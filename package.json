@@ -23,5 +23,6 @@
     "email": "hello@dotbunny.com",
     "url": "https://dotbunny.com"
   },
-  "type": "library"
+  "type": "library",
+  "hideInEditor": false
 }
