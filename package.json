@@ -1,16 +1,9 @@
 {
   "name": "com.dotbunny.gdx",
   "displayName": "GDX",
-  "version": "0.0.1",
-  "unity": "2020.1",
-  "dependencies": {
-    "com.unity.test-framework": "1.1.11",
-    "com.unity.burst": "1.4.2",
-    "com.unity.jobs": "0.2.10-preview.12",
-    "com.unity.settings-manager": "1.0.3",
-    "com.unity.scriptablebuildpipeline": "1.14.1"
-  },
-  "description": "Game Development Extensions",
+  "version": "1.0.0",
+  "unity": "2019.4",
+  "description": "Game Development Extensions\nA battle-tested library of game-focused high performance C# code.",
   "keywords": [
     "game",
     "development",
@@ -20,9 +13,9 @@
   "category": "Programming",
   "author": {
     "name": "dotBunny",
-    "email": "hello@dotbunny.com",
+    "email": "support@dotbunny.com",
     "url": "https://dotbunny.com"
   },
-  "type": "library",
-  "hideInEditor": false
+  "hideInEditor": false,
+  "type": "library"
 }
