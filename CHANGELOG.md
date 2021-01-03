@@ -13,7 +13,7 @@ Initial release containing only the GDX core library.
 #### GDX.Collections
 - Included bit array structures `BitArray8`, `BitArray16`, `BitArray32`, `BitArray64`, `BitArray128`, `BitArray256`, `BitArray512`.
 - Included byte vector `Byte2`.
-- Included sparse index pool structures `SparseSet` and `NativeSpareSet`
+- Included sparse index pool structures `SparseSet` and `NativeSparseSet`
 - Included a `FreeList` data structure.
 #### GDX.Collections.Generic
 - Included a revolving buffer `CircularBuffer`.
