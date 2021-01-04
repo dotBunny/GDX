@@ -1,10 +1,11 @@
-[![GDX](https://dotbunny.com/wp-content/uploads/2021/01/gdx-logo-colored.png)](https://github.com/dotBunny/GDX)
+[![GDX](https://dotbunny.com/wp-content/uploads/2021/01/gdx-logo-fun.png)](https://github.com/dotBunny/GDX)
 
 [![Latest Release](https://img.shields.io/github/release/dotBunny/GDX.svg?logo=github)](https://github.com/dotBunny/GDX/releases)
-[![Discord Server](https://img.shields.io/discord/582190573897908224.svg?label=discord&logo=discord&color=informational)](https://discord.gg/Y9jrzYpm6ZE)
+[![OpenUPM](https://img.shields.io/npm/v/com.dotbunny.gdx?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.dotbunny.gdx/)
+[![Discord Server](https://img.shields.io/discord/582190573897908224.svg?label=discord&logo=discord&color=informational)](https://discord.gg/EcceFGAuJs)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/dotBunny/GDX/blob/main/LICENSE)
 
-Game Development Extensions, a battle-tested library of game-focused high performance C# code.
+Game Development Extensions, a battle-tested library of game-focused high-performance C# code.
 
 ## Feature Highlights
 - Optimized & non-allocating collections (_GDX.Collections_)

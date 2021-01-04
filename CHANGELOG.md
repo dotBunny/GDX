@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+
+### Changed
 - Updated the `README.md` header with logo and badges.
 
 ## [1.0.0] - 2021-01-03
