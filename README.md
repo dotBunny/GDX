@@ -1,5 +1,7 @@
 # GDX
-[![Licence](https://img.shields.io/github/license/midlevel/mlapi.svg?color=informational)](https://github.com/MidLevel/MLAPI/blob/master/LICENCE)
+[![Latest Release](https://img.shields.io/github/release/dotBunny/GDX.svg?logo=github)](https://github.com/dotBunny/GDX/releases)
+[![Discord Server](https://img.shields.io/discord/582190573897908224.svg?label=discord&logo=discord&color=informational)](https://discord.gg/Y9jrzYpm6ZE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/dotBunny/GDX/blob/main/LICENSE)
 
 Game Development Extensions, a battle-tested library of game-focused high performance C# code.
 
