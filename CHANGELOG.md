@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+#### GDX.Editor
+- Added `UpdateManager` to facilitate updating of Unity Asset Store installations.
 
 ### Changed
 - Updated the `README.md` header with logo and badges.
