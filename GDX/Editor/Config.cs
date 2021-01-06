@@ -8,7 +8,7 @@ namespace GDX.Editor
 {
     public static class Config
     {
-        public static GDXConfig GetOrCreateConfig()
+        public static GDXConfig Get()
         {
             GDXConfig settings = AssetDatabase.LoadAssetAtPath<GDXConfig>("Assets/" + GDXConfig.ResourcesPath);
 
@@ -32,7 +32,7 @@ namespace GDX.Editor
         public static SerializedObject GetSerializedConfig()
         {
             // ReSharper disable once HeapView.ObjectAllocation.Evident
-            return new SerializedObject(GetOrCreateConfig());
+            return new SerializedObject(Get());
         }
     }
 }

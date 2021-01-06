@@ -12,7 +12,7 @@ using Unity.Mathematics;
 
 #pragma warning disable 0660, 0661
 
-namespace GDX.Collections
+namespace GDX.Mathematics
 {
     /// <summary>
     ///     A <see cref="byte" /> vector.

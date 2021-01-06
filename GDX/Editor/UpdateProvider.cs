@@ -3,39 +3,56 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net;
-using GDX.Collections;
 using UnityEditor;
 using UnityEngine;
 
 namespace GDX.Editor
 {
     /// <summary>
+    ///     An autonomous provider which detects and notifies if updates are available for the GDX package.
     /// </summary>
     [InitializeOnLoad]
-    public class UpdateProvider
+    public static class UpdateProvider
     {
         /// <summary>
         ///     A defined collection of ways that the package could be found in a Unity project.
         /// </summary>
-        public enum InstallationMethod
+        public enum InstallationType
         {
+            /// <summary>
+            ///     Unable to determine how the package was installed.
+            /// </summary>
             Unidentified = 0,
+
+            /// <summary>
+            ///     The package was installed via Unity's traditional UPM process.
+            /// </summary>
             UnityPackageManager = 1,
+
+            /// <summary>
+            ///     The package is included into the project via an asset store inclusion.
+            /// </summary>
             UnityAssetStore = 2,
 
+            /// <summary>
+            ///     The package was installed through Unity's UPM using a reference to the OpenUPM repo.
+            /// </summary>
             // ReSharper disable once InconsistentNaming
             OpenUPM = 3,
+
+            /// <summary>
+            ///     The package is placed in the project's asset folder.
+            /// </summary>
             LocalPackage = 4,
+
+            /// <summary>
+            ///     The package was cloned into a folder in the project from GitHub.
+            /// </summary>
             GitHubClone = 5
         }
 
         /// <summary>
-        ///     The key used by <see cref="EditorPrefs" /> to store <see cref="CheckForUpdatesSetting" />.
-        /// </summary>
-        private const string CheckForUpdatesKey = "GDX.UpdateProvider.CheckForUpdates";
-
-        /// <summary>
-        ///     The key used by <see cref="EditorPrefs" /> to store <see cref="LastChecked" />.
+        ///     The key used by <see cref="EditorPrefs" /> to store the last time we checked for an update.
         /// </summary>
         private const string LastCheckedKey = "GDX.UpdateProvider.LastChecked";
 
@@ -45,20 +62,30 @@ namespace GDX.Editor
         private const string UpdateDayCountKey = "GDX.UpdateProvider.UpdateDayCount";
 
         /// <summary>
-        ///     The key used by <see cref="EditorPrefs" /> to store <see cref="Last" />.
+        ///     The key used by <see cref="EditorPrefs" /> to store the last update version we notified the user about.
         /// </summary>
         private const string LastNotifiedVersionKey = "GDX.UpdateProvider.LastNotifiedVersion";
 
+        /// <summary>
+        ///     The <see cref="InstallationType" /> detected during construction of the package.
+        /// </summary>
+        public static readonly InstallationType InstallationMethod = GetInstallationType();
+
+        /// <summary>
+        ///     The <see cref="PackageDefinition" /> for the installed package.
+        /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
-        public static InstallationMethod Installation = InstallationMethod.Unidentified;
+        public static readonly PackageDefinition Package = GetLocalPackageDefinition();
 
         /// <summary>
         ///     A list of keywords to flag when searching project settings.
         /// </summary>
+        // ReSharper disable HeapView.ObjectAllocation.Evident
         private static readonly HashSet<string> s_settingsKeywords = new HashSet<string>(new[] {"gdx", "update"});
+        // ReSharper restore HeapView.ObjectAllocation.Evident
 
         /// <summary>
-        ///     Settings content for <see cref="CheckForUpdatesSetting" />.
+        ///     Settings content for <see cref="GDXConfig.checkForUpdates" />.
         /// </summary>
         // ReSharper disable once HeapView.ObjectAllocation.Evident
         private static readonly GUIContent s_settingsCheckForUpdates = new GUIContent(
@@ -74,13 +101,28 @@ namespace GDX.Editor
             "After how many days should updates be checked for?");
 
         /// <summary>
-        ///     Should the package check the GitHub repository to see if there is a new version?
+        ///     If an update check has occured, this will be filled with its <see cref="PackageDefinition" />.
         /// </summary>
-        /// <remarks>We use a property over methods in this case so that Unity's UI can be easily tied to this value.</remarks>
-        private static bool CheckForUpdatesSetting
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static PackageDefinition MainPackageDefinition;
+
+        /// <summary>
+        ///     Initialize the update provider, and check if necessary.
+        /// </summary>
+        static UpdateProvider()
         {
-            get => EditorPrefs.GetBool(CheckForUpdatesKey, true);
-            set => EditorPrefs.SetBool(CheckForUpdatesKey, value);
+            GDXConfig config = Config.Get();
+            if (!config.checkForUpdates)
+            {
+                return;
+            }
+
+            // Should we check for updates?
+            DateTime targetDate = GetLastChecked().AddDays(UpdateDayCountSetting);
+            if (DateTime.Now >= targetDate)
+            {
+                CheckForUpdates();
+            }
         }
 
         /// <summary>
@@ -108,54 +150,61 @@ namespace GDX.Editor
                 {
                     GDXStyles.BeginGUILayout();
 
-                    EditorGUILayout.BeginVertical(GDXStyles.HeaderStyle);
-
-                    EditorGUILayout.BeginHorizontal();
+                    EditorGUILayout.BeginHorizontal(GDXStyles.HeaderStyle);
                     GUILayout.Label(
-                        $"Local version: {GetLocalPackageDefinition().version}\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}.", EditorStyles.boldLabel);
+                        MainPackageDefinition != null
+                            ? $"Local version: {GetLocalPackageDefinition().version}\nGitHub version: {MainPackageDefinition.version}\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}."
+                            : $"Local version: {GetLocalPackageDefinition().version}\nGitHub version: Unknown\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}.",
+                        EditorStyles.boldLabel);
+
                     if (GUILayout.Button("Manual Check", EditorStyles.miniButton))
                     {
                         CheckForUpdates();
                     }
+
                     EditorGUILayout.EndHorizontal();
 
 
-                    EditorGUILayout.EndVertical();
-
-
                     SerializedObject settings = Config.GetSerializedConfig();
-                    EditorGUILayout.PropertyField(settings.FindProperty("checkForUpdates"), CheckForUpdatesSetting);
+                    EditorGUILayout.PropertyField(settings.FindProperty("checkForUpdates"), s_settingsCheckForUpdates);
                     settings.ApplyModifiedPropertiesWithoutUndo();
 
-                    UpdateDayCountSetting = EditorGUILayout.IntSlider(s_settingsUpdateDayCount, UpdateDayCountSetting, 1, 31);
+                    UpdateDayCountSetting =
+                        EditorGUILayout.IntSlider(s_settingsUpdateDayCount, UpdateDayCountSetting, 1, 31);
 
                     GDXStyles.EndGUILayout();
-
                 },
                 keywords = s_settingsKeywords
             };
         }
 
-        public static readonly PackageDefinition Package = GetLocalPackageDefinition();
-
+        /// <summary>
+        ///     Check for updates!
+        /// </summary>
         private static void CheckForUpdates()
         {
             SetLastChecked();
 
-            PackageDefinition remoteDefinition = GetMainPackageDefinition();
-            if (remoteDefinition == null)
+            MainPackageDefinition = GetMainPackageDefinition();
+            if (MainPackageDefinition == null)
             {
                 return;
             }
 
-            SemanticVersion remoteVersion = new SemanticVersion(remoteDefinition.version);
+            SemanticVersion remoteVersion = new SemanticVersion(MainPackageDefinition.version);
             SemanticVersion localVersion = new SemanticVersion(Package.version);
 
+            // TODO: Check for Unity version?
             if (remoteVersion > localVersion)
             {
-                // UPDATE
+                // Store the notification value
+                SetLastNotifiedVersion(MainPackageDefinition.version);
+
+                // TODO: Notify!
+                // TODO: Update?
             }
         }
+
         /// <summary>
         ///     Gets the last time that we checked for an update to the package.
         /// </summary>
@@ -178,21 +227,28 @@ namespace GDX.Editor
             EditorPrefs.SetString(LastCheckedKey, DateTime.Now.ToString(CultureInfo.InvariantCulture));
         }
 
+        /// <summary>
+        ///     Get the last version of the package which was presented to the user for update.
+        /// </summary>
+        /// <returns>A version string.</returns>
         public static string GetLastNotifiedVersion()
         {
             return EditorPrefs.GetString(LastNotifiedVersionKey);
         }
 
-        public static void SetLastNotifiedVersion(string versionTag)
+        /// <summary>
+        ///     Set the version of the package presented to update too.
+        /// </summary>
+        /// <param name="versionTag">The package version string.</param>
+        private static void SetLastNotifiedVersion(string versionTag)
         {
             EditorPrefs.SetString(LastNotifiedVersionKey, versionTag);
         }
 
-        public static string GetProjectRootPath()
-        {
-            return Application.dataPath.Substring(0, Application.dataPath.Length - 6);
-        }
-
+        /// <summary>
+        ///     Find and parse the local package.json into a <see cref="PackageDefinition" />.
+        /// </summary>
+        /// <returns>A <see cref="PackageDefinition" /> instance.</returns>
         private static PackageDefinition GetLocalPackageDefinition()
         {
             try
@@ -202,7 +258,8 @@ namespace GDX.Editor
                 string packageIdentifierLine = $"\"name\": \"{Strings.PackageName}\",";
                 for (int i = 0; i < packageCount; i++)
                 {
-                    string packagePath = Path.Combine(GetProjectRootPath(),
+                    string packagePath = Path.Combine(
+                        Application.dataPath.Substring(0, Application.dataPath.Length - 6),
                         AssetDatabase.GUIDToAssetPath(packageGuids[i]));
                     string[] packageContent = File.ReadAllLines(packagePath);
 
@@ -216,13 +273,17 @@ namespace GDX.Editor
 
                 return null;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // Don't go any further if there is an error
                 return null;
             }
         }
 
+        /// <summary>
+        ///     Poll the main GitHub repository to find its package.json, parsing into a <see cref="PackageDefinition" />.
+        /// </summary>
+        /// <returns>A <see cref="PackageDefinition" /> instance.</returns>
         private static PackageDefinition GetMainPackageDefinition()
         {
             try
@@ -239,7 +300,7 @@ namespace GDX.Editor
                     ? null
                     : JsonUtility.FromJson<PackageDefinition>(packageJsonContent);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // Don't go any further if there is an error
                 return null;
@@ -247,13 +308,13 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        ///     Determine the current <see cref="InstallationMethod" /> of the GDX package.
+        ///     Determine the current <see cref="InstallationType" /> of the GDX package.
         /// </summary>
-        /// <returns>The discovered <see cref="InstallationMethod" />.</returns>
-        private static InstallationMethod GetInstallationMethod()
+        /// <returns>The discovered <see cref="InstallationType" />.</returns>
+        private static InstallationType GetInstallationType()
         {
             // Well we reached this point and don't actually know, so guess we should admit it.
-            return InstallationMethod.Unidentified;
+            return InstallationType.Unidentified;
         }
 
 

@@ -6,11 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+#### GDX
+- Included `SemanticVersion` struct for assistance with versioning.
 #### GDX.Editor
-- Added `UpdateManager` to facilitate updating of Unity Asset Store installations.
+- Included `Config` static utility class to store persistent project-wide configurations for both runtime and author-time.
+- Added `GDXStyles` to assist with editor styling.
+- Added `UpdateProvider` to facilitate updating of Unity Asset Store installations as well as notifying other installation methods of updates.
 
 ### Changed
 - Updated the `README.md` header with logo and badges.
+- Altered arrangement of `LICENSE` with the hopes of appeasing the _GitHub_ overlords of license type detection.
+#### GDX.Mathematics
+- Moved `Byte2` to `GDX.Mathematics` namespace (formerly in `GDX.Collections`) as it made more sense to alongside other similar types in `Unity.Mathematics`.
 
 ## [1.0.0] - 2021-01-03
 Initial release containing only the GDX core library.
