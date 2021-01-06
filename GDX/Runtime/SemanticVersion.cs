@@ -3,7 +3,7 @@
 
 using System.Runtime.CompilerServices;
 
-namespace GDX.Collections
+namespace GDX
 {
     /// <summary>
     ///     A Semantic Versioning structure.
