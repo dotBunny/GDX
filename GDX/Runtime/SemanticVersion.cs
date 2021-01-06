@@ -33,6 +33,10 @@ namespace GDX
 
         // ReSharper restore MemberCanBePrivate.Global
 
+        /// <summary>
+        ///     Create a <see cref="SemanticVersion" /> based on a formatted <see cref="System.String" />.
+        /// </summary>
+        /// <param name="version">A formatted version semantic version string (2020.1.0).</param>
         public SemanticVersion(string version)
         {
             string[] split = version.Split(Strings.VersionIndicators);
@@ -61,6 +65,12 @@ namespace GDX
             }
         }
 
+        /// <summary>
+        ///     Determine if <see cref="SemanticVersion" /> is greater than another <see cref="SemanticVersion" />.
+        /// </summary>
+        /// <param name="lhs">Left-hand side <see cref="SemanticVersion" />.</param>
+        /// <param name="rhs">Right-hand side <see cref="SemanticVersion" />.</param>
+        /// <returns>Returns the result of a GREATER THAN operation on two <see cref="SemanticVersion" /> values.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator >(SemanticVersion lhs, SemanticVersion rhs)
         {
@@ -77,6 +87,72 @@ namespace GDX
             return lhs.Major == rhs.Major && lhs.Minor == rhs.Minor && lhs.Patch > rhs.Patch;
         }
 
+        /// <summary>
+        ///     Determine if <see cref="SemanticVersion" /> is greater than or equal to another <see cref="SemanticVersion" />.
+        /// </summary>
+        /// <param name="lhs">Left-hand side <see cref="SemanticVersion" />.</param>
+        /// <param name="rhs">Right-hand side <see cref="SemanticVersion" />.</param>
+        /// <returns>
+        ///     Returns the result of a GREATER THAN OR EQUAL operation on two <see cref="SemanticVersion" />
+        ///     values.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator >=(SemanticVersion lhs, SemanticVersion rhs)
+        {
+            if (lhs.Major > rhs.Major)
+            {
+                return true;
+            }
+
+            if (lhs.Major == rhs.Major && lhs.Minor > rhs.Minor)
+            {
+                return true;
+            }
+
+            if (lhs.Major == rhs.Major && lhs.Minor == rhs.Minor && lhs.Patch > rhs.Patch)
+            {
+                return true;
+            }
+
+            return lhs.Major == rhs.Major && lhs.Minor == rhs.Minor && lhs.Patch == rhs.Patch;
+        }
+
+        /// <summary>
+        ///     Determine if <see cref="SemanticVersion" /> is less than or equal to another <see cref="SemanticVersion" />.
+        /// </summary>
+        /// <param name="lhs">Left-hand side <see cref="SemanticVersion" />.</param>
+        /// <param name="rhs">Right-hand side <see cref="SemanticVersion" />.</param>
+        /// <returns>
+        ///     Returns the result of a LESS THAN OR EQUAL operation on two <see cref="SemanticVersion" />
+        ///     values.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool operator <=(SemanticVersion lhs, SemanticVersion rhs)
+        {
+            if (lhs.Major < rhs.Major)
+            {
+                return true;
+            }
+
+            if (lhs.Major == rhs.Major && lhs.Minor < rhs.Minor)
+            {
+                return true;
+            }
+
+            if (lhs.Major == rhs.Major && lhs.Minor == rhs.Minor && lhs.Patch < rhs.Patch)
+            {
+                return true;
+            }
+
+            return lhs.Major == rhs.Major && lhs.Minor == rhs.Minor && lhs.Patch == rhs.Patch;
+        }
+
+        /// <summary>
+        ///     Determine if <see cref="SemanticVersion" /> is less than another <see cref="SemanticVersion" />.
+        /// </summary>
+        /// <param name="lhs">Left-hand side <see cref="SemanticVersion" />.</param>
+        /// <param name="rhs">Right-hand side <see cref="SemanticVersion" />.</param>
+        /// <returns>Returns the result of a LESS THAN operation on two <see cref="SemanticVersion" /> values.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator <(SemanticVersion lhs, SemanticVersion rhs)
         {
@@ -93,23 +169,44 @@ namespace GDX
             return lhs.Major == rhs.Major && lhs.Minor == rhs.Minor && lhs.Patch < rhs.Patch;
         }
 
+        /// <summary>
+        ///     Determine if <see cref="SemanticVersion" /> is equal to another <see cref="SemanticVersion" />.
+        /// </summary>
+        /// <param name="lhs">Left-hand side <see cref="SemanticVersion" />.</param>
+        /// <param name="rhs">Right-hand side <see cref="SemanticVersion" />.</param>
+        /// <returns>Returns the result of a EQUALITY operation on two <see cref="SemanticVersion" /> values.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(SemanticVersion lhs, SemanticVersion rhs)
         {
             return lhs.Major == rhs.Major && lhs.Minor == rhs.Minor && lhs.Patch == rhs.Patch;
         }
 
+        /// <summary>
+        ///     Determine if <see cref="SemanticVersion" /> does not equal than another <see cref="SemanticVersion" />.
+        /// </summary>
+        /// <param name="lhs">Left-hand side <see cref="SemanticVersion" />.</param>
+        /// <param name="rhs">Right-hand side <see cref="SemanticVersion" />.</param>
+        /// <returns>Returns the result of a NOT EQUAL operation on two <see cref="SemanticVersion" /> values.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(SemanticVersion lhs, SemanticVersion rhs)
         {
             return lhs.Major != rhs.Major || lhs.Minor != rhs.Minor || lhs.Patch != rhs.Patch;
         }
 
+        /// <summary>
+        ///     Does the <paramref name="obj" /> equal this <see cref="SemanticVersion" />.
+        /// </summary>
+        /// <param name="obj">An <see cref="object" /> to compare against.</param>
+        /// <returns>Returns the result of an EQUALITY operation.</returns>
         public override bool Equals(object obj)
         {
             return obj is SemanticVersion other && Equals(other);
         }
 
+        /// <summary>
+        ///     Get the hash code of the <see cref="SemanticVersion" />.
+        /// </summary>
+        /// <returns>A <see cref="System.Int32" /> value.</returns>
         public override int GetHashCode()
         {
             unchecked
@@ -121,9 +218,19 @@ namespace GDX
             }
         }
 
-        private bool Equals(SemanticVersion other)
+        /// <summary>
+        ///     Does the <paramref name="otherSemanticVersion" /> equal the <see cref="SemanticVersion" />.
+        /// </summary>
+        /// <param name="otherSemanticVersion"></param>
+        /// <returns>
+        ///     The results of checking the <see cref="SemanticVersion.Major" />/<see cref="SemanticVersion.Minor" />/
+        ///     <see cref="SemanticVersion.Patch" /> for equality.
+        /// </returns>
+        private bool Equals(SemanticVersion otherSemanticVersion)
         {
-            return Major == other.Major && Minor == other.Minor && Patch == other.Patch;
+            return Major == otherSemanticVersion.Major &&
+                   Minor == otherSemanticVersion.Minor &&
+                   Patch == otherSemanticVersion.Patch;
         }
     }
 }
