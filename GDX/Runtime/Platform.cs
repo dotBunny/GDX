@@ -1,6 +1,8 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Runtime.CompilerServices;
+
 namespace GDX
 {
     /// <summary>
@@ -27,6 +29,20 @@ namespace GDX
 #else
             return 0;
 #endif
+        }
+
+        /// <summary>
+        /// Validate that all parent directories are created for a given <paramref name="path"/>.
+        /// </summary>
+        /// <param name="path">The path to process and validate.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void EnsureFolderHierarchyExists(string path)
+        {
+            string targetDirectory = System.IO.Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(targetDirectory))
+            {
+                System.IO.Directory.CreateDirectory(targetDirectory);
+            }
         }
     }
 }

@@ -25,7 +25,12 @@ namespace GDX
         /// <summary>
         ///     An array of <see cref="System.Char" /> used to indicate newlines.
         /// </summary>
-        public static readonly char[] NewLineCharacters = {'\n', '\r'};
+        public static readonly char[] NewLineIndicators = {'\n', '\r'};
+
+        /// <summary>
+        ///     An array of <see cref="System.Char" /> used to split versions.
+        /// </summary>
+        public static readonly char[] VersionIndicators = {'.', ',', '_'};
 
         /// <summary>
         ///     A reusable <see cref="System.Text.StringBuilder" />.
