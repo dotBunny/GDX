@@ -191,15 +191,19 @@ namespace GDX.Editor
                 return;
             }
 
-            SemanticVersion remoteVersion = new SemanticVersion(MainPackageDefinition.version);
-            SemanticVersion localVersion = new SemanticVersion(Package.version);
+            // Package versions
+            SemanticVersion updatePackageVersion = new SemanticVersion(MainPackageDefinition.version);
+            SemanticVersion localPackageVersion = new SemanticVersion(Package.version);
 
-            // TODO: Check for Unity version?
-            if (remoteVersion > localVersion)
+            // Unity versions
+            SemanticVersion currentUnityVersion = new SemanticVersion(Application.unityVersion);
+            SemanticVersion minimumUnityVersion = new SemanticVersion(MainPackageDefinition.unity);
+            
+            if (updatePackageVersion > localPackageVersion &&
+                currentUnityVersion >= minimumUnityVersion)
             {
                 // Store the notification value
                 SetLastNotifiedVersion(MainPackageDefinition.version);
-
                 // TODO: Notify!
                 // TODO: Update?
             }
