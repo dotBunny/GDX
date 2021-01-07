@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Net;
 using UnityEditor;
 using UnityEngine;
@@ -14,43 +13,6 @@ namespace GDX.Editor
     [InitializeOnLoad]
     public static class UpdateProvider
     {
-        /// <summary>
-        ///     A defined collection of ways that the package could be found in a Unity project.
-        /// </summary>
-        public enum InstallationType
-        {
-            /// <summary>
-            ///     Unable to determine how the package was installed.
-            /// </summary>
-            Unidentified = 0,
-
-            /// <summary>
-            ///     The package was installed via Unity's traditional UPM process.
-            /// </summary>
-            UnityPackageManager = 1,
-
-            /// <summary>
-            ///     The package is included into the project via an asset store inclusion.
-            /// </summary>
-            UnityAssetStore = 2,
-
-            /// <summary>
-            ///     The package was installed through Unity's UPM using a reference to the OpenUPM repo.
-            /// </summary>
-            // ReSharper disable once InconsistentNaming
-            OpenUPM = 3,
-
-            /// <summary>
-            ///     The package is placed in the project's asset folder.
-            /// </summary>
-            LocalPackage = 4,
-
-            /// <summary>
-            ///     The package was cloned into a folder in the project from GitHub.
-            /// </summary>
-            GitHubClone = 5
-        }
-
         /// <summary>
         ///     The key used by <see cref="EditorPrefs" /> to store the last time we checked for an update.
         /// </summary>
@@ -67,15 +29,9 @@ namespace GDX.Editor
         private const string LastNotifiedVersionKey = "GDX.UpdateProvider.LastNotifiedVersion";
 
         /// <summary>
-        ///     The <see cref="InstallationType" /> detected during construction of the package.
+        ///     A collection of information about the locally installed GDX package.
         /// </summary>
-        public static readonly InstallationType InstallationMethod = GetInstallationType();
-
-        /// <summary>
-        ///     The <see cref="PackageDefinition" /> for the installed package.
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        public static readonly PackageDefinition Package = GetLocalPackageDefinition();
+        private static readonly PackageProvider s_localPackage;
 
         /// <summary>
         ///     A list of keywords to flag when searching project settings.
@@ -101,16 +57,19 @@ namespace GDX.Editor
             "After how many days should updates be checked for?");
 
         /// <summary>
-        ///     If an update check has occured, this will be filled with its <see cref="PackageDefinition" />.
+        ///     If an update check has occured, this will be filled with its <see cref="PackageProvider.PackageDefinition" />.
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
-        public static PackageDefinition MainPackageDefinition;
+        public static PackageProvider.PackageDefinition UpdatePackageDefinition;
 
         /// <summary>
         ///     Initialize the update provider, and check if necessary.
         /// </summary>
         static UpdateProvider()
         {
+            // Create a copy of the local p
+            s_localPackage = new PackageProvider();
+
             GDXConfig config = Config.Get();
             if (!config.checkForUpdates)
             {
@@ -152,9 +111,9 @@ namespace GDX.Editor
 
                     EditorGUILayout.BeginHorizontal(GDXStyles.HeaderStyle);
                     GUILayout.Label(
-                        MainPackageDefinition != null
-                            ? $"Local version: {GetLocalPackageDefinition().version}\nGitHub version: {MainPackageDefinition.version}\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}."
-                            : $"Local version: {GetLocalPackageDefinition().version}\nGitHub version: Unknown\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}.",
+                        UpdatePackageDefinition != null
+                            ? $"Local version: {s_localPackage.Definition.version}\nGitHub version: {UpdatePackageDefinition.version}\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}."
+                            : $"Local version: {s_localPackage.Definition.version}\nGitHub version: Unknown\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}.",
                         EditorStyles.boldLabel);
 
                     if (GUILayout.Button("Manual Check", EditorStyles.miniButton))
@@ -185,25 +144,25 @@ namespace GDX.Editor
         {
             SetLastChecked();
 
-            MainPackageDefinition = GetMainPackageDefinition();
-            if (MainPackageDefinition == null)
+            UpdatePackageDefinition = GetMainPackageDefinition();
+            if (UpdatePackageDefinition == null)
             {
                 return;
             }
 
             // Package versions
-            SemanticVersion updatePackageVersion = new SemanticVersion(MainPackageDefinition.version);
-            SemanticVersion localPackageVersion = new SemanticVersion(Package.version);
+            SemanticVersion updatePackageVersion = new SemanticVersion(UpdatePackageDefinition.version);
+            SemanticVersion localPackageVersion = new SemanticVersion(s_localPackage.Definition.version);
 
             // Unity versions
             SemanticVersion currentUnityVersion = new SemanticVersion(Application.unityVersion);
-            SemanticVersion minimumUnityVersion = new SemanticVersion(MainPackageDefinition.unity);
-            
+            SemanticVersion minimumUnityVersion = new SemanticVersion(UpdatePackageDefinition.unity);
+
             if (updatePackageVersion > localPackageVersion &&
                 currentUnityVersion >= minimumUnityVersion)
             {
                 // Store the notification value
-                SetLastNotifiedVersion(MainPackageDefinition.version);
+                SetLastNotifiedVersion(UpdatePackageDefinition.version);
                 // TODO: Notify!
                 // TODO: Update?
             }
@@ -250,45 +209,10 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        ///     Find and parse the local package.json into a <see cref="PackageDefinition" />.
+        ///     Poll the main GitHub repository to find its package.json, parsing into a <see cref="PackageProvider.PackageDefinition" />.
         /// </summary>
-        /// <returns>A <see cref="PackageDefinition" /> instance.</returns>
-        private static PackageDefinition GetLocalPackageDefinition()
-        {
-            try
-            {
-                string[] packageGuids = AssetDatabase.FindAssets("package");
-                int packageCount = packageGuids.Length;
-                string packageIdentifierLine = $"\"name\": \"{Strings.PackageName}\",";
-                for (int i = 0; i < packageCount; i++)
-                {
-                    string packagePath = Path.Combine(
-                        Application.dataPath.Substring(0, Application.dataPath.Length - 6),
-                        AssetDatabase.GUIDToAssetPath(packageGuids[i]));
-                    string[] packageContent = File.ReadAllLines(packagePath);
-
-                    if (packageContent.Length > 15 &&
-                        packageContent[1].Trim() == packageIdentifierLine &&
-                        packageContent[14].Trim() == "\"name\": \"dotBunny\",")
-                    {
-                        return JsonUtility.FromJson<PackageDefinition>(File.ReadAllText(packagePath));
-                    }
-                }
-
-                return null;
-            }
-            catch (Exception)
-            {
-                // Don't go any further if there is an error
-                return null;
-            }
-        }
-
-        /// <summary>
-        ///     Poll the main GitHub repository to find its package.json, parsing into a <see cref="PackageDefinition" />.
-        /// </summary>
-        /// <returns>A <see cref="PackageDefinition" /> instance.</returns>
-        private static PackageDefinition GetMainPackageDefinition()
+        /// <returns>A <see cref="PackageProvider.PackageDefinition" /> instance.</returns>
+        private static PackageProvider.PackageDefinition GetMainPackageDefinition()
         {
             try
             {
@@ -302,34 +226,13 @@ namespace GDX.Editor
                 // Return back the parsed object or null if there was no content.
                 return string.IsNullOrEmpty(packageJsonContent)
                     ? null
-                    : JsonUtility.FromJson<PackageDefinition>(packageJsonContent);
+                    : JsonUtility.FromJson<PackageProvider.PackageDefinition>(packageJsonContent);
             }
             catch (Exception)
             {
                 // Don't go any further if there is an error
                 return null;
             }
-        }
-
-        /// <summary>
-        ///     Determine the current <see cref="InstallationType" /> of the GDX package.
-        /// </summary>
-        /// <returns>The discovered <see cref="InstallationType" />.</returns>
-        private static InstallationType GetInstallationType()
-        {
-            // Well we reached this point and don't actually know, so guess we should admit it.
-            return InstallationType.Unidentified;
-        }
-
-
-        /// <summary>
-        ///     A miniature package definition useful for quickly parsing a remote package definition.
-        /// </summary>
-        [Serializable]
-        public class PackageDefinition
-        {
-            public string version;
-            public string unity;
         }
     }
 }
