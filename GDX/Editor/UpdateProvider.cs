@@ -201,7 +201,11 @@ namespace GDX.Editor
             switch (s_localPackage.InstallationMethod)
             {
                 case PackageProvider.InstallationType.Unidentified:
+                    EditorUtility.DisplayDialog("GDX Update Available",
+                        $"{messageStart}Unfortunately we are unable to determine how your package was installed. We are UNABLE to upgrade your package for you.",
+                        "Doh!");
                     break;
+
                 case PackageProvider.InstallationType.UnityPackageManager:
                     if (EditorUtility.DisplayDialog("GDX Update Available",
                         $"{messageStart}Would you like to have the package attempt to upgrade itself through UPM to the newest version automatically?",
@@ -214,8 +218,8 @@ namespace GDX.Editor
                     {
                         SetLastNotifiedVersion(UpdatePackageDefinition.version);
                     }
-
                     break;
+
                 case PackageProvider.InstallationType.GitHubClone:
                     if (EditorUtility.DisplayDialog("GDX Update Available",
                         $"{messageStart}Would you like your cloned repository updated?\n\nIMPORTANT!\n\nThis will \"reset hard\" and \"pull\" the repository, wiping any local changes made.",
