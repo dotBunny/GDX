@@ -42,6 +42,11 @@ namespace GDX
             string[] split = version.Split(Strings.VersionIndicators);
             switch (split.Length)
             {
+                case 4:
+                    int.TryParse(split[0], out Major);
+                    int.TryParse(split[1], out Minor);
+                    int.TryParse(split[2], out Patch);
+                    break;
                 case 3:
                     int.TryParse(split[0], out Major);
                     int.TryParse(split[1], out Minor);
