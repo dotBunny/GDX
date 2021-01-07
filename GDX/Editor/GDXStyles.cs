@@ -8,42 +8,49 @@ namespace GDX.Editor
 {
     public static class GDXStyles
     {
-        private static readonly GUIStyle s_marginLessLineStyle;
-        private static readonly GUIStyle s_lineStyle;
-        private static readonly GUIStyle s_wrapperStyle;
+        private static readonly GUIStyle s_marginLessLine;
+        private static readonly GUIStyle s_line;
+        private static readonly GUIStyle s_wrapper;
 
-        public static readonly GUIStyle HeaderStyle;
+        public static readonly GUIStyle Header;
+        public static readonly GUIStyle Button;
 
         static GDXStyles()
         {
-            s_marginLessLineStyle =
+            s_marginLessLine =
                 new GUIStyle("box")
                 {
                     border = {top = 0, bottom = 0},
                     margin = {top = 0, bottom = 0, left = -50, right = -50 }, // makes sure to
                     padding = {top = 0, bottom = 0}
                 };
-            s_lineStyle =
-                new GUIStyle(s_marginLessLineStyle)
+            s_line =
+                new GUIStyle(s_marginLessLine)
                 {
                     margin = {left = 0, right = 0 }
                 };
 
-            HeaderStyle = new GUIStyle(EditorStyles.helpBox)
+            Header = new GUIStyle(EditorStyles.helpBox)
             {
                 padding = {top = 10, bottom = 10, left = 10, right = 10},
                 margin = { bottom = 10 }
             };
 
-            s_wrapperStyle = new GUIStyle()
+            s_wrapper = new GUIStyle()
             {
                 margin = { left = 5, right = 5, bottom = 5 }
+            };
+
+            Button = new GUIStyle(EditorStyles.miniButton)
+            {
+                stretchWidth = false,
+                padding = { left = 10, right = 10 },
             };
         }
 
         public static void BeginGUILayout()
         {
-            EditorGUILayout.BeginVertical(s_wrapperStyle);
+            EditorGUILayout.BeginVertical(s_wrapper);
         }
 
         public static void EndGUILayout()
@@ -60,7 +67,7 @@ namespace GDX.Editor
             }
 
             // Draw line of sorts
-            GUILayout.Box(GUIContent.none, s_marginLessLineStyle,
+            GUILayout.Box(GUIContent.none, s_marginLessLine,
                 GUILayout.ExpandWidth(true),
                 GUILayout.Height(height));
 
@@ -79,7 +86,7 @@ namespace GDX.Editor
             }
 
             // Draw line of sorts
-            GUILayout.Box(GUIContent.none, s_lineStyle,
+            GUILayout.Box(GUIContent.none, s_line,
                 GUILayout.ExpandWidth(true),
                 GUILayout.Height(height));
 

@@ -63,25 +63,29 @@ namespace GDX.Editor
         public PackageProvider()
         {
             // Find Local Definition
+            PackagePath = GetPackagePath();
+            if (PackagePath == null)
+            {
+                return;
+            }
+
+            // Lets try and parse the package JSON
             try
             {
-                PackagePath = GetPackagePath();
-                if (PackagePath != null)
-                {
-                    Definition = JsonUtility.FromJson<PackageDefinition>(File.ReadAllText(PackagePath));
-                }
-
-                if (Definition == null)
-                {
-                    return;
-                }
-
-                InstallationMethod = GetInstallationType();
+                Definition = JsonUtility.FromJson<PackageDefinition>(File.ReadAllText(PackagePath));
             }
             catch (Exception)
             {
                 // Don't go any further if there is an error
             }
+
+            // It didn't actually parse correctly so lets just stop right now.
+            if (Definition == null)
+            {
+                InstallationMethod = InstallationType.Unidentified;
+                return;
+            }
+            InstallationMethod = GetInstallationType();
         }
 
         /// <summary>

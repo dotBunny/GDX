@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Net;
 using UnityEditor;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace GDX.Editor
@@ -14,19 +17,30 @@ namespace GDX.Editor
     public static class UpdateProvider
     {
         /// <summary>
+        ///     The public URI of the latest changes, as Markdown.
+        /// </summary>
+        /// <remarks>The main branch is used to contain released versions only, so if it is found there, it is the latest release.</remarks>
+        private const string GitHubChangelogUri = "https://github.com/dotBunny/GDX/blob/main/CHANGELOG.md";
+
+        /// <summary>
+        ///     The public URI of releases for GDX.
+        /// </summary>
+        private const string GitHubReleasesUri = "https://github.com/dotBunny/GDX/releases";
+
+        /// <summary>
         ///     The key used by <see cref="EditorPrefs" /> to store the last time we checked for an update.
         /// </summary>
         private const string LastCheckedKey = "GDX.UpdateProvider.LastChecked";
 
         /// <summary>
-        ///     The key used by <see cref="EditorPrefs" /> to store <see cref="UpdateDayCountSetting" />.
-        /// </summary>
-        private const string UpdateDayCountKey = "GDX.UpdateProvider.UpdateDayCount";
-
-        /// <summary>
         ///     The key used by <see cref="EditorPrefs" /> to store the last update version we notified the user about.
         /// </summary>
         private const string LastNotifiedVersionKey = "GDX.UpdateProvider.LastNotifiedVersion";
+
+        /// <summary>
+        ///     The key used by <see cref="EditorPrefs" /> to store <see cref="UpdateDayCountSetting" />.
+        /// </summary>
+        private const string UpdateDayCountKey = "GDX.UpdateProvider.UpdateDayCount";
 
         /// <summary>
         ///     A collection of information about the locally installed GDX package.
@@ -67,7 +81,8 @@ namespace GDX.Editor
         /// </summary>
         static UpdateProvider()
         {
-            // Create a copy of the local p
+            // Create a copy of the local package provider
+            // ReSharper disable once HeapView.ObjectAllocation.Evident
             s_localPackage = new PackageProvider();
 
             GDXConfig config = Config.Get();
@@ -109,17 +124,39 @@ namespace GDX.Editor
                 {
                     GDXStyles.BeginGUILayout();
 
-                    EditorGUILayout.BeginHorizontal(GDXStyles.HeaderStyle);
+                    EditorGUILayout.BeginHorizontal(GDXStyles.Header);
                     GUILayout.Label(
                         UpdatePackageDefinition != null
                             ? $"Local version: {s_localPackage.Definition.version}\nGitHub version: {UpdatePackageDefinition.version}\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}."
                             : $"Local version: {s_localPackage.Definition.version}\nGitHub version: Unknown\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}.",
                         EditorStyles.boldLabel);
 
-                    if (GUILayout.Button("Manual Check", EditorStyles.miniButton))
+                    // Force things to the right
+                    GUILayout.FlexibleSpace();
+
+                    EditorGUILayout.BeginVertical();
+                    if (HasUpdate(UpdatePackageDefinition))
                     {
-                        CheckForUpdates();
+                        if (GUILayout.Button("Changelog", GDXStyles.Button))
+                        {
+                            Application.OpenURL(GitHubChangelogUri);
+                        }
+
+                        if (GUILayout.Button("Update", GDXStyles.Button))
+                        {
+                            AttemptUpgrade();
+                        }
                     }
+                    else
+                    {
+                        if (GUILayout.Button("Manual Check", GDXStyles.Button))
+                        {
+                            CheckForUpdates();
+                        }
+                    }
+
+                    EditorGUILayout.EndVertical();
+
 
                     EditorGUILayout.EndHorizontal();
 
@@ -137,17 +174,11 @@ namespace GDX.Editor
             };
         }
 
-        /// <summary>
-        ///     Check for updates!
-        /// </summary>
-        private static void CheckForUpdates()
+        private static bool HasUpdate(PackageProvider.PackageDefinition updatePackageDefinition)
         {
-            SetLastChecked();
-
-            UpdatePackageDefinition = GetMainPackageDefinition();
-            if (UpdatePackageDefinition == null)
+            if (updatePackageDefinition == null)
             {
-                return;
+                return false;
             }
 
             // Package versions
@@ -158,51 +189,103 @@ namespace GDX.Editor
             SemanticVersion currentUnityVersion = new SemanticVersion(Application.unityVersion);
             SemanticVersion minimumUnityVersion = new SemanticVersion(UpdatePackageDefinition.unity);
 
-            string notifiedVersion = GetLastNotifiedVersion();
+            // Actually figure out if we have something
+            return updatePackageVersion > localPackageVersion &&
+                   currentUnityVersion >= minimumUnityVersion;
+        }
 
-            if (updatePackageVersion > localPackageVersion &&
-                currentUnityVersion >= minimumUnityVersion &&
-                notifiedVersion != UpdatePackageDefinition.version)
+        private static void AttemptUpgrade()
+        {
+            string messageStart =
+                $"There is a new version of GDX available ({UpdatePackageDefinition.version}).\n";
+            switch (s_localPackage.InstallationMethod)
             {
-                string updateMessage =
-                    $"Good news!\n\nThere is a new version of GDX available ({UpdatePackageDefinition.version}). Would you like to have the package attempt to upgrade itself to the newest version automatically?";
-                int updateOption = EditorUtility.DisplayDialogComplex(
-                    "GDX Update Available", updateMessage, "Update", "Skip", "Changelog");
+                case PackageProvider.InstallationType.Unidentified:
+                    break;
+                case PackageProvider.InstallationType.UnityPackageManager:
+                    if (EditorUtility.DisplayDialog("GDX Update Available",
+                        $"{messageStart}Would you like to have the package attempt to upgrade itself through UPM to the newest version automatically?",
+                        "Yes", "No"))
+                    {
+                        // TODO: Unsure if this actually will work if it is not an internal package?
+                        Client.Add(Strings.PackageName);
+                    }
+                    else
+                    {
+                        SetLastNotifiedVersion(UpdatePackageDefinition.version);
+                    }
 
-                switch (updateOption)
-                {
-                    case 0:
-                        switch (s_localPackage.InstallationMethod)
+                    break;
+                case PackageProvider.InstallationType.GitHubClone:
+                    if (EditorUtility.DisplayDialog("GDX Update Available",
+                        $"{messageStart}Would you like your cloned repository updated?\n\nIMPORTANT!\n\nThis will \"reset hard\" and \"pull\" the repository, wiping any local changes made.",
+                        "Yes", "No"))
+                    {
+                        // ReSharper disable once HeapView.ObjectAllocation.Evident
+                        Process process = new Process();
+                        // ReSharper disable once HeapView.ObjectAllocation.Evident
+                        ProcessStartInfo startInfo = new ProcessStartInfo
                         {
-                            case PackageProvider.InstallationType.Unidentified:
-                                // Flat out replace? Or just tell
-                                break;
-                            case PackageProvider.InstallationType.UnityPackageManager:
-                                // How to get UPM to update?
-                                break;
-                            case PackageProvider.InstallationType.GitHubClone:
-                                // GitHub pull?
-                                break;
-                            case PackageProvider.InstallationType.UnderAssets:
-                                // Zip extract?
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
+                            WindowStyle = ProcessWindowStyle.Normal, FileName = "git.exe"
+                        };
+                        process.StartInfo = startInfo;
+
+                        try
+                        {
+                            // Pause asset database
+                            AssetDatabase.StartAssetEditing();
+
+                            if (s_localPackage?.PackagePath != null)
+                            {
+                                startInfo.WorkingDirectory =
+                                    Path.GetDirectoryName(s_localPackage.PackagePath) ?? string.Empty;
+
+                                startInfo.Arguments = "reset --hard";
+                                process.Start();
+                                process.WaitForExit();
+
+                                startInfo.Arguments = "pull";
+                                process.Start();
+                                process.WaitForExit();
+
+                                // Lets force the import anyways now
+                                AssetDatabase.ImportAsset(s_localPackage.PackagePath);
+                            }
                         }
-
+                        finally
+                        {
+                            // Return asset database monitoring back to normal
+                            AssetDatabase.StopAssetEditing();
+                        }
+                    }
+                    else
+                    {
                         SetLastNotifiedVersion(UpdatePackageDefinition.version);
-                        break;
+                    }
 
-                    case 2:
-                        // Open Changelog
-                        Application.OpenURL("https://github.com/dotBunny/GDX/blob/main/CHANGELOG.md");
-                        break;
+                    break;
+                case PackageProvider.InstallationType.UnderAssets:
+                    // Convert over to GitHub clone?
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
 
-                    default:
-                        // Skip Version
-                        SetLastNotifiedVersion(UpdatePackageDefinition.version);
-                        break;
-                }
+        /// <summary>
+        ///     Check for updates!
+        /// </summary>
+        private static void CheckForUpdates()
+        {
+            SetLastChecked();
+
+            // Cache the update information
+            UpdatePackageDefinition = GetMainPackageDefinition();
+
+            if (HasUpdate(UpdatePackageDefinition) &&
+                GetLastNotifiedVersion() != UpdatePackageDefinition.version)
+            {
+                AttemptUpgrade();
             }
         }
 
@@ -232,6 +315,7 @@ namespace GDX.Editor
         ///     Get the last version of the package which was presented to the user for update.
         /// </summary>
         /// <returns>A version string.</returns>
+        // ReSharper disable once MemberCanBePrivate.Global
         public static string GetLastNotifiedVersion()
         {
             return EditorPrefs.GetString(LastNotifiedVersionKey);
