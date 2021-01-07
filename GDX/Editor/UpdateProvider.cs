@@ -158,13 +158,51 @@ namespace GDX.Editor
             SemanticVersion currentUnityVersion = new SemanticVersion(Application.unityVersion);
             SemanticVersion minimumUnityVersion = new SemanticVersion(UpdatePackageDefinition.unity);
 
+            string notifiedVersion = GetLastNotifiedVersion();
+
             if (updatePackageVersion > localPackageVersion &&
-                currentUnityVersion >= minimumUnityVersion)
+                currentUnityVersion >= minimumUnityVersion &&
+                notifiedVersion != UpdatePackageDefinition.version)
             {
-                // Store the notification value
-                SetLastNotifiedVersion(UpdatePackageDefinition.version);
-                // TODO: Notify!
-                // TODO: Update?
+                string updateMessage =
+                    $"Good news!\n\nThere is a new version of GDX available ({UpdatePackageDefinition.version}). Would you like to have the package attempt to upgrade itself to the newest version automatically?";
+                int updateOption = EditorUtility.DisplayDialogComplex(
+                    "GDX Update Available", updateMessage, "Update", "Skip", "Changelog");
+
+                switch (updateOption)
+                {
+                    case 0:
+                        switch (s_localPackage.InstallationMethod)
+                        {
+                            case PackageProvider.InstallationType.Unidentified:
+                                // Flat out replace? Or just tell
+                                break;
+                            case PackageProvider.InstallationType.UnityPackageManager:
+                                // How to get UPM to update?
+                                break;
+                            case PackageProvider.InstallationType.GitHubClone:
+                                // GitHub pull?
+                                break;
+                            case PackageProvider.InstallationType.UnderAssets:
+                                // Zip extract?
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+
+                        SetLastNotifiedVersion(UpdatePackageDefinition.version);
+                        break;
+
+                    case 2:
+                        // Open Changelog
+                        Application.OpenURL("https://github.com/dotBunny/GDX/blob/main/CHANGELOG.md");
+                        break;
+
+                    default:
+                        // Skip Version
+                        SetLastNotifiedVersion(UpdatePackageDefinition.version);
+                        break;
+                }
             }
         }
 
@@ -209,7 +247,8 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        ///     Poll the main GitHub repository to find its package.json, parsing into a <see cref="PackageProvider.PackageDefinition" />.
+        ///     Poll the main GitHub repository to find its package.json, parsing into a
+        ///     <see cref="PackageProvider.PackageDefinition" />.
         /// </summary>
         /// <returns>A <see cref="PackageProvider.PackageDefinition" /> instance.</returns>
         private static PackageProvider.PackageDefinition GetMainPackageDefinition()
