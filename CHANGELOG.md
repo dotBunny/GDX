@@ -8,10 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 #### GDX
 - Included `SemanticVersion` struct for assistance with versioning.
+#### GDX.IO.Compression
+- Included `TarFile` support for decompressing tarballs.
 #### GDX.Editor
 - Included `Config` static utility class to store persistent project-wide configurations for both runtime and author-time.
 - Added `GDXStyles` to assist with editor styling.
-- Added `UpdateProvider`, `PackageProvider` to facilitate updating of Unity Asset Store installations as well as notifying other installation methods of updates.
+- Added `UpdateProvider`, `PackageProvider` to facilitate updating of GDX package from different installation sources.
 
 ### Changed
 - Updated the `README.md` header with logo and badges.

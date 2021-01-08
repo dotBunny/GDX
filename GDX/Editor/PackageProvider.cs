@@ -23,23 +23,24 @@ namespace GDX.Editor
             /// <summary>
             ///     Unable to determine how the package was installed.
             /// </summary>
-            Unidentified = 0,
+            Unknown = 0,
 
             /// <summary>
             ///     The package was installed via Unity's traditional UPM process.
             /// </summary>
-            UnityPackageManager = 1,
+            // ReSharper disable once InconsistentNaming
+            UPM = 1,
 
             /// <summary>
             ///     The package was cloned into a folder in the project from GitHub.
             /// </summary>
-            GitHubClone = 2,
+            GitHub = 2,
 
             /// <summary>
             ///     The package was found in the assets folder. This could be a Asset Store installation or even
             ///     just a zip decompressed into a project.
             /// </summary>
-            UnderAssets = 3
+            Assets = 3
         }
 
         /// <summary>
@@ -82,7 +83,7 @@ namespace GDX.Editor
             // It didn't actually parse correctly so lets just stop right now.
             if (Definition == null)
             {
-                InstallationMethod = InstallationType.Unidentified;
+                InstallationMethod = InstallationType.Unknown;
                 return;
             }
             InstallationMethod = GetInstallationType();
@@ -96,7 +97,7 @@ namespace GDX.Editor
         {
             if (Definition == null)
             {
-                return InstallationType.Unidentified;
+                return InstallationType.Unknown;
             }
 
             // Cache directory where the package.json was found
@@ -113,7 +114,7 @@ namespace GDX.Editor
                 {
                     if (projectManifest[i].Contains(Strings.PackageName))
                     {
-                        return InstallationType.UnityPackageManager;
+                        return InstallationType.UPM;
                     }
                 }
             }
@@ -128,7 +129,7 @@ namespace GDX.Editor
                 {
                     if (gitConfig[i].Trim() == "url = https://github.com/dotBunny/GDX.git")
                     {
-                        return InstallationType.GitHubClone;
+                        return InstallationType.GitHub;
                     }
                 }
             }
@@ -136,11 +137,11 @@ namespace GDX.Editor
             // Assets Folder ... at least?
             if (packageDirectory != null && packageDirectory.StartsWith(Application.dataPath))
             {
-                return InstallationType.UnderAssets;
+                return InstallationType.Assets;
             }
 
             // Well we reached this point and don't actually know, so guess we should admit it.
-            return InstallationType.Unidentified;
+            return InstallationType.Unknown;
         }
 
         /// <summary>

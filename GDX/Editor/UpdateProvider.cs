@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.IO.Compression;
 using System.Net;
+using GDX.IO.Compression;
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEngine;
@@ -28,6 +28,9 @@ namespace GDX.Editor
         /// </summary>
         private const string GitHubReleasesUri = "https://github.com/dotBunny/GDX/releases";
 
+        /// <summary>
+        ///     The base URI for downloading the latest released tarball.
+        /// </summary>
         private const string GitHubLatestUri = "https://github.com/dotBunny/GDX/archive/v";
 
         /// <summary>
@@ -130,8 +133,8 @@ namespace GDX.Editor
                     EditorGUILayout.BeginHorizontal(GDXStyles.Header);
                     GUILayout.Label(
                         UpdatePackageDefinition != null
-                            ? $"Local version: {s_localPackage.Definition.version}\nGitHub version: {UpdatePackageDefinition.version}\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}."
-                            : $"Local version: {s_localPackage.Definition.version}\nGitHub version: Unknown\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}.",
+                            ? $"Local version: {s_localPackage.Definition.version} ({s_localPackage.InstallationMethod.ToString()})\nGitHub version: {UpdatePackageDefinition.version}\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}."
+                            : $"Local version: {s_localPackage.Definition.version} ({s_localPackage.InstallationMethod.ToString()})\nGitHub version: Unknown\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}.",
                         EditorStyles.boldLabel);
 
                     // Force things to the right
@@ -199,121 +202,142 @@ namespace GDX.Editor
 
         private static void AttemptUpgrade()
         {
-            // string messageStart =
-            //     $"There is a new version of GDX available ({UpdatePackageDefinition.version}).\n";
-            // switch (s_localPackage.InstallationMethod)
-            // {
-            //     case PackageProvider.InstallationType.Unidentified:
-            //         EditorUtility.DisplayDialog("GDX Update Available",
-            //             $"{messageStart}Unfortunately we are unable to determine how your package was installed. We are UNABLE to upgrade your package for you.",
-            //             "Doh!");
-            //         break;
-            //
-            //     case PackageProvider.InstallationType.UnityPackageManager:
-            //         if (EditorUtility.DisplayDialog("GDX Update Available",
-            //             $"{messageStart}Would you like to have the package attempt to upgrade itself through UPM to the newest version automatically?",
-            //             "Yes", "No"))
-            //         {
-            //             // TODO: Unsure if this actually will work if it is not an internal package?
-            //             Client.Add(Strings.PackageName);
-            //         }
-            //         else
-            //         {
-            //             SetLastNotifiedVersion(UpdatePackageDefinition.version);
-            //         }
-            //
-            //         break;
-            //
-            //     case PackageProvider.InstallationType.GitHubClone:
-            //         if (EditorUtility.DisplayDialog("GDX Update Available",
-            //             $"{messageStart}Would you like your cloned repository updated?\n\nIMPORTANT!\n\nThis will \"reset hard\" and \"pull\" the repository, wiping any local changes made.",
-            //             "Yes", "No"))
-            //         {
-            //             // ReSharper disable once HeapView.ObjectAllocation.Evident
-            //             Process process = new Process();
-            //             // ReSharper disable once HeapView.ObjectAllocation.Evident
-            //             ProcessStartInfo startInfo = new ProcessStartInfo
-            //             {
-            //                 WindowStyle = ProcessWindowStyle.Normal, FileName = "git.exe"
-            //             };
-            //             process.StartInfo = startInfo;
-            //
-            //             try
-            //             {
-            //                 // Pause asset database
-            //                 AssetDatabase.StartAssetEditing();
-            //
-            //                 if (s_localPackage?.PackagePath != null)
-            //                 {
-            //                     startInfo.WorkingDirectory =
-            //                         Path.GetDirectoryName(s_localPackage.PackagePath) ?? string.Empty;
-            //
-            //                     startInfo.Arguments = "reset --hard";
-            //                     process.Start();
-            //                     process.WaitForExit();
-            //
-            //                     startInfo.Arguments = "pull";
-            //                     process.Start();
-            //                     process.WaitForExit();
-            //
-            //                     // Lets force the import anyways now
-            //                     AssetDatabase.ImportAsset(s_localPackage.PackagePath);
-            //                 }
-            //             }
-            //             finally
-            //             {
-            //                 // Return asset database monitoring back to normal
-            //                 AssetDatabase.StopAssetEditing();
-            //             }
-            //         }
-            //         else
-            //         {
-            //             SetLastNotifiedVersion(UpdatePackageDefinition.version);
-            //         }
-            //
-            //         break;
-            //     case PackageProvider.InstallationType.UnderAssets:
+            string messageStart =
+                $"There is a new version of GDX available ({UpdatePackageDefinition.version}).\n";
+            switch (s_localPackage.InstallationMethod)
+            {
+                case PackageProvider.InstallationType.Unknown:
+                    EditorUtility.DisplayDialog("GDX Update Available",
+                        $"{messageStart}Unfortunately we are unable to determine how your package was installed. We are UNABLE to upgrade your package for you.",
+                        "Doh!");
+                    SetLastNotifiedVersion(UpdatePackageDefinition.version);
+                    break;
 
-                    // Convert over to GitHub clone?
-
-                    // Get a temporary file
-                    // TODO: This will need to be changed for newer .NET (System.IO.GetTempFileName())
-                    string tempFile = Path.GetTempFileName();
-
-                    // Download the file
-                    EditorUtility.DisplayProgressBar("GDX", "Downloading Update ...", 0.25f);
-                    try
+                case PackageProvider.InstallationType.UPM:
+                    if (EditorUtility.DisplayDialog("GDX Update Available",
+                        $"{messageStart}Would you like to have the package attempt to upgrade itself through UPM to the newest version automatically?",
+                        "Yes", "No"))
                     {
-                        using WebClient webClient = new WebClient();
-                        webClient.DownloadFile(GitHubLatestUri + UpdatePackageDefinition.version + ".tar.gz",
-                            tempFile);
+                        // TODO: Unsure if this actually will work if it is not an internal package?
+                        Client.Add(Strings.PackageName);
                     }
-                    catch (Exception)
+                    else
                     {
-                        return;
-                    }
-                    finally
-                    {
-                        EditorUtility.ClearProgressBar();
+                        SetLastNotifiedVersion(UpdatePackageDefinition.version);
                     }
 
-                    string targetPath = Path.GetDirectoryName(s_localPackage.PackagePath);
-                    string tempExtractFolder = Path.Combine(Path.GetTempPath(), Strings.PackageName);
+                    break;
 
-                    // Remove previous upgrade folder (if it exists)
-                    if (Directory.Exists(tempExtractFolder))
+                case PackageProvider.InstallationType.GitHub:
+                    if (EditorUtility.DisplayDialog("GDX Update Available",
+                        $"{messageStart}Would you like your cloned repository updated?\n\nIMPORTANT!\n\nThis will \"reset hard\" and \"pull\" the repository, wiping any local changes made.",
+                        "Yes", "No"))
                     {
-                        Directory.Delete(tempExtractFolder, true);
+                        // ReSharper disable once HeapView.ObjectAllocation.Evident
+                        Process process = new Process();
+                        // ReSharper disable once HeapView.ObjectAllocation.Evident
+                        ProcessStartInfo startInfo = new ProcessStartInfo
+                        {
+                            WindowStyle = ProcessWindowStyle.Normal, FileName = "git.exe"
+                        };
+                        process.StartInfo = startInfo;
+
+                        try
+                        {
+                            // Pause asset database
+                            AssetDatabase.StartAssetEditing();
+
+                            if (s_localPackage?.PackagePath != null)
+                            {
+                                startInfo.WorkingDirectory =
+                                    Path.GetDirectoryName(s_localPackage.PackagePath) ?? string.Empty;
+
+                                startInfo.Arguments = "reset --hard";
+                                process.Start();
+                                process.WaitForExit();
+
+                                startInfo.Arguments = "pull";
+                                process.Start();
+                                process.WaitForExit();
+
+                                // Lets force the import anyways now
+                                AssetDatabase.ImportAsset(s_localPackage.PackagePath);
+                            }
+                        }
+                        finally
+                        {
+                            // Return asset database monitoring back to normal
+                            AssetDatabase.StopAssetEditing();
+                        }
                     }
-                    Platform.EnsureFolderHierarchyExists(tempExtractFolder);
+                    else
+                    {
+                        SetLastNotifiedVersion(UpdatePackageDefinition.version);
+                    }
 
-                    UnityEngine.Debug.Log($"Extract {tempFile} to {tempExtractFolder}");
-                    GDX.IO.Compression.TarFile.ExtractToDirectory(tempFile, tempExtractFolder, true);
+                    break;
+                case PackageProvider.InstallationType.Assets:
+                    if (EditorUtility.DisplayDialog("GDX Update Available",
+                        $"{messageStart}Would you like your install replaced?\n\nIMPORTANT!\n\nThis will remove any local changes to GDX.",
+                        "Yes", "No"))
+                    {
+                        // Get a temporary file
+                        // TODO: This will need to be changed for newer .NET (System.IO.GetTempFileName())
+                        string tempFile = Path.GetTempFileName();
+
+                        // Download the file
+                        EditorUtility.DisplayProgressBar("GDX", "Downloading Update ...", 0.25f);
+                        try
+                        {
+                            using WebClient webClient = new WebClient();
+                            webClient.DownloadFile(GitHubLatestUri + UpdatePackageDefinition.version + ".tar.gz",
+                                tempFile);
+                        }
+                        catch (Exception)
+                        {
+                            return;
+                        }
+                        finally
+                        {
+                            EditorUtility.ClearProgressBar();
+                        }
 
 
+                        string tempExtractFolder = Path.Combine(Path.GetTempPath(), Strings.PackageName);
 
-                    //         break;
-                    // }
+                        // Remove previous upgrade folder (if it exists)
+                        if (Directory.Exists(tempExtractFolder))
+                        {
+                            Directory.Delete(tempExtractFolder, true);
+                        }
+
+                        Platform.EnsureFolderHierarchyExists(tempExtractFolder);
+
+                        // Extract downloaded tarball to the temp folder
+                        TarFile.ExtractToDirectory(tempFile, tempExtractFolder, true);
+
+                        // Get desired target placement
+                        string targetPath = Path.GetDirectoryName(s_localPackage.PackagePath);
+
+                        // TODO: VCS Checkout? maybe make a function
+
+                        // Remove all existing content
+                        if (targetPath != null)
+                        {
+                            Directory.Delete(targetPath, true);
+
+                            // Drop in new content
+                            Directory.Move(
+                                Path.Combine(tempExtractFolder, "GDX-" + UpdatePackageDefinition.version),
+                                targetPath);
+                        }
+                    }
+                    else
+                    {
+                        SetLastNotifiedVersion(UpdatePackageDefinition.version);
+                    }
+                    break;
+            }
         }
 
         /// <summary>
