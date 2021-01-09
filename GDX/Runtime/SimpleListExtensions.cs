@@ -15,9 +15,9 @@ namespace GDX
         ///     <para>Does <paramref name="targetSimpleList" /> contain <paramref name="targetItem" />?</para>
         /// </summary>
         /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
-        /// <param name="targetSimpleList">The <see cref="System.Collections.Generic.List{T}" /> to look in.</param>
-        /// <param name="targetItem">The target object to look for.</param>
-        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
+        /// <param name="targetItem">The target class object to look for.</param>
+        /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
         /// <returns>true/false</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool ContainsItem<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : class
@@ -36,14 +36,38 @@ namespace GDX
             return false;
         }
 
+        /// <summary>
+        ///     <para>Does <paramref name="targetSimpleList" /> contain <paramref name="targetValue" />?</para>
+        /// </summary>
+        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
+        /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
+        /// <param name="targetValue">The value to look for.</param>
+        /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
+        /// <returns>true/false</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ContainsValue<T>(ref this SimpleList<T> targetSimpleList, T targetValue) where T : struct
+        {
+            int length = targetSimpleList.Count;
+            T[] array = targetSimpleList.Array;
+
+            for (int i = 0; i < length; i++)
+            {
+                if (array[i].Equals(targetValue))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         /// <summary>
         ///     <para>Removes <paramref name="targetItem" /> from the provided <paramref name="targetSimpleList" />.</para>
         /// </summary>
         /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
-        /// <param name="targetSimpleList">The target <see cref="System.Collections.Generic.List{T}" />.</param>
+        /// <param name="targetSimpleList">The target <see cref="SimpleList{T}" />.</param>
         /// <param name="targetItem">The target object to remove from the <paramref name="targetSimpleList" />.</param>
-        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
         /// <returns>true/false if the item was removed.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool RemoveItem<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : class

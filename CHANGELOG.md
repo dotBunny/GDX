@@ -14,10 +14,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Included `Config` static utility class to store persistent project-wide configurations for both runtime and author-time.
 - Added `GDXStyles` to assist with editor styling.
 - Added `UpdateProvider`, `PackageProvider` to facilitate updating of GDX package from different installation sources.
+#### GDX.Tests
+- Added `SimpleListExtensionsTests`
 
 ### Changed
 - Updated the `README.md` header with logo and badges.
 - Altered arrangement of `LICENSE` with the hopes of appeasing the _GitHub_ overlords of license type detection.
+#### GDX
+- Changed `SimpleListExtensions` to have `ContainsItem` (_class_) and `ContainsValue` (_struct_) methods.
 #### GDX.Mathematics
 - Moved `Byte2` to `GDX.Mathematics` namespace (formerly in `GDX.Collections`) as it made more sense to alongside other similar types in `Unity.Mathematics`.
 
