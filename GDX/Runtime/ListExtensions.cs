@@ -36,6 +36,59 @@ namespace GDX
         }
 
         /// <summary>
+        ///     <para>Removes the first <paramref name="targetItem" /> from the provided <paramref name="targetList" />.</para>
+        /// </summary>
+        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
+        /// <param name="targetList">The target <see cref="System.Collections.Generic.List{T}" />.</param>
+        /// <param name="targetItem">The target object to remove from the <paramref name="targetList" />.</param>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <returns>true/false if the item was removed.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool RemoveFirstItem<T>(this List<T> targetList, T targetItem) where T : class
+        {
+            int length = targetList.Count;
+            for (int i = 0; i < length; i++)
+            {
+                if (targetList[i] != targetItem)
+                {
+                    continue;
+                }
+
+                targetList.RemoveAt(i);
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     <para>Removes any <paramref name="targetItem" /> from the provided <paramref name="targetList" />.</para>
+        /// </summary>
+        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
+        /// <param name="targetList">The target <see cref="System.Collections.Generic.List{T}" />.</param>
+        /// <param name="targetItem">The target object to remove from the <paramref name="targetList" />.</param>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <returns>true/false if the item was removed.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool RemoveItems<T>(this List<T> targetList, T targetItem) where T : class
+        {
+            int length = targetList.Count;
+            bool removedItem = false;
+            for (int i = length - 1; i >= 0; i--)
+            {
+                if (targetList[i] != targetItem)
+                {
+                    continue;
+                }
+
+                targetList.RemoveAt(i);
+                removedItem = true;
+            }
+
+            return removedItem;
+        }
+
+        /// <summary>
         ///     <para>
         ///         Replaces the object found at the provided <paramref name="index" /> with the last object in
         ///         <paramref name="targetList" />, then removes the last item from the <paramref name="targetList" />.
@@ -56,8 +109,9 @@ namespace GDX
             targetList.RemoveAt(lastIndex);
         }
 
+
         /// <summary>
-        ///     <para>Removes <paramref name="targetItem" /> from the provided <paramref name="targetList" />.</para>
+        ///     <para>Removes the last <paramref name="targetItem" /> from the provided <paramref name="targetList" />.</para>
         /// </summary>
         /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
         /// <param name="targetList">The target <see cref="System.Collections.Generic.List{T}" />.</param>
@@ -65,10 +119,10 @@ namespace GDX
         /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
         /// <returns>true/false if the item was removed.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool RemoveItem<T>(this List<T> targetList, T targetItem) where T : class
+        public static bool RemoveLastItem<T>(this List<T> targetList, T targetItem) where T : class
         {
             int length = targetList.Count;
-            for (int i = 0; i < length; i++)
+            for (int i = length - 1; i >= 0; i--)
             {
                 if (targetList[i] != targetItem)
                 {
@@ -81,6 +135,7 @@ namespace GDX
 
             return false;
         }
+
 
         /// <summary>
         ///     Shuffle the items in the <paramref name="targetList" />.

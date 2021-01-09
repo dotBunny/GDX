@@ -32,6 +32,50 @@ namespace GDX.Tests.Editor
             _listValues = default;
         }
 
+
+        #region ContainsItem
+
+        /// <summary>
+        ///     Check if we can find a <see cref="string" /> in a SimpleList, while its not the actual object, this validates
+        ///     the .NET magic for strings.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_ContainsItem_String()
+        {
+            const string searchValue = "Hello";
+            SimpleList<string> listOfStrings = new SimpleList<string>(3);
+            listOfStrings.AddUnchecked(searchValue);
+            listOfStrings.AddUnchecked("World");
+            listOfStrings.AddUnchecked("!");
+
+            Assert.IsTrue(listOfStrings.ContainsItem(searchValue),
+                $"Expected positive response to looking for {searchValue} item.");
+        }
+
+        /// <summary>
+        ///     Check if a class object can be correctly found inside of a <see cref="SimpleList{T}" />.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_ContainsItem_CircularBuffer()
+        {
+            CircularBuffer<int> searchValue = new CircularBuffer<int>(3, new[] {0, 1, 2});
+            SimpleList<CircularBuffer<int>> listOfCircularBuffers = new SimpleList<CircularBuffer<int>>(5);
+
+            // Build test rig
+            listOfCircularBuffers.AddUnchecked(new CircularBuffer<int>(5));
+            listOfCircularBuffers.AddUnchecked(searchValue);
+            listOfCircularBuffers.AddUnchecked(new CircularBuffer<int>(5));
+            listOfCircularBuffers.AddUnchecked(new CircularBuffer<int>(5));
+            listOfCircularBuffers.AddUnchecked(new CircularBuffer<int>(5));
+
+            Assert.IsTrue(listOfCircularBuffers.ContainsItem(searchValue),
+                "Expected positive response to looking for target circular buffer.");
+        }
+
+        #endregion
+
         #region ContainsValue
 
         /// <summary>
@@ -85,45 +129,154 @@ namespace GDX.Tests.Editor
 
         #endregion
 
-        #region ContainsItem
+        #region RemoveFirstItem
 
         /// <summary>
-        ///     Check if we can find a <see cref="string" /> in a SimpleList, while its not the actual object, this validates
-        ///     the .NET magic for strings.
+        /// Check that removing the first item from a <see cref="SimpleList{T}"/> works correctly.
         /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_ContainsItem_String()
-        {
-            const string searchValue = "Hello";
-            SimpleList<string> listOfStrings = new SimpleList<string>(3);
-            listOfStrings.AddUnchecked(searchValue);
-            listOfStrings.AddUnchecked("World");
-            listOfStrings.AddUnchecked("!");
-
-            Assert.IsTrue(listOfStrings.ContainsItem(searchValue),
-                $"Expected positive response to looking for {searchValue} item.");
-        }
-
-        /// <summary>
-        ///     Check if a class object can be correctly found inside of a <see cref="SimpleList{T}" />.
-        /// </summary>
-        [Test]
-        [Category("GDX.Tests")]
-        public void True_ContainsItem_CircularBuffer()
+        public void True_RemoveFirstItem_Simple()
         {
             CircularBuffer<int> searchValue = new CircularBuffer<int>(3, new[] {0, 1, 2});
-            SimpleList<CircularBuffer<int>> listOfCircularBuffers = new SimpleList<CircularBuffer<int>>(5);
+            SimpleList<CircularBuffer<int>> listOfCircularBuffers = new SimpleList<CircularBuffer<int>>(6);
 
             // Build test rig
             listOfCircularBuffers.AddUnchecked(new CircularBuffer<int>(5));
             listOfCircularBuffers.AddUnchecked(searchValue);
             listOfCircularBuffers.AddUnchecked(new CircularBuffer<int>(5));
             listOfCircularBuffers.AddUnchecked(new CircularBuffer<int>(5));
+            listOfCircularBuffers.AddUnchecked(searchValue);
             listOfCircularBuffers.AddUnchecked(new CircularBuffer<int>(5));
 
-            Assert.IsTrue(listOfCircularBuffers.ContainsItem(searchValue),
-                "Expected positive response to looking for target circular buffer.");
+            listOfCircularBuffers.RemoveFirstItem(searchValue);
+            Assert.IsTrue(listOfCircularBuffers.Array[1] != searchValue &&
+                          listOfCircularBuffers.ContainsItem(searchValue), $"Item was expected to have been removed correctly.");
+
+        }
+
+        #endregion
+
+        #region RemoveFirstValue
+
+        /// <summary>
+        /// Check that removing the first value from a <see cref="SimpleList{T}"/> works correctly.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_RemoveFirstValue_Simple()
+        {
+            const int targetValue = 1;
+            SimpleList<int> listValues = new SimpleList<int>(6);
+            listValues.AddUnchecked(0);
+            listValues.AddUnchecked(targetValue);
+            listValues.AddUnchecked(2);
+            listValues.AddUnchecked(3);
+            listValues.AddUnchecked(4);
+            listValues.AddUnchecked(targetValue);
+
+            listValues.RemoveFirstValue(targetValue);
+            Assert.IsTrue(listValues.Array[1] == 2 && listValues.ContainsValue(targetValue), $"A value of 2 was expected.");
+        }
+
+        #endregion
+
+        #region RemoveItems
+        /// <summary>
+        /// Check that removing the all references to an item from a <see cref="SimpleList{T}"/> works correctly.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_RemoveItems_Simple()
+        {
+            CircularBuffer<int> searchValue = new CircularBuffer<int>(3, new[] {0, 1, 2});
+            SimpleList<CircularBuffer<int>> listOfCircularBuffers = new SimpleList<CircularBuffer<int>>(6);
+
+            // Build test rig
+            listOfCircularBuffers.AddUnchecked(new CircularBuffer<int>(5));
+            listOfCircularBuffers.AddUnchecked(searchValue);
+            listOfCircularBuffers.AddUnchecked(new CircularBuffer<int>(5));
+            listOfCircularBuffers.AddUnchecked(new CircularBuffer<int>(5));
+            listOfCircularBuffers.AddUnchecked(searchValue);
+            listOfCircularBuffers.AddUnchecked(new CircularBuffer<int>(5));
+
+            listOfCircularBuffers.RemoveItems(searchValue);
+            Assert.IsTrue(!listOfCircularBuffers.ContainsItem(searchValue), $"Items were expected to have been removed correctly.");
+
+        }
+        #endregion
+
+        #region RemoveLastItem
+        /// <summary>
+        /// Check that removing the last item from a <see cref="SimpleList{T}"/> works correctly.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_RemoveLastItem_Simple()
+        {
+            CircularBuffer<int> searchValue = new CircularBuffer<int>(3, new[] {0, 1, 2});
+            SimpleList<CircularBuffer<int>> listOfCircularBuffers = new SimpleList<CircularBuffer<int>>(6);
+
+            // Build test rig
+            listOfCircularBuffers.AddUnchecked(new CircularBuffer<int>(5));
+            listOfCircularBuffers.AddUnchecked(searchValue);
+            listOfCircularBuffers.AddUnchecked(new CircularBuffer<int>(5));
+            listOfCircularBuffers.AddUnchecked(new CircularBuffer<int>(5));
+            listOfCircularBuffers.AddUnchecked(searchValue);
+            listOfCircularBuffers.AddUnchecked(new CircularBuffer<int>(5));
+
+            listOfCircularBuffers.RemoveLastItem(searchValue);
+            Assert.IsTrue(listOfCircularBuffers.Array[4] != searchValue &&
+                          listOfCircularBuffers.ContainsItem(searchValue), $"Item was expected to have been removed correctly.");
+
+        }
+        #endregion
+
+        #region RemoveLastValue
+
+        /// <summary>
+        /// Check that removing the last value from a <see cref="SimpleList{T}"/> works correctly.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_RemoveLastValue_Simple()
+        {
+            SimpleList<int> listValues = new SimpleList<int>(7);
+            listValues.AddUnchecked(0);
+            listValues.AddUnchecked(1);
+            listValues.AddUnchecked(2);
+            listValues.AddUnchecked(3);
+            listValues.AddUnchecked(4);
+            listValues.AddUnchecked(1);
+            listValues.AddUnchecked(2);
+
+            listValues.RemoveLastValue(1);
+            Assert.IsTrue(listValues.Array[5] == 2, $"A value of 2 was expected.");
+        }
+
+        #endregion
+
+        #region RemoveValues
+
+        /// <summary>
+        /// Check that removing all of a specific value from a <see cref="SimpleList{T}"/> works correctly.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_RemoveValues_Simple()
+        {
+            SimpleList<int> listValues = new SimpleList<int>(7);
+            listValues.AddUnchecked(0);
+            listValues.AddUnchecked(1);
+            listValues.AddUnchecked(2);
+            listValues.AddUnchecked(3);
+            listValues.AddUnchecked(4);
+            listValues.AddUnchecked(1);
+            listValues.AddUnchecked(2);
+
+            listValues.RemoveValues(1);
+
+            Assert.IsTrue(!listValues.ContainsValue(1), $"No 1 values were expected.");
         }
 
         #endregion

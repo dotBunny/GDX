@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0] - 2021-01-11
 ***"Breaking Bad"***
-> We are breaking some rules! This should have been a _major release_ as we have altered method names to be consistent across the API.
+> We are breaking some rules (sorta)! This should have been a _major release_ as we have altered method names to be consistent across the API.
 ### Added
 #### GDX
 - Included `SemanticVersion` struct for assistance with versioning.
@@ -24,9 +24,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added release names to `CHANGELOG.md`.
 - Altered arrangement of `LICENSE` with the hopes of appeasing the _GitHub_ overlords of license type detection.
 #### GDX
+- Changed `ListExtensions` to be more specific.
+  - `RemoveItems`, `RemoveFirstItem()` and `RemoveLastItem()` have been added.
 - Changed `SimpleListExtensions` to be more specific.
-  - Class based operations `ContainsItem()`, `RemoveAllItems()`, `RemoveFirstItem()` and `RemoveLastItem()`.
-  - Struct/value based operations `ContainsValue()`, `RemoveAllValues()`, `RemoveFirstValue()` and `RemoveLastValue()`.
+  - Class based operations `ContainsItem()`, `RemoveItems()`, `RemoveFirstItem()` and `RemoveLastItem()`.
+  - Struct/value based operations `ContainsValue()`, `RemoveValues()`, `RemoveFirstValue()` and `RemoveLastValue()`.
 #### GDX.Mathematics
 - Moved `Byte2` to `GDX.Mathematics` namespace (formerly in `GDX.Collections`) as it made more sense to alongside other similar types in `Unity.Mathematics`.
 
