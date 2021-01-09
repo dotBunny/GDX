@@ -59,12 +59,14 @@ namespace GDX.Editor
         public readonly string PackagePath;
 
         /// <summary>
-        ///     Initialize a new <see cref="PackageProvider"/>.
+        ///     Initialize a new <see cref="PackageProvider" />.
         /// </summary>
         public PackageProvider()
         {
             // Find Local Definition
             PackagePath = GetPackagePath();
+
+            // This is a strange position to be in.
             if (PackagePath == null)
             {
                 return;
@@ -86,6 +88,7 @@ namespace GDX.Editor
                 InstallationMethod = InstallationType.Unknown;
                 return;
             }
+
             InstallationMethod = GetInstallationType();
         }
 
@@ -150,24 +153,15 @@ namespace GDX.Editor
         /// <returns>A full path to the package.json.</returns>
         private string GetPackagePath()
         {
-            string[] packageGuids = AssetDatabase.FindAssets("package");
-            int packageCount = packageGuids.Length;
-            string packageIdentifierLine = $"\"name\": \"{Strings.PackageName}\",";
-
-            for (int i = 0; i < packageCount; i++)
+            string[] editorAssemblyDefinition = AssetDatabase.FindAssets("GDX.Editor t:asmdef");
+            if (editorAssemblyDefinition.Length > 0)
             {
-                string packagePath = Path.Combine(
-                    Application.dataPath.Substring(0, Application.dataPath.Length - 6),
-                    AssetDatabase.GUIDToAssetPath(packageGuids[i]));
-
-                string[] packageContent = File.ReadAllLines(packagePath);
-
-                if (packageContent.Length > 15 &&
-                    packageContent[1].Trim() == packageIdentifierLine &&
-                    packageContent[14].Trim() == "\"name\": \"dotBunny\",")
-                {
-                    return packagePath;
-                }
+                return Path.Combine(
+                    Path.GetDirectoryName(
+                        Path.Combine(
+                            Application.dataPath.Substring(0, Application.dataPath.Length - 6),
+                            AssetDatabase.GUIDToAssetPath(editorAssemblyDefinition[0]))) ?? string.Empty, "..", "..",
+                    "package.json");
             }
             return null;
         }
