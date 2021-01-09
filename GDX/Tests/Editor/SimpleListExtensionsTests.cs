@@ -4,14 +4,10 @@
 using GDX.Collections.Generic;
 using NUnit.Framework;
 
-#if GDX_TESTFRAMEWORK_PERFORMANCETESTING
-
-#endif
-
 namespace GDX.Tests.Editor
 {
     /// <summary>
-    ///     A collection of unit tests to validate functionality of the <see cref="GDX.Collections.Generic.SimpleList{T}" />
+    ///     A collection of unit tests to validate functionality of the <see cref="SimpleListExtensions" />
     ///     class.
     /// </summary>
     public class SimpleListExtensionsTests

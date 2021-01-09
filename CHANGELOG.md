@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.1.0] - 2021-01-11
+***"Breaking Bad"***
+> We are breaking some rules! This should have been a _major release_ as we have altered method names to be consistent across the API.
 ### Added
 #### GDX
 - Included `SemanticVersion` struct for assistance with versioning.
@@ -19,14 +21,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Updated the `README.md` header with logo and badges.
+- Added release names to `CHANGELOG.md`.
 - Altered arrangement of `LICENSE` with the hopes of appeasing the _GitHub_ overlords of license type detection.
 #### GDX
-- Changed `SimpleListExtensions` to have `ContainsItem` (_class_) and `ContainsValue` (_struct_) methods.
+- Changed `SimpleListExtensions` to be more specific.
+  - Class based operations `ContainsItem()`, `RemoveAllItems()`, `RemoveFirstItem()` and `RemoveLastItem()`.
+  - Struct/value based operations `ContainsValue()`, `RemoveAllValues()`, `RemoveFirstValue()` and `RemoveLastValue()`.
 #### GDX.Mathematics
 - Moved `Byte2` to `GDX.Mathematics` namespace (formerly in `GDX.Collections`) as it made more sense to alongside other similar types in `Unity.Mathematics`.
 
 ## [1.0.0] - 2021-01-03
-Initial release containing only the GDX core library.
+***"The Beginning"***
+> Initial release containing only the GDX core library.
 ### Added
 #### GDX
 - Included numerous static extension based functionality classes `AddressablesExtensions`, `ArrayExtensions`, `ByteExtensions`, `ListExtensions`, `SimpleListExtensions`, `StringExtensions`.
