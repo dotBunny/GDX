@@ -153,6 +153,7 @@ namespace GDX.Editor
         /// <returns>A full path to the package.json.</returns>
         private string GetPackagePath()
         {
+            // ReSharper disable once StringLiteralTypo
             string[] editorAssemblyDefinition = AssetDatabase.FindAssets("GDX.Editor t:asmdef");
             if (editorAssemblyDefinition.Length > 0)
             {
