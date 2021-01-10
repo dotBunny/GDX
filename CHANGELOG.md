@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0] - 2021-01-11
+## [1.1.0] - 2021-01-18
 ***"Breaking Bad"***
 > We are breaking some rules! This should have been a _major release_ as we have altered method names to be consistent across the API.
 ### Added
@@ -24,8 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Altered arrangement of `LICENSE` with the hopes of appeasing the _GitHub_ overlords of license type detection.
 #### GDX
 - Changed `ArrayExtensions` to be more specific
-  - Class based operations `FirstIndexOfItem()`
-  - Struct based operations `FirstIndexOfValue()` 
+  - Class based operations `FirstIndexOfItem()` and `LastIndexOfItem()`
+  - Struct based operations `FirstIndexOfValue()` and `LastIndexOfValue()`
 - Changed `ListExtensions` to be more specific.
   - Class based operations `ContainsItem()`, `RemoveItems()`, `RemoveFirstItem()` and `RemoveLastItem()`..
   - Struct based operations `ContainsValue()`, `RemoveValues()`, `RemoveFirstValue()` and `RemoveLastValue()`.

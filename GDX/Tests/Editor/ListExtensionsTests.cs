@@ -14,12 +14,31 @@ namespace GDX.Tests.Editor
         #region ContainsItem
         #endregion
 
+        #region ContainsValue
+        #endregion
+
         #region RemoveFirstItem
+        #endregion
+
+        #region RemoveFirstValue
         #endregion
 
         #region RemoveItems
         #endregion
 
+        #region RemoveValues
+        #endregion
 
+        #region RemoveItemSwap
+        #endregion
+
+        #region RemoveLastItem
+        #endregion
+
+        #region RemoveLastValue
+        #endregion
+
+        #region Shuffle
+        #endregion
     }
 }
