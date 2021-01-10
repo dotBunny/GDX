@@ -3,7 +3,7 @@
 
 using System;
 
-namespace dotBunny.Hydrogen.Collections.Extensions
+namespace GDX
 {
     /// <summary>
     ///     Array Based Extension Methods
@@ -11,9 +11,12 @@ namespace dotBunny.Hydrogen.Collections.Extensions
     public static class ArrayExtensions
     {
         /// <summary>
-        ///     Clear an array and set its length to 0.
+        ///     Set all elements in an array to the default values.
         /// </summary>
-        /// <param name="targetArray">The array to be cleared.</param>
+        /// <remarks>
+        ///     This does not alter the <paramref name="targetArray"/>'s length.
+        /// </remarks>
+        /// <param name="targetArray">The array to be defaulted.</param>
         /// <typeparam name="T">The type of the array.</typeparam>
         public static void Clear<T>(this T[] targetArray)
         {
