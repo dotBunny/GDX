@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Altered arrangement of `LICENSE` with the hopes of appeasing the _GitHub_ overlords of license type detection.
 #### GDX
 - Changed `ArrayExtensions` to be more specific
+  - Corrected documentation of `Clear()`
   - Class based operations `FirstIndexOfItem()` and `LastIndexOfItem()`
   - Struct based operations `FirstIndexOfValue()` and `LastIndexOfValue()`
   - Correctly moved into GDX namespace.
