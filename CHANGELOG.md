@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 #### GDX
 - Included `SemanticVersion` struct for assistance with versioning.
+#### GDX.Developer
+- Included a **separate assembly** with more developer specific functionality.
+  - `CommandLineParser`
 #### GDX.IO.Compression
 - Included `TarFile` support for decompressing tarballs.
 #### GDX.Editor
@@ -17,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `GDXStyles` to assist with editor styling.
 - Added `UpdateProvider`, `PackageProvider` to facilitate updating of GDX package from different installation sources.
 #### GDX.Tests
-- Added `ListExtensionsTests` and `SimpleListExtensionsTests`
+- Added `ArrayExtensionsTests`, `ListExtensionsTests` and `SimpleListExtensionsTests`
 ### Changed
 - Updated the `README.md` header with logo and badges.
 - Added release names to `CHANGELOG.md`.
