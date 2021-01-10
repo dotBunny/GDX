@@ -36,6 +36,33 @@ namespace GDX
         }
 
         /// <summary>
+        ///     <para>Does <paramref name="targetList" /> contain <paramref name="targetValue" />?</para>
+        /// </summary>
+        /// <remarks>
+        ///     WARNING: This will box the <paramref name="targetValue" />. You should probably write your own explicit
+        ///     implementation.
+        /// </remarks>
+        /// <param name="targetList">The <see cref="System.Collections.Generic.List{T}" /> to look in.</param>
+        /// <param name="targetValue">The value to look for.</param>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <returns>true/false</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ContainsValue<T>(this List<T> targetList, object targetValue)
+            where T : struct
+        {
+            int length = targetList.Count;
+            for (int i = 0; i < length; i++)
+            {
+                if (targetList[i].Equals(targetValue))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         ///     <para>Removes the first <paramref name="targetItem" /> from the provided <paramref name="targetList" />.</para>
         /// </summary>
         /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
@@ -62,7 +89,38 @@ namespace GDX
         }
 
         /// <summary>
-        ///     <para>Removes any <paramref name="targetItem" /> from the provided <paramref name="targetList" />.</para>
+        ///     Removes the first <paramref name="targetValue" /> from the provided <paramref name="targetList" />.
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         WARNING: This will box the <paramref name="targetValue" />. You should probably write your own explicit
+        ///         implementation.
+        ///     </para>
+        /// </remarks>
+        /// <param name="targetList">The target <see cref="System.Collections.Generic.List{T}" />.</param>
+        /// <param name="targetValue">The value to remove from the <paramref name="targetList" />.</param>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <returns>true/false if a value was removed.</returns>
+        public static bool RemoveFirstValue<T>(this List<T> targetList, object targetValue)
+            where T : struct
+        {
+            int length = targetList.Count;
+            for (int i = 0; i < length; i++)
+            {
+                if (!targetList[i].Equals(targetValue))
+                {
+                    continue;
+                }
+
+                targetList.RemoveAt(i);
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     <para>Removes all <paramref name="targetItem" /> from the provided <paramref name="targetList" />.</para>
         /// </summary>
         /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
         /// <param name="targetList">The target <see cref="System.Collections.Generic.List{T}" />.</param>
@@ -86,6 +144,38 @@ namespace GDX
             }
 
             return removedItem;
+        }
+
+        /// <summary>
+        ///     Removes all <paramref name="targetValue" /> from the provided <paramref name="targetList" />.
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         WARNING: This will box the <paramref name="targetValue" />. You should probably write your own explicit
+        ///         implementation.
+        ///     </para>
+        /// </remarks>
+        /// <param name="targetList">The target <see cref="System.Collections.Generic.List{T}" />.</param>
+        /// <param name="targetValue">The value to remove from the <paramref name="targetList" />.</param>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <returns>true/false if values were removed.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool RemoveValues<T>(this List<T> targetList, object targetValue) where T : struct
+        {
+            int length = targetList.Count;
+            bool removedValues = false;
+            for (int i = length - 1; i >= 0; i--)
+            {
+                if (!targetList[i].Equals(targetValue))
+                {
+                    continue;
+                }
+
+                targetList.RemoveAt(i);
+                removedValues = true;
+            }
+
+            return removedValues;
         }
 
         /// <summary>
@@ -125,6 +215,37 @@ namespace GDX
             for (int i = length - 1; i >= 0; i--)
             {
                 if (targetList[i] != targetItem)
+                {
+                    continue;
+                }
+
+                targetList.RemoveAt(i);
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     Removes the last <paramref name="targetValue" /> from the provided <paramref name="targetList" />.
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         WARNING: This will box the <paramref name="targetValue" />. You should probably write your own explicit
+        ///         implementation.
+        ///     </para>
+        /// </remarks>
+        /// <param name="targetList">The target <see cref="System.Collections.Generic.List{T}" />.</param>
+        /// <param name="targetValue">The value to remove from the <paramref name="targetList" />.</param>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <returns>true/false if a value was removed.</returns>
+        public static bool RemoveLastValue<T>(this List<T> targetList, object targetValue)
+            where T : struct
+        {
+            int length = targetList.Count;
+            for (int i = length - 1; i >= 0; i--)
+            {
+                if (!targetList[i].Equals(targetValue))
                 {
                     continue;
                 }
