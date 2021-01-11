@@ -1,7 +1,11 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections.Generic;
+using GDX.Collections.Generic;
 using NUnit.Framework;
+
+// ReSharper disable HeapView.ObjectAllocation.Evident
 
 namespace GDX.Tests.Editor
 {
@@ -12,33 +16,255 @@ namespace GDX.Tests.Editor
     public class ListExtensionsTests
     {
         #region ContainsItem
+
+        /// <summary>
+        ///     Check if we can find the item in a <see cref="List{T}" />.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_ContainsItem_SecondValue()
+        {
+            CircularBuffer<int> searchValue = new CircularBuffer<int>(5);
+            List<CircularBuffer<int>> listValues = new List<CircularBuffer<int>>
+            {
+                new CircularBuffer<int>(2),
+                searchValue,
+                new CircularBuffer<int>(4),
+                new CircularBuffer<int>(15),
+                searchValue
+            };
+            Assert.IsTrue(listValues.ContainsItem(searchValue),
+                $"Expected positive response to looking for {searchValue} value.");
+        }
+
         #endregion
 
         #region ContainsValue
+
+        /// <summary>
+        ///     Check if we can find the value in a <see cref="List{T}" />.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_ContainsValue_SecondValue()
+        {
+            const int searchValue = 1;
+            List<int> listValues = new List<int>
+            {
+                0,
+                searchValue,
+                2,
+                3,
+                searchValue
+            };
+            Assert.IsTrue(listValues.ContainsValue(searchValue),
+                $"Expected positive response to looking for {searchValue} value.");
+        }
+
         #endregion
 
         #region RemoveFirstItem
-        #endregion
 
-        #region RemoveFirstValue
-        #endregion
+        /// <summary>
+        ///     Check that removing the first item from a <see cref="List{T}" /> works correctly.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_RemoveFirstItem_Simple()
+        {
+            CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
+            List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
+            {
+                new CircularBuffer<int>(2),
+                searchItem,
+                new CircularBuffer<int>(4),
+                new CircularBuffer<int>(15),
+                searchItem
+            };
 
-        #region RemoveItems
-        #endregion
+            listItems.RemoveFirstItem(searchItem);
+            Assert.IsTrue(listItems[1] != searchItem &&
+                          listItems.ContainsItem(searchItem), "Item was expected to have been removed correctly.");
+        }
 
-        #region RemoveValues
-        #endregion
-
-        #region RemoveItemSwap
         #endregion
 
         #region RemoveLastItem
+
+        /// <summary>
+        ///     Check that removing the last item from a <see cref="List{T}" /> works correctly.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_RemoveLastItem_Simple()
+        {
+            CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
+            List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
+            {
+                new CircularBuffer<int>(2),
+                searchItem,
+                new CircularBuffer<int>(4),
+                new CircularBuffer<int>(15),
+                searchItem
+            };
+
+            listItems.RemoveLastItem(searchItem);
+            Assert.IsTrue(listItems.Count == 4 &&
+                          listItems[3] != searchItem &&
+                          listItems.ContainsItem(searchItem), "Item was expected to have been removed correctly.");
+        }
+
+        #endregion
+
+        #region RemoveFirstValue
+        /// <summary>
+        ///     Check that removing the first value from a <see cref="List{T}" /> works correctly.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_RemoveFirstValue_Simple()
+        {
+            const int searchValue = 9;
+
+            List<int> listItems = new List<int>
+            {
+                2,
+                searchValue,
+                4,
+                15,
+                searchValue
+            };
+            listItems.RemoveFirstValue(searchValue);
+            Assert.IsTrue(listItems[0] != searchValue &&
+                          listItems.ContainsValue(searchValue), "Value was expected to have been removed correctly.");
+        }
+        #endregion
+
+        #region RemoveItems
+        /// <summary>
+        ///     Check that removing all references to an item from a <see cref="List{T}" /> works correctly.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_RemoveItems_Simple()
+        {
+            CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
+            List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
+            {
+                new CircularBuffer<int>(2),
+                searchItem,
+                new CircularBuffer<int>(4),
+                new CircularBuffer<int>(15),
+                searchItem
+            };
+
+            listItems.RemoveItems(searchItem);
+            Assert.IsTrue(!listItems.ContainsItem(searchItem), "Item was expected to have been removed correctly.");
+        }
+        #endregion
+
+        #region RemoveValues
+        /// <summary>
+        ///     Check that removing the all values from a <see cref="List{T}" /> works correctly.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_RemoveValues_Simple()
+        {
+            const int searchValue = 9;
+
+            List<int> listItems = new List<int>
+            {
+                2,
+                searchValue,
+                4,
+                15,
+                searchValue,
+                9
+            };
+            listItems.RemoveValues(searchValue);
+            Assert.IsTrue(!listItems.ContainsValue(searchValue), "Value was expected to be fully removed..");
+        }
+        #endregion
+
+        #region RemoveItemSwap
+        /// <summary>
+        ///     Check that forced removal from the end of a <see cref="List{T}" /> works correctly.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_RemoveItemSwap_Simple()
+        {
+            CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
+            List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
+            {
+                new CircularBuffer<int>(2),
+                searchItem,
+                new CircularBuffer<int>(4),
+                new CircularBuffer<int>(15),
+            };
+
+            listItems.RemoveItemSwap(1);
+            Assert.IsTrue(!listItems.ContainsItem(searchItem), "Item was expected to have been removed correctly.");
+        }
         #endregion
 
         #region RemoveLastValue
+        /// <summary>
+        ///     Check that removing the last value from a <see cref="List{T}" /> works correctly.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_RemoveLastValue_Simple()
+        {
+            const int searchValue = 9;
+
+            List<int> listItems = new List<int>
+            {
+                2,
+                searchValue,
+                4,
+                15,
+                searchValue,
+                98
+            };
+            listItems.RemoveLastValue(searchValue);
+            Assert.IsTrue(listItems[4] != searchValue &&
+                          listItems.ContainsValue(searchValue), "Value was expected to have been removed correctly.");
+        }
         #endregion
 
         #region Shuffle
+        /// <summary>
+        ///     Check that shuffling a <see cref="List{T}" /> works correctly.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_Shuffle_Simple()
+        {
+            List<int> listItemA = new List<int>
+            {
+                2, 3, 4, 15, 2, 98, 109, 2, 29, 99, 123, 911, 69, 2, 3, 4, 15, 2, 98, 109, 2, 29, 99, 123, 911, 69
+            };
+            List<int> listItemB = new List<int>
+            {
+                2, 3, 4, 15, 2, 98, 109, 2, 29, 99, 123, 911, 69, 2, 3, 4, 15, 2, 98, 109, 2, 29, 99, 123, 911, 69
+            };
+
+            listItemA.Shuffle();
+
+            int listLength = listItemA.Count;
+            bool different = true;
+            for (int i = 0; i < listLength; i++)
+            {
+                if (listItemA[0] == listItemB[1])
+                {
+                    different = false;
+                }
+            }
+            Assert.IsTrue(different, "List was not randomized.");
+        }
+
         #endregion
     }
 }

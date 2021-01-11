@@ -13,7 +13,7 @@ using Unity.PerformanceTesting;
 namespace GDX.Tests.Editor
 {
     /// <summary>
-    /// A collection of unit tests to validate functionality of the <see cref="StringExtensions"/> class.
+    ///     A collection of unit tests to validate functionality of the <see cref="StringExtensions" /> class.
     /// </summary>
     public class StringExtensionsTests
     {
