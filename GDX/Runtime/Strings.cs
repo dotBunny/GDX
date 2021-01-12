@@ -31,10 +31,5 @@ namespace GDX
         ///     An array of <see cref="System.Char" /> used to split versions.
         /// </summary>
         public static readonly char[] VersionIndicators = {'.', ',', '_', 'f'};
-
-        /// <summary>
-        ///     A reusable <see cref="System.Text.StringBuilder" />.
-        /// </summary>
-        public static readonly StringBuilder Builder = new StringBuilder();
     }
 }
