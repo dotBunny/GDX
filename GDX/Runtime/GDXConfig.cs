@@ -8,6 +8,7 @@ namespace GDX
     /// <summary>
     ///     Project-wide configuration which is available at runtime.
     /// </summary>
+    /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
     // ReSharper disable once InconsistentNaming
     public class GDXConfig : ScriptableObject
     {
@@ -24,6 +25,7 @@ namespace GDX
         /// <summary>
         ///     Get a loaded instance of the <see cref="GDXConfig" /> from resources.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <returns>A instance of <see cref="GDXConfig" />.</returns>
         public static GDXConfig Get()
         {

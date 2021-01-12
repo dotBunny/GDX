@@ -4,16 +4,20 @@
 using System.Runtime.CompilerServices;
 using Unity.Collections;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace GDX.Collections
 {
     /// <summary>
-    ///     An adapter collection for external data arrays that allows constant-time insertion, deletion, and lookup by handle,
-    ///     as well as array-like iteration.
+    ///     An adapter collection for external data arrays that allows constant-time insertion, deletion, and lookup by
+    ///     handle, as well as array-like iteration.
     /// </summary>
+    /// <remarks>
+    ///     The <see cref="NativeSparseSet" /> is backed by a <see cref="Unity.Collections.NativeArray{T}" /> which
+    ///     requires UnityEngine.CoreModule.dll.
+    /// </remarks>
     public struct NativeSparseSet
     {
-        // ReSharper disable MemberCanBePrivate.Global
-
         /// <summary>
         ///     Holds references to the sparse array for swapping indices.
         /// </summary>
@@ -36,8 +40,6 @@ namespace GDX.Collections
         ///     The first free (currently unused) index in the sparse array.
         /// </summary>
         public int FreeIndex;
-
-        // ReSharper enable MemberCanBePrivate.Global
 
         /// <summary>
         ///     Create a <see cref="NativeSparseSet" /> with an <paramref name="initialCapacity" />.

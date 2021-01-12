@@ -34,7 +34,7 @@ namespace GDX.Developer
         /// <summary>
         ///     The processed flags found in the arguments.
         /// </summary>
-        public static readonly HashSet<string> Flags = new HashSet<string>();
+        public static readonly List<string> Flags = new List<string>();
 
         /// <summary>
         ///     Process the environment's commandline arguments into <see cref="Arguments" /> and <see cref="Flags" />.

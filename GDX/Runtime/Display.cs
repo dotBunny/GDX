@@ -8,6 +8,7 @@ namespace GDX
     /// <summary>
     ///     A collection of display related helper utilities.
     /// </summary>
+    /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
     public static class Display
     {
         /// <summary>

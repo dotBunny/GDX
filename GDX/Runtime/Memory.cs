@@ -12,6 +12,7 @@ namespace GDX
     /// <summary>
     ///     A collection of memory related helper utilities.
     /// </summary>
+    /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
     public static class Memory
     {
         /// <summary>
@@ -25,6 +26,7 @@ namespace GDX
         ///         </item>
         ///     </list>
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         public static void CleanUp()
         {
             // Fire off a first pass collection
@@ -41,7 +43,7 @@ namespace GDX
         }
 
         /// <inheritdoc cref="CleanUp" />
-        /// <remarks>Async Version</remarks>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         public static async void CleanUpAsync()
         {
             // ReSharper disable once HeapView.DelegateAllocation

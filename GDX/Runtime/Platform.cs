@@ -13,7 +13,7 @@ namespace GDX
         /// <summary>
         ///     Gets the current platforms hardware generation number?
         /// </summary>
-        /// <remarks>This can be used to determine enhanced/upgraded status.</remarks>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <returns>true/false</returns>
         public static int GetHardwareGeneration()
         {

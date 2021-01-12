@@ -261,6 +261,7 @@ namespace GDX
         /// <summary>
         ///     Shuffle the items in the <paramref name="targetList" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="targetList">The target <see cref="System.Collections.Generic.List{T}" />.</param>
         /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

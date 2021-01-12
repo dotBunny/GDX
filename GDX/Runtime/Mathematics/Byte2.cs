@@ -750,6 +750,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Constructs a <see cref="Byte2" /> from a <see cref="Unity.Mathematics.bool2" /> by conversion.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="v">The value to transcribe.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Byte2(bool2 v)
@@ -761,6 +762,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Constructs a <see cref="Byte2" /> from a <see cref="Unity.Mathematics.float2" /> by conversion.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="v">The value to transcribe.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Byte2(float2 v)
@@ -772,6 +774,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Constructs a <see cref="Byte2" /> from a <see cref="Unity.Mathematics.double2" /> by conversion.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="v">The value to transcribe.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Byte2(double2 v)
@@ -783,6 +786,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Explicitly converts a <see cref="Unity.Mathematics.bool2" /> to a <see cref="Byte2" /> by conversion.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="v">The value to transcribe.</param>
         /// <returns>A new <see cref="Byte2" /> created from <paramref name="v" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -794,6 +798,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Explicitly converts a <see cref="Unity.Mathematics.bool2" /> to a <see cref="Byte2" /> by conversion.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="v">The value to transcribe.</param>
         /// <returns>A new <see cref="Byte2" /> created from <paramref name="v" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -806,6 +811,7 @@ namespace GDX.Mathematics
         ///     Explicitly converts a <see cref="Unity.Mathematics.double2" /> to a <see cref="Byte2" /> by
         ///     conversion.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="v">The value to transcribe.</param>
         /// <returns>A new <see cref="Byte2" /> created from <paramref name="v" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -817,6 +823,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Determine if one <see cref="Byte2" /> is less than another <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>Returns the result of a LESS THAN operation on two <see cref="Byte2" />.</returns>
@@ -829,6 +836,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Determine if <see cref="Byte2" /> is less than a <see cref="byte" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
         /// <returns>
@@ -844,6 +852,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Determine if <see cref="byte" /> is less than a <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>
@@ -859,6 +868,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Determine if one <see cref="Byte2" /> is less than or equal to another <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>Returns the result of a LESS THAN OR EQUAL operation on two <see cref="Byte2" />.</returns>
@@ -871,6 +881,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Determine if <see cref="Byte2 " /> is less than or equal a <see cref="byte" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
         /// <returns>
@@ -887,6 +898,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Determine if <see cref="byte" /> is less than or equal a <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>
@@ -903,6 +915,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Determine if one <see cref="Byte2" /> is less than another <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>Returns the result of a LESS THAN operation on two <see cref="Byte2" />.</returns>
@@ -915,6 +928,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Determine if <see cref="Byte2 " /> is greater than a <see cref="byte" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
         /// <returns>
@@ -930,6 +944,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Determine if <see cref="byte" /> is greater than a <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>
@@ -946,6 +961,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Determine if <see cref="Byte2 " /> is greater than or equal a <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>
@@ -962,6 +978,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Determine if <see cref="Byte2 " /> is greater than or equal a <see cref="byte" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
         /// <returns>
@@ -978,6 +995,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Determine if <see cref="byte " /> is greater than or equal a <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>
@@ -994,6 +1012,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Determine if one <see cref="Byte2" /> is equal to another <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>Returns the result of an EQUALITY operation on two <see cref="Byte2" />.</returns>
@@ -1006,6 +1025,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Determine if both components of a <see cref="Byte2" /> are equal to a <see cref="byte" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
         /// <returns>Returns the result of an EQUALITY operation on a <see cref="Byte2" /> and a <see cref="byte" />.</returns>
@@ -1018,6 +1038,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Determine if both components of a <see cref="Byte2" /> are equal to a <see cref="byte" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>Returns the result of an EQUALITY operation on a <see cref="byte" /> and a <see cref="Byte2" />.</returns>
@@ -1030,6 +1051,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Determine if one <see cref="Byte2" /> is not equal to another <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>Returns the result of a NOT EQUAL operation on two <see cref="Byte2" />.</returns>
@@ -1042,6 +1064,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Determine if both components of a <see cref="Byte2" /> are not equal to a <see cref="byte" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
         /// <returns>Returns the result of a NOT EQUAL operation on a <see cref="Byte2" /> and a <see cref="byte" />.</returns>
@@ -1054,6 +1077,7 @@ namespace GDX.Mathematics
         /// <summary>
         ///     Determine if both components of a <see cref="Byte2" /> are not equal to a <see cref="byte" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>Returns the result of a NOT EQUAL operation on a <see cref="byte" /> and a <see cref="Byte2" />.</returns>
