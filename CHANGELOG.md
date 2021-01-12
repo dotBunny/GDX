@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ***"Breaking Bad"***
 > We are breaking some rules! This should have been a _major release_ as we have altered method names to be consistent across the API.
 ### Added
+- Added _remarks_ statemets in documentation where a function or class requires the prescence of Unity's CoreModule to function correctly.
 #### GDX
 - Included `SemanticVersion` struct for assistance with versioning.
 #### GDX.Developer
