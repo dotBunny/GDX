@@ -11,6 +11,25 @@ namespace GDX
     /// </summary>
     public static class SimpleListExtensions
     {
+        public static bool AddUncheckedUniqueItem<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : class
+        {
+            return false;
+        }
+
+        public static bool AddUncheckedUniqueValue<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : struct
+        {
+            return false;
+        }
+
+        public static bool AddWithExpandCheckUniqueItem<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : class
+        {
+            return false;
+        }
+
+        public static bool AddWithExpandCheckUniqueValue<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : struct
+        {
+            return false;
+        }
         /// <summary>
         ///     <para>Does <paramref name="targetSimpleList" /> contain <paramref name="targetItem" />?</para>
         /// </summary>
