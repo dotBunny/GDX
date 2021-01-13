@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace GDX.Tests.Editor
 {
     /// <summary>
-    ///     A collection of unit tests to validate functionality of the <see cref="System.Collections.Generic.List{T}" />
+    ///     A collection of unit tests to validate functionality of the <see cref="ListExtensions" />
     ///     class.
     /// </summary>
     public class ListExtensionsTests
@@ -117,6 +117,7 @@ namespace GDX.Tests.Editor
         #endregion
 
         #region RemoveFirstValue
+
         /// <summary>
         ///     Check that removing the first value from a <see cref="List{T}" /> works correctly.
         /// </summary>
@@ -138,9 +139,11 @@ namespace GDX.Tests.Editor
             Assert.IsTrue(listItems[0] != searchValue &&
                           listItems.ContainsValue(searchValue), "Value was expected to have been removed correctly.");
         }
+
         #endregion
 
         #region RemoveItems
+
         /// <summary>
         ///     Check that removing all references to an item from a <see cref="List{T}" /> works correctly.
         /// </summary>
@@ -161,9 +164,11 @@ namespace GDX.Tests.Editor
             listItems.RemoveItems(searchItem);
             Assert.IsTrue(!listItems.ContainsItem(searchItem), "Item was expected to have been removed correctly.");
         }
+
         #endregion
 
         #region RemoveValues
+
         /// <summary>
         ///     Check that removing the all values from a <see cref="List{T}" /> works correctly.
         /// </summary>
@@ -185,9 +190,11 @@ namespace GDX.Tests.Editor
             listItems.RemoveValues(searchValue);
             Assert.IsTrue(!listItems.ContainsValue(searchValue), "Value was expected to be fully removed..");
         }
+
         #endregion
 
         #region RemoveItemSwap
+
         /// <summary>
         ///     Check that forced removal from the end of a <see cref="List{T}" /> works correctly.
         /// </summary>
@@ -198,18 +205,17 @@ namespace GDX.Tests.Editor
             CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
             List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
             {
-                new CircularBuffer<int>(2),
-                searchItem,
-                new CircularBuffer<int>(4),
-                new CircularBuffer<int>(15),
+                new CircularBuffer<int>(2), searchItem, new CircularBuffer<int>(4), new CircularBuffer<int>(15)
             };
 
             listItems.RemoveItemSwap(1);
             Assert.IsTrue(!listItems.ContainsItem(searchItem), "Item was expected to have been removed correctly.");
         }
+
         #endregion
 
         #region RemoveLastValue
+
         /// <summary>
         ///     Check that removing the last value from a <see cref="List{T}" /> works correctly.
         /// </summary>
@@ -232,9 +238,11 @@ namespace GDX.Tests.Editor
             Assert.IsTrue(listItems[4] != searchValue &&
                           listItems.ContainsValue(searchValue), "Value was expected to have been removed correctly.");
         }
+
         #endregion
 
         #region Shuffle
+
         /// <summary>
         ///     Check that shuffling a <see cref="List{T}" /> works correctly.
         /// </summary>
@@ -244,25 +252,143 @@ namespace GDX.Tests.Editor
         {
             List<int> listItemA = new List<int>
             {
-                2, 3, 4, 15, 2, 98, 109, 2, 29, 99, 123, 911, 69, 2, 3, 4, 15, 2, 98, 109, 2, 29, 99, 123, 911, 69
+                2,
+                3,
+                4,
+                15,
+                2,
+                98,
+                109,
+                2,
+                29,
+                99,
+                123,
+                911,
+                69,
+                2,
+                3,
+                4,
+                15,
+                2,
+                98,
+                109,
+                2,
+                29,
+                99,
+                123,
+                911,
+                69
             };
             List<int> listItemB = new List<int>
             {
-                2, 3, 4, 15, 2, 98, 109, 2, 29, 99, 123, 911, 69, 2, 3, 4, 15, 2, 98, 109, 2, 29, 99, 123, 911, 69
+                2,
+                3,
+                4,
+                15,
+                2,
+                98,
+                109,
+                2,
+                29,
+                99,
+                123,
+                911,
+                69,
+                2,
+                3,
+                4,
+                15,
+                2,
+                98,
+                109,
+                2,
+                29,
+                99,
+                123,
+                911,
+                69
             };
 
             listItemA.Shuffle();
 
             int listLength = listItemA.Count;
-            bool different = true;
+            int differentCount = listLength;
             for (int i = 0; i < listLength; i++)
             {
                 if (listItemA[0] == listItemB[1])
                 {
-                    different = false;
+                    differentCount--;
                 }
             }
-            Assert.IsTrue(different, "List was not randomized.");
+
+            Assert.IsTrue(differentCount > 0, "List was not randomized.");
+        }
+
+        #endregion
+
+        #region AddUniqueItem
+
+        /// <summary>
+        ///     Check if we can add a unique item to a <see cref="List{T}" /> for the first time.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_AddUniqueItem_FirstTime()
+        {
+            CircularBuffer<int> searchValue = new CircularBuffer<int>(5);
+            List<CircularBuffer<int>> listValues = new List<CircularBuffer<int>>
+            {
+                new CircularBuffer<int>(2), new CircularBuffer<int>(4), new CircularBuffer<int>(15)
+            };
+            Assert.IsTrue(listValues.AddUniqueItem(searchValue),
+                "Expected to be able to add the new item.");
+        }
+
+        /// <summary>
+        ///     Checks that we cant add a unique item a second time to a <see cref="List{T}" />.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void False_AddUniqueItem_SecondTime()
+        {
+            CircularBuffer<int> searchValue = new CircularBuffer<int>(5);
+            List<CircularBuffer<int>> listValues = new List<CircularBuffer<int>>
+            {
+                new CircularBuffer<int>(2), new CircularBuffer<int>(4), searchValue, new CircularBuffer<int>(15)
+            };
+            Assert.IsFalse(listValues.AddUniqueItem(searchValue),
+                "Expected not to be able to add the duplicate item.");
+        }
+
+        #endregion
+
+        #region AddUniqueValue
+
+        /// <summary>
+        ///     Check if we can add a unique value to a <see cref="List{T}" /> for the first time.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_AddUniqueValue_FirstTime()
+        {
+            const int searchValue = 1;
+            List<int> listValues = new List<int> {0, 2, 3};
+            Assert.IsTrue(listValues.AddUniqueValue(searchValue),
+                $"Expected to be able to add {searchValue} value.");
+        }
+
+        /// <summary>
+        ///     Checks that we cant add a unique value a second time to a <see cref="List{T}" />.
+        /// </summary>
+        [Test]
+        [Category("GDX.Tests")]
+        public void False_AddUniqueValue_SecondTime()
+        {
+            const int searchValue = 1;
+            List<int> listValues = new List<int> {0, 2, 3};
+            listValues.AddUniqueValue(searchValue);
+            Assert.IsFalse(listValues.AddUniqueValue(searchValue),
+                "Expected not to be able to add value.");
         }
 
         #endregion

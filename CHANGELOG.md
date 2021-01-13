@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added _remarks_ statemets in documentation where a function or class requires the prescence of Unity's CoreModule to function correctly.
 #### GDX
-- Included `SemanticVersion` struct for assistance with versioning.
+- Included a `SemanticVersion` struct for assistance with versioning.
 #### GDX.Developer
 - Included a **separate assembly** with more developer specific functionality.
   - `CommandLineParser`
@@ -33,11 +33,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Struct based operations `FirstIndexOfValue()` and `LastIndexOfValue()`
   - Correctly moved into GDX namespace.
 - Changed `ListExtensions` to be more specific.
-  - Class based operations `ContainsItem()`, `RemoveItems()`, `RemoveFirstItem()` and `RemoveLastItem()`..
-  - Struct based operations `ContainsValue()`, `RemoveValues()`, `RemoveFirstValue()` and `RemoveLastValue()`.
+  - Class based operations `AddUniqueItem()`, `ContainsItem()`, `RemoveItems()`, `RemoveFirstItem()` and `RemoveLastItem()`..
+  - Struct based operations `AddUniqueValue()`, `ContainsValue()`, `RemoveValues()`, `RemoveFirstValue()` and `RemoveLastValue()`.
 - Changed `SimpleListExtensions` to be more specific.
   - Class based operations `ContainsItem()`, `RemoveItems()`, `RemoveFirstItem()` and `RemoveLastItem()`.
   - Struct based operations `ContainsValue()`, `RemoveValues()`, `RemoveFirstValue()` and `RemoveLastValue()`.
+- Removed unused static StringBuilder from `Strings`.
 #### GDX.Mathematics
 - Moved `Byte2` to `GDX.Mathematics` namespace (formerly in `GDX.Collections`) as it made more sense to alongside other similar types in `Unity.Mathematics`.
 

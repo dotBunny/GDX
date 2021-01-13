@@ -13,6 +13,46 @@ namespace GDX
     public static class ListExtensions
     {
         /// <summary>
+        ///     Add an item to a <see cref="System.Collections.Generic.List{T}" />, but only if it is not already contained.
+        /// </summary>
+        /// <param name="targetList">The <see cref="System.Collections.Generic.List{T}" /> to add too.</param>
+        /// <param name="targetItem">The target object to add..</param>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <returns>true/false if this operation was able to add the item.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool AddUniqueItem<T>(this List<T> targetList, T targetItem) where T : class
+        {
+            if (targetList.ContainsItem(targetItem))
+            {
+                return false;
+            }
+
+            targetList.Add(targetItem);
+            return true;
+
+        }
+
+        /// <summary>
+        ///     Add a value to a <see cref="System.Collections.Generic.List{T}" />, but only if it is not already contained.
+        /// </summary>
+        /// <param name="targetList">The <see cref="System.Collections.Generic.List{T}" /> to add too.</param>
+        /// <param name="targetValue">The target value to add..</param>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <returns>true/false if this operation was able to add the value.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool AddUniqueValue<T>(this List<T> targetList, T targetValue) where T : struct
+        {
+            if (targetList.ContainsValue(targetValue))
+            {
+                return false;
+            }
+
+            targetList.Add(targetValue);
+            return true;
+
+        }
+
+        /// <summary>
         ///     <para>Does <paramref name="targetList" /> contain <paramref name="targetItem" />?</para>
         /// </summary>
         /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
