@@ -7,6 +7,7 @@ using System.Net;
 using GDX.IO.Compression;
 using UnityEditor;
 using UnityEditor.PackageManager;
+using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace GDX.Editor
@@ -157,11 +158,13 @@ namespace GDX.Editor
                                 CheckForUpdates();
                             }
                         }
+
                         EditorGUILayout.EndVertical();
                     }
                     else
                     {
-                        GUILayout.Label($"An error occured trying to find the package definition.\nPresumed Root: {s_localPackage.PackageAssetPath}\nPresumed Manifest:{s_localPackage.PackageManifestPath})",
+                        GUILayout.Label(
+                            $"An error occured trying to find the package definition.\nPresumed Root: {s_localPackage.PackageAssetPath}\nPresumed Manifest:{s_localPackage.PackageManifestPath})",
                             EditorStyles.boldLabel);
                     }
 
@@ -181,6 +184,12 @@ namespace GDX.Editor
             };
         }
 
+        /// <summary>
+        ///     Is there an update available to the local package, based on the provided
+        ///     <see cref="PackageProvider.PackageDefinition" />.
+        /// </summary>
+        /// <param name="updatePackageDefinition">The found <see cref="PackageProvider.PackageDefinition" /> on GitHub.</param>
+        /// <returns>true/false if an update is found.</returns>
         private static bool HasUpdate(PackageProvider.PackageDefinition updatePackageDefinition)
         {
             if (updatePackageDefinition == null)
@@ -201,6 +210,9 @@ namespace GDX.Editor
                    currentUnityVersion >= minimumUnityVersion;
         }
 
+        /// <summary>
+        ///     Attempt to do the upgrade of the package based on the established <see cref="PackageProvider.InstallationType" />.
+        /// </summary>
         private static void AttemptUpgrade()
         {
             string messageStart =
@@ -321,9 +333,9 @@ namespace GDX.Editor
                         string targetPath = Path.GetDirectoryName(s_localPackage.PackageManifestPath);
 
                         // TODO: VCS Checkout? maybe make a function
-                        if (UnityEditor.VersionControl.Provider.enabled && UnityEditor.VersionControl.Provider.isActive)
+                        if (Provider.enabled && Provider.isActive)
                         {
-                           // UnityEditor.VersionControl.Provider.Checkout(mat, UnityEditor.VersionControl.CheckoutMode.Both);
+                            // UnityEditor.VersionControl.Provider.Checkout(mat, UnityEditor.VersionControl.CheckoutMode.Both);
                         }
 
                         // Remove all existing content
@@ -341,6 +353,7 @@ namespace GDX.Editor
                     {
                         SetLastNotifiedVersion(UpdatePackageDefinition.version);
                     }
+
                     break;
             }
         }

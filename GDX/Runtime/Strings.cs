@@ -11,6 +11,11 @@ namespace GDX
     public static class Strings
     {
         /// <summary>
+        ///      Useful prefix when dealing with asset paths.
+        /// </summary>
+        public const string AssetPathPrefix = "Assets/";
+
+        /// <summary>
         ///     Reference to the Unity package name for GDX.
         /// </summary>
         public const string PackageName = "com.dotbunny.gdx";
