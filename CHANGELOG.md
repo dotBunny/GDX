@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Class based operations `FirstIndexOfItem()` and `LastIndexOfItem()`
   - Struct based operations `FirstIndexOfValue()` and `LastIndexOfValue()`
   - Correctly moved into GDX namespace.
+- Changed `ByteExtensions` to be more specific
+  - Renamed hashing method to `GetValueHashCode()`
 - Changed `ListExtensions` to be more specific.
   - Class based operations `AddUniqueItem()`, `ContainsItem()`, `RemoveItems()`, `RemoveFirstItem()` and `RemoveLastItem()`..
   - Struct based operations `AddUniqueValue()`, `ContainsValue()`, `RemoveValues()`, `RemoveFirstValue()` and `RemoveLastValue()`.

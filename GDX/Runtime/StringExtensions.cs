@@ -43,7 +43,10 @@ namespace GDX
         ///     </para>
         /// </summary>
         /// <remarks>
-        ///     This loosely based on the Fowler–Noll–Vo (FNV) hash function.
+        ///     This loosely based on the Fowler–Noll–Vo (FNV) hash function. It's value will be identical
+        ///     to the value produced natively by processing a <see cref="System.String" /> with
+        ///     <see cref="System.String.ToUpper()" />.<see cref="System.String.GetHashCode()" />, but with no
+        ///     allocations.
         /// </remarks>
         /// <param name="targetString">The target <see cref="System.String" />.</param>
         /// <returns>A <see cref="System.Int32" /> value.</returns>
@@ -99,7 +102,10 @@ namespace GDX
         ///     </para>
         /// </summary>
         /// <remarks>
-        ///     This loosely based on the Fowler–Noll–Vo (FNV) hash function.
+        ///     This loosely based on the Fowler–Noll–Vo (FNV) hash function. It's value will be identical
+        ///     to the value produced natively by processing a <see cref="System.String" /> with
+        ///     <see cref="System.String.ToLower()" />.<see cref="System.String.GetHashCode()" />, but with no
+        ///     allocations.
         /// </remarks>
         /// <param name="targetString">The target <see cref="System.String" />.</param>
         /// <returns>A <see cref="System.Int32" /> value.</returns>
