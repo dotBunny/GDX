@@ -24,11 +24,6 @@ namespace GDX.Editor
         private const string GitHubChangelogUri = "https://github.com/dotBunny/GDX/blob/main/CHANGELOG.md";
 
         /// <summary>
-        ///     The public URI of releases for GDX.
-        /// </summary>
-        private const string GitHubReleasesUri = "https://github.com/dotBunny/GDX/releases";
-
-        /// <summary>
         ///     The base URI for downloading the latest released tarball.
         /// </summary>
         private const string GitHubLatestUri = "https://github.com/dotBunny/GDX/archive/v";
@@ -131,38 +126,44 @@ namespace GDX.Editor
                     GDXStyles.BeginGUILayout();
 
                     EditorGUILayout.BeginHorizontal(GDXStyles.Header);
-                    GUILayout.Label(
-                        UpdatePackageDefinition != null
-                            ? $"Local version: {s_localPackage.Definition.version} ({s_localPackage.InstallationMethod.ToString()})\nGitHub version: {UpdatePackageDefinition.version}\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}."
-                            : $"Local version: {s_localPackage.Definition.version} ({s_localPackage.InstallationMethod.ToString()})\nGitHub version: Unknown\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}.",
-                        EditorStyles.boldLabel);
-
-                    // Force things to the right
-                    GUILayout.FlexibleSpace();
-
-                    EditorGUILayout.BeginVertical();
-                    if (HasUpdate(UpdatePackageDefinition))
+                    if (s_localPackage.Definition != null)
                     {
-                        if (GUILayout.Button("Changelog", GDXStyles.Button))
-                        {
-                            Application.OpenURL(GitHubChangelogUri);
-                        }
+                        GUILayout.Label(
+                            UpdatePackageDefinition != null
+                                ? $"Local version: {s_localPackage.Definition.version} ({s_localPackage.InstallationMethod.ToString()})\nGitHub version: {UpdatePackageDefinition.version}\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}."
+                                : $"Local version: {s_localPackage.Definition.version} ({s_localPackage.InstallationMethod.ToString()})\nGitHub version: Unknown\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}.",
+                            EditorStyles.boldLabel);
 
-                        if (GUILayout.Button("Update", GDXStyles.Button))
+                        // Force things to the right
+                        GUILayout.FlexibleSpace();
+
+                        EditorGUILayout.BeginVertical();
+                        if (HasUpdate(UpdatePackageDefinition))
                         {
-                            AttemptUpgrade();
+                            if (GUILayout.Button("Changelog", GDXStyles.Button))
+                            {
+                                Application.OpenURL(GitHubChangelogUri);
+                            }
+
+                            if (GUILayout.Button("Update", GDXStyles.Button))
+                            {
+                                AttemptUpgrade();
+                            }
                         }
+                        else
+                        {
+                            if (GUILayout.Button("Manual Check", GDXStyles.Button))
+                            {
+                                CheckForUpdates();
+                            }
+                        }
+                        EditorGUILayout.EndVertical();
                     }
                     else
                     {
-                        if (GUILayout.Button("Manual Check", GDXStyles.Button))
-                        {
-                            CheckForUpdates();
-                        }
+                        GUILayout.Label($"An error occured trying to find the package definition.\nPresumed Root: {s_localPackage.PackageAssetPath}\nPresumed Manifest:{s_localPackage.PackageManifestPath})",
+                            EditorStyles.boldLabel);
                     }
-
-                    EditorGUILayout.EndVertical();
-
 
                     EditorGUILayout.EndHorizontal();
 
@@ -247,10 +248,10 @@ namespace GDX.Editor
                             // Pause asset database
                             AssetDatabase.StartAssetEditing();
 
-                            if (s_localPackage?.PackagePath != null)
+                            if (s_localPackage?.PackageManifestPath != null)
                             {
                                 startInfo.WorkingDirectory =
-                                    Path.GetDirectoryName(s_localPackage.PackagePath) ?? string.Empty;
+                                    Path.GetDirectoryName(s_localPackage.PackageManifestPath) ?? string.Empty;
 
                                 startInfo.Arguments = "reset --hard";
                                 process.Start();
@@ -261,7 +262,7 @@ namespace GDX.Editor
                                 process.WaitForExit();
 
                                 // Lets force the import anyways now
-                                AssetDatabase.ImportAsset(s_localPackage.PackagePath);
+                                AssetDatabase.ImportAsset(s_localPackage.PackageManifestPath);
                             }
                         }
                         finally
@@ -317,9 +318,13 @@ namespace GDX.Editor
                         TarFile.ExtractToDirectory(tempFile, tempExtractFolder, true);
 
                         // Get desired target placement
-                        string targetPath = Path.GetDirectoryName(s_localPackage.PackagePath);
+                        string targetPath = Path.GetDirectoryName(s_localPackage.PackageManifestPath);
 
                         // TODO: VCS Checkout? maybe make a function
+                        if (UnityEditor.VersionControl.Provider.enabled && UnityEditor.VersionControl.Provider.isActive)
+                        {
+                           // UnityEditor.VersionControl.Provider.Checkout(mat, UnityEditor.VersionControl.CheckoutMode.Both);
+                        }
 
                         // Remove all existing content
                         if (targetPath != null)

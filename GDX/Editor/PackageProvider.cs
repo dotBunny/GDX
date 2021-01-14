@@ -54,9 +54,17 @@ namespace GDX.Editor
         public readonly InstallationType InstallationMethod;
 
         /// <summary>
+        ///     Asset database path to the root of the package.
+        /// </summary>
+        /// <remarks>
+        ///     This is useful for situations where you need to provide an asset database relative path.
+        /// </remarks>
+        public readonly string PackageAssetPath;
+
+        /// <summary>
         ///     Fully qualified path to the package.json file.
         /// </summary>
-        public readonly string PackagePath;
+        public readonly string PackageManifestPath;
 
         /// <summary>
         ///     Initialize a new <see cref="PackageProvider" />.
@@ -64,18 +72,31 @@ namespace GDX.Editor
         public PackageProvider()
         {
             // Find Local Definition
-            PackagePath = GetPackagePath();
-
-            // This is a strange position to be in.
-            if (PackagePath == null)
+            // ReSharper disable once StringLiteralTypo
+            string[] editorAssemblyDefinition = AssetDatabase.FindAssets("GDX.Editor t:asmdef");
+            if (editorAssemblyDefinition.Length > 0)
             {
-                return;
+                // Establish package root path
+                PackageAssetPath =
+                    Path.Combine(
+                        Path.GetDirectoryName(AssetDatabase.GUIDToAssetPath(editorAssemblyDefinition[0])) ??
+                        string.Empty, Strings.PreviousFolder, Strings.PreviousFolder);
+
+                // Build the package manifest path
+                PackageManifestPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6),
+                    PackageAssetPath ?? string.Empty, "package.json");
+
+                // Make sure the file exists
+                if (!File.Exists(PackageManifestPath))
+                {
+                    return;
+                }
             }
 
             // Lets try and parse the package JSON
             try
             {
-                Definition = JsonUtility.FromJson<PackageDefinition>(File.ReadAllText(PackagePath));
+                Definition = JsonUtility.FromJson<PackageDefinition>(File.ReadAllText(PackageManifestPath));
             }
             catch (Exception)
             {
@@ -104,7 +125,7 @@ namespace GDX.Editor
             }
 
             // Cache directory where the package.json was found
-            string packageDirectory = Path.GetDirectoryName(PackagePath);
+            string packageDirectory = Path.GetDirectoryName(PackageManifestPath);
             string projectDirectory = Application.dataPath.Substring(0, Application.dataPath.Length - 6);
 
             // Unity Package Manager Check
@@ -145,26 +166,6 @@ namespace GDX.Editor
 
             // Well we reached this point and don't actually know, so guess we should admit it.
             return InstallationType.Unknown;
-        }
-
-        /// <summary>
-        ///     Get the package's on disk path to its package.json.
-        /// </summary>
-        /// <returns>A full path to the package.json.</returns>
-        private string GetPackagePath()
-        {
-            // ReSharper disable once StringLiteralTypo
-            string[] editorAssemblyDefinition = AssetDatabase.FindAssets("GDX.Editor t:asmdef");
-            if (editorAssemblyDefinition.Length > 0)
-            {
-                return Path.Combine(
-                    Path.GetDirectoryName(
-                        Path.Combine(
-                            Application.dataPath.Substring(0, Application.dataPath.Length - 6),
-                            AssetDatabase.GUIDToAssetPath(editorAssemblyDefinition[0]))) ?? string.Empty, "..", "..",
-                    "package.json");
-            }
-            return null;
         }
 
         /// <summary>

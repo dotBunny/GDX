@@ -21,6 +21,11 @@ namespace GDX
         public const string TestDefine = "GDX_TESTS";
 
         /// <summary>
+        ///     Useful <see cref="string"/> to move up to a parent in pathing.
+        /// </summary>
+        public const string PreviousFolder = "..";
+
+        /// <summary>
         ///     An array of <see cref="System.Char" /> used to indicate newlines.
         /// </summary>
         public static readonly char[] NewLineIndicators = {'\n', '\r'};
