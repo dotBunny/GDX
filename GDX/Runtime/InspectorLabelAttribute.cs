@@ -5,6 +5,9 @@ namespace GDX
 {
     using UnityEngine;
 
+    /// <summary>
+    ///     Override the label content of the scripting variable.
+    /// </summary>
     public class InspectorLabelAttribute : PropertyAttribute
     {
         public string Label { get ; private set; }

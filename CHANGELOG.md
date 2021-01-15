@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added _remarks_ statements in `GDX` assembly documentation where a function or class requires the presence of Unity's CoreModule to function correctly.
 #### GDX
-- Included `InspectorLabelAttribute` to facilitate a quick way of altering displayed labels in the editor.
+- Included `InspectorLabelAttribute` to facilitate a quick way of replacing a labels content in the inspector.
 - Included a `SemanticVersion` struct for assistance with versioning.
 #### GDX.Developer
 - Included a **separate assembly** with more developer specific functionality.
