@@ -42,7 +42,7 @@ namespace GDX.Developer
             string argumentPrefix = gdxConfig.developerCommandLineParserArgumentPrefix;
             int prefixLength = argumentPrefix.Length;
             string argumentSplit = gdxConfig.developerCommandLineParserArgumentSplit;
-            
+
             foreach (string argument in Environment.GetCommandLineArgs())
             {
                 // Has the starter and has an assignment

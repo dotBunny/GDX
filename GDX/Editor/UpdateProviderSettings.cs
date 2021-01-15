@@ -49,7 +49,7 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        ///     Get <see cref="SettingsProvider" /> for GDX updates.
+        ///     Get <see cref="SettingsProvider" /> for <see cref="UpdateProvider"/>.
         /// </summary>
         /// <returns>A provider for project settings.</returns>
         [SettingsProvider]
