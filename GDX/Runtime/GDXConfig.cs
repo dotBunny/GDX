@@ -21,14 +21,14 @@ namespace GDX
         /// <summary>
         ///     Should GDX check for updates at editor time?
         /// </summary>
-        [Header("GDX.UpdateProvider")]
+        //[Header("GDX.UpdateProvider")]
         [InspectorLabel("Check For Updates")]
         public bool updateProviderCheckForUpdates = true;
 
         /// <summary>
         /// What should be used to denote arguments in the command line?
         /// </summary>
-        [Header("GDX.Developer.CommandLineParser")]
+        //[Header("GDX.Developer.CommandLineParser")]
         [InspectorLabel("Argument Prefix")]
         public string developerCommandLineParserArgumentPrefix = "--";
 
