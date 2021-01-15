@@ -11,25 +11,89 @@ namespace GDX
     /// </summary>
     public static class SimpleListExtensions
     {
-        public static bool AddUncheckedUniqueItem<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : class
+        /// <summary>
+        ///     Add an item to the <see cref="SimpleList{T}" /> without checking the internal size,
+        ///     making sure that the item is not already contained in the <see cref="SimpleList{T}" />.
+        /// </summary>
+        /// <param name="targetSimpleList">The target <see cref="SimpleList{T}" /> to add to.</param>
+        /// <param name="targetItem">The target class object to add.</param>
+        /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
+        /// <returns>true/false if the operation was able to add the item successfully.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool AddUncheckedUniqueItem<T>(ref this SimpleList<T> targetSimpleList, T targetItem)
+            where T : class
         {
+            if (!targetSimpleList.ContainsItem(targetItem))
+            {
+                return false;
+            }
+
+            targetSimpleList.AddUnchecked(targetItem);
+            return true;
+        }
+
+        /// <summary>
+        ///     Add a value to the <see cref="SimpleList{T}" /> without checking the internal size,
+        ///     making sure that the value is not already contained in the <see cref="SimpleList{T}" />.
+        /// </summary>
+        /// <param name="targetSimpleList">The target <see cref="SimpleList{T}" /> to add to.</param>
+        /// <param name="targetValue">The value to add.</param>
+        /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
+        /// <returns>true/false if the operation was able to add the value successfully.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool AddUncheckedUniqueValue<T>(ref this SimpleList<T> targetSimpleList, T targetValue)
+            where T : struct
+        {
+            if (!targetSimpleList.ContainsValue(targetValue))
+            {
+                return false;
+            }
+
+            targetSimpleList.AddUnchecked(targetValue);
+            return true;
+        }
+
+        /// <summary>
+        ///     Add an item to the <see cref="SimpleList{T}" /> with checking the internal size (expanding as necessary),
+        ///     making sure that the item is not already contained in the <see cref="SimpleList{T}" />.
+        /// </summary>
+        /// <param name="targetSimpleList">The target <see cref="SimpleList{T}" /> to add to.</param>
+        /// <param name="targetItem">The target class object to add.</param>
+        /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
+        /// <returns>true/false if the operation was able to add the item successfully.</returns>
+        public static bool AddWithExpandCheckUniqueItem<T>(ref this SimpleList<T> targetSimpleList, T targetItem)
+            where T : class
+        {
+            if (!targetSimpleList.ContainsItem(targetItem))
+            {
+                return false;
+            }
+
+            targetSimpleList.AddWithExpandCheck(targetItem);
+            return true;
+        }
+
+        /// <summary>
+        ///     Add a value to the <see cref="SimpleList{T}" /> with checking the internal size (expanding as necessary),
+        ///     making sure that the value is not already contained in the <see cref="SimpleList{T}" />.
+        /// </summary>
+        /// <param name="targetSimpleList">The target <see cref="SimpleList{T}" /> to add to.</param>
+        /// <param name="targetValue">The value to add.</param>
+        /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
+        /// <returns>true/false if the operation was able to add the value successfully.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool AddWithExpandCheckUniqueValue<T>(ref this SimpleList<T> targetSimpleList, T targetValue)
+            where T : struct
+        {
+            if (!targetSimpleList.ContainsValue(targetValue))
+            {
+                return false;
+            }
+
+            targetSimpleList.AddWithExpandCheck(targetValue);
             return false;
         }
 
-        public static bool AddUncheckedUniqueValue<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : struct
-        {
-            return false;
-        }
-
-        public static bool AddWithExpandCheckUniqueItem<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : class
-        {
-            return false;
-        }
-
-        public static bool AddWithExpandCheckUniqueValue<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : struct
-        {
-            return false;
-        }
         /// <summary>
         ///     <para>Does <paramref name="targetSimpleList" /> contain <paramref name="targetItem" />?</para>
         /// </summary>
