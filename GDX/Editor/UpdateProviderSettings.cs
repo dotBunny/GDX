@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace GDX.Editor
 {
+    /// <summary>
+    /// Project settings for the <see cref="UpdateProvider"/>.
+    /// </summary>
     public static class UpdateProviderSettings
     {
         /// <summary>

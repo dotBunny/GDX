@@ -6,7 +6,10 @@ using UnityEngine;
 
 namespace GDX.Developer.Editor
 {
-    public class CommandLineParserSettings
+    /// <summary>
+    /// Project settings for the <see cref="CommandLineParser"/>.
+    /// </summary>
+    public static class CommandLineParserSettings
     {
         /// <summary>
         ///     A list of keywords to flag when searching project settings.
