@@ -19,17 +19,6 @@ namespace GDX.Editor
     public static class UpdateProvider
     {
         /// <summary>
-        ///     The public URI of the latest changes, as Markdown.
-        /// </summary>
-        /// <remarks>The main branch is used to contain released versions only, so if it is found there, it is the latest release.</remarks>
-        private const string GitHubChangelogUri = "https://github.com/dotBunny/GDX/blob/main/CHANGELOG.md";
-
-        /// <summary>
-        ///     The base URI for downloading the latest released tarball.
-        /// </summary>
-        private const string GitHubLatestUri = "https://github.com/dotBunny/GDX/archive/v";
-
-        /// <summary>
         ///     The key used by <see cref="EditorPrefs" /> to store the last time we checked for an update.
         /// </summary>
         private const string LastCheckedKey = "GDX.UpdateProvider.LastChecked";
@@ -40,37 +29,20 @@ namespace GDX.Editor
         private const string LastNotifiedVersionKey = "GDX.UpdateProvider.LastNotifiedVersion";
 
         /// <summary>
-        ///     The key used by <see cref="EditorPrefs" /> to store <see cref="UpdateDayCountSetting" />.
+        ///     The public URI of the latest changes, as Markdown.
         /// </summary>
-        private const string UpdateDayCountKey = "GDX.UpdateProvider.UpdateDayCount";
+        /// <remarks>The main branch is used to contain released versions only, so if it is found there, it is the latest release.</remarks>
+        public const string GitHubChangelogUri = "https://github.com/dotBunny/GDX/blob/main/CHANGELOG.md";
+
+        /// <summary>
+        ///     The base URI for downloading the latest released tarball.
+        /// </summary>
+        private const string GitHubLatestUri = "https://github.com/dotBunny/GDX/archive/v";
 
         /// <summary>
         ///     A collection of information about the locally installed GDX package.
         /// </summary>
-        private static readonly PackageProvider s_localPackage;
-
-        /// <summary>
-        ///     A list of keywords to flag when searching project settings.
-        /// </summary>
-        // ReSharper disable HeapView.ObjectAllocation.Evident
-        private static readonly HashSet<string> s_settingsKeywords = new HashSet<string>(new[] {"gdx", "update"});
-        // ReSharper restore HeapView.ObjectAllocation.Evident
-
-        /// <summary>
-        ///     Settings content for <see cref="GDXConfig.checkForUpdates" />.
-        /// </summary>
-        // ReSharper disable once HeapView.ObjectAllocation.Evident
-        private static readonly GUIContent s_settingsCheckForUpdates = new GUIContent(
-            "Check For Updates",
-            "Should the package check the GitHub repository to see if there is a new version?");
-
-        /// <summary>
-        ///     Settings content for <see cref="UpdateDayCountSetting" />.
-        /// </summary>
-        // ReSharper disable once HeapView.ObjectAllocation.Evident
-        private static readonly GUIContent s_settingsUpdateDayCount = new GUIContent(
-            "Update Timer (Days)",
-            "After how many days should updates be checked for?");
+        public static readonly PackageProvider LocalPackage;
 
         /// <summary>
         ///     If an update check has occured, this will be filled with its <see cref="PackageProvider.PackageDefinition" />.
@@ -85,103 +57,20 @@ namespace GDX.Editor
         {
             // Create a copy of the local package provider
             // ReSharper disable once HeapView.ObjectAllocation.Evident
-            s_localPackage = new PackageProvider();
+            LocalPackage = new PackageProvider();
 
             GDXConfig config = Config.Get();
-            if (!config.checkForUpdates)
+            if (!config.updateProviderCheckForUpdates)
             {
                 return;
             }
 
             // Should we check for updates?
-            DateTime targetDate = GetLastChecked().AddDays(UpdateDayCountSetting);
+            DateTime targetDate = GetLastChecked().AddDays(UpdateProviderSettings.UpdateDayCountSetting);
             if (DateTime.Now >= targetDate)
             {
                 CheckForUpdates();
             }
-        }
-
-        /// <summary>
-        ///     The number of days between checks for updates.
-        /// </summary>
-        /// <remarks>We use a property over methods in this case so that Unity's UI can be easily tied to this value.</remarks>
-        private static int UpdateDayCountSetting
-        {
-            get => EditorPrefs.GetInt(UpdateDayCountKey, 7);
-            set => EditorPrefs.SetInt(UpdateDayCountKey, value);
-        }
-
-        /// <summary>
-        ///     Get <see cref="SettingsProvider" /> for GDX updates.
-        /// </summary>
-        /// <returns>A provider for project settings.</returns>
-        [SettingsProvider]
-        public static SettingsProvider SettingsProvider()
-        {
-            // ReSharper disable once HeapView.ObjectAllocation.Evident
-            return new SettingsProvider("Project/GDX/Updates", SettingsScope.Project)
-            {
-                label = "Updates",
-                guiHandler = searchContext =>
-                {
-                    GDXStyles.BeginGUILayout();
-
-                    EditorGUILayout.BeginHorizontal(GDXStyles.Header);
-                    if (s_localPackage.Definition != null)
-                    {
-                        GUILayout.Label(
-                            UpdatePackageDefinition != null
-                                ? $"Local version: {s_localPackage.Definition.version} ({s_localPackage.InstallationMethod.ToString()})\nGitHub version: {UpdatePackageDefinition.version}\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}."
-                                : $"Local version: {s_localPackage.Definition.version} ({s_localPackage.InstallationMethod.ToString()})\nGitHub version: Unknown\nLast checked on {GetLastChecked().ToString(Localization.LocalTimestampFormat)}.",
-                            EditorStyles.boldLabel);
-
-                        // Force things to the right
-                        GUILayout.FlexibleSpace();
-
-                        EditorGUILayout.BeginVertical();
-                        if (HasUpdate(UpdatePackageDefinition))
-                        {
-                            if (GUILayout.Button("Changelog", GDXStyles.Button))
-                            {
-                                Application.OpenURL(GitHubChangelogUri);
-                            }
-
-                            if (GUILayout.Button("Update", GDXStyles.Button))
-                            {
-                                AttemptUpgrade();
-                            }
-                        }
-                        else
-                        {
-                            if (GUILayout.Button("Manual Check", GDXStyles.Button))
-                            {
-                                CheckForUpdates();
-                            }
-                        }
-
-                        EditorGUILayout.EndVertical();
-                    }
-                    else
-                    {
-                        GUILayout.Label(
-                            $"An error occured trying to find the package definition.\nPresumed Root: {s_localPackage.PackageAssetPath}\nPresumed Manifest:{s_localPackage.PackageManifestPath})",
-                            EditorStyles.boldLabel);
-                    }
-
-                    EditorGUILayout.EndHorizontal();
-
-
-                    SerializedObject settings = Config.GetSerializedConfig();
-                    EditorGUILayout.PropertyField(settings.FindProperty("checkForUpdates"), s_settingsCheckForUpdates);
-                    settings.ApplyModifiedPropertiesWithoutUndo();
-
-                    UpdateDayCountSetting =
-                        EditorGUILayout.IntSlider(s_settingsUpdateDayCount, UpdateDayCountSetting, 1, 31);
-
-                    GDXStyles.EndGUILayout();
-                },
-                keywords = s_settingsKeywords
-            };
         }
 
         /// <summary>
@@ -190,7 +79,7 @@ namespace GDX.Editor
         /// </summary>
         /// <param name="updatePackageDefinition">The found <see cref="PackageProvider.PackageDefinition" /> on GitHub.</param>
         /// <returns>true/false if an update is found.</returns>
-        private static bool HasUpdate(PackageProvider.PackageDefinition updatePackageDefinition)
+        public static bool HasUpdate(PackageProvider.PackageDefinition updatePackageDefinition)
         {
             if (updatePackageDefinition == null)
             {
@@ -199,7 +88,7 @@ namespace GDX.Editor
 
             // Package versions
             SemanticVersion updatePackageVersion = new SemanticVersion(UpdatePackageDefinition.version);
-            SemanticVersion localPackageVersion = new SemanticVersion(s_localPackage.Definition.version);
+            SemanticVersion localPackageVersion = new SemanticVersion(LocalPackage.Definition.version);
 
             // Unity versions
             SemanticVersion currentUnityVersion = new SemanticVersion(Application.unityVersion);
@@ -213,11 +102,11 @@ namespace GDX.Editor
         /// <summary>
         ///     Attempt to do the upgrade of the package based on the established <see cref="PackageProvider.InstallationType" />.
         /// </summary>
-        private static void AttemptUpgrade()
+        public static void AttemptUpgrade()
         {
             string messageStart =
                 $"There is a new version of GDX available ({UpdatePackageDefinition.version}).\n";
-            switch (s_localPackage.InstallationMethod)
+            switch (LocalPackage.InstallationMethod)
             {
                 case PackageProvider.InstallationType.Unknown:
                     EditorUtility.DisplayDialog("GDX Update Available",
@@ -260,10 +149,10 @@ namespace GDX.Editor
                             // Pause asset database
                             AssetDatabase.StartAssetEditing();
 
-                            if (s_localPackage?.PackageManifestPath != null)
+                            if (LocalPackage?.PackageManifestPath != null)
                             {
                                 startInfo.WorkingDirectory =
-                                    Path.GetDirectoryName(s_localPackage.PackageManifestPath) ?? string.Empty;
+                                    Path.GetDirectoryName(LocalPackage.PackageManifestPath) ?? string.Empty;
 
                                 startInfo.Arguments = "reset --hard";
                                 process.Start();
@@ -274,7 +163,7 @@ namespace GDX.Editor
                                 process.WaitForExit();
 
                                 // Lets force the import anyways now
-                                AssetDatabase.ImportAsset(s_localPackage.PackageManifestPath);
+                                AssetDatabase.ImportAsset(LocalPackage.PackageManifestPath);
                             }
                         }
                         finally
@@ -330,7 +219,7 @@ namespace GDX.Editor
                         TarFile.ExtractToDirectory(tempFile, tempExtractFolder, true);
 
                         // Get desired target placement
-                        string targetPath = Path.GetDirectoryName(s_localPackage.PackageManifestPath);
+                        string targetPath = Path.GetDirectoryName(LocalPackage.PackageManifestPath);
 
                         // TODO: VCS Checkout? maybe make a function
                         if (Provider.enabled && Provider.isActive)
@@ -361,7 +250,7 @@ namespace GDX.Editor
         /// <summary>
         ///     Check for updates!
         /// </summary>
-        private static void CheckForUpdates()
+        public static void CheckForUpdates()
         {
             SetLastChecked();
 
@@ -378,7 +267,7 @@ namespace GDX.Editor
         /// <summary>
         ///     Gets the last time that we checked for an update to the package.
         /// </summary>
-        private static DateTime GetLastChecked()
+        public static DateTime GetLastChecked()
         {
             DateTime lastTime = new DateTime(2020, 12, 14);
             if (EditorPrefs.HasKey(LastCheckedKey))

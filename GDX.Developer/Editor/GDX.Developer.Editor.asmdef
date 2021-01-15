@@ -1,12 +1,16 @@
 {
-    "name": "GDX.Developer",
-    "rootNamespace": "GDX.Developer",
+    "name": "GDX.Developer.Editor",
+    "rootNamespace": "GDX.Developer.Editor",
     "references": [
-        "GDX"
+        "GDX",
+        "GDX.Editor",
+        "GDX.Developer"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
-    "allowUnsafeCode": true,
+    "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,

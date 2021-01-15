@@ -20,7 +20,17 @@ namespace GDX
         /// <summary>
         ///     Should GDX check for updates at editor time?
         /// </summary>
-        public bool checkForUpdates = true;
+        public bool updateProviderCheckForUpdates = true;
+
+        /// <summary>
+        /// What should be used to denote arguments in the command line?
+        /// </summary>
+        public string developerCommandLineParserArgumentPrefix = "--";
+
+        /// <summary>
+        /// What should be used to split arguments from their values in the command line?
+        /// </summary>
+        public string developerCommandLineParserArgumentSplit = "=";
 
         /// <summary>
         ///     Get a loaded instance of the <see cref="GDXConfig" /> from resources.

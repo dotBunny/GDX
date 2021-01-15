@@ -17,16 +17,6 @@ namespace GDX.Developer
     public static class CommandLineParser
     {
         /// <summary>
-        ///     The prefix string used to denote an argument.
-        /// </summary>
-        private const string ArgumentPrefix = "--";
-
-        /// <summary>
-        ///     The split string used when determining the value for an argument.
-        /// </summary>
-        private const string ArgumentSplit = "=";
-
-        /// <summary>
         ///     The processed arguments found after parsing the arguments
         /// </summary>
         public static readonly Dictionary<string, string> Arguments = new Dictionary<string, string>();
@@ -48,20 +38,25 @@ namespace GDX.Developer
             Arguments.Clear();
             Flags.Clear();
 
+            GDXConfig gdxConfig = GDXConfig.Get();
+            string argumentPrefix = gdxConfig.developerCommandLineParserArgumentPrefix;
+            int prefixLength = argumentPrefix.Length;
+            string argumentSplit = gdxConfig.developerCommandLineParserArgumentSplit;
+            
             foreach (string argument in Environment.GetCommandLineArgs())
             {
                 // Has the starter and has an assignment
-                if (!argument.StartsWith(ArgumentPrefix))
+                if (!argument.StartsWith(argumentPrefix))
                 {
                     continue;
                 }
 
-                if (argument.Contains(ArgumentSplit))
+                if (argument.Contains(argumentSplit))
                 {
-                    int keyEnd = argument.IndexOf(ArgumentSplit, StringComparison.Ordinal);
-                    string key = argument.Substring(2, keyEnd - 2);
+                    int keyEnd = argument.IndexOf(argumentSplit, StringComparison.Ordinal);
+                    string key = argument.Substring(prefixLength, keyEnd - prefixLength);
 
-                    int valueStart = argument.IndexOf(ArgumentSplit, StringComparison.Ordinal) + 1;
+                    int valueStart = argument.IndexOf(argumentSplit, StringComparison.Ordinal) + 1;
                     int valueEnd = argument.Length;
                     string value = argument.Substring(valueStart, valueEnd - valueStart);
 
@@ -70,7 +65,7 @@ namespace GDX.Developer
                 }
                 else
                 {
-                    string flag = argument.Substring(2).ToUpper();
+                    string flag = argument.Substring(prefixLength).ToUpper();
 
                     // Flag parameter, ensure they are unique
                     if (!Flags.Contains(flag))
