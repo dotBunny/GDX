@@ -143,32 +143,43 @@ namespace GDX.Editor
                         };
                         process.StartInfo = startInfo;
 
-                        try
+                        string targetPath = Path.GetDirectoryName(LocalPackage.PackageManifestPath);
+                        if (targetPath != null)
                         {
-                            // Pause asset database
-                            AssetDatabase.StartAssetEditing();
-
-                            if (LocalPackage?.PackageManifestPath != null)
+                            // Handle VCS
+                            if (Provider.enabled && Provider.isActive)
                             {
-                                startInfo.WorkingDirectory =
-                                    Path.GetDirectoryName(LocalPackage.PackageManifestPath) ?? string.Empty;
-
-                                startInfo.Arguments = "reset --hard";
-                                process.Start();
-                                process.WaitForExit();
-
-                                startInfo.Arguments = "pull";
-                                process.Start();
-                                process.WaitForExit();
-
-                                // Lets force the import anyways now
-                                AssetDatabase.ImportAsset(LocalPackage.PackageManifestPath);
+                                AssetList checkoutAssets = VersionControl.GetAssetListFromFolder(targetPath);
+                                Task checkoutTask = Provider.Checkout(checkoutAssets, CheckoutMode.Both);
+                                checkoutTask.Wait();
                             }
-                        }
-                        finally
-                        {
-                            // Return asset database monitoring back to normal
-                            AssetDatabase.StopAssetEditing();
+
+                            try
+                            {
+                                // Pause asset database
+                                AssetDatabase.StartAssetEditing();
+
+                                if (LocalPackage?.PackageManifestPath != null)
+                                {
+                                    startInfo.WorkingDirectory = targetPath;
+
+                                    startInfo.Arguments = "reset --hard";
+                                    process.Start();
+                                    process.WaitForExit();
+
+                                    startInfo.Arguments = "pull";
+                                    process.Start();
+                                    process.WaitForExit();
+
+                                    // Lets force the import anyways now
+                                    AssetDatabase.ImportAsset(LocalPackage.PackageManifestPath);
+                                }
+                            }
+                            finally
+                            {
+                                // Return asset database monitoring back to normal
+                                AssetDatabase.StopAssetEditing();
+                            }
                         }
                     }
                     else
@@ -220,10 +231,12 @@ namespace GDX.Editor
                         // Get desired target placement
                         string targetPath = Path.GetDirectoryName(LocalPackage.PackageManifestPath);
 
-                        // TODO: VCS Checkout? maybe make a function
+                        // Handle VCS
                         if (Provider.enabled && Provider.isActive)
                         {
-                            // UnityEditor.VersionControl.Provider.Checkout(mat, UnityEditor.VersionControl.CheckoutMode.Both);
+                            AssetList checkoutAssets = VersionControl.GetAssetListFromFolder(targetPath);
+                            Task checkoutTask = Provider.Checkout(checkoutAssets, CheckoutMode.Both);
+                            checkoutTask.Wait();
                         }
 
                         // Remove all existing content
@@ -342,5 +355,7 @@ namespace GDX.Editor
                 return null;
             }
         }
+
+
     }
 }
