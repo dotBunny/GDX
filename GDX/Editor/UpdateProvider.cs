@@ -229,12 +229,23 @@ namespace GDX.Editor
                         // Remove all existing content
                         if (targetPath != null)
                         {
-                            Directory.Delete(targetPath, true);
+                            try
+                            {
+                                AssetDatabase.StartAssetEditing();
+                                Directory.Delete(targetPath, true);
 
-                            // Drop in new content
-                            Directory.Move(
-                                Path.Combine(tempExtractFolder, "GDX-" + UpdatePackageDefinition.version),
-                                targetPath);
+                                // Drop in new content
+                                Directory.Move(
+                                    Path.Combine(tempExtractFolder, "GDX-" + UpdatePackageDefinition.version),
+                                    targetPath);
+
+                                AssetDatabase.ImportAsset(targetPath);
+                            }
+                            finally
+                            {
+                                AssetDatabase.StopAssetEditing();
+                            }
+
                         }
                     }
                     else
