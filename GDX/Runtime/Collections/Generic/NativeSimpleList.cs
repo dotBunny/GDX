@@ -12,13 +12,13 @@ namespace GDX.Collections.Generic
     ///     A <see cref="Unity.Collections.NativeArray{T}" /> backed <see cref="SimpleList{T}" />.
     /// </summary>
     /// <remarks>
-    ///     The <see cref="NativeSimpleList{T}" /> is backed by a <see cref="Unity.Collections.NativeArray{T}" /> which requires
+    ///     The <see cref="NativeSimpleList{T}" /> is backed by a <see cref="Unity.Collections.NativeArray{T}" /> which
+    ///     requires
     ///     UnityEngine.CoreModule.dll.
     /// </remarks>
     /// <typeparam name="T">The type of <see cref="object" />s contained within.</typeparam>
     public struct NativeSimpleList<T> : IDisposable where T : struct
     {
-
         /// <summary>
         ///     Internal array of backed data for the <see cref="SimpleList{T}" />.
         /// </summary>
@@ -27,7 +27,7 @@ namespace GDX.Collections.Generic
         /// <summary>
         ///     Number of elements.
         /// </summary>
-        /// <remarks>CAUTION! Changing this will alter the understanding of the data.</remarks
+        /// <remarks>CAUTION! Changing this will alter the understanding of the data.</remarks>
         public int Count;
 
         /// <summary>

@@ -37,7 +37,7 @@ namespace GDX.Editor
             // Create and save the asset
             AssetDatabase.CreateAsset(settings,
                 Strings.AssetPathPrefix + "Resources/" + GDXConfig.ResourcesPath);
-            
+
             AssetDatabase.SaveAssets();
 
             // Send it back!
