@@ -14,8 +14,14 @@ namespace GDX.Tests.Editor
     /// </summary>
     public class SimpleListExtensionsTests
     {
+        /// <summary>
+        ///     Staged list values for test runs.
+        /// </summary>
         private SimpleList<int> _listValues;
 
+        /// <summary>
+        ///     Unit test staging.
+        /// </summary>
         [SetUp]
         public void Setup()
         {
@@ -27,14 +33,15 @@ namespace GDX.Tests.Editor
             _listValues.AddUnchecked(4);
         }
 
+        /// <summary>
+        ///     Unit test cleanup.
+        /// </summary>
         [TearDown]
         public void TearDown()
         {
             _listValues.Clear();
             _listValues = default;
         }
-
-        #region RemoveFirstItem
 
         /// <summary>
         ///     Check that removing the first item from a <see cref="SimpleList{T}" /> works correctly.
@@ -60,10 +67,6 @@ namespace GDX.Tests.Editor
                 "Item was expected to have been removed correctly.");
         }
 
-        #endregion
-
-        #region RemoveFirstValue
-
         /// <summary>
         ///     Check that removing the first value from a <see cref="SimpleList{T}" /> works correctly.
         /// </summary>
@@ -84,10 +87,6 @@ namespace GDX.Tests.Editor
             Assert.IsTrue(listValues.Array[1] == 2 && listValues.ContainsValue(searchValue),
                 "A value of 2 was expected.");
         }
-
-        #endregion
-
-        #region RemoveItems
 
         /// <summary>
         ///     Check that removing the all references to an item from a <see cref="SimpleList{T}" /> works correctly.
@@ -111,10 +110,6 @@ namespace GDX.Tests.Editor
             Assert.IsTrue(!listItems.ContainsItem(searchItem),
                 "Items were expected to have been removed correctly.");
         }
-
-        #endregion
-
-        #region RemoveLastItem
 
         /// <summary>
         ///     Check that removing the last item from a <see cref="SimpleList{T}" /> works correctly.
@@ -140,10 +135,6 @@ namespace GDX.Tests.Editor
                 "Item was expected to have been removed correctly.");
         }
 
-        #endregion
-
-        #region RemoveLastValue
-
         /// <summary>
         ///     Check that removing the last value from a <see cref="SimpleList{T}" /> works correctly.
         /// </summary>
@@ -163,10 +154,6 @@ namespace GDX.Tests.Editor
             listValues.RemoveLastValue(1);
             Assert.IsTrue(listValues.Array[5] == 2, "A value of 2 was expected.");
         }
-
-        #endregion
-
-        #region RemoveValues
 
         /// <summary>
         ///     Check that removing all of a specific value from a <see cref="SimpleList{T}" /> works correctly.
@@ -188,11 +175,6 @@ namespace GDX.Tests.Editor
 
             Assert.IsTrue(!listValues.ContainsValue(1), "No 1 values were expected.");
         }
-
-        #endregion
-
-
-        #region ContainsItem
 
         /// <summary>
         ///     Check if we can find a <see cref="string" /> in a SimpleList, while its not the actual object, this validates
@@ -233,10 +215,6 @@ namespace GDX.Tests.Editor
                 "Expected positive response to looking for target circular buffer.");
         }
 
-        #endregion
-
-        #region ContainsValue
-
         /// <summary>
         ///     Check if we can find the first struct/value in a <see cref="SimpleList{T}" />.
         /// </summary>
@@ -261,7 +239,6 @@ namespace GDX.Tests.Editor
                 $"Expected negative response to looking for {searchValue} value.");
         }
 
-
         /// <summary>
         ///     Check if we can find the last struct/value in a <see cref="SimpleList{T}" />.
         /// </summary>
@@ -285,7 +262,5 @@ namespace GDX.Tests.Editor
             Assert.IsTrue(_listValues.ContainsValue(searchValue),
                 $"Expected positive response to looking for {searchValue} value.");
         }
-
-        #endregion
     }
 }

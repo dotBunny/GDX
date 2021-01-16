@@ -14,8 +14,6 @@ namespace GDX.Tests.Editor
     /// </summary>
     public class ArrayExtensionsTests
     {
-        #region Clear
-
         /// <summary>
         ///     Check if the <see cref="ArrayExtensions.Clear{T}" /> method correctly defaults all elements in an array.
         /// </summary>
@@ -31,10 +29,6 @@ namespace GDX.Tests.Editor
                           clearArray[2] == default &&
                           clearArray[3] == default, "Expected all elements in the array to be default.");
         }
-
-        #endregion
-
-        #region FirstIndexOfItem
 
         /// <summary>
         ///     Check if the <see cref="ArrayExtensions.FirstIndexOfItem{T}" /> method correctly finds the first index.
@@ -52,10 +46,6 @@ namespace GDX.Tests.Editor
             Assert.IsTrue(testArray.FirstIndexOfItem(searchBuffer) == 1, "Expected an index of 1.");
         }
 
-        #endregion
-
-        #region FirstIndexOfValue
-
         /// <summary>
         ///     Check if the <see cref="ArrayExtensions.FirstIndexOfValue{T}" /> method correctly finds the first index.
         /// </summary>
@@ -66,10 +56,6 @@ namespace GDX.Tests.Editor
             int[] testArray = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2};
             Assert.IsTrue(testArray.FirstIndexOfValue(1) == 1, "Expected an index of 1.");
         }
-
-        #endregion
-
-        #region LastIndexOfItem
 
         /// <summary>
         ///     Check if the <see cref="ArrayExtensions.LastIndexOfItem{T}" /> method correctly finds the last index.
@@ -88,10 +74,6 @@ namespace GDX.Tests.Editor
             Assert.IsTrue(testArray.LastIndexOfItem(searchBuffer) == 3, "Expected an index of 3.");
         }
 
-        #endregion
-
-        #region LastIndexOfValue
-
         /// <summary>
         ///     Check if the <see cref="ArrayExtensions.LastIndexOfValue{T}" /> method correctly finds the last index.
         /// </summary>
@@ -102,7 +84,5 @@ namespace GDX.Tests.Editor
             int[] testArray = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2};
             Assert.IsTrue(testArray.LastIndexOfValue(1) == 11, "Expected an index of 11.");
         }
-
-        #endregion
     }
 }

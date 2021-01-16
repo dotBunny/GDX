@@ -26,8 +26,6 @@ namespace GDX.Tests.Editor
         private const string UpperCaseTestString = "THIS IS ALL UPPERCASE";
         private const string LowerCaseTestString = "this is all lowercase";
 
-        #region GetLowerCaseHashCode
-
         [Test]
         [Category("GDX.Tests")]
         public void Equal_ToLowerGetHashCode_GetLowerCaseHashCode_ComplexString()
@@ -61,6 +59,42 @@ namespace GDX.Tests.Editor
         {
             int oldHash = UpperCaseTestString.ToLower().GetHashCode();
             int newHash = UpperCaseTestString.GetLowerCaseHashCode();
+            Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void Equal_ToUpperGetHashCode_GetUpperCaseHashCode_ComplexString()
+        {
+            int oldHash = ComplexTestString.ToUpper().GetHashCode();
+            int newHash = ComplexTestString.GetUpperCaseHashCode();
+            Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void Equal_ToUpperGetHashCode_GetUpperCaseHashCode_LowerCase()
+        {
+            int oldHash = LowerCaseTestString.ToUpper().GetHashCode();
+            int newHash = LowerCaseTestString.GetUpperCaseHashCode();
+            Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void Equal_ToUpperGetHashCode_GetUpperCaseHashCode_Simple()
+        {
+            int oldHash = SimpleTestString.ToUpper().GetHashCode();
+            int newHash = SimpleTestString.GetUpperCaseHashCode();
+            Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void Equal_ToUpperGetHashCode_GetUpperCaseHashCode_UpperCase()
+        {
+            int oldHash = UpperCaseTestString.ToUpper().GetHashCode();
+            int newHash = UpperCaseTestString.GetUpperCaseHashCode();
             Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
         }
 
@@ -152,46 +186,6 @@ namespace GDX.Tests.Editor
         }
 #endif
 
-        #endregion
-
-        #region GetUpperCaseHashCode
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void Equal_ToUpperGetHashCode_GetUpperCaseHashCode_ComplexString()
-        {
-            int oldHash = ComplexTestString.ToUpper().GetHashCode();
-            int newHash = ComplexTestString.GetUpperCaseHashCode();
-            Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void Equal_ToUpperGetHashCode_GetUpperCaseHashCode_LowerCase()
-        {
-            int oldHash = LowerCaseTestString.ToUpper().GetHashCode();
-            int newHash = LowerCaseTestString.GetUpperCaseHashCode();
-            Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void Equal_ToUpperGetHashCode_GetUpperCaseHashCode_Simple()
-        {
-            int oldHash = SimpleTestString.ToUpper().GetHashCode();
-            int newHash = SimpleTestString.GetUpperCaseHashCode();
-            Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void Equal_ToUpperGetHashCode_GetUpperCaseHashCode_UpperCase()
-        {
-            int oldHash = UpperCaseTestString.ToUpper().GetHashCode();
-            int newHash = UpperCaseTestString.GetUpperCaseHashCode();
-            Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
-        }
-
 #if GDX_TESTFRAMEWORK_PERFORMANCETESTING
         [Test]
         [Performance]
@@ -279,7 +273,5 @@ namespace GDX.Tests.Editor
                 .Run();
         }
 #endif
-
-        #endregion
     }
 }

@@ -15,8 +15,6 @@ namespace GDX.Tests.Editor
     /// </summary>
     public class ListExtensionsTests
     {
-        #region ContainsItem
-
         /// <summary>
         ///     Check if we can find the item in a <see cref="List{T}" />.
         /// </summary>
@@ -37,10 +35,6 @@ namespace GDX.Tests.Editor
                 $"Expected positive response to looking for {searchValue} value.");
         }
 
-        #endregion
-
-        #region ContainsValue
-
         /// <summary>
         ///     Check if we can find the value in a <see cref="List{T}" />.
         /// </summary>
@@ -60,10 +54,6 @@ namespace GDX.Tests.Editor
             Assert.IsTrue(listValues.ContainsValue(searchValue),
                 $"Expected positive response to looking for {searchValue} value.");
         }
-
-        #endregion
-
-        #region RemoveFirstItem
 
         /// <summary>
         ///     Check that removing the first item from a <see cref="List{T}" /> works correctly.
@@ -86,10 +76,6 @@ namespace GDX.Tests.Editor
             Assert.IsTrue(listItems[1] != searchItem &&
                           listItems.ContainsItem(searchItem), "Item was expected to have been removed correctly.");
         }
-
-        #endregion
-
-        #region RemoveLastItem
 
         /// <summary>
         ///     Check that removing the last item from a <see cref="List{T}" /> works correctly.
@@ -114,10 +100,6 @@ namespace GDX.Tests.Editor
                           listItems.ContainsItem(searchItem), "Item was expected to have been removed correctly.");
         }
 
-        #endregion
-
-        #region RemoveFirstValue
-
         /// <summary>
         ///     Check that removing the first value from a <see cref="List{T}" /> works correctly.
         /// </summary>
@@ -140,10 +122,6 @@ namespace GDX.Tests.Editor
                           listItems.ContainsValue(searchValue), "Value was expected to have been removed correctly.");
         }
 
-        #endregion
-
-        #region RemoveItems
-
         /// <summary>
         ///     Check that removing all references to an item from a <see cref="List{T}" /> works correctly.
         /// </summary>
@@ -164,10 +142,6 @@ namespace GDX.Tests.Editor
             listItems.RemoveItems(searchItem);
             Assert.IsTrue(!listItems.ContainsItem(searchItem), "Item was expected to have been removed correctly.");
         }
-
-        #endregion
-
-        #region RemoveValues
 
         /// <summary>
         ///     Check that removing the all values from a <see cref="List{T}" /> works correctly.
@@ -191,10 +165,6 @@ namespace GDX.Tests.Editor
             Assert.IsTrue(!listItems.ContainsValue(searchValue), "Value was expected to be fully removed..");
         }
 
-        #endregion
-
-        #region RemoveItemSwap
-
         /// <summary>
         ///     Check that forced removal from the end of a <see cref="List{T}" /> works correctly.
         /// </summary>
@@ -211,10 +181,6 @@ namespace GDX.Tests.Editor
             listItems.RemoveItemSwap(1);
             Assert.IsTrue(!listItems.ContainsItem(searchItem), "Item was expected to have been removed correctly.");
         }
-
-        #endregion
-
-        #region RemoveLastValue
 
         /// <summary>
         ///     Check that removing the last value from a <see cref="List{T}" /> works correctly.
@@ -238,10 +204,6 @@ namespace GDX.Tests.Editor
             Assert.IsTrue(listItems[4] != searchValue &&
                           listItems.ContainsValue(searchValue), "Value was expected to have been removed correctly.");
         }
-
-        #endregion
-
-        #region Shuffle
 
         /// <summary>
         ///     Check that shuffling a <see cref="List{T}" /> works correctly.
@@ -324,10 +286,6 @@ namespace GDX.Tests.Editor
             Assert.IsTrue(differentCount > 0, "List was not randomized.");
         }
 
-        #endregion
-
-        #region AddUniqueItem
-
         /// <summary>
         ///     Check if we can add a unique item to a <see cref="List{T}" /> for the first time.
         /// </summary>
@@ -360,10 +318,6 @@ namespace GDX.Tests.Editor
                 "Expected not to be able to add the duplicate item.");
         }
 
-        #endregion
-
-        #region AddUniqueValue
-
         /// <summary>
         ///     Check if we can add a unique value to a <see cref="List{T}" /> for the first time.
         /// </summary>
@@ -390,7 +344,5 @@ namespace GDX.Tests.Editor
             Assert.IsFalse(listValues.AddUniqueValue(searchValue),
                 "Expected not to be able to add value.");
         }
-
-        #endregion
     }
 }

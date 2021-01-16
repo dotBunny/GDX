@@ -14,10 +14,8 @@ namespace GDX.Tests.Editor
     /// </summary>
     public class ByteExtensionsTests
     {
-        #region GetHashCode
-
         /// <summary>
-        ///     Check if we get the correct hash code from an array of <see cref="byte"/>s.
+        ///     Check if we get the correct hash code from an array of <see cref="byte" />s.
         /// </summary>
         [Test]
         [Category("GDX.Tests")]
@@ -27,7 +25,5 @@ namespace GDX.Tests.Editor
             int hashCode = testArray.GetValueHashCode();
             Assert.IsTrue(hashCode == 1349791181, $"Expected value of 1349791181 instead got {hashCode}.");
         }
-
-        #endregion
     }
 }
