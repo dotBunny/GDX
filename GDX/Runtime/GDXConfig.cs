@@ -16,19 +16,17 @@ namespace GDX
         /// <summary>
         ///     Resource path at runtime.
         /// </summary>
-        public const string ResourcesPath = "Resources/GDX/GDXConfig.asset";
+        public const string ResourcesPath = "GDX/GDXConfig.asset";
 
         /// <summary>
         ///     Should GDX check for updates at editor time?
         /// </summary>
-        //[Header("GDX.UpdateProvider")]
         [InspectorLabel("Check For Updates")]
         public bool updateProviderCheckForUpdates = true;
 
         /// <summary>
         /// What should be used to denote arguments in the command line?
         /// </summary>
-        //[Header("GDX.Developer.CommandLineParser")]
         [InspectorLabel("Argument Prefix")]
         public string developerCommandLineParserArgumentPrefix = "--";
 

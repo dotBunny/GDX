@@ -7,8 +7,10 @@ using UnityEngine;
 
 namespace GDX.Editor
 {
-    // ReSharper disable once InconsistentNaming
-    public static class GDXSettings
+    /// <summary>
+    /// GDX Assembly Settings
+    /// </summary>
+    public static class Settings
     {
          /// <summary>
         ///     The key used by <see cref="EditorPrefs" /> to store <see cref="UpdateDayCountSetting" />.
@@ -19,14 +21,14 @@ namespace GDX.Editor
         ///     A list of keywords to flag when searching project settings.
         /// </summary>
         // ReSharper disable HeapView.ObjectAllocation.Evident
-        private static readonly HashSet<string> s_settingsKeywords = new HashSet<string>(new[] {"gdx", "update"});
+        private static readonly HashSet<string> s_keywords = new HashSet<string>(new[] {"gdx", "update"});
         // ReSharper restore HeapView.ObjectAllocation.Evident
 
         /// <summary>
         ///     Settings content for <see cref="GDXConfig.updateProviderCheckForUpdates" />.
         /// </summary>
         // ReSharper disable once HeapView.ObjectAllocation.Evident
-        private static readonly GUIContent s_settingsCheckForUpdates = new GUIContent(
+        private static readonly GUIContent s_contentCheckForUpdates = new GUIContent(
             "Check For Updates",
             "Should the package check the GitHub repository to see if there is a new version?");
 
@@ -34,7 +36,7 @@ namespace GDX.Editor
         ///     Settings content for <see cref="UpdateDayCountSetting" />.
         /// </summary>
         // ReSharper disable once HeapView.ObjectAllocation.Evident
-        private static readonly GUIContent s_settingsUpdateDayCount = new GUIContent(
+        private static readonly GUIContent s_contentUpdateDayCount = new GUIContent(
             "Update Timer (Days)",
             "After how many days should updates be checked for?");
 
@@ -50,7 +52,7 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        ///     Get <see cref="SettingsProvider" /> for <see cref="UpdateProvider"/>.
+        ///     Get <see cref="SettingsProvider" /> for GDX assembly.
         /// </summary>
         /// <returns>A provider for project settings.</returns>
         [SettingsProvider]
@@ -64,12 +66,10 @@ namespace GDX.Editor
                 {
                     GDXStyles.BeginGUILayout();
 
-                    GUILayout.Label("Updates", GDXStyles.H1);
-                    GDXStyles.DrawLine(2, 2, 10);
+                    #region Package Updates
+                    GDXStyles.SectionHeader("Package Updates");
 
                     EditorGUILayout.BeginHorizontal(GDXStyles.InfoBox);
-
-
                     if (UpdateProvider.LocalPackage.Definition != null)
                     {
                         GUILayout.Label(
@@ -110,20 +110,20 @@ namespace GDX.Editor
                             $"An error occured trying to find the package definition.\nPresumed Root: {UpdateProvider.LocalPackage.PackageAssetPath}\nPresumed Manifest:{UpdateProvider.LocalPackage.PackageManifestPath})",
                             EditorStyles.boldLabel);
                     }
-
                     EditorGUILayout.EndHorizontal();
 
 
                     SerializedObject settings = Config.GetSerializedConfig();
-                    EditorGUILayout.PropertyField(settings.FindProperty("updateProviderCheckForUpdates"), s_settingsCheckForUpdates);
+                    EditorGUILayout.PropertyField(settings.FindProperty("updateProviderCheckForUpdates"), s_contentCheckForUpdates);
                     settings.ApplyModifiedPropertiesWithoutUndo();
 
                     UpdateDayCountSetting =
-                        EditorGUILayout.IntSlider(s_settingsUpdateDayCount, UpdateDayCountSetting, 1, 31);
+                        EditorGUILayout.IntSlider(s_contentUpdateDayCount, UpdateDayCountSetting, 1, 31);
+                    #endregion
 
                     GDXStyles.EndGUILayout();
                 },
-                keywords = s_settingsKeywords
+                keywords = s_keywords
             };
         }
     }

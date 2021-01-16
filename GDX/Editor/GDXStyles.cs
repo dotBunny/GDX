@@ -20,6 +20,11 @@ namespace GDX.Editor
         private static readonly GUIStyle s_line;
 
         /// <summary>
+        /// A <see cref="GUIStyle" /> representing a section header.
+        /// </summary>
+        private static readonly GUIStyle s_sectionHeader;
+
+        /// <summary>
         ///     A <see cref="GUIStyle" /> used to wrap all GDX editor user interfaces.
         /// </summary>
         private static readonly GUIStyle s_wrapper;
@@ -69,13 +74,14 @@ namespace GDX.Editor
 
             s_wrapper = new GUIStyle {margin = {left = 5, right = 5, bottom = 5}};
 
+            s_sectionHeader = new GUIStyle("box");
+
             Button = new GUIStyle(EditorStyles.miniButton) {stretchWidth = false, padding = {left = 10, right = 10}};
 
             // Build our headers
-            H1 = new GUIStyle(EditorStyles.largeLabel) { fontStyle = FontStyle.Bold };
+            H1 = new GUIStyle(EditorStyles.largeLabel) {fontStyle = FontStyle.Bold};
             H2 = new GUIStyle(H1) {fontSize = H1.fontSize - 2};
             H3 = new GUIStyle(H2) {fontSize = H2.fontSize - 2};
-
         }
 
         /// <summary>
@@ -121,6 +127,17 @@ namespace GDX.Editor
             {
                 GUILayout.Space(bottomPadding);
             }
+        }
+
+        /// <summary>
+        ///     Draw a section header useful for project settings.
+        /// </summary>
+        /// <param name="text">The section header content.</param>
+        public static void SectionHeader(string text)
+        {
+            GUILayout.BeginHorizontal(s_sectionHeader);
+            GUILayout.Label(text, H1);
+            GUILayout.EndHorizontal();
         }
     }
 }

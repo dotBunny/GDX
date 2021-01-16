@@ -7,9 +7,9 @@ using UnityEngine;
 namespace GDX.Developer.Editor
 {
     /// <summary>
-    /// Project settings for the <see cref="CommandLineParser"/>.
+    /// GDX.Developer Assembly Settings
     /// </summary>
-    public static class CommandLineParserSettings
+    public static class Settings
     {
         /// <summary>
         ///     A list of keywords to flag when searching project settings.
@@ -22,7 +22,7 @@ namespace GDX.Developer.Editor
         ///     Settings content for <see cref="GDXConfig.developerCommandLineParserArgumentPrefix" />.
         /// </summary>
         // ReSharper disable once HeapView.ObjectAllocation.Evident
-        private static readonly GUIContent s_settingsArgumentPrefix = new GUIContent(
+        private static readonly GUIContent s_contentArgumentPrefix = new GUIContent(
             "Argument Prefix",
             "The prefix used to denote arguments in the command line.");
 
@@ -30,32 +30,36 @@ namespace GDX.Developer.Editor
         ///     Settings content for <see cref="GDXConfig.developerCommandLineParserArgumentSplit" />.
         /// </summary>
         // ReSharper disable once HeapView.ObjectAllocation.Evident
-        private static readonly GUIContent s_settingsArgumentSplit = new GUIContent(
+        private static readonly GUIContent s_contentArgumentSplit = new GUIContent(
             "Argument Split",
             "The string used to split arguments from their values.");
 
         /// <summary>
-        ///     Get <see cref="SettingsProvider" /> for GDX.Developer updates.
+        ///     Get <see cref="SettingsProvider" /> for GDX.Developer assembly.
         /// </summary>
         /// <returns>A provider for project settings.</returns>
         [SettingsProvider]
         public static SettingsProvider SettingsProvider()
         {
             // ReSharper disable once HeapView.ObjectAllocation.Evident
-            return new SettingsProvider("Project/GDX/Command Line Parser", SettingsScope.Project)
+            return new SettingsProvider("Project/GDX/Developer", SettingsScope.Project)
             {
-                label = "Command Line Parser",
+                label = "Developer",
                 guiHandler = searchContext =>
                 {
+                    SerializedObject settings = Config.GetSerializedConfig();
                     GDXStyles.BeginGUILayout();
 
-                    SerializedObject settings = Config.GetSerializedConfig();
-                    EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentPrefix"), s_settingsArgumentPrefix);
-                    EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentSplit"), s_settingsArgumentSplit);
+                    #region Command Line Parser
+                    GDXStyles.SectionHeader("Command Line Parser");
 
-                    settings.ApplyModifiedPropertiesWithoutUndo();
+                    EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentPrefix"), s_contentArgumentPrefix);
+                    EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentSplit"), s_contentArgumentSplit);
+
+                    #endregion
 
                     GDXStyles.EndGUILayout();
+                    settings.ApplyModifiedPropertiesWithoutUndo();
                 },
                 keywords = s_settingsKeywords
             };

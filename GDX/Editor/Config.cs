@@ -18,7 +18,8 @@ namespace GDX.Editor
         public static GDXConfig Get()
         {
             // Attempt to load the settings file from the asset database.
-            GDXConfig settings = AssetDatabase.LoadAssetAtPath<GDXConfig>(Strings.AssetPathPrefix + GDXConfig.ResourcesPath);
+            GDXConfig settings = AssetDatabase.LoadAssetAtPath<GDXConfig>(
+                Strings.AssetPathPrefix + "Resources/" + GDXConfig.ResourcesPath);
 
             // If it worked, send it back!
             if (settings != null)
@@ -31,11 +32,12 @@ namespace GDX.Editor
 
             // Ensure the folder structure is in place before we manually make the asset
             Platform.EnsureFolderHierarchyExists(
-                System.IO.Path.Combine(Application.dataPath,
-                    GDXConfig.ResourcesPath));
+                System.IO.Path.Combine(Application.dataPath, "Resources", GDXConfig.ResourcesPath));
 
             // Create and save the asset
-            AssetDatabase.CreateAsset(settings, Strings.AssetPathPrefix + GDXConfig.ResourcesPath);
+            AssetDatabase.CreateAsset(settings,
+                Strings.AssetPathPrefix + "Resources/" + GDXConfig.ResourcesPath);
+            
             AssetDatabase.SaveAssets();
 
             // Send it back!

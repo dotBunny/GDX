@@ -66,7 +66,7 @@ namespace GDX.Editor
             }
 
             // Should we check for updates?
-            DateTime targetDate = GetLastChecked().AddDays(GDXSettings.UpdateDayCountSetting);
+            DateTime targetDate = GetLastChecked().AddDays(Settings.UpdateDayCountSetting);
             if (DateTime.Now >= targetDate)
             {
                 CheckForUpdates();
