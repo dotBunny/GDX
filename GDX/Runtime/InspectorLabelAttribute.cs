@@ -10,7 +10,15 @@ namespace GDX
     /// </summary>
     public class InspectorLabelAttribute : PropertyAttribute
     {
-        public string Label { get ; private set; }
+        /// <summary>
+        /// Label Text
+        /// </summary>
+        public readonly string Label;
+
+        /// <summary>
+        /// Create a new instance of <see cref="InspectorLabelAttribute"/>.
+        /// </summary>
+        /// <param name="label">The labels <see cref="GUIContent.text"/>.</param>
         public InspectorLabelAttribute(string label)
         {
             Label = label ;
