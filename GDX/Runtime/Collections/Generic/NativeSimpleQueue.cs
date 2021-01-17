@@ -9,6 +9,10 @@ namespace GDX.Collections.Generic
     /// <summary>
     ///     A <see cref="Unity.Collections.NativeArray{T}" /> backed simplified first-in, first-out (FIFO) data structure.
     /// </summary>
+    /// <remarks>
+    ///     The <see cref="NativeSimpleQueue{T}" /> is backed by a <see cref="Unity.Collections.NativeArray{T}" /> which requires
+    ///     UnityEngine.CoreModule.dll.
+    /// </remarks>
     /// <typeparam name="T">The type of <see cref="object" />s contained within.</typeparam>
     public struct NativeSimpleQueue<T> : IDisposable where T : struct
     {

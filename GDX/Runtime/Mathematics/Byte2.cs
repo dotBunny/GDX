@@ -12,7 +12,7 @@ using Unity.Mathematics;
 
 #pragma warning disable 0660, 0661
 
-namespace GDX.Collections
+namespace GDX.Mathematics
 {
     /// <summary>
     ///     A <see cref="byte" /> vector.
@@ -296,7 +296,7 @@ namespace GDX.Collections
         /// </summary>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise multiplication operation on two <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of a  multiplication operation on two <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator *(Byte2 lhs, Byte2 rhs)
         {
@@ -309,7 +309,7 @@ namespace GDX.Collections
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise multiplication operation on a <see cref="Byte2" /> and a
+        ///     Returns the result of a multiplication operation on a <see cref="Byte2" /> and a
         ///     <see cref="byte" /> value.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -324,7 +324,7 @@ namespace GDX.Collections
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise multiplication operation on a <see cref="byte" /> and a
+        ///     Returns the result of a multiplication operation on a <see cref="byte" /> and a
         ///     <see cref="Byte2" /> value.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -338,7 +338,7 @@ namespace GDX.Collections
         /// </summary>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise addition operation on two <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of an addition operation on two <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator +(Byte2 lhs, Byte2 rhs)
         {
@@ -351,7 +351,7 @@ namespace GDX.Collections
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise addition operation on an <see cref="Byte2" /> and an <see cref="byte" />
+        ///     Returns the result of an addition operation on an <see cref="Byte2" /> and an <see cref="byte" />
         ///     value.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -366,7 +366,7 @@ namespace GDX.Collections
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise addition operation on an <see cref="byte" /> value and an
+        ///     Returns the result of an addition operation on an <see cref="byte" /> value and an
         ///     <see cref="Byte2" />.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -380,7 +380,7 @@ namespace GDX.Collections
         /// </summary>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise subtraction operation on two <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of a subtraction operation on two <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator -(Byte2 lhs, Byte2 rhs)
         {
@@ -393,7 +393,7 @@ namespace GDX.Collections
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise subtraction operation on a <see cref="Byte2" /> and a <see cref="byte" />
+        ///     Returns the result of a subtraction operation on a <see cref="Byte2" /> and a <see cref="byte" />
         ///     value.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -408,7 +408,7 @@ namespace GDX.Collections
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise subtraction operation on an <see cref="byte" /> value and an
+        ///     Returns the result of a subtraction operation on an <see cref="byte" /> value and an
         ///     <see cref="Byte2" />.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -422,7 +422,7 @@ namespace GDX.Collections
         /// </summary>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise division operation on two <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of a division operation on two <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator /(Byte2 lhs, Byte2 rhs)
         {
@@ -435,7 +435,7 @@ namespace GDX.Collections
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise division operation on a <see cref="Byte2" /> and <see cref="byte" />
+        ///     Returns the result of a division operation on a <see cref="Byte2" /> and <see cref="byte" />
         ///     value.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -450,7 +450,7 @@ namespace GDX.Collections
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise division operation on a <see cref="byte" /> value and
+        ///     Returns the result of a division operation on a <see cref="byte" /> value and
         ///     <see cref="Byte2" />.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -464,7 +464,7 @@ namespace GDX.Collections
         /// </summary>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise modulus operation on two <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of a modulus operation on two <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator %(Byte2 lhs, Byte2 rhs)
         {
@@ -477,7 +477,7 @@ namespace GDX.Collections
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise modulus operation on a <see cref="Byte2" /> and <see cref="byte" />
+        ///     Returns the result of a modulus operation on a <see cref="Byte2" /> and <see cref="byte" />
         ///     value.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -492,7 +492,7 @@ namespace GDX.Collections
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise modulus operation on a <see cref="byte" /> value and
+        ///     Returns the result of a modulus operation on a <see cref="byte" /> value and
         ///     <see cref="Byte2" />.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -505,7 +505,7 @@ namespace GDX.Collections
         ///     Increment <see cref="Byte2" /> values.
         /// </summary>
         /// <param name="val">Target <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise increment operation on a <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of an increment operation on a <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator ++(Byte2 val)
         {
@@ -516,7 +516,7 @@ namespace GDX.Collections
         ///     Decrement <see cref="Byte2" /> values.
         /// </summary>
         /// <param name="val">Target <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise decrement operation on a <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of a decrement operation on a <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator --(Byte2 val)
         {
@@ -527,7 +527,7 @@ namespace GDX.Collections
         ///     Unary minus <see cref="Byte2" /> values.
         /// </summary>
         /// <param name="val">Target <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise unary minus operation on a <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of an unary minus operation on a <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator -(Byte2 val)
         {
@@ -538,7 +538,7 @@ namespace GDX.Collections
         ///     Unary plus <see cref="Byte2" /> values.
         /// </summary>
         /// <param name="val">Target <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise unary plus operation on a <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of an unary plus operation on a <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator +(Byte2 val)
         {
@@ -549,7 +549,7 @@ namespace GDX.Collections
         ///     Bitwise NOT <see cref="Byte2" /> values.
         /// </summary>
         /// <param name="val">Target <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise bitwise NOT operation on a <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of a bitwise NOT operation on a <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator ~(Byte2 val)
         {
@@ -561,7 +561,7 @@ namespace GDX.Collections
         /// </summary>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise bitwise AND operation on two <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of a bitwise AND operation on two <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator &(Byte2 lhs, Byte2 rhs)
         {
@@ -574,7 +574,7 @@ namespace GDX.Collections
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise bitwise AND operation on a <see cref="Byte2" /> and a <see cref="byte" />
+        ///     Returns the result of a bitwise AND operation on a <see cref="Byte2" /> and a <see cref="byte" />
         ///     value.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -589,7 +589,7 @@ namespace GDX.Collections
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise bitwise AND operation on a <see cref="byte" /> and a <see cref="Byte2" />
+        ///     Returns the result of a bitwise AND operation on a <see cref="byte" /> and a <see cref="Byte2" />
         ///     value.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -603,7 +603,7 @@ namespace GDX.Collections
         /// </summary>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise bitwise OR operation on two <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of a bitwise OR operation on two <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator |(Byte2 lhs, Byte2 rhs)
         {
@@ -616,7 +616,7 @@ namespace GDX.Collections
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise bitwise OR operation on a <see cref="Byte2" /> and a <see cref="byte" />
+        ///     Returns the result of a bitwise OR operation on a <see cref="Byte2" /> and a <see cref="byte" />
         ///     value.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -631,7 +631,7 @@ namespace GDX.Collections
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise bitwise OR operation on a <see cref="byte" /> and a <see cref="Byte2" />
+        ///     Returns the result of a bitwise OR operation on a <see cref="byte" /> and a <see cref="Byte2" />
         ///     value.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -645,7 +645,7 @@ namespace GDX.Collections
         /// </summary>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise bitwise EXCLUSIVE OR operation on two <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of a bitwise EXCLUSIVE OR operation on two <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator ^(Byte2 lhs, Byte2 rhs)
         {
@@ -658,7 +658,7 @@ namespace GDX.Collections
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise bitwise XOR operation on a <see cref="Byte2" /> and a <see cref="byte" />
+        ///     Returns the result of a bitwise XOR operation on a <see cref="Byte2" /> and a <see cref="byte" />
         ///     value.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -673,7 +673,7 @@ namespace GDX.Collections
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise bitwise XOR operation on a <see cref="byte" /> and a <see cref="Byte2" />
+        ///     Returns the result of a bitwise XOR operation on a <see cref="byte" /> and a <see cref="Byte2" />
         ///     value.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -748,8 +748,9 @@ namespace GDX.Collections
 
 #if GDX_MATHEMATICS
         /// <summary>
-        ///     Constructs a <see cref="Byte2" /> from a <see cref="Unity.Mathematics.bool2" /> by componentwise conversion.
+        ///     Constructs a <see cref="Byte2" /> from a <see cref="Unity.Mathematics.bool2" /> by conversion.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="v">The value to transcribe.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Byte2(bool2 v)
@@ -759,8 +760,9 @@ namespace GDX.Collections
         }
 
         /// <summary>
-        ///     Constructs a <see cref="Byte2" /> from a <see cref="Unity.Mathematics.float2" /> by componentwise conversion.
+        ///     Constructs a <see cref="Byte2" /> from a <see cref="Unity.Mathematics.float2" /> by conversion.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="v">The value to transcribe.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Byte2(float2 v)
@@ -770,8 +772,9 @@ namespace GDX.Collections
         }
 
         /// <summary>
-        ///     Constructs a <see cref="Byte2" /> from a <see cref="Unity.Mathematics.double2" /> by componentwise conversion.
+        ///     Constructs a <see cref="Byte2" /> from a <see cref="Unity.Mathematics.double2" /> by conversion.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="v">The value to transcribe.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Byte2(double2 v)
@@ -781,8 +784,9 @@ namespace GDX.Collections
         }
 
         /// <summary>
-        ///     Explicitly converts a <see cref="Unity.Mathematics.bool2" /> to a <see cref="Byte2" /> by componentwise conversion.
+        ///     Explicitly converts a <see cref="Unity.Mathematics.bool2" /> to a <see cref="Byte2" /> by conversion.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="v">The value to transcribe.</param>
         /// <returns>A new <see cref="Byte2" /> created from <paramref name="v" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -792,8 +796,9 @@ namespace GDX.Collections
         }
 
         /// <summary>
-        ///     Explicitly converts a <see cref="Unity.Mathematics.bool2" /> to a <see cref="Byte2" /> by componentwise conversion.
+        ///     Explicitly converts a <see cref="Unity.Mathematics.bool2" /> to a <see cref="Byte2" /> by conversion.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="v">The value to transcribe.</param>
         /// <returns>A new <see cref="Byte2" /> created from <paramref name="v" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -803,9 +808,10 @@ namespace GDX.Collections
         }
 
         /// <summary>
-        ///     Explicitly converts a <see cref="Unity.Mathematics.double2" /> to a <see cref="Byte2" /> by componentwise
+        ///     Explicitly converts a <see cref="Unity.Mathematics.double2" /> to a <see cref="Byte2" /> by
         ///     conversion.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="v">The value to transcribe.</param>
         /// <returns>A new <see cref="Byte2" /> created from <paramref name="v" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -817,9 +823,10 @@ namespace GDX.Collections
         /// <summary>
         ///     Determine if one <see cref="Byte2" /> is less than another <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise LESS THAN operation on two <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of a LESS THAN operation on two <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator <(Byte2 lhs, Byte2 rhs)
         {
@@ -827,12 +834,13 @@ namespace GDX.Collections
         }
 
         /// <summary>
-        ///     Determine if <see cref="Byte2 " /> is less than a <see cref="byte" />.
+        ///     Determine if <see cref="Byte2" /> is less than a <see cref="byte" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise LESS THAN operation on a <see cref="Byte2" /> and a <see cref="byte" />
+        ///     Returns the result of a LESS THAN operation on a <see cref="Byte2" /> and a <see cref="byte" />
         ///     value.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -844,10 +852,11 @@ namespace GDX.Collections
         /// <summary>
         ///     Determine if <see cref="byte" /> is less than a <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise LESS THAN operation on a <see cref="byte" /> and a <see cref="Byte2" />
+        ///     Returns the result of a LESS THAN operation on a <see cref="byte" /> and a <see cref="Byte2" />
         ///     value.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -859,9 +868,10 @@ namespace GDX.Collections
         /// <summary>
         ///     Determine if one <see cref="Byte2" /> is less than or equal to another <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise LESS THAN OR EQUAL operation on two <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of a LESS THAN OR EQUAL operation on two <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator <=(Byte2 lhs, Byte2 rhs)
         {
@@ -871,10 +881,11 @@ namespace GDX.Collections
         /// <summary>
         ///     Determine if <see cref="Byte2 " /> is less than or equal a <see cref="byte" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise LESS THAN OR EQUAL operation on a <see cref="Byte2" /> and a
+        ///     Returns the result of a LESS THAN OR EQUAL operation on a <see cref="Byte2" /> and a
         ///     <see cref="byte" />
         ///     value.
         /// </returns>
@@ -887,10 +898,11 @@ namespace GDX.Collections
         /// <summary>
         ///     Determine if <see cref="byte" /> is less than or equal a <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise LESS THAN OR EQUAL operation on a <see cref="byte" /> and a
+        ///     Returns the result of a LESS THAN OR EQUAL operation on a <see cref="byte" /> and a
         ///     <see cref="Byte2" />
         ///     value.
         /// </returns>
@@ -903,9 +915,10 @@ namespace GDX.Collections
         /// <summary>
         ///     Determine if one <see cref="Byte2" /> is less than another <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise LESS THAN operation on two <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of a LESS THAN operation on two <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator >(Byte2 lhs, Byte2 rhs)
         {
@@ -915,10 +928,11 @@ namespace GDX.Collections
         /// <summary>
         ///     Determine if <see cref="Byte2 " /> is greater than a <see cref="byte" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise GREATER THAN operation on a <see cref="Byte2" /> and a <see cref="byte" />
+        ///     Returns the result of a GREATER THAN operation on a <see cref="Byte2" /> and a <see cref="byte" />
         ///     value.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -930,10 +944,11 @@ namespace GDX.Collections
         /// <summary>
         ///     Determine if <see cref="byte" /> is greater than a <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise GREATER THAN operation on a <see cref="byte" /> and a <see cref="Byte2" />
+        ///     Returns the result of a GREATER THAN operation on a <see cref="byte" /> and a <see cref="Byte2" />
         ///     value.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -946,10 +961,11 @@ namespace GDX.Collections
         /// <summary>
         ///     Determine if <see cref="Byte2 " /> is greater than or equal a <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise GREATER THAN OR EQUAL operation on a <see cref="Byte2" /> and a
+        ///     Returns the result of a GREATER THAN OR EQUAL operation on a <see cref="Byte2" /> and a
         ///     <see cref="Byte2" />
         ///     value.
         /// </returns>
@@ -962,10 +978,11 @@ namespace GDX.Collections
         /// <summary>
         ///     Determine if <see cref="Byte2 " /> is greater than or equal a <see cref="byte" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise GREATER THAN OR EQUAL operation on a <see cref="Byte2" /> and a
+        ///     Returns the result of a GREATER THAN OR EQUAL operation on a <see cref="Byte2" /> and a
         ///     <see cref="byte" />
         ///     value.
         /// </returns>
@@ -978,10 +995,11 @@ namespace GDX.Collections
         /// <summary>
         ///     Determine if <see cref="byte " /> is greater than or equal a <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
         /// <returns>
-        ///     Returns the result of a componentwise GREATER THAN OR EQUAL operation on a <see cref="byte" /> and a
+        ///     Returns the result of a GREATER THAN OR EQUAL operation on a <see cref="byte" /> and a
         ///     <see cref="Byte2" />
         ///     value.
         /// </returns>
@@ -994,9 +1012,10 @@ namespace GDX.Collections
         /// <summary>
         ///     Determine if one <see cref="Byte2" /> is equal to another <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise EQUALITY operation on two <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of an EQUALITY operation on two <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator ==(Byte2 lhs, Byte2 rhs)
         {
@@ -1006,9 +1025,10 @@ namespace GDX.Collections
         /// <summary>
         ///     Determine if both components of a <see cref="Byte2" /> are equal to a <see cref="byte" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
-        /// <returns>Returns the result of a componentwise EQUALITY operation on a <see cref="Byte2" /> and a <see cref="byte" />.</returns>
+        /// <returns>Returns the result of an EQUALITY operation on a <see cref="Byte2" /> and a <see cref="byte" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator ==(Byte2 lhs, byte rhs)
         {
@@ -1018,9 +1038,10 @@ namespace GDX.Collections
         /// <summary>
         ///     Determine if both components of a <see cref="Byte2" /> are equal to a <see cref="byte" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise EQUALITY operation on a <see cref="byte" /> and a <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of an EQUALITY operation on a <see cref="byte" /> and a <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator ==(byte lhs, Byte2 rhs)
         {
@@ -1030,9 +1051,10 @@ namespace GDX.Collections
         /// <summary>
         ///     Determine if one <see cref="Byte2" /> is not equal to another <see cref="Byte2" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise NOT EQUAL operation on two <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of a NOT EQUAL operation on two <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator !=(Byte2 lhs, Byte2 rhs)
         {
@@ -1042,9 +1064,10 @@ namespace GDX.Collections
         /// <summary>
         ///     Determine if both components of a <see cref="Byte2" /> are not equal to a <see cref="byte" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="Byte2" />.</param>
         /// <param name="rhs">Right-hand side <see cref="byte" />.</param>
-        /// <returns>Returns the result of a componentwise NOT EQUAL operation on a <see cref="Byte2" /> and a <see cref="byte" />.</returns>
+        /// <returns>Returns the result of a NOT EQUAL operation on a <see cref="Byte2" /> and a <see cref="byte" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator !=(Byte2 lhs, byte rhs)
         {
@@ -1054,9 +1077,10 @@ namespace GDX.Collections
         /// <summary>
         ///     Determine if both components of a <see cref="Byte2" /> are not equal to a <see cref="byte" />.
         /// </summary>
+        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <param name="lhs">Left-hand side <see cref="byte" />.</param>
         /// <param name="rhs">Right-hand side <see cref="Byte2" />.</param>
-        /// <returns>Returns the result of a componentwise NOT EQUAL operation on a <see cref="byte" /> and a <see cref="Byte2" />.</returns>
+        /// <returns>Returns the result of a NOT EQUAL operation on a <see cref="byte" /> and a <see cref="Byte2" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator !=(byte lhs, Byte2 rhs)
         {

@@ -1,8 +1,6 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Text;
-
 // ReSharper disable HeapView.ObjectAllocation.Evident
 
 namespace GDX
@@ -12,6 +10,11 @@ namespace GDX
     /// </summary>
     public static class Strings
     {
+        /// <summary>
+        ///      Useful prefix when dealing with asset paths.
+        /// </summary>
+        public const string AssetPathPrefix = "Assets/";
+
         /// <summary>
         ///     Reference to the Unity package name for GDX.
         /// </summary>
@@ -23,13 +26,23 @@ namespace GDX
         public const string TestDefine = "GDX_TESTS";
 
         /// <summary>
-        ///     An array of <see cref="System.Char" /> used to indicate newlines.
+        ///     A null value string useful for default method parameters.
         /// </summary>
-        public static readonly char[] NewLineCharacters = {'\n', '\r'};
+        public const string Null = null;
 
         /// <summary>
-        ///     A reusable <see cref="System.Text.StringBuilder" />.
+        ///     Useful <see cref="string"/> to move up to a parent in pathing.
         /// </summary>
-        public static readonly StringBuilder Builder = new StringBuilder();
+        public const string PreviousFolder = "..";
+
+        /// <summary>
+        ///     An array of <see cref="System.Char" /> used to indicate newlines.
+        /// </summary>
+        public static readonly char[] NewLineIndicators = {'\n', '\r'};
+
+        /// <summary>
+        ///     An array of <see cref="System.Char" /> used to split versions.
+        /// </summary>
+        public static readonly char[] VersionIndicators = {'.', ',', '_', 'f'};
     }
 }

@@ -17,13 +17,14 @@ using Unity.Jobs;
 namespace GDX.Jobs.ParallelFor
 {
     /// <summary>
-    ///     <para>
-    ///         Fills a <see cref="Unity.Collections.NativeArray{T}" /> typed as <see cref="System.Int32" /> with a value in
-    ///         parallel.
-    ///     </para>
+    ///     Fills a <see cref="Unity.Collections.NativeArray{T}" /> typed as <see cref="System.Int32" /> with a value in
+    ///     parallel.
     /// </summary>
     /// <remarks>
-    ///     Burst compatible.
+    ///     <para>
+    ///         The <see cref="IntegerBufferFillJob" /> relies on the <see cref="IJobParallelFor" /> which
+    ///         requires UnityEngine.CoreModule.dll.
+    ///     </para>
     /// </remarks>
 #if GDX_BURST
     [BurstCompile]

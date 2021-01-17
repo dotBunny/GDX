@@ -11,12 +11,10 @@ namespace GDX
         /// <summary>
         ///     <para>Get the hash code value of <paramref name="targetBytes" />, an array of <see cref="System.Byte" />.</para>
         /// </summary>
-        /// <remarks>
-        ///     This loosely based on the Fowler–Noll–Vo (FNV) hash function.
-        /// </remarks>
+        /// <remarks>Does NOT get the object's hashcode.</remarks>
         /// <param name="targetBytes">The target array of <see cref="byte" />.</param>
         /// <returns>A <see cref="System.Int32" /> value.</returns>
-        public static int GetHashCode(this byte[] targetBytes)
+        public static int GetValueHashCode(this byte[] targetBytes)
         {
             unchecked
             {

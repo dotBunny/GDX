@@ -16,7 +16,10 @@ namespace GDX.Collections.Generic
     /// <summary>
     ///     A 3-Dimensional <see cref="NativeArray{T}" /> backed array.
     /// </summary>
-    /// <remarks>Can be used in Jobs.</remarks>
+    /// <remarks>
+    ///     The <see cref="NativeArray2D{T}" /> is backed by a <see cref="Unity.Collections.NativeArray{T}" /> which requires
+    ///     UnityEngine.CoreModule.dll.
+    /// </remarks>
     /// <typeparam name="T">Type of objects.</typeparam>
     public struct NativeUniformArray3D<T> : IDisposable where T : struct
     {

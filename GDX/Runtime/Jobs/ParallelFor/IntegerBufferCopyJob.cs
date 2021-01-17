@@ -17,13 +17,14 @@ using Unity.Jobs;
 namespace GDX.Jobs.ParallelFor
 {
     /// <summary>
-    ///     <para>
-    ///         Copy one <see cref="Unity.Collections.NativeArray{T}" /> typed as <see cref="System.Int32" /> to another in
-    ///         parallel.
-    ///     </para>
+    ///     Copy one <see cref="Unity.Collections.NativeArray{T}" /> typed as <see cref="System.Int32" /> to another in
+    ///     parallel.
     /// </summary>
     /// <remarks>
-    ///     Burst compatible.
+    ///     <para>
+    ///         The <see cref="IntegerBufferCopyJob" /> relies on the <see cref="IJobParallelFor" /> which
+    ///         requires UnityEngine.CoreModule.dll.
+    ///     </para>
     /// </remarks>
 #if GDX_BURST
     [BurstCompile]

@@ -4,15 +4,21 @@
 using System;
 using Unity.Collections;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace GDX.Collections.Generic
 {
     /// <summary>
     ///     A <see cref="Unity.Collections.NativeArray{T}" /> backed <see cref="SimpleList{T}" />.
     /// </summary>
+    /// <remarks>
+    ///     The <see cref="NativeSimpleList{T}" /> is backed by a <see cref="Unity.Collections.NativeArray{T}" /> which
+    ///     requires
+    ///     UnityEngine.CoreModule.dll.
+    /// </remarks>
     /// <typeparam name="T">The type of <see cref="object" />s contained within.</typeparam>
     public struct NativeSimpleList<T> : IDisposable where T : struct
     {
-        // ReSharper disable MemberCanBePrivate.Global
         /// <summary>
         ///     Internal array of backed data for the <see cref="SimpleList{T}" />.
         /// </summary>
@@ -21,8 +27,8 @@ namespace GDX.Collections.Generic
         /// <summary>
         ///     Number of elements.
         /// </summary>
+        /// <remarks>CAUTION! Changing this will alter the understanding of the data.</remarks>
         public int Count;
-        // ReSharper enable MemberCanBePrivate.Global
 
         /// <summary>
         ///     Create a <see cref="SimpleList{T}" /> with an initial <paramref name="capacity" />.

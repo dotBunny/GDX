@@ -43,7 +43,10 @@ namespace GDX
         ///     </para>
         /// </summary>
         /// <remarks>
-        ///     This loosely based on the Fowler–Noll–Vo (FNV) hash function.
+        ///     This loosely based on the Fowler–Noll–Vo (FNV) hash function. It's value will be identical
+        ///     to the value produced natively by processing a <see cref="System.String" /> with
+        ///     <see cref="System.String.ToUpper()" />.<see cref="System.String.GetHashCode()" />, but with no
+        ///     allocations.
         /// </remarks>
         /// <param name="targetString">The target <see cref="System.String" />.</param>
         /// <returns>A <see cref="System.Int32" /> value.</returns>
@@ -99,7 +102,10 @@ namespace GDX
         ///     </para>
         /// </summary>
         /// <remarks>
-        ///     This loosely based on the Fowler–Noll–Vo (FNV) hash function.
+        ///     This loosely based on the Fowler–Noll–Vo (FNV) hash function. It's value will be identical
+        ///     to the value produced natively by processing a <see cref="System.String" /> with
+        ///     <see cref="System.String.ToLower()" />.<see cref="System.String.GetHashCode()" />, but with no
+        ///     allocations.
         /// </remarks>
         /// <param name="targetString">The target <see cref="System.String" />.</param>
         /// <returns>A <see cref="System.Int32" /> value.</returns>
@@ -146,6 +152,56 @@ namespace GDX
 
                 return hash1 + hash2 * 1566083941;
             }
+        }
+
+        /// <summary>
+        /// Determine if there are any lowercase letters in the provided <paramref name="targetString"/>.
+        /// </summary>
+        /// <param name="targetString">The target <see cref="System.String" />.</param>
+        /// <returns>true/false if lowercase letters were found.</returns>
+        public static unsafe bool HasLowerCase(this string targetString)
+        {
+            fixed (char* src = targetString)
+            {
+                int c;
+                char* s = src;
+
+                // Get character
+                while ((c = s[0]) != 0)
+                {
+                    if (c >= AsciiLowerCaseStart && c <= AsciiLowerCaseEnd)
+                    {
+                        return true;
+                    }
+                    s += 1;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Determine if there are any uppercase letters in the provided <paramref name="targetString"/>.
+        /// </summary>
+        /// <param name="targetString">The target <see cref="System.String" />.</param>
+        /// <returns>true/false if uppercase letters were found.</returns>
+        public static unsafe bool HasUpperCase(this string targetString)
+        {
+            fixed (char* src = targetString)
+            {
+                int c;
+                char* s = src;
+
+                // Get character
+                while ((c = s[0]) != 0)
+                {
+                    if (c >= AsciiUpperCaseStart && c <= AsciiUpperCaseEnd)
+                    {
+                        return true;
+                    }
+                    s += 1;
+                }
+            }
+            return false;
         }
     }
 }
