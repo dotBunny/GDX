@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2021-01-17
+***"Let Us Build"***
+> A minor problem came to light after pushing the button.
+### Changed
+- `GDX.Developer.Build.BuildInfoGenerator` will now forcibly tell the `GDX.Developer.CommandLineParser` to do its thing prior to filling out the file.
+
 ## [1.1.0] - 2021-01-17
 ***"Breaking Bad"***
 > We are breaking some rules! This should have been a _major release_ as we have altered method names to be consistent across the API.
