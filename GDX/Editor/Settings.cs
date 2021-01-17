@@ -10,11 +10,11 @@ using UnityEngine;
 namespace GDX.Editor
 {
     /// <summary>
-    /// GDX Assembly Settings
+    ///     GDX Assembly Settings
     /// </summary>
     public static class Settings
     {
-         /// <summary>
+        /// <summary>
         ///     The key used by <see cref="EditorPrefs" /> to store <see cref="UpdateDayCountSetting" />.
         /// </summary>
         private const string UpdateDayCountKey = "GDX.UpdateProvider.UpdateDayCount";
@@ -61,10 +61,13 @@ namespace GDX.Editor
                 label = "GDX",
                 guiHandler = searchContext =>
                 {
+                    SerializedObject settings = Config.GetSerializedConfig();
                     GDXStyles.BeginGUILayout();
 
                     #region Package Updates
-                    GDXStyles.SectionHeader("Package Updates");
+
+                    GDXStyles.SectionHeader("Package Updates",
+                        settings.FindProperty("updateProviderCheckForUpdates").boolValue);
 
                     EditorGUILayout.BeginHorizontal(GDXStyles.InfoBox);
                     if (UpdateProvider.LocalPackage.Definition != null)
@@ -107,15 +110,23 @@ namespace GDX.Editor
                             $"An error occured trying to find the package definition.\nPresumed Root: {UpdateProvider.LocalPackage.PackageAssetPath}\nPresumed Manifest:{UpdateProvider.LocalPackage.PackageManifestPath})",
                             EditorStyles.boldLabel);
                     }
+
                     EditorGUILayout.EndHorizontal();
 
 
-                    SerializedObject settings = Config.GetSerializedConfig();
-                    EditorGUILayout.PropertyField(settings.FindProperty("updateProviderCheckForUpdates"), s_contentCheckForUpdates);
+                    EditorGUILayout.PropertyField(settings.FindProperty("updateProviderCheckForUpdates"),
+                        s_contentCheckForUpdates);
                     settings.ApplyModifiedPropertiesWithoutUndo();
+
+                    // Disable based on if we have this enabled
+                    GUI.enabled = settings.FindProperty("updateProviderCheckForUpdates").boolValue;
 
                     UpdateDayCountSetting =
                         EditorGUILayout.IntSlider(s_contentUpdateDayCount, UpdateDayCountSetting, 1, 31);
+
+                    // Restore regardless
+                    GUI.enabled = true;
+
                     #endregion
 
                     GDXStyles.EndGUILayout();

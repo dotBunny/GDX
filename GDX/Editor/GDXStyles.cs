@@ -20,7 +20,7 @@ namespace GDX.Editor
         private static readonly GUIStyle s_line;
 
         /// <summary>
-        /// A <see cref="GUIStyle" /> representing a section header.
+        ///     A <see cref="GUIStyle" /> representing a section header.
         /// </summary>
         private static readonly GUIStyle s_sectionHeader;
 
@@ -33,6 +33,16 @@ namespace GDX.Editor
         ///     A <see cref="GUIStyle" /> representing a button.
         /// </summary>
         public static readonly GUIStyle Button;
+
+        /// <summary>
+        ///     A <see cref="GUIStyle" /> representing an disabled section header.
+        /// </summary>
+        public static readonly GUIStyle DisabledSectionHeader;
+
+        /// <summary>
+        ///     A <see cref="GUIStyle" /> representing an enabled section header.
+        /// </summary>
+        public static readonly GUIStyle EnabledSectionHeader;
 
         /// <summary>
         ///     A <see cref="GUIStyle" /> representing a heading at level 1.
@@ -82,6 +92,9 @@ namespace GDX.Editor
             H1 = new GUIStyle(EditorStyles.largeLabel) {fontStyle = FontStyle.Bold};
             H2 = new GUIStyle(H1) {fontSize = H1.fontSize - 2};
             H3 = new GUIStyle(H2) {fontSize = H2.fontSize - 2};
+
+            EnabledSectionHeader = new GUIStyle(H1) {normal = {textColor = Color.green}, };
+            DisabledSectionHeader = new GUIStyle(EnabledSectionHeader) {normal = {textColor = Color.red}};
         }
 
         /// <summary>
@@ -133,10 +146,11 @@ namespace GDX.Editor
         ///     Draw a section header useful for project settings.
         /// </summary>
         /// <param name="text">The section header content.</param>
-        public static void SectionHeader(string text)
+        /// <param name="sectionEnabled">Is this section enabled?</param>
+        public static void SectionHeader(string text, bool sectionEnabled = true)
         {
             GUILayout.BeginHorizontal(s_sectionHeader);
-            GUILayout.Label(text, H1);
+            GUILayout.Label(text, sectionEnabled ? EnabledSectionHeader : DisabledSectionHeader);
             GUILayout.EndHorizontal();
         }
     }

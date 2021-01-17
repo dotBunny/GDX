@@ -117,7 +117,8 @@ namespace GDX.Developer.Editor
 
                     #region BuildInfo Generation
 
-                    GDXStyles.SectionHeader("BuildInfo Generation");
+                    GDXStyles.SectionHeader("BuildInfo Generation",
+                        settings.FindProperty("developerBuildInfoEnabled").boolValue);
 
                     EditorGUILayout.PropertyField(settings.FindProperty("developerBuildInfoEnabled"),
                         s_contentBuildInfoEnabled);
