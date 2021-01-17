@@ -28,6 +28,34 @@ namespace GDX.Tests.Editor
 
         [Test]
         [Category("GDX.Tests")]
+        public void False_HasUpperCase_Simple()
+        {
+            Assert.IsFalse(LowerCaseTestString.HasUpperCase());
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void False_HasLowerCase_Simple()
+        {
+            Assert.IsFalse(UpperCaseTestString.HasLowerCase());
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_HasUpperCase_Simple()
+        {
+            Assert.IsTrue(SimpleTestString.HasUpperCase());
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_HasLowerCase_Simple()
+        {
+            Assert.IsTrue(SimpleTestString.HasLowerCase());
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
         public void Equal_ToLowerGetHashCode_GetLowerCaseHashCode_ComplexString()
         {
             int oldHash = ComplexTestString.ToLower().GetHashCode();

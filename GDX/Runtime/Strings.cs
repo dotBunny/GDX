@@ -26,6 +26,11 @@ namespace GDX
         public const string TestDefine = "GDX_TESTS";
 
         /// <summary>
+        ///     A null value string useful for default method parameters.
+        /// </summary>
+        public const string Null = null;
+
+        /// <summary>
         ///     Useful <see cref="string"/> to move up to a parent in pathing.
         /// </summary>
         public const string PreviousFolder = "..";

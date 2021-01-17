@@ -12,16 +12,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `GDX.InspectorLabelAttribute` (and supporting `GDX.Editor.InspectorLabelPropertyDrawer`) to facilitate a quick way of replacing a labels content in the inspector.
 - `GDX.IO.Compression.TarFile` support for decompressing tarballs.
 - `GDX.SemanticVersion` struct for assistance with versioning.
+- `GDX.StringExtensions` gained `HasLowerCase()` and `HasUpperCase()` checks.
 - `GDX.Strings.Null` is a constant null value string
 - `GDX.Editor.Config` static utility class to store persistent project-wide configurations for both runtime and author-time.
 - `GDX.Editor.Settings` to drive specific `GDX` assembly settings to show up in the **Project Settings** window.
 - `GDX.Editor.GDXStyles` to assist with editor styling.
 - `GDX.Editor.UpdateProvider`, `GDX.Editor.PackageProvider` to facilitate updating of GDX package from different installation sources.
 - `GDX.Editor.VersionControl` static utility class to help with VCS operations.
-- Some extension based unit testing.
+- Unit test coverage for extension classes.
   - `GDX.Tests.ArrayExtensionsTests`
   - `GDX.Tests.ListExtensionsTests`
   - `GDX.Tests.SimpleListExtensionsTests`
+- Additional coverage was added to `GDX.Tests.StringExtensionsTests` to cover `HasUpperCase()` and `HasLowerCase()` methods.
 - `GDX.Developer` a **separate assembly** with more developer specific functionality.
 - `GDX.Developer.CommandLineParser` to provide a simple, yet configurable argument parser.
 - `GDX.Developer.Editor.Build.BuildInfoProvider` to facilitate automated BuildInfo generation across different pipelines.

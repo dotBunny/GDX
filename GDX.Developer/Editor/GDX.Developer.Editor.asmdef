@@ -4,7 +4,11 @@
     "references": [
         "GDX",
         "GDX.Editor",
-        "GDX.Developer"
+        "GDX.Developer",
+        "Unity.ScriptableBuildPipeline",
+        "Unity.ScriptableBuildPipeline.Editor",
+        "",
+        ""
     ],
     "includePlatforms": [
         "Editor"

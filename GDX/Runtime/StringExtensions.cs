@@ -153,5 +153,55 @@ namespace GDX
                 return hash1 + hash2 * 1566083941;
             }
         }
+
+        /// <summary>
+        /// Determine if there are any lowercase letters in the provided <paramref name="targetString"/>.
+        /// </summary>
+        /// <param name="targetString">The target <see cref="System.String" />.</param>
+        /// <returns>true/false if lowercase letters were found.</returns>
+        public static unsafe bool HasLowerCase(this string targetString)
+        {
+            fixed (char* src = targetString)
+            {
+                int c;
+                char* s = src;
+
+                // Get character
+                while ((c = s[0]) != 0)
+                {
+                    if (c >= AsciiLowerCaseStart && c <= AsciiLowerCaseEnd)
+                    {
+                        return true;
+                    }
+                    s += 1;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Determine if there are any uppercase letters in the provided <paramref name="targetString"/>.
+        /// </summary>
+        /// <param name="targetString">The target <see cref="System.String" />.</param>
+        /// <returns>true/false if uppercase letters were found.</returns>
+        public static unsafe bool HasUpperCase(this string targetString)
+        {
+            fixed (char* src = targetString)
+            {
+                int c;
+                char* s = src;
+
+                // Get character
+                while ((c = s[0]) != 0)
+                {
+                    if (c >= AsciiUpperCaseStart && c <= AsciiUpperCaseEnd)
+                    {
+                        return true;
+                    }
+                    s += 1;
+                }
+            }
+            return false;
+        }
     }
 }

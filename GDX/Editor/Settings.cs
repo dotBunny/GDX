@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+// ReSharper HeapView.ObjectAllocation.Evident
+
 namespace GDX.Editor
 {
     /// <summary>
@@ -20,14 +22,11 @@ namespace GDX.Editor
         /// <summary>
         ///     A list of keywords to flag when searching project settings.
         /// </summary>
-        // ReSharper disable HeapView.ObjectAllocation.Evident
         private static readonly HashSet<string> s_keywords = new HashSet<string>(new[] {"gdx", "update"});
-        // ReSharper restore HeapView.ObjectAllocation.Evident
 
         /// <summary>
         ///     Settings content for <see cref="GDXConfig.updateProviderCheckForUpdates" />.
         /// </summary>
-        // ReSharper disable once HeapView.ObjectAllocation.Evident
         private static readonly GUIContent s_contentCheckForUpdates = new GUIContent(
             "Check For Updates",
             "Should the package check the GitHub repository to see if there is a new version?");
@@ -35,7 +34,6 @@ namespace GDX.Editor
         /// <summary>
         ///     Settings content for <see cref="UpdateDayCountSetting" />.
         /// </summary>
-        // ReSharper disable once HeapView.ObjectAllocation.Evident
         private static readonly GUIContent s_contentUpdateDayCount = new GUIContent(
             "Update Timer (Days)",
             "After how many days should updates be checked for?");
@@ -58,7 +56,6 @@ namespace GDX.Editor
         [SettingsProvider]
         public static SettingsProvider SettingsProvider()
         {
-            // ReSharper disable once HeapView.ObjectAllocation.Evident
             return new SettingsProvider("Project/GDX", SettingsScope.Project)
             {
                 label = "GDX",
