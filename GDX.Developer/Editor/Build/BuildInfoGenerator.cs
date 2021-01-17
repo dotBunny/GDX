@@ -21,6 +21,12 @@ namespace GDX.Developer.Editor.Build
         public static string GetContent(GDXConfig config, bool forceDefaults = false,
             string internalDescription = Strings.Null)
         {
+            // Force the parse because this isn't a runtime thing
+            if (!forceDefaults)
+            {
+                CommandLineParser.ParseArguments();
+            }
+
             StringBuilder fileContent = new StringBuilder();
 
             fileContent.Append("namespace ");
