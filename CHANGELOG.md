@@ -9,14 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 > We are breaking some rules! This should have been a _major release_ as we have altered method names to be consistent across the API.
 ### Added
 - `GDX` assembly documentation contains _remarks_ where a function or class requires the presence of Unity's CoreModule to function correctly.
+- `GDX.GDXConfig` scriptable object self creates to store persistent project-wide configurations for both runtime and author-time, editable through **Project Settings**. 
 - `GDX.InspectorLabelAttribute` (and supporting `GDX.Editor.InspectorLabelPropertyDrawer`) to facilitate a quick way of replacing a labels content in the inspector.
 - `GDX.IO.Compression.TarFile` support for decompressing tarballs.
 - `GDX.SemanticVersion` struct for assistance with versioning.
 - `GDX.StringExtensions` gained `HasLowerCase()` and `HasUpperCase()` checks.
 - `GDX.Strings.Null` is a constant null value string
-- `GDX.Editor.Config` static utility class to store persistent project-wide configurations for both runtime and author-time.
+- `GDX.Editor.Config` static utility class to help with `GDX.GDXConfig` at author-time.
 - `GDX.Editor.Settings` to drive specific `GDX` assembly settings to show up in the **Project Settings** window.
-- `GDX.Editor.GDXStyles` to assist with editor styling.
+- `GDX.Editor.SettingsGUILayout` to assist with creating a consistent feel for `GDX` settings.
+- `GDX.Editor.GDXConfigEditor` enforces that a selected `GDXConfig` does not allow for inspector changes.
 - `GDX.Editor.UpdateProvider`, `GDX.Editor.PackageProvider` to facilitate updating of GDX package from different installation sources.
 - `GDX.Editor.VersionControl` static utility class to help with VCS operations.
 - Unit test coverage for extension classes.

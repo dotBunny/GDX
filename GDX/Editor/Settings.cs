@@ -28,7 +28,7 @@ namespace GDX.Editor
         ///     Settings content for <see cref="GDXConfig.updateProviderCheckForUpdates" />.
         /// </summary>
         private static readonly GUIContent s_contentCheckForUpdates = new GUIContent(
-            "Check For Updates",
+            "",
             "Should the package check the GitHub repository to see if there is a new version?");
 
         /// <summary>
@@ -62,15 +62,16 @@ namespace GDX.Editor
                 guiHandler = searchContext =>
                 {
                     SerializedObject settings = Config.GetSerializedConfig();
-                    GDXStyles.BeginGUILayout();
+                    SettingsGUILayout.BeginGUILayout();
 
                     #region Package Updates
 
-                    GDXStyles.SectionHeader("Package Updates",
-                        GDXStyles.GetSectionHeaderMode(settings.FindProperty("updateProviderCheckForUpdates")
-                            .boolValue));
+                    bool packageSectionEnabled = SettingsGUILayout.SectionHeader(
+                        "Automatic Package Updates",
+                        settings.FindProperty("updateProviderCheckForUpdates"),
+                        s_contentCheckForUpdates);
 
-                    EditorGUILayout.BeginHorizontal(GDXStyles.InfoBox);
+                    EditorGUILayout.BeginHorizontal(SettingsGUILayout.InfoBoxStyle);
                     if (UpdateProvider.LocalPackage.Definition != null)
                     {
                         GUILayout.Label(
@@ -85,19 +86,19 @@ namespace GDX.Editor
                         EditorGUILayout.BeginVertical();
                         if (UpdateProvider.HasUpdate(UpdateProvider.UpdatePackageDefinition))
                         {
-                            if (GUILayout.Button("Changelog", GDXStyles.Button))
+                            if (GUILayout.Button("Changelog", SettingsGUILayout.ButtonStyle))
                             {
                                 Application.OpenURL(UpdateProvider.GitHubChangelogUri);
                             }
 
-                            if (GUILayout.Button("Update", GDXStyles.Button))
+                            if (GUILayout.Button("Update", SettingsGUILayout.ButtonStyle))
                             {
                                 UpdateProvider.AttemptUpgrade();
                             }
                         }
                         else
                         {
-                            if (GUILayout.Button("Manual Check", GDXStyles.Button))
+                            if (GUILayout.Button("Manual Check", SettingsGUILayout.ButtonStyle))
                             {
                                 UpdateProvider.CheckForUpdates();
                             }
@@ -115,12 +116,8 @@ namespace GDX.Editor
                     EditorGUILayout.EndHorizontal();
 
 
-                    EditorGUILayout.PropertyField(settings.FindProperty("updateProviderCheckForUpdates"),
-                        s_contentCheckForUpdates);
-                    settings.ApplyModifiedPropertiesWithoutUndo();
-
                     // Disable based on if we have this enabled
-                    GUI.enabled = settings.FindProperty("updateProviderCheckForUpdates").boolValue;
+                    GUI.enabled = packageSectionEnabled;
 
                     UpdateDayCountSetting =
                         EditorGUILayout.IntSlider(s_contentUpdateDayCount, UpdateDayCountSetting, 1, 31);
@@ -129,8 +126,8 @@ namespace GDX.Editor
                     GUI.enabled = true;
 
                     #endregion
-
-                    GDXStyles.EndGUILayout();
+                    settings.ApplyModifiedPropertiesWithoutUndo();
+                    SettingsGUILayout.EndGUILayout();
                 },
                 keywords = s_keywords
             };

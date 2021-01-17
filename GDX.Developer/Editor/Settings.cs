@@ -36,7 +36,7 @@ namespace GDX.Developer.Editor
         ///     Settings content for <see cref="GDXConfig.developerBuildInfoEnabled" />.
         /// </summary>
         private static readonly GUIContent s_contentBuildInfoEnabled = new GUIContent(
-            "Output BuildInfo",
+            "",
             "During the build process should a BuildInfo be written?");
 
         /// <summary>
@@ -57,35 +57,35 @@ namespace GDX.Developer.Editor
         ///     Settings content for <see cref="GDXConfig.developerBuildInfoBuildNumberArgument" />.
         /// </summary>
         private static readonly GUIContent s_contentBuildInfoBuildNumberArgument = new GUIContent(
-            "Build Number Argument",
+            "Number",
             "The argument key for the build number to be passed to the BuildInfoGenerator.");
 
         /// <summary>
         ///     Settings content for <see cref="GDXConfig.developerBuildInfoBuildDescriptionArgument" />.
         /// </summary>
         private static readonly GUIContent s_contentBuildInfoBuildDescriptionArgument = new GUIContent(
-            "Build Description Argument",
+            "Description",
             "The argument key for the build description to be passed to the BuildInfoGenerator.");
 
         /// <summary>
         ///     Settings content for <see cref="GDXConfig.developerBuildInfoBuildChangelistArgument" />.
         /// </summary>
         private static readonly GUIContent s_contentBuildInfoBuildChangelistArgument = new GUIContent(
-            "Build Changelist Argument",
+            "Changelist",
             "The argument key for the build changelist to be passed to the BuildInfoGenerator.");
 
         /// <summary>
         ///     Settings content for <see cref="GDXConfig.developerBuildInfoBuildTaskArgument" />.
         /// </summary>
         private static readonly GUIContent s_contentBuildInfoBuildTaskArgument = new GUIContent(
-            "Build Task Argument",
+            "Task",
             "The argument key for the build task to be passed to the BuildInfoGenerator.");
 
         /// <summary>
         ///     Settings content for <see cref="GDXConfig.developerBuildInfoBuildStreamArgument" />.
         /// </summary>
         private static readonly GUIContent s_contentBuildInfoBuildStreamArgument = new GUIContent(
-            "Build Stream Argument",
+            "Stream",
             "The argument key for the build stream to be passed to the BuildInfoGenerator.");
 
         /// <summary>
@@ -102,11 +102,11 @@ namespace GDX.Developer.Editor
                 guiHandler = searchContext =>
                 {
                     SerializedObject settings = Config.GetSerializedConfig();
-                    GDXStyles.BeginGUILayout();
+                    SettingsGUILayout.BeginGUILayout();
 
                     #region Command Line Parser
 
-                    GDXStyles.SectionHeader("Command Line Parser", GDXStyles.SectionHeaderMode.Default);
+                    SettingsGUILayout.SectionHeader("Command Line Parser");
 
                     EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentPrefix"),
                         s_contentArgumentPrefix);
@@ -120,10 +120,9 @@ namespace GDX.Developer.Editor
 
                     #region BuildInfo Generation
 
-                    GDXStyles.SectionHeader("BuildInfo Generation",
-                        GDXStyles.GetSectionHeaderMode(settings.FindProperty("developerBuildInfoEnabled").boolValue));
-
-                    EditorGUILayout.PropertyField(settings.FindProperty("developerBuildInfoEnabled"),
+                    GUI.enabled = SettingsGUILayout.SectionHeader(
+                        "BuildInfo Generation",
+                        settings.FindProperty("developerBuildInfoEnabled"),
                         s_contentBuildInfoEnabled);
 
                     // Only allow editing based on the feature being enabled
@@ -134,7 +133,10 @@ namespace GDX.Developer.Editor
                     EditorGUILayout.PropertyField(settings.FindProperty("developerBuildInfoNamespace"),
                         s_contentBuildInfoNamespace);
 
+
+                    GUILayout.Space(10);
                     // Arguments (we're going to make sure they are forced to uppercase).
+                    GUILayout.Label("Build Arguments", SettingsGUILayout.H2Style);
 
                     SerializedProperty buildNumberProperty =
                         settings.FindProperty("developerBuildInfoBuildNumberArgument");
@@ -180,7 +182,7 @@ namespace GDX.Developer.Editor
 
                     #endregion
 
-                    GDXStyles.EndGUILayout();
+                    SettingsGUILayout.EndGUILayout();
                     settings.ApplyModifiedPropertiesWithoutUndo();
                 },
                 keywords = s_settingsKeywords
