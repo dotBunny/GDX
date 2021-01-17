@@ -8,61 +8,83 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ***"Breaking Bad"***
 > We are breaking some rules! This should have been a _major release_ as we have altered method names to be consistent across the API.
 ### Added
-- Added _remarks_ statements in `GDX` assembly documentation where a function or class requires the presence of Unity's CoreModule to function correctly.
-#### GDX
-- Included `InspectorLabelAttribute` to facilitate a quick way of replacing a labels content in the inspector.
-- Included a `SemanticVersion` struct for assistance with versioning.
-#### GDX.Developer
-- Included a **separate assembly** with more developer specific functionality.
-  - `CommandLineParser`
-#### GDX.IO.Compression
-- Included `TarFile` support for decompressing tarballs.
-#### GDX.Editor
-- Included `Config` static utility class to store persistent project-wide configurations for both runtime and author-time.
-- Added `GDXStyles` to assist with editor styling.
-- Added `UpdateProvider`, `PackageProvider` to facilitate updating of GDX package from different installation sources.
-- Included `VersionControl` static utility class to help with VCS operations.
-#### GDX.Tests
-- Added `ArrayExtensionsTests`, `ListExtensionsTests` and `SimpleListExtensionsTests`
+- `GDX` assembly documentation contains _remarks_ where a function or class requires the presence of Unity's CoreModule to function correctly.
+- `GDX.InspectorLabelAttribute` (and supporting `GDX.Editor.InspectorLabelPropertyDrawer`) to facilitate a quick way of replacing a labels content in the inspector.
+- `GDX.IO.Compression.TarFile` support for decompressing tarballs.
+- `GDX.SemanticVersion` struct for assistance with versioning.
+- `GDX.Strings.Null` is a constant null value string
+- `GDX.Editor.Config` static utility class to store persistent project-wide configurations for both runtime and author-time.
+- `GDX.Editor.Settings` to drive specific `GDX` assembly settings to show up in the **Project Settings** window.
+- `GDX.Editor.GDXStyles` to assist with editor styling.
+- `GDX.Editor.UpdateProvider`, `GDX.Editor.PackageProvider` to facilitate updating of GDX package from different installation sources.
+- `GDX.Editor.VersionControl` static utility class to help with VCS operations.
+- Some extension based unit testing.
+  - `GDX.Tests.ArrayExtensionsTests`
+  - `GDX.Tests.ListExtensionsTests`
+  - `GDX.Tests.SimpleListExtensionsTests`
+- `GDX.Developer` a **separate assembly** with more developer specific functionality.
+- `GDX.Developer.CommandLineParser` to provide a simple, yet configurable argument parser.
+- `GDX.Developer.Editor.Build.BuildInfoProvider` to facilitate automated BuildInfo generation across different pipelines.
+- `GDX.Developer.Editor.Build.BuildInfoGenerator` to generate content for the BuildInfo file.
+- `GDX.Developer.Editor.Settings` to drive specific `GDX.Developer` assembly settings to show up in the **Project Settings** window.
 ### Changed
 - Updated the `README.md` header with logo and badges.
-- Added release names to `CHANGELOG.md`.
+- Added release names to `CHANGELOG.md` as well as removed namespace sub-lists, settling on having full names in description instead.
 - Altered arrangement of `LICENSE` with the hopes of appeasing the _GitHub_ overlords of license type detection.
-#### GDX
-- Changed `ArrayExtensions` to be more specific
+- `GDX.ArrayExtensions` to be more specific
   - Corrected documentation of `Clear()`
   - Class based operations `FirstIndexOfItem()` and `LastIndexOfItem()`
   - Struct based operations `FirstIndexOfValue()` and `LastIndexOfValue()`
   - Correctly moved into GDX namespace.
-- Changed `ByteExtensions` to be more specific
+- `GDX.ByteExtensions` to be more specific
   - Renamed hashing method to `GetValueHashCode()`
-- Changed `ListExtensions` to be more specific.
+- `GDX.ListExtensions` to be more specific.
   - Class based operations `AddUniqueItem()`, `ContainsItem()`, `RemoveItems()`, `RemoveFirstItem()` and `RemoveLastItem()`..
   - Struct based operations `AddUniqueValue()`, `ContainsValue()`, `RemoveValues()`, `RemoveFirstValue()` and `RemoveLastValue()`.
-- Changed `SimpleListExtensions` to be more specific.
+- `GDX.SimpleListExtensions` to be more specific.
   - Class based operations `AddUncheckedUniqueItem()`, `AddWithExpandCheckUniqueItem()`, `ContainsItem()`, `RemoveItems()`, `RemoveFirstItem()` and `RemoveLastItem()`.
   - Struct based operations `AddUncheckedUniqueValue()`, `AddWithExpandCheckUniqueValue()`, `ContainsValue()`, `RemoveValues()`, `RemoveFirstValue()` and `RemoveLastValue()`.
-- Removed unused static StringBuilder from `Strings`.
-#### GDX.Mathematics
-- Moved `Byte2` to `GDX.Mathematics` namespace (formerly in `GDX.Collections`) as it made more sense to alongside other similar types in `Unity.Mathematics`.
+- Moved `GDX.Collections.Byte2` to `GDX.Mathematics.Byte2` as it made more sense to alongside other similar types in `Unity.Mathematics`.
+### Removed
+- Removed unused static StringBuilder from `GDX.Strings`.
 
 ## [1.0.0] - 2021-01-03
 ***"The Beginning"***
 > Initial release containing only the GDX core library.
 ### Added
-#### GDX
-- Included numerous static extension based functionality classes `AddressablesExtensions`, `ArrayExtensions`, `ByteExtensions`, `ListExtensions`, `SimpleListExtensions`, `StringExtensions`.
-- Included numerous static utility classes `Display`, `Localization`, `Memory`, `Platform`, `Strings`.
-#### GDX.Collections
-- Included bit array structures `BitArray8`, `BitArray16`, `BitArray32`, `BitArray64`, `BitArray128`, `BitArray256`, `BitArray512`.
-- Included byte vector `Byte2`.
-- Included sparse index pool structures `SparseSet` and `NativeSparseSet`
-- Included a `FreeList` data structure.
-#### GDX.Collections.Generic
-- Included a revolving buffer `CircularBuffer`.
-- Included a `List`-like structure `SimpleList`.
-- Included a few `NativeArray` based structures `NativeArray2D`, `NativeSimpleList`, `NativeSimpleQueue`, `NativeUniformArray3D`.
-#### GDX.Jobs.ParallelFor
-- Included numerous `int32` buffer operation jobs `IntegerBufferCopyJob`, `IntegerBufferFillJob`, `IntegerBufferSwapJob`.
-#### GDX.Mathematics.Random
-- Included deterministic random `MersenneTwister`.
+- Numerous static extension based functionality classes.
+  - `GDX.AddressablesExtensions`
+  - `GDX.ArrayExtensions`
+  - `GDX.ByteExtensions`
+  - `GDX.ListExtensions`
+  - `GDX.SimpleListExtensions`
+  - `GDX.StringExtensions`
+- Numerous static utility classes.
+  - `GDX.Display`
+  - `GDX.Localization`
+  - `GDX.Memory`
+  - `GDX.Platform`
+  - `GDX.Strings`
+- Bit array structures.
+  - `GDX.Collections.BitArray8`
+  - `GDX.Collections.BitArray16`
+  - `GDX.Collections.BitArray32`
+  - `GDX.Collections.BitArray64`
+  - `GDX.Collections.BitArray128`
+  - `GDX.Collections.BitArray256`
+  - `GDX.Collections.BitArray512`
+- Byte vector `GDX.Collections.Byte2`.
+- Sparse index pool structures `GDX.Collections.SparseSet` and `GDX.Collections.NativeSparseSet`
+- `GDX.Collections.FreeList`
+- Revolving buffer `GDX.Collections.Generic.CircularBuffer`.
+- `List`-like structure `GDX.Collections.Generic.SimpleList`.
+- A few `NativeArray` based structures.
+  - `GDX.Collections.Generic.NativeArray2D`
+  - `GDX.Collections.Generic.NativeSimpleList`
+  - `GDX.Collections.Generic.NativeSimpleQueue`
+  - `GDX.Collections.Generic.NativeUniformArray3D`.
+- Numerous `int32` buffer operation jobs.
+  - `GDX.Jobs.ParallelFor.IntegerBufferCopyJob`
+  - `GDX.Jobs.ParallelFor.IntegerBufferFillJob`
+  - `GDX.Jobs.ParallelFor.IntegerBufferSwapJob`
+- Deterministic random `GDX.Mathematics.Random.MersenneTwister`.
