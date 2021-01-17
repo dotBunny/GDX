@@ -106,7 +106,7 @@ namespace GDX.Developer.Editor
 
                     #region Command Line Parser
 
-                    GDXStyles.SectionHeader("Command Line Parser");
+                    GDXStyles.SectionHeader("Command Line Parser", GDXStyles.SectionHeaderMode.Default);
 
                     EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentPrefix"),
                         s_contentArgumentPrefix);
@@ -115,10 +115,13 @@ namespace GDX.Developer.Editor
 
                     #endregion
 
+                    // Create some distance between next section
+                    GUILayout.Space(10);
+
                     #region BuildInfo Generation
 
                     GDXStyles.SectionHeader("BuildInfo Generation",
-                        settings.FindProperty("developerBuildInfoEnabled").boolValue);
+                        GDXStyles.GetSectionHeaderMode(settings.FindProperty("developerBuildInfoEnabled").boolValue));
 
                     EditorGUILayout.PropertyField(settings.FindProperty("developerBuildInfoEnabled"),
                         s_contentBuildInfoEnabled);

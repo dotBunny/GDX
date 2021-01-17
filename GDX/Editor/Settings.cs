@@ -67,7 +67,8 @@ namespace GDX.Editor
                     #region Package Updates
 
                     GDXStyles.SectionHeader("Package Updates",
-                        settings.FindProperty("updateProviderCheckForUpdates").boolValue);
+                        GDXStyles.GetSectionHeaderMode(settings.FindProperty("updateProviderCheckForUpdates")
+                            .boolValue));
 
                     EditorGUILayout.BeginHorizontal(GDXStyles.InfoBox);
                     if (UpdateProvider.LocalPackage.Definition != null)

@@ -15,14 +15,67 @@ namespace GDX.Editor
     public static class GDXStyles
     {
         /// <summary>
+        ///     A defined type of section header indicating the possible states.
+        /// </summary>
+        public enum SectionHeaderMode
+        {
+            Default = -1,
+            Disabled = 0,
+            Enabled = 1
+        }
+
+        /// <summary>
+        ///     A shade of the <see cref="Color"/> green.
+        /// </summary>
+        /// <remarks>Meant for enabled things.</remarks>
+        private static readonly Color s_colorEnabledGreen = new Color(0.1803921568627451f, 0.6431372549019608f, 0.3098039215686275f);
+
+        /// <summary>
+        ///     A shade of the <see cref="Color"/> blue.
+        /// </summary>
+        /// <remarks>Meant for default things.</remarks>
+        private static readonly Color s_colorDefaultBlue = new Color(0.0941176470588235f, 0.4549019607843137f, 0.8549019607843137f);
+
+        /// <summary>
+        ///     A shade of the <see cref="Color"/> yellow.
+        /// </summary>
+        /// <remarks>Meant for disabled things.</remarks>
+        private static readonly Color s_colorDisabledYellow = new Color(0.8941176470588235f, 0.9019607843137255f, 0.4117647058823529f);
+
+        /// <summary>
+        ///     A blendable shade of the <see cref="Color"/> white at 25% opacity.
+        /// </summary>
+        private static readonly Color s_colorWhiteBlend25 = new Color(1f, 1f, 1f, 0.25f);
+
+        /// <summary>
+        ///     A blendable shade of the <see cref="Color"/> white at 75% opacity.
+        /// </summary>
+        private static readonly Color s_colorWhiteBlend75 = new Color(1f, 1f, 1f, 0.75f);
+
+        /// <summary>
         ///     A <see cref="GUIStyle" /> representing a horizontal line which respects margins/padding.
         /// </summary>
         private static readonly GUIStyle s_line;
 
         /// <summary>
-        ///     A <see cref="GUIStyle" /> representing a section header.
+        ///     A <see cref="GUIStyle" /> representing a default section header.
         /// </summary>
         private static readonly GUIStyle s_sectionHeader;
+
+        /// <summary>
+        ///     A <see cref="GUIStyle" /> representing a default section header text.
+        /// </summary>
+        private static readonly GUIStyle s_sectionHeaderTextDefault;
+
+        /// <summary>
+        ///     A <see cref="GUIStyle" /> representing a disabled section header text.
+        /// </summary>
+        private static readonly GUIStyle s_sectionHeaderTextDisabled;
+
+        /// <summary>
+        ///     A <see cref="GUIStyle" /> representing a enabled section header text.
+        /// </summary>
+        private static readonly GUIStyle s_sectionHeaderTextEnabled;
 
         /// <summary>
         ///     A <see cref="GUIStyle" /> used to wrap all GDX editor user interfaces.
@@ -33,16 +86,6 @@ namespace GDX.Editor
         ///     A <see cref="GUIStyle" /> representing a button.
         /// </summary>
         public static readonly GUIStyle Button;
-
-        /// <summary>
-        ///     A <see cref="GUIStyle" /> representing an disabled section header.
-        /// </summary>
-        public static readonly GUIStyle DisabledSectionHeader;
-
-        /// <summary>
-        ///     A <see cref="GUIStyle" /> representing an enabled section header.
-        /// </summary>
-        public static readonly GUIStyle EnabledSectionHeader;
 
         /// <summary>
         ///     A <see cref="GUIStyle" /> representing a heading at level 1.
@@ -84,7 +127,6 @@ namespace GDX.Editor
 
             s_wrapper = new GUIStyle {margin = {left = 5, right = 5, bottom = 5}};
 
-            s_sectionHeader = new GUIStyle("box");
 
             Button = new GUIStyle(EditorStyles.miniButton) {stretchWidth = false, padding = {left = 10, right = 10}};
 
@@ -93,8 +135,11 @@ namespace GDX.Editor
             H2 = new GUIStyle(H1) {fontSize = H1.fontSize - 2};
             H3 = new GUIStyle(H2) {fontSize = H2.fontSize - 2};
 
-            EnabledSectionHeader = new GUIStyle(H1) {normal = {textColor = Color.green}, };
-            DisabledSectionHeader = new GUIStyle(EnabledSectionHeader) {normal = {textColor = Color.red}};
+            // Section Headers
+            s_sectionHeader = new GUIStyle("box") { margin = { left = -20}};
+            s_sectionHeaderTextDefault = new GUIStyle(H1);
+            s_sectionHeaderTextEnabled = new GUIStyle(s_sectionHeaderTextDefault) {normal = {textColor = s_colorWhiteBlend75}};
+            s_sectionHeaderTextDisabled = new GUIStyle(s_sectionHeaderTextDefault) {normal = {textColor = s_colorWhiteBlend25}};
         }
 
         /// <summary>
@@ -143,15 +188,45 @@ namespace GDX.Editor
         }
 
         /// <summary>
+        ///     Get the <see cref="SectionHeaderMode" /> from a <see cref="bool" /> flag.
+        /// </summary>
+        /// <param name="enabled">Is the section enabled?</param>
+        /// <returns>The specific <see cref="SectionHeaderMode" />.</returns>
+        public static SectionHeaderMode GetSectionHeaderMode(bool enabled)
+        {
+            return enabled ? SectionHeaderMode.Enabled : SectionHeaderMode.Disabled;
+        }
+
+        /// <summary>
         ///     Draw a section header useful for project settings.
         /// </summary>
         /// <param name="text">The section header content.</param>
-        /// <param name="sectionEnabled">Is this section enabled?</param>
-        public static void SectionHeader(string text, bool sectionEnabled = true)
+        /// <param name="headerMode">What mode should the header be rendered in?</param>
+        public static void SectionHeader(string text, SectionHeaderMode headerMode)
         {
-            GUILayout.BeginHorizontal(s_sectionHeader);
-            GUILayout.Label(text, sectionEnabled ? EnabledSectionHeader : DisabledSectionHeader);
+            Color previousColor = GUI.backgroundColor;
+
+            switch (headerMode)
+            {
+                case SectionHeaderMode.Enabled:
+                    GUI.backgroundColor = s_colorEnabledGreen;
+                    GUILayout.BeginHorizontal(s_sectionHeader);
+                    GUILayout.Label(text, s_sectionHeaderTextEnabled);
+                    break;
+                case SectionHeaderMode.Disabled:
+                    GUI.backgroundColor = s_colorDisabledYellow;
+                    GUILayout.BeginHorizontal(s_sectionHeader);
+                    GUILayout.Label(text, s_sectionHeaderTextDisabled);
+                    break;
+                default:
+                    GUI.backgroundColor = s_colorDefaultBlue;
+                    GUILayout.BeginHorizontal(s_sectionHeader);
+                    GUILayout.Label(text, s_sectionHeaderTextDefault);
+                    break;
+            }
+
             GUILayout.EndHorizontal();
+            GUI.backgroundColor = previousColor;
         }
     }
 }
