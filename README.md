@@ -5,7 +5,7 @@
 [![Discord Server](https://img.shields.io/discord/582190573897908224.svg?label=discord&logo=discord&color=informational)](https://discord.gg/EcceFGAuJs)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/dotBunny/GDX/blob/main/LICENSE)
 
-Game Development Extensions, a battle-tested library of game-focused high-performance C# code.
+Game Development Extensions, a battle-tested library of game ready high-performance C# code.
 
 ## Feature Highlights
 - Optimized & non-allocating collections (_GDX.Collections_)
