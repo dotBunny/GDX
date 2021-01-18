@@ -2,11 +2,12 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Text;
+using GDX;
 using NUnit.Framework;
 
 // ReSharper disable HeapView.ObjectAllocation.Evident
 
-namespace GDX.Tests.Editor
+namespace Runtime
 {
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="ByteExtensions" />

@@ -9,7 +9,7 @@ namespace GDX.Editor
     /// <summary>
     /// An author-time helper class to access the GDX specific configuration file in a project.
     /// </summary>
-    public static class Config
+    public static class ConfigProvider
     {
         /// <summary>
         /// Get/Create an instance of the <see cref="GDXConfig"/> <see cref="ScriptableObject"/>.

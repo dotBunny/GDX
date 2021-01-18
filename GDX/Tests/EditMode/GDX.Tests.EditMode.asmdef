@@ -1,6 +1,6 @@
 {
-    "name": "GDX.Tests.Editor",
-    "rootNamespace": "GDX.Tests.Editor",
+    "name": "GDX.Tests.EditMode",
+    "rootNamespace": "GDX",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
