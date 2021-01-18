@@ -61,7 +61,7 @@ namespace GDX.Editor
                 label = "GDX",
                 guiHandler = searchContext =>
                 {
-                    SerializedObject settings = Config.GetSerializedConfig();
+                    SerializedObject settings = ConfigProvider.GetSerializedConfig();
                     SettingsGUILayout.BeginGUILayout();
 
                     #region Package Updates

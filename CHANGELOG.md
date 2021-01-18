@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2021-01-18
+***"EditMode Enabled"***
+> Fixes for author-time code accessing runtime only parts.
+### Added
+- Added more `EditMode` unit test coverage.
+  - `GDX.Developer.Build.BuildInfoGeneratorTests`
+  - `GDX.Developer.CommandLineParserTests`
+### Changed
+- Renamed `GDX.Editor.Config` to `GDX.Editor.ConfigProvider`
+- Fixed a bug where author-time calls to `GDXConfig.Get()` would return a null as it is meant for runtime only, they will now route through an editor safe path.
+- Moved all **Tests** to follow the test runner naming `EditMode` for editor runnable unit tests, namespaces included inside the assembly have been stripped down as well.
+- Exposed `GDX.Developer.CommandLineParser.ProcessArguments()` to allow for manual arguments to be added.
+
 ## [1.1.1] - 2021-01-17
 ***"Let Us Build"***
 > A minor problem came to light after pushing the button.
@@ -28,10 +41,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `GDX.Editor.UpdateProvider`, `GDX.Editor.PackageProvider` to facilitate updating of GDX package from different installation sources.
 - `GDX.Editor.VersionControl` static utility class to help with VCS operations.
 - Unit test coverage for extension classes.
-  - `GDX.Tests.ArrayExtensionsTests`
-  - `GDX.Tests.ListExtensionsTests`
-  - `GDX.Tests.SimpleListExtensionsTests`
-- Additional coverage was added to `GDX.Tests.StringExtensionsTests` to cover `HasUpperCase()` and `HasLowerCase()` methods.
+  - `GDX.ArrayExtensionsTests`
+  - `GDX.ListExtensionsTests`
+  - `GDX.SimpleListExtensionsTests`
+- Additional coverage was added to `GDX.StringExtensionsTests` to cover `HasUpperCase()` and `HasLowerCase()` methods.
 - `GDX.Developer` a **separate assembly** with more developer specific functionality.
 - `GDX.Developer.CommandLineParser` to provide a simple, yet configurable argument parser.
 - `GDX.Developer.Editor.Build.BuildInfoProvider` to facilitate automated BuildInfo generation across different pipelines.

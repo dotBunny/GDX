@@ -58,7 +58,7 @@ namespace GDX.Editor
             // ReSharper disable once HeapView.ObjectAllocation.Evident
             LocalPackage = new PackageProvider();
 
-            GDXConfig config = Config.Get();
+            GDXConfig config = ConfigProvider.Get();
             if (!config.updateProviderCheckForUpdates)
             {
                 return;

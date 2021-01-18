@@ -101,7 +101,7 @@ namespace GDX.Developer.Editor
                 label = "Developer",
                 guiHandler = searchContext =>
                 {
-                    SerializedObject settings = Config.GetSerializedConfig();
+                    SerializedObject settings = ConfigProvider.GetSerializedConfig();
                     SettingsGUILayout.BeginGUILayout();
 
                     #region Command Line Parser
