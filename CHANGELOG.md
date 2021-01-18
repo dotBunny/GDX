@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.2] - 2021-01-18
 ***"EditMode Enabled"***
+> Fixes for author-time code accessing runtime only parts.
 ### Added
 - Added more `EditMode` unit test coverage.
   - `GDX.Developer.Build.BuildInfoGeneratorTests`
