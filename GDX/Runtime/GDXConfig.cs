@@ -2,6 +2,10 @@
 // See the LICENSE file in the project root for more information.
 
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+
+#endif
 
 namespace GDX
 {
@@ -23,52 +27,52 @@ namespace GDX
         public bool updateProviderCheckForUpdates = true;
 
         /// <summary>
-        /// What should be used to denote arguments in the command line?
+        ///     What should be used to denote arguments in the command line?
         /// </summary>
         public string developerCommandLineParserArgumentPrefix = "--";
 
         /// <summary>
-        /// What should be used to split arguments from their values in the command line?
+        ///     What should be used to split arguments from their values in the command line?
         /// </summary>
         public string developerCommandLineParserArgumentSplit = "=";
 
         /// <summary>
-        /// Should the BuildInfo file be written during builds?
+        ///     Should the BuildInfo file be written during builds?
         /// </summary>
-        public bool developerBuildInfoEnabled = false;
+        public bool developerBuildInfoEnabled;
 
         /// <summary>
-        /// The path to output the BuildInfo file.
+        ///     The path to output the BuildInfo file.
         /// </summary>
         public string developerBuildInfoPath = "Generated/Build/BuildInfo.cs";
 
         /// <summary>
-        /// The namespace where the BuildInfo should be placed.
+        ///     The namespace where the BuildInfo should be placed.
         /// </summary>
         public string developerBuildInfoNamespace = "Generated.Build";
 
         /// <summary>
-        /// The argument key for the build number to be passed to the BuildInfoGenerator.
+        ///     The argument key for the build number to be passed to the BuildInfoGenerator.
         /// </summary>
         public string developerBuildInfoBuildNumberArgument = "BUILD";
 
         /// <summary>
-        /// The argument key for the build description to be passed to the BuildInfoGenerator.
+        ///     The argument key for the build description to be passed to the BuildInfoGenerator.
         /// </summary>
         public string developerBuildInfoBuildDescriptionArgument = "BUILD_DESC";
 
         /// <summary>
-        /// The argument key for the build's changelist to be passed to the BuildInfoGenerator.
+        ///     The argument key for the build's changelist to be passed to the BuildInfoGenerator.
         /// </summary>
         public string developerBuildInfoBuildChangelistArgument = "BUILD_CHANGELIST";
 
         /// <summary>
-        /// The argument key for the build's task to be passed to the BuildInfoGenerator.
+        ///     The argument key for the build's task to be passed to the BuildInfoGenerator.
         /// </summary>
         public string developerBuildInfoBuildTaskArgument = "BUILD_TASK";
 
         /// <summary>
-        /// The argument key for the build's stream to be passed to the BuildInfoGenerator.
+        ///     The argument key for the build's stream to be passed to the BuildInfoGenerator.
         /// </summary>
         public string developerBuildInfoBuildStreamArgument = "BUILD_STREAM";
 
@@ -79,7 +83,13 @@ namespace GDX
         /// <returns>A instance of <see cref="GDXConfig" />.</returns>
         public static GDXConfig Get()
         {
+#if UNITY_EDITOR
+            // Special handler for scenarios where we need runtime logic, that is getting called from editor automation
+            // and things like that.
+            return AssetDatabase.LoadAssetAtPath<GDXConfig>(Strings.AssetPathPrefix + "Resources/" + ResourcesPath);
+#else
             return Resources.Load<GDXConfig>(ResourcesPath);
+#endif
         }
     }
 }

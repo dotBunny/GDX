@@ -35,16 +35,34 @@ namespace GDX.Developer
         [RuntimeInitializeOnLoadMethod]
         public static void ParseArguments()
         {
-            Arguments.Clear();
-            Flags.Clear();
+            ProcessArguments(Environment.GetCommandLineArgs());
+        }
 
+        /// <summary>
+        ///     Process the environment's commandline arguments into <see cref="Arguments" /> and <see cref="Flags" />.
+        /// </summary>
+        /// <param name="argumentArray">An array of arguments to process.</param>
+        /// <param name="shouldClear">Should the storage containers be cleared.</param>
+        public static void ProcessArguments(string[] argumentArray, bool shouldClear = true)
+        {
+            if (shouldClear)
+            {
+                Arguments.Clear();
+                Flags.Clear();
+            }
+
+            // Grabs runtime method of GDX Config
             GDXConfig gdxConfig = GDXConfig.Get();
+
             string argumentPrefix = gdxConfig.developerCommandLineParserArgumentPrefix;
             int prefixLength = argumentPrefix.Length;
             string argumentSplit = gdxConfig.developerCommandLineParserArgumentSplit;
-
-            foreach (string argument in Environment.GetCommandLineArgs())
+            int argumentLength = argumentArray.Length;
+            for (int i = 0; i < argumentLength; i++)
             {
+                // Cache current argument
+                string argument = argumentArray[i];
+
                 // Has the starter and has an assignment
                 if (!argument.StartsWith(argumentPrefix))
                 {
