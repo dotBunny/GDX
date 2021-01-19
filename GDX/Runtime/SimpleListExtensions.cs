@@ -61,6 +61,7 @@ namespace GDX
         /// <param name="targetItem">The target class object to add.</param>
         /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
         /// <returns>true/false if the operation was able to add the item successfully.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool AddWithExpandCheckUniqueItem<T>(ref this SimpleList<T> targetSimpleList, T targetItem)
             where T : class
         {

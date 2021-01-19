@@ -15,6 +15,7 @@ namespace GDX
         /// </summary>
         /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <returns>true/false</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetHardwareGeneration()
         {
 #if UNITY_XBOXONE && !UNITY_EDITOR

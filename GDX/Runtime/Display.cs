@@ -1,6 +1,7 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace GDX
@@ -16,6 +17,7 @@ namespace GDX
         /// </summary>
         /// <remarks>This resolves issues with scaled rendering.</remarks>
         /// <returns>The pixel height of the screen resolution.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetScreenHeight()
         {
             return Screen.currentResolution.height;
@@ -26,6 +28,7 @@ namespace GDX
         /// </summary>
         /// <remarks>This resolves issues with scaled rendering.</remarks>
         /// <returns>The pixel width of the screen resolution.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetScreenWidth()
         {
             return Screen.currentResolution.width;
@@ -35,6 +38,7 @@ namespace GDX
         ///     Does the current display device support HDR output?
         /// </summary>
         /// <returns>true/false</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsHDRSupported()
         {
 #if UNITY_PS4
@@ -50,6 +54,7 @@ namespace GDX
         ///     Is HDR output currently enabled (and actively being used)?
         /// </summary>
         /// <returns>true/false</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsHDREnabled()
         {
 #if UNITY_PS4
