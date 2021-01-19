@@ -4,6 +4,7 @@
 using UnityEditor;
 using UnityEngine;
 
+// ReSharper disable HeapView.ObjectAllocation.Evident
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace GDX.Editor
@@ -11,7 +12,7 @@ namespace GDX.Editor
     /// <summary>
     ///     A helper class for generating the GDX editor experience.
     /// </summary>
-    public static class SettingsGUILayout
+    public static class SettingsStyles
     {
         /// <summary>
         ///     A <see cref="GUIStyle" /> representing a button.
@@ -38,16 +39,6 @@ namespace GDX.Editor
         /// <remarks>Meant for enabled things.</remarks>
         public static readonly Color EnabledGreenColor =
             new Color(0.1803921568627451f, 0.6431372549019608f, 0.3098039215686275f);
-
-        /// <summary>
-        ///     A <see cref="GUIStyle" /> representing a heading at level 1.
-        /// </summary>
-        public static readonly GUIStyle H1Style;
-
-        /// <summary>
-        ///     A <see cref="GUIStyle" /> representing a heading at level 2.
-        /// </summary>
-        public static readonly GUIStyle H2Style;
 
         /// <summary>
         ///     A <see cref="GUIStyle" /> representing an info box.
@@ -80,6 +71,11 @@ namespace GDX.Editor
         public static readonly GUILayoutOption[] SectionHeaderToggleLayoutOptions;
 
         /// <summary>
+        ///     A <see cref="GUIStyle" /> representing the header of a sub section definition.
+        /// </summary>
+        public static readonly GUIStyle SubSectionHeaderTextStyle;
+
+        /// <summary>
         ///     A blendable shade of the <see cref="Color" /> white at 25% opacity.
         /// </summary>
         public static readonly Color WhiteBlend25Color = new Color(1f, 1f, 1f, 0.25f);
@@ -95,9 +91,9 @@ namespace GDX.Editor
         public static readonly GUIStyle WrapperStyle;
 
         /// <summary>
-        ///     Initialize the <see cref="SettingsGUILayout" />, creating all of the associated <see cref="GUIStyle" />s.
+        ///     Initialize the <see cref="SettingsStyles" />, creating all of the associated <see cref="GUIStyle" />s.
         /// </summary>
-        static SettingsGUILayout()
+        static SettingsStyles()
         {
             LineStyle =
                 new GUIStyle("box")
@@ -106,47 +102,22 @@ namespace GDX.Editor
                     margin = {top = 0, bottom = 0, left = 0, right = 0}, // makes sure to
                     padding = {top = 0, bottom = 0}
                 };
-
             InfoBoxStyle = new GUIStyle(EditorStyles.helpBox)
             {
                 padding = {top = 10, bottom = 10, left = 10, right = 10}, margin = {bottom = 10}
             };
-
             WrapperStyle = new GUIStyle {margin = {left = 5, right = 5, bottom = 5}};
-
-
             ButtonStyle =
                 new GUIStyle(EditorStyles.miniButton) {stretchWidth = false, padding = {left = 10, right = 10}};
 
-            // Build our headers
-            H1Style = new GUIStyle(EditorStyles.largeLabel) {fontStyle = FontStyle.Bold};
-            H2Style = new GUIStyle(H1Style) {fontSize = H1Style.fontSize - 1, margin = { left = 2 }};
-
             // Section Headers
             SectionHeaderStyle = new GUIStyle("box") {margin = {left = -20}};
-            SectionHeaderTextDefaultStyle = new GUIStyle(H1Style) {normal = {textColor = WhiteBlend75Color}};
+            SectionHeaderTextDefaultStyle = new GUIStyle(EditorStyles.largeLabel) {fontStyle = FontStyle.Bold, normal = {textColor = WhiteBlend75Color}};
             SectionHeaderTextDisabledStyle =
                 new GUIStyle(SectionHeaderTextDefaultStyle) {normal = {textColor = WhiteBlend25Color}};
-
             SectionHeaderToggleLayoutOptions = new[] {GUILayout.Width(EditorStyles.toggle.CalcSize(GUIContent.none).x)};
+            SubSectionHeaderTextStyle = new GUIStyle(EditorStyles.largeLabel) {fontStyle = FontStyle.Bold, fontSize = EditorStyles.largeLabel.fontSize - 1, margin = { left = 2 }};
         }
-
-        /// <summary>
-        ///     Simplified start of a wrapped user interface experience.
-        /// </summary>
-        public static void BeginGUILayout()
-        {
-            EditorGUILayout.BeginVertical(WrapperStyle);
-        }
-
-        /// <summary>
-        ///     Simplified end of a wrapped user interface experience.
-        /// </summary>
-        public static void EndGUILayout()
-        {
-            EditorGUILayout.EndVertical();
-        }
-
 
         /// <summary>
         ///     Draw a line during the definition of a user interface experience which respects padding/margins, but also adds its

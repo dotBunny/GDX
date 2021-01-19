@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Combined `GDX.Developer.Build.BuildInfoGenerator` into `GDX.Developer.Build.BuildInfoProvider`.
 - Renamed `GDX.Developer.Build.BuildInfoGeneratorTests` to `GDX.Developer.Build.BuildInfoProviderTests`
 - Fixed issue with output folder structure was not present for `BuildInfo` generation.
-- Exposed many of the styles in `GDX.Editor.SettingsGUILayout`.
+- Renamed `GDX.Editor.SettingsGUILayout` to `GDX.Editor.SettingsStyles`, while exposing more internals for reuse.
 
 ## [1.1.2] - 2021-01-18
 ***"EditMode Enabled"***

@@ -61,16 +61,16 @@ namespace GDX.Editor
                 guiHandler = searchContext =>
                 {
                     SerializedObject settings = ConfigProvider.GetSerializedConfig();
-                    SettingsGUILayout.BeginGUILayout();
+                    EditorGUILayout.BeginVertical(SettingsStyles.WrapperStyle);
 
                     #region Package Updates
 
-                    bool packageSectionEnabled = SettingsGUILayout.SectionHeader(
+                    bool packageSectionEnabled = SettingsStyles.SectionHeader(
                         "Automatic Package Updates",
                         settings.FindProperty("updateProviderCheckForUpdates"),
                         s_contentCheckForUpdates);
 
-                    EditorGUILayout.BeginHorizontal(SettingsGUILayout.InfoBoxStyle);
+                    EditorGUILayout.BeginHorizontal(SettingsStyles.InfoBoxStyle);
                     if (UpdateProvider.LocalPackage.Definition != null)
                     {
                         GUILayout.Label(
@@ -85,19 +85,19 @@ namespace GDX.Editor
                         EditorGUILayout.BeginVertical();
                         if (UpdateProvider.HasUpdate(UpdateProvider.UpdatePackageDefinition))
                         {
-                            if (GUILayout.Button("Changelog", SettingsGUILayout.ButtonStyle))
+                            if (GUILayout.Button("Changelog", SettingsStyles.ButtonStyle))
                             {
                                 Application.OpenURL(UpdateProvider.GitHubChangelogUri);
                             }
 
-                            if (GUILayout.Button("Update", SettingsGUILayout.ButtonStyle))
+                            if (GUILayout.Button("Update", SettingsStyles.ButtonStyle))
                             {
                                 UpdateProvider.AttemptUpgrade();
                             }
                         }
                         else
                         {
-                            if (GUILayout.Button("Manual Check", SettingsGUILayout.ButtonStyle))
+                            if (GUILayout.Button("Manual Check", SettingsStyles.ButtonStyle))
                             {
                                 UpdateProvider.CheckForUpdates();
                             }
@@ -127,7 +127,7 @@ namespace GDX.Editor
                     #endregion
 
                     settings.ApplyModifiedPropertiesWithoutUndo();
-                    SettingsGUILayout.EndGUILayout();
+                    EditorGUILayout.EndVertical();
                 },
                 keywords = s_keywords
             };

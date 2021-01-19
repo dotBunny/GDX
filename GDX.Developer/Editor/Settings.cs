@@ -67,35 +67,35 @@ namespace GDX.Developer.Editor
         /// </summary>
         private static readonly GUIContent s_contentBuildInfoBuildNumberArgument = new GUIContent(
             "Number",
-            "The argument key for the build number to be passed to the BuildInfoGenerator.");
+            "The argument key for the build number to be passed to the BuildInfoProvider.");
 
         /// <summary>
         ///     Settings content for <see cref="GDXConfig.developerBuildInfoBuildDescriptionArgument" />.
         /// </summary>
         private static readonly GUIContent s_contentBuildInfoBuildDescriptionArgument = new GUIContent(
             "Description",
-            "The argument key for the build description to be passed to the BuildInfoGenerator.");
+            "The argument key for the build description to be passed to the BuildInfoProvider.");
 
         /// <summary>
         ///     Settings content for <see cref="GDXConfig.developerBuildInfoBuildChangelistArgument" />.
         /// </summary>
         private static readonly GUIContent s_contentBuildInfoBuildChangelistArgument = new GUIContent(
             "Changelist",
-            "The argument key for the build changelist to be passed to the BuildInfoGenerator.");
+            "The argument key for the build changelist to be passed to the BuildInfoProvider.");
 
         /// <summary>
         ///     Settings content for <see cref="GDXConfig.developerBuildInfoBuildTaskArgument" />.
         /// </summary>
         private static readonly GUIContent s_contentBuildInfoBuildTaskArgument = new GUIContent(
             "Task",
-            "The argument key for the build task to be passed to the BuildInfoGenerator.");
+            "The argument key for the build task to be passed to the BuildInfoProvider.");
 
         /// <summary>
         ///     Settings content for <see cref="GDXConfig.developerBuildInfoBuildStreamArgument" />.
         /// </summary>
         private static readonly GUIContent s_contentBuildInfoBuildStreamArgument = new GUIContent(
             "Stream",
-            "The argument key for the build stream to be passed to the BuildInfoGenerator.");
+            "The argument key for the build stream to be passed to the BuildInfoProvider.");
 
         /// <summary>
         ///     Get <see cref="SettingsProvider" /> for GDX.Developer assembly.
@@ -111,11 +111,11 @@ namespace GDX.Developer.Editor
                 guiHandler = searchContext =>
                 {
                     SerializedObject settings = ConfigProvider.GetSerializedConfig();
-                    SettingsGUILayout.BeginGUILayout();
+                    EditorGUILayout.BeginVertical(SettingsStyles.WrapperStyle);
 
                     #region BuildInfo Generation
 
-                    bool buildInfoEnabled = SettingsGUILayout.SectionHeader(
+                    bool buildInfoEnabled = SettingsStyles.SectionHeader(
                         "BuildInfo Generation",
                         settings.FindProperty("developerBuildInfoEnabled"),
                         s_contentBuildInfoEnabled);
@@ -124,11 +124,11 @@ namespace GDX.Developer.Editor
                         settings.FindProperty("developerBuildInfoPath").stringValue);
                     if (!File.Exists(buildInfoFile))
                     {
-                        GUILayout.BeginVertical(SettingsGUILayout.InfoBoxStyle);
+                        GUILayout.BeginVertical(SettingsStyles.InfoBoxStyle);
                         GUILayout.BeginHorizontal();
                         GUILayout.Label(
                             "There is currently no BuildInfo file in the target location\nWould you like some default content written in its place?");
-                        if (GUILayout.Button("Create Default", SettingsGUILayout.ButtonStyle))
+                        if (GUILayout.Button("Create Default", SettingsStyles.ButtonStyle))
                         {
                             BuildInfoProvider.WriteDefaultFile();
                             AssetDatabase.ImportAsset("Assets/" +
@@ -152,7 +152,7 @@ namespace GDX.Developer.Editor
 
                     GUILayout.Space(10);
                     // Arguments (we're going to make sure they are forced to uppercase).
-                    GUILayout.Label("Build Arguments", SettingsGUILayout.H2Style);
+                    GUILayout.Label("Build Arguments", SettingsStyles.SubSectionHeaderTextStyle);
 
                     SerializedProperty buildNumberProperty =
                         settings.FindProperty("developerBuildInfoBuildNumberArgument");
@@ -203,7 +203,7 @@ namespace GDX.Developer.Editor
 
                     #region Command Line Parser
 
-                    SettingsGUILayout.SectionHeader("Command Line Parser");
+                    SettingsStyles.SectionHeader("Command Line Parser");
 
                     EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentPrefix"),
                         s_contentArgumentPrefix);
@@ -212,7 +212,7 @@ namespace GDX.Developer.Editor
 
                     #endregion
 
-                    SettingsGUILayout.EndGUILayout();
+                    EditorGUILayout.EndVertical();
                     settings.ApplyModifiedPropertiesWithoutUndo();
                 },
                 keywords = s_settingsKeywords
