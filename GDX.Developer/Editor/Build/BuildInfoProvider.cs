@@ -4,6 +4,7 @@
 using System;
 using System.IO;
 using System.Text;
+using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
@@ -127,6 +128,9 @@ namespace GDX.Developer.Editor.Build
             }
         }
 
+        /// <summary>
+        ///     Check if an assembly definition should be placed along side the written BuildInfo and write one.
+        /// </summary>
         public static void CheckForAssemblyDefinition()
         {
             GDXConfig config = GDXConfig.Get();
@@ -162,6 +166,9 @@ namespace GDX.Developer.Editor.Build
             fileBuilder.AppendLine("}");
 
             File.WriteAllText(assemblyDefinition, fileBuilder.ToString());
+            AssetDatabase.ImportAsset("Assets/" +
+                                      Path.GetDirectoryName(config.developerBuildInfoPath) + "/" +
+                                      config.developerBuildInfoNamespace + ".asmdef" );
 
         }
     }

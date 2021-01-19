@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.IO;
+using GDX.Developer.Editor.Build;
 using GDX.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -131,6 +133,22 @@ namespace GDX.Developer.Editor
                         "BuildInfo Generation",
                         settings.FindProperty("developerBuildInfoEnabled"),
                         s_contentBuildInfoEnabled);
+
+                    string buildInfoFile = Path.Combine(Application.dataPath,
+                        settings.FindProperty("developerBuildInfoPath").stringValue);
+                    if (!File.Exists(buildInfoFile))
+                    {
+                        GUILayout.BeginVertical(SettingsGUILayout.InfoBoxStyle);
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label("There is currently no BuildInfo file in the target location\nWould you like some default content written in its place?");
+                        if (GUILayout.Button("Create Default", SettingsGUILayout.ButtonStyle))
+                        {
+                            BuildInfoProvider.WriteDefaultFile();
+                            AssetDatabase.ImportAsset("Assets/" + settings.FindProperty("developerBuildInfoPath").stringValue);
+                        }
+                        GUILayout.EndHorizontal();
+                        GUILayout.EndVertical();
+                    }
 
                     // Only allow editing based on the feature being enabled
                     GUI.enabled = settings.FindProperty("developerBuildInfoEnabled").boolValue;
