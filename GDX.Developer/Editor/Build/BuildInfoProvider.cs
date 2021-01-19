@@ -3,6 +3,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
@@ -51,6 +52,8 @@ namespace GDX.Developer.Editor.Build
                 string path = Path.Combine(Application.dataPath, config.developerBuildInfoPath);
                 Platform.EnsureFileFolderHierarchyExists(path);
                 File.WriteAllText(path), BuildInfoGenerator.GetContent(config, false, Context.BuildConfigurationName));
+
+                CheckForAssemblyDefinition();
             }
             catch (Exception e)
             {
@@ -93,6 +96,8 @@ namespace GDX.Developer.Editor.Build
                 string path = Path.Combine(Application.dataPath, config.developerBuildInfoPath);
                 Platform.EnsureFileFolderHierarchyExists(path);
                 File.WriteAllText(path, BuildInfoGenerator.GetContent(config, false, "Legacy"));
+
+                CheckForAssemblyDefinition();
             }
             catch (Exception e)
             {
@@ -113,11 +118,51 @@ namespace GDX.Developer.Editor.Build
                 string path = Path.Combine(Application.dataPath, config.developerBuildInfoPath);
                 Platform.EnsureFileFolderHierarchyExists(path);
                 File.WriteAllText(path, BuildInfoGenerator.GetContent(config, true));
+
+                CheckForAssemblyDefinition();
             }
             catch (Exception e)
             {
                 Debug.LogWarning(e);
             }
+        }
+
+        public static void CheckForAssemblyDefinition()
+        {
+            GDXConfig config = GDXConfig.Get();
+            if (config == null || !config.developerBuildInfoAssemblyDefinition) return;
+
+            string assemblyDefinition = Path.Combine(
+                Path.GetDirectoryName(Path.Combine(Application.dataPath, config.developerBuildInfoPath)) ?? string.Empty,
+                config.developerBuildInfoNamespace + ".asmdef");
+
+            if (File.Exists(assemblyDefinition))
+            {
+                return;
+            }
+
+            StringBuilder fileBuilder = new StringBuilder();
+            fileBuilder.AppendLine("{");
+            fileBuilder.Append("\t\"name\": \"");
+            fileBuilder.Append(config.developerBuildInfoNamespace);
+            fileBuilder.AppendLine("\",");
+            fileBuilder.Append("\t\"rootNamespace\": \"");
+            fileBuilder.Append(config.developerBuildInfoNamespace);
+            fileBuilder.AppendLine("\",");
+            fileBuilder.AppendLine("\t\"references\": [],");
+            fileBuilder.AppendLine("\t\"includePlatforms\": [],");
+            fileBuilder.AppendLine("\t\"excludePlatforms\": [],");
+            fileBuilder.AppendLine("\t\"allowUnsafeCode\": false,");
+            fileBuilder.AppendLine("\t\"overrideReferences\": false,");
+            fileBuilder.AppendLine("\t\"precompiledReferences\": [],");
+            fileBuilder.AppendLine("\t\"autoReferenced\": true,");
+            fileBuilder.AppendLine("\t\"defineConstraints\": [],");
+            fileBuilder.AppendLine("\t\"versionDefines\": [],");
+            fileBuilder.AppendLine("\t\"noEngineReferences\": true");
+            fileBuilder.AppendLine("}");
+
+            File.WriteAllText(assemblyDefinition, fileBuilder.ToString());
+
         }
     }
 }

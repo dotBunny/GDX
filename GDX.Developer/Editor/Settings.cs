@@ -19,6 +19,13 @@ namespace GDX.Developer.Editor
             new HashSet<string>(new[] {"gdx", "developer", "parser"});
 
         /// <summary>
+        ///     Settings content for <see cref="GDXConfig.developerBuildInfoAssemblyDefinition" />.
+        /// </summary>
+        private static readonly GUIContent s_contentBuildInfoAssemblyDefinition = new GUIContent(
+            "Assembly Definition",
+            "Ensure that the folder of the BuildInfo has an assembly definition.");
+
+        /// <summary>
         ///     Settings content for <see cref="GDXConfig.developerCommandLineParserArgumentPrefix" />.
         /// </summary>
         private static readonly GUIContent s_contentArgumentPrefix = new GUIContent(
@@ -132,6 +139,8 @@ namespace GDX.Developer.Editor
                         s_contentBuildInfoPath);
                     EditorGUILayout.PropertyField(settings.FindProperty("developerBuildInfoNamespace"),
                         s_contentBuildInfoNamespace);
+                    EditorGUILayout.PropertyField(settings.FindProperty("developerBuildInfoAssemblyDefinition"),
+                        s_contentBuildInfoAssemblyDefinition);
 
 
                     GUILayout.Space(10);
