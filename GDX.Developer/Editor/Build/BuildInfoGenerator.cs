@@ -36,18 +36,17 @@ namespace GDX.Developer.Editor.Build
             fileContent.AppendLine("{");
 
             fileContent.AppendLine("    /// <summary>");
-            fileContent.AppendLine(
-                "            A collection of information providing further information as to the conditions present when the build was made.");
+            fileContent.AppendLine("    ///     A collection of information providing further information as to the conditions present when the build was made.");
             fileContent.AppendLine("    /// </summary>");
             fileContent.AppendLine("    public static class BuildInfo");
             fileContent.AppendLine("    {");
 
             // BuildNumber
             fileContent.AppendLine("        /// <summary>");
-            fileContent.AppendLine("                The builds numerically incremented version.");
+            fileContent.AppendLine("        ///     The builds numerically incremented version.");
             fileContent.AppendLine("        /// </summary>");
             fileContent.AppendLine("        /// <remarks>");
-            fileContent.AppendLine("                This may not be a shared build number across all build tasks.");
+            fileContent.AppendLine("        ///     This may not be a shared build number across all build tasks.");
             fileContent.AppendLine("        /// </remarks>");
             fileContent.Append("        public const int BuildNumber = ");
             fileContent.Append(!forceDefaults &&
@@ -58,7 +57,7 @@ namespace GDX.Developer.Editor.Build
 
             // Changelist
             fileContent.AppendLine("        /// <summary>");
-            fileContent.AppendLine("                The revision the workspace was at when the build was made.");
+            fileContent.AppendLine("        ///     The revision the workspace was at when the build was made.");
             fileContent.AppendLine("        /// </summary>");
             fileContent.Append("        public const int Changelist = ");
             fileContent.Append(!forceDefaults &&
@@ -70,7 +69,7 @@ namespace GDX.Developer.Editor.Build
 
             // BuildTask
             fileContent.AppendLine("        /// <summary>");
-            fileContent.AppendLine("                The specific build task used to create the build.");
+            fileContent.AppendLine("        ///     The specific build task used to create the build.");
             fileContent.AppendLine("        /// </summary>");
             fileContent.Append("        public const string BuildTask = \"");
             fileContent.Append(!forceDefaults &&
@@ -81,7 +80,7 @@ namespace GDX.Developer.Editor.Build
 
             // Stream
             fileContent.AppendLine("        /// <summary>");
-            fileContent.AppendLine("                The version control stream which the build was built from.");
+            fileContent.AppendLine("        ///     The version control stream which the build was built from.");
             fileContent.AppendLine("        /// </summary>");
             fileContent.Append("        public const string Stream = \"");
             fileContent.Append(!forceDefaults &&
@@ -92,7 +91,7 @@ namespace GDX.Developer.Editor.Build
 
             // Build Description
             fileContent.AppendLine("        /// <summary>");
-            fileContent.AppendLine("                The passed in build description.");
+            fileContent.AppendLine("        ///     The passed in build description.");
             fileContent.AppendLine("        /// </summary>");
             fileContent.Append("        public const string Description = \"");
             fileContent.Append(!forceDefaults &&
@@ -104,7 +103,7 @@ namespace GDX.Developer.Editor.Build
 
             // Internal Description
             fileContent.AppendLine("        /// <summary>");
-            fileContent.AppendLine("                The internal description set through method invoke.");
+            fileContent.AppendLine("        ///     The internal description set through method invoke.");
             fileContent.AppendLine("        /// </summary>");
             fileContent.Append("        public const string InternalDescription = \"");
             fileContent.Append(!forceDefaults && !string.IsNullOrEmpty(internalDescription)
@@ -113,7 +112,7 @@ namespace GDX.Developer.Editor.Build
 
             // Timestamp
             fileContent.AppendLine("        /// <summary>");
-            fileContent.AppendLine("                The date and time when the build was started.");
+            fileContent.AppendLine("        ///     The date and time when the build was started.");
             fileContent.AppendLine("        /// </summary>");
             fileContent.Append("        public const string Timestamp = \"");
             fileContent.Append(!forceDefaults

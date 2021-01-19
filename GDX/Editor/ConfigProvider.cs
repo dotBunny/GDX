@@ -31,7 +31,7 @@ namespace GDX.Editor
             settings = ScriptableObject.CreateInstance<GDXConfig>();
 
             // Ensure the folder structure is in place before we manually make the asset
-            Platform.EnsureFolderHierarchyExists(
+            Platform.EnsureFileFolderHierarchyExists(
                 System.IO.Path.Combine(Application.dataPath, "Resources", GDXConfig.ResourcesPath));
 
             // Create and save the asset

@@ -48,8 +48,9 @@ namespace GDX.Developer.Editor.Build
 
             try
             {
-                File.WriteAllText(Path.Combine(Application.dataPath, config.developerBuildInfoPath),
-                    BuildInfoGenerator.GetContent(config, false, Context.BuildConfigurationName));
+                string path = Path.Combine(Application.dataPath, config.developerBuildInfoPath);
+                Platform.EnsureFileFolderHierarchyExists(path);
+                File.WriteAllText(path), BuildInfoGenerator.GetContent(config, false, Context.BuildConfigurationName));
             }
             catch (Exception e)
             {
@@ -89,8 +90,9 @@ namespace GDX.Developer.Editor.Build
 
             try
             {
-                File.WriteAllText(Path.Combine(Application.dataPath, config.developerBuildInfoPath),
-                    BuildInfoGenerator.GetContent(config, false, "Legacy"));
+                string path = Path.Combine(Application.dataPath, config.developerBuildInfoPath);
+                Platform.EnsureFileFolderHierarchyExists(path);
+                File.WriteAllText(path, BuildInfoGenerator.GetContent(config, false, "Legacy"));
             }
             catch (Exception e)
             {
@@ -108,9 +110,9 @@ namespace GDX.Developer.Editor.Build
 
             try
             {
-                File.WriteAllText(
-                    Path.Combine(Application.dataPath, config.developerBuildInfoPath),
-                    BuildInfoGenerator.GetContent(config, true));
+                string path = Path.Combine(Application.dataPath, config.developerBuildInfoPath);
+                Platform.EnsureFileFolderHierarchyExists(path);
+                File.WriteAllText(path, BuildInfoGenerator.GetContent(config, true));
             }
             catch (Exception e)
             {

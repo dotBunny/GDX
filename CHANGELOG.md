@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.3] - 2021-01-19
+### Added
+- `Platform.EnsureFileFolderHiearchyExists()`  to check specifically for file paths.
+### Changed
+- Fixed issue with output folder structure was not present for `BuildInfo` generation.
+- `Platform.EnsureFolderHierarchyExists()`'s argument to be labeled `folderPath` to provide further clarity of the functional intent.
+
 ## [1.1.2] - 2021-01-18
 ***"EditMode Enabled"***
 > Fixes for author-time code accessing runtime only parts.
