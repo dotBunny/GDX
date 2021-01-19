@@ -4,14 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.3] - 2021-01-19
+## [1.2.0] - 2021-01-21
+***"Broken Build"***
+> A bit of refactoring around `BuildInfo` to make it a little easier to work with.
 ### Added
 - `Platform.EnsureFileFolderHiearchyExists()`  to check specifically for file paths.
-- Add the ability (by default) to encompass the `BuildInfo` output folder in an assembly definition.
-- Added an ability from **Project Settings** to output a default `BuildInfo` file.
+- The ability (by default) to encompass the `BuildInfo` output folder in an assembly definition.
+- An ability from **Project Settings** to output a default `BuildInfo` file.
+- `AssemblyInfo` to each assembly to support `internal` access during unit testing.
 ### Changed
-- Fixed issue with output folder structure was not present for `BuildInfo` generation.
+- Reorganized **Project Settings** sections to be alphabetically sorted.
 - `Platform.EnsureFolderHierarchyExists()`'s argument to be labeled `folderPath` to provide further clarity of the functional intent.
+- Combined `GDX.Developer.Build.BuildInfoGenerator` into `GDX.Developer.Build.BuildInfoProvider`.
+- Renamed `GDX.Developer.Build.BuildInfoGeneratorTests` to `GDX.Developer.Build.BuildInfoProviderTests`
+- Fixed issue with output folder structure was not present for `BuildInfo` generation.
 
 ## [1.1.2] - 2021-01-18
 ***"EditMode Enabled"***

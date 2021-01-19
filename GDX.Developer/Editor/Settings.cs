@@ -113,23 +113,9 @@ namespace GDX.Developer.Editor
                     SerializedObject settings = ConfigProvider.GetSerializedConfig();
                     SettingsGUILayout.BeginGUILayout();
 
-                    #region Command Line Parser
-
-                    SettingsGUILayout.SectionHeader("Command Line Parser");
-
-                    EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentPrefix"),
-                        s_contentArgumentPrefix);
-                    EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentSplit"),
-                        s_contentArgumentSplit);
-
-                    #endregion
-
-                    // Create some distance between next section
-                    GUILayout.Space(10);
-
                     #region BuildInfo Generation
 
-                    GUI.enabled = SettingsGUILayout.SectionHeader(
+                    bool buildInfoEnabled = SettingsGUILayout.SectionHeader(
                         "BuildInfo Generation",
                         settings.FindProperty("developerBuildInfoEnabled"),
                         s_contentBuildInfoEnabled);
@@ -140,18 +126,21 @@ namespace GDX.Developer.Editor
                     {
                         GUILayout.BeginVertical(SettingsGUILayout.InfoBoxStyle);
                         GUILayout.BeginHorizontal();
-                        GUILayout.Label("There is currently no BuildInfo file in the target location\nWould you like some default content written in its place?");
+                        GUILayout.Label(
+                            "There is currently no BuildInfo file in the target location\nWould you like some default content written in its place?");
                         if (GUILayout.Button("Create Default", SettingsGUILayout.ButtonStyle))
                         {
                             BuildInfoProvider.WriteDefaultFile();
-                            AssetDatabase.ImportAsset("Assets/" + settings.FindProperty("developerBuildInfoPath").stringValue);
+                            AssetDatabase.ImportAsset("Assets/" +
+                                                      settings.FindProperty("developerBuildInfoPath").stringValue);
                         }
+
                         GUILayout.EndHorizontal();
                         GUILayout.EndVertical();
                     }
 
                     // Only allow editing based on the feature being enabled
-                    GUI.enabled = settings.FindProperty("developerBuildInfoEnabled").boolValue;
+                    GUI.enabled = buildInfoEnabled;
 
                     EditorGUILayout.PropertyField(settings.FindProperty("developerBuildInfoPath"),
                         s_contentBuildInfoPath);
@@ -206,6 +195,20 @@ namespace GDX.Developer.Editor
 
                     // Restore regardless
                     GUI.enabled = true;
+
+                    #endregion
+
+                    // Create some distance between next section
+                    GUILayout.Space(10);
+
+                    #region Command Line Parser
+
+                    SettingsGUILayout.SectionHeader("Command Line Parser");
+
+                    EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentPrefix"),
+                        s_contentArgumentPrefix);
+                    EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentSplit"),
+                        s_contentArgumentSplit);
 
                     #endregion
 

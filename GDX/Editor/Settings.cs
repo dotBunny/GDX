@@ -38,7 +38,6 @@ namespace GDX.Editor
             "Update Timer (Days)",
             "After how many days should updates be checked for?");
 
-
         /// <summary>
         ///     The number of days between checks for updates.
         /// </summary>
@@ -126,6 +125,7 @@ namespace GDX.Editor
                     GUI.enabled = true;
 
                     #endregion
+
                     settings.ApplyModifiedPropertiesWithoutUndo();
                     SettingsGUILayout.EndGUILayout();
                 },

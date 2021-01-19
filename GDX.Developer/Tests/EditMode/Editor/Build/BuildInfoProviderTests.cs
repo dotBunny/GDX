@@ -11,9 +11,9 @@ using NUnit.Framework;
 namespace Editor.Build
 {
     /// <summary>
-    ///     A collection of unit tests to validate functionality of the <see cref="BuildInfoGenerator" /> class.
+    ///     A collection of unit tests to validate functionality of the <see cref="BuildInfoProvider" /> class.
     /// </summary>
-    public class BuildInfoGeneratorTests
+    public class BuildInfoProviderTests
     {
         /// <summary>
         ///     Check if the default content is returned when asked for.
@@ -22,7 +22,7 @@ namespace Editor.Build
         [Category("GDX.Tests")]
         public void True_GetContent_ForceDefaults()
         {
-            string generateContent = BuildInfoGenerator.GetContent(GDXConfig.Get(), true);
+            string generateContent = BuildInfoProvider.GetContent(GDXConfig.Get(), true);
             Assert.IsTrue(generateContent.Contains(" public const int Changelist = 0;"), "Expected to find 'public const int Changelist = 0;'");
         }
     }
