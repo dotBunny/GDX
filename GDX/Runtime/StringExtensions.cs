@@ -1,6 +1,8 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using System.Security;
 
@@ -35,6 +37,62 @@ namespace GDX
         ///     The ASCII character code shift value required to change the case of a letter.
         /// </summary>
         private const int CaseShift = 32;
+
+        /// <summary>
+        ///     Get the <see cref="System.String"/> after the first identified <paramref name="splitString"/> in <paramref name="targetString"/>.
+        /// </summary>
+        /// <param name="targetString">The target <see cref="System.String" /> to look in.</param>
+        /// <param name="splitString">The divider which the <paramref name="targetString"/> should be split on.</param>
+        /// <param name="comparison">Specifies the culture, case, and sort rules to be used.</param>
+        /// <returns>The content following the <paramref name="splitString"/>, or <paramref name="targetString"/> if none is found.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GetAfterFirst(this string targetString, string splitString, StringComparison comparison = StringComparison.Ordinal)
+        {
+            int splitIndex = targetString.IndexOf(splitString, 0, comparison);
+            return splitIndex < 0 ? targetString : targetString.Substring(splitIndex+splitString.Length);
+        }
+
+        /// <summary>
+        ///     Get the <see cref="System.String"/> after the last identified <paramref name="splitString"/> in <paramref name="targetString"/>.
+        /// </summary>
+        /// <param name="targetString">The target <see cref="System.String" /> to look in.</param>
+        /// <param name="splitString">The divider which the <paramref name="targetString"/> should be split on.</param>
+        /// <param name="comparison">Specifies the culture, case, and sort rules to be used.</param>
+        /// <returns>The content following the <paramref name="splitString"/>, or <paramref name="targetString"/> if none is found.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GetAfterLast(this string targetString, string splitString, StringComparison comparison = StringComparison.Ordinal)
+        {
+            int splitIndex = targetString.LastIndexOf(splitString, targetString.Length - 1, comparison);
+            return splitIndex < 0 ? targetString : targetString.Substring(splitIndex+splitString.Length);
+        }
+
+        /// <summary>
+        ///     Get the <see cref="System.String"/> before the first identified <paramref name="splitString"/> in <paramref name="targetString"/>.
+        /// </summary>
+        /// <param name="targetString">The target <see cref="System.String" /> to look in.</param>
+        /// <param name="splitString">The divider which the <paramref name="targetString"/> should be split on.</param>
+        /// <param name="comparison">Specifies the culture, case, and sort rules to be used.</param>
+        /// <returns>The content before the <paramref name="splitString"/>, or <paramref name="targetString"/> if none is found.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GetBeforeFirst(this string targetString, string splitString, StringComparison comparison = StringComparison.Ordinal)
+        {
+            int splitIndex = targetString.IndexOf(splitString, 0, comparison);
+            return splitIndex < 0 ? targetString : targetString.Substring(0, splitIndex);
+        }
+
+        /// <summary>
+        ///     Get the <see cref="System.String"/> before the last identified <paramref name="splitString"/> in <paramref name="targetString"/>.
+        /// </summary>
+        /// <param name="targetString">The target <see cref="System.String" /> to look in.</param>
+        /// <param name="splitString">The divider which the <paramref name="targetString"/> should be split on.</param>
+        /// <param name="comparison">Specifies the culture, case, and sort rules to be used.</param>
+        /// <returns>The content before the <paramref name="splitString"/>, or <paramref name="targetString"/> if none is found.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GetBeforeLast(this string targetString, string splitString, StringComparison comparison = StringComparison.Ordinal)
+        {
+            int splitIndex = targetString.LastIndexOf(splitString, targetString.Length - 1, comparison);
+            return splitIndex < 0 ? targetString : targetString.Substring(0, splitIndex);
+        }
 
         /// <summary>
         ///     <para>
@@ -159,6 +217,8 @@ namespace GDX
         /// </summary>
         /// <param name="targetString">The target <see cref="System.String" />.</param>
         /// <returns>true/false if lowercase letters were found.</returns>
+        [SecuritySafeCritical]
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
         public static unsafe bool HasLowerCase(this string targetString)
         {
             fixed (char* src = targetString)
@@ -184,6 +244,8 @@ namespace GDX
         /// </summary>
         /// <param name="targetString">The target <see cref="System.String" />.</param>
         /// <returns>true/false if uppercase letters were found.</returns>
+        [SecuritySafeCritical]
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
         public static unsafe bool HasUpperCase(this string targetString)
         {
             fixed (char* src = targetString)

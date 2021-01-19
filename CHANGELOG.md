@@ -6,15 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.0] - 2021-01-21
 ***"Broken Build"***
-> A bit of refactoring around `BuildInfo` to make it a little easier to work with.
+> A bit of refactoring around `BuildInfo` to make it a little easier to work with and some small additions to functionality by request.
 ### Added
-- `Platform.EnsureFileFolderHiearchyExists()`  to check specifically for file paths.
+- Separation of checking folders and files path structure, new `GDX.Platform.EnsureFileFolderHiearchyExists()` just for files.
 - The ability (by default) to encompass the `BuildInfo` output folder in an assembly definition.
 - An ability from **Project Settings** to output a default `BuildInfo` file.
-- `AssemblyInfo` to each assembly to support `internal` access during unit testing.
+- `AssemblyInfo` to each assembly to support _internal_ access during unit testing.
+- Applied `MethodImplOptions.AggressiveInlining` to many methods.
+- A bunch of split related functionality to `GDX.StringExtensions`.
+  - `GetAfterFirst()`
+  - `GetAfterLast()`
+  - `GetBeforeFirst()`
+  - `GetBeforeLast()`
 ### Changed
+- Removed feature highlight section from `README.md`, the thought is to use the [Wiki](https://github.com/dotBunny/GDX/wiki) for this sort of stuff. 
+- Dropped in some unsafe attributes to `GDX.StringExtensions.HasLowerCase()` and `GDX.StringExtensions.HasUpperCase()` in `GDX.StringExtensions`.
 - Reorganized **Project Settings** sections to be alphabetically sorted.
-- `Platform.EnsureFolderHierarchyExists()`'s argument to be labeled `folderPath` to provide further clarity of the functional intent.
+- `GDX.Platform.EnsureFolderHierarchyExists()`'s argument to be labeled `folderPath` to provide further clarity of the functional intent.
 - Combined `GDX.Developer.Build.BuildInfoGenerator` into `GDX.Developer.Build.BuildInfoProvider`.
 - Renamed `GDX.Developer.Build.BuildInfoGeneratorTests` to `GDX.Developer.Build.BuildInfoProviderTests`
 - Fixed issue with output folder structure was not present for `BuildInfo` generation.

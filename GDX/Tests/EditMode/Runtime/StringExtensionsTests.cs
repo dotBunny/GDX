@@ -27,6 +27,47 @@ namespace Runtime
         private const string UpperCaseTestString = "THIS IS ALL UPPERCASE";
         private const string LowerCaseTestString = "this is all lowercase";
 
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_GetAfterFirst_Simple()
+        {
+            string result = ComplexTestString.GetAfterFirst("_M");
+            const string expected = "\"y_TEST_STR#$34343";
+
+            Assert.IsTrue(result == expected, $"Expected {expected} but got {result}");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_GetAfterLast_Simple()
+        {
+            string result = ComplexTestString.GetAfterLast("_");
+            const string expected = "STR#$34343";
+
+            Assert.IsTrue(result == expected, $"Expected {expected} but got {result}");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_GetBeforeFirst_Simple()
+        {
+            string result = ComplexTestString.GetBeforeFirst("_");
+            const string expected = "";
+
+            Assert.IsTrue(result == expected, $"Expected {expected} but got {result}");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_GetBeforeLast_Simple()
+        {
+            string result = ComplexTestString.GetBeforeLast("_");
+            const string expected = "_tH\\is_I!is_M\"y_TEST";
+
+            Assert.IsTrue(result == expected, $"Expected {expected} but got {result}");
+        }
+
         [Test]
         [Category("GDX.Tests")]
         public void False_HasUpperCase_Simple()
