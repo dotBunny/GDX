@@ -4,8 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.0] - 2021-01-21
-***"Broken Build"***
+## [1.2.0] - 2021-01-20
+***"Cisco's Birthday"***
 > A bit of refactoring around `BuildInfo` to make it a little easier to work with and some small additions to functionality by request.
 ### Added
 - Separation of checking folders and files path structure, new `GDX.Platform.EnsureFileFolderHiearchyExists()` just for files.
@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `GDX.Vector2Extensions` and `GDX.Vector3Extensions` with associated unit testing.
   - `Approximately()`
   - `Midpoint()`
+- A `GDX.StringExtensions.SplitCamelCase()` to help with formatting of data. 
 ### Changed
 - All classes with unit testing will reference the class in a commend
 - Removed feature highlight section from `README.md`, the thought is to use the [Wiki](https://github.com/dotBunny/GDX/wiki) for this sort of stuff. 

@@ -98,6 +98,19 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
+        public void True_SplitCamelCase_CamelCase()
+        {
+            Assert.IsTrue("SomethingSomethingDarkSide".SplitCamelCase(" ") == "Something Something Dark Side");
+        }
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_SplitCamelCase_camelCase()
+        {
+            Assert.IsTrue("somethingSomethingDarkSide".SplitCamelCase(" ") == "something Something Dark Side");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
         public void Equal_ToLowerGetHashCode_GetLowerCaseHashCode_ComplexString()
         {
             int oldHash = ComplexTestString.ToLower().GetHashCode();
