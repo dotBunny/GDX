@@ -18,6 +18,9 @@ namespace GDX.Developer.Editor.Build
     ///     A wrapper for the scriptable build system (platform package based), to create the BuildInfo
     ///     file during the build process, and clean it up afterwards.
     /// </summary>
+    /// <remarks>
+    ///     Unit testing found in GDX.Developer.Tests.EditMode, under Editor.Build.BuildInfoProviderTests.
+    /// </remarks>
     internal class BuildInfoProvider : ClassicBuildPipelineCustomizer
     {
         /// <summary>
@@ -66,6 +69,9 @@ namespace GDX.Developer.Editor.Build
     ///     A wrapper for the legacy build system (non platform package based), to create the BuildInfo
     ///     file during the build process, and clean it up afterwards.
     /// </summary>
+    /// <remarks>
+    ///     Unit testing found in GDX.Developer.Tests.EditMode, under Editor.Build.BuildInfoProviderTests.
+    /// </remarks>
     internal class BuildInfoProvider : IPreprocessBuildWithReport, IPostprocessBuildWithReport
     {
         /// <inheritdoc />

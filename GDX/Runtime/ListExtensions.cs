@@ -10,6 +10,9 @@ namespace GDX
     /// <summary>
     ///     <see cref="System.Collections.Generic.List{T}" /> Based Extension Methods
     /// </summary>
+    /// <remarks>
+    ///     Unit testing found in GDX.Tests.EditMode, under Runtime.ListExtensionsTests.
+    /// </remarks>
     public static class ListExtensions
     {
         /// <summary>

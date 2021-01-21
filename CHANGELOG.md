@@ -18,13 +18,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `GetAfterLast()`
   - `GetBeforeFirst()`
   - `GetBeforeLast()`
+- `GDX.Vector2Extensions` and `GDX.Vector3Extensions` with associated unit testing.
+  - `Approximately()`
+  - `Midpoint()`
 ### Changed
+- All classes with unit testing will reference the class in a commend
 - Removed feature highlight section from `README.md`, the thought is to use the [Wiki](https://github.com/dotBunny/GDX/wiki) for this sort of stuff. 
 - Dropped in some unsafe attributes to `GDX.StringExtensions.HasLowerCase()` and `GDX.StringExtensions.HasUpperCase()` in `GDX.StringExtensions`.
 - Reorganized **Project Settings** sections to be alphabetically sorted.
 - `GDX.Platform.EnsureFolderHierarchyExists()`'s argument to be labeled `folderPath` to provide further clarity of the functional intent.
 - Combined `GDX.Developer.Build.BuildInfoGenerator` into `GDX.Developer.Build.BuildInfoProvider`.
-- Renamed `GDX.Developer.Build.BuildInfoGeneratorTests` to `GDX.Developer.Build.BuildInfoProviderTests`
+- Renamed `Editor.Build.BuildInfoGeneratorTests` to `Editor.Build.BuildInfoProviderTests`
 - Fixed issue with output folder structure was not present for `BuildInfo` generation.
 - Renamed `GDX.Editor.SettingsGUILayout` to `GDX.Editor.SettingsStyles`, while exposing more internals for reuse.
 

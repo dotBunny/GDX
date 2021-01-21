@@ -11,6 +11,9 @@ namespace GDX
     /// <summary>
     ///     <see cref="System.String" /> Based Extension Methods
     /// </summary>
+    /// <remarks>
+    ///     Unit testing found in GDX.Tests.EditMode, under Runtime.StringExtensionsTests.
+    /// </remarks>
     public static class StringExtensions
     {
         /// <summary>

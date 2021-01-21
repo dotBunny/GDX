@@ -6,6 +6,9 @@ namespace GDX
     /// <summary>
     ///     <see cref="byte" /> Based Extension Methods
     /// </summary>
+    /// <remarks>
+    ///     Unit testing found in GDX.Tests.EditMode, under Runtime.ByteExtensionsTests.
+    /// </remarks>
     public static class ByteExtensions
     {
         /// <summary>

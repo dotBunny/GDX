@@ -3,7 +3,7 @@
 
 using GDX;
 using NUnit.Framework;
-#if GDX_TESTFRAMEWORK_PERFORMANCETESTING
+#if GDX_PERFORMANCETESTING
 using Unity.PerformanceTesting;
 
 #endif
@@ -168,7 +168,7 @@ namespace Runtime
             Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
         }
 
-#if GDX_TESTFRAMEWORK_PERFORMANCETESTING
+#if GDX_PERFORMANCETESTING
         [Test]
         [Performance]
         [Category("GDX.Performance")]
@@ -256,7 +256,7 @@ namespace Runtime
         }
 #endif
 
-#if GDX_TESTFRAMEWORK_PERFORMANCETESTING
+#if GDX_PERFORMANCETESTING
         [Test]
         [Performance]
         [Category("GDX.Performance")]

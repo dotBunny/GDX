@@ -278,7 +278,7 @@ namespace Runtime
             int differentCount = listLength;
             for (int i = 0; i < listLength; i++)
             {
-                if (listItemA[0] == listItemB[1])
+                if (listItemA[i] == listItemB[i])
                 {
                     differentCount--;
                 }
