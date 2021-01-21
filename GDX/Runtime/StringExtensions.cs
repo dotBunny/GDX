@@ -2,10 +2,15 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using System.Security;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
+
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace GDX
 {
@@ -41,6 +46,73 @@ namespace GDX
         ///     The ASCII character code shift value required to change the case of a letter.
         /// </summary>
         private const int CaseShift = 32;
+
+        /// <summary>
+        ///     The default encryption key used when none is provided to the encryption related extensions.
+        /// </summary>
+        /// <remarks>
+        ///     You can change this at runtime during some sort of initialization pass to being something unique to your project,
+        ///     but it is not absolutely necessary. This must be a multiple of 8 bytes.
+        /// </remarks>
+        // ReSharper disable once FieldCanBeMadeReadOnly.Global
+        public static byte[] EncryptionDefaultKey = Encoding.UTF8.GetBytes("Awesome!");
+
+        /// <summary>
+        ///     The IV (Initialization Vector) provided to the <see cref="DESCryptoServiceProvider" />.
+        /// </summary>
+        /// <remarks>
+        ///     You can change this at runtime during some sort of initialization pass to being something unique to your project,
+        ///     but it is not absolutely necessary. This must be a multiple of 8 bytes.
+        /// </remarks>
+        // ReSharper disable once FieldCanBeMadeReadOnly.Global
+        public static byte[] EncryptionInitializationVector = Encoding.UTF8.GetBytes("dotBunny");
+
+        /// <summary>
+        ///     Decrypt an encrypted <see cref="System.String" /> created by <see cref="Encrypt" />.
+        /// </summary>
+        /// <remarks>This will have quite a few allocations.</remarks>
+        /// <param name="encryptedString">The encrypted <see cref="System.String" />.</param>
+        /// <param name="encryptionKey">The key used to encrypt the <see cref="System.String" />.</param>
+        /// <returns>The decrypted <see cref="System.String" />.</returns>
+        public static string Decrypt(this string encryptedString, byte[] encryptionKey = null)
+        {
+            DESCryptoServiceProvider desProvider = new DESCryptoServiceProvider
+            {
+                Mode = CipherMode.ECB,
+                Padding = PaddingMode.PKCS7,
+                Key = encryptionKey ?? EncryptionDefaultKey,
+                IV = EncryptionInitializationVector
+            };
+            using MemoryStream stream = new MemoryStream(Convert.FromBase64String(encryptedString));
+            using CryptoStream cs = new CryptoStream(stream, desProvider.CreateDecryptor(), CryptoStreamMode.Read);
+            using StreamReader sr = new StreamReader(cs, Encoding.UTF8);
+            return sr.ReadToEnd();
+        }
+
+        /// <summary>
+        ///     Encrypt a <see cref="System.String" /> utilizing a <see cref="DESCryptoServiceProvider" />.
+        /// </summary>
+        /// <remarks>This will have quite a few allocations.</remarks>
+        /// <param name="decryptedString">The original <see cref="System.String" />.</param>
+        /// <param name="encryptionKey">The key to be used when encrypting the <see cref="System.String" />.  This must be a multiple of 8 bytes.</param>
+        /// <returns>The encrypted <see cref="System.String" />.</returns>
+        public static string Encrypt(this string decryptedString, byte[] encryptionKey = null)
+        {
+            DESCryptoServiceProvider desProvider = new DESCryptoServiceProvider
+            {
+                Mode = CipherMode.ECB,
+                Padding = PaddingMode.PKCS7,
+                Key = encryptionKey ?? EncryptionDefaultKey,
+                IV = EncryptionInitializationVector
+            };
+
+            using MemoryStream stream = new MemoryStream();
+            using CryptoStream cs = new CryptoStream(stream, desProvider.CreateEncryptor(), CryptoStreamMode.Write);
+            byte[] data = Encoding.Default.GetBytes(decryptedString);
+            cs.Write(data, 0, data.Length);
+            cs.FlushFinalBlock();
+            return Convert.ToBase64String(stream.ToArray());
+        }
 
         /// <summary>
         ///     Get the <see cref="System.String" /> after the first identified <paramref name="splitString" /> in

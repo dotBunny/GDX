@@ -21,7 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `GDX.Vector2Extensions` and `GDX.Vector3Extensions` with associated unit testing.
   - `Approximately()`
   - `Midpoint()`
-- A `GDX.StringExtensions.SplitCamelCase()` to help with formatting of data. 
+- `GDX.StringExtensions`
+  - `SplitCamelCase()` to help with formatting of internal data.
+  - `Encrypt()` and `Decrypt()` for all your string hiding needs. 
 ### Changed
 - All classes/structs with unit testing will reference the class in a comments
 - `GDX.ListExtensions` renamed to `GDX.IListExtensions` (as well as its unit test class)

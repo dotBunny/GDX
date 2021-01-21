@@ -111,6 +111,21 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
+        public void Equal_Encrypt_Decrypt_SimpleString()
+        {
+            string encrypted = SimpleTestString.Encrypt();
+            Assert.IsTrue(encrypted.Decrypt() == SimpleTestString, "Expected strings to match.");
+        }
+        [Test]
+        [Category("GDX.Tests")]
+        public void Equal_Encrypt_Decrypt_ComplexString()
+        {
+            string encrypted = ComplexTestString.Encrypt();
+            Assert.IsTrue(encrypted.Decrypt() == ComplexTestString, "Expected strings to match.");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
         public void Equal_ToLowerGetHashCode_GetLowerCaseHashCode_ComplexString()
         {
             int oldHash = ComplexTestString.ToLower().GetHashCode();
