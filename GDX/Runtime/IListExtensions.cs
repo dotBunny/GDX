@@ -8,22 +8,22 @@ using UnityEngine;
 namespace GDX
 {
     /// <summary>
-    ///     <see cref="System.Collections.Generic.List{T}" /> Based Extension Methods
+    ///     <see cref="System.Collections.Generic.IList{T}" /> Based Extension Methods
     /// </summary>
     /// <remarks>
-    ///     Unit testing found in GDX.Tests.EditMode, under Runtime.ListExtensionsTests.
+    ///     Unit testing found in GDX.Tests.EditMode, under Runtime.IListExtensionsTests.
     /// </remarks>
-    public static class ListExtensions
+    public static class IListExtensions
     {
         /// <summary>
-        ///     Add an item to a <see cref="System.Collections.Generic.List{T}" />, but only if it is not already contained.
+        ///     Add an item to a <see cref="System.Collections.Generic.IList{T}" />, but only if it is not already contained.
         /// </summary>
-        /// <param name="targetList">The <see cref="System.Collections.Generic.List{T}" /> to add too.</param>
+        /// <param name="targetList">The <see cref="System.Collections.Generic.IList{T}" /> to add too.</param>
         /// <param name="targetItem">The target object to add..</param>
-        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.IList{T}" />.</typeparam>
         /// <returns>true/false if this operation was able to add the item.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool AddUniqueItem<T>(this List<T> targetList, T targetItem) where T : class
+        public static bool AddUniqueItem<T>(this IList<T> targetList, T targetItem) where T : class
         {
             if (targetList.ContainsItem(targetItem))
             {
@@ -36,14 +36,14 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Add a value to a <see cref="System.Collections.Generic.List{T}" />, but only if it is not already contained.
+        ///     Add a value to a <see cref="System.Collections.Generic.IList{T}" />, but only if it is not already contained.
         /// </summary>
-        /// <param name="targetList">The <see cref="System.Collections.Generic.List{T}" /> to add too.</param>
+        /// <param name="targetList">The <see cref="System.Collections.Generic.IList{T}" /> to add too.</param>
         /// <param name="targetValue">The target value to add..</param>
-        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.IList{T}" />.</typeparam>
         /// <returns>true/false if this operation was able to add the value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool AddUniqueValue<T>(this List<T> targetList, T targetValue) where T : struct
+        public static bool AddUniqueValue<T>(this IList<T> targetList, T targetValue) where T : struct
         {
             if (targetList.ContainsValue(targetValue))
             {
@@ -59,12 +59,12 @@ namespace GDX
         ///     <para>Does <paramref name="targetList" /> contain <paramref name="targetItem" />?</para>
         /// </summary>
         /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
-        /// <param name="targetList">The <see cref="System.Collections.Generic.List{T}" /> to look in.</param>
+        /// <param name="targetList">The <see cref="System.Collections.Generic.IList{T}" /> to look in.</param>
         /// <param name="targetItem">The target object to look for.</param>
-        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.IList{T}" />.</typeparam>
         /// <returns>true/false</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool ContainsItem<T>(this List<T> targetList, T targetItem) where T : class
+        public static bool ContainsItem<T>(this IList<T> targetList, T targetItem) where T : class
         {
             int length = targetList.Count;
             for (int i = 0; i < length; i++)
@@ -85,12 +85,12 @@ namespace GDX
         ///     WARNING: This will box the <paramref name="targetValue" />. You should probably write your own explicit
         ///     implementation.
         /// </remarks>
-        /// <param name="targetList">The <see cref="System.Collections.Generic.List{T}" /> to look in.</param>
+        /// <param name="targetList">The <see cref="System.Collections.Generic.IList{T}" /> to look in.</param>
         /// <param name="targetValue">The value to look for.</param>
-        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.IList{T}" />.</typeparam>
         /// <returns>true/false</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool ContainsValue<T>(this List<T> targetList, object targetValue)
+        public static bool ContainsValue<T>(this IList<T> targetList, object targetValue)
             where T : struct
         {
             int length = targetList.Count;
@@ -109,12 +109,12 @@ namespace GDX
         ///     <para>Removes the first <paramref name="targetItem" /> from the provided <paramref name="targetList" />.</para>
         /// </summary>
         /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
-        /// <param name="targetList">The target <see cref="System.Collections.Generic.List{T}" />.</param>
+        /// <param name="targetList">The target <see cref="System.Collections.Generic.IList{T}" />.</param>
         /// <param name="targetItem">The target object to remove from the <paramref name="targetList" />.</param>
-        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.IList{T}" />.</typeparam>
         /// <returns>true/false if the item was removed.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool RemoveFirstItem<T>(this List<T> targetList, T targetItem) where T : class
+        public static bool RemoveFirstItem<T>(this IList<T> targetList, T targetItem) where T : class
         {
             int length = targetList.Count;
             for (int i = 0; i < length; i++)
@@ -140,11 +140,11 @@ namespace GDX
         ///         implementation.
         ///     </para>
         /// </remarks>
-        /// <param name="targetList">The target <see cref="System.Collections.Generic.List{T}" />.</param>
+        /// <param name="targetList">The target <see cref="System.Collections.Generic.IList{T}" />.</param>
         /// <param name="targetValue">The value to remove from the <paramref name="targetList" />.</param>
-        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.IList{T}" />.</typeparam>
         /// <returns>true/false if a value was removed.</returns>
-        public static bool RemoveFirstValue<T>(this List<T> targetList, object targetValue)
+        public static bool RemoveFirstValue<T>(this IList<T> targetList, object targetValue)
             where T : struct
         {
             int length = targetList.Count;
@@ -166,12 +166,12 @@ namespace GDX
         ///     <para>Removes all <paramref name="targetItem" /> from the provided <paramref name="targetList" />.</para>
         /// </summary>
         /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
-        /// <param name="targetList">The target <see cref="System.Collections.Generic.List{T}" />.</param>
+        /// <param name="targetList">The target <see cref="System.Collections.Generic.IList{T}" />.</param>
         /// <param name="targetItem">The target object to remove from the <paramref name="targetList" />.</param>
-        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.IList{T}" />.</typeparam>
         /// <returns>true/false if the item was removed.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool RemoveItems<T>(this List<T> targetList, T targetItem) where T : class
+        public static bool RemoveItems<T>(this IList<T> targetList, T targetItem) where T : class
         {
             int length = targetList.Count;
             bool removedItem = false;
@@ -198,12 +198,12 @@ namespace GDX
         ///         implementation.
         ///     </para>
         /// </remarks>
-        /// <param name="targetList">The target <see cref="System.Collections.Generic.List{T}" />.</param>
+        /// <param name="targetList">The target <see cref="System.Collections.Generic.IList{T}" />.</param>
         /// <param name="targetValue">The value to remove from the <paramref name="targetList" />.</param>
-        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.IList{T}" />.</typeparam>
         /// <returns>true/false if values were removed.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool RemoveValues<T>(this List<T> targetList, object targetValue) where T : struct
+        public static bool RemoveValues<T>(this IList<T> targetList, object targetValue) where T : struct
         {
             int length = targetList.Count;
             bool removedValues = false;
@@ -229,13 +229,13 @@ namespace GDX
         /// </summary>
         /// <remarks>
         ///     This make sure that you are always removing from the end of a
-        ///     <see cref="System.Collections.Generic.List{T}" />.
+        ///     <see cref="System.Collections.Generic.IList{T}" />.
         /// </remarks>
-        /// <param name="targetList">The target <see cref="System.Collections.Generic.List{T}" />.</param>
+        /// <param name="targetList">The target <see cref="System.Collections.Generic.IList{T}" />.</param>
         /// <param name="index">The index of the item to remove.</param>
-        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.IList{T}" />.</typeparam>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void RemoveItemSwap<T>(this List<T> targetList, int index)
+        public static void RemoveItemSwap<T>(this IList<T> targetList, int index)
         {
             int lastIndex = targetList.Count - 1;
             targetList[index] = targetList[lastIndex];
@@ -247,12 +247,12 @@ namespace GDX
         ///     <para>Removes the last <paramref name="targetItem" /> from the provided <paramref name="targetList" />.</para>
         /// </summary>
         /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
-        /// <param name="targetList">The target <see cref="System.Collections.Generic.List{T}" />.</param>
+        /// <param name="targetList">The target <see cref="System.Collections.Generic.IList{T}" />.</param>
         /// <param name="targetItem">The target object to remove from the <paramref name="targetList" />.</param>
-        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.IList{T}" />.</typeparam>
         /// <returns>true/false if the item was removed.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool RemoveLastItem<T>(this List<T> targetList, T targetItem) where T : class
+        public static bool RemoveLastItem<T>(this IList<T> targetList, T targetItem) where T : class
         {
             int length = targetList.Count;
             for (int i = length - 1; i >= 0; i--)
@@ -278,11 +278,11 @@ namespace GDX
         ///         implementation.
         ///     </para>
         /// </remarks>
-        /// <param name="targetList">The target <see cref="System.Collections.Generic.List{T}" />.</param>
+        /// <param name="targetList">The target <see cref="System.Collections.Generic.IList{T}" />.</param>
         /// <param name="targetValue">The value to remove from the <paramref name="targetList" />.</param>
-        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.IList{T}" />.</typeparam>
         /// <returns>true/false if a value was removed.</returns>
-        public static bool RemoveLastValue<T>(this List<T> targetList, object targetValue)
+        public static bool RemoveLastValue<T>(this IList<T> targetList, object targetValue)
             where T : struct
         {
             int length = targetList.Count;
@@ -305,10 +305,10 @@ namespace GDX
         ///     Shuffle the items in the <paramref name="targetList" />.
         /// </summary>
         /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
-        /// <param name="targetList">The target <see cref="System.Collections.Generic.List{T}" />.</param>
-        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.List{T}" />.</typeparam>
+        /// <param name="targetList">The target <see cref="System.Collections.Generic.IList{T}" />.</param>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.IList{T}" />.</typeparam>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Shuffle<T>(this List<T> targetList)
+        public static void Shuffle<T>(this IList<T> targetList)
         {
             int length = targetList.Count;
             for (int i = 0; i < length; i++)

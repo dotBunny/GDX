@@ -23,7 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `Midpoint()`
 - A `GDX.StringExtensions.SplitCamelCase()` to help with formatting of data. 
 ### Changed
-- All classes with unit testing will reference the class in a commend
+- All classes/structs with unit testing will reference the class in a comments
+- `GDX.ListExtensions` renamed to `GDX.IListExtensions` (as well as its unit test class)
 - Removed feature highlight section from `README.md`, the thought is to use the [Wiki](https://github.com/dotBunny/GDX/wiki) for this sort of stuff. 
 - Dropped in some unsafe attributes to `GDX.StringExtensions.HasLowerCase()` and `GDX.StringExtensions.HasUpperCase()` in `GDX.StringExtensions`.
 - Reorganized **Project Settings** sections to be alphabetically sorted.
