@@ -18,13 +18,14 @@ namespace GDX.Editor
         /// <summary>
         ///     Message to display in the inspector if a <see cref="GDXConfig" /> is selected in the project.
         /// </summary>
-        private static readonly string s_helpContent =
-            "GDX project settings must be changed via the Project Settings window.";
+        private const string HelpContent = "GDX project settings must be changed via the Project Settings window.";
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Prevent the inspector actually showing for a <see cref="GDXConfig" /> to prevent unintentional editing.
+        /// </summary>
         public override void OnInspectorGUI()
         {
-            EditorGUILayout.HelpBox(s_helpContent, MessageType.Info);
+            EditorGUILayout.HelpBox(HelpContent, MessageType.Info);
         }
     }
 }

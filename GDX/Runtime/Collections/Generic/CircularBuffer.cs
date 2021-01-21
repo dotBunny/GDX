@@ -55,7 +55,7 @@ namespace GDX.Collections.Generic
 
         /// <summary>
         ///     Create a <see cref="CircularBuffer{T}" /> with a <paramref name="capacity" />, filling with
-        ///     <see cref="targetItems" />.
+        ///     <paramref name="targetItems"/>.
         /// </summary>
         /// <param name="capacity">The maximum number of items allowed in the <see cref="CircularBuffer{T}" /></param>
         /// <param name="targetItems">An array of values to fill the <see cref="CircularBuffer{T}" /> with.</param>
