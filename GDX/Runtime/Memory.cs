@@ -2,6 +2,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -27,6 +28,7 @@ namespace GDX
         ///     </list>
         /// </summary>
         /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void CleanUp()
         {
             // Fire off a first pass collection
@@ -44,6 +46,7 @@ namespace GDX
 
         /// <inheritdoc cref="CleanUp" />
         /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async void CleanUpAsync()
         {
             // ReSharper disable once HeapView.DelegateAllocation

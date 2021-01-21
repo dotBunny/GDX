@@ -13,6 +13,7 @@ namespace GDX.Developer
     /// </summary>
     /// <remarks>
     ///     <para>This does NOT support the /FLAG or /KEY=VALUE format. All FLAGs and KEYs are stored in Uppercase.</para>
+    ///     <para>Unit testing found in GDX.Developer.Tests.EditMode, under Runtime.CommandLineParserTests.</para>
     /// </remarks>
     public static class CommandLineParser
     {

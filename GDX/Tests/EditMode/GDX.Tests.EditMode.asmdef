@@ -22,14 +22,14 @@
     ],
     "versionDefines": [
         {
-            "name": "com.unity.test-framework.performance",
-            "expression": "1.0.0",
-            "define": "GDX_TESTFRAMEWORK_PERFORMANCETESTING"
+            "name": "com.unity.test-framework",
+            "expression": "1.1.0",
+            "define": "GDX_TESTFRAMEWORK"
         },
         {
-            "name": "com.unity.test-framework",
-            "expression": "1.0.0",
-            "define": "GDX_TESTFRAMEWORK"
+            "name": "com.unity.test-framework.performance",
+            "expression": "2.0.0",
+            "define": "GDX_PERFORMANCETESTING"
         }
     ],
     "noEngineReferences": false

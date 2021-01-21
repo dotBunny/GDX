@@ -3,7 +3,7 @@
 
 using GDX;
 using NUnit.Framework;
-#if GDX_TESTFRAMEWORK_PERFORMANCETESTING
+#if GDX_PERFORMANCETESTING
 using Unity.PerformanceTesting;
 
 #endif
@@ -26,6 +26,47 @@ namespace Runtime
         private const string SimpleTestString = "HelloWorld!";
         private const string UpperCaseTestString = "THIS IS ALL UPPERCASE";
         private const string LowerCaseTestString = "this is all lowercase";
+
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_GetAfterFirst_Simple()
+        {
+            string result = ComplexTestString.GetAfterFirst("_M");
+            const string expected = "\"y_TEST_STR#$34343";
+
+            Assert.IsTrue(result == expected, $"Expected {expected} but got {result}");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_GetAfterLast_Simple()
+        {
+            string result = ComplexTestString.GetAfterLast("_");
+            const string expected = "STR#$34343";
+
+            Assert.IsTrue(result == expected, $"Expected {expected} but got {result}");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_GetBeforeFirst_Simple()
+        {
+            string result = ComplexTestString.GetBeforeFirst("_");
+            const string expected = "";
+
+            Assert.IsTrue(result == expected, $"Expected {expected} but got {result}");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_GetBeforeLast_Simple()
+        {
+            string result = ComplexTestString.GetBeforeLast("_");
+            const string expected = "_tH\\is_I!is_M\"y_TEST";
+
+            Assert.IsTrue(result == expected, $"Expected {expected} but got {result}");
+        }
 
         [Test]
         [Category("GDX.Tests")]
@@ -53,6 +94,34 @@ namespace Runtime
         public void True_HasLowerCase_Simple()
         {
             Assert.IsTrue(SimpleTestString.HasLowerCase());
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_SplitCamelCase_CamelCase()
+        {
+            Assert.IsTrue("SomethingSomethingDarkSide".SplitCamelCase(" ") == "Something Something Dark Side");
+        }
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_SplitCamelCase_camelCase()
+        {
+            Assert.IsTrue("somethingSomethingDarkSide".SplitCamelCase(" ") == "something Something Dark Side");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void Equal_Encrypt_Decrypt_SimpleString()
+        {
+            string encrypted = SimpleTestString.Encrypt();
+            Assert.IsTrue(encrypted.Decrypt() == SimpleTestString, "Expected strings to match.");
+        }
+        [Test]
+        [Category("GDX.Tests")]
+        public void Equal_Encrypt_Decrypt_ComplexString()
+        {
+            string encrypted = ComplexTestString.Encrypt();
+            Assert.IsTrue(encrypted.Decrypt() == ComplexTestString, "Expected strings to match.");
         }
 
         [Test]
@@ -127,7 +196,7 @@ namespace Runtime
             Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
         }
 
-#if GDX_TESTFRAMEWORK_PERFORMANCETESTING
+#if GDX_PERFORMANCETESTING
         [Test]
         [Performance]
         [Category("GDX.Performance")]
@@ -215,7 +284,7 @@ namespace Runtime
         }
 #endif
 
-#if GDX_TESTFRAMEWORK_PERFORMANCETESTING
+#if GDX_PERFORMANCETESTING
         [Test]
         [Performance]
         [Category("GDX.Performance")]

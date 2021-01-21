@@ -1,14 +1,25 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+using System.IO;
+using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using System.Security;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
+
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace GDX
 {
     /// <summary>
     ///     <see cref="System.String" /> Based Extension Methods
     /// </summary>
+    /// <remarks>
+    ///     Unit testing found in GDX.Tests.EditMode, under Runtime.StringExtensionsTests.
+    /// </remarks>
     public static class StringExtensions
     {
         /// <summary>
@@ -35,6 +46,143 @@ namespace GDX
         ///     The ASCII character code shift value required to change the case of a letter.
         /// </summary>
         private const int CaseShift = 32;
+
+        /// <summary>
+        ///     The default encryption key used when none is provided to the encryption related extensions.
+        /// </summary>
+        /// <remarks>
+        ///     You can change this at runtime during some sort of initialization pass to being something unique to your project,
+        ///     but it is not absolutely necessary. This must be a multiple of 8 bytes.
+        /// </remarks>
+        // ReSharper disable once FieldCanBeMadeReadOnly.Global
+        public static byte[] EncryptionDefaultKey = Encoding.UTF8.GetBytes("Awesome!");
+
+        /// <summary>
+        ///     The IV (Initialization Vector) provided to the <see cref="DESCryptoServiceProvider" />.
+        /// </summary>
+        /// <remarks>
+        ///     You can change this at runtime during some sort of initialization pass to being something unique to your project,
+        ///     but it is not absolutely necessary. This must be a multiple of 8 bytes.
+        /// </remarks>
+        // ReSharper disable once FieldCanBeMadeReadOnly.Global
+        public static byte[] EncryptionInitializationVector = Encoding.UTF8.GetBytes("dotBunny");
+
+        /// <summary>
+        ///     Decrypt an encrypted <see cref="System.String" /> created by <see cref="Encrypt" />.
+        /// </summary>
+        /// <remarks>This will have quite a few allocations.</remarks>
+        /// <param name="encryptedString">The encrypted <see cref="System.String" />.</param>
+        /// <param name="encryptionKey">The key used to encrypt the <see cref="System.String" />.</param>
+        /// <returns>The decrypted <see cref="System.String" />.</returns>
+        public static string Decrypt(this string encryptedString, byte[] encryptionKey = null)
+        {
+            DESCryptoServiceProvider desProvider = new DESCryptoServiceProvider
+            {
+                Mode = CipherMode.ECB,
+                Padding = PaddingMode.PKCS7,
+                Key = encryptionKey ?? EncryptionDefaultKey,
+                IV = EncryptionInitializationVector
+            };
+            using MemoryStream stream = new MemoryStream(Convert.FromBase64String(encryptedString));
+            using CryptoStream cs = new CryptoStream(stream, desProvider.CreateDecryptor(), CryptoStreamMode.Read);
+            using StreamReader sr = new StreamReader(cs, Encoding.UTF8);
+            return sr.ReadToEnd();
+        }
+
+        /// <summary>
+        ///     Encrypt a <see cref="System.String" /> utilizing a <see cref="DESCryptoServiceProvider" />.
+        /// </summary>
+        /// <remarks>This will have quite a few allocations.</remarks>
+        /// <param name="decryptedString">The original <see cref="System.String" />.</param>
+        /// <param name="encryptionKey">The key to be used when encrypting the <see cref="System.String" />.  This must be a multiple of 8 bytes.</param>
+        /// <returns>The encrypted <see cref="System.String" />.</returns>
+        public static string Encrypt(this string decryptedString, byte[] encryptionKey = null)
+        {
+            DESCryptoServiceProvider desProvider = new DESCryptoServiceProvider
+            {
+                Mode = CipherMode.ECB,
+                Padding = PaddingMode.PKCS7,
+                Key = encryptionKey ?? EncryptionDefaultKey,
+                IV = EncryptionInitializationVector
+            };
+
+            using MemoryStream stream = new MemoryStream();
+            using CryptoStream cs = new CryptoStream(stream, desProvider.CreateEncryptor(), CryptoStreamMode.Write);
+            byte[] data = Encoding.Default.GetBytes(decryptedString);
+            cs.Write(data, 0, data.Length);
+            cs.FlushFinalBlock();
+            return Convert.ToBase64String(stream.ToArray());
+        }
+
+        /// <summary>
+        ///     Get the <see cref="System.String" /> after the first identified <paramref name="splitString" /> in
+        ///     <paramref name="targetString" />.
+        /// </summary>
+        /// <param name="targetString">The target <see cref="System.String" /> to look in.</param>
+        /// <param name="splitString">The divider which the <paramref name="targetString" /> should be split on.</param>
+        /// <param name="comparison">Specifies the culture, case, and sort rules to be used.</param>
+        /// <returns>
+        ///     The content following the <paramref name="splitString" />, or <paramref name="targetString" /> if none is
+        ///     found.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GetAfterFirst(this string targetString, string splitString,
+            StringComparison comparison = StringComparison.Ordinal)
+        {
+            int splitIndex = targetString.IndexOf(splitString, 0, comparison);
+            return splitIndex < 0 ? targetString : targetString.Substring(splitIndex + splitString.Length);
+        }
+
+        /// <summary>
+        ///     Get the <see cref="System.String" /> after the last identified <paramref name="splitString" /> in
+        ///     <paramref name="targetString" />.
+        /// </summary>
+        /// <param name="targetString">The target <see cref="System.String" /> to look in.</param>
+        /// <param name="splitString">The divider which the <paramref name="targetString" /> should be split on.</param>
+        /// <param name="comparison">Specifies the culture, case, and sort rules to be used.</param>
+        /// <returns>
+        ///     The content following the <paramref name="splitString" />, or <paramref name="targetString" /> if none is
+        ///     found.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GetAfterLast(this string targetString, string splitString,
+            StringComparison comparison = StringComparison.Ordinal)
+        {
+            int splitIndex = targetString.LastIndexOf(splitString, targetString.Length - 1, comparison);
+            return splitIndex < 0 ? targetString : targetString.Substring(splitIndex + splitString.Length);
+        }
+
+        /// <summary>
+        ///     Get the <see cref="System.String" /> before the first identified <paramref name="splitString" /> in
+        ///     <paramref name="targetString" />.
+        /// </summary>
+        /// <param name="targetString">The target <see cref="System.String" /> to look in.</param>
+        /// <param name="splitString">The divider which the <paramref name="targetString" /> should be split on.</param>
+        /// <param name="comparison">Specifies the culture, case, and sort rules to be used.</param>
+        /// <returns>The content before the <paramref name="splitString" />, or <paramref name="targetString" /> if none is found.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GetBeforeFirst(this string targetString, string splitString,
+            StringComparison comparison = StringComparison.Ordinal)
+        {
+            int splitIndex = targetString.IndexOf(splitString, 0, comparison);
+            return splitIndex < 0 ? targetString : targetString.Substring(0, splitIndex);
+        }
+
+        /// <summary>
+        ///     Get the <see cref="System.String" /> before the last identified <paramref name="splitString" /> in
+        ///     <paramref name="targetString" />.
+        /// </summary>
+        /// <param name="targetString">The target <see cref="System.String" /> to look in.</param>
+        /// <param name="splitString">The divider which the <paramref name="targetString" /> should be split on.</param>
+        /// <param name="comparison">Specifies the culture, case, and sort rules to be used.</param>
+        /// <returns>The content before the <paramref name="splitString" />, or <paramref name="targetString" /> if none is found.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GetBeforeLast(this string targetString, string splitString,
+            StringComparison comparison = StringComparison.Ordinal)
+        {
+            int splitIndex = targetString.LastIndexOf(splitString, targetString.Length - 1, comparison);
+            return splitIndex < 0 ? targetString : targetString.Substring(0, splitIndex);
+        }
 
         /// <summary>
         ///     <para>
@@ -155,10 +303,12 @@ namespace GDX
         }
 
         /// <summary>
-        /// Determine if there are any lowercase letters in the provided <paramref name="targetString"/>.
+        ///     Determine if there are any lowercase letters in the provided <paramref name="targetString" />.
         /// </summary>
         /// <param name="targetString">The target <see cref="System.String" />.</param>
         /// <returns>true/false if lowercase letters were found.</returns>
+        [SecuritySafeCritical]
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
         public static unsafe bool HasLowerCase(this string targetString)
         {
             fixed (char* src = targetString)
@@ -173,17 +323,21 @@ namespace GDX
                     {
                         return true;
                     }
+
                     s += 1;
                 }
             }
+
             return false;
         }
 
         /// <summary>
-        /// Determine if there are any uppercase letters in the provided <paramref name="targetString"/>.
+        ///     Determine if there are any uppercase letters in the provided <paramref name="targetString" />.
         /// </summary>
         /// <param name="targetString">The target <see cref="System.String" />.</param>
         /// <returns>true/false if uppercase letters were found.</returns>
+        [SecuritySafeCritical]
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
         public static unsafe bool HasUpperCase(this string targetString)
         {
             fixed (char* src = targetString)
@@ -198,10 +352,24 @@ namespace GDX
                     {
                         return true;
                     }
+
                     s += 1;
                 }
             }
+
             return false;
+        }
+
+        /// <summary>
+        ///     Create a new string, splitting an existing string up based on camel case formatting.
+        /// </summary>
+        /// <param name="targetString">The target <see cref="System.String" />.</param>
+        /// <param name="divider">The <see cref="System.String" /> to put in between the split <see cref="System.String" />.</param>
+        /// <returns>A new <see cref="System.String" />.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string SplitCamelCase(this string targetString, string divider = " ")
+        {
+            return Regex.Replace(targetString, "([A-Z])", $"{divider}$1", RegexOptions.None).Trim();
         }
     }
 }

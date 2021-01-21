@@ -15,6 +15,7 @@ namespace GDX
         /// </summary>
         /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <returns>true/false</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetHardwareGeneration()
         {
 #if UNITY_XBOXONE && !UNITY_EDITOR
@@ -32,13 +33,27 @@ namespace GDX
         }
 
         /// <summary>
-        /// Validate that all parent directories are created for a given <paramref name="path"/>.
+        /// Validate that all directories are created for a given <paramref name="folderPath"/>.
         /// </summary>
-        /// <param name="path">The path to process and validate.</param>
+        /// <param name="folderPath">The path to process and validate.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void EnsureFolderHierarchyExists(string path)
+        public static void EnsureFolderHierarchyExists(string folderPath)
         {
-            string targetDirectory = System.IO.Path.GetDirectoryName(path);
+            string targetDirectory = System.IO.Path.GetDirectoryName(folderPath);
+            if (!string.IsNullOrEmpty(targetDirectory))
+            {
+                System.IO.Directory.CreateDirectory(targetDirectory);
+            }
+        }
+
+        /// <summary>
+        /// Validate that all parent directories are created for a given <paramref name="filePath"/>.
+        /// </summary>
+        /// <param name="filePath">The path to process and validate.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void EnsureFileFolderHierarchyExists(string filePath)
+        {
+            string targetDirectory = System.IO.Path.GetDirectoryName(filePath);
             if (!string.IsNullOrEmpty(targetDirectory))
             {
                 System.IO.Directory.CreateDirectory(targetDirectory);

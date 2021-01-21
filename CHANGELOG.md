@@ -4,6 +4,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2021-01-20
+***"Cisco's Birthday"***
+> A bit of refactoring around `BuildInfo` to make it a little easier to work with and some small additions to functionality by request.
+### Added
+- Separation of checking folders and files path structure, new `GDX.Platform.EnsureFileFolderHiearchyExists()` just for files.
+- The ability (by default) to encompass the `BuildInfo` output folder in an assembly definition.
+- An ability from **Project Settings** to output a default `BuildInfo` file.
+- `AssemblyInfo` to each assembly to support _internal_ access during unit testing.
+- Applied `MethodImplOptions.AggressiveInlining` to many methods.
+- A bunch of split related functionality to `GDX.StringExtensions`.
+  - `GetAfterFirst()`
+  - `GetAfterLast()`
+  - `GetBeforeFirst()`
+  - `GetBeforeLast()`
+- `GDX.Vector2Extensions` and `GDX.Vector3Extensions` with associated unit testing.
+  - `Approximately()`
+  - `Midpoint()`
+- `GDX.StringExtensions`
+  - `SplitCamelCase()` to help with formatting of internal data.
+  - `Encrypt()` and `Decrypt()` for all your string hiding needs. 
+### Changed
+- All classes/structs with unit testing will reference the class in a comments
+- `GDX.ListExtensions` renamed to `GDX.IListExtensions` (as well as its unit test class)
+- Removed feature highlight section from `README.md`, the thought is to use the [Wiki](https://github.com/dotBunny/GDX/wiki) for this sort of stuff. 
+- Dropped in some unsafe attributes to `GDX.StringExtensions.HasLowerCase()` and `GDX.StringExtensions.HasUpperCase()` in `GDX.StringExtensions`.
+- Reorganized **Project Settings** sections to be alphabetically sorted.
+- `GDX.Platform.EnsureFolderHierarchyExists()`'s argument to be labeled `folderPath` to provide further clarity of the functional intent.
+- Combined `GDX.Developer.Build.BuildInfoGenerator` into `GDX.Developer.Build.BuildInfoProvider`.
+- Renamed `Editor.Build.BuildInfoGeneratorTests` to `Editor.Build.BuildInfoProviderTests`
+- Fixed issue with output folder structure was not present for `BuildInfo` generation.
+- Renamed `GDX.Editor.SettingsGUILayout` to `GDX.Editor.SettingsStyles`, while exposing more internals for reuse.
+
 ## [1.1.2] - 2021-01-18
 ***"EditMode Enabled"***
 > Fixes for author-time code accessing runtime only parts.

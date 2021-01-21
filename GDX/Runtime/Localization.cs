@@ -2,6 +2,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Runtime.CompilerServices;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -43,6 +44,7 @@ namespace GDX
         /// <remarks>Two additional non-compliant values may be returned DEV or DEFAULT.</remarks>
         /// <param name="targetLanguage">The target <see cref="Language" />.</param>
         /// <returns>The language code.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GetISO639_1(this Language targetLanguage)
         {
             switch (targetLanguage)
@@ -75,6 +77,7 @@ namespace GDX
         /// </summary>
         /// <param name="targetLanguage">The target <see cref="Language" />.</param>
         /// <returns>The format <see cref="System.String" />.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GetTimestampFormat(this Language targetLanguage)
         {
             switch (targetLanguage)

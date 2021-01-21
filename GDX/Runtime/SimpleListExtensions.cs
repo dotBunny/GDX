@@ -9,6 +9,9 @@ namespace GDX
     /// <summary>
     ///     <see cref="GDX.Collections.Generic.SimpleList{T}" /> Based Extension Methods
     /// </summary>
+    /// <remarks>
+    ///     Unit testing found in GDX.Tests.EditMode, under Runtime.SimpleListExtensionsTests.
+    /// </remarks>
     public static class SimpleListExtensions
     {
         /// <summary>
@@ -61,6 +64,7 @@ namespace GDX
         /// <param name="targetItem">The target class object to add.</param>
         /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
         /// <returns>true/false if the operation was able to add the item successfully.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool AddWithExpandCheckUniqueItem<T>(ref this SimpleList<T> targetSimpleList, T targetItem)
             where T : class
         {

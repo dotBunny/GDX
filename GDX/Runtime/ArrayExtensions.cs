@@ -2,12 +2,16 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace GDX
 {
     /// <summary>
     ///     Array Based Extension Methods
     /// </summary>
+    /// <remarks>
+    ///     Unit testing found in GDX.Tests.EditMode, under Runtime.ArrayExtensionsTests.
+    /// </remarks>
     public static class ArrayExtensions
     {
         /// <summary>
@@ -18,6 +22,7 @@ namespace GDX
         /// </remarks>
         /// <param name="targetArray">The array to be defaulted.</param>
         /// <typeparam name="T">The type of the array.</typeparam>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Clear<T>(this T[] targetArray)
         {
             Array.Clear(targetArray, 0, targetArray.Length);

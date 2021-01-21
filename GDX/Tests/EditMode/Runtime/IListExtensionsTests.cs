@@ -11,13 +11,13 @@ using NUnit.Framework;
 namespace Runtime
 {
     /// <summary>
-    ///     A collection of unit tests to validate functionality of the <see cref="ListExtensions" />
+    ///     A collection of unit tests to validate functionality of the <see cref="IListExtensions" />
     ///     class.
     /// </summary>
     public class ListExtensionsTests
     {
         /// <summary>
-        ///     Check if we can find the item in a <see cref="List{T}" />.
+        ///     Check if we can find the item in a <see cref="IList{T}" />.
         /// </summary>
         [Test]
         [Category("GDX.Tests")]
@@ -278,7 +278,7 @@ namespace Runtime
             int differentCount = listLength;
             for (int i = 0; i < listLength; i++)
             {
-                if (listItemA[0] == listItemB[1])
+                if (listItemA[i] == listItemB[i])
                 {
                     differentCount--;
                 }

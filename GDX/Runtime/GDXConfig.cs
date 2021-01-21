@@ -37,6 +37,11 @@ namespace GDX
         public string developerCommandLineParserArgumentSplit = "=";
 
         /// <summary>
+        ///     Ensure that there is an assembly definition wrapping the generated content.
+        /// </summary>
+        public bool developerBuildInfoAssemblyDefinition = true;
+
+        /// <summary>
         ///     Should the BuildInfo file be written during builds?
         /// </summary>
         public bool developerBuildInfoEnabled;
