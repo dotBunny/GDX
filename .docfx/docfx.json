@@ -37,7 +37,10 @@
     "resource": [
       {
         "files": [
-          "images/**"
+          "images/**",
+          "logo.svg",
+          "styles/*.css",
+          "styles/*.js"
         ]
       }
     ],
