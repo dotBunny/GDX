@@ -55,6 +55,14 @@
         ]
       }
     ],
+    "globalMetadata": {
+      "_appTitle": "GDX",
+      "_gitContribute": {
+        "repo": "https://github.com/dotBunny/GDX",
+        "branch": "main",
+        "apiSpecFolder": ".docfx/apiSpec"
+      }
+    },  
     "dest": "_site",
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
