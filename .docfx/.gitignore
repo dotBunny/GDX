@@ -6,4 +6,6 @@
 /**/packages/
 /**/bin/
 /**/obj/
+/**/changelog.md
+/**/gdx-data.yml
 _site

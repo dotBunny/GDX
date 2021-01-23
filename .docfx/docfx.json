@@ -27,8 +27,8 @@
       },
       {
         "files": [
-          "articles/**.md",
-          "articles/**/toc.yml",
+          "manual/**.md",
+          "manual/**/toc.yml",          
           "toc.yml",
           "*.md"
         ]
@@ -39,6 +39,7 @@
         "files": [
           "images/**",
           "logo.svg",
+          "favicon.ico",
           "styles/*.css",
           "styles/*.js"
         ]
@@ -56,18 +57,20 @@
       }
     ],
     "globalMetadata": {
+      "_enableSearch": true,
       "_appTitle": "GDX",
       "_gitContribute": {
         "repo": "https://github.com/dotBunny/GDX",
         "branch": "main",
-        "apiSpecFolder": ".docfx/apiSpec"
+        "apiSpecFolder": ".docfx/apispec"
       }
     },  
     "dest": "_site",
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
     "template": [
-      "default"
+      "default",
+      "templates/gdx"
     ],
     "postProcessors": [],
     "markdownEngineName": "markdig",
