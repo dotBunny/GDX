@@ -7,6 +7,8 @@
 
 Game Development Extensions, a battle-tested library of game-ready high-performance C# code.
 
+Documentation available at [https://gdx.dotbunny.com/](https://gdx.dotbunny.com/).
+
 ## Usage
 Add `com.dotbunny.gdx` as a dependency to the project `Packages/manifest.json` file:
 
@@ -17,7 +19,7 @@ Add `com.dotbunny.gdx` as a dependency to the project `Packages/manifest.json` f
   }
 }
 ```
-> It is possible for the repository to be simply cloned into a sub-folder in your projects Asset folder.
+> For a full breakdown of all installation methods please refer to the [Installation](https://gdx.dotbunny.com/manual/getting-started.html#installation) section of [Getting Started](https://gdx.dotbunny.com/manual/getting-started.html) in the [manual](https://gdx.dotbunny.com/manual/).
 
 ## Requirements
 The package is designed to be compatible with an _empty project_ created in [Unity](http://unity3d.com).

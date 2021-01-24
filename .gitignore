@@ -58,3 +58,6 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# Ignore LICENSE meta file so GitHub will detect the right license.
+LICENSE.meta
+
