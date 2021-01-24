@@ -201,9 +201,17 @@ namespace GDX.Editor
                         EditorUtility.DisplayProgressBar("GDX", "Downloading Update ...", 0.25f);
                         try
                         {
+#if UNITY_2020_2_OR_NEWER
                             using WebClient webClient = new WebClient();
                             webClient.DownloadFile(GitHubLatestUri + UpdatePackageDefinition.version + ".tar.gz",
                                 tempFile);
+#else
+                            using (WebClient webClient = new WebClient())
+                            {
+                                webClient.DownloadFile(GitHubLatestUri + UpdatePackageDefinition.version + ".tar.gz",
+                                    tempFile);
+                            }
+#endif
                         }
                         catch (Exception)
                         {
@@ -258,7 +266,6 @@ namespace GDX.Editor
                             {
                                 AssetDatabase.StopAssetEditing();
                             }
-
                         }
                     }
                     else
@@ -338,8 +345,12 @@ namespace GDX.Editor
             try
             {
                 // ReSharper disable once HeapView.ObjectAllocation.Evident
+#if UNITY_2020_2_OR_NEWER
                 using WebClient webClient = new WebClient();
-
+#else
+                using (WebClient webClient = new WebClient())
+                {
+#endif
                 // Get content of the package definition file
                 string packageJsonContent =
                     webClient.DownloadString("https://raw.githubusercontent.com/dotBunny/GDX/main/package.json");
@@ -348,6 +359,9 @@ namespace GDX.Editor
                 return string.IsNullOrEmpty(packageJsonContent)
                     ? null
                     : JsonUtility.FromJson<PackageProvider.PackageDefinition>(packageJsonContent);
+#if !UNITY_2020_2_OR_NEWER
+                }
+#endif
             }
             catch (Exception)
             {
@@ -355,7 +369,5 @@ namespace GDX.Editor
                 return null;
             }
         }
-
-
     }
 }

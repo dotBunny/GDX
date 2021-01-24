@@ -83,10 +83,24 @@ namespace GDX
                 Key = encryptionKey ?? EncryptionDefaultKey,
                 IV = EncryptionInitializationVector
             };
+#if UNITY_2020_2_OR_NEWER
             using MemoryStream stream = new MemoryStream(Convert.FromBase64String(encryptedString));
             using CryptoStream cs = new CryptoStream(stream, desProvider.CreateDecryptor(), CryptoStreamMode.Read);
             using StreamReader sr = new StreamReader(cs, Encoding.UTF8);
+#else
+            using (MemoryStream stream = new MemoryStream(Convert.FromBase64String(encryptedString)))
+            {
+                using (CryptoStream cs = new CryptoStream(stream, desProvider.CreateDecryptor(), CryptoStreamMode.Read))
+                {
+                    using (StreamReader sr = new StreamReader(cs, Encoding.UTF8))
+                    {
+#endif
             return sr.ReadToEnd();
+#if !UNITY_2020_2_OR_NEWER
+                    }
+                }
+            }
+#endif
         }
 
         /// <summary>
@@ -94,7 +108,10 @@ namespace GDX
         /// </summary>
         /// <remarks>This will have quite a few allocations.</remarks>
         /// <param name="decryptedString">The original <see cref="System.String" />.</param>
-        /// <param name="encryptionKey">The key to be used when encrypting the <see cref="System.String" />.  This must be a multiple of 8 bytes.</param>
+        /// <param name="encryptionKey">
+        ///     The key to be used when encrypting the <see cref="System.String" />.  This must be a
+        ///     multiple of 8 bytes.
+        /// </param>
         /// <returns>The encrypted <see cref="System.String" />.</returns>
         public static string Encrypt(this string decryptedString, byte[] encryptionKey = null)
         {
@@ -105,13 +122,24 @@ namespace GDX
                 Key = encryptionKey ?? EncryptionDefaultKey,
                 IV = EncryptionInitializationVector
             };
-
+#if UNITY_2020_2_OR_NEWER
             using MemoryStream stream = new MemoryStream();
             using CryptoStream cs = new CryptoStream(stream, desProvider.CreateEncryptor(), CryptoStreamMode.Write);
+#else
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (CryptoStream cs = new CryptoStream(stream, desProvider.CreateEncryptor(),
+                    CryptoStreamMode.Write))
+                {
+#endif
             byte[] data = Encoding.Default.GetBytes(decryptedString);
             cs.Write(data, 0, data.Length);
             cs.FlushFinalBlock();
             return Convert.ToBase64String(stream.ToArray());
+#if !UNITY_2020_2_OR_NEWER
+                }
+            }
+#endif
         }
 
         /// <summary>
