@@ -110,7 +110,7 @@ namespace GDX.Mathematics.Random
         ///     Creates a new pseudo-random number generator with a default seed.
         /// </summary>
         /// <remarks>
-        ///     <c>new <see cref="System.Random" />().<see cref="Random.Next()" /></c>
+        ///     <c>new <see cref="System.Random" />().<see cref="System.Random.Next()" /></c>
         ///     is used for the seed.
         /// </remarks>
         // ReSharper disable once HeapView.ObjectAllocation.Evident

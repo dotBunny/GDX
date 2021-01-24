@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2021-01-24
+***"Old Is New"***
+> A DocFX generated [site](https://gdx.dotbunny.com/) is now being stood up by our internal CI when a new commit is made to the `main` branch.
+### Added
+- A proper [**Getting Started**](https://gdx.dotbunny.com/manual/getting-started.html) section to the manual
+### Changed
+- Fixes to compilation of code requiring C# 8 using `UNITY_2020_2_OR_NEWER` preprocessor in `GDX.IO.Compression.TarFile`, `GDX.StringExtensions` and `GDX.Editor.UpdateProvider`.
+### Removed
+- Removed the Wiki links and entries on GitHub, favoring discussions and content additions to the [documentation](https://gdx.dotbunny.com/).
+
 ## [1.2.0] - 2021-01-20
 ***"Cisco's Birthday"***
 > A bit of refactoring around `BuildInfo` to make it a little easier to work with and some small additions to functionality by request.
@@ -27,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - All classes/structs with unit testing will reference the class in a comments
 - `GDX.ListExtensions` renamed to `GDX.IListExtensions` (as well as its unit test class)
-- Removed feature highlight section from `README.md`, the thought is to use the [Wiki](https://github.com/dotBunny/GDX/wiki) for this sort of stuff. 
+- Removed feature highlight section from `README.md`.
 - Dropped in some unsafe attributes to `GDX.StringExtensions.HasLowerCase()` and `GDX.StringExtensions.HasUpperCase()` in `GDX.StringExtensions`.
 - Reorganized **Project Settings** sections to be alphabetically sorted.
 - `GDX.Platform.EnsureFolderHierarchyExists()`'s argument to be labeled `folderPath` to provide further clarity of the functional intent.
