@@ -5,3 +5,5 @@
   homepage: api/index.md
 - name: Changelog
   href: changelog.md
+- name: License
+  href: license.md
