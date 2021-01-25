@@ -15,53 +15,53 @@ namespace GDX.Editor
     public static class SettingsStyles
     {
         /// <summary>
-        ///     A <see cref="GUIStyle" /> representing a button.
+        ///     A <see cref="UnityEngine.GUIStyle"/>" /> representing a button.
         /// </summary>
         public static readonly GUIStyle ButtonStyle;
 
         /// <summary>
-        ///     A shade of the <see cref="Color" /> blue.
+        ///     A shade of the <see cref="UnityEngine.Color" /> blue.
         /// </summary>
         /// <remarks>Meant for default things.</remarks>
         public static readonly Color DefaultBlueColor =
             new Color(0.0941176470588235f, 0.4549019607843137f, 0.8549019607843137f);
 
         /// <summary>
-        ///     A shade of the <see cref="Color" /> yellow.
+        ///     A shade of the <see cref="UnityEngine.Color" /> yellow.
         /// </summary>
         /// <remarks>Meant for disabled things.</remarks>
         public static readonly Color DisabledYellowColor =
             new Color(0.8941176470588235f, 0.9019607843137255f, 0.4117647058823529f);
 
         /// <summary>
-        ///     A shade of the <see cref="Color" /> green.
+        ///     A shade of the <see cref="UnityEngine.Color" /> green.
         /// </summary>
         /// <remarks>Meant for enabled things.</remarks>
         public static readonly Color EnabledGreenColor =
             new Color(0.1803921568627451f, 0.6431372549019608f, 0.3098039215686275f);
 
         /// <summary>
-        ///     A <see cref="GUIStyle" /> representing an info box.
+        ///     A <see cref="UnityEngine.GUIStyle" /> representing an info box.
         /// </summary>
         public static readonly GUIStyle InfoBoxStyle;
 
         /// <summary>
-        ///     A <see cref="GUIStyle" /> representing a horizontal line which respects margins/padding.
+        ///     A <see cref="UnityEngine.GUIStyle" /> representing a horizontal line which respects margins/padding.
         /// </summary>
         public static readonly GUIStyle LineStyle;
 
         /// <summary>
-        ///     A <see cref="GUIStyle" /> representing a default section header.
+        ///     A <see cref="UnityEngine.GUIStyle" /> representing a default section header.
         /// </summary>
         public static readonly GUIStyle SectionHeaderStyle;
 
         /// <summary>
-        ///     A <see cref="GUIStyle" /> representing a default section header text.
+        ///     A <see cref="UnityEngine.GUIStyle" /> representing a default section header text.
         /// </summary>
         public static readonly GUIStyle SectionHeaderTextDefaultStyle;
 
         /// <summary>
-        ///     A <see cref="GUIStyle" /> representing a disabled section header text.
+        ///     A <see cref="UnityEngine.GUIStyle" /> representing a disabled section header text.
         /// </summary>
         public static readonly GUIStyle SectionHeaderTextDisabledStyle;
 
@@ -71,22 +71,22 @@ namespace GDX.Editor
         public static readonly GUILayoutOption[] SectionHeaderToggleLayoutOptions;
 
         /// <summary>
-        ///     A <see cref="GUIStyle" /> representing the header of a sub section definition.
+        ///     A <see cref="UnityEngine.GUIStyle" /> representing the header of a sub section definition.
         /// </summary>
         public static readonly GUIStyle SubSectionHeaderTextStyle;
 
         /// <summary>
-        ///     A blendable shade of the <see cref="Color" /> white at 25% opacity.
+        ///     A blendable shade of the <see cref="UnityEngine.Color" /> white at 25% opacity.
         /// </summary>
         public static readonly Color WhiteBlend25Color = new Color(1f, 1f, 1f, 0.25f);
 
         /// <summary>
-        ///     A blendable shade of the <see cref="Color" /> white at 75% opacity.
+        ///     A blendable shade of the <see cref="UnityEngine.Color" /> white at 75% opacity.
         /// </summary>
         public static readonly Color WhiteBlend75Color = new Color(1f, 1f, 1f, 0.75f);
 
         /// <summary>
-        ///     A <see cref="GUIStyle" /> used to wrap all GDX editor user interfaces.
+        ///     A <see cref="UnityEngine.GUIStyle" /> used to wrap all GDX editor user interfaces.
         /// </summary>
         public static readonly GUIStyle WrapperStyle;
 
@@ -152,10 +152,10 @@ namespace GDX.Editor
         /// </summary>
         /// <param name="text">The section header content.</param>
         /// <param name="sectionToggleProperty">
-        ///     A <see cref="SerializedProperty" /> which will dictate if a section is enabled or
+        ///     A <see cref="UnityEditor.SerializedProperty" /> which will dictate if a section is enabled or
         ///     not.
         /// </param>
-        /// <param name="sectionToggleContent">The <see cref="GUIContent" /> associated with a setting.</param>
+        /// <param name="sectionToggleContent">The <see cref="UnityEngine.GUIContent" /> associated with a setting.</param>
         /// <returns>true/false if the sections content should be enabled.</returns>
         public static bool SectionHeader(string text, SerializedProperty sectionToggleProperty = null,
             GUIContent sectionToggleContent = null)

@@ -10,9 +10,9 @@ Installing via the package manager system (UPM) in Unity will provide an immutab
 
 #### UPM: Package Manager Window
 ![UPM Git](/images/manual/getting-started/upm-gdx-github.gif)
-The simplest and most straight forward method is to use Unity's built in workflow, once you have found and opened the **Package Manager** window (Window -> Package Manager), follow these steps:
+The simplest and most straight forward method is to use Unity's built in workflow, once you have found and opened the **Package Manager** window (**Window > Package Manager**), follow these steps:
 1. Find the **+** button in the upper left portion of the **Package Manager** window, clicking it should reveal a dropdown menu.
-2. Select `Add package from git URL...`
+2. Select **Add package from git URL...**
 3. In the presented text field, enter: `https://github.com/dotBunny/GDX.git`
 4. After entering the URL, click **Add**.
 

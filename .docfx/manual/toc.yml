@@ -1,2 +1,25 @@
 - name: Getting Started
   href: getting-started.md
+- name: Features
+  href: features.md
+- name: Requirements
+  href: requirements.md
+- name: Contributing
+  href:
+  items:
+    - name: Code
+      href: contributing\code.md
+    - name: Design Guidelines
+      href: contributing\design-guidelines.md
+    - name: Documentation
+      href: contributing\documentation.md
+- name: GitHub
+  href:
+  items:
+    - name: Issues
+      href: https://github.com/dotBunny/GDX/issues
+    - name: Discussions
+      href: https://github.com/dotBunny/GDX/discussions
+    - name: Plan
+      href: https://github.com/dotBunny/GDX/projects/1
+    

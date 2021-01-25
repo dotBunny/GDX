@@ -12,12 +12,12 @@ namespace GDX.Editor
     public static class VersionControl
     {
         /// <summary>
-        /// Get an <see cref="AssetList"/> from an <paramref name="absoluteDirectoryPath"/>.
+        /// Get an <see cref="UnityEditor.VersionControl.AssetList"/> from an <paramref name="absoluteDirectoryPath"/>.
         /// </summary>
         /// <param name="absoluteDirectoryPath">A fully qualified path on disk to query.</param>
         /// <param name="searchPattern">The search pattern to look for files with.</param>
         /// <param name="searchOption">What level of searching should be done.</param>
-        /// <returns>An <see cref="AssetList"/> containing any valid assets under version control.</returns>
+        /// <returns>An <see cref="UnityEditor.VersionControl.AssetList"/> containing any valid assets under version control.</returns>
         public static AssetList GetAssetListFromFolder(string absoluteDirectoryPath, string searchPattern = "*.*",
             SearchOption searchOption = SearchOption.AllDirectories)
         {
