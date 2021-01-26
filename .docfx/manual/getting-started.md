@@ -6,7 +6,8 @@ There are many options to getting `GDX` into your project; each comes with its b
 ### Unity Package Manager
 Installing via the package manager system (UPM) in Unity will provide an immutable (unable to be modified) copy of the package inside of your project.
 
-> There is two available methods available for this option, pick one!
+> [!TIP]
+> There are two available UPM methods. You only need to pick one!
 
 #### UPM: Package Manager Window
 ![UPM Git](/images/manual/getting-started/upm-gdx-github.gif)
@@ -27,7 +28,8 @@ The above workflow provides a user interface for your project's `manifest.json` 
 ```
 
 ### Asset Store
-_Discussions to bring the package to the Asset Store are ongoing, we are looking to do this in the near future (1.5)._
+> [!NOTE]
+> Discussions to bring the package to the Asset Store are ongoing, we are looking to do this in the near future.
 
 ### OpenUPM
 The `GDX` package is registered with [OpenUPM](https://openupm.com/), and releases are automatically reflected in that registry. The package is registered as `com.dotbunny.gdx`.

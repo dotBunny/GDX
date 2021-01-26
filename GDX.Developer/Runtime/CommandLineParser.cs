@@ -12,7 +12,7 @@ namespace GDX.Developer
     ///     A parser specifically for command line arguments which follow the --FLAG or --KEY=VALUE format.
     /// </summary>
     /// <remarks>
-    ///     <para>This does NOT support the /FLAG or /KEY=VALUE format. All FLAGs and KEYs are stored in Uppercase.</para>
+    ///     <para>The prefix and divider are configurable via the <see cref="GDXConfig"/>. All FLAGs and KEYs are stored in Uppercase.</para>
     ///     <para>Unit testing found in GDX.Developer.Tests.EditMode, under Runtime.CommandLineParserTests.</para>
     /// </remarks>
     public static class CommandLineParser
