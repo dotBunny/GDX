@@ -7,7 +7,7 @@ There are many options to getting `GDX` into your project; each comes with its b
 Installing via the package manager system (UPM) in Unity will provide an immutable (unable to be modified) copy of the package inside of your project.
 
 > [!TIP]
-> There are two available UPM methods. You only need to pick one!
+> There are two available UPM methods. You only need to **pick one**!
 
 #### UPM: Package Manager Window
 ![UPM Git](/images/manual/getting-started/upm-gdx-github.gif)

@@ -3,3 +3,7 @@ svg#logo
     height: 90%;
     padding-top: 10%;
 }
+
+article[data-uid="features"] td {
+    padding: 10px !important;
+}

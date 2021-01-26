@@ -1,3 +1,8 @@
+---
+_disableToc: true
+_disableBreadcrumb: true
+_disableContribution: true
+---
 # MIT License
 
 **Copyright (c) 2020-2021 dotBunny Inc.**
