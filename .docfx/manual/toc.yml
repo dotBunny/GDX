@@ -4,6 +4,8 @@
   href: features.md
 - name: Requirements
   href: requirements.md
+- name: Discussions
+  href: https://github.com/dotBunny/GDX/discussions
 - name: Contributing
   href:
   items:
@@ -13,13 +15,3 @@
       href: contributing\design-guidelines.md
     - name: Documentation
       href: contributing\documentation.md
-- name: GitHub
-  href:
-  items:
-    - name: Issues
-      href: https://github.com/dotBunny/GDX/issues
-    - name: Discussions
-      href: https://github.com/dotBunny/GDX/discussions
-    - name: Plan
-      href: https://github.com/dotBunny/GDX/projects/1
-    

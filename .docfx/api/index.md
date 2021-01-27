@@ -1,5 +1,5 @@
 ---
 _disableContribution: true
 ---
-# Scripting API
+# API
 [GitHub Repository](https://github.com/dotBunny/GDX)
