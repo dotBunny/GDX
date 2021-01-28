@@ -15,7 +15,11 @@
       "dest": "api",
       "disableGitFeatures": false,
       "disableDefaultFilter": true,
-      "filter": "filterConfig.yml" 
+      "filter": "filterConfig.yml" ,
+      "properties": {
+        "TargetFramework": "netstandard2.0",
+        "DefineConstants": "GDX_ADDRESSABLES;GDX_BURST;GDX_JOBS;GDX_MATHEMATICS;GDX_PLATFORMS"
+      }
     }
   ],
   "build": {
