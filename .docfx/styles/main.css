@@ -7,3 +7,18 @@ svg#logo
 article[data-uid="features"] td {
     padding: 10px !important;
 }
+
+
+a[title="Issues"]:after
+{
+    padding-left: 5px;
+    position:relative;
+    top:1px;
+    display:inline-block;
+    font-family:"Glyphicons Halflings";
+    font-weight:400;
+    line-height:1;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    content:"\e066"
+}
