@@ -13,5 +13,5 @@ uid: features
 ## Developer Tools
 |Feature|Description|
 |---|:---|
-|Build Info Writer|A system which latches on to the build pipeline to write a configurable `BuildInfo` class containing a passed set of parameters.
+|[Build Info Writer](xref:GDX.Developer.Editor.Build.BuildInfoProvider)|A system which latches on to the build pipeline to write a configurable `BuildInfo` class containing a passed set of parameters.
 |[Command Line Parser](xref:GDX.Developer.CommandLineParser)|A configurable command line parameter parsing system which can be queried at runtime (and in special cases during editor automation) for flags and key-value-pair data.|

@@ -13,14 +13,35 @@ using UnityEngine;
 
 namespace GDX.Developer.Editor.Build
 {
-#if GDX_PLATFORMS
     /// <summary>
-    ///     A wrapper for the scriptable build system (platform package based), to create the BuildInfo
-    ///     file during the build process, and clean it up afterwards.
+    ///     <para>A build step for both the legacy and scriptable build pipeline.</para>
+    ///     <para>During the build process a BuildInfo file will be generated containing information passed in
+    ///     through commandline arguments. These arguments and their formats are configurable via
+    ///     <see cref="GDXConfig"/>.</para>
+    ///     <para>The created BuildInfo will be reset after the build.</para>
+    ///     <list type="bullet">
+    ///         <item>
+    ///             <description>Build Number (BUILD)</description>
+    ///         </item>
+    ///         <item>
+    ///             <description>Build Description (BUILD_DESC)</description>
+    ///         </item>
+    ///         <item>
+    ///             <description>Build Changelist Number (BUILD_CHANGELIST)</description>
+    ///         </item>
+    ///         <item>
+    ///             <description>Build CI Task (BUILD_TASK)</description>
+    ///         </item>
+    ///         <item>
+    ///             <description>Version Control Stream (BUILD_STREAM)</description>
+    ///         </item>
+    ///     </list>
     /// </summary>
     /// <remarks>
-    ///     Unit testing found in GDX.Developer.Tests.EditMode, under Editor.Build.BuildInfoProviderTests.
+    ///     <para>Unit testing found in GDX.Developer.Tests.EditMode, under Editor.Build.BuildInfoProviderTests.</para>
+    ///     <para>Generated documentation will only discuss non SBP.</para>
     /// </remarks>
+#if GDX_PLATFORMS
     internal class BuildInfoProvider : ClassicBuildPipelineCustomizer
     {
         /// <summary>
@@ -65,13 +86,6 @@ namespace GDX.Developer.Editor.Build
             }
         }
 #else
-    /// <summary>
-    ///     A wrapper for the legacy build system (non platform package based), to create the BuildInfo
-    ///     file during the build process, and clean it up afterwards.
-    /// </summary>
-    /// <remarks>
-    ///     Unit testing found in GDX.Developer.Tests.EditMode, under Editor.Build.BuildInfoProviderTests.
-    /// </remarks>
     internal class BuildInfoProvider : IPreprocessBuildWithReport, IPostprocessBuildWithReport
     {
         /// <inheritdoc />
