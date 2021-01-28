@@ -10,7 +10,7 @@ namespace GDX
     ///     Array Based Extension Methods
     /// </summary>
     /// <remarks>
-    ///     Unit testing found in GDX.Tests.EditMode, under Runtime.ArrayExtensionsTests.
+    ///     <i>Unit tests are found in GDX.Tests.EditMode, under Runtime.ArrayExtensionsTests.</i>
     /// </remarks>
     public static class ArrayExtensions
     {

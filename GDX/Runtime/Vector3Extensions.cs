@@ -14,7 +14,7 @@ namespace GDX
     ///     <see cref="Vector3" /> Based Extension Methods
     /// </summary>
     /// <remarks>
-    ///     Unit testing found in GDX.Tests.EditMode, under Runtime.Vector3ExtensionsTests.
+    ///     <i>Unit tests are found in GDX.Tests.EditMode, under Runtime.Vector3ExtensionsTests.</i>
     /// </remarks>
     public static class Vector3Extensions
     {

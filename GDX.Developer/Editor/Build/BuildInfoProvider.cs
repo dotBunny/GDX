@@ -14,32 +14,62 @@ using UnityEngine;
 namespace GDX.Developer.Editor.Build
 {
     /// <summary>
-    ///     <para>A build step for both the legacy and scriptable build pipeline.</para>
-    ///     <para>During the build process a BuildInfo file will be generated containing information passed in
-    ///     through commandline arguments. These arguments and their formats are configurable via
-    ///     <see cref="GDXConfig"/>.</para>
-    ///     <para>The created BuildInfo will be reset after the build.</para>
-    ///     <list type="bullet">
-    ///         <item>
-    ///             <description>Build Number (BUILD)</description>
-    ///         </item>
-    ///         <item>
-    ///             <description>Build Description (BUILD_DESC)</description>
-    ///         </item>
-    ///         <item>
-    ///             <description>Build Changelist Number (BUILD_CHANGELIST)</description>
-    ///         </item>
-    ///         <item>
-    ///             <description>Build CI Task (BUILD_TASK)</description>
-    ///         </item>
-    ///         <item>
-    ///             <description>Version Control Stream (BUILD_STREAM)</description>
-    ///         </item>
-    ///     </list>
+    ///     <para>
+    ///         A build step for both the legacy and scriptable build pipeline's in Unity. This <c>internal</c> class
+    ///         will alter itself according to available packages and pipelines.
+    ///     </para>
+    ///     <para>
+    ///         During the build process a <c>BuildInfo</c> file will be generated containing information passed in
+    ///         through commandline arguments (parsed by <see cref="CommandLineParser" />). These arguments and
+    ///         their formats are configurable via the <see cref="GDXConfig" />.
+    ///     </para>
     /// </summary>
     /// <remarks>
-    ///     <para>Unit testing found in GDX.Developer.Tests.EditMode, under Editor.Build.BuildInfoProviderTests.</para>
-    ///     <para>Generated documentation will only discuss non SBP.</para>
+    ///     <para>
+    ///         After a build is finished, the <c>BuildInfo</c> will be reset to default values. This is intended to make sure
+    ///         local builds have a specific marker.
+    ///     </para>
+    ///     <list type="table">
+    ///         <listheader>
+    ///             <term>Argument (Default Value)</term>
+    ///             <description>Description</description>
+    ///         </listheader>
+    ///         <item>
+    ///             <term>BUILD</term>
+    ///             <description>The build number, accessible through <c>BuildInfo.BuildNumber</c>.</description>
+    ///         </item>
+    ///         <item>
+    ///             <term>BUILD_DESC</term>
+    ///             <description>
+    ///                 A short description of the build (example: useful for identifying personal CI builds),
+    ///                 accessible through <c>BuildInfo.Description</c>.
+    ///             </description>
+    ///         </item>
+    ///         <item>
+    ///             <term>BUILD_CHANGELIST</term>
+    ///             <description>
+    ///                 The changelist which the build was made against, accessible through
+    ///                 <c>BuildInfo.Changelist</c>.
+    ///             </description>
+    ///         </item>
+    ///         <item>
+    ///             <term>BUILD_TASK</term>
+    ///             <description>
+    ///                 The name of the build script/task which was used to create the build (example:
+    ///                 CODE-Main-Build-PS5-Development), accessible through <c>BuildInfo.BuildTask</c>.
+    ///             </description>
+    ///         </item>
+    ///         <item>
+    ///             <term>BUILD_STREAM</term>
+    ///             <description>
+    ///                 An indicator of what stream/branch that the build was build against from your chosen version
+    ///                 control system, accessible through <c>BuildInfo.Stream</c>.
+    ///             </description>
+    ///         </item>
+    ///     </list>
+    ///     <para>
+    ///         <i>Unit tests are found in GDX.Developer.Tests.EditMode, under <c>Editor.Build.BuildInfoProviderTests</c>.</i>
+    ///     </para>
     /// </remarks>
 #if GDX_PLATFORMS
     internal class BuildInfoProvider : ClassicBuildPipelineCustomizer
@@ -50,7 +80,7 @@ namespace GDX.Developer.Editor.Build
         private bool _enabled = false;
 
         /// <summary>
-        ///     Reverse the changes to the BuildInfo generated file.
+        ///     Restore the default <c>BuildInfo</c> after a build process finishes.
         /// </summary>
         ~BuildInfoProvider()
         {
@@ -60,7 +90,9 @@ namespace GDX.Developer.Editor.Build
             }
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Writes out <c>BuildInfo</c> prior to build.
+        /// </summary>
         public override void OnBeforeBuild()
         {
             GDXConfig config = GDXConfig.Get();
@@ -88,10 +120,16 @@ namespace GDX.Developer.Editor.Build
 #else
     internal class BuildInfoProvider : IPreprocessBuildWithReport, IPostprocessBuildWithReport
     {
-        /// <inheritdoc />
-        public int callbackOrder { get; }
+        /// <summary>
+        ///     The priority for the processor to be executed, before defaults.
+        /// </summary>
+        /// <value>The numerical value used to sort callbacks, lowest to highest.</value>
+        public int callbackOrder => -42;
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Restores the default <c>BuildInfo</c> after a build process finishes.
+        /// </summary>
+        /// <param name="report">Build process reported information.</param>
         public void OnPostprocessBuild(BuildReport report)
         {
             GDXConfig config = GDXConfig.Get();
@@ -103,7 +141,10 @@ namespace GDX.Developer.Editor.Build
             WriteDefaultFile();
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Writes out <c>BuildInfo</c> prior to build.
+        /// </summary>
+        /// <param name="report">Build process reported information.</param>
         public void OnPreprocessBuild(BuildReport report)
         {
             GDXConfig config = GDXConfig.Get();
@@ -128,9 +169,9 @@ namespace GDX.Developer.Editor.Build
 #endif
 
         /// <summary>
-        /// Create the content for the BuildInfo file based on provided information.
+        ///     Create the content for the <c>BuildInfo</c> file based on provided information.
         /// </summary>
-        /// <param name="config">A <see cref="GDXConfig"/> used to determine many of the keys for information.</param>
+        /// <param name="config">A <see cref="GDXConfig" /> used to determine many of the keys for information.</param>
         /// <param name="forceDefaults">Should all default values be used instead?</param>
         /// <param name="internalDescription">An internally used description.</param>
         /// <returns>The files content.</returns>
@@ -152,7 +193,8 @@ namespace GDX.Developer.Editor.Build
             fileContent.AppendLine("{");
 
             fileContent.AppendLine("    /// <summary>");
-            fileContent.AppendLine("    ///     A collection of information providing further information as to the conditions present when the build was made.");
+            fileContent.AppendLine(
+                "    ///     A collection of information providing further information as to the conditions present when the build was made.");
             fileContent.AppendLine("    /// </summary>");
             fileContent.AppendLine("    public static class BuildInfo");
             fileContent.AppendLine("    {");
@@ -223,7 +265,8 @@ namespace GDX.Developer.Editor.Build
             fileContent.AppendLine("        /// </summary>");
             fileContent.Append("        public const string InternalDescription = \"");
             fileContent.Append(!forceDefaults && !string.IsNullOrEmpty(internalDescription)
-                ? internalDescription : "N/A");
+                ? internalDescription
+                : "N/A");
             fileContent.AppendLine("\";");
 
             // Timestamp
@@ -244,12 +287,15 @@ namespace GDX.Developer.Editor.Build
         }
 
         /// <summary>
-        ///     Write default content to BuildInfo file.
+        ///     Write default content to <c>BuildInfo</c> file.
         /// </summary>
         public static void WriteDefaultFile()
         {
             GDXConfig config = GDXConfig.Get();
-            if (config == null) return;
+            if (config == null)
+            {
+                return;
+            }
 
             try
             {
@@ -266,15 +312,19 @@ namespace GDX.Developer.Editor.Build
         }
 
         /// <summary>
-        ///     Check if an assembly definition should be placed along side the written BuildInfo and write one.
+        ///     Check if an assembly definition should be placed along side the written <c>BuildInfo</c> and write one.
         /// </summary>
         public static void CheckForAssemblyDefinition()
         {
             GDXConfig config = GDXConfig.Get();
-            if (config == null || !config.developerBuildInfoAssemblyDefinition) return;
+            if (config == null || !config.developerBuildInfoAssemblyDefinition)
+            {
+                return;
+            }
 
             string assemblyDefinition = Path.Combine(
-                Path.GetDirectoryName(Path.Combine(Application.dataPath, config.developerBuildInfoPath)) ?? string.Empty,
+                Path.GetDirectoryName(Path.Combine(Application.dataPath, config.developerBuildInfoPath)) ??
+                string.Empty,
                 config.developerBuildInfoNamespace + ".asmdef");
 
             if (File.Exists(assemblyDefinition))
@@ -305,8 +355,7 @@ namespace GDX.Developer.Editor.Build
             File.WriteAllText(assemblyDefinition, fileBuilder.ToString());
             AssetDatabase.ImportAsset("Assets/" +
                                       Path.GetDirectoryName(config.developerBuildInfoPath) + "/" +
-                                      config.developerBuildInfoNamespace + ".asmdef" );
-
+                                      config.developerBuildInfoNamespace + ".asmdef");
         }
     }
 }

@@ -9,11 +9,16 @@ using UnityEngine;
 namespace GDX.Developer
 {
     /// <summary>
-    ///     A parser specifically for command line arguments which follow the --FLAG or --KEY=VALUE format.
+    ///     A simplified commandline parser that handles arguments which follow the <c>--FLAG</c> or <c>--KEY=VALUE</c> format.
+    ///     Automatically initialized during normal runtime operations, however can be manually triggered for author time
+    ///     use cases as well.
     /// </summary>
     /// <remarks>
-    ///     <para>The prefix and divider are configurable via the <see cref="GDXConfig"/>. All FLAGs and KEYs are stored in Uppercase.</para>
-    ///     <para>Unit testing found in GDX.Developer.Tests.EditMode, under Runtime.CommandLineParserTests.</para>
+    ///     <para>
+    ///         The prefix and divider are configurable via the <see cref="GDXConfig" />, however the always, the <c>FLAG</c>
+    ///         and <c>KEY</c> will be Uppercase.
+    ///     </para>
+    ///     <para>Unit tests are found in GDX.Developer.Tests.EditMode, under <c>Runtime.CommandLineParserTests</c></para>
     /// </remarks>
     public static class CommandLineParser
     {
@@ -31,7 +36,7 @@ namespace GDX.Developer
         ///     Process the environment's commandline arguments into <see cref="Arguments" /> and <see cref="Flags" />.
         /// </summary>
         /// <remarks>
-        ///     <para>This is automatically done at runtime.</para>
+        ///     <para>This is automatically executed during runtime.</para>
         /// </remarks>
         [RuntimeInitializeOnLoadMethod]
         public static void ParseArguments()
@@ -40,7 +45,7 @@ namespace GDX.Developer
         }
 
         /// <summary>
-        ///     Process the environment's commandline arguments into <see cref="Arguments" /> and <see cref="Flags" />.
+        ///     Process an array of arguments into <see cref="Arguments" /> and <see cref="Flags" />.
         /// </summary>
         /// <param name="argumentArray">An array of arguments to process.</param>
         /// <param name="shouldClear">Should the storage containers be cleared.</param>
