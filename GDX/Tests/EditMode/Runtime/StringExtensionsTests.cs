@@ -126,73 +126,73 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_ToLowerGetHashCode_GetLowerCaseHashCode_ComplexString()
+        public void Equal_ToLowerGetHashCode_GetStableLowerCaseHashCode_ComplexString()
         {
             int oldHash = ComplexTestString.ToLower().GetHashCode();
-            int newHash = ComplexTestString.GetLowerCaseHashCode();
+            int newHash = ComplexTestString.GetStableLowerCaseHashCode();
             Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_ToLowerGetHashCode_GetLowerCaseHashCode_LowerCase()
+        public void Equal_ToLowerGetHashCode_GetStableLowerCaseHashCode_LowerCase()
         {
             int oldHash = LowerCaseTestString.ToLower().GetHashCode();
-            int newHash = LowerCaseTestString.GetLowerCaseHashCode();
+            int newHash = LowerCaseTestString.GetStableLowerCaseHashCode();
             Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_ToLowerGetHashCode_GetLowerCaseHashCode_Simple()
+        public void Equal_ToLowerGetHashCode_GetStableLowerCaseHashCode_Simple()
         {
             int oldHash = SimpleTestString.ToLower().GetHashCode();
-            int newHash = SimpleTestString.GetLowerCaseHashCode();
+            int newHash = SimpleTestString.GetStableLowerCaseHashCode();
             Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_ToLowerGetHashCode_GetLowerCaseHashCode_UpperCase()
+        public void Equal_ToLowerGetHashCode_GetStableLowerCaseHashCode_UpperCase()
         {
             int oldHash = UpperCaseTestString.ToLower().GetHashCode();
-            int newHash = UpperCaseTestString.GetLowerCaseHashCode();
+            int newHash = UpperCaseTestString.GetStableLowerCaseHashCode();
             Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_ToUpperGetHashCode_GetUpperCaseHashCode_ComplexString()
+        public void Equal_ToUpperGetHashCode_GetStableUpperCaseHashCode_ComplexString()
         {
             int oldHash = ComplexTestString.ToUpper().GetHashCode();
-            int newHash = ComplexTestString.GetUpperCaseHashCode();
+            int newHash = ComplexTestString.GetStableUpperCaseHashCode();
             Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_ToUpperGetHashCode_GetUpperCaseHashCode_LowerCase()
+        public void Equal_ToUpperGetHashCode_GetStableUpperCaseHashCode_LowerCase()
         {
             int oldHash = LowerCaseTestString.ToUpper().GetHashCode();
-            int newHash = LowerCaseTestString.GetUpperCaseHashCode();
+            int newHash = LowerCaseTestString.GetStableUpperCaseHashCode();
             Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_ToUpperGetHashCode_GetUpperCaseHashCode_Simple()
+        public void Equal_ToUpperGetHashCode_GetStableUpperCaseHashCode_Simple()
         {
             int oldHash = SimpleTestString.ToUpper().GetHashCode();
-            int newHash = SimpleTestString.GetUpperCaseHashCode();
+            int newHash = SimpleTestString.GetStableUpperCaseHashCode();
             Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_ToUpperGetHashCode_GetUpperCaseHashCode_UpperCase()
+        public void Equal_ToUpperGetHashCode_GetStableUpperCaseHashCode_UpperCase()
         {
             int oldHash = UpperCaseTestString.ToUpper().GetHashCode();
-            int newHash = UpperCaseTestString.GetUpperCaseHashCode();
+            int newHash = UpperCaseTestString.GetStableUpperCaseHashCode();
             Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
         }
 
@@ -243,11 +243,11 @@ namespace Runtime
         [Test]
         [Performance]
         [Category("GDX.Performance")]
-        public void Measure_GetLowerCaseHashCode()
+        public void Measure_GetStableLowerCaseHashCode()
         {
             Measure.Method(() =>
                 {
-                    int dummyValue = SimpleTestString.GetLowerCaseHashCode();
+                    int dummyValue = SimpleTestString.GetStableLowerCaseHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -256,7 +256,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = LowerCaseTestString.GetLowerCaseHashCode();
+                    int dummyValue = LowerCaseTestString.GetStableLowerCaseHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -265,7 +265,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = UpperCaseTestString.GetLowerCaseHashCode();
+                    int dummyValue = UpperCaseTestString.GetStableLowerCaseHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -274,7 +274,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = ComplexTestString.GetLowerCaseHashCode();
+                    int dummyValue = ComplexTestString.GetStableLowerCaseHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -331,11 +331,11 @@ namespace Runtime
         [Test]
         [Performance]
         [Category("GDX.Performance")]
-        public void Measure_GetUpperCaseHashCode()
+        public void Measure_GetStableUpperCaseHashCode()
         {
             Measure.Method(() =>
                 {
-                    int dummyValue = SimpleTestString.GetUpperCaseHashCode();
+                    int dummyValue = SimpleTestString.GetStableUpperCaseHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -344,7 +344,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = LowerCaseTestString.GetUpperCaseHashCode();
+                    int dummyValue = LowerCaseTestString.GetStableUpperCaseHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -353,7 +353,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = UpperCaseTestString.GetUpperCaseHashCode();
+                    int dummyValue = UpperCaseTestString.GetStableUpperCaseHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -362,7 +362,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = ComplexTestString.GetUpperCaseHashCode();
+                    int dummyValue = ComplexTestString.GetStableUpperCaseHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)

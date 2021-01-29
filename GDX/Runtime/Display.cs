@@ -45,7 +45,6 @@ namespace GDX
             return ((UnityEngine.PS4.Utility.GetVideoOutDeviceCapability(UnityEngine.PS4.Utility.videoOutPortHandle) &
                     UnityEngine.PS4.Utility.VideoOutDeviceCapability.BT2020_PQ) != 0);
 #else
-            // TODO: HDR on PC?
             return SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.DefaultHDR);
 #endif
         }
@@ -65,7 +64,6 @@ namespace GDX
 #elif UNITY_XBOXONE
             return UnityEngine.XboxOne.Graphics.displayInHDR;
 #else
-            // TODO: HDR on PC?
             return SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.DefaultHDR);
 #endif
         }

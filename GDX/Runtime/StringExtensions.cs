@@ -214,7 +214,7 @@ namespace GDX
 
         /// <summary>
         ///     <para>
-        ///         Get the hash code value of <paramref name="targetString" /> (converted to an uppercase
+        ///         Get the stable hash code value of <paramref name="targetString" /> (converted to an uppercase
         ///         <see cref="System.String" />).
         ///     </para>
         /// </summary>
@@ -228,7 +228,7 @@ namespace GDX
         /// <returns>A <see cref="System.Int32" /> value.</returns>
         [SecuritySafeCritical]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-        public static unsafe int GetUpperCaseHashCode(this string targetString)
+        public static unsafe int GetStableUpperCaseHashCode(this string targetString)
         {
             fixed (char* src = targetString)
             {
@@ -273,7 +273,7 @@ namespace GDX
 
         /// <summary>
         ///     <para>
-        ///         Get the hash code value of <paramref name="targetString" /> (converted to an uppercase
+        ///         Get the stable hash code value of <paramref name="targetString" /> (converted to an uppercase
         ///         <see cref="System.String" />).
         ///     </para>
         /// </summary>
@@ -287,7 +287,7 @@ namespace GDX
         /// <returns>A <see cref="System.Int32" /> value.</returns>
         [SecuritySafeCritical]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-        public static unsafe int GetLowerCaseHashCode(this string targetString)
+        public static unsafe int GetStableLowerCaseHashCode(this string targetString)
         {
             fixed (char* src = targetString)
             {

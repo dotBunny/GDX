@@ -12,12 +12,12 @@ namespace GDX
     public static class ByteExtensions
     {
         /// <summary>
-        ///     <para>Get the hash code value of <paramref name="targetBytes" />, an array of <see cref="System.Byte" />.</para>
+        ///     <para>Get the stable hash code of <paramref name="targetBytes" />, an array of <see cref="System.Byte" />.</para>
         /// </summary>
         /// <remarks>Does NOT get the object's hashcode.</remarks>
         /// <param name="targetBytes">The target array of <see cref="byte" />.</param>
         /// <returns>A <see cref="System.Int32" /> value.</returns>
-        public static int GetValueHashCode(this byte[] targetBytes)
+        public static int GetStableHashCode(this byte[] targetBytes)
         {
             unchecked
             {

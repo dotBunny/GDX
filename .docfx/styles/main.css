@@ -4,10 +4,15 @@ svg#logo
     padding-top: 10%;
 }
 
-article[data-uid="features"] td {
+article[data-uid="features"] td 
+{
     padding: 10px !important;
 }
 
+article[data-uid="features"] td:first-child 
+{
+    width: 20%;
+}
 
 a[title="Issues"]:after,
 a[title="Discussions"]:after
