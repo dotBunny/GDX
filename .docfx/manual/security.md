@@ -1,3 +1,6 @@
+--- 
+_disableContribution: true 
+--- 
 # Security Policy
 
 ## Supported Versions

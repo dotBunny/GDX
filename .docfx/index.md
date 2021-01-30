@@ -13,6 +13,5 @@ _disableContribution: true
 
 > Game Development Extensions, a battle-tested library of game-ready high-performance C# code.
 
-
-<a class="btn btn-primary" href="/manual/features.html" role="button">Features</a>
 <a class="btn btn-primary" href="/manual/getting-started.html" role="button">Getting Started</a>
+<a class="btn btn-primary" href="/manual/features.html" role="button">Features</a>

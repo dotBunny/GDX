@@ -27,16 +27,8 @@ The `GDX` package can be dropped into any compatible [Unity](http://unity3d.com)
 
 ## Contributing
 GDX is an open-source project and we encourage and welcome contributions.
-### Design Guidelines
-There is a general effort to follow the [Framework Design Guidelines](https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/)
-set forth by the .NET team. While we **do not** always precisely adhere to them, they serve as a guiding principle.
-- Embedded in the project is an [EditorConfig](https://editorconfig.org/), which should standardize much of the formatting.
-    - It is based on the .NET Roslyn repositories `.editorconfig`.
-    - Warns of non-explicit type definitions everywhere (we're not going to use var to promote better readability).
-- [.NET Coding Conventions](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions) is also a good point of reference.
-- Typically sections of classes are ordered alphabetically.
-- Preference to expose backing data, indices, etc.
+> Please review our [Code of Conduct](https://gdx.dotbunny.com/manual/contributing/code-of-conduct.html), [Source Code](https://gdx.dotbunny.com/manual/contributing/source-code.html), [Design Guidelines](https://gdx.dotbunny.com/manual/contributing/design-guidelines.html) and [Documentation](https://gdx.dotbunny.com/manual/contributing/documentation.html) sections of the manual for more info. 
 
 ## License
 GDX is licensed under the [MIT License](https://choosealicense.com/licenses/mit/).
-A copy of this license can be found at the root of the project in the `LICENSE` file.
+> A copy of this license can be found at the root of the project in the `LICENSE` file, or [here](https://gdx.dotbunny.com/license.html)

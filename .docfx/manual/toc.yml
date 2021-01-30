@@ -9,9 +9,13 @@
 - name: Contributing
   href:
   items:
-    - name: Code
-      href: contributing\code.md
+    - name: Code Of Conduct
+      href: contributing\code-of-conduct.md
+    - name: Source Code
+      href: contributing\source-code.md
     - name: Design Guidelines
       href: contributing\design-guidelines.md
     - name: Documentation
       href: contributing\documentation.md
+- name: Security Policy
+  href: security.md
