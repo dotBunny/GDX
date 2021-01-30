@@ -33,97 +33,6 @@ namespace GDX.Editor
         });
 
         /// <summary>
-        ///     Settings content for <see cref="GDXConfig.updateProviderCheckForUpdates" />.
-        /// </summary>
-        private static readonly GUIContent s_contentCheckForUpdates = new GUIContent(
-            "",
-            "Should the package check the GitHub repository to see if there is a new version?");
-
-        /// <summary>
-        ///     Settings content for <see cref="UpdateDayCountSetting" />.
-        /// </summary>
-        private static readonly GUIContent s_contentUpdateDayCount = new GUIContent(
-            "Update Timer (Days)",
-            "After how many days should updates be checked for?");
-
-        /// <summary>
-        ///     Settings content for <see cref="GDXConfig.developerBuildInfoAssemblyDefinition" />.
-        /// </summary>
-        private static readonly GUIContent s_contentBuildInfoAssemblyDefinition = new GUIContent(
-            "Assembly Definition",
-            "Ensure that the folder of the BuildInfo has an assembly definition.");
-
-        /// <summary>
-        ///     Settings content for <see cref="GDXConfig.developerCommandLineParserArgumentPrefix" />.
-        /// </summary>
-        private static readonly GUIContent s_contentArgumentPrefix = new GUIContent(
-            "Argument Prefix",
-            "The prefix used to denote arguments in the command line.");
-
-        /// <summary>
-        ///     Settings content for <see cref="GDXConfig.developerCommandLineParserArgumentSplit" />.
-        /// </summary>
-        private static readonly GUIContent s_contentArgumentSplit = new GUIContent(
-            "Argument Split",
-            "The string used to split arguments from their values.");
-
-        /// <summary>
-        ///     Settings content for <see cref="GDXConfig.developerBuildInfoEnabled" />.
-        /// </summary>
-        private static readonly GUIContent s_contentBuildInfoEnabled = new GUIContent(
-            "",
-            "During the build process should a BuildInfo be written?");
-
-        /// <summary>
-        ///     Settings content for <see cref="GDXConfig.developerBuildInfoPath" />.
-        /// </summary>
-        private static readonly GUIContent s_contentBuildInfoPath = new GUIContent(
-            "Output Path",
-            "The asset database relative path to output the file.");
-
-        /// <summary>
-        ///     Settings content for <see cref="GDXConfig.developerBuildInfoNamespace" />.
-        /// </summary>
-        private static readonly GUIContent s_contentBuildInfoNamespace = new GUIContent(
-            "Namespace",
-            "The namespace where the BuildInfo should be placed.");
-
-        /// <summary>
-        ///     Settings content for <see cref="GDXConfig.developerBuildInfoBuildNumberArgument" />.
-        /// </summary>
-        private static readonly GUIContent s_contentBuildInfoBuildNumberArgument = new GUIContent(
-            "Number",
-            "The argument key for the build number to be passed to the BuildInfoProvider.");
-
-        /// <summary>
-        ///     Settings content for <see cref="GDXConfig.developerBuildInfoBuildDescriptionArgument" />.
-        /// </summary>
-        private static readonly GUIContent s_contentBuildInfoBuildDescriptionArgument = new GUIContent(
-            "Description",
-            "The argument key for the build description to be passed to the BuildInfoProvider.");
-
-        /// <summary>
-        ///     Settings content for <see cref="GDXConfig.developerBuildInfoBuildChangelistArgument" />.
-        /// </summary>
-        private static readonly GUIContent s_contentBuildInfoBuildChangelistArgument = new GUIContent(
-            "Changelist",
-            "The argument key for the build changelist to be passed to the BuildInfoProvider.");
-
-        /// <summary>
-        ///     Settings content for <see cref="GDXConfig.developerBuildInfoBuildTaskArgument" />.
-        /// </summary>
-        private static readonly GUIContent s_contentBuildInfoBuildTaskArgument = new GUIContent(
-            "Task",
-            "The argument key for the build task to be passed to the BuildInfoProvider.");
-
-        /// <summary>
-        ///     Settings content for <see cref="GDXConfig.developerBuildInfoBuildStreamArgument" />.
-        /// </summary>
-        private static readonly GUIContent s_contentBuildInfoBuildStreamArgument = new GUIContent(
-            "Stream",
-            "The argument key for the build stream to be passed to the BuildInfoProvider.");
-
-        /// <summary>
         ///     The number of days between checks for updates.
         /// </summary>
         /// <remarks>We use a property over methods in this case so that Unity's UI can be easily tied to this value.</remarks>
@@ -176,12 +85,12 @@ namespace GDX.Editor
             const string sectionID = "GDX.Editor.UpdateProvider";
             GUI.enabled = true;
 
-            bool packageSectionEnabled = SettingsStyles.BeginSettingsSection(
+            bool packageSectionEnabled = SettingsLayout.CreateSettingsSection(
                 sectionID, true,
                 "Automatic Package Updates",
                 settings.FindProperty("updateProviderCheckForUpdates"),
-                s_contentCheckForUpdates);
-            if (!SettingsStyles.GetCachedEditorBoolean(sectionID))
+                SettingsContent.AutomaticUpdatesEnabled);
+            if (!SettingsLayout.GetCachedEditorBoolean(sectionID))
             {
                 return;
             }
@@ -234,7 +143,7 @@ namespace GDX.Editor
             GUI.enabled = packageSectionEnabled;
 
             UpdateDayCountSetting =
-                EditorGUILayout.IntSlider(s_contentUpdateDayCount, UpdateDayCountSetting, 1, 31);
+                EditorGUILayout.IntSlider(SettingsContent.AutomaticUpdatesUpdateDayCount, UpdateDayCountSetting, 1, 31);
 
             GUILayout.Space(SectionPaddingBottom);
         }
@@ -248,13 +157,13 @@ namespace GDX.Editor
             const string sectionID = "GDX.Editor.Build.BuildInfoProvider";
             GUI.enabled = true;
 
-            bool buildInfoEnabled = SettingsStyles.BeginSettingsSection(
+            bool buildInfoEnabled = SettingsLayout.CreateSettingsSection(
                 sectionID, false,
                 "BuildInfo Generation",
                 settings.FindProperty("developerBuildInfoEnabled"),
-                s_contentBuildInfoEnabled);
+                SettingsContent.BuildInfoEnabled);
 
-            if (!SettingsStyles.GetCachedEditorBoolean(sectionID))
+            if (!SettingsLayout.GetCachedEditorBoolean(sectionID))
             {
                 return;
             }
@@ -282,11 +191,11 @@ namespace GDX.Editor
             GUI.enabled = buildInfoEnabled;
 
             EditorGUILayout.PropertyField(settings.FindProperty("developerBuildInfoPath"),
-                s_contentBuildInfoPath);
+                SettingsContent.BuildInfoPath);
             EditorGUILayout.PropertyField(settings.FindProperty("developerBuildInfoNamespace"),
-                s_contentBuildInfoNamespace);
+                SettingsContent.BuildInfoNamespace);
             EditorGUILayout.PropertyField(settings.FindProperty("developerBuildInfoAssemblyDefinition"),
-                s_contentBuildInfoAssemblyDefinition);
+                SettingsContent.BuildInfoAssemblyDefinition);
 
 
             GUILayout.Space(10);
@@ -295,7 +204,7 @@ namespace GDX.Editor
 
             SerializedProperty buildNumberProperty =
                 settings.FindProperty("developerBuildInfoBuildNumberArgument");
-            EditorGUILayout.PropertyField(buildNumberProperty, s_contentBuildInfoBuildNumberArgument);
+            EditorGUILayout.PropertyField(buildNumberProperty, SettingsContent.BuildInfoBuildNumberArgument);
             if (buildNumberProperty.stringValue.HasLowerCase())
             {
                 buildNumberProperty.stringValue = buildNumberProperty.stringValue.ToUpper();
@@ -303,7 +212,7 @@ namespace GDX.Editor
 
             SerializedProperty buildDescriptionProperty =
                 settings.FindProperty("developerBuildInfoBuildDescriptionArgument");
-            EditorGUILayout.PropertyField(buildDescriptionProperty, s_contentBuildInfoBuildDescriptionArgument);
+            EditorGUILayout.PropertyField(buildDescriptionProperty, SettingsContent.BuildInfoBuildDescriptionArgument);
             if (buildDescriptionProperty.stringValue.HasLowerCase())
             {
                 buildDescriptionProperty.stringValue = buildDescriptionProperty.stringValue.ToUpper();
@@ -311,14 +220,14 @@ namespace GDX.Editor
 
             SerializedProperty buildChangelistProperty =
                 settings.FindProperty("developerBuildInfoBuildChangelistArgument");
-            EditorGUILayout.PropertyField(buildChangelistProperty, s_contentBuildInfoBuildChangelistArgument);
+            EditorGUILayout.PropertyField(buildChangelistProperty, SettingsContent.BuildInfoBuildChangelistArgument);
             if (buildChangelistProperty.stringValue.HasLowerCase())
             {
                 buildChangelistProperty.stringValue = buildChangelistProperty.stringValue.ToUpper();
             }
 
             SerializedProperty buildTaskProperty = settings.FindProperty("developerBuildInfoBuildTaskArgument");
-            EditorGUILayout.PropertyField(buildTaskProperty, s_contentBuildInfoBuildTaskArgument);
+            EditorGUILayout.PropertyField(buildTaskProperty, SettingsContent.BuildInfoBuildTaskArgument);
             if (buildTaskProperty.stringValue.HasLowerCase())
             {
                 buildTaskProperty.stringValue = buildTaskProperty.stringValue.ToUpper();
@@ -326,7 +235,7 @@ namespace GDX.Editor
 
             SerializedProperty buildStreamProperty =
                 settings.FindProperty("developerBuildInfoBuildStreamArgument");
-            EditorGUILayout.PropertyField(buildStreamProperty, s_contentBuildInfoBuildStreamArgument);
+            EditorGUILayout.PropertyField(buildStreamProperty, SettingsContent.BuildInfoBuildStreamArgument);
             if (buildStreamProperty.stringValue.HasLowerCase())
             {
                 buildStreamProperty.stringValue = buildStreamProperty.stringValue.ToUpper();
@@ -344,17 +253,17 @@ namespace GDX.Editor
             const string sectionID = "GDX.Developer.CommandLineParser";
             GUI.enabled = true;
 
-            SettingsStyles.BeginSettingsSection(sectionID, false, "Command Line Parser");
+            SettingsLayout.CreateSettingsSection(sectionID, false, "Command Line Parser");
 
-            if (!SettingsStyles.GetCachedEditorBoolean(sectionID))
+            if (!SettingsLayout.GetCachedEditorBoolean(sectionID))
             {
                 return;
             }
 
             EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentPrefix"),
-                s_contentArgumentPrefix);
+                SettingsContent.CommandLineParserArgumentPrefix);
             EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentSplit"),
-                s_contentArgumentSplit);
+                SettingsContent. CommandLineParserArgumentSplit);
         }
     }
 }

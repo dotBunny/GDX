@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - [Generated documentation](https://gdx.dotbunny.com/) now including `private` and `internal` classes for visibility.
+- Moved all static `GUIContent` from settings window into new `SettingsContent`.
+- `GDX.Developer.Conditionals` contains constant status indicators of packages used by `GDX`. Useful for determine if a certain featureset is available.
 ### Changed
+- Lowered feature requirement of `com.unity.jobs` to `0.2.7`.
+- Lowered feature requirement of `com.unity.burst` to `1.0.0`.
 - `GDX.Developer` assembly collapsed back into main `GDX` assembly.
 - Modified settings framework to be in a single `GDX` category in the **Project Settings** window, with collapsable sections contained within.
 - `GDX.StringExtensions.GetLowerCaseHashCode()` renamed to `GDX.StringExtensions.GetStableLowerCaseHashCode()`.

@@ -22,14 +22,14 @@
             "define": "GDX_ADDRESSABLES"
         },
         {
-          "name": "com.unity.burst",
-          "expression": "1.4.0",
-          "define": "GDX_BURST"
+            "name": "com.unity.burst",
+            "expression": "1.0.0",
+            "define": "GDX_BURST"
         },
         {
-          "name": "com.unity.jobs",
-          "expression": "0.6.9",
-          "define": "GDX_JOBS"
+            "name": "com.unity.jobs",
+            "expression": "0.2.7",
+            "define": "GDX_JOBS"
         },
         {
             "name": "com.unity.mathematics",
