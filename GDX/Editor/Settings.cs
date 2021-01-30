@@ -61,6 +61,9 @@ namespace GDX.Editor
                     // Start wrapping the content
                     EditorGUILayout.BeginVertical(SettingsStyles.WrapperStyle);
 
+                    // Display top level information
+                    PackageStatus();
+
                     // Build out sections
                     AutomaticUpdatesSection(settings);
                     BuildInfoSection(settings);
@@ -264,6 +267,31 @@ namespace GDX.Editor
                 SettingsContent.CommandLineParserArgumentPrefix);
             EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentSplit"),
                 SettingsContent. CommandLineParserArgumentSplit);
+        }
+
+        private static void PackageStatus()
+        {
+            GUI.enabled = true;
+
+            // ReSharper disable ConditionIsAlwaysTrueOrFalse
+            if (Developer.Conditionals.HasAddressablesPackage)
+            {
+
+            }
+
+            if (Developer.Conditionals.HasBurstPackage)
+            {
+
+            }
+            if (Developer.Conditionals.HasJobsPackage)
+            {
+
+            }
+            if (Developer.Conditionals.HasMathematicsPackage)
+            {
+
+            }
+            // ReSharper enable ConditionIsAlwaysTrueOrFalse
         }
     }
 }
