@@ -1,6 +1,7 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace GDX.Editor
     public static class SettingsStyles
     {
         /// <summary>
-        ///     A <see cref="UnityEngine.GUIStyle"/>" /> representing a button.
+        ///     A <see cref="UnityEngine.GUIStyle" />" /> representing a button.
         /// </summary>
         public static readonly GUIStyle ButtonStyle;
 
@@ -66,6 +67,16 @@ namespace GDX.Editor
         public static readonly GUIStyle SectionHeaderTextDisabledStyle;
 
         /// <summary>
+        ///     A <see cref="UnityEngine.GUIStyle" /> representing the expand button for section headers.
+        /// </summary>
+        public static readonly GUIStyle SectionHeaderExpandButtonStyle;
+
+        /// <summary>
+        ///     A collection of layout parameters to use when rendering the expand button on section headers.
+        /// </summary>
+        public static readonly GUILayoutOption[] SectionHeaderExpandLayoutOptions;
+
+        /// <summary>
         ///     A collection of layout parameters to use when rendering the toggle option on section headers.
         /// </summary>
         public static readonly GUILayoutOption[] SectionHeaderToggleLayoutOptions;
@@ -91,6 +102,11 @@ namespace GDX.Editor
         public static readonly GUIStyle WrapperStyle;
 
         /// <summary>
+        ///     A cache of boolean values backed by <see cref="EditorPrefs" />.
+        /// </summary>
+        private static readonly Dictionary<string, bool> s_cachedEditorPreferences = new Dictionary<string, bool>();
+
+        /// <summary>
         ///     Initialize the <see cref="SettingsStyles" />, creating all of the associated <see cref="GUIStyle" />s.
         /// </summary>
         static SettingsStyles()
@@ -112,11 +128,24 @@ namespace GDX.Editor
 
             // Section Headers
             SectionHeaderStyle = new GUIStyle("box") {margin = {left = -20}};
-            SectionHeaderTextDefaultStyle = new GUIStyle(EditorStyles.largeLabel) {fontStyle = FontStyle.Bold, normal = {textColor = WhiteBlend75Color}};
+
+            SectionHeaderTextDefaultStyle = new GUIStyle(EditorStyles.largeLabel)
+            {
+                fontStyle = FontStyle.Bold, normal = {textColor = WhiteBlend75Color}
+            };
             SectionHeaderTextDisabledStyle =
                 new GUIStyle(SectionHeaderTextDefaultStyle) {normal = {textColor = WhiteBlend25Color}};
+
             SectionHeaderToggleLayoutOptions = new[] {GUILayout.Width(EditorStyles.toggle.CalcSize(GUIContent.none).x)};
-            SubSectionHeaderTextStyle = new GUIStyle(EditorStyles.largeLabel) {fontStyle = FontStyle.Bold, fontSize = EditorStyles.largeLabel.fontSize - 1, margin = { left = 2 }};
+
+            SectionHeaderExpandButtonStyle = new GUIStyle("button") {fontStyle = FontStyle.Bold};
+
+            SectionHeaderExpandLayoutOptions = new[] {GUILayout.Width(25)};
+
+            SubSectionHeaderTextStyle = new GUIStyle(EditorStyles.largeLabel)
+            {
+                fontStyle = FontStyle.Bold, fontSize = EditorStyles.largeLabel.fontSize - 1, margin = {left = 2}
+            };
         }
 
         /// <summary>
@@ -150,6 +179,8 @@ namespace GDX.Editor
         /// <summary>
         ///     Draw a section header useful for project settings.
         /// </summary>
+        /// <param name="id">Identifier used for editor preferences to determine if the section is collapsed or not.</param>
+        /// <param name="defaultVisibility">Should this sections content be visible by default?</param>
         /// <param name="text">The section header content.</param>
         /// <param name="sectionToggleProperty">
         ///     A <see cref="UnityEditor.SerializedProperty" /> which will dictate if a section is enabled or
@@ -157,7 +188,7 @@ namespace GDX.Editor
         /// </param>
         /// <param name="sectionToggleContent">The <see cref="UnityEngine.GUIContent" /> associated with a setting.</param>
         /// <returns>true/false if the sections content should be enabled.</returns>
-        public static bool SectionHeader(string text, SerializedProperty sectionToggleProperty = null,
+        public static bool BeginSettingsSection(string id, bool defaultVisibility, string text, SerializedProperty sectionToggleProperty = null,
             GUIContent sectionToggleContent = null)
         {
             Color previousColor = GUI.backgroundColor;
@@ -166,6 +197,26 @@ namespace GDX.Editor
             {
                 GUI.backgroundColor = DefaultBlueColor;
                 GUILayout.BeginHorizontal(SectionHeaderStyle);
+                bool setting = GetCachedEditorBoolean(id, defaultVisibility);
+                if (!setting)
+                {
+                    // ReSharper disable once InvertIf
+                    if (GUILayout.Button("+", SectionHeaderExpandButtonStyle, SectionHeaderExpandLayoutOptions))
+                    {
+                        GUIUtility.hotControl = 0;
+                        SetCachedEditorBoolean(id, true);
+                    }
+                }
+                else
+                {
+                    // ReSharper disable once InvertIf
+                    if (GUILayout.Button("-", SectionHeaderExpandButtonStyle, SectionHeaderExpandLayoutOptions))
+                    {
+                        GUIUtility.hotControl = 0;
+                        SetCachedEditorBoolean(id, false);
+                    }
+                }
+
                 GUILayout.Label(text, SectionHeaderTextDefaultStyle);
                 GUILayout.EndHorizontal();
                 GUI.backgroundColor = previousColor;
@@ -177,6 +228,26 @@ namespace GDX.Editor
             {
                 GUI.backgroundColor = EnabledGreenColor;
                 GUILayout.BeginHorizontal(SectionHeaderStyle);
+                bool setting = GetCachedEditorBoolean(id);
+                if (!setting)
+                {
+                    // ReSharper disable once InvertIf
+                    if (GUILayout.Button("+", SectionHeaderExpandButtonStyle, SectionHeaderExpandLayoutOptions))
+                    {
+                        GUIUtility.hotControl = 0;
+                        SetCachedEditorBoolean(id, true);
+                    }
+                }
+                else
+                {
+                    // ReSharper disable once InvertIf
+                    if (GUILayout.Button("-", SectionHeaderExpandButtonStyle, SectionHeaderExpandLayoutOptions))
+                    {
+                        GUIUtility.hotControl = 0;
+                        SetCachedEditorBoolean(id, false);
+                    }
+                }
+
                 GUILayout.Label(text, SectionHeaderTextDefaultStyle);
                 GUILayout.FlexibleSpace();
                 EditorGUILayout.PropertyField(sectionToggleProperty, sectionToggleContent,
@@ -186,6 +257,26 @@ namespace GDX.Editor
             {
                 GUI.backgroundColor = DisabledYellowColor;
                 GUILayout.BeginHorizontal(SectionHeaderStyle);
+                bool setting = GetCachedEditorBoolean(id);
+                if (!setting)
+                {
+                    // ReSharper disable once InvertIf
+                    if (GUILayout.Button("+", SectionHeaderExpandButtonStyle, SectionHeaderExpandLayoutOptions))
+                    {
+                        GUIUtility.hotControl = 0;
+                        SetCachedEditorBoolean(id, true);
+                    }
+                }
+                else
+                {
+                    // ReSharper disable once InvertIf
+                    if (GUILayout.Button("-", SectionHeaderExpandButtonStyle, SectionHeaderExpandLayoutOptions))
+                    {
+                        GUIUtility.hotControl = 0;
+                        SetCachedEditorBoolean(id, false);
+                    }
+                }
+
                 GUILayout.Label(text, SectionHeaderTextDisabledStyle);
                 GUILayout.FlexibleSpace();
                 EditorGUILayout.PropertyField(sectionToggleProperty, sectionToggleContent,
@@ -196,6 +287,46 @@ namespace GDX.Editor
             GUI.backgroundColor = previousColor;
             GUILayout.Space(5);
             return sectionToggleProperty.boolValue;
+        }
+
+        /// <summary>
+        ///     Get a cached value or fill it from <see cref="EditorPrefs" />.
+        /// </summary>
+        /// <param name="id">Identifier for the <see cref="bool" /> value.</param>
+        /// <param name="defaultValue">If no value is found, what should be used.</param>
+        /// <returns></returns>
+        public static bool GetCachedEditorBoolean(string id, bool defaultValue = true)
+        {
+            if (!s_cachedEditorPreferences.ContainsKey(id))
+            {
+                s_cachedEditorPreferences[id] = EditorPrefs.GetBool(id, defaultValue);
+            }
+
+            return s_cachedEditorPreferences[id];
+        }
+
+        /// <summary>
+        ///     Sets the cached value (and <see cref="EditorPrefs" />) for the <paramref name="id" />.
+        /// </summary>
+        /// <param name="id">Identifier for the <see cref="bool" /> value.</param>
+        /// <param name="setValue">The desired value to set.</param>
+        public static void SetCachedEditorBoolean(string id, bool setValue)
+        {
+            if (!s_cachedEditorPreferences.ContainsKey(id))
+            {
+                s_cachedEditorPreferences[id] = setValue;
+                EditorPrefs.SetBool(id, setValue);
+            }
+            else
+            {
+                if (s_cachedEditorPreferences[id] == setValue)
+                {
+                    return;
+                }
+
+                s_cachedEditorPreferences[id] = setValue;
+                EditorPrefs.SetBool(id, setValue);
+            }
         }
     }
 }

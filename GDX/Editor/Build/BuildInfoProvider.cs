@@ -8,10 +8,11 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+using GDX.Developer;
 
 // ReSharper disable MemberCanBePrivate.Global
 
-namespace GDX.Developer.Editor.Build
+namespace GDX.Editor.Build
 {
     /// <summary>
     ///     <para>

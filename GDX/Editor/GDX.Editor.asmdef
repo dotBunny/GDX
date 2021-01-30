@@ -2,7 +2,9 @@
     "name": "GDX.Editor",
     "rootNamespace": "GDX.Editor",
     "references": [
-        "GDX"
+        "GDX",
+        "Unity.ScriptableBuildPipeline",
+        "Unity.ScriptableBuildPipeline.Editor"
     ],
     "includePlatforms": [
         "Editor"

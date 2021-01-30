@@ -5,7 +5,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Unity.PerformanceTesting",
-        "GDX"
+        "GDX",
+        "GDX.Editor"
     ],
     "includePlatforms": [
         "Editor"

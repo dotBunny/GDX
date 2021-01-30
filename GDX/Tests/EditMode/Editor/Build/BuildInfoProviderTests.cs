@@ -2,11 +2,8 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX;
-using GDX.Developer.Editor.Build;
+using GDX.Editor.Build;
 using NUnit.Framework;
-#if GDX_TESTFRAMEWORK_PERFORMANCETESTING
-
-#endif
 
 namespace Editor.Build
 {

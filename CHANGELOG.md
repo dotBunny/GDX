@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - [Generated documentation](https://gdx.dotbunny.com/) now including `private` and `internal` classes for visibility.
 ### Changed
+- `GDX.Developer` assembly collapsed back into main `GDX` assembly.
+- Modified settings framework to be in a single `GDX` category in the **Project Settings** window, with collapsable sections contained within.
 - `GDX.StringExtensions.GetLowerCaseHashCode()` renamed to `GDX.StringExtensions.GetStableLowerCaseHashCode()`.
 - `GDX.StringExtensions.GetUpperCaseHashCode()` renamed to `GDX.StringExtensions.GetStableUpperCaseHashCode()`.
 - `GDX.ByteExtensions.GetValueHashCode()` renamed to `GDX.ByteExtensions.GetStableHashCode()`.
