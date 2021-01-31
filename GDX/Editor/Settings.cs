@@ -83,7 +83,7 @@ namespace GDX.Editor
 #if UNITY_2021_1_OR_NEWER
                     if (EditorGUILayout.LinkButton("Repository"))
 #else
-                    if (GUILayout.Button("Repository"))
+                    if (GUILayout.Button("Repository", EditorStyles.linkLabel))
 #endif
                     {
                         GUIUtility.hotControl = 0;
@@ -97,7 +97,7 @@ namespace GDX.Editor
 #if UNITY_2021_1_OR_NEWER
                     if (EditorGUILayout.LinkButton("Documentation"))
 #else
-                    if (GUILayout.Button("Documentation"))
+                    if (GUILayout.Button("Documentation", EditorStyles.linkLabel))
 #endif
                     {
                         GUIUtility.hotControl = 0;
@@ -111,7 +111,7 @@ namespace GDX.Editor
 #if UNITY_2021_1_OR_NEWER
                     if (EditorGUILayout.LinkButton("Report an Issue"))
 #else
-                    if (GUILayout.Button("Report an Issue"))
+                    if (GUILayout.Button("Report an Issue", EditorStyles.linkLabel))
 #endif
                     {
                         GUIUtility.hotControl = 0;
