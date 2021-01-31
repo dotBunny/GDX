@@ -8,6 +8,7 @@
 /**/obj/
 /**/changelog.md
 /**/license.md
+/**/security.md
 /**/manual/contributing/code-of-conduct.md
 /**/templates/gdx/partials/footer.tmpl.partial
 _site
