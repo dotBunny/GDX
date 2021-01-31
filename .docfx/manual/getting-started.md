@@ -26,6 +26,8 @@ The above workflow provides a user interface for your project's `manifest.json` 
   }
 }
 ```
+> [!NOTE]
+> You can also include branches or releases with this method by appending `#branch` to the end of the definition.
 
 ### Asset Store
 > [!NOTE]

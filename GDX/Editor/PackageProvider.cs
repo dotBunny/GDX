@@ -138,7 +138,7 @@ namespace GDX.Editor
                 {
                     if (projectManifest[i].Contains(Strings.PackageName))
                     {
-                        return InstallationType.UPM;
+                        return projectManifest[i].Contains("\"file:") ? InstallationType.Unknown : InstallationType.UPM;
                     }
                 }
             }
