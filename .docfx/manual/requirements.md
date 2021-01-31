@@ -15,4 +15,5 @@ GDX_JOBS | com.unity.jobs | `0.2.7`
 GDX_MATHEMATICS | com.unity.mathematics | `1.2.1`
 GDX_PLATFORMS | com.unity.platforms | `0.8.0`
 
-It is essential to note that the GDX_* defines are only valid inside the `GDX` assembly.
+> [!NOTE]
+> It is essential to remember that the GDX_* defines are only valid inside the `GDX` assembly, see [Conditionals](xref:GDX.Developer.Conditionals) if you wish to access some semblance outside of `GDX`.
