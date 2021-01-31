@@ -77,38 +77,49 @@ namespace GDX.Editor
                     GUILayout.Label(SettingsContent.AboutBlurb, SettingsStyles.WordWrappedLabelStyle);
                     GUILayout.Space(10);
 
+
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("-", SettingsStyles.BulletLayoutOptions);
+#if UNITY_2021_1_OR_NEWER
                     if (EditorGUILayout.LinkButton("Repository"))
+#else
+                    if (GUILayout.Button("Repository"))
+#endif
                     {
                         GUIUtility.hotControl = 0;
                         Application.OpenURL(Strings.GitHubUri);
                     }
-
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("-", SettingsStyles.BulletLayoutOptions);
+#if UNITY_2021_1_OR_NEWER
                     if (EditorGUILayout.LinkButton("Documentation"))
+#else
+                    if (GUILayout.Button("Documentation"))
+#endif
                     {
                         GUIUtility.hotControl = 0;
                         Application.OpenURL(Strings.DocumentationUri);
                     }
-
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("-", SettingsStyles.BulletLayoutOptions);
+#if UNITY_2021_1_OR_NEWER
                     if (EditorGUILayout.LinkButton("Report an Issue"))
+#else
+                    if (GUILayout.Button("Report an Issue"))
+#endif
                     {
                         GUIUtility.hotControl = 0;
                         Application.OpenURL(Strings.GitHubIssuesUri);
                     }
-
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
+
 
                     GUILayout.EndVertical();
 
