@@ -27,7 +27,7 @@ The above workflow provides a user interface for your project's `manifest.json` 
 }
 ```
 > [!NOTE]
-> You can also include branches or releases with this method by appending `#branch` to the end of the definition.
+> You can also include branches or releases with this method by appending `#branch` to the end of the definition. Check out Unity's [UPM](https://docs.unity3d.com/Manual/upm-git.html) page for more details.
 
 ### Asset Store
 > [!NOTE]
