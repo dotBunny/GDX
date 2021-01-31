@@ -7,5 +7,7 @@
 /**/bin/
 /**/obj/
 /**/changelog.md
+/**/license.md
+/**/manual/contributing/code-of-conduct.md
 /**/templates/gdx/partials/footer.tmpl.partial
 _site
