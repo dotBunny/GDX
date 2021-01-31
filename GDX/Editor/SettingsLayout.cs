@@ -23,13 +23,14 @@ namespace GDX.Editor
         /// <param name="id">Identifier used for editor preferences to determine if the section is collapsed or not.</param>
         /// <param name="defaultVisibility">Should this sections content be visible by default?</param>
         /// <param name="text">The section header content.</param>
+        /// <param name="helpUri">The destination of the help button, if present.</param>
         /// <param name="sectionToggleProperty">
         ///     A <see cref="UnityEditor.SerializedProperty" /> which will dictate if a section is enabled or
         ///     not.
         /// </param>
         /// <param name="sectionToggleContent">The <see cref="UnityEngine.GUIContent" /> associated with a setting.</param>
         /// <returns>true/false if the sections content should be enabled.</returns>
-        public static bool CreateSettingsSection(string id, bool defaultVisibility, string text,
+        public static bool CreateSettingsSection(string id, bool defaultVisibility, string text, string helpUri = null,
             SerializedProperty sectionToggleProperty = null,
             GUIContent sectionToggleContent = null)
         {
@@ -43,7 +44,7 @@ namespace GDX.Editor
                 if (!setting)
                 {
                     // ReSharper disable once InvertIf
-                    if (GUILayout.Button("+", SettingsStyles.SectionHeaderExpandButtonStyle,
+                    if (GUILayout.Button(SettingsContent.PlusIcon, SettingsStyles.SectionHeaderExpandButtonStyle,
                         SettingsStyles.SectionHeaderExpandLayoutOptions))
                     {
                         GUIUtility.hotControl = 0;
@@ -53,7 +54,7 @@ namespace GDX.Editor
                 else
                 {
                     // ReSharper disable once InvertIf
-                    if (GUILayout.Button("-", SettingsStyles.SectionHeaderExpandButtonStyle,
+                    if (GUILayout.Button(SettingsContent.MinusIcon, SettingsStyles.SectionHeaderExpandButtonStyle,
                         SettingsStyles.SectionHeaderExpandLayoutOptions))
                     {
                         GUIUtility.hotControl = 0;
@@ -62,7 +63,18 @@ namespace GDX.Editor
                 }
 
                 GUILayout.Label(text, SettingsStyles.SectionHeaderTextDefaultStyle);
+                if (!string.IsNullOrEmpty(helpUri))
+                {
+                    if (GUILayout.Button(SettingsContent.HelpIcon, SettingsStyles.HelpButtonStyle))
+                    {
+                        GUIUtility.hotControl = 0;
+                        Application.OpenURL(helpUri);
+                    }
+                }
+
+                GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
+
                 GUI.backgroundColor = previousColor;
                 GUILayout.Space(5);
                 return true;
@@ -76,7 +88,7 @@ namespace GDX.Editor
                 if (!setting)
                 {
                     // ReSharper disable once InvertIf
-                    if (GUILayout.Button("+", SettingsStyles.SectionHeaderExpandButtonStyle,
+                    if (GUILayout.Button(SettingsContent.PlusIcon, SettingsStyles.SectionHeaderExpandButtonStyle,
                         SettingsStyles.SectionHeaderExpandLayoutOptions))
                     {
                         GUIUtility.hotControl = 0;
@@ -86,7 +98,7 @@ namespace GDX.Editor
                 else
                 {
                     // ReSharper disable once InvertIf
-                    if (GUILayout.Button("-", SettingsStyles.SectionHeaderExpandButtonStyle,
+                    if (GUILayout.Button(SettingsContent.MinusIcon, SettingsStyles.SectionHeaderExpandButtonStyle,
                         SettingsStyles.SectionHeaderExpandLayoutOptions))
                     {
                         GUIUtility.hotControl = 0;
@@ -95,6 +107,15 @@ namespace GDX.Editor
                 }
 
                 GUILayout.Label(text, SettingsStyles.SectionHeaderTextDefaultStyle);
+                if (!string.IsNullOrEmpty(helpUri))
+                {
+                    if (GUILayout.Button(SettingsContent.HelpIcon, SettingsStyles.HelpButtonStyle))
+                    {
+                        GUIUtility.hotControl = 0;
+                        Application.OpenURL(helpUri);
+                    }
+                }
+
                 GUILayout.FlexibleSpace();
                 EditorGUILayout.PropertyField(sectionToggleProperty, sectionToggleContent,
                     SettingsStyles.SectionHeaderToggleLayoutOptions);
@@ -107,7 +128,7 @@ namespace GDX.Editor
                 if (!setting)
                 {
                     // ReSharper disable once InvertIf
-                    if (GUILayout.Button("+", SettingsStyles.SectionHeaderExpandButtonStyle,
+                    if (GUILayout.Button(SettingsContent.PlusIcon, SettingsStyles.SectionHeaderExpandButtonStyle,
                         SettingsStyles.SectionHeaderExpandLayoutOptions))
                     {
                         GUIUtility.hotControl = 0;
@@ -117,7 +138,7 @@ namespace GDX.Editor
                 else
                 {
                     // ReSharper disable once InvertIf
-                    if (GUILayout.Button("-", SettingsStyles.SectionHeaderExpandButtonStyle,
+                    if (GUILayout.Button(SettingsContent.MinusIcon, SettingsStyles.SectionHeaderExpandButtonStyle,
                         SettingsStyles.SectionHeaderExpandLayoutOptions))
                     {
                         GUIUtility.hotControl = 0;
@@ -127,6 +148,15 @@ namespace GDX.Editor
 
 
                 GUILayout.Label(text, SettingsStyles.SectionHeaderTextDisabledStyle);
+                if (!string.IsNullOrEmpty(helpUri))
+                {
+                    if (GUILayout.Button(SettingsContent.HelpIcon, SettingsStyles.HelpButtonStyle))
+                    {
+                        GUIUtility.hotControl = 0;
+                        Application.OpenURL(helpUri);
+                    }
+                }
+
                 GUILayout.FlexibleSpace();
                 EditorGUILayout.PropertyField(sectionToggleProperty, sectionToggleContent,
                     SettingsStyles.SectionHeaderToggleLayoutOptions);

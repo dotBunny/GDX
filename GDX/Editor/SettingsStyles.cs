@@ -15,6 +15,11 @@ namespace GDX.Editor
     public static class SettingsStyles
     {
         /// <summary>
+        ///     A collection of layout parameters to use when rendering the expand button on section headers.
+        /// </summary>
+        public static readonly GUILayoutOption[] BulletLayoutOptions;
+
+        /// <summary>
         ///     A <see cref="UnityEngine.GUIStyle" />" /> representing a button.
         /// </summary>
         public static readonly GUIStyle ButtonStyle;
@@ -39,6 +44,12 @@ namespace GDX.Editor
         /// <remarks>Meant for enabled things.</remarks>
         public static readonly Color EnabledGreenColor =
             new Color(0.1803921568627451f, 0.6431372549019608f, 0.3098039215686275f);
+
+
+        /// <summary>
+        ///     A <see cref="UnityEngine.GUIStyle" /> representing a help button.
+        /// </summary>
+        public static readonly GUIStyle HelpButtonStyle;
 
         /// <summary>
         ///     A <see cref="UnityEngine.GUIStyle" /> representing an info box.
@@ -84,6 +95,11 @@ namespace GDX.Editor
         ///     A <see cref="UnityEngine.GUIStyle" /> representing the header of a sub section definition.
         /// </summary>
         public static readonly GUIStyle SubSectionHeaderTextStyle;
+
+        /// <summary>
+        ///     A generic label with wordwrap <see cref="GUIStyle" />.
+        /// </summary>
+        public static readonly GUIStyle WordWrappedLabelStyle;
 
         /// <summary>
         ///     A blendable shade of the <see cref="UnityEngine.Color" /> white at 25% opacity.
@@ -135,11 +151,15 @@ namespace GDX.Editor
             SectionHeaderExpandButtonStyle = new GUIStyle("button") {fontStyle = FontStyle.Bold};
 
             SectionHeaderExpandLayoutOptions = new[] {GUILayout.Width(25)};
+            BulletLayoutOptions = new[] {GUILayout.Width(10)};
 
             SubSectionHeaderTextStyle = new GUIStyle(EditorStyles.largeLabel)
             {
                 fontStyle = FontStyle.Bold, fontSize = EditorStyles.largeLabel.fontSize - 1, margin = {left = 2}
             };
+
+            WordWrappedLabelStyle = new GUIStyle("label") {wordWrap = true};
+            HelpButtonStyle = new GUIStyle("IconButton") {margin = {top = 5}};
         }
     }
 }

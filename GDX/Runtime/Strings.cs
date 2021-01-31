@@ -16,19 +16,36 @@ namespace GDX
         public const string AssetPathPrefix = "Assets/";
 
         /// <summary>
-        ///     Reference to the Unity package name for GDX.
+        ///     The public URI of the package's documentation.
         /// </summary>
-        public const string PackageName = "com.dotbunny.gdx";
+        public const string DocumentationUri = "https://gdx.dotbunny.com/";
 
         /// <summary>
-        ///     The GDX test suite preprocessor define.
+        ///     The public URI of the latest changes, as Markdown.
         /// </summary>
-        public const string TestDefine = "GDX_TESTS";
+        /// <remarks>The main branch is used to contain released versions only, so if it is found there, it is the latest release.</remarks>
+        public const string GitHubChangelogUri = "https://github.com/dotBunny/GDX/blob/main/CHANGELOG.md";
+
+        /// <summary>
+        ///    The public URI to report issues on GitHub.
+        /// </summary>
+        public const string GitHubIssuesUri = "https://github.com/dotBunny/GDX/issues";
+
+
+        /// <summary>
+        ///     The public URI of the package repository.
+        /// </summary>
+        public const string GitHubUri = "https://github.com/dotBunny/GDX/";
 
         /// <summary>
         ///     A null value string useful for default method parameters.
         /// </summary>
         public const string Null = null;
+
+        /// <summary>
+        ///     Reference to the Unity package name for GDX.
+        /// </summary>
+        public const string PackageName = "com.dotbunny.gdx";
 
         /// <summary>
         ///     Useful <see cref="string"/> to move up to a parent in pathing.

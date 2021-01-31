@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using GDX.Developer;
 using GDX.Editor.Build;
 using UnityEditor;
 using UnityEngine;
@@ -22,6 +23,9 @@ namespace GDX.Editor
         /// </summary>
         private const string UpdateDayCountKey = "GDX.UpdateProvider.UpdateDayCount";
 
+        /// <summary>
+        ///     Padding to place at the bottom of a section using <see cref="GUILayout.Space" />.
+        /// </summary>
         private const int SectionPaddingBottom = 5;
 
         /// <summary>
@@ -61,8 +65,111 @@ namespace GDX.Editor
                     // Start wrapping the content
                     EditorGUILayout.BeginVertical(SettingsStyles.WrapperStyle);
 
-                    // Display top level information
-                    PackageStatus();
+                    GUI.enabled = true;
+
+                    // ReSharper disable ConditionIsAlwaysTrueOrFalse
+                    EditorGUILayout.BeginHorizontal();
+
+                    // Information
+                    GUILayout.BeginVertical();
+
+                    GUILayout.Label(SettingsContent.AboutBlurb, SettingsStyles.WordWrappedLabelStyle);
+                    GUILayout.Space(10);
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("-", SettingsStyles.BulletLayoutOptions);
+                    if (EditorGUILayout.LinkButton("Repository"))
+                    {
+                        GUIUtility.hotControl = 0;
+                        Application.OpenURL(Strings.GitHubUri);
+                    }
+
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("-", SettingsStyles.BulletLayoutOptions);
+                    if (EditorGUILayout.LinkButton("Documentation"))
+                    {
+                        GUIUtility.hotControl = 0;
+                        Application.OpenURL(Strings.DocumentationUri);
+                    }
+
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("-", SettingsStyles.BulletLayoutOptions);
+                    if (EditorGUILayout.LinkButton("Report an Issue"))
+                    {
+                        GUIUtility.hotControl = 0;
+                        Application.OpenURL(Strings.GitHubIssuesUri);
+                    }
+
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.EndVertical();
+
+                    GUILayout.Space(15);
+                    GUILayout.FlexibleSpace();
+
+                    // CHeck Packages
+                    EditorGUILayout.BeginVertical(SettingsStyles.InfoBoxStyle);
+                    GUILayout.Label("Packages Found", SettingsStyles.SubSectionHeaderTextStyle);
+                    GUILayout.Space(5);
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Addressables");
+                    GUILayout.FlexibleSpace();
+                    GUILayout.Label(Conditionals.HasAddressablesPackage
+                        ? SettingsContent.TestPassedIcon
+                        : SettingsContent.TestNormalIcon);
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Burst");
+                    GUILayout.FlexibleSpace();
+                    GUILayout.Label(Conditionals.HasBurstPackage
+                        ? SettingsContent.TestPassedIcon
+                        : SettingsContent.TestNormalIcon);
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Jobs");
+                    GUILayout.FlexibleSpace();
+                    GUILayout.Label(Conditionals.HasJobsPackage
+                        ? SettingsContent.TestPassedIcon
+                        : SettingsContent.TestNormalIcon);
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Mathematics");
+                    GUILayout.FlexibleSpace();
+                    GUILayout.Label(Conditionals.HasMathematicsPackage
+                        ? SettingsContent.TestPassedIcon
+                        : SettingsContent.TestNormalIcon);
+                    GUILayout.EndHorizontal();
+
+                    if (!Conditionals.HasAddressablesPackage ||
+                        !Conditionals.HasBurstPackage ||
+                        !Conditionals.HasJobsPackage ||
+                        !Conditionals.HasMathematicsPackage)
+                    {
+                        GUILayout.Space(5);
+                        EditorGUILayout.HelpBox(
+                            "Some functionality will be disabled as some packages are not compatible or found.",
+                            MessageType.Warning);
+                    }
+
+                    EditorGUILayout.EndVertical();
+                    EditorGUILayout.EndHorizontal();
+
+                    // ReSharper enable ConditionIsAlwaysTrueOrFalse
+
+                    GUILayout.Space(10);
+                    GUILayout.Label("Features", SettingsStyles.SectionHeaderTextDefaultStyle);
+                    GUILayout.Space(5);
 
                     // Build out sections
                     AutomaticUpdatesSection(settings);
@@ -90,7 +197,7 @@ namespace GDX.Editor
 
             bool packageSectionEnabled = SettingsLayout.CreateSettingsSection(
                 sectionID, true,
-                "Automatic Package Updates",
+                "Automatic Package Updates", null,
                 settings.FindProperty("updateProviderCheckForUpdates"),
                 SettingsContent.AutomaticUpdatesEnabled);
             if (!SettingsLayout.GetCachedEditorBoolean(sectionID))
@@ -115,7 +222,7 @@ namespace GDX.Editor
                 {
                     if (GUILayout.Button("Changelog", SettingsStyles.ButtonStyle))
                     {
-                        Application.OpenURL(UpdateProvider.GitHubChangelogUri);
+                        Application.OpenURL(Strings.GitHubChangelogUri);
                     }
 
                     if (GUILayout.Button("Update", SettingsStyles.ButtonStyle))
@@ -163,6 +270,7 @@ namespace GDX.Editor
             bool buildInfoEnabled = SettingsLayout.CreateSettingsSection(
                 sectionID, false,
                 "BuildInfo Generation",
+                Strings.DocumentationUri + "api/GDX.Editor.Build.BuildInfoProvider.html",
                 settings.FindProperty("developerBuildInfoEnabled"),
                 SettingsContent.BuildInfoEnabled);
 
@@ -178,7 +286,8 @@ namespace GDX.Editor
                 GUILayout.BeginVertical(SettingsStyles.InfoBoxStyle);
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(
-                    "There is currently no BuildInfo file in the target location\nWould you like some default content written in its place?");
+                    "There is currently no BuildInfo file in the target location. Would you like some default content written in its place?",
+                    SettingsStyles.WordWrappedLabelStyle);
                 if (GUILayout.Button("Create Default", SettingsStyles.ButtonStyle))
                 {
                     BuildInfoProvider.WriteDefaultFile();
@@ -256,7 +365,8 @@ namespace GDX.Editor
             const string sectionID = "GDX.Developer.CommandLineParser";
             GUI.enabled = true;
 
-            SettingsLayout.CreateSettingsSection(sectionID, false, "Command Line Parser");
+            SettingsLayout.CreateSettingsSection(sectionID, false, "Command Line Parser",
+                Strings.DocumentationUri + "api/GDX.Developer.CommandLineParser.html");
 
             if (!SettingsLayout.GetCachedEditorBoolean(sectionID))
             {
@@ -266,32 +376,7 @@ namespace GDX.Editor
             EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentPrefix"),
                 SettingsContent.CommandLineParserArgumentPrefix);
             EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentSplit"),
-                SettingsContent. CommandLineParserArgumentSplit);
-        }
-
-        private static void PackageStatus()
-        {
-            GUI.enabled = true;
-
-            // ReSharper disable ConditionIsAlwaysTrueOrFalse
-            if (Developer.Conditionals.HasAddressablesPackage)
-            {
-
-            }
-
-            if (Developer.Conditionals.HasBurstPackage)
-            {
-
-            }
-            if (Developer.Conditionals.HasJobsPackage)
-            {
-
-            }
-            if (Developer.Conditionals.HasMathematicsPackage)
-            {
-
-            }
-            // ReSharper enable ConditionIsAlwaysTrueOrFalse
+                SettingsContent.CommandLineParserArgumentSplit);
         }
     }
 }

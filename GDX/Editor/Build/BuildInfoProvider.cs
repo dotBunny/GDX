@@ -21,7 +21,7 @@ namespace GDX.Editor.Build
     ///     </para>
     ///     <para>
     ///         During the build process a <c>BuildInfo</c> file will be generated containing information passed in
-    ///         through commandline arguments (parsed by <see cref="CommandLineParser" />). These arguments and
+    ///         through commandline arguments (parsed by <see cref="GDX.Developer.CommandLineParser" />). These arguments and
     ///         their formats are configurable via the <see cref="GDXConfig" />.
     ///     </para>
     /// </summary>

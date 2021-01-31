@@ -1,6 +1,7 @@
 // dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using UnityEditor;
 using UnityEngine;
 
 // ReSharper disable HeapView.ObjectAllocation.Evident
@@ -12,6 +13,12 @@ namespace GDX.Editor
     /// </summary>
     public static class SettingsContent
     {
+        /// <summary>
+        ///     Content for the initial introduction of the projects settings window.
+        /// </summary>
+        public static readonly GUIContent AboutBlurb = new GUIContent(
+            "Game Development Extensions, a battle-tested library of game-ready high-performance C# code.");
+
         /// <summary>
         ///     Settings content for <see cref="GDXConfig.updateProviderCheckForUpdates" />.
         /// </summary>
@@ -89,6 +96,7 @@ namespace GDX.Editor
             "Output Path",
             "The asset database relative path to output the file.");
 
+
         /// <summary>
         ///     Settings content for <see cref="GDXConfig.developerCommandLineParserArgumentPrefix" />.
         /// </summary>
@@ -102,5 +110,42 @@ namespace GDX.Editor
         public static readonly GUIContent CommandLineParserArgumentSplit = new GUIContent(
             "Argument Split",
             "The string used to split arguments from their values.");
+
+        /// <summary>
+        ///     A cached <see cref="GUIContent" /> containing a help symbol.
+        /// </summary>
+        public static readonly GUIContent HelpIcon;
+
+        /// <summary>
+        ///     A cached <see cref="GUIContent" /> containing a minus symbol.
+        /// </summary>
+        public static readonly GUIContent MinusIcon;
+
+        /// <summary>
+        ///     A cached <see cref="GUIContent" /> containing a plus symbol.
+        /// </summary>
+        public static readonly GUIContent PlusIcon;
+
+        /// <summary>
+        ///     A cached <see cref="GUIContent" /> containing a cross symbol.
+        /// </summary>
+        public static readonly GUIContent TestNormalIcon;
+
+        /// <summary>
+        ///     A cached <see cref="GUIContent" /> containing a checkmark symbol.
+        /// </summary>
+        public static readonly GUIContent TestPassedIcon;
+
+        /// <summary>
+        ///     Initialize the <see cref="SettingsContent" />.
+        /// </summary>
+        static SettingsContent()
+        {
+            PlusIcon = EditorGUIUtility.IconContent("Toolbar Plus");
+            MinusIcon = EditorGUIUtility.IconContent("Toolbar Minus");
+            TestPassedIcon = EditorGUIUtility.IconContent("TestPassed");
+            TestNormalIcon = EditorGUIUtility.IconContent("TestNormal");
+            HelpIcon = EditorGUIUtility.IconContent("_Help");
+        }
     }
 }

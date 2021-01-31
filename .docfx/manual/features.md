@@ -60,7 +60,7 @@ The missing or upgraded development process functionality.
 
 Feature | Description
 :--- | :---
-[Build Info Writer](xref:GDX.Developer.Editor.Build.BuildInfoProvider) | A system which latches on to the build pipeline to write a configurable `BuildInfo` class containing a passed set of parameters from commandline arguments.
+[Build Info Writer](xref:GDX.Editor.Build.BuildInfoProvider) | A system which latches on to the build pipeline to write a configurable `BuildInfo` class containing a passed set of parameters from commandline arguments.
 [Command Line Parser](xref:GDX.Developer.CommandLineParser) | A configurable command line parameter parsing system which can be queried at runtime (and in special cases during editor automation) for flags and key-value-pair data.
 
 ## Miscellaneous

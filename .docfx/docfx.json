@@ -6,9 +6,7 @@
           "src": "../../..",
           "files": [            
             "GDX.csproj",
-            "GDX.Editor.csproj",
-            "GDX.Developer.csproj",
-            "GDX.Developer.Editor.csproj"
+            "GDX.Editor.csproj",            
           ]
         }
       ],

@@ -28,12 +28,6 @@ namespace GDX.Editor
         private const string LastNotifiedVersionKey = "GDX.UpdateProvider.LastNotifiedVersion";
 
         /// <summary>
-        ///     The public URI of the latest changes, as Markdown.
-        /// </summary>
-        /// <remarks>The main branch is used to contain released versions only, so if it is found there, it is the latest release.</remarks>
-        public const string GitHubChangelogUri = "https://github.com/dotBunny/GDX/blob/main/CHANGELOG.md";
-
-        /// <summary>
         ///     The base URI for downloading the latest released tarball.
         /// </summary>
         private const string GitHubLatestUri = "https://github.com/dotBunny/GDX/archive/v";
