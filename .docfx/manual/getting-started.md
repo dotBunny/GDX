@@ -42,3 +42,23 @@ It is possible for the repository to be cloned into a sub-folder in your project
 git clone https://github.com/dotBunny/GDX.git
 ```
 This method is how typical development is done on `GDX`.
+
+## Project Settings
+Upon installation, `GDX` *should* work out of the box.
+
+Furhter configuration of `GDX` is done by opening the **Project Settings** window (**Edit > Project Settings...**), and selecting the `GDX` section. You will be presented with a view similar to the image below, with numerous configuration options sorted by feature.
+
+![Project Settings](/images/manual/getting-started/gdx-config.png)
+
+Each feature has a collapsable section (**A**) that is expandable and collapsable by clicking the **+**/**-** buttons to the header's left. Features dynamically activate based on the Unity version and packages found in the project (**B**).
+
+A section header's background can inform you of the status of the feature. A green background indicates that the feature is active, where a yellow background means that it is currently disabled. Not all features are enabled by default and require an opt-in (**C**). A blue background indicates an always-on feature, most commonly just functionality that has some level of configuration.
+
+### Persitent Storage
+Project-specific configuration values are stored in [GDXConfig](xref:GDX.GDXConfig), a `ScriptableObject` placed at `/Resources/GDX/GDXConfig.asset`. This allows access to configured values at both author and runtime and to be persistent across the project.
+
+
+
+
+
+

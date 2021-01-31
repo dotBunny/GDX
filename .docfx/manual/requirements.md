@@ -14,4 +14,4 @@ GDX_BURST | com.unity.burst | `1.4.0`
 GDX_JOBS | com.unity.jobs | `0.6.9`
 GDX_MATHEMATICS | com.unity.mathematics | `1.2.1`
 
-It is essential to note that the GDX_* defines are only valid inside the `GDX` assemblies.
+It is essential to note that the GDX_* defines are only valid inside the `GDX` assembly.
