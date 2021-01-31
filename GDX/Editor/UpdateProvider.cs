@@ -166,7 +166,7 @@ namespace GDX.Editor
                                     process.WaitForExit();
 
                                     // Lets force the import anyways now
-                                    AssetDatabase.ImportAsset(LocalPackage.PackageManifestPath);
+                                    AssetDatabase.ImportAsset(LocalPackage.PackageAssetPath);
                                 }
                             }
                             finally
