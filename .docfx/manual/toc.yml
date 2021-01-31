@@ -7,15 +7,13 @@
 - name: Discussions
   href: https://github.com/dotBunny/GDX/discussions
 - name: Contributing
-  href:
+  href: contributing.md
   items:
     - name: Code Of Conduct
-      href: contributing\code-of-conduct.md
-    - name: Source Code
-      href: contributing\source-code.md
+      href: contributing\code-of-conduct.md    
     - name: Design Guidelines
       href: contributing\design-guidelines.md
     - name: Documentation
-      href: contributing\documentation.md
+      href: contributing\documentation.md  
 - name: Security Policy
   href: security.md
