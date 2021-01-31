@@ -141,11 +141,23 @@ namespace GDX.Editor
         /// </summary>
         static SettingsContent()
         {
-            PlusIcon = EditorGUIUtility.IconContent("Toolbar Plus");
-            MinusIcon = EditorGUIUtility.IconContent("Toolbar Minus");
-            TestPassedIcon = EditorGUIUtility.IconContent("TestPassed");
-            TestNormalIcon = EditorGUIUtility.IconContent("TestNormal");
-            HelpIcon = EditorGUIUtility.IconContent("_Help");
+            if (EditorGUIUtility.isProSkin)
+            {
+                PlusIcon = EditorGUIUtility.IconContent("Toolbar Plus");
+                MinusIcon = EditorGUIUtility.IconContent("Toolbar Minus");
+                TestPassedIcon = EditorGUIUtility.IconContent("TestPassed");
+                TestNormalIcon = EditorGUIUtility.IconContent("TestNormal");
+                HelpIcon = EditorGUIUtility.IconContent("_Help");
+            }
+            else
+            {
+                PlusIcon = EditorGUIUtility.IconContent("d_Toolbar Plus");
+                MinusIcon = EditorGUIUtility.IconContent("d_Toolbar Minus");
+                TestPassedIcon = EditorGUIUtility.IconContent("TestPassed");
+                TestNormalIcon = EditorGUIUtility.IconContent("TestNormal");
+                HelpIcon = EditorGUIUtility.IconContent("d__Help");
+            }
+
         }
     }
 }

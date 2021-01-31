@@ -176,8 +176,6 @@ namespace GDX.Editor
 
                     // ReSharper enable ConditionIsAlwaysTrueOrFalse
 
-                    GUILayout.Space(10);
-                    GUILayout.Label("Features", SettingsStyles.SectionHeaderTextDefaultStyle);
                     GUILayout.Space(5);
 
                     // Build out sections
