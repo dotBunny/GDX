@@ -35,6 +35,11 @@
             "name": "com.unity.mathematics",
             "expression": "1.2.1",
             "define": "GDX_MATHEMATICS"
+        },
+        {
+            "name": "com.unity.platforms",
+            "expression": "0.8.0",
+            "define": "GDX_PLATFORMS"
         }
     ],
     "noEngineReferences": false

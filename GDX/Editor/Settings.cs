@@ -54,6 +54,7 @@ namespace GDX.Editor
         public static SettingsProvider SettingsProvider()
         {
             // ReSharper disable once HeapView.ObjectAllocation.Evident
+
             return new SettingsProvider("Project/GDX", SettingsScope.Project)
             {
                 label = "GDX",
@@ -151,16 +152,13 @@ namespace GDX.Editor
                         : SettingsContent.TestNormalIcon);
                     GUILayout.EndHorizontal();
 
-                    if (!Conditionals.HasAddressablesPackage ||
-                        !Conditionals.HasBurstPackage ||
-                        !Conditionals.HasJobsPackage ||
-                        !Conditionals.HasMathematicsPackage)
-                    {
-                        GUILayout.Space(5);
-                        EditorGUILayout.HelpBox(
-                            "Some functionality will be disabled as some packages are not compatible or found.",
-                            MessageType.Warning);
-                    }
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Platforms");
+                    GUILayout.FlexibleSpace();
+                    GUILayout.Label(Conditionals.HasPlatformsPackage
+                        ? SettingsContent.TestPassedIcon
+                        : SettingsContent.TestNormalIcon);
+                    GUILayout.EndHorizontal();
 
                     EditorGUILayout.EndVertical();
                     EditorGUILayout.EndHorizontal();

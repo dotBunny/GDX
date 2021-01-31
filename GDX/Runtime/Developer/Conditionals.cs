@@ -47,5 +47,11 @@ namespace GDX.Developer
 #else
         public const bool HasMathematicsPackage = false;
 #endif
+
+#if GDX_PLATFORMS
+        public const bool HasPlatformsPackage = true;
+#else
+        public const bool HasPlatformsPackage = false;
+#endif
     }
 }
