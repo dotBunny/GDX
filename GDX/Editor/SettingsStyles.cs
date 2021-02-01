@@ -45,7 +45,6 @@ namespace GDX.Editor
         public static readonly Color EnabledGreenColor =
             new Color(0.1803921568627451f, 0.6431372549019608f, 0.3098039215686275f);
 
-
         /// <summary>
         ///     A <see cref="UnityEngine.GUIStyle" /> representing a help button.
         /// </summary>
@@ -65,6 +64,11 @@ namespace GDX.Editor
         ///     A <see cref="UnityEngine.GUIStyle" /> representing a default section header.
         /// </summary>
         public static readonly GUIStyle SectionHeaderStyle;
+
+        /// <summary>
+        ///     A specific max width (130) for layout options to allow for organized width layouts.
+        /// </summary>
+        public static readonly GUILayoutOption[] FixedWidth130LayoutOptions;
 
         /// <summary>
         ///     A <see cref="UnityEngine.GUIStyle" /> representing a default section header text.
@@ -160,6 +164,8 @@ namespace GDX.Editor
 
             WordWrappedLabelStyle = new GUIStyle("label") {wordWrap = true};
             HelpButtonStyle = new GUIStyle("IconButton") {margin = {top = 5}};
+
+            FixedWidth130LayoutOptions = new[] {GUILayout.MaxWidth(130), GUILayout.MinWidth(130), GUILayout.Width(130)};
         }
     }
 }

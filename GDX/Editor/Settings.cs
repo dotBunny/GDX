@@ -66,117 +66,7 @@ namespace GDX.Editor
                     // Start wrapping the content
                     EditorGUILayout.BeginVertical(SettingsStyles.WrapperStyle);
 
-                    GUI.enabled = true;
-
-                    // ReSharper disable ConditionIsAlwaysTrueOrFalse
-                    EditorGUILayout.BeginHorizontal();
-
-                    // Information
-                    GUILayout.BeginVertical();
-
-                    GUILayout.Label(SettingsContent.AboutBlurb, SettingsStyles.WordWrappedLabelStyle);
-                    GUILayout.Space(10);
-
-
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Label("-", SettingsStyles.BulletLayoutOptions);
-#if UNITY_2021_1_OR_NEWER
-                    if (EditorGUILayout.LinkButton("Repository"))
-#else
-                    if (GUILayout.Button("Repository", EditorStyles.linkLabel))
-#endif
-                    {
-                        GUIUtility.hotControl = 0;
-                        Application.OpenURL(Strings.GitHubUri);
-                    }
-                    GUILayout.FlexibleSpace();
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Label("-", SettingsStyles.BulletLayoutOptions);
-#if UNITY_2021_1_OR_NEWER
-                    if (EditorGUILayout.LinkButton("Documentation"))
-#else
-                    if (GUILayout.Button("Documentation", EditorStyles.linkLabel))
-#endif
-                    {
-                        GUIUtility.hotControl = 0;
-                        Application.OpenURL(Strings.DocumentationUri);
-                    }
-                    GUILayout.FlexibleSpace();
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Label("-", SettingsStyles.BulletLayoutOptions);
-#if UNITY_2021_1_OR_NEWER
-                    if (EditorGUILayout.LinkButton("Report an Issue"))
-#else
-                    if (GUILayout.Button("Report an Issue", EditorStyles.linkLabel))
-#endif
-                    {
-                        GUIUtility.hotControl = 0;
-                        Application.OpenURL(Strings.GitHubIssuesUri);
-                    }
-                    GUILayout.FlexibleSpace();
-                    GUILayout.EndHorizontal();
-
-
-                    GUILayout.EndVertical();
-
-                    GUILayout.Space(15);
-                    GUILayout.FlexibleSpace();
-
-                    // CHeck Packages
-                    EditorGUILayout.BeginVertical(SettingsStyles.InfoBoxStyle);
-                    GUILayout.Label("Packages Found", SettingsStyles.SubSectionHeaderTextStyle);
-                    GUILayout.Space(5);
-
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Label("Addressables");
-                    GUILayout.FlexibleSpace();
-                    GUILayout.Label(Conditionals.HasAddressablesPackage
-                        ? SettingsContent.TestPassedIcon
-                        : SettingsContent.TestNormalIcon);
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Label("Burst");
-                    GUILayout.FlexibleSpace();
-                    GUILayout.Label(Conditionals.HasBurstPackage
-                        ? SettingsContent.TestPassedIcon
-                        : SettingsContent.TestNormalIcon);
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Label("Jobs");
-                    GUILayout.FlexibleSpace();
-                    GUILayout.Label(Conditionals.HasJobsPackage
-                        ? SettingsContent.TestPassedIcon
-                        : SettingsContent.TestNormalIcon);
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Label("Mathematics");
-                    GUILayout.FlexibleSpace();
-                    GUILayout.Label(Conditionals.HasMathematicsPackage
-                        ? SettingsContent.TestPassedIcon
-                        : SettingsContent.TestNormalIcon);
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Label("Platforms");
-                    GUILayout.FlexibleSpace();
-                    GUILayout.Label(Conditionals.HasPlatformsPackage
-                        ? SettingsContent.TestPassedIcon
-                        : SettingsContent.TestNormalIcon);
-                    GUILayout.EndHorizontal();
-
-                    EditorGUILayout.EndVertical();
-                    EditorGUILayout.EndHorizontal();
-
-                    // ReSharper enable ConditionIsAlwaysTrueOrFalse
-
-                    GUILayout.Space(5);
+                    PackageStatusSection();
 
                     // Build out sections
                     AutomaticUpdatesSection(settings);
@@ -191,6 +81,127 @@ namespace GDX.Editor
                 },
                 keywords = SearchKeywords
             };
+        }
+
+        /// <summary>
+        ///     Build out the packages status section of the settings window.
+        /// </summary>
+        private static void PackageStatusSection()
+        {
+            GUI.enabled = true;
+
+            // ReSharper disable ConditionIsAlwaysTrueOrFalse
+            EditorGUILayout.BeginHorizontal();
+
+            // Information
+            GUILayout.BeginVertical();
+
+            GUILayout.Label(SettingsContent.AboutBlurb, SettingsStyles.WordWrappedLabelStyle);
+            GUILayout.Space(10);
+
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("-", SettingsStyles.BulletLayoutOptions);
+#if UNITY_2021_1_OR_NEWER
+            if (EditorGUILayout.LinkButton("Repository"))
+#else
+            if (GUILayout.Button("Repository", EditorStyles.linkLabel))
+#endif
+            {
+                GUIUtility.hotControl = 0;
+                Application.OpenURL(Strings.GitHubUri);
+            }
+
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("-", SettingsStyles.BulletLayoutOptions);
+#if UNITY_2021_1_OR_NEWER
+            if (EditorGUILayout.LinkButton("Documentation"))
+#else
+            if (GUILayout.Button("Documentation", EditorStyles.linkLabel))
+#endif
+            {
+                GUIUtility.hotControl = 0;
+                Application.OpenURL(Strings.DocumentationUri);
+            }
+
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("-", SettingsStyles.BulletLayoutOptions);
+#if UNITY_2021_1_OR_NEWER
+            if (EditorGUILayout.LinkButton("Report an Issue"))
+#else
+            if (GUILayout.Button("Report an Issue", EditorStyles.linkLabel))
+#endif
+            {
+                GUIUtility.hotControl = 0;
+                Application.OpenURL(Strings.GitHubIssuesUri);
+            }
+
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+
+
+            GUILayout.EndVertical();
+
+            GUILayout.Space(15);
+            GUILayout.FlexibleSpace();
+
+            // CHeck Packages
+            EditorGUILayout.BeginVertical(SettingsStyles.InfoBoxStyle);
+            GUILayout.Label("Packages Found", SettingsStyles.SubSectionHeaderTextStyle);
+            GUILayout.Space(5);
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Addressables");
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(Conditionals.HasAddressablesPackage
+                ? SettingsContent.TestPassedIcon
+                : SettingsContent.TestNormalIcon);
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Burst");
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(Conditionals.HasBurstPackage
+                ? SettingsContent.TestPassedIcon
+                : SettingsContent.TestNormalIcon);
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Jobs");
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(Conditionals.HasJobsPackage
+                ? SettingsContent.TestPassedIcon
+                : SettingsContent.TestNormalIcon);
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Mathematics");
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(Conditionals.HasMathematicsPackage
+                ? SettingsContent.TestPassedIcon
+                : SettingsContent.TestNormalIcon);
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Platforms");
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(Conditionals.HasPlatformsPackage
+                ? SettingsContent.TestPassedIcon
+                : SettingsContent.TestNormalIcon);
+            GUILayout.EndHorizontal();
+
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.EndHorizontal();
+
+            // ReSharper enable ConditionIsAlwaysTrueOrFalse
+
+            GUILayout.Space(5);
         }
 
         /// <summary>
@@ -215,11 +226,65 @@ namespace GDX.Editor
             EditorGUILayout.BeginHorizontal(SettingsStyles.InfoBoxStyle);
             if (UpdateProvider.LocalPackage.Definition != null)
             {
-                GUILayout.Label(
-                    UpdateProvider.UpdatePackageDefinition != null
-                        ? $"Local version: {UpdateProvider.LocalPackage.Definition.version} ({PackageProvider.GetFriendlyName(UpdateProvider.LocalPackage.InstallationMethod)})\nGitHub version: {UpdateProvider.UpdatePackageDefinition.version}\nLast checked on {UpdateProvider.GetLastChecked().ToString(Localization.LocalTimestampFormat)}."
-                        : $"Local version: {UpdateProvider.LocalPackage.Definition.version} ({PackageProvider.GetFriendlyName(UpdateProvider.LocalPackage.InstallationMethod)})\nGitHub version: Unknown\nLast checked on {UpdateProvider.GetLastChecked().ToString(Localization.LocalTimestampFormat)}.",
-                    EditorStyles.boldLabel);
+                GUILayout.BeginVertical();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Local Version:", EditorStyles.boldLabel, SettingsStyles.FixedWidth130LayoutOptions);
+                GUILayout.Label(UpdateProvider.LocalPackage.Definition.version);
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Installation Method:", EditorStyles.boldLabel,
+                    SettingsStyles.FixedWidth130LayoutOptions);
+                GUILayout.Label(PackageProvider.GetFriendlyName(UpdateProvider.LocalPackage.InstallationMethod));
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
+
+                // Handle additional information
+
+                switch (UpdateProvider.LocalPackage.InstallationMethod)
+                {
+                    case PackageProvider.InstallationType.UPMBranch:
+                    case PackageProvider.InstallationType.GitHubBranch:
+                    case PackageProvider.InstallationType.GitHub:
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label("Source Branch:", EditorStyles.boldLabel, SettingsStyles.FixedWidth130LayoutOptions);
+                        GUILayout.Label(!string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
+                            ? UpdateProvider.LocalPackage.SourceTag
+                            : "N/A");
+                        GUILayout.FlexibleSpace();
+                        GUILayout.EndHorizontal();
+                        break;
+                    case PackageProvider.InstallationType.UPMTag:
+                    case PackageProvider.InstallationType.GitHubTag:
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label("Source Tag:", EditorStyles.boldLabel, SettingsStyles.FixedWidth130LayoutOptions);
+                        GUILayout.Label(!string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
+                            ? UpdateProvider.LocalPackage.SourceTag
+                            : "N/A");
+                        GUILayout.FlexibleSpace();
+                        GUILayout.EndHorizontal();
+                        break;
+                    case PackageProvider.InstallationType.UPMCommit:
+                    case PackageProvider.InstallationType.GitHubCommit:
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label("Source Commit:", EditorStyles.boldLabel, SettingsStyles.FixedWidth130LayoutOptions);
+                        GUILayout.Label(!string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
+                            ? UpdateProvider.LocalPackage.SourceTag
+                            : "N/A");
+                        GUILayout.FlexibleSpace();
+                        GUILayout.EndHorizontal();
+                        break;
+                }
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Last Checked:", EditorStyles.boldLabel, SettingsStyles.FixedWidth130LayoutOptions);
+                GUILayout.Label(UpdateProvider.GetLastChecked().ToString(Localization.LocalTimestampFormat));
+                GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
+
+                GUILayout.EndVertical();
 
                 // Force things to the right
                 GUILayout.FlexibleSpace();
@@ -231,6 +296,7 @@ namespace GDX.Editor
                     {
                         Application.OpenURL(Strings.GitHubChangelogUri);
                     }
+
                     if (UpdateProvider.IsUpgradable())
                     {
                         if (GUILayout.Button("Update", SettingsStyles.ButtonStyle))

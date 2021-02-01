@@ -106,6 +106,12 @@ namespace GDX.Editor
         public readonly string PackageManifestPath;
 
         /// <summary>
+        ///     Additional information outline what sort of package has been detected. This usually will indicate a
+        ///     specified version to include, or a specific commit.
+        /// </summary>
+        public readonly string SourceTag;
+
+        /// <summary>
         ///     Initialize a new <see cref="PackageProvider" />.
         /// </summary>
         public PackageProvider()
@@ -149,14 +155,17 @@ namespace GDX.Editor
                 return;
             }
 
-            InstallationMethod = GetInstallationType();
+            // Lets figure out where we came from
+            (InstallationType installationType, string sourceTag) = GetInstallationType();
+            InstallationMethod = installationType;
+            SourceTag = sourceTag;
         }
 
         /// <summary>
-        /// Get a friendly <see cref="string"/> name of an <see cref="InstallationType"/>.
+        ///     Get a friendly <see cref="string" /> name of an <see cref="InstallationType" />.
         /// </summary>
-        /// <param name="installationType">The <see cref="InstallationType"/> to return a name for.</param>
-        /// <returns>A friendly name for <paramref name="installationType"/>.</returns>
+        /// <param name="installationType">The <see cref="InstallationType" /> to return a name for.</param>
+        /// <returns>A friendly name for <paramref name="installationType" />.</returns>
         public static string GetFriendlyName(InstallationType installationType)
         {
             switch (installationType)
@@ -189,22 +198,25 @@ namespace GDX.Editor
         /// <summary>
         ///     Determine the current <see cref="PackageProvider.InstallationType" /> of the GDX package.
         /// </summary>
-        /// <returns>The discovered <see cref="PackageProvider.InstallationType" />.</returns>
-        private InstallationType GetInstallationType()
+        /// <returns>
+        ///     A <see cref="Tuple" /> containing the discovered <see cref="PackageProvider.InstallationType" /> and any
+        ///     source tag.
+        /// </returns>
+        private (InstallationType, string) GetInstallationType()
         {
+            // NOTHING - If we dont have any sort of definition to work with, we really cant do anything, honest.
             if (Definition == null)
             {
-                return InstallationType.Unknown;
+                return (InstallationType.Unknown, null);
             }
 
             // Cache directory where the package.json was found
             string packageDirectory = Path.GetDirectoryName(PackageManifestPath);
             string projectDirectory = Application.dataPath.Substring(0, Application.dataPath.Length - 6);
 
-            // Unity Package Manager Check
+            // UNITY PACKAGE MANAGER - The package was added via UPM, now the fun task begins of identifying what sort of UPM inclusion was made.
             string projectManifestPath = Path.Combine(projectDirectory, "Packages", "manifest.json");
             string manifestLine = null;
-
             if (File.Exists(projectManifestPath))
             {
                 string[] projectManifest = File.ReadAllLines(projectManifestPath);
@@ -217,6 +229,7 @@ namespace GDX.Editor
                     {
                         continue;
                     }
+
                     manifestLine = projectManifest[i];
                     break;
                 }
@@ -227,65 +240,106 @@ namespace GDX.Editor
                 // Local UPM reference
                 if (manifestLine.Contains("\"file:"))
                 {
-                    return InstallationType.UPMLocal;
+                    return (InstallationType.UPMLocal, null);
                 }
 
                 // Time to see whats in the lock file
-                string packageManifestLockFilePath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6), "Packages", "packages-lock.json");
+                string packageManifestLockFilePath =
+                    Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6), "Packages",
+                        "packages-lock.json");
 
                 if (!File.Exists(packageManifestLockFilePath))
                 {
                     // No lock go bold!
-                    return InstallationType.UPM;
+                    return (InstallationType.UPM, null);
                 }
 
                 string[] lockFile = File.ReadAllLines(packageManifestLockFilePath);
                 int lockFileLength = lockFile.Length;
 
-                // Loop through lockfile for the package
+                // Loop through lockfile for the package to determine further information on how it has been added.
+                bool insidePackage = false;
                 for (int i = 0; i < lockFileLength; i++)
                 {
+                    string workingLine = lockFile[i].Trim();
+                    if (workingLine.StartsWith("\"com.dotbunny.gdx\""))
+                    {
+                        insidePackage = true;
+                        continue;
+                    }
+
+                    // We want to make sure that we are inside the package definition and that we are looking at the version line.
+                    if (!insidePackage || !workingLine.StartsWith("\"version\""))
+                    {
+                        continue;
+                    }
+
+                    string versionLine = workingLine.Substring(12, workingLine.Length - (12 + 2));
+                    string tag = versionLine.GetAfterLast("#");
+
+                    // No actual suffix, interesting.
+                    if (string.IsNullOrEmpty(tag))
+                    {
+                        return (InstallationType.UPM, null);
+                    }
+
+                    // All of our release tags start with 'v'
+                    if (tag.StartsWith("v"))
+                    {
+                        return (InstallationType.UPMTag, tag);
+                    }
+
+                    // Check for what we assume is a commit hash
+                    if (tag.Length == 40 && tag.HasLowerCase() && !tag.HasUpperCase())
+                    {
+                        return (InstallationType.GitHubCommit, tag);
+                    }
+
+                    return (InstallationType.UPMBranch, tag);
                 }
-/*
-{
-  "dependencies": {
-    "com.dotbunny.gdx": {
-      "version": "https://github.com/dotBunny/GDX.git#1.2",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "c15bde98d440c1d39aabeebc0e50fb7093f261d6"
-    },
- */
 
                 // Well we at least can say it was UPM bound
-                return  InstallationType.UPM;
+                return (InstallationType.UPM, null);
             }
 
-            // GitHub Clone Check
+            // GITHUB - The package was added via some sort of GitHub cloning into the project.
             string gitDirectory = Path.Combine(packageDirectory ?? string.Empty, ".git");
+
             if (packageDirectory != null && Directory.Exists(gitDirectory))
             {
-                string[] gitConfig = File.ReadAllLines(Path.Combine(gitDirectory, "config"));
-                int gitConfigLength = gitConfig.Length;
-                for (int i = 0; i < gitConfigLength; i++)
+                string gitConfigPath = Path.Combine(gitDirectory, "config");
+                if (File.Exists(gitConfigPath))
                 {
-                    // We look for a non-version locked URI
-                    if (gitConfig[i].Trim() == "url = https://github.com/dotBunny/GDX.git")
+                    string[] gitConfig = File.ReadAllLines(gitConfigPath);
+                    int gitConfigLength = gitConfig.Length;
+                    for (int i = 0; i < gitConfigLength; i++)
                     {
-                        return InstallationType.GitHub;
+                        // We look for a non-version locked URI
+                        if (gitConfig[i].Trim() != "url = https://github.com/dotBunny/GDX.git")
+                        {
+                            continue;
+                        }
+
+                        // Lets check for that HEAD file now to see if we can get a branch that is being targeted.
+                        string gitHeadPath = Path.Combine(gitDirectory, "HEAD");
+                        if (!File.Exists(gitHeadPath))
+                        {
+                            return (InstallationType.GitHub, null);
+                        }
+                        string[] gitHead = File.ReadAllLines(gitHeadPath);
+                        return (InstallationType.GitHubBranch, gitHead[0].GetAfterLast("/").Trim());
                     }
                 }
             }
 
-            // Assets Folder ... at least?
+            // ASSET DATABASE - A fallback where I guess this is what we are doing?
             if (packageDirectory != null && packageDirectory.StartsWith(Application.dataPath))
             {
-                return InstallationType.Assets;
+                return (InstallationType.Assets, null);
             }
 
             // Well we reached this point and don't actually know, so guess we should admit it.
-            return InstallationType.Unknown;
+            return (InstallationType.Unknown, null);
         }
 
         /// <summary>
