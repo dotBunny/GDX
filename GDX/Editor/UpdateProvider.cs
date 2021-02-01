@@ -99,21 +99,30 @@ namespace GDX.Editor
         {
             string messageStart =
                 $"There is a new version of GDX available ({UpdatePackageDefinition.version}).\n";
+            if (!IsUpgradable())
+            {
+                EditorUtility.DisplayDialog("GDX Update Available",
+                    $"{messageStart}Unfortunately we are unable to determine a proper upgrade path for your package. We are UNABLE to upgrade your package for you automatically.",
+                    "Doh!");
+                SetLastNotifiedVersion(UpdatePackageDefinition.version);
+            }
+
+
             switch (LocalPackage.InstallationMethod)
             {
-                case PackageProvider.InstallationType.Unknown:
-                    EditorUtility.DisplayDialog("GDX Update Available",
-                        $"{messageStart}Unfortunately we are unable to determine how your package was installed. We are UNABLE to upgrade your package for you.",
-                        "Doh!");
-                    SetLastNotifiedVersion(UpdatePackageDefinition.version);
-                    break;
-
+                // Currently this option doesnt function due to the IsUpgrade check, but its WIP
                 case PackageProvider.InstallationType.UPM:
                     if (EditorUtility.DisplayDialog("GDX Update Available",
                         $"{messageStart}Would you like to have the package attempt to upgrade itself through UPM to the newest version automatically?",
                         "Yes", "No"))
                     {
+                        // Delete the cached package if found
+                        string cacheFolderPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6), "Library", "PackageCache");
+                        string packageManifestLockFile = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6), "Packages", "packages-lock.json");
+
+
                         // TODO: Unsure if this actually will work if it is not an internal package?
+                        // SPOILER: It doesnt
                         Client.Add(Strings.PackageName);
                     }
                     else
@@ -300,6 +309,22 @@ namespace GDX.Editor
             }
 
             return lastTime;
+        }
+
+        /// <summary>
+        /// Can the local package be upgraded automatically through various means?
+        /// </summary>
+        /// <returns>A true/false answer to the question.</returns>
+        public static bool IsUpgradable()
+        {
+            switch (LocalPackage.InstallationMethod)
+            {
+                case PackageProvider.InstallationType.GitHub:
+                case PackageProvider.InstallationType.Assets:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         /// <summary>

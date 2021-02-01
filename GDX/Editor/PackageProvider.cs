@@ -32,15 +32,54 @@ namespace GDX.Editor
             UPM = 1,
 
             /// <summary>
+            ///     The package was installed via Unity's traditional UPM process, however with a branch specified.
+            /// </summary>
+            // ReSharper disable once InconsistentNaming
+            UPMBranch = 2,
+
+            /// <summary>
+            ///     The package was installed via Unity's traditional UPM process, however with a tag specified.
+            /// </summary>
+            // ReSharper disable once InconsistentNaming
+            UPMTag = 3,
+
+            /// <summary>
+            ///     The package was installed via Unity's traditional UPM process, however with a commit specified.
+            /// </summary>
+            // ReSharper disable once InconsistentNaming
+            UPMCommit = 4,
+
+            /// <summary>
+            ///     The package was installed via Unity's traditional UPM process, however with local file reference.
+            /// </summary>
+            // ReSharper disable once InconsistentNaming
+            UPMLocal = 5,
+
+            /// <summary>
             ///     The package was cloned into a folder in the project from GitHub.
             /// </summary>
-            GitHub = 2,
+            GitHub = 10,
+
+            /// <summary>
+            ///     The package was cloned into a folder in the project from GitHub, however with a branch specified.
+            /// </summary>
+            GitHubBranch = 11,
+
+            /// <summary>
+            ///     The package was cloned into a folder in the project from GitHub, however with a tag specified.
+            /// </summary>
+            GitHubTag = 12,
+
+            /// <summary>
+            ///     The package was cloned into a folder in the project from GitHub, however with a commit specified.
+            /// </summary>
+            GitHubCommit = 13,
 
             /// <summary>
             ///     The package was found in the assets folder. This could be a Asset Store installation or even
             ///     just a zip decompressed into a project.
             /// </summary>
-            Assets = 3
+            Assets = 20
         }
 
         /// <summary>
@@ -114,6 +153,40 @@ namespace GDX.Editor
         }
 
         /// <summary>
+        /// Get a friendly <see cref="string"/> name of an <see cref="InstallationType"/>.
+        /// </summary>
+        /// <param name="installationType">The <see cref="InstallationType"/> to return a name for.</param>
+        /// <returns>A friendly name for <paramref name="installationType"/>.</returns>
+        public static string GetFriendlyName(InstallationType installationType)
+        {
+            switch (installationType)
+            {
+                case InstallationType.UPM:
+                    return "Unity Package Manager";
+                case InstallationType.UPMBranch:
+                    return "Unity Package Manager (Branch)";
+                case InstallationType.UPMTag:
+                    return "Unity Package Manager (Tag)";
+                case InstallationType.UPMCommit:
+                    return "Unity Package Manager (Commit)";
+                case InstallationType.UPMLocal:
+                    return "Unity Package Manager (Local)";
+                case InstallationType.GitHub:
+                    return "GitHub";
+                case InstallationType.GitHubBranch:
+                    return "GitHub (Branch)";
+                case InstallationType.GitHubTag:
+                    return "GitHub (Tag)";
+                case InstallationType.GitHubCommit:
+                    return "GitHub (Commit)";
+                case InstallationType.Assets:
+                    return "Asset Database";
+                default:
+                    return "Unknown";
+            }
+        }
+
+        /// <summary>
         ///     Determine the current <see cref="PackageProvider.InstallationType" /> of the GDX package.
         /// </summary>
         /// <returns>The discovered <see cref="PackageProvider.InstallationType" />.</returns>
@@ -130,17 +203,63 @@ namespace GDX.Editor
 
             // Unity Package Manager Check
             string projectManifestPath = Path.Combine(projectDirectory, "Packages", "manifest.json");
+            string manifestLine = null;
+
             if (File.Exists(projectManifestPath))
             {
                 string[] projectManifest = File.ReadAllLines(projectManifestPath);
                 int projectManifestLength = projectManifest.Length;
+
+                // Loop through manifest looking for the package name
                 for (int i = 0; i < projectManifestLength; i++)
                 {
-                    if (projectManifest[i].Contains(Strings.PackageName))
+                    if (!projectManifest[i].Contains(Strings.PackageName))
                     {
-                        return projectManifest[i].Contains("\"file:") ? InstallationType.Unknown : InstallationType.UPM;
+                        continue;
                     }
+                    manifestLine = projectManifest[i];
+                    break;
                 }
+            }
+
+            if (!string.IsNullOrEmpty(manifestLine))
+            {
+                // Local UPM reference
+                if (manifestLine.Contains("\"file:"))
+                {
+                    return InstallationType.UPMLocal;
+                }
+
+                // Time to see whats in the lock file
+                string packageManifestLockFilePath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6), "Packages", "packages-lock.json");
+
+                if (!File.Exists(packageManifestLockFilePath))
+                {
+                    // No lock go bold!
+                    return InstallationType.UPM;
+                }
+
+                string[] lockFile = File.ReadAllLines(packageManifestLockFilePath);
+                int lockFileLength = lockFile.Length;
+
+                // Loop through lockfile for the package
+                for (int i = 0; i < lockFileLength; i++)
+                {
+                }
+/*
+{
+  "dependencies": {
+    "com.dotbunny.gdx": {
+      "version": "https://github.com/dotBunny/GDX.git#1.2",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "c15bde98d440c1d39aabeebc0e50fb7093f261d6"
+    },
+ */
+
+                // Well we at least can say it was UPM bound
+                return  InstallationType.UPM;
             }
 
             // GitHub Clone Check
@@ -151,6 +270,7 @@ namespace GDX.Editor
                 int gitConfigLength = gitConfig.Length;
                 for (int i = 0; i < gitConfigLength; i++)
                 {
+                    // We look for a non-version locked URI
                     if (gitConfig[i].Trim() == "url = https://github.com/dotBunny/GDX.git")
                     {
                         return InstallationType.GitHub;

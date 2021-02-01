@@ -217,8 +217,8 @@ namespace GDX.Editor
             {
                 GUILayout.Label(
                     UpdateProvider.UpdatePackageDefinition != null
-                        ? $"Local version: {UpdateProvider.LocalPackage.Definition.version} ({UpdateProvider.LocalPackage.InstallationMethod.ToString()})\nGitHub version: {UpdateProvider.UpdatePackageDefinition.version}\nLast checked on {UpdateProvider.GetLastChecked().ToString(Localization.LocalTimestampFormat)}."
-                        : $"Local version: {UpdateProvider.LocalPackage.Definition.version} ({UpdateProvider.LocalPackage.InstallationMethod.ToString()})\nGitHub version: Unknown\nLast checked on {UpdateProvider.GetLastChecked().ToString(Localization.LocalTimestampFormat)}.",
+                        ? $"Local version: {UpdateProvider.LocalPackage.Definition.version} ({PackageProvider.GetFriendlyName(UpdateProvider.LocalPackage.InstallationMethod)})\nGitHub version: {UpdateProvider.UpdatePackageDefinition.version}\nLast checked on {UpdateProvider.GetLastChecked().ToString(Localization.LocalTimestampFormat)}."
+                        : $"Local version: {UpdateProvider.LocalPackage.Definition.version} ({PackageProvider.GetFriendlyName(UpdateProvider.LocalPackage.InstallationMethod)})\nGitHub version: Unknown\nLast checked on {UpdateProvider.GetLastChecked().ToString(Localization.LocalTimestampFormat)}.",
                     EditorStyles.boldLabel);
 
                 // Force things to the right
@@ -231,10 +231,12 @@ namespace GDX.Editor
                     {
                         Application.OpenURL(Strings.GitHubChangelogUri);
                     }
-
-                    if (GUILayout.Button("Update", SettingsStyles.ButtonStyle))
+                    if (UpdateProvider.IsUpgradable())
                     {
-                        UpdateProvider.AttemptUpgrade();
+                        if (GUILayout.Button("Update", SettingsStyles.ButtonStyle))
+                        {
+                            UpdateProvider.AttemptUpgrade();
+                        }
                     }
                 }
                 else
