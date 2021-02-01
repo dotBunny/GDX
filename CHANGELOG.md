@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `GDX.StringExtensions.GetLowerCaseHashCode()` renamed to `GDX.StringExtensions.GetStableLowerCaseHashCode()`.
 - `GDX.StringExtensions.GetUpperCaseHashCode()` renamed to `GDX.StringExtensions.GetStableUpperCaseHashCode()`.
 - `GDX.ByteExtensions.GetValueHashCode()` renamed to `GDX.ByteExtensions.GetStableHashCode()`.
+- Better package installation type detection and handling of upgrades. This has cut down the possibilities of automatic upgrades, however efforts will continue to expand on this functionality.
 
 ## [1.2.1] - 2021-01-24
 ***"Old Is New"***

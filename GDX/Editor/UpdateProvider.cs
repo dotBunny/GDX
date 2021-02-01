@@ -104,9 +104,11 @@ namespace GDX.Editor
                 EditorUtility.DisplayDialog("GDX Update Available",
                     $"{messageStart}Unfortunately we are unable to determine a proper upgrade path for your package. We are UNABLE to upgrade your package for you automatically.",
                     "Doh!");
-                SetLastNotifiedVersion(UpdatePackageDefinition.version);
-            }
 
+                SetLastNotifiedVersion(UpdatePackageDefinition.version);
+
+                return;
+            }
 
             switch (LocalPackage.InstallationMethod)
             {
@@ -116,14 +118,7 @@ namespace GDX.Editor
                         $"{messageStart}Would you like to have the package attempt to upgrade itself through UPM to the newest version automatically?",
                         "Yes", "No"))
                     {
-                        // Delete the cached package if found
-                        string cacheFolderPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6), "Library", "PackageCache");
-                        string packageManifestLockFile = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6), "Packages", "packages-lock.json");
-
-
-                        // TODO: Unsure if this actually will work if it is not an internal package?
-                        // SPOILER: It doesnt
-                        Client.Add(Strings.PackageName);
+                        UpgradeUnityPackageManager();
                     }
                     else
                     {
@@ -137,139 +132,19 @@ namespace GDX.Editor
                         $"{messageStart}Would you like your cloned repository updated?\n\nIMPORTANT!\n\nThis will \"reset hard\" and \"pull\" the repository, wiping any local changes made.",
                         "Yes", "No"))
                     {
-                        // ReSharper disable once HeapView.ObjectAllocation.Evident
-                        Process process = new Process();
-                        // ReSharper disable once HeapView.ObjectAllocation.Evident
-                        ProcessStartInfo startInfo = new ProcessStartInfo
-                        {
-                            WindowStyle = ProcessWindowStyle.Normal, FileName = "git.exe"
-                        };
-                        process.StartInfo = startInfo;
-
-                        string targetPath = Path.GetDirectoryName(LocalPackage.PackageManifestPath);
-                        if (targetPath != null)
-                        {
-                            // Handle VCS
-                            if (Provider.enabled && Provider.isActive)
-                            {
-                                AssetList checkoutAssets = VersionControl.GetAssetListFromFolder(targetPath);
-                                Task checkoutTask = Provider.Checkout(checkoutAssets, CheckoutMode.Both);
-                                checkoutTask.Wait();
-                            }
-
-                            try
-                            {
-                                // Pause asset database
-                                AssetDatabase.StartAssetEditing();
-
-                                if (LocalPackage?.PackageManifestPath != null)
-                                {
-                                    startInfo.WorkingDirectory = targetPath;
-
-                                    startInfo.Arguments = "reset --hard";
-                                    process.Start();
-                                    process.WaitForExit();
-
-                                    startInfo.Arguments = "pull";
-                                    process.Start();
-                                    process.WaitForExit();
-
-                                    // Lets force the import anyways now
-                                    AssetDatabase.ImportAsset(LocalPackage.PackageAssetPath);
-                                }
-                            }
-                            finally
-                            {
-                                // Return asset database monitoring back to normal
-                                AssetDatabase.StopAssetEditing();
-                            }
-                        }
+                       UpgradeGitHub();
                     }
                     else
                     {
                         SetLastNotifiedVersion(UpdatePackageDefinition.version);
                     }
-
                     break;
                 case PackageProvider.InstallationType.Assets:
                     if (EditorUtility.DisplayDialog("GDX Update Available",
                         $"{messageStart}Would you like your install replaced?\n\nIMPORTANT!\n\nThis will remove any local changes to GDX.",
                         "Yes", "No"))
                     {
-                        // Get a temporary file
-                        // TODO: This will need to be changed for newer .NET (System.IO.GetTempFileName())
-                        string tempFile = Path.GetTempFileName();
-
-                        // Download the file
-                        EditorUtility.DisplayProgressBar("GDX", "Downloading Update ...", 0.25f);
-                        try
-                        {
-#if UNITY_2020_2_OR_NEWER
-                            using WebClient webClient = new WebClient();
-                            webClient.DownloadFile(GitHubLatestUri + UpdatePackageDefinition.version + ".tar.gz",
-                                tempFile);
-#else
-                            using (WebClient webClient = new WebClient())
-                            {
-                                webClient.DownloadFile(GitHubLatestUri + UpdatePackageDefinition.version + ".tar.gz",
-                                    tempFile);
-                            }
-#endif
-                        }
-                        catch (Exception)
-                        {
-                            return;
-                        }
-                        finally
-                        {
-                            EditorUtility.ClearProgressBar();
-                        }
-
-
-                        string tempExtractFolder = Path.Combine(Path.GetTempPath(), Strings.PackageName);
-
-                        // Remove previous upgrade folder (if it exists)
-                        if (Directory.Exists(tempExtractFolder))
-                        {
-                            Directory.Delete(tempExtractFolder, true);
-                        }
-
-                        Platform.EnsureFolderHierarchyExists(tempExtractFolder);
-
-                        // Extract downloaded tarball to the temp folder
-                        TarFile.ExtractToDirectory(tempFile, tempExtractFolder, true);
-
-                        // Get desired target placement
-                        string targetPath = Path.GetDirectoryName(LocalPackage.PackageManifestPath);
-
-                        // Handle VCS
-                        if (Provider.enabled && Provider.isActive)
-                        {
-                            AssetList checkoutAssets = VersionControl.GetAssetListFromFolder(targetPath);
-                            Task checkoutTask = Provider.Checkout(checkoutAssets, CheckoutMode.Both);
-                            checkoutTask.Wait();
-                        }
-
-                        // Remove all existing content
-                        if (targetPath != null)
-                        {
-                            try
-                            {
-                                AssetDatabase.StartAssetEditing();
-                                Directory.Delete(targetPath, true);
-
-                                // Drop in new content
-                                Directory.Move(
-                                    Path.Combine(tempExtractFolder, "GDX-" + UpdatePackageDefinition.version),
-                                    targetPath);
-
-                                AssetDatabase.ImportAsset(LocalPackage.PackageAssetPath);
-                            }
-                            finally
-                            {
-                                AssetDatabase.StopAssetEditing();
-                            }
-                        }
+                        UpgradeAssetDatabase();
                     }
                     else
                     {
@@ -387,6 +262,155 @@ namespace GDX.Editor
                 // Don't go any further if there is an error
                 return null;
             }
+        }
+
+        /// <summary>
+        ///     Upgrade the package, with the understanding that it is located in the Asset database.
+        /// </summary>
+        private static void UpgradeAssetDatabase()
+        {
+            // Get a temporary file
+            // TODO: This will need to be changed for newer .NET (System.IO.GetTempFileName())
+            string tempFile = Path.GetTempFileName();
+
+            // Download the file
+            EditorUtility.DisplayProgressBar("GDX", "Downloading Update ...", 0.25f);
+            try
+            {
+    #if UNITY_2020_2_OR_NEWER
+                using WebClient webClient = new WebClient();
+                webClient.DownloadFile(GitHubLatestUri + UpdatePackageDefinition.version + ".tar.gz",
+                    tempFile);
+    #else
+                using (WebClient webClient = new WebClient())
+                {
+                    webClient.DownloadFile(GitHubLatestUri + UpdatePackageDefinition.version + ".tar.gz",
+                        tempFile);
+                }
+    #endif
+            }
+            catch (Exception)
+            {
+                return;
+            }
+            finally
+            {
+                EditorUtility.ClearProgressBar();
+            }
+
+
+            string tempExtractFolder = Path.Combine(Path.GetTempPath(), Strings.PackageName);
+
+            // Remove previous upgrade folder (if it exists)
+            if (Directory.Exists(tempExtractFolder))
+            {
+                Directory.Delete(tempExtractFolder, true);
+            }
+
+            Platform.EnsureFolderHierarchyExists(tempExtractFolder);
+
+            // Extract downloaded tarball to the temp folder
+            TarFile.ExtractToDirectory(tempFile, tempExtractFolder, true);
+
+            // Get desired target placement
+            string targetPath = Path.GetDirectoryName(LocalPackage.PackageManifestPath);
+
+            // Handle VCS
+            if (Provider.enabled && Provider.isActive)
+            {
+                AssetList checkoutAssets = VersionControl.GetAssetListFromFolder(targetPath);
+                Task checkoutTask = Provider.Checkout(checkoutAssets, CheckoutMode.Both);
+                checkoutTask.Wait();
+            }
+
+            // Remove all existing content
+            if (targetPath != null)
+            {
+                try
+                {
+                    AssetDatabase.StartAssetEditing();
+                    Directory.Delete(targetPath, true);
+
+                    // Drop in new content
+                    Directory.Move(
+                        Path.Combine(tempExtractFolder, "GDX-" + UpdatePackageDefinition.version),
+                        targetPath);
+
+                    AssetDatabase.ImportAsset(LocalPackage.PackageAssetPath);
+                }
+                finally
+                {
+                    AssetDatabase.StopAssetEditing();
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Upgrade the package, with the understanding that is a standard GitHub clone.
+        /// </summary>
+        private static void UpgradeGitHub()
+        {
+            // ReSharper disable once HeapView.ObjectAllocation.Evident
+            Process process = new Process();
+            // ReSharper disable once HeapView.ObjectAllocation.Evident
+            ProcessStartInfo startInfo = new ProcessStartInfo
+            {
+                WindowStyle = ProcessWindowStyle.Normal, FileName = "git.exe"
+            };
+            process.StartInfo = startInfo;
+
+            string targetPath = Path.GetDirectoryName(LocalPackage.PackageManifestPath);
+            if (targetPath != null)
+            {
+                // Handle VCS
+                if (Provider.enabled && Provider.isActive)
+                {
+                    AssetList checkoutAssets = VersionControl.GetAssetListFromFolder(targetPath);
+                    Task checkoutTask = Provider.Checkout(checkoutAssets, CheckoutMode.Both);
+                    checkoutTask.Wait();
+                }
+
+                try
+                {
+                    // Pause asset database
+                    AssetDatabase.StartAssetEditing();
+
+                    if (LocalPackage?.PackageManifestPath != null)
+                    {
+                        startInfo.WorkingDirectory = targetPath;
+
+                        startInfo.Arguments = "reset --hard";
+                        process.Start();
+                        process.WaitForExit();
+
+                        startInfo.Arguments = "pull";
+                        process.Start();
+                        process.WaitForExit();
+
+                        // Lets force the import anyways now
+                        AssetDatabase.ImportAsset(LocalPackage.PackageAssetPath);
+                    }
+                }
+                finally
+                {
+                    // Return asset database monitoring back to normal
+                    AssetDatabase.StopAssetEditing();
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Upgrade the package, with the understanding that it was added via UPM.
+        /// </summary>
+        private static void UpgradeUnityPackageManager()
+        {
+            // Delete the cached package if found
+            string cacheFolderPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6), "Library", "PackageCache");
+            string packageManifestLockFile = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6), "Packages", "packages-lock.json");
+
+            // TODO: Unsure if this actually will work if it is not an internal package?
+            // SPOILER: It doesnt
+            Client.Add(Strings.PackageName);
         }
     }
 }
