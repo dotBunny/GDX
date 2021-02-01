@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `Slope()` calculated slope value
 - `GDX.Vector3Extensions.NearestIndex()` have been added to find the closest position in an array of positions.
 - `GDX.StringExtensions.TryParseVector2()` and `GDX.StringExtensions.TryParseVector3()` will rehydrate `0,0` and `0,0,0` formatted strings.
+- `GDX.GameObjectExtensions.GetFirstComponentInChildrenComplex()` and `GDX.MonoBehaviourExtensions.GetFirstComponentInChildrenComplex()`
 
 ### Changed
 - Lowered feature requirement of `com.unity.jobs` to `0.2.7`.
