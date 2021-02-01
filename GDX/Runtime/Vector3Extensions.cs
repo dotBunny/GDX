@@ -55,6 +55,24 @@ namespace GDX
         }
 
         /// <summary>
+        ///     Get the horizontal distance between two <see cref="Vector3"/> points.
+        /// </summary>
+        /// <remarks>Ignores the Y-axis completely.</remarks>
+        /// <param name="targetVector3">Point A</param>
+        /// <param name="otherVector3">Point B</param>
+        /// <returns>The horizontal distance.</returns>
+        public static float HorizontalDistance(this Vector3 targetVector3, Vector3 otherVector3)
+        {
+            float num1 = targetVector3.x - otherVector3.x;
+            float num2 = targetVector3.z - otherVector3.z;
+#if GDX_MATHEMATICS
+            return (float)math.sqrt(num1 * (double)num1 + num2 * (double)num2);
+#else
+            return (float)Math.Sqrt(num1 * (double) num1 + num2 * (double) num2);
+#endif
+        }
+
+        /// <summary>
         ///     Get the midpoint between two <see cref="Vector3" />s.
         /// </summary>
         /// <param name="targetVector3">Point A</param>
