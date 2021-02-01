@@ -68,7 +68,7 @@ namespace GDX
 #if GDX_MATHEMATICS
             return (float)math.sqrt(num1 * (double)num1 + num2 * (double)num2);
 #else
-            return (float)Math.Sqrt(num1 * (double) num1 + num2 * (double) num2);
+            return Mathf.Sqrt(num1 * num1 + num2 * num2);
 #endif
         }
 
