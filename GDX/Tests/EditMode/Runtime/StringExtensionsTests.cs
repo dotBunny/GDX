@@ -3,6 +3,7 @@
 
 using GDX;
 using NUnit.Framework;
+using UnityEngine;
 #if GDX_PERFORMANCETESTING
 using Unity.PerformanceTesting;
 
@@ -100,13 +101,14 @@ namespace Runtime
         [Category("GDX.Tests")]
         public void True_SplitCamelCase_CamelCase()
         {
-            Assert.IsTrue("SomethingSomethingDarkSide".SplitCamelCase(" ") == "Something Something Dark Side");
+            Assert.IsTrue("SomethingSomethingDarkSide".SplitCamelCase() == "Something Something Dark Side");
         }
+
         [Test]
         [Category("GDX.Tests")]
         public void True_SplitCamelCase_camelCase()
         {
-            Assert.IsTrue("somethingSomethingDarkSide".SplitCamelCase(" ") == "something Something Dark Side");
+            Assert.IsTrue("somethingSomethingDarkSide".SplitCamelCase() == "something Something Dark Side");
         }
 
         [Test]
@@ -116,6 +118,7 @@ namespace Runtime
             string encrypted = SimpleTestString.Encrypt();
             Assert.IsTrue(encrypted.Decrypt() == SimpleTestString, "Expected strings to match.");
         }
+
         [Test]
         [Category("GDX.Tests")]
         public void Equal_Encrypt_Decrypt_ComplexString()
@@ -194,6 +197,74 @@ namespace Runtime
             int oldHash = UpperCaseTestString.ToUpper().GetHashCode();
             int newHash = UpperCaseTestString.GetStableUpperCaseHashCode();
             Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void Equal_TryParseVector2_UnityFormat()
+        {
+            string sourceData = "1, 2";
+            Vector2 successValue = new Vector2(1, 2);
+
+            if (sourceData.TryParseVector2(out Vector2 parsedLocation))
+            {
+                Assert.IsTrue(successValue == parsedLocation, $"Expected {successValue}, found {parsedLocation}");
+            }
+            else
+            {
+                Assert.Fail($"Unable to parse provided source data ({sourceData}).");
+            }
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void Equal_TryParseVector2_NoSpaces()
+        {
+            string sourceData = "1.5,2";
+            Vector2 successValue = new Vector2(1.5f, 2);
+
+            if (sourceData.TryParseVector2(out Vector2 parsedLocation))
+            {
+                Assert.IsTrue(successValue == parsedLocation, $"Expected {successValue}, found {parsedLocation}");
+            }
+            else
+            {
+                Assert.Fail($"Unable to parse provided source data ({sourceData}).");
+            }
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void Equal_TryParseVector3_UnityFormat()
+        {
+            string sourceData = "3, 2, 1";
+            Vector3 successValue = new Vector3(3, 2, 1);
+
+            if (sourceData.TryParseVector3(out Vector3 parsedLocation))
+            {
+                Assert.IsTrue(successValue == parsedLocation, $"Expected {successValue}, found {parsedLocation}");
+            }
+            else
+            {
+                Assert.Fail($"Unable to parse provided source data ({sourceData}).");
+            }
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void Equal_TryParseVector3_NoSpaces()
+        {
+            string sourceData = "3,2,1";
+            Vector3 successValue = new Vector3(3, 2, 1);
+
+            if (sourceData.TryParseVector3(out Vector3 parsedLocation))
+            {
+                Assert.IsTrue(successValue == parsedLocation, $"Expected {successValue}, found {parsedLocation}");
+            }
+            else
+            {
+                Assert.Fail($"Unable to parse provided source data ({sourceData}).");
+            }
         }
 
 #if GDX_PERFORMANCETESTING

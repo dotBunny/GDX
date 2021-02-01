@@ -69,5 +69,44 @@ namespace GDX
                 targetVector3.z + (otherVector3.z - targetVector3.z) * 0.5f
             );
         }
+
+        /// <summary>
+        ///     Find the index of the <see cref="Vector3" /> in <paramref name="otherVector3" /> that is nearest to the
+        ///     <paramref name="targetVector3" />.
+        /// </summary>
+        /// <param name="targetVector3">The <see cref="Vector3" /> to use as the point of reference.</param>
+        /// <param name="otherVector3">An array of <see cref="Vector3" /> positions to evaluate for which one is nearest.</param>
+        /// <returns>
+        ///     The index of the nearest <paramref name="otherVector3" /> element to <paramref name="targetVector3" />.
+        ///     Returning -1 if the the <paramref name="otherVector3" /> has no elements or is null.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int NearestIndex(this Vector3 targetVector3, Vector3[] otherVector3)
+        {
+            // We found nothing to compare against
+            if (otherVector3 == null || otherVector3.Length == 0)
+            {
+                return -1;
+            }
+
+            float closestSquareMagnitude = float.PositiveInfinity;
+            int closestIndex = -1;
+            int otherVector3Length = otherVector3.Length;
+
+            // Loop through the provided points and figure out what is closest (close enough).
+            for (int i = 0; i < otherVector3Length; i++)
+            {
+                float squareDistance = (otherVector3[i] - targetVector3).sqrMagnitude;
+                if (float.IsNaN(squareDistance) || !(squareDistance < closestSquareMagnitude))
+                {
+                    continue;
+                }
+
+                closestSquareMagnitude = squareDistance;
+                closestIndex = i;
+            }
+
+            return closestIndex;
+        }
     }
 }

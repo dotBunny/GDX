@@ -3,6 +3,7 @@
 
 using GDX;
 using NUnit.Framework;
+using UnityEditor.VersionControl;
 using UnityEngine;
 #if GDX_PERFORMANCETESTING
 
@@ -63,6 +64,32 @@ namespace Runtime
             Vector2 result = a.Midpoint(b);
             Vector2 expected = new Vector2(0.5f, 0.5f);
             Assert.IsTrue(expected == result, $"Expected {result} but got {result}");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_Nearest_NoData()
+        {
+            Vector2 a = Vector2.down;
+            Assert.IsTrue(a.NearestIndex(null) == -1, "Expected a return of -1 for null data");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_Nearest_Simple()
+        {
+            Vector2 target = Vector2.one;
+
+            Vector2[] searchData = {
+                new Vector2(0,0),
+                new Vector2(1.1f, 1.1f),
+                new Vector2(2,2),
+                new Vector2(3,3),
+                new Vector2(3,1)
+            };
+
+            int nearestIndex =  target.NearestIndex(searchData);
+            Assert.IsTrue(nearestIndex == 1, $"Expected index of 1, found {nearestIndex}.");
         }
     }
 }

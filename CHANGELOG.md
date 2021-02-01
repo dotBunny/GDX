@@ -9,8 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Generated documentation](https://gdx.dotbunny.com/) now including `private` and `internal` classes for visibility.
 - Moved all static `GUIContent` from settings window into new `SettingsContent`.
 - Moved all static layout methods from `SettingsStyles` into `SettingsLayout`.
-- `GDX.Developer.Conditionals` contains constant status indicators of packages used by `GDX`. Useful for determine if a certain featureset is available.
+- `GDX.Developer.Conditionals` contains constant status indicators of packages used by `GDX`. Useful for determine if a certain feature set is available.
 - Properly set define GDX_PLATFORMS based on the `com.unity.platforms` package.
+- `GDX.Localization.GetHumanReadableFileSize()` is a method to create more readable file sizes.
+- `GDX.Vector2Extensions`
+  - `NearestIndex()` to find the closest position in an array
+  - `Slope()` calculated slope value
+- `GDX.Vector3Extensions.NearestIndex()` have been added to find the closest position in an array of positions.
+- `GDX.StringExtensions.TryParseVector2()` and `GDX.StringExtensions.TryParseVector3()` will rehydrate `0,0` and `0,0,0` formatted strings.
+
 ### Changed
 - Lowered feature requirement of `com.unity.jobs` to `0.2.7`.
 - Lowered feature requirement of `com.unity.burst` to `1.0.0`.
