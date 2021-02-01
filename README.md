@@ -27,7 +27,7 @@ The `GDX` package can be dropped into any compatible [Unity](http://unity3d.com)
 
 ## Contributing
 GDX is an open-source project and we encourage and welcome contributions.
-> Please review the manual's [Contributing]](https://gdx.dotbunny.com/manual/contributing.html) section for info on how you can contribute to this package and our awesome community. :heart:
+> Please review the manual's [Contributing](https://gdx.dotbunny.com/manual/contributing.html) section for info on how you can contribute to this package and our awesome community. :heart:
 
 ## License
 GDX is licensed under the [MIT License](https://choosealicense.com/licenses/mit/).
