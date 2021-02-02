@@ -17,11 +17,6 @@ namespace GDX
     public class GDXConfig : ScriptableObject
     {
         /// <summary>
-        ///     Resource path at runtime.
-        /// </summary>
-        public const string ResourcesPath = "GDX/GDXConfig.asset";
-
-        /// <summary>
         ///     Should GDX check for updates at editor time?
         /// </summary>
         public bool updateProviderCheckForUpdates = true;
