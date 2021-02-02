@@ -2,7 +2,7 @@
 uid: features
 ---
 # Features
-This is an overview of some of the notable features contained within the `GDX` package. For a more thorough list of functionality make sure to explore the [API documentation](/api/index.html) directly.
+This is an overview of *some of* the notable features contained within the `GDX` package. For a more thorough list of functionality make sure to explore the [API documentation](/api/index.html) directly.
 
 ## Extensions
 A set of functionality, aggressively  inlined where appropriate to augment workflows with existing or provided types and collections.
@@ -14,8 +14,12 @@ Feature | Description
 :--- | :---
 [Addressables](xref:GDX.AddressablesExtensions) | A collection of useful spawning and management functionality built on top of the `com.unity.addressables` package. For example identifying if a `AssetReference` is valid and able to be instantiated.
 [Array](xref:GDX.ArrayExtensions) | A bunch of `Array` operations which are commonly used by other methods. For example getting the last or first index of an item or value in an `Array`.
+[BoxCollider](xref:GDX.BoxColliderExtensions) | Find out if a position is contained within a `BoxCollider`.
 [Byte](xref:GDX.ByteExtensions) | Contains a simple non-allocating extension method to get a stable hash code from an array of `bytes`, maybe more someday.
+[CapsuleCollider](xref:GDX.CapsuleColliderExtensions) | Simple helper for finding out which way a `CapsuleCollider` is oriented.
+[GameObject](xref:GDX.GameObjectExtensions) | After this long, even Unity can use a little help with some of its fundamental component based systems.
 [IList](xref:GDX.IListExtensions) | A common set of methods for collections allowing for optimized value and item checks, as well as some extras.
+[Rigidbody](xref:GDX.RigidbodyExtensions) | A method for determining the moment of inertia.
 [String](xref:GDX.StringExtensions) | The thing that started it all, a vast collection of extension methods covering a wide range from encryption to hash codes, to simply finding content an existing `string`.
 [Vector2](xref:GDX.Vector2Extensions) | Additional functionality for common calculations done with `Vector2`. For example, determining approximately if two `Vector2` are the same efficiently, or finding the midpoint between two `Vector2`. This automatically switches to using `com.unity.mathematics` functionality if available.
 [Vector3](xref:GDX.Vector3Extensions) | Additional functionality for common calculations done with `Vector3`. For example, determining approximately if two `Vector3` are the same efficiently, or finding the midpoint between two `Vector3`. This automatically switches to using `com.unity.mathematics` functionality if available.
@@ -53,6 +57,7 @@ Feature | Description
 [Localization](xref:GDX.Localization) | ISO language based formatting functionality.
 [Memory](xref:GDX.Memory) | Specific functionality to ensure the heap is kept as small as possible.
 [Platform](xref:GDX.Platform) | A bunch of Hardware and I/O related methods.
+[Smoothing](xref:GDX.Mathematics.Smoothing) | Some fancy smoothing functions.
 
 
 ## Developer Tools
