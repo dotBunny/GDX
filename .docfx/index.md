@@ -1,3 +1,8 @@
+---
+_disableToc: true
+_disableBreadcrumb: true
+_disableContribution: true
+---
 # Game Development Extensions
 [![GDX](/images/home/gdx-banner.png)](https://github.com/dotBunny/GDX)
 
@@ -7,3 +12,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/dotBunny/GDX/blob/main/LICENSE)
 
 > Game Development Extensions, a battle-tested library of game-ready high-performance C# code.
+
+<a class="btn btn-primary" href="/manual/getting-started.html" role="button">Getting Started</a>
+<a class="btn btn-primary" href="/manual/features.html" role="button">Features</a>

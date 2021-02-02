@@ -12,7 +12,7 @@ namespace GDX.Editor
     public static class ConfigProvider
     {
         /// <summary>
-        /// Get/Create an instance of the <see cref="GDXConfig"/> <see cref="ScriptableObject"/>.
+        /// Get/Create an instance of the <see cref="GDXConfig"/> <see cref="UnityEngine.ScriptableObject"/>.
         /// </summary>
         /// <returns>A fully realized <see cref="GDXConfig"/>.</returns>
         public static GDXConfig Get()
@@ -45,9 +45,9 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        /// Get a <see cref="SerializedObject"/> for raw editing of the <see cref="GDXConfig"/>.
+        /// Get a <see cref="UnityEditor.SerializedObject"/> for raw editing of the <see cref="GDXConfig"/>.
         /// </summary>
-        /// <returns>A <see cref="SerializedObject"/>.</returns>
+        /// <returns>A <see cref="UnityEditor.SerializedObject"/>.</returns>
         public static SerializedObject GetSerializedConfig()
         {
             // ReSharper disable once HeapView.ObjectAllocation.Evident

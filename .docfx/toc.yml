@@ -1,9 +1,11 @@
 - name: Manual
   href: manual/
-- name: Scripting API
+- name: API
   href: api/
   homepage: api/index.md
 - name: Changelog
   href: changelog.md
 - name: License
   href: license.md
+- name: Issues
+  href: https://github.com/dotBunny/GDX/issues

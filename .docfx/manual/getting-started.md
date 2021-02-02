@@ -6,13 +6,14 @@ There are many options to getting `GDX` into your project; each comes with its b
 ### Unity Package Manager
 Installing via the package manager system (UPM) in Unity will provide an immutable (unable to be modified) copy of the package inside of your project.
 
-> There is two available methods available for this option, pick one!
+> [!TIP]
+> There are two available UPM methods. You only need to **pick one**!
 
 #### UPM: Package Manager Window
 ![UPM Git](/images/manual/getting-started/upm-gdx-github.gif)
-The simplest and most straight forward method is to use Unity's built in workflow, once you have found and opened the **Package Manager** window (Window -> Package Manager), follow these steps:
+The simplest and most straight forward method is to use Unity's built in workflow, once you have found and opened the **Package Manager** window (**Window > Package Manager**), follow these steps:
 1. Find the **+** button in the upper left portion of the **Package Manager** window, clicking it should reveal a dropdown menu.
-2. Select `Add package from git URL...`
+2. Select **Add package from git URL...**
 3. In the presented text field, enter: `https://github.com/dotBunny/GDX.git`
 4. After entering the URL, click **Add**.
 
@@ -25,9 +26,12 @@ The above workflow provides a user interface for your project's `manifest.json` 
   }
 }
 ```
+> [!NOTE]
+> You can also include branches or releases with this method by appending `#branch` to the end of the definition. Check out Unity's [UPM](https://docs.unity3d.com/Manual/upm-git.html) page for more details.
 
 ### Asset Store
-_Discussions to bring the package to the Asset Store are ongoing, we are looking to do this in the near future (1.5)._
+> [!NOTE]
+> Discussions to bring the package to the Asset Store are ongoing, we are looking to do this in the near future.
 
 ### OpenUPM
 The `GDX` package is registered with [OpenUPM](https://openupm.com/), and releases are automatically reflected in that registry. The package is registered as `com.dotbunny.gdx`.
@@ -40,3 +44,23 @@ It is possible for the repository to be cloned into a sub-folder in your project
 git clone https://github.com/dotBunny/GDX.git
 ```
 This method is how typical development is done on `GDX`.
+
+## Project Settings
+Upon installation, `GDX` *should* work out of the box.
+
+Furhter configuration of `GDX` is done by opening the **Project Settings** window (**Edit > Project Settings...**), and selecting the `GDX` section. You will be presented with a view similar to the image below, with numerous configuration options sorted by feature.
+
+![Project Settings](/images/manual/getting-started/gdx-config.png)
+
+Each feature has a collapsable section (**A**) that is expandable and collapsable by clicking the **+**/**-** buttons to the header's left. Features dynamically activate based on the Unity version and packages found in the project (**B**).
+
+A section header's background can inform you of the status of the feature. A green background indicates that the feature is active, where a yellow background means that it is currently disabled. Not all features are enabled by default and require an opt-in (**C**). A blue background indicates an always-on feature, most commonly just functionality that has some level of configuration.
+
+### Persitent Storage
+Project-specific configuration values are stored in [GDXConfig](xref:GDX.GDXConfig), a `ScriptableObject` placed at `/Resources/GDX/GDXConfig.asset`. This allows access to configured values at both author and runtime and to be persistent across the project.
+
+
+
+
+
+

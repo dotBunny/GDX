@@ -11,7 +11,7 @@ namespace GDX
     ///     <see cref="System.Collections.Generic.IList{T}" /> Based Extension Methods
     /// </summary>
     /// <remarks>
-    ///     Unit testing found in GDX.Tests.EditMode, under Runtime.IListExtensionsTests.
+    ///     <i>Unit tests are found in GDX.Tests.EditMode, under Runtime.IListExtensionsTests.</i>
     /// </remarks>
     public static class IListExtensions
     {

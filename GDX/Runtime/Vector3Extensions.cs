@@ -14,7 +14,7 @@ namespace GDX
     ///     <see cref="Vector3" /> Based Extension Methods
     /// </summary>
     /// <remarks>
-    ///     Unit testing found in GDX.Tests.EditMode, under Runtime.Vector3ExtensionsTests.
+    ///     <i>Unit tests are found in GDX.Tests.EditMode, under Runtime.Vector3ExtensionsTests.</i>
     /// </remarks>
     public static class Vector3Extensions
     {
@@ -55,6 +55,24 @@ namespace GDX
         }
 
         /// <summary>
+        ///     Get the horizontal distance between two <see cref="Vector3"/> points.
+        /// </summary>
+        /// <remarks>Ignores the Y-axis completely.</remarks>
+        /// <param name="targetVector3">Point A</param>
+        /// <param name="otherVector3">Point B</param>
+        /// <returns>The horizontal distance.</returns>
+        public static float HorizontalDistance(this Vector3 targetVector3, Vector3 otherVector3)
+        {
+            float num1 = targetVector3.x - otherVector3.x;
+            float num2 = targetVector3.z - otherVector3.z;
+#if GDX_MATHEMATICS
+            return (float)math.sqrt(num1 * (double)num1 + num2 * (double)num2);
+#else
+            return Mathf.Sqrt(num1 * num1 + num2 * num2);
+#endif
+        }
+
+        /// <summary>
         ///     Get the midpoint between two <see cref="Vector3" />s.
         /// </summary>
         /// <param name="targetVector3">Point A</param>
@@ -68,6 +86,45 @@ namespace GDX
                 targetVector3.y + (otherVector3.y - targetVector3.y) * 0.5f,
                 targetVector3.z + (otherVector3.z - targetVector3.z) * 0.5f
             );
+        }
+
+        /// <summary>
+        ///     Find the index of the <see cref="Vector3" /> in <paramref name="otherVector3" /> that is nearest to the
+        ///     <paramref name="targetVector3" />.
+        /// </summary>
+        /// <param name="targetVector3">The <see cref="Vector3" /> to use as the point of reference.</param>
+        /// <param name="otherVector3">An array of <see cref="Vector3" /> positions to evaluate for which one is nearest.</param>
+        /// <returns>
+        ///     The index of the nearest <paramref name="otherVector3" /> element to <paramref name="targetVector3" />.
+        ///     Returning -1 if the the <paramref name="otherVector3" /> has no elements or is null.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int NearestIndex(this Vector3 targetVector3, Vector3[] otherVector3)
+        {
+            // We found nothing to compare against
+            if (otherVector3 == null || otherVector3.Length == 0)
+            {
+                return -1;
+            }
+
+            float closestSquareMagnitude = float.PositiveInfinity;
+            int closestIndex = -1;
+            int otherVector3Length = otherVector3.Length;
+
+            // Loop through the provided points and figure out what is closest (close enough).
+            for (int i = 0; i < otherVector3Length; i++)
+            {
+                float squareDistance = (otherVector3[i] - targetVector3).sqrMagnitude;
+                if (float.IsNaN(squareDistance) || !(squareDistance < closestSquareMagnitude))
+                {
+                    continue;
+                }
+
+                closestSquareMagnitude = squareDistance;
+                closestIndex = i;
+            }
+
+            return closestIndex;
         }
     }
 }

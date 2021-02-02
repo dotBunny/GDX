@@ -1,2 +1,19 @@
 - name: Getting Started
   href: getting-started.md
+- name: Features
+  href: features.md
+- name: Requirements
+  href: requirements.md
+- name: Discussions
+  href: https://github.com/dotBunny/GDX/discussions
+- name: Contributing
+  href: contributing.md
+  items:
+    - name: Code Of Conduct
+      href: contributing\code-of-conduct.md    
+    - name: Design Guidelines
+      href: contributing\design-guidelines.md
+    - name: Documentation
+      href: contributing\documentation.md  
+- name: Security Policy
+  href: security.md

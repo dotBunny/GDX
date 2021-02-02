@@ -44,7 +44,10 @@ namespace GDX.Jobs.ParallelFor
         // ReSharper disable once UnassignedField.Global
         [ReadOnly] public int FillValue;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Executable work for the provided index.
+        /// </summary>
+        /// <param name="index">The index of the Parallel for loop at which to perform work.</param>
         public void Execute(int index)
         {
             Buffer[index] = FillValue;

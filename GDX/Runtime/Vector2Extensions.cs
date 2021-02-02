@@ -14,7 +14,7 @@ namespace GDX
     ///     <see cref="Vector2" /> Based Extension Methods
     /// </summary>
     /// <remarks>
-    ///     Unit testing found in GDX.Tests.EditMode, under Runtime.Vector2ExtensionsTests.
+    ///     <i>Unit tests are found in GDX.Tests.EditMode, under Runtime.Vector2ExtensionsTests.</i>
     /// </remarks>
     public static class Vector2Extensions
     {
@@ -49,6 +49,21 @@ namespace GDX
         }
 
         /// <summary>
+        /// Get the slope of a <see cref="Vector2"/>.
+        /// </summary>
+        /// <param name="targetVector2">The <see cref="Vector2"/> to evaluate.</param>
+        /// <returns>The slope value.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float Slope(this Vector2 targetVector2)
+        {
+            if (targetVector2.x == 0f)
+            {
+                return 0f;
+            }
+            return targetVector2.y / targetVector2.x;
+        }
+
+        /// <summary>
         ///     Get the midpoint between two <see cref="Vector2" />s.
         /// </summary>
         /// <param name="targetVector2">Point A</param>
@@ -62,6 +77,45 @@ namespace GDX
                 targetVector2.x + (otherVector2.x - targetVector2.x) * halfMultiplier,
                 targetVector2.y + (otherVector2.y - targetVector2.y) * halfMultiplier
             );
+        }
+
+        /// <summary>
+        ///     Find the index of the <see cref="Vector2" /> in <paramref name="otherVector2" /> that is nearest to the
+        ///     <paramref name="targetVector2" />.
+        /// </summary>
+        /// <param name="targetVector2">The <see cref="Vector2" /> to use as the point of reference.</param>
+        /// <param name="otherVector2">An array of <see cref="Vector2" /> positions to evaluate for which one is nearest.</param>
+        /// <returns>
+        ///     The index of the nearest <paramref name="otherVector2" /> element to <paramref name="targetVector2" />.
+        ///     Returning -1 if the the <paramref name="otherVector2" /> has no elements or is null.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int NearestIndex(this Vector2 targetVector2, Vector2[] otherVector2)
+        {
+            // We found nothing to compare against
+            if (otherVector2 == null || otherVector2.Length == 0)
+            {
+                return -1;
+            }
+
+            float closestSquareMagnitude = float.PositiveInfinity;
+            int closestIndex = -1;
+            int otherVector2Length = otherVector2.Length;
+
+            // Loop through the provided points and figure out what is closest (close enough).
+            for (int i = 0; i < otherVector2Length; i++)
+            {
+                float squareDistance = (otherVector2[i] - targetVector2).sqrMagnitude;
+                if (float.IsNaN(squareDistance) || !(squareDistance < closestSquareMagnitude))
+                {
+                    continue;
+                }
+
+                closestSquareMagnitude = squareDistance;
+                closestIndex = i;
+            }
+
+            return closestIndex;
         }
     }
 }

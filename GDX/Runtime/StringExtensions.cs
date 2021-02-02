@@ -9,6 +9,7 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -18,7 +19,7 @@ namespace GDX
     ///     <see cref="System.String" /> Based Extension Methods
     /// </summary>
     /// <remarks>
-    ///     Unit testing found in GDX.Tests.EditMode, under Runtime.StringExtensionsTests.
+    ///     <i>Unit tests are found in GDX.Tests.EditMode, under Runtime.StringExtensionsTests.</i>
     /// </remarks>
     public static class StringExtensions
     {
@@ -214,7 +215,7 @@ namespace GDX
 
         /// <summary>
         ///     <para>
-        ///         Get the hash code value of <paramref name="targetString" /> (converted to an uppercase
+        ///         Get the stable hash code value of <paramref name="targetString" /> (converted to an uppercase
         ///         <see cref="System.String" />).
         ///     </para>
         /// </summary>
@@ -228,7 +229,7 @@ namespace GDX
         /// <returns>A <see cref="System.Int32" /> value.</returns>
         [SecuritySafeCritical]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-        public static unsafe int GetUpperCaseHashCode(this string targetString)
+        public static unsafe int GetStableUpperCaseHashCode(this string targetString)
         {
             fixed (char* src = targetString)
             {
@@ -273,7 +274,7 @@ namespace GDX
 
         /// <summary>
         ///     <para>
-        ///         Get the hash code value of <paramref name="targetString" /> (converted to an uppercase
+        ///         Get the stable hash code value of <paramref name="targetString" /> (converted to an uppercase
         ///         <see cref="System.String" />).
         ///     </para>
         /// </summary>
@@ -287,7 +288,7 @@ namespace GDX
         /// <returns>A <see cref="System.Int32" /> value.</returns>
         [SecuritySafeCritical]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-        public static unsafe int GetLowerCaseHashCode(this string targetString)
+        public static unsafe int GetStableLowerCaseHashCode(this string targetString)
         {
             fixed (char* src = targetString)
             {
@@ -386,6 +387,99 @@ namespace GDX
             }
 
             return false;
+        }
+
+        /// <summary>
+        ///     Attempt to parse a <see cref="string" /> into a <see cref="Vector2" />.
+        /// </summary>
+        /// <remarks>This isn't great for runtime performance, it should be used predominantly when reconstructing data.</remarks>
+        /// <param name="targetString">The <see cref="string" /> to convert into a <see cref="Vector2" /> if possible.</param>
+        /// <param name="outputVector2">The outputted <see cref="Vector2" />.</param>
+        /// <returns>true/false if the conversion was successful.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool TryParseVector2(this string targetString, out Vector2 outputVector2)
+        {
+            // Find split points
+            int splitIndex = targetString.IndexOf(',', 0);
+            if (splitIndex == -1)
+            {
+                outputVector2 = Vector2.zero;
+                return false;
+            }
+
+            // Get source parts
+            string sourceX = targetString.Substring(0, splitIndex);
+            string sourceY = targetString.Substring(splitIndex + 1);
+
+            // Parse components
+            if (!float.TryParse(sourceX, out float parsedX))
+            {
+                outputVector2 = Vector2.zero;
+                return false;
+            }
+
+            if (!float.TryParse(sourceY, out float parsedY))
+            {
+                outputVector2 = Vector2.zero;
+                return false;
+            }
+
+            // Everything looks good, assign the values
+            outputVector2 = new Vector2(parsedX, parsedY);
+            return true;
+        }
+
+        /// <summary>
+        ///     Attempt to parse a <see cref="string" /> into a <see cref="Vector3" />.
+        /// </summary>
+        /// <remarks>This isn't great for runtime performance, it should be used predominantly when reconstructing data.</remarks>
+        /// <param name="targetString">The <see cref="string" /> to convert into a <see cref="Vector3" /> if possible.</param>
+        /// <param name="outputVector3">The outputted <see cref="Vector3" />.</param>
+        /// <returns>true/false if the conversion was successful.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool TryParseVector3(this string targetString, out Vector3 outputVector3)
+        {
+            // Find split points
+            int firstSplit = targetString.IndexOf(',', 0);
+            if (firstSplit == -1)
+            {
+                outputVector3 = Vector3.zero;
+                return false;
+            }
+            int secondSplit = targetString.IndexOf(',', firstSplit + 1);
+            if (secondSplit == -1)
+            {
+                outputVector3 = Vector3.zero;
+                return false;
+            }
+
+            // Get source parts
+            string sourceX = targetString.Substring(0, firstSplit);
+            string sourceY = targetString.Substring(firstSplit + 1, secondSplit - (firstSplit + 1));
+            string sourceZ = targetString.Substring(secondSplit + 1);
+
+            // Parse components
+            if (!float.TryParse(sourceX, out float parsedX))
+            {
+                outputVector3 = Vector3.zero;
+                return false;
+            }
+
+            if (!float.TryParse(sourceY, out float parsedY))
+            {
+                outputVector3 = Vector3.zero;
+                return false;
+            }
+
+            if (!float.TryParse(sourceZ, out float parsedZ))
+            {
+                outputVector3 = Vector3.zero;
+                return false;
+            }
+
+            // Everything looks good, assign the values
+            outputVector3 = new Vector3(parsedX, parsedY, parsedZ);
+            return true;
         }
 
         /// <summary>

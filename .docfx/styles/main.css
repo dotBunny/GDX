@@ -3,3 +3,28 @@ svg#logo
     height: 90%;
     padding-top: 10%;
 }
+
+article[data-uid="features"] td 
+{
+    padding: 10px !important;
+}
+
+article[data-uid="features"] td:first-child 
+{
+    width: 20%;
+}
+
+a[title="Issues"]:after,
+a[title="Discussions"]:after
+{
+    padding-left: 5px;
+    position:relative;
+    top:1px;
+    display:inline-block;
+    font-family:"Glyphicons Halflings";
+    font-weight:200;
+    line-height:1;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    content:"\e066"
+}

@@ -19,32 +19,16 @@ Add `com.dotbunny.gdx` as a dependency to the project `Packages/manifest.json` f
   }
 }
 ```
-> For a full breakdown of all installation methods please refer to the [Installation](https://gdx.dotbunny.com/manual/getting-started.html#installation) section of [Getting Started](https://gdx.dotbunny.com/manual/getting-started.html) in the [manual](https://gdx.dotbunny.com/manual/).
+> For a full breakdown of all installation methods please refer to the [Installation](https://gdx.dotbunny.com/manual/getting-started.html#installation) section of [Getting Started](https://gdx.dotbunny.com/manual/getting-started.html) in the manual.
 
 ## Requirements
-The package is designed to be compatible with an _empty project_ created in [Unity](http://unity3d.com).
-It uses a preprocessor system, where the assembly definition will define features based on the packages found in the project.
-> It is important to note that the GDX_* defines are only valid inside of the GDX assemblies.
-### Supported Packages
-Package | Minimum Version
-:--- | ---
-com.unity.addressables | `1.16.0`
-com.unity.burst | `1.4.0`
-com.unity.jobs | `0.6.9`
-com.unity.mathematics | `1.2.1`
+The `GDX` package can be dropped into any compatible [Unity](http://unity3d.com) (>=`2019.1`) project and selectively enables portions of its functionality based on what packages it finds in the project.
+> For more detailed infromation, please consult [Requirements](https://gdx.dotbunny.com/manual/requirements.html) in the manual.
 
 ## Contributing
 GDX is an open-source project and we encourage and welcome contributions.
-### Design Guidelines
-There is a general effort to follow the [Framework Design Guidelines](https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/)
-set forth by the .NET team. While we **do not** always precisely adhere to them, they serve as a guiding principle.
-- Embedded in the project is an [EditorConfig](https://editorconfig.org/), which should standardize much of the formatting.
-    - It is based on the .NET Roslyn repositories `.editorconfig`.
-    - Warns of non-explicit type definitions everywhere (we're not going to use var to promote better readability).
-- [.NET Coding Conventions](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions) is also a good point of reference.
-- Typically sections of classes are ordered alphabetically.
-- Preference to expose backing data, indices, etc.
+> Please review the manual's [Contributing](https://gdx.dotbunny.com/manual/contributing.html) section for info on how you can contribute to this package and our awesome community. :heart:
 
 ## License
 GDX is licensed under the [MIT License](https://choosealicense.com/licenses/mit/).
-A copy of this license can be found at the root of the project in the `LICENSE` file.
+> A copy of this license can be found at the root of the project in the `LICENSE` file, or [here](https://gdx.dotbunny.com/license.html).

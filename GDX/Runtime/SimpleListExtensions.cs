@@ -10,7 +10,7 @@ namespace GDX
     ///     <see cref="GDX.Collections.Generic.SimpleList{T}" /> Based Extension Methods
     /// </summary>
     /// <remarks>
-    ///     Unit testing found in GDX.Tests.EditMode, under Runtime.SimpleListExtensionsTests.
+    ///     <i>Unit tests are found in GDX.Tests.EditMode, under Runtime.SimpleListExtensionsTests.</i>
     /// </remarks>
     public static class SimpleListExtensions
     {

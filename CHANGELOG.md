@@ -3,6 +3,40 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [1.2.2] - 2021-02-1
+***"Cookie Monster"***
+> A whole lot of work went into trying to solidify what documentation is going to look like, as well as get foundational work in place to mak sure anyone can contribute.
+
+### Added
+- Moved all static `GUIContent` from settings window into new `SettingsContent`.
+- Moved all static layout functionality from `SettingsStyles` into `SettingsLayout`.
+- `GDX.Developer.Conditionals` contains constant status indicators of packages used by `GDX`. Useful for determine if a certain feature set is available.
+- Properly set define GDX_PLATFORMS based on the `com.unity.platforms` package.
+- The`GDX.Localization.GetHumanReadableFileSize()` method to create more readable file size outputs.
+- More functionality in `GDX.Vector2Extensions`
+  - `NearestIndex()` to find the closest position in an array.
+  - `Slope()`
+- Additional functionality in `GDX.Vector3Extensions`
+  - `HorizontalDistance()` to get a horizontal distance ignoring vertically.
+  - `NearestIndex()` to find the closest position in an array of positions.
+- `GDX.StringExtensions.TryParseVector2()` and `GDX.StringExtensions.TryParseVector3()` will rehydrate `0,0` and `0,0,0` formatted strings.
+- A more complex version of `GetComponentInChildren()` has been included with `GDX.GameObjectExtensions.GetFirstComponentInChildrenComplex()` and `GDX.MonoBehaviourExtensions.GetFirstComponentInChildrenComplex()` allowing for recursion limits.
+- `GDX.BoxColliderExtensions.ContainsPosition()` as a quick method to determine if a world space position is inside of a `BoxCollider`.
+- `GDX.CapsuleColliderExtensions.Direction()` to get a `Vector3` based direction for a `CapsuleCollider`.
+- `GDX.RigidbodyExtensions.MomentOfInertia()` for an inertia calculation based on axis.
+- `GDX.Mathematics.Smooth` adds `Exponential()` smoothing functionality.
+- `GDX.Mathematics.Rotate` adds `Towards()` calculations.
+
+### Changed
+- [Generated documentation](https://gdx.dotbunny.com/) now includes `private` and `internal` classes.
+- Lowered feature requirement of `com.unity.jobs` to `0.2.7`, and `com.unity.burst` to `1.0.0`.
+- `GDX.Developer` assembly collapsed back into main `GDX` assembly.
+- Modified settings framework to be in a single `GDX` category in the **Project Settings** window, with collapsable sections contained within.
+- `GDX.StringExtensions.GetLowerCaseHashCode()` renamed to `GDX.StringExtensions.GetStableLowerCaseHashCode()`.
+- `GDX.StringExtensions.GetUpperCaseHashCode()` renamed to `GDX.StringExtensions.GetStableUpperCaseHashCode()`.
+- `GDX.ByteExtensions.GetValueHashCode()` renamed to `GDX.ByteExtensions.GetStableHashCode()`.
+- Better package installation type detection and handling of upgrades. 
+  - This has cut down the possibilities of automatic upgrades, however efforts will continue to expand on this functionality.
 
 ## [1.2.1] - 2021-01-24
 ***"Old Is New"***

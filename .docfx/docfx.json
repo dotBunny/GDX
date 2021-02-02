@@ -6,15 +6,18 @@
           "src": "../../..",
           "files": [            
             "GDX.csproj",
-            "GDX.Editor.csproj",
-            "GDX.Developer.csproj",
-            "GDX.Developer.Editor.csproj"
+            "GDX.Editor.csproj",            
           ]
         }
       ],
       "dest": "api",
       "disableGitFeatures": false,
-      "disableDefaultFilter": false
+      "disableDefaultFilter": true,
+      "filter": "filterConfig.yml" ,
+      "properties": {
+        "TargetFramework": "netstandard2.0",
+        "DefineConstants": "GDX_ADDRESSABLES;GDX_BURST;GDX_JOBS;GDX_MATHEMATICS;GDX_PLATFORMS"
+      }
     }
   ],
   "build": {

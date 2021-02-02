@@ -39,6 +39,33 @@ namespace GDX
         public const string LocalTimestampFormat = "yyyy-MM-dd HH\\:mm\\:ss";
 
         /// <summary>
+        ///     An array of strings representative for file size formats.
+        /// </summary>
+        private static readonly string[] s_readableByteSizes = { "B", "KB", "MB", "GB", "TB" };
+
+        /// <summary>
+        ///     Creates a more human readable <see cref="string"/> of a byte size.
+        /// </summary>
+        /// <example>
+        ///     A byte size of 1024, will return a string of 1 KB.
+        /// </example>
+        /// <param name="byteSize">The number of bytes to measure.</param>
+        /// <returns>A human readable version of the provided <paramref name="byteSize"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GetHumanReadableFileSize(long byteSize)
+        {
+            long length = byteSize;
+            int order = 0;
+            const int incrementLengthAdjusted = 4;
+            while (length >= 1024 && order < incrementLengthAdjusted)
+            {
+                order++;
+                length /= 1024;
+            }
+            return $"{length:0.##} {s_readableByteSizes[order]}";
+        }
+
+        /// <summary>
         ///     <para>Get the ISO 639-1 language code for <paramref name="targetLanguage" />.</para>
         /// </summary>
         /// <remarks>Two additional non-compliant values may be returned DEV or DEFAULT.</remarks>

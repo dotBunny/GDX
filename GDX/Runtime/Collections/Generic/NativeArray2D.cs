@@ -10,7 +10,7 @@ using Unity.Collections;
 namespace GDX.Collections.Generic
 {
     /// <summary>
-    ///     A 2-Dimensional <see cref="NativeArray{T}" /> backed array.
+    ///     A 2-dimension <see cref="NativeArray{T}" /> backed array.
     /// </summary>
     /// <remarks>
     ///     The <see cref="NativeArray2D{T}" /> is backed by a <see cref="Unity.Collections.NativeArray{T}" /> which requires

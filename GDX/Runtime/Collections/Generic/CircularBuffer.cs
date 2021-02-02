@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 namespace GDX.Collections.Generic
 {
     /// <summary>
-    ///     A buffer which loops back over itself as locations are used.
+    ///     A sized buffer which loops back over itself as elements are used.
     /// </summary>
     /// <typeparam name="T">The type of <see cref="object" />s contained within.</typeparam>
     public class CircularBuffer<T> : IEnumerable<T>

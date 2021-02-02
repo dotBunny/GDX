@@ -17,7 +17,10 @@ namespace GDX
     /// <summary>
     ///     Addressables Based Extension Methods
     /// </summary>
-    /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
+    /// <remarks>
+    ///     <para>Requires UnityEngine.CoreModule.dll to function correctly.</para>
+    ///     <para>Requires <c>com.unity.addressables</c> Package.</para>
+    /// </remarks>
     public static class AddressablesExtensions
     {
         /// <summary>
