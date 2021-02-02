@@ -19,14 +19,9 @@ namespace GDX.Editor
     public static class Settings
     {
         /// <summary>
-        ///     The key used by <see cref="EditorPrefs" /> to store <see cref="UpdateDayCountSetting" />.
+        ///     The public URI of the package's documentation.
         /// </summary>
-        private const string UpdateDayCountKey = "GDX.UpdateProvider.UpdateDayCount";
-
-        /// <summary>
-        ///     Padding to place at the bottom of a section using <see cref="GUILayout.Space" />.
-        /// </summary>
-        private const int SectionPaddingBottom = 5;
+        public const string DocumentationUri = "https://gdx.dotbunny.com/";
 
         /// <summary>
         ///     A list of keywords to flag when searching project settings.
@@ -42,8 +37,8 @@ namespace GDX.Editor
         /// <remarks>We use a property over methods in this case so that Unity's UI can be easily tied to this value.</remarks>
         public static int UpdateDayCountSetting
         {
-            get => EditorPrefs.GetInt(UpdateDayCountKey, 7);
-            private set => EditorPrefs.SetInt(UpdateDayCountKey, value);
+            get => EditorPrefs.GetInt("GDX.UpdateProvider.UpdateDayCount", 7);
+            private set => EditorPrefs.SetInt("GDX.UpdateProvider.UpdateDayCount", value);
         }
 
         /// <summary>
@@ -109,7 +104,7 @@ namespace GDX.Editor
 #endif
             {
                 GUIUtility.hotControl = 0;
-                Application.OpenURL(Strings.GitHubUri);
+                Application.OpenURL("https://github.com/dotBunny/GDX/");
             }
 
             GUILayout.FlexibleSpace();
@@ -124,7 +119,7 @@ namespace GDX.Editor
 #endif
             {
                 GUIUtility.hotControl = 0;
-                Application.OpenURL(Strings.DocumentationUri);
+                Application.OpenURL(DocumentationUri);
             }
 
             GUILayout.FlexibleSpace();
@@ -139,7 +134,7 @@ namespace GDX.Editor
 #endif
             {
                 GUIUtility.hotControl = 0;
-                Application.OpenURL(Strings.GitHubIssuesUri);
+                Application.OpenURL("https://github.com/dotBunny/GDX/issues");
             }
 
             GUILayout.FlexibleSpace();
@@ -294,7 +289,7 @@ namespace GDX.Editor
                 {
                     if (GUILayout.Button("Changelog", SettingsStyles.ButtonStyle))
                     {
-                        Application.OpenURL(Strings.GitHubChangelogUri);
+                        Application.OpenURL("https://github.com/dotBunny/GDX/blob/main/CHANGELOG.md");
                     }
 
                     if (UpdateProvider.IsUpgradable())
@@ -330,7 +325,7 @@ namespace GDX.Editor
             UpdateDayCountSetting =
                 EditorGUILayout.IntSlider(SettingsContent.AutomaticUpdatesUpdateDayCount, UpdateDayCountSetting, 1, 31);
 
-            GUILayout.Space(SectionPaddingBottom);
+            GUILayout.Space(5);
         }
 
         /// <summary>
@@ -344,8 +339,7 @@ namespace GDX.Editor
 
             bool buildInfoEnabled = SettingsLayout.CreateSettingsSection(
                 sectionID, false,
-                "BuildInfo Generation",
-                Strings.DocumentationUri + "api/GDX.Editor.Build.BuildInfoProvider.html",
+                "BuildInfo Generation", $"{DocumentationUri}api/GDX.Editor.Build.BuildInfoProvider.html",
                 settings.FindProperty("developerBuildInfoEnabled"),
                 SettingsContent.BuildInfoEnabled);
 
@@ -428,7 +422,7 @@ namespace GDX.Editor
                 buildStreamProperty.stringValue = buildStreamProperty.stringValue.ToUpper();
             }
 
-            GUILayout.Space(SectionPaddingBottom);
+            GUILayout.Space(5);
         }
 
         /// <summary>
@@ -441,7 +435,7 @@ namespace GDX.Editor
             GUI.enabled = true;
 
             SettingsLayout.CreateSettingsSection(sectionID, false, "Command Line Parser",
-                Strings.DocumentationUri + "api/GDX.Developer.CommandLineParser.html");
+                $"{DocumentationUri}api/GDX.Developer.CommandLineParser.html");
 
             if (!SettingsLayout.GetCachedEditorBoolean(sectionID))
             {

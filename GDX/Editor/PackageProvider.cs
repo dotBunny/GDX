@@ -16,6 +16,11 @@ namespace GDX.Editor
     public class PackageProvider
     {
         /// <summary>
+        ///     Reference to the Unity package name for GDX.
+        /// </summary>
+        public const string PackageName = "com.dotbunny.gdx";
+
+        /// <summary>
         ///     A defined collection of ways that the package could be found in a Unity project.
         /// </summary>
         public enum InstallationType
@@ -125,7 +130,7 @@ namespace GDX.Editor
                 PackageAssetPath =
                     Path.Combine(
                         Path.GetDirectoryName(AssetDatabase.GUIDToAssetPath(editorAssemblyDefinition[0])) ??
-                        string.Empty, Strings.PreviousFolder, Strings.PreviousFolder);
+                        string.Empty, "..", "..");
 
                 // Build the package manifest path
                 PackageManifestPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6),
@@ -225,7 +230,7 @@ namespace GDX.Editor
                 // Loop through manifest looking for the package name
                 for (int i = 0; i < projectManifestLength; i++)
                 {
-                    if (!projectManifest[i].Contains(Strings.PackageName))
+                    if (!projectManifest[i].Contains(PackageName))
                     {
                         continue;
                     }

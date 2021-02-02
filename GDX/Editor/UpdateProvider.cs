@@ -298,8 +298,7 @@ namespace GDX.Editor
                 EditorUtility.ClearProgressBar();
             }
 
-
-            string tempExtractFolder = Path.Combine(Path.GetTempPath(), Strings.PackageName);
+            string tempExtractFolder = Path.Combine(Path.GetTempPath(), PackageProvider.PackageName);
 
             // Remove previous upgrade folder (if it exists)
             if (Directory.Exists(tempExtractFolder))
@@ -410,7 +409,7 @@ namespace GDX.Editor
 
             // TODO: Unsure if this actually will work if it is not an internal package?
             // SPOILER: It doesnt
-            Client.Add(Strings.PackageName);
+            Client.Add(PackageProvider.PackageName);
         }
     }
 }

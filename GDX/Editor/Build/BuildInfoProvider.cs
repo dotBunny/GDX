@@ -177,7 +177,7 @@ namespace GDX.Editor.Build
         /// <param name="internalDescription">An internally used description.</param>
         /// <returns>The files content.</returns>
         public static string GetContent(GDXConfig config, bool forceDefaults = false,
-            string internalDescription = Strings.Null)
+            string internalDescription = null)
         {
             // Force the parse because this isn't a runtime thing
             if (!forceDefaults)
