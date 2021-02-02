@@ -23,7 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `GDX.BoxColliderExtensions.ContainsPosition()` A quick method to determine if a world space position is inside of a `BoxCollider`.
 - `GDX.CapsuleColliderExtensions.Direction()` A quick method to get a `Vector3` based direction for a `CapsuleCollider`.
 - `GDX.RigidbodyExtensions.MomentOfInertia()` inertia calculation based on axis.
-- `GDX.Mathematics.Smoothing` adds `Exponential()` smoothing functionality.
+- `GDX.Mathematics.Smooth` adds `Exponential()` smoothing functionality.
+- `GDX.Mathematics.Rotate` adds `Towards()`
 
 ### Changed
 - Lowered feature requirement of `com.unity.jobs` to `0.2.7`.

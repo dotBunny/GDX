@@ -57,7 +57,7 @@ Feature | Description
 [Localization](xref:GDX.Localization) | ISO language based formatting functionality.
 [Memory](xref:GDX.Memory) | Specific functionality to ensure the heap is kept as small as possible.
 [Platform](xref:GDX.Platform) | A bunch of Hardware and I/O related methods.
-[Smoothing](xref:GDX.Mathematics.Smoothing) | Some fancy smoothing functions.
+[Smooth](xref:GDX.Mathematics.Smooth) | Some fancy smoothing functions.
 
 
 ## Developer Tools

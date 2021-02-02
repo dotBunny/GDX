@@ -1,6 +1,7 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Runtime.CompilerServices;
 using UnityEngine;
 #if GDX_MATHEMATICS
 using Unity.Mathematics;
@@ -14,7 +15,7 @@ namespace GDX.Mathematics
     /// <summary>
     ///     Some helpful interpolation functionality.
     /// </summary>
-    public static class Smoothing
+    public static class Smooth
     {
         // ReSharper disable CommentTypo
         /// <summary>
@@ -33,6 +34,7 @@ namespace GDX.Mathematics
         /// </param>
         /// <returns>A smoothed value.</returns>
         // ReSharper enable CommentType
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Exponential(float previousValue, float targetValue, float halfLife,
             float elapsedTime = float.NaN)
         {
@@ -52,6 +54,7 @@ namespace GDX.Mathematics
         /// <param name="halfLife">The desired halflife.</param>
         /// <param name="elapsedTime">The time since the last sample.</param>
         /// <returns>The coefficient value applied to the weight(t) of a lerp.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float HalfLifeToSmoothingFactor(float halfLife, float elapsedTime = float.NaN)
         {
             if (halfLife <= 0f)
