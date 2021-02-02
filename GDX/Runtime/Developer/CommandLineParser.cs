@@ -18,7 +18,6 @@ namespace GDX.Developer
     ///         The prefix and divider are configurable via the <see cref="GDXConfig" />, however the always, the <c>FLAG</c>
     ///         and <c>KEY</c> will be Uppercase.
     ///     </para>
-    ///     <para>Unit tests are found in GDX.Developer.Tests.EditMode, under <c>Runtime.CommandLineParserTests</c></para>
     /// </remarks>
     public static class CommandLineParser
     {

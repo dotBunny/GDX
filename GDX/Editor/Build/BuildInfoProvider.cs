@@ -68,9 +68,6 @@ namespace GDX.Editor.Build
     ///             </description>
     ///         </item>
     ///     </list>
-    ///     <para>
-    ///         <i>Unit tests are found in GDX.Developer.Tests.EditMode, under <c>Editor.Build.BuildInfoProviderTests</c>.</i>
-    ///     </para>
     /// </remarks>
 #if GDX_PLATFORMS
     internal class BuildInfoProvider : ClassicBuildPipelineCustomizer
