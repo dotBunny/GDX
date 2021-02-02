@@ -68,9 +68,6 @@ namespace GDX.Editor.Build
     ///             </description>
     ///         </item>
     ///     </list>
-    ///     <para>
-    ///         <i>Unit tests are found in GDX.Developer.Tests.EditMode, under <c>Editor.Build.BuildInfoProviderTests</c>.</i>
-    ///     </para>
     /// </remarks>
 #if GDX_PLATFORMS
     internal class BuildInfoProvider : ClassicBuildPipelineCustomizer
@@ -177,7 +174,7 @@ namespace GDX.Editor.Build
         /// <param name="internalDescription">An internally used description.</param>
         /// <returns>The files content.</returns>
         public static string GetContent(GDXConfig config, bool forceDefaults = false,
-            string internalDescription = Strings.Null)
+            string internalDescription = null)
         {
             // Force the parse because this isn't a runtime thing
             if (!forceDefaults)

@@ -17,11 +17,6 @@ namespace GDX
     public class GDXConfig : ScriptableObject
     {
         /// <summary>
-        ///     Resource path at runtime.
-        /// </summary>
-        public const string ResourcesPath = "GDX/GDXConfig.asset";
-
-        /// <summary>
         ///     Should GDX check for updates at editor time?
         /// </summary>
         public bool updateProviderCheckForUpdates = true;
@@ -91,9 +86,9 @@ namespace GDX
 #if UNITY_EDITOR
             // Special handler for scenarios where we need runtime logic, that is getting called from editor automation
             // and things like that.
-            return AssetDatabase.LoadAssetAtPath<GDXConfig>(Strings.AssetPathPrefix + "Resources/" + ResourcesPath);
+            return AssetDatabase.LoadAssetAtPath<GDXConfig>("Assets/Resources/GDX/GDXConfig.asset");
 #else
-            return Resources.Load<GDXConfig>(ResourcesPath);
+            return Resources.Load<GDXConfig>("GDX/GDXConfig");
 #endif
         }
     }

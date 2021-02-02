@@ -11,6 +11,11 @@ namespace GDX
     /// <remarks>https://semver.org/</remarks>
     public readonly struct SemanticVersion
     {
+        /// <summary>
+        ///     An array of <see cref="System.Char" /> used to split versions.
+        /// </summary>
+        private static readonly char[] s_versionIndicators = {'.', ',', '_', 'f'};
+
         // ReSharper disable MemberCanBePrivate.Global
 
         /// <summary>
@@ -39,7 +44,7 @@ namespace GDX
         /// <param name="version">A formatted version semantic version string (2020.1.0).</param>
         public SemanticVersion(string version)
         {
-            string[] split = version.Split(Strings.VersionIndicators);
+            string[] split = version.Split(s_versionIndicators);
             switch (split.Length)
             {
                 case 4:

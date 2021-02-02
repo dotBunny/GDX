@@ -15,8 +15,8 @@ namespace GDX.Mathematics
         /// <summary>
         /// Create a quaternion based on a rotation from <paramref name="targetQuaternion"/> to <paramref name="otherQuaternion"/>.
         /// </summary>
-        /// <param name="targetQuaternion">The source <see cref="UnityEngine.Quaternion"/>.</param>
-        /// <param name="otherQuaternion">The destination <see cref="UnityEngine.Quaternion"/>.</param>
+        /// <param name="targetQuaternion">The source <see cref="Quaternion"/>.</param>
+        /// <param name="otherQuaternion">The destination <see cref="Quaternion"/>.</param>
         /// <param name="rotationRate">How fast should the rotation occur.</param>
         /// <param name="elapsedTime">How long has elapsed since the rotation started.</param>
         /// <returns>A rotational value.</returns>
