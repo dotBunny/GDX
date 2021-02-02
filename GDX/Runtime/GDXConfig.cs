@@ -93,7 +93,7 @@ namespace GDX
             // and things like that.
             return AssetDatabase.LoadAssetAtPath<GDXConfig>("Assets/Resources/GDX/GDXConfig.asset");
 #else
-            return Resources.Load<GDXConfig>("GDX/GDXConfig);
+            return Resources.Load<GDXConfig>("GDX/GDXConfig");
 #endif
         }
     }
