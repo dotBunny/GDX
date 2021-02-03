@@ -58,6 +58,6 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
-# Ignore LICENSE meta file so GitHub will detect the right license.
-LICENSE.meta
+# Ignore LICENSE meta file so GitHub will detect the right license, but causes problems with Unity
+# LICENSE.meta
 
