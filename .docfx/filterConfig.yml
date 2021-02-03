@@ -1,4 +1,33 @@
 apiRules:
+ # Exclude System Bases  
 - exclude:
       uidRegex: ^System\.Object
+      type: Type   
+- exclude:
+      uidRegex: ^System\.ValueType
       type: Type
+- exclude:
+      uidRegex: ^System\.Attribute
+      type: Type  
+# Exclude Unity Bases
+- exclude:
+      uidRegex: ^UnityEngine\.Object
+      type: Type
+- exclude:
+      uidRegex: ^UnityEngine\.ScriptableObject
+      type: Type  
+- exclude:
+      uidRegex: ^UnityEditor\.PropertyDrawer 
+      type: Type 
+- exclude:
+      uidRegex: ^UnityEditor\.Editor  
+      type: Type    
+# Exclude Attributed      
+- exclude:
+      hasAttribute:
+            uid: GDX.HideFromDocFXAttribute
+# Include Specific
+# - include:
+#      uidRegex: ^GDX\.Editor\.Build\.BuildInfoProvider
+#      type: Type
+

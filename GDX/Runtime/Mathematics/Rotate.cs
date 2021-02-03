@@ -10,6 +10,9 @@ using Unity.Mathematics;
 
 namespace GDX.Mathematics
 {
+    /// <summary>
+    /// A set of functionality to extend on Unity's on rotation based methods.
+    /// </summary>
     public static class Rotate
     {
         /// <summary>
