@@ -26,8 +26,3 @@ apiRules:
 - exclude:
       hasAttribute:
             uid: GDX.HideFromDocFXAttribute
-# Include Specific
-# - include:
-#      uidRegex: ^GDX\.Editor\.Build\.BuildInfoProvider
-#      type: Type
-
