@@ -97,6 +97,17 @@ namespace Runtime
             Assert.IsTrue(SimpleTestString.HasLowerCase());
         }
 
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_IsBoolean_True()
+        {
+            int result = "True".GetStableLowerCaseHashCode();
+          //  const string expected = "\"y_TEST_STR#$34343";
+          Assert.Fail($"True: {result.ToString()}");
+          //Assert.IsTrue(result == expected, $"Expected {expected} but got {result}");
+        }
+
         [Test]
         [Category("GDX.Tests")]
         public void True_SplitCamelCase_CamelCase()

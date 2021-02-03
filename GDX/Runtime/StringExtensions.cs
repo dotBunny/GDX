@@ -388,6 +388,19 @@ namespace GDX
 
         public static unsafe bool IsBooleanValue(this string targetString)
         {
+            int hash = targetString.GetStableLowerCaseHashCode();
+            switch (hash)
+            {
+                    case 1: // true
+                    case 2: // false
+                    case 4: // 1
+                    case 3: // 0
+                    case 5: // yes
+                    case 6: // no
+                        break;
+
+            }
+
             // TODO: fill logic
             return false;
         }
