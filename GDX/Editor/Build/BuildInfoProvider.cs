@@ -16,8 +16,8 @@ namespace GDX.Editor.Build
 {
     /// <summary>
     ///     <para>
-    ///         A build step for both the legacy and scriptable build pipeline's in Unity. This <c>internal</c> class
-    ///         will alter itself according to available packages and pipelines.
+    ///         A build step for both the legacy and scriptable build pipeline's in Unity. This class will alter itself
+    ///         according to available packages and pipelines.
     ///     </para>
     ///     <para>
     ///         During the build process a <c>BuildInfo</c> file will be generated containing information passed in
@@ -70,7 +70,7 @@ namespace GDX.Editor.Build
     ///     </list>
     /// </remarks>
 #if GDX_PLATFORMS
-    internal class BuildInfoProvider : ClassicBuildPipelineCustomizer
+    public class BuildInfoProvider : ClassicBuildPipelineCustomizer
     {
         /// <summary>
         ///     Cache if the provider/customizer actually was effective.
@@ -116,7 +116,7 @@ namespace GDX.Editor.Build
             }
         }
 #else
-    internal class BuildInfoProvider : IPreprocessBuildWithReport, IPostprocessBuildWithReport
+    public class BuildInfoProvider : IPreprocessBuildWithReport, IPostprocessBuildWithReport
     {
         /// <summary>
         ///     The priority for the processor to be executed, before defaults.

@@ -7,7 +7,6 @@ namespace GDX
 {
     using UnityEngine;
 
-    [HideInInspector]
     /// <summary>
     ///     Override the label content of the scripting variable.
     /// </summary>
