@@ -70,6 +70,17 @@ namespace GDX
         }
 
         /// <summary>
+        /// Calculate the distance from a <see cref="Vector3"/> to a <see cref="Ray"/>.
+        /// </summary>
+        /// <param name="targetVector3">The position.</param>
+        /// <param name="targetRay">The line.</param>
+        /// <returns>The distance.</returns>
+        public static float DistanceToRay(this Vector3 targetVector3, Ray targetRay)
+        {
+            return Vector3.Cross(targetRay.direction, targetVector3 - targetRay.origin).magnitude;
+        }
+
+        /// <summary>
         ///     Get the midpoint between two <see cref="Vector3" />s.
         /// </summary>
         /// <param name="targetVector3">Point A</param>

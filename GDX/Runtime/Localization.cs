@@ -16,6 +16,9 @@ namespace GDX
         /// <summary>
         ///     A list of supported languages.
         /// </summary>
+        /// <remarks>
+        ///     This does not differentiate between things like French Canadian and French.
+        /// </remarks>
         public enum Language : ushort
         {
             Development = 0,

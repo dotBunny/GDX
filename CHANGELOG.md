@@ -6,7 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.3] - 2021-02-3
 ***"Workplace 2.0"***
-
+### Added
+- `GDX.Vector3Extensions.DistanceToRay()`
+- `GDX.CapsuleCollider.OutSphereCenters()`
 ### Changed
 - Optimized `GDX.GDXConfig` loading at runtime.
 - Wrap `GDX.InspectorLabelAttribute` in `UNITY_EDITOR` define requirement.

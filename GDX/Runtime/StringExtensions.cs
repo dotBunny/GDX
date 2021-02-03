@@ -386,6 +386,48 @@ namespace GDX
             return false;
         }
 
+        public static unsafe bool IsBooleanValue(this string targetString)
+        {
+            // TODO: fill logic
+            return false;
+        }
+
+        public static unsafe bool IsIntegerValue(this string targetString)
+        {
+            // TODO: fill logic
+            return false;
+        }
+
+        /// <summary>
+        /// Is the <paramref name="targetString"/> a numerical value.
+        /// </summary>
+        /// <remarks>
+        ///     <list>
+        ///         <item>
+        ///             <description>The first character must a sign, or a number.</description>
+        ///         </item>
+        ///         <item>
+        ///             <description>No alpha characters are present.</description>
+        ///         </item>
+        ///     </list>
+        /// </remarks>
+        /// <param name="targetString"></param>
+        /// <returns></returns>
+        [SecuritySafeCritical]
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
+        public static unsafe bool IsNumericalValue(this string targetString)
+        {
+            // TODO: fill logic
+            return false;
+        }
+
+
+        public static unsafe bool IsSingleValue(this string targetString)
+        {
+            // TODO: fill logic
+            return false;
+        }
+
         /// <summary>
         ///     Attempt to parse a <see cref="string" /> into a <see cref="Vector2" />.
         /// </summary>
