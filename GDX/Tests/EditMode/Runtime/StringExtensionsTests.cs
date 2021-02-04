@@ -28,6 +28,9 @@ namespace Runtime
         private const string UpperCaseTestString = "THIS IS ALL UPPERCASE";
         private const string LowerCaseTestString = "this is all lowercase";
 
+        private const string SimpleIntegerTestString = "10";
+        private const string ComplexIntegerTestString = "-12304912";
+
 
         [Test]
         [Category("GDX.Tests")]
@@ -469,6 +472,56 @@ namespace Runtime
             Measure.Method(() =>
                 {
                     int dummyValue = ComplexTestString.ToUpper().GetHashCode();
+                })
+                .WarmupCount(WarmupCount)
+                .MeasurementCount(MeasurementCount)
+                .IterationsPerMeasurement(IterationsPerMeasurement)
+                .SampleGroup("Complex")
+                .Run();
+        }
+
+        [Test]
+        [Performance]
+        [Category("GDX.Performance")]
+        public void Measure_IntTryParse()
+        {
+            Measure.Method(() =>
+                {
+                    int.TryParse(SimpleIntegerTestString, out int value);
+                })
+                .WarmupCount(WarmupCount)
+                .MeasurementCount(MeasurementCount)
+                .IterationsPerMeasurement(IterationsPerMeasurement)
+                .SampleGroup("Simple")
+                .Run();
+            Measure.Method(() =>
+                {
+                    int.TryParse(ComplexIntegerTestString, out int value);
+                })
+                .WarmupCount(WarmupCount)
+                .MeasurementCount(MeasurementCount)
+                .IterationsPerMeasurement(IterationsPerMeasurement)
+                .SampleGroup("Complex")
+                .Run();
+        }
+
+        [Test]
+        [Performance]
+        [Category("GDX.Performance")]
+        public void Measure_IsIntegerValue()
+        {
+            Measure.Method(() =>
+                {
+                    SimpleIntegerTestString.IsIntegerValue();
+                })
+                .WarmupCount(WarmupCount)
+                .MeasurementCount(MeasurementCount)
+                .IterationsPerMeasurement(IterationsPerMeasurement)
+                .SampleGroup("Simple")
+                .Run();
+            Measure.Method(() =>
+                {
+                    ComplexIntegerTestString.IsIntegerValue();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)

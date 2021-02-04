@@ -472,7 +472,11 @@ namespace GDX
         /// <summary>
         ///     Determine if the <paramref name="targetString" /> is an <see cref="Int32" /> value.
         /// </summary>
-        /// <remarks>This does not qualify <see cref="float" /> values.</remarks>
+        /// <remarks>
+        ///     This method is meant for when you do not actually need the value returned, merely an evaluation if
+        ///     the provided <paramref name="targetString" /> is an <see cref="Int32" />. This does not qualify
+        ///     <see cref="float" /> values positively.
+        /// </remarks>
         /// <param name="targetString">The target <see cref="System.String" />.</param>
         /// <returns>true/false if it contains an <see cref="Int32" />.</returns>
         [SecuritySafeCritical]
@@ -512,27 +516,29 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Is the <paramref name="targetString" /> a numerical value.
+        ///     Is the <paramref name="targetString" /> a numeric value.
         /// </summary>
         /// <remarks>
-        ///     <list>
+        ///     <para>
+        ///         The following requirements must be met to be considered a valid number in this method:
+        ///     </para>
+        ///     <list type="bullet">
         ///         <item>
-        ///             <description>The first character may be a negative sign.</description>
+        ///             <description>
+        ///                 The first character may be an indicator of its sign, an explicit acceptance of <c>-</c> is made. If
+        ///                 prefixed with <c>+</c>, the number will be found invalid.
+        ///             </description>
         ///         </item>
         ///         <item>
-        ///             <description>A decimal point may be set.</description>
+        ///             <description>A single decimal point <c>.</c> may be present in the <paramref name="targetString" />.</description>
         ///         </item>
         ///         <item>
-        ///             <description>No alphabet characters are present.</description>
+        ///             <description>No alphabet characters are present in the <paramref name="targetString"/>.</description>
         ///         </item>
         ///     </list>
-        ///     <para>
-        ///         This will identify values such as <see cref="Int32" /> and <see cref="float" />, if casting afterwards
-        ///         make note that an <see cref="Int32" /> can parse into a <see cref="float" /> most of the time.
-        ///     </para>
         /// </remarks>
-        /// <param name="targetString"></param>
-        /// <returns></returns>
+        /// <param name="targetString">The target <see cref="System.String" />.</param>
+        /// <returns>true/false if the <paramref name="targetString" /> qualifies as a numeric value.</returns>
         [SecuritySafeCritical]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
         public static unsafe bool IsNumeric(this string targetString)
