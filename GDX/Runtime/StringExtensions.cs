@@ -535,7 +535,7 @@ namespace GDX
         /// <returns></returns>
         [SecuritySafeCritical]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-        public static unsafe bool IsNumericalValue(this string targetString)
+        public static unsafe bool IsNumeric(this string targetString)
         {
             fixed (char* src = targetString)
             {

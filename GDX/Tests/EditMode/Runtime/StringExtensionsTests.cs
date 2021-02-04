@@ -156,22 +156,22 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_IsNumericalValue_Simple()
+        public void True_IsNumericValue_Simple()
         {
-            Assert.IsTrue("1".IsNumericalValue(), "Expected positive response.");
+            Assert.IsTrue("1".IsNumeric(), "Expected positive response.");
         }
         [Test]
         [Category("GDX.Tests")]
-        public void True_IsNumericalValue_Complex()
+        public void True_IsNumericValue_Complex()
         {
-            Assert.IsTrue("-100.12123".IsNumericalValue(), "Expected positive response.");
+            Assert.IsTrue("-100.12123".IsNumeric(), "Expected positive response.");
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void False_IsNumericalValue_DoubleDecimal()
+        public void False_IsNumericValue_DoubleDecimal()
         {
-            Assert.IsFalse("-100..12123".IsNumericalValue(), "Expected positive response.");
+            Assert.IsFalse("-100..12123".IsNumeric(), "Expected positive response.");
         }
 
 

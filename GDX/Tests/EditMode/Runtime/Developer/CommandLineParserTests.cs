@@ -1,13 +1,8 @@
 // dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using GDX.Developer;
 using NUnit.Framework;
-#if GDX_TESTFRAMEWORK_PERFORMANCETESTING
-using Unity.PerformanceTesting;
-
-#endif
 
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable
