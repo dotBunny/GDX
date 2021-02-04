@@ -100,13 +100,80 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_IsBoolean_True()
+        public void True_IsBooleanPositiveValue_Simple()
         {
-            int result = "True".GetStableLowerCaseHashCode();
-          //  const string expected = "\"y_TEST_STR#$34343";
-          Assert.Fail($"True: {result.ToString()}");
-          //Assert.IsTrue(result == expected, $"Expected {expected} but got {result}");
+            Assert.IsTrue("true".IsBooleanPositiveValue(), "Expected positive response.");
         }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_IsBooleanValue_Simple()
+        {
+            Assert.IsTrue("off".IsBooleanValue(), "Expected positive response.");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void False_IsBooleanValue_Simple()
+        {
+            Assert.IsFalse("off2".IsBooleanValue(), "Expected negative response.");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void False_IsBooleanPositiveValue_Simple()
+        {
+            Assert.IsFalse("true2".IsBooleanPositiveValue(), "Expected positive response.");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_IsIntegerValue_Simple()
+        {
+            Assert.IsTrue("1".IsIntegerValue(), "Expected positive response.");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_IsIntegerValue_Complex()
+        {
+            Assert.IsTrue("-100222".IsIntegerValue(), "Expected positive response.");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void False_IsIntegerValue_Simple()
+        {
+            Assert.IsFalse("bob".IsIntegerValue(), "Expected false response.");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void False_IsIntegerValue_Complex()
+        {
+            Assert.IsFalse("-100bob222".IsIntegerValue(), "Expected false response.");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_IsNumericalValue_Simple()
+        {
+            Assert.IsTrue("1".IsNumericalValue(), "Expected positive response.");
+        }
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_IsNumericalValue_Complex()
+        {
+            Assert.IsTrue("-100.12123".IsNumericalValue(), "Expected positive response.");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void False_IsNumericalValue_DoubleDecimal()
+        {
+            Assert.IsFalse("-100..12123".IsNumericalValue(), "Expected positive response.");
+        }
+
 
         [Test]
         [Category("GDX.Tests")]

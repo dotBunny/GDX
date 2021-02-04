@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `GDX.Vector3Extensions.DistanceToRay()`
 - `GDX.CapsuleCollider.OutSphereCenters()`
+- `GDX.StringExtensions`
+  - Exposed ASCII markers
+  - `IsBooleanValue()`
+  - `IsBooleanPositiveValue()`
+  - `IsIntegerValue()`
+  - `IsNumericalValue()`
 ### Changed
 - Optimized `GDX.GDXConfig` loading at runtime.
 - Wrap `GDX.InspectorLabelAttribute` in `UNITY_EDITOR` define requirement.
@@ -33,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `HorizontalDistance()` to get a horizontal distance ignoring vertically.
   - `NearestIndex()` to find the closest position in an array of positions.
 - `GDX.StringExtensions.TryParseVector2()` and `GDX.StringExtensions.TryParseVector3()` will rehydrate `0,0` and `0,0,0` formatted strings.
-- A more complex version of `GetComponentInChildren()` has been included with `GDX.GameObjectExtensions.GetFirstComponentInChildrenComplex()` and `GDX.MonoBehaviourExtensions.GetFirstComponentInChildrenComplex()` allowing for recursion limits.
+- A complex version of `GetComponentInChildren()`, called `GetFirstComponentInChildrenComplex()` is available in `GDX.GameObjectExtensions` and `GDX.MonoBehaviourExtensions`, allowing for recursion limits.
 - `GDX.BoxColliderExtensions.ContainsPosition()` as a quick method to determine if a world space position is inside of a `BoxCollider`.
 - `GDX.CapsuleColliderExtensions.Direction()` to get a `Vector3` based direction for a `CapsuleCollider`.
 - `GDX.RigidbodyExtensions.MomentOfInertia()` for an inertia calculation based on axis.
@@ -104,7 +110,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed `GDX.Editor.Config` to `GDX.Editor.ConfigProvider`
 - Fixed a bug where author-time calls to `GDXConfig.Get()` would return a null as it is meant for runtime only, they will now route through an editor safe path.
 - Moved all **Tests** to follow the test runner naming `EditMode` for editor runnable unit tests, namespaces included inside the assembly have been stripped down as well.
-- Exposed `GDX.Developer.CommandLineParser.ProcessArguments()` to allow for manual arguments to be added.
+- Exposed `ProcessArguments()` in `GDX.Developer.CommandLineParser` to allow for manual arguments to be added.
 
 ## [1.1.1] - 2021-01-17
 ***"Let Us Build"***

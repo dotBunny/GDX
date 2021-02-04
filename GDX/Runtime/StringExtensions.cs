@@ -21,29 +21,54 @@ namespace GDX
     public static class StringExtensions
     {
         /// <summary>
-        ///     The ASCII character code for uppercase A.
+        ///     The ASCII decimal value shift required to change the case of a letter.
         /// </summary>
-        private const int AsciiUpperCaseStart = 65;
+        public const int AsciiCaseShift = 32;
 
         /// <summary>
-        ///     The ASCII  character code for uppercase Z.
+        ///     The ASCII decimal value for a.
         /// </summary>
-        private const int AsciiUpperCaseEnd = 90;
+        public const int AsciiLowerCaseStart = 97;
 
         /// <summary>
-        ///     The ASCII character code for lowercase a.
+        ///     The ASCII decimal value for lowercase z.
         /// </summary>
-        private const int AsciiLowerCaseStart = 97;
+        public const int AsciiLowerCaseEnd = 122;
 
         /// <summary>
-        ///     The ASCII character code for lowercase z.
+        ///     The ASCII decimal value for the number sign -.
         /// </summary>
-        private const int AsciiLowerCaseEnd = 122;
+        public const int AsciiNumberSign = 45;
 
         /// <summary>
-        ///     The ASCII character code shift value required to change the case of a letter.
+        ///     The ASCII decimal value for the decimal (.).
         /// </summary>
-        private const int CaseShift = 32;
+        public const int AsciiNumberDecimal = 46;
+
+        /// <summary>
+        ///     The ASCII decimal value for the , separator.
+        /// </summary>
+        public const int AsciiNumberSeparator = 47;
+
+        /// <summary>
+        ///     The ASCII decimal value for 0.
+        /// </summary>
+        public const int AsciiNumberStart = 48;
+
+        /// <summary>
+        ///     The ASCII decimal value for 9.
+        /// </summary>
+        public const int AsciiNumberEnd = 57;
+
+        /// <summary>
+        ///     The ASCII decimal value for uppercase A.
+        /// </summary>
+        public const int AsciiUpperCaseStart = 65;
+
+        /// <summary>
+        ///     The ASCII  decimal value for uppercase Z.
+        /// </summary>
+        public const int AsciiUpperCaseEnd = 90;
 
         /// <summary>
         ///     The default encryption key used when none is provided to the encryption related extensions.
@@ -241,7 +266,7 @@ namespace GDX
                     // Check character value and shift it if necessary (32)
                     if (c >= AsciiLowerCaseStart && c <= AsciiLowerCaseEnd)
                     {
-                        c ^= CaseShift;
+                        c ^= AsciiCaseShift;
                     }
 
                     // Add to Hash #1
@@ -258,7 +283,7 @@ namespace GDX
                     // Check character value and shift it if necessary (32)
                     if (c >= AsciiLowerCaseStart && c <= AsciiLowerCaseEnd)
                     {
-                        c ^= CaseShift;
+                        c ^= AsciiCaseShift;
                     }
 
                     hash2 = ((hash2 << 5) + hash2) ^ c;
@@ -300,7 +325,7 @@ namespace GDX
                     // Check character value and shift it if necessary (32)
                     if (c >= AsciiUpperCaseStart && c <= AsciiUpperCaseEnd)
                     {
-                        c ^= CaseShift;
+                        c ^= AsciiCaseShift;
                     }
 
                     // Add to Hash #1
@@ -317,7 +342,7 @@ namespace GDX
                     // Check character value and shift it if necessary (32)
                     if (c >= AsciiUpperCaseStart && c <= AsciiUpperCaseEnd)
                     {
-                        c ^= CaseShift;
+                        c ^= AsciiCaseShift;
                     }
 
                     hash2 = ((hash2 << 5) + hash2) ^ c;
@@ -386,43 +411,125 @@ namespace GDX
             return false;
         }
 
-        public static unsafe bool IsBooleanValue(this string targetString)
+        /// <summary>
+        ///     Determine if the <paramref name="targetString" /> represents a boolean value arrangement.
+        /// </summary>
+        /// <param name="targetString">The target <see cref="System.String" />.</param>
+        /// <returns>true/false if the <paramref name="targetString" /> can be evaluated as a boolean value.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsBooleanValue(this string targetString)
         {
+            // Get an optimized hash value
             int hash = targetString.GetStableLowerCaseHashCode();
+
+            // Check
             switch (hash)
             {
-                    case 1: // true
-                    case 2: // false
-                    case 4: // 1
-                    case 3: // 0
-                    case 5: // yes
-                    case 6: // no
-                        break;
-
+                case -971704226: // true
+                case -1685090051: // false
+                case 372029325: // 1
+                case 372029326: // 0
+                case -1273338385: // yes
+                case 1496915069: // no
+                case -1231968287: // on
+                case -870054309: // off
+                    return true;
             }
 
-            // TODO: fill logic
-            return false;
-        }
-
-        public static unsafe bool IsIntegerValue(this string targetString)
-        {
-            // TODO: fill logic
             return false;
         }
 
         /// <summary>
-        /// Is the <paramref name="targetString"/> a numerical value.
+        ///     Determine if the <paramref name="targetString" /> represents a positive boolean value arrangement.
+        /// </summary>
+        /// <example>
+        ///     Useful method when trying to parse data for branching.
+        ///     <code>
+        ///         if(data["set"].IsBooleanPositiveValue())
+        ///         {
+        ///             ShouldBlueBox();
+        ///         }
+        ///     </code>
+        /// </example>
+        /// <param name="targetString">The target <see cref="System.String" />.</param>
+        /// <returns>true/false if the <paramref name="targetString" /> can be evaluated as a positive boolean value.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsBooleanPositiveValue(this string targetString)
+        {
+            int hash = targetString.GetStableLowerCaseHashCode();
+            switch (hash)
+            {
+                case -971704226: // true
+                case 372029325: // 1
+                case -1273338385: // yes
+                case -1231968287: // on
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     Determine if the <paramref name="targetString" /> is an <see cref="Int32" /> value.
+        /// </summary>
+        /// <remarks>This does not qualify <see cref="float" /> values.</remarks>
+        /// <param name="targetString">The target <see cref="System.String" />.</param>
+        /// <returns>true/false if it contains an <see cref="Int32" />.</returns>
+        [SecuritySafeCritical]
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
+        public static unsafe bool IsIntegerValue(this string targetString)
+        {
+            fixed (char* src = targetString)
+            {
+                char* s = src;
+                int c = s[0];
+
+                // Nothing
+                if (c == 0)
+                {
+                    return false;
+                }
+
+                // Check first character
+                if (c != AsciiNumberSign && (c < AsciiNumberStart || c > AsciiNumberEnd))
+                {
+                    return false;
+                }
+
+                // Get character
+                while ((c = s[1]) != 0)
+                {
+                    if (c < AsciiNumberStart || c > AsciiNumberEnd)
+                    {
+                        return false;
+                    }
+
+                    s += 1;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        ///     Is the <paramref name="targetString" /> a numerical value.
         /// </summary>
         /// <remarks>
         ///     <list>
         ///         <item>
-        ///             <description>The first character must a sign, or a number.</description>
+        ///             <description>The first character may be a negative sign.</description>
         ///         </item>
         ///         <item>
-        ///             <description>No alpha characters are present.</description>
+        ///             <description>A decimal point may be set.</description>
+        ///         </item>
+        ///         <item>
+        ///             <description>No alphabet characters are present.</description>
         ///         </item>
         ///     </list>
+        ///     <para>
+        ///         This will identify values such as <see cref="Int32" /> and <see cref="float" />, if casting afterwards
+        ///         make note that an <see cref="Int32" /> can parse into a <see cref="float" /> most of the time.
+        ///     </para>
         /// </remarks>
         /// <param name="targetString"></param>
         /// <returns></returns>
@@ -430,15 +537,44 @@ namespace GDX
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
         public static unsafe bool IsNumericalValue(this string targetString)
         {
-            // TODO: fill logic
-            return false;
-        }
+            fixed (char* src = targetString)
+            {
+                char* s = src;
+                int c = s[0];
+                bool hasDecimal = false;
 
+                // Nothing
+                if (c == 0)
+                {
+                    return false;
+                }
 
-        public static unsafe bool IsSingleValue(this string targetString)
-        {
-            // TODO: fill logic
-            return false;
+                // Check first character
+                if (c != AsciiNumberSign && (c < AsciiNumberStart || c > AsciiNumberEnd))
+                {
+                    return false;
+                }
+
+                // Get character
+                while ((c = s[1]) != 0)
+                {
+                    if (c < AsciiNumberStart || c > AsciiNumberEnd)
+                    {
+                        if (c == AsciiNumberDecimal && !hasDecimal)
+                        {
+                            hasDecimal = true;
+                            s += 1;
+                            continue;
+                        }
+
+                        return false;
+                    }
+
+                    s += 1;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -498,6 +634,7 @@ namespace GDX
                 outputVector3 = Vector3.zero;
                 return false;
             }
+
             int secondSplit = targetString.IndexOf(',', firstSplit + 1);
             if (secondSplit == -1)
             {
