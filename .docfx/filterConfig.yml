@@ -9,6 +9,9 @@ apiRules:
 - exclude:
       uidRegex: ^System\.Attribute
       type: Type  
+- exclude: 
+      uidRegex: ^System\.Collections\.Generic\.Dictionary
+      type: Type
 # Exclude Unity Bases
 - exclude:
       uidRegex: ^UnityEngine\.Object
