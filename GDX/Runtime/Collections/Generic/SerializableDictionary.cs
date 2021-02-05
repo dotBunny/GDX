@@ -24,6 +24,13 @@ namespace GDX.Collections.Generic
     [Serializable]
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
+#if UNITY_EDITOR
+        /// <summary>
+        ///     Editor only data indicating if the property drawer is expanded.
+        /// </summary>
+        [HideInInspector] [SerializeField] private bool drawerExpanded = false;
+#endif
+
         /// <summary>
         ///     A cached length of the serialized data arrays.
         /// </summary>
@@ -144,6 +151,7 @@ namespace GDX.Collections.Generic
         /// <summary>
         ///     Fill serializable arrays from dictionary data.
         /// </summary>
+        /// <remarks>We will always create the arrays so the property drawers function nicely.</remarks>
         public void SaveSerializedData()
         {
             // Stash our length for future usage
