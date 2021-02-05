@@ -90,7 +90,9 @@ namespace GDX
         /// <summary>
         ///     A runtime only instance of <see cref="GDXConfig"/>.
         /// </summary>
-        private static GDXConfig _runtimeInstance = null;
+#pragma warning disable 414
+        private static GDXConfig s_runtimeInstance = null;
+#pragma warning restore 414
 
         /// <summary>
         ///     Get a loaded instance of the <see cref="GDXConfig" /> from resources.
@@ -104,11 +106,11 @@ namespace GDX
             // and things like that.
             return AssetDatabase.LoadAssetAtPath<GDXConfig>("Assets/Resources/GDX/GDXConfig.asset");
 #else
-            if (_runtimeInstance == null)
+            if (s_runtimeInstance == null)
             {
-                _runtimeInstance = Resources.Load<GDXConfig>("GDX/GDXConfig");
+                s_runtimeInstance = Resources.Load<GDXConfig>("GDX/GDXConfig");
             }
-            return _runtimeInstance;
+            return s_runtimeInstance;
 #endif
         }
     }
