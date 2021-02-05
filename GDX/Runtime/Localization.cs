@@ -2,7 +2,9 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Globalization;
 using System.Runtime.CompilerServices;
+using UnityEngine;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -44,16 +46,16 @@ namespace GDX
         /// <summary>
         ///     An array of strings representative for file size formats.
         /// </summary>
-        private static readonly string[] s_readableByteSizes = { "B", "KB", "MB", "GB", "TB" };
+        private static readonly string[] s_readableByteSizes = {"B", "KB", "MB", "GB", "TB"};
 
         /// <summary>
-        ///     Creates a more human readable <see cref="string"/> of a byte size.
+        ///     Creates a more human readable <see cref="string" /> of a byte size.
         /// </summary>
         /// <example>
         ///     A byte size of 1024, will return a string of 1 KB.
         /// </example>
         /// <param name="byteSize">The number of bytes to measure.</param>
-        /// <returns>A human readable version of the provided <paramref name="byteSize"/>.</returns>
+        /// <returns>A human readable version of the provided <paramref name="byteSize" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GetHumanReadableFileSize(long byteSize)
         {
@@ -65,6 +67,7 @@ namespace GDX
                 order++;
                 length /= 1024;
             }
+
             return $"{length:0.##} {s_readableByteSizes[order]}";
         }
 
@@ -100,6 +103,63 @@ namespace GDX
             }
         }
 
+        /// <summary>
+        ///     <para>Get the IETF language code for <paramref name="targetLanguage" />.</para>
+        /// </summary>
+        /// <remarks>Two additional non-compliant values may be returned DEV or DEFAULT.</remarks>
+        /// <param name="targetLanguage">The target <see cref="Language" />.</param>
+        /// <returns>The language code.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GetIETF(this Language targetLanguage)
+        {
+            switch (targetLanguage)
+            {
+                case Language.English:
+                    return "en-US";
+                case Language.German:
+                    return "de";
+                case Language.Spanish:
+                    return "es";
+                case Language.French:
+                    return "fr";
+                case Language.Polish:
+                    return "pl";
+                case Language.Russian:
+                    return "ru";
+                case Language.Development:
+                    return "DEV";
+                case Language.Default:
+                    return "DEFAULT";
+                default:
+                    return "en-US";
+            }
+        }
+
+        /// <summary>
+        ///     Get the <see cref="Language"/> equivalent of the <see cref="SystemLanguage"/>.
+        /// </summary>
+        /// <returns>The appropriate <see cref="Language"/>, or default.</returns>
+        public static Language GetSystemLanguage()
+        {
+            SystemLanguage language = Application.systemLanguage;
+            switch (language)
+            {
+                case SystemLanguage.German:
+                    return Language.German;
+                case SystemLanguage.Russian:
+                    return Language.Russian;
+                case SystemLanguage.Polish:
+                    return Language.Polish;
+                case SystemLanguage.French:
+                    return Language.French;
+                case SystemLanguage.Spanish:
+                    return Language.Spanish;
+                case SystemLanguage.English:
+                    return Language.English;
+                default:
+                    return Language.Default;
+            }
+        }
 
         /// <summary>
         ///     Get the localized <see cref="System.DateTime" />.<see cref="System.DateTime.ToString(string)" /> for
@@ -126,6 +186,24 @@ namespace GDX
                     return LocalTimestampFormat;
                 default:
                     return LocalTimestampFormat;
+            }
+        }
+
+
+        /// <summary>
+        ///     Sets the current threads culture to a defined setting in <see cref="GDXConfig"/>.
+        /// </summary>
+        /// <remarks>
+        ///     Can be used to avoid issues with culture settings without a Gregorian Calendar. Configurable to automatically
+        ///     execute after assemblies are loaded.
+        /// </remarks>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+        public static void SetDefaultCulture()
+        {
+            GDXConfig config = GDXConfig.Get();
+            if (config.localizationSetDefaultCulture && GetSystemLanguage() == Language.Default)
+            {
+                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(GetIETF(config.localizationDefaultCulture));
             }
         }
     }

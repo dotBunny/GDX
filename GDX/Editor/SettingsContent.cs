@@ -117,6 +117,20 @@ namespace GDX.Editor
         public static readonly GUIContent HelpIcon;
 
         /// <summary>
+        ///     Settings content for <see cref="GDXConfig.localizationSetDefaultCulture" />.
+        /// </summary>
+        public static readonly GUIContent LocalizationSetDefaultCulture = new GUIContent(
+            "Set Default Culture",
+            "For situations where a culture does not have a calendar available, this can be corrected after assemblies have been loaded by setting the CultureInfo.DefaultThreadCurrentCulture to a setting with one.");
+
+        /// <summary>
+        ///     Settings content for <see cref="GDXConfig.localizationDefaultCulture" />.
+        /// </summary>
+        public static readonly GUIContent LocalizationDefaultCulture = new GUIContent(
+            "Default Culture",
+            "The value to be used when setting the CultureInfo.DefaultThreadCurrentCulture.");
+
+        /// <summary>
         ///     A cached <see cref="GUIContent" /> containing a minus symbol.
         /// </summary>
         public static readonly GUIContent MinusIcon;

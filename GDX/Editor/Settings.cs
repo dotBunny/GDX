@@ -7,6 +7,7 @@ using GDX.Developer;
 using GDX.Editor.Build;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper HeapView.ObjectAllocation.Evident
@@ -67,6 +68,7 @@ namespace GDX.Editor
                     AutomaticUpdatesSection(settings);
                     BuildInfoSection(settings);
                     CommandLineProcessorSection(settings);
+                    LocalizationSection(settings);
 
                     // Apply any serialized setting changes
                     settings.ApplyModifiedPropertiesWithoutUndo();
@@ -446,6 +448,30 @@ namespace GDX.Editor
                 SettingsContent.CommandLineParserArgumentPrefix);
             EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentSplit"),
                 SettingsContent.CommandLineParserArgumentSplit);
+        }
+
+        /// <summary>
+        ///     Build out Localization section of settings.
+        /// </summary>
+        /// <param name="settings">Serialized <see cref="GDXConfig" /> object to be modified.</param>
+        private static void LocalizationSection(SerializedObject settings)
+        {
+            const string sectionID = "GDX.Localization";
+            GUI.enabled = true;
+
+            SettingsLayout.CreateSettingsSection(sectionID, false, "Localization",
+                $"{DocumentationUri}api/GDX.Localization.html");
+
+            if (!SettingsLayout.GetCachedEditorBoolean(sectionID))
+            {
+                return;
+            }
+
+            EditorGUILayout.PropertyField(settings.FindProperty("localizationSetDefaultCulture"),
+                SettingsContent.LocalizationSetDefaultCulture);
+
+            EditorGUILayout.PropertyField(settings.FindProperty("localizationDefaultCulture"),
+                SettingsContent.LocalizationDefaultCulture);
         }
     }
 }

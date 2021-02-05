@@ -76,6 +76,22 @@ namespace GDX
         /// </summary>
         public string developerBuildInfoBuildStreamArgument = "BUILD_STREAM";
 
+
+        /// <summary>
+        ///     Should the default thread culture be set?
+        /// </summary>
+        public bool localizationSetDefaultCulture = true;
+
+        /// <summary>
+        ///     The language to set the default thread culture too.
+        /// </summary>
+        public Localization.Language localizationDefaultCulture = Localization.Language.English;
+
+        /// <summary>
+        ///     A runtime only instance of <see cref="GDXConfig"/>.
+        /// </summary>
+        private static GDXConfig _runtimeInstance = null;
+
         /// <summary>
         ///     Get a loaded instance of the <see cref="GDXConfig" /> from resources.
         /// </summary>
@@ -88,7 +104,11 @@ namespace GDX
             // and things like that.
             return AssetDatabase.LoadAssetAtPath<GDXConfig>("Assets/Resources/GDX/GDXConfig.asset");
 #else
-            return Resources.Load<GDXConfig>("GDX/GDXConfig");
+            if (_runtimeInstance == null)
+            {
+                _runtimeInstance = Resources.Load<GDXConfig>("GDX/GDXConfig");
+            }
+            return _runtimeInstance;
 #endif
         }
     }

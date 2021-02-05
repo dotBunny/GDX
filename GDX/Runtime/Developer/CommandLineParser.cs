@@ -37,7 +37,7 @@ namespace GDX.Developer
         /// <remarks>
         ///     <para>This is automatically executed during runtime.</para>
         /// </remarks>
-        [RuntimeInitializeOnLoadMethod]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
         public static void ParseArguments()
         {
             ProcessArguments(Environment.GetCommandLineArgs());
