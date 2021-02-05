@@ -19,6 +19,7 @@ Feature | Description
 [CapsuleCollider](xref:GDX.CapsuleColliderExtensions) | Simple helper for finding out which way a `CapsuleCollider` is oriented.
 [GameObject](xref:GDX.GameObjectExtensions) | After this long, even Unity can use a little help with some of its fundamental component based systems.
 [IList](xref:GDX.IListExtensions) | A common set of methods for collections allowing for optimized value and item checks, as well as some extras.
+[Mesh](xref:GDX.MeshExtensions) | A one of helper to calculate the volume of a mesh.
 [Rigidbody](xref:GDX.RigidbodyExtensions) | A method for determining the moment of inertia.
 [String](xref:GDX.StringExtensions) | The thing that started it all, a vast collection of extension methods covering a wide range from encryption to hash codes, to simply finding content an existing `string`.
 [Vector2](xref:GDX.Vector2Extensions) | Additional functionality for common calculations done with `Vector2`. For example, determining approximately if two `Vector2` are the same efficiently, or finding the midpoint between two `Vector2`. This automatically switches to using `com.unity.mathematics` functionality if available.
