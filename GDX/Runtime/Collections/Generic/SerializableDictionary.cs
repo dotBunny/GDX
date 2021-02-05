@@ -85,9 +85,19 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
+        ///     Get the length of the serialized data arrays.
+        /// </summary>
+        /// <returns>An integer value representing the count.</returns>
+        public int GetSerializedDataLength()
+        {
+            return serializedLength;
+        }
+
+        /// <summary>
         ///     Load the data into the <see cref="Dictionary{TKey,TValue}" /> cached in the serialized data.
         /// </summary>
-        public void LoadSerializedData()
+        /// <param name="clearAfterLoad">Should the serialized data be cleared after loading?</param>
+        public void LoadSerializedData(bool clearAfterLoad = true)
         {
             Clear();
 
@@ -103,6 +113,11 @@ namespace GDX.Collections.Generic
             }
 
             // Remove any data cached so that references are not held.
+            if (!clearAfterLoad)
+            {
+                return;
+            }
+
             serializedLength = -1;
             serializedKeys = null;
             serializedValues = null;

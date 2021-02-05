@@ -7,7 +7,7 @@ using NUnit.Framework;
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable
 
-namespace Runtime
+namespace Runtime.Developer
 {
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="CommandLineParser" /> class.
