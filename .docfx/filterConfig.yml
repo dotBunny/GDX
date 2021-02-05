@@ -29,3 +29,6 @@ apiRules:
 - exclude:
       hasAttribute:
             uid: GDX.HideFromDocFXAttribute
+- exclude:
+      uidRegex: ^GDX\.Editor\.PropertyDrawers 
+      type: Namespace 

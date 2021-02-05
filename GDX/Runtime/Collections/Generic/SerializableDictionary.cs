@@ -42,7 +42,52 @@ namespace GDX.Collections.Generic
         /// <summary>
         ///     Rehydrate the serialized data arrays back into a <see cref="Dictionary{TKey,TValue}" />.
         /// </summary>
+        /// <remarks>Calls <see cref="LoadSerializedData" />.</remarks>
         public void OnAfterDeserialize()
+        {
+            LoadSerializedData();
+        }
+
+        /// <summary>
+        ///     Prepare our data for serialization, moving it into arrays.
+        /// </summary>
+        /// <remarks>Calls <see cref="SaveSerializedData" />.</remarks>
+        public void OnBeforeSerialize()
+        {
+            SaveSerializedData();
+        }
+
+        /// <summary>
+        ///     Creates a copy from the serialized data.
+        /// </summary>
+        /// <returns>
+        ///     A new <see cref="SerializableDictionary{TKey,TValue}" /> filled with the the serialized data of this
+        ///     <see cref="SerializableDictionary{TKey,TValue}" />.
+        /// </returns>
+        public SerializableDictionary<TKey, TValue> CreateFromSerializedData()
+        {
+            // Make sure we have some form of data to work with
+            SerializableDictionary<TKey, TValue> newDictionary = new SerializableDictionary<TKey, TValue>();
+
+            if (serializedLength <= 0)
+            {
+                return newDictionary;
+            }
+
+            // Iterate over all the serialized data and put it back into the dictionary as it once was, in order.
+            for (int i = 0; i < serializedLength; i++)
+            {
+                newDictionary.Add(serializedKeys[i], serializedValues[i]);
+            }
+
+            // Return filled dictionary
+            return newDictionary;
+        }
+
+        /// <summary>
+        ///     Load the data into the <see cref="Dictionary{TKey,TValue}" /> cached in the serialized data.
+        /// </summary>
+        public void LoadSerializedData()
         {
             Clear();
 
@@ -64,43 +109,11 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Prepare our data for serialization, moving it into arrays.
-        /// </summary>
-        /// <remarks>Calls <see cref="SaveSerializedData" />.</remarks>
-        public void OnBeforeSerialize()
-        {
-            SaveSerializedData();
-        }
-
-        /// <summary>
-        ///     Creates a copy from the serialized data.
-        /// </summary>
-        public SerializableDictionary<TKey, TValue> CopyFromSerializedData()
-        {
-            // Make sure we have some form of data to work with
-            SerializableDictionary<TKey, TValue> newDictionary = new SerializableDictionary<TKey, TValue>();
-
-            if (serializedLength <= 0)
-            {
-                return newDictionary;
-            }
-
-            // Iterate over all the serialized data and put it back into the dictionary as it once was, in order.
-            for (int i = 0; i < serializedLength; i++)
-            {
-                newDictionary.Add(serializedKeys[i], serializedValues[i]);
-            }
-
-            // Return filled dictionary
-            return newDictionary;
-        }
-
-        /// <summary>
-        ///     Copy arrays of data into the serialized data for this <see cref="SerializableDictionary{TKey,TValue}" />.
+        ///     Overwrite data in the serialized arrays with the provided data.
         /// </summary>
         /// <param name="keyArray">An array of keys.</param>
         /// <param name="valueArray">An array of values.</param>
-        public void CopyToSerializableData(TKey[] keyArray, TValue[] valueArray)
+        public void OverwriteSerializedData(TKey[] keyArray, TValue[] valueArray)
         {
             if (keyArray.Length != valueArray.Length)
             {

@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.3] - 2021-02-3
 ***"Workplace 2.0"***
+> Extending functionality out with more code from the backlog, while still addressing some oddities in the existing codebase.
+
 ### Added
 - A Unity serializable dictionary-esque type `GDX.Collections.Generic.SerializableDictionary`.
 - `GDX.Vector3Extensions.DistanceToRay()`
