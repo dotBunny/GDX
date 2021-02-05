@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `IsBooleanPositiveValue()`
   - `IsIntegerValue()`
   - `IsNumericalValue()`
+- `GDX.TransformExtensions`
+  - `GetFirstComponentInChildrenComplex()`
+  - `GetActiveChildCount()`
+- Automated culture setting on thread.
 ### Changed
 - Optimized `GDX.GDXConfig` loading at runtime.
 - Wrap `GDX.InspectorLabelAttribute` in `UNITY_EDITOR` define requirement.

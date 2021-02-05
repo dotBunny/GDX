@@ -58,8 +58,7 @@ namespace GDX
                 }
             }
 
-            returnComponent =
-                FindFirstComponentRecursively<T>(targetGameObject.transform, includeInactive, 0, maxLevelsOfRecursion);
+            returnComponent = targetGameObject.transform.GetFirstComponentInChildrenComplex<T>(includeInactive, 0, maxLevelsOfRecursion);
             if (returnComponent != null)
             {
                 return returnComponent;
@@ -68,69 +67,6 @@ namespace GDX
             return !lookInChildrenFirst ? default : targetGameObject.GetComponent<T>();
         }
 
-        /// <summary>
-        ///     Search recursively for a <see cref="Component" /> on the <paramref name="targetTransform" />.
-        /// </summary>
-        /// <param name="targetTransform">The target <see cref="Transform" /> to use as the base for the search.</param>
-        /// <param name="includeInactive">
-        ///     Include inactive child <see cref="GameObject" />s when looking for the
-        ///     <see cref="Component" />.
-        /// </param>
-        /// <param name="currentDepth">Current level of recursion.</param>
-        /// <param name="maxLevelsOfRecursion">
-        ///     The maximum levels of recursion when looking for a <see cref="Component" />, -1 for
-        ///     infinite recursion.
-        /// </param>
-        /// <typeparam name="T">The target <see cref="UnityEngine.Component" /> type that is being looked for.</typeparam>
-        /// <returns>The first found <see cref="Component" />.</returns>
-        private static T FindFirstComponentRecursively<T>(this Transform targetTransform, bool includeInactive,
-            int currentDepth, int maxLevelsOfRecursion)
-        {
-            // Make sure we have nothing to return if necessary.
-            T returnComponent = default;
 
-            // Increase depth count
-            currentDepth++;
-
-            if (maxLevelsOfRecursion >= 0 && currentDepth > maxLevelsOfRecursion)
-            {
-                return returnComponent;
-            }
-
-            int cachedChildCount = targetTransform.childCount;
-            for (int i = 0; i < cachedChildCount; i++)
-            {
-                Transform transformToCheck = targetTransform.GetChild(i);
-
-                // Don't include disabled transforms
-                if (!transformToCheck.gameObject.activeSelf &&
-                    !includeInactive)
-                {
-                    continue;
-                }
-
-                // Lets check the current transform for the component.
-                returnComponent = transformToCheck.GetComponent<T>();
-                if (returnComponent != null)
-                {
-                    return returnComponent;
-                }
-
-                // OK, time to deep dive.
-                if (maxLevelsOfRecursion >= 0 && currentDepth >= maxLevelsOfRecursion)
-                {
-                    continue;
-                }
-
-                returnComponent = FindFirstComponentRecursively<T>(transformToCheck, includeInactive, currentDepth,
-                    maxLevelsOfRecursion);
-                if (returnComponent != null)
-                {
-                    return returnComponent;
-                }
-            }
-
-            return returnComponent;
-        }
     }
 }

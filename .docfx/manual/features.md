@@ -22,6 +22,7 @@ Feature | Description
 [Mesh](xref:GDX.MeshExtensions) | A one of helper to calculate the volume of a mesh.
 [Rigidbody](xref:GDX.RigidbodyExtensions) | A method for determining the moment of inertia.
 [String](xref:GDX.StringExtensions) | The thing that started it all, a vast collection of extension methods covering a wide range from encryption to hash codes, to simply finding content an existing `string`.
+[Transform](xref:GDX.TransformExtensions) | Some useful functionality when it comes to working with `Transform`.
 [Vector2](xref:GDX.Vector2Extensions) | Additional functionality for common calculations done with `Vector2`. For example, determining approximately if two `Vector2` are the same efficiently, or finding the midpoint between two `Vector2`. This automatically switches to using `com.unity.mathematics` functionality if available.
 [Vector3](xref:GDX.Vector3Extensions) | Additional functionality for common calculations done with `Vector3`. For example, determining approximately if two `Vector3` are the same efficiently, or finding the midpoint between two `Vector3`. This automatically switches to using `com.unity.mathematics` functionality if available.
  
