@@ -45,8 +45,6 @@ namespace GDX.Editor.PropertyDrawers
 #endif
     internal class SerializableDictionaryPropertyDrawer : PropertyDrawer
     {
-        private SerializedObject _serializedObject;
-
         private SerializedProperty _propertyExpanded;
         private bool _propertyExpandedCache;
         private SerializedProperty _propertyAddKey;
@@ -59,7 +57,14 @@ namespace GDX.Editor.PropertyDrawers
         private SerializedProperty _propertyValues;
 
         private string _label = "Serializable Dictionary";
-        private float _cachedHeight;
+
+        private float _heightTotal;
+        private float _heightFoldout;
+        private float _heightContent;
+        private float _heightContentHeader;
+        private float _heightContentElements;
+        private float _heightContentFooter;
+        private float _heightFooter;
 
 
         private bool _validKeyValueCount = true;
@@ -67,40 +72,41 @@ namespace GDX.Editor.PropertyDrawers
         /// <summary>
         ///     Provide an adjusted height for the entire element to be rendered.
         /// </summary>
+        /// <remarks>Makes use of caching of heights to different sections of the property drawer.</remarks>
         /// <param name="property">The target <see cref="SerializedProperty" /> which is being evaluated.</param>
         /// <param name="label">Ignored.</param>
-        /// <returns>Required height for element.</returns>
+        /// <returns>Required height for element to be drawn.</returns>
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             // In the case that we just have the foldout showing, we want the property drawer to just be a single line
+            _heightFoldout = EditorGUIUtility.singleLineHeight;
+
+            // Early out if the property drawer is not expanded
             if (!_propertyExpandedCache)
             {
-                _cachedHeight = EditorGUIUtility.singleLineHeight;
-                return _cachedHeight;
+                _heightTotal = _heightFoldout;
+                return _heightTotal;
             }
 
+            // Determine the height of the elements portion of the content area
+            _heightContentHeader = 4;
+            _heightContentElements = (EditorGUIUtility.singleLineHeight + Styles.ContentAreaElementSpacing) *
+                Mathf.Max(
+                    1, _propertyCountCache) - Styles.ContentAreaElementSpacing;
+            _heightContentFooter = 4;
+            _heightContent = _heightContentHeader +
+                             _heightContentElements +
+                             _heightContentFooter;
 
-            if (_propertyCountCache == 0)
-            {
-                _cachedHeight = EditorGUIUtility.singleLineHeight * Mathf.Max(2, _propertyCountCache + 1) +
-                                EditorGUIUtility.singleLineHeight +
-                                Styles.ContentAreaPadding +
-                                Utility.ButtonOffset +
-                                Utility.ButtonVerticalPadding +
-                                Utility.MarginBottom;
-                return _cachedHeight;
-            }
-
-            _cachedHeight = (EditorGUIUtility.singleLineHeight + Styles.ElementSpaceBetweenPadding) *
-                            Mathf.Max(2, _propertyCountCache + 1) +
+            // Figure out our footer total height
+            _heightFooter = Styles.ActionButtonVerticalPadding +
                             EditorGUIUtility.singleLineHeight +
-                            Styles.ContentAreaPadding * 2 +
-                            Utility.ButtonOffset +
-                            Utility.ButtonVerticalPadding +
-                            Utility.MarginBottom
-                            // Remove the extra space
-                            - Styles.ElementSpaceBetweenPadding;
-            return _cachedHeight;
+                            Styles.ActionButtonVerticalPadding;
+
+            // Add up our total
+            _heightTotal = _heightFoldout + Styles.ContentAreaTopMargin + _heightContent + _heightFooter;
+
+            return _heightTotal;
         }
 
         /// <summary>
@@ -111,8 +117,6 @@ namespace GDX.Editor.PropertyDrawers
         /// <param name="label">An ignored label value.</param>
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            // Cache Serialized Object
-            _serializedObject = property.serializedObject;
             _label = property.displayName;
 
             // Editor only properties
@@ -133,31 +137,140 @@ namespace GDX.Editor.PropertyDrawers
                                   _propertyCountCache == _propertyKeys.arraySize;
 
             // Draw the foldout at the top of the space
-            DrawFoldout(new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight));
+            Rect foldoutRect = new Rect(position.x, position.y, position.width, _heightFoldout);
+            DrawFoldout(foldoutRect);
 
             // If the foldout is expanded, draw the actual content
             if (_propertyExpandedCache)
             {
-                Rect contentRect = new Rect(position.x,
-                    position.y + EditorGUIUtility.singleLineHeight + Styles.ContentAreaPadding,
-                    position.width,
-                    position.height - (EditorGUIUtility.singleLineHeight * 2 + Utility.ButtonOffset +
-                                       Utility.ButtonVerticalPadding + Utility.MarginBottom));
-
-                Rect footerRect = new Rect(
-                    position.x,
-                    position.y + (position.height - (EditorGUIUtility.singleLineHeight + Utility.ButtonOffset +
-                                                     Utility.ButtonVerticalPadding + Utility.MarginBottom)),
-                    position.width,
-                    EditorGUIUtility.singleLineHeight + Utility.ButtonVerticalPadding);
-
-
-                DrawContentEditor(contentRect, footerRect);
+                Rect contentRect = new Rect(position.x, foldoutRect.yMax + Styles.ContentAreaTopMargin , position.width, _heightContent);
+                DrawContentEditor(contentRect);
+                Rect footerRect = new Rect(position.x, contentRect.yMax, position.width, _heightFooter);
                 DrawFooterActions(footerRect);
             }
 
             // Anything we changed property wise we should save
             property.serializedObject.ApplyModifiedProperties();
+        }
+
+        private void DrawContentEditor(Rect position)
+        {
+            // Paint the background
+            if (Event.current.type == EventType.Repaint)
+            {
+                Rect headerBackgroundRect = new Rect(position.x, position.y, position.width, _heightContentHeader);
+
+                // The extra 2 pixels are used to get rid of the rounded corners on the content box
+                Rect contentBackgroundRect = new Rect(position.x, headerBackgroundRect.yMax, position.width,
+                    _heightContentElements + 2);
+                Rect footerBackgroundRect = new Rect(position.x, contentBackgroundRect.yMax - 2, position.width,
+                    _heightContentFooter);
+
+                Styles.BoxBackground.Draw(contentBackgroundRect, false, false, false, false);
+
+                Styles.HeaderBackground.Draw(headerBackgroundRect, false, false, false, false);
+                Styles.FooterBackground.Draw(footerBackgroundRect, false, false, false, false);
+            }
+
+            // Bring in the provided rect
+            position.yMin += _heightContentHeader;
+            position.yMax -= _heightContentFooter;
+            position.xMin += Styles.ContentAreaHorizontalPadding;
+            position.xMax -= Styles.ContentAreaHorizontalPadding;
+
+            // If we have nothing simply display the message
+            if (_propertyCountCache == 0)
+            {
+                EditorGUI.LabelField(position, Content.EmptyDictionary, EditorStyles.label);
+                return;
+            }
+
+            // Generate our elements
+            const float spacing = 15;
+            float columnWidth = (position.width - Styles.ContentAreaHorizontalPadding * 2) / 2 - spacing;
+
+            //   EditorGUI.indentLevel++;
+            for (int i = 0; i < _propertyCountCache; i++)
+            {
+                float topOffset = (EditorGUIUtility.singleLineHeight + Styles.ContentAreaElementSpacing) * i;
+
+                EditorGUI.PropertyField(
+                    new Rect(position.x, position.y + topOffset, columnWidth,
+                        EditorGUIUtility.singleLineHeight), _propertyKeys.GetArrayElementAtIndex(i), GUIContent.none);
+
+                EditorGUI.PropertyField(
+                    new Rect(position.x + spacing + columnWidth, position.y + topOffset,
+                        columnWidth, EditorGUIUtility.singleLineHeight), _propertyValues.GetArrayElementAtIndex(i),
+                    GUIContent.none);
+            }
+
+            //  EditorGUI.indentLevel--;
+        }
+
+        /// <summary>
+        ///     Draw actionable buttons offset of the footer.
+        /// </summary>
+        /// <param name="position">
+        ///     A <see cref="Rect" /> representing the space which the footer will be drawn, so that he the
+        ///     buttons can draw offset of it.
+        /// </param>
+        private void DrawFooterActions(Rect position)
+        {
+            float inputWidth = position.width / 2 - Styles.ActionButtonWidth - Styles.ActionButtonHorizontalPadding;
+            Rect addBackgroundRect = new Rect(position.xMin + 10f, position.y,
+                Styles.ActionButtonWidth + inputWidth + Styles.ActionButtonHorizontalPadding * 2,
+                position.height);
+
+            // Create button rects
+            Rect addRect = new Rect(addBackgroundRect.xMin + Styles.ActionButtonHorizontalPadding, addBackgroundRect.yMin + Styles.ActionButtonVerticalPadding,
+                Styles.ActionButtonWidth, Styles.ActionButtonHeight);
+            Rect inputRect = new Rect(addBackgroundRect.xMin + Styles.ActionButtonWidth + Styles.ActionButtonHorizontalPadding,
+                addBackgroundRect.yMin + Styles.ActionButtonVerticalPadding, inputWidth, Styles.ActionButtonHeight);
+
+            if (Event.current.type == EventType.Repaint)
+            {
+                Styles.ButtonBackground.Draw(addBackgroundRect, false, false, false, false);
+            }
+
+            // Draw the input before the button so it overlaps it
+            EditorGUI.PropertyField(inputRect, _propertyAddKey, GUIContent.none);
+
+            GUI.enabled = _propertyAddKeyValidCache;
+            if (GUI.Button(addRect, Content.IconPlus, Styles.FooterButton))
+            {
+                AddNewEntry();
+            }
+
+            GUI.enabled = true;
+
+
+            // Remove button
+            // TODO: Only enable when selecting?
+            if (_propertyCountCache <= 0)
+            {
+                return;
+            }
+
+            Rect removeBackground = new Rect(
+                position.xMax - (10 + Styles.ActionButtonWidth + Styles.ActionButtonHorizontalPadding * 2),
+                position.y,
+                Styles.ActionButtonWidth + Styles.ActionButtonHorizontalPadding * 2,
+                position.height);
+
+            if (Event.current.type == EventType.Repaint)
+            {
+                Styles.ButtonBackground.Draw(removeBackground, false, false, false, false);
+            }
+
+            if (GUI.Button(
+                new Rect(
+                    removeBackground.xMin + Styles.ActionButtonHorizontalPadding,
+                    removeBackground.yMin  + Styles.ActionButtonVerticalPadding,
+                    Styles.ActionButtonWidth, Styles.ActionButtonHeight),
+                Content.IconMinus, Styles.FooterButton))
+            {
+                RemoveLastEntry();
+            }
         }
 
         /// <summary>
@@ -184,130 +297,6 @@ namespace GDX.Editor.PropertyDrawers
             EditorGUI.TextField(new Rect(position.x + position.width - itemCountSize,
                 position.y, itemCountSize, position.height), _propertyCountCache.ToString());
             GUI.enabled = true;
-        }
-
-        /// <summary>
-        ///     Draw actionable buttons offset of the footer.
-        /// </summary>
-        /// <param name="position">
-        ///     A <see cref="Rect" /> representing the space which the footer will be drawn, so that he the
-        ///     buttons can draw offset of it.
-        /// </param>
-        private void DrawFooterActions(Rect position)
-        {
-            float inputWidth = position.width / 2 - Utility.ButtonWidth - Utility.ButtonHorizontalPadding;
-            Rect addBackground = new Rect(position.xMin + 10f, position.y + Utility.ButtonOffset,
-                Utility.ButtonWidth + inputWidth + Utility.ButtonHorizontalPadding * 2,
-                position.height);
-
-
-            // Create button rects
-            Rect addRect = new Rect(addBackground.xMin + Utility.ButtonHorizontalPadding, addBackground.yMin,
-                Utility.ButtonWidth, Utility.ButtonHeight);
-            Rect inputRect = new Rect(addBackground.xMin + Utility.ButtonWidth + Utility.ButtonHorizontalPadding,
-                addBackground.yMin, inputWidth, Utility.ButtonHeight);
-
-            if (Event.current.type == EventType.Repaint)
-            {
-                Styles.ButtonBackground.Draw(addBackground, false, false, false, false);
-            }
-
-            // Draw the input before the button so it overlaps it
-            EditorGUI.PropertyField(inputRect, _propertyAddKey, GUIContent.none);
-
-            GUI.enabled = _propertyAddKeyValidCache;
-            if (GUI.Button(addRect, Utility.iconToolbarPlus, Utility.preButton))
-            {
-                AddNewEntry();
-            }
-
-            GUI.enabled = true;
-
-
-            // Remove button
-            // TODO: Only enable when selecting?
-            if (_propertyCountCache > 0)
-            {
-                Rect removeBackground = new Rect(
-                    position.xMax - (10 + Utility.ButtonWidth + Utility.ButtonHorizontalPadding * 2),
-                    position.y + Utility.ButtonOffset,
-                    Utility.ButtonWidth + Utility.ButtonHorizontalPadding * 2,
-                    position.height);
-
-                if (Event.current.type == EventType.Repaint)
-                {
-                    Styles.ButtonBackground.Draw(removeBackground, false, false, false, false);
-                }
-
-                if (GUI.Button(
-                    new Rect(removeBackground.xMin + Utility.ButtonHorizontalPadding, removeBackground.yMin,
-                        Utility.ButtonWidth, Utility.ButtonHeight), Utility.iconToolbarMinus, Utility.preButton))
-                {
-                    RemoveLastEntry();
-                }
-            }
-        }
-
-
-        private void DrawContentEditor(Rect area, Rect footerRect)
-        {
-            //if (Event.current.type != EventType.Repaint) return;
-
-            Rect contentFooterRect = new Rect(footerRect.x, footerRect.y, footerRect.width, 7);
-            Styles.FooterBackground.fixedHeight = 0;
-            if (_propertyCountCache == 0)
-            {
-                if (Event.current.type == EventType.Repaint)
-                {
-                    Styles.HeaderBackground.Draw(area, false, false, false, false);
-                    Styles.FooterBackground.Draw(contentFooterRect, false, false, false, false);
-                }
-
-                // apply the padding to get the internal rect
-                area.xMin += Styles.ContentAreaPadding;
-                area.xMax -= Styles.ContentAreaPadding;
-                area.height -= 2;
-                area.y += 1;
-
-                EditorGUI.LabelField(area, Utility.EmptyDictionaryContent, EditorStyles.label);
-                return;
-            }
-
-            if (Event.current.type == EventType.Repaint)
-            {
-                Styles.BoxBackground.Draw(area, false, false, false, false);
-                Styles.HeaderBackground.Draw(area, false, false, false, false);
-                Styles.FooterBackground.Draw(contentFooterRect, false, false, false, false);
-            }
-
-            // apply the padding to get the internal rect
-            area.xMin += Styles.ContentAreaPadding;
-            area.xMax -= Styles.ContentAreaPadding;
-            area.yMin += Styles.ContentAreaPadding;
-            area.yMax -= Styles.ContentAreaPadding;
-
-            // area.height -= 2;
-            // area.y += 1;
-
-            const float spacing = 15;
-            float columnWidth = area.width / 2 - spacing;
-
-            EditorGUI.indentLevel++;
-            for (int i = 0; i < _propertyCountCache; i++)
-            {
-                float topOffset = (EditorGUIUtility.singleLineHeight + Styles.ElementSpaceBetweenPadding) * i;
-
-                EditorGUI.PropertyField(
-                    new Rect(area.x, area.y + topOffset, columnWidth,
-                        EditorGUIUtility.singleLineHeight), _propertyKeys.GetArrayElementAtIndex(i), GUIContent.none);
-
-                EditorGUI.PropertyField(
-                    new Rect(area.x + spacing + columnWidth, area.y + topOffset,
-                        columnWidth, EditorGUIUtility.singleLineHeight), _propertyValues.GetArrayElementAtIndex(i),
-                    GUIContent.none);
-            }
-
-            EditorGUI.indentLevel--;
         }
 
         private void AddNewEntry()
@@ -417,56 +406,69 @@ namespace GDX.Editor.PropertyDrawers
 
         private static class Styles
         {
-            public const int ContentAreaPadding = 6;
-            public const int ElementSpaceBetweenPadding = 3;
+            /// <summary>
+            /// The width of an individual button in the footer.
+            /// </summary>
+            public const float ActionButtonWidth = 25f;
+
+            /// <summary>
+            /// The height of an individual button in the footer.
+            /// </summary>
+            public const float ActionButtonHeight = 16f;
+
+            public const float ActionButtonHorizontalPadding = 4f;
+
+            public const float ActionButtonVerticalPadding = 1f;
+
+            /// <summary>
+            ///     The distance from the foldout to the content area.
+            /// </summary>
+            public const int ContentAreaTopMargin = 2;
+
+            /// <summary>
+            ///     The horizontal padding of the content area, subtracted from both sides.
+            /// </summary>
+            public const int ContentAreaHorizontalPadding = 6;
+
+            /// <summary>
+            /// The space between each element in the content area.
+            /// </summary>
+            public const int ContentAreaElementSpacing = 3;
 
             public static readonly GUIStyle BoxBackground = "RL Background";
             public static readonly GUIStyle HeaderBackground = "RL Empty Header";
             public static readonly GUIStyle FooterBackground = "RL Footer";
             public static readonly GUIStyle ButtonBackground = "RL Footer";
-        }
-
-
-        private static class Utility
-        {
-            public const int dragHandleWidth = 20;
-            public const int propertyDrawerPadding = 8;
-            public const int minHeaderHeight = 2;
-
-
-            public const float ButtonHorizontalPadding = 4f;
-            public const float ButtonVerticalPadding = 2f;
-            public const float MarginBottom = 2f;
-            public const float ButtonOffset = 7f;
-            public const float ButtonWidth = 25f;
-            public const float ButtonHeight = 16f;
-
-            public static readonly GUIContent iconToolbarPlus =
-                EditorGUIUtility.TrIconContent("Toolbar Plus", "Add to list");
-
-            public static GUIContent iconToolbarPlusMore =
-                EditorGUIUtility.TrIconContent("Toolbar Plus More", "Choose to add to list");
-
-            public static readonly GUIContent iconToolbarMinus =
-                EditorGUIUtility.TrIconContent("Toolbar Minus", "Remove selection or last element from list");
-
-            public static readonly GUIStyle draggingHandle = "RL DragHandle";
-
-
-            public static readonly GUIStyle preButton = "RL FooterButton";
-
-            public static readonly string undoAdd = "Add Element To Array";
-            public static readonly string undoRemove = "Remove Element From Array";
-            public static readonly string undoMove = "Reorder Element In Array";
-
-            public static readonly Rect infinityRect = new Rect(float.NegativeInfinity, float.NegativeInfinity,
-                float.PositiveInfinity, float.PositiveInfinity);
+            public static readonly GUIStyle FooterButton = "RL FooterButton";
 
 
             public static readonly GUIStyle elementBackground = "RL Element";
 
+            /// <summary>
+            ///     A few last minute changes to settings.
+            /// </summary>
+            static Styles()
+            {
+                HeaderBackground.fixedHeight = 0;
+                FooterBackground.fixedHeight = 0;
+            }
+        }
 
-            public static readonly GUIContent EmptyDictionaryContent = new GUIContent("Dictionary is Empty");
+        private static class Content
+        {
+            public static readonly GUIContent EmptyDictionary = new GUIContent("Dictionary is Empty");
+
+            public static readonly GUIContent IconPlus =
+                EditorGUIUtility.IconContent("Toolbar Plus", "Add element with provided key to the dictionary.");
+
+            public static readonly GUIContent IconMinus =
+                EditorGUIUtility.IconContent("Toolbar Minus", "Remove the selected element from the dictionary.");
+
+            public static readonly GUIContent IconKey =
+                EditorGUIUtility.IconContent("animationkeyframe", "Key");
+            public static readonly GUIContent IconValue =
+                EditorGUIUtility.IconContent("animationnocurve", "Value");
+
         }
     }
 }
