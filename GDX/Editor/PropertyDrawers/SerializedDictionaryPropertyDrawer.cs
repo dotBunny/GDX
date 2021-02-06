@@ -49,13 +49,16 @@ namespace GDX.Editor.PropertyDrawers
 
         private SerializedProperty _propertyExpanded;
         private bool _propertyExpandedCache;
+        private SerializedProperty _propertyAddKey;
+        private SerializedProperty _propertyAddKeyValid;
+        private bool _propertyAddKeyValidCache;
+
         private SerializedProperty _propertyCount;
         private int _propertyCountCache = -1;
         private SerializedProperty _propertyKeys;
         private SerializedProperty _propertyValues;
 
         private bool _validKeyValueCount = true;
-        private bool _validAddType = false;
 
         /// <summary>
         ///     Provide an adjusted height for the entire element to be rendered.
@@ -70,7 +73,7 @@ namespace GDX.Editor.PropertyDrawers
                 return EditorGUIUtility.singleLineHeight;
             }
 
-            return EditorGUIUtility.singleLineHeight * Mathf.Max(2, _propertyCountCache) +
+            return (EditorGUIUtility.singleLineHeight * Mathf.Max(2, _propertyCountCache + 1)) +
                    EditorGUIUtility.singleLineHeight;
         }
 
@@ -88,6 +91,9 @@ namespace GDX.Editor.PropertyDrawers
             // Editor only properties
             _propertyExpanded = property.FindPropertyRelative("drawerExpanded");
             _propertyExpandedCache = _propertyExpanded.boolValue;
+            _propertyAddKey = property.FindPropertyRelative("serializedAddKey");
+            _propertyAddKeyValid = property.FindPropertyRelative("serializedAddKeyValid");
+            _propertyAddKeyValidCache = _propertyAddKeyValid.boolValue;
 
             // Grab the properties that matter!
             _propertyCount = property.FindPropertyRelative("serializedLength");
@@ -98,13 +104,6 @@ namespace GDX.Editor.PropertyDrawers
             // Validate saved sizes
             _validKeyValueCount = _propertyCountCache == _propertyValues.arraySize &&
                                   _propertyCountCache == _propertyKeys.arraySize;
-
-            switch (_propertyKeys.arrayElementType)
-            {
-                case "string":
-                    _validAddType = true;
-                    break;
-            }
 
 
             DrawHeader(new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight), property.displayName);
@@ -122,17 +121,24 @@ namespace GDX.Editor.PropertyDrawers
 
         private void DrawFooter(Rect position)
         {
-            if (_validAddType)
+            GUI.enabled = _propertyAddKeyValidCache;
+            if (GUI.Button(new Rect(position.x, position.y, (position.width / 2) - 100, position.height), "Add"))
             {
-                if (GUI.Button(new Rect(position.x, position.y, position.width / 2, position.height), "Add"))
-                {
-                    AddNewEntry();
-                }
+                AddNewEntry();
             }
+            GUI.enabled = true;
 
-            if(GUI.Button(new Rect(position.x + (position.width / 2), position.y, position.width / 2, position.height), "Remove"))
+            EditorGUI.PropertyField(new Rect(position.x + (position.width / 2), position.y, 100, position.height),
+                _propertyAddKey);
+
+            if (_propertyCountCache > 0)
             {
-                RemoveLastEntry();
+                if (GUI.Button(
+                    new Rect(position.x + (position.width / 2), position.y, position.width / 2, position.height),
+                    "Remove"))
+                {
+                    RemoveLastEntry();
+                }
             }
         }
 
@@ -151,16 +157,13 @@ namespace GDX.Editor.PropertyDrawers
                 _propertyExpandedCache = newExpanded;
             }
 
-            // Generate an element count indicator, with delayed size change abilities
+            // Indicate Count - but ready only
+            GUI.enabled = false;
             const int itemCountSize = 48;
-            string oldCount = _propertyCount.intValue.ToString();
-            string newCount = EditorGUI.DelayedTextField(new Rect(position.x + position.width - itemCountSize,
-                position.y, itemCountSize, position.height), oldCount);
-            if (oldCount != newCount && newCount.IsIntegerValue())
-            {
-                int newCountValue = int.Parse(newCount);
-                // TODO: count change
-            }
+            EditorGUI.TextField(new Rect(position.x + position.width - itemCountSize,
+                position.y, itemCountSize, position.height), _propertyCountCache.ToString());
+            GUI.enabled = true;
+
         }
 
         private void DrawDictionaryEditor(Rect area)
@@ -171,13 +174,19 @@ namespace GDX.Editor.PropertyDrawers
             // RL Footer
             // RL FooterButton
 
+            if (_propertyCountCache == 0)
+            {
+                EditorGUI.LabelField(area, "Empty");
+                return;
+            }
+
             const float spacing = 15;
             float columnWidth = (area.width / 2) - spacing;
 
             for (int i = 0; i < _propertyCountCache; i++)
             {
-                EditorGUI.PropertyField(new Rect(area.x, area.y + (EditorGUIUtility.singleLineHeight * i), columnWidth, EditorGUIUtility.singleLineHeight), _propertyKeys.GetArrayElementAtIndex(i));
-                EditorGUI.PropertyField(new Rect(area.x + spacing + columnWidth, area.y + (EditorGUIUtility.singleLineHeight * i), columnWidth, EditorGUIUtility.singleLineHeight), _propertyValues.GetArrayElementAtIndex(i));
+                EditorGUI.PropertyField(new Rect(area.x, area.y + (EditorGUIUtility.singleLineHeight * i), columnWidth, EditorGUIUtility.singleLineHeight), _propertyKeys.GetArrayElementAtIndex(i), GUIContent.none);
+                EditorGUI.PropertyField(new Rect(area.x + spacing + columnWidth, area.y + (EditorGUIUtility.singleLineHeight * i), columnWidth, EditorGUIUtility.singleLineHeight), _propertyValues.GetArrayElementAtIndex(i), GUIContent.none);
             }
         }
 
@@ -185,23 +194,14 @@ namespace GDX.Editor.PropertyDrawers
         {
             if (_propertyCountCache == -1 || _propertyKeys == null || _propertyValues == null) return;
 
+            // Increase Size
             _propertyCountCache++;
-
 
             // Keys need to be unique
             _propertyKeys.arraySize = _propertyCountCache;
-            SerializedProperty newKeyProperty = _propertyKeys.GetArrayElementAtIndex(_propertyCountCache-1);
-            switch (newKeyProperty.type)
-            {
-                case "int":
-                case "float":
-                case "string":
-                    newKeyProperty.stringValue = "NewItem";
-                    break;
-            }
 
-
-
+            SerializedProperty addedKey = _propertyKeys.GetArrayElementAtIndex(_propertyCountCache-1);
+            addedKey.ShallowCopy(_propertyAddKey);
 
             _propertyValues.arraySize = _propertyCountCache;
             _propertyCount.intValue = _propertyCountCache;

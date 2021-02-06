@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace GDX.Collections.Generic
@@ -29,6 +30,16 @@ namespace GDX.Collections.Generic
         ///     Editor only data indicating if the property drawer is expanded.
         /// </summary>
         [HideInInspector] [SerializeField] private bool drawerExpanded = false;
+
+        /// <summary>
+        ///     Temporary placement for keys to be added.
+        /// </summary>
+        [HideInInspector] [SerializeField] private TKey serializedAddKey;
+
+        /// <summary>
+        ///     Is the provided key a valid key (unique).
+        /// </summary>
+        [HideInInspector] [SerializeField] private bool serializedAddKeyValid;
 #endif
 
         /// <summary>
@@ -110,6 +121,7 @@ namespace GDX.Collections.Generic
 
             if (serializedLength <= 0)
             {
+                serializedAddKeyValid = true;
                 return;
             }
 
@@ -118,6 +130,10 @@ namespace GDX.Collections.Generic
             {
                 Add(serializedKeys[i], serializedValues[i]);
             }
+
+#if UNITY_EDITOR
+            serializedAddKeyValid = !ContainsKey(serializedAddKey);
+#endif
 
             // Remove any data cached so that references are not held.
             if (!clearAfterLoad)

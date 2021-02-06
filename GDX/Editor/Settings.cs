@@ -66,8 +66,11 @@ namespace GDX.Editor
 
                     // Build out sections
                     AutomaticUpdatesSection(settings);
+                    GUILayout.Space(5);
                     BuildInfoSection(settings);
+                    GUILayout.Space(5);
                     CommandLineProcessorSection(settings);
+                    GUILayout.Space(5);
                     LocalizationSection(settings);
 
                     // Apply any serialized setting changes
@@ -326,8 +329,6 @@ namespace GDX.Editor
 
             UpdateDayCountSetting =
                 EditorGUILayout.IntSlider(SettingsContent.AutomaticUpdatesUpdateDayCount, UpdateDayCountSetting, 1, 31);
-
-            GUILayout.Space(5);
         }
 
         /// <summary>
@@ -423,8 +424,6 @@ namespace GDX.Editor
             {
                 buildStreamProperty.stringValue = buildStreamProperty.stringValue.ToUpper();
             }
-
-            GUILayout.Space(5);
         }
 
         /// <summary>
