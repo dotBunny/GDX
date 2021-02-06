@@ -250,6 +250,7 @@ namespace GDX.Editor.PropertyDrawers
             const float spacing = 15;
             float columnWidth = area.width / 2 - spacing;
 
+            EditorGUI.indentLevel++;
             for (int i = 0; i < _propertyCountCache; i++)
             {
                 EditorGUI.PropertyField(
@@ -260,6 +261,7 @@ namespace GDX.Editor.PropertyDrawers
                         columnWidth, EditorGUIUtility.singleLineHeight), _propertyValues.GetArrayElementAtIndex(i),
                     GUIContent.none);
             }
+            EditorGUI.indentLevel--;
         }
 
         private void AddNewEntry()
@@ -312,7 +314,7 @@ namespace GDX.Editor.PropertyDrawers
             public const float ButtonHorizontalPadding = 4f;
             public const float ButtonVerticalPadding = 2f;
             public const float MarginBottom = 2f;
-            public const float ButtonOffset = 6f;
+            public const float ButtonOffset = 6.5f;
             public const float ButtonWidth = 25f;
             public const float ButtonHeight = 16f;
 
