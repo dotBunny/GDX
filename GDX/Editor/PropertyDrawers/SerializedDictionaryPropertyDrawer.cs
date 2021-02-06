@@ -185,26 +185,32 @@ namespace GDX.Editor.PropertyDrawers
                 return;
             }
 
-            // Generate our elements
-            const float spacing = 15;
-            float columnWidth = (position.width - Styles.ContentAreaHorizontalPadding * 2) / 2 - spacing;
 
-            //   EditorGUI.indentLevel++;
+            float columnWidth = (position.width - 34) / 2f;
+
+
+
             for (int i = 0; i < _propertyCountCache; i++)
             {
                 float topOffset = (EditorGUIUtility.singleLineHeight + Styles.ContentAreaElementSpacing) * i;
 
-                EditorGUI.PropertyField(
-                    new Rect(position.x, position.y + topOffset, columnWidth,
-                        EditorGUIUtility.singleLineHeight), _propertyKeys.GetArrayElementAtIndex(i), GUIContent.none);
+                // Draw Key Icon
+                Rect keyIconRect = new Rect(position.x - 2, position.y + topOffset - 1, 17, EditorGUIUtility.singleLineHeight);
+                EditorGUI.LabelField(keyIconRect, Content.IconKey);
 
-                EditorGUI.PropertyField(
-                    new Rect(position.x + spacing + columnWidth, position.y + topOffset,
-                        columnWidth, EditorGUIUtility.singleLineHeight), _propertyValues.GetArrayElementAtIndex(i),
-                    GUIContent.none);
+                // Draw Key Property
+                Rect keyPropertyRect = new Rect(keyIconRect.xMax, position.y + topOffset, columnWidth,
+                    EditorGUIUtility.singleLineHeight);
+                EditorGUI.PropertyField(keyPropertyRect, _propertyKeys.GetArrayElementAtIndex(i), GUIContent.none);
+
+                // Draw Value Icon
+                Rect valueIconRect = new Rect(keyPropertyRect.xMax - 2, position.y + topOffset - 1, 17, EditorGUIUtility.singleLineHeight);
+                EditorGUI.LabelField(valueIconRect, Content.IconValue);
+
+                // Draw Value Property
+                Rect valuePropertyRect = new Rect(valueIconRect.xMax , position.y + topOffset, columnWidth, EditorGUIUtility.singleLineHeight);
+                EditorGUI.PropertyField(valuePropertyRect, _propertyValues.GetArrayElementAtIndex(i), GUIContent.none);
             }
-
-            //  EditorGUI.indentLevel--;
         }
 
         /// <summary>
@@ -467,7 +473,7 @@ namespace GDX.Editor.PropertyDrawers
             public static readonly GUIContent IconKey =
                 EditorGUIUtility.IconContent("animationkeyframe", "Key");
             public static readonly GUIContent IconValue =
-                EditorGUIUtility.IconContent("animationnocurve", "Value");
+                EditorGUIUtility.IconContent("animationanimated", "Value");
 
         }
     }
