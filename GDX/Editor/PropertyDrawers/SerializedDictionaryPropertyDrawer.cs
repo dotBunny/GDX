@@ -76,12 +76,24 @@ namespace GDX.Editor.PropertyDrawers
                 return EditorGUIUtility.singleLineHeight;
             }
 
-            return EditorGUIUtility.singleLineHeight * Mathf.Max(2, _propertyCountCache + 1) +
+            if (_propertyCountCache == 0)
+            {
+                return (EditorGUIUtility.singleLineHeight)  * Mathf.Max(2, _propertyCountCache + 1) +
+                       EditorGUIUtility.singleLineHeight +
+                       Styles.ContentAreaPadding +
+                       Utility.ButtonOffset +
+                       Utility.ButtonVerticalPadding +
+                       Utility.MarginBottom;
+            }
+
+            return (EditorGUIUtility.singleLineHeight + Styles.ElementSpaceBetweenPadding) * Mathf.Max(2, _propertyCountCache + 1) +
                    EditorGUIUtility.singleLineHeight +
-                   Utility.Padding +
+                   (Styles.ContentAreaPadding * 2) +
                    Utility.ButtonOffset +
                    Utility.ButtonVerticalPadding +
-                   Utility.MarginBottom;
+                   Utility.MarginBottom
+                   // Remove the extra space
+                   - Styles.ElementSpaceBetweenPadding;
         }
 
         /// <summary>
@@ -116,20 +128,19 @@ namespace GDX.Editor.PropertyDrawers
             // Draw the foldout at the top of the space
             DrawFoldout(new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight));
 
-
             // If the foldout is expanded, draw the actual content
             if (_propertyExpandedCache)
             {
                 Rect contentRect = new Rect(position.x,
-                    position.y + EditorGUIUtility.singleLineHeight + Utility.Padding,
+                    position.y + EditorGUIUtility.singleLineHeight + Styles.ContentAreaPadding,
                     position.width,
-                    position.height - (EditorGUIUtility.singleLineHeight * 2 + Utility.ButtonOffset +
-                                       Utility.ButtonVerticalPadding + Utility.MarginBottom));
+                    position.height - (EditorGUIUtility.singleLineHeight * 2 + Utility.ButtonOffset + Utility.ButtonVerticalPadding + Utility.MarginBottom));
 
-                Rect footerRect = new Rect(position.x,
-                    position.y + (position.height - (EditorGUIUtility.singleLineHeight + Utility.ButtonOffset +
-                                                     Utility.ButtonVerticalPadding + Utility.MarginBottom)),
-                    position.width, EditorGUIUtility.singleLineHeight + Utility.ButtonVerticalPadding);
+                Rect footerRect = new Rect(
+                    position.x,
+                    position.y + (position.height - (EditorGUIUtility.singleLineHeight + Utility.ButtonOffset + Utility.ButtonVerticalPadding + Utility.MarginBottom)),
+                    position.width,
+                    EditorGUIUtility.singleLineHeight + Utility.ButtonVerticalPadding);
 
 
                 DrawContentEditor(contentRect, footerRect);
@@ -186,7 +197,7 @@ namespace GDX.Editor.PropertyDrawers
 
             if (Event.current.type == EventType.Repaint)
             {
-                Utility.ButtonBackground.Draw(addBackground, false, false, false, false);
+                Styles.ButtonBackground.Draw(addBackground, false, false, false, false);
             }
 
             // Draw the input before the button so it overlaps it
@@ -213,7 +224,7 @@ namespace GDX.Editor.PropertyDrawers
 
                 if (Event.current.type == EventType.Repaint)
                 {
-                    Utility.ButtonBackground.Draw(removeBackground, false, false, false, false);
+                    Styles.ButtonBackground.Draw(removeBackground, false, false, false, false);
                 }
 
                 if (GUI.Button(
@@ -233,18 +244,18 @@ namespace GDX.Editor.PropertyDrawers
             //if (Event.current.type != EventType.Repaint) return;
 
             Rect contentFooterRect = new Rect(footerRect.x, footerRect.y, footerRect.width, 7);
-            Utility.FooterBackground.fixedHeight = 0;
+            Styles.FooterBackground.fixedHeight = 0;
             if (_propertyCountCache == 0)
             {
                 if (Event.current.type == EventType.Repaint)
                 {
-                    Utility.RLEmptyHeader.Draw(area, false, false, false, false);
-                    Utility.FooterBackground.Draw(contentFooterRect, false, false, false, false);
+                    Styles.HeaderBackground.Draw(area, false, false, false, false);
+                    Styles.FooterBackground.Draw(contentFooterRect, false, false, false, false);
                 }
 
                 // apply the padding to get the internal rect
-                area.xMin += Utility.Padding;
-                area.xMax -= Utility.Padding;
+                area.xMin += Styles.ContentAreaPadding;
+                area.xMax -= Styles.ContentAreaPadding;
                 area.height -= 2;
                 area.y += 1;
 
@@ -252,18 +263,21 @@ namespace GDX.Editor.PropertyDrawers
                 return;
             }
 
-
             if (Event.current.type == EventType.Repaint)
             {
-                Utility.RLHeader.Draw(area, false, false, false, false);
-                Utility.FooterBackground.Draw(contentFooterRect, false, false, false, false);
+                Styles.BoxBackground.Draw(area, false, false, false, false);
+                Styles.HeaderBackground.Draw(area, false, false, false, false);
+                Styles.FooterBackground.Draw(contentFooterRect, false, false, false, false);
             }
 
             // apply the padding to get the internal rect
-            area.xMin += Utility.Padding;
-            area.xMax -= Utility.Padding;
-            area.height -= 2;
-            area.y += 1;
+            area.xMin += Styles.ContentAreaPadding;
+            area.xMax -= Styles.ContentAreaPadding;
+            area.yMin += Styles.ContentAreaPadding;
+            area.yMax -= Styles.ContentAreaPadding;
+
+            // area.height -= 2;
+            // area.y += 1;
 
             const float spacing = 15;
             float columnWidth = area.width / 2 - spacing;
@@ -271,11 +285,14 @@ namespace GDX.Editor.PropertyDrawers
             EditorGUI.indentLevel++;
             for (int i = 0; i < _propertyCountCache; i++)
             {
+                float topOffset = ((EditorGUIUtility.singleLineHeight + Styles.ElementSpaceBetweenPadding) * i);
+
                 EditorGUI.PropertyField(
-                    new Rect(area.x, area.y + EditorGUIUtility.singleLineHeight * i, columnWidth,
+                    new Rect(area.x, area.y +topOffset , columnWidth,
                         EditorGUIUtility.singleLineHeight), _propertyKeys.GetArrayElementAtIndex(i), GUIContent.none);
+
                 EditorGUI.PropertyField(
-                    new Rect(area.x + spacing + columnWidth, area.y + EditorGUIUtility.singleLineHeight * i,
+                    new Rect(area.x + spacing + columnWidth, area.y + topOffset,
                         columnWidth, EditorGUIUtility.singleLineHeight), _propertyValues.GetArrayElementAtIndex(i),
                     GUIContent.none);
             }
@@ -296,7 +313,7 @@ namespace GDX.Editor.PropertyDrawers
             _propertyKeys.arraySize = _propertyCountCache;
 
             SerializedProperty addedKey = _propertyKeys.GetArrayElementAtIndex(_propertyCountCache - 1);
-            Utility.ShallowCopy(addedKey, _propertyAddKey);
+            ShallowCopy(addedKey, _propertyAddKey);
 
             _propertyValues.arraySize = _propertyCountCache;
             _propertyCount.intValue = _propertyCountCache;
@@ -320,11 +337,85 @@ namespace GDX.Editor.PropertyDrawers
             _propertyCount.intValue = _propertyCountCache;
         }
 
+        /// <summary>
+        ///     A single level copy of value from the <paramref name="sourceProperty" /> to the <paramref name="targetProperty" />.
+        /// </summary>
+        /// <param name="targetProperty">The receiver of the value.</param>
+        /// <param name="sourceProperty">The originator of the value to be used.</param>
+        private static void ShallowCopy(SerializedProperty targetProperty, SerializedProperty sourceProperty)
+        {
+            switch (targetProperty.type)
+            {
+                case "int":
+                    targetProperty.intValue = sourceProperty.intValue;
+                    break;
+                case "bool":
+                    targetProperty.boolValue = sourceProperty.boolValue;
+                    break;
+                case "bounds":
+                    targetProperty.boundsValue = sourceProperty.boundsValue;
+                    break;
+                case "color":
+                    targetProperty.colorValue = sourceProperty.colorValue;
+                    break;
+                case "double":
+                    targetProperty.doubleValue = sourceProperty.doubleValue;
+                    break;
+                case "float":
+                    targetProperty.floatValue = sourceProperty.floatValue;
+                    break;
+                case "long":
+                    targetProperty.longValue = sourceProperty.longValue;
+                    break;
+                case "quaternion":
+                    targetProperty.quaternionValue = sourceProperty.quaternionValue;
+                    break;
+                case "rect":
+                    targetProperty.rectValue = sourceProperty.rectValue;
+                    break;
+                case "string":
+                    targetProperty.stringValue = sourceProperty.stringValue;
+                    break;
+                case "vector2":
+                    targetProperty.vector2Value = sourceProperty.vector2Value;
+                    break;
+                case "vector3":
+                    targetProperty.vector3Value = sourceProperty.vector3Value;
+                    break;
+                case "vector4":
+                    targetProperty.vector4Value = sourceProperty.vector4Value;
+                    break;
+                case "animationCurve":
+                    targetProperty.animationCurveValue = sourceProperty.animationCurveValue;
+                    break;
+                case "boundsInt":
+                    targetProperty.boundsIntValue = sourceProperty.boundsIntValue;
+                    break;
+                case "enum":
+                    targetProperty.enumValueIndex = sourceProperty.enumValueIndex;
+                    break;
+                case "exposedReference":
+                    targetProperty.exposedReferenceValue = sourceProperty.exposedReferenceValue;
+                    break;
+                case "object":
+                    targetProperty.objectReferenceValue = sourceProperty.objectReferenceValue;
+                    targetProperty.objectReferenceInstanceIDValue = sourceProperty.objectReferenceInstanceIDValue;
+                    break;
+            }
+        }
+
+        private static class Styles
+        {
+            public const int ContentAreaPadding = 6;
+            public const int ElementSpaceBetweenPadding = 3;
+
+            public static readonly GUIStyle BoxBackground = "RL Background";
+            public static readonly GUIStyle HeaderBackground = "RL Empty Header";
+            public static readonly GUIStyle FooterBackground = "RL Footer";
+            public static readonly GUIStyle ButtonBackground = "RL Footer";
+        }
 
 
-
-
-        
         private static class Utility
         {
             public const int dragHandleWidth = 20;
@@ -332,12 +423,12 @@ namespace GDX.Editor.PropertyDrawers
             public const int minHeaderHeight = 2;
 
 
-            public const int Padding = 6;
+
 
             public const float ButtonHorizontalPadding = 4f;
             public const float ButtonVerticalPadding = 2f;
             public const float MarginBottom = 2f;
-            public const float ButtonOffset = 6.5f;
+            public const float ButtonOffset = 7f;
             public const float ButtonWidth = 25f;
             public const float ButtonHeight = 16f;
 
@@ -353,9 +444,9 @@ namespace GDX.Editor.PropertyDrawers
             public static readonly GUIStyle draggingHandle = "RL DragHandle";
 
 
-            public static readonly GUIStyle boxBackground = "RL Background";
+
             public static readonly GUIStyle preButton = "RL FooterButton";
-            public static readonly GUIStyle elementBackground = "RL Element";
+
             public static readonly string undoAdd = "Add Element To Array";
             public static readonly string undoRemove = "Remove Element From Array";
             public static readonly string undoMove = "Reorder Element In Array";
@@ -363,79 +454,17 @@ namespace GDX.Editor.PropertyDrawers
             public static readonly Rect infinityRect = new Rect(float.NegativeInfinity, float.NegativeInfinity,
                 float.PositiveInfinity, float.PositiveInfinity);
 
+
+            public static readonly GUIStyle elementBackground = "RL Element";
+
+
             public static readonly GUIContent EmptyDictionaryContent = new GUIContent("Dictionary is Empty");
 
-            public static readonly GUIStyle RLEmptyHeader = "RL Empty Header";
-            public static readonly GUIStyle FooterBackground = "RL Footer";
-            public static readonly GUIStyle ButtonBackground = "RL Footer";
-            public static readonly GUIStyle RLHeader = "RL Header";
 
-            /// <summary>
-            ///     A single level copy of value from the <paramref name="sourceProperty" /> to the <paramref name="targetProperty" />.
-            /// </summary>
-            /// <param name="targetProperty">The receiver of the value.</param>
-            /// <param name="sourceProperty">The originator of the value to be used.</param>
-            public static void ShallowCopy(SerializedProperty targetProperty, SerializedProperty sourceProperty)
-            {
-                switch (targetProperty.type)
-                {
-                    case "int":
-                        targetProperty.intValue = sourceProperty.intValue;
-                        break;
-                    case "bool":
-                        targetProperty.boolValue = sourceProperty.boolValue;
-                        break;
-                    case "bounds":
-                        targetProperty.boundsValue = sourceProperty.boundsValue;
-                        break;
-                    case "color":
-                        targetProperty.colorValue = sourceProperty.colorValue;
-                        break;
-                    case "double":
-                        targetProperty.doubleValue = sourceProperty.doubleValue;
-                        break;
-                    case "float":
-                        targetProperty.floatValue = sourceProperty.floatValue;
-                        break;
-                    case "long":
-                        targetProperty.longValue = sourceProperty.longValue;
-                        break;
-                    case "quaternion":
-                        targetProperty.quaternionValue = sourceProperty.quaternionValue;
-                        break;
-                    case "rect":
-                        targetProperty.rectValue = sourceProperty.rectValue;
-                        break;
-                    case "string":
-                        targetProperty.stringValue = sourceProperty.stringValue;
-                        break;
-                    case "vector2":
-                        targetProperty.vector2Value = sourceProperty.vector2Value;
-                        break;
-                    case "vector3":
-                        targetProperty.vector3Value = sourceProperty.vector3Value;
-                        break;
-                    case "vector4":
-                        targetProperty.vector4Value = sourceProperty.vector4Value;
-                        break;
-                    case "animationCurve":
-                        targetProperty.animationCurveValue = sourceProperty.animationCurveValue;
-                        break;
-                    case "boundsInt":
-                        targetProperty.boundsIntValue = sourceProperty.boundsIntValue;
-                        break;
-                    case "enum":
-                        targetProperty.enumValueIndex = sourceProperty.enumValueIndex;
-                        break;
-                    case "exposedReference":
-                        targetProperty.exposedReferenceValue = sourceProperty.exposedReferenceValue;
-                        break;
-                    case "object":
-                        targetProperty.objectReferenceValue = sourceProperty.objectReferenceValue;
-                        targetProperty.objectReferenceInstanceIDValue = sourceProperty.objectReferenceInstanceIDValue;
-                        break;
-                }
-            }
+
+
+
+
         }
     }
 }

@@ -59,18 +59,18 @@ namespace GDX.Editor
                     SerializedObject settings = ConfigProvider.GetSerializedConfig();
 
                     // Start wrapping the content
-                    EditorGUILayout.BeginVertical(SettingsStyles.WrapperStyle);
+                    EditorGUILayout.BeginVertical(Styles.WrapperStyle);
 
-                    SettingsSections.PackageStatus();
+                    Sections.PackageStatus();
 
                     // Build out sections
-                    SettingsSections.AutomaticUpdates(settings);
+                    Sections.AutomaticUpdates(settings);
                     GUILayout.Space(5);
-                    SettingsSections.BuildInfo(settings);
+                    Sections.BuildInfo(settings);
                     GUILayout.Space(5);
-                    SettingsSections.CommandLineProcessor(settings);
+                    Sections.CommandLineProcessor(settings);
                     GUILayout.Space(5);
-                    SettingsSections.Locale(settings);
+                    Sections.Locale(settings);
 
                     // Apply any serialized setting changes
                     settings.ApplyModifiedPropertiesWithoutUndo();
@@ -85,7 +85,7 @@ namespace GDX.Editor
         /// <summary>
         ///     A static collection of <see cref="GUIContent" /> used by <see cref="Settings" />.
         /// </summary>
-        private static class SettingsContent
+        private static class Content
         {
             /// <summary>
             ///     Content for the initial introduction of the projects settings window.
@@ -225,9 +225,9 @@ namespace GDX.Editor
             public static readonly GUIContent TestPassedIcon;
 
             /// <summary>
-            ///     Initialize the <see cref="SettingsContent" />.
+            ///     Initialize the <see cref="Content" />.
             /// </summary>
-            static SettingsContent()
+            static Content()
             {
                 if (EditorGUIUtility.isProSkin)
                 {
@@ -251,7 +251,7 @@ namespace GDX.Editor
         /// <summary>
         ///     A collection of IMGUI based layout methods used by the settings window.
         /// </summary>
-        private static class SettingsLayout
+        private static class Layout
         {
             /// <summary>
             ///     A cache of boolean values backed by <see cref="EditorPrefs" /> to assist with optimizing layout.
@@ -280,14 +280,14 @@ namespace GDX.Editor
 
                 if (sectionToggleProperty == null)
                 {
-                    GUI.backgroundColor = SettingsStyles.DefaultBlueColor;
-                    GUILayout.BeginHorizontal(SettingsStyles.SectionHeaderStyle);
+                    GUI.backgroundColor = Styles.DefaultBlueColor;
+                    GUILayout.BeginHorizontal(Styles.SectionHeaderStyle);
                     bool setting = GetCachedEditorBoolean(id, defaultVisibility);
                     if (!setting)
                     {
                         // ReSharper disable once InvertIf
-                        if (GUILayout.Button(SettingsContent.PlusIcon, SettingsStyles.SectionHeaderExpandButtonStyle,
-                            SettingsStyles.SectionHeaderExpandLayoutOptions))
+                        if (GUILayout.Button(Content.PlusIcon, Styles.SectionHeaderExpandButtonStyle,
+                            Styles.SectionHeaderExpandLayoutOptions))
                         {
                             GUIUtility.hotControl = 0;
                             SetCachedEditorBoolean(id, true);
@@ -296,18 +296,18 @@ namespace GDX.Editor
                     else
                     {
                         // ReSharper disable once InvertIf
-                        if (GUILayout.Button(SettingsContent.MinusIcon, SettingsStyles.SectionHeaderExpandButtonStyle,
-                            SettingsStyles.SectionHeaderExpandLayoutOptions))
+                        if (GUILayout.Button(Content.MinusIcon, Styles.SectionHeaderExpandButtonStyle,
+                            Styles.SectionHeaderExpandLayoutOptions))
                         {
                             GUIUtility.hotControl = 0;
                             SetCachedEditorBoolean(id, false);
                         }
                     }
 
-                    GUILayout.Label(text, SettingsStyles.SectionHeaderTextDefaultStyle);
+                    GUILayout.Label(text, Styles.SectionHeaderTextDefaultStyle);
                     if (!string.IsNullOrEmpty(helpUri))
                     {
-                        if (GUILayout.Button(SettingsContent.HelpIcon, SettingsStyles.HelpButtonStyle))
+                        if (GUILayout.Button(Content.HelpIcon, Styles.HelpButtonStyle))
                         {
                             GUIUtility.hotControl = 0;
                             Application.OpenURL(helpUri);
@@ -324,14 +324,14 @@ namespace GDX.Editor
 
                 if (sectionToggleProperty.boolValue)
                 {
-                    GUI.backgroundColor = SettingsStyles.EnabledGreenColor;
-                    GUILayout.BeginHorizontal(SettingsStyles.SectionHeaderStyle);
+                    GUI.backgroundColor = Styles.EnabledGreenColor;
+                    GUILayout.BeginHorizontal(Styles.SectionHeaderStyle);
                     bool setting = GetCachedEditorBoolean(id);
                     if (!setting)
                     {
                         // ReSharper disable once InvertIf
-                        if (GUILayout.Button(SettingsContent.PlusIcon, SettingsStyles.SectionHeaderExpandButtonStyle,
-                            SettingsStyles.SectionHeaderExpandLayoutOptions))
+                        if (GUILayout.Button(Content.PlusIcon, Styles.SectionHeaderExpandButtonStyle,
+                            Styles.SectionHeaderExpandLayoutOptions))
                         {
                             GUIUtility.hotControl = 0;
                             SetCachedEditorBoolean(id, true);
@@ -340,18 +340,18 @@ namespace GDX.Editor
                     else
                     {
                         // ReSharper disable once InvertIf
-                        if (GUILayout.Button(SettingsContent.MinusIcon, SettingsStyles.SectionHeaderExpandButtonStyle,
-                            SettingsStyles.SectionHeaderExpandLayoutOptions))
+                        if (GUILayout.Button(Content.MinusIcon, Styles.SectionHeaderExpandButtonStyle,
+                            Styles.SectionHeaderExpandLayoutOptions))
                         {
                             GUIUtility.hotControl = 0;
                             SetCachedEditorBoolean(id, false);
                         }
                     }
 
-                    GUILayout.Label(text, SettingsStyles.SectionHeaderTextDefaultStyle);
+                    GUILayout.Label(text, Styles.SectionHeaderTextDefaultStyle);
                     if (!string.IsNullOrEmpty(helpUri))
                     {
-                        if (GUILayout.Button(SettingsContent.HelpIcon, SettingsStyles.HelpButtonStyle))
+                        if (GUILayout.Button(Content.HelpIcon, Styles.HelpButtonStyle))
                         {
                             GUIUtility.hotControl = 0;
                             Application.OpenURL(helpUri);
@@ -360,18 +360,18 @@ namespace GDX.Editor
 
                     GUILayout.FlexibleSpace();
                     EditorGUILayout.PropertyField(sectionToggleProperty, sectionToggleContent,
-                        SettingsStyles.SectionHeaderToggleLayoutOptions);
+                        Styles.SectionHeaderToggleLayoutOptions);
                 }
                 else
                 {
-                    GUI.backgroundColor = SettingsStyles.DisabledYellowColor;
-                    GUILayout.BeginHorizontal(SettingsStyles.SectionHeaderStyle);
+                    GUI.backgroundColor = Styles.DisabledYellowColor;
+                    GUILayout.BeginHorizontal(Styles.SectionHeaderStyle);
                     bool setting = GetCachedEditorBoolean(id);
                     if (!setting)
                     {
                         // ReSharper disable once InvertIf
-                        if (GUILayout.Button(SettingsContent.PlusIcon, SettingsStyles.SectionHeaderExpandButtonStyle,
-                            SettingsStyles.SectionHeaderExpandLayoutOptions))
+                        if (GUILayout.Button(Content.PlusIcon, Styles.SectionHeaderExpandButtonStyle,
+                            Styles.SectionHeaderExpandLayoutOptions))
                         {
                             GUIUtility.hotControl = 0;
                             SetCachedEditorBoolean(id, true);
@@ -380,8 +380,8 @@ namespace GDX.Editor
                     else
                     {
                         // ReSharper disable once InvertIf
-                        if (GUILayout.Button(SettingsContent.MinusIcon, SettingsStyles.SectionHeaderExpandButtonStyle,
-                            SettingsStyles.SectionHeaderExpandLayoutOptions))
+                        if (GUILayout.Button(Content.MinusIcon, Styles.SectionHeaderExpandButtonStyle,
+                            Styles.SectionHeaderExpandLayoutOptions))
                         {
                             GUIUtility.hotControl = 0;
                             SetCachedEditorBoolean(id, false);
@@ -389,10 +389,10 @@ namespace GDX.Editor
                     }
 
 
-                    GUILayout.Label(text, SettingsStyles.SectionHeaderTextDisabledStyle);
+                    GUILayout.Label(text, Styles.SectionHeaderTextDisabledStyle);
                     if (!string.IsNullOrEmpty(helpUri))
                     {
-                        if (GUILayout.Button(SettingsContent.HelpIcon, SettingsStyles.HelpButtonStyle))
+                        if (GUILayout.Button(Content.HelpIcon, Styles.HelpButtonStyle))
                         {
                             GUIUtility.hotControl = 0;
                             Application.OpenURL(helpUri);
@@ -401,7 +401,7 @@ namespace GDX.Editor
 
                     GUILayout.FlexibleSpace();
                     EditorGUILayout.PropertyField(sectionToggleProperty, sectionToggleContent,
-                        SettingsStyles.SectionHeaderToggleLayoutOptions);
+                        Styles.SectionHeaderToggleLayoutOptions);
                 }
 
                 GUILayout.EndHorizontal();
@@ -454,7 +454,7 @@ namespace GDX.Editor
         /// <summary>
         ///     A collection of IMGUI based section builders for the settings window.
         /// </summary>
-        private static class SettingsSections
+        private static class Sections
         {
             /// <summary>
             ///     Draw the Automatic Updates section of settings.
@@ -465,31 +465,31 @@ namespace GDX.Editor
                 const string sectionID = "GDX.Editor.UpdateProvider";
                 GUI.enabled = true;
 
-                bool packageSectionEnabled = SettingsLayout.CreateSettingsSection(
+                bool packageSectionEnabled = Layout.CreateSettingsSection(
                     sectionID, true,
                     "Automatic Package Updates", null,
                     settings.FindProperty("updateProviderCheckForUpdates"),
-                    SettingsContent.AutomaticUpdatesEnabled);
-                if (!SettingsLayout.GetCachedEditorBoolean(sectionID))
+                    Content.AutomaticUpdatesEnabled);
+                if (!Layout.GetCachedEditorBoolean(sectionID))
                 {
                     return;
                 }
 
-                EditorGUILayout.BeginHorizontal(SettingsStyles.InfoBoxStyle);
+                EditorGUILayout.BeginHorizontal(Styles.InfoBoxStyle);
                 if (UpdateProvider.LocalPackage.Definition != null)
                 {
                     GUILayout.BeginVertical();
 
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Local Version:", EditorStyles.boldLabel,
-                        SettingsStyles.FixedWidth130LayoutOptions);
+                        Styles.FixedWidth130LayoutOptions);
                     GUILayout.Label(UpdateProvider.LocalPackage.Definition.version);
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Installation Method:", EditorStyles.boldLabel,
-                        SettingsStyles.FixedWidth130LayoutOptions);
+                        Styles.FixedWidth130LayoutOptions);
                     GUILayout.Label(PackageProvider.GetFriendlyName(UpdateProvider.LocalPackage.InstallationMethod));
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
@@ -503,7 +503,7 @@ namespace GDX.Editor
                         case PackageProvider.InstallationType.GitHub:
                             GUILayout.BeginHorizontal();
                             GUILayout.Label("Source Branch:", EditorStyles.boldLabel,
-                                SettingsStyles.FixedWidth130LayoutOptions);
+                                Styles.FixedWidth130LayoutOptions);
                             GUILayout.Label(!string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
                                 ? UpdateProvider.LocalPackage.SourceTag
                                 : "N/A");
@@ -514,7 +514,7 @@ namespace GDX.Editor
                         case PackageProvider.InstallationType.GitHubTag:
                             GUILayout.BeginHorizontal();
                             GUILayout.Label("Source Tag:", EditorStyles.boldLabel,
-                                SettingsStyles.FixedWidth130LayoutOptions);
+                                Styles.FixedWidth130LayoutOptions);
                             GUILayout.Label(!string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
                                 ? UpdateProvider.LocalPackage.SourceTag
                                 : "N/A");
@@ -525,7 +525,7 @@ namespace GDX.Editor
                         case PackageProvider.InstallationType.GitHubCommit:
                             GUILayout.BeginHorizontal();
                             GUILayout.Label("Source Commit:", EditorStyles.boldLabel,
-                                SettingsStyles.FixedWidth130LayoutOptions);
+                                Styles.FixedWidth130LayoutOptions);
                             GUILayout.Label(!string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
                                 ? UpdateProvider.LocalPackage.SourceTag
                                 : "N/A");
@@ -535,7 +535,7 @@ namespace GDX.Editor
                     }
 
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Last Checked:", EditorStyles.boldLabel, SettingsStyles.FixedWidth130LayoutOptions);
+                    GUILayout.Label("Last Checked:", EditorStyles.boldLabel, Styles.FixedWidth130LayoutOptions);
                     GUILayout.Label(UpdateProvider.GetLastChecked().ToString(Localization.LocalTimestampFormat));
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
@@ -548,14 +548,14 @@ namespace GDX.Editor
                     EditorGUILayout.BeginVertical();
                     if (UpdateProvider.HasUpdate(UpdateProvider.UpdatePackageDefinition))
                     {
-                        if (GUILayout.Button("Changelog", SettingsStyles.ButtonStyle))
+                        if (GUILayout.Button("Changelog", Styles.ButtonStyle))
                         {
                             Application.OpenURL("https://github.com/dotBunny/GDX/blob/main/CHANGELOG.md");
                         }
 
                         if (UpdateProvider.IsUpgradable())
                         {
-                            if (GUILayout.Button("Update", SettingsStyles.ButtonStyle))
+                            if (GUILayout.Button("Update", Styles.ButtonStyle))
                             {
                                 UpdateProvider.AttemptUpgrade();
                             }
@@ -563,7 +563,7 @@ namespace GDX.Editor
                     }
                     else
                     {
-                        if (GUILayout.Button("Manual Check", SettingsStyles.ButtonStyle))
+                        if (GUILayout.Button("Manual Check", Styles.ButtonStyle))
                         {
                             UpdateProvider.CheckForUpdates();
                         }
@@ -584,7 +584,7 @@ namespace GDX.Editor
                 GUI.enabled = packageSectionEnabled;
 
                 UpdateDayCountSetting =
-                    EditorGUILayout.IntSlider(SettingsContent.AutomaticUpdatesUpdateDayCount, UpdateDayCountSetting, 1,
+                    EditorGUILayout.IntSlider(Content.AutomaticUpdatesUpdateDayCount, UpdateDayCountSetting, 1,
                         31);
             }
 
@@ -597,13 +597,13 @@ namespace GDX.Editor
                 const string sectionID = "GDX.Editor.Build.BuildInfoProvider";
                 GUI.enabled = true;
 
-                bool buildInfoEnabled = SettingsLayout.CreateSettingsSection(
+                bool buildInfoEnabled = Layout.CreateSettingsSection(
                     sectionID, false,
                     "BuildInfo Generation", $"{DocumentationUri}api/GDX.Editor.Build.BuildInfoProvider.html",
                     settings.FindProperty("developerBuildInfoEnabled"),
-                    SettingsContent.BuildInfoEnabled);
+                    Content.BuildInfoEnabled);
 
-                if (!SettingsLayout.GetCachedEditorBoolean(sectionID))
+                if (!Layout.GetCachedEditorBoolean(sectionID))
                 {
                     return;
                 }
@@ -612,12 +612,12 @@ namespace GDX.Editor
                     settings.FindProperty("developerBuildInfoPath").stringValue);
                 if (!File.Exists(buildInfoFile))
                 {
-                    GUILayout.BeginVertical(SettingsStyles.InfoBoxStyle);
+                    GUILayout.BeginVertical(Styles.InfoBoxStyle);
                     GUILayout.BeginHorizontal();
                     GUILayout.Label(
                         "There is currently no BuildInfo file in the target location. Would you like some default content written in its place?",
-                        SettingsStyles.WordWrappedLabelStyle);
-                    if (GUILayout.Button("Create Default", SettingsStyles.ButtonStyle))
+                        Styles.WordWrappedLabelStyle);
+                    if (GUILayout.Button("Create Default", Styles.ButtonStyle))
                     {
                         BuildInfoProvider.WriteDefaultFile();
                         AssetDatabase.ImportAsset("Assets/" +
@@ -632,20 +632,20 @@ namespace GDX.Editor
                 GUI.enabled = buildInfoEnabled;
 
                 EditorGUILayout.PropertyField(settings.FindProperty("developerBuildInfoPath"),
-                    SettingsContent.BuildInfoPath);
+                    Content.BuildInfoPath);
                 EditorGUILayout.PropertyField(settings.FindProperty("developerBuildInfoNamespace"),
-                    SettingsContent.BuildInfoNamespace);
+                    Content.BuildInfoNamespace);
                 EditorGUILayout.PropertyField(settings.FindProperty("developerBuildInfoAssemblyDefinition"),
-                    SettingsContent.BuildInfoAssemblyDefinition);
+                    Content.BuildInfoAssemblyDefinition);
 
 
                 GUILayout.Space(10);
                 // Arguments (we're going to make sure they are forced to uppercase).
-                GUILayout.Label("Build Arguments", SettingsStyles.SubSectionHeaderTextStyle);
+                GUILayout.Label("Build Arguments", Styles.SubSectionHeaderTextStyle);
 
                 SerializedProperty buildNumberProperty =
                     settings.FindProperty("developerBuildInfoBuildNumberArgument");
-                EditorGUILayout.PropertyField(buildNumberProperty, SettingsContent.BuildInfoBuildNumberArgument);
+                EditorGUILayout.PropertyField(buildNumberProperty, Content.BuildInfoBuildNumberArgument);
                 if (buildNumberProperty.stringValue.HasLowerCase())
                 {
                     buildNumberProperty.stringValue = buildNumberProperty.stringValue.ToUpper();
@@ -654,7 +654,7 @@ namespace GDX.Editor
                 SerializedProperty buildDescriptionProperty =
                     settings.FindProperty("developerBuildInfoBuildDescriptionArgument");
                 EditorGUILayout.PropertyField(buildDescriptionProperty,
-                    SettingsContent.BuildInfoBuildDescriptionArgument);
+                    Content.BuildInfoBuildDescriptionArgument);
                 if (buildDescriptionProperty.stringValue.HasLowerCase())
                 {
                     buildDescriptionProperty.stringValue = buildDescriptionProperty.stringValue.ToUpper();
@@ -663,14 +663,14 @@ namespace GDX.Editor
                 SerializedProperty buildChangelistProperty =
                     settings.FindProperty("developerBuildInfoBuildChangelistArgument");
                 EditorGUILayout.PropertyField(buildChangelistProperty,
-                    SettingsContent.BuildInfoBuildChangelistArgument);
+                    Content.BuildInfoBuildChangelistArgument);
                 if (buildChangelistProperty.stringValue.HasLowerCase())
                 {
                     buildChangelistProperty.stringValue = buildChangelistProperty.stringValue.ToUpper();
                 }
 
                 SerializedProperty buildTaskProperty = settings.FindProperty("developerBuildInfoBuildTaskArgument");
-                EditorGUILayout.PropertyField(buildTaskProperty, SettingsContent.BuildInfoBuildTaskArgument);
+                EditorGUILayout.PropertyField(buildTaskProperty, Content.BuildInfoBuildTaskArgument);
                 if (buildTaskProperty.stringValue.HasLowerCase())
                 {
                     buildTaskProperty.stringValue = buildTaskProperty.stringValue.ToUpper();
@@ -678,7 +678,7 @@ namespace GDX.Editor
 
                 SerializedProperty buildStreamProperty =
                     settings.FindProperty("developerBuildInfoBuildStreamArgument");
-                EditorGUILayout.PropertyField(buildStreamProperty, SettingsContent.BuildInfoBuildStreamArgument);
+                EditorGUILayout.PropertyField(buildStreamProperty, Content.BuildInfoBuildStreamArgument);
                 if (buildStreamProperty.stringValue.HasLowerCase())
                 {
                     buildStreamProperty.stringValue = buildStreamProperty.stringValue.ToUpper();
@@ -694,18 +694,18 @@ namespace GDX.Editor
                 const string sectionID = "GDX.Developer.CommandLineParser";
                 GUI.enabled = true;
 
-                SettingsLayout.CreateSettingsSection(sectionID, false, "Command Line Parser",
+                Layout.CreateSettingsSection(sectionID, false, "Command Line Parser",
                     $"{DocumentationUri}api/GDX.Developer.CommandLineParser.html");
 
-                if (!SettingsLayout.GetCachedEditorBoolean(sectionID))
+                if (!Layout.GetCachedEditorBoolean(sectionID))
                 {
                     return;
                 }
 
                 EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentPrefix"),
-                    SettingsContent.CommandLineParserArgumentPrefix);
+                    Content.CommandLineParserArgumentPrefix);
                 EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentSplit"),
-                    SettingsContent.CommandLineParserArgumentSplit);
+                    Content.CommandLineParserArgumentSplit);
             }
 
             /// <summary>
@@ -717,19 +717,19 @@ namespace GDX.Editor
                 const string sectionID = "GDX.Localization";
                 GUI.enabled = true;
 
-                SettingsLayout.CreateSettingsSection(sectionID, false, "Localization",
+                Layout.CreateSettingsSection(sectionID, false, "Localization",
                     $"{DocumentationUri}api/GDX.Localization.html");
 
-                if (!SettingsLayout.GetCachedEditorBoolean(sectionID))
+                if (!Layout.GetCachedEditorBoolean(sectionID))
                 {
                     return;
                 }
 
                 EditorGUILayout.PropertyField(settings.FindProperty("localizationSetDefaultCulture"),
-                    SettingsContent.LocalizationSetDefaultCulture);
+                    Content.LocalizationSetDefaultCulture);
 
                 EditorGUILayout.PropertyField(settings.FindProperty("localizationDefaultCulture"),
-                    SettingsContent.LocalizationDefaultCulture);
+                    Content.LocalizationDefaultCulture);
             }
 
             /// <summary>
@@ -745,12 +745,12 @@ namespace GDX.Editor
                 // Information
                 GUILayout.BeginVertical();
 
-                GUILayout.Label(SettingsContent.AboutBlurb, SettingsStyles.WordWrappedLabelStyle);
+                GUILayout.Label(Content.AboutBlurb, Styles.WordWrappedLabelStyle);
                 GUILayout.Space(10);
 
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("-", SettingsStyles.BulletLayoutOptions);
+                GUILayout.Label("-", Styles.BulletLayoutOptions);
 #if UNITY_2021_1_OR_NEWER
                              if (EditorGUILayout.LinkButton("Repository"))
 #else
@@ -765,7 +765,7 @@ namespace GDX.Editor
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("-", SettingsStyles.BulletLayoutOptions);
+                GUILayout.Label("-", Styles.BulletLayoutOptions);
 #if UNITY_2021_1_OR_NEWER
                              if (EditorGUILayout.LinkButton("Documentation"))
 #else
@@ -780,7 +780,7 @@ namespace GDX.Editor
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("-", SettingsStyles.BulletLayoutOptions);
+                GUILayout.Label("-", Styles.BulletLayoutOptions);
 #if UNITY_2021_1_OR_NEWER
                              if (EditorGUILayout.LinkButton("Report an Issue"))
 #else
@@ -803,8 +803,8 @@ namespace GDX.Editor
                 // CHeck Packages
                 // ReSharper disable UnreachableCode
 #pragma warning disable 162
-                EditorGUILayout.BeginVertical(SettingsStyles.InfoBoxStyle);
-                GUILayout.Label("Packages Found", SettingsStyles.SubSectionHeaderTextStyle);
+                EditorGUILayout.BeginVertical(Styles.InfoBoxStyle);
+                GUILayout.Label("Packages Found", Styles.SubSectionHeaderTextStyle);
                 GUILayout.Space(5);
 
                 GUILayout.BeginHorizontal();
@@ -812,8 +812,8 @@ namespace GDX.Editor
                 GUILayout.Label("Addressables");
                 GUILayout.FlexibleSpace();
                 GUILayout.Label(Conditionals.HasAddressablesPackage
-                    ? SettingsContent.TestPassedIcon
-                    : SettingsContent.TestNormalIcon);
+                    ? Content.TestPassedIcon
+                    : Content.TestNormalIcon);
 
                 GUILayout.EndHorizontal();
 
@@ -821,32 +821,32 @@ namespace GDX.Editor
                 GUILayout.Label("Burst");
                 GUILayout.FlexibleSpace();
                 GUILayout.Label(Conditionals.HasBurstPackage
-                    ? SettingsContent.TestPassedIcon
-                    : SettingsContent.TestNormalIcon);
+                    ? Content.TestPassedIcon
+                    : Content.TestNormalIcon);
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Jobs");
                 GUILayout.FlexibleSpace();
                 GUILayout.Label(Conditionals.HasJobsPackage
-                    ? SettingsContent.TestPassedIcon
-                    : SettingsContent.TestNormalIcon);
+                    ? Content.TestPassedIcon
+                    : Content.TestNormalIcon);
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Mathematics");
                 GUILayout.FlexibleSpace();
                 GUILayout.Label(Conditionals.HasMathematicsPackage
-                    ? SettingsContent.TestPassedIcon
-                    : SettingsContent.TestNormalIcon);
+                    ? Content.TestPassedIcon
+                    : Content.TestNormalIcon);
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Platforms");
                 GUILayout.FlexibleSpace();
                 GUILayout.Label(Conditionals.HasPlatformsPackage
-                    ? SettingsContent.TestPassedIcon
-                    : SettingsContent.TestNormalIcon);
+                    ? Content.TestPassedIcon
+                    : Content.TestNormalIcon);
                 GUILayout.EndHorizontal();
 
                 EditorGUILayout.EndVertical();
@@ -864,7 +864,7 @@ namespace GDX.Editor
         /// <summary>
         ///     A collection of styles and layout options used by the settings window.
         /// </summary>
-        private static class SettingsStyles
+        private static class Styles
         {
             /// <summary>
             ///     A collection of layout parameters to use when rendering the expand button on section headers.
@@ -968,9 +968,9 @@ namespace GDX.Editor
             private static readonly Color s_whiteBlend75Color = new Color(1f, 1f, 1f, 0.75f);
 
             /// <summary>
-            ///     Initialize the <see cref="SettingsStyles" />, creating all of the associated <see cref="GUIStyle" />s.
+            ///     Initialize the <see cref="Styles" />, creating all of the associated <see cref="GUIStyle" />s.
             /// </summary>
-            static SettingsStyles()
+            static Styles()
             {
                 InfoBoxStyle = new GUIStyle(EditorStyles.helpBox)
                 {
