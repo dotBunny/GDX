@@ -122,14 +122,14 @@ namespace GDX.Editor.PropertyDrawers
         private void DrawFooter(Rect position)
         {
             GUI.enabled = _propertyAddKeyValidCache;
-            if (GUI.Button(new Rect(position.x, position.y, (position.width / 2) - 100, position.height), "Add"))
+            if (GUI.Button(new Rect(position.x, position.y, 100, position.height), "Add"))
             {
                 AddNewEntry();
             }
             GUI.enabled = true;
 
-            EditorGUI.PropertyField(new Rect(position.x + (position.width / 2), position.y, 100, position.height),
-                _propertyAddKey);
+            EditorGUI.PropertyField(new Rect(position.x + 100, position.y, (position.width / 2) - 100, position.height),
+                _propertyAddKey, GUIContent.none);
 
             if (_propertyCountCache > 0)
             {
