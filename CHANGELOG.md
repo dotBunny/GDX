@@ -22,9 +22,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `GetFirstComponentInChildrenComplex()`
   - `GetActiveChildCount()`
 - Automated culture setting on thread.
+- `GDX.SerializableDictionary`, speaks for itself.
 ### Changed
 - Optimized `GDX.GDXConfig` loading at runtime.
 - Wrap `GDX.InspectorLabelAttribute` in `UNITY_EDITOR` define requirement.
+- Consolidated entirety of `GDX.Editor.Settings` related classes into private classes inside of itself.
+- Moved `GDX.Editor.InspectorLabelPropertyDrawer` to `GDX.Editor.PropertyDrawers.InspectorLabelPropertyDrawer`
 ### Removed
 - Removed centralized `GDX.Strings`, moving ownership of data to the actual primary consumer.
 - Removed reference to unit test locations from files.

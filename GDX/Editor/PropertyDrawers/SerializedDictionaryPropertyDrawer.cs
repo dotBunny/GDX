@@ -43,7 +43,7 @@ namespace GDX.Editor.PropertyDrawers
     [CustomPropertyDrawer(typeof(SerializableDictionary<string, GameObject>))]
     [CustomPropertyDrawer(typeof(SerializableDictionary<string, MonoBehaviour>))]
 #endif
-    internal class SerializedDictionaryPropertyDrawer : PropertyDrawer
+    internal class SerializableDictionaryPropertyDrawer : PropertyDrawer
     {
         private SerializedObject _serializedObject;
 
@@ -57,6 +57,9 @@ namespace GDX.Editor.PropertyDrawers
         private int _propertyCountCache = -1;
         private SerializedProperty _propertyKeys;
         private SerializedProperty _propertyValues;
+
+        private string _label = "Serializable Dictionary";
+
 
         private bool _validKeyValueCount = true;
 
@@ -91,6 +94,7 @@ namespace GDX.Editor.PropertyDrawers
         {
             // Cache Serialized Object
             _serializedObject = property.serializedObject;
+            _label = property.displayName;
 
             // Editor only properties
             _propertyExpanded = property.FindPropertyRelative("drawerExpanded");
@@ -109,31 +113,64 @@ namespace GDX.Editor.PropertyDrawers
             _validKeyValueCount = _propertyCountCache == _propertyValues.arraySize &&
                                   _propertyCountCache == _propertyKeys.arraySize;
 
+            // Draw the foldout at the top of the space
+            DrawFoldout(new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight));
 
-            DrawHeader(new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight),
-                property.displayName);
+
+            // If the foldout is expanded, draw the actual content
             if (_propertyExpandedCache)
             {
-                Rect footerRect = new Rect(position.x,
-                    position.y + (position.height - (EditorGUIUtility.singleLineHeight + Utility.ButtonOffset +
-                                                     Utility.ButtonVerticalPadding + Utility.MarginBottom)),
-                    position.width, EditorGUIUtility.singleLineHeight + Utility.ButtonVerticalPadding);
-
                 Rect contentRect = new Rect(position.x,
                     position.y + EditorGUIUtility.singleLineHeight + Utility.Padding,
                     position.width,
                     position.height - (EditorGUIUtility.singleLineHeight * 2 + Utility.ButtonOffset +
                                        Utility.ButtonVerticalPadding + Utility.MarginBottom));
 
+                Rect footerRect = new Rect(position.x,
+                    position.y + (position.height - (EditorGUIUtility.singleLineHeight + Utility.ButtonOffset +
+                                                     Utility.ButtonVerticalPadding + Utility.MarginBottom)),
+                    position.width, EditorGUIUtility.singleLineHeight + Utility.ButtonVerticalPadding);
+
+
                 DrawContentEditor(contentRect, footerRect);
-                DrawButtons(footerRect);
+                DrawFooterActions(footerRect);
             }
 
             // Anything we changed property wise we should save
             property.serializedObject.ApplyModifiedProperties();
         }
 
-        private void DrawButtons(Rect position)
+        /// <summary>
+        /// Draw the foldout header for the <see cref="SerializableDictionary{TKey,TValue}"/>.
+        /// </summary>
+        /// <param name="position">A <see cref="Rect"/> representing the space which the header will consume in its entirety.</param>
+        private void DrawFoldout(Rect position)
+        {
+            // TODO: Could return the consumed height? so we can have a banner at the top if invalid?
+            // Generate a foldout GUI element representing the name of the dictionary
+            bool newExpanded =
+                EditorGUI.Foldout(position,
+                    _propertyExpanded.boolValue, _label, true, EditorStyles.foldout);
+            if (newExpanded != _propertyExpandedCache)
+            {
+                // TODO: Is there some editor cache for whats unfolded? This would prevent over serialization / extra data
+                _propertyExpanded.boolValue = newExpanded;
+                _propertyExpandedCache = newExpanded;
+            }
+
+            // Indicate Count - but ready only
+            GUI.enabled = false;
+            const int itemCountSize = 48;
+            EditorGUI.TextField(new Rect(position.x + position.width - itemCountSize,
+                position.y, itemCountSize, position.height), _propertyCountCache.ToString());
+            GUI.enabled = true;
+        }
+
+        /// <summary>
+        ///     Draw actionable buttons offset of the footer.
+        /// </summary>
+        /// <param name="position">A <see cref="Rect"/> representing the space which the footer will be drawn, so that he the buttons can draw offset of it.</param>
+        private void DrawFooterActions(Rect position)
         {
             float inputWidth = (position.width / 2) - Utility.ButtonWidth - Utility.ButtonHorizontalPadding;
             Rect addBackground = new Rect(position.xMin + 10f, position.y + Utility.ButtonOffset,
@@ -188,27 +225,8 @@ namespace GDX.Editor.PropertyDrawers
             }
         }
 
-        private void DrawHeader(Rect position, string displayName)
-        {
-            // TODO: Could return the consumed height? so we can have a banner at the top if invalid?
-            // Generate a foldout GUI element representing the name of the dictionary
-            bool newExpanded =
-                EditorGUI.Foldout(position,
-                    _propertyExpanded.boolValue, displayName, true, EditorStyles.foldout);
-            if (newExpanded != _propertyExpandedCache)
-            {
-                // TODO: Is there some editor cache for whats unfolded? This would prevent over serialization / extra data
-                _propertyExpanded.boolValue = newExpanded;
-                _propertyExpandedCache = newExpanded;
-            }
 
-            // Indicate Count - but ready only
-            GUI.enabled = false;
-            const int itemCountSize = 48;
-            EditorGUI.TextField(new Rect(position.x + position.width - itemCountSize,
-                position.y, itemCountSize, position.height), _propertyCountCache.ToString());
-            GUI.enabled = true;
-        }
+
 
         private void DrawContentEditor(Rect area, Rect footerRect)
         {
@@ -302,6 +320,11 @@ namespace GDX.Editor.PropertyDrawers
             _propertyCount.intValue = _propertyCountCache;
         }
 
+
+
+
+
+        
         private static class Utility
         {
             public const int dragHandleWidth = 20;

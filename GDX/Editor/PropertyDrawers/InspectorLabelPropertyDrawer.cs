@@ -4,7 +4,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace GDX.Editor
+namespace GDX.Editor.PropertyDrawers
 {
     /// <summary>
     ///     The drawing component of the <see cref="InspectorLabelAttribute" />.
