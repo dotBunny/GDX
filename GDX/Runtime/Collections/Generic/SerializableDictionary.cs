@@ -133,6 +133,12 @@ namespace GDX.Collections.Generic
 
 #if UNITY_EDITOR
             serializedAddKeyValid = !ContainsKey(serializedAddKey);
+
+            // If the key is bad we shouldn't actually have it around?
+            if (!serializedAddKeyValid)
+            {
+                serializedAddKey = default;
+            }
 #endif
 
             // Remove any data cached so that references are not held.

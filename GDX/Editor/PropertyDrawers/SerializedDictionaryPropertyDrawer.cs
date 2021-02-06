@@ -74,7 +74,11 @@ namespace GDX.Editor.PropertyDrawers
             }
 
             return EditorGUIUtility.singleLineHeight * Mathf.Max(2, _propertyCountCache + 1) +
-                   EditorGUIUtility.singleLineHeight + Utility.HeaderBottomPadding;
+                   EditorGUIUtility.singleLineHeight +
+                   Utility.Padding +
+                   Utility.ButtonOffset +
+                   Utility.ButtonVerticalPadding +
+                   Utility.MarginBottom;
         }
 
         /// <summary>
@@ -110,46 +114,74 @@ namespace GDX.Editor.PropertyDrawers
                 property.displayName);
             if (_propertyExpandedCache)
             {
-                DrawDictionaryEditor(new Rect(position.x, position.y + EditorGUIUtility.singleLineHeight + Utility.HeaderBottomPadding,
-                    position.width, position.height - EditorGUIUtility.singleLineHeight * 2));
+                Rect footerRect = new Rect(position.x,
+                    position.y + (position.height - (EditorGUIUtility.singleLineHeight + Utility.ButtonOffset +
+                                                     Utility.ButtonVerticalPadding + Utility.MarginBottom)),
+                    position.width, EditorGUIUtility.singleLineHeight + Utility.ButtonVerticalPadding);
 
-                DrawFooter(new Rect(position.x, position.y + (position.height - EditorGUIUtility.singleLineHeight),
-                    position.width, EditorGUIUtility.singleLineHeight));
+                Rect contentRect = new Rect(position.x,
+                    position.y + EditorGUIUtility.singleLineHeight + Utility.Padding,
+                    position.width,
+                    position.height - (EditorGUIUtility.singleLineHeight * 2 + Utility.ButtonOffset +
+                                       Utility.ButtonVerticalPadding + Utility.MarginBottom));
+
+                DrawContentEditor(contentRect, footerRect);
+                DrawButtons(footerRect);
             }
 
             // Anything we changed property wise we should save
             property.serializedObject.ApplyModifiedProperties();
         }
 
-        private void DrawFooter(Rect position)
+        private void DrawButtons(Rect position)
         {
-            float rightEdge = position.xMax - 10f;
-            float leftEdge = rightEdge - 8f;
-            leftEdge -= 25; // Add
+            float inputWidth = (position.width / 2) - Utility.ButtonWidth - Utility.ButtonHorizontalPadding;
+            Rect addBackground = new Rect(position.xMin + 10f, position.y + Utility.ButtonOffset,
+                Utility.ButtonWidth + inputWidth + Utility.ButtonHorizontalPadding * 2,
+                position.height);
 
-            if (_propertyCountCache > 0)
-            {
-                leftEdge -= 25;
-            }
 
-            position = new Rect(leftEdge, position.y, rightEdge - leftEdge, position.height);
-            Rect addRect = new Rect(leftEdge + 4, position.y, 25, 16);
-            Rect removeRect = new Rect(rightEdge - 29, position.y, 25, 16);
+            // Create button rects
+            Rect addRect = new Rect(addBackground.xMin + Utility.ButtonHorizontalPadding, addBackground.yMin,
+                Utility.ButtonWidth, Utility.ButtonHeight);
+            Rect inputRect = new Rect(addBackground.xMin + Utility.ButtonWidth + Utility.ButtonHorizontalPadding,
+                addBackground.yMin, inputWidth, Utility.ButtonHeight);
+
             if (Event.current.type == EventType.Repaint)
             {
-                Utility.RLFooter.Draw(position, false, false, false, false);
+                Utility.ButtonBackground.Draw(addBackground, false, false, false, false);
             }
+
+            // Draw the input before the button so it overlaps it
+            EditorGUI.PropertyField(inputRect, _propertyAddKey, GUIContent.none);
 
             GUI.enabled = _propertyAddKeyValidCache;
             if (GUI.Button(addRect, Utility.iconToolbarPlus, Utility.preButton))
             {
                 AddNewEntry();
             }
+
             GUI.enabled = true;
 
+
+            // Remove button
+            // TODO: Only enable when selecting?
             if (_propertyCountCache > 0)
             {
-                if (GUI.Button(removeRect, Utility.iconToolbarMinus, Utility.preButton))
+                Rect removeBackground = new Rect(
+                    position.xMax - (10 + Utility.ButtonWidth + Utility.ButtonHorizontalPadding * 2),
+                    position.y + Utility.ButtonOffset,
+                    Utility.ButtonWidth + Utility.ButtonHorizontalPadding * 2,
+                    position.height);
+
+                if (Event.current.type == EventType.Repaint)
+                {
+                    Utility.ButtonBackground.Draw(removeBackground, false, false, false, false);
+                }
+
+                if (GUI.Button(
+                    new Rect(removeBackground.xMin + Utility.ButtonHorizontalPadding, removeBackground.yMin,
+                        Utility.ButtonWidth, Utility.ButtonHeight), Utility.iconToolbarMinus, Utility.preButton))
                 {
                     RemoveLastEntry();
                 }
@@ -178,16 +210,18 @@ namespace GDX.Editor.PropertyDrawers
             GUI.enabled = true;
         }
 
-        private void DrawDictionaryEditor(Rect area)
+        private void DrawContentEditor(Rect area, Rect footerRect)
         {
             //if (Event.current.type != EventType.Repaint) return;
 
-
+            Rect contentFooterRect = new Rect(footerRect.x, footerRect.y, footerRect.width, 7);
+            Utility.FooterBackground.fixedHeight = 0;
             if (_propertyCountCache == 0)
             {
                 if (Event.current.type == EventType.Repaint)
                 {
                     Utility.RLEmptyHeader.Draw(area, false, false, false, false);
+                    Utility.FooterBackground.Draw(contentFooterRect, false, false, false, false);
                 }
 
                 // apply the padding to get the internal rect
@@ -201,12 +235,10 @@ namespace GDX.Editor.PropertyDrawers
             }
 
 
-
-
-
             if (Event.current.type == EventType.Repaint)
             {
                 Utility.RLHeader.Draw(area, false, false, false, false);
+                Utility.FooterBackground.Draw(contentFooterRect, false, false, false, false);
             }
 
             // apply the padding to get the internal rect
@@ -270,35 +302,51 @@ namespace GDX.Editor.PropertyDrawers
 
         private static class Utility
         {
-            public static GUIContent iconToolbarPlus = EditorGUIUtility.TrIconContent("Toolbar Plus", "Add to list");
-            public static  GUIContent iconToolbarPlusMore = EditorGUIUtility.TrIconContent("Toolbar Plus More", "Choose to add to list");
-            public static  GUIContent iconToolbarMinus = EditorGUIUtility.TrIconContent("Toolbar Minus", "Remove selection or last element from list");
-            public static  readonly GUIStyle draggingHandle = "RL DragHandle";
-
-
-            public static  readonly GUIStyle boxBackground = "RL Background";
-            public static  readonly GUIStyle preButton = "RL FooterButton";
-            public static  readonly GUIStyle elementBackground = "RL Element";
-
             public const int dragHandleWidth = 20;
             public const int propertyDrawerPadding = 8;
             public const int minHeaderHeight = 2;
-            public static readonly string undoAdd = "Add Element To Array";
-            public static readonly string undoRemove = "Remove Element From Array";
-            public static readonly string undoMove = "Reorder Element In Array";
-            public static readonly Rect infinityRect = new Rect(float.NegativeInfinity, float.NegativeInfinity, float.PositiveInfinity, float.PositiveInfinity);
 
 
             public const int Padding = 6;
-            public const int HeaderBottomPadding = 4;
+
+            public const float ButtonHorizontalPadding = 4f;
+            public const float ButtonVerticalPadding = 2f;
+            public const float MarginBottom = 2f;
+            public const float ButtonOffset = 6f;
+            public const float ButtonWidth = 25f;
+            public const float ButtonHeight = 16f;
+
+            public static readonly GUIContent iconToolbarPlus =
+                EditorGUIUtility.TrIconContent("Toolbar Plus", "Add to list");
+
+            public static GUIContent iconToolbarPlusMore =
+                EditorGUIUtility.TrIconContent("Toolbar Plus More", "Choose to add to list");
+
+            public static readonly GUIContent iconToolbarMinus =
+                EditorGUIUtility.TrIconContent("Toolbar Minus", "Remove selection or last element from list");
+
+            public static readonly GUIStyle draggingHandle = "RL DragHandle";
+
+
+            public static readonly GUIStyle boxBackground = "RL Background";
+            public static readonly GUIStyle preButton = "RL FooterButton";
+            public static readonly GUIStyle elementBackground = "RL Element";
+            public static readonly string undoAdd = "Add Element To Array";
+            public static readonly string undoRemove = "Remove Element From Array";
+            public static readonly string undoMove = "Reorder Element In Array";
+
+            public static readonly Rect infinityRect = new Rect(float.NegativeInfinity, float.NegativeInfinity,
+                float.PositiveInfinity, float.PositiveInfinity);
+
             public static readonly GUIContent EmptyDictionaryContent = new GUIContent("Dictionary is Empty");
 
             public static readonly GUIStyle RLEmptyHeader = "RL Empty Header";
-            public static readonly GUIStyle RLFooter = "RL Footer";
+            public static readonly GUIStyle FooterBackground = "RL Footer";
+            public static readonly GUIStyle ButtonBackground = "RL Footer";
             public static readonly GUIStyle RLHeader = "RL Header";
 
-             /// <summary>
-            /// A single level copy of value from the <paramref name="sourceProperty"/> to the <paramref name="targetProperty"/>.
+            /// <summary>
+            ///     A single level copy of value from the <paramref name="sourceProperty" /> to the <paramref name="targetProperty" />.
             /// </summary>
             /// <param name="targetProperty">The receiver of the value.</param>
             /// <param name="sourceProperty">The originator of the value to be used.</param>
@@ -361,7 +409,6 @@ namespace GDX.Editor.PropertyDrawers
                         targetProperty.objectReferenceValue = sourceProperty.objectReferenceValue;
                         targetProperty.objectReferenceInstanceIDValue = sourceProperty.objectReferenceInstanceIDValue;
                         break;
-
                 }
             }
         }
