@@ -68,6 +68,7 @@ namespace GDX.Editor.PropertyDrawers
 
 
         private bool _validKeyValueCount = true;
+        private int _selectedIndex = -1;
 
         /// <summary>
         ///     Provide an adjusted height for the entire element to be rendered.
@@ -193,6 +194,28 @@ namespace GDX.Editor.PropertyDrawers
             for (int i = 0; i < _propertyCountCache; i++)
             {
                 float topOffset = (EditorGUIUtility.singleLineHeight + Styles.ContentAreaElementSpacing) * i;
+                Rect selectionRect = new Rect(
+                    position.x - Styles.ContentAreaHorizontalPadding + 1,
+                    position.y + topOffset,
+                    position.width + (Styles.ContentAreaHorizontalPadding * 2) - 3,
+                    EditorGUIUtility.singleLineHeight);
+
+                if (i == _selectedIndex)
+                {
+                    if (Event.current.type == EventType.Repaint)
+                    {
+                        Styles.elementBackground.Draw(selectionRect, false, true, true, true);
+                    }
+                }
+
+                // Handle selection
+                if (Event.current.type == EventType.MouseDown &&
+                    Event.current.button == 1 &&
+                    selectionRect.Contains(Event.current.mousePosition))
+                {
+                    _selectedIndex = i;
+                    Event.current.Use();
+                }
 
                 // Draw Key Icon
                 Rect keyIconRect = new Rect(position.x - 2, position.y + topOffset - 1, 17, EditorGUIUtility.singleLineHeight);
@@ -204,7 +227,7 @@ namespace GDX.Editor.PropertyDrawers
                 EditorGUI.PropertyField(keyPropertyRect, _propertyKeys.GetArrayElementAtIndex(i), GUIContent.none);
 
                 // Draw Value Icon
-                Rect valueIconRect = new Rect(keyPropertyRect.xMax - 2, position.y + topOffset - 1, 17, EditorGUIUtility.singleLineHeight);
+                Rect valueIconRect = new Rect(keyPropertyRect.xMax + 3, position.y + topOffset - 1, 17, EditorGUIUtility.singleLineHeight);
                 EditorGUI.LabelField(valueIconRect, Content.IconValue);
 
                 // Draw Value Property
@@ -252,7 +275,7 @@ namespace GDX.Editor.PropertyDrawers
 
             // Remove button
             // TODO: Only enable when selecting?
-            if (_propertyCountCache <= 0)
+            if (_propertyCountCache > 0 && _selectedIndex != -1)
             {
                 return;
             }
@@ -276,6 +299,7 @@ namespace GDX.Editor.PropertyDrawers
                 Content.IconMinus, Styles.FooterButton))
             {
                 RemoveLastEntry();
+                _selectedIndex = -1;
             }
         }
 
@@ -471,8 +495,11 @@ namespace GDX.Editor.PropertyDrawers
                 EditorGUIUtility.IconContent("Toolbar Minus", "Remove the selected element from the dictionary.");
 
             public static readonly GUIContent IconKey =
+                // ReSharper disable once StringLiteralTypo
                 EditorGUIUtility.IconContent("animationkeyframe", "Key");
+
             public static readonly GUIContent IconValue =
+                // ReSharper disable once StringLiteralTypo
                 EditorGUIUtility.IconContent("animationanimated", "Value");
 
         }
