@@ -59,6 +59,7 @@ namespace GDX.Editor.PropertyDrawers
         private SerializedProperty _propertyValues;
 
         private string _label = "Serializable Dictionary";
+        private float _cachedHeight;
 
 
         private bool _validKeyValueCount = true;
@@ -71,29 +72,35 @@ namespace GDX.Editor.PropertyDrawers
         /// <returns>Required height for element.</returns>
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
+            // In the case that we just have the foldout showing, we want the property drawer to just be a single line
             if (!_propertyExpandedCache)
             {
-                return EditorGUIUtility.singleLineHeight;
+                _cachedHeight = EditorGUIUtility.singleLineHeight;
+                return _cachedHeight;
             }
+
 
             if (_propertyCountCache == 0)
             {
-                return (EditorGUIUtility.singleLineHeight)  * Mathf.Max(2, _propertyCountCache + 1) +
-                       EditorGUIUtility.singleLineHeight +
-                       Styles.ContentAreaPadding +
-                       Utility.ButtonOffset +
-                       Utility.ButtonVerticalPadding +
-                       Utility.MarginBottom;
+                _cachedHeight = EditorGUIUtility.singleLineHeight * Mathf.Max(2, _propertyCountCache + 1) +
+                                EditorGUIUtility.singleLineHeight +
+                                Styles.ContentAreaPadding +
+                                Utility.ButtonOffset +
+                                Utility.ButtonVerticalPadding +
+                                Utility.MarginBottom;
+                return _cachedHeight;
             }
 
-            return (EditorGUIUtility.singleLineHeight + Styles.ElementSpaceBetweenPadding) * Mathf.Max(2, _propertyCountCache + 1) +
-                   EditorGUIUtility.singleLineHeight +
-                   (Styles.ContentAreaPadding * 2) +
-                   Utility.ButtonOffset +
-                   Utility.ButtonVerticalPadding +
-                   Utility.MarginBottom
-                   // Remove the extra space
-                   - Styles.ElementSpaceBetweenPadding;
+            _cachedHeight = (EditorGUIUtility.singleLineHeight + Styles.ElementSpaceBetweenPadding) *
+                            Mathf.Max(2, _propertyCountCache + 1) +
+                            EditorGUIUtility.singleLineHeight +
+                            Styles.ContentAreaPadding * 2 +
+                            Utility.ButtonOffset +
+                            Utility.ButtonVerticalPadding +
+                            Utility.MarginBottom
+                            // Remove the extra space
+                            - Styles.ElementSpaceBetweenPadding;
+            return _cachedHeight;
         }
 
         /// <summary>
@@ -134,11 +141,13 @@ namespace GDX.Editor.PropertyDrawers
                 Rect contentRect = new Rect(position.x,
                     position.y + EditorGUIUtility.singleLineHeight + Styles.ContentAreaPadding,
                     position.width,
-                    position.height - (EditorGUIUtility.singleLineHeight * 2 + Utility.ButtonOffset + Utility.ButtonVerticalPadding + Utility.MarginBottom));
+                    position.height - (EditorGUIUtility.singleLineHeight * 2 + Utility.ButtonOffset +
+                                       Utility.ButtonVerticalPadding + Utility.MarginBottom));
 
                 Rect footerRect = new Rect(
                     position.x,
-                    position.y + (position.height - (EditorGUIUtility.singleLineHeight + Utility.ButtonOffset + Utility.ButtonVerticalPadding + Utility.MarginBottom)),
+                    position.y + (position.height - (EditorGUIUtility.singleLineHeight + Utility.ButtonOffset +
+                                                     Utility.ButtonVerticalPadding + Utility.MarginBottom)),
                     position.width,
                     EditorGUIUtility.singleLineHeight + Utility.ButtonVerticalPadding);
 
@@ -152,9 +161,9 @@ namespace GDX.Editor.PropertyDrawers
         }
 
         /// <summary>
-        /// Draw the foldout header for the <see cref="SerializableDictionary{TKey,TValue}"/>.
+        ///     Draw the foldout header for the <see cref="SerializableDictionary{TKey,TValue}" />.
         /// </summary>
-        /// <param name="position">A <see cref="Rect"/> representing the space which the header will consume in its entirety.</param>
+        /// <param name="position">A <see cref="Rect" /> representing the space which the header will consume in its entirety.</param>
         private void DrawFoldout(Rect position)
         {
             // TODO: Could return the consumed height? so we can have a banner at the top if invalid?
@@ -180,10 +189,13 @@ namespace GDX.Editor.PropertyDrawers
         /// <summary>
         ///     Draw actionable buttons offset of the footer.
         /// </summary>
-        /// <param name="position">A <see cref="Rect"/> representing the space which the footer will be drawn, so that he the buttons can draw offset of it.</param>
+        /// <param name="position">
+        ///     A <see cref="Rect" /> representing the space which the footer will be drawn, so that he the
+        ///     buttons can draw offset of it.
+        /// </param>
         private void DrawFooterActions(Rect position)
         {
-            float inputWidth = (position.width / 2) - Utility.ButtonWidth - Utility.ButtonHorizontalPadding;
+            float inputWidth = position.width / 2 - Utility.ButtonWidth - Utility.ButtonHorizontalPadding;
             Rect addBackground = new Rect(position.xMin + 10f, position.y + Utility.ButtonOffset,
                 Utility.ButtonWidth + inputWidth + Utility.ButtonHorizontalPadding * 2,
                 position.height);
@@ -237,8 +249,6 @@ namespace GDX.Editor.PropertyDrawers
         }
 
 
-
-
         private void DrawContentEditor(Rect area, Rect footerRect)
         {
             //if (Event.current.type != EventType.Repaint) return;
@@ -285,10 +295,10 @@ namespace GDX.Editor.PropertyDrawers
             EditorGUI.indentLevel++;
             for (int i = 0; i < _propertyCountCache; i++)
             {
-                float topOffset = ((EditorGUIUtility.singleLineHeight + Styles.ElementSpaceBetweenPadding) * i);
+                float topOffset = (EditorGUIUtility.singleLineHeight + Styles.ElementSpaceBetweenPadding) * i;
 
                 EditorGUI.PropertyField(
-                    new Rect(area.x, area.y +topOffset , columnWidth,
+                    new Rect(area.x, area.y + topOffset, columnWidth,
                         EditorGUIUtility.singleLineHeight), _propertyKeys.GetArrayElementAtIndex(i), GUIContent.none);
 
                 EditorGUI.PropertyField(
@@ -296,6 +306,7 @@ namespace GDX.Editor.PropertyDrawers
                         columnWidth, EditorGUIUtility.singleLineHeight), _propertyValues.GetArrayElementAtIndex(i),
                     GUIContent.none);
             }
+
             EditorGUI.indentLevel--;
         }
 
@@ -423,8 +434,6 @@ namespace GDX.Editor.PropertyDrawers
             public const int minHeaderHeight = 2;
 
 
-
-
             public const float ButtonHorizontalPadding = 4f;
             public const float ButtonVerticalPadding = 2f;
             public const float MarginBottom = 2f;
@@ -444,7 +453,6 @@ namespace GDX.Editor.PropertyDrawers
             public static readonly GUIStyle draggingHandle = "RL DragHandle";
 
 
-
             public static readonly GUIStyle preButton = "RL FooterButton";
 
             public static readonly string undoAdd = "Add Element To Array";
@@ -459,12 +467,6 @@ namespace GDX.Editor.PropertyDrawers
 
 
             public static readonly GUIContent EmptyDictionaryContent = new GUIContent("Dictionary is Empty");
-
-
-
-
-
-
         }
     }
 }
