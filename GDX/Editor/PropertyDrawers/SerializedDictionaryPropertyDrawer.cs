@@ -73,8 +73,8 @@ namespace GDX.Editor.PropertyDrawers
                 return EditorGUIUtility.singleLineHeight;
             }
 
-            return (EditorGUIUtility.singleLineHeight * Mathf.Max(2, _propertyCountCache + 1)) +
-                   EditorGUIUtility.singleLineHeight;
+            return EditorGUIUtility.singleLineHeight * Mathf.Max(2, _propertyCountCache + 1) +
+                   EditorGUIUtility.singleLineHeight + Utility.HeaderBottomPadding;
         }
 
         /// <summary>
@@ -106,13 +106,15 @@ namespace GDX.Editor.PropertyDrawers
                                   _propertyCountCache == _propertyKeys.arraySize;
 
 
-            DrawHeader(new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight), property.displayName);
+            DrawHeader(new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight),
+                property.displayName);
             if (_propertyExpandedCache)
             {
-                DrawDictionaryEditor(new Rect(position.x, position.y + EditorGUIUtility.singleLineHeight,
-                    position.width, position.height - (EditorGUIUtility.singleLineHeight * 2)));
+                DrawDictionaryEditor(new Rect(position.x, position.y + EditorGUIUtility.singleLineHeight + Utility.HeaderBottomPadding,
+                    position.width, position.height - EditorGUIUtility.singleLineHeight * 2));
 
-                DrawFooter(new Rect(position.x, position.y + (position.height - EditorGUIUtility.singleLineHeight), position.width, EditorGUIUtility.singleLineHeight));
+                DrawFooter(new Rect(position.x, position.y + (position.height - EditorGUIUtility.singleLineHeight),
+                    position.width, EditorGUIUtility.singleLineHeight));
             }
 
             // Anything we changed property wise we should save
@@ -121,21 +123,33 @@ namespace GDX.Editor.PropertyDrawers
 
         private void DrawFooter(Rect position)
         {
+            float rightEdge = position.xMax - 10f;
+            float leftEdge = rightEdge - 8f;
+            leftEdge -= 25; // Add
+
+            if (_propertyCountCache > 0)
+            {
+                leftEdge -= 25;
+            }
+
+            position = new Rect(leftEdge, position.y, rightEdge - leftEdge, position.height);
+            Rect addRect = new Rect(leftEdge + 4, position.y, 25, 16);
+            Rect removeRect = new Rect(rightEdge - 29, position.y, 25, 16);
+            if (Event.current.type == EventType.Repaint)
+            {
+                Utility.RLFooter.Draw(position, false, false, false, false);
+            }
+
             GUI.enabled = _propertyAddKeyValidCache;
-            if (GUI.Button(new Rect(position.x, position.y, 100, position.height), "Add"))
+            if (GUI.Button(addRect, Utility.iconToolbarPlus, Utility.preButton))
             {
                 AddNewEntry();
             }
             GUI.enabled = true;
 
-            EditorGUI.PropertyField(new Rect(position.x + 100, position.y, (position.width / 2) - 100, position.height),
-                _propertyAddKey, GUIContent.none);
-
             if (_propertyCountCache > 0)
             {
-                if (GUI.Button(
-                    new Rect(position.x + (position.width / 2), position.y, position.width / 2, position.height),
-                    "Remove"))
+                if (GUI.Button(removeRect, Utility.iconToolbarMinus, Utility.preButton))
                 {
                     RemoveLastEntry();
                 }
@@ -145,7 +159,6 @@ namespace GDX.Editor.PropertyDrawers
         private void DrawHeader(Rect position, string displayName)
         {
             // TODO: Could return the consumed height? so we can have a banner at the top if invalid?
-
             // Generate a foldout GUI element representing the name of the dictionary
             bool newExpanded =
                 EditorGUI.Foldout(position,
@@ -163,36 +176,66 @@ namespace GDX.Editor.PropertyDrawers
             EditorGUI.TextField(new Rect(position.x + position.width - itemCountSize,
                 position.y, itemCountSize, position.height), _propertyCountCache.ToString());
             GUI.enabled = true;
-
         }
 
         private void DrawDictionaryEditor(Rect area)
         {
-            // RL Empty header
-            // RL Background
-            // RL Element
-            // RL Footer
-            // RL FooterButton
+            //if (Event.current.type != EventType.Repaint) return;
+
 
             if (_propertyCountCache == 0)
             {
-                EditorGUI.LabelField(area, "Empty");
+                if (Event.current.type == EventType.Repaint)
+                {
+                    Utility.RLEmptyHeader.Draw(area, false, false, false, false);
+                }
+
+                // apply the padding to get the internal rect
+                area.xMin += Utility.Padding;
+                area.xMax -= Utility.Padding;
+                area.height -= 2;
+                area.y += 1;
+
+                EditorGUI.LabelField(area, Utility.EmptyDictionaryContent, EditorStyles.label);
                 return;
             }
 
+
+
+
+
+            if (Event.current.type == EventType.Repaint)
+            {
+                Utility.RLHeader.Draw(area, false, false, false, false);
+            }
+
+            // apply the padding to get the internal rect
+            area.xMin += Utility.Padding;
+            area.xMax -= Utility.Padding;
+            area.height -= 2;
+            area.y += 1;
+
             const float spacing = 15;
-            float columnWidth = (area.width / 2) - spacing;
+            float columnWidth = area.width / 2 - spacing;
 
             for (int i = 0; i < _propertyCountCache; i++)
             {
-                EditorGUI.PropertyField(new Rect(area.x, area.y + (EditorGUIUtility.singleLineHeight * i), columnWidth, EditorGUIUtility.singleLineHeight), _propertyKeys.GetArrayElementAtIndex(i), GUIContent.none);
-                EditorGUI.PropertyField(new Rect(area.x + spacing + columnWidth, area.y + (EditorGUIUtility.singleLineHeight * i), columnWidth, EditorGUIUtility.singleLineHeight), _propertyValues.GetArrayElementAtIndex(i), GUIContent.none);
+                EditorGUI.PropertyField(
+                    new Rect(area.x, area.y + EditorGUIUtility.singleLineHeight * i, columnWidth,
+                        EditorGUIUtility.singleLineHeight), _propertyKeys.GetArrayElementAtIndex(i), GUIContent.none);
+                EditorGUI.PropertyField(
+                    new Rect(area.x + spacing + columnWidth, area.y + EditorGUIUtility.singleLineHeight * i,
+                        columnWidth, EditorGUIUtility.singleLineHeight), _propertyValues.GetArrayElementAtIndex(i),
+                    GUIContent.none);
             }
         }
 
         private void AddNewEntry()
         {
-            if (_propertyCountCache == -1 || _propertyKeys == null || _propertyValues == null) return;
+            if (_propertyCountCache == -1 || _propertyKeys == null || _propertyValues == null)
+            {
+                return;
+            }
 
             // Increase Size
             _propertyCountCache++;
@@ -200,8 +243,8 @@ namespace GDX.Editor.PropertyDrawers
             // Keys need to be unique
             _propertyKeys.arraySize = _propertyCountCache;
 
-            SerializedProperty addedKey = _propertyKeys.GetArrayElementAtIndex(_propertyCountCache-1);
-            addedKey.ShallowCopy(_propertyAddKey);
+            SerializedProperty addedKey = _propertyKeys.GetArrayElementAtIndex(_propertyCountCache - 1);
+            Utility.ShallowCopy(addedKey, _propertyAddKey);
 
             _propertyValues.arraySize = _propertyCountCache;
             _propertyCount.intValue = _propertyCountCache;
@@ -209,14 +252,118 @@ namespace GDX.Editor.PropertyDrawers
 
         private void RemoveLastEntry()
         {
-            if (_propertyCountCache == -1 || _propertyKeys == null || _propertyValues == null) return;
+            if (_propertyCountCache == -1 || _propertyKeys == null || _propertyValues == null)
+            {
+                return;
+            }
 
             _propertyCountCache--;
-            if (_propertyCountCache < 0) _propertyCountCache = 0;
+            if (_propertyCountCache < 0)
+            {
+                _propertyCountCache = 0;
+            }
 
             _propertyKeys.arraySize = _propertyCountCache;
             _propertyValues.arraySize = _propertyCountCache;
             _propertyCount.intValue = _propertyCountCache;
+        }
+
+        private static class Utility
+        {
+            public static GUIContent iconToolbarPlus = EditorGUIUtility.TrIconContent("Toolbar Plus", "Add to list");
+            public static  GUIContent iconToolbarPlusMore = EditorGUIUtility.TrIconContent("Toolbar Plus More", "Choose to add to list");
+            public static  GUIContent iconToolbarMinus = EditorGUIUtility.TrIconContent("Toolbar Minus", "Remove selection or last element from list");
+            public static  readonly GUIStyle draggingHandle = "RL DragHandle";
+
+
+            public static  readonly GUIStyle boxBackground = "RL Background";
+            public static  readonly GUIStyle preButton = "RL FooterButton";
+            public static  readonly GUIStyle elementBackground = "RL Element";
+
+            public const int dragHandleWidth = 20;
+            public const int propertyDrawerPadding = 8;
+            public const int minHeaderHeight = 2;
+            public static readonly string undoAdd = "Add Element To Array";
+            public static readonly string undoRemove = "Remove Element From Array";
+            public static readonly string undoMove = "Reorder Element In Array";
+            public static readonly Rect infinityRect = new Rect(float.NegativeInfinity, float.NegativeInfinity, float.PositiveInfinity, float.PositiveInfinity);
+
+
+            public const int Padding = 6;
+            public const int HeaderBottomPadding = 4;
+            public static readonly GUIContent EmptyDictionaryContent = new GUIContent("Dictionary is Empty");
+
+            public static readonly GUIStyle RLEmptyHeader = "RL Empty Header";
+            public static readonly GUIStyle RLFooter = "RL Footer";
+            public static readonly GUIStyle RLHeader = "RL Header";
+
+             /// <summary>
+            /// A single level copy of value from the <paramref name="sourceProperty"/> to the <paramref name="targetProperty"/>.
+            /// </summary>
+            /// <param name="targetProperty">The receiver of the value.</param>
+            /// <param name="sourceProperty">The originator of the value to be used.</param>
+            public static void ShallowCopy(SerializedProperty targetProperty, SerializedProperty sourceProperty)
+            {
+                switch (targetProperty.type)
+                {
+                    case "int":
+                        targetProperty.intValue = sourceProperty.intValue;
+                        break;
+                    case "bool":
+                        targetProperty.boolValue = sourceProperty.boolValue;
+                        break;
+                    case "bounds":
+                        targetProperty.boundsValue = sourceProperty.boundsValue;
+                        break;
+                    case "color":
+                        targetProperty.colorValue = sourceProperty.colorValue;
+                        break;
+                    case "double":
+                        targetProperty.doubleValue = sourceProperty.doubleValue;
+                        break;
+                    case "float":
+                        targetProperty.floatValue = sourceProperty.floatValue;
+                        break;
+                    case "long":
+                        targetProperty.longValue = sourceProperty.longValue;
+                        break;
+                    case "quaternion":
+                        targetProperty.quaternionValue = sourceProperty.quaternionValue;
+                        break;
+                    case "rect":
+                        targetProperty.rectValue = sourceProperty.rectValue;
+                        break;
+                    case "string":
+                        targetProperty.stringValue = sourceProperty.stringValue;
+                        break;
+                    case "vector2":
+                        targetProperty.vector2Value = sourceProperty.vector2Value;
+                        break;
+                    case "vector3":
+                        targetProperty.vector3Value = sourceProperty.vector3Value;
+                        break;
+                    case "vector4":
+                        targetProperty.vector4Value = sourceProperty.vector4Value;
+                        break;
+                    case "animationCurve":
+                        targetProperty.animationCurveValue = sourceProperty.animationCurveValue;
+                        break;
+                    case "boundsInt":
+                        targetProperty.boundsIntValue = sourceProperty.boundsIntValue;
+                        break;
+                    case "enum":
+                        targetProperty.enumValueIndex = sourceProperty.enumValueIndex;
+                        break;
+                    case "exposedReference":
+                        targetProperty.exposedReferenceValue = sourceProperty.exposedReferenceValue;
+                        break;
+                    case "object":
+                        targetProperty.objectReferenceValue = sourceProperty.objectReferenceValue;
+                        targetProperty.objectReferenceInstanceIDValue = sourceProperty.objectReferenceInstanceIDValue;
+                        break;
+
+                }
+            }
         }
     }
 }
