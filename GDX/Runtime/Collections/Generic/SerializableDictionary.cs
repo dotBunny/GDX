@@ -26,10 +26,13 @@ namespace GDX.Collections.Generic
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
 #if UNITY_EDITOR
+
         /// <summary>
         ///     Editor only data indicating if the property drawer is expanded.
         /// </summary>
+#pragma warning disable 414
         [HideInInspector] [SerializeField] private bool drawerExpanded = false;
+#pragma warning restore 414
 
         /// <summary>
         ///     Temporary placement for keys to be added.
