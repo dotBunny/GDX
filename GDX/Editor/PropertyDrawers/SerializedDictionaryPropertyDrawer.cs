@@ -194,7 +194,7 @@ namespace GDX.Editor.PropertyDrawers
             // Generate a foldout GUI element representing the name of the dictionary
             bool newExpanded =
                 EditorGUI.Foldout(position,
-                    _propertyExpanded.boolValue, displayName, false, EditorStyles.foldout);
+                    _propertyExpanded.boolValue, displayName, true, EditorStyles.foldout);
             if (newExpanded != _propertyExpandedCache)
             {
                 // TODO: Is there some editor cache for whats unfolded? This would prevent over serialization / extra data
