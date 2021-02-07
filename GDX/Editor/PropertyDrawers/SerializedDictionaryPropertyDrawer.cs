@@ -170,6 +170,12 @@ namespace GDX.Editor.PropertyDrawers
                 DrawFooterActions(footerRect);
             }
 
+            // Create undo point if we've changed something
+            if (GUI.changed)
+            {
+                Undo.SetCurrentGroupName("Changed Serialized Dictionary");
+            }
+
             // Anything we changed property wise we should save
             property.serializedObject.ApplyModifiedProperties();
         }
@@ -230,6 +236,8 @@ namespace GDX.Editor.PropertyDrawers
                     selectionRect.Contains(Event.current.mousePosition))
                 {
                     _selectedIndex = i;
+
+                    // TODO: Currently if you dont click on something that forces a repaint, the highlight wont render till you move the mouse.
                 }
 
                 if (i == _selectedIndex)
@@ -378,7 +386,8 @@ namespace GDX.Editor.PropertyDrawers
             Rect iconRect = new Rect(position.x - 16, position.y, 16, position.height);
             Content.IconError.tooltip = tooltip;
             EditorGUI.LabelField(iconRect, Content.IconError);
-            EditorGUI.LabelField(position, new GUIContent(_label, tooltip), EditorStyles.label);
+            Rect messageRect = new Rect(position.x, position.y, position.width - 17, position.height);
+            EditorGUI.LabelField(messageRect, new GUIContent(_label, tooltip), EditorStyles.label);
 
             if (!displayResetButton)
             {
@@ -653,6 +662,12 @@ namespace GDX.Editor.PropertyDrawers
 
         private static class Content
         {
+            public const string CorruptDataError =
+                "Serialized data is checked that the number of keys and values match, as well as the cached length. If any of these does not match the data is considered corrupt.";
+
+            public const string InvalidTypesError =
+                "System.Object is not compatible with Unity's serialization system.";
+
             public static readonly GUIContent EmptyDictionary = new GUIContent("Dictionary is Empty");
 
             public static readonly GUIContent IconError = EditorGUIUtility.IconContent("Error", "Issue Detected!");
@@ -667,16 +682,13 @@ namespace GDX.Editor.PropertyDrawers
                 // ReSharper disable once StringLiteralTypo
                 EditorGUIUtility.IconContent("animationkeyframe", "Key");
 
-            public static readonly GUIContent IconTrash = EditorGUIUtility.IconContent(EditorGUIUtility.isProSkin ? "d_TreeEditor.Trash" : "TreeEditor.Trash", "Reset");
+            public static readonly GUIContent IconTrash =
+                EditorGUIUtility.IconContent("Grid.EraserTool",
+                    "Reset");
 
             public static readonly GUIContent IconValue =
                 // ReSharper disable once StringLiteralTypo
                 EditorGUIUtility.IconContent("animationanimated", "Value");
-
-            public const string CorruptDataError = "Serialized data is checked that the number of keys and values match, as well as the cached length. If any of these does not match the data is considered corrupt.";
-
-            public const string InvalidTypesError =
-                "System.Object is not compatible with Unity's serialization system.";
         }
     }
 }

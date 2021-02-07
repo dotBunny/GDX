@@ -187,7 +187,20 @@ namespace GDX.Collections.Generic
             // Iterate over all the serialized data and put it back into the dictionary as it once was, in order.
             for (int i = 0; i < serializedLength; i++)
             {
-                Add(serializedKeys[i], serializedValues[i]);
+#if UNITY_EDITOR
+                // If the key is already in the dataset what do we do?
+                if (ContainsKey(serializedKeys[i]))
+                {
+                    Debug.LogError(
+                        "A duplicate key has been detected in a serialized dictionary. The item has not been added, you may undo your last action to restore the previous state.");
+                }
+                else
+                {
+#endif
+                    Add(serializedKeys[i], serializedValues[i]);
+#if UNITY_EDITOR
+                }
+#endif
             }
 
 #if UNITY_EDITOR
