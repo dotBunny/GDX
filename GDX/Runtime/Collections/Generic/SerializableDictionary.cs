@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace GDX.Collections.Generic
@@ -12,6 +11,10 @@ namespace GDX.Collections.Generic
     ///     A Unity serializable <see cref="Dictionary{TKey,TValue}" />.
     /// </summary>
     /// <remarks>
+    ///     <para>
+    ///         This will NOT work with <see cref="System.Object" /> based objects, it requires basing off
+    ///         <see cref="UnityEngine.Object" />.
+    ///     </para>
     ///     <para>
     ///         While .NET has solutions for creating custom serialization paths, Unity uses its own system to serialize data
     ///         into YAML structures. This also assumes that the types provided can be serialized by Unity.
@@ -25,26 +28,6 @@ namespace GDX.Collections.Generic
     [Serializable]
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
-#if UNITY_EDITOR
-
-        /// <summary>
-        ///     Editor only data indicating if the property drawer is expanded.
-        /// </summary>
-#pragma warning disable 414
-        [HideInInspector] [SerializeField] private bool drawerExpanded = false;
-#pragma warning restore 414
-
-        /// <summary>
-        ///     Temporary placement for keys to be added.
-        /// </summary>
-        [HideInInspector] [SerializeField] private TKey serializedAddKey;
-
-        /// <summary>
-        ///     Is the provided key a valid key (unique).
-        /// </summary>
-        [HideInInspector] [SerializeField] private bool serializedAddKeyValid;
-#endif
-
         /// <summary>
         ///     A cached length of the serialized data arrays.
         /// </summary>
@@ -114,11 +97,39 @@ namespace GDX.Collections.Generic
             return serializedLength;
         }
 
+        /// <summary>
+        ///     Is the dictionaries key nullable?
+        /// </summary>
+        /// <returns>true/false if nullable.</returns>
         public bool IsNullableKey()
         {
             Type type = typeof(TKey);
-            if (!type.IsValueType) return true;
+            if (!type.IsValueType)
+            {
+                return true;
+            }
+
             return Nullable.GetUnderlyingType(type) != null;
+        }
+
+        /// <summary>
+        ///     Is the dictionaries value nullable?
+        /// </summary>
+        /// <returns>true/false if nullable.</returns>
+        public bool IsNullableValue()
+        {
+            Type type = typeof(TValue);
+            if (!type.IsValueType)
+            {
+                return true;
+            }
+            return Nullable.GetUnderlyingType(type) != null;
+        }
+
+        public bool IsKeyInvalidType()
+        {
+            Type type = typeof(TKey);
+            return type == typeof(object);
         }
 
         /// <summary>
@@ -129,9 +140,17 @@ namespace GDX.Collections.Generic
         {
             Clear();
 
-            if (serializedLength <= 0)
+            if (serializedLength <= 0 )
             {
-                serializedAddKeyValid = true;
+                // Don't allow null keys for non-nullables
+                if (!IsNullableKey() && serializedAddKey == null)
+                {
+                    serializedAddKeyValid = false;
+                }
+                else
+                {
+                    serializedAddKeyValid = true;
+                }
                 return;
             }
 
@@ -209,5 +228,24 @@ namespace GDX.Collections.Generic
                 index++;
             }
         }
+#if UNITY_EDITOR
+
+        /// <summary>
+        ///     Editor only data indicating if the property drawer is expanded.
+        /// </summary>
+#pragma warning disable 414
+        [HideInInspector] [SerializeField] private bool drawerExpanded;
+#pragma warning restore 414
+
+        /// <summary>
+        ///     Temporary placement for keys to be added.
+        /// </summary>
+        [HideInInspector] [SerializeField] private TKey serializedAddKey;
+
+        /// <summary>
+        ///     Is the provided key a valid key (unique).
+        /// </summary>
+        [HideInInspector] [SerializeField] private bool serializedAddKeyValid;
+#endif
     }
 }

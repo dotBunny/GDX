@@ -23,25 +23,25 @@ namespace GDX.Editor.PropertyDrawers
 #if UNITY_2020_1_OR_NEWER
     [CustomPropertyDrawer(typeof(SerializableDictionary<,>))]
 #else
-    // Viable serialization types
     [CustomPropertyDrawer(typeof(SerializableDictionary<int, int>))]
     [CustomPropertyDrawer(typeof(SerializableDictionary<int, string>))]
     [CustomPropertyDrawer(typeof(SerializableDictionary<int, float>))]
     [CustomPropertyDrawer(typeof(SerializableDictionary<int, bool>))]
+    [CustomPropertyDrawer(typeof(SerializableDictionary<int, Object>))]
+    [CustomPropertyDrawer(typeof(SerializableDictionary<int, GameObject>))]
+    [CustomPropertyDrawer(typeof(SerializableDictionary<int, Behaviour>))]
+    [CustomPropertyDrawer(typeof(SerializableDictionary<int, MonoBehaviour>))]
+    [CustomPropertyDrawer(typeof(SerializableDictionary<int, Collider>))]
+
     [CustomPropertyDrawer(typeof(SerializableDictionary<string, int>))]
     [CustomPropertyDrawer(typeof(SerializableDictionary<string, string>))]
     [CustomPropertyDrawer(typeof(SerializableDictionary<string, float>))]
     [CustomPropertyDrawer(typeof(SerializableDictionary<string, bool>))]
-
-    // Warn about object referencing
-    [CustomPropertyDrawer(typeof(SerializableDictionary<int, object>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<int, Object>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<int, GameObject>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<int, MonoBehaviour>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<string, object>))]
     [CustomPropertyDrawer(typeof(SerializableDictionary<string, Object>))]
     [CustomPropertyDrawer(typeof(SerializableDictionary<string, GameObject>))]
+    [CustomPropertyDrawer(typeof(SerializableDictionary<string, Behaviour>))]
     [CustomPropertyDrawer(typeof(SerializableDictionary<string, MonoBehaviour>))]
+    [CustomPropertyDrawer(typeof(SerializableDictionary<string, Collider>))]
 #endif
     internal class SerializableDictionaryPropertyDrawer : PropertyDrawer
     {
@@ -137,6 +137,12 @@ namespace GDX.Editor.PropertyDrawers
             _validKeyValueCount = _propertyCountCache == _propertyValues.arraySize &&
                                   _propertyCountCache == _propertyKeys.arraySize;
 
+            if (!_validKeyValueCount)
+            {
+                // TODO: Draw error that the validation failed
+            }
+
+
             // Draw the foldout at the top of the space
             Rect foldoutRect = new Rect(position.x, position.y, position.width, _heightFoldout);
             DrawFoldout(foldoutRect);
@@ -144,8 +150,9 @@ namespace GDX.Editor.PropertyDrawers
             // If the foldout is expanded, draw the actual content
             if (_propertyExpandedCache)
             {
-                Rect contentRect = new Rect(position.x, foldoutRect.yMax + Styles.ContentAreaTopMargin , position.width, _heightContent);
-                DrawContentEditor(contentRect);
+                Rect contentRect = new Rect(position.x, foldoutRect.yMax + Styles.ContentAreaTopMargin, position.width,
+                    _heightContent);
+                DrawContentArea(contentRect);
                 Rect footerRect = new Rect(position.x, contentRect.yMax, position.width, _heightFooter);
                 DrawFooterActions(footerRect);
             }
@@ -154,7 +161,11 @@ namespace GDX.Editor.PropertyDrawers
             property.serializedObject.ApplyModifiedProperties();
         }
 
-        private void DrawContentEditor(Rect position)
+        /// <summary>
+        ///     Draw the content area, including elements.
+        /// </summary>
+        /// <param name="position">A <see cref="Rect" /> representing the space which the content area will be drawn.</param>
+        private void DrawContentArea(Rect position)
         {
             // Paint the background
             if (Event.current.type == EventType.Repaint)
@@ -197,7 +208,7 @@ namespace GDX.Editor.PropertyDrawers
                 Rect selectionRect = new Rect(
                     position.x - Styles.ContentAreaHorizontalPadding + 1,
                     position.y + topOffset - 1,
-                    position.width + (Styles.ContentAreaHorizontalPadding * 2) - 3,
+                    position.width + Styles.ContentAreaHorizontalPadding * 2 - 3,
                     EditorGUIUtility.singleLineHeight + 2);
 
                 // Handle selection (left-click), do not consume/use the event so that fields receive.
@@ -207,6 +218,7 @@ namespace GDX.Editor.PropertyDrawers
                 {
                     _selectedIndex = i;
                 }
+
                 if (i == _selectedIndex)
                 {
                     if (Event.current.type == EventType.Repaint)
@@ -217,9 +229,11 @@ namespace GDX.Editor.PropertyDrawers
 
                 // Draw Key Icon
 #if UNITY_2021_1_OR_NEWER
-                Rect keyIconRect = new Rect(position.x - 2, position.y + topOffset - 1, 17, EditorGUIUtility.singleLineHeight);
+                Rect keyIconRect =
+ new Rect(position.x - 2, position.y + topOffset - 1, 17, EditorGUIUtility.singleLineHeight);
 #else
-                Rect keyIconRect = new Rect(position.x, position.y + topOffset - 1, 17, EditorGUIUtility.singleLineHeight);
+                Rect keyIconRect = new Rect(position.x, position.y + topOffset - 1, 17,
+                    EditorGUIUtility.singleLineHeight);
 #endif
                 EditorGUI.LabelField(keyIconRect, Content.IconKey);
 
@@ -229,11 +243,13 @@ namespace GDX.Editor.PropertyDrawers
                 EditorGUI.PropertyField(keyPropertyRect, _propertyKeys.GetArrayElementAtIndex(i), GUIContent.none);
 
                 // Draw Value Icon
-                Rect valueIconRect = new Rect(keyPropertyRect.xMax + 3, position.y + topOffset - 1, 17, EditorGUIUtility.singleLineHeight);
+                Rect valueIconRect = new Rect(keyPropertyRect.xMax + 3, position.y + topOffset - 1, 17,
+                    EditorGUIUtility.singleLineHeight);
                 EditorGUI.LabelField(valueIconRect, Content.IconValue);
 
                 // Draw Value Property
-                Rect valuePropertyRect = new Rect(valueIconRect.xMax , position.y + topOffset, columnWidth, EditorGUIUtility.singleLineHeight);
+                Rect valuePropertyRect = new Rect(valueIconRect.xMax, position.y + topOffset, columnWidth,
+                    EditorGUIUtility.singleLineHeight);
                 EditorGUI.PropertyField(valuePropertyRect, _propertyValues.GetArrayElementAtIndex(i), GUIContent.none);
             }
         }
@@ -253,9 +269,11 @@ namespace GDX.Editor.PropertyDrawers
                 position.height);
 
             // Create button rects
-            Rect addRect = new Rect(addBackgroundRect.xMin + Styles.ActionButtonHorizontalPadding, addBackgroundRect.yMin + Styles.ActionButtonVerticalPadding,
+            Rect addRect = new Rect(addBackgroundRect.xMin + Styles.ActionButtonHorizontalPadding,
+                addBackgroundRect.yMin + Styles.ActionButtonVerticalPadding,
                 Styles.ActionButtonWidth, Styles.ActionButtonHeight);
-            Rect inputRect = new Rect(addBackgroundRect.xMin + Styles.ActionButtonWidth + Styles.ActionButtonHorizontalPadding,
+            Rect inputRect = new Rect(
+                addBackgroundRect.xMin + Styles.ActionButtonWidth + Styles.ActionButtonHorizontalPadding,
                 addBackgroundRect.yMin + Styles.ActionButtonVerticalPadding, inputWidth, Styles.ActionButtonHeight);
 
             if (Event.current.type == EventType.Repaint)
@@ -298,7 +316,7 @@ namespace GDX.Editor.PropertyDrawers
             if (GUI.Button(
                 new Rect(
                     removeBackground.xMin + Styles.ActionButtonHorizontalPadding,
-                    removeBackground.yMin  + Styles.ActionButtonVerticalPadding,
+                    removeBackground.yMin + Styles.ActionButtonVerticalPadding,
                     Styles.ActionButtonWidth, Styles.ActionButtonHeight),
                 Content.IconMinus, Styles.FooterButton))
             {
@@ -306,11 +324,7 @@ namespace GDX.Editor.PropertyDrawers
                 GUIUtility.hotControl = 0;
 
                 RemoveElementAt(_selectedIndex);
-                // _selectedIndex--;
-                // if (_selectedIndex < 0)
-                // {
-                    _selectedIndex = -1;
-                //}
+                _selectedIndex = -1;
             }
         }
 
@@ -320,7 +334,6 @@ namespace GDX.Editor.PropertyDrawers
         /// <param name="position">A <see cref="Rect" /> representing the space which the header will consume in its entirety.</param>
         private void DrawFoldout(Rect position)
         {
-            // TODO: Could return the consumed height? so we can have a banner at the top if invalid?
             // Generate a foldout GUI element representing the name of the dictionary
             bool newExpanded =
                 EditorGUI.Foldout(position,
@@ -340,6 +353,17 @@ namespace GDX.Editor.PropertyDrawers
             GUI.enabled = true;
         }
 
+        /// <summary>
+        ///     Add an element to the targeted <see cref="SerializableDictionary{TKey,TValue}" /> using the provided key.
+        /// </summary>
+        /// <remarks>
+        ///     This alters the underlying backing serialized data, after this change, the actual
+        ///     <see cref="SerializableDictionary{TKey,TValue}" /> picks up the change.
+        /// </remarks>
+        /// <param name="defaultValue">
+        ///     Should the value be reset to its default value. It holds the previous element in the array's
+        ///     value due to how the value array was expanded.
+        /// </param>
         private void AddElement(bool defaultValue = true)
         {
             if (_propertyCountCache == -1 || _propertyKeys == null || _propertyValues == null)
@@ -357,7 +381,7 @@ namespace GDX.Editor.PropertyDrawers
 
             // Add new value element, and optionally default its value
             _propertyValues.arraySize = _propertyCountCache;
-            if(defaultValue)
+            if (defaultValue)
             {
                 SerializedProperty addedValue = _propertyValues.GetArrayElementAtIndex(_propertyCountCache - 1);
                 DefaultValue(addedValue);
@@ -366,13 +390,21 @@ namespace GDX.Editor.PropertyDrawers
             _propertyCount.intValue = _propertyCountCache;
         }
 
+        /// <summary>
+        ///     Remove an element from the targeted <see cref="SerializableDictionary{TKey,TValue}" /> at the provided index.
+        /// </summary>
+        /// <remarks>
+        ///     This alters the underlying backing serialized data, after this change, the actual
+        ///     <see cref="SerializableDictionary{TKey,TValue}" /> picks up the change.
+        /// </remarks>
+        /// <param name="index">The index (really ordered serialized data) to remove.</param>
         private void RemoveElementAt(int index)
         {
             if (index == -1)
             {
                 _selectedIndex = -1;
             }
-            else if(_propertyKeys != null && _propertyValues != null)
+            else if (_propertyKeys != null && _propertyValues != null)
             {
                 _propertyKeys.DeleteArrayElementAtIndex(index);
                 _propertyValues.DeleteArrayElementAtIndex(index);
@@ -385,23 +417,73 @@ namespace GDX.Editor.PropertyDrawers
 
                 _propertyCount.intValue = _propertyCountCache;
             }
-
         }
 
-        private void RemoveLastElement()
+        /// <summary>
+        ///     Clear the value of a provided <see cref="SerializedProperty" />, setting it to the <c>default</c>.
+        /// </summary>
+        /// <param name="targetProperty">The receiver of the value.</param>
+        private static void DefaultValue(SerializedProperty targetProperty)
         {
-            if (_propertyCountCache == -1 || _propertyKeys == null || _propertyValues == null)
+            switch (targetProperty.type)
             {
-                return;
+                case "int":
+                    targetProperty.intValue = default;
+                    break;
+                case "bool":
+                    targetProperty.boolValue = default;
+                    break;
+                case "bounds":
+                    targetProperty.boundsValue = default;
+                    break;
+                case "color":
+                    targetProperty.colorValue = default;
+                    break;
+                case "double":
+                    targetProperty.doubleValue = default;
+                    break;
+                case "float":
+                    targetProperty.floatValue = default;
+                    break;
+                case "long":
+                    targetProperty.longValue = default;
+                    break;
+                case "quaternion":
+                    targetProperty.quaternionValue = default;
+                    break;
+                case "rect":
+                    targetProperty.rectValue = default;
+                    break;
+                case "string":
+                    targetProperty.stringValue = default;
+                    break;
+                case "vector2":
+                    targetProperty.vector2Value = default;
+                    break;
+                case "vector3":
+                    targetProperty.vector3Value = default;
+                    break;
+                case "vector4":
+                    targetProperty.vector4Value = default;
+                    break;
+                case "animationCurve":
+                    targetProperty.animationCurveValue = default;
+                    break;
+                case "boundsInt":
+                    targetProperty.boundsIntValue = default;
+                    break;
+                case "enum":
+                    targetProperty.enumValueIndex = default;
+                    break;
+                case "exposedReference":
+                    targetProperty.exposedReferenceValue = default;
+                    break;
+                default:
+                    // This covers the whole "PPtr<$NAME> outcome, could probably handle differently.
+                    targetProperty.objectReferenceValue = default;
+                    targetProperty.objectReferenceInstanceIDValue = default;
+                    break;
             }
-            _propertyCountCache--;
-            if (_propertyCountCache < 0)
-            {
-                _propertyCountCache = 0;
-            }
-            _propertyKeys.arraySize = _propertyCountCache;
-            _propertyValues.arraySize = _propertyCountCache;
-            _propertyCount.intValue = _propertyCountCache;
         }
 
         /// <summary>
@@ -472,78 +554,16 @@ namespace GDX.Editor.PropertyDrawers
             }
         }
 
-        private static void DefaultValue(SerializedProperty targetProperty)
-        {
-            switch (targetProperty.type)
-            {
-                case "int":
-                    targetProperty.intValue = default;
-                    break;
-                case "bool":
-                    targetProperty.boolValue = default;
-                    break;
-                case "bounds":
-                    targetProperty.boundsValue = default;
-                    break;
-                case "color":
-                    targetProperty.colorValue = default;
-                    break;
-                case "double":
-                    targetProperty.doubleValue = default;
-                    break;
-                case "float":
-                    targetProperty.floatValue = default;
-                    break;
-                case "long":
-                    targetProperty.longValue = default;
-                    break;
-                case "quaternion":
-                    targetProperty.quaternionValue = default;
-                    break;
-                case "rect":
-                    targetProperty.rectValue = default;
-                    break;
-                case "string":
-                    targetProperty.stringValue = default;
-                    break;
-                case "vector2":
-                    targetProperty.vector2Value = default;
-                    break;
-                case "vector3":
-                    targetProperty.vector3Value = default;
-                    break;
-                case "vector4":
-                    targetProperty.vector4Value = default;
-                    break;
-                case "animationCurve":
-                    targetProperty.animationCurveValue = default;
-                    break;
-                case "boundsInt":
-                    targetProperty.boundsIntValue = default;
-                    break;
-                case "enum":
-                    targetProperty.enumValueIndex = default;
-                    break;
-                case "exposedReference":
-                    targetProperty.exposedReferenceValue = default;
-                    break;
-                default:
-                    // This covers the whole "PPtr<$NAME> outcome, could probably handle differently.
-                    targetProperty.objectReferenceValue = default;
-                    targetProperty.objectReferenceInstanceIDValue = default;
-                    break;
-            }
-        }
 
         private static class Styles
         {
             /// <summary>
-            /// The width of an individual button in the footer.
+            ///     The width of an individual button in the footer.
             /// </summary>
             public const float ActionButtonWidth = 25f;
 
             /// <summary>
-            /// The height of an individual button in the footer.
+            ///     The height of an individual button in the footer.
             /// </summary>
             public const float ActionButtonHeight = 16f;
 
@@ -562,7 +582,7 @@ namespace GDX.Editor.PropertyDrawers
             public const int ContentAreaHorizontalPadding = 6;
 
             /// <summary>
-            /// The space between each element in the content area.
+            ///     The space between each element in the content area.
             /// </summary>
             public const int ContentAreaElementSpacing = 3;
 
@@ -600,7 +620,6 @@ namespace GDX.Editor.PropertyDrawers
             public static readonly GUIContent IconValue =
                 // ReSharper disable once StringLiteralTypo
                 EditorGUIUtility.IconContent("animationanimated", "Value");
-
         }
     }
 }
