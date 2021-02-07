@@ -306,11 +306,11 @@ namespace GDX.Editor.PropertyDrawers
                 GUIUtility.hotControl = 0;
 
                 RemoveElementAt(_selectedIndex);
-                _selectedIndex--;
-                if (_selectedIndex < 0)
-                {
+                // _selectedIndex--;
+                // if (_selectedIndex < 0)
+                // {
                     _selectedIndex = -1;
-                }
+                //}
             }
         }
 
