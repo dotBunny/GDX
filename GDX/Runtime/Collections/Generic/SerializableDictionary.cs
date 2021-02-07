@@ -43,6 +43,12 @@ namespace GDX.Collections.Generic
         /// </summary>
         [HideInInspector] [SerializeField] private TValue[] serializedValues;
 
+        public SerializableDictionary()
+        {
+            isSerializable = IsKeyValidType() && IsValueValidType();
+        }
+
+
         /// <summary>
         ///     Rehydrate the serialized data arrays back into a <see cref="Dictionary{TKey,TValue}" />.
         /// </summary>
@@ -123,13 +129,28 @@ namespace GDX.Collections.Generic
             {
                 return true;
             }
+
             return Nullable.GetUnderlyingType(type) != null;
         }
 
-        public bool IsKeyInvalidType()
+        /// <summary>
+        ///     Is the dictionary <see cref="TKey" /> a valid type?
+        /// </summary>
+        /// <returns>true/false if the type is valid.</returns>
+        public bool IsKeyValidType()
         {
             Type type = typeof(TKey);
-            return type == typeof(object);
+            return type != typeof(object);
+        }
+
+        /// <summary>
+        ///     Is the dictionary <see cref="TValue" /> a valid type?
+        /// </summary>
+        /// <returns>true/false if the type is valid.</returns>
+        public bool IsValueValidType()
+        {
+            Type type = typeof(TValue);
+            return type != typeof(object);
         }
 
         /// <summary>
@@ -140,7 +161,12 @@ namespace GDX.Collections.Generic
         {
             Clear();
 
-            if (serializedLength <= 0 )
+#if UNITY_EDITOR
+            // If this is not serializable we need to do nothing
+            if (!isSerializable) return;
+#endif
+
+            if (serializedLength <= 0)
             {
                 // Don't allow null keys for non-nullables
                 if (!IsNullableKey() && serializedAddKey == null)
@@ -151,6 +177,7 @@ namespace GDX.Collections.Generic
                 {
                     serializedAddKeyValid = true;
                 }
+
                 return;
             }
 
@@ -212,6 +239,11 @@ namespace GDX.Collections.Generic
         /// <remarks>We will always create the arrays so the property drawers function nicely.</remarks>
         public void SaveSerializedData()
         {
+#if UNITY_EDITOR
+            // If this is not serializable we need to do nothing
+            if (!isSerializable) return;
+#endif
+
             // Stash our length for future usage
             serializedLength = Count;
 
@@ -236,6 +268,11 @@ namespace GDX.Collections.Generic
 #pragma warning disable 414
         [HideInInspector] [SerializeField] private bool drawerExpanded;
 #pragma warning restore 414
+
+        /// <summary>
+        ///     Editor only data indicating if the property drawer is expanded.
+        /// </summary>
+        [HideInInspector] [SerializeField] private bool isSerializable = false;
 
         /// <summary>
         ///     Temporary placement for keys to be added.

@@ -47,6 +47,8 @@ namespace GDX.Editor.PropertyDrawers
     {
         private SerializedProperty _propertyExpanded;
         private bool _propertyExpandedCache;
+        private SerializedProperty _propertyIsSerializable;
+        private bool _propertyIsSerializableCache;
         private SerializedProperty _propertyAddKey;
         private SerializedProperty _propertyAddKeyValid;
         private bool _propertyAddKeyValidCache;
@@ -82,8 +84,8 @@ namespace GDX.Editor.PropertyDrawers
             // In the case that we just have the foldout showing, we want the property drawer to just be a single line
             _heightFoldout = EditorGUIUtility.singleLineHeight;
 
-            // Early out if the property drawer is not expanded
-            if (!_propertyExpandedCache)
+            // Early out if the property drawer is not expanded, or we dont have any data
+            if (!_propertyExpandedCache || !_propertyIsSerializableCache)
             {
                 _heightTotal = _heightFoldout;
                 return _heightTotal;
@@ -118,9 +120,21 @@ namespace GDX.Editor.PropertyDrawers
         /// <param name="label">An ignored label value.</param>
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            // Safe to cache!
             _label = property.displayName;
 
+            // Build our top level position
+            Rect foldoutRect = new Rect(position.x, position.y, position.width, _heightFoldout);
+
             // Editor only properties
+            _propertyIsSerializable = property.FindPropertyRelative("isSerializable");
+            _propertyIsSerializableCache = _propertyIsSerializable.boolValue;
+            if (!_propertyIsSerializableCache)
+            {
+                DrawErrorMessage(foldoutRect, Content.InvalidTypesError);
+                return;
+            }
+
             _propertyExpanded = property.FindPropertyRelative("drawerExpanded");
             _propertyExpandedCache = _propertyExpanded.boolValue;
             _propertyAddKey = property.FindPropertyRelative("serializedAddKey");
@@ -139,12 +153,11 @@ namespace GDX.Editor.PropertyDrawers
 
             if (!_validKeyValueCount)
             {
-                // TODO: Draw error that the validation failed
+                DrawErrorMessage(foldoutRect, Content.CorruptDataError, true);
+                return;
             }
 
-
             // Draw the foldout at the top of the space
-            Rect foldoutRect = new Rect(position.x, position.y, position.width, _heightFoldout);
             DrawFoldout(foldoutRect);
 
             // If the foldout is expanded, draw the actual content
@@ -354,6 +367,33 @@ namespace GDX.Editor.PropertyDrawers
         }
 
         /// <summary>
+        ///     Draw a message instead of the normal property drawer.
+        /// </summary>
+        /// <remarks>Useful for when data is corrupted, or types are incompatible.</remarks>
+        /// <param name="position">A <see cref="Rect" /> representing where it should be drawn.</param>
+        /// <param name="tooltip">The message to display when mousing over.</param>
+        /// <param name="displayResetButton">Should a reset button be displayed?</param>
+        private void DrawErrorMessage(Rect position, string tooltip, bool displayResetButton = false)
+        {
+            Rect iconRect = new Rect(position.x - 16, position.y, 16, position.height);
+            Content.IconError.tooltip = tooltip;
+            EditorGUI.LabelField(iconRect, Content.IconError);
+            EditorGUI.LabelField(position, new GUIContent(_label, tooltip), EditorStyles.label);
+
+            if (!displayResetButton)
+            {
+                return;
+            }
+
+            Rect buttonRect = new Rect(position.width, position.y, 17, position.height);
+            if (GUI.Button(buttonRect, Content.IconTrash, GUIStyle.none))
+            {
+                ResetSerializedData();
+            }
+        }
+
+
+        /// <summary>
         ///     Add an element to the targeted <see cref="SerializableDictionary{TKey,TValue}" /> using the provided key.
         /// </summary>
         /// <remarks>
@@ -371,22 +411,21 @@ namespace GDX.Editor.PropertyDrawers
                 return;
             }
 
-            // Increase Size
-            _propertyCountCache++;
-
             // Add new key element, and fill with predetermined good key
-            _propertyKeys.arraySize = _propertyCountCache;
-            SerializedProperty addedKey = _propertyKeys.GetArrayElementAtIndex(_propertyCountCache - 1);
+            _propertyKeys.arraySize++;
+            SerializedProperty addedKey = _propertyKeys.GetArrayElementAtIndex(_propertyCountCache);
             ShallowCopy(addedKey, _propertyAddKey);
 
             // Add new value element, and optionally default its value
-            _propertyValues.arraySize = _propertyCountCache;
+            _propertyValues.arraySize++;
             if (defaultValue)
             {
-                SerializedProperty addedValue = _propertyValues.GetArrayElementAtIndex(_propertyCountCache - 1);
+                SerializedProperty addedValue = _propertyValues.GetArrayElementAtIndex(_propertyCountCache);
                 DefaultValue(addedValue);
             }
 
+            // Increase Size
+            _propertyCountCache++;
             _propertyCount.intValue = _propertyCountCache;
         }
 
@@ -417,6 +456,15 @@ namespace GDX.Editor.PropertyDrawers
 
                 _propertyCount.intValue = _propertyCountCache;
             }
+        }
+
+        private void ResetSerializedData()
+        {
+            _propertyKeys.ClearArray();
+            _propertyValues.ClearArray();
+            _propertyCount.intValue = 0;
+            _propertyCountCache = 0;
+            _selectedIndex = -1;
         }
 
         /// <summary>
@@ -607,6 +655,8 @@ namespace GDX.Editor.PropertyDrawers
         {
             public static readonly GUIContent EmptyDictionary = new GUIContent("Dictionary is Empty");
 
+            public static readonly GUIContent IconError = EditorGUIUtility.IconContent("Error", "Issue Detected!");
+
             public static readonly GUIContent IconPlus =
                 EditorGUIUtility.IconContent("Toolbar Plus", "Add element with provided key to the dictionary.");
 
@@ -617,9 +667,16 @@ namespace GDX.Editor.PropertyDrawers
                 // ReSharper disable once StringLiteralTypo
                 EditorGUIUtility.IconContent("animationkeyframe", "Key");
 
+            public static readonly GUIContent IconTrash = EditorGUIUtility.IconContent(EditorGUIUtility.isProSkin ? "d_TreeEditor.Trash" : "TreeEditor.Trash", "Reset");
+
             public static readonly GUIContent IconValue =
                 // ReSharper disable once StringLiteralTypo
                 EditorGUIUtility.IconContent("animationanimated", "Value");
+
+            public const string CorruptDataError = "Serialized data is checked that the number of keys and values match, as well as the cached length. If any of these does not match the data is considered corrupt.";
+
+            public const string InvalidTypesError =
+                "System.Object is not compatible with Unity's serialization system.";
         }
     }
 }
