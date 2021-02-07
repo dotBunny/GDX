@@ -190,7 +190,6 @@ namespace GDX.Editor.PropertyDrawers
             float columnWidth = (position.width - 34) / 2f;
 
 
-
             for (int i = 0; i < _propertyCountCache; i++)
             {
                 float topOffset = (EditorGUIUtility.singleLineHeight + Styles.ContentAreaElementSpacing) * i;
@@ -200,21 +199,19 @@ namespace GDX.Editor.PropertyDrawers
                     position.width + (Styles.ContentAreaHorizontalPadding * 2) - 3,
                     EditorGUIUtility.singleLineHeight);
 
+                // Handle selection (left-click), do not consume/use the event so that fields receive.
+                if (Event.current.type == EventType.MouseDown &&
+                    Event.current.button == 0 &&
+                    selectionRect.Contains(Event.current.mousePosition))
+                {
+                    _selectedIndex = i;
+                }
                 if (i == _selectedIndex)
                 {
                     if (Event.current.type == EventType.Repaint)
                     {
-                        Styles.elementBackground.Draw(selectionRect, false, true, true, true);
+                        Styles.ElementBackground.Draw(selectionRect, false, true, true, true);
                     }
-                }
-
-                // Handle selection
-                if (Event.current.type == EventType.MouseDown &&
-                    Event.current.button == 1 &&
-                    selectionRect.Contains(Event.current.mousePosition))
-                {
-                    _selectedIndex = i;
-                    Event.current.Use();
                 }
 
                 // Draw Key Icon
@@ -267,15 +264,14 @@ namespace GDX.Editor.PropertyDrawers
             GUI.enabled = _propertyAddKeyValidCache;
             if (GUI.Button(addRect, Content.IconPlus, Styles.FooterButton))
             {
-                AddNewEntry();
+                AddElement();
             }
 
             GUI.enabled = true;
 
 
-            // Remove button
-            // TODO: Only enable when selecting?
-            if (_propertyCountCache > 0 && _selectedIndex != -1)
+            // Only visible when we have something selected (with a failsafe on item count)
+            if (_propertyCountCache == 0 || _selectedIndex == -1)
             {
                 return;
             }
@@ -298,7 +294,7 @@ namespace GDX.Editor.PropertyDrawers
                     Styles.ActionButtonWidth, Styles.ActionButtonHeight),
                 Content.IconMinus, Styles.FooterButton))
             {
-                RemoveLastEntry();
+                RemoveElementAt(_selectedIndex);
                 _selectedIndex = -1;
             }
         }
@@ -329,7 +325,7 @@ namespace GDX.Editor.PropertyDrawers
             GUI.enabled = true;
         }
 
-        private void AddNewEntry()
+        private void AddElement()
         {
             if (_propertyCountCache == -1 || _propertyKeys == null || _propertyValues == null)
             {
@@ -349,19 +345,39 @@ namespace GDX.Editor.PropertyDrawers
             _propertyCount.intValue = _propertyCountCache;
         }
 
-        private void RemoveLastEntry()
+        private void RemoveElementAt(int index)
+        {
+            if (index == -1)
+            {
+                _selectedIndex = -1;
+            }
+            else if(_propertyKeys != null && _propertyValues != null)
+            {
+                _propertyKeys.DeleteArrayElementAtIndex(index);
+                _propertyValues.DeleteArrayElementAtIndex(index);
+
+                _propertyCountCache--;
+                if (_propertyCountCache < 0)
+                {
+                    _propertyCountCache = 0;
+                }
+
+                _propertyCount.intValue = _propertyCountCache;
+            }
+
+        }
+
+        private void RemoveLastElement()
         {
             if (_propertyCountCache == -1 || _propertyKeys == null || _propertyValues == null)
             {
                 return;
             }
-
             _propertyCountCache--;
             if (_propertyCountCache < 0)
             {
                 _propertyCountCache = 0;
             }
-
             _propertyKeys.arraySize = _propertyCountCache;
             _propertyValues.arraySize = _propertyCountCache;
             _propertyCount.intValue = _propertyCountCache;
@@ -470,9 +486,7 @@ namespace GDX.Editor.PropertyDrawers
             public static readonly GUIStyle FooterBackground = "RL Footer";
             public static readonly GUIStyle ButtonBackground = "RL Footer";
             public static readonly GUIStyle FooterButton = "RL FooterButton";
-
-
-            public static readonly GUIStyle elementBackground = "RL Element";
+            public static readonly GUIStyle ElementBackground = "RL Element";
 
             /// <summary>
             ///     A few last minute changes to settings.
