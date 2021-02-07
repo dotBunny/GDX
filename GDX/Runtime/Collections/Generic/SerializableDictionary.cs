@@ -114,6 +114,13 @@ namespace GDX.Collections.Generic
             return serializedLength;
         }
 
+        public bool IsNullableKey()
+        {
+            Type type = typeof(TKey);
+            if (!type.IsValueType) return true;
+            return Nullable.GetUnderlyingType(type) != null;
+        }
+
         /// <summary>
         ///     Load the data into the <see cref="Dictionary{TKey,TValue}" /> cached in the serialized data.
         /// </summary>
@@ -135,12 +142,19 @@ namespace GDX.Collections.Generic
             }
 
 #if UNITY_EDITOR
-            serializedAddKeyValid = !ContainsKey(serializedAddKey);
 
-            // If the key is bad we shouldn't actually have it around?
-            if (!serializedAddKeyValid)
+            // We need to check if the key is actually nullable
+            if (!IsNullableKey() && serializedAddKey == null)
             {
-                serializedAddKey = default;
+                serializedAddKeyValid = false;
+            }
+            else
+            {
+                serializedAddKeyValid = !ContainsKey(serializedAddKey);
+                if (!serializedAddKeyValid)
+                {
+                    serializedAddKey = default;
+                }
             }
 #endif
 

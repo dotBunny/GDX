@@ -464,7 +464,8 @@ namespace GDX.Editor.PropertyDrawers
                 case "exposedReference":
                     targetProperty.exposedReferenceValue = sourceProperty.exposedReferenceValue;
                     break;
-                case "object":
+                default:
+                    // This covers the whole "PPtr<$NAME> outcome, could probably handle differently.
                     targetProperty.objectReferenceValue = sourceProperty.objectReferenceValue;
                     targetProperty.objectReferenceInstanceIDValue = sourceProperty.objectReferenceInstanceIDValue;
                     break;
@@ -526,7 +527,8 @@ namespace GDX.Editor.PropertyDrawers
                 case "exposedReference":
                     targetProperty.exposedReferenceValue = default;
                     break;
-                case "object":
+                default:
+                    // This covers the whole "PPtr<$NAME> outcome, could probably handle differently.
                     targetProperty.objectReferenceValue = default;
                     targetProperty.objectReferenceInstanceIDValue = default;
                     break;
