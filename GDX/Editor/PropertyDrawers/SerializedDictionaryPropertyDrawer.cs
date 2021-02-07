@@ -193,11 +193,12 @@ namespace GDX.Editor.PropertyDrawers
             for (int i = 0; i < _propertyCountCache; i++)
             {
                 float topOffset = (EditorGUIUtility.singleLineHeight + Styles.ContentAreaElementSpacing) * i;
+
                 Rect selectionRect = new Rect(
                     position.x - Styles.ContentAreaHorizontalPadding + 1,
-                    position.y + topOffset,
+                    position.y + topOffset - 1,
                     position.width + (Styles.ContentAreaHorizontalPadding * 2) - 3,
-                    EditorGUIUtility.singleLineHeight);
+                    EditorGUIUtility.singleLineHeight + 2);
 
                 // Handle selection (left-click), do not consume/use the event so that fields receive.
                 if (Event.current.type == EventType.MouseDown &&
@@ -215,7 +216,11 @@ namespace GDX.Editor.PropertyDrawers
                 }
 
                 // Draw Key Icon
+#if UNITY_2021_1_OR_NEWER
                 Rect keyIconRect = new Rect(position.x - 2, position.y + topOffset - 1, 17, EditorGUIUtility.singleLineHeight);
+#else
+                Rect keyIconRect = new Rect(position.x, position.y + topOffset - 1, 17, EditorGUIUtility.singleLineHeight);
+#endif
                 EditorGUI.LabelField(keyIconRect, Content.IconKey);
 
                 // Draw Key Property
@@ -264,6 +269,9 @@ namespace GDX.Editor.PropertyDrawers
             GUI.enabled = _propertyAddKeyValidCache;
             if (GUI.Button(addRect, Content.IconPlus, Styles.FooterButton))
             {
+                // Remove control focus
+                GUIUtility.hotControl = 0;
+
                 AddElement();
             }
 
@@ -294,8 +302,15 @@ namespace GDX.Editor.PropertyDrawers
                     Styles.ActionButtonWidth, Styles.ActionButtonHeight),
                 Content.IconMinus, Styles.FooterButton))
             {
+                // Remove control focus
+                GUIUtility.hotControl = 0;
+
                 RemoveElementAt(_selectedIndex);
-                _selectedIndex = -1;
+                _selectedIndex--;
+                if (_selectedIndex < 0)
+                {
+                    _selectedIndex = -1;
+                }
             }
         }
 
@@ -325,7 +340,7 @@ namespace GDX.Editor.PropertyDrawers
             GUI.enabled = true;
         }
 
-        private void AddElement()
+        private void AddElement(bool defaultValue = true)
         {
             if (_propertyCountCache == -1 || _propertyKeys == null || _propertyValues == null)
             {
@@ -335,13 +350,19 @@ namespace GDX.Editor.PropertyDrawers
             // Increase Size
             _propertyCountCache++;
 
-            // Keys need to be unique
+            // Add new key element, and fill with predetermined good key
             _propertyKeys.arraySize = _propertyCountCache;
-
             SerializedProperty addedKey = _propertyKeys.GetArrayElementAtIndex(_propertyCountCache - 1);
             ShallowCopy(addedKey, _propertyAddKey);
 
+            // Add new value element, and optionally default its value
             _propertyValues.arraySize = _propertyCountCache;
+            if(defaultValue)
+            {
+                SerializedProperty addedValue = _propertyValues.GetArrayElementAtIndex(_propertyCountCache - 1);
+                DefaultValue(addedValue);
+            }
+
             _propertyCount.intValue = _propertyCountCache;
         }
 
@@ -446,6 +467,68 @@ namespace GDX.Editor.PropertyDrawers
                 case "object":
                     targetProperty.objectReferenceValue = sourceProperty.objectReferenceValue;
                     targetProperty.objectReferenceInstanceIDValue = sourceProperty.objectReferenceInstanceIDValue;
+                    break;
+            }
+        }
+
+        private static void DefaultValue(SerializedProperty targetProperty)
+        {
+            switch (targetProperty.type)
+            {
+                case "int":
+                    targetProperty.intValue = default;
+                    break;
+                case "bool":
+                    targetProperty.boolValue = default;
+                    break;
+                case "bounds":
+                    targetProperty.boundsValue = default;
+                    break;
+                case "color":
+                    targetProperty.colorValue = default;
+                    break;
+                case "double":
+                    targetProperty.doubleValue = default;
+                    break;
+                case "float":
+                    targetProperty.floatValue = default;
+                    break;
+                case "long":
+                    targetProperty.longValue = default;
+                    break;
+                case "quaternion":
+                    targetProperty.quaternionValue = default;
+                    break;
+                case "rect":
+                    targetProperty.rectValue = default;
+                    break;
+                case "string":
+                    targetProperty.stringValue = default;
+                    break;
+                case "vector2":
+                    targetProperty.vector2Value = default;
+                    break;
+                case "vector3":
+                    targetProperty.vector3Value = default;
+                    break;
+                case "vector4":
+                    targetProperty.vector4Value = default;
+                    break;
+                case "animationCurve":
+                    targetProperty.animationCurveValue = default;
+                    break;
+                case "boundsInt":
+                    targetProperty.boundsIntValue = default;
+                    break;
+                case "enum":
+                    targetProperty.enumValueIndex = default;
+                    break;
+                case "exposedReference":
+                    targetProperty.exposedReferenceValue = default;
+                    break;
+                case "object":
+                    targetProperty.objectReferenceValue = default;
+                    targetProperty.objectReferenceInstanceIDValue = default;
                     break;
             }
         }
