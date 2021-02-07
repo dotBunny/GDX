@@ -12,8 +12,8 @@ namespace GDX.Collections.Generic
     /// </summary>
     /// <remarks>
     ///     <para>
-    ///         This will NOT work with <see cref="System.Object" /> based objects, it requires basing off
-    ///         <see cref="UnityEngine.Object" />.
+    ///         This will NOT work with <see cref="System.Object" /> based objects, use <see cref="UnityEngine.Object" /> if
+    ///         you must.
     ///     </para>
     ///     <para>
     ///         While .NET has solutions for creating custom serialization paths, Unity uses its own system to serialize data
@@ -163,7 +163,10 @@ namespace GDX.Collections.Generic
 
 #if UNITY_EDITOR
             // If this is not serializable we need to do nothing
-            if (!isSerializable) return;
+            if (!isSerializable)
+            {
+                return;
+            }
 #endif
 
             if (serializedLength <= 0)
@@ -241,7 +244,10 @@ namespace GDX.Collections.Generic
         {
 #if UNITY_EDITOR
             // If this is not serializable we need to do nothing
-            if (!isSerializable) return;
+            if (!isSerializable)
+            {
+                return;
+            }
 #endif
 
             // Stash our length for future usage
@@ -272,7 +278,7 @@ namespace GDX.Collections.Generic
         /// <summary>
         ///     Editor only data indicating if the property drawer is expanded.
         /// </summary>
-        [HideInInspector] [SerializeField] private bool isSerializable = false;
+        [HideInInspector] [SerializeField] private bool isSerializable;
 
         /// <summary>
         ///     Temporary placement for keys to be added.
