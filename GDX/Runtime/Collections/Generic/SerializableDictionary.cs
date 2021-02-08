@@ -171,6 +171,7 @@ namespace GDX.Collections.Generic
 
             if (serializedLength <= 0)
             {
+#if UNITY_EDITOR
                 // Don't allow null keys for non-nullables
                 if (!IsNullableKey() && serializedAddKey == null)
                 {
@@ -180,6 +181,7 @@ namespace GDX.Collections.Generic
                 {
                     serializedAddKeyValid = true;
                 }
+#endif
 
                 return;
             }
