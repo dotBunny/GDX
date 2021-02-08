@@ -8,12 +8,12 @@ using UnityEngine;
 namespace GDX.Editor.PropertyDrawers
 {
     /// <summary>
-    ///     Shows an item count for known configurations of <see cref="SerializableDictionary{TKey,TValue}" />.
+    ///     A <see cref="PropertyDrawer" /> for <see cref="SerializableDictionary{TKey,TValue}" />.
     /// </summary>
     /// <remarks>
     ///     <para>
-    ///         Versions of Unity after 2020.1 are able to have generic types for custom property drawers, otherwise we try to
-    ///         just pre-populate a bunch of possible configurations.
+    ///         Versions of Unity after 2020.1 are able to have generic types for custom property drawers, otherwise we
+    ///         try to just pre-populate a bunch of possible configurations.
     ///     </para>
     ///     <para>
     ///         Heavily influenced by
@@ -45,33 +45,82 @@ namespace GDX.Editor.PropertyDrawers
 #endif
     internal class SerializableDictionaryPropertyDrawer : PropertyDrawer
     {
-        private Object _targetObject;
+        /// <summary>
+        ///     Cached ID of the <see cref="EditorGUI.PropertyField(UnityEngine.Rect,UnityEditor.SerializedProperty)" />, used to
+        ///     determine if it has focus across updates.
+        /// </summary>
+        private string _addKeyFieldID;
+
+        /// <summary>
+        ///     A cached version of the display name to use for the <see cref="PropertyDrawer" />.
+        /// </summary>
+        private string _displayName = "Serializable Dictionary";
+
+        /// <summary>
+        ///     The cached calculated height of the entire content portion of the <see cref="PropertyDrawer" />.
+        /// </summary>
+        private float _heightContent;
+
+        /// <summary>
+        ///     The cached calculated height of the elements in the content portion of the <see cref="PropertyDrawer" />.
+        /// </summary>
+        private float _heightContentElements;
+
+        /// <summary>
+        ///     The cached calculated height of the footer for the content portion of the <see cref="PropertyDrawer" />.
+        /// </summary>
+        private float _heightContentFooter;
+
+        /// <summary>
+        ///     The cached calculated height of the header for the content portion of the <see cref="PropertyDrawer" />.
+        /// </summary>
+        private float _heightContentHeader;
+
+        /// <summary>
+        ///     The cached calculated height of the foldout portion of the <see cref="PropertyDrawer" />.
+        /// </summary>
+        private float _heightFoldout;
+
+        /// <summary>
+        ///     The cached calculated height of the footer portion of the <see cref="PropertyDrawer" />.
+        /// </summary>
+        private float _heightFooter;
+
+        /// <summary>
+        ///     The cached calculated total height of the <see cref="PropertyDrawer" />.
+        /// </summary>
+        private float _heightTotal;
+
+        /// <summary>
+        ///     Does the key and value array counts match, and do they match the serialized length?
+        /// </summary>
+        /// <remarks>
+        ///     Used as a bit of a checksum for the serialized data.
+        /// </remarks>
+        private bool _isKeyValueCountValid = true;
+
+        private SerializedProperty _propertyAddKey;
+        private SerializedProperty _propertyAddKeyValid;
+        private bool _propertyAddKeyValidCache;
+        private SerializedProperty _propertyCount;
+        private int _propertyCountCache = -1;
         private SerializedProperty _propertyExpanded;
         private bool _propertyExpandedCache;
         private SerializedProperty _propertyIsSerializable;
         private bool _propertyIsSerializableCache;
-        private SerializedProperty _propertyAddKey;
-        private SerializedProperty _propertyAddKeyValid;
-        private bool _propertyAddKeyValidCache;
-
-        private SerializedProperty _propertyCount;
-        private int _propertyCountCache = -1;
         private SerializedProperty _propertyKeys;
         private SerializedProperty _propertyValues;
 
-        private string _label = "Serializable Dictionary";
-
-        private float _heightTotal;
-        private float _heightFoldout;
-        private float _heightContent;
-        private float _heightContentHeader;
-        private float _heightContentElements;
-        private float _heightContentFooter;
-        private float _heightFooter;
-
-
-        private bool _validKeyValueCount = true;
+        /// <summary>
+        ///     The index of in the data arrays to be considered selected.
+        /// </summary>
         private int _selectedIndex = -1;
+
+        /// <summary>
+        ///     The target object of the <see cref="PropertyDrawer" />.
+        /// </summary>
+        private Object _targetObject;
+
 
         /// <summary>
         ///     Provide an adjusted height for the entire element to be rendered.
@@ -122,7 +171,8 @@ namespace GDX.Editor.PropertyDrawers
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             // Safe to cache!
-            _label = property.displayName;
+            _displayName = property.displayName;
+            _addKeyFieldID = Content.AddKeyFieldIDPrefix + _displayName.GetHashCode();
             _targetObject = property.serializedObject.targetObject;
 
             // Build our top level position
@@ -150,10 +200,10 @@ namespace GDX.Editor.PropertyDrawers
             _propertyValues = property.FindPropertyRelative("serializedValues");
 
             // Validate saved sizes
-            _validKeyValueCount = _propertyCountCache == _propertyValues.arraySize &&
-                                  _propertyCountCache == _propertyKeys.arraySize;
+            _isKeyValueCountValid = _propertyCountCache == _propertyValues.arraySize &&
+                                    _propertyCountCache == _propertyKeys.arraySize;
 
-            if (!_validKeyValueCount)
+            if (!_isKeyValueCountValid)
             {
                 DrawErrorMessage(foldoutRect, Content.CorruptDataError, true);
                 return;
@@ -305,7 +355,20 @@ namespace GDX.Editor.PropertyDrawers
                 Styles.ButtonBackground.Draw(addBackgroundRect, false, false, false, false);
             }
 
+            // Hitting enter while the add key field is selected
+            if (_propertyAddKeyValidCache &&
+                Event.current.type == EventType.KeyDown &&
+                (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter ||
+                 Event.current.character == '\n') &&
+                GUI.GetNameOfFocusedControl() == _addKeyFieldID)
+            {
+                // Event.current.Use();
+                GUIUtility.hotControl = 0;
+                AddElement();
+            }
+
             // Draw the input before the button so it overlaps it
+            GUI.SetNextControlName(_addKeyFieldID);
             EditorGUI.PropertyField(inputRect, _propertyAddKey, GUIContent.none);
 
             GUI.enabled = _propertyAddKeyValidCache;
@@ -318,7 +381,6 @@ namespace GDX.Editor.PropertyDrawers
             }
 
             GUI.enabled = true;
-
 
             // Only visible when we have something selected (with a failsafe on item count)
             if (_propertyCountCache == 0 || _selectedIndex == -1)
@@ -361,7 +423,7 @@ namespace GDX.Editor.PropertyDrawers
             // Generate a foldout GUI element representing the name of the dictionary
             bool newExpanded =
                 EditorGUI.Foldout(position,
-                    _propertyExpanded.boolValue, _label, true, EditorStyles.foldout);
+                    _propertyExpanded.boolValue, _displayName, true, EditorStyles.foldout);
             if (newExpanded != _propertyExpandedCache)
             {
                 // TODO: Is there some editor cache for whats unfolded? This would prevent over serialization / extra data
@@ -390,7 +452,7 @@ namespace GDX.Editor.PropertyDrawers
             Content.IconError.tooltip = tooltip;
             EditorGUI.LabelField(iconRect, Content.IconError);
             Rect messageRect = new Rect(position.x, position.y, position.width - 17, position.height);
-            EditorGUI.LabelField(messageRect, new GUIContent(_label, tooltip), EditorStyles.label);
+            EditorGUI.LabelField(messageRect, new GUIContent(_displayName, tooltip), EditorStyles.label);
 
             if (!displayResetButton)
             {
@@ -470,6 +532,9 @@ namespace GDX.Editor.PropertyDrawers
             }
         }
 
+        /// <summary>
+        ///     Reset the serialized data as if there were no entries in the dictionary.
+        /// </summary>
         private void ResetSerializedData()
         {
             _propertyKeys.ClearArray();
@@ -614,7 +679,75 @@ namespace GDX.Editor.PropertyDrawers
             }
         }
 
+        /// <summary>
+        ///     <see cref="PropertyDrawer" /> Fixed Content.
+        /// </summary>
+        private static class Content
+        {
+            /// <summary>
+            ///     The prefix of the <see cref="string" /> identifier of the add field.
+            /// </summary>
+            public const string AddKeyFieldIDPrefix = "SD_KeyToAdd_";
 
+            /// <summary>
+            ///     Message relayed when bad serialized data is detected.
+            /// </summary>
+            public const string CorruptDataError =
+                "Serialized data is checked that the number of keys and values match, as well as the cached length. If any of these does not match the data is considered corrupt.";
+
+            /// <summary>
+            ///     Message relayed when an invalid type is attempted to be serialized.
+            /// </summary>
+            public const string InvalidTypesError =
+                "System.Object is not compatible with Unity's serialization system.";
+
+            /// <summary>
+            ///     Message displayed when no content is found in the serialized data.
+            /// </summary>
+            public static readonly GUIContent EmptyDictionary = new GUIContent("Dictionary is Empty");
+
+            /// <summary>
+            ///     A white exclamation mark, surround by a red hexagon.
+            /// </summary>
+            public static readonly GUIContent IconError = EditorGUIUtility.IconContent("Error", "Issue Detected!");
+
+            /// <summary>
+            ///     A plus symbol.
+            /// </summary>
+            public static readonly GUIContent IconPlus =
+                EditorGUIUtility.IconContent("Toolbar Plus", "Add element with provided key to the dictionary.");
+
+            /// <summary>
+            ///     A minus symbol.
+            /// </summary>
+            public static readonly GUIContent IconMinus =
+                EditorGUIUtility.IconContent("Toolbar Minus", "Remove the selected element from the dictionary.");
+
+            /// <summary>
+            ///     A key-frame indicator, attempting to relay the concept of a key.
+            /// </summary>
+            public static readonly GUIContent IconKey =
+                // ReSharper disable once StringLiteralTypo
+                EditorGUIUtility.IconContent("animationkeyframe", "Key");
+
+            /// <summary>
+            ///     An eraser icon.
+            /// </summary>
+            public static readonly GUIContent IconTrash =
+                EditorGUIUtility.IconContent("Grid.EraserTool",
+                    "Reset");
+
+            /// <summary>
+            ///     An animation dope sheet value indicator.
+            /// </summary>
+            public static readonly GUIContent IconValue =
+                // ReSharper disable once StringLiteralTypo
+                EditorGUIUtility.IconContent("animationanimated", "Value");
+        }
+
+        /// <summary>
+        ///     <see cref="PropertyDrawer" /> Styles.
+        /// </summary>
         private static class Styles
         {
             /// <summary>
@@ -627,8 +760,14 @@ namespace GDX.Editor.PropertyDrawers
             /// </summary>
             public const float ActionButtonHeight = 16f;
 
+            /// <summary>
+            ///     The horizontal padding around a button, making it appear wider then it would normally.
+            /// </summary>
             public const float ActionButtonHorizontalPadding = 4f;
 
+            /// <summary>
+            ///     The vertical padding around a button, making it appear taller then it would normally.
+            /// </summary>
             public const float ActionButtonVerticalPadding = 1f;
 
             /// <summary>
@@ -646,52 +785,45 @@ namespace GDX.Editor.PropertyDrawers
             /// </summary>
             public const int ContentAreaElementSpacing = 3;
 
+            /// <summary>
+            ///     The reorderable list's main background.
+            /// </summary>
             public static readonly GUIStyle BoxBackground = "RL Background";
-            public static readonly GUIStyle HeaderBackground = "RL Empty Header";
-            public static readonly GUIStyle FooterBackground = "RL Footer";
+
+            /// <summary>
+            ///     The reorderable list's footer button background.
+            /// </summary>
             public static readonly GUIStyle ButtonBackground = "RL Footer";
-            public static readonly GUIStyle FooterButton = "RL FooterButton";
+
+            /// <summary>
+            ///     The reorderable list's element background.
+            /// </summary>
             public static readonly GUIStyle ElementBackground = "RL Element";
 
             /// <summary>
-            ///     A few last minute changes to settings.
+            ///     The reorderable list's footer background.
+            /// </summary>
+            public static readonly GUIStyle FooterBackground = "RL Footer";
+
+            /// <summary>
+            ///     The reorderable list's footer buttons.
+            /// </summary>
+            public static readonly GUIStyle FooterButton = "RL FooterButton";
+
+
+            /// <summary>
+            ///     The reorderable list's empty header.
+            /// </summary>
+            public static readonly GUIStyle HeaderBackground = "RL Empty Header";
+
+            /// <summary>
+            ///     Initialize some of the styles slightly different then expected.
             /// </summary>
             static Styles()
             {
                 HeaderBackground.fixedHeight = 0;
                 FooterBackground.fixedHeight = 0;
             }
-        }
-
-        private static class Content
-        {
-            public const string CorruptDataError =
-                "Serialized data is checked that the number of keys and values match, as well as the cached length. If any of these does not match the data is considered corrupt.";
-
-            public const string InvalidTypesError =
-                "System.Object is not compatible with Unity's serialization system.";
-
-            public static readonly GUIContent EmptyDictionary = new GUIContent("Dictionary is Empty");
-
-            public static readonly GUIContent IconError = EditorGUIUtility.IconContent("Error", "Issue Detected!");
-
-            public static readonly GUIContent IconPlus =
-                EditorGUIUtility.IconContent("Toolbar Plus", "Add element with provided key to the dictionary.");
-
-            public static readonly GUIContent IconMinus =
-                EditorGUIUtility.IconContent("Toolbar Minus", "Remove the selected element from the dictionary.");
-
-            public static readonly GUIContent IconKey =
-                // ReSharper disable once StringLiteralTypo
-                EditorGUIUtility.IconContent("animationkeyframe", "Key");
-
-            public static readonly GUIContent IconTrash =
-                EditorGUIUtility.IconContent("Grid.EraserTool",
-                    "Reset");
-
-            public static readonly GUIContent IconValue =
-                // ReSharper disable once StringLiteralTypo
-                EditorGUIUtility.IconContent("animationanimated", "Value");
         }
     }
 }
