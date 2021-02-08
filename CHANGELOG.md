@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automated culture setting on thread.
 - `GDX.SerializableDictionary`, speaks for itself.
 ### Changed
+- Added language to `README.md` and documentation regarding associations to Unity.
 - Optimized `GDX.GDXConfig` loading at runtime.
 - Wrap `GDX.InspectorLabelAttribute` in `UNITY_EDITOR` define requirement.
 - Consolidated entirety of `GDX.Editor.Settings` related classes into private classes inside of itself.

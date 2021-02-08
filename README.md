@@ -26,7 +26,7 @@ The `GDX` package can be dropped into any compatible [Unity](http://unity3d.com)
 > For more detailed infromation, please consult [Requirements](https://gdx.dotbunny.com/manual/requirements.html) in the manual.
 
 ## Contributing
-GDX is an open-source project and we encourage and welcome contributions.
+GDX is an open-source project, and we encourage and welcome contributions. While the `GDX` package has Unity employees amongst its contributors, it is **not officially supported by Unity**, and it is not on Unity's roadmap.
 > Please review the manual's [Contributing](https://gdx.dotbunny.com/manual/contributing.html) section for info on how you can contribute to this package and our awesome community. :heart:
 
 ## License
