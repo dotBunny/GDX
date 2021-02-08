@@ -45,6 +45,7 @@ namespace GDX.Editor.PropertyDrawers
 #endif
     internal class SerializableDictionaryPropertyDrawer : PropertyDrawer
     {
+        private Object _targetObject;
         private SerializedProperty _propertyExpanded;
         private bool _propertyExpandedCache;
         private SerializedProperty _propertyIsSerializable;
@@ -122,6 +123,7 @@ namespace GDX.Editor.PropertyDrawers
         {
             // Safe to cache!
             _label = property.displayName;
+            _targetObject = property.serializedObject.targetObject;
 
             // Build our top level position
             Rect foldoutRect = new Rect(position.x, position.y, position.width, _heightFoldout);
@@ -237,7 +239,8 @@ namespace GDX.Editor.PropertyDrawers
                 {
                     _selectedIndex = i;
 
-                    // TODO: Currently if you dont click on something that forces a repaint, the highlight wont render till you move the mouse.
+                    // Attempt to force a redraw of the inspector
+                    EditorUtility.SetDirty(_targetObject);
                 }
 
                 if (i == _selectedIndex)
