@@ -121,7 +121,6 @@ namespace GDX.Editor.PropertyDrawers
         /// </summary>
         private Object _targetObject;
 
-
         /// <summary>
         ///     Provide an adjusted height for the entire element to be rendered.
         /// </summary>

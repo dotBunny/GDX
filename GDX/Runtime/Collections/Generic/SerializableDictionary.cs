@@ -283,8 +283,9 @@ namespace GDX.Collections.Generic
                 index++;
             }
         }
-#if UNITY_EDITOR
 
+
+#if UNITY_EDITOR
         /// <summary>
         ///     Editor only data indicating if the property drawer is expanded.
         /// </summary>
@@ -306,6 +307,13 @@ namespace GDX.Collections.Generic
         ///     Is the provided key a valid key (unique).
         /// </summary>
         [HideInInspector] [SerializeField] private bool serializedAddKeyValid;
+#else
+        // We wanted to block out some padding since Unity is looking for a specific byte.
+        // Adam is a genius.
+        [SerializeField] private bool _hackSerializationIgnoreA;
+        [SerializeField] private bool _hackSerializationIgnoreB;
+        [SerializeField] private TKey _hackSerializationIgnoreC;
+        [SerializeField] private bool _hackSerializationIgnoreD;
 #endif
     }
 }
