@@ -45,7 +45,9 @@ namespace GDX.Collections.Generic
 
         public SerializableDictionary()
         {
+#if UNITY_EDITOR
             isSerializable = IsKeyValidType() && IsValueValidType();
+#endif
         }
 
 
