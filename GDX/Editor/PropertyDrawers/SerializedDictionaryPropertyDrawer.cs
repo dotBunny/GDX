@@ -362,7 +362,7 @@ namespace GDX.Editor.PropertyDrawers
                  Event.current.character == '\n') &&
                 GUI.GetNameOfFocusedControl() == _addKeyFieldID)
             {
-                // Event.current.Use();
+                Event.current.Use();
                 GUIUtility.hotControl = 0;
                 AddElement();
             }
