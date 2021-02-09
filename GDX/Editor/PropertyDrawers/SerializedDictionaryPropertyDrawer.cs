@@ -7,42 +7,21 @@ using UnityEngine;
 
 namespace GDX.Editor.PropertyDrawers
 {
+#if UNITY_2020_1_OR_NEWER
     /// <summary>
     ///     A <see cref="PropertyDrawer" /> for <see cref="SerializableDictionary{TKey,TValue}" />.
     /// </summary>
     /// <remarks>
     ///     <para>
-    ///         Versions of Unity after 2020.1 are able to have generic types for custom property drawers, otherwise we
-    ///         try to just pre-populate a bunch of possible configurations.
+    ///         Requires Unity 2020.1+ for the PropertyDrawer to function, as that's the point where generic attributes became
+    ///         available on the editor side.
     ///     </para>
     ///     <para>
     ///         Heavily influenced by
     ///         https://github.com/Unity-Technologies/UnityCsReference/blob/master/Editor/Mono/GUI/ReorderableList.cs
     ///     </para>
     /// </remarks>
-#if UNITY_2020_1_OR_NEWER
     [CustomPropertyDrawer(typeof(SerializableDictionary<,>))]
-#else
-    [CustomPropertyDrawer(typeof(SerializableDictionary<int, int>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<int, string>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<int, float>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<int, bool>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<int, Object>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<int, GameObject>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<int, Behaviour>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<int, MonoBehaviour>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<int, Collider>))]
-
-    [CustomPropertyDrawer(typeof(SerializableDictionary<string, int>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<string, string>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<string, float>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<string, bool>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<string, Object>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<string, GameObject>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<string, Behaviour>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<string, MonoBehaviour>))]
-    [CustomPropertyDrawer(typeof(SerializableDictionary<string, Collider>))]
-#endif
     internal class SerializableDictionaryPropertyDrawer : PropertyDrawer
     {
         /// <summary>
@@ -568,7 +547,8 @@ namespace GDX.Editor.PropertyDrawers
                 case "exposedReference":
                     return targetProperty.exposedReferenceValue != default;
                 default:
-                    return targetProperty.objectReferenceValue != default || targetProperty.objectReferenceInstanceIDValue != default;
+                    return targetProperty.objectReferenceValue != default ||
+                           targetProperty.objectReferenceInstanceIDValue != default;
             }
         }
 
@@ -895,4 +875,5 @@ namespace GDX.Editor.PropertyDrawers
             }
         }
     }
+#endif
 }
