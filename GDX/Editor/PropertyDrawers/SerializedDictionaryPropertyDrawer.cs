@@ -14,7 +14,8 @@ namespace GDX.Editor.PropertyDrawers
     /// <remarks>
     ///     <para>
     ///         Requires Unity 2020.1+ for the PropertyDrawer to function, as that's the point where generic attributes became
-    ///         available on the editor side.
+    ///         available on the editor side. While this doesnt produce exception if not wrapped by the UNITY_2020_1_OR_NEWER
+    ///         it made sense to keep it just to explicitly show the version required.
     ///     </para>
     ///     <para>
     ///         Heavily influenced by
@@ -875,5 +876,5 @@ namespace GDX.Editor.PropertyDrawers
             }
         }
     }
-#endif
+#endif // UNITY_2020_1_OR_NEWER
 }

@@ -48,7 +48,7 @@ namespace GDX.Collections.Generic
         public SerializableDictionary()
         {
 #if UNITY_EDITOR
-            isSerializable = IsKeyValidType() && IsValueValidType();
+            isSerializable = IsSerializableType(typeof(TKey)) && IsSerializableType(typeof(TValue));
 #endif
         }
 
@@ -118,27 +118,7 @@ namespace GDX.Collections.Generic
         {
             Type type = typeof(TKey);
 
-            // Some sanity checks
-            if (type == typeof(MonoBehaviour)) return false;
-
-
-            if (!type.IsValueType)
-            {
-                return true;
-            }
-
-            return Nullable.GetUnderlyingType(type) != null;
-        }
-
-        /// <summary>
-        ///     Is the dictionaries value nullable?
-        /// </summary>
-        /// <returns>true/false if nullable.</returns>
-        public bool IsNullableValue()
-        {
-            Type type = typeof(TValue);
-
-            // Some sanity checks
+            // While a Behaviour itself can be null, when its a MonoBehaviour we cannot.
             if (type == typeof(MonoBehaviour)) return false;
 
             if (!type.IsValueType)
@@ -150,22 +130,11 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Is the dictionary key type a valid Unity serialization type?
+        ///     Is the type a valid Unity serialization type?
         /// </summary>
         /// <returns>true/false if the type is valid.</returns>
-        public bool IsKeyValidType()
+        public bool IsSerializableType(Type type)
         {
-            Type type = typeof(TKey);
-            return type != typeof(object);
-        }
-
-        /// <summary>
-        ///     Is the dictionary value type a valid Unity serialization type?
-        /// </summary>
-        /// <returns>true/false if the type is valid.</returns>
-        public bool IsValueValidType()
-        {
-            Type type = typeof(TValue);
             return type != typeof(object);
         }
 

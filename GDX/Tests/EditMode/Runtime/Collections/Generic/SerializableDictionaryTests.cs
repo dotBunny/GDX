@@ -16,18 +16,18 @@ namespace Runtime.Collections.Generic
     {
         [Test]
         [Category("GDX.Tests")]
-        public void False_IsKeyValidType_SystemObject()
+        public void False_IsSerializableType_SystemObject()
         {
             SerializableDictionary<object, string> testDictionary = new SerializableDictionary<object, string>();
-            Assert.IsFalse(testDictionary.IsKeyValidType(), "Expected to flag type as invalid.");
+            Assert.IsFalse(testDictionary.IsSerializableType(typeof(object)), "Expected to flag type as invalid.");
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_IsKeyValidType_UnityObject()
+        public void True_IsSerializableType_UnityObject()
         {
             SerializableDictionary<UnityEngine.Object, string> testDictionary = new SerializableDictionary<UnityEngine.Object, string>();
-            Assert.IsTrue(testDictionary.IsKeyValidType(), "Expected to flag type as valid.");
+            Assert.IsTrue(testDictionary.IsSerializableType(typeof(UnityEngine.Object)), "Expected to flag type as valid.");
         }
 
         [Test]
