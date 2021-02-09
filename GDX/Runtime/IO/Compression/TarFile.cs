@@ -6,13 +6,22 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 
+// ReSharper disable once MemberCanBePrivate.Global
+
 namespace GDX.IO.Compression
 {
+    /// <summary>
+    /// Provides static methods for extracting tar files and tarballs.
+    /// </summary>
     public static class TarFile
     {
         /// <summary>
-        ///     Extracts all the files in the specified tarball to a directory on the file system.
+        ///     Extracts all the files in the specified tar/tarball to a directory on the file system.
         /// </summary>
+        /// <example>
+        ///     A synchronous approach to extracting the contents of a file, to a folder:
+        ///     <code>TarFile.ExtractToDirectory("C:\Temp\DownloadCache.tar.gz", "C:\Saved");</code>
+        /// </example>
         /// <param name="sourceArchiveFileName">The path to the archive that is to be extracted.</param>
         /// <param name="destinationDirectoryName">
         ///     The path to the directory in which to place the extracted files, specified as a
@@ -74,11 +83,11 @@ namespace GDX.IO.Compression
 
 
         /// <summary>
-        ///     Extract a tarball to the <paramref name="destinationDirectoryName" />.
+        ///     Extract a tar formatted <see cref="Stream"/> to the <paramref name="destinationDirectoryName" />.
         /// </summary>
         /// <param name="sourceStream">The <see cref="Stream" /> which to extract from.</param>
         /// <param name="destinationDirectoryName">Output directory to write the files.</param>
-        private static void ExtractStream(Stream sourceStream, string destinationDirectoryName)
+        public static void ExtractStream(Stream sourceStream, string destinationDirectoryName)
         {
             const int readBufferSize = 100;
             const int contentOffset = 512;

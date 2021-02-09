@@ -4,9 +4,6 @@
 using GDX;
 using NUnit.Framework;
 using UnityEngine;
-#if GDX_PERFORMANCETESTING
-
-#endif
 
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable

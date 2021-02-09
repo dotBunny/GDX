@@ -16,8 +16,8 @@ namespace GDX.Editor.Build
 {
     /// <summary>
     ///     <para>
-    ///         A build step for both the legacy and scriptable build pipeline's in Unity. This <c>internal</c> class
-    ///         will alter itself according to available packages and pipelines.
+    ///         A build step for both the legacy and scriptable build pipeline's in Unity. This class will alter itself
+    ///         according to available packages and pipelines.
     ///     </para>
     ///     <para>
     ///         During the build process a <c>BuildInfo</c> file will be generated containing information passed in
@@ -68,12 +68,9 @@ namespace GDX.Editor.Build
     ///             </description>
     ///         </item>
     ///     </list>
-    ///     <para>
-    ///         <i>Unit tests are found in GDX.Developer.Tests.EditMode, under <c>Editor.Build.BuildInfoProviderTests</c>.</i>
-    ///     </para>
     /// </remarks>
 #if GDX_PLATFORMS
-    internal class BuildInfoProvider : ClassicBuildPipelineCustomizer
+    public class BuildInfoProvider : ClassicBuildPipelineCustomizer
     {
         /// <summary>
         ///     Cache if the provider/customizer actually was effective.
@@ -118,8 +115,8 @@ namespace GDX.Editor.Build
                 Debug.LogWarning(e);
             }
         }
-#else
-    internal class BuildInfoProvider : IPreprocessBuildWithReport, IPostprocessBuildWithReport
+#else // !GDX_PLATFORMS
+    public class BuildInfoProvider : IPreprocessBuildWithReport, IPostprocessBuildWithReport
     {
         /// <summary>
         ///     The priority for the processor to be executed, before defaults.
@@ -177,7 +174,7 @@ namespace GDX.Editor.Build
         /// <param name="internalDescription">An internally used description.</param>
         /// <returns>The files content.</returns>
         public static string GetContent(GDXConfig config, bool forceDefaults = false,
-            string internalDescription = Strings.Null)
+            string internalDescription = null)
         {
             // Force the parse because this isn't a runtime thing
             if (!forceDefaults)

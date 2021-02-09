@@ -12,11 +12,11 @@
       ],
       "dest": "api",
       "disableGitFeatures": false,
-      "disableDefaultFilter": true,
+      "disableDefaultFilter": false,
       "filter": "filterConfig.yml" ,
       "properties": {
         "TargetFramework": "netstandard2.0",
-        "DefineConstants": "GDX_ADDRESSABLES;GDX_BURST;GDX_JOBS;GDX_MATHEMATICS;GDX_PLATFORMS"
+        "DefineConstants": "UNITY_EDITOR;GDX_ADDRESSABLES;GDX_BURST;GDX_JOBS;GDX_MATHEMATICS;GDX_PLATFORMS"
       }
     }
   ],

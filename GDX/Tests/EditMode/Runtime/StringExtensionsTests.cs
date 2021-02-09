@@ -28,6 +28,9 @@ namespace Runtime
         private const string UpperCaseTestString = "THIS IS ALL UPPERCASE";
         private const string LowerCaseTestString = "this is all lowercase";
 
+        private const string SimpleIntegerTestString = "10";
+        private const string ComplexIntegerTestString = "-12304912";
+
 
         [Test]
         [Category("GDX.Tests")]
@@ -96,6 +99,84 @@ namespace Runtime
         {
             Assert.IsTrue(SimpleTestString.HasLowerCase());
         }
+
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_IsBooleanPositiveValue_Simple()
+        {
+            Assert.IsTrue("true".IsBooleanPositiveValue(), "Expected positive response.");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_IsBooleanValue_Simple()
+        {
+            Assert.IsTrue("off".IsBooleanValue(), "Expected positive response.");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void False_IsBooleanValue_Simple()
+        {
+            Assert.IsFalse("off2".IsBooleanValue(), "Expected negative response.");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void False_IsBooleanPositiveValue_Simple()
+        {
+            Assert.IsFalse("true2".IsBooleanPositiveValue(), "Expected positive response.");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_IsIntegerValue_Simple()
+        {
+            Assert.IsTrue("1".IsIntegerValue(), "Expected positive response.");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_IsIntegerValue_Complex()
+        {
+            Assert.IsTrue("-100222".IsIntegerValue(), "Expected positive response.");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void False_IsIntegerValue_Simple()
+        {
+            Assert.IsFalse("bob".IsIntegerValue(), "Expected false response.");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void False_IsIntegerValue_Complex()
+        {
+            Assert.IsFalse("-100bob222".IsIntegerValue(), "Expected false response.");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_IsNumericValue_Simple()
+        {
+            Assert.IsTrue("1".IsNumeric(), "Expected positive response.");
+        }
+        [Test]
+        [Category("GDX.Tests")]
+        public void True_IsNumericValue_Complex()
+        {
+            Assert.IsTrue("-100.12123".IsNumeric(), "Expected positive response.");
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void False_IsNumericValue_DoubleDecimal()
+        {
+            Assert.IsFalse("-100..12123".IsNumeric(), "Expected positive response.");
+        }
+
 
         [Test]
         [Category("GDX.Tests")]
@@ -391,6 +472,56 @@ namespace Runtime
             Measure.Method(() =>
                 {
                     int dummyValue = ComplexTestString.ToUpper().GetHashCode();
+                })
+                .WarmupCount(WarmupCount)
+                .MeasurementCount(MeasurementCount)
+                .IterationsPerMeasurement(IterationsPerMeasurement)
+                .SampleGroup("Complex")
+                .Run();
+        }
+
+        [Test]
+        [Performance]
+        [Category("GDX.Performance")]
+        public void Measure_IntTryParse()
+        {
+            Measure.Method(() =>
+                {
+                    int.TryParse(SimpleIntegerTestString, out int value);
+                })
+                .WarmupCount(WarmupCount)
+                .MeasurementCount(MeasurementCount)
+                .IterationsPerMeasurement(IterationsPerMeasurement)
+                .SampleGroup("Simple")
+                .Run();
+            Measure.Method(() =>
+                {
+                    int.TryParse(ComplexIntegerTestString, out int value);
+                })
+                .WarmupCount(WarmupCount)
+                .MeasurementCount(MeasurementCount)
+                .IterationsPerMeasurement(IterationsPerMeasurement)
+                .SampleGroup("Complex")
+                .Run();
+        }
+
+        [Test]
+        [Performance]
+        [Category("GDX.Performance")]
+        public void Measure_IsIntegerValue()
+        {
+            Measure.Method(() =>
+                {
+                    SimpleIntegerTestString.IsIntegerValue();
+                })
+                .WarmupCount(WarmupCount)
+                .MeasurementCount(MeasurementCount)
+                .IterationsPerMeasurement(IterationsPerMeasurement)
+                .SampleGroup("Simple")
+                .Run();
+            Measure.Method(() =>
+                {
+                    ComplexIntegerTestString.IsIntegerValue();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)

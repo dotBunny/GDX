@@ -19,8 +19,11 @@ Feature | Description
 [CapsuleCollider](xref:GDX.CapsuleColliderExtensions) | Simple helper for finding out which way a `CapsuleCollider` is oriented.
 [GameObject](xref:GDX.GameObjectExtensions) | After this long, even Unity can use a little help with some of its fundamental component based systems.
 [IList](xref:GDX.IListExtensions) | A common set of methods for collections allowing for optimized value and item checks, as well as some extras.
+[NavMeshPath](xref:GDX.NavMeshPathExtensions) | Some helpful functions when trying to build out AI logic.
+[Mesh](xref:GDX.MeshExtensions) | A one of helper to calculate the volume of a mesh.
 [Rigidbody](xref:GDX.RigidbodyExtensions) | A method for determining the moment of inertia.
 [String](xref:GDX.StringExtensions) | The thing that started it all, a vast collection of extension methods covering a wide range from encryption to hash codes, to simply finding content an existing `string`.
+[Transform](xref:GDX.TransformExtensions) | Some useful functionality when it comes to working with `Transform`.
 [Vector2](xref:GDX.Vector2Extensions) | Additional functionality for common calculations done with `Vector2`. For example, determining approximately if two `Vector2` are the same efficiently, or finding the midpoint between two `Vector2`. This automatically switches to using `com.unity.mathematics` functionality if available.
 [Vector3](xref:GDX.Vector3Extensions) | Additional functionality for common calculations done with `Vector3`. For example, determining approximately if two `Vector3` are the same efficiently, or finding the midpoint between two `Vector3`. This automatically switches to using `com.unity.mathematics` functionality if available.
  
@@ -47,6 +50,7 @@ Feature | Description | Type
 [Native Simple List](xref:GDX.Collections.Generic.NativeSimpleList`1) | A [SimpleList](xref:GDX.Collections.Generic.SimpleList`1), backed by a `NativeArray`. | `struct`
 [Native Simple Queue](xref:GDX.Collections.Generic.NativeSimpleQueue`1) | A simple queue, backed by a `NativeArray`. | `struct`
 [Native Uniform 3D Array](xref:GDX.Collections.Generic.NativeUniformArray3D`1) | A 3-dimension `NativeArray` where all axis are the same length. Numerous accessors available, including a `xyz` based. | `struct`
+[SerializableDictionary](xref:GDX.Collections.Generic.SerializableDictionary`2) | A dictionary that can be serialized by Unity into its native YAML format. Usage of the editor side property drawer **requires Unity 2020.1+**. | `class`
 
 ## Utilities
 Everyone loves static utility classes, and naturally `GDX` has a bunch of them to help fill out some commonly used functionality.

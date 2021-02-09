@@ -17,11 +17,6 @@ namespace GDX
     public class GDXConfig : ScriptableObject
     {
         /// <summary>
-        ///     Resource path at runtime.
-        /// </summary>
-        public const string ResourcesPath = "GDX/GDXConfig.asset";
-
-        /// <summary>
         ///     Should GDX check for updates at editor time?
         /// </summary>
         public bool updateProviderCheckForUpdates = true;
@@ -81,6 +76,24 @@ namespace GDX
         /// </summary>
         public string developerBuildInfoBuildStreamArgument = "BUILD_STREAM";
 
+
+        /// <summary>
+        ///     Should the default thread culture be set?
+        /// </summary>
+        public bool localizationSetDefaultCulture = true;
+
+        /// <summary>
+        ///     The language to set the default thread culture too.
+        /// </summary>
+        public Localization.Language localizationDefaultCulture = Localization.Language.English;
+
+        /// <summary>
+        ///     A runtime only instance of <see cref="GDXConfig"/>.
+        /// </summary>
+#pragma warning disable 414
+        private static GDXConfig s_runtimeInstance = null;
+#pragma warning restore 414
+
         /// <summary>
         ///     Get a loaded instance of the <see cref="GDXConfig" /> from resources.
         /// </summary>
@@ -91,9 +104,13 @@ namespace GDX
 #if UNITY_EDITOR
             // Special handler for scenarios where we need runtime logic, that is getting called from editor automation
             // and things like that.
-            return AssetDatabase.LoadAssetAtPath<GDXConfig>(Strings.AssetPathPrefix + "Resources/" + ResourcesPath);
+            return AssetDatabase.LoadAssetAtPath<GDXConfig>("Assets/Resources/GDX/GDXConfig.asset");
 #else
-            return Resources.Load<GDXConfig>(ResourcesPath);
+            if (s_runtimeInstance == null)
+            {
+                s_runtimeInstance = Resources.Load<GDXConfig>("GDX/GDXConfig");
+            }
+            return s_runtimeInstance;
 #endif
         }
     }

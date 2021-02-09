@@ -1,17 +1,12 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-#if GDX_JOBS && GDX_BURST
+using Unity.Collections;
+using Unity.Jobs;
+#if GDX_BURST
 using Unity.Burst;
-using Unity.Collections;
-using Unity.Jobs;
-
-#elif GDX_JOBS
-using Unity.Collections;
-using Unity.Jobs;
 #endif
 
-#if GDX_JOBS
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace GDX.Jobs.ParallelFor
@@ -53,4 +48,3 @@ namespace GDX.Jobs.ParallelFor
         }
     }
 }
-#endif
