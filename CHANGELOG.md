@@ -4,25 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.3] - 2021-02-3
+## [1.2.3] - 2021-02-12
 ***"Workplace 2.0"***
 > Extending functionality out with more code from the backlog, while still addressing some oddities in the existing codebase.
 
 ### Added
-- A Unity serializable dictionary-esque type `GDX.Collections.Generic.SerializableDictionary`.
+- A Unity serializable dictionary based type `GDX.Collections.Generic.SerializableDictionary`.
+  - The `SerializableDictionaryCustomPropertyDrawer` requires Unity 2020.1 or newer; while the `SerializableDictionary` will still work without it, just without a pretty `CustomPropertyDrawer`.
 - `GDX.Vector3Extensions.DistanceToRay()`
-- `GDX.CapsuleCollider.OutSphereCenters()`
-- `GDX.StringExtensions`
-  - Exposed ASCII markers
-  - `IsBooleanValue()`
-  - `IsBooleanPositiveValue()`
-  - `IsIntegerValue()`
-  - `IsNumericalValue()`
+- A way to get key positions `GDX.CapsuleCollider.OutSphereCenters()` from a `CapsuleCollider`.
+- Improved on `GDX.StringExtensions`.
+  - Optimized test `IsBooleanValue()`.
+  - Optimized test `IsBooleanPositiveValue()`.
+  - Optimized test `IsIntegerValue()`
+  - Optimized test `IsNumericalValue()`.
+  - Exposed ASCII markers.
+- `GDX.NavMeshPathExtensions` to help with working with AI/navigation.  
 - `GDX.TransformExtensions`
-  - `GetFirstComponentInChildrenComplex()`
-  - `GetActiveChildCount()`
-- Automated culture setting on thread.
-- `GDX.SerializableDictionary`, speaks for itself.
+  - A depth-limited `GetFirstComponentInChildrenComplex()` method.
+  - A quick `GetActiveChildCount()` reporting only on active child transforms.
+- Automated culture setting on main thread when an unknown system language is found, protecting against specific calender situations.
+- `LICENSE.meta` has returned to the package to stop compile warnings, we will just have to deal with GitHub not being able to figure out the license model automatically.
 ### Changed
 - Added language to `README.md` and documentation regarding associations to Unity.
 - Optimized `GDX.GDXConfig` loading at runtime.
@@ -30,8 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Consolidated entirety of `GDX.Editor.Settings` related classes into private classes inside of itself.
 - Moved `GDX.Editor.InspectorLabelPropertyDrawer` to `GDX.Editor.PropertyDrawers.InspectorLabelPropertyDrawer`
 ### Removed
-- Removed centralized `GDX.Strings`, moving ownership of data to the actual primary consumer.
-- Removed reference to unit test locations from files.
+- Centralized `GDX.Strings`, moving ownership of data to the actual primary consumer.
+- Reference to unit test locations from files.
+- Corrected Jobs package being included in Unity's CoreModule.
 
 ## [1.2.2] - 2021-02-1
 ***"Cookie Monster"***

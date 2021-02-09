@@ -136,9 +136,9 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Get the <see cref="Language"/> equivalent of the <see cref="SystemLanguage"/>.
+        ///     Get the <see cref="Language" /> equivalent of the <see cref="SystemLanguage" />.
         /// </summary>
-        /// <returns>The appropriate <see cref="Language"/>, or default.</returns>
+        /// <returns>The appropriate <see cref="Language" />, or default.</returns>
         public static Language GetSystemLanguage()
         {
             SystemLanguage language = Application.systemLanguage;
@@ -189,9 +189,8 @@ namespace GDX
             }
         }
 
-
         /// <summary>
-        ///     Sets the current threads culture to a defined setting in <see cref="GDXConfig"/>.
+        ///     Sets the current threads culture to a defined setting in <see cref="GDXConfig" />.
         /// </summary>
         /// <remarks>
         ///     Can be used to avoid issues with culture settings without a Gregorian Calendar. Configurable to automatically

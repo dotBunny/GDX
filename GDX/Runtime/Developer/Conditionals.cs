@@ -39,6 +39,9 @@ namespace GDX.Developer
         public const bool HasMathematicsPackage = false;
 #endif
 
+        /// <summary>
+        ///     Is a compatible version of the Platforms package present in the project?
+        /// </summary>
 #if GDX_PLATFORMS
         public const bool HasPlatformsPackage = true;
 #else

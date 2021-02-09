@@ -52,6 +52,24 @@ namespace GDX
         }
 
         /// <summary>
+        ///     Calculate the squared distance between two <see cref="Vector3"/>.
+        /// </summary>
+        /// <remarks>
+        ///     <para>Based on https://en.wikipedia.org/wiki/Euclidean_distance#Squared_Euclidean_distance.</para>
+        /// </remarks>
+        /// <param name="targetVector3">Point A</param>
+        /// <param name="otherVector3">Point B</param>
+        /// <returns>The squared distance.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float DistanceSqr(this Vector3 targetVector3, Vector3 otherVector3)
+        {
+            float x = targetVector3.x - otherVector3.x;
+            float y = targetVector3.y - otherVector3.y;
+            float z = targetVector3.z - otherVector3.z;
+            return x * x + y * y + z * z;
+        }
+
+        /// <summary>
         ///     Get the horizontal distance between two <see cref="Vector3"/> points.
         /// </summary>
         /// <remarks>Ignores the Y-axis completely.</remarks>
