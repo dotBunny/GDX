@@ -113,4 +113,4 @@ namespace GDX
         }
     }
 }
-#endif
+#endif // GDX_ADDRESSABLES

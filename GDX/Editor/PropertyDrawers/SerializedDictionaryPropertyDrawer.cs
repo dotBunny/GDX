@@ -298,7 +298,7 @@ namespace GDX.Editor.PropertyDrawers
                 // Draw Key Icon
 #if UNITY_2021_1_OR_NEWER
                 Rect keyIconRect =
- new Rect(position.x - 2, position.y + topOffset - 1, 17, EditorGUIUtility.singleLineHeight);
+                    new Rect(position.x - 2, position.y + topOffset - 1, 17, EditorGUIUtility.singleLineHeight);
 #else
                 Rect keyIconRect = new Rect(position.x, position.y + topOffset - 1, 17,
                     EditorGUIUtility.singleLineHeight);

@@ -752,7 +752,7 @@ namespace GDX.Editor
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("-", Styles.BulletLayoutOptions);
 #if UNITY_2021_1_OR_NEWER
-                             if (EditorGUILayout.LinkButton("Repository"))
+                if (EditorGUILayout.LinkButton("Repository"))
 #else
                 if (GUILayout.Button("Repository", EditorStyles.linkLabel))
 #endif
@@ -782,7 +782,7 @@ namespace GDX.Editor
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("-", Styles.BulletLayoutOptions);
 #if UNITY_2021_1_OR_NEWER
-                             if (EditorGUILayout.LinkButton("Report an Issue"))
+                if (EditorGUILayout.LinkButton("Report an Issue"))
 #else
                 if (GUILayout.Button("Report an Issue", EditorStyles.linkLabel))
 #endif

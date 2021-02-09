@@ -53,4 +53,4 @@ namespace GDX.Jobs.ParallelFor
         }
     }
 }
-#endif
+#endif // GDX_JOBS

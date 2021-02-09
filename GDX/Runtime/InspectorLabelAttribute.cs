@@ -28,4 +28,4 @@ namespace GDX
     }
 }
 
-#endif
+#endif // UNITY_EDITOR

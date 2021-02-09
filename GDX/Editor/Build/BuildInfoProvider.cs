@@ -115,7 +115,7 @@ namespace GDX.Editor.Build
                 Debug.LogWarning(e);
             }
         }
-#else
+#else // !GDX_PLATFORMS
     public class BuildInfoProvider : IPreprocessBuildWithReport, IPostprocessBuildWithReport
     {
         /// <summary>
