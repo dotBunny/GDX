@@ -232,10 +232,16 @@ namespace GDX.Editor.PropertyDrawers
         }
 
         /// <summary>
-        ///     Resets the Add Key serialized data
+        ///     Resets the Add Key serialized data to default, if it is not already defaulted.
         /// </summary>
         private void ClearAddKeyReference()
         {
+            // If we already default, dont bother.
+            if (!HasValue(_propertyAddKey))
+            {
+                return;
+            }
+
             DefaultValue(_propertyAddKey);
             _propertyAddKey.serializedObject.ApplyModifiedPropertiesWithoutUndo();
         }
@@ -517,6 +523,53 @@ namespace GDX.Editor.PropertyDrawers
             _propertyCount.intValue = _propertyCountCache;
 
             ClearAddKeyReference();
+        }
+
+        /// <summary>
+        ///     Does the provided <see cref="SerializedProperty" /> contain a non <c>default</c> value.
+        /// </summary>
+        /// <param name="targetProperty">The target to evaluate.</param>
+        private static bool HasValue(SerializedProperty targetProperty)
+        {
+            switch (targetProperty.type)
+            {
+                case "int":
+                    return targetProperty.intValue != 0;
+                case "bool":
+                    return targetProperty.boolValue;
+                case "bounds":
+                    return targetProperty.boundsValue != default;
+                case "color":
+                    return targetProperty.colorValue != default;
+                case "double":
+                    return targetProperty.doubleValue != 0;
+                case "float":
+                    return targetProperty.floatValue != 0;
+                case "long":
+                    return targetProperty.longValue != 0;
+                case "quaternion":
+                    return targetProperty.quaternionValue != default;
+                case "rect":
+                    return targetProperty.rectValue != default;
+                case "string":
+                    return targetProperty.stringValue != default;
+                case "vector2":
+                    return targetProperty.vector2Value != default;
+                case "vector3":
+                    return targetProperty.vector3Value != default;
+                case "vector4":
+                    return targetProperty.vector4Value != default;
+                case "animationCurve":
+                    return targetProperty.animationCurveValue.keys.Length > 0;
+                case "boundsInt":
+                    return targetProperty.boundsIntValue != default;
+                case "enum":
+                    return targetProperty.enumValueIndex != default;
+                case "exposedReference":
+                    return targetProperty.exposedReferenceValue != default;
+                default:
+                    return targetProperty.objectReferenceValue != default || targetProperty.objectReferenceInstanceIDValue != default;
+            }
         }
 
         /// <summary>

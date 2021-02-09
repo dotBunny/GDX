@@ -117,6 +117,11 @@ namespace GDX.Collections.Generic
         public bool IsNullableKey()
         {
             Type type = typeof(TKey);
+
+            // Some sanity checks
+            if (type == typeof(MonoBehaviour)) return false;
+
+
             if (!type.IsValueType)
             {
                 return true;
@@ -132,6 +137,10 @@ namespace GDX.Collections.Generic
         public bool IsNullableValue()
         {
             Type type = typeof(TValue);
+
+            // Some sanity checks
+            if (type == typeof(MonoBehaviour)) return false;
+
             if (!type.IsValueType)
             {
                 return true;
