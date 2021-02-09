@@ -232,6 +232,15 @@ namespace GDX.Editor.PropertyDrawers
         }
 
         /// <summary>
+        ///     Resets the Add Key serialized data
+        /// </summary>
+        private void ClearAddKeyReference()
+        {
+            DefaultValue(_propertyAddKey);
+            _propertyAddKey.serializedObject.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        /// <summary>
         ///     Draw the content area, including elements.
         /// </summary>
         /// <param name="position">A <see cref="Rect" /> representing the space which the content area will be drawn.</param>
@@ -428,6 +437,12 @@ namespace GDX.Editor.PropertyDrawers
                 // TODO: Is there some editor cache for whats unfolded? This would prevent over serialization / extra data
                 _propertyExpanded.boolValue = newExpanded;
                 _propertyExpandedCache = newExpanded;
+
+                // If we're collapsing the foldout, make sure there is no key cached
+                if (!newExpanded)
+                {
+                    ClearAddKeyReference();
+                }
             }
 
             // Indicate Count - but ready only
@@ -500,6 +515,8 @@ namespace GDX.Editor.PropertyDrawers
             // Increase Size
             _propertyCountCache++;
             _propertyCount.intValue = _propertyCountCache;
+
+            ClearAddKeyReference();
         }
 
         /// <summary>

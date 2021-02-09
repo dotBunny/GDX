@@ -60,6 +60,7 @@ namespace GDX.Collections.Generic
         {
             LoadSerializedData();
 #if !UNITY_EDITOR
+            // Make sure nothing is there holding a reference.
             _padForSerializationKey = default;
 #endif
         }
