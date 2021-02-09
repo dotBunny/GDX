@@ -36,6 +36,7 @@ namespace Runtime.Collections.Generic
         {
             SerializableDictionary<int, string> testDictionary = new SerializableDictionary<int, string>();
             testDictionary.SaveSerializedData();
+
             Assert.IsTrue(testDictionary.GetSerializedDataLength() == 0, "Expected no length");
         }
 

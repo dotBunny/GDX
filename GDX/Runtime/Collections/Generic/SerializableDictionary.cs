@@ -32,74 +32,28 @@ namespace GDX.Collections.Generic
         [HideInInspector] [SerializeField] private bool isSerializable;
 
         /// <summary>
-        ///     A cached length of the serialized data arrays.
+        ///     The length of the serialized data arrays.
         /// </summary>
         [HideInInspector] [SerializeField] private int serializedLength = -1;
 
         /// <summary>
-        ///     An array of all of the keys, in order, used by the dictionary.
+        ///     An array of all of the keys, in order, used to recreate the base <see cref="Dictionary{TKey,TValue}" />.
         /// </summary>
         [HideInInspector] [SerializeField] private TKey[] serializedKeys;
 
         /// <summary>
-        ///     An array of all the data, in order, used by the dictionary.
+        ///     An array of all of the values, in order, used to recreate the base <see cref="Dictionary{TKey,TValue}" />.
         /// </summary>
         [HideInInspector] [SerializeField] private TValue[] serializedValues;
 
+        /// <summary>
+        ///     Type constructor.
+        /// </summary>
         public SerializableDictionary()
         {
 #if UNITY_EDITOR
             isSerializable = IsSerializableType(typeof(TKey)) && IsSerializableType(typeof(TValue));
 #endif
-        }
-
-        /// <summary>
-        ///     Rehydrate the serialized data arrays back into a <see cref="Dictionary{TKey,TValue}" />.
-        /// </summary>
-        /// <remarks>Invoked by Unity, calls <see cref="LoadSerializedData" />.</remarks>
-        public void OnAfterDeserialize()
-        {
-            LoadSerializedData();
-#if !UNITY_EDITOR
-            // Make sure nothing is there holding a reference.
-            _padForSerializationKey = default;
-#endif
-        }
-
-        /// <summary>
-        ///     Prepare our data for serialization, moving it into arrays.
-        /// </summary>
-        /// <remarks>Invoked by Unity, calls <see cref="SaveSerializedData" />.</remarks>
-        public void OnBeforeSerialize()
-        {
-            SaveSerializedData();
-        }
-
-        /// <summary>
-        ///     Creates a copy from the serialized data.
-        /// </summary>
-        /// <returns>
-        ///     A new <see cref="SerializableDictionary{TKey,TValue}" /> filled with the the serialized data of this
-        ///     <see cref="SerializableDictionary{TKey,TValue}" />.
-        /// </returns>
-        public SerializableDictionary<TKey, TValue> CreateFromSerializedData()
-        {
-            // Make sure we have some form of data to work with
-            SerializableDictionary<TKey, TValue> newDictionary = new SerializableDictionary<TKey, TValue>();
-
-            if (serializedLength <= 0)
-            {
-                return newDictionary;
-            }
-
-            // Iterate over all the serialized data and put it back into the dictionary as it once was, in order.
-            for (int i = 0; i < serializedLength; i++)
-            {
-                newDictionary.Add(serializedKeys[i], serializedValues[i]);
-            }
-
-            // Return filled dictionary
-            return newDictionary;
         }
 
         /// <summary>
@@ -182,7 +136,7 @@ namespace GDX.Collections.Generic
                 if (ContainsKey(serializedKeys[i]))
                 {
                     Debug.LogError(
-                        "A duplicate key has been detected in a serialized dictionary. The item has not been added, you may undo your last action to restore the previous state.");
+                        "A duplicate key has been detected in the serialized dictionary, the item has been removed.\nYou can undo your last action to restore the previous state.");
                 }
                 else
                 {
@@ -219,6 +173,28 @@ namespace GDX.Collections.Generic
             serializedLength = -1;
             serializedKeys = null;
             serializedValues = null;
+        }
+
+        /// <summary>
+        ///     Rehydrate the serialized data arrays back into a cohesive <see cref="Dictionary{TKey,TValue}" />.
+        /// </summary>
+        /// <remarks>Invoked by Unity, calls <see cref="LoadSerializedData" />.</remarks>
+        public void OnAfterDeserialize()
+        {
+            LoadSerializedData();
+#if !UNITY_EDITOR
+            // Make sure nothing is there holding a reference.
+            _padForSerializationKey = default;
+#endif
+        }
+
+        /// <summary>
+        ///     Build out serialized data arrays and associative data, used to rehydrate during deserialization.
+        /// </summary>
+        /// <remarks>Invoked by Unity, calls <see cref="SaveSerializedData" />.</remarks>
+        public void OnBeforeSerialize()
+        {
+            SaveSerializedData();
         }
 
         /// <summary>

@@ -204,9 +204,9 @@ namespace GDX.Editor.PropertyDrawers
             // Create undo point if we've changed something
             if (GUI.changed)
             {
-                Undo.SetCurrentGroupName("Changed Serialized Dictionary");
+                Undo.SetCurrentGroupName("Serializable Dictionary Action");
             }
-
+            
             // Anything we changed property wise we should save
             property.serializedObject.ApplyModifiedProperties();
         }
