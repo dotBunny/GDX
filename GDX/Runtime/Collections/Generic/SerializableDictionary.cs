@@ -13,11 +13,8 @@ namespace GDX.Collections.Generic
     /// <remarks>
     ///     <para>
     ///         This will NOT work with <see cref="System.Object" /> based objects, use <see cref="UnityEngine.Object" /> if
-    ///         you must.
-    ///     </para>
-    ///     <para>
-    ///         While .NET has solutions for creating custom serialization paths, Unity uses its own system to serialize data
-    ///         into YAML structures. This also assumes that the types provided can be serialized by Unity.
+    ///         you must. While .NET has solutions for creating custom serialization paths, Unity uses its own system to
+    ///         serialize data into YAML structures. This also assumes that the types provided can be serialized by Unity.
     ///     </para>
     ///     <para>
     ///         The process of serializing and deserializing this dictionary is not to be considered performant in any way.
@@ -28,6 +25,11 @@ namespace GDX.Collections.Generic
     [Serializable]
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
+        /// <summary>
+        ///     Is the dictionary capable of being serialized by Unity?
+        /// </summary>
+        [HideInInspector] [SerializeField] private bool isSerializable;
+
         /// <summary>
         ///     A cached length of the serialized data arrays.
         /// </summary>
@@ -50,20 +52,22 @@ namespace GDX.Collections.Generic
 #endif
         }
 
-
         /// <summary>
         ///     Rehydrate the serialized data arrays back into a <see cref="Dictionary{TKey,TValue}" />.
         /// </summary>
-        /// <remarks>Calls <see cref="LoadSerializedData" />.</remarks>
+        /// <remarks>Invoked by Unity, calls <see cref="LoadSerializedData" />.</remarks>
         public void OnAfterDeserialize()
         {
             LoadSerializedData();
+#if !UNITY_EDITOR
+            _padForSerializationKey = default;
+#endif
         }
 
         /// <summary>
         ///     Prepare our data for serialization, moving it into arrays.
         /// </summary>
-        /// <remarks>Calls <see cref="SaveSerializedData" />.</remarks>
+        /// <remarks>Invoked by Unity, calls <see cref="SaveSerializedData" />.</remarks>
         public void OnBeforeSerialize()
         {
             SaveSerializedData();
@@ -163,13 +167,11 @@ namespace GDX.Collections.Generic
         {
             Clear();
 
-#if UNITY_EDITOR
             // If this is not serializable we need to do nothing
             if (!isSerializable)
             {
                 return;
             }
-#endif
 
             if (serializedLength <= 0)
             {
@@ -259,13 +261,11 @@ namespace GDX.Collections.Generic
         /// <remarks>We will always create the arrays so the property drawers function nicely.</remarks>
         public void SaveSerializedData()
         {
-#if UNITY_EDITOR
             // If this is not serializable we need to do nothing
             if (!isSerializable)
             {
                 return;
             }
-#endif
 
             // Stash our length for future usage
             serializedLength = Count;
@@ -284,7 +284,6 @@ namespace GDX.Collections.Generic
             }
         }
 
-
 #if UNITY_EDITOR
         /// <summary>
         ///     Editor only data indicating if the property drawer is expanded.
@@ -292,28 +291,21 @@ namespace GDX.Collections.Generic
 #pragma warning disable 414
         [HideInInspector] [SerializeField] private bool drawerExpanded;
 #pragma warning restore 414
-
         /// <summary>
-        ///     Editor only data indicating if the property drawer is expanded.
+        ///     Is the provided key a valid key (unique).
         /// </summary>
-        [HideInInspector] [SerializeField] private bool isSerializable;
+        [HideInInspector] [SerializeField] private bool serializedAddKeyValid;
 
         /// <summary>
         ///     Temporary placement for keys to be added.
         /// </summary>
         [HideInInspector] [SerializeField] private TKey serializedAddKey;
-
-        /// <summary>
-        ///     Is the provided key a valid key (unique).
-        /// </summary>
-        [HideInInspector] [SerializeField] private bool serializedAddKeyValid;
 #else
-        // We wanted to block out some padding since Unity is looking for a specific byte.
-        // Adam is a genius.
-        [SerializeField] private bool _hackSerializationIgnoreA;
-        [SerializeField] private bool _hackSerializationIgnoreB;
-        [SerializeField] private TKey _hackSerializationIgnoreC;
-        [SerializeField] private bool _hackSerializationIgnoreD;
+        // We need to pad the size of the serialized data due to Unity checking the size of the serialized object.
+        // This is a problem where "classic" Unity author-time data, is the same as runtime data.
+        [SerializeField] private bool _padForSerializationBoolA;
+        [SerializeField] private bool _padForSerializationBoolB;
+        [SerializeField] private TKey _padForSerializationKey;
 #endif
     }
 }
