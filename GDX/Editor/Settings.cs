@@ -826,14 +826,6 @@ namespace GDX.Editor
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Jobs");
-                GUILayout.FlexibleSpace();
-                GUILayout.Label(Conditionals.HasJobsPackage
-                    ? Content.TestPassedIcon
-                    : Content.TestNormalIcon);
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
                 GUILayout.Label("Mathematics");
                 GUILayout.FlexibleSpace();
                 GUILayout.Label(Conditionals.HasMathematicsPackage

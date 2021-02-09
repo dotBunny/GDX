@@ -206,7 +206,7 @@ namespace GDX.Editor.PropertyDrawers
             {
                 Undo.SetCurrentGroupName("Serializable Dictionary Action");
             }
-            
+
             // Anything we changed property wise we should save
             property.serializedObject.ApplyModifiedProperties();
         }

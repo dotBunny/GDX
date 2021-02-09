@@ -31,15 +31,6 @@ namespace GDX.Developer
 #endif
 
         /// <summary>
-        ///     Is a compatible version of the Jobs package present in the project?
-        /// </summary>
-#if GDX_JOBS
-        public const bool HasJobsPackage = true;
-#else
-        public const bool HasJobsPackage = false;
-#endif
-
-        /// <summary>
         ///     Is a compatible version of the Mathematics package present in the project?
         /// </summary>
 #if GDX_MATHEMATICS

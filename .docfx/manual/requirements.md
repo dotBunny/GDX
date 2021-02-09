@@ -11,7 +11,6 @@ Define | Package | Minimum Version
 :--- | :--- | ---
 GDX_ADDRESSABLES | com.unity.addressables | `1.8.5`
 GDX_BURST | com.unity.burst | `1.0.0`
-GDX_JOBS | com.unity.jobs | `0.2.7`
 GDX_MATHEMATICS | com.unity.mathematics | `1.2.1`
 GDX_PLATFORMS | com.unity.platforms | `0.8.0`
 
