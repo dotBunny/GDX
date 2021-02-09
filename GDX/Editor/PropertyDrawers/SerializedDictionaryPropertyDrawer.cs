@@ -272,9 +272,9 @@ namespace GDX.Editor.PropertyDrawers
 
                 Rect selectionRect = new Rect(
                     position.x - Styles.ContentAreaHorizontalPadding + 1,
-                    position.y + topOffset - 1,
+                    position.y + topOffset - 2,
                     position.width + Styles.ContentAreaHorizontalPadding * 2 - 3,
-                    EditorGUIUtility.singleLineHeight + 2);
+                    EditorGUIUtility.singleLineHeight + 4);
 
                 // Handle selection (left-click), do not consume/use the event so that fields receive.
                 if (Event.current.type == EventType.MouseDown &&
@@ -300,7 +300,7 @@ namespace GDX.Editor.PropertyDrawers
                 Rect keyIconRect =
                     new Rect(position.x - 2, position.y + topOffset - 1, 17, EditorGUIUtility.singleLineHeight);
 #else
-                Rect keyIconRect = new Rect(position.x, position.y + topOffset - 1, 17,
+                Rect keyIconRect = new Rect(position.x, position.y + topOffset, 17,
                     EditorGUIUtility.singleLineHeight);
 #endif
                 EditorGUI.LabelField(keyIconRect, Content.IconKey);
@@ -316,7 +316,7 @@ namespace GDX.Editor.PropertyDrawers
                 EditorGUI.LabelField(valueIconRect, Content.IconValue);
 
                 // Draw Value Property
-                Rect valuePropertyRect = new Rect(valueIconRect.xMax, position.y + topOffset, columnWidth,
+                Rect valuePropertyRect = new Rect(valueIconRect.xMax, position.y + topOffset, columnWidth - 1,
                     EditorGUIUtility.singleLineHeight);
                 EditorGUI.PropertyField(valuePropertyRect, _propertyValues.GetArrayElementAtIndex(i), GUIContent.none);
             }
@@ -402,9 +402,23 @@ namespace GDX.Editor.PropertyDrawers
             {
                 // Remove control focus
                 GUIUtility.hotControl = 0;
-
                 RemoveElementAt(_selectedIndex);
-                _selectedIndex = -1;
+
+                // Keep next item selected.
+                _selectedIndex--;
+                if (_selectedIndex >= 0)
+                {
+                    return;
+                }
+
+                if (_propertyCountCache > 1)
+                {
+                    _selectedIndex = 0;
+                }
+                else
+                {
+                    _selectedIndex = -1;
+                }
             }
         }
 
@@ -803,7 +817,7 @@ namespace GDX.Editor.PropertyDrawers
             /// <summary>
             ///     The width of an individual button in the footer.
             /// </summary>
-            public const float ActionButtonWidth = 25f;
+            public const float ActionButtonWidth = 20f;
 
             /// <summary>
             ///     The height of an individual button in the footer.
