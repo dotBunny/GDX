@@ -136,7 +136,7 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Is the dictionary <see cref="TKey" /> a valid type?
+        ///     Is the dictionary key type a valid Unity serialization type?
         /// </summary>
         /// <returns>true/false if the type is valid.</returns>
         public bool IsKeyValidType()
@@ -146,7 +146,7 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Is the dictionary <see cref="TValue" /> a valid type?
+        ///     Is the dictionary value type a valid Unity serialization type?
         /// </summary>
         /// <returns>true/false if the type is valid.</returns>
         public bool IsValueValidType()
