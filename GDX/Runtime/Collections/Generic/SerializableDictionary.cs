@@ -17,17 +17,18 @@ namespace GDX.Collections.Generic
     ///         serialize data into YAML structures. This also assumes that the types provided can be serialized by Unity.
     ///     </para>
     ///     <para>
-    ///         The process of serializing and deserializing this dictionary is not to be considered performant in any way.
+    ///         The process of serializing and deserializing this dictionary should not be considered performant.
     ///     </para>
     /// </remarks>
-    /// <typeparam name="TKey">The <see cref="KeyValuePair{TKey,TValue}" />'s key type.</typeparam>
-    /// <typeparam name="TValue">The <see cref="KeyValuePair{TKey,TValue}" />'s value type.</typeparam>
+    /// <typeparam name="TKey">The dictionary's key <see cref="System.Type" />.</typeparam>
+    /// <typeparam name="TValue">The dictionary's value <see cref="System.Type" />.</typeparam>
     [Serializable]
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
         /// <summary>
-        ///     Is the dictionary capable of being serialized by Unity?
+        ///     Is the dictionary completely capable of being serialized by Unity?
         /// </summary>
+        /// <remarks>This field is determined/cached in the constructor.</remarks>
         [HideInInspector] [SerializeField] private bool isSerializable;
 
         /// <summary>
@@ -119,7 +120,10 @@ namespace GDX.Collections.Generic
             Type type = typeof(TKey);
 
             // While a Behaviour itself can be null, when its a MonoBehaviour we cannot.
-            if (type == typeof(MonoBehaviour)) return false;
+            if (type == typeof(MonoBehaviour))
+            {
+                return false;
+            }
 
             if (!type.IsValueType)
             {
@@ -130,7 +134,8 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Is the type a valid Unity serialization type?
+        ///     Is the <paramref name="type" /> capable of being serialized by the
+        ///     <see cref="SerializableDictionary{TKey,TValue}" />, utilizing Unity's own serialization system?
         /// </summary>
         /// <returns>true/false if the type is valid.</returns>
         public bool IsSerializableType(Type type)
@@ -268,6 +273,7 @@ namespace GDX.Collections.Generic
         ///     Editor only data indicating if the property drawer is expanded.
         /// </summary>
 #pragma warning disable 414
+        // ReSharper disable once NotAccessedField.Local
         [HideInInspector] [SerializeField] private bool drawerExpanded;
 #pragma warning restore 414
         /// <summary>
