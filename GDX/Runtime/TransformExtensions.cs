@@ -1,6 +1,7 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace GDX
@@ -13,6 +14,33 @@ namespace GDX
     /// </remarks>
     public static class TransformExtensions
     {
+        /// <summary>
+        ///     Destroy child <see cref="Transform"/>.
+        /// </summary>
+        /// <param name="targetTransform">The parent <see cref="Transform"/> to look at.</param>
+        /// <param name="deactivateBeforeDestroy">Should the <paramref name="targetTransform"/> children's <see cref="GameObject"/>s be deactivated before destroying? This can be used to immediately hide an object, that will be destroyed at the end of the frame.</param>
+        /// <param name="destroyInactive">Should inactive <see cref="GameObject"/> be destroyed as well?</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void DestroyChildren(this Transform targetTransform, bool deactivateBeforeDestroy = true, bool destroyInactive = true)
+        {
+            int count = targetTransform.childCount;
+            for (int i = 0; i < count; i++)
+            {
+                GameObject childObject = targetTransform.GetChild(i).gameObject;
+                if (!destroyInactive && !childObject.activeInHierarchy)
+                {
+                    continue;
+                }
+
+                if (deactivateBeforeDestroy)
+                {
+                    childObject.SetActive(false);
+                }
+
+                Object.Destroy(childObject);
+            }
+        }
+
         /// <summary>
         ///     Search recursively for a <see cref="Component" /> on the <paramref name="targetTransform" />.
         /// </summary>
@@ -84,12 +112,9 @@ namespace GDX
         /// </summary>
         /// <param name="targetTransform">The transform to look at's children.</param>
         /// <returns>The number of active children transforms.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetActiveChildCount(this Transform targetTransform)
         {
-            if (targetTransform == null)
-            {
-                return 0;
-            }
             int counter = 0;
             int childCount = targetTransform.childCount;
             for (int i = 0; i < childCount; i++)

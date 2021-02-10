@@ -72,6 +72,7 @@ namespace GDX
         /// <param name="targetNavMeshPath">The calculated path to evaluate for the position.</param>
         /// <param name="distance">The distance along the calculated path to find the position at.</param>
         /// <returns>The position found on the <see cref="UnityEngine.AI.NavMeshPath" />.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 GetPositionAtDistance(this NavMeshPath targetNavMeshPath, float distance)
         {
             float calculatedLength = 0;
@@ -122,6 +123,7 @@ namespace GDX
         /// <param name="targetNavMeshPath">The calculated path to evaluate for the position.</param>
         /// <param name="distance">The distance along the calculated path to find the position at.</param>
         /// <returns>The position found on the <see cref="UnityEngine.AI.NavMeshPath" />.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3 GetPositionAtDistanceSqr(this NavMeshPath targetNavMeshPath, float distance)
         {
             float calculatedLength = 0;
