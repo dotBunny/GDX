@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.2.4] - 2021-02-11
 ***"Cold Brew"***
-> Bugfixes, feedback and features, just what a growing library needs.
+> Bugfixes, feedback, and features, just what a growing library needs.
 
 ### Added
 - `GDX` scripting define is automatically added to all build targets.
