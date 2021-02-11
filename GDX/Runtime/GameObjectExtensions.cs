@@ -1,6 +1,7 @@
 // dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace GDX
@@ -13,6 +14,18 @@ namespace GDX
     /// </remarks>
     public static class GameObjectExtensions
     {
+        /// <summary>
+        ///     Destroy child <see cref="GameObject"/>.
+        /// </summary>
+        /// <param name="targetGameObject">The parent <see cref="GameObject"/> to look at.</param>
+        /// <param name="deactivateBeforeDestroy">Should the <paramref name="targetGameObject"/>'s children be deactivated before destroying? This can be used to immediately hide an object, that will be destroyed at the end of the frame.</param>
+        /// <param name="destroyInactive">Should inactive <see cref="GameObject"/> be destroyed as well?</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void DestroyChildren(this GameObject targetGameObject, bool deactivateBeforeDestroy = true, bool destroyInactive = true)
+        {
+            targetGameObject.transform.DestroyChildren(deactivateBeforeDestroy, destroyInactive);
+        }
+
         /// <summary>
         ///     A slightly more complex version of <see cref="Component.GetComponentInChildren{T}(bool)" /> which allows for
         ///     different hinted search options.

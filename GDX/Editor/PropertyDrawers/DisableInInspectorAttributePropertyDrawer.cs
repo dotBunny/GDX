@@ -7,10 +7,10 @@ using UnityEngine;
 namespace GDX.Editor.PropertyDrawers
 {
     /// <summary>
-    ///     The drawing component of the <see cref="InspectorLabelAttribute" />.
+    ///     The drawing component of the <see cref="DisableInInspectorAttribute" />.
     /// </summary>
-    [CustomPropertyDrawer(typeof(InspectorLabelAttribute))]
-    public class InspectorLabelPropertyDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(DisableInInspectorAttribute))]
+    public class DisableInInspectorAttributePropertyDrawer : PropertyDrawer
     {
         /// <summary>
         ///     Unity IMGUI Draw Event
@@ -20,11 +20,10 @@ namespace GDX.Editor.PropertyDrawers
         /// <param name="label">The label of this property.</param>
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            // Replace label text content
-            label.text = (attribute as InspectorLabelAttribute)?.Label;
-
-            // Draw property
+            GUI.enabled = false;
             EditorGUI.PropertyField(position, property, label);
+            GUI.enabled = true;
         }
+
     }
 }
