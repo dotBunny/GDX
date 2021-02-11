@@ -3,6 +3,7 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -121,6 +122,11 @@ namespace GDX.Editor
         /// </summary>
         public PackageProvider()
         {
+
+            // Make sure that the project has the GDX preprocessor added
+            // TODO: This should happen periodically? force it on builds?
+            EnsureScriptingDefineSymbol();
+
             // Find Local Definition
             // ReSharper disable once StringLiteralTypo
             string[] editorAssemblyDefinition = AssetDatabase.FindAssets("GDX.Editor t:asmdef");
@@ -164,6 +170,53 @@ namespace GDX.Editor
             (InstallationType installationType, string sourceTag) = GetInstallationType();
             InstallationMethod = installationType;
             SourceTag = sourceTag;
+        }
+
+        /// <summary>
+        ///     Ensure that the GDX define is present across all viable platforms.
+        /// </summary>
+        public static void EnsureScriptingDefineSymbol()
+        {
+            // Create a list of all the build targets
+            Array buildTargets = Enum.GetValues(typeof(BuildTargetGroup));
+            int buildTargetsCount = buildTargets.Length;
+
+            // Iterate over them all - skipping unknown
+            for (int i = 1; i < buildTargetsCount; i++)
+            {
+                // Get our object
+                object target = buildTargets.GetValue(i);
+
+                // Cast back
+                BuildTargetGroup group = (BuildTargetGroup)target;
+                Type enumType =  group.GetType();
+
+                // Check if we can find an ObsoleteAttribute
+                FieldInfo fieldInfo = enumType.GetField(Enum.GetName(enumType, target));
+                Attribute foundAttribute = fieldInfo.GetCustomAttribute(typeof(ObsoleteAttribute), false);
+
+                // It doesnt have one, so we should assume we can update the scripting defines for this target.
+                if (foundAttribute != null)
+                {
+                    continue;
+                }
+
+                PlayerSettings.GetScriptingDefineSymbolsForGroup(group, out string[] defines);
+                int location = defines.FirstIndexOfItem("GDX");
+
+                // Found
+                if (location != -1)
+                {
+                    continue;
+                }
+
+                // Add to it!
+                int oldLength = defines.Length;
+                string[] newDefines = new string[oldLength + 1];
+                Array.Copy(defines, newDefines, oldLength);
+                newDefines[oldLength] = "GDX";
+                PlayerSettings.SetScriptingDefineSymbolsForGroup(@group, newDefines);
+            }
         }
 
         /// <summary>
