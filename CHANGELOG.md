@@ -4,9 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.4] - 2021-02-?
+## [1.2.4] - 2021-02-11
 ***"Cold Brew"***
-> Feedback and features, just what a growing library needs.
+> Bugfixes, feedback and features, just what a growing library needs.
 
 ### Added
 - `GDX` scripting define is automatically added to all build targets.
@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `InspectorMessageBoxAttribute` for ease of messaging/reminders.
 
 ### Changed
+- Restored reference to Unity.PerformanceTesting
 - Adopted using `dev` branch for active development, pulling into version named branches for patching.
 
 ### Removed
