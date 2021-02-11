@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.5]
+
+### Added
+- Environment section of GDX project settings, initial toggling for `GDX` scripting define symbol enforcement.
+
 ## [1.2.4] - 2021-02-11
 ***"Cold Brew"***
 > Bugfixes, feedback, and features, just what a growing library needs.
@@ -12,14 +17,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `GDX` scripting define is automatically added to all build targets.
 - `GDX.GameObjectExtensions` and `GDX.TransformExtensions` received `DestroyChildren()` functionality.
 - `GDX.DisableInInspectorAttribute` and associated `PropertyDrawer`.
-- `InspectorMessageBoxAttribute` for ease of messaging/reminders.
+- `GDX.InspectorMessageBoxAttribute` for ease of messaging/reminders.
 
 ### Changed
 - Restored reference to Unity.PerformanceTesting
 - Adopted using `dev` branch for active development, pulling into version named branches for patching.
 
 ### Removed
-- `InspectorLabelAttribute`, Unity has native `InspectorNameAttribute` in 2019.1+
+- `GDX.InspectorLabelAttribute`, Unity has native `InspectorNameAttribute` in 2019.1+
 
 ## [1.2.3] - 2021-02-09
 ***"Workplace 2.0"***
