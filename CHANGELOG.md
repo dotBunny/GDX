@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Environment section of GDX project settings, initial toggling for `GDX` scripting define symbol enforcement.
+- `GDX.TransformExtensions` gained `GetScenePath()`
+- `GDX.GameObjectExtensions` extended out to have:
+  - `GetOrAddComponent()`
+  - `GetScenePath()`
 
 ## [1.2.4] - 2021-02-11
 ***"Cold Brew"***
