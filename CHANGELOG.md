@@ -12,6 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `GDX` scripting define is automatically added to all build targets.
 - `GDX.GameObjectExtensions` and `GDX.TransformExtensions` received `DestroyChildren()` functionality.
 - `GDX.DisableInInspectorAttribute` and associated `PropertyDrawer`.
+- `InspectorMessageBoxAttribute` for ease of messaging/reminders.
+
+### Changed
+- Adopted using `dev` branch for active development, pulling into version named branches for patching.
+
+### Removed
+- `InspectorLabelAttribute`, Unity has native `InspectorNameAttribute` in 2019.1+
 
 ## [1.2.3] - 2021-02-09
 ***"Workplace 2.0"***
