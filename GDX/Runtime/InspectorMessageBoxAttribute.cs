@@ -10,7 +10,6 @@ namespace GDX
     /// </summary>
     public class InspectorMessageBoxAttribute : PropertyAttribute
     {
-#if UNITY_EDITOR
         /// <summary>
         ///     Valid types of messages.
         /// </summary>
@@ -22,6 +21,7 @@ namespace GDX
             Error
         }
 
+#if UNITY_EDITOR
         /// <summary>
         ///     The message to show in the message box.
         /// </summary>
@@ -31,12 +31,14 @@ namespace GDX
         ///     The icon/type of message being displayed.
         /// </summary>
         public readonly MessageBoxType MessageType;
-
+#endif
         public InspectorMessageBoxAttribute(string message, MessageBoxType messageType = MessageBoxType.Info)
         {
+#if UNITY_EDITOR
             Message = message;
             MessageType = messageType;
-        }
 #endif
+        }
+
     }
 }
