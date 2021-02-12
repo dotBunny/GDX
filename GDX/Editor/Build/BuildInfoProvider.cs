@@ -1,174 +1,21 @@
-// dotBunny licenses this file to you under the MIT license.
+﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
 using System;
 using System.IO;
 using System.Text;
+using GDX.Developer;
 using UnityEditor;
 using UnityEngine;
-using GDX.Developer;
 
-#if !GDX_PLATFORMS
-using UnityEditor.Build;
-using UnityEditor.Build.Reporting;
-#endif
-
-// ReSharper disable MemberCanBePrivate.Global
-
-namespace GDX.Editor.Build.Classic
+namespace GDX.Editor.Build
 {
     /// <summary>
-    ///     <para>
-    ///         A build step for both the legacy and scriptable build pipeline's in Unity. This class will alter itself
-    ///         according to available packages and pipelines.
-    ///     </para>
-    ///     <para>
-    ///         During the build process a <c>BuildInfo</c> file will be generated containing information passed in
-    ///         through commandline arguments (parsed by <see cref="GDX.Developer.CommandLineParser" />). These arguments and
-    ///         their formats are configurable via the <see cref="GDXConfig" />.
-    ///     </para>
+    ///     A set of tools to produce the content used for the <c>BuildInfo</c> generated file, as well as the surrounding
+    ///     assembly definition, as well as an ability to reset the file.
     /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///         After a build is finished, the <c>BuildInfo</c> will be reset to default values. This is intended to make sure
-    ///         local builds have a specific marker.
-    ///     </para>
-    ///     <list type="table">
-    ///         <listheader>
-    ///             <term>Argument (Default Value)</term>
-    ///             <description>Description</description>
-    ///         </listheader>
-    ///         <item>
-    ///             <term>BUILD</term>
-    ///             <description>The build number, accessible through <c>BuildInfo.BuildNumber</c>.</description>
-    ///         </item>
-    ///         <item>
-    ///             <term>BUILD_DESC</term>
-    ///             <description>
-    ///                 A short description of the build (example: useful for identifying personal CI builds),
-    ///                 accessible through <c>BuildInfo.Description</c>.
-    ///             </description>
-    ///         </item>
-    ///         <item>
-    ///             <term>BUILD_CHANGELIST</term>
-    ///             <description>
-    ///                 The changelist which the build was made against, accessible through
-    ///                 <c>BuildInfo.Changelist</c>.
-    ///             </description>
-    ///         </item>
-    ///         <item>
-    ///             <term>BUILD_TASK</term>
-    ///             <description>
-    ///                 The name of the build script/task which was used to create the build (example:
-    ///                 CODE-Main-Build-PS5-Development), accessible through <c>BuildInfo.BuildTask</c>.
-    ///             </description>
-    ///         </item>
-    ///         <item>
-    ///             <term>BUILD_STREAM</term>
-    ///             <description>
-    ///                 An indicator of what stream/branch that the build was build against from your chosen version
-    ///                 control system, accessible through <c>BuildInfo.Stream</c>.
-    ///             </description>
-    ///         </item>
-    ///     </list>
-    /// </remarks>
-#if GDX_PLATFORMS
-    public class BuildInfoProvider : Unity.Build.Classic.ClassicBuildPipelineCustomizer
+    public static class BuildInfoProvider
     {
-        /// <summary>
-        ///     Cache if the provider/customizer actually was effective.
-        /// </summary>
-        private bool _enabled = false;
-
-        /// <summary>
-        ///     Restore the default <c>BuildInfo</c> after a build process finishes.
-        /// </summary>
-        ~BuildInfoProvider()
-        {
-            if (_enabled)
-            {
-                WriteDefaultFile();
-            }
-        }
-
-        /// <summary>
-        ///     Writes out <c>BuildInfo</c> prior to build.
-        /// </summary>
-        public override void OnBeforeBuild()
-        {
-            GDXConfig config = GDXConfig.Get();
-            if (config == null || !config.developerBuildInfoEnabled)
-            {
-                return;
-            }
-
-            // Cache for destructor
-            _enabled = true;
-
-            try
-            {
-                string path = Path.Combine(Application.dataPath, config.developerBuildInfoPath);
-                Platform.EnsureFileFolderHierarchyExists(path);
-                File.WriteAllText(path, GetContent(config, false, Context.BuildConfigurationName));
-
-                CheckForAssemblyDefinition();
-            }
-            catch (Exception e)
-            {
-                Debug.LogWarning(e);
-            }
-        }
-#else // !GDX_PLATFORMS
-    public class BuildInfoProvider : IPreprocessBuildWithReport, IPostprocessBuildWithReport
-    {
-        /// <summary>
-        ///     The priority for the processor to be executed, before defaults.
-        /// </summary>
-        /// <value>The numerical value used to sort callbacks, lowest to highest.</value>
-        public int callbackOrder => -42;
-
-        /// <summary>
-        ///     Restores the default <c>BuildInfo</c> after a build process finishes.
-        /// </summary>
-        /// <param name="report">Build process reported information.</param>
-        public void OnPostprocessBuild(BuildReport report)
-        {
-            GDXConfig config = GDXConfig.Get();
-            if (config == null || !config.developerBuildInfoEnabled)
-            {
-                return;
-            }
-
-            WriteDefaultFile();
-        }
-
-        /// <summary>
-        ///     Writes out <c>BuildInfo</c> prior to build.
-        /// </summary>
-        /// <param name="report">Build process reported information.</param>
-        public void OnPreprocessBuild(BuildReport report)
-        {
-            GDXConfig config = GDXConfig.Get();
-            if (config == null || !config.developerBuildInfoEnabled)
-            {
-                return;
-            }
-
-            try
-            {
-                string path = Path.Combine(Application.dataPath, config.developerBuildInfoPath);
-                Platform.EnsureFileFolderHierarchyExists(path);
-                File.WriteAllText(path, GetContent(config, false, "Legacy"));
-
-                CheckForAssemblyDefinition();
-            }
-            catch (Exception e)
-            {
-                Debug.LogWarning(e);
-            }
-        }
-#endif
-
         /// <summary>
         ///     Create the content for the <c>BuildInfo</c> file based on provided information.
         /// </summary>
