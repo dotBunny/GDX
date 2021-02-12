@@ -15,13 +15,17 @@ namespace GDX
     public static class GameObjectExtensions
     {
         /// <summary>
-        ///     Destroy child <see cref="GameObject"/>.
+        ///     Destroy child <see cref="GameObject" />.
         /// </summary>
-        /// <param name="targetGameObject">The parent <see cref="GameObject"/> to look at.</param>
-        /// <param name="deactivateBeforeDestroy">Should the <paramref name="targetGameObject"/>'s children be deactivated before destroying? This can be used to immediately hide an object, that will be destroyed at the end of the frame.</param>
-        /// <param name="destroyInactive">Should inactive <see cref="GameObject"/> be destroyed as well?</param>
+        /// <param name="targetGameObject">The parent <see cref="GameObject" /> to look at.</param>
+        /// <param name="deactivateBeforeDestroy">
+        ///     Should the <paramref name="targetGameObject" />'s children be deactivated before
+        ///     destroying? This can be used to immediately hide an object, that will be destroyed at the end of the frame.
+        /// </param>
+        /// <param name="destroyInactive">Should inactive <see cref="GameObject" /> be destroyed as well?</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void DestroyChildren(this GameObject targetGameObject, bool deactivateBeforeDestroy = true, bool destroyInactive = true)
+        public static void DestroyChildren(this GameObject targetGameObject, bool deactivateBeforeDestroy = true,
+            bool destroyInactive = true)
         {
             targetGameObject.transform.DestroyChildren(deactivateBeforeDestroy, destroyInactive);
         }
@@ -71,7 +75,9 @@ namespace GDX
                 }
             }
 
-            returnComponent = targetGameObject.transform.GetFirstComponentInChildrenComplex<T>(includeInactive, 0, maxLevelsOfRecursion);
+            returnComponent =
+                targetGameObject.transform.GetFirstComponentInChildrenComplex<T>(includeInactive, 0,
+                    maxLevelsOfRecursion);
             if (returnComponent != null)
             {
                 return returnComponent;
@@ -80,6 +86,29 @@ namespace GDX
             return !lookInChildrenFirst ? default : targetGameObject.GetComponent<T>();
         }
 
+        /// <summary>
+        ///     Get a component by type from a <paramref name="targetGameObject" />, if it is not found add and return it.
+        /// </summary>
+        /// <remarks>Adding a component at runtime is a performance nightmare. Use with caution!</remarks>
+        /// <param name="targetGameObject">The <see cref="GameObject" /> that we should query for the component.</param>
+        /// <typeparam name="T">The type of component.</typeparam>
+        /// <returns>The component on the <paramref name="targetGameObject" />.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T GetOrAddComponent<T>(this GameObject targetGameObject) where T : Component
+        {
+            T instance = targetGameObject.GetComponent<T>();
+            return instance ? instance : targetGameObject.AddComponent<T>();
+        }
 
+        /// <summary>
+        ///     Get an in scene path to the <paramref name="targetGameObject" />.
+        /// </summary>
+        /// <param name="targetGameObject">The <see cref="GameObject" /> which to derive a path from.</param>
+        /// <returns>A created path <see cref="System.String" />.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GetScenePath(this GameObject targetGameObject)
+        {
+            return targetGameObject.transform.GetScenePath();
+        }
     }
 }

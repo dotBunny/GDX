@@ -2,6 +2,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Runtime.CompilerServices;
+using System.Text;
 using UnityEngine;
 
 namespace GDX
@@ -39,6 +40,27 @@ namespace GDX
 
                 Object.Destroy(childObject);
             }
+        }
+
+        /// <summary>
+        /// Get the number of immediate children active.
+        /// </summary>
+        /// <param name="targetTransform">The transform to look at's children.</param>
+        /// <returns>The number of active children transforms.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int GetActiveChildCount(this Transform targetTransform)
+        {
+            int counter = 0;
+            int childCount = targetTransform.childCount;
+            for (int i = 0; i < childCount; i++)
+            {
+                if (targetTransform.GetChild(i).gameObject.activeSelf)
+                {
+                    counter++;
+                }
+            }
+
+            return counter;
         }
 
         /// <summary>
@@ -106,26 +128,29 @@ namespace GDX
             return returnComponent;
         }
 
-
         /// <summary>
-        /// Get the number of immediate children active.
+        ///     Get an in scene path to the <paramref name="targetTransform"/>.
         /// </summary>
-        /// <param name="targetTransform">The transform to look at's children.</param>
-        /// <returns>The number of active children transforms.</returns>
+        /// <param name="targetTransform">The <see cref="Transform"/> which to derive a path from.</param>
+        /// <returns>A created path <see cref="System.String"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int GetActiveChildCount(this Transform targetTransform)
+        public static string GetScenePath(this Transform targetTransform)
         {
-            int counter = 0;
-            int childCount = targetTransform.childCount;
-            for (int i = 0; i < childCount; i++)
+            StringBuilder stringBuilder = new StringBuilder();
+            while ( targetTransform != null )
             {
-                if (targetTransform.GetChild(i).gameObject.activeSelf)
-                {
-                    counter++;
-                }
+                stringBuilder.Insert(0, targetTransform.name);
+                stringBuilder.Insert(0, '/');
+                targetTransform = targetTransform.parent;
             }
-
-            return counter;
+#if UNITY_EDITOR
+            if (targetTransform &&
+                UnityEditor.EditorUtility.IsPersistent(targetTransform) )
+            {
+                stringBuilder.Append( " [P]" );
+            }
+#endif
+            return stringBuilder.ToString();
         }
     }
 }

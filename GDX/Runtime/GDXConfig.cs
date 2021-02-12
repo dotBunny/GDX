@@ -76,6 +76,10 @@ namespace GDX
         /// </summary>
         public string developerBuildInfoBuildStreamArgument = "BUILD_STREAM";
 
+        /// <summary>
+        ///     Should a GDX scripting define symbol be added to all target build groups.
+        /// </summary>
+        public bool environmentScriptingDefineSymbol = false;
 
         /// <summary>
         ///     Should the default thread culture be set?
