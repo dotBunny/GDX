@@ -70,7 +70,7 @@ namespace GDX.Editor.Build
     ///     </list>
     /// </remarks>
 #if GDX_PLATFORMS
-    public class BuildInfoProvider : ClassicBuildPipelineCustomizer
+    public class BuildInfoProvider : Unity.Build.Classic.ClassicBuildPipelineCustomizer
     {
         /// <summary>
         ///     Cache if the provider/customizer actually was effective.
@@ -106,7 +106,7 @@ namespace GDX.Editor.Build
             {
                 string path = Path.Combine(Application.dataPath, config.developerBuildInfoPath);
                 Platform.EnsureFileFolderHierarchyExists(path);
-                File.WriteAllText(path), GetContent(config, false, Context.BuildConfigurationName));
+                File.WriteAllText(path, GetContent(config, false, Context.BuildConfigurationName));
 
                 CheckForAssemblyDefinition();
             }
