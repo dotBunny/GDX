@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `GDX.GameObjectExtensions` extended out to have:
   - `GetOrAddComponent()`
   - `GetScenePath()`
+- `ScriptingDefineProvider`
 
 ### Fixed
 - Platform's `ClassicBuildPipelineCustomizer` now properly referenced by `BuildInfoProvider`

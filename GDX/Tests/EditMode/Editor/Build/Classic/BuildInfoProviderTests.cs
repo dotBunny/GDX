@@ -2,7 +2,7 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX;
-using GDX.Editor.Build;
+using GDX.Editor.Build.Classic;
 using NUnit.Framework;
 
 namespace Editor.Build

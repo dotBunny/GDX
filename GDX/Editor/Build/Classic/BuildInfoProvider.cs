@@ -5,14 +5,17 @@ using System;
 using System.IO;
 using System.Text;
 using UnityEditor;
-using UnityEditor.Build;
-using UnityEditor.Build.Reporting;
 using UnityEngine;
 using GDX.Developer;
 
+#if !GDX_PLATFORMS
+using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
+#endif
+
 // ReSharper disable MemberCanBePrivate.Global
 
-namespace GDX.Editor.Build
+namespace GDX.Editor.Build.Classic
 {
     /// <summary>
     ///     <para>

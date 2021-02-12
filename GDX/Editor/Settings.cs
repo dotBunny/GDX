@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.IO;
 using GDX.Developer;
-using GDX.Editor.Build;
+using GDX.Editor.Build.Classic;
 using UnityEditor;
 using UnityEngine;
 
