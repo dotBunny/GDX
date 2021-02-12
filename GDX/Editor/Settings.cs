@@ -70,6 +70,8 @@ namespace GDX.Editor
                     GUILayout.Space(5);
                     Sections.CommandLineProcessor(settings);
                     GUILayout.Space(5);
+                    Sections.Environment(settings);
+                    GUILayout.Space(5);
                     Sections.Locale(settings);
 
                     // Apply any serialized setting changes
@@ -170,7 +172,6 @@ namespace GDX.Editor
                 "Output Path",
                 "The asset database relative path to output the file.");
 
-
             /// <summary>
             ///     Settings content for <see cref="GDXConfig.developerCommandLineParserArgumentPrefix" />.
             /// </summary>
@@ -184,6 +185,13 @@ namespace GDX.Editor
             public static readonly GUIContent CommandLineParserArgumentSplit = new GUIContent(
                 "Argument Split",
                 "The string used to split arguments from their values.");
+
+            /// <summary>
+            ///     Settings content for <see cref="GDXConfig.environmentScriptingDefineSymbol" />.
+            /// </summary>
+            public static readonly GUIContent EnvironmentScriptingDefineSymbol = new GUIContent(
+                "Ensure GDX Symbol",
+                "Should GDX make sure that there is a GDX scripting define symbol across all viable build target groups.");
 
             /// <summary>
             ///     A cached <see cref="GUIContent" /> containing a help symbol.
@@ -706,6 +714,22 @@ namespace GDX.Editor
                     Content.CommandLineParserArgumentPrefix);
                 EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentSplit"),
                     Content.CommandLineParserArgumentSplit);
+            }
+
+            public static void Environment(SerializedObject settings)
+            {
+                const string sectionID = "GDX.Environment";
+                GUI.enabled = true;
+
+                Layout.CreateSettingsSection(sectionID, false, "Environment");
+
+                if (!Layout.GetCachedEditorBoolean(sectionID))
+                {
+                    return;
+                }
+
+                EditorGUILayout.PropertyField(settings.FindProperty("environmentScriptingDefineSymbol"),
+                    Content.EnvironmentScriptingDefineSymbol);
             }
 
             /// <summary>

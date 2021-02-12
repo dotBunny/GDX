@@ -244,14 +244,14 @@ namespace GDX.Collections.Generic
             }
         }
 
+#pragma warning disable 414
 #if UNITY_EDITOR
         /// <summary>
         ///     Editor only data indicating if the property drawer is expanded.
         /// </summary>
-#pragma warning disable 414
         // ReSharper disable once NotAccessedField.Local
         [HideInInspector] [SerializeField] private bool drawerExpanded;
-#pragma warning restore 414
+
         /// <summary>
         ///     Is the provided key a valid key (unique).
         /// </summary>
@@ -268,5 +268,6 @@ namespace GDX.Collections.Generic
         [SerializeField] private bool _padForSerializationBoolB;
         [SerializeField] private TKey _padForSerializationKey;
 #endif
+#pragma warning restore 414
     }
 }

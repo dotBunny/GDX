@@ -32,7 +32,7 @@
         },
         {
             "name": "com.unity.platforms",
-            "expression": "0.8.0",
+            "expression": "0.9",
             "define": "GDX_PLATFORMS"
         }
     ],

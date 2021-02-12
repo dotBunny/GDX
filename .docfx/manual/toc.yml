@@ -15,5 +15,7 @@
       href: contributing\design-guidelines.md
     - name: Documentation
       href: contributing\documentation.md  
+    - name: Kanban Board
+      href: https://github.com/dotBunny/GDX/projects/1 
 - name: Security Policy
   href: security.md

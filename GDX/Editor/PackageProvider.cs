@@ -124,8 +124,10 @@ namespace GDX.Editor
         {
 
             // Make sure that the project has the GDX preprocessor added
-            // TODO: This should happen periodically? force it on builds?
-            EnsureScriptingDefineSymbol();
+            if (ConfigProvider.Get().environmentScriptingDefineSymbol)
+            {
+                EnsureScriptingDefineSymbol();
+            }
 
             // Find Local Definition
             // ReSharper disable once StringLiteralTypo

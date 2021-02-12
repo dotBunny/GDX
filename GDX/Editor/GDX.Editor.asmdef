@@ -4,7 +4,9 @@
     "references": [
         "GDX",
         "Unity.ScriptableBuildPipeline",
-        "Unity.ScriptableBuildPipeline.Editor"
+        "Unity.ScriptableBuildPipeline.Editor",
+        "Unity.Build",
+        "Unity.Build.Classic"
     ],
     "includePlatforms": [
         "Editor"
@@ -15,6 +17,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.platforms",
+            "expression": "0.9",
+            "define": "GDX_PLATFORMS"
+        }
+    ],
     "noEngineReferences": false
 }
