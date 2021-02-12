@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `GetOrAddComponent()`
   - `GetScenePath()`
 
+### Fixed
+- Platform's `ClassicBuildPipelineCustomizer` now properly referenced by `BuildInfoProvider`
+
 ## [1.2.4] - 2021-02-11
 ***"Cold Brew"***
 > Bugfixes, feedback, and features, just what a growing library needs.

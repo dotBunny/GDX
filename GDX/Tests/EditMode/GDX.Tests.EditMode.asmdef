@@ -5,6 +5,7 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Unity.PerformanceTesting",
+        "Unity.Build.Classic",
         "GDX",
         "GDX.Editor"
     ],
