@@ -37,6 +37,6 @@ namespace GDX
             Message = message;
             MessageType = messageType;
         }
-    }
 #endif
+    }
 }
