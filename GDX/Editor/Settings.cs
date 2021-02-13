@@ -503,7 +503,6 @@ namespace GDX.Editor
                     GUILayout.EndHorizontal();
 
                     // Handle additional information
-
                     switch (UpdateProvider.LocalPackage.InstallationMethod)
                     {
                         case PackageProvider.InstallationType.UPMBranch:
@@ -513,8 +512,7 @@ namespace GDX.Editor
                             GUILayout.Label("Source Branch:", EditorStyles.boldLabel,
                                 Styles.FixedWidth130LayoutOptions);
                             GUILayout.Label(!string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
-                                ? UpdateProvider.LocalPackage.SourceTag
-                                : "N/A");
+                                ? UpdateProvider.LocalPackage.SourceTag : "N/A");
                             GUILayout.FlexibleSpace();
                             GUILayout.EndHorizontal();
                             break;
@@ -524,8 +522,7 @@ namespace GDX.Editor
                             GUILayout.Label("Source Tag:", EditorStyles.boldLabel,
                                 Styles.FixedWidth130LayoutOptions);
                             GUILayout.Label(!string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
-                                ? UpdateProvider.LocalPackage.SourceTag
-                                : "N/A");
+                                ? UpdateProvider.LocalPackage.SourceTag : "N/A");
                             GUILayout.FlexibleSpace();
                             GUILayout.EndHorizontal();
                             break;
@@ -535,11 +532,20 @@ namespace GDX.Editor
                             GUILayout.Label("Source Commit:", EditorStyles.boldLabel,
                                 Styles.FixedWidth130LayoutOptions);
                             GUILayout.Label(!string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
-                                ? UpdateProvider.LocalPackage.SourceTag
-                                : "N/A");
+                                ? UpdateProvider.LocalPackage.SourceTag : "N/A");
                             GUILayout.FlexibleSpace();
                             GUILayout.EndHorizontal();
                             break;
+                    }
+
+                    // Show remote version if we have something to show
+                    if (UpdateProvider.UpdatePackageDefinition != null)
+                    {
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label("Remote Version:", EditorStyles.boldLabel, Styles.FixedWidth130LayoutOptions);
+                        GUILayout.Label(UpdateProvider.UpdatePackageDefinition.version);
+                        GUILayout.FlexibleSpace();
+                        GUILayout.EndHorizontal();
                     }
 
                     GUILayout.BeginHorizontal();

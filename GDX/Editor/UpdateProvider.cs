@@ -244,8 +244,15 @@ namespace GDX.Editor
                 {
 #endif
                 // Get content of the package definition file
+                string updateLocation = "main";
+                if (LocalPackage.InstallationMethod == PackageProvider.InstallationType.GitHubBranch ||
+                    LocalPackage.InstallationMethod == PackageProvider.InstallationType.UPMBranch)
+                {
+                    updateLocation = LocalPackage.SourceTag;
+                }
+
                 string packageJsonContent =
-                    webClient.DownloadString("https://raw.githubusercontent.com/dotBunny/GDX/main/package.json");
+                    webClient.DownloadString($"https://raw.githubusercontent.com/dotBunny/GDX/{updateLocation}/package.json");
 
                 // Return back the parsed object or null if there was no content.
                 return string.IsNullOrEmpty(packageJsonContent)
