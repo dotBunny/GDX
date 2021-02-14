@@ -129,6 +129,7 @@ namespace GDX.Editor
                     break;
 
                 case PackageProvider.InstallationType.GitHub:
+                case PackageProvider.InstallationType.GitHubBranch:
                     if (EditorUtility.DisplayDialog("GDX Update Available",
                         $"{messageStart}Would you like your cloned repository updated?\n\nIMPORTANT!\n\nThis will \"reset hard\" and \"pull\" the repository, wiping any local changes made.",
                         "Yes", "No"))
@@ -139,7 +140,6 @@ namespace GDX.Editor
                     {
                         SetLastNotifiedVersion(UpdatePackageDefinition.version);
                     }
-
                     break;
                 case PackageProvider.InstallationType.Assets:
                     if (EditorUtility.DisplayDialog("GDX Update Available",
@@ -411,14 +411,11 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        ///     Upgrade the package, with the understanding that it was added via UPM.
+        ///     Removes the com.dotbunny.gdx entry from the Manifest Lockfile, forcing the package manager to
+        ///     reset what version the package is currently at.
         /// </summary>
-        private static void UpgradeUnityPackageManager()
+        private static void RemovePackageManifestLockFileEntry()
         {
-            // Delete the cached package if found
-            string cacheFolderPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6),
-                "Library", "PackageCache");
-
             // We're going to remove the entry from the lockfile triggering it to record an update
             string packageManifestLockFile =
                 Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6), "Packages",
@@ -465,6 +462,18 @@ namespace GDX.Editor
                     File.WriteAllLines(packageManifestLockFile, newFileContent.ToArray());
                 }
             }
+        }
+
+        /// <summary>
+        ///     Upgrade the package, with the understanding that it was added via UPM.
+        /// </summary>
+        private static void UpgradeUnityPackageManager()
+        {
+            // Delete the cached package if found
+            string cacheFolderPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6),
+                "Library", "PackageCache");
+
+            RemovePackageManifestLockFileEntry();
         }
     }
 }
