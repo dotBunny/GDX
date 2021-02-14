@@ -294,8 +294,10 @@ namespace GDX.Editor
                 }
     #endif
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                // We will end up here if the formulated Uri is bad.
+                UnityEngine.Debug.LogWarning(e.Message);
                 return;
             }
             finally
