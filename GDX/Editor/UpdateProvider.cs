@@ -1,13 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
 using GDX.IO.Compression;
 using UnityEditor;
-using UnityEditor.PackageManager;
 using UnityEditor.VersionControl;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace GDX.Editor
 {
@@ -112,6 +113,8 @@ namespace GDX.Editor
             {
                 // Currently this option doesnt function due to the IsUpgrade check, but its WIP
                 case PackageProvider.InstallationType.UPM:
+                case PackageProvider.InstallationType.UPMBranch:
+                case PackageProvider.InstallationType.UPMTag:
                     if (EditorUtility.DisplayDialog("GDX Update Available",
                         $"{messageStart}Would you like to have the package attempt to upgrade itself through UPM to the newest version automatically?",
                         "Yes", "No"))
@@ -130,12 +133,13 @@ namespace GDX.Editor
                         $"{messageStart}Would you like your cloned repository updated?\n\nIMPORTANT!\n\nThis will \"reset hard\" and \"pull\" the repository, wiping any local changes made.",
                         "Yes", "No"))
                     {
-                       UpgradeGitHub();
+                        UpgradeGitHub();
                     }
                     else
                     {
                         SetLastNotifiedVersion(UpdatePackageDefinition.version);
                     }
+
                     break;
                 case PackageProvider.InstallationType.Assets:
                     if (EditorUtility.DisplayDialog("GDX Update Available",
@@ -185,7 +189,7 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        /// Can the local package be upgraded automatically through various means?
+        ///     Can the local package be upgraded automatically through various means?
         /// </summary>
         /// <returns>A true/false answer to the question.</returns>
         public static bool IsUpgradable()
@@ -252,7 +256,8 @@ namespace GDX.Editor
                 }
 
                 string packageJsonContent =
-                    webClient.DownloadString($"https://raw.githubusercontent.com/dotBunny/GDX/{updateLocation}/package.json");
+                    webClient.DownloadString(
+                        $"https://raw.githubusercontent.com/dotBunny/GDX/{updateLocation}/package.json");
 
                 // Return back the parsed object or null if there was no content.
                 return string.IsNullOrEmpty(packageJsonContent)
@@ -282,22 +287,22 @@ namespace GDX.Editor
             EditorUtility.DisplayProgressBar("GDX", "Downloading Update ...", 0.25f);
             try
             {
-    #if UNITY_2020_2_OR_NEWER
+#if UNITY_2020_2_OR_NEWER
                 using WebClient webClient = new WebClient();
                 webClient.DownloadFile(GitHubLatestUri + UpdatePackageDefinition.version + ".tar.gz",
                     tempFile);
-    #else
+#else
                 using (WebClient webClient = new WebClient())
                 {
                     webClient.DownloadFile(GitHubLatestUri + UpdatePackageDefinition.version + ".tar.gz",
                         tempFile);
                 }
-    #endif
+#endif
             }
             catch (Exception e)
             {
                 // We will end up here if the formulated Uri is bad.
-                UnityEngine.Debug.LogWarning(e.Message);
+                Debug.LogWarning(e.Message);
                 return;
             }
             finally
@@ -411,12 +416,55 @@ namespace GDX.Editor
         private static void UpgradeUnityPackageManager()
         {
             // Delete the cached package if found
-            string cacheFolderPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6), "Library", "PackageCache");
-            string packageManifestLockFile = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6), "Packages", "packages-lock.json");
+            string cacheFolderPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6),
+                "Library", "PackageCache");
 
-            // TODO: Unsure if this actually will work if it is not an internal package?
-            // SPOILER: It doesnt
-            Client.Add(PackageProvider.PackageName);
+            // We're going to remove the entry from the lockfile triggering it to record an update
+            string packageManifestLockFile =
+                Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6), "Packages",
+                    "packages-lock.json");
+
+            if (File.Exists(packageManifestLockFile))
+            {
+                string[] lockFileContents = File.ReadAllLines(packageManifestLockFile);
+                int lockFileLength = lockFileContents.Length;
+                int depth = 0;
+
+                List<string> newFileContent = new List<string>(lockFileLength);
+                for (int i = 0; i < lockFileLength; i++)
+                {
+                    // Identify the block
+                    if (lockFileContents[i].Trim() == "\"com.dotbunny.gdx\": {")
+                    {
+                        depth++;
+                        continue;
+                    }
+
+                    // Rebuild replacement file while were iterating
+                    if (depth == 0)
+                    {
+                        newFileContent.Add(lockFileContents[i]);
+                    }
+                    else
+                    {
+                        if (lockFileContents[i].Contains("{"))
+                        {
+                            depth++;
+                        }
+
+                        if (lockFileContents[i].Contains("}"))
+                        {
+                            depth--;
+                        }
+                    }
+                }
+
+                // We have a change to write
+                if (newFileContent.Count != lockFileLength)
+                {
+                    File.WriteAllLines(packageManifestLockFile, newFileContent.ToArray());
+                }
+            }
         }
     }
 }
