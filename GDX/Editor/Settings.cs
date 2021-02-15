@@ -581,6 +581,15 @@ namespace GDX.Editor
                         {
                             UpdateProvider.CheckForUpdates();
                         }
+
+                        // Special allowance to force pull dev branch to avoid having to increment the version code.
+                        if (UpdateProvider.LocalPackage.SourceTag == "dev")
+                        {
+                            if (GUILayout.Button("Force Upgrade", Styles.ButtonStyle))
+                            {
+                                UpdateProvider.AttemptUpgrade(true);
+                            }
+                        }
                     }
 
                     EditorGUILayout.EndVertical();

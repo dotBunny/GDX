@@ -94,11 +94,12 @@ namespace GDX.Editor
         /// <summary>
         ///     Attempt to do the upgrade of the package based on the established <see cref="PackageProvider.InstallationType" />.
         /// </summary>
-        public static void AttemptUpgrade()
+        /// <param name="forceUpgrade">Should we bypass all safety checks?</param>
+        public static void AttemptUpgrade(bool forceUpgrade = false)
         {
             string messageStart =
                 $"There is a new version of GDX available ({UpdatePackageDefinition.version}).\n";
-            if (!IsUpgradable())
+            if (!forceUpgrade && !IsUpgradable())
             {
                 EditorUtility.DisplayDialog("GDX Update Available",
                     $"{messageStart}Unfortunately we are unable to determine a proper upgrade path for your package. We are UNABLE to upgrade your package for you automatically.",
