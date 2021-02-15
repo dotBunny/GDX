@@ -512,7 +512,8 @@ namespace GDX.Editor
                             GUILayout.Label("Source Branch:", EditorStyles.boldLabel,
                                 Styles.FixedWidth130LayoutOptions);
                             GUILayout.Label(!string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
-                                ? UpdateProvider.LocalPackage.SourceTag : "N/A");
+                                ? UpdateProvider.LocalPackage.SourceTag
+                                : "N/A");
                             GUILayout.FlexibleSpace();
                             GUILayout.EndHorizontal();
                             break;
@@ -522,7 +523,8 @@ namespace GDX.Editor
                             GUILayout.Label("Source Tag:", EditorStyles.boldLabel,
                                 Styles.FixedWidth130LayoutOptions);
                             GUILayout.Label(!string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
-                                ? UpdateProvider.LocalPackage.SourceTag : "N/A");
+                                ? UpdateProvider.LocalPackage.SourceTag
+                                : "N/A");
                             GUILayout.FlexibleSpace();
                             GUILayout.EndHorizontal();
                             break;
@@ -532,7 +534,8 @@ namespace GDX.Editor
                             GUILayout.Label("Source Commit:", EditorStyles.boldLabel,
                                 Styles.FixedWidth130LayoutOptions);
                             GUILayout.Label(!string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
-                                ? UpdateProvider.LocalPackage.SourceTag : "N/A");
+                                ? UpdateProvider.LocalPackage.SourceTag
+                                : "N/A");
                             GUILayout.FlexibleSpace();
                             GUILayout.EndHorizontal();
                             break;
@@ -583,7 +586,11 @@ namespace GDX.Editor
                         }
 
                         // Special allowance to force pull dev branch to avoid having to increment the version code.
-                        if (UpdateProvider.LocalPackage.SourceTag == "dev")
+                        if ((UpdateProvider.LocalPackage.InstallationMethod ==
+                             PackageProvider.InstallationType.GitHubBranch ||
+                             UpdateProvider.LocalPackage.InstallationMethod ==
+                             PackageProvider.InstallationType.UPMBranch) &&
+                            UpdateProvider.LocalPackage.SourceTag == "dev")
                         {
                             if (GUILayout.Button("Force Upgrade", Styles.ButtonStyle))
                             {
