@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.6] - 2021-02-15
+***"UPM Updates"***
+> Starting to frame up the ability to update package adds from GitHub.
+
+### Added
+- Some functionality around being able to update a UPM based package, by removing the entry in the lockfile, a package will update.
+
+### Fixed
+- `NavMeshPathExtensions` no longer breaks compiling without `com.unity.mathematics`.
+
 ## [1.2.5] - 2021-02-12
 ***"Hello World"***
 > Enough critical mass has been hit with functionality that with this release we will start to look at publicizing the package more.

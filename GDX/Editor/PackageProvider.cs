@@ -337,10 +337,11 @@ namespace GDX.Editor
                     string versionLine = workingLine.Substring(12, workingLine.Length - (12 + 2));
                     string tag = versionLine.GetAfterLast("#");
 
-                    // No actual suffix, interesting.
-                    if (string.IsNullOrEmpty(tag))
+
+                    // No actual tag found, so we are a straight UPM but we should consider it main line
+                    if (tag == versionLine)
                     {
-                        return (InstallationType.UPM, null);
+                        return (InstallationType.UPM, "main");
                     }
 
                     // All of our release tags start with 'v'

@@ -94,7 +94,7 @@ namespace GDX
                 float nextCornerLength = calculatedLength +
                                          Vector3.Distance(targetNavMeshPath.corners[i], targetNavMeshPath.corners[i + 1]);
 
-                if (Math.Abs(nextCornerLength - distance) < Mathf.Epsilon)
+                if (Mathf.Abs(nextCornerLength - distance) < Mathf.Epsilon)
                 {
                     return targetNavMeshPath.corners[i + 1];
                 }
