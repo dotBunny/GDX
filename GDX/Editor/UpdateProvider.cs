@@ -130,6 +130,7 @@ namespace GDX.Editor
 
                 case PackageProvider.InstallationType.GitHub:
                 case PackageProvider.InstallationType.GitHubBranch:
+                case PackageProvider.InstallationType.GitHubTag:
                     if (EditorUtility.DisplayDialog("GDX Update Available",
                         $"{messageStart}Would you like your cloned repository updated?\n\nIMPORTANT!\n\nThis will \"reset hard\" and \"pull\" the repository, wiping any local changes made.",
                         "Yes", "No"))
@@ -196,9 +197,19 @@ namespace GDX.Editor
         {
             switch (LocalPackage.InstallationMethod)
             {
+
                 case PackageProvider.InstallationType.GitHub:
+                case PackageProvider.InstallationType.GitHubBranch:
+                case PackageProvider.InstallationType.GitHubTag:
+                case PackageProvider.InstallationType.UPM:
+                case PackageProvider.InstallationType.UPMBranch:
+                case PackageProvider.InstallationType.UPMTag:
                 case PackageProvider.InstallationType.Assets:
                     return true;
+                case PackageProvider.InstallationType.Unknown:
+                case PackageProvider.InstallationType.UPMCommit:
+                case PackageProvider.InstallationType.UPMLocal:
+                case PackageProvider.InstallationType.GitHubCommit:
                 default:
                     return false;
             }
@@ -414,7 +425,7 @@ namespace GDX.Editor
         ///     Removes the com.dotbunny.gdx entry from the Manifest Lockfile, forcing the package manager to
         ///     reset what version the package is currently at.
         /// </summary>
-        private static void RemovePackageManifestLockFileEntry()
+        public static void RemovePackageManifestLockFileEntry()
         {
             // We're going to remove the entry from the lockfile triggering it to record an update
             string packageManifestLockFile =
@@ -473,7 +484,10 @@ namespace GDX.Editor
             string cacheFolderPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6),
                 "Library", "PackageCache");
 
+            // Remove entry from lock file
             RemovePackageManifestLockFileEntry();
+
+            // Do we need to delete the actual folder?
         }
     }
 }
