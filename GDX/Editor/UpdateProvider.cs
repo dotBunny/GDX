@@ -1,13 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
 using GDX.IO.Compression;
 using UnityEditor;
-using UnityEditor.PackageManager;
 using UnityEditor.VersionControl;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace GDX.Editor
 {
@@ -112,6 +113,8 @@ namespace GDX.Editor
             {
                 // Currently this option doesnt function due to the IsUpgrade check, but its WIP
                 case PackageProvider.InstallationType.UPM:
+                case PackageProvider.InstallationType.UPMBranch:
+                case PackageProvider.InstallationType.UPMTag:
                     if (EditorUtility.DisplayDialog("GDX Update Available",
                         $"{messageStart}Would you like to have the package attempt to upgrade itself through UPM to the newest version automatically?",
                         "Yes", "No"))
@@ -126,11 +129,13 @@ namespace GDX.Editor
                     break;
 
                 case PackageProvider.InstallationType.GitHub:
+                case PackageProvider.InstallationType.GitHubBranch:
+                case PackageProvider.InstallationType.GitHubTag:
                     if (EditorUtility.DisplayDialog("GDX Update Available",
                         $"{messageStart}Would you like your cloned repository updated?\n\nIMPORTANT!\n\nThis will \"reset hard\" and \"pull\" the repository, wiping any local changes made.",
                         "Yes", "No"))
                     {
-                       UpgradeGitHub();
+                        UpgradeGitHub();
                     }
                     else
                     {
@@ -185,16 +190,26 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        /// Can the local package be upgraded automatically through various means?
+        ///     Can the local package be upgraded automatically through various means?
         /// </summary>
         /// <returns>A true/false answer to the question.</returns>
         public static bool IsUpgradable()
         {
             switch (LocalPackage.InstallationMethod)
             {
+
                 case PackageProvider.InstallationType.GitHub:
+                case PackageProvider.InstallationType.GitHubBranch:
+                case PackageProvider.InstallationType.GitHubTag:
+                case PackageProvider.InstallationType.UPM:
+                case PackageProvider.InstallationType.UPMBranch:
+                case PackageProvider.InstallationType.UPMTag:
                 case PackageProvider.InstallationType.Assets:
                     return true;
+                case PackageProvider.InstallationType.Unknown:
+                case PackageProvider.InstallationType.UPMCommit:
+                case PackageProvider.InstallationType.UPMLocal:
+                case PackageProvider.InstallationType.GitHubCommit:
                 default:
                     return false;
             }
@@ -244,8 +259,16 @@ namespace GDX.Editor
                 {
 #endif
                 // Get content of the package definition file
+                string updateLocation = "main";
+                if (LocalPackage.InstallationMethod == PackageProvider.InstallationType.GitHubBranch ||
+                    LocalPackage.InstallationMethod == PackageProvider.InstallationType.UPMBranch)
+                {
+                    updateLocation = LocalPackage.SourceTag;
+                }
+
                 string packageJsonContent =
-                    webClient.DownloadString("https://raw.githubusercontent.com/dotBunny/GDX/main/package.json");
+                    webClient.DownloadString(
+                        $"https://raw.githubusercontent.com/dotBunny/GDX/{updateLocation}/package.json");
 
                 // Return back the parsed object or null if there was no content.
                 return string.IsNullOrEmpty(packageJsonContent)
@@ -275,20 +298,22 @@ namespace GDX.Editor
             EditorUtility.DisplayProgressBar("GDX", "Downloading Update ...", 0.25f);
             try
             {
-    #if UNITY_2020_2_OR_NEWER
+#if UNITY_2020_2_OR_NEWER
                 using WebClient webClient = new WebClient();
                 webClient.DownloadFile(GitHubLatestUri + UpdatePackageDefinition.version + ".tar.gz",
                     tempFile);
-    #else
+#else
                 using (WebClient webClient = new WebClient())
                 {
                     webClient.DownloadFile(GitHubLatestUri + UpdatePackageDefinition.version + ".tar.gz",
                         tempFile);
                 }
-    #endif
+#endif
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                // We will end up here if the formulated Uri is bad.
+                Debug.LogWarning(e.Message);
                 return;
             }
             finally
@@ -397,17 +422,72 @@ namespace GDX.Editor
         }
 
         /// <summary>
+        ///     Removes the com.dotbunny.gdx entry from the Manifest Lockfile, forcing the package manager to
+        ///     reset what version the package is currently at.
+        /// </summary>
+        public static void RemovePackageManifestLockFileEntry()
+        {
+            // We're going to remove the entry from the lockfile triggering it to record an update
+            string packageManifestLockFile =
+                Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6), "Packages",
+                    "packages-lock.json");
+
+            if (File.Exists(packageManifestLockFile))
+            {
+                string[] lockFileContents = File.ReadAllLines(packageManifestLockFile);
+                int lockFileLength = lockFileContents.Length;
+                int depth = 0;
+
+                List<string> newFileContent = new List<string>(lockFileLength);
+                for (int i = 0; i < lockFileLength; i++)
+                {
+                    // Identify the block
+                    if (lockFileContents[i].Trim() == "\"com.dotbunny.gdx\": {")
+                    {
+                        depth++;
+                        continue;
+                    }
+
+                    // Rebuild replacement file while were iterating
+                    if (depth == 0)
+                    {
+                        newFileContent.Add(lockFileContents[i]);
+                    }
+                    else
+                    {
+                        if (lockFileContents[i].Contains("{"))
+                        {
+                            depth++;
+                        }
+
+                        if (lockFileContents[i].Contains("}"))
+                        {
+                            depth--;
+                        }
+                    }
+                }
+
+                // We have a change to write
+                if (newFileContent.Count != lockFileLength)
+                {
+                    File.WriteAllLines(packageManifestLockFile, newFileContent.ToArray());
+                }
+            }
+        }
+
+        /// <summary>
         ///     Upgrade the package, with the understanding that it was added via UPM.
         /// </summary>
         private static void UpgradeUnityPackageManager()
         {
             // Delete the cached package if found
-            string cacheFolderPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6), "Library", "PackageCache");
-            string packageManifestLockFile = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6), "Packages", "packages-lock.json");
+            string cacheFolderPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6),
+                "Library", "PackageCache");
 
-            // TODO: Unsure if this actually will work if it is not an internal package?
-            // SPOILER: It doesnt
-            Client.Add(PackageProvider.PackageName);
+            // Remove entry from lock file
+            RemovePackageManifestLockFileEntry();
+
+            // Do we need to delete the actual folder?
         }
     }
 }
