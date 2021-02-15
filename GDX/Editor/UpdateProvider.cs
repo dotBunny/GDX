@@ -422,16 +422,16 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        ///     Removes the com.dotbunny.gdx entry from the Manifest Lockfile, forcing the package manager to
-        ///     reset what version the package is currently at.
+        ///     Upgrade the package, with the understanding that it was added via UPM.
         /// </summary>
-        public static void RemovePackageManifestLockFileEntry()
+        private static void UpgradeUnityPackageManager()
         {
             // We're going to remove the entry from the lockfile triggering it to record an update
             string packageManifestLockFile =
                 Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6), "Packages",
                     "packages-lock.json");
 
+            // We can only do this if the file exists!
             if (File.Exists(packageManifestLockFile))
             {
                 string[] lockFileContents = File.ReadAllLines(packageManifestLockFile);
@@ -473,21 +473,6 @@ namespace GDX.Editor
                     File.WriteAllLines(packageManifestLockFile, newFileContent.ToArray());
                 }
             }
-        }
-
-        /// <summary>
-        ///     Upgrade the package, with the understanding that it was added via UPM.
-        /// </summary>
-        private static void UpgradeUnityPackageManager()
-        {
-            // Delete the cached package if found
-            string cacheFolderPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6),
-                "Library", "PackageCache");
-
-            // Remove entry from lock file
-            RemovePackageManifestLockFileEntry();
-
-            // Do we need to delete the actual folder?
         }
     }
 }
