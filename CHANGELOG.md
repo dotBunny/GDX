@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - UPM and GitHub installation methods utilizing the`dev` branch will have a "Force Update" action available to them in the **Project Settings**.
+- `PlatformExtensions` now has a `IsHeadless()` method for determining if the application is running without a graphics device initialized; aka a headless server.
 
 ## [1.2.6] - 2021-02-15
 ***"UPM Updates"***
