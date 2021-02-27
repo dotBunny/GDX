@@ -1,4 +1,4 @@
-﻿// dotBunny licenses this file to you under the MIT license.
+// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
 using System.Runtime.CompilerServices;
@@ -49,7 +49,6 @@ namespace GDX.Collections
         /// <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
         public NativeSparseSet(int initialCapacity, Allocator allocator, NativeArrayOptions nativeArrayOptions)
         {
-            ++initialCapacity;
             DenseArray = new NativeArray<int>(initialCapacity, allocator, nativeArrayOptions);
             SparseArray = new NativeArray<int>(initialCapacity, allocator, nativeArrayOptions);
             Count = 0;
