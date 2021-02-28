@@ -314,7 +314,7 @@ namespace GDX.Editor
             catch (Exception e)
             {
                 // We will end up here if the formulated Uri is bad.
-                Debug.LogWarning(e.Message);
+                Trace.Output(Trace.TraceLevel.Warning, e.Message);
                 return;
             }
             finally
