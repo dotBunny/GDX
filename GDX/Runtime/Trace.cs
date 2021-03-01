@@ -13,6 +13,9 @@ namespace GDX
     /// </summary>
     public static class Trace
     {
+        /// <summary>
+        /// Trace Levels
+        /// </summary>
         [Flags]
         public enum TraceLevel : ushort
         {
