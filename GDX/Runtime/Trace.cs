@@ -2,13 +2,15 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using UnityEngine.Diagnostics;
+using Debug = System.Diagnostics.Debug;
 using Object = UnityEngine.Object;
 
 namespace GDX
 {
+    /// <summary>
+    ///     Trace logging functionality.
+    /// </summary>
     public static class Trace
     {
         public enum TraceLevel
@@ -39,6 +41,9 @@ namespace GDX
             /// </summary>
             Exception = 40,
 
+            /// <summary>
+            ///     An assertion based event has occured and has some sort of messaging to be recorded.
+            /// </summary>
             Assertion = 50,
 
             /// <summary>
@@ -47,75 +52,50 @@ namespace GDX
             Fatal = 100
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Assertion(object message, Object context = null)
-        {
-            Output(TraceLevel.Assertion, message, context);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Error(object message, Object context = null)
-        {
-            Output(TraceLevel.Error, message, context);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Exception(Exception ex, Object context = null)
-        {
-            Output(TraceLevel.Exception, ex, context);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Fatal(object message, Object context = null)
-        {
-            Output(TraceLevel.Fatal, message, context);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Info(object message, Object context = null)
-        {
-            Output(TraceLevel.Info, message, context);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Log(object message, Object context = null)
-        {
-            Output(TraceLevel.Log, message, context);
-        }
-
         /// <summary>
+        ///     Log a trace message to the appropriate subscribers and the Unity console where applicable.
         /// </summary>
-        /// <param name="level"></param>
-        /// <param name="traceObject"></param>
-        /// <param name="contextObject"></param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        /// <param name="level">The <see cref="TraceLevel" /> of the particular message.</param>
+        /// <param name="traceObject">An <see cref="object" /> representing the message to be recorded.</param>
+        /// <param name="contextObject">An <see cref="UnityEngine.Object" /> indicating context for the given message.</param>
         public static void Output(TraceLevel level, object traceObject, Object contextObject = null)
         {
             // Get a reference to the config
             // TODO: Would it be better to cache this?
             GDXConfig config = GDXConfig.Get();
 
-#if UNITY_EDITOR
-            if (level < config.traceEditorMinimumLevel)
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (level < config.traceDevelopmentMinimumLevel)
+            {
+                return;
+            }
+#elif DEBUG
+            if (level < config.traceDebugMinimumLevel)
             {
                 return;
             }
 #else
-            if (level < config.traceBuildMinimumLevel)
+            if (level < config.traceReleaseMinimumLevel)
             {
                 return;
             }
 #endif
 
-
             // This will output to anything internally registered for tracing (IDE consoles for example)
             Debug.WriteLine(traceObject);
 
             // Is outputting to the Unity console enabled?
-            if (!config.traceOutputToUnityConsole)
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (!config.traceDevelopmentOutputToUnityConsole)
             {
                 return;
             }
+#elif DEBUG
+            if (!config.traceDebugOutputToUnityConsole)
+            {
+                return;
+            }
+#endif
 
             // Figure out what path to take based on the level
             switch (level)
@@ -149,17 +129,6 @@ namespace GDX
                     break;
                 // ReSharper restore RedundantCaseLabel
             }
-        }
-
-        public static void OutputFormat(TraceLevel level, Object contextObject, string format, params object[] args)
-        {
-            Output(level, string.Format(format, args), contextObject);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Warning(object message, Object context = null)
-        {
-            Output(TraceLevel.Warning, message, context);
         }
     }
 }

@@ -82,19 +82,29 @@ namespace GDX
         public bool environmentScriptingDefineSymbol = false;
 
         /// <summary>
-        ///     What is the minimum level of traces which should be processed and logged by GDX in the editor?
+        ///     What is the minimum level of traces which should be processed and logged by GDX in the editor or development builds?
         /// </summary>
-        public Trace.TraceLevel traceEditorMinimumLevel = Trace.TraceLevel.Info;
+        public Trace.TraceLevel traceDevelopmentMinimumLevel = Trace.TraceLevel.Info;
 
         /// <summary>
-        ///     What is the minimum level of traces which should be processed and logged by GDX in actual builds?
+        ///     What is the minimum level of traces which should be processed and logged by GDX in debug builds?
         /// </summary>
-        public Trace.TraceLevel traceBuildMinimumLevel = Trace.TraceLevel.Warning;
+        public Trace.TraceLevel traceDebugMinimumLevel = Trace.TraceLevel.Log;
 
         /// <summary>
-        ///     Should GDX based traces output to the Unity console?
+        ///     What is the minimum level of traces which should be processed and logged by GDX in release builds?
         /// </summary>
-        public bool traceOutputToUnityConsole = true;
+        public Trace.TraceLevel traceReleaseMinimumLevel = Trace.TraceLevel.Warning;
+
+        /// <summary>
+        ///     Should GDX based traces output to the Unity console in the editor or development builds?
+        /// </summary>
+        public bool traceDevelopmentOutputToUnityConsole = true;
+
+        /// <summary>
+        ///     Should GDX based traces output to the Unity console in debug builds?
+        /// </summary>
+        public bool traceDebugOutputToUnityConsole = true;
 
         /// <summary>
         ///     Should the default thread culture be set?
