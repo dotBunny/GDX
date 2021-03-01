@@ -13,7 +13,8 @@ namespace GDX
     /// </summary>
     public static class Trace
     {
-        public enum TraceLevel
+        [Flags]
+        public enum TraceLevel : ushort
         {
             /// <summary>
             ///     A trivial informational entry.
@@ -23,33 +24,33 @@ namespace GDX
             /// <summary>
             ///     An entry indicating something which might be useful to provide context.
             /// </summary>
-            Log = 10,
+            Log = 1,
 
             /// <summary>
             ///     An issue has been found but handled.
             /// </summary>
-            Warning = 20,
+            Warning = 2,
 
             /// <summary>
             ///     An error has occurred which may be recoverable, but notification is required.
             /// </summary>
-            Error = 30,
+            Error = 4,
 
             /// <summary>
             ///     An exception has occured and needs to be flagged up for resolution. The should never happen in a release
             ///     environment.
             /// </summary>
-            Exception = 40,
+            Exception = 8,
 
             /// <summary>
             ///     An assertion based event has occured and has some sort of messaging to be recorded.
             /// </summary>
-            Assertion = 50,
+            Assertion = 16,
 
             /// <summary>
             ///     A fatal error has occured which needs to be logged, and the program will subsequently crash.
             /// </summary>
-            Fatal = 100
+            Fatal = 32
         }
 
         /// <summary>
@@ -60,22 +61,23 @@ namespace GDX
         /// <param name="contextObject">An <see cref="UnityEngine.Object" /> indicating context for the given message.</param>
         public static void Output(TraceLevel level, object traceObject, Object contextObject = null)
         {
+
             // Get a reference to the config
             // TODO: Would it be better to cache this?
             GDXConfig config = GDXConfig.Get();
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            if (level < config.traceDevelopmentMinimumLevel)
+            if (!config.traceDevelopmentLevels.HasFlags(level))
             {
                 return;
             }
 #elif DEBUG
-            if (level < config.traceDebugMinimumLevel)
+            if (config.traceDebugLevels.HasFlags(level))
             {
                 return;
             }
 #else
-            if (level < config.traceReleaseMinimumLevel)
+            if (config.traceReleaseLevels.HasFlags(level))
             {
                 return;
             }

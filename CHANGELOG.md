@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - UPM and GitHub installation methods utilizing the`dev` branch will have a "Force Update" action available to them in the **Project Settings**.
 - `PlatformExtensions` now has a `IsHeadless()` method for determining if the application is running without a graphics device initialized; aka a headless server.
+- `EnumExtensions` has a faster `HasFlags()` method for working with flags. 
 - `PoolingSystem` now exists in the `GDX.Collections.Pooling` namespace.
 - `Trace` static now available to funnel all `GDX` based logging through, with editor/build configurations available.
 

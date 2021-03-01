@@ -233,6 +233,27 @@ namespace GDX.Editor
             public static readonly GUIContent TestPassedIcon;
 
             /// <summary>
+            ///     Settings content for <see cref="GDXConfig.traceDevelopmentLevels" />.
+            /// </summary>
+            public static readonly GUIContent TraceDevelopmentLevels = new GUIContent(
+                "Development Tracing",
+                "The levels of trace call to be logged in a development/editor build.");
+
+            /// <summary>
+            ///     Settings content for <see cref="GDXConfig.traceDebugLevels" />.
+            /// </summary>
+            public static readonly GUIContent TraceDebugLevels = new GUIContent(
+                "Debug Tracing",
+                "The levels of trace call to be logged in a debug build.");
+
+            /// <summary>
+            ///     Settings content for <see cref="GDXConfig.traceReleaseLevels" />.
+            /// </summary>
+            public static readonly GUIContent TraceReleaseLevels = new GUIContent(
+                "Release Tracing",
+                "The levels of trace call to be logged in a release build.");
+
+            /// <summary>
             ///     Initialize the <see cref="Content" />.
             /// </summary>
             static Content()
@@ -752,6 +773,34 @@ namespace GDX.Editor
 
                 EditorGUILayout.PropertyField(settings.FindProperty("environmentScriptingDefineSymbol"),
                     Content.EnvironmentScriptingDefineSymbol);
+
+
+                SerializedProperty developmentLevelsProperty = settings.FindProperty("traceDevelopmentLevels");
+                EditorGUI.BeginChangeCheck();
+                ushort newDevelopmentLevels = (ushort)EditorGUILayout.MaskField(Content.TraceDevelopmentLevels, developmentLevelsProperty.intValue,
+                    developmentLevelsProperty.enumDisplayNames);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    developmentLevelsProperty.intValue = newDevelopmentLevels;
+                }
+
+                SerializedProperty debugLevelsProperty = settings.FindProperty("traceDebugLevels");
+                EditorGUI.BeginChangeCheck();
+                ushort newDebugLevels = (ushort)EditorGUILayout.MaskField(Content.TraceDebugLevels, debugLevelsProperty.intValue,
+                    debugLevelsProperty.enumDisplayNames);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    debugLevelsProperty.intValue = newDebugLevels;
+                }
+
+                SerializedProperty releaseLevelsProperty = settings.FindProperty("traceReleaseLevels");
+                EditorGUI.BeginChangeCheck();
+                ushort newReleaseLevels = (ushort)EditorGUILayout.MaskField(Content.TraceReleaseLevels, releaseLevelsProperty.intValue,
+                    releaseLevelsProperty.enumDisplayNames);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    releaseLevelsProperty.intValue = newReleaseLevels;
+                }
             }
 
             /// <summary>
