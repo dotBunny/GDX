@@ -75,12 +75,12 @@ namespace GDX
                 return;
             }
 #elif DEBUG
-            if (config.traceDebugLevels.HasFlags(level))
+            if (!config.traceDebugLevels.HasFlags(level))
             {
                 return;
             }
 #else
-            if (config.traceReleaseLevels.HasFlags(level))
+            if (!config.traceReleaseLevels.HasFlags(level))
             {
                 return;
             }
