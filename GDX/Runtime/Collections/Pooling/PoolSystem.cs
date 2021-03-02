@@ -38,7 +38,7 @@ namespace GDX.Collections.Pooling
         {
             foreach (KeyValuePair<int, IPool> p in s_pools)
             {
-                p.Value.PoolAll(shouldShrink);
+                p.Value.PoolAllItems(shouldShrink);
             }
         }
 
@@ -56,13 +56,11 @@ namespace GDX.Collections.Pooling
 
         /// <summary>
         ///     Execute <see cref="IPool.TearDown()" /> (destroying contents) on all registered <see cref="IPool" /> which have
-        ///     been flagged to accept it
-        ///     via the <see cref="IPool.ShouldTearDown" /> flag.
+        ///     been flagged to accept it via the <see cref="IPool.AllowManagedTearDown" /> flag.
         /// </summary>
         /// <remarks>This will unregister the <see cref="IPool" /> itself as well, as all of the content will have been destroyed.</remarks>
         /// <param name="forceAll">
-        ///     Execute <see cref="IPool.TearDown()" /> regardless of the <see cref="IPool.ShouldTearDown" />
-        ///     flag.
+        ///     Execute <see cref="IPool.TearDown()" /> regardless of the <see cref="IPool.AllowManagedTearDown" /> flag.
         /// </param>
         public static void TearDown(bool forceAll = false)
         {
@@ -74,7 +72,7 @@ namespace GDX.Collections.Pooling
             int poolCount = s_pools.Count;
             foreach (KeyValuePair<int, IPool> pool in s_pools)
             {
-                if (!pool.Value.ShouldTearDown && !forceAll)
+                if (!pool.Value.AllowManagedTearDown && !forceAll)
                 {
                     continue;
                 }
@@ -83,7 +81,7 @@ namespace GDX.Collections.Pooling
                 removeKeyBuffer.AddUnchecked(pool.Key);
             }
 
-            // Can't modify the dictionary while itterating over it, so here we are.
+            // Can't modify the dictionary while iterating over it, so here we are.
             int removeCount = removeKeyBuffer.Count;
             for (int r = 0; r < removeCount; r++)
             {

@@ -8,7 +8,7 @@ namespace GDX.Collections.Pooling
         /// <summary>
         /// Should the<see cref="IPool" /> destroy itself when the <see cref="PoolingSystem"/> requests a tear down?
         /// </summary>
-        bool ShouldTearDown { get; }
+        bool AllowManagedTearDown { get; }
 
         /// <summary>
         /// Create a pooled item and add it to the <see cref="IPool"/>.
@@ -24,7 +24,7 @@ namespace GDX.Collections.Pooling
         /// Return all spawned items to the <see cref="IPool"/>.
         /// </summary>
         /// <param name="shouldShrink">Should the <see cref="IPool"/> be shrunk to its original minimum size?</param>
-        void PoolAll(bool shouldShrink = true);
+        void PoolAllItems(bool shouldShrink = true);
 
         /// <summary>
         /// Destroy all pooled items.
