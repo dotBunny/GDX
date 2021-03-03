@@ -3,14 +3,14 @@
 
 using UnityEngine;
 
-namespace GDX.Collections.Pooling
+namespace GDX.Collections.Pooling.GameObjects
 {
-    public class PrefabPoolItem : MonoBehaviour, IPoolItem<GameObject>
+    public class GameObjectObjectPoolItem : MonoBehaviour, IObjectPoolItem
     {
-        private IPool _parent;
+        private IObjectPool _parent;
 
         /// <inheritdoc />
-        public IPool GetParentPool()
+        public IObjectPool GetParentPool()
         {
             return _parent;
         }
@@ -42,13 +42,13 @@ namespace GDX.Collections.Pooling
         /// <inheritdoc />
         public void ReturnToPool()
         {
-            (_parent as PrefabPool)?.Pool(this);
+            (_parent as GameObjectPool)?.Pool(this);
         }
 
         /// <inheritdoc />
-        public void SetParentPool(IPool targetPool)
+        public void SetParentPool(IObjectPool targetObjectPool)
         {
-            _parent = targetPool;
+            _parent = targetObjectPool;
         }
     }
 }

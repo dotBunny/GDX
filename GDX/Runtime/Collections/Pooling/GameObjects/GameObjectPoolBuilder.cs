@@ -4,13 +4,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GDX.Collections.Pooling
+namespace GDX.Collections.Pooling.GameObjects
 {
-    public class PrefabPoolBuilder : MonoBehaviour
+    public class GameObjectPoolBuilder : MonoBehaviour
     {
         private const int InstantiatesPerFrame = 5;
         private static GameObject s_builderObject;
-        private static readonly List<IPool> s_targetPools = new List<IPool>();
+        private static readonly List<IObjectPool> s_targetPools = new List<IObjectPool>();
         private static int s_targetPoolsCount;
 
         private void LateUpdate()
@@ -28,14 +28,14 @@ namespace GDX.Collections.Pooling
             Destroy(gameObject);
         }
 
-        public static void AddObjectPool(IPool targetPool)
+        public static void AddObjectPool(IObjectPool targetObjectPool)
         {
-            if (s_targetPools.Contains(targetPool))
+            if (s_targetPools.Contains(targetObjectPool))
             {
                 return;
             }
 
-            s_targetPools.Add(targetPool);
+            s_targetPools.Add(targetObjectPool);
             s_targetPoolsCount++;
 
             if (s_builderObject == null)
@@ -44,21 +44,21 @@ namespace GDX.Collections.Pooling
             }
         }
 
-        public static void RemoveObjectPool(IPool targetPool)
+        public static void RemoveObjectPool(IObjectPool targetObjectPool)
         {
-            if (!s_targetPools.Contains(targetPool))
+            if (!s_targetPools.Contains(targetObjectPool))
             {
                 return;
             }
 
-            s_targetPools.Remove(targetPool);
+            s_targetPools.Remove(targetObjectPool);
             s_targetPoolsCount--;
         }
 
         private static void CreateBuilder()
         {
-            s_builderObject = new GameObject("GDX.PrefabPoolBuilder");
-            s_builderObject.AddComponent<PrefabPoolBuilder>();
+            s_builderObject = new GameObject("GDX.GameObjectPoolBuilder");
+            s_builderObject.AddComponent<GameObjectPoolBuilder>();
         }
 
         private void Tick()
