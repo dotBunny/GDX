@@ -21,20 +21,71 @@ namespace GDX.Collections.Pooling
         // TODO: Change over to IntDictionary
         private static readonly Dictionary<int, IPool> s_pools = new Dictionary<int, IPool>();
 
+        // TODO: Should autocreate?
         /// <summary>
-        ///     Get a registered <see cref="IPool"/> based on its <paramref name="uniqueID"/>.
+        ///     Get a registered <see cref="IPool" /> based on its <paramref name="uniqueID" />.
         /// </summary>
         /// <param name="uniqueID">The unique identifier provided to the system when registering the pool.</param>
-        /// <returns>An <see cref="IPool"/> identified by the provided <paramref name="uniqueID"/>.</returns>
+        /// <returns>An <see cref="IPool" /> identified by the provided <paramref name="uniqueID" />.</returns>
         public static IPool GetPool(int uniqueID)
         {
             return s_pools[uniqueID];
         }
 
+        public static T GetPool<T>(int uniqueID)
+        {
+            return (T)s_pools[uniqueID];
+        }
+
         public static IPool GetPool(string key)
         {
-            return GetPool(key.GetHashCode());
+            return s_pools[key.GetHashCode()];
         }
+
+        public static T GetPool<T>(string key)
+        {
+            return (T)s_pools[key.GetHashCode()];
+        }
+
+        public static IPool GetPoolWithContainsCheck(int uniqueID)
+        {
+            if (s_pools.ContainsKey(uniqueID))
+            {
+                return s_pools[uniqueID];
+            }
+
+            return null;
+        }
+
+        public static T GetPoolWithContainsCheck<T>(int uniqueID) where T : class
+        {
+            if (s_pools.ContainsKey(uniqueID))
+            {
+                return (T)s_pools[uniqueID];
+            }
+            return null;
+        }
+
+        public static IPool GetPoolWithContainsCheck(string key)
+        {
+            int uniqueID = key.GetHashCode();
+            if (s_pools.ContainsKey(uniqueID))
+            {
+                return s_pools[uniqueID];
+            }
+            return null;
+        }
+
+        public static T GetPoolWithContainsCheck<T>(string key) where T : class
+        {
+            int uniqueID = key.GetHashCode();
+            if (s_pools.ContainsKey(uniqueID))
+            {
+                return (T)s_pools[uniqueID];
+            }
+            return null;
+        }
+
 
         /// <summary>
         ///     Is a <see cref="IPool" /> created with the provided <paramref name="uniqueID" />?
@@ -50,8 +101,6 @@ namespace GDX.Collections.Pooling
         {
             return HasPool(key.GetHashCode());
         }
-
-
 
         /// <summary>
         ///     Attempts to return all *spawned* items to their original pools.
