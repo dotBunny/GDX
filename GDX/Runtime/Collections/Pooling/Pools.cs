@@ -8,7 +8,7 @@ namespace GDX.Collections.Pooling
     ///     built for possible usages in an Entity Component System where it could be leveraged to keep pools of reusable
     ///     entity indices for example.
     /// </summary>
-    public static class PoolingSystem
+    public static class Pools
     {
         /// <summary>
         ///     An internal dictionary containing the pools, uniquely index by constant ID provider.
@@ -18,7 +18,23 @@ namespace GDX.Collections.Pooling
         ///     be managed by the implementation.
         /// </remarks>
         // ReSharper disable once HeapView.ObjectAllocation.Evident
+        // TODO: Change over to IntDictionary
         private static readonly Dictionary<int, IPool> s_pools = new Dictionary<int, IPool>();
+
+        /// <summary>
+        ///     Get a registered <see cref="IPool"/> based on its <paramref name="uniqueID"/>.
+        /// </summary>
+        /// <param name="uniqueID">The unique identifier provided to the system when registering the pool.</param>
+        /// <returns>An <see cref="IPool"/> identified by the provided <paramref name="uniqueID"/>.</returns>
+        public static IPool GetPool(int uniqueID)
+        {
+            return s_pools[uniqueID];
+        }
+
+        public static IPool GetPool(string key)
+        {
+            return GetPool(key.GetHashCode());
+        }
 
         /// <summary>
         ///     Is a <see cref="IPool" /> created with the provided <paramref name="uniqueID" />?
@@ -29,6 +45,13 @@ namespace GDX.Collections.Pooling
         {
             return s_pools.ContainsKey(uniqueID);
         }
+
+        public static bool HasPool(string key)
+        {
+            return HasPool(key.GetHashCode());
+        }
+
+
 
         /// <summary>
         ///     Attempts to return all *spawned* items to their original pools.
@@ -56,23 +79,23 @@ namespace GDX.Collections.Pooling
 
         /// <summary>
         ///     Execute <see cref="IPool.TearDown()" /> (destroying contents) on all registered <see cref="IPool" /> which have
-        ///     been flagged to accept it via the <see cref="IPool.AllowManagedTearDown" /> flag.
+        ///     been flagged to accept it, evaluated by <see cref="IPool.IsAllowedManagedTearDown()" />.
         /// </summary>
         /// <remarks>This will unregister the <see cref="IPool" /> itself as well, as all of the content will have been destroyed.</remarks>
         /// <param name="forceAll">
-        ///     Execute <see cref="IPool.TearDown()" /> regardless of the <see cref="IPool.AllowManagedTearDown" /> flag.
+        ///     Execute <see cref="IPool.TearDown()" /> regardless of the <see cref="IPool.IsAllowedManagedTearDown()" /> response.
         /// </param>
         public static void TearDown(bool forceAll = false)
         {
             // Make removal buffer
-            //List<int> removeKeyBuffer = new List<int>();
             SimpleList<int> removeKeyBuffer = new SimpleList<int>(s_pools.Count);
 
             // Now we pay the cost, however its during a teardown so, its less bad.
             int poolCount = s_pools.Count;
+            // TODO: Implement MoveNext when available
             foreach (KeyValuePair<int, IPool> pool in s_pools)
             {
-                if (!pool.Value.AllowManagedTearDown && !forceAll)
+                if (!pool.Value.IsAllowedManagedTearDown() && !forceAll)
                 {
                     continue;
                 }
@@ -89,7 +112,7 @@ namespace GDX.Collections.Pooling
             }
 
             Trace.Output(Trace.TraceLevel.Info,
-                $"[ObjectPool] Removed {removeCount.ToString()}/{poolCount.ToString()}");
+                $"[PoolSystem::TearDown] Removed {removeCount.ToString()}/{poolCount.ToString()}");
         }
 
         /// <summary>
