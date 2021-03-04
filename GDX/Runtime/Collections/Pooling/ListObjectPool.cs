@@ -34,12 +34,12 @@ namespace GDX.Collections.Pooling
 
         public Action<ListObjectPool> OnCreateItem;
 
-        public Action<ListObjectPool, bool> OnPoolAllItems;
         public Action<ListObjectPool> OnTearDownPostPoolItems;
         public Action<ListObjectPool> OnTearDownPrePoolItems;
 
         public Action<ListObjectPool, object> OnSpawnedFromPool;
         public Action<ListObjectPool, object> OnReturnedToPool;
+        public Action<object> OnDestroyItem;
 
 
         public ListObjectPool(
@@ -77,8 +77,6 @@ namespace GDX.Collections.Pooling
                     this.CreateItem();
                 }
             }
-
-            _outCount = 0;
         }
 
         /// <inheritdoc />
@@ -225,7 +223,23 @@ namespace GDX.Collections.Pooling
         /// <inheritdoc />
         public void PoolAllItems(bool shouldShrink = true)
         {
-            OnPoolAllItems?.Invoke(this, shouldShrink);
+            for (int i = _outCount - 1; i >= 0; i--)
+            {
+                Pool(_outItems[i]);
+            }
+
+            if (shouldShrink && _inCount > _maximumObjects)
+            {
+                return;
+            }
+
+            int removeCount = _inCount - _maximumObjects;
+            for (int i = 0; i < removeCount; i++)
+            {
+                OnDestroyItem?.Invoke(_inItems[i]);
+                _inItems.RemoveAt(i);
+                _inCount--;
+            }
         }
 
         /// <inheritdoc />

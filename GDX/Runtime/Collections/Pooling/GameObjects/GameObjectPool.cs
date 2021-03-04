@@ -60,9 +60,10 @@ namespace GDX.Collections.Pooling.GameObjects
 
             // Assign actions
             newGameObjectPool.OnCreateItem += OnCreateItemAction;
+            newGameObjectPool.OnDestroyItem += OnDestroyItem;
+
             newGameObjectPool.OnTearDownPrePoolItems += OnTearDownPrePoolItemsAction;
             newGameObjectPool.OnTearDownPostPoolItems += OnTearDownPostPoolItemsAction;
-            newGameObjectPool.OnPoolAllItems += OnPoolAllItemsAction;
             newGameObjectPool.OnSpawnedFromPool += OnSpawnedFromPoolAction;
             newGameObjectPool.OnReturnedToPool += OnReturnedToPoolAction;
 
@@ -119,29 +120,12 @@ namespace GDX.Collections.Pooling.GameObjects
             (item as IGameObjectPoolItem)?.OnReturnedToPool();
         }
 
-        private static void OnPoolAllItemsAction(ListObjectPool pool, bool shouldShrink = true)
+        private static void OnDestroyItem(object item)
         {
-            for (int i = pool._outCount - 1; i >= 0; i--)
+            Object unityObject = (Object)item;
+            if (unityObject != null)
             {
-                pool.Pool(pool._outItems[i]);
-            }
-
-            if (shouldShrink && pool._inCount > pool._maximumObjects)
-            {
-                return;
-            }
-
-            int removeCount = pool._inCount - pool._maximumObjects;
-            for (int i = 0; i < removeCount; i++)
-            {
-                pool._inItems.RemoveAt(i);
-                Object unityObject = (Object)pool._inItems[i];
-                if (unityObject != null)
-                {
-                    Object.Destroy(unityObject, 0f);
-                }
-
-                pool._inCount--;
+                Object.Destroy(unityObject, 0f);
             }
         }
 
