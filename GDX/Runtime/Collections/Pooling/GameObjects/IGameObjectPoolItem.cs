@@ -7,8 +7,10 @@ namespace GDX.Collections.Pooling
     ///     An interface describing the functionality needed for an item to be understood by a potential
     ///     <see cref="IObjectPool" />, if callbacks are to be made.
     /// </summary>
-    public interface IObjectPoolItem
+    public interface IGameObjectPoolItem
     {
+        UnityEngine.GameObject GetGameObject();
+
         /// <summary>
         ///     Return the <see cref="IObjectPool" /> which the <see cref="IObjectPoolItem" /> is currently managed by.
         /// </summary>

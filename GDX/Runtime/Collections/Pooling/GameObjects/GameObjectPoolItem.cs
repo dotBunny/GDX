@@ -5,9 +5,18 @@ using UnityEngine;
 
 namespace GDX.Collections.Pooling.GameObjects
 {
-    public class GameObjectObjectPoolItem : MonoBehaviour, IObjectPoolItem
+    /// <summary>
+    ///     A simple <see cref="GameObject""/>
+    /// </summary>
+    public class GameObjectPoolItem : MonoBehaviour, IGameObjectPoolItem
     {
         private IObjectPool _parent;
+
+        /// <inheritdoc />
+        public GameObject GetGameObject()
+        {
+            return transform.gameObject;
+        }
 
         /// <inheritdoc />
         public IObjectPool GetParentPool()
@@ -15,17 +24,11 @@ namespace GDX.Collections.Pooling.GameObjects
             return _parent;
         }
 
-        public GameObject GetSelf()
-        {
-            return gameObject;
-        }
-
-         /// <inheritdoc />
+        /// <inheritdoc />
         public bool IsValidItem()
         {
             return this != null && gameObject != null;
         }
-
 
         /// <inheritdoc />
         public void OnReturnedToPool()
@@ -42,7 +45,7 @@ namespace GDX.Collections.Pooling.GameObjects
         /// <inheritdoc />
         public void ReturnToPool()
         {
-            (_parent as GameObjectPool)?.Pool(this);
+            _parent.Pool(this);
         }
 
         /// <inheritdoc />

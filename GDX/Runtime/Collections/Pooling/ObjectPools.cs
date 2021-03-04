@@ -103,7 +103,7 @@ namespace GDX.Collections.Pooling
         ///     Attempts to return all *spawned* items to their original pools.
         /// </summary>
         /// <param name="shouldShrink">Should the pool be shrunk (destroying created items) to its original set minimum size?</param>
-        public static void PoolAll(bool shouldShrink = true)
+        public static void PoolAllItem(bool shouldShrink = true)
         {
             foreach (KeyValuePair<int, IObjectPool> p in s_pools)
             {

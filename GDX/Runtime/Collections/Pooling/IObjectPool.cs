@@ -11,7 +11,8 @@ namespace GDX.Collections.Pooling
         public void CreateItem();
 
         /// <summary>
-        ///     Remove an <paramref name="item" /> from an <see cref="IObjectPool" /> immediately, removing it from tracking.
+        ///     Remove an <paramref name="item" /> from an <see cref="IObjectPool" /> immediately, removing it from tracking and
+        ///     not calling any actions on it.
         /// </summary>
         /// <param name="item">The target <see cref="object" /> to attempt to remove.</param>
         public void ForceRemove(object item);
@@ -23,16 +24,9 @@ namespace GDX.Collections.Pooling
         public object Get(bool triggerOnSpawnedFromPool = true);
 
         /// <summary>
-        ///     Get the next available item from an <see cref="IObjectPool" />, and cast it to the indicated type.
+        ///     Return the <see cref="object" /> which the pool is built from.
         /// </summary>
-        /// <typeparam name="T">The type to cast the <see cref="object" /> return to.</typeparam>
-        /// <returns>An item if available, otherwise null.</returns>
-        public T Get<T>(bool triggerOnSpawnedFromPool = true);
-
-        /// <summary>
-        ///     Return the <see cref="object"/> which the pool is built from.
-        /// </summary>
-        /// <returns>The <see cref="object"/> the <see cref="IObjectPool"/> is modelled around.</returns>
+        /// <returns>The <see cref="object" /> the <see cref="IObjectPool" /> is modelled around.</returns>
         public object GetBaseObject();
 
         /// <summary>
@@ -47,6 +41,7 @@ namespace GDX.Collections.Pooling
         /// </summary>
         /// <returns>true/false if enough items are found contained in the <see cref="IObjectPool" />.</returns>
         public bool HasMinimumPooledItems();
+
 
         /// <summary>
         ///     Should the<see cref="IObjectPool" /> destroy itself when <see cref="ObjectPools" /> requests a tear down?

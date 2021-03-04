@@ -6,31 +6,85 @@ using System.Collections.Generic;
 
 namespace GDX.Collections.Pooling
 {
-    /// <summary>
-    /// </summary>
-    public class ListObjectPool : IObjectPool
-    {
-        protected bool _allowCreateMore = true;
-        protected bool _allowManagedTearDown = true;
-        protected bool _allowReuse = false;
-        protected object _baseObject;
-        protected int _inCount;
-        protected List<object> _inItems;
-        protected int _maximumObjects = 20;
-        protected int _minimumObjects = 5;
-        protected int _outCount;
-        protected List<object> _outItems;
-        protected int _uniqueID;
 
-        public Action OnCreateItem;
-        public Action<bool> OnPoolAllItems;
-        public Action OnTearDownPostPoolItems;
-        public Action OnTearDownPrePoolItems;
+    /// <summary>
+    /// A <see cref="object"/> <see cref="List{T}"/> backed pool implementation.
+    /// </summary>
+    public sealed class ListObjectPool : IObjectPool
+    {
+        private const int AllowCreateMoreFlag = 0;
+        private const int AllowManagedTeardownFlag = 1;
+        private const int AllowReuseFlag = 2;
+        private const int PrewarmPoolFlag = 3;
+
+        public BitArray8 Flags;
+
+        internal readonly object _baseObject;
+        internal readonly object _containerObject;
+
+        internal int _inCount;
+        internal readonly List<object> _inItems;
+        internal readonly int _maximumObjects;
+        internal readonly int _minimumObjects;
+        internal int _outCount;
+        internal readonly List<object> _outItems;
+        internal readonly int _uniqueID;
+
+        public Func<object> CreateItemFunc;
+
+        public Action<ListObjectPool> OnCreateItem;
+
+        public Action<ListObjectPool, bool> OnPoolAllItems;
+        public Action<ListObjectPool> OnTearDownPostPoolItems;
+        public Action<ListObjectPool> OnTearDownPrePoolItems;
+
+        public Action<ListObjectPool, object> OnSpawnedFromPool;
+        public Action<ListObjectPool, object> OnReturnedToPool;
+
+
+        public ListObjectPool(
+            int uniqueID,
+            object baseObject,
+            int minimumObjects = 10,
+            int maximumObjects = 50,
+            object containerObject = null,
+            bool prewarmPool = true,
+            bool allowCreateMore = true,
+            bool allowReuseWhenCapped = false,
+            bool shouldTearDown = false)
+        {
+            _uniqueID = uniqueID;
+            _baseObject = baseObject;
+            _minimumObjects = minimumObjects;
+            _maximumObjects = maximumObjects;
+
+            Flags[AllowCreateMoreFlag] = allowCreateMore;
+            Flags[AllowManagedTeardownFlag] = shouldTearDown;
+            Flags[AllowReuseFlag] = allowReuseWhenCapped;
+            Flags[PrewarmPoolFlag] = prewarmPool;
+
+            _containerObject = containerObject;
+
+            ObjectPools.Register(this);
+
+            _inItems = new List<object>(maximumObjects);
+            _outItems = new List<object>(maximumObjects);
+
+            if (prewarmPool)
+            {
+                for (int i = 0; i < minimumObjects; i++)
+                {
+                    this.CreateItem();
+                }
+            }
+
+            _outCount = 0;
+        }
 
         /// <inheritdoc />
         public void CreateItem()
         {
-            OnCreateItem?.Invoke();
+            OnCreateItem?.Invoke(this);
         }
 
         /// <inheritdoc />
@@ -55,7 +109,7 @@ namespace GDX.Collections.Pooling
         public object Get(bool triggerOnSpawnedFromPool = true)
         {
             // Are we empty, but have refills?
-            if (_inCount == 0 && _outCount < _maximumObjects || _inCount == 0 && _allowCreateMore)
+            if (_inCount == 0 && _outCount < _maximumObjects || _inCount == 0 && Flags[AllowCreateMoreFlag])
             {
                 CreateItem();
             }
@@ -75,21 +129,19 @@ namespace GDX.Collections.Pooling
                 }
 
                 // Handle counters
-                _outItems.Add(_inItems[targetIndex]);
+                _outItems.Add(returnItem);
                 _outCount++;
                 _inItems.RemoveAt(targetIndex);
                 _inCount--;
 
-                // Return Item
-                if (triggerOnSpawnedFromPool && returnItem is IObjectPoolItem objectPoolItem)
+                if (triggerOnSpawnedFromPool)
                 {
-                    objectPoolItem.OnSpawnedFromPool();
+                    OnSpawnedFromPool?.Invoke(this, returnItem);
                 }
-
                 return returnItem;
             }
 
-            if (_allowReuse)
+            if (Flags[AllowReuseFlag])
             {
                 object returnItem = _outItems[0];
                 if (returnItem == null)
@@ -99,14 +151,10 @@ namespace GDX.Collections.Pooling
                     return null;
                 }
 
-                // Call events on item
-                if (returnItem is IObjectPoolItem objectPoolItem)
+                OnReturnedToPool?.Invoke(this, returnItem);
+                if (triggerOnSpawnedFromPool)
                 {
-                    objectPoolItem.OnReturnedToPool();
-                    if (triggerOnSpawnedFromPool)
-                    {
-                        objectPoolItem.OnSpawnedFromPool();
-                    }
+                    OnSpawnedFromPool?.Invoke(this, returnItem);
                 }
 
                 return returnItem;
@@ -115,12 +163,6 @@ namespace GDX.Collections.Pooling
             Trace.Output(Trace.TraceLevel.Warning,
                 $"[ListObjectPool->Get] Hit maximum object cap of {_maximumObjects.ToString()} for object pool ({_uniqueID}).");
             return null;
-        }
-
-        /// <inheritdoc />
-        public T Get<T>(bool triggerOnSpawnedFromPool = true)
-        {
-            return (T)Get(triggerOnSpawnedFromPool);
         }
 
         /// <inheritdoc />
@@ -144,7 +186,7 @@ namespace GDX.Collections.Pooling
         /// <inheritdoc />
         public bool IsAllowedManagedTearDown()
         {
-            return _allowManagedTearDown;
+            return Flags[AllowManagedTeardownFlag];
         }
 
         /// <inheritdoc />
@@ -163,10 +205,7 @@ namespace GDX.Collections.Pooling
         public void Pool(object item)
         {
             // Do we have the interface call?
-            if (item is IObjectPoolItem objectPoolItem)
-            {
-                objectPoolItem.OnReturnedToPool();
-            }
+            OnReturnedToPool?.Invoke(this, item);
 
             if (_outItems.Contains(item))
             {
@@ -186,13 +225,13 @@ namespace GDX.Collections.Pooling
         /// <inheritdoc />
         public void PoolAllItems(bool shouldShrink = true)
         {
-            OnPoolAllItems?.Invoke(shouldShrink);
+            OnPoolAllItems?.Invoke(this, shouldShrink);
         }
 
         /// <inheritdoc />
         public void TearDown()
         {
-            OnTearDownPrePoolItems?.Invoke();
+            OnTearDownPrePoolItems?.Invoke(this);
 
             // Return all items to the pool
             for (int i = _outCount - 1; i >= 0; i--)
@@ -207,8 +246,9 @@ namespace GDX.Collections.Pooling
             _outCount = 0;
 
             // Execute specific logic to the implementation
-            OnTearDownPostPoolItems?.Invoke();
+            OnTearDownPostPoolItems?.Invoke(this);
 
+            // Removing references to the objects should make GC do its thing
             _inItems.Clear();
             _inCount = 0;
         }

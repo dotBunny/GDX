@@ -1,559 +1,372 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace GDX.Collections.Pooling.GameObjects
 {
-    public class GameObjectPool : ListObjectPool
+    public static class GameObjectPool // : ListObjectPool
     {
-        private readonly Transform _cachedParent;
-        private readonly bool _isSliced;
+        private const int HasInterfaceFlag = 5;
 
         /// <summary>
-        ///     Create a <see cref="GameObject" /> based <see cref="ListObjectPool"/> for the provided <paramref name="prefab"/>.
+        ///     Create a <see cref="GameObject" /> based <see cref="ListObjectPool" /> for the provided <paramref name="prefab" />.
         /// </summary>
         /// <param name="parent">Default transform parent for any created items.</param>
-        /// <param name="prefab">The prefab OR <see cref="GameObject"/> which going to be cloned.</param>
+        /// <param name="prefab">The prefab OR <see cref="GameObject" /> which going to be cloned.</param>
         /// <param name="minimumObjects">The minimum number of objects to be pooled.</param>
         /// <param name="maximumObjects">The maximum number of objects to be pooled.</param>
-        /// <param name="allowCreateMore">Can more items
-        /// be created as needed?</param>
+        /// <param name="allowCreateMore">
+        ///     Can more items
+        ///     be created as needed?
+        /// </param>
         /// <param name="allowReuseWhenCapped">Should we reuse oldest items when capped?</param>
-        /// <param name="sliceInitialCreation">Should the initial spawning be spread across frames using a builder?</param>
+        /// <param name="allowTimeSlicing">Should the initial spawning be spread across frames using a builder?</param>
         /// <param name="shouldTearDown">Should the object pool tear itself down during scene transitions?</param>
-        public GameObjectPool(Transform parent, GameObject prefab, int minimumObjects = 10, int maximumObjects = 50,
-            bool allowCreateMore = true, bool allowReuseWhenCapped = false, bool sliceInitialCreation = true,
+        public static IObjectPool Create(Transform parent, GameObject prefab, int minimumObjects = 10,
+            int maximumObjects = 50,
+            bool allowCreateMore = true, bool allowReuseWhenCapped = false, bool allowTimeSlicing = true,
             bool shouldTearDown = false)
         {
-            // Get the hash code cashed before we register
-            _cachedParent = parent;
-            _baseObject = prefab;
-            _allowReuse = allowReuseWhenCapped;
-            _allowManagedTearDown = shouldTearDown;
-
-            // Create our unique ID
-            _uniqueID = GetUniqueID(prefab);
-
-            // Register with system
-            ObjectPools.Register(this);
-
-            _minimumObjects = minimumObjects;
-            _maximumObjects = maximumObjects;
-            _allowCreateMore = allowCreateMore;
-
-            if (prefab.GetComponent<GameObjectObjectPoolItem>() != null)
+            // We already have a pool for this ID
+            int uniqueID = GetUniqueID(prefab);
+            if (ObjectPools.HasPool(uniqueID))
             {
-                HasItemInterface = true;
+                return ObjectPools.GetPool<ListObjectPool>(uniqueID);
             }
 
-            _inItems = new List<object>(maximumObjects);
-            _outItems = new List<object>(maximumObjects);
-
-            _isSliced = sliceInitialCreation;
-            if (!sliceInitialCreation)
+            // Create our new pool
+            ListObjectPool newGameObjectPool = new ListObjectPool(
+                uniqueID,
+                prefab,
+                minimumObjects,
+                maximumObjects,
+                parent,
+                false,
+                allowCreateMore,
+                allowReuseWhenCapped,
+                shouldTearDown)
             {
-                for (int i = 0; i < minimumObjects; i++)
+                Flags =
                 {
-                    this.CreateItem();
+                    [HasInterfaceFlag] = prefab.GetComponent<IGameObjectPoolItem>() != null
                 }
-            }
-            else
-            {
-                GameObjectPoolBuilder.AddObjectPool(this);
-            }
+            };
 
-            _outCount = 0;
+            GameObjectPoolBuilder.AddObjectPool(newGameObjectPool);
+
+            newGameObjectPool._outCount = 0;
 
             // Assign actions
-            OnCreateItem += OnCreateItemAction;
-            OnTearDownPrePoolItems += OnTearDownPrePoolItemsAction;
-            OnTearDownPostPoolItems += OnTearDownPostPoolItemsAction;
-            OnPoolAllItems += OnPoolAllItemsActions;
-        }
+            newGameObjectPool.OnCreateItem += OnCreateItemAction;
+            newGameObjectPool.OnTearDownPrePoolItems += OnTearDownPrePoolItemsAction;
+            newGameObjectPool.OnTearDownPostPoolItems += OnTearDownPostPoolItemsAction;
+            newGameObjectPool.OnPoolAllItems += OnPoolAllItemsAction;
+            newGameObjectPool.OnSpawnedFromPool += OnSpawnedFromPoolAction;
+            newGameObjectPool.OnReturnedToPool += OnReturnedToPoolAction;
 
-        public bool HasItemInterface { get; }
+
+            return newGameObjectPool;
+        }
 
         public static int GetUniqueID(GameObject source)
         {
-            return $"PrefabPool_{source.GetInstanceID().ToString()}".GetHashCode();
+            return $"GameObject_{source.GetInstanceID().ToString()}".GetHashCode();
         }
 
-
-
-        public Transform GetPoolTransform()
+        private static void OnCreateItemAction(ListObjectPool pool)
         {
-            return _cachedParent;
-        }
+            GameObject spawnedObject =
+                Object.Instantiate((GameObject)pool._baseObject, (Transform)pool._containerObject, false);
 
-
-
-        // TODO: Maybe this needs to be a create Func?
-        void OnCreateItemAction()
-        {
-            GameObject spawnedObject = Object.Instantiate((GameObject)_baseObject, _cachedParent, false);
-
-            if (!HasItemInterface)
+            if (pool.Flags[HasInterfaceFlag])
             {
-                GameObjectObjectPoolItem item = spawnedObject.AddComponent<GameObjectObjectPoolItem>();
-                item.SetParentPool(this);
+                // The old swap for the interface instead of the GameObject
+                IGameObjectPoolItem item = spawnedObject.GetComponent<IGameObjectPoolItem>();
+                item.SetParentPool(pool);
                 item.OnReturnedToPool();
-                _inItems.Add(item);
+                pool._inItems.Add(item);
             }
             else
             {
-                IObjectPoolItem item = spawnedObject.GetComponent<IObjectPoolItem>();
-                item.SetParentPool(this);
-                item.OnReturnedToPool();
-                _inItems.Add(item);
+                spawnedObject.SetActive(false);
+                pool._inItems.Add(spawnedObject);
             }
-
-            _inCount++;
+            pool._inCount++;
         }
 
-        void OnPoolAllItemsActions(bool shouldShrink = true)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void OnSpawnedFromPoolAction(ListObjectPool pool, object item)
         {
-            for (int i = _outCount - 1; i >= 0; i--)
+            if (!pool.Flags[HasInterfaceFlag])
             {
-                Pool(_outItems[i]);
+                (item as GameObject)?.SetActive(true);
+                return;
             }
 
-            if (shouldShrink && _inCount > _maximumObjects)
+            (item as IGameObjectPoolItem)?.OnSpawnedFromPool();
+        }
+
+        private static void OnReturnedToPoolAction(ListObjectPool pool, object item)
+        {
+            if (!pool.Flags[HasInterfaceFlag])
+            {
+                (item as GameObject)?.SetActive(false);
+                return;
+            }
+
+            (item as IGameObjectPoolItem)?.OnReturnedToPool();
+        }
+
+        private static void OnPoolAllItemsAction(ListObjectPool pool, bool shouldShrink = true)
+        {
+            for (int i = pool._outCount - 1; i >= 0; i--)
+            {
+                pool.Pool(pool._outItems[i]);
+            }
+
+            if (shouldShrink && pool._inCount > pool._maximumObjects)
             {
                 return;
             }
 
-            int removeCount = _inCount - _maximumObjects;
+            int removeCount = pool._inCount - pool._maximumObjects;
             for (int i = 0; i < removeCount; i++)
             {
-                _inItems.RemoveAt(i);
-                Object unityObject = (Object)_inItems[i];
+                pool._inItems.RemoveAt(i);
+                Object unityObject = (Object)pool._inItems[i];
                 if (unityObject != null)
                 {
                     Object.Destroy(unityObject, 0f);
                 }
-                _inCount--;
+
+                pool._inCount--;
             }
         }
 
-        void OnTearDownPrePoolItemsAction()
+        private static void OnTearDownPrePoolItemsAction(ListObjectPool pool)
         {
-            if (_isSliced)
-            {
-                GameObjectPoolBuilder.RemoveObjectPool(this);
-            }
+            GameObjectPoolBuilder.RemoveObjectPool(pool);
         }
 
-        void OnTearDownPostPoolItemsAction()
+        private static void OnTearDownPostPoolItemsAction(ListObjectPool pool)
         {
-            for (int i = 0; i < _inCount; i++)
+            for (int i = 0; i < pool._inCount; i++)
             {
-                object inItem = _inItems[i];
+                object inItem = pool._inItems[i];
                 if (inItem == null)
                 {
                     continue;
                 }
 
-                IObjectPoolItem poolItem = (IObjectPoolItem)inItem;
-                if (poolItem.IsValidItem())
+                if (inItem is IGameObjectPoolItem gameObjectItem && gameObjectItem.IsValidItem())
                 {
                     Object.Destroy((Object)inItem);
                 }
             }
         }
 
-        public GameObject Get(Transform parent, bool worldPositionStays = false, bool zeroPosition = true)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static GameObject Get(ListObjectPool pool)
         {
             // Get an item but dont trigger OnSpawnedFromPool logic
-            object item = Get(false);
-            GameObject returnObject = null;
-            if (item == null) return null;
-
-            // Return GO
-            if (item is MonoBehaviour monoBehaviour)
+            object item = pool.Get(false);
+            if (item == null)
             {
-                Transform transform = monoBehaviour.transform;
-                returnObject = transform.gameObject;
-                transform.SetParent(parent, worldPositionStays);
-                if (!worldPositionStays && zeroPosition)
-                {
-                    transform.localPosition = Vector3.zero;
-                }
+                return null;
             }
 
-            if (item is IObjectPoolItem objectPoolItem)
-            {
-                objectPoolItem.OnSpawnedFromPool();
-            }
+            GameObject returnObject = (pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem)
+                ? gameObjectPoolItem.GetGameObject()
+                : (GameObject)item;
 
             return returnObject;
         }
 
-        /*
-        public GameObject Get(Transform parent, Vector3 localPosition, Quaternion localRotation)
+        public static GameObject Get(ListObjectPool pool, Transform parent, bool worldPositionStays = false,
+            bool zeroPosition = true)
         {
-            // Are we empty, but have refills?
-            if (_inCount == 0 && _outCount < _maximumObjects || _inCount == 0 && _allowCreateMore)
+            // Get an item but dont trigger OnSpawnedFromPool logic
+            object item = pool.Get(false);
+            if (item == null)
             {
-                CreateItem();
+                return null;
             }
 
-            if (_inCount > 0)
+            GameObject returnObject = (pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem)
+                ? gameObjectPoolItem.GetGameObject()
+                : (GameObject)item;
+
+            if (returnObject == null)
             {
-                int targetIndex = _inCount - 1;
-
-                // Make sure we don't pull badness
-                IObjectPoolItem returnItem = _inItems[targetIndex];
-                if (returnItem == null)
-                {
-                    Trace.Output(Trace.TraceLevel.Warning,
-                        $"[GameObjectPool->Get] A null object was pulled from the object pool for {_prefab.name}.");
-                    _inCount--;
-                    return null;
-                }
-
-                // Handle counters
-                _outItems.Add(_inItems[targetIndex]);
-                _outCount++;
-                _inItems.RemoveAt(targetIndex);
-                _inCount--;
-
-                // Return GO
-                GameObject returnObject = returnItem.GetSelf();
-                returnObject.transform.SetParent(parent);
-                returnObject.transform.localPosition = localPosition;
-                returnObject.transform.localRotation = localRotation;
-                returnItem.OnSpawnedFromPool();
                 return returnObject;
             }
 
-            if (_allowReuse)
+            Transform transform = returnObject.transform;
+            transform.SetParent(parent, worldPositionStays);
+            if (!worldPositionStays && zeroPosition)
             {
-                IObjectPoolItem returnItem = _outItems[0];
-                if (returnItem == null)
-                {
-                    Trace.Output(Trace.TraceLevel.Warning,
-                        $"[GameObjectPool->Get] A null object was returned to object pool for {_prefab.name}.");
-                    return null;
-                }
-
-                returnItem.OnReturnedToPool();
-
-                GameObject returnObject = returnItem.GetSelf();
-                returnObject.transform.SetParent(parent);
-                returnObject.transform.localPosition = localPosition;
-                returnObject.transform.localRotation = localRotation;
-                returnItem.OnSpawnedFromPool();
-                return returnObject;
+                transform.localPosition = Vector3.zero;
             }
-
-            Trace.Output(Trace.TraceLevel.Warning,
-                $"[GameObjectPool->Get] Hit maximum object cap of {_maximumObjects.ToString()} for {_prefab.name}.");
-            return null;
+            OnSpawnedFromPoolAction(pool, item);
+            return returnObject;
         }
 
-        public GameObject Get(Transform parent, Vector3 localPosition, Vector3 worldLookAtPosition)
+        public static GameObject Get(ListObjectPool pool, Transform parent, Vector3 localPosition,
+            Quaternion localRotation)
         {
-            // Are we empty, but have refills?
-            if (_inCount == 0 && _outCount < _maximumObjects || _inCount == 0 && _allowCreateMore)
+            // Get an item but dont trigger OnSpawnedFromPool logic
+            object item = pool.Get(false);
+            if (item == null)
             {
-                CreateItem();
+                return null;
             }
 
-            if (_inCount > 0)
+            GameObject returnObject = (pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem)
+                ? gameObjectPoolItem.GetGameObject()
+                : (GameObject)item;
+
+            if (returnObject == null)
             {
-                int targetIndex = _inCount - 1;
-
-                // Make sure we don't pull badness
-                IObjectPoolItem returnItem = _inItems[targetIndex];
-                if (returnItem == null)
-                {
-                    Trace.Output(Trace.TraceLevel.Warning,
-                        $"[GameObjectPool->Get] A null object was pulled from the object pool for {_prefab.name}.");
-                    _inCount--;
-                    return null;
-                }
-
-                // Handle counters
-                _outItems.Add(_inItems[targetIndex]);
-                _outCount++;
-                _inItems.RemoveAt(targetIndex);
-                _inCount--;
-
-                // Return GO
-                GameObject returnObject = returnItem.GetSelf();
-                returnObject.transform.SetParent(parent);
-                returnObject.transform.localPosition = localPosition;
-                returnObject.transform.LookAt(worldLookAtPosition);
-                returnItem.OnSpawnedFromPool();
                 return returnObject;
             }
 
-            if (_allowReuse)
-            {
-                IObjectPoolItem returnItem = _outItems[0];
-                if (returnItem == null)
-                {
-                    Trace.Output(Trace.TraceLevel.Warning,
-                        $"[GameObjectPool->Get] A null object was returned to object pool for {_prefab.name}.");
-                    return null;
-                }
-
-                returnItem.OnReturnedToPool();
-
-                GameObject returnObject = returnItem.GetSelf();
-                returnObject.transform.SetParent(parent);
-                returnObject.transform.localPosition = localPosition;
-                returnObject.transform.LookAt(worldLookAtPosition);
-                returnItem.OnSpawnedFromPool();
-                return returnObject;
-            }
-
-            Trace.Output(Trace.TraceLevel.Warning,
-                $"[GameObjectPool->Get] Hit maximum object cap of {_maximumObjects.ToString()} for {_prefab.name}.");
-            return null;
+            Transform transform = returnObject.transform;
+            transform.SetParent(parent);
+            transform.localPosition = localPosition;
+            transform.localRotation = localRotation;
+            OnSpawnedFromPoolAction(pool, item);
+            return returnObject;
         }
 
-        public GameObject Get(Vector3 worldPosition, Vector3 worldLookAtPosition)
+        public static GameObject Get(ListObjectPool pool, Transform parent, Vector3 localPosition,
+            Vector3 worldLookAtPosition)
         {
-            // Are we empty, but have refills?
-            if (_inCount == 0 && _outCount < _maximumObjects || _inCount == 0 && _allowCreateMore)
+            // Get an item but dont trigger OnSpawnedFromPool logic
+            object item = pool.Get(false);
+            if (item == null)
             {
-                CreateItem();
+                return null;
             }
 
-            if (_inCount > 0)
+            GameObject returnObject = (pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem)
+                ? gameObjectPoolItem.GetGameObject()
+                : (GameObject)item;
+
+            if (returnObject == null)
             {
-                int targetIndex = _inCount - 1;
-
-                // Make sure we don't pull badness
-                IObjectPoolItem returnItem = _inItems[targetIndex];
-                if (returnItem == null)
-                {
-                    Trace.Output(Trace.TraceLevel.Warning,
-                        $"[GameObjectPool->Get] A null object was pulled from the object pool for {_prefab.name}.");
-                    _inCount--;
-                    return null;
-                }
-
-                // Handle counters
-                _outItems.Add(_inItems[targetIndex]);
-                _outCount++;
-                _inItems.RemoveAt(targetIndex);
-                _inCount--;
-
-                // Return GO
-                GameObject returnObject = returnItem.GetSelf();
-                returnObject.transform.position = worldPosition;
-                returnObject.transform.LookAt(worldLookAtPosition);
-                returnItem.OnSpawnedFromPool();
                 return returnObject;
             }
 
-            if (_allowReuse)
-            {
-                IObjectPoolItem returnItem = _outItems[0];
-                if (returnItem == null)
-                {
-                    Trace.Output(Trace.TraceLevel.Warning,
-                        $"[GameObjectPool->Get] A null object was returned to object pool for {_prefab.name}.");
-                    return null;
-                }
-
-                returnItem.OnReturnedToPool();
-
-                GameObject returnObject = returnItem.GetSelf();
-                returnObject.transform.position = worldPosition;
-                returnObject.transform.LookAt(worldLookAtPosition);
-                returnItem.OnSpawnedFromPool();
-                return returnObject;
-            }
-
-            Trace.Output(Trace.TraceLevel.Warning,
-                $"[GameObjectPool->Get] Hit maximum object cap of {_maximumObjects.ToString()} for {_prefab.name}.");
-            return null;
+            Transform transform = returnObject.transform;
+            transform.SetParent(parent);
+            transform.localPosition = localPosition;
+            transform.LookAt(worldLookAtPosition);
+            OnSpawnedFromPoolAction(pool, item);
+            return returnObject;
         }
 
-        public GameObject Get(Vector3 worldPosition, Quaternion worldRotation)
+        public static GameObject Get(ListObjectPool pool, Vector3 worldPosition, Vector3 worldLookAtPosition)
         {
-            // Are we empty, but have refills?
-            if (_inCount == 0 && _outCount < _maximumObjects || _inCount == 0 && _allowCreateMore)
+            // Get an item but dont trigger OnSpawnedFromPool logic
+            object item = pool.Get(false);
+            if (item == null)
             {
-                CreateItem();
+                return null;
             }
 
-            if (_inCount > 0)
+            GameObject returnObject = (pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem)
+                ? gameObjectPoolItem.GetGameObject()
+                : (GameObject)item;
+
+            if (returnObject == null)
             {
-                int targetIndex = _inCount - 1;
-
-                // Make sure we don't pull badness
-                IObjectPoolItem returnItem = _inItems[targetIndex];
-                if (returnItem == null)
-                {
-                    Trace.Output(Trace.TraceLevel.Warning,
-                        $"[GameObjectPool->Get] A null object was pulled from the object pool for {_prefab.name}.");
-                    _inCount--;
-                    return null;
-                }
-
-                // Handle counters
-                _outItems.Add(_inItems[targetIndex]);
-                _outCount++;
-                _inItems.RemoveAt(targetIndex);
-                _inCount--;
-
-                // Return GO
-                GameObject returnObject = returnItem.GetSelf();
-                returnObject.transform.SetPositionAndRotation(worldPosition, worldRotation);
-                returnItem.OnSpawnedFromPool();
                 return returnObject;
             }
 
-            if (_allowReuse)
-            {
-                IObjectPoolItem returnItem = _outItems[0];
-                if (returnItem == null)
-                {
-                    Trace.Output(Trace.TraceLevel.Warning,
-                        $"[GameObjectPool->Get] A null object was returned to object pool for {_prefab.name}.");
-                    return null;
-                }
-
-                returnItem.OnReturnedToPool();
-
-                GameObject returnObject = returnItem.GetSelf();
-                returnObject.transform.SetPositionAndRotation(worldPosition, worldRotation);
-                returnItem.OnSpawnedFromPool();
-                return returnObject;
-            }
-
-            Trace.Output(Trace.TraceLevel.Warning,
-                $"[GameObjectPool->Get] Hit maximum object cap of {_maximumObjects.ToString()} for {_prefab.name}.");
-            return null;
+            Transform transform = returnObject.transform;
+            transform.position = worldPosition;
+            transform.LookAt(worldLookAtPosition);
+            OnSpawnedFromPoolAction(pool, item);
+            return returnObject;
         }
 
-        public GameObject Get(Vector3 worldPosition, Quaternion worldRotation, Transform parent)
+        public static GameObject Get(ListObjectPool pool, Vector3 worldPosition, Quaternion worldRotation)
         {
-            // Are we empty, but have refills?
-            if (_inCount == 0 && _outCount < _maximumObjects || _inCount == 0 && _allowCreateMore)
+            // Get an item but dont trigger OnSpawnedFromPool logic
+            object item = pool.Get(false);
+            if (item == null)
             {
-                CreateItem();
+                return null;
             }
 
-            if (_inCount > 0)
+            GameObject returnObject = (pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem)
+                ? gameObjectPoolItem.GetGameObject()
+                : (GameObject)item;
+
+            if (returnObject == null)
             {
-                int targetIndex = _inCount - 1;
-
-                // Make sure we don't pull badness
-                IObjectPoolItem returnItem = _inItems[targetIndex];
-                if (returnItem == null)
-                {
-                    Trace.Output(Trace.TraceLevel.Warning,
-                        $"[GameObjectPool->Get] A null object was pulled from the object pool for {_prefab.name}.");
-                    _inCount--;
-                    return null;
-                }
-
-                // Handle counters
-                _outItems.Add(_inItems[targetIndex]);
-                _outCount++;
-                _inItems.RemoveAt(targetIndex);
-                _inCount--;
-
-                // Return GO
-                GameObject returnObject = returnItem.GetSelf();
-                returnObject.transform.SetPositionAndRotation(worldPosition, worldRotation);
-                returnObject.transform.SetParent(parent, true);
-                returnItem.OnSpawnedFromPool();
                 return returnObject;
             }
 
-            if (_allowReuse)
-            {
-                IObjectPoolItem returnItem = _outItems[0];
-                if (returnItem == null)
-                {
-                    Trace.Output(Trace.TraceLevel.Warning,
-                        $"[GameObjectPool->Get] A null object was returned to object pool for {_prefab.name}.");
-                    return null;
-                }
-
-                returnItem.OnReturnedToPool();
-
-                GameObject returnObject = returnItem.GetSelf();
-                returnObject.transform.SetPositionAndRotation(worldPosition, worldRotation);
-                returnObject.transform.SetParent(parent, true);
-                returnItem.OnSpawnedFromPool();
-                return returnObject;
-            }
-
-            Trace.Output(Trace.TraceLevel.Warning,
-                $"[GameObjectPool->Get] Hit maximum object cap of {_maximumObjects.ToString()} for {_prefab.name}.");
-            return null;
+            Transform transform = returnObject.transform;
+            transform.SetPositionAndRotation(worldPosition, worldRotation);
+            OnSpawnedFromPoolAction(pool, item);
+            return returnObject;
         }
 
-        public GameObject Get(Vector3 worldPosition, Vector3 worldLookAtPosition, Transform parent)
+        public static GameObject Get(ListObjectPool pool, Vector3 worldPosition, Quaternion worldRotation,
+            Transform parent)
         {
-            // Are we empty, but have refills?
-            if (_inCount == 0 && _outCount < _maximumObjects || _inCount == 0 && _allowCreateMore)
+            // Get an item but dont trigger OnSpawnedFromPool logic
+            object item = pool.Get(false);
+            if (item == null)
             {
-                CreateItem();
+                return null;
             }
 
-            if (_inCount > 0)
+            GameObject returnObject = (pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem)
+                ? gameObjectPoolItem.GetGameObject()
+                : (GameObject)item;
+
+            if (returnObject == null)
             {
-                int targetIndex = _inCount - 1;
-
-                // Make sure we don't pull badness
-                IObjectPoolItem returnItem = _inItems[targetIndex];
-                if (returnItem == null)
-                {
-                    Trace.Output(Trace.TraceLevel.Warning,
-                        $"[GameObjectPool->Get] A null object was pulled from the object pool for {_prefab.name}.");
-                    _inCount--;
-                    return null;
-                }
-
-                // Handle counters
-                _outItems.Add(_inItems[targetIndex]);
-                _outCount++;
-                _inItems.RemoveAt(targetIndex);
-                _inCount--;
-
-                // Return GO
-                GameObject returnObject = returnItem.GetSelf();
-                returnObject.transform.position = worldPosition;
-                returnObject.transform.SetParent(parent, true);
-                returnObject.transform.LookAt(worldLookAtPosition);
-                returnItem.OnSpawnedFromPool();
                 return returnObject;
             }
 
-            if (_allowReuse)
-            {
-                IObjectPoolItem returnItem = _outItems[0];
-                if (returnItem == null)
-                {
-                    Trace.Output(Trace.TraceLevel.Warning,
-                        $"[GameObjectPool->Get] A null object was returned to object pool for {_prefab.name}.");
-                    return null;
-                }
-
-                returnItem.OnReturnedToPool();
-
-                GameObject returnObject = returnItem.GetSelf();
-                returnObject.transform.position = worldPosition;
-                returnObject.transform.SetParent(parent, true);
-                returnObject.transform.LookAt(worldLookAtPosition);
-                returnItem.OnSpawnedFromPool();
-                return returnObject;
-            }
-
-            Trace.Output(Trace.TraceLevel.Warning,
-                $"[GameObjectPool->Get] Hit maximum object cap of {_maximumObjects.ToString()} for {_prefab.name}.");
-            return null;
+            Transform transform = returnObject.transform;
+            transform.SetPositionAndRotation(worldPosition, worldRotation);
+            transform.SetParent(parent, true);
+            OnSpawnedFromPoolAction(pool, item);
+            return returnObject;
         }
-        */
+
+        public static GameObject Get(ListObjectPool pool, Vector3 worldPosition, Vector3 worldLookAtPosition,
+            Transform parent)
+        {
+            // Get an item but dont trigger OnSpawnedFromPool logic
+            object item = pool.Get(false);
+            if (item == null)
+            {
+                return null;
+            }
+
+            GameObject returnObject = (pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem)
+                ? gameObjectPoolItem.GetGameObject()
+                : (GameObject)item;
+
+            if (returnObject == null)
+            {
+                return returnObject;
+            }
+
+            Transform transform = returnObject.transform;
+            transform.position = worldPosition;
+            transform.SetParent(parent, true);
+            transform.LookAt(worldLookAtPosition);
+            OnSpawnedFromPoolAction(pool, item);
+            return returnObject;
+        }
     }
 }
