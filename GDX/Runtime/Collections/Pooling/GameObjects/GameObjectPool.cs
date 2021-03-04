@@ -60,7 +60,7 @@ namespace GDX.Collections.Pooling.GameObjects
 
             // Assign actions
             newGameObjectPool.OnCreateItem += OnCreateItemAction;
-            newGameObjectPool.OnDestroyItem += OnDestroyItem;
+            newGameObjectPool.OnDestroyItem += OnDestroyItemAction;
 
             newGameObjectPool.OnTearDownPrePoolItems += OnTearDownPrePoolItemsAction;
             newGameObjectPool.OnTearDownPostPoolItems += OnTearDownPostPoolItemsAction;
@@ -120,7 +120,7 @@ namespace GDX.Collections.Pooling.GameObjects
             (item as IGameObjectPoolItem)?.OnReturnedToPool();
         }
 
-        private static void OnDestroyItem(object item)
+        private static void OnDestroyItemAction(object item)
         {
             Object unityObject = (Object)item;
             if (unityObject != null)
