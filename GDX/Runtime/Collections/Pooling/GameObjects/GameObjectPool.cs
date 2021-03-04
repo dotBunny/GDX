@@ -9,25 +9,24 @@ namespace GDX.Collections.Pooling.GameObjects
     public static class GameObjectPool // : ListObjectPool
     {
         private const int HasInterfaceFlag = 5;
-
         /// <summary>
         ///     Create a <see cref="GameObject" /> based <see cref="ListObjectPool" /> for the provided <paramref name="prefab" />.
         /// </summary>
-        /// <param name="parent">Default transform parent for any created items.</param>
-        /// <param name="prefab">The prefab OR <see cref="GameObject" /> which going to be cloned.</param>
+        /// <param name="parent">The container object.</param>
+        /// <param name="prefab">The object which going to be cloned.</param>
         /// <param name="minimumObjects">The minimum number of objects to be pooled.</param>
         /// <param name="maximumObjects">The maximum number of objects to be pooled.</param>
-        /// <param name="allowCreateMore">
-        ///     Can more items
-        ///     be created as needed?
-        /// </param>
-        /// <param name="allowReuseWhenCapped">Should we reuse oldest items when capped?</param>
-        /// <param name="allowTimeSlicing">Should the initial spawning be spread across frames using a builder?</param>
-        /// <param name="shouldTearDown">Should the object pool tear itself down during scene transitions?</param>
-        public static IObjectPool Create(Transform parent, GameObject prefab, int minimumObjects = 10,
+        /// <param name="allowCreateMore">Can more items be created as needed when starved for items?</param>
+        /// <param name="allowReuseWhenCapped">Should we reuse oldest items when starving for items?</param>
+        /// <param name="allowManagedTearDown">Does the pool allow a managed tear down event call?</param>
+        public static IObjectPool Create(
+            Transform parent,
+            GameObject prefab,
+            int minimumObjects = 10,
             int maximumObjects = 50,
-            bool allowCreateMore = true, bool allowReuseWhenCapped = false, bool allowTimeSlicing = true,
-            bool shouldTearDown = false)
+            bool allowCreateMore = true,
+            bool allowReuseWhenCapped = false,
+            bool allowManagedTearDown = false)
         {
             // We already have a pool for this ID
             int uniqueID = GetUniqueID(prefab);
@@ -46,7 +45,7 @@ namespace GDX.Collections.Pooling.GameObjects
                 false,
                 allowCreateMore,
                 allowReuseWhenCapped,
-                shouldTearDown)
+                allowManagedTearDown)
             {
                 Flags =
                 {

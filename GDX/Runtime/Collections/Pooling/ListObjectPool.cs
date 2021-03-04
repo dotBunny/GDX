@@ -41,7 +41,18 @@ namespace GDX.Collections.Pooling
         public Action<ListObjectPool, object> OnReturnedToPool;
         public Action<object> OnDestroyItem;
 
-
+        /// <summary>
+        ///     Create a <see cref="ListObjectPool"/>.
+        /// </summary>
+        /// <param name="uniqueID">An absolutely unique identifier for this pool.</param>
+        /// <param name="baseObject">The object which going to be cloned.</param>
+        /// <param name="minimumObjects">The minimum number of objects to be pooled.</param>
+        /// <param name="maximumObjects">The maximum number of objects to be pooled.</param>
+        /// <param name="containerObject">A reference to an object which should be used as the container for created items.</param>
+        /// <param name="prewarmPool">Should this pool create its items during the constructor?</param>
+        /// <param name="allowCreateMore">Can more items be created as needed when starved for items?</param>
+        /// <param name="allowReuseWhenCapped">Should we reuse oldest items when starving for items?</param>
+        /// <param name="allowManagedTearDown">Does the pool allow a managed tear down event call?</param>
         public ListObjectPool(
             int uniqueID,
             object baseObject,
@@ -51,7 +62,7 @@ namespace GDX.Collections.Pooling
             bool prewarmPool = true,
             bool allowCreateMore = true,
             bool allowReuseWhenCapped = false,
-            bool shouldTearDown = false)
+            bool allowManagedTearDown = false)
         {
             _uniqueID = uniqueID;
             _baseObject = baseObject;
@@ -59,7 +70,7 @@ namespace GDX.Collections.Pooling
             _maximumObjects = maximumObjects;
 
             Flags[AllowCreateMoreFlag] = allowCreateMore;
-            Flags[AllowManagedTeardownFlag] = shouldTearDown;
+            Flags[AllowManagedTeardownFlag] = allowManagedTearDown;
             Flags[AllowReuseFlag] = allowReuseWhenCapped;
             Flags[PrewarmPoolFlag] = prewarmPool;
 
@@ -70,12 +81,14 @@ namespace GDX.Collections.Pooling
             _inItems = new List<object>(maximumObjects);
             _outItems = new List<object>(maximumObjects);
 
-            if (prewarmPool)
+            if (!prewarmPool)
             {
-                for (int i = 0; i < minimumObjects; i++)
-                {
-                    this.CreateItem();
-                }
+                return;
+            }
+
+            for (int i = 0; i < minimumObjects; i++)
+            {
+                this.CreateItem();
             }
         }
 
@@ -121,7 +134,7 @@ namespace GDX.Collections.Pooling
                 if (returnItem == null)
                 {
                     Trace.Output(Trace.TraceLevel.Warning,
-                        $"[ListObjectPool->Get] A null object was pulled from a pool ({_uniqueID}).");
+                        $"[ListObjectPool->Get] A null object was pulled from a pool ({_uniqueID.ToString()}).");
                     _inCount--;
                     return null;
                 }
@@ -145,7 +158,7 @@ namespace GDX.Collections.Pooling
                 if (returnItem == null)
                 {
                     Trace.Output(Trace.TraceLevel.Warning,
-                        $"[ListObjectPool->Get] A null object was returned to the object pool ({_uniqueID}).");
+                        $"[ListObjectPool->Get] A null object was returned to the object pool ({_uniqueID.ToString()}).");
                     return null;
                 }
 
@@ -159,7 +172,7 @@ namespace GDX.Collections.Pooling
             }
 
             Trace.Output(Trace.TraceLevel.Warning,
-                $"[ListObjectPool->Get] Hit maximum object cap of {_maximumObjects.ToString()} for object pool ({_uniqueID}).");
+                $"[ListObjectPool->Get] Hit maximum object cap of {_maximumObjects.ToString()} for object pool ({_uniqueID.ToString()}).");
             return null;
         }
 
