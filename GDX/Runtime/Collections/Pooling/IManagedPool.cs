@@ -42,7 +42,6 @@ namespace GDX.Collections.Pooling
         /// <returns>true/false if enough items are found contained in the <see cref="IManagedPool" />.</returns>
         public bool HasMinimumPooledItems();
 
-
         /// <summary>
         ///     Should the<see cref="IManagedPool" /> destroy itself when <see cref="ManagedPools" /> requests a tear down?
         /// </summary>
@@ -76,7 +75,7 @@ namespace GDX.Collections.Pooling
         public void PoolAllItems(bool shouldShrink = true);
 
         /// <summary>
-        ///     Destroy all <see cref="object" /> associated with the <see cref="IManagedPool" />.
+        ///     Destroy all <see cref="object" />s associated with the <see cref="IManagedPool" />.
         /// </summary>
         public void TearDown();
     }

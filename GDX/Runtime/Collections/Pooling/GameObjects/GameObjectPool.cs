@@ -40,6 +40,7 @@ namespace GDX.Collections.Pooling.GameObjects
             ListManagedPool newGameManagedPool = new ListManagedPool(
                 uniqueID,
                 prefab,
+                CreateItem,
                 minimumObjects,
                 maximumObjects,
                 parent,
@@ -56,14 +57,11 @@ namespace GDX.Collections.Pooling.GameObjects
             newGameManagedPool._outCount = 0;
 
             // Assign actions
-            newGameManagedPool.OnCreateItem += OnCreateItemAction;
             newGameManagedPool.OnDestroyItem += OnDestroyItemAction;
-
             newGameManagedPool.OnTearDownPrePoolItems += OnTearDownPrePoolItemsAction;
             newGameManagedPool.OnTearDownPostPoolItems += OnTearDownPostPoolItemsAction;
             newGameManagedPool.OnSpawnedFromPool += OnSpawnedFromPoolAction;
             newGameManagedPool.OnReturnedToPool += OnReturnedToPoolAction;
-
 
             return newGameManagedPool;
         }
@@ -73,7 +71,7 @@ namespace GDX.Collections.Pooling.GameObjects
             return $"GameObject_{source.GetInstanceID().ToString()}".GetHashCode();
         }
 
-        private static void OnCreateItemAction(ListManagedPool pool)
+        private static object CreateItem(ListManagedPool pool)
         {
             GameObject spawnedObject =
                 Object.Instantiate((GameObject)pool._baseObject, (Transform)pool._containerObject, false);
@@ -85,14 +83,14 @@ namespace GDX.Collections.Pooling.GameObjects
                 item.SetParentPool(pool);
                 item.OnReturnedToPool();
                 pool._inItems.Add(item);
-            }
-            else
-            {
-                spawnedObject.SetActive(false);
-                pool._inItems.Add(spawnedObject);
+                pool._inCount++;
+                return item;
             }
 
+            spawnedObject.SetActive(false);
+            pool._inItems.Add(spawnedObject);
             pool._inCount++;
+            return spawnedObject;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

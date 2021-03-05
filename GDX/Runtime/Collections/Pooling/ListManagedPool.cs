@@ -44,6 +44,11 @@ namespace GDX.Collections.Pooling
         internal readonly object _containerObject;
 
         /// <summary>
+        ///     A defined function to create items for the pool.
+        /// </summary>
+        private readonly Func<ListManagedPool, object> _createItemFunc;
+
+        /// <summary>
         ///     A collection of items that are currently contained in the pool for use when spawning items upon request.
         /// </summary>
         internal readonly List<object> _inItems;
@@ -78,9 +83,6 @@ namespace GDX.Collections.Pooling
         /// </summary>
         internal int _outCount;
 
-        // TODO: Implement using this to create items?
-        public Func<object> CreateItemFunc;
-
         /// <summary>
         ///     A <see cref="BitArray8" /> used to store pool based flags, as well as provide additional spots for implementations.
         /// </summary>
@@ -92,22 +94,17 @@ namespace GDX.Collections.Pooling
         public BitArray8 Flags;
 
         /// <summary>
-        ///     A <c>delegate</c> call made when an item is created by the <see cref="ListManagedPool"/>.
-        /// </summary>
-        public Action<ListManagedPool> OnCreateItem;
-
-        /// <summary>
-        ///     A <c>delegate</c> call made when an item is destroyed by the <see cref="ListManagedPool"/>.
+        ///     A <c>delegate</c> call made when an item is destroyed by the <see cref="ListManagedPool" />.
         /// </summary>
         public Action<object> OnDestroyItem;
 
         /// <summary>
-        ///     A <c>delegate</c> call made when an item is returned to the <see cref="ListManagedPool"/>.
+        ///     A <c>delegate</c> call made when an item is returned to the <see cref="ListManagedPool" />.
         /// </summary>
         public Action<ListManagedPool, object> OnReturnedToPool;
 
         /// <summary>
-        ///     A <c>delegate</c> call made when an item is spawned from the <see cref="ListManagedPool"/>.
+        ///     A <c>delegate</c> call made when an item is spawned from the <see cref="ListManagedPool" />.
         /// </summary>
         public Action<ListManagedPool, object> OnSpawnedFromPool;
 
@@ -126,6 +123,7 @@ namespace GDX.Collections.Pooling
         /// </summary>
         /// <param name="uniqueID">An absolutely unique identifier for this pool.</param>
         /// <param name="baseObject">The object which going to be cloned.</param>
+        /// <param name="createItemFunc">The function used to create new items for the pool.</param>
         /// <param name="minimumObjects">The minimum number of objects to be managed by the pool.</param>
         /// <param name="maximumObjects">The maximum number of objects to be managed by the pool.</param>
         /// <param name="containerObject">A reference to an object which should be used as the container for created items.</param>
@@ -136,6 +134,7 @@ namespace GDX.Collections.Pooling
         public ListManagedPool(
             int uniqueID,
             object baseObject,
+            Func<ListManagedPool, object> createItemFunc,
             int minimumObjects = 10,
             int maximumObjects = 50,
             object containerObject = null,
@@ -146,6 +145,7 @@ namespace GDX.Collections.Pooling
         {
             _uniqueID = uniqueID;
             _baseObject = baseObject;
+            _createItemFunc = createItemFunc;
             _minimumObjects = minimumObjects;
             _maximumObjects = maximumObjects;
 
@@ -175,7 +175,7 @@ namespace GDX.Collections.Pooling
         /// <inheritdoc />
         public void CreateItem()
         {
-            OnCreateItem?.Invoke(this);
+            _createItemFunc(this);
         }
 
         /// <inheritdoc />
