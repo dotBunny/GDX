@@ -10,7 +10,7 @@ namespace GDX.Collections.Pooling.GameObjects
     {
         private const int InstantiatesPerFrame = 5;
         private static GameObject s_builderObject;
-        private static readonly List<IObjectPool> s_targetPools = new List<IObjectPool>();
+        private static readonly List<IManagedPool> s_targetPools = new List<IManagedPool>();
         private static int s_targetPoolsCount;
 
         private void LateUpdate()
@@ -28,14 +28,14 @@ namespace GDX.Collections.Pooling.GameObjects
             Destroy(gameObject);
         }
 
-        public static void AddObjectPool(IObjectPool targetObjectPool)
+        public static void AddObjectPool(IManagedPool targetManagedPool)
         {
-            if (s_targetPools.Contains(targetObjectPool))
+            if (s_targetPools.Contains(targetManagedPool))
             {
                 return;
             }
 
-            s_targetPools.Add(targetObjectPool);
+            s_targetPools.Add(targetManagedPool);
             s_targetPoolsCount++;
 
             if (s_builderObject == null)
@@ -44,14 +44,14 @@ namespace GDX.Collections.Pooling.GameObjects
             }
         }
 
-        public static void RemoveObjectPool(IObjectPool targetObjectPool)
+        public static void RemoveObjectPool(IManagedPool targetManagedPool)
         {
-            if (!s_targetPools.Contains(targetObjectPool))
+            if (!s_targetPools.Contains(targetManagedPool))
             {
                 return;
             }
 
-            s_targetPools.Remove(targetObjectPool);
+            s_targetPools.Remove(targetManagedPool);
             s_targetPoolsCount--;
         }
 

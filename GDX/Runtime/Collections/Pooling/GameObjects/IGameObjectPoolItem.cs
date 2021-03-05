@@ -14,11 +14,11 @@ namespace GDX.Collections.Pooling.GameObjects
         GameObject GetGameObject();
 
         /// <summary>
-        ///     Return the <see cref="IObjectPool" /> which the <see cref="IGameObjectPoolItem" /> is currently managed by.
+        ///     Return the <see cref="IManagedPool" /> which the <see cref="IGameObjectPoolItem" /> is currently managed by.
         /// </summary>
         /// <remarks>It is possible that a pooled item may exist without a parent in some custom scenario.</remarks>
-        /// <returns>An <see cref="IObjectPool" /> if the <see cref="IGameObjectPoolItem" /> is attached to a pool, otherwise null.</returns>
-        IObjectPool GetParentPool();
+        /// <returns>An <see cref="IManagedPool" /> if the <see cref="IGameObjectPoolItem" /> is attached to a pool, otherwise null.</returns>
+        IManagedPool GetParentPool();
 
         /// <summary>
         ///     Is the <see cref="IGameObjectPoolItem" /> thought to be valid?
@@ -36,6 +36,6 @@ namespace GDX.Collections.Pooling.GameObjects
 
         void ReturnToPool();
 
-        void SetParentPool(IObjectPool targetObjectPool);
+        void SetParentPool(IManagedPool targetManagedPool);
     }
 }

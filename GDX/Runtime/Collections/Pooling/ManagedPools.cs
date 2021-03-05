@@ -6,7 +6,7 @@ namespace GDX.Collections.Pooling
     /// <summary>
     ///     A pooling system implementation primarily meant for the object oriented patterns, based on the C# base object.
     /// </summary>
-    public static class ObjectPools
+    public static class ManagedPools
     {
         /// <summary>
         ///     An internal dictionary containing the pools, uniquely index by constant ID provider.
@@ -17,15 +17,15 @@ namespace GDX.Collections.Pooling
         /// </remarks>
         // ReSharper disable once HeapView.ObjectAllocation.Evident
         // TODO: Change over to IntDictionary
-        private static readonly Dictionary<int, IObjectPool> s_pools = new Dictionary<int, IObjectPool>();
+        private static readonly Dictionary<int, IManagedPool> s_pools = new Dictionary<int, IManagedPool>();
 
         // TODO: Should autocreate?
         /// <summary>
-        ///     Get a registered <see cref="IObjectPool" /> based on its <paramref name="uniqueID" />.
+        ///     Get a registered <see cref="IManagedPool" /> based on its <paramref name="uniqueID" />.
         /// </summary>
         /// <param name="uniqueID">The unique identifier provided to the system when registering the pool.</param>
-        /// <returns>An <see cref="IObjectPool" /> identified by the provided <paramref name="uniqueID" />.</returns>
-        public static IObjectPool GetPool(int uniqueID)
+        /// <returns>An <see cref="IManagedPool" /> identified by the provided <paramref name="uniqueID" />.</returns>
+        public static IManagedPool GetPool(int uniqueID)
         {
             return s_pools[uniqueID];
         }
@@ -35,7 +35,7 @@ namespace GDX.Collections.Pooling
             return (T)s_pools[uniqueID];
         }
 
-        public static IObjectPool GetPool(string key)
+        public static IManagedPool GetPool(string key)
         {
             return s_pools[key.GetHashCode()];
         }
@@ -45,7 +45,7 @@ namespace GDX.Collections.Pooling
             return (T)s_pools[key.GetHashCode()];
         }
 
-        public static IObjectPool GetPoolWithContainsCheck(int uniqueID)
+        public static IManagedPool GetPoolWithContainsCheck(int uniqueID)
         {
             if (s_pools.ContainsKey(uniqueID))
             {
@@ -64,7 +64,7 @@ namespace GDX.Collections.Pooling
             return null;
         }
 
-        public static IObjectPool GetPoolWithContainsCheck(string key)
+        public static IManagedPool GetPoolWithContainsCheck(string key)
         {
             int uniqueID = key.GetHashCode();
             if (s_pools.ContainsKey(uniqueID))
@@ -85,7 +85,7 @@ namespace GDX.Collections.Pooling
         }
 
         /// <summary>
-        ///     Is a <see cref="IObjectPool" /> created with the provided <paramref name="uniqueID" />?
+        ///     Is a <see cref="IManagedPool" /> created with the provided <paramref name="uniqueID" />?
         /// </summary>
         /// <param name="uniqueID">A unique pool identifier</param>
         /// <returns>true if a pool is found registered with this system, false otherwise.</returns>
@@ -105,31 +105,31 @@ namespace GDX.Collections.Pooling
         /// <param name="shouldShrink">Should the pool be shrunk (destroying created items) to its original set minimum size?</param>
         public static void PoolAllItem(bool shouldShrink = true)
         {
-            foreach (KeyValuePair<int, IObjectPool> p in s_pools)
+            foreach (KeyValuePair<int, IManagedPool> p in s_pools)
             {
                 p.Value.PoolAllItems(shouldShrink);
             }
         }
 
         /// <summary>
-        ///     Register a <see cref="IObjectPool" /> with the global management system.
+        ///     Register a <see cref="IManagedPool" /> with the global management system.
         /// </summary>
-        /// <param name="objectPool">Target <see cref="IObjectPool" /></param>
-        public static void Register(IObjectPool objectPool)
+        /// <param name="managedPool">Target <see cref="IManagedPool" /></param>
+        public static void Register(IManagedPool managedPool)
         {
-            if (!s_pools.ContainsKey(objectPool.GetUniqueID()))
+            if (!s_pools.ContainsKey(managedPool.GetUniqueID()))
             {
-                s_pools.Add(objectPool.GetUniqueID(), objectPool);
+                s_pools.Add(managedPool.GetUniqueID(), managedPool);
             }
         }
 
         /// <summary>
-        ///     Execute <see cref="IObjectPool.TearDown()" /> (destroying contents) on all registered <see cref="IObjectPool" /> which have
-        ///     been flagged to accept it, evaluated by <see cref="IObjectPool.IsAllowedManagedTearDown()" />.
+        ///     Execute <see cref="IManagedPool.TearDown()" /> (destroying contents) on all registered <see cref="IManagedPool" /> which have
+        ///     been flagged to accept it, evaluated by <see cref="IManagedPool.IsAllowedManagedTearDown()" />.
         /// </summary>
-        /// <remarks>This will unregister the <see cref="IObjectPool" /> itself as well, as all of the content will have been destroyed.</remarks>
+        /// <remarks>This will unregister the <see cref="IManagedPool" /> itself as well, as all of the content will have been destroyed.</remarks>
         /// <param name="forceAll">
-        ///     Execute <see cref="IObjectPool.TearDown()" /> regardless of the <see cref="IObjectPool.IsAllowedManagedTearDown()" /> response.
+        ///     Execute <see cref="IManagedPool.TearDown()" /> regardless of the <see cref="IManagedPool.IsAllowedManagedTearDown()" /> response.
         /// </param>
         public static void TearDown(bool forceAll = false)
         {
@@ -139,7 +139,7 @@ namespace GDX.Collections.Pooling
             // Now we pay the cost, however its during a teardown so, its less bad.
             int poolCount = s_pools.Count;
             // TODO: Implement MoveNext when available
-            foreach (KeyValuePair<int, IObjectPool> pool in s_pools)
+            foreach (KeyValuePair<int, IManagedPool> pool in s_pools)
             {
                 if (!pool.Value.IsAllowedManagedTearDown() && !forceAll)
                 {
@@ -162,19 +162,19 @@ namespace GDX.Collections.Pooling
         }
 
         /// <summary>
-        ///     Unregister a <see cref="IObjectPool" /> with the global management system.
+        ///     Unregister a <see cref="IManagedPool" /> with the global management system.
         /// </summary>
-        /// <param name="objectPool">Target <see cref="IObjectPool" /></param>
-        public static void Unregister(IObjectPool objectPool)
+        /// <param name="managedPool">Target <see cref="IManagedPool" /></param>
+        public static void Unregister(IManagedPool managedPool)
         {
-            if (objectPool == null)
+            if (managedPool == null)
             {
                 return;
             }
 
-            if (s_pools.ContainsKey(objectPool.GetUniqueID()))
+            if (s_pools.ContainsKey(managedPool.GetUniqueID()))
             {
-                s_pools.Remove(objectPool.GetUniqueID());
+                s_pools.Remove(managedPool.GetUniqueID());
             }
         }
     }

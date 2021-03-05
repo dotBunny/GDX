@@ -6,12 +6,12 @@ using UnityEngine;
 
 namespace GDX.Collections.Pooling.GameObjects
 {
-    public static class GameObjectPool // : ListObjectPool
+    public static class GameObjectPool
     {
         private const int HasInterfaceFlag = 5;
 
         /// <summary>
-        ///     Create a <see cref="GameObject" /> based <see cref="ListObjectPool" /> for the provided <paramref name="prefab" />.
+        ///     Create a <see cref="GameObject" /> based <see cref="ListManagedPool" /> for the provided <paramref name="prefab" />.
         /// </summary>
         /// <param name="parent">The container object.</param>
         /// <param name="prefab">The object which going to be cloned.</param>
@@ -20,7 +20,7 @@ namespace GDX.Collections.Pooling.GameObjects
         /// <param name="allowCreateMore">Can more items be created as needed when starved for items?</param>
         /// <param name="allowReuseWhenCapped">Should we reuse oldest items when starving for items?</param>
         /// <param name="allowManagedTearDown">Does the pool allow a managed tear down event call?</param>
-        public static IObjectPool Create(
+        public static IManagedPool Create(
             Transform parent,
             UnityEngine.GameObject prefab,
             int minimumObjects = 10,
@@ -31,13 +31,13 @@ namespace GDX.Collections.Pooling.GameObjects
         {
             // We already have a pool for this ID
             int uniqueID = GetUniqueID(prefab);
-            if (ObjectPools.HasPool(uniqueID))
+            if (ManagedPools.HasPool(uniqueID))
             {
-                return ObjectPools.GetPool<ListObjectPool>(uniqueID);
+                return ManagedPools.GetPool<ListManagedPool>(uniqueID);
             }
 
             // Create our new pool
-            ListObjectPool newGameObjectPool = new ListObjectPool(
+            ListManagedPool newGameManagedPool = new ListManagedPool(
                 uniqueID,
                 prefab,
                 minimumObjects,
@@ -51,21 +51,21 @@ namespace GDX.Collections.Pooling.GameObjects
                 Flags = {[HasInterfaceFlag] = prefab.GetComponent<IGameObjectPoolItem>() != null}
             };
 
-            GameObjectPoolBuilder.AddObjectPool(newGameObjectPool);
+            GameObjectPoolBuilder.AddObjectPool(newGameManagedPool);
 
-            newGameObjectPool._outCount = 0;
+            newGameManagedPool._outCount = 0;
 
             // Assign actions
-            newGameObjectPool.OnCreateItem += OnCreateItemAction;
-            newGameObjectPool.OnDestroyItem += OnDestroyItemAction;
+            newGameManagedPool.OnCreateItem += OnCreateItemAction;
+            newGameManagedPool.OnDestroyItem += OnDestroyItemAction;
 
-            newGameObjectPool.OnTearDownPrePoolItems += OnTearDownPrePoolItemsAction;
-            newGameObjectPool.OnTearDownPostPoolItems += OnTearDownPostPoolItemsAction;
-            newGameObjectPool.OnSpawnedFromPool += OnSpawnedFromPoolAction;
-            newGameObjectPool.OnReturnedToPool += OnReturnedToPoolAction;
+            newGameManagedPool.OnTearDownPrePoolItems += OnTearDownPrePoolItemsAction;
+            newGameManagedPool.OnTearDownPostPoolItems += OnTearDownPostPoolItemsAction;
+            newGameManagedPool.OnSpawnedFromPool += OnSpawnedFromPoolAction;
+            newGameManagedPool.OnReturnedToPool += OnReturnedToPoolAction;
 
 
-            return newGameObjectPool;
+            return newGameManagedPool;
         }
 
         public static int GetUniqueID(UnityEngine.GameObject source)
@@ -73,7 +73,7 @@ namespace GDX.Collections.Pooling.GameObjects
             return $"GameObject_{source.GetInstanceID().ToString()}".GetHashCode();
         }
 
-        private static void OnCreateItemAction(ListObjectPool pool)
+        private static void OnCreateItemAction(ListManagedPool pool)
         {
             GameObject spawnedObject =
                 Object.Instantiate((GameObject)pool._baseObject, (Transform)pool._containerObject, false);
@@ -96,7 +96,7 @@ namespace GDX.Collections.Pooling.GameObjects
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void OnSpawnedFromPoolAction(ListObjectPool pool, object item)
+        private static void OnSpawnedFromPoolAction(ListManagedPool pool, object item)
         {
             if (!pool.Flags[HasInterfaceFlag])
             {
@@ -107,7 +107,7 @@ namespace GDX.Collections.Pooling.GameObjects
             (item as IGameObjectPoolItem)?.OnSpawnedFromPool();
         }
 
-        private static void OnReturnedToPoolAction(ListObjectPool pool, object item)
+        private static void OnReturnedToPoolAction(ListManagedPool pool, object item)
         {
             if (!pool.Flags[HasInterfaceFlag])
             {
@@ -127,12 +127,12 @@ namespace GDX.Collections.Pooling.GameObjects
             }
         }
 
-        private static void OnTearDownPrePoolItemsAction(ListObjectPool pool)
+        private static void OnTearDownPrePoolItemsAction(ListManagedPool pool)
         {
             GameObjectPoolBuilder.RemoveObjectPool(pool);
         }
 
-        private static void OnTearDownPostPoolItemsAction(ListObjectPool pool)
+        private static void OnTearDownPostPoolItemsAction(ListManagedPool pool)
         {
             for (int i = 0; i < pool._inCount; i++)
             {
@@ -150,7 +150,7 @@ namespace GDX.Collections.Pooling.GameObjects
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GameObject Get(ListObjectPool pool)
+        public static GameObject Get(ListManagedPool pool)
         {
             // Get an item but dont trigger OnSpawnedFromPool logic
             object item = pool.Get(false);
@@ -166,7 +166,7 @@ namespace GDX.Collections.Pooling.GameObjects
             return returnObject;
         }
 
-        public static GameObject Get(ListObjectPool pool, Transform parent, bool worldPositionStays = false,
+        public static GameObject Get(ListManagedPool pool, Transform parent, bool worldPositionStays = false,
             bool zeroPosition = true)
         {
             // Get an item but dont trigger OnSpawnedFromPool logic
@@ -196,7 +196,7 @@ namespace GDX.Collections.Pooling.GameObjects
             return returnObject;
         }
 
-        public static GameObject Get(ListObjectPool pool, Transform parent, Vector3 localPosition,
+        public static GameObject Get(ListManagedPool pool, Transform parent, Vector3 localPosition,
             Quaternion localRotation)
         {
             // Get an item but dont trigger OnSpawnedFromPool logic
@@ -223,7 +223,7 @@ namespace GDX.Collections.Pooling.GameObjects
             return returnObject;
         }
 
-        public static GameObject Get(ListObjectPool pool, Transform parent, Vector3 localPosition,
+        public static GameObject Get(ListManagedPool pool, Transform parent, Vector3 localPosition,
             Vector3 worldLookAtPosition)
         {
             // Get an item but dont trigger OnSpawnedFromPool logic
@@ -250,7 +250,7 @@ namespace GDX.Collections.Pooling.GameObjects
             return returnObject;
         }
 
-        public static GameObject Get(ListObjectPool pool, Vector3 worldPosition, Vector3 worldLookAtPosition)
+        public static GameObject Get(ListManagedPool pool, Vector3 worldPosition, Vector3 worldLookAtPosition)
         {
             // Get an item but dont trigger OnSpawnedFromPool logic
             object item = pool.Get(false);
@@ -275,7 +275,7 @@ namespace GDX.Collections.Pooling.GameObjects
             return returnObject;
         }
 
-        public static GameObject Get(ListObjectPool pool, Vector3 worldPosition, Quaternion worldRotation)
+        public static GameObject Get(ListManagedPool pool, Vector3 worldPosition, Quaternion worldRotation)
         {
             // Get an item but dont trigger OnSpawnedFromPool logic
             object item = pool.Get(false);
@@ -299,7 +299,7 @@ namespace GDX.Collections.Pooling.GameObjects
             return returnObject;
         }
 
-        public static GameObject Get(ListObjectPool pool, Vector3 worldPosition, Quaternion worldRotation,
+        public static GameObject Get(ListManagedPool pool, Vector3 worldPosition, Quaternion worldRotation,
             Transform parent)
         {
             // Get an item but dont trigger OnSpawnedFromPool logic
@@ -325,7 +325,7 @@ namespace GDX.Collections.Pooling.GameObjects
             return returnObject;
         }
 
-        public static GameObject Get(ListObjectPool pool, Vector3 worldPosition, Vector3 worldLookAtPosition,
+        public static GameObject Get(ListManagedPool pool, Vector3 worldPosition, Vector3 worldLookAtPosition,
             Transform parent)
         {
             // Get an item but dont trigger OnSpawnedFromPool logic

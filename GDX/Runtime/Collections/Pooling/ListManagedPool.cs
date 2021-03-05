@@ -9,10 +9,10 @@ namespace GDX.Collections.Pooling
     /// <summary>
     ///     A <see cref="object" /> <see cref="List{T}" /> backed pool implementation.
     /// </summary>
-    public sealed class ListObjectPool : IObjectPool
+    public sealed class ListManagedPool : IManagedPool
     {
         /// <summary>
-        ///     The <see cref="Flags" /> index used to determine if the <see cref="ListObjectPool" /> is able to create
+        ///     The <see cref="Flags" /> index used to determine if the <see cref="ListManagedPool" /> is able to create
         ///     more items as necessary.
         /// </summary>
         private const int AllowCreateMoreFlag = 0;
@@ -87,42 +87,42 @@ namespace GDX.Collections.Pooling
         /// <remarks>
         ///     Index 0-3 (<see cref="AllowCreateMoreFlag" />, <see cref="AllowManagedTeardownFlag" />,
         ///     <see cref="AllowReuseFlag" />, and <see cref="PrewarmPoolFlag" />) are used by the
-        ///     <see cref="ListObjectPool" /> itself, leaving 4-7 for additional use.
+        ///     <see cref="ListManagedPool" /> itself, leaving 4-7 for additional use.
         /// </remarks>
         public BitArray8 Flags;
 
         /// <summary>
-        ///     A <c>delegate</c> call made when an item is created by the <see cref="ListObjectPool"/>.
+        ///     A <c>delegate</c> call made when an item is created by the <see cref="ListManagedPool"/>.
         /// </summary>
-        public Action<ListObjectPool> OnCreateItem;
+        public Action<ListManagedPool> OnCreateItem;
 
         /// <summary>
-        ///     A <c>delegate</c> call made when an item is destroyed by the <see cref="ListObjectPool"/>.
+        ///     A <c>delegate</c> call made when an item is destroyed by the <see cref="ListManagedPool"/>.
         /// </summary>
         public Action<object> OnDestroyItem;
 
         /// <summary>
-        ///     A <c>delegate</c> call made when an item is returned to the <see cref="ListObjectPool"/>.
+        ///     A <c>delegate</c> call made when an item is returned to the <see cref="ListManagedPool"/>.
         /// </summary>
-        public Action<ListObjectPool, object> OnReturnedToPool;
+        public Action<ListManagedPool, object> OnReturnedToPool;
 
         /// <summary>
-        ///     A <c>delegate</c> call made when an item is spawned from the <see cref="ListObjectPool"/>.
+        ///     A <c>delegate</c> call made when an item is spawned from the <see cref="ListManagedPool"/>.
         /// </summary>
-        public Action<ListObjectPool, object> OnSpawnedFromPool;
+        public Action<ListManagedPool, object> OnSpawnedFromPool;
 
         /// <summary>
         ///     A <c>delegate</c> call made when a pool is tearing down, after the items are returned to the pool.
         /// </summary>
-        public Action<ListObjectPool> OnTearDownPostPoolItems;
+        public Action<ListManagedPool> OnTearDownPostPoolItems;
 
         /// <summary>
         ///     A <c>delegate</c> call made when a pool is tearing down, before the items are pooled.
         /// </summary>
-        public Action<ListObjectPool> OnTearDownPrePoolItems;
+        public Action<ListManagedPool> OnTearDownPrePoolItems;
 
         /// <summary>
-        ///     Create a <see cref="ListObjectPool" />.
+        ///     Create a <see cref="ListManagedPool" />.
         /// </summary>
         /// <param name="uniqueID">An absolutely unique identifier for this pool.</param>
         /// <param name="baseObject">The object which going to be cloned.</param>
@@ -133,7 +133,7 @@ namespace GDX.Collections.Pooling
         /// <param name="allowCreateMore">Can more items be created as needed when starved for items?</param>
         /// <param name="allowReuseWhenCapped">Should we reuse oldest items when starving for items?</param>
         /// <param name="allowManagedTearDown">Does the pool allow a managed tear down event call?</param>
-        public ListObjectPool(
+        public ListManagedPool(
             int uniqueID,
             object baseObject,
             int minimumObjects = 10,
@@ -156,7 +156,7 @@ namespace GDX.Collections.Pooling
 
             _containerObject = containerObject;
 
-            ObjectPools.Register(this);
+            ManagedPools.Register(this);
 
             _inItems = new List<object>(maximumObjects);
             _outItems = new List<object>(maximumObjects);
@@ -361,10 +361,10 @@ namespace GDX.Collections.Pooling
             _inCount = 0;
         }
 
-        ~ListObjectPool()
+        ~ListManagedPool()
         {
             // Unregister
-            ObjectPools.Unregister(this);
+            ManagedPools.Unregister(this);
         }
     }
 }
