@@ -9,6 +9,7 @@ namespace GDX.Collections.Pooling.GameObjects
     public static class GameObjectPool // : ListObjectPool
     {
         private const int HasInterfaceFlag = 5;
+
         /// <summary>
         ///     Create a <see cref="GameObject" /> based <see cref="ListObjectPool" /> for the provided <paramref name="prefab" />.
         /// </summary>
@@ -21,7 +22,7 @@ namespace GDX.Collections.Pooling.GameObjects
         /// <param name="allowManagedTearDown">Does the pool allow a managed tear down event call?</param>
         public static IObjectPool Create(
             Transform parent,
-            GameObject prefab,
+            UnityEngine.GameObject prefab,
             int minimumObjects = 10,
             int maximumObjects = 50,
             bool allowCreateMore = true,
@@ -47,10 +48,7 @@ namespace GDX.Collections.Pooling.GameObjects
                 allowReuseWhenCapped,
                 allowManagedTearDown)
             {
-                Flags =
-                {
-                    [HasInterfaceFlag] = prefab.GetComponent<IGameObjectPoolItem>() != null
-                }
+                Flags = {[HasInterfaceFlag] = prefab.GetComponent<IGameObjectPoolItem>() != null}
             };
 
             GameObjectPoolBuilder.AddObjectPool(newGameObjectPool);
@@ -70,7 +68,7 @@ namespace GDX.Collections.Pooling.GameObjects
             return newGameObjectPool;
         }
 
-        public static int GetUniqueID(GameObject source)
+        public static int GetUniqueID(UnityEngine.GameObject source)
         {
             return $"GameObject_{source.GetInstanceID().ToString()}".GetHashCode();
         }
@@ -93,6 +91,7 @@ namespace GDX.Collections.Pooling.GameObjects
                 spawnedObject.SetActive(false);
                 pool._inItems.Add(spawnedObject);
             }
+
             pool._inCount++;
         }
 
@@ -160,7 +159,7 @@ namespace GDX.Collections.Pooling.GameObjects
                 return null;
             }
 
-            GameObject returnObject = (pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem)
+            GameObject returnObject = pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem
                 ? gameObjectPoolItem.GetGameObject()
                 : (GameObject)item;
 
@@ -177,7 +176,7 @@ namespace GDX.Collections.Pooling.GameObjects
                 return null;
             }
 
-            GameObject returnObject = (pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem)
+            GameObject returnObject = pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem
                 ? gameObjectPoolItem.GetGameObject()
                 : (GameObject)item;
 
@@ -192,6 +191,7 @@ namespace GDX.Collections.Pooling.GameObjects
             {
                 transform.localPosition = Vector3.zero;
             }
+
             OnSpawnedFromPoolAction(pool, item);
             return returnObject;
         }
@@ -206,7 +206,7 @@ namespace GDX.Collections.Pooling.GameObjects
                 return null;
             }
 
-            GameObject returnObject = (pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem)
+            GameObject returnObject = pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem
                 ? gameObjectPoolItem.GetGameObject()
                 : (GameObject)item;
 
@@ -233,7 +233,7 @@ namespace GDX.Collections.Pooling.GameObjects
                 return null;
             }
 
-            GameObject returnObject = (pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem)
+            GameObject returnObject = pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem
                 ? gameObjectPoolItem.GetGameObject()
                 : (GameObject)item;
 
@@ -259,7 +259,7 @@ namespace GDX.Collections.Pooling.GameObjects
                 return null;
             }
 
-            GameObject returnObject = (pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem)
+            GameObject returnObject = pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem
                 ? gameObjectPoolItem.GetGameObject()
                 : (GameObject)item;
 
@@ -284,7 +284,7 @@ namespace GDX.Collections.Pooling.GameObjects
                 return null;
             }
 
-            GameObject returnObject = (pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem)
+            GameObject returnObject = pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem
                 ? gameObjectPoolItem.GetGameObject()
                 : (GameObject)item;
 
@@ -309,7 +309,7 @@ namespace GDX.Collections.Pooling.GameObjects
                 return null;
             }
 
-            GameObject returnObject = (pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem)
+            GameObject returnObject = pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem
                 ? gameObjectPoolItem.GetGameObject()
                 : (GameObject)item;
 
@@ -335,7 +335,7 @@ namespace GDX.Collections.Pooling.GameObjects
                 return null;
             }
 
-            GameObject returnObject = (pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem)
+            GameObject returnObject = pool.Flags[HasInterfaceFlag] && item is IGameObjectPoolItem gameObjectPoolItem
                 ? gameObjectPoolItem.GetGameObject()
                 : (GameObject)item;
 

@@ -6,48 +6,128 @@ using System.Collections.Generic;
 
 namespace GDX.Collections.Pooling
 {
-
     /// <summary>
-    /// A <see cref="object"/> <see cref="List{T}"/> backed pool implementation.
+    ///     A <see cref="object" /> <see cref="List{T}" /> backed pool implementation.
     /// </summary>
     public sealed class ListObjectPool : IObjectPool
     {
+        /// <summary>
+        ///     The <see cref="Flags" /> index used to determine if the <see cref="ListObjectPool" /> is able to create
+        ///     more items as necessary.
+        /// </summary>
         private const int AllowCreateMoreFlag = 0;
+
+        /// <summary>
+        ///     The <see cref="Flags" /> index used to if <see cref="TearDown" /> can be called by a manager.
+        /// </summary>
         private const int AllowManagedTeardownFlag = 1;
+
+        /// <summary>
+        ///     The <see cref="Flags" /> index used to determine if items should be reused when the pool is starved.
+        /// </summary>
         private const int AllowReuseFlag = 2;
+
+        /// <summary>
+        ///     The <see cref="Flags" /> index used to determine if the pool should create items during its constructor.
+        /// </summary>
         private const int PrewarmPoolFlag = 3;
 
-        public BitArray8 Flags;
-
+        /// <summary>
+        ///     The object which the pool is based off of, used as a model when creating new items.
+        /// </summary>
         internal readonly object _baseObject;
+
+        /// <summary>
+        ///     The object which serves as a container for all objects of the pool.
+        /// </summary>
+        /// <remarks>Used more by implementations of pools, then this base class.</remarks>
         internal readonly object _containerObject;
 
-        internal int _inCount;
+        /// <summary>
+        ///     A collection of items that are currently contained in the pool for use when spawning items upon request.
+        /// </summary>
         internal readonly List<object> _inItems;
-        internal readonly int _maximumObjects;
-        internal readonly int _minimumObjects;
-        internal int _outCount;
-        internal readonly List<object> _outItems;
-        internal readonly int _uniqueID;
 
+        /// <summary>
+        ///     The Maximum number of objects to be managed by the pool.
+        /// </summary>
+        private readonly int _maximumObjects;
+
+        /// <summary>
+        ///     The minimum number of objects to be managed by the pool.
+        /// </summary>
+        private readonly int _minimumObjects;
+
+        /// <summary>
+        ///     A collection of items that are currently considered out of the pool, that have been spawned.
+        /// </summary>
+        private readonly List<object> _outItems;
+
+        /// <summary>
+        ///     The absolutely unique identifier for this pool.
+        /// </summary>
+        private readonly int _uniqueID;
+
+        /// <summary>
+        ///     A cached count of the number of items contained in <see cref="_inItems" />.
+        /// </summary>
+        internal int _inCount;
+
+        /// <summary>
+        ///     A cached count of the number of items contained in <see cref="_outItems" />.
+        /// </summary>
+        internal int _outCount;
+
+        // TODO: Implement using this to create items?
         public Func<object> CreateItemFunc;
 
+        /// <summary>
+        ///     A <see cref="BitArray8" /> used to store pool based flags, as well as provide additional spots for implementations.
+        /// </summary>
+        /// <remarks>
+        ///     Index 0-3 (<see cref="AllowCreateMoreFlag" />, <see cref="AllowManagedTeardownFlag" />,
+        ///     <see cref="AllowReuseFlag" />, and <see cref="PrewarmPoolFlag" />) are used by the
+        ///     <see cref="ListObjectPool" /> itself, leaving 4-7 for additional use.
+        /// </remarks>
+        public BitArray8 Flags;
+
+        /// <summary>
+        ///     A <c>delegate</c> call made when an item is created by the <see cref="ListObjectPool"/>.
+        /// </summary>
         public Action<ListObjectPool> OnCreateItem;
 
-        public Action<ListObjectPool> OnTearDownPostPoolItems;
-        public Action<ListObjectPool> OnTearDownPrePoolItems;
-
-        public Action<ListObjectPool, object> OnSpawnedFromPool;
-        public Action<ListObjectPool, object> OnReturnedToPool;
+        /// <summary>
+        ///     A <c>delegate</c> call made when an item is destroyed by the <see cref="ListObjectPool"/>.
+        /// </summary>
         public Action<object> OnDestroyItem;
 
         /// <summary>
-        ///     Create a <see cref="ListObjectPool"/>.
+        ///     A <c>delegate</c> call made when an item is returned to the <see cref="ListObjectPool"/>.
+        /// </summary>
+        public Action<ListObjectPool, object> OnReturnedToPool;
+
+        /// <summary>
+        ///     A <c>delegate</c> call made when an item is spawned from the <see cref="ListObjectPool"/>.
+        /// </summary>
+        public Action<ListObjectPool, object> OnSpawnedFromPool;
+
+        /// <summary>
+        ///     A <c>delegate</c> call made when a pool is tearing down, after the items are returned to the pool.
+        /// </summary>
+        public Action<ListObjectPool> OnTearDownPostPoolItems;
+
+        /// <summary>
+        ///     A <c>delegate</c> call made when a pool is tearing down, before the items are pooled.
+        /// </summary>
+        public Action<ListObjectPool> OnTearDownPrePoolItems;
+
+        /// <summary>
+        ///     Create a <see cref="ListObjectPool" />.
         /// </summary>
         /// <param name="uniqueID">An absolutely unique identifier for this pool.</param>
         /// <param name="baseObject">The object which going to be cloned.</param>
-        /// <param name="minimumObjects">The minimum number of objects to be pooled.</param>
-        /// <param name="maximumObjects">The maximum number of objects to be pooled.</param>
+        /// <param name="minimumObjects">The minimum number of objects to be managed by the pool.</param>
+        /// <param name="maximumObjects">The maximum number of objects to be managed by the pool.</param>
         /// <param name="containerObject">A reference to an object which should be used as the container for created items.</param>
         /// <param name="prewarmPool">Should this pool create its items during the constructor?</param>
         /// <param name="allowCreateMore">Can more items be created as needed when starved for items?</param>
@@ -88,7 +168,7 @@ namespace GDX.Collections.Pooling
 
             for (int i = 0; i < minimumObjects; i++)
             {
-                this.CreateItem();
+                CreateItem();
             }
         }
 
@@ -149,6 +229,7 @@ namespace GDX.Collections.Pooling
                 {
                     OnSpawnedFromPool?.Invoke(this, returnItem);
                 }
+
                 return returnItem;
             }
 

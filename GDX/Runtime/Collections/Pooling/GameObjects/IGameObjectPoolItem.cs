@@ -1,27 +1,33 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace GDX.Collections.Pooling
+using UnityEngine;
+
+namespace GDX.Collections.Pooling.GameObjects
 {
     /// <summary>
-    ///     An interface describing the functionality needed for an item to be understood by a potential
-    ///     <see cref="IObjectPool" />, if callbacks are to be made.
+    ///     An interface describing the functionality needed for an item to be understood by the <see cref=""/>,
+    ///     if callbacks are to be made.
     /// </summary>
     public interface IGameObjectPoolItem
     {
-        UnityEngine.GameObject GetGameObject();
+        GameObject GetGameObject();
 
         /// <summary>
-        ///     Return the <see cref="IObjectPool" /> which the <see cref="IObjectPoolItem" /> is currently managed by.
+        ///     Return the <see cref="IObjectPool" /> which the <see cref="IGameObjectPoolItem" /> is currently managed by.
         /// </summary>
         /// <remarks>It is possible that a pooled item may exist without a parent in some custom scenario.</remarks>
-        /// <returns>An <see cref="IObjectPool" /> if the <see cref="IObjectPoolItem" /> is attached to a pool, otherwise null.</returns>
+        /// <returns>An <see cref="IObjectPool" /> if the <see cref="IGameObjectPoolItem" /> is attached to a pool, otherwise null.</returns>
         IObjectPool GetParentPool();
 
         /// <summary>
-        ///     Is the <see cref="IObjectPoolItem"/>
+        ///     Is the <see cref="IGameObjectPoolItem" /> thought to be valid?
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>
+        ///     Sometimes a <see cref="UnityEngine.GameObject" /> may get destroyed without the pool knowing, this contains
+        ///     checks to validate if the item can be returned to a pool and reused appropriately.
+        /// </remarks>
+        /// <returns>true/false if the item is found to be valid.</returns>
         bool IsValidItem();
 
         void OnReturnedToPool();
