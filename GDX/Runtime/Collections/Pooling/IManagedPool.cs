@@ -34,7 +34,7 @@ namespace GDX.Collections.Pooling
         /// </summary>
         /// <remarks>This is used as the hash key for the <see cref="ManagedPools" />'s entry for this <see cref="IManagedPool" />.</remarks>
         /// <returns>A unique identifier.</returns>
-        public int GetUniqueID();
+        public int GetKey();
 
         /// <summary>
         ///     Does the <see cref="IManagedPool" /> contain the minimum number of items.
@@ -66,13 +66,14 @@ namespace GDX.Collections.Pooling
         ///     Return the <paramref name="item" /> to the <see cref="IManagedPool" />'s internal collection.
         /// </summary>
         /// <param name="item">The <paramref name="item" /> to return to the <see cref="IManagedPool" />.</param>
-        public void Pool(object item);
+        public void Return(object item);
 
         /// <summary>
         ///     Return all spawned <see cref="object" />s to the <see cref="IManagedPool" />.
         /// </summary>
-        /// <param name="shouldShrink">Should the <see cref="IManagedPool" /> be shrunk to its original minimum size?</param>
-        public void PoolAllItems(bool shouldShrink = true);
+        /// <remarks>Shrinking the pools helps with pools that have grown out of necessity past their maximum size</remarks>
+        /// <param name="shouldShrink">Should the <see cref="IManagedPool" /> be shrunk to its original maximum size?</param>
+        public void ReturnAll(bool shouldShrink = true);
 
         /// <summary>
         ///     Destroy all <see cref="object" />s associated with the <see cref="IManagedPool" />.

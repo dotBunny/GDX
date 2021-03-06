@@ -71,7 +71,7 @@ namespace GDX.Collections.Pooling
         /// <summary>
         ///     The absolutely unique identifier for this pool.
         /// </summary>
-        private readonly int _uniqueID;
+        private readonly int _key;
 
         /// <summary>
         ///     A cached count of the number of items contained in <see cref="_inItems" />.
@@ -121,7 +121,7 @@ namespace GDX.Collections.Pooling
         /// <summary>
         ///     Create a <see cref="ListManagedPool" />.
         /// </summary>
-        /// <param name="uniqueID">An absolutely unique identifier for this pool.</param>
+        /// <param name="key">An absolutely unique identifier for this pool.</param>
         /// <param name="baseObject">The object which going to be cloned.</param>
         /// <param name="createItemFunc">The function used to create new items for the pool.</param>
         /// <param name="minimumObjects">The minimum number of objects to be managed by the pool.</param>
@@ -132,7 +132,6 @@ namespace GDX.Collections.Pooling
         /// <param name="allowReuseWhenCapped">Should we reuse oldest items when starving for items?</param>
         /// <param name="allowManagedTearDown">Does the pool allow a managed tear down event call?</param>
         public ListManagedPool(
-            int uniqueID,
             object baseObject,
             Func<ListManagedPool, object> createItemFunc,
             int minimumObjects = 10,
@@ -143,7 +142,7 @@ namespace GDX.Collections.Pooling
             bool allowReuseWhenCapped = false,
             bool allowManagedTearDown = false)
         {
-            _uniqueID = uniqueID;
+            _key = ManagedPools.ReservePoolID();
             _baseObject = baseObject;
             _createItemFunc = createItemFunc;
             _minimumObjects = minimumObjects;
@@ -214,7 +213,7 @@ namespace GDX.Collections.Pooling
                 if (returnItem == null)
                 {
                     Trace.Output(Trace.TraceLevel.Warning,
-                        $"[ListObjectPool->Get] A null object was pulled from a pool ({_uniqueID.ToString()}).");
+                        $"[ListObjectPool->Get] A null object was pulled from a pool ({_key.ToString()}).");
                     _inCount--;
                     return null;
                 }
@@ -239,7 +238,7 @@ namespace GDX.Collections.Pooling
                 if (returnItem == null)
                 {
                     Trace.Output(Trace.TraceLevel.Warning,
-                        $"[ListObjectPool->Get] A null object was returned to the object pool ({_uniqueID.ToString()}).");
+                        $"[ListObjectPool->Get] A null object was returned to the object pool ({_key.ToString()}).");
                     return null;
                 }
 
@@ -253,7 +252,7 @@ namespace GDX.Collections.Pooling
             }
 
             Trace.Output(Trace.TraceLevel.Warning,
-                $"[ListObjectPool->Get] Hit maximum object cap of {_maximumObjects.ToString()} for object pool ({_uniqueID.ToString()}).");
+                $"[ListObjectPool->Get] Hit maximum object cap of {_maximumObjects.ToString()} for object pool ({_key.ToString()}).");
             return null;
         }
 
@@ -264,9 +263,9 @@ namespace GDX.Collections.Pooling
         }
 
         /// <inheritdoc />
-        public int GetUniqueID()
+        public int GetKey()
         {
-            return _uniqueID;
+            return _key;
         }
 
         /// <inheritdoc />
@@ -294,7 +293,7 @@ namespace GDX.Collections.Pooling
         }
 
         /// <inheritdoc />
-        public void Pool(object item)
+        public void Return(object item)
         {
             // Do we have the interface call?
             OnReturnedToPool?.Invoke(this, item);
@@ -315,14 +314,14 @@ namespace GDX.Collections.Pooling
         }
 
         /// <inheritdoc />
-        public void PoolAllItems(bool shouldShrink = true)
+        public void ReturnAll(bool shouldShrink = true)
         {
             for (int i = _outCount - 1; i >= 0; i--)
             {
-                Pool(_outItems[i]);
+                Return(_outItems[i]);
             }
 
-            if (shouldShrink && _inCount > _maximumObjects)
+            if (shouldShrink && _inCount <= _maximumObjects)
             {
                 return;
             }
@@ -330,7 +329,11 @@ namespace GDX.Collections.Pooling
             int removeCount = _inCount - _maximumObjects;
             for (int i = 0; i < removeCount; i++)
             {
+
+                // Trigger specific logic, like Object.Destroy
                 OnDestroyItem?.Invoke(_inItems[i]);
+
+                // Dereferencing
                 _inItems.RemoveAt(i);
                 _inCount--;
             }
@@ -346,7 +349,7 @@ namespace GDX.Collections.Pooling
             {
                 if (_outItems[i] != null)
                 {
-                    Pool(_outItems[i]);
+                    Return(_outItems[i]);
                 }
             }
 

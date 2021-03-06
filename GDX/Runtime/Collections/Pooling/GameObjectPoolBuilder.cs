@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GDX.Collections.Pooling.GameObjects
+namespace GDX.Collections.Pooling
 {
     public class GameObjectPoolBuilder : MonoBehaviour
     {

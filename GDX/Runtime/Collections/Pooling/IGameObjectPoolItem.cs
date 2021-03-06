@@ -3,7 +3,7 @@
 
 using UnityEngine;
 
-namespace GDX.Collections.Pooling.GameObjects
+namespace GDX.Collections.Pooling
 {
     /// <summary>
     ///     An interface describing the functionality needed for an item to be understood by the <see cref=""/>,

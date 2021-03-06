@@ -4,17 +4,26 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-namespace GDX.Collections.Pooling.GameObjects
+namespace GDX.Collections.Pooling
 {
+    /// <summary>
+    ///     <see cref="GameObject" /> based functionality extending the <see cref="ListManagedPool" /> to better support
+    ///     <see cref="GameObject" /> patterns.
+    /// </summary>
     public static class GameObjectPool
     {
+        /// <summary>
+        ///     The <see cref="ListManagedPool" /> flags index used to determine if the object which is used to create new objects
+        ///     has the <see cref="IGameObjectPoolItem" /> interface on a root component.
+        /// </summary>
         private const int HasInterfaceFlag = 5;
 
         /// <summary>
-        ///     Create a <see cref="GameObject" /> based <see cref="ListManagedPool" /> for the provided <paramref name="prefab" />.
+        ///     Create a <see cref="GameObject" /> based <see cref="ListManagedPool" /> for the provided
+        ///     <paramref name="gameObject" />.
         /// </summary>
         /// <param name="parent">The container object.</param>
-        /// <param name="prefab">The object which going to be cloned.</param>
+        /// <param name="gameObject">The object which going to be cloned.</param>
         /// <param name="minimumObjects">The minimum number of objects to be pooled.</param>
         /// <param name="maximumObjects">The maximum number of objects to be pooled.</param>
         /// <param name="allowCreateMore">Can more items be created as needed when starved for items?</param>
@@ -22,24 +31,16 @@ namespace GDX.Collections.Pooling.GameObjects
         /// <param name="allowManagedTearDown">Does the pool allow a managed tear down event call?</param>
         public static IManagedPool Create(
             Transform parent,
-            UnityEngine.GameObject prefab,
+            GameObject gameObject,
             int minimumObjects = 10,
             int maximumObjects = 50,
             bool allowCreateMore = true,
             bool allowReuseWhenCapped = false,
             bool allowManagedTearDown = false)
         {
-            // We already have a pool for this ID
-            int uniqueID = GetUniqueID(prefab);
-            if (ManagedPools.HasPool(uniqueID))
-            {
-                return ManagedPools.GetPool<ListManagedPool>(uniqueID);
-            }
-
             // Create our new pool
             ListManagedPool newGameManagedPool = new ListManagedPool(
-                uniqueID,
-                prefab,
+                gameObject,
                 CreateItem,
                 minimumObjects,
                 maximumObjects,
@@ -49,7 +50,7 @@ namespace GDX.Collections.Pooling.GameObjects
                 allowReuseWhenCapped,
                 allowManagedTearDown)
             {
-                Flags = {[HasInterfaceFlag] = prefab.GetComponent<IGameObjectPoolItem>() != null}
+                Flags = {[HasInterfaceFlag] = gameObject.GetComponent<IGameObjectPoolItem>() != null}
             };
 
             GameObjectPoolBuilder.AddObjectPool(newGameManagedPool);
@@ -66,11 +67,11 @@ namespace GDX.Collections.Pooling.GameObjects
             return newGameManagedPool;
         }
 
-        public static int GetUniqueID(UnityEngine.GameObject source)
-        {
-            return $"GameObject_{source.GetInstanceID().ToString()}".GetHashCode();
-        }
-
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="pool"></param>
+        /// <returns></returns>
         private static object CreateItem(ListManagedPool pool)
         {
             GameObject spawnedObject =
@@ -93,7 +94,6 @@ namespace GDX.Collections.Pooling.GameObjects
             return spawnedObject;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void OnSpawnedFromPoolAction(ListManagedPool pool, object item)
         {
             if (!pool.Flags[HasInterfaceFlag])
