@@ -121,7 +121,6 @@ namespace GDX.Collections.Pooling
         /// <summary>
         ///     Create a <see cref="ListManagedPool" />.
         /// </summary>
-        /// <param name="key">An absolutely unique identifier for this pool.</param>
         /// <param name="baseObject">The object which going to be cloned.</param>
         /// <param name="createItemFunc">The function used to create new items for the pool.</param>
         /// <param name="minimumObjects">The minimum number of objects to be managed by the pool.</param>
