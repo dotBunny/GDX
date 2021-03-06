@@ -32,9 +32,8 @@ namespace GDX.Collections.Pooling
         /// <summary>
         ///     Get the unique identifier for the <see cref="IManagedPool" />.
         /// </summary>
-        /// <remarks>This is used as the hash key for the <see cref="ManagedPools" />'s entry for this <see cref="IManagedPool" />.</remarks>
         /// <returns>A unique identifier.</returns>
-        public int GetKey();
+        public uint GetKey();
 
         /// <summary>
         ///     Does the <see cref="IManagedPool" /> contain the minimum number of items.

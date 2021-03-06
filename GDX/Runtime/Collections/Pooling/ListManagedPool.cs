@@ -71,7 +71,7 @@ namespace GDX.Collections.Pooling
         /// <summary>
         ///     The absolutely unique identifier for this pool.
         /// </summary>
-        private readonly int _key;
+        private readonly uint _key;
 
         /// <summary>
         ///     A cached count of the number of items contained in <see cref="_inItems" />.
@@ -142,7 +142,9 @@ namespace GDX.Collections.Pooling
             bool allowReuseWhenCapped = false,
             bool allowManagedTearDown = false)
         {
-            _key = ManagedPools.ReservePoolID();
+            // Get pool ID ticket
+            _key = ManagedPools.GetNextPoolKey();
+
             _baseObject = baseObject;
             _createItemFunc = createItemFunc;
             _minimumObjects = minimumObjects;
@@ -263,7 +265,7 @@ namespace GDX.Collections.Pooling
         }
 
         /// <inheritdoc />
-        public int GetKey()
+        public uint GetKey()
         {
             return _key;
         }

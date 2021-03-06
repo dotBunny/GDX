@@ -9,10 +9,14 @@ namespace GDX.Collections.Pooling
     /// </summary>
     public static class ManagedPools
     {
-        // TODO: Ticket approach? since we need something to find pool
-        [NonSerialized] private static int s_nextPoolID;
-
-        // TODO: Need a way to get a pool by the object base?
+        /// <summary>
+        ///     The next available pool key.
+        /// </summary>
+        /// <remarks>
+        ///     This resets on domain reload, and as such the keys should not be relied on through any sort of
+        ///     serialization process.
+        /// </remarks>
+        private static uint s_nextPoolKey;
 
         /// <summary>
         ///     An internal dictionary containing the pools, uniquely index by constant ID provider.
@@ -22,13 +26,12 @@ namespace GDX.Collections.Pooling
         ///     be managed by the implementation.
         /// </remarks>
         // ReSharper disable once HeapView.ObjectAllocation.Evident
-        // TODO: Change over to IntDictionary
-        [NonSerialized]
-        private static readonly Dictionary<int, IManagedPool> s_pools = new Dictionary<int, IManagedPool>();
+        private static readonly Dictionary<uint, IManagedPool> s_pools = new Dictionary<uint, IManagedPool>();
 
-        public static int ReservePoolID()
+        public static uint GetNextPoolKey()
         {
-            return ++s_nextPoolID;
+            s_nextPoolKey++;
+            return s_nextPoolKey;
         }
 
         /// <summary>
@@ -36,17 +39,17 @@ namespace GDX.Collections.Pooling
         /// </summary>
         /// <param name="key">The unique identifier provided to the system when registering the pool.</param>
         /// <returns>An <see cref="IManagedPool" /> identified by the provided <paramref name="key" />.</returns>
-        public static IManagedPool GetPool(int key)
+        public static IManagedPool GetPool(uint key)
         {
             return s_pools[key];
         }
 
-        public static bool TryGetPoolKey(object baseObject, out int key)
+        public static bool TryGetPoolKey(object baseObject, out uint key)
         {
-            key = -1;
+            key = 0;
             int poolCount = s_pools.Count;
 
-            for (int i = 0; i < poolCount; i++)
+            for (uint i = 0; i < poolCount; i++)
             {
                 if (s_pools[i].GetBaseObject() == baseObject)
                 {
@@ -63,7 +66,7 @@ namespace GDX.Collections.Pooling
         /// <param name="key">The unique identifier provided to the system when registering the pool.</param>
         /// <typeparam name="T">The type of the pool, used to cast the return pool</typeparam>
         /// <returns>A type casted pool identified by the provided <paramref name="key" />.</returns>
-        public static T GetPool<T>(int key)
+        public static T GetPool<T>(uint key)
         {
             return (T)s_pools[key];
         }
@@ -74,7 +77,7 @@ namespace GDX.Collections.Pooling
         /// </summary>
         /// <param name="key">The unique identifier provided to the system when registering the pool.</param>
         /// <returns>An <see cref="IManagedPool" /> identified by the provided <paramref name="key" />, null if not found.</returns>
-        public static IManagedPool GetPoolWithContainsCheck(int key)
+        public static IManagedPool GetPoolWithContainsCheck(uint key)
         {
             return s_pools.ContainsKey(key) ? s_pools[key] : null;
         }
@@ -86,7 +89,7 @@ namespace GDX.Collections.Pooling
         /// <param name="key">The unique identifier provided to the system when registering the pool.</param>
         /// <typeparam name="T">The type of the pool, used to cast the return pool</typeparam>
         /// <returns>A type casted pool identified by the provided <paramref name="key" />, null if not found.</returns>
-        public static T GetPoolWithContainsCheck<T>(int key) where T : class
+        public static T GetPoolWithContainsCheck<T>(uint key) where T : class
         {
             if (s_pools.ContainsKey(key))
             {
@@ -101,7 +104,7 @@ namespace GDX.Collections.Pooling
         /// </summary>
         /// <param name="key">A unique pool identifier</param>
         /// <returns>true if a pool is found registered with this system, false otherwise.</returns>
-        public static bool HasPool(int key)
+        public static bool HasPool(uint key)
         {
             return s_pools.ContainsKey(key);
         }
@@ -112,7 +115,7 @@ namespace GDX.Collections.Pooling
         /// <param name="shouldShrink">Should the pool be shrunk (destroying created items) to its original set minimum size?</param>
         public static void ReturnAll(bool shouldShrink = true)
         {
-            foreach (KeyValuePair<int, IManagedPool> p in s_pools)
+            foreach (KeyValuePair<uint, IManagedPool> p in s_pools)
             {
                 p.Value.ReturnAll(shouldShrink);
             }
@@ -125,7 +128,7 @@ namespace GDX.Collections.Pooling
         public static void Register(IManagedPool managedPool)
         {
             // Add to numerical index
-            int key = managedPool.GetKey();
+            uint key = managedPool.GetKey();
             if (!s_pools.ContainsKey(key))
             {
                 s_pools.Add(key, managedPool);
@@ -153,12 +156,13 @@ namespace GDX.Collections.Pooling
         public static void TearDown(bool forceAll = false)
         {
             // Make removal buffer
-            SimpleList<int> removeKeyBuffer = new SimpleList<int>(s_pools.Count);
+            SimpleList<uint> removeKeyBuffer = new SimpleList<uint>(s_pools.Count);
 
             // Now we pay the cost, however its during a teardown so, its less bad.
             int poolCount = s_pools.Count;
+
             // TODO: Implement MoveNext when available
-            foreach (KeyValuePair<int, IManagedPool> pool in s_pools)
+            foreach (KeyValuePair<uint, IManagedPool> pool in s_pools)
             {
                 if (!pool.Value.IsAllowedManagedTearDown() && !forceAll)
                 {
@@ -191,7 +195,7 @@ namespace GDX.Collections.Pooling
                 return;
             }
 
-            int key = managedPool.GetKey();
+            uint key = managedPool.GetKey();
             if (s_pools.ContainsKey(key))
             {
                 s_pools.Remove(key);
