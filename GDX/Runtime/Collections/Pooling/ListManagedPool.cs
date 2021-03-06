@@ -54,6 +54,11 @@ namespace GDX.Collections.Pooling
         internal readonly List<object> _inItems;
 
         /// <summary>
+        ///     The absolutely unique identifier for this pool.
+        /// </summary>
+        private readonly uint _key;
+
+        /// <summary>
         ///     The Maximum number of objects to be managed by the pool.
         /// </summary>
         private readonly int _maximumObjects;
@@ -67,11 +72,6 @@ namespace GDX.Collections.Pooling
         ///     A collection of items that are currently considered out of the pool, that have been spawned.
         /// </summary>
         private readonly List<object> _outItems;
-
-        /// <summary>
-        ///     The absolutely unique identifier for this pool.
-        /// </summary>
-        private readonly uint _key;
 
         /// <summary>
         ///     A cached count of the number of items contained in <see cref="_inItems" />.
@@ -331,7 +331,6 @@ namespace GDX.Collections.Pooling
             int removeCount = _inCount - _maximumObjects;
             for (int i = 0; i < removeCount; i++)
             {
-
                 // Trigger specific logic, like Object.Destroy
                 OnDestroyItem?.Invoke(_inItems[i]);
 
@@ -366,6 +365,9 @@ namespace GDX.Collections.Pooling
             _inCount = 0;
         }
 
+        /// <summary>
+        ///     The <see cref="ListManagedPool" /> destructor which unregisters itself from <see cref="ManagedPools" />.
+        /// </summary>
         ~ListManagedPool()
         {
             // Unregister

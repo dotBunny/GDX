@@ -18,6 +18,23 @@ namespace GDX.Collections.Pooling
         /// </summary>
         private const int HasInterfaceFlag = 5;
 
+        public static IManagedPool GetOrCreate(
+            Transform parent,
+            GameObject gameObject,
+            int minimumObjects = 10,
+            int maximumObjects = 50,
+            bool allowCreateMore = true,
+            bool allowReuseWhenCapped = false,
+            bool allowManagedTearDown = false)
+        {
+            if (ManagedPools.TryGetFirstPool(gameObject, out IManagedPool checkPool))
+            {
+                return checkPool;
+            }
+
+            return Create(parent, gameObject, minimumObjects, maximumObjects, allowCreateMore, allowReuseWhenCapped,
+                allowManagedTearDown);
+        }
         /// <summary>
         ///     Create a <see cref="GameObject" /> based <see cref="ListManagedPool" /> for the provided
         ///     <paramref name="gameObject" />.
@@ -53,7 +70,7 @@ namespace GDX.Collections.Pooling
                 Flags = {[HasInterfaceFlag] = gameObject.GetComponent<IGameObjectPoolItem>() != null}
             };
 
-            GameObjectPoolBuilder.AddObjectPool(newGameManagedPool);
+            ManagedPoolBuilder.AddManagedPool(newGameManagedPool);
 
             newGameManagedPool._outCount = 0;
 
@@ -127,7 +144,7 @@ namespace GDX.Collections.Pooling
 
         private static void OnTearDownPrePoolItemsAction(ListManagedPool pool)
         {
-            GameObjectPoolBuilder.RemoveObjectPool(pool);
+            ManagedPoolBuilder.RemoveManagedPool(pool);
         }
 
         private static void OnTearDownPostPoolItemsAction(ListManagedPool pool)

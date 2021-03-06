@@ -1,69 +1,56 @@
-using System;
 using System.Collections.Generic;
 using GDX.Collections.Generic;
 
 namespace GDX.Collections.Pooling
 {
     /// <summary>
-    ///     A pooling system implementation primarily meant for the object oriented patterns, based on the C# base object.
+    ///     A managed pooling system implementation primarily meant for the object oriented patterns, based on the C# base
+    ///     object.
     /// </summary>
     public static class ManagedPools
     {
         /// <summary>
-        ///     The next available pool key.
+        ///     The last issued pool key used by internal dictionary's <see cref="KeyValuePair{TKey,TValue}" /> when referencing an
+        ///     <see cref="IManagedPool" />.
         /// </summary>
         /// <remarks>
-        ///     This resets on domain reload, and as such the keys should not be relied on through any sort of
-        ///     serialization process.
+        ///     This value resets on domain reload, and as such the keys should not be relied on through any sort of
+        ///     serialization (including networking) or session based process.
         /// </remarks>
-        private static uint s_nextPoolKey;
+        private static uint s_lastPoolKey;
 
         /// <summary>
-        ///     An internal dictionary containing the pools, uniquely index by constant ID provider.
+        ///     An internal dictionary containing the <see cref="IManagedPool" />s, uniquely indexed by constant ticket-like
+        ///     system.
         /// </summary>
-        /// <remarks>
-        ///     In a GameObject sense, a Prefab's instance ID would be used, for entities, this is still debatable and should
-        ///     be managed by the implementation.
-        /// </remarks>
         // ReSharper disable once HeapView.ObjectAllocation.Evident
         private static readonly Dictionary<uint, IManagedPool> s_pools = new Dictionary<uint, IManagedPool>();
 
+        /// <summary>
+        ///     Get the next available pool key.
+        /// </summary>
+        /// <remarks>Increments the previously issued stored value, and returns the new value.</remarks>
+        /// <returns>A unique pool identifying key.</returns>
         public static uint GetNextPoolKey()
         {
-            s_nextPoolKey++;
-            return s_nextPoolKey;
+            s_lastPoolKey++;
+            return s_lastPoolKey;
         }
 
         /// <summary>
         ///     Get a registered <see cref="IManagedPool" /> based on its <paramref name="key" />.
         /// </summary>
-        /// <param name="key">The unique identifier provided to the system when registering the pool.</param>
+        /// <param name="key">The unique key to use when looking for the <see cref="IManagedPool" />.</param>
         /// <returns>An <see cref="IManagedPool" /> identified by the provided <paramref name="key" />.</returns>
         public static IManagedPool GetPool(uint key)
         {
             return s_pools[key];
         }
 
-        public static bool TryGetPoolKey(object baseObject, out uint key)
-        {
-            key = 0;
-            int poolCount = s_pools.Count;
-
-            for (uint i = 0; i < poolCount; i++)
-            {
-                if (s_pools[i].GetBaseObject() == baseObject)
-                {
-                    key = s_pools[i].GetKey();
-                    return true;
-                }
-            }
-            return false;
-        }
-
         /// <summary>
         ///     Get a registered <see cref="IManagedPool" /> based on its <paramref name="key" />.
         /// </summary>
-        /// <param name="key">The unique identifier provided to the system when registering the pool.</param>
+        /// <param name="key">The unique key to use when looking for the <see cref="IManagedPool" />.</param>
         /// <typeparam name="T">The type of the pool, used to cast the return pool</typeparam>
         /// <returns>A type casted pool identified by the provided <paramref name="key" />.</returns>
         public static T GetPool<T>(uint key)
@@ -75,7 +62,7 @@ namespace GDX.Collections.Pooling
         ///     Get a registered <see cref="IManagedPool" /> based on its <paramref name="key" />, first checking if it is
         ///     registered.
         /// </summary>
-        /// <param name="key">The unique identifier provided to the system when registering the pool.</param>
+        /// <param name="key">The unique key to use when looking for the <see cref="IManagedPool" />.</param>
         /// <returns>An <see cref="IManagedPool" /> identified by the provided <paramref name="key" />, null if not found.</returns>
         public static IManagedPool GetPoolWithContainsCheck(uint key)
         {
@@ -86,7 +73,7 @@ namespace GDX.Collections.Pooling
         ///     Get a registered <see cref="IManagedPool" /> based on its <paramref name="key" />, first checking if it is
         ///     registered.
         /// </summary>
-        /// <param name="key">The unique identifier provided to the system when registering the pool.</param>
+        /// <param name="key">The unique key to use when looking for the <see cref="IManagedPool" />.</param>
         /// <typeparam name="T">The type of the pool, used to cast the return pool</typeparam>
         /// <returns>A type casted pool identified by the provided <paramref name="key" />, null if not found.</returns>
         public static T GetPoolWithContainsCheck<T>(uint key) where T : class
@@ -100,22 +87,17 @@ namespace GDX.Collections.Pooling
         }
 
         /// <summary>
-        ///     Is a <see cref="IManagedPool" /> created with the provided <paramref name="key" />?
+        ///     Is an <see cref="IManagedPool" /> registered with the provided <paramref name="key" />?
         /// </summary>
-        /// <param name="key">A unique pool identifier</param>
+        /// <param name="key">A unique pool key</param>
         /// <returns>true if a pool is found registered with this system, false otherwise.</returns>
         public static bool HasPool(uint key)
         {
             return s_pools.ContainsKey(key);
         }
 
-        public static bool HasPool(object baseObject)
-        {
-            return TryGetPoolKey(baseObject, out uint _);
-        }
-
         /// <summary>
-        ///     Attempts to return all spawned items to their original pools.
+        ///     Attempts to return all spawned items to their original <see cref="IManagedPool" />s.
         /// </summary>
         /// <param name="shouldShrink">Should the pool be shrunk (destroying created items) to its original set minimum size?</param>
         public static void ReturnAll(bool shouldShrink = true)
@@ -141,18 +123,16 @@ namespace GDX.Collections.Pooling
             else
             {
                 Trace.Output(Trace.TraceLevel.Error,
-                    "A managed pool attempted to register itself with the ManagedPools, but the provided ID is already in use.");
+                    "A managed pool attempted to register itself with the ManagedPools, but the provided key is already in use.");
             }
         }
 
         /// <summary>
         ///     Execute <see cref="IManagedPool.TearDown()" /> (destroying contents) on all registered <see cref="IManagedPool" />
-        ///     which have
-        ///     been flagged to accept it, evaluated by <see cref="IManagedPool.IsAllowedManagedTearDown()" />.
+        ///     which have been flagged to accept it, evaluated by <see cref="IManagedPool.IsAllowedManagedTearDown()" />.
         /// </summary>
         /// <remarks>
-        ///     This will unregister the <see cref="IManagedPool" /> itself as well, as all of the content will have been
-        ///     destroyed.
+        ///     This will unregister the <see cref="IManagedPool" /> itself as well.
         /// </remarks>
         /// <param name="forceAll">
         ///     Execute <see cref="IManagedPool.TearDown()" /> regardless of the
@@ -166,7 +146,6 @@ namespace GDX.Collections.Pooling
             // Now we pay the cost, however its during a teardown so, its less bad.
             int poolCount = s_pools.Count;
 
-            // TODO: Implement MoveNext when available
             foreach (KeyValuePair<uint, IManagedPool> pool in s_pools)
             {
                 if (!pool.Value.IsAllowedManagedTearDown() && !forceAll)
@@ -190,19 +169,47 @@ namespace GDX.Collections.Pooling
         }
 
         /// <summary>
-        ///     Unregister a <see cref="IManagedPool" /> with the global management system.
+        ///     Attempt to get an <see cref="IManagedPool" /> based on the <paramref name="baseObject" />.
+        /// </summary>
+        /// <param name="baseObject">The <see cref="object" /> which was used to create the pool.</param>
+        /// <param name="pool">The first found <see cref="IManagedPool" /> created with <paramref name="baseObject" />.</param>
+        /// <returns>true/false if an <see cref="IManagedPool" /> was found.</returns>
+        public static bool TryGetFirstPool(object baseObject, out IManagedPool pool)
+        {
+            pool = null;
+            foreach (KeyValuePair<uint, IManagedPool> kvp in s_pools)
+            {
+                if (kvp.Value.GetBaseObject() != baseObject)
+                {
+                    continue;
+                }
+
+                pool = kvp.Value;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     Unregister a <see cref="IManagedPool" /> from with the management system.
         /// </summary>
         /// <param name="managedPool">Target <see cref="IManagedPool" /></param>
         public static void Unregister(IManagedPool managedPool)
         {
+            // Well we cant be doing anything with that
             if (managedPool == null)
             {
                 return;
             }
 
+            // Get the apparent key
             uint key = managedPool.GetKey();
-            if (s_pools.ContainsKey(key))
+
+            // Checks key and the matching pool
+            if (s_pools.ContainsKey(key) && s_pools[key] == managedPool)
             {
+                // Remove it from the registry
                 s_pools.Remove(key);
             }
         }
