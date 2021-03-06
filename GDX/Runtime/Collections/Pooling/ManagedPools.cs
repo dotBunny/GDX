@@ -109,6 +109,11 @@ namespace GDX.Collections.Pooling
             return s_pools.ContainsKey(key);
         }
 
+        public static bool HasPool(object baseObject)
+        {
+            return TryGetPoolKey(baseObject, out uint _);
+        }
+
         /// <summary>
         ///     Attempts to return all spawned items to their original pools.
         /// </summary>
