@@ -362,6 +362,9 @@ namespace GDX.Collections.Pooling
             // Removing references to the objects should make GC do its thing
             _inItems.Clear();
             _inCount = 0;
+
+            // Unregister
+            ManagedPools.Unregister(this);
         }
 
         /// <summary>

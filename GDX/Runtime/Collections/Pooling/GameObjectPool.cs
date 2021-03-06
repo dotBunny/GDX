@@ -22,16 +22,16 @@ namespace GDX.Collections.Pooling
         ///     Create a <see cref="GameObject" /> based <see cref="ListManagedPool" /> for the provided
         ///     <paramref name="gameObject" />.
         /// </summary>
-        /// <param name="parent">The container object.</param>
         /// <param name="gameObject">The object which going to be cloned.</param>
+        /// <param name="parent">The container object.</param>
         /// <param name="minimumObjects">The minimum number of objects to be pooled.</param>
         /// <param name="maximumObjects">The maximum number of objects to be pooled.</param>
         /// <param name="allowCreateMore">Can more items be created as needed when starved for items?</param>
         /// <param name="allowReuseWhenCapped">Should we reuse oldest items when starving for items?</param>
         /// <param name="allowManagedTearDown">Does the pool allow a managed tear down event call?</param>
         public static IManagedPool CreatePool(
-            Transform parent,
             GameObject gameObject,
+            Transform parent,
             int minimumObjects = 10,
             int maximumObjects = 50,
             bool allowCreateMore = true,
@@ -372,16 +372,16 @@ namespace GDX.Collections.Pooling
         /// <summary>
         ///     Gets a pool for the <paramref name="gameObject"/>, or creates a new <see cref="ListManagedPool" /> for it.
         /// </summary>
-        /// <param name="parent">The container object.</param>
         /// <param name="gameObject">The object which going to be cloned.</param>
+        /// <param name="parent">The container object.</param>
         /// <param name="minimumObjects">The minimum number of objects to be pooled.</param>
         /// <param name="maximumObjects">The maximum number of objects to be pooled.</param>
         /// <param name="allowCreateMore">Can more items be created as needed when starved for items?</param>
         /// <param name="allowReuseWhenCapped">Should we reuse oldest items when starving for items?</param>
         /// <param name="allowManagedTearDown">Does the pool allow a managed tear down event call?</param>
         public static IManagedPool GetOrCreatePool(
-            Transform parent,
             GameObject gameObject,
+            Transform parent,
             int minimumObjects = 10,
             int maximumObjects = 50,
             bool allowCreateMore = true,
@@ -392,7 +392,7 @@ namespace GDX.Collections.Pooling
             {
                 return checkPool;
             }
-            return CreatePool(parent, gameObject, minimumObjects, maximumObjects, allowCreateMore, allowReuseWhenCapped,
+            return CreatePool(gameObject, parent, minimumObjects, maximumObjects, allowCreateMore, allowReuseWhenCapped,
                 allowManagedTearDown);
         }
 

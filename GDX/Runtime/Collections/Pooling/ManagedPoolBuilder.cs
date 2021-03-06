@@ -102,8 +102,18 @@ namespace GDX.Collections.Pooling
             {
                 return;
             }
-
+#if UNITY_EDITOR
+            if (Application.isPlaying)
+            {
+                Destroy(s_builderObject);
+            }
+            else
+            {
+                DestroyImmediate(s_builderObject);
+            }
+#else
             Destroy(s_builderObject);
+#endif
             s_builderObject = null;
         }
 
