@@ -17,66 +17,71 @@ namespace Runtime
     {
         [Test]
         [Category("GDX.Tests")]
-        public void True_Approximately_Zero()
-        {
-            Vector2 a = new Vector2(0, 0);
-            Vector2 b = new Vector2(0, 0);
-            Assert.IsTrue(a.Approximately(b), "Expected a positive response.");
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void True_Approximately_One()
-        {
-            Vector2 a = new Vector2(1, 1);
-            Vector2 b = new Vector2(1, 1);
-            Assert.IsTrue(a.Approximately(b), "Expected a positive response.");
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void True_Approximately_FiveZerosOne()
-        {
-            Vector2 a = new Vector2(1.000001f, 1);
-            Vector2 b = new Vector2(1, 1);
-            Assert.IsTrue(a.Approximately(b), "Expected a positive response.");
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void False_Approximately_FiveZerosFive()
+        public void Approximately_FiveMillionths_ReturnsFalse()
         {
             Vector2 a = new Vector2(1.000005f, 1);
             Vector2 b = new Vector2(1, 1);
-            Assert.IsFalse(a.Approximately(b), "Expected a positive response.");
+
+            bool evaluate = a.Approximately(b);
+
+            Assert.IsFalse(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_Midpoint_Simple()
+        public void Approximately_One_ReturnsTrue()
+        {
+            Vector2 a = new Vector2(1, 1);
+            Vector2 b = new Vector2(1, 1);
+
+            bool evaluate = a.Approximately(b);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void Approximately_OneMillionth_ReturnsTrue()
+        {
+            Vector2 a = new Vector2(1.000001f, 1);
+            Vector2 b = new Vector2(1, 1);
+
+            bool evaluate = a.Approximately(b);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void Approximately_Zero_ReturnsTrue()
+        {
+            Vector2 a = new Vector2(0, 0);
+            Vector2 b = new Vector2(0, 0);
+
+            bool evaluate = a.Approximately(b);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void Midpoint_ZeroAndOne_ReturnsHalf()
         {
             Vector2 a = new Vector2(0, 0);
             Vector2 b = new Vector2(1, 1);
-            Vector2 result = a.Midpoint(b);
             Vector2 expected = new Vector2(0.5f, 0.5f);
-            Assert.IsTrue(expected == result, $"Expected {result} but got {result}");
+
+            bool evaluate = a.Midpoint(b) == expected;
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_Nearest_NoData()
-        {
-            Vector2 a = Vector2.down;
-            Assert.IsTrue(a.NearestIndex(null) == -1, "Expected a return of -1 for null data");
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void True_Nearest_Simple()
+        public void NearestIndex_MockData_ReturnsClosest()
         {
             Vector2 target = Vector2.one;
-
-            Vector2[] searchData = {
+            Vector2[] mockData = {
                 new Vector2(0,0),
                 new Vector2(1.1f, 1.1f),
                 new Vector2(2,2),
@@ -84,8 +89,22 @@ namespace Runtime
                 new Vector2(3,1)
             };
 
-            int nearestIndex =  target.NearestIndex(searchData);
-            Assert.IsTrue(nearestIndex == 1, $"Expected index of 1, found {nearestIndex}.");
+            bool evaluate = target.NearestIndex(mockData) == 1;
+
+            Assert.IsTrue(evaluate);
         }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void NearestIndex_NullInput_ReturnsNegativeOne()
+        {
+            Vector2 a = Vector2.down;
+
+            bool evaluate = a.NearestIndex(null) == -1;
+
+            Assert.IsTrue(evaluate);
+        }
+
+
     }
 }

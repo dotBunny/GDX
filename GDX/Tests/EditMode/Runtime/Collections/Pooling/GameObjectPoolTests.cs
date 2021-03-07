@@ -29,7 +29,7 @@ namespace Runtime.Collections.Pooling
 
         [Test]
         [Category("GDX.Tests")]
-        public void GetOrCreatePool_MockData_ReturnsPool()
+        public void GetOrCreatePool_MockData_ReturnsValidPool()
         {
             IManagedPool pool = GameObjectPool.GetOrCreatePool(_mockBaseObject,_mockTransform);
 

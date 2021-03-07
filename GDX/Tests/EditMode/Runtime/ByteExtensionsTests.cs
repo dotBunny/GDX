@@ -20,11 +20,13 @@ namespace Runtime
         /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_GetStableHashCode_Simple()
+        public void GetStableHashCode_MockData_ReturnsValidCode()
         {
             byte[] testArray = Encoding.UTF8.GetBytes("Hello World");
-            int hashCode = testArray.GetStableHashCode();
-            Assert.IsTrue(hashCode == 1349791181, $"Expected value of 1349791181 instead got {hashCode}.");
+
+            bool evaluate = (testArray.GetStableHashCode() == 1349791181);
+
+            Assert.IsTrue(evaluate);
         }
     }
 }

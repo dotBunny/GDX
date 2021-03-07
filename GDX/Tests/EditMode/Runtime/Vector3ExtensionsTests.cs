@@ -17,42 +17,6 @@ namespace Runtime
     {
         [Test]
         [Category("GDX.Tests")]
-        public void Approximately_TwoVector3Zero_ReturnsTrue()
-        {
-            Vector3 a = new Vector3(0, 0, 0);
-            Vector3 b = new Vector3(0, 0, 0);
-
-            bool evaluate = a.Approximately(b);
-
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void Approximately_TwoVector3One_ReturnsTrue()
-        {
-            Vector3 a = new Vector3(1, 1, 1);
-            Vector3 b = new Vector3(1, 1, 1);
-
-            bool evaluate = a.Approximately(b);
-
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void Approximately_OneMillionths_ReturnsTrue()
-        {
-            Vector3 a = new Vector3(1.000001f, 1, 1);
-            Vector3 b = new Vector3(1, 1, 1);
-
-            bool evaluate = a.Approximately(b);
-
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
         public void Approximately_FiveMillionths_ReturnsFalse()
         {
             Vector3 a = new Vector3(1.000005f, 1, 1);
@@ -65,12 +29,64 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
-        public void Midpoint_BetweenVector3ZeroAndVector3One_ReturnsVector3Half()
+        public void Approximately_One_ReturnsTrue()
+        {
+            Vector3 a = new Vector3(1, 1, 1);
+            Vector3 b = new Vector3(1, 1, 1);
+
+            bool evaluate = a.Approximately(b);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void Approximately_OneMillionth_ReturnsTrue()
+        {
+            Vector3 a = new Vector3(1.000001f, 1, 1);
+            Vector3 b = new Vector3(1, 1, 1);
+
+            bool evaluate = a.Approximately(b);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void Approximately_Zero_ReturnsTrue()
+        {
+            Vector3 a = new Vector3(0, 0, 0);
+            Vector3 b = new Vector3(0, 0, 0);
+
+            bool evaluate = a.Approximately(b);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void Midpoint_ZeroAndOne_ReturnsHalf()
         {
             Vector3 a = new Vector3(0, 0, 0);
             Vector3 b = new Vector3(1, 1, 1);
 
-            bool evaluate = (a.Midpoint(b) == new Vector3(0.5f, 0.5f, 0.5f));
+            bool evaluate = a.Midpoint(b) == new Vector3(0.5f, 0.5f, 0.5f);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void NearestIndex_MockData_ReturnsClosest()
+        {
+            Vector3 target = Vector3.one;
+            Vector3[] mockData =
+            {
+                new Vector3(0, 0, 0), new Vector3(1.1f, 1.1f, 1.1f), new Vector3(2, 2, 0), new Vector3(3, 3, 1),
+                new Vector3(3, 1, 0)
+            };
+
+            bool evaluate = target.NearestIndex(mockData) == 1;
 
             Assert.IsTrue(evaluate);
         }
@@ -82,24 +98,6 @@ namespace Runtime
             Vector3 a = Vector3.down;
 
             bool evaluate = a.NearestIndex(null) == -1;
-
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void NearestIndex_MockData_ReturnsClosest()
-        {
-            Vector3 target = Vector3.one;
-            Vector3[] mockData = {
-                new Vector3(0,0,0),
-                new Vector3(1.1f, 1.1f, 1.1f),
-                new Vector3(2,2, 0),
-                new Vector3(3,3, 1),
-                new Vector3(3,1, 0)
-            };
-
-            bool evaluate = target.NearestIndex(mockData) == 1;
 
             Assert.IsTrue(evaluate);
         }
