@@ -17,66 +17,81 @@ namespace Runtime
     {
         [Test]
         [Category("GDX.Tests")]
-        public void True_Approximately_Zero()
+        public void Approximately_TwoVector3Zero_ReturnsTrue()
         {
             Vector3 a = new Vector3(0, 0, 0);
             Vector3 b = new Vector3(0, 0, 0);
-            Assert.IsTrue(a.Approximately(b), "Expected a positive response.");
+
+            bool evaluate = a.Approximately(b);
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_Approximately_One()
+        public void Approximately_TwoVector3One_ReturnsTrue()
         {
             Vector3 a = new Vector3(1, 1, 1);
             Vector3 b = new Vector3(1, 1, 1);
-            Assert.IsTrue(a.Approximately(b), "Expected a positive response.");
+
+            bool evaluate = a.Approximately(b);
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_Approximately_FiveZerosOne()
+        public void Approximately_OneMillionths_ReturnsTrue()
         {
             Vector3 a = new Vector3(1.000001f, 1, 1);
             Vector3 b = new Vector3(1, 1, 1);
-            Assert.IsTrue(a.Approximately(b), "Expected a positive response.");
+
+            bool evaluate = a.Approximately(b);
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void False_Approximately_FiveZerosFive()
+        public void Approximately_FiveMillionths_ReturnsFalse()
         {
             Vector3 a = new Vector3(1.000005f, 1, 1);
             Vector3 b = new Vector3(1, 1, 1);
-            Assert.IsFalse(a.Approximately(b), "Expected a positive response.");
+
+            bool evaluate = a.Approximately(b);
+
+            Assert.IsFalse(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_Midpoint_Simple()
+        public void Midpoint_BetweenVector3ZeroAndVector3One_ReturnsVector3Half()
         {
             Vector3 a = new Vector3(0, 0, 0);
             Vector3 b = new Vector3(1, 1, 1);
-            Vector3 result = a.Midpoint(b);
-            Vector3 expected = new Vector3(0.5f, 0.5f, 0.5f);
-            Assert.IsTrue(expected == result, $"Expected {result} but got {result}");
+
+            bool evaluate = (a.Midpoint(b) == new Vector3(0.5f, 0.5f, 0.5f));
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_Nearest_NoData()
+        public void NearestIndex_NullInput_ReturnsNegativeOne()
         {
             Vector3 a = Vector3.down;
-            Assert.IsTrue(a.NearestIndex(null) == -1, "Expected a return of -1 for null data");
+
+            bool evaluate = a.NearestIndex(null) == -1;
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_Nearest_Simple()
+        public void NearestIndex_MockData_ReturnsClosest()
         {
             Vector3 target = Vector3.one;
-
-            Vector3[] searchData = {
+            Vector3[] mockData = {
                 new Vector3(0,0,0),
                 new Vector3(1.1f, 1.1f, 1.1f),
                 new Vector3(2,2, 0),
@@ -84,8 +99,9 @@ namespace Runtime
                 new Vector3(3,1, 0)
             };
 
-            int nearestIndex =  target.NearestIndex(searchData);
-            Assert.IsTrue(nearestIndex == 1, $"Expected index of 1, found {nearestIndex}.");
+            bool evaluate = target.NearestIndex(mockData) == 1;
+
+            Assert.IsTrue(evaluate);
         }
     }
 }

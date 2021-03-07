@@ -9,38 +9,46 @@ namespace Runtime.Collections.Pooling
 {
     public class GameObjectPoolTests
     {
-        private GameObject _baseObject;
-        private Transform _parentTransform;
+        private GameObject _mockBaseObject;
+        private Transform _mockTransform;
 
         [SetUp]
         public void Setup()
         {
-            _baseObject = new GameObject();
-            _parentTransform = new GameObject().transform;
+            _mockBaseObject = new GameObject();
+            _mockTransform = new GameObject().transform;
         }
 
         [TearDown]
         public void TearDown()
         {
-            Object.DestroyImmediate(_baseObject);
-            Object.DestroyImmediate(_parentTransform.gameObject);
+            Object.DestroyImmediate(_mockBaseObject);
+            Object.DestroyImmediate(_mockTransform.gameObject);
         }
 
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_GetOrCreatePool_SimpleValidation()
+        public void GetOrCreatePool_MockData_ReturnsPool()
         {
-            // Make pool
-            IManagedPool pool = GameObjectPool.GetOrCreatePool(_baseObject,_parentTransform);
+            IManagedPool pool = GameObjectPool.GetOrCreatePool(_mockBaseObject,_mockTransform);
+
+            Assert.IsNotNull(pool);
+
+            pool.TearDown();
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void TearDown_Pool_UnregistersPool()
+        {
+            IManagedPool pool = GameObjectPool.GetOrCreatePool(_mockBaseObject,_mockTransform);
             uint cachePoolID = pool.GetKey();
 
-            Assert.IsNotNull(pool, "Expected to have a pool");
-
-            // Destroy pool
             pool.TearDown();
 
-            Assert.IsFalse(ManagedPools.HasPool(cachePoolID), "Should not have found a pool at ID");
+            Assert.IsFalse(ManagedPools.HasPool(cachePoolID));
         }
+
     }
 }
