@@ -26,10 +26,9 @@ namespace Runtime.Collections.Pooling
             Object.DestroyImmediate(_mockTransform.gameObject);
         }
 
-
         [Test]
         [Category("GDX.Tests")]
-        public void GetOrCreatePool_MockData_ReturnsValidPool()
+        public void GetOrCreatePool_MockData_ReturnsPool()
         {
             IManagedPool pool = GameObjectPool.GetOrCreatePool(_mockBaseObject,_mockTransform);
 

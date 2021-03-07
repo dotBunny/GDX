@@ -1,6 +1,7 @@
 // dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using GDX;
 using GDX.Developer;
 using NUnit.Framework;
 
@@ -14,29 +15,46 @@ namespace Runtime.Developer
     /// </summary>
     public class CommandLineParserTests
     {
-        /// <summary>
-        ///     Check if a simple flag is able to be detected.
-        /// </summary>
-        [Test]
-        [Category("GDX.Tests")]
-        public void True_ProcessArguments_Flag()
+        private string[] _mockData;
+
+        [SetUp]
+        public void Setup()
         {
-            string[] testArgs = {"--KEY=Value", "job", "--SOMETHING"};
-            CommandLineParser.ProcessArguments(testArgs);
-            Assert.IsTrue(CommandLineParser.Flags.Contains("SOMETHING"), "Expected to find SOMETHING flag.");
+            GDXConfig config = GDXConfig.Get();
+            _mockData = new[]
+            {
+                $"{config.developerCommandLineParserArgumentPrefix}KEY{config.developerCommandLineParserArgumentSplit}Value",
+                "job", $"{config.developerCommandLineParserArgumentPrefix}SOMETHING"
+            };
         }
 
-        /// <summary>
-        ///     Check if a KVP is successfully extracted.
-        /// </summary>
+        [TearDown]
+        public void TearDown()
+        {
+            _mockData = null;
+        }
+
         [Test]
         [Category("GDX.Tests")]
-        public void True_ProcessArguments_Value()
+        public void ProcessArguments_MockData_ContainsFlag()
         {
-            string[] testArgs = {"--KEY=Value", "job", "--SOMETHING"};
-            CommandLineParser.ProcessArguments(testArgs);
-            Assert.IsTrue(CommandLineParser.Arguments.ContainsKey("KEY") && CommandLineParser.Arguments["KEY"] == "Value",
-                "Expected to find KEY with a value of Value");
+            CommandLineParser.ProcessArguments(_mockData);
+
+            bool evaluate = CommandLineParser.Flags.Contains("SOMETHING");
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void ProcessArguments_MockData_HasValue()
+        {
+            CommandLineParser.ProcessArguments(_mockData);
+
+            bool evaluate = CommandLineParser.Arguments.ContainsKey("KEY") &&
+                            CommandLineParser.Arguments["KEY"] == "Value";
+
+            Assert.IsTrue(evaluate);
         }
     }
 }

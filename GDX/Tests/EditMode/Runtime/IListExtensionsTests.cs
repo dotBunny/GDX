@@ -16,35 +16,86 @@ namespace Runtime
     /// </summary>
     public class ListExtensionsTests
     {
-        /// <summary>
-        ///     Check if we can find the item in a <see cref="IList{T}" />.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_ContainsItem_SecondValue()
+        public void AddUniqueItem_UniqueItem_ReturnsTrue()
         {
             CircularBuffer<int> searchValue = new CircularBuffer<int>(5);
             List<CircularBuffer<int>> listValues = new List<CircularBuffer<int>>
             {
-                new CircularBuffer<int>(2),
-                searchValue,
-                new CircularBuffer<int>(4),
-                new CircularBuffer<int>(15),
-                searchValue
+                new CircularBuffer<int>(2), new CircularBuffer<int>(4), new CircularBuffer<int>(15)
             };
-            Assert.IsTrue(listValues.ContainsItem(searchValue),
-                $"Expected positive response to looking for {searchValue} value.");
+
+            bool evaluate = listValues.AddUniqueItem(searchValue);
+
+            Assert.IsTrue(evaluate);
         }
 
-        /// <summary>
-        ///     Check if we can find the value in a <see cref="List{T}" />.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_ContainsValue_SecondValue()
+        public void AddUniqueItem_NonUniqueItem_ReturnsFalse()
+        {
+            CircularBuffer<int> searchValue = new CircularBuffer<int>(5);
+            List<CircularBuffer<int>> listValues = new List<CircularBuffer<int>>
+            {
+                new CircularBuffer<int>(2), new CircularBuffer<int>(4), searchValue, new CircularBuffer<int>(15)
+            };
+
+            bool evaluate = listValues.AddUniqueItem(searchValue);
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddUniqueValue_UniqueValue_ReturnsTrue()
         {
             const int searchValue = 1;
-            List<int> listValues = new List<int>
+            List<int> listValues = new List<int> {0, 2, 3};
+
+            bool evaluate = listValues.AddUniqueValue(searchValue);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddUniqueValue_NonUniqueValue_ReturnsFalse()
+        {
+            const int searchValue = 1;
+            List<int> listValues = new List<int> {0, 2, 3};
+
+            listValues.AddUniqueValue(searchValue);
+            bool evaluate = listValues.AddUniqueValue(searchValue);
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void ContainsItem_MockData_ReturnsIndex()
+        {
+            CircularBuffer<int> mockObject = new CircularBuffer<int>(5);
+            List<CircularBuffer<int>> mockData = new List<CircularBuffer<int>>
+            {
+                new CircularBuffer<int>(2),
+                mockObject,
+                new CircularBuffer<int>(4),
+                new CircularBuffer<int>(15),
+                mockObject
+            };
+
+            bool evaluate = mockData.ContainsItem(mockObject);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void ContainsValue_MockData_ReturnsIndex()
+        {
+            const int searchValue = 1;
+            List<int> mockValues = new List<int>
             {
                 0,
                 searchValue,
@@ -52,16 +103,15 @@ namespace Runtime
                 3,
                 searchValue
             };
-            Assert.IsTrue(listValues.ContainsValue(searchValue),
-                $"Expected positive response to looking for {searchValue} value.");
+
+            bool evaluate = mockValues.ContainsValue(searchValue);
+
+            Assert.IsTrue(evaluate);
         }
 
-        /// <summary>
-        ///     Check that removing the first item from a <see cref="List{T}" /> works correctly.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_RemoveFirstItem_Simple()
+        public void RemoveFirstItem_MockData_RemovedItem()
         {
             CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
             List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
@@ -74,39 +124,16 @@ namespace Runtime
             };
 
             listItems.RemoveFirstItem(searchItem);
-            Assert.IsTrue(listItems[1] != searchItem &&
-                          listItems.ContainsItem(searchItem), "Item was expected to have been removed correctly.");
+
+            bool evaluate = listItems[1] != searchItem &&
+                            listItems.ContainsItem(searchItem);
+
+            Assert.IsTrue(evaluate);
         }
 
-        /// <summary>
-        ///     Check that removing the last item from a <see cref="List{T}" /> works correctly.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_RemoveLastItem_Simple()
-        {
-            CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
-            List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
-            {
-                new CircularBuffer<int>(2),
-                searchItem,
-                new CircularBuffer<int>(4),
-                new CircularBuffer<int>(15),
-                searchItem
-            };
-
-            listItems.RemoveLastItem(searchItem);
-            Assert.IsTrue(listItems.Count == 4 &&
-                          listItems[3] != searchItem &&
-                          listItems.ContainsItem(searchItem), "Item was expected to have been removed correctly.");
-        }
-
-        /// <summary>
-        ///     Check that removing the first value from a <see cref="List{T}" /> works correctly.
-        /// </summary>
-        [Test]
-        [Category("GDX.Tests")]
-        public void True_RemoveFirstValue_Simple()
+        public void RemoveFirstValue_MockData_RemovedItem()
         {
             const int searchValue = 9;
 
@@ -119,16 +146,56 @@ namespace Runtime
                 searchValue
             };
             listItems.RemoveFirstValue(searchValue);
-            Assert.IsTrue(listItems[0] != searchValue &&
-                          listItems.ContainsValue(searchValue), "Value was expected to have been removed correctly.");
+
+            bool evaluate = listItems[0] != searchValue &&
+                            listItems.ContainsValue(searchValue);
+
+            Assert.IsTrue(evaluate);
         }
 
-        /// <summary>
-        ///     Check that removing all references to an item from a <see cref="List{T}" /> works correctly.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_RemoveItems_Simple()
+        public void RemoveItemSwap_MockData_RemovedItem()
+        {
+            CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
+            List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
+            {
+                new CircularBuffer<int>(2), searchItem, new CircularBuffer<int>(4), new CircularBuffer<int>(15)
+            };
+
+            listItems.RemoveItemSwap(1);
+
+            bool evaluate = listItems.ContainsItem(searchItem);
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void RemoveLastItem_MockData_RemovedItems()
+        {
+            CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
+            List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
+            {
+                new CircularBuffer<int>(2),
+                searchItem,
+                new CircularBuffer<int>(4),
+                new CircularBuffer<int>(15),
+                searchItem
+            };
+
+            listItems.RemoveLastItem(searchItem);
+
+            bool evaluate = listItems.Count == 4 &&
+                            listItems[3] != searchItem &&
+                            listItems.ContainsItem(searchItem);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void RemoveItems_MockData_RemovedItems()
         {
             CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
             List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
@@ -141,15 +208,15 @@ namespace Runtime
             };
 
             listItems.RemoveItems(searchItem);
-            Assert.IsTrue(!listItems.ContainsItem(searchItem), "Item was expected to have been removed correctly.");
+
+            bool evaluate = listItems.ContainsItem(searchItem);
+
+            Assert.IsFalse(evaluate);
         }
 
-        /// <summary>
-        ///     Check that removing the all values from a <see cref="List{T}" /> works correctly.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_RemoveValues_Simple()
+        public void RemoveValues_MockData_RemovedValues()
         {
             const int searchValue = 9;
 
@@ -162,37 +229,20 @@ namespace Runtime
                 searchValue,
                 9
             };
+
             listItems.RemoveValues(searchValue);
-            Assert.IsTrue(!listItems.ContainsValue(searchValue), "Value was expected to be fully removed..");
+
+            bool evaluate = listItems.ContainsValue(searchValue);
+
+            Assert.IsFalse(evaluate);
         }
 
-        /// <summary>
-        ///     Check that forced removal from the end of a <see cref="List{T}" /> works correctly.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_RemoveItemSwap_Simple()
-        {
-            CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
-            List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
-            {
-                new CircularBuffer<int>(2), searchItem, new CircularBuffer<int>(4), new CircularBuffer<int>(15)
-            };
-
-            listItems.RemoveItemSwap(1);
-            Assert.IsTrue(!listItems.ContainsItem(searchItem), "Item was expected to have been removed correctly.");
-        }
-
-        /// <summary>
-        ///     Check that removing the last value from a <see cref="List{T}" /> works correctly.
-        /// </summary>
-        [Test]
-        [Category("GDX.Tests")]
-        public void True_RemoveLastValue_Simple()
+        public void RemoveLastValue_MockData_RemovedValue()
         {
             const int searchValue = 9;
-
-            List<int> listItems = new List<int>
+            List<int> mockData = new List<int>
             {
                 2,
                 searchValue,
@@ -201,19 +251,19 @@ namespace Runtime
                 searchValue,
                 98
             };
-            listItems.RemoveLastValue(searchValue);
-            Assert.IsTrue(listItems[4] != searchValue &&
-                          listItems.ContainsValue(searchValue), "Value was expected to have been removed correctly.");
+            mockData.RemoveLastValue(searchValue);
+
+            bool evaluate = mockData[4] != searchValue &&
+                            mockData.ContainsValue(searchValue);
+
+            Assert.IsTrue(evaluate);
         }
 
-        /// <summary>
-        ///     Check that shuffling a <see cref="List{T}" /> works correctly.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_Shuffle_Simple()
+        public void Shuffle_MockData_HasDifferences()
         {
-            List<int> listItemA = new List<int>
+            List<int> mockData = new List<int>
             {
                 2,
                 3,
@@ -242,108 +292,22 @@ namespace Runtime
                 911,
                 69
             };
-            List<int> listItemB = new List<int>
-            {
-                2,
-                3,
-                4,
-                15,
-                2,
-                98,
-                109,
-                2,
-                29,
-                99,
-                123,
-                911,
-                69,
-                2,
-                3,
-                4,
-                15,
-                2,
-                98,
-                109,
-                2,
-                29,
-                99,
-                123,
-                911,
-                69
-            };
+            List<int> listItemB = new List<int>(mockData);
+            mockData.Shuffle();
 
-            listItemA.Shuffle();
-
-            int listLength = listItemA.Count;
+            int listLength = mockData.Count;
             int differentCount = listLength;
             for (int i = 0; i < listLength; i++)
             {
-                if (listItemA[i] == listItemB[i])
+                if (mockData[i] == listItemB[i])
                 {
                     differentCount--;
                 }
             }
 
-            Assert.IsTrue(differentCount > 0, "List was not randomized.");
-        }
+            bool evaluate = differentCount > 0;
 
-        /// <summary>
-        ///     Check if we can add a unique item to a <see cref="List{T}" /> for the first time.
-        /// </summary>
-        [Test]
-        [Category("GDX.Tests")]
-        public void True_AddUniqueItem_FirstTime()
-        {
-            CircularBuffer<int> searchValue = new CircularBuffer<int>(5);
-            List<CircularBuffer<int>> listValues = new List<CircularBuffer<int>>
-            {
-                new CircularBuffer<int>(2), new CircularBuffer<int>(4), new CircularBuffer<int>(15)
-            };
-            Assert.IsTrue(listValues.AddUniqueItem(searchValue),
-                "Expected to be able to add the new item.");
-        }
-
-        /// <summary>
-        ///     Checks that we cant add a unique item a second time to a <see cref="List{T}" />.
-        /// </summary>
-        [Test]
-        [Category("GDX.Tests")]
-        public void False_AddUniqueItem_SecondTime()
-        {
-            CircularBuffer<int> searchValue = new CircularBuffer<int>(5);
-            List<CircularBuffer<int>> listValues = new List<CircularBuffer<int>>
-            {
-                new CircularBuffer<int>(2), new CircularBuffer<int>(4), searchValue, new CircularBuffer<int>(15)
-            };
-            Assert.IsFalse(listValues.AddUniqueItem(searchValue),
-                "Expected not to be able to add the duplicate item.");
-        }
-
-        /// <summary>
-        ///     Check if we can add a unique value to a <see cref="List{T}" /> for the first time.
-        /// </summary>
-        [Test]
-        [Category("GDX.Tests")]
-        public void True_AddUniqueValue_FirstTime()
-        {
-            const int searchValue = 1;
-            List<int> listValues = new List<int> {0, 2, 3};
-            Assert.IsTrue(listValues.AddUniqueValue(searchValue),
-                $"Expected to be able to add {searchValue} value.");
-        }
-
-        /// <summary>
-        ///     Checks that we cant add a unique value a second time to a <see cref="List{T}" />.
-        /// </summary>
-        [Test]
-        [Category("GDX.Tests")]
-        public void False_AddUniqueValue_SecondTime()
-        {
-            const int searchValue = 1;
-            List<int> listValues = new List<int> {0, 2, 3};
-            listValues.AddUniqueValue(searchValue);
-            Assert.IsFalse(listValues.AddUniqueValue(searchValue),
-                "Expected not to be able to add value.");
+            Assert.IsTrue(evaluate);
         }
     }
 }
