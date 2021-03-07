@@ -15,326 +15,307 @@ namespace Runtime
     /// </summary>
     public class StringExtensionsTests
     {
-        public const string ComplexTestString = "_tH\\is_I!is_M\"y_TEST_STR#$34343";
-        public const string SimpleTestString = "HelloWorld!";
-        public const string UpperCaseTestString = "THIS IS ALL UPPERCASE";
-        public const string LowerCaseTestString = "this is all lowercase";
-
         [Test]
         [Category("GDX.Tests")]
-        public void True_GetAfterFirst_Simple()
+        public void GetAfterFirst_MockData_ReturnsString()
         {
-            string result = ComplexTestString.GetAfterFirst("_M");
-            const string expected = "\"y_TEST_STR#$34343";
+            string result = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetAfterFirst("_M");
 
-            Assert.IsTrue(result == expected, $"Expected {expected} but got {result}");
+            bool evaluate = result == "\"y_TEST_STR#$34343";
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_GetAfterLast_Simple()
+        public void GetAfterLast_MockData_ReturnsString()
         {
-            string result = ComplexTestString.GetAfterLast("_");
-            const string expected = "STR#$34343";
+            string result = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetAfterLast("_");
 
-            Assert.IsTrue(result == expected, $"Expected {expected} but got {result}");
+            bool evaluate = result == "STR#$34343";
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_GetBeforeFirst_Simple()
+        public void GetBeforeFirst_MockData_ReturnsEmptyString()
         {
-            string result = ComplexTestString.GetBeforeFirst("_");
-            const string expected = "";
+            string result = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetBeforeFirst("_");
 
-            Assert.IsTrue(result == expected, $"Expected {expected} but got {result}");
+            bool evaluate = result == "";
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_GetBeforeLast_Simple()
+        public void GetBeforeLast_MockData_ReturnsString()
         {
-            string result = ComplexTestString.GetBeforeLast("_");
-            const string expected = "_tH\\is_I!is_M\"y_TEST";
+            string result = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetBeforeLast("_");
 
-            Assert.IsTrue(result == expected, $"Expected {expected} but got {result}");
+            bool evaluate = result == "_tH\\is_I!is_M\"y_TEST";
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void False_HasUpperCase_Simple()
+        public void HasUpperCase_LowerCaseString_ReturnsFalse()
         {
-            Assert.IsFalse(LowerCaseTestString.HasUpperCase());
+            bool evaluate = "this is all lowercase".HasUpperCase();
+
+            Assert.IsFalse(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void False_HasLowerCase_Simple()
+        public void HasLowerCase_UpperCaseString_ReturnsFalse()
         {
-            Assert.IsFalse(UpperCaseTestString.HasLowerCase());
+            bool evaluate = "THIS IS ALL UPPERCASE".HasLowerCase();
+
+            Assert.IsFalse(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_HasUpperCase_Simple()
+        public void HasUpperCase_MixedCaseString_ReturnsTrue()
         {
-            Assert.IsTrue(SimpleTestString.HasUpperCase());
+            Assert.IsTrue("HelloWorld!".HasUpperCase());
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_HasLowerCase_Simple()
+        public void HasLowerCase_MixedCaseString_ReturnsTrue()
         {
-            Assert.IsTrue(SimpleTestString.HasLowerCase());
-        }
-
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void True_IsBooleanPositiveValue_Simple()
-        {
-            Assert.IsTrue("true".IsBooleanPositiveValue(), "Expected positive response.");
+            Assert.IsTrue("HelloWorld!".HasLowerCase());
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_IsBooleanValue_Simple()
+        public void IsBooleanPositiveValue_TrueString_ReturnsTrue()
         {
-            Assert.IsTrue("off".IsBooleanValue(), "Expected positive response.");
+            bool evaluate = "true".IsBooleanPositiveValue();
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void False_IsBooleanValue_Simple()
+        public void IsBooleanValue_OffString_ReturnsTrue()
         {
-            Assert.IsFalse("off2".IsBooleanValue(), "Expected negative response.");
+            bool evaluate = "off".IsBooleanValue();
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void False_IsBooleanPositiveValue_Simple()
+        public void IsBooleanValue_BadString_ReturnsFalse()
         {
-            Assert.IsFalse("true2".IsBooleanPositiveValue(), "Expected positive response.");
+            bool evaluate = "off2".IsBooleanValue();
+
+            Assert.IsFalse(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_IsIntegerValue_Simple()
+        public void IsBooleanPositiveValue_BadString_ReturnsFalse()
         {
-            Assert.IsTrue("1".IsIntegerValue(), "Expected positive response.");
+            bool evaluate = "true2".IsBooleanPositiveValue();
+
+            Assert.IsFalse(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_IsIntegerValue_Complex()
+        public void IsIntegerValue_PositiveNumber_ReturnsTrue()
         {
-            Assert.IsTrue("-100222".IsIntegerValue(), "Expected positive response.");
+            bool evaluate = "1".IsIntegerValue();
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void False_IsIntegerValue_Simple()
+        public void IsIntegerValue_NegativeNumber_ReturnsTrue()
         {
-            Assert.IsFalse("bob".IsIntegerValue(), "Expected false response.");
+            bool evaluate = "-100222".IsIntegerValue();
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void False_IsIntegerValue_Complex()
+        public void IsIntegerValue_BadString_ReturnsFalse()
         {
-            Assert.IsFalse("-100bob222".IsIntegerValue(), "Expected false response.");
+            bool evaluate = "bob".IsIntegerValue();
+
+            Assert.IsFalse(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_IsNumericValue_Simple()
+        public void IsIntegerValue_MixedString_ReturnsFalse()
         {
-            Assert.IsTrue("1".IsNumeric(), "Expected positive response.");
-        }
-        [Test]
-        [Category("GDX.Tests")]
-        public void True_IsNumericValue_Complex()
-        {
-            Assert.IsTrue("-100.12123".IsNumeric(), "Expected positive response.");
+            bool evaluate = "-100bob222".IsIntegerValue();
+
+            Assert.IsFalse(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void False_IsNumericValue_DoubleDecimal()
+        public void IsNumericValue_PositiveNumber_ReturnsTrue()
         {
-            Assert.IsFalse("-100..12123".IsNumeric(), "Expected positive response.");
-        }
+            bool evaluate = "1".IsNumeric();
 
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void True_SplitCamelCase_CamelCase()
-        {
-            Assert.IsTrue("SomethingSomethingDarkSide".SplitCamelCase() == "Something Something Dark Side");
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_SplitCamelCase_camelCase()
+        public void IsNumericValue_NegativeNumber_ReturnsTrue()
         {
-            Assert.IsTrue("somethingSomethingDarkSide".SplitCamelCase() == "something Something Dark Side");
+            bool evaluate = "-100.12123".IsNumeric();
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_Encrypt_Decrypt_SimpleString()
+        public void IsNumericValue_TwoDecimals_ReturnsFalse()
         {
-            string encrypted = SimpleTestString.Encrypt();
-            Assert.IsTrue(encrypted.Decrypt() == SimpleTestString, "Expected strings to match.");
+            bool evaluate = "-100..12123".IsNumeric();
+
+            Assert.IsFalse(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_Encrypt_Decrypt_ComplexString()
+        public void SplitCamelCase_CamelCase_ReturnsString()
         {
-            string encrypted = ComplexTestString.Encrypt();
-            Assert.IsTrue(encrypted.Decrypt() == ComplexTestString, "Expected strings to match.");
+            bool evaluate = "SomethingSomethingDarkSide".SplitCamelCase() == "Something Something Dark Side";
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_ToLowerGetHashCode_GetStableLowerCaseHashCode_ComplexString()
+        public void SplitCamelCase_camelCase_ReturnsString()
         {
-            int oldHash = ComplexTestString.ToLower().GetHashCode();
-            int newHash = ComplexTestString.GetStableLowerCaseHashCode();
-            Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
+            bool evaluate = "somethingSomethingDarkSide".SplitCamelCase() == "something Something Dark Side";
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_ToLowerGetHashCode_GetStableLowerCaseHashCode_LowerCase()
+        public void Encrypt_Decrypt_IsEqual()
         {
-            int oldHash = LowerCaseTestString.ToLower().GetHashCode();
-            int newHash = LowerCaseTestString.GetStableLowerCaseHashCode();
-            Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
+            const string simpleString = "HelloWorld!";
+            const string complexString = "_tH\\is_I!is_M\"y_TEST_STR#$34343";
+
+            string encryptedSimple = simpleString.Encrypt();
+            string encryptedComplex = complexString.Encrypt();
+
+            bool evaluate = encryptedSimple.Decrypt() == simpleString &&
+                            encryptedComplex.Decrypt() == complexString;
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_ToLowerGetHashCode_GetStableLowerCaseHashCode_Simple()
+        public void Encrypt_MockData_ReturnsString()
         {
-            int oldHash = SimpleTestString.ToLower().GetHashCode();
-            int newHash = SimpleTestString.GetStableLowerCaseHashCode();
-            Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
+            bool evaluate = "HelloWorld!".Encrypt() != "HelloWorld!";
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_ToLowerGetHashCode_GetStableLowerCaseHashCode_UpperCase()
+        public void GetStableLowerCaseHashCode_ToLowerGetHashCode_IsEqual()
         {
-            int oldHash = UpperCaseTestString.ToLower().GetHashCode();
-            int newHash = UpperCaseTestString.GetStableLowerCaseHashCode();
-            Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
+            int oldSimpleHash = "HelloWorld!".ToLower().GetHashCode();
+            int newSimpleHash = "HelloWorld!".GetStableLowerCaseHashCode();
+            int oldLowerCaseHash = "this is all lowercase".ToLower().GetHashCode();
+            int newLowerCaseHash = "this is all lowercase".GetStableLowerCaseHashCode();
+            int oldUpperCaseHash = "THIS IS ALL UPPERCASE".ToLower().GetHashCode();
+            int newUpperCaseHash = "THIS IS ALL UPPERCASE".GetStableLowerCaseHashCode();
+            int oldComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".ToLower().GetHashCode();
+            int newComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetStableLowerCaseHashCode();
+
+            bool evaluate = oldSimpleHash == newSimpleHash &&
+                            oldComplexHash == newComplexHash &&
+                            oldLowerCaseHash == newLowerCaseHash &&
+                            oldUpperCaseHash == newUpperCaseHash;
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_ToUpperGetHashCode_GetStableUpperCaseHashCode_ComplexString()
+        public void GetStableUpperCaseHashCode_ToUpperGetHashCode_IsEqual()
         {
-            int oldHash = ComplexTestString.ToUpper().GetHashCode();
-            int newHash = ComplexTestString.GetStableUpperCaseHashCode();
-            Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
+            int oldComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".ToUpper().GetHashCode();
+            int newComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetStableUpperCaseHashCode();
+            int oldLowerCaseHash = "this is all lowercase".ToUpper().GetHashCode();
+            int newLowerCaseHash = "this is all lowercase".GetStableUpperCaseHashCode();
+            int oldSimpleHash = "HelloWorld!".ToUpper().GetHashCode();
+            int newSimpleHash = "HelloWorld!".GetStableUpperCaseHashCode();
+            int oldUpperCaseHash = "THIS IS ALL UPPERCASE".ToUpper().GetHashCode();
+            int newUpperCaseHash = "THIS IS ALL UPPERCASE".GetStableUpperCaseHashCode();
+
+            bool evaluate = oldComplexHash == newComplexHash &&
+                            oldLowerCaseHash == newLowerCaseHash &&
+                            oldSimpleHash == newSimpleHash &&
+                            oldUpperCaseHash == newUpperCaseHash;
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_ToUpperGetHashCode_GetStableUpperCaseHashCode_LowerCase()
+        public void TryParseVector2_NoSpaces_ReturnsVector2()
         {
-            int oldHash = LowerCaseTestString.ToUpper().GetHashCode();
-            int newHash = LowerCaseTestString.GetStableUpperCaseHashCode();
-            Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
+            bool parse = "1.5,2".TryParseVector2(out Vector2 parsedLocation);
+
+            bool evaluate = parse && parsedLocation == new Vector2(1.5f, 2);
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_ToUpperGetHashCode_GetStableUpperCaseHashCode_Simple()
+        public void TryParseVector2_SpacedValues_ReturnsVector2()
         {
-            int oldHash = SimpleTestString.ToUpper().GetHashCode();
-            int newHash = SimpleTestString.GetStableUpperCaseHashCode();
-            Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
+            bool parse = "1, 2".TryParseVector2(out Vector2 parsedLocation);
+
+            bool evaluate = parse && parsedLocation == new Vector2(1, 2);
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_ToUpperGetHashCode_GetStableUpperCaseHashCode_UpperCase()
+        public void TryParseVector3_NoSpaces_ReturnsVector3()
         {
-            int oldHash = UpperCaseTestString.ToUpper().GetHashCode();
-            int newHash = UpperCaseTestString.GetStableUpperCaseHashCode();
-            Assert.IsTrue(oldHash == newHash, "Expected string hash codes to match. {0} vs {1}", oldHash, newHash);
+            bool parse = "3,2,1".TryParseVector3(out Vector3 parsedLocation);
+
+            bool evaluate = parse && parsedLocation == new Vector3(3, 2, 1);
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void Equal_TryParseVector2_UnityFormat()
+        public void TryParseVector3_SpacedValues_ReturnsVector3()
         {
-            string sourceData = "1, 2";
-            Vector2 successValue = new Vector2(1, 2);
+            bool parse = "3, 2, 1".TryParseVector3(out Vector3 parsedLocation);
 
-            if (sourceData.TryParseVector2(out Vector2 parsedLocation))
-            {
-                Assert.IsTrue(successValue == parsedLocation, $"Expected {successValue}, found {parsedLocation}");
-            }
-            else
-            {
-                Assert.Fail($"Unable to parse provided source data ({sourceData}).");
-            }
+            bool evaluate = parse && parsedLocation == new Vector3(3, 2, 1);
+
+            Assert.IsTrue(evaluate);
         }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void Equal_TryParseVector2_NoSpaces()
-        {
-            string sourceData = "1.5,2";
-            Vector2 successValue = new Vector2(1.5f, 2);
-
-            if (sourceData.TryParseVector2(out Vector2 parsedLocation))
-            {
-                Assert.IsTrue(successValue == parsedLocation, $"Expected {successValue}, found {parsedLocation}");
-            }
-            else
-            {
-                Assert.Fail($"Unable to parse provided source data ({sourceData}).");
-            }
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void Equal_TryParseVector3_UnityFormat()
-        {
-            string sourceData = "3, 2, 1";
-            Vector3 successValue = new Vector3(3, 2, 1);
-
-            if (sourceData.TryParseVector3(out Vector3 parsedLocation))
-            {
-                Assert.IsTrue(successValue == parsedLocation, $"Expected {successValue}, found {parsedLocation}");
-            }
-            else
-            {
-                Assert.Fail($"Unable to parse provided source data ({sourceData}).");
-            }
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void Equal_TryParseVector3_NoSpaces()
-        {
-            string sourceData = "3,2,1";
-            Vector3 successValue = new Vector3(3, 2, 1);
-
-            if (sourceData.TryParseVector3(out Vector3 parsedLocation))
-            {
-                Assert.IsTrue(successValue == parsedLocation, $"Expected {successValue}, found {parsedLocation}");
-            }
-            else
-            {
-                Assert.Fail($"Unable to parse provided source data ({sourceData}).");
-            }
-        }
-
     }
 }

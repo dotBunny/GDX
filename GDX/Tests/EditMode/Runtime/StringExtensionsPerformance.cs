@@ -17,17 +17,14 @@ namespace Runtime
         private const int MeasurementCount = 20;
         private const int IterationsPerMeasurement = 100;
 
-        private const string SimpleIntegerTestString = "10";
-        private const string ComplexIntegerTestString = "-12304912";
-
         [Test]
         [Performance]
         [Category("GDX.Performance")]
-        public void Measure_ToLower_GetHashCode()
+        public void ToLower_GetHashCode()
         {
             Measure.Method(() =>
                 {
-                    int dummyValue = StringExtensionsTests.SimpleTestString.ToLower().GetHashCode();
+                    int dummyValue = "HelloWorld!".ToLower().GetHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -36,7 +33,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = StringExtensionsTests.LowerCaseTestString.ToLower().GetHashCode();
+                    int dummyValue = "this is all lowercase".ToLower().GetHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -45,7 +42,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = StringExtensionsTests.UpperCaseTestString.ToLower().GetHashCode();
+                    int dummyValue = "THIS IS ALL UPPERCASE".ToLower().GetHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -54,7 +51,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = StringExtensionsTests.ComplexTestString.ToLower().GetHashCode();
+                    int dummyValue = "_tH\\is_I!is_M\"y_TEST_STR#$34343".ToLower().GetHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -66,11 +63,11 @@ namespace Runtime
         [Test]
         [Performance]
         [Category("GDX.Performance")]
-        public void Measure_GetStableLowerCaseHashCode()
+        public void GetStableLowerCaseHashCode()
         {
             Measure.Method(() =>
                 {
-                    int dummyValue = StringExtensionsTests.SimpleTestString.GetStableLowerCaseHashCode();
+                    int dummyValue = "HelloWorld!".GetStableLowerCaseHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -79,7 +76,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = StringExtensionsTests.LowerCaseTestString.GetStableLowerCaseHashCode();
+                    int dummyValue = "this is all lowercase".GetStableLowerCaseHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -88,7 +85,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = StringExtensionsTests.UpperCaseTestString.GetStableLowerCaseHashCode();
+                    int dummyValue = "THIS IS ALL UPPERCASE".GetStableLowerCaseHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -97,7 +94,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = StringExtensionsTests.ComplexTestString.GetStableLowerCaseHashCode();
+                    int dummyValue = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetStableLowerCaseHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -109,11 +106,11 @@ namespace Runtime
         [Test]
         [Performance]
         [Category("GDX.Performance")]
-        public void Measure_ToUpper_GetHashCode()
+        public void ToUpper_GetHashCode()
         {
             Measure.Method(() =>
                 {
-                    int dummyValue = StringExtensionsTests.SimpleTestString.ToUpper().GetHashCode();
+                    int dummyValue = "HelloWorld!".ToUpper().GetHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -122,7 +119,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = StringExtensionsTests.LowerCaseTestString.ToUpper().GetHashCode();
+                    int dummyValue = "this is all lowercase".ToUpper().GetHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -131,7 +128,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = StringExtensionsTests.UpperCaseTestString.ToUpper().GetHashCode();
+                    int dummyValue = "THIS IS ALL UPPERCASE".ToUpper().GetHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -140,7 +137,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = StringExtensionsTests.ComplexTestString.ToUpper().GetHashCode();
+                    int dummyValue = "_tH\\is_I!is_M\"y_TEST_STR#$34343".ToUpper().GetHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -152,11 +149,11 @@ namespace Runtime
         [Test]
         [Performance]
         [Category("GDX.Performance")]
-        public void Measure_IntTryParse()
+        public void IntTryParse()
         {
             Measure.Method(() =>
                 {
-                    int.TryParse(SimpleIntegerTestString, out int value);
+                    int.TryParse("10", out int value);
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -165,7 +162,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int.TryParse(ComplexIntegerTestString, out int value);
+                    int.TryParse("-12304912", out int value);
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -177,11 +174,11 @@ namespace Runtime
         [Test]
         [Performance]
         [Category("GDX.Performance")]
-        public void Measure_IsIntegerValue()
+        public void IsIntegerValue()
         {
             Measure.Method(() =>
                 {
-                    SimpleIntegerTestString.IsIntegerValue();
+                    "10".IsIntegerValue();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -190,7 +187,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    ComplexIntegerTestString.IsIntegerValue();
+                    "-12304912".IsIntegerValue();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -202,11 +199,11 @@ namespace Runtime
         [Test]
         [Performance]
         [Category("GDX.Performance")]
-        public void Measure_GetStableUpperCaseHashCode()
+        public void GetStableUpperCaseHashCode()
         {
             Measure.Method(() =>
                 {
-                    int dummyValue = StringExtensionsTests.SimpleTestString.GetStableUpperCaseHashCode();
+                    int dummyValue = "HelloWorld!".GetStableUpperCaseHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -215,7 +212,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = StringExtensionsTests.LowerCaseTestString.GetStableUpperCaseHashCode();
+                    int dummyValue = "this is all lowercase".GetStableUpperCaseHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -224,7 +221,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = StringExtensionsTests.UpperCaseTestString.GetStableUpperCaseHashCode();
+                    int dummyValue = "THIS IS ALL UPPERCASE".GetStableUpperCaseHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
@@ -233,7 +230,7 @@ namespace Runtime
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = StringExtensionsTests.ComplexTestString.GetStableUpperCaseHashCode();
+                    int dummyValue = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetStableUpperCaseHashCode();
                 })
                 .WarmupCount(WarmupCount)
                 .MeasurementCount(MeasurementCount)
