@@ -48,6 +48,5 @@ namespace Runtime.Collections.Pooling
 
             Assert.IsFalse(ManagedPools.HasPool(cachePoolID));
         }
-
     }
 }

@@ -15,9 +15,6 @@ namespace Runtime
     /// </summary>
     public class ByteExtensionsTests
     {
-        /// <summary>
-        ///     Check if we get the correct hash code from an array of <see cref="byte" />s.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
         public void GetStableHashCode_MockData_ReturnsValidCode()
