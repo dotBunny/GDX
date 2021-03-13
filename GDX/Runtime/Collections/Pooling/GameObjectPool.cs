@@ -74,7 +74,7 @@ namespace GDX.Collections.Pooling
         /// <param name="triggerOnSpawnedFromPool">Should the <see cref="OnSpawnedFromPoolAction"/> be called when getting this item.</param>
         /// <returns>A <see cref="GameObject" /> from the <see cref="ListManagedPool"/>, or null if no item is available.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GameObject Get(ListManagedPool pool, bool triggerOnSpawnedFromPool = true)
+        public static GameObject Get(this ListManagedPool pool, bool triggerOnSpawnedFromPool = true)
         {
             // Pull
             object item = pool.Get(false);
@@ -404,7 +404,7 @@ namespace GDX.Collections.Pooling
         private static object CreateItem(ListManagedPool pool)
         {
             GameObject spawnedObject =
-                Object.Instantiate((GameObject)pool._baseObject, (Transform)pool._containerObject, false);
+                Object.Instantiate((GameObject)pool._baseObject, (Transform)pool._containerObject, true);
 
             if (pool.Flags[HasInterfaceFlag])
             {
@@ -484,7 +484,18 @@ namespace GDX.Collections.Pooling
 
                 if (inItem is IGameObjectPoolItem gameObjectItem && gameObjectItem.IsValidItem())
                 {
+#if UNITY_EDITOR
+                    if (Application.isPlaying)
+                    {
+                        Object.Destroy((Object)inItem);
+                    }
+                    else
+                    {
+                        Object.DestroyImmediate((Object)inItem);
+                    }
+#else
                     Object.Destroy((Object)inItem);
+#endif
                 }
             }
         }
