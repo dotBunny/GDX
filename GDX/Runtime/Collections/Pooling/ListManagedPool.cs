@@ -109,14 +109,9 @@ namespace GDX.Collections.Pooling
         public Action<ListManagedPool, object> OnSpawnedFromPool;
 
         /// <summary>
-        ///     A <c>delegate</c> call made when a pool is tearing down, after the items are returned to the pool.
-        /// </summary>
-        public Action<ListManagedPool> OnTearDownPostPoolItems;
-
-        /// <summary>
         ///     A <c>delegate</c> call made when a pool is tearing down, before the items are pooled.
         /// </summary>
-        public Action<ListManagedPool> OnTearDownPrePoolItems;
+        public Action<ListManagedPool> OnTearDown;
 
         /// <summary>
         ///     Create a <see cref="ListManagedPool" />.
@@ -342,7 +337,7 @@ namespace GDX.Collections.Pooling
         /// <inheritdoc />
         public void TearDown()
         {
-            OnTearDownPrePoolItems?.Invoke(this);
+            OnTearDown?.Invoke(this);
 
             // Return all items to the pool
             for (int i = _outCount - 1; i >= 0; i--)
@@ -350,16 +345,21 @@ namespace GDX.Collections.Pooling
                 if (_outItems[i] != null)
                 {
                     Return(_outItems[i]);
+
                 }
             }
 
             _outItems.Clear();
             _outCount = 0;
 
-            // Execute specific logic to the implementation
-            OnTearDownPostPoolItems?.Invoke(this);
-
-            // Removing references to the objects should make GC do its thing
+            // Wipe internals
+            for (int i = _inCount - 1; i >= 0; i--)
+            {
+                if (_inItems[i] != null)
+                {
+                    OnDestroyItem?.Invoke(_inItems[i]);
+                }
+            }
             _inItems.Clear();
             _inCount = 0;
 

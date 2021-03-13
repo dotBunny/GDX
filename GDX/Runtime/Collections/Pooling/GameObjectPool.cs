@@ -59,8 +59,7 @@ namespace GDX.Collections.Pooling
 
             // Assign actions
             newGameManagedPool.OnDestroyItem += OnDestroyItemAction;
-            newGameManagedPool.OnTearDownPrePoolItems += OnTearDownPrePoolItemsAction;
-            newGameManagedPool.OnTearDownPostPoolItems += OnTearDownPostPoolItemsAction;
+            newGameManagedPool.OnTearDown += OnTearDownAction;
             newGameManagedPool.OnSpawnedFromPool += OnSpawnedFromPoolAction;
             newGameManagedPool.OnReturnedToPool += OnReturnedToPoolAction;
 
@@ -429,11 +428,35 @@ namespace GDX.Collections.Pooling
         /// <param name="item">The item being destroyed.</param>
         private static void OnDestroyItemAction(object item)
         {
-            Object unityObject = (Object)item;
+            if (item == null) return;
+
+            Object unityObject = null;
+            if (item is IGameObjectPoolItem poolItem && poolItem.IsValidItem())
+            {
+                unityObject = poolItem.GetGameObject();
+            }
+            else
+            {
+                unityObject = (Object)item;
+            }
+
             if (unityObject != null)
             {
+#if UNITY_EDITOR
+                if (Application.isPlaying)
+                {
+                    Object.Destroy(unityObject, 0f);
+                }
+                else
+                {
+                    Object.DestroyImmediate(unityObject);
+                }
+#else
                 Object.Destroy(unityObject, 0f);
+#endif
+
             }
+
         }
 
         /// <summary>
@@ -469,42 +492,10 @@ namespace GDX.Collections.Pooling
         }
 
         /// <summary>
-        ///     The subscribed action called when the <paramref name="pool"/> is asked to <see cref="IManagedPool.TearDown()"/> after items were returned to the pool.
-        /// </summary>
-        /// <param name="pool">The <see cref="ListManagedPool"/> being torn down.</param>
-        private static void OnTearDownPostPoolItemsAction(ListManagedPool pool)
-        {
-            for (int i = 0; i < pool._inCount; i++)
-            {
-                object inItem = pool._inItems[i];
-                if (inItem == null)
-                {
-                    continue;
-                }
-
-                if (inItem is IGameObjectPoolItem gameObjectItem && gameObjectItem.IsValidItem())
-                {
-#if UNITY_EDITOR
-                    if (Application.isPlaying)
-                    {
-                        Object.Destroy((Object)inItem);
-                    }
-                    else
-                    {
-                        Object.DestroyImmediate((Object)inItem);
-                    }
-#else
-                    Object.Destroy((Object)inItem);
-#endif
-                }
-            }
-        }
-
-        /// <summary>
         ///     The subscribed action called when the <paramref name="pool"/> is asked to <see cref="IManagedPool.TearDown()"/> before items were returned to the pool.
         /// </summary>
         /// <param name="pool">The <see cref="ListManagedPool"/> being torn down.</param>
-        private static void OnTearDownPrePoolItemsAction(ListManagedPool pool)
+        private static void OnTearDownAction(ListManagedPool pool)
         {
             ManagedPoolBuilder.RemoveManagedPool(pool);
         }
