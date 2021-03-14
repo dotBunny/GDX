@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0" assemblyQualifiedName="Microsoft.VisualStudio.Coverage.DynamicCoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+        <Configuration>
+          <CodeCoverage>
+            <ModulePaths>
+              <Include>
+                <ModulePath>GDX.dll</ModulePath>
+                <ModulePath>GDX.Editor.dll</ModulePath>
+              </Include>            
+              <Exclude>
+                <ModulePath>GDX.Tests.EditMode.dll</ModulePath>   
+                <ModulePath>GDX.Tests.PlayMode.dll</ModulePath>
+              </Exclude>
+            </ModulePaths>            
+            <Attributes>
+              <Exclude>                
+                <Attribute>^System\.Diagnostics\.DebuggerHiddenAttribute$</Attribute>
+                <Attribute>^System\.Diagnostics\.DebuggerNonUserCodeAttribute$</Attribute>
+                <Attribute>^System\.CodeDom\.Compiler\.GeneratedCodeAttribute$</Attribute>
+                <Attribute>^System\.Diagnostics\.CodeAnalysis\.ExcludeFromCodeCoverageAttribute$</Attribute>
+              </Exclude>
+            </Attributes>
+          </CodeCoverage>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>            

@@ -16,17 +16,24 @@ namespace Runtime
     /// </summary>
     public class StringExtensionsTests
     {
-        [Test]
-        [Category("GDX.Tests")]
-        public void EncryptionKeys_InitializedValues_ReturnValid()
+        private byte[] _previousEncryptionDefaultKey;
+        private byte[] _previousEncryptionInitializationVector;
+
+        [SetUp]
+        public void Setup()
         {
-            byte[] defaultKey = Encoding.UTF8.GetBytes("Awesome!");
-            byte[] defaultVector = Encoding.UTF8.GetBytes("dotBunny");
+            _previousEncryptionDefaultKey = StringExtensions.EncryptionDefaultKey;
+            _previousEncryptionInitializationVector = StringExtensions.EncryptionInitializationVector;
 
-            bool evaluate = StringExtensions.EncryptionDefaultKey.IsSame(defaultKey) &&
-                            StringExtensions.EncryptionInitializationVector.IsSame(defaultVector);
+            StringExtensions.EncryptionDefaultKey = Encoding.UTF8.GetBytes("Awesome!");
+            StringExtensions.EncryptionInitializationVector = Encoding.UTF8.GetBytes("dotBunny");
+        }
 
-            Assert.IsTrue(evaluate);
+        [TearDown]
+        public void TearDown()
+        {
+            StringExtensions.EncryptionDefaultKey = _previousEncryptionDefaultKey;
+            StringExtensions.EncryptionInitializationVector = _previousEncryptionInitializationVector;
         }
 
         [Test]

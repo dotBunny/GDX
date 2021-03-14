@@ -49,11 +49,39 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
-        public void FirstIndexOfItem_MockDataValue_ReturnsIndex()
+        public void FirstIndexOfItem_NoMockDataObject_ReturnsIndex()
+        {
+            CircularBuffer<int> mockSearchBuffer = new CircularBuffer<int>(2, new[] {0, 1});
+            CircularBuffer<int>[] mockArray = new CircularBuffer<int>[4];
+            CircularBuffer<int> noObject = new CircularBuffer<int>(1, new[] {0});
+            mockArray[0] = new CircularBuffer<int>(1);
+            mockArray[1] = mockSearchBuffer;
+            mockArray[2] = new CircularBuffer<int>(2);
+            mockArray[3] = mockSearchBuffer;
+
+            bool evaluate = mockArray.FirstIndexOfItem(noObject) == -1;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void FirstIndexOfValue_MockDataValue_ReturnsIndex()
         {
             int[] mockArray = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2};
 
             bool evaluate = mockArray.FirstIndexOfValue(1) == 1;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void FirstIndexOfValue_NoMockDataValue_ReturnsNegativeOne()
+        {
+            int[] mockArray = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2};
+
+            bool evaluate = mockArray.FirstIndexOfValue(22) == -1;
 
             Assert.IsTrue(evaluate);
         }
@@ -76,11 +104,39 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
-        public void LastIndexOfItem_MockDataValue_ReturnsIndex()
+        public void LastIndexOfItem_NoMockDataObject_ReturnsNegativeOne()
+        {
+            CircularBuffer<int> mockSearchBuffer = new CircularBuffer<int>(2, new[] {0, 1});
+            CircularBuffer<int>[] mockArray = new CircularBuffer<int>[4];
+            CircularBuffer<int> noObject = new CircularBuffer<int>(1, new[] {0});
+            mockArray[0] = new CircularBuffer<int>(1);
+            mockArray[1] = mockSearchBuffer;
+            mockArray[2] = new CircularBuffer<int>(2);
+            mockArray[3] = mockSearchBuffer;
+
+            bool evaluate = mockArray.LastIndexOfItem(noObject) == -1;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void LastIndexOfValue_MockDataValue_ReturnsIndex()
         {
             int[] mockArray = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2};
 
             bool evaluate = mockArray.LastIndexOfValue(1) == 11;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void LastIndexOfValue_NoMockDataValue_ReturnsNegativeOne()
+        {
+            int[] mockArray = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2};
+
+            bool evaluate = mockArray.LastIndexOfValue(12) == -1;
 
             Assert.IsTrue(evaluate);
         }
