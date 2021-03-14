@@ -16,13 +16,22 @@
               </Exclude>
             </ModulePaths>            
             <Attributes>
-              <Exclude>                
-                <Attribute>^System\.Diagnostics\.DebuggerHiddenAttribute$</Attribute>
+              <Exclude>  
+                <Attribute>^*Attribute$</Attribute>              
+                <!-- <Attribute>^System\.Diagnostics\.DebuggerHiddenAttribute$</Attribute>
                 <Attribute>^System\.Diagnostics\.DebuggerNonUserCodeAttribute$</Attribute>
                 <Attribute>^System\.CodeDom\.Compiler\.GeneratedCodeAttribute$</Attribute>
-                <Attribute>^System\.Diagnostics\.CodeAnalysis\.ExcludeFromCodeCoverageAttribute$</Attribute>
+                <Attribute>^System\.Diagnostics\.CodeAnalysis\.ExcludeFromCodeCoverageAttribute$</Attribute> -->
               </Exclude>
             </Attributes>
+            <Functions>
+              <Exclude>
+                <Function>^GDX\.*Extensions\.cctor$</Function>
+                <Function>^GDX\.GDXConfig\..ctor$</Function>
+                <Function>^GDX\.GDXConfig\..cctor$</Function>
+                <Function>^GDX\.Developer\.CommandLineParser\..cctor$</Function>
+              </Exclude>
+            </Functions>
           </CodeCoverage>
         </Configuration>
       </DataCollector>

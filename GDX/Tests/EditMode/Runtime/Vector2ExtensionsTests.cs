@@ -105,6 +105,29 @@ namespace Runtime
             Assert.IsTrue(evaluate);
         }
 
+        [Test]
+        [Category("GDX.Tests")]
+        public void Slope_ZeroXValue_ReturnsZero()
+        {
+            Vector2 mockData = new Vector2(0, 10);
+
+            bool evaluate = (mockData.Slope() == 0);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void Slope_MockData_ReturnsSlope()
+        {
+            Vector2 mockData = new Vector2(5, 10);
+
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            bool evaluate = (mockData.Slope() == 2);
+
+            Assert.IsTrue(evaluate);
+        }
+
 
     }
 }

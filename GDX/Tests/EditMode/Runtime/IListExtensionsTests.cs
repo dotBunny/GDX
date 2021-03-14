@@ -133,6 +133,26 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
+        public void RemoveFirstItem_BadMockData_ReturnsFalse()
+        {
+            CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
+            CircularBuffer<int> mockData = new CircularBuffer<int>(2);
+            List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
+            {
+                new CircularBuffer<int>(2),
+                searchItem,
+                new CircularBuffer<int>(4),
+                new CircularBuffer<int>(15),
+                searchItem
+            };
+
+            bool evaluate = listItems.RemoveFirstItem(mockData);
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
         public void RemoveFirstValue_MockData_RemovedItem()
         {
             const int searchValue = 9;
@@ -151,6 +171,23 @@ namespace Runtime
                             listItems.ContainsValue(searchValue);
 
             Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void RemoveFirstValue_BadMockData_ReturnsFalse()
+        {
+            List<int> listItems = new List<int>
+            {
+                2,
+                9,
+                4,
+                15,
+                9
+            };
+            bool evaluate = listItems.RemoveFirstValue(6);
+
+            Assert.IsFalse(evaluate);
         }
 
         [Test]
@@ -191,6 +228,23 @@ namespace Runtime
                             listItems.ContainsItem(searchItem);
 
             Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void RemoveLastItem_BadMockData_ReturnsFalse()
+        {
+            CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
+            List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
+            {
+                new CircularBuffer<int>(2),
+                new CircularBuffer<int>(4),
+                new CircularBuffer<int>(15),
+            };
+
+            bool evaluate = listItems.RemoveLastItem(searchItem);
+
+            Assert.IsFalse(evaluate);
         }
 
         [Test]
@@ -257,6 +311,24 @@ namespace Runtime
                             mockData.ContainsValue(searchValue);
 
             Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void RemoveLastValue_BadMockData_ReturnsFalse()
+        {
+            List<int> mockData = new List<int>
+            {
+                2,
+                9,
+                4,
+                15,
+                9,
+                98
+            };
+            bool evaluate = mockData.RemoveLastValue(6);
+
+            Assert.IsFalse(evaluate);
         }
 
         [Test]
