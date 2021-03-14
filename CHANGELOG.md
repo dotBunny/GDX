@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.7] - 2021-03-05
+## [1.2.7] - 2021-03-15
 ***"Never Say Never"***
 > Updates have been tested across different installation methods, a pooling system, and some fixes!
 
@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Caught issue with `initialCapcity` causing an OOB issue with `SparseSets` [@godjammit](https://github.com/dotBunny/GDX/pull/41)
+- Caught a few more null coalescing assignments that are not compatible with Unity 2019 in `InspectorMessageBoxAttributeDecoratorDrawer`. (thanks Nick & Gabe)
+- Resolved `PackageProvider` issues with Unity 2019.
 
 ## [1.2.6] - 2021-02-15
 ***"UPM Updates"***
