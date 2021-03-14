@@ -1,6 +1,7 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Text;
 using GDX;
 using NUnit.Framework;
 using UnityEngine;
@@ -15,6 +16,19 @@ namespace Runtime
     /// </summary>
     public class StringExtensionsTests
     {
+        [Test]
+        [Category("GDX.Tests")]
+        public void EncryptionKeys_InitializedValues_ReturnValid()
+        {
+            byte[] defaultKey = Encoding.UTF8.GetBytes("Awesome!");
+            byte[] defaultVector = Encoding.UTF8.GetBytes("dotBunny");
+
+            bool evaluate = StringExtensions.EncryptionDefaultKey.IsSame(defaultKey) &&
+                            StringExtensions.EncryptionInitializationVector.IsSame(defaultVector);
+
+            Assert.IsTrue(evaluate);
+        }
+
         [Test]
         [Category("GDX.Tests")]
         public void GetAfterFirst_MockData_ReturnsString()
@@ -129,6 +143,14 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
+        public void IsIntegerValue_NullNumber_ReturnsFalse()
+        {
+            bool evaluate = "".IsIntegerValue();
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
         public void IsIntegerValue_PositiveNumber_ReturnsTrue()
         {
             bool evaluate = "1".IsIntegerValue();
@@ -169,6 +191,22 @@ namespace Runtime
             bool evaluate = "1".IsNumeric();
 
             Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void IsNumericValue_NullNumber_ReturnsFalse()
+        {
+            bool evaluate = "".IsNumeric();
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void IsNumericValue_Characters_ReturnsFalse()
+        {
+            bool evaluate = "c111".IsNumeric();
+            Assert.IsFalse(evaluate);
         }
 
         [Test]
@@ -276,6 +314,17 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
+        public void TryParseVector2_NoSplit_ReturnsFalse()
+        {
+            bool parse = "12".TryParseVector2(out Vector2 parsedLocation);
+
+            bool evaluate = !parse && parsedLocation == Vector2.zero;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
         public void TryParseVector2_NoSpaces_ReturnsVector2()
         {
             bool parse = "1.5,2".TryParseVector2(out Vector2 parsedLocation);
@@ -295,6 +344,84 @@ namespace Runtime
 
             Assert.IsTrue(evaluate);
         }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void TryParseVector2_CharFirstSplit_ReturnsFalse()
+        {
+            bool parse = "c, 2".TryParseVector2(out Vector2 parsedLocation);
+
+            bool evaluate = !parse && parsedLocation == Vector2.zero;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void TryParseVector2_CharSecondSplit_ReturnsFalse()
+        {
+            bool parse = "1, c".TryParseVector2(out Vector2 parsedLocation);
+
+            bool evaluate = !parse && parsedLocation == Vector2.zero;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void TryParseVector3_NoSplit_ReturnsVector2Zero()
+        {
+            bool parse = "123".TryParseVector3(out Vector3 parsedLocation);
+
+            bool evaluate = !parse && parsedLocation == Vector3.zero;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void TryParseVector3_NoSecondSplit_ReturnsFalse()
+        {
+            bool parse = "2, 22".TryParseVector3(out Vector3 parsedLocation);
+
+            bool evaluate = !parse && parsedLocation == Vector3.zero;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void TryParseVector3_CharFirstSplit_ReturnsFalse()
+        {
+            bool parse = "c, 2, 2".TryParseVector3(out Vector3 parsedLocation);
+
+            bool evaluate = !parse && parsedLocation == Vector3.zero;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void TryParseVector3_CharSecondSplit_ReturnsFalse()
+        {
+            bool parse = "2, c, 2".TryParseVector3(out Vector3 parsedLocation);
+
+            bool evaluate = !parse && parsedLocation == Vector3.zero;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void TryParseVector3_CharThirdSplit_ReturnsFalse()
+        {
+            bool parse = "2, 2, c".TryParseVector3(out Vector3 parsedLocation);
+
+            bool evaluate = !parse && parsedLocation == Vector3.zero;
+
+            Assert.IsTrue(evaluate);
+        }
+
 
         [Test]
         [Category("GDX.Tests")]

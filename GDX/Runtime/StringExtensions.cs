@@ -2,6 +2,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
@@ -103,7 +104,7 @@ namespace GDX
             {
                 Mode = CipherMode.ECB,
                 Padding = PaddingMode.PKCS7,
-                Key = encryptionKey ?? EncryptionDefaultKey,
+                Key = (encryptionKey != null && encryptionKey.Length > 0) ? encryptionKey : EncryptionDefaultKey,
                 IV = EncryptionInitializationVector
             };
 #if UNITY_2020_2_OR_NEWER
@@ -142,7 +143,7 @@ namespace GDX
             {
                 Mode = CipherMode.ECB,
                 Padding = PaddingMode.PKCS7,
-                Key = encryptionKey ?? EncryptionDefaultKey,
+                Key = (encryptionKey != null && encryptionKey.Length > 0) ? encryptionKey : EncryptionDefaultKey,
                 IV = EncryptionInitializationVector
             };
 #if UNITY_2020_2_OR_NEWER

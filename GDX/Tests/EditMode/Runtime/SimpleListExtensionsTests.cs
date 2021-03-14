@@ -1,6 +1,7 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using GDX;
 using GDX.Collections.Generic;
 using NUnit.Framework;
@@ -33,6 +34,135 @@ namespace Runtime
         {
             _mockData.Clear();
             _mockData = default;
+        }
+
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddWithExpandCheckUniqueItem_NonUniqueString_ReturnsFalse()
+        {
+            SimpleList<string> mockData = new SimpleList<string>(3);
+
+            mockData.AddWithExpandCheckUniqueItem("test1");
+            mockData.AddWithExpandCheckUniqueItem("test2");
+            mockData.AddWithExpandCheckUniqueItem("test3");
+
+            bool evaluate = mockData.AddWithExpandCheckUniqueItem("test1");
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddWithExpandCheckUniqueItem_UniqueString_ReturnsTrue()
+        {
+            SimpleList<string> mockData = new SimpleList<string>(3);
+
+            mockData.AddWithExpandCheckUniqueItem("test1");
+            mockData.AddWithExpandCheckUniqueItem("test2");
+            mockData.AddWithExpandCheckUniqueItem("test3");
+
+            bool evaluate = mockData.AddWithExpandCheckUniqueItem("test4");
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddWithExpandCheckUniqueValue_NonUniqueInteger_ReturnsFalse()
+        {
+            SimpleList<int> listOfIntegers = new SimpleList<int>(3);
+            listOfIntegers.AddWithExpandCheckUniqueValue(1);
+            listOfIntegers.AddWithExpandCheckUniqueValue(2);
+            listOfIntegers.AddWithExpandCheckUniqueValue(3);
+
+            bool evaluate = listOfIntegers.AddWithExpandCheckUniqueValue(1);
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddWithExpandCheckUniqueValue_UniqueInteger_ReturnsTrue()
+        {
+            SimpleList<int> listOfIntegers = new SimpleList<int>(3);
+            listOfIntegers.AddWithExpandCheckUniqueValue(1);
+            listOfIntegers.AddWithExpandCheckUniqueValue(2);
+            listOfIntegers.AddWithExpandCheckUniqueValue(3);
+
+            bool evaluate = listOfIntegers.AddWithExpandCheckUniqueValue(4);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddUncheckedUniqueItem_NonUniqueString_ReturnsFalse()
+        {
+            SimpleList<string> listOfStrings = new SimpleList<string>(3);
+            listOfStrings.AddUncheckedUniqueItem("test1");
+            listOfStrings.AddUncheckedUniqueItem("test2");
+
+            bool evaluate = listOfStrings.AddUncheckedUniqueItem("test2");
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddUncheckedUniqueItem_UniqueStringWithRoom_NoException()
+        {
+            SimpleList<string> listOfStrings = new SimpleList<string>(3);
+            listOfStrings.AddUncheckedUniqueItem("test1");
+            listOfStrings.AddUncheckedUniqueItem("test2");
+
+            Assert.DoesNotThrow(() => { listOfStrings.AddUncheckedUniqueItem("test3"); });
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddUncheckedUniqueItem_UniqueStringWithNoRoom_ThrowsException()
+        {
+            SimpleList<string> listOfStrings = new SimpleList<string>(2);
+            listOfStrings.AddUncheckedUniqueItem("test1");
+            listOfStrings.AddUncheckedUniqueItem("test2");
+
+            Assert.Throws<IndexOutOfRangeException>(() => { listOfStrings.AddUncheckedUniqueItem("test3"); });
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddUncheckedUniqueValue_NonUniqueInteger_ReturnsFalse()
+        {
+            SimpleList<int> listOfIntegers = new SimpleList<int>(3);
+            listOfIntegers.AddUncheckedUniqueValue(1);
+            listOfIntegers.AddUncheckedUniqueValue(2);
+
+            bool evaluate = listOfIntegers.AddUncheckedUniqueValue(2);
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddUncheckedUniqueValue_UniqueIntegerWithRoom_NoException()
+        {
+            SimpleList<int> listOfIntegers = new SimpleList<int>(3);
+            listOfIntegers.AddUncheckedUniqueValue(1);
+            listOfIntegers.AddUncheckedUniqueValue(2);
+
+            Assert.DoesNotThrow(() => { listOfIntegers.AddUncheckedUniqueValue(3); });
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddUncheckedUniqueValue_UniqueIntegerWithNoRoom_ThrowsException()
+        {
+            SimpleList<int> listOfIntegers = new SimpleList<int>(2);
+            listOfIntegers.AddUncheckedUniqueValue(1);
+            listOfIntegers.AddUncheckedUniqueValue(2);
+
+            Assert.Throws<IndexOutOfRangeException>(() => { listOfIntegers.AddUncheckedUniqueValue(3); });
         }
 
         [Test]

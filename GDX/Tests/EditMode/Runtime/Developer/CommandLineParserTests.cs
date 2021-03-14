@@ -37,20 +37,6 @@ namespace Runtime.Developer
 
         [Test]
         [Category("GDX.Tests")]
-        public void ParseArguments_MockData_ContainsFlag()
-        {
-
-           // Environment.
-            CommandLineParser.ParseArguments();
-
-            bool evaluate = CommandLineParser.Flags.Contains("SOMETHING");
-
-            Assert.IsTrue(evaluate);
-        }
-
-
-        [Test]
-        [Category("GDX.Tests")]
         public void ProcessArguments_MockData_ContainsFlag()
         {
             CommandLineParser.ProcessArguments(_mockData);
