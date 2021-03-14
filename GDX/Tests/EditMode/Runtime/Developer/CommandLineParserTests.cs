@@ -1,6 +1,7 @@
 // dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using GDX;
 using GDX.Developer;
 using NUnit.Framework;
@@ -33,6 +34,20 @@ namespace Runtime.Developer
         {
             _mockData = null;
         }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void ParseArguments_MockData_ContainsFlag()
+        {
+
+           // Environment.
+            CommandLineParser.ParseArguments();
+
+            bool evaluate = CommandLineParser.Flags.Contains("SOMETHING");
+
+            Assert.IsTrue(evaluate);
+        }
+
 
         [Test]
         [Category("GDX.Tests")]

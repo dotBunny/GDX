@@ -1,6 +1,7 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 namespace GDX
@@ -8,6 +9,7 @@ namespace GDX
     /// <summary>
     ///     Create a message box of information above the property in the inspector.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class InspectorMessageBoxAttribute : PropertyAttribute
     {
         /// <summary>
