@@ -2,6 +2,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace GDX
 {
@@ -18,6 +19,7 @@ namespace GDX
     ///         uid: GDX.HideFromDocFXAttribute
     ///     </code>
     /// </example>
+    [ExcludeFromCodeCoverage]
     public sealed class HideFromDocFXAttribute : Attribute
     {
     }

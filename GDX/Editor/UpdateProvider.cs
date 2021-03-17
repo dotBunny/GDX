@@ -94,11 +94,12 @@ namespace GDX.Editor
         /// <summary>
         ///     Attempt to do the upgrade of the package based on the established <see cref="PackageProvider.InstallationType" />.
         /// </summary>
-        public static void AttemptUpgrade()
+        /// <param name="forceUpgrade">Should we bypass all safety checks?</param>
+        public static void AttemptUpgrade(bool forceUpgrade = false)
         {
             string messageStart =
                 $"There is a new version of GDX available ({UpdatePackageDefinition.version}).\n";
-            if (!IsUpgradable())
+            if (!forceUpgrade && !IsUpgradable())
             {
                 EditorUtility.DisplayDialog("GDX Update Available",
                     $"{messageStart}Unfortunately we are unable to determine a proper upgrade path for your package. We are UNABLE to upgrade your package for you automatically.",
@@ -313,7 +314,7 @@ namespace GDX.Editor
             catch (Exception e)
             {
                 // We will end up here if the formulated Uri is bad.
-                Debug.LogWarning(e.Message);
+                Trace.Output(Trace.TraceLevel.Warning, e.Message);
                 return;
             }
             finally
@@ -422,16 +423,16 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        ///     Removes the com.dotbunny.gdx entry from the Manifest Lockfile, forcing the package manager to
-        ///     reset what version the package is currently at.
+        ///     Upgrade the package, with the understanding that it was added via UPM.
         /// </summary>
-        public static void RemovePackageManifestLockFileEntry()
+        private static void UpgradeUnityPackageManager()
         {
             // We're going to remove the entry from the lockfile triggering it to record an update
             string packageManifestLockFile =
                 Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6), "Packages",
                     "packages-lock.json");
 
+            // We can only do this if the file exists!
             if (File.Exists(packageManifestLockFile))
             {
                 string[] lockFileContents = File.ReadAllLines(packageManifestLockFile);
@@ -473,21 +474,6 @@ namespace GDX.Editor
                     File.WriteAllLines(packageManifestLockFile, newFileContent.ToArray());
                 }
             }
-        }
-
-        /// <summary>
-        ///     Upgrade the package, with the understanding that it was added via UPM.
-        /// </summary>
-        private static void UpgradeUnityPackageManager()
-        {
-            // Delete the cached package if found
-            string cacheFolderPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6),
-                "Library", "PackageCache");
-
-            // Remove entry from lock file
-            RemovePackageManifestLockFileEntry();
-
-            // Do we need to delete the actual folder?
         }
     }
 }

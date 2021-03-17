@@ -15,7 +15,7 @@ Add `com.dotbunny.gdx` as a dependency to the project `Packages/manifest.json` f
 ```
 {
   "dependencies": {
-    "com.dotbunny.gdx": "https://github.com/dotBunny/GDX.git",
+    "com.dotbunny.gdx": "https://github.com/dotBunny/GDX.git"
   }
 }
 ```

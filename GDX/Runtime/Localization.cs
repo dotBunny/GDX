@@ -54,12 +54,12 @@ namespace GDX
         /// <example>
         ///     A byte size of 1024, will return a string of 1 KB.
         /// </example>
-        /// <param name="byteSize">The number of bytes to measure.</param>
-        /// <returns>A human readable version of the provided <paramref name="byteSize" />.</returns>
+        /// <param name="base2Size">The number of bytes (binary) to measure.</param>
+        /// <returns>A human readable version of the provided <paramref name="base2Size" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string GetHumanReadableFileSize(long byteSize)
+        public static string GetHumanReadableFileSize(long base2Size)
         {
-            long length = byteSize;
+            long length = base2Size;
             int order = 0;
             const int incrementLengthAdjusted = 4;
             while (length >= 1024 && order < incrementLengthAdjusted)

@@ -33,8 +33,16 @@ namespace GDX.Editor.DecoratorDrawers
         /// <returns>The height in pixels.</returns>
         public override float GetHeight()
         {
-            _target ??= (InspectorMessageBoxAttribute)attribute;
-            _targetMessage ??= new GUIContent(_target.Message);
+            // ReSharper disable once ConvertIfStatementToNullCoalescingAssignment
+            if (_target == null)
+            {
+                _target = (InspectorMessageBoxAttribute)attribute;
+            }
+            // ReSharper disable once ConvertIfStatementToNullCoalescingAssignment
+            if (_targetMessage == null)
+            {
+                _targetMessage = new GUIContent(_target.Message);
+            }
             return s_cachedHelpBoxStyle.CalcHeight(_targetMessage, EditorGUIUtility.currentViewWidth) + 4;
         }
 
@@ -44,7 +52,12 @@ namespace GDX.Editor.DecoratorDrawers
         /// <param name="position">Rectangle on the screen to use for the decorator.</param>
         public override void OnGUI(Rect position)
         {
-            _target ??= (InspectorMessageBoxAttribute)attribute;
+            // ReSharper disable once ConvertIfStatementToNullCoalescingAssignment
+            if (_target == null)
+            {
+                _target = (InspectorMessageBoxAttribute)attribute;
+            }
+
             switch (_target.MessageType)
             {
                 case InspectorMessageBoxAttribute.MessageBoxType.Info:

@@ -1,6 +1,7 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Text;
 using GDX;
 using NUnit.Framework;
@@ -15,16 +16,76 @@ namespace Runtime
     /// </summary>
     public class ByteExtensionsTests
     {
-        /// <summary>
-        ///     Check if we get the correct hash code from an array of <see cref="byte" />s.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_GetStableHashCode_Simple()
+        public void GetStableHashCode_MockData_ReturnsValidCode()
         {
             byte[] testArray = Encoding.UTF8.GetBytes("Hello World");
-            int hashCode = testArray.GetStableHashCode();
-            Assert.IsTrue(hashCode == 1349791181, $"Expected value of 1349791181 instead got {hashCode}.");
+
+            bool evaluate = (testArray.GetStableHashCode() == 1349791181);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void IsSame_SameData_ReturnsTrue()
+        {
+            byte[] mockData = StringExtensions.EncryptionDefaultKey;
+
+            bool evaluate = mockData.IsSame(StringExtensions.EncryptionDefaultKey);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void IsSame_DifferentData_ReturnsFalse()
+        {
+            byte[] mockData = StringExtensions.EncryptionDefaultKey;
+            byte[] differentData = StringExtensions.EncryptionInitializationVector;
+
+            bool evaluate = mockData.IsSame(differentData);
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void IsSame_NullLeftHandSide_ReturnsFalse()
+        {
+            byte[] mockData = null;
+            byte[] differentData = StringExtensions.EncryptionInitializationVector;
+
+            // ReSharper disable once ExpressionIsAlwaysNull
+            bool evaluate = mockData.IsSame(differentData);
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void IsSame_NullRightHandSide_ReturnsFalse()
+        {
+            byte[] mockData = StringExtensions.EncryptionDefaultKey;
+            byte[] differentData = null;
+
+            // ReSharper disable once ExpressionIsAlwaysNull
+            bool evaluate = mockData.IsSame(differentData);
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void IsSame_DifferentLengths_ReturnsFalse()
+        {
+            byte[] mockData = StringExtensions.EncryptionDefaultKey;
+            byte[] differentData = new byte[9];
+
+            bool evaluate = mockData.IsSame(differentData);
+
+            Assert.IsFalse(evaluate);
         }
     }
 }

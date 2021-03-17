@@ -17,6 +17,12 @@ namespace GDX
     public class GDXConfig : ScriptableObject
     {
         /// <summary>
+        ///     A runtime only instance of <see cref="GDXConfig" />.
+        /// </summary>
+#pragma warning disable 414
+        private static GDXConfig s_runtimeInstance = null;
+#pragma warning restore 414
+        /// <summary>
         ///     Should GDX check for updates at editor time?
         /// </summary>
         public bool updateProviderCheckForUpdates = true;
@@ -79,7 +85,40 @@ namespace GDX
         /// <summary>
         ///     Should a GDX scripting define symbol be added to all target build groups.
         /// </summary>
-        public bool environmentScriptingDefineSymbol = false;
+        public bool environmentScriptingDefineSymbol;
+
+        /// <summary>
+        ///     What is the level of traces which should be processed and logged by GDX in the editor or development builds?
+        /// </summary>
+        public Trace.TraceLevel traceDevelopmentLevels = Trace.TraceLevel.Log |
+                                                         Trace.TraceLevel.Warning |
+                                                         Trace.TraceLevel.Error |
+                                                         Trace.TraceLevel.Exception |
+                                                         Trace.TraceLevel.Assertion |
+                                                         Trace.TraceLevel.Fatal;
+
+        /// <summary>
+        ///     What is the level of traces which should be processed and logged by GDX in debug builds?
+        /// </summary>
+        public Trace.TraceLevel traceDebugLevels = Trace.TraceLevel.Warning |
+                                                   Trace.TraceLevel.Assertion |
+                                                   Trace.TraceLevel.Error |
+                                                   Trace.TraceLevel.Exception;
+
+        /// <summary>
+        ///     What is the level of traces which should be processed and logged by GDX in release builds?
+        /// </summary>
+        public Trace.TraceLevel traceReleaseLevels = Trace.TraceLevel.Fatal;
+
+        /// <summary>
+        ///     Should GDX based traces output to the Unity console in the editor or development builds?
+        /// </summary>
+        public bool traceDevelopmentOutputToUnityConsole = true;
+
+        /// <summary>
+        ///     Should GDX based traces output to the Unity console in debug builds?
+        /// </summary>
+        public bool traceDebugOutputToUnityConsole = true;
 
         /// <summary>
         ///     Should the default thread culture be set?
@@ -90,13 +129,6 @@ namespace GDX
         ///     The language to set the default thread culture too.
         /// </summary>
         public Localization.Language localizationDefaultCulture = Localization.Language.English;
-
-        /// <summary>
-        ///     A runtime only instance of <see cref="GDXConfig"/>.
-        /// </summary>
-#pragma warning disable 414
-        private static GDXConfig s_runtimeInstance = null;
-#pragma warning restore 414
 
         /// <summary>
         ///     Get a loaded instance of the <see cref="GDXConfig" /> from resources.

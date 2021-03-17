@@ -155,7 +155,7 @@ namespace GDX.Editor.Build
             }
             catch (Exception e)
             {
-                Debug.LogWarning(e);
+                Trace.Output(Trace.TraceLevel.Warning, e);
             }
         }
 

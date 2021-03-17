@@ -15,75 +15,130 @@ namespace Runtime
     /// </summary>
     public class ArrayExtensionsTests
     {
-        /// <summary>
-        ///     Check if the <see cref="ArrayExtensions.Clear{T}" /> method correctly defaults all elements in an array.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_Clear_Simple()
+        public void Clear_MockData_HasDefaultValues()
         {
-            int[] clearArray = {0, 1, 2, 3};
-            clearArray.Clear();
+            int[] mockArray = {0, 1, 2, 3};
 
-            Assert.IsTrue(clearArray[0] == default &&
-                          clearArray[1] == default &&
-                          clearArray[2] == default &&
-                          clearArray[3] == default, "Expected all elements in the array to be default.");
+            mockArray.Clear();
+
+            bool evaluate = mockArray[0] == default &&
+                            mockArray[1] == default &&
+                            mockArray[2] == default &&
+                            mockArray[3] == default;
+
+            Assert.IsTrue(evaluate);
         }
 
-        /// <summary>
-        ///     Check if the <see cref="ArrayExtensions.FirstIndexOfItem{T}" /> method correctly finds the first index.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_FirstIndexOfItem_Simple()
+        public void FirstIndexOfItem_MockDataObject_ReturnsIndex()
         {
-            CircularBuffer<int> searchBuffer = new CircularBuffer<int>(2, new[] {0, 1});
-            CircularBuffer<int>[] testArray = new CircularBuffer<int>[4];
-            testArray[0] = new CircularBuffer<int>(1);
-            testArray[1] = searchBuffer;
-            testArray[2] = new CircularBuffer<int>(2);
-            testArray[3] = searchBuffer;
-            Assert.IsTrue(testArray.FirstIndexOfItem(searchBuffer) == 1, "Expected an index of 1.");
+            CircularBuffer<int> mockSearchBuffer = new CircularBuffer<int>(2, new[] {0, 1});
+            CircularBuffer<int>[] mockArray = new CircularBuffer<int>[4];
+            mockArray[0] = new CircularBuffer<int>(1);
+            mockArray[1] = mockSearchBuffer;
+            mockArray[2] = new CircularBuffer<int>(2);
+            mockArray[3] = mockSearchBuffer;
+
+            bool evaluate = mockArray.FirstIndexOfItem(mockSearchBuffer) == 1;
+
+            Assert.IsTrue(evaluate);
         }
 
-        /// <summary>
-        ///     Check if the <see cref="ArrayExtensions.FirstIndexOfValue{T}" /> method correctly finds the first index.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_FirstIndexOfValue_Simple()
+        public void FirstIndexOfItem_NoMockDataObject_ReturnsIndex()
         {
-            int[] testArray = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2};
-            Assert.IsTrue(testArray.FirstIndexOfValue(1) == 1, "Expected an index of 1.");
+            CircularBuffer<int> mockSearchBuffer = new CircularBuffer<int>(2, new[] {0, 1});
+            CircularBuffer<int>[] mockArray = new CircularBuffer<int>[4];
+            CircularBuffer<int> noObject = new CircularBuffer<int>(1, new[] {0});
+            mockArray[0] = new CircularBuffer<int>(1);
+            mockArray[1] = mockSearchBuffer;
+            mockArray[2] = new CircularBuffer<int>(2);
+            mockArray[3] = mockSearchBuffer;
+
+            bool evaluate = mockArray.FirstIndexOfItem(noObject) == -1;
+
+            Assert.IsTrue(evaluate);
         }
 
-        /// <summary>
-        ///     Check if the <see cref="ArrayExtensions.LastIndexOfItem{T}" /> method correctly finds the last index.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_LastIndexOfItem_Simple()
+        public void FirstIndexOfValue_MockDataValue_ReturnsIndex()
         {
-            CircularBuffer<int> searchBuffer = new CircularBuffer<int>(2, new[] {0, 1});
-            CircularBuffer<int>[] testArray = new CircularBuffer<int>[4];
-            testArray[0] = new CircularBuffer<int>(1);
-            testArray[1] = searchBuffer;
-            testArray[2] = new CircularBuffer<int>(2);
-            testArray[3] = searchBuffer;
+            int[] mockArray = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2};
 
-            Assert.IsTrue(testArray.LastIndexOfItem(searchBuffer) == 3, "Expected an index of 3.");
+            bool evaluate = mockArray.FirstIndexOfValue(1) == 1;
+
+            Assert.IsTrue(evaluate);
         }
 
-        /// <summary>
-        ///     Check if the <see cref="ArrayExtensions.LastIndexOfValue{T}" /> method correctly finds the last index.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_LastIndexOfValue_Simple()
+        public void FirstIndexOfValue_NoMockDataValue_ReturnsNegativeOne()
         {
-            int[] testArray = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2};
-            Assert.IsTrue(testArray.LastIndexOfValue(1) == 11, "Expected an index of 11.");
+            int[] mockArray = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2};
+
+            bool evaluate = mockArray.FirstIndexOfValue(22) == -1;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void LastIndexOfItem_MockDataObject_ReturnsIndex()
+        {
+            CircularBuffer<int> mockSearchBuffer = new CircularBuffer<int>(2, new[] {0, 1});
+            CircularBuffer<int>[] mockArray = new CircularBuffer<int>[4];
+            mockArray[0] = new CircularBuffer<int>(1);
+            mockArray[1] = mockSearchBuffer;
+            mockArray[2] = new CircularBuffer<int>(2);
+            mockArray[3] = mockSearchBuffer;
+
+            bool evaluate = mockArray.LastIndexOfItem(mockSearchBuffer) == 3;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void LastIndexOfItem_NoMockDataObject_ReturnsNegativeOne()
+        {
+            CircularBuffer<int> mockSearchBuffer = new CircularBuffer<int>(2, new[] {0, 1});
+            CircularBuffer<int>[] mockArray = new CircularBuffer<int>[4];
+            CircularBuffer<int> noObject = new CircularBuffer<int>(1, new[] {0});
+            mockArray[0] = new CircularBuffer<int>(1);
+            mockArray[1] = mockSearchBuffer;
+            mockArray[2] = new CircularBuffer<int>(2);
+            mockArray[3] = mockSearchBuffer;
+
+            bool evaluate = mockArray.LastIndexOfItem(noObject) == -1;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void LastIndexOfValue_MockDataValue_ReturnsIndex()
+        {
+            int[] mockArray = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2};
+
+            bool evaluate = mockArray.LastIndexOfValue(1) == 11;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void LastIndexOfValue_NoMockDataValue_ReturnsNegativeOne()
+        {
+            int[] mockArray = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2};
+
+            bool evaluate = mockArray.LastIndexOfValue(12) == -1;
+
+            Assert.IsTrue(evaluate);
         }
     }
 }

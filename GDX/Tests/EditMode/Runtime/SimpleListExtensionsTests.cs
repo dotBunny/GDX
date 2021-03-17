@@ -1,6 +1,7 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using GDX;
 using GDX.Collections.Generic;
 using NUnit.Framework;
@@ -15,41 +16,236 @@ namespace Runtime
     /// </summary>
     public class SimpleListExtensionsTests
     {
-        /// <summary>
-        ///     Staged list values for test runs.
-        /// </summary>
-        private SimpleList<int> _listValues;
+        private SimpleList<int> _mockData;
 
-        /// <summary>
-        ///     Unit test staging.
-        /// </summary>
         [SetUp]
         public void Setup()
         {
-            _listValues = new SimpleList<int>(5);
-            _listValues.AddUnchecked(0);
-            _listValues.AddUnchecked(1);
-            _listValues.AddUnchecked(2);
-            _listValues.AddUnchecked(3);
-            _listValues.AddUnchecked(4);
+            _mockData = new SimpleList<int>(5);
+            _mockData.AddUnchecked(0);
+            _mockData.AddUnchecked(1);
+            _mockData.AddUnchecked(2);
+            _mockData.AddUnchecked(3);
+            _mockData.AddUnchecked(4);
         }
 
-        /// <summary>
-        ///     Unit test cleanup.
-        /// </summary>
         [TearDown]
         public void TearDown()
         {
-            _listValues.Clear();
-            _listValues = default;
+            _mockData.Clear();
+            _mockData = default;
         }
 
-        /// <summary>
-        ///     Check that removing the first item from a <see cref="SimpleList{T}" /> works correctly.
-        /// </summary>
+
         [Test]
         [Category("GDX.Tests")]
-        public void True_RemoveFirstItem_Simple()
+        public void AddWithExpandCheckUniqueItem_NonUniqueString_ReturnsFalse()
+        {
+            SimpleList<string> mockData = new SimpleList<string>(3);
+
+            mockData.AddWithExpandCheckUniqueItem("test1");
+            mockData.AddWithExpandCheckUniqueItem("test2");
+            mockData.AddWithExpandCheckUniqueItem("test3");
+
+            bool evaluate = mockData.AddWithExpandCheckUniqueItem("test1");
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddWithExpandCheckUniqueItem_UniqueString_ReturnsTrue()
+        {
+            SimpleList<string> mockData = new SimpleList<string>(3);
+
+            mockData.AddWithExpandCheckUniqueItem("test1");
+            mockData.AddWithExpandCheckUniqueItem("test2");
+            mockData.AddWithExpandCheckUniqueItem("test3");
+
+            bool evaluate = mockData.AddWithExpandCheckUniqueItem("test4");
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddWithExpandCheckUniqueValue_NonUniqueInteger_ReturnsFalse()
+        {
+            SimpleList<int> listOfIntegers = new SimpleList<int>(3);
+            listOfIntegers.AddWithExpandCheckUniqueValue(1);
+            listOfIntegers.AddWithExpandCheckUniqueValue(2);
+            listOfIntegers.AddWithExpandCheckUniqueValue(3);
+
+            bool evaluate = listOfIntegers.AddWithExpandCheckUniqueValue(1);
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddWithExpandCheckUniqueValue_UniqueInteger_ReturnsTrue()
+        {
+            SimpleList<int> listOfIntegers = new SimpleList<int>(3);
+            listOfIntegers.AddWithExpandCheckUniqueValue(1);
+            listOfIntegers.AddWithExpandCheckUniqueValue(2);
+            listOfIntegers.AddWithExpandCheckUniqueValue(3);
+
+            bool evaluate = listOfIntegers.AddWithExpandCheckUniqueValue(4);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddUncheckedUniqueItem_NonUniqueString_ReturnsFalse()
+        {
+            SimpleList<string> listOfStrings = new SimpleList<string>(3);
+            listOfStrings.AddUncheckedUniqueItem("test1");
+            listOfStrings.AddUncheckedUniqueItem("test2");
+
+            bool evaluate = listOfStrings.AddUncheckedUniqueItem("test2");
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddUncheckedUniqueItem_UniqueStringWithRoom_NoException()
+        {
+            SimpleList<string> listOfStrings = new SimpleList<string>(3);
+            listOfStrings.AddUncheckedUniqueItem("test1");
+            listOfStrings.AddUncheckedUniqueItem("test2");
+
+            Assert.DoesNotThrow(() => { listOfStrings.AddUncheckedUniqueItem("test3"); });
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddUncheckedUniqueItem_UniqueStringWithNoRoom_ThrowsException()
+        {
+            SimpleList<string> listOfStrings = new SimpleList<string>(2);
+            listOfStrings.AddUncheckedUniqueItem("test1");
+            listOfStrings.AddUncheckedUniqueItem("test2");
+
+            Assert.Throws<IndexOutOfRangeException>(() => { listOfStrings.AddUncheckedUniqueItem("test3"); });
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddUncheckedUniqueValue_NonUniqueInteger_ReturnsFalse()
+        {
+            SimpleList<int> listOfIntegers = new SimpleList<int>(3);
+            listOfIntegers.AddUncheckedUniqueValue(1);
+            listOfIntegers.AddUncheckedUniqueValue(2);
+
+            bool evaluate = listOfIntegers.AddUncheckedUniqueValue(2);
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddUncheckedUniqueValue_UniqueIntegerWithRoom_NoException()
+        {
+            SimpleList<int> listOfIntegers = new SimpleList<int>(3);
+            listOfIntegers.AddUncheckedUniqueValue(1);
+            listOfIntegers.AddUncheckedUniqueValue(2);
+
+            Assert.DoesNotThrow(() => { listOfIntegers.AddUncheckedUniqueValue(3); });
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddUncheckedUniqueValue_UniqueIntegerWithNoRoom_ThrowsException()
+        {
+            SimpleList<int> listOfIntegers = new SimpleList<int>(2);
+            listOfIntegers.AddUncheckedUniqueValue(1);
+            listOfIntegers.AddUncheckedUniqueValue(2);
+
+            Assert.Throws<IndexOutOfRangeException>(() => { listOfIntegers.AddUncheckedUniqueValue(3); });
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void ContainsItem_String_ReturnsTrue()
+        {
+            const string searchItem = "Hello";
+            SimpleList<string> listOfStrings = new SimpleList<string>(3);
+            listOfStrings.AddUnchecked(searchItem);
+            listOfStrings.AddUnchecked("World");
+            listOfStrings.AddUnchecked("!");
+
+            bool evaluate = listOfStrings.ContainsItem(searchItem);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void ContainsItem_CircularBuffer_ReturnsTrue()
+        {
+            CircularBuffer<int> searchItem = new CircularBuffer<int>(3, new[] {0, 1, 2});
+            SimpleList<CircularBuffer<int>> listItems = new SimpleList<CircularBuffer<int>>(5);
+
+            // Build test rig
+            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(searchItem);
+            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new CircularBuffer<int>(5));
+
+            bool evaluate = listItems.ContainsItem(searchItem);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void ContainsValue_FirstValue_ReturnsTrue()
+        {
+            const int searchValue = 0;
+
+            bool evaluate = _mockData.ContainsValue(searchValue);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void ContainsValue_LastValue_ReturnsTrue()
+        {
+            const int searchValue = 4;
+
+            bool evaluate = _mockData.ContainsValue(searchValue);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void ContainsValue_MidValue_ReturnsTrue()
+        {
+            const int searchValue = 1;
+
+            bool evaluate = _mockData.ContainsValue(searchValue);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void ContainsValue_MissingValue_ReturnsFalse()
+        {
+            const int searchValue = 12;
+
+            bool evaluate = _mockData.ContainsValue(searchValue);
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void RemoveFirstItem_MockData_RemovedItem()
         {
             CircularBuffer<int> searchItem = new CircularBuffer<int>(3, new[] {0, 1, 2});
             SimpleList<CircularBuffer<int>> listItems = new SimpleList<CircularBuffer<int>>(6);
@@ -63,17 +259,16 @@ namespace Runtime
             listItems.AddUnchecked(new CircularBuffer<int>(5));
 
             listItems.RemoveFirstItem(searchItem);
-            Assert.IsTrue(listItems.Array[1] != searchItem &&
-                          listItems.ContainsItem(searchItem),
-                "Item was expected to have been removed correctly.");
+
+            bool evaluate = listItems.Array[1] != searchItem &&
+                            listItems.ContainsItem(searchItem);
+
+            Assert.IsTrue(evaluate);
         }
 
-        /// <summary>
-        ///     Check that removing the first value from a <see cref="SimpleList{T}" /> works correctly.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_RemoveFirstValue_Simple()
+        public void RemoveFirstValue_MockData_RemovedValue()
         {
             const int searchValue = 1;
             SimpleList<int> listValues = new SimpleList<int>(6);
@@ -85,16 +280,15 @@ namespace Runtime
             listValues.AddUnchecked(searchValue);
 
             listValues.RemoveFirstValue(searchValue);
-            Assert.IsTrue(listValues.Array[1] == 2 && listValues.ContainsValue(searchValue),
-                "A value of 2 was expected.");
+
+            bool evaluate = listValues.Array[1] == 2 && listValues.ContainsValue(searchValue);
+
+            Assert.IsTrue(evaluate);
         }
 
-        /// <summary>
-        ///     Check that removing the all references to an item from a <see cref="SimpleList{T}" /> works correctly.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_RemoveItems_Simple()
+        public void RemoveItems_MockData_RemovedItems()
         {
             CircularBuffer<int> searchItem = new CircularBuffer<int>(3, new[] {0, 1, 2});
             SimpleList<CircularBuffer<int>> listItems = new SimpleList<CircularBuffer<int>>(6);
@@ -108,16 +302,15 @@ namespace Runtime
             listItems.AddUnchecked(new CircularBuffer<int>(5));
 
             listItems.RemoveItems(searchItem);
-            Assert.IsTrue(!listItems.ContainsItem(searchItem),
-                "Items were expected to have been removed correctly.");
+
+            bool evaluate = listItems.ContainsItem(searchItem);
+
+            Assert.IsFalse(evaluate);
         }
 
-        /// <summary>
-        ///     Check that removing the last item from a <see cref="SimpleList{T}" /> works correctly.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_RemoveLastItem_Simple()
+        public void RemoveLastItem_MockData_RemovedItem()
         {
             CircularBuffer<int> searchItem = new CircularBuffer<int>(3, new[] {0, 1, 2});
             SimpleList<CircularBuffer<int>> listItems = new SimpleList<CircularBuffer<int>>(6);
@@ -131,17 +324,16 @@ namespace Runtime
             listItems.AddUnchecked(new CircularBuffer<int>(5));
 
             listItems.RemoveLastItem(searchItem);
-            Assert.IsTrue(listItems.Array[4] != searchItem &&
-                          listItems.ContainsItem(searchItem),
-                "Item was expected to have been removed correctly.");
+
+            bool evaluate = listItems.Array[4] != searchItem &&
+                            listItems.ContainsItem(searchItem);
+
+            Assert.IsTrue(evaluate);
         }
 
-        /// <summary>
-        ///     Check that removing the last value from a <see cref="SimpleList{T}" /> works correctly.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_RemoveLastValue_Simple()
+        public void RemoveLastValue_MockData_RemovedValue()
         {
             SimpleList<int> listValues = new SimpleList<int>(7);
             listValues.AddUnchecked(0);
@@ -153,15 +345,15 @@ namespace Runtime
             listValues.AddUnchecked(2);
 
             listValues.RemoveLastValue(1);
-            Assert.IsTrue(listValues.Array[5] == 2, "A value of 2 was expected.");
+
+            bool evaluate = listValues.Array[5] == 2;
+
+            Assert.IsTrue(evaluate);
         }
 
-        /// <summary>
-        ///     Check that removing all of a specific value from a <see cref="SimpleList{T}" /> works correctly.
-        /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_RemoveValues_Simple()
+        public void RemoveValues_MockData_RemovedValue()
         {
             SimpleList<int> listValues = new SimpleList<int>(7);
             listValues.AddUnchecked(0);
@@ -174,94 +366,9 @@ namespace Runtime
 
             listValues.RemoveValues(1);
 
-            Assert.IsTrue(!listValues.ContainsValue(1), "No 1 values were expected.");
-        }
+            bool evaluate = listValues.ContainsValue(1);
 
-        /// <summary>
-        ///     Check if we can find a <see cref="string" /> in a SimpleList, while its not the actual object, this validates
-        ///     the .NET magic for strings.
-        /// </summary>
-        [Test]
-        [Category("GDX.Tests")]
-        public void True_ContainsItem_String()
-        {
-            const string searchItem = "Hello";
-            SimpleList<string> listOfStrings = new SimpleList<string>(3);
-            listOfStrings.AddUnchecked(searchItem);
-            listOfStrings.AddUnchecked("World");
-            listOfStrings.AddUnchecked("!");
-
-            Assert.IsTrue(listOfStrings.ContainsItem(searchItem),
-                $"Expected positive response to looking for {searchItem} item.");
-        }
-
-        /// <summary>
-        ///     Check if a class object can be correctly found inside of a <see cref="SimpleList{T}" />.
-        /// </summary>
-        [Test]
-        [Category("GDX.Tests")]
-        public void True_ContainsItem_CircularBuffer()
-        {
-            CircularBuffer<int> searchItem = new CircularBuffer<int>(3, new[] {0, 1, 2});
-            SimpleList<CircularBuffer<int>> listItems = new SimpleList<CircularBuffer<int>>(5);
-
-            // Build test rig
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
-            listItems.AddUnchecked(searchItem);
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
-
-            Assert.IsTrue(listItems.ContainsItem(searchItem),
-                "Expected positive response to looking for target circular buffer.");
-        }
-
-        /// <summary>
-        ///     Check if we can find the first struct/value in a <see cref="SimpleList{T}" />.
-        /// </summary>
-        [Test]
-        [Category("GDX.Tests")]
-        public void True_ContainsValue_FirstValue()
-        {
-            const int searchValue = 0;
-            Assert.IsTrue(_listValues.ContainsValue(searchValue),
-                $"Expected positive response to looking for {searchValue} value.");
-        }
-
-        /// <summary>
-        ///     Check if we cant find a value in <see cref="SimpleList{T}" />.
-        /// </summary>
-        [Test]
-        [Category("GDX.Tests")]
-        public void False_ContainsValue_MissingValue()
-        {
-            const int searchValue = 12;
-            Assert.IsFalse(_listValues.ContainsValue(searchValue),
-                $"Expected negative response to looking for {searchValue} value.");
-        }
-
-        /// <summary>
-        ///     Check if we can find the last struct/value in a <see cref="SimpleList{T}" />.
-        /// </summary>
-        [Test]
-        [Category("GDX.Tests")]
-        public void True_ContainsValue_LastValue()
-        {
-            const int searchValue = 4;
-            Assert.IsTrue(_listValues.ContainsValue(searchValue),
-                $"Expected positive response to looking for {searchValue} value.");
-        }
-
-        /// <summary>
-        ///     Check if we can find a struct/value in amongst a <see cref="SimpleList{T}" />.
-        /// </summary>
-        [Test]
-        [Category("GDX.Tests")]
-        public void True_ContainsValue_MidValue()
-        {
-            const int searchValue = 1;
-            Assert.IsTrue(_listValues.ContainsValue(searchValue),
-                $"Expected positive response to looking for {searchValue} value.");
+            Assert.IsFalse(evaluate);
         }
     }
 }
