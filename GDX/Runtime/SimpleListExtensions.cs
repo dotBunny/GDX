@@ -23,7 +23,7 @@ namespace GDX
         public static bool AddUncheckedUniqueItem<T>(ref this SimpleList<T> targetSimpleList, T targetItem)
             where T : class
         {
-            if (!targetSimpleList.ContainsItem(targetItem))
+            if (targetSimpleList.ContainsItem(targetItem))
             {
                 return false;
             }
@@ -44,7 +44,7 @@ namespace GDX
         public static bool AddUncheckedUniqueValue<T>(ref this SimpleList<T> targetSimpleList, T targetValue)
             where T : struct
         {
-            if (!targetSimpleList.ContainsValue(targetValue))
+            if (targetSimpleList.ContainsValue(targetValue))
             {
                 return false;
             }
@@ -65,7 +65,7 @@ namespace GDX
         public static bool AddWithExpandCheckUniqueItem<T>(ref this SimpleList<T> targetSimpleList, T targetItem)
             where T : class
         {
-            if (!targetSimpleList.ContainsItem(targetItem))
+            if (targetSimpleList.ContainsItem(targetItem))
             {
                 return false;
             }
@@ -86,13 +86,13 @@ namespace GDX
         public static bool AddWithExpandCheckUniqueValue<T>(ref this SimpleList<T> targetSimpleList, T targetValue)
             where T : struct
         {
-            if (!targetSimpleList.ContainsValue(targetValue))
+            if (targetSimpleList.ContainsValue(targetValue))
             {
                 return false;
             }
 
             targetSimpleList.AddWithExpandCheck(targetValue);
-            return false;
+            return true;
         }
 
         /// <summary>

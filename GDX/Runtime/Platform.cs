@@ -4,6 +4,7 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace GDX
 {
@@ -78,6 +79,16 @@ namespace GDX
 #else
             return Application.isFocused;
 #endif
+        }
+
+        /// <summary>
+        /// Is the application running in headless mode?.
+        /// </summary>
+        /// <remarks>Useful for detecting running a server.</remarks>
+        /// <returns>true/false if the application is without an initialized graphics device.</returns>
+        public static bool IsHeadless()
+        {
+            return SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null;
         }
     }
 }
