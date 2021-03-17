@@ -73,7 +73,7 @@ namespace GDX.Collections.Pooling
         /// <param name="triggerOnSpawnedFromPool">Should the <see cref="OnSpawnedFromPoolAction"/> be called when getting this item.</param>
         /// <returns>A <see cref="GameObject" /> from the <see cref="ListManagedPool"/>, or null if no item is available.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GameObject Get(this ListManagedPool pool, bool triggerOnSpawnedFromPool = true)
+        public static GameObject Get(ListManagedPool pool, bool triggerOnSpawnedFromPool = true)
         {
             // Pull
             object item = pool.Get(false);
