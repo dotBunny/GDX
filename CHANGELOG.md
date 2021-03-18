@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.8] - ?
+***"Not Done"***
+> 
+
+### Changed
+- Removed the extension `Get` method from `GameObjectPool` to match the other methods.
+
+### Fixed
+- Force the Package Manager to resolve the package manifest during an update.
+
 ## [1.2.7] - 2021-03-16
 ***"Never Say Never"***
 > Updates have been tested across different installation methods, a pooling system, and some fixes!
