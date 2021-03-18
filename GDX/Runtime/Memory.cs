@@ -27,7 +27,9 @@ namespace GDX
         ///         </item>
         ///     </list>
         /// </summary>
-        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
+        /// <remarks>
+        ///     <para>Requires UnityEngine.CoreModule.dll to function correctly.</para>
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void CleanUp()
         {
@@ -35,9 +37,7 @@ namespace GDX
             GC.Collect();
 
             // Tell Unity to clean up any assets that it no longer wants to have loaded
-            while (!Resources.UnloadUnusedAssets().isDone)
-            {
-            }
+            Resources.UnloadUnusedAssets();
 
             // Fire off second pass collection
             GC.WaitForPendingFinalizers();
@@ -49,8 +49,19 @@ namespace GDX
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async void CleanUpAsync()
         {
-            // ReSharper disable once HeapView.DelegateAllocation
-            await Task.Run(CleanUp);
+            // Fire off a first pass collection
+            GC.Collect();
+
+            // Tell Unity to clean up any assets that it no longer wants to have loaded
+            AsyncOperation handle = Resources.UnloadUnusedAssets();
+            while (!handle.isDone)
+            {
+                await Task.Delay(1000);
+            }
+
+            // Fire off second pass collection
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
         }
     }
 }
