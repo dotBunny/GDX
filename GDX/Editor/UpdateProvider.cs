@@ -8,7 +8,6 @@ using GDX.IO.Compression;
 using UnityEditor;
 using UnityEditor.VersionControl;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace GDX.Editor
 {
@@ -142,6 +141,7 @@ namespace GDX.Editor
                     {
                         SetLastNotifiedVersion(UpdatePackageDefinition.version);
                     }
+
                     break;
                 case PackageProvider.InstallationType.Assets:
                     if (EditorUtility.DisplayDialog("GDX Update Available",
@@ -198,7 +198,6 @@ namespace GDX.Editor
         {
             switch (LocalPackage.InstallationMethod)
             {
-
                 case PackageProvider.InstallationType.GitHub:
                 case PackageProvider.InstallationType.GitHubBranch:
                 case PackageProvider.InstallationType.GitHubTag:
@@ -472,6 +471,9 @@ namespace GDX.Editor
                 if (newFileContent.Count != lockFileLength)
                 {
                     File.WriteAllLines(packageManifestLockFile, newFileContent.ToArray());
+
+                    // Tell PackageManager to resolve our newly altered file.
+                    UnityEditor.PackageManager.Client.Resolve();
                 }
             }
         }
