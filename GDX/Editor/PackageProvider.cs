@@ -4,8 +4,10 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -203,7 +205,12 @@ namespace GDX.Editor
                     continue;
                 }
 
-                PlayerSettings.GetScriptingDefineSymbolsForGroup(group, out string[] defines);
+                string[] defines = null;
+#if UNITY_2020_1_OR_NEWER
+                PlayerSettings.GetScriptingDefineSymbolsForGroup(group, out defines);
+#else
+                defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(group).Split(';');
+#endif
                 int location = defines.FirstIndexOfItem("GDX");
 
                 // Found
@@ -217,7 +224,21 @@ namespace GDX.Editor
                 string[] newDefines = new string[oldLength + 1];
                 Array.Copy(defines, newDefines, oldLength);
                 newDefines[oldLength] = "GDX";
+
+
+#if UNITY_2020_2_OR_NEWER
                 PlayerSettings.SetScriptingDefineSymbolsForGroup(@group, newDefines);
+#else
+                StringBuilder output = new StringBuilder();
+                foreach (string s in newDefines)
+                {
+                    output.Append(s);
+                    output.Append(";");
+                }
+                PlayerSettings.SetScriptingDefineSymbolsForGroup(group,output.ToString().TrimEnd(new[] {';'}));
+#endif
+
+
             }
         }
 

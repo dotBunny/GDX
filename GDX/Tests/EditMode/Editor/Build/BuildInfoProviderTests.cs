@@ -17,10 +17,13 @@ namespace Editor.Build
         /// </summary>
         [Test]
         [Category("GDX.Tests")]
-        public void True_GetContent_ForceDefaults()
+        public void GetContent_ForceDefaults_ReturnsDefaultContent()
         {
             string generateContent = BuildInfoProvider.GetContent(GDXConfig.Get(), true);
-            Assert.IsTrue(generateContent.Contains(" public const int Changelist = 0;"), "Expected to find 'public const int Changelist = 0;'");
+
+            bool evaluate = generateContent.Contains(" public const int Changelist = 0;");
+
+            Assert.IsTrue(evaluate);
         }
     }
 }

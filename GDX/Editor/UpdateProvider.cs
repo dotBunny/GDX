@@ -8,7 +8,6 @@ using GDX.IO.Compression;
 using UnityEditor;
 using UnityEditor.VersionControl;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace GDX.Editor
 {
@@ -97,6 +96,11 @@ namespace GDX.Editor
         /// <param name="forceUpgrade">Should we bypass all safety checks?</param>
         public static void AttemptUpgrade(bool forceUpgrade = false)
         {
+            if (UpdatePackageDefinition == null)
+            {
+                UpdatePackageDefinition = GetMainPackageDefinition();
+            }
+
             string messageStart =
                 $"There is a new version of GDX available ({UpdatePackageDefinition.version}).\n";
             if (!forceUpgrade && !IsUpgradable())
@@ -142,6 +146,7 @@ namespace GDX.Editor
                     {
                         SetLastNotifiedVersion(UpdatePackageDefinition.version);
                     }
+
                     break;
                 case PackageProvider.InstallationType.Assets:
                     if (EditorUtility.DisplayDialog("GDX Update Available",
@@ -198,7 +203,6 @@ namespace GDX.Editor
         {
             switch (LocalPackage.InstallationMethod)
             {
-
                 case PackageProvider.InstallationType.GitHub:
                 case PackageProvider.InstallationType.GitHubBranch:
                 case PackageProvider.InstallationType.GitHubTag:
@@ -314,7 +318,7 @@ namespace GDX.Editor
             catch (Exception e)
             {
                 // We will end up here if the formulated Uri is bad.
-                Debug.LogWarning(e.Message);
+                Trace.Output(Trace.TraceLevel.Warning, e.Message);
                 return;
             }
             finally
@@ -472,6 +476,9 @@ namespace GDX.Editor
                 if (newFileContent.Count != lockFileLength)
                 {
                     File.WriteAllLines(packageManifestLockFile, newFileContent.ToArray());
+
+                    // Tell PackageManager to resolve our newly altered file.
+                    UnityEditor.PackageManager.Client.Resolve();
                 }
             }
         }

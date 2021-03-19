@@ -16,50 +16,63 @@ namespace Runtime.Collections.Generic
     {
         [Test]
         [Category("GDX.Tests")]
-        public void False_IsSerializableType_SystemObject()
+        public void IsSerializableType_SystemObject_ReturnsFalse()
         {
-            SerializableDictionary<object, string> testDictionary = new SerializableDictionary<object, string>();
-            Assert.IsFalse(testDictionary.IsSerializableType(typeof(object)), "Expected to flag type as invalid.");
+            SerializableDictionary<object, string> mockDictionary = new SerializableDictionary<object, string>();
+
+            bool evaluate = mockDictionary.IsSerializableType(typeof(object));
+
+            Assert.IsFalse(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_IsSerializableType_UnityObject()
+        public void SaveSerializedData_MockData_ReturnsSerializedDataLength()
         {
-            SerializableDictionary<UnityEngine.Object, string> testDictionary = new SerializableDictionary<UnityEngine.Object, string>();
-            Assert.IsTrue(testDictionary.IsSerializableType(typeof(UnityEngine.Object)), "Expected to flag type as valid.");
+            SerializableDictionary<int, string> mockDictionary = new SerializableDictionary<int, string>();
+            mockDictionary.Add(1, "one");
+            mockDictionary.Add(2, "two");
+            mockDictionary.SaveSerializedData();
+
+            bool evaluate = mockDictionary.GetSerializedDataLength() == 2;
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_SaveSerializedData_NoData()
+        public void IsSerializableType_UnityObject_ReturnsTrue()
         {
-            SerializableDictionary<int, string> testDictionary = new SerializableDictionary<int, string>();
-            testDictionary.SaveSerializedData();
+            SerializableDictionary<UnityEngine.Object, string> mockDictionary = new SerializableDictionary<UnityEngine.Object, string>();
 
-            Assert.IsTrue(testDictionary.GetSerializedDataLength() == 0, "Expected no length");
+            bool evaluate = mockDictionary.IsSerializableType(typeof(UnityEngine.Object));
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_SaveSerializedData_Simple()
+        public void OverwriteSerializedData_MockData_PopulatesDictionary()
         {
-            SerializableDictionary<int, string> testDictionary = new SerializableDictionary<int, string>();
-            testDictionary.Add(1, "one");
-            testDictionary.Add(2, "two");
-            testDictionary.SaveSerializedData();
-            Assert.IsTrue(testDictionary.GetSerializedDataLength() == 2, "Expected a length of 2.");
+            SerializableDictionary<int, string> mockDictionary = new SerializableDictionary<int, string>();
+            mockDictionary.OverwriteSerializedData(new int[2] {1, 2}, new string[2] {"one", "two"});
+            mockDictionary.LoadSerializedData();
+
+            bool evaluate = mockDictionary.Count == 2 && mockDictionary[2] == "two";
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void True_OverwriteSerializedData_LoadSerializedData_Simple()
+        public void SaveSerializedData_NoData_ReturnsZeroSerializedDataLength()
         {
-            SerializableDictionary<int, string> testDictionary = new SerializableDictionary<int, string>();
-            testDictionary.OverwriteSerializedData(new int[2] {1, 2}, new string[2] {"one", "two"});
-            testDictionary.LoadSerializedData();
-            Assert.IsTrue(testDictionary.Count == 2 && testDictionary[2] == "two",
-                $"Expected a length of 2, and the elements to match (found {testDictionary[1]}).");
+            SerializableDictionary<int, string> mockDictionary = new SerializableDictionary<int, string>();
+            mockDictionary.SaveSerializedData();
+
+            bool evaluate = mockDictionary.GetSerializedDataLength() == 0;
+
+            Assert.IsTrue(evaluate);
         }
     }
 }

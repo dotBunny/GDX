@@ -112,7 +112,7 @@ namespace GDX.Editor.Build.Legacy
             }
             catch (Exception e)
             {
-                Debug.LogWarning(e);
+                Trace.Output(Trace.TraceLevel.Warning, e);
             }
         }
 #endif

@@ -36,5 +36,40 @@ namespace GDX
                 return hash;
             }
         }
+
+        /// <summary>
+        ///     Are the two provided <see cref="byte" /> arrays the same.
+        /// </summary>
+        /// <param name="sourceBytes">The left hand side <see cref="byte" /> array to compare.</param>
+        /// <param name="targetBytes">The right hand side <see cref="byte" /> array to compare.</param>
+        /// <returns>true if they are identical, will also return true if both are null.</returns>
+        public static bool IsSame(this byte[] sourceBytes, byte[] targetBytes)
+        {
+            if (sourceBytes == null)
+            {
+                return targetBytes == null;
+            }
+
+            if (targetBytes == null)
+            {
+                return false;
+            }
+
+            if (sourceBytes.Length != targetBytes.Length)
+            {
+                return false;
+            }
+
+            int count = sourceBytes.Length;
+            for (int i = 0; i < count; i++)
+            {
+                if (sourceBytes[i] != targetBytes[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }
