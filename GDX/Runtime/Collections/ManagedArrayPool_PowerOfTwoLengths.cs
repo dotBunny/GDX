@@ -1,98 +1,102 @@
 // dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-public struct ManagedArrayPool_PowerOfTwoLengths<T>
+namespace GDX.Collections
 {
-    public const int MAX_POWER_OF_TWO_SHIFT = 30;
-    public ManagedArrayPool<T>[] ArrayPools;
-    public int[] MaxPoolCapacities;
-
-    public ManagedArrayPool_PowerOfTwoLengths(int[] initialArrayStorageCounts, int[] maxPoolCapacities)
+    public struct ManagedArrayPool_PowerOfTwoLengths<T>
     {
-        ArrayPools = new ManagedArrayPool<T>[30];
-        MaxPoolCapacities = maxPoolCapacities;
+        public const int MAX_POWER_OF_TWO_SHIFT = 30;
+        public ManagedArrayPool<T>[] ArrayPools;
+        public int[] MaxPoolCapacities;
 
-        for (int i = 0; i < 30; i++)
+        public ManagedArrayPool_PowerOfTwoLengths(int[] initialArrayStorageCounts, int[] maxPoolCapacities)
         {
-            int initialArrayCount = initialArrayStorageCounts[i];
-            int maxArraysForSize = maxPoolCapacities[i];
-            T[][] arrayPoolForSize = new T[maxArraysForSize][];
+            ArrayPools = new ManagedArrayPool<T>[30];
+            MaxPoolCapacities = maxPoolCapacities;
 
-            for (int j = 0; j < initialArrayCount; j++)
+            for (int i = 0; i < 30; i++)
             {
-                arrayPoolForSize[j] = new T[1 << i];
+                int initialArrayCount = initialArrayStorageCounts[i];
+                int maxArraysForSize = maxPoolCapacities[i];
+                T[][] arrayPoolForSize = new T[maxArraysForSize][];
+
+                for (int j = 0; j < initialArrayCount; j++)
+                {
+                    arrayPoolForSize[j] = new T[1 << i];
+                }
+
+                ManagedArrayPool<T> pool = new ManagedArrayPool<T>();
+
+                pool.Pool = arrayPoolForSize;
+                pool.Count = maxPoolCapacities[i];
+            }
+        }
+
+        public T[] GetArrayFromPool(int requestedSize)
+        {
+            requestedSize = requestedSize < 1 ? 1 : requestedSize;
+            requestedSize--;
+            requestedSize |= requestedSize >> 1;
+            requestedSize |= requestedSize >> 2;
+            requestedSize |= requestedSize >> 4;
+            requestedSize |= requestedSize >> 8;
+            requestedSize |= requestedSize >> 16;
+            int nextPowerOfTwo = requestedSize++;
+
+            LongDoubleConversionUnion u;
+            u.doubleValue = 0.0;
+            u.longValue = 0x4330000000000000L + nextPowerOfTwo;
+            u.doubleValue -= 4503599627370496.0;
+            int index = (int)(u.longValue >> 52) - 0x3FF;
+
+            ManagedArrayPool<T> arrayPool = ArrayPools[index];
+
+            T[] array;
+            if (arrayPool.Count < 1)
+            {
+                array = new T[nextPowerOfTwo];
+            }
+            else
+            {
+                array = arrayPool.Pool[arrayPool.Count - 1];
+                arrayPool.Count--;
             }
 
-            ManagedArrayPool<T> pool = new ManagedArrayPool<T>();
+            ArrayPools[index] = arrayPool;
 
-            pool.Pool = arrayPoolForSize;
-            pool.Count = maxPoolCapacities[i];
+            return array;
+        }
+
+        public void ReturnArrayToPool(T[] array)
+        {
+            uint length = unchecked((uint)array.Length); // Counting on people to be cool and not pass in a non-power-of-two here.
+
+            LongDoubleConversionUnion u;
+            u.doubleValue = 0.0;
+            u.longValue = 0x4330000000000000L + length;
+            u.doubleValue -= 4503599627370496.0;
+            int index = (int)(u.longValue >> 52) - 0x3FF;
+
+            ManagedArrayPool<T> arrayPool = ArrayPools[index];
+            int maxPoolCapacity = MaxPoolCapacities[index];
+            int currentPoolCapacity = arrayPool.Pool.Length;
+            int nextPoolCapacity = currentPoolCapacity * 2;
+            nextPoolCapacity = (nextPoolCapacity > maxPoolCapacity) ? maxPoolCapacity : nextPoolCapacity;
+
+            if (arrayPool.Count < maxPoolCapacity)
+            {
+                arrayPool.Pool[arrayPool.Count] = array;
+                arrayPool.Count++;
+            }
+
+            ArrayPools[index] = arrayPool;
         }
     }
 
-    public T[] GetArrayFromPool(int requestedSize)
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
+    public struct LongDoubleConversionUnion
     {
-        requestedSize = requestedSize < 1 ? 1 : requestedSize;
-        requestedSize--;
-        requestedSize |= requestedSize >> 1;
-        requestedSize |= requestedSize >> 2;
-        requestedSize |= requestedSize >> 4;
-        requestedSize |= requestedSize >> 8;
-        requestedSize |= requestedSize >> 16;
-        int nextPowerOfTwo = requestedSize++;
-
-        int index = 0;
-        int i = 1;
-
-        while ((i & nextPowerOfTwo) == 0)
-        {
-            i = i << 1;
-            ++index;
-        }
-
-        ManagedArrayPool<T> arrayPool = ArrayPools[index];
-
-        T[] array;
-        if (arrayPool.Count < 1)
-        {
-            array = new T[nextPowerOfTwo];
-        }
-        else
-        {
-            array = arrayPool.Pool[arrayPool.Count - 1];
-            arrayPool.Count--;
-        }
-
-        ArrayPools[index] = arrayPool;
-
-        return array;
-    }
-
-    public void ReturnArrayToPool(T[] array)
-    {
-        int length = array.Length; // Counting on people to be cool and not pass in a non-power-of-two here.
-
-        int index = 0;
-        int i = 1;
-
-        while ((i & length) == 0)
-        {
-            i = i << 1;
-            ++index;
-        }
-
-        ManagedArrayPool<T> arrayPool = ArrayPools[index];
-        int maxPoolCapacity = MaxPoolCapacities[i];
-        int currentPoolCapacity = arrayPool.Pool.Length;
-        int nextPoolCapacity = currentPoolCapacity * 2;
-        nextPoolCapacity = (nextPoolCapacity > maxPoolCapacity) ? maxPoolCapacity : nextPoolCapacity;
-
-        if (arrayPool.Count < maxPoolCapacity)
-        {
-            arrayPool.Pool[arrayPool.Count] = array;
-            arrayPool.Count++;
-        }
-
-        ArrayPools[index] = arrayPool;
+       [System.Runtime.InteropServices.FieldOffset(0)] public long longValue;
+       [System.Runtime.InteropServices.FieldOffset(0)] public double doubleValue;
     }
 }
