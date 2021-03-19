@@ -58,6 +58,7 @@ namespace GDX.Collections.Pooling
             else
             {
                 array = arrayPool.Pool[arrayPool.Count - 1];
+                arrayPool.Pool[arrayPool.Count - 1] = null;
                 arrayPool.Count--;
             }
 
