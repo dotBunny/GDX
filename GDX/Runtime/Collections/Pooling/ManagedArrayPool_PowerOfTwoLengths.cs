@@ -5,7 +5,6 @@ namespace GDX.Collections.Pooling
 {
     public struct ManagedArrayPool_PowerOfTwoLengths<T>
     {
-        public const int MAX_POWER_OF_TWO_SHIFT = 30;
         public ManagedArrayPool<T>[] ArrayPools;
         public int[] MaxPoolCapacities;
 
