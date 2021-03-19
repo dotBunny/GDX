@@ -96,6 +96,11 @@ namespace GDX.Editor
         /// <param name="forceUpgrade">Should we bypass all safety checks?</param>
         public static void AttemptUpgrade(bool forceUpgrade = false)
         {
+            if (UpdatePackageDefinition == null)
+            {
+                UpdatePackageDefinition = GetMainPackageDefinition();
+            }
+
             string messageStart =
                 $"There is a new version of GDX available ({UpdatePackageDefinition.version}).\n";
             if (!forceUpgrade && !IsUpgradable())
