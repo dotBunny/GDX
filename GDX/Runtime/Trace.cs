@@ -13,6 +13,8 @@ namespace GDX
     /// </summary>
     public static class Trace
     {
+        // TODO: Create trace levels output methods which can be compiled out?
+
         /// <summary>
         /// Trace Levels
         /// </summary>
