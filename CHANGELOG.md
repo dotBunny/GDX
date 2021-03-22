@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Force the Package Manager to resolve the package manifest during an update.
+- Unsupported attributes for Unity 2018
 
 ## [1.2.7] - 2021-03-16
 ***"Never Say Never"***
