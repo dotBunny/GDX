@@ -44,9 +44,12 @@ namespace GDX.Editor
 
             CodeEditor.CurrentEditor.SyncAll();
 #else
-            UnityEditor.SyncVS.SyncSolution();
-            //EditorApplication.ExecuteMenuItem("Assets/Open C# Project");
+            System.Type T = System.Type.GetType("UnityEditor.SyncVS,UnityEditor");
+            System.Reflection.MethodInfo SyncSolution = T.GetMethod("SyncSolution", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+            SyncSolution.Invoke(null, null);
 #endif // UNITY_2019_1_OR_NEWER
+
+
         }
     }
 }
