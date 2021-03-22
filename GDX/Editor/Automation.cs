@@ -11,6 +11,9 @@ namespace GDX.Editor
         {
             Trace.Output(Trace.TraceLevel.Info, "Syncing Project Files ...");
 
+            UnityEditor.AssetDatabase.Refresh();
+
+#if UNITY_2019_1_OR_NEWER
             // We haven't actually opened up Unity on this machine, so no editor has been set
             if (string.IsNullOrEmpty(CodeEditor.CurrentEditorInstallation))
             {
@@ -34,10 +37,14 @@ namespace GDX.Editor
 #else
                 // TODO: Maybe do something for VSCode?
                 CodeEditor.SetExternalScriptEditor("/Applications/MonoDevelop.app");
-#endif
+#endif // UNITY_EDITOR_WIN
             }
 
             CodeEditor.CurrentEditor.SyncAll();
+#else
+            UnityEditor.SyncVS.SyncSolution();
+            //EditorApplication.ExecuteMenuItem("Assets/Open C# Project");
+#endif // UNITY_2019_1_OR_NEWER
         }
     }
 }
