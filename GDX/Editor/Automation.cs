@@ -1,7 +1,9 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+#if UNITY_2019_1_OR_NEWER
 using Unity.CodeEditor;
+#endif
 
 namespace GDX.Editor
 {
