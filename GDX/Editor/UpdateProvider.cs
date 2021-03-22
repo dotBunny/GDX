@@ -477,8 +477,14 @@ namespace GDX.Editor
                 {
                     File.WriteAllLines(packageManifestLockFile, newFileContent.ToArray());
 
+#if UNITY_2020_1_OR_NEWER
                     // Tell PackageManager to resolve our newly altered file.
                     UnityEditor.PackageManager.Client.Resolve();
+#else
+                    EditorUtility.DisplayDialog("GDX Package Update",
+                        "Your version of Unity requires that you either loose focus and return to Unity, or simply restart the editor to detect the change.",
+                        "OK");
+#endif
                 }
             }
         }
