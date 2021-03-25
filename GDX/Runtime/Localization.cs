@@ -196,7 +196,11 @@ namespace GDX
         ///     Can be used to avoid issues with culture settings without a Gregorian Calendar. Configurable to automatically
         ///     execute after assemblies are loaded.
         /// </remarks>
+#if UNITY_2019_1_OR_NEWER
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+#else
+        [RuntimeInitializeOnLoadMethod]
+#endif
         public static void SetDefaultCulture()
         {
             GDXConfig config = GDXConfig.Get();

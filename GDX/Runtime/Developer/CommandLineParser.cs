@@ -38,7 +38,11 @@ namespace GDX.Developer
         /// <remarks>
         ///     <para>This is automatically executed during runtime.</para>
         /// </remarks>
+#if UNITY_2019_1_OR_NEWER
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+#else
+        [RuntimeInitializeOnLoadMethod]
+#endif
         [ExcludeFromCodeCoverage]
         public static void ParseArguments()
         {

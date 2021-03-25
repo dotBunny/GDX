@@ -848,8 +848,10 @@ namespace GDX.Editor
                 GUILayout.Label("-", Styles.BulletLayoutOptions);
 #if UNITY_2021_1_OR_NEWER
                 if (EditorGUILayout.LinkButton("Repository"))
-#else
+#elif UNITY_2019_1_OR_NEWER
                 if (GUILayout.Button("Repository", EditorStyles.linkLabel))
+#else
+                if (GUILayout.Button("Repository", EditorStyles.boldLabel))
 #endif
                 {
                     GUIUtility.hotControl = 0;
@@ -862,9 +864,11 @@ namespace GDX.Editor
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("-", Styles.BulletLayoutOptions);
 #if UNITY_2021_1_OR_NEWER
-                             if (EditorGUILayout.LinkButton("Documentation"))
-#else
+                if (EditorGUILayout.LinkButton("Documentation"))
+#elif UNITY_2019_1_OR_NEWER
                 if (GUILayout.Button("Documentation", EditorStyles.linkLabel))
+#else
+                if (GUILayout.Button("Documentation", EditorStyles.boldLabel))
 #endif
                 {
                     GUIUtility.hotControl = 0;
@@ -878,8 +882,10 @@ namespace GDX.Editor
                 GUILayout.Label("-", Styles.BulletLayoutOptions);
 #if UNITY_2021_1_OR_NEWER
                 if (EditorGUILayout.LinkButton("Report an Issue"))
-#else
+#elif UNITY_2019_1_OR_NEWER
                 if (GUILayout.Button("Report an Issue", EditorStyles.linkLabel))
+#else
+                if (GUILayout.Button("Report an Issue", EditorStyles.boldLabel))
 #endif
                 {
                     GUIUtility.hotControl = 0;

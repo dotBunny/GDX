@@ -1,7 +1,9 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+#if UNITY_2019_1_OR_NEWER
 using Unity.CodeEditor;
+#endif
 
 namespace GDX.Editor
 {
@@ -11,6 +13,9 @@ namespace GDX.Editor
         {
             Trace.Output(Trace.TraceLevel.Info, "Syncing Project Files ...");
 
+            UnityEditor.AssetDatabase.Refresh();
+
+#if UNITY_2019_1_OR_NEWER
             // We haven't actually opened up Unity on this machine, so no editor has been set
             if (string.IsNullOrEmpty(CodeEditor.CurrentEditorInstallation))
             {
@@ -34,10 +39,17 @@ namespace GDX.Editor
 #else
                 // TODO: Maybe do something for VSCode?
                 CodeEditor.SetExternalScriptEditor("/Applications/MonoDevelop.app");
-#endif
+#endif // UNITY_EDITOR_WIN
             }
 
             CodeEditor.CurrentEditor.SyncAll();
+#else
+            System.Type T = System.Type.GetType("UnityEditor.SyncVS,UnityEditor");
+            System.Reflection.MethodInfo SyncSolution = T.GetMethod("SyncSolution", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+            SyncSolution.Invoke(null, null);
+#endif // UNITY_2019_1_OR_NEWER
+
+
         }
     }
 }
