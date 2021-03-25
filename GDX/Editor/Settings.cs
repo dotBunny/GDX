@@ -56,7 +56,7 @@ namespace GDX.Editor
                 guiHandler = searchContext =>
                 {
                     // Get a serialized version of the settings
-                    SerializedObject settings = ConfigProvider.GetSerializedConfig();
+                    SerializedObject settings = GetSerializedConfig();
 
                     // Start wrapping the content
                     EditorGUILayout.BeginVertical(Styles.WrapperStyle);
@@ -84,6 +84,15 @@ namespace GDX.Editor
             };
         }
 
+        /// <summary>
+        /// Get a <see cref="UnityEditor.SerializedObject"/> for raw editing of the <see cref="GDXConfig"/>.
+        /// </summary>
+        /// <returns>A <see cref="UnityEditor.SerializedObject"/>.</returns>
+        public static SerializedObject GetSerializedConfig()
+        {
+            // ReSharper disable once HeapView.ObjectAllocation.Evident
+            return new SerializedObject(GDXConfig.Get());
+        }
         /// <summary>
         ///     A static collection of <see cref="GUIContent" /> used by <see cref="Settings" />.
         /// </summary>

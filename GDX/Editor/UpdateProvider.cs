@@ -61,7 +61,7 @@ namespace GDX.Editor
         /// </summary>
         private static void DelayCall()
         {
-            if (!ConfigProvider.Get().updateProviderCheckForUpdates)
+            if (!GDXConfig.Get().updateProviderCheckForUpdates)
             {
                 return;
             }
