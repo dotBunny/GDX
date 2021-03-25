@@ -51,6 +51,16 @@ namespace GDX.Editor
             // Create a copy of the local package provider
             // ReSharper disable once HeapView.ObjectAllocation.Evident
             LocalPackage = new PackageProvider();
+
+            EditorApplication.delayCall += DelayCall;
+
+        }
+
+        /// <summary>
+        /// Execute delayed logic that won't interfere with a current import process.
+        /// </summary>
+        private static void DelayCall()
+        {
             if (!ConfigProvider.Get().updateProviderCheckForUpdates)
             {
                 return;
