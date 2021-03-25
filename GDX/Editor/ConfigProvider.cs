@@ -35,7 +35,6 @@ namespace GDX.Editor
 
             // Create and save the asset
             AssetDatabase.CreateAsset(settings, "Assets/Resources/GDX/GDXConfig.asset");
-            AssetDatabase.SaveAssets();
 
             // Send it back!
             return settings;
