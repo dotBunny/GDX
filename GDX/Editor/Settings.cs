@@ -1,10 +1,16 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using GDX.Developer;
 using GDX.Editor.Build;
+using GDX.Mathematics.Random;
+#if GDX_VISUALSCRIPTING
+using Unity.VisualScripting;
+#endif
 using UnityEditor;
 using UnityEngine;
 
@@ -73,6 +79,11 @@ namespace GDX.Editor
                     Sections.Environment(settings);
                     GUILayout.Space(5);
                     Sections.Locale(settings);
+#if GDX_VISUALSCRIPTING
+                    GUILayout.Space(5);
+                    Sections.VisualScripting();
+#endif
+
 
                     // Apply any serialized setting changes
                     settings.ApplyModifiedPropertiesWithoutUndo();
@@ -952,6 +963,86 @@ namespace GDX.Editor
 
                 GUILayout.Space(5);
             }
+
+#if GDX_VISUALSCRIPTING
+            public static void VisualScripting()
+            {
+                const string sectionID = "GDX.VisualScripting";
+                GUI.enabled = true;
+
+                Layout.CreateSettingsSection(sectionID, false, "Visual Scripting",
+                    $"{DocumentationUri}manual/features/visual-scripting.html");
+
+                if (!Layout.GetCachedEditorBoolean(sectionID))
+                {
+                    return;
+                }
+
+                if (GUILayout.Button("ADD TO ASSEMBLIES"))
+                {
+                    if (!BoltCore.Configuration.assemblyOptions.Contains("GDX"))
+                    {
+                        BoltCore.Configuration.assemblyOptions.Add(new LooseAssemblyName("GDX"));
+                        BoltCore.Configuration.Save();
+                        Codebase.UpdateSettings();
+                    }
+                }
+
+                if (GUILayout.Button("ADD TYPE"))
+                {
+                    Assembly gdxAssembly = Assembly.GetAssembly(typeof(GDXConfig));
+
+                    List<Type> extensionTypes = new List<Type>();
+                    List<Type> typeTypes = new List<Type>();
+                    foreach(Type type in gdxAssembly.GetTypes())
+                    {
+                        var attributes = type.GetCustomAttributes(typeof(VisualScriptingAttribute), true);
+                        foreach (object attribute in attributes)
+                        {
+                            VisualScriptingAttribute a = (VisualScriptingAttribute)attribute;
+                            if (a != null)
+                            {
+                                switch (a._category)
+                                {
+                                    case VisualScriptingAttribute.Category.Extensions:
+                                        extensionTypes.Add(type);
+                                        break;
+                                    case VisualScriptingAttribute.Category.Types:
+                                        typeTypes.Add(type);
+                                        break;
+                                }
+                            }
+                        }
+
+                    }
+
+
+                    bool changed = false;
+                    foreach (Type type in extensionTypes)
+                    {
+                        if (!BoltCore.Configuration.typeOptions.Contains(type))
+                        {
+                            BoltCore.Configuration.typeOptions.Add(type);
+                            changed = true;
+                        }
+                    }
+                    foreach (Type type in typeTypes)
+                    {
+                        if (!BoltCore.Configuration.typeOptions.Contains(type))
+                        {
+                            BoltCore.Configuration.typeOptions.Add(type);
+                            changed = true;
+                        }
+                    }
+
+                    if (changed)
+                    {
+                        BoltCore.Configuration.Save();
+                        UnitBase.Rebuild();
+                    }
+                }
+            }
+#endif
         }
 
         /// <summary>

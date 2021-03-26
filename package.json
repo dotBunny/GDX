@@ -17,5 +17,9 @@
     "url": "https://dotbunny.com"
   },
   "hideInEditor": false,
-  "type": "library"
+  "type": "library",
+  "repository": {
+    "url": "https://github.com/dotBunny/GDX.git",
+    "type": "git"
+  }
 }
