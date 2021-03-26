@@ -9,7 +9,7 @@ namespace GDX
     /// <summary>
     ///     Array Based Extension Methods
     /// </summary>
-    [VisualScripting(VisualScriptingAttribute.Category.Extensions)]
+    [VisualScriptingNode(VisualScriptingNodeAttribute.Category.Extensions)]
     public static class ArrayExtensions
     {
         /// <summary>

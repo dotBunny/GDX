@@ -9,7 +9,7 @@ namespace GDX
     /// <summary>
     ///     <see cref="UnityEngine.CapsuleCollider" /> Based Extension Methods
     /// </summary>
-    [VisualScripting(VisualScriptingAttribute.Category.Extensions)]
+    [VisualScriptingNode(VisualScriptingNodeAttribute.Category.Extensions)]
     public static class CapsuleColliderExtensions
     {
         /// <summary>

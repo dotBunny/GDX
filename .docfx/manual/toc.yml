@@ -2,6 +2,11 @@
   href: getting-started.md
 - name: Features
   href: features.md
+  items:
+  - name: Serializable Dictionary
+    href: features\serializable-dictionary.md    
+  - name: Visual Scripting
+    href: features\visual-scripting.md        
 - name: Requirements
   href: requirements.md
 - name: Discussions

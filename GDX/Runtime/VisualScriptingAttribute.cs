@@ -6,7 +6,7 @@ using System;
 namespace GDX
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    public sealed class VisualScriptingAttribute : Attribute
+    public class VisualScriptingNodeAttribute : Attribute
     {
         public enum Category
         {
@@ -14,10 +14,10 @@ namespace GDX
             Types
         }
 
-        public Category _category;
+        public readonly Category _type;
 
-        public VisualScriptingAttribute(Category category) {
-            _category = category;
+        public VisualScriptingNodeAttribute(Category type) {
+            _type = type;
         }
     }
 }

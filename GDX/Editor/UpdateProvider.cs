@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using GDX.Editor.ProjectSettings;
 using GDX.IO.Compression;
 using UnityEditor;
 using UnityEditor.VersionControl;
@@ -67,7 +68,7 @@ namespace GDX.Editor
             }
 
             // Should we check for updates?
-            DateTime targetDate = GetLastChecked().AddDays(Settings.UpdateDayCountSetting);
+            DateTime targetDate = GetLastChecked().AddDays(AutomaticUpdatesSettings.UpdateDayCountSetting);
             if (DateTime.Now >= targetDate)
             {
                 CheckForUpdates();
