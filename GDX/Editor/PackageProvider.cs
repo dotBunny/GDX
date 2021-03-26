@@ -123,12 +123,7 @@ namespace GDX.Editor
         /// </summary>
         public PackageProvider()
         {
-
-            // Make sure that the project has the GDX preprocessor added
-            if (ConfigProvider.Get().environmentScriptingDefineSymbol)
-            {
-                EnsureScriptingDefineSymbol();
-            }
+            EditorApplication.delayCall += DelayCall;
 
             // Find Local Definition
             // ReSharper disable once StringLiteralTypo
@@ -173,6 +168,18 @@ namespace GDX.Editor
             (InstallationType installationType, string sourceTag) = GetInstallationType();
             InstallationMethod = installationType;
             SourceTag = sourceTag;
+        }
+
+        /// <summary>
+        /// Execute delayed logic that won't interfere with a current import process.
+        /// </summary>
+        private void DelayCall()
+        {
+            // Make sure that the project has the GDX preprocessor added
+            if (GDXConfig.Get().environmentScriptingDefineSymbol)
+            {
+                EnsureScriptingDefineSymbol();
+            }
         }
 
         /// <summary>
