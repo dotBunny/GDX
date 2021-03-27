@@ -13,7 +13,7 @@ namespace GDX
     /// <summary>
     ///     <see cref="Vector3" /> Based Extension Methods
     /// </summary>
-    [VisualScriptingNode(VisualScriptingNodeAttribute.Category.Extensions)]
+    [VisualScriptingExtension]
     public static class Vector3Extensions
     {
         /// <summary>

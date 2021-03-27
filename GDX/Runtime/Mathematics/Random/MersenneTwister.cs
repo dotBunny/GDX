@@ -24,7 +24,7 @@ namespace GDX.Mathematics.Random
     ///         for details on the algorithm.
     ///     </para>
     /// </remarks>
-    [VisualScriptingNode(VisualScriptingNodeAttribute.Category.Types)]
+    [VisualScriptingType]
     public class MersenneTwister : System.Random
     {
         /// <summary>

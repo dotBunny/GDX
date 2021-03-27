@@ -19,7 +19,7 @@ namespace GDX
     /// <summary>
     ///     <see cref="System.String" /> Based Extension Methods
     /// </summary>
-    [VisualScriptingNode(VisualScriptingNodeAttribute.Category.Extensions)]
+    [VisualScriptingExtension]
     public static class StringExtensions
     {
         /// <summary>

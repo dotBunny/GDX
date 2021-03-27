@@ -13,7 +13,7 @@ namespace GDX
     /// <remarks>
     ///     Used for MonoBehaviour workflows.
     /// </remarks>
-    [VisualScriptingNode(VisualScriptingNodeAttribute.Category.Extensions)]
+    [VisualScriptingExtension]
     public static class TransformExtensions
     {
         /// <summary>

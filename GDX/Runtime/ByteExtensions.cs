@@ -6,7 +6,7 @@ namespace GDX
     /// <summary>
     ///     <see cref="byte" /> Based Extension Methods
     /// </summary>
-    [VisualScriptingNode(VisualScriptingNodeAttribute.Category.Extensions)]
+    [VisualScriptingExtension]
     public static class ByteExtensions
     {
         /// <summary>

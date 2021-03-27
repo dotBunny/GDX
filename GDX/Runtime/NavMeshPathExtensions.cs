@@ -14,7 +14,7 @@ namespace GDX
     /// <summary>
     ///     <see cref="UnityEngine.AI.NavMeshPath" /> Based Extension Methods
     /// </summary>
-    [VisualScriptingNode(VisualScriptingNodeAttribute.Category.Extensions)]
+    [VisualScriptingExtension]
     public static class NavMeshPathExtensions
     {
         /// <summary>

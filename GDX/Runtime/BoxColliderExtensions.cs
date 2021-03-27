@@ -9,7 +9,7 @@ namespace GDX
     /// <summary>
     ///     <see cref="UnityEngine.BoxCollider" /> Based Extension Methods
     /// </summary>
-    [VisualScriptingNode(VisualScriptingNodeAttribute.Category.Extensions)]
+    [VisualScriptingExtension]
     public static class BoxColliderExtensions
     {
         /// <summary>

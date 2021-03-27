@@ -11,7 +11,7 @@ namespace GDX
     /// <summary>
     ///     <see cref="UnityEngine.Mesh" /> Based Extension Methods
     /// </summary>
-    [VisualScriptingNode(VisualScriptingNodeAttribute.Category.Extensions)]
+    [VisualScriptingExtension]
     public static class MeshExtensions
     {
         /// <summary>

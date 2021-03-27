@@ -10,6 +10,8 @@ using UnityEditor;
 
 #if GDX_VISUALSCRIPTING
 using Unity.VisualScripting;
+using Unity.VisualScripting.FullSerializer.Internal;
+
 #endif
 
 namespace GDX.Editor.ProjectSettings
@@ -23,6 +25,8 @@ namespace GDX.Editor.ProjectSettings
         ///     Internal section identifier.
         /// </summary>
         private const string SectionID = "GDX.VisualScripting";
+
+
 
         /// <summary>
         ///     Draw the Build Info section of settings.
@@ -41,61 +45,37 @@ namespace GDX.Editor.ProjectSettings
                 return;
             }
 
-
-
-            if (GUILayout.Button("ADD TO ASSEMBLIES"))
-            {
-                EnsureAssemblyReferenced();
-            }
-
             if (GUILayout.Button("ADD TYPE"))
             {
-                Assembly gdxAssembly = Assembly.GetAssembly(typeof(GDXConfig));
+                EnsureAssemblyReferenced();
 
+                Assembly gdxAssembly = Assembly.GetAssembly(typeof(GDXConfig));
                 List<Type> extensionTypes = new List<Type>();
+                List<Type> utilityTypes = new List<Type>();
                 List<Type> typeTypes = new List<Type>();
+
+
                 foreach(Type type in gdxAssembly.GetTypes())
                 {
-                    object[] attributes = type.GetCustomAttributes(typeof(VisualScriptingNodeAttribute), true);
-                    foreach (object attribute in attributes)
+                    if (type.GetCustomAttributes(typeof(VisualScriptingExtensionAttribute), true).Length > 0)
                     {
-                        VisualScriptingNodeAttribute visualScriptingNodeAttribute = (VisualScriptingNodeAttribute)attribute;
-                        if (visualScriptingNodeAttribute != null)
-                        {
-                            switch (visualScriptingNodeAttribute._type)
-                            {
-                                case VisualScriptingNodeAttribute.Category.Extensions:
-                                    extensionTypes.Add(type);
-                                    break;
-                                case VisualScriptingNodeAttribute.Category.Types:
-                                    typeTypes.Add(type);
-                                    break;
-                            }
-                        }
+                        extensionTypes.Add(type);
                     }
-
-                }
-
-
-                bool changed = false;
-                foreach (Type type in extensionTypes)
-                {
-                    if (!BoltCore.Configuration.typeOptions.Contains(type))
+                    if (type.GetCustomAttributes(typeof(VisualScriptingUtilityAttribute), true).Length > 0)
                     {
-                        BoltCore.Configuration.typeOptions.Add(type);
-                        changed = true;
+                        utilityTypes.Add(type);
                     }
-                }
-                foreach (Type type in typeTypes)
-                {
-                    if (!BoltCore.Configuration.typeOptions.Contains(type))
+                    if (type.GetCustomAttributes(typeof(VisualScriptingTypeAttribute), true).Length > 0)
                     {
-                        BoltCore.Configuration.typeOptions.Add(type);
-                        changed = true;
+                        typeTypes.Add(type);
                     }
                 }
 
-                if (changed)
+                bool changedTypes = AddTypes(typeTypes);
+                bool changedExtensions = AddTypes(extensionTypes);
+                bool changedUtility = AddTypes(utilityTypes);
+
+                if (changedTypes || changedExtensions || changedUtility)
                 {
                     BoltCore.Configuration.Save();
                     UnitBase.Rebuild();

@@ -10,7 +10,7 @@ namespace GDX.Collections.Pooling
     ///     A managed pooling system implementation primarily meant for the object oriented patterns, based on the C# base
     ///     object.
     /// </summary>
-    [VisualScriptingNode(VisualScriptingNodeAttribute.Category.Extensions)]
+    [VisualScriptingUtility]
     public static class ManagedPools
     {
         /// <summary>

@@ -10,7 +10,7 @@ namespace GDX.Collections.Pooling
     ///     <see cref="GameObject" /> based functionality extending the <see cref="ListManagedPool" /> to better support
     ///     <see cref="GameObject" /> patterns.
     /// </summary>
-    [VisualScriptingNode(VisualScriptingNodeAttribute.Category.Types)]
+    [VisualScriptingUtility]
     public static class GameObjectPool
     {
         /// <summary>
