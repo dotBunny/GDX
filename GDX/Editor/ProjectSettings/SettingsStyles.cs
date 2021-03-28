@@ -58,6 +58,11 @@ namespace GDX.Editor.ProjectSettings
         public static readonly GUIStyle SectionHeaderStyle;
 
         /// <summary>
+        ///     A <see cref="UnityEngine.GUIStyle" /> representing a table row.
+        /// </summary>
+        public static readonly GUIStyle TableRowStyle;
+
+        /// <summary>
         ///     A specific max width (130) for layout options to allow for organized width layouts.
         /// </summary>
         public static readonly GUILayoutOption[] FixedWidth130LayoutOptions;
@@ -158,7 +163,11 @@ namespace GDX.Editor.ProjectSettings
                 TestNormalIcon = EditorGUIUtility.IconContent("TestNormal");
                 HelpIcon = EditorGUIUtility.IconContent("d__Help");
             }
-
+            TableRowStyle = new GUIStyle()
+            {
+                padding = {top = 10, bottom = 10, left = 10, right = 10},
+                margin = {bottom = 10},
+            };
             InfoBoxStyle = new GUIStyle(EditorStyles.helpBox)
             {
                 padding = {top = 10, bottom = 10, left = 10, right = 10}, margin = {bottom = 10}

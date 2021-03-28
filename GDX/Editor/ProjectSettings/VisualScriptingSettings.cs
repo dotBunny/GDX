@@ -26,7 +26,20 @@ namespace GDX.Editor.ProjectSettings
         /// </summary>
         private const string SectionID = "GDX.VisualScripting";
 
+        private static AssemblyProvider s_assembly = null;
+        private static int s_visualScriptingNodeChangeCount = 0;
 
+        /// <summary>
+        ///     Content for the notice when visual scripting needs to regenerate its nodes.
+        /// </summary>
+        private static readonly GUIContent s_visualScriptingGenerationContent = new GUIContent(
+            "The visual scripting system needs to rebuild its node database.");
+
+        /// <summary>
+        ///     Content for the notice when visual scripting needs to regenerate its nodes.
+        /// </summary>
+        private static readonly GUIContent s_visualScriptingLoadingContent = new GUIContent(
+            "The visual scripting system is currently loading.");
 
         /// <summary>
         ///     Draw the Build Info section of settings.
@@ -37,75 +50,106 @@ namespace GDX.Editor.ProjectSettings
         {
             GUI.enabled = true;
 
+
             SettingsGUIUtility.CreateSettingsSection(SectionID, false, "Visual Scripting",
                 $"{SettingsProvider.DocumentationUri}manual/features/visual-scripting.html");
 
+            // Don't show section if not enabled OR if the visual scripting has not been initialized
             if (!SettingsGUIUtility.GetCachedEditorBoolean(SectionID))
             {
                 return;
             }
 
-            if (GUILayout.Button("ADD TYPE"))
+            if (!ProductContainer.initialized)
             {
-                EnsureAssemblyReferenced();
+                GUILayout.BeginVertical(SettingsStyles.InfoBoxStyle);
+                GUILayout.Label(s_visualScriptingLoadingContent);
+                GUILayout.EndVertical();
+                return;
+            }
 
-                Assembly gdxAssembly = Assembly.GetAssembly(typeof(GDXConfig));
-                List<Type> extensionTypes = new List<Type>();
-                List<Type> utilityTypes = new List<Type>();
-                List<Type> typeTypes = new List<Type>();
+            if (s_assembly == null) s_assembly = new AssemblyProvider();
+
+            DrawNodeSection("Extensions", s_assembly.VisualScriptingExtensionsContent,
+                s_assembly.VisualScriptingExtensions);
+
+            GUILayout.Box(GUIContent.none, EditorStyles.helpBox, GUILayout.ExpandWidth(true), GUILayout.Height(1));
+
+            DrawNodeSection("Types", s_assembly.VisualScriptingTypesContent,
+                s_assembly.VisualScriptingTypes);
+
+            GUILayout.Box(GUIContent.none, EditorStyles.helpBox, GUILayout.ExpandWidth(true), GUILayout.Height(1));
+
+            DrawNodeSection("Utilities", s_assembly.VisualScriptingUtilitiesContent,
+                s_assembly.VisualScriptingUtilities);
 
 
-                foreach(Type type in gdxAssembly.GetTypes())
-                {
-                    if (type.GetCustomAttributes(typeof(VisualScriptingExtensionAttribute), true).Length > 0)
-                    {
-                        extensionTypes.Add(type);
-                    }
-                    if (type.GetCustomAttributes(typeof(VisualScriptingUtilityAttribute), true).Length > 0)
-                    {
-                        utilityTypes.Add(type);
-                    }
-                    if (type.GetCustomAttributes(typeof(VisualScriptingTypeAttribute), true).Length > 0)
-                    {
-                        typeTypes.Add(type);
-                    }
-                }
+            if (s_visualScriptingNodeChangeCount > 0)
+            {
+                GUILayout.BeginVertical(SettingsStyles.InfoBoxStyle);
+                //GUILayout.BeginHorizontal();
 
-                bool changedTypes = AddTypes(typeTypes);
-                bool changedExtensions = AddTypes(extensionTypes);
-                bool changedUtility = AddTypes(utilityTypes);
-
-                if (changedTypes || changedExtensions || changedUtility)
+                GUILayout.Label(s_visualScriptingGenerationContent);
+                if (GUILayout.Button("Update Node Database"))
                 {
                     BoltCore.Configuration.Save();
                     UnitBase.Rebuild();
+                    s_visualScriptingNodeChangeCount = 0;
                 }
+                //GUILayout.EndHorizontal();
+                GUILayout.EndVertical();
             }
+
         }
 #endif
 
-
-
-        private static bool AddTypes(List<Type> types)
+        private static void DrawNodeSection(string section, GUIContent content, List<Type> types)
         {
+            GUILayout.BeginVertical(SettingsStyles.TableRowStyle);
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(section, EditorStyles.boldLabel,SettingsStyles.FixedWidth130LayoutOptions);
+            GUILayout.Label(content);
 
-            bool changed = false;
+            bool hasAllTypes = HasAllTypes(types);
+            bool changed = GUILayout.Toggle(hasAllTypes, "", SettingsStyles.SectionHeaderToggleLayoutOptions);
+
+            // A change has occured
+            if (changed != hasAllTypes)
+            {
+                if (changed)
+                {
+                    EnsureAssemblyReferenced();
+                    AddTypes(types);
+                }
+                else
+                {
+                    RemoveTypes(types);
+                }
+
+                s_visualScriptingNodeChangeCount = 1;
+            }
+
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+        }
+
+        private static void AddTypes(List<Type> types)
+        {
 #if GDX_VISUALSCRIPTING
+            // Itterate
             foreach (Type type in types)
             {
                 if (!BoltCore.Configuration.typeOptions.Contains(type))
                 {
                     BoltCore.Configuration.typeOptions.Add(type);
-                    changed = true;
                 }
             }
 #endif
-            return changed;
-
         }
 
         private static void EnsureAssemblyReferenced()
         {
+
 #if GDX_VISUALSCRIPTING
             if (BoltCore.Configuration.assemblyOptions.Contains("GDX"))
             {
@@ -118,5 +162,36 @@ namespace GDX.Editor.ProjectSettings
             Codebase.UpdateSettings();
 #endif
         }
+
+        private static bool HasAllTypes(List<Type> types)
+        {
+#if !GDX_VISUALSCRIPTING
+            return false;
+#else
+            foreach (Type type in types)
+            {
+                if (!BoltCore.Configuration.typeOptions.Contains(type))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+#endif
+        }
+
+        private static void RemoveTypes(List<Type> types)
+        {
+#if GDX_VISUALSCRIPTING
+            foreach (Type type in types)
+            {
+                if (BoltCore.Configuration.typeOptions.Contains(type))
+                {
+                    BoltCore.Configuration.typeOptions.Remove(type);
+                }
+            }
+#endif
+        }
+
     }
 }
