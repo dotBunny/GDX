@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting.FullSerializer;
 using UnityEditor;
 using UnityEngine;
 #if GDX_VISUALSCRIPTING
