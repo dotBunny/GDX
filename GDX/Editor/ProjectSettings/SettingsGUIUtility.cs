@@ -189,7 +189,7 @@ namespace GDX.Editor.ProjectSettings
         /// </summary>
         /// <param name="id">Identifier for the <see cref="bool" /> value.</param>
         /// <param name="setValue">The desired value to set.</param>
-        private static void SetCachedEditorBoolean(string id, bool setValue)
+        public static void SetCachedEditorBoolean(string id, bool setValue)
         {
             if (!s_cachedEditorPreferences.ContainsKey(id))
             {

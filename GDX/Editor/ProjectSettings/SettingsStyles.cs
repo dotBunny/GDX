@@ -67,6 +67,9 @@ namespace GDX.Editor.ProjectSettings
         /// </summary>
         public static readonly GUILayoutOption[] FixedWidth130LayoutOptions;
 
+
+        public static readonly GUIStyle CombinedFoldoutStyle;
+
         /// <summary>
         ///     A <see cref="UnityEngine.GUIStyle" /> representing a default section header text.
         /// </summary>
@@ -194,6 +197,14 @@ namespace GDX.Editor.ProjectSettings
             ButtonStyle =
                 new GUIStyle(EditorStyles.miniButton) {stretchWidth = false, padding = {left = 10, right = 10}};
             NoHorizontalStretchStyle = new GUIStyle() {stretchWidth = false};
+
+            CombinedFoldoutStyle = new GUIStyle(EditorStyles.foldout)
+            {
+                fixedWidth = 15,
+                //stretchWidth = false,
+                //margin = { right = 0 },
+                //padding = { right = 0 }
+            };
 
             // Section Headers
             SectionHeaderStyle = new GUIStyle("box") {margin = {left = -20}};

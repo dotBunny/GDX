@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEditor;
 using UnityEngine;
 #if GDX_VISUALSCRIPTING
@@ -27,6 +28,7 @@ namespace GDX.Editor.ProjectSettings
         /// </summary>
         private static AssemblyProvider s_assembly;
 
+        private static readonly GUIContent s_listPrefixContent = new GUIContent("- ");
         /// <summary>
         ///     Content regarding this not being all of the content that can be added to visual scripting.
         /// </summary>
@@ -60,7 +62,7 @@ namespace GDX.Editor.ProjectSettings
             "The visual scripting subsystem is currently loading.");
 
         /// <summary>
-        ///     Draw the Build Info section of settings.
+        ///     Draw the Visual Scripting settings section.
         /// </summary>
         /// <param name="settings">Serialized <see cref="GDXConfig" /> object to be modified.</param>
 #if GDX_VISUALSCRIPTING
@@ -127,55 +129,14 @@ namespace GDX.Editor.ProjectSettings
         }
 #endif
 
-        private static void DrawNodeSection(string section, List<Type> types)
-        {
-            GUILayout.BeginVertical(SettingsStyles.TableRowStyle);
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(section, EditorStyles.boldLabel, SettingsStyles.FixedWidth130LayoutOptions);
-
-            GUILayout.BeginVertical();
-            foreach (Type type in types)
-            {
-#if UNITY_2021_1_OR_NEWER
-                if (EditorGUILayout.LinkButton(type.ToString()))
-#elif UNITY_2019_1_OR_NEWER
-                if (GUILayout.Button(type.ToString(), EditorStyles.linkLabel))
-#else
-                if (GUILayout.Button(type.ToString(), EditorStyles.boldLabel))
-#endif
-                {
-                    GUIUtility.hotControl = 0;
-                    Application.OpenURL($"https://gdx.dotbunny.com/api/{type}.html");
-                }
-            }
-
-            GUILayout.EndVertical();
-
-            bool hasAllTypes = HasAllTypes(types);
-            bool changed = GUILayout.Toggle(hasAllTypes, "", SettingsStyles.SectionHeaderToggleLayoutOptions);
-
-            // A change has occured
-            if (changed != hasAllTypes)
-            {
-                if (changed)
-                {
-                    EnsureAssemblyReferenced();
-                    AddTypes(types);
-                }
-                else
-                {
-                    RemoveTypes(types);
-                }
-            }
-
-            GUILayout.EndHorizontal();
-            GUILayout.EndVertical();
-        }
-
-        private static void AddTypes(List<Type> types)
+        /// <summary>
+        ///     Adds a provided list of types to the Visual Scripting configuration; the database still
+        ///     needs to be rebuilt afterwards.
+        /// </summary>
+        /// <param name="types">A collection of <see cref="Type"/>.</param>
+        private static void AddTypesToVisualScripting(List<Type> types)
         {
 #if GDX_VISUALSCRIPTING
-            // Itterate
             foreach (Type type in types)
             {
                 if (!BoltCore.Configuration.typeOptions.Contains(type))
@@ -186,6 +147,73 @@ namespace GDX.Editor.ProjectSettings
 #endif
         }
 
+        /// <summary>
+        ///     Draw the individual node sections for the Visual Scripting settings.
+        /// </summary>
+        /// <param name="category">The category label.</param>
+        /// <param name="types">A collection of <see cref="Type"/>.</param>
+        private static void DrawNodeSection(string category, List<Type> types)
+        {
+            GUILayout.BeginVertical(SettingsStyles.TableRowStyle);
+            GUILayout.BeginHorizontal();
+
+            string foldoutID = $"{SectionID}_{category}";
+            bool sectionFoldout = EditorGUILayout.Foldout(SettingsGUIUtility.GetCachedEditorBoolean(foldoutID), "",
+                SettingsStyles.CombinedFoldoutStyle);
+            SettingsGUIUtility.SetCachedEditorBoolean(foldoutID, sectionFoldout);
+
+            GUILayout.Label(category, EditorStyles.boldLabel, SettingsStyles.FixedWidth130LayoutOptions);
+
+            GUILayout.BeginVertical();
+            GUILayout.Label("Category description.");
+            if (sectionFoldout)
+            {
+                GUILayout.Space(5);
+                foreach (Type type in types)
+                {
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label(s_listPrefixContent, SettingsStyles.NoHorizontalStretchStyle);
+#if UNITY_2021_1_OR_NEWER
+                    if (EditorGUILayout.LinkButton(type.ToString()))
+#elif UNITY_2019_1_OR_NEWER
+                    if (GUILayout.Button(type.ToString(), EditorStyles.linkLabel))
+#else
+                    if (GUILayout.Button(type.ToString(), EditorStyles.boldLabel))
+#endif
+                    {
+                        GUIUtility.hotControl = 0;
+                        Application.OpenURL($"https://gdx.dotbunny.com/api/{type}.html");
+                    }
+                    GUILayout.EndHorizontal();
+
+                }
+            }
+            GUILayout.EndVertical();
+
+            bool hasAllTypes = HasAllTypesInConfiguration(types);
+            bool changed = GUILayout.Toggle(hasAllTypes, "", SettingsStyles.SectionHeaderToggleLayoutOptions);
+
+            // A change has occured
+            if (changed != hasAllTypes)
+            {
+                if (changed)
+                {
+                    EnsureAssemblyReferenced();
+                    AddTypesToVisualScripting(types);
+                }
+                else
+                {
+                    RemoveTypesFromVisualScripting(types);
+                }
+            }
+
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+        }
+
+        /// <summary>
+        ///     Make sure GDX is added to the assemblies used by Visual Scripting.
+        /// </summary>
         private static void EnsureAssemblyReferenced()
         {
 #if GDX_VISUALSCRIPTING
@@ -201,7 +229,12 @@ namespace GDX.Editor.ProjectSettings
 #endif
         }
 
-        private static bool HasAllTypes(List<Type> types)
+        /// <summary>
+        ///     Check to make sure all the provided <see cref="Type"/> are found in the Visual Scripting configuration.
+        /// </summary>
+        /// <param name="types">A collection of <see cref="Type"/>.</param>
+        /// <returns>true/false if all the provided <see cref="Type"/> are in the configuration.</returns>
+        private static bool HasAllTypesInConfiguration(List<Type> types)
         {
 #if !GDX_VISUALSCRIPTING
             return false;
@@ -213,12 +246,16 @@ namespace GDX.Editor.ProjectSettings
                     return false;
                 }
             }
-
             return true;
 #endif
         }
 
-        private static void RemoveTypes(List<Type> types)
+        /// <summary>
+        ///     Removes a provided list of types from the Visual Scripting configuration; the database still
+        ///     needs to be rebuilt afterwards.
+        /// </summary>
+        /// <param name="types">A collection of <see cref="Type"/>.</param>
+        private static void RemoveTypesFromVisualScripting(List<Type> types)
         {
 #if GDX_VISUALSCRIPTING
             foreach (Type type in types)
