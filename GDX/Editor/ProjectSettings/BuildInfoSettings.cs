@@ -106,6 +106,7 @@ namespace GDX.Editor.ProjectSettings
             {
                 GUILayout.BeginVertical(SettingsStyles.InfoBoxStyle);
                 GUILayout.BeginHorizontal();
+                GUILayout.Label(SettingsStyles.NoticeIcon, SettingsStyles.NoHorizontalStretchStyle);
                 GUILayout.Label(
                     "There is currently no BuildInfo file in the target location. Would you like some default content written in its place?",
                     SettingsStyles.WordWrappedLabelStyle);
@@ -115,7 +116,6 @@ namespace GDX.Editor.ProjectSettings
                     AssetDatabase.ImportAsset("Assets/" +
                                               settings.FindProperty("developerBuildInfoPath").stringValue);
                 }
-
                 GUILayout.EndHorizontal();
                 GUILayout.EndVertical();
             }

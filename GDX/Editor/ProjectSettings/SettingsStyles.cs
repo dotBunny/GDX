@@ -98,6 +98,11 @@ namespace GDX.Editor.ProjectSettings
         public static readonly GUIStyle SubSectionHeaderTextStyle;
 
         /// <summary>
+        ///     A <see cref="UnityEngine.GUIStyle" /> representing content that doesnt stretch horizontally.
+        /// </summary>
+        public static readonly GUIStyle NoHorizontalStretchStyle;
+
+        /// <summary>
         ///     A generic label with wordwrap <see cref="GUIStyle" />.
         /// </summary>
         public static readonly GUIStyle WordWrappedLabelStyle;
@@ -128,6 +133,11 @@ namespace GDX.Editor.ProjectSettings
         public static readonly GUIContent MinusIcon;
 
         /// <summary>
+        ///     A cached <see cref="GUIContent"/> containing a notice symbol.
+        /// </summary>
+        public static readonly GUIContent NoticeIcon;
+
+        /// <summary>
         ///     A cached <see cref="GUIContent" /> containing a plus symbol.
         /// </summary>
         public static readonly GUIContent PlusIcon;
@@ -143,6 +153,11 @@ namespace GDX.Editor.ProjectSettings
         public static readonly GUIContent TestPassedIcon;
 
         /// <summary>
+        ///     A cached <see cref="GUIContent" /> containing a warning symbol.
+        /// </summary>
+        public static readonly GUIContent WarningIcon;
+
+        /// <summary>
         ///     Initialize the <see cref="SettingsStyles" />, creating all of the associated <see cref="GUIStyle" />s.
         /// </summary>
         static SettingsStyles()
@@ -151,18 +166,21 @@ namespace GDX.Editor.ProjectSettings
             {
                 PlusIcon = EditorGUIUtility.IconContent("Toolbar Plus");
                 MinusIcon = EditorGUIUtility.IconContent("Toolbar Minus");
-                TestPassedIcon = EditorGUIUtility.IconContent("TestPassed");
-                TestNormalIcon = EditorGUIUtility.IconContent("TestNormal");
                 HelpIcon = EditorGUIUtility.IconContent("_Help");
+                WarningIcon = EditorGUIUtility.IconContent("d_console.warnicon@2x");
+                NoticeIcon = EditorGUIUtility.IconContent("d_console.infoicon@2x");
             }
             else
             {
                 PlusIcon = EditorGUIUtility.IconContent("d_Toolbar Plus");
                 MinusIcon = EditorGUIUtility.IconContent("d_Toolbar Minus");
-                TestPassedIcon = EditorGUIUtility.IconContent("TestPassed");
-                TestNormalIcon = EditorGUIUtility.IconContent("TestNormal");
                 HelpIcon = EditorGUIUtility.IconContent("d__Help");
+                WarningIcon = EditorGUIUtility.IconContent("console.warnicon@2x");
+                NoticeIcon = EditorGUIUtility.IconContent("console.infoicon@2x");
             }
+            TestPassedIcon = EditorGUIUtility.IconContent("TestPassed");
+            TestNormalIcon = EditorGUIUtility.IconContent("TestNormal");
+
             TableRowStyle = new GUIStyle()
             {
                 padding = {top = 10, bottom = 10, left = 10, right = 10},
@@ -175,6 +193,7 @@ namespace GDX.Editor.ProjectSettings
             WrapperStyle = new GUIStyle {margin = {left = 5, right = 5, bottom = 5}};
             ButtonStyle =
                 new GUIStyle(EditorStyles.miniButton) {stretchWidth = false, padding = {left = 10, right = 10}};
+            NoHorizontalStretchStyle = new GUIStyle() {stretchWidth = false};
 
             // Section Headers
             SectionHeaderStyle = new GUIStyle("box") {margin = {left = -20}};

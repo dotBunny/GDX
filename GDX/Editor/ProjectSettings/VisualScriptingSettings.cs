@@ -1,16 +1,12 @@
 // dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using UnityEngine;
 using UnityEditor;
-
+using UnityEngine;
 #if GDX_VISUALSCRIPTING
 using Unity.VisualScripting;
-using Unity.VisualScripting.FullSerializer.Internal;
 
 #endif
 
@@ -26,20 +22,42 @@ namespace GDX.Editor.ProjectSettings
         /// </summary>
         private const string SectionID = "GDX.VisualScripting";
 
-        private static AssemblyProvider s_assembly = null;
-        private static int s_visualScriptingNodeChangeCount = 0;
+        /// <summary>
+        ///     Information regarding the assembly
+        /// </summary>
+        private static AssemblyProvider s_assembly;
 
         /// <summary>
-        ///     Content for the notice when visual scripting needs to regenerate its nodes.
+        ///     Content regarding this not being all of the content that can be added to visual scripting.
+        /// </summary>
+        private static readonly GUIContent s_visualScriptingGenerationAdditionalContent = new GUIContent(
+            "These categories represents a curated selection of predefined content from the GDX API which has proven useful; it is not meant to represent everything available for inclusion to Visual Scripting.");
+
+        /// <summary>
+        ///     Content for instruction on how to regenerate quickly.
         /// </summary>
         private static readonly GUIContent s_visualScriptingGenerationContent = new GUIContent(
-            "The visual scripting system needs to rebuild its node database.");
+            "You can do this by clicking the Regenerate Units button to the right or by finding the same button available in the Visual Scripting section of the Project Settings.");
+
+        /// <summary>
+        ///     Content for the warning about changing types units.
+        /// </summary>
+        private static readonly GUIContent s_visualScriptingGenerationNoticeContent =
+            new GUIContent(
+                "By selecting and deselecting the below categories, items will be added or removed from the Visual Scripting type options configuration.");
+
+        /// <summary>
+        ///     Content for the warning about regenerating units.
+        /// </summary>
+        private static readonly GUIContent s_visualScriptingGenerationWarningContent =
+            new GUIContent(
+                "You still NEED to Regenerate Units!");
 
         /// <summary>
         ///     Content for the notice when visual scripting needs to regenerate its nodes.
         /// </summary>
         private static readonly GUIContent s_visualScriptingLoadingContent = new GUIContent(
-            "The visual scripting system is currently loading.");
+            "The visual scripting subsystem is currently loading.");
 
         /// <summary>
         ///     Draw the Build Info section of settings.
@@ -68,47 +86,70 @@ namespace GDX.Editor.ProjectSettings
                 return;
             }
 
-            if (s_assembly == null) s_assembly = new AssemblyProvider();
-
-            DrawNodeSection("Extensions", s_assembly.VisualScriptingExtensionsContent,
-                s_assembly.VisualScriptingExtensions);
-
-            GUILayout.Box(GUIContent.none, EditorStyles.helpBox, GUILayout.ExpandWidth(true), GUILayout.Height(1));
-
-            DrawNodeSection("Types", s_assembly.VisualScriptingTypesContent,
-                s_assembly.VisualScriptingTypes);
-
-            GUILayout.Box(GUIContent.none, EditorStyles.helpBox, GUILayout.ExpandWidth(true), GUILayout.Height(1));
-
-            DrawNodeSection("Utilities", s_assembly.VisualScriptingUtilitiesContent,
-                s_assembly.VisualScriptingUtilities);
-
-
-            if (s_visualScriptingNodeChangeCount > 0)
+            if (s_assembly == null)
             {
-                GUILayout.BeginVertical(SettingsStyles.InfoBoxStyle);
-                //GUILayout.BeginHorizontal();
-
-                GUILayout.Label(s_visualScriptingGenerationContent);
-                if (GUILayout.Button("Update Node Database"))
-                {
-                    BoltCore.Configuration.Save();
-                    UnitBase.Rebuild();
-                    s_visualScriptingNodeChangeCount = 0;
-                }
-                //GUILayout.EndHorizontal();
-                GUILayout.EndVertical();
+                s_assembly = new AssemblyProvider();
             }
 
+            GUILayout.BeginVertical(SettingsStyles.InfoBoxStyle);
+            GUILayout.BeginHorizontal();
+
+            GUILayout.Label(SettingsStyles.WarningIcon, SettingsStyles.NoHorizontalStretchStyle);
+            GUILayout.BeginVertical();
+            GUILayout.Label(s_visualScriptingGenerationNoticeContent, SettingsStyles.WordWrappedLabelStyle);
+            GUILayout.Space(5);
+            GUILayout.Label(s_visualScriptingGenerationWarningContent, EditorStyles.boldLabel);
+            GUILayout.Space(5);
+            GUILayout.Label(s_visualScriptingGenerationContent, SettingsStyles.WordWrappedLabelStyle);
+            GUILayout.Space(5);
+            GUILayout.Label(s_visualScriptingGenerationAdditionalContent, SettingsStyles.WordWrappedLabelStyle);
+            GUILayout.EndVertical();
+            GUILayout.Space(10);
+            if (GUILayout.Button("Regenerate Units", SettingsStyles.ButtonStyle))
+            {
+                BoltCore.Configuration.Save();
+                UnitBase.Rebuild();
+            }
+
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+
+
+            DrawNodeSection("Extensions", s_assembly.VisualScriptingExtensions);
+
+            GUILayout.Box(GUIContent.none, EditorStyles.helpBox, GUILayout.ExpandWidth(true), GUILayout.Height(1));
+
+            DrawNodeSection("Types", s_assembly.VisualScriptingTypes);
+
+            GUILayout.Box(GUIContent.none, EditorStyles.helpBox, GUILayout.ExpandWidth(true), GUILayout.Height(1));
+
+            DrawNodeSection("Utilities", s_assembly.VisualScriptingUtilities);
         }
 #endif
 
-        private static void DrawNodeSection(string section, GUIContent content, List<Type> types)
+        private static void DrawNodeSection(string section, List<Type> types)
         {
             GUILayout.BeginVertical(SettingsStyles.TableRowStyle);
             GUILayout.BeginHorizontal();
-            GUILayout.Label(section, EditorStyles.boldLabel,SettingsStyles.FixedWidth130LayoutOptions);
-            GUILayout.Label(content);
+            GUILayout.Label(section, EditorStyles.boldLabel, SettingsStyles.FixedWidth130LayoutOptions);
+
+            GUILayout.BeginVertical();
+            foreach (Type type in types)
+            {
+#if UNITY_2021_1_OR_NEWER
+                if (EditorGUILayout.LinkButton(type.ToString()))
+#elif UNITY_2019_1_OR_NEWER
+                if (GUILayout.Button(type.ToString(), EditorStyles.linkLabel))
+#else
+                if (GUILayout.Button(type.ToString(), EditorStyles.boldLabel))
+#endif
+                {
+                    GUIUtility.hotControl = 0;
+                    Application.OpenURL($"https://gdx.dotbunny.com/api/{type}.html");
+                }
+            }
+
+            GUILayout.EndVertical();
 
             bool hasAllTypes = HasAllTypes(types);
             bool changed = GUILayout.Toggle(hasAllTypes, "", SettingsStyles.SectionHeaderToggleLayoutOptions);
@@ -125,8 +166,6 @@ namespace GDX.Editor.ProjectSettings
                 {
                     RemoveTypes(types);
                 }
-
-                s_visualScriptingNodeChangeCount = 1;
             }
 
             GUILayout.EndHorizontal();
@@ -149,7 +188,6 @@ namespace GDX.Editor.ProjectSettings
 
         private static void EnsureAssemblyReferenced()
         {
-
 #if GDX_VISUALSCRIPTING
             if (BoltCore.Configuration.assemblyOptions.Contains("GDX"))
             {
@@ -192,6 +230,5 @@ namespace GDX.Editor.ProjectSettings
             }
 #endif
         }
-
     }
 }
