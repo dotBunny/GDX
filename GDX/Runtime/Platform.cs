@@ -21,10 +21,9 @@ namespace GDX
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void EnsureFolderHierarchyExists(string folderPath)
         {
-            string targetDirectory = Path.GetDirectoryName(folderPath);
-            if (!string.IsNullOrEmpty(targetDirectory))
+            if (!string.IsNullOrEmpty(folderPath))
             {
-                Directory.CreateDirectory(targetDirectory);
+                Directory.CreateDirectory(folderPath);
             }
         }
 

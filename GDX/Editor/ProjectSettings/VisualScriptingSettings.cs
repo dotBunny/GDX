@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEngine;
 #if GDX_VISUALSCRIPTING
 using Unity.VisualScripting;
+using UnityEngine.PlayerLoop;
 
 #endif
 
@@ -114,11 +115,33 @@ namespace GDX.Editor.ProjectSettings
             GUILayout.Label(s_visualScriptingGenerationAdditionalContent, SettingsStyles.WordWrappedLabelStyle);
             GUILayout.EndVertical();
             GUILayout.Space(10);
+            GUILayout.BeginVertical();
             if (GUILayout.Button("Regenerate Units", SettingsStyles.ButtonStyle))
             {
                 BoltCore.Configuration.Save();
                 UnitBase.Rebuild();
             }
+            GUILayout.Space(10);
+            if (GUILayout.Button("Install Docs", SettingsStyles.ButtonStyle))
+            {
+                if (UpdateProvider.LocalPackage != null)
+                {
+                    string sourceFile = System.IO.Path.Combine(
+                        Application.dataPath.Substring(0, Application.dataPath.Length - 6),
+                        UpdateProvider.LocalPackage.PackageAssetPath,
+                        ".docfx", "GDX.xml");
+
+                    Platform.EnsureFolderHierarchyExists(BoltCore.Paths.assemblyDocumentations);
+
+                    string targetFile = System.IO.Path.Combine(BoltCore.Paths.assemblyDocumentations, "GDX.xml");
+                    System.IO.File.Copy(sourceFile,targetFile, true);
+
+                    XmlDocumentation.ClearCache();
+
+                    AssetDatabase.ImportAsset(targetFile);
+                }
+            }
+            GUILayout.EndVertical();
 
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
