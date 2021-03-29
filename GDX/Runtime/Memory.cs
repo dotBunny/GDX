@@ -14,6 +14,7 @@ namespace GDX
     ///     A collection of memory related helper utilities.
     /// </summary>
     /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
+    [VisualScriptingUtility]
     public static class Memory
     {
         /// <summary>

@@ -27,7 +27,13 @@ namespace GDX.Editor.ProjectSettings
         /// </summary>
         private static AssemblyProvider s_assembly;
 
-        private static readonly GUIContent s_listPrefixContent = new GUIContent("- ");
+        private static readonly GUIContent s_categoryExtensionsContent = new GUIContent(
+            "A collection of aggressively inlined functionality that expands on many of the built-in Unity types.");
+        private static readonly GUIContent s_categoryTypesContent = new GUIContent(
+            "An extensive group of classes designed with performance-sensitive environments in mind.");
+        private static readonly GUIContent s_categoryUtilitiesContent = new GUIContent(
+            "A collection of aggressively inlined functionality that expands on many of the built-in Unity types.");
+
         /// <summary>
         ///     Content regarding this not being all of the content that can be added to visual scripting.
         /// </summary>
@@ -116,15 +122,15 @@ namespace GDX.Editor.ProjectSettings
             GUILayout.EndVertical();
 
 
-            DrawNodeSection("Extensions", s_assembly.VisualScriptingExtensions);
+            DrawNodeSection("Extensions", s_categoryExtensionsContent,  s_assembly.VisualScriptingExtensions);
 
             GUILayout.Box(GUIContent.none, EditorStyles.helpBox, GUILayout.ExpandWidth(true), GUILayout.Height(1));
 
-            DrawNodeSection("Types", s_assembly.VisualScriptingTypes);
+            DrawNodeSection("Types", s_categoryTypesContent, s_assembly.VisualScriptingTypes);
 
             GUILayout.Box(GUIContent.none, EditorStyles.helpBox, GUILayout.ExpandWidth(true), GUILayout.Height(1));
 
-            DrawNodeSection("Utilities", s_assembly.VisualScriptingUtilities);
+            DrawNodeSection("Utilities", s_categoryUtilitiesContent, s_assembly.VisualScriptingUtilities);
         }
 #endif
 
@@ -150,13 +156,16 @@ namespace GDX.Editor.ProjectSettings
         ///     Draw the individual node sections for the Visual Scripting settings.
         /// </summary>
         /// <param name="category">The category label.</param>
+        /// <param name="description">The <see cref="GUIContent"/> used as the description for the category.</param>
         /// <param name="types">A collection of <see cref="Type"/>.</param>
-        private static void DrawNodeSection(string category, List<Type> types)
+        private static void DrawNodeSection(string category, GUIContent description, List<Type> types)
         {
             GUILayout.BeginVertical(SettingsStyles.TableRowStyle);
             GUILayout.BeginHorizontal();
 
             string foldoutID = $"{SectionID}_{category}";
+
+
             bool sectionFoldout = EditorGUILayout.Foldout(SettingsGUIUtility.GetCachedEditorBoolean(foldoutID), "",
                 SettingsStyles.CombinedFoldoutStyle);
             SettingsGUIUtility.SetCachedEditorBoolean(foldoutID, sectionFoldout);
@@ -164,14 +173,12 @@ namespace GDX.Editor.ProjectSettings
             GUILayout.Label(category, EditorStyles.boldLabel, SettingsStyles.FixedWidth130LayoutOptions);
 
             GUILayout.BeginVertical();
-            GUILayout.Label("Category description.");
+            GUILayout.Label(description, SettingsStyles.WordWrappedLabelStyle);
             if (sectionFoldout)
             {
                 GUILayout.Space(5);
                 foreach (Type type in types)
                 {
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Label(s_listPrefixContent, SettingsStyles.NoHorizontalStretchStyle);
 #if UNITY_2021_1_OR_NEWER
                     if (EditorGUILayout.LinkButton(type.ToString()))
 #elif UNITY_2019_1_OR_NEWER
@@ -183,9 +190,9 @@ namespace GDX.Editor.ProjectSettings
                         GUIUtility.hotControl = 0;
                         Application.OpenURL($"https://gdx.dotbunny.com/api/{type}.html");
                     }
-                    GUILayout.EndHorizontal();
 
                 }
+                GUILayout.Space(5);
             }
             GUILayout.EndVertical();
 

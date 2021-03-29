@@ -13,6 +13,7 @@ namespace GDX
     /// <summary>
     ///     A collection of localization related helper utilities.
     /// </summary>
+    [VisualScriptingUtility]
     public static class Localization
     {
         /// <summary>

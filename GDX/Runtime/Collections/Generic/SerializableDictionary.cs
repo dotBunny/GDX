@@ -23,6 +23,7 @@ namespace GDX.Collections.Generic
     /// <typeparam name="TKey">The dictionary's key <see cref="System.Type" />.</typeparam>
     /// <typeparam name="TValue">The dictionary's value <see cref="System.Type" />.</typeparam>
     [Serializable]
+    [VisualScriptingType]
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
         /// <summary>

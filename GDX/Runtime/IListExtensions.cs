@@ -10,6 +10,7 @@ namespace GDX
     /// <summary>
     ///     <see cref="System.Collections.Generic.IList{T}" /> Based Extension Methods
     /// </summary>
+    [VisualScriptingExtension]
     public static class IListExtensions
     {
         /// <summary>

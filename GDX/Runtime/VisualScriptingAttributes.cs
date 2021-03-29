@@ -17,7 +17,7 @@ namespace GDX
     /// <summary>
     ///     Indicate that the tagged class should be considered as containing a type when adding to Visual Scripting.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
     public sealed class VisualScriptingTypeAttribute : Attribute
     {
 

@@ -186,8 +186,8 @@ namespace GDX.Editor.ProjectSettings
 
             TableRowStyle = new GUIStyle()
             {
-                padding = {top = 10, bottom = 10, left = 10, right = 10},
-                margin = {bottom = 10},
+                padding = {top = 0, bottom = 5, left = 10, right = 10},
+                margin = {top = 0, bottom = 0},
             };
             InfoBoxStyle = new GUIStyle(EditorStyles.helpBox)
             {
