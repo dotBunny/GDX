@@ -27,12 +27,14 @@ namespace GDX.Editor.ProjectSettings
         /// </summary>
         private static AssemblyProvider s_assembly;
 
+        private static readonly GUIContent s_categoryCollectionsContent = new GUIContent(
+            "An extensive group of collection based classes and structs designed with performance-sensitive environments in mind.");
         private static readonly GUIContent s_categoryExtensionsContent = new GUIContent(
-            "A collection of aggressively inlined functionality that expands on many of the built-in Unity types.");
+            "A gathering of aggressively inlined functionality that expands on many of the built-in Unity types.");
         private static readonly GUIContent s_categoryTypesContent = new GUIContent(
-            "An extensive group of classes designed with performance-sensitive environments in mind.");
+            "Additional types proven useful in specific situations.");
         private static readonly GUIContent s_categoryUtilitiesContent = new GUIContent(
-            "A collection of aggressively inlined functionality that expands on many of the built-in Unity types.");
+            "Function libraries useful throughout different areas of a games development.");
 
         /// <summary>
         ///     Content regarding this not being all of the content that can be added to visual scripting.
@@ -121,6 +123,9 @@ namespace GDX.Editor.ProjectSettings
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
 
+            DrawNodeSection("Collections", s_categoryCollectionsContent,  s_assembly.VisualScriptingCollections);
+
+            GUILayout.Box(GUIContent.none, EditorStyles.helpBox, GUILayout.ExpandWidth(true), GUILayout.Height(1));
 
             DrawNodeSection("Extensions", s_categoryExtensionsContent,  s_assembly.VisualScriptingExtensions);
 
@@ -165,8 +170,7 @@ namespace GDX.Editor.ProjectSettings
 
             string foldoutID = $"{SectionID}_{category}";
 
-
-            bool sectionFoldout = EditorGUILayout.Foldout(SettingsGUIUtility.GetCachedEditorBoolean(foldoutID), "",
+            bool sectionFoldout = EditorGUILayout.Foldout(SettingsGUIUtility.GetCachedEditorBoolean(foldoutID, false), "",
                 SettingsStyles.CombinedFoldoutStyle);
             SettingsGUIUtility.SetCachedEditorBoolean(foldoutID, sectionFoldout);
 
@@ -179,18 +183,35 @@ namespace GDX.Editor.ProjectSettings
                 GUILayout.Space(5);
                 foreach (Type type in types)
                 {
+                    string typeString = type.ToString();
+                    string cleanedType = typeString.GetBeforeFirst("`");
+                    if (cleanedType == null)
+                    {
+                        cleanedType = typeString;
+                    }
+
 #if UNITY_2021_1_OR_NEWER
-                    if (EditorGUILayout.LinkButton(type.ToString()))
+                    if (EditorGUILayout.LinkButton(cleanedType))
 #elif UNITY_2019_1_OR_NEWER
-                    if (GUILayout.Button(type.ToString(), EditorStyles.linkLabel))
+                    if (GUILayout.Button(cleanedType, EditorStyles.linkLabel))
 #else
-                    if (GUILayout.Button(type.ToString(), EditorStyles.boldLabel))
+                    if (GUILayout.Button(cleanedType, EditorStyles.boldLabel))
 #endif
                     {
                         GUIUtility.hotControl = 0;
-                        Application.OpenURL($"https://gdx.dotbunny.com/api/{type}.html");
-                    }
 
+                        string extrasType = typeString.GetAfterFirst("`");
+
+                        if (extrasType != null)
+                        {
+                            int parameterCount = extrasType.CountOccurence(',') + 1;
+                            Application.OpenURL($"https://gdx.dotbunny.com/api/{cleanedType}-{parameterCount.ToString()}.html");
+                        }
+                        else
+                        {
+                            Application.OpenURL($"https://gdx.dotbunny.com/api/{cleanedType}.html");
+                        }
+                    }
                 }
                 GUILayout.Space(5);
             }

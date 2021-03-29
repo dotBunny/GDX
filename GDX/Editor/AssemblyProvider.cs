@@ -20,10 +20,14 @@ namespace GDX.Editor
         public readonly Assembly RuntimeAssembly;
 
         /// <summary>
+        ///     A list of all types with the <see cref="GDX.VisualScriptingCollectionAttribute"/> attribute.
+        /// </summary>
+        public readonly List<Type> VisualScriptingCollections;
+
+        /// <summary>
         ///     A list of all types with the <see cref="GDX.VisualScriptingExtensionAttribute"/> attribute.
         /// </summary>
         public readonly List<Type> VisualScriptingExtensions;
-
 
         /// <summary>
         ///     A list of all types with the <see cref="GDX.VisualScriptingTypeAttribute"/> attribute.
@@ -43,12 +47,17 @@ namespace GDX.Editor
             RuntimeAssembly = Assembly.GetAssembly(typeof(GDXConfig));
 
             // Populate Visual Scripting Lists
+            VisualScriptingCollections = new List<Type>();
             VisualScriptingExtensions = new List<Type>();
             VisualScriptingTypes = new List<Type>();
             VisualScriptingUtilities = new List<Type>();
 
             foreach(Type type in RuntimeAssembly.GetTypes())
             {
+                if (type.GetCustomAttributes(typeof(VisualScriptingCollectionAttribute), true).Length > 0)
+                {
+                    VisualScriptingCollections.Add(type);
+                }
                 if (type.GetCustomAttributes(typeof(VisualScriptingExtensionAttribute), true).Length > 0)
                 {
                     VisualScriptingExtensions.Add(type);

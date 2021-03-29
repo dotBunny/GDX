@@ -321,6 +321,28 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
+        public void CountOccurence_TwoMockData_ReturnsTwo()
+        {
+            string mockData = "this is a, count of sorts,";
+
+            bool evaluate = mockData.CountOccurence(',') == 2;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void CountOccurence_ZeroMockData_ReturnsTwo()
+        {
+            string mockData = "this is a, count of sorts,";
+
+            bool evaluate = mockData.CountOccurence('!') == 0;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
         public void TryParseVector2_NoSplit_ReturnsFalse()
         {
             bool parse = "12".TryParseVector2(out Vector2 parsedLocation);
