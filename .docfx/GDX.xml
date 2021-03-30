@@ -2876,7 +2876,7 @@
             </summary>
             <param name="buffer">The buffer to fill.</param>
             <exception cref="T:System.ArgumentNullException">
-                If <c>buffer == <see langword="null" /></c>.
+                If <c>buffer == null</c>.
             </exception>
         </member>
         <member name="M:GDX.Mathematics.Random.MersenneTwister.NextDouble">
@@ -2916,14 +2916,14 @@
                 depending on the value of the given parameter.
             </summary>
             <param name="includeOne">
-                If <see langword="true" />, the pseudo-random System.Double number returned will be
+                If true, the pseudo-random System.Double number returned will be
                 less than or equal to one; otherwise, the pseudo-random number returned will
                 be strictly less than one.
             </param>
             <returns>
-                If includeOne is <see langword="true" />, this method returns a
+                If includeOne is true, this method returns a
                 System.Double-precision pseudo-random number greater than or equal to zero, and less
-                than or equal to one. If includeOne is <see langword="false" />, this method
+                than or equal to one. If includeOne is false, this method
                 returns a System.Double-precision pseudo-random number greater than or equal to zero and
                 strictly less than one.
             </returns>
@@ -2950,14 +2950,14 @@
                 given boolean parameter.
             </summary>
             <param name="includeOne">
-                If <see langword="true" />, the pseudo-random number returned will be
+                If true, the pseudo-random number returned will be
                 less than or equal to one; otherwise, the pseudo-random number returned will
                 be strictly less than one.
             </param>
             <returns>
-                If includeOne is <see langword="true" />, this method returns a
+                If includeOne is true, this method returns a
                 System.Single-precision pseudo-random number greater than or equal to zero, and less
-                than or equal to one. If includeOne is <see langword="false" />,
+                than or equal to one. If includeOne is false,
                 this method returns a single-precision pseudo-random number greater than or equal to zero and
                 strictly less than one.
             </returns>
@@ -4806,7 +4806,7 @@
             <summary>
                 <para>Does targetAssetReference have a runtime key?</para>
             </summary>
-            <remarks>Will return false if the reference is <see langword="null" />.</remarks>
+            <remarks>Will return false if the reference is null.</remarks>
             <param name="targetAssetReference">The target UnityEngine.AddressableAssets.AssetReference.</param>
             <returns>true/false</returns>
         </member>
