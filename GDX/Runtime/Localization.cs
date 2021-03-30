@@ -35,12 +35,12 @@ namespace GDX
         }
 
         /// <summary>
-        ///     The UTC ISO 8601 compliant <see cref="System.DateTime" />.<see cref="DateTime.ToString(System.String)" />.
+        ///     The UTC ISO 8601 compliant <see cref="DateTime.ToString(System.String)" />.
         /// </summary>
         public const string UtcTimestampFormat = "yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz";
 
         /// <summary>
-        ///     The local ISO 8601 compliant <see cref="System.DateTime" />.<see cref="DateTime.ToString(System.String)" />.
+        ///     The local ISO 8601 compliant <see cref="DateTime.ToString(System.String)" />.
         /// </summary>
         public const string LocalTimestampFormat = "yyyy-MM-dd HH\\:mm\\:ss";
 
