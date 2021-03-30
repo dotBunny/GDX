@@ -563,21 +563,6 @@
             </summary>
             <remarks>We will always create the arrays so the property drawers function nicely.</remarks>
         </member>
-        <member name="F:GDX.Collections.Generic.SerializableDictionary`2.drawerExpanded">
-            <summary>
-                Editor only data indicating if the property drawer is expanded.
-            </summary>
-        </member>
-        <member name="F:GDX.Collections.Generic.SerializableDictionary`2.serializedAddKeyValid">
-            <summary>
-                Is the provided key a valid key (unique).
-            </summary>
-        </member>
-        <member name="F:GDX.Collections.Generic.SerializableDictionary`2.serializedAddKey">
-            <summary>
-                Temporary placement for keys to be added.
-            </summary>
-        </member>
         <member name="T:GDX.Collections.Generic.NativeSimpleList`1">
             <summary>
                 A <see cref="T:Unity.Collections.NativeArray`1" /> backed <see cref="T:GDX.Collections.Generic.SimpleList`1" />.
@@ -4091,16 +4076,6 @@
         <member name="T:GDX.InspectorMessageBoxAttribute.MessageBoxType">
             <summary>
                 Valid types of messages.
-            </summary>
-        </member>
-        <member name="F:GDX.InspectorMessageBoxAttribute.Message">
-            <summary>
-                The message to show in the message box.
-            </summary>
-        </member>
-        <member name="F:GDX.InspectorMessageBoxAttribute.MessageType">
-            <summary>
-                The icon/type of message being displayed.
             </summary>
         </member>
         <member name="T:GDX.HideFromDocFXAttribute">

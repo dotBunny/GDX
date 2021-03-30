@@ -138,7 +138,7 @@ namespace GDX.Editor.ProjectSettings
 
                     XmlDocumentation.ClearCache();
 
-                    AssetDatabase.ImportAsset(targetFile);
+                    AssetDatabase.ImportAsset("Assets/" + targetFile.Replace(Application.dataPath, "").Replace("\\", "/"));
                 }
             }
             GUILayout.EndVertical();
