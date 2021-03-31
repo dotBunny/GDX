@@ -167,5 +167,27 @@ namespace GDX.Collections.Generic
                 System.Array.Resize(ref Array, combinedLength);
             }
         }
+
+        /// <summary>
+        ///     Reverse the order of <see cref="Array"/>.
+        /// </summary>
+        public void Reverse()
+        {
+            T temporaryStorage;
+
+            int lastIndex = Count - 1;
+            int middleIndex = Count / 2;
+
+            for (int currentElementIndex = 0; currentElementIndex < middleIndex; currentElementIndex++)
+            {
+                // Store the swap value
+                temporaryStorage = Array[currentElementIndex];
+                int swapElementIndex = currentElementIndex + (lastIndex - currentElementIndex);
+
+                // Swap values
+                Array[currentElementIndex] = Array[swapElementIndex];
+                Array[swapElementIndex] = temporaryStorage;
+            }
+        }
     }
 }

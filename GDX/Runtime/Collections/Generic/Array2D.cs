@@ -1,28 +1,22 @@
-﻿// dotBunny licenses this file to you under the MIT license.
+// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Runtime.CompilerServices;
-using Unity.Collections;
 
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace GDX.Collections.Generic
 {
     /// <summary>
-    ///     A 2-dimension <see cref="NativeArray{T}" /> backed array.
+    ///     A 2-dimensional array backed by a flat array.
     /// </summary>
-    /// <remarks>
-    ///     The <see cref="NativeArray2D{T}" /> is backed by a <see cref="Unity.Collections.NativeArray{T}" /> which requires
-    ///     UnityEngine.CoreModule.dll.
-    /// </remarks>
     /// <typeparam name="T">Type of objects.</typeparam>
-    public struct NativeArray2D<T> : IDisposable where T : struct
+    public class Array2D<T>
     {
         /// <summary>
-        ///     The backing <see cref="NativeArray{T}" />.
+        ///     The backing flat array.
         /// </summary>
-        public NativeArray<T> Array;
+        public T[] Array;
 
         /// <summary>
         ///     The length of each pseudo-array in the dataset.
@@ -37,25 +31,23 @@ namespace GDX.Collections.Generic
         public int RowCount;
 
         /// <summary>
-        ///     Create a <see cref="NativeArray2D{T}" />.
+        ///     Create a <see cref="Array2D{T}" />.
         /// </summary>
         /// <param name="columnCount">The number of columns (X).</param>
         /// <param name="rowCount">The number of rows (Y).</param>
-        /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
-        /// <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
-        public NativeArray2D(int columnCount, int rowCount, Allocator allocator,
-            NativeArrayOptions nativeArrayOptions)
+        public Array2D(int columnCount, int rowCount)
         {
             ColumnCount = columnCount;
             RowCount = rowCount;
-            Array = new NativeArray<T>(rowCount * columnCount, allocator, nativeArrayOptions);
+            Array = new T[rowCount * columnCount];
         }
 
         /// <summary>
         ///     Get a typed object at a specific 2-dimensional index in <see cref="Array" />.
         /// </summary>
-        /// <param name="x">The column number (X).</param>
-        /// <param name="y">The row number (Y).</param>
+        /// <remarks>This does not follow graphing axis standards, but mimics the framing of a multi-dimensional array.</remarks>
+        /// <param name="x">The row number (X).</param>
+        /// <param name="y">The column number (Y).</param>
         public T this[int x, int y]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -68,15 +60,15 @@ namespace GDX.Collections.Generic
         ///     Add additional rows to the dataset.
         /// </summary>
         /// <param name="numberOfNewRows">The number of rows/arrays to add.</param>
-        /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
-        /// <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
-        public void AddRows(int numberOfNewRows, Allocator allocator, NativeArrayOptions nativeArrayOptions)
+        public void AddRows(int numberOfNewRows)
         {
             int newArrayCount = RowCount + numberOfNewRows;
+            T[] newArray = new T[newArrayCount * ColumnCount];
+            for (int i = 0; i < Array.Length; i++)
+            {
+                newArray[i] = Array[i];
+            }
 
-            NativeArray<T> newArray = new NativeArray<T>(newArrayCount * ColumnCount, allocator, nativeArrayOptions);
-            Array.CopyTo(newArray);
-            Array.Dispose();
             Array = newArray;
             RowCount = newArrayCount;
         }
@@ -85,13 +77,11 @@ namespace GDX.Collections.Generic
         ///     Add additional columns to the dataset.
         /// </summary>
         /// <param name="numberOfNewColumns">The number of columns add.</param>
-        /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
-        /// <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
-        public void AddColumns(int numberOfNewColumns, Allocator allocator, NativeArrayOptions nativeArrayOptions)
+        public void AddColumns(int numberOfNewColumns)
         {
             int currentLengthOfArrays = ColumnCount;
             int newLengthOfArrays = currentLengthOfArrays + numberOfNewColumns;
-            NativeArray<T> newArray = new NativeArray<T>(RowCount * newLengthOfArrays, allocator, nativeArrayOptions);
+            T[] newArray = new T[RowCount * newLengthOfArrays];
 
             for (int i = 0; i < RowCount; i++)
             for (int j = 0; j < currentLengthOfArrays; j++)
@@ -100,20 +90,6 @@ namespace GDX.Collections.Generic
             }
 
             ColumnCount = newLengthOfArrays;
-        }
-
-        /// <summary>
-        ///     Properly dispose of <see cref="Array" />.
-        /// </summary>
-        public void Dispose()
-        {
-            if (!Array.IsCreated)
-            {
-                return;
-            }
-
-            Array.Dispose();
-            Array = default;
         }
 
         /// <summary>
@@ -149,8 +125,7 @@ namespace GDX.Collections.Generic
         /// </summary>
         public void ReverseRows()
         {
-            NativeArray<T> temporaryStorage =
-                new NativeArray<T>(ColumnCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
+            T[] temporaryStorage = new T[ColumnCount];
 
             int lastIndex = RowCount - 1;
             int middleIndex = RowCount / 2;
@@ -158,17 +133,15 @@ namespace GDX.Collections.Generic
             for (int rowIndex = 0; rowIndex < middleIndex; rowIndex++)
             {
                 // Save existing line
-                NativeArray<T>.Copy(Array, rowIndex * ColumnCount, temporaryStorage, 0, ColumnCount);
+                System.Array.Copy(Array, rowIndex * ColumnCount, temporaryStorage, 0, ColumnCount);
 
                 // Get line on other side of the flip and put in place
-                NativeArray<T>.Copy(Array, (lastIndex - rowIndex) * ColumnCount, Array, rowIndex * ColumnCount,
+                System.Array.Copy(Array, (lastIndex - rowIndex) * ColumnCount, Array, rowIndex * ColumnCount,
                     ColumnCount);
 
                 // Write other side content
-                NativeArray<T>.Copy(temporaryStorage, 0, Array, (lastIndex - rowIndex) * ColumnCount, ColumnCount);
+                System.Array.Copy(temporaryStorage, 0, Array, (lastIndex - rowIndex) * ColumnCount, ColumnCount);
             }
-
-            temporaryStorage.Dispose();
         }
 
         /// <summary>
