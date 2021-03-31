@@ -11,6 +11,7 @@ namespace GDX.Collections.Generic
     ///     A 2-dimensional array backed by a flat array.
     /// </summary>
     /// <typeparam name="T">Type of objects.</typeparam>
+    [VisualScriptingCollection]
     public class Array2D<T>
     {
         /// <summary>
