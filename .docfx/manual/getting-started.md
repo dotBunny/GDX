@@ -48,7 +48,7 @@ This method is how typical development is done on `GDX`.
 ## Project Settings
 Upon installation, `GDX` *should* work out of the box.
 
-Furhter configuration of `GDX` is done by opening the **Project Settings** window (**Edit > Project Settings...**), and selecting the `GDX` section. You will be presented with a view similar to the image below, with numerous configuration options sorted by feature.
+Further configuration of `GDX` is done by opening the **Project Settings** window (**Edit > Project Settings...**), and selecting the `GDX` section. You will be presented with a view similar to the image below, with numerous configuration options sorted by feature.
 
 ![Project Settings](/images/manual/getting-started/gdx-config.png)
 
