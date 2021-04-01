@@ -1,7 +1,7 @@
 # Visual Scripting Support
 
-## Disclaimer
-There is an inherent inefficiency in utilizing visual scripting; in most cases, hand-crafted code will outperform generated code. While `GDX` operates on the principle of performance first, this does not preclude the idea of providing performant nodes for visual scripting graphs.
+> [!WARNING]
+> There is an inherent inefficiency in utilizing visual scripting; in most cases, hand-crafted code will outperform generated code. While `GDX` operates on the principle of performance first, this does not preclude the idea of providing performant nodes for visual scripting graphs.
 
 ## Adding GDX To Visual Scripting
 An assembly and its types need to be added to the unit list configuration of Visual Scripting to be usable. By default, this is a manual process available in the `Visual Scripting` section of the **Project Settings**. To speed this process up a bit and generally create a much nicer workflow, `GDX` provides a shortcutted workflow.
