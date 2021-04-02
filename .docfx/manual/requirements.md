@@ -21,3 +21,12 @@ GDX_VISUALSCRIPTING | com.unity.visual-scripting | 2021.1 |`1.52`
 
 > [!NOTE]
 > It is essential to remember that the GDX_* defines are only valid inside the `GDX` assembly, see [Conditionals](xref:GDX.Developer.Conditionals) if you wish to access some semblance outside of `GDX`.
+
+### Portability
+Automation continually checks the portability of the code used in the library, ensuring compatibility across various platforms.
+
+| Platform | Version |
+| ------- | ------------------ |
+| .NET Core + Platform Extensions | 3.1 |
+| .NET Core | 3.1 |
+| .NET Standard + Platform Extensions | 2.0 |

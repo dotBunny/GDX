@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Automated compatibility tests for 2018.4 LTS, 2019.4 LTS and 2020.3 LTS have been added to internal CI.
+- Automated portability checks for .NET Standard 2.0 and .NET Core 3.1 to internal CI.
 - Support for Visual Scripting (Bolt) with options in **Project Settings** to add a currated portion of the `GDX` API for usage with Visual Scripting.
 - New array pooling type `ManagedArrayPools`, with corresponding `ManagedArrayPool_PowerOfTwoLengths` implementation.
 - Numerous collections gained `Reverse()` methods, and the newly added `Array2D` also having `ReverseRows()` and `ReverseColumns()`.
