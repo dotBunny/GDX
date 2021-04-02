@@ -13,8 +13,11 @@ namespace GDX.Collections.Generic
     ///     A 2-dimension <see cref="NativeArray{T}" /> backed array.
     /// </summary>
     /// <remarks>
+    ///     <para>
     ///     The <see cref="NativeArray2D{T}" /> is backed by a <see cref="Unity.Collections.NativeArray{T}" /> which requires
     ///     UnityEngine.CoreModule.dll.
+    ///     </para>
+    ///     <para>Use X (horizontal) and Y (vertical) arrangement.</para>
     /// </remarks>
     /// <typeparam name="T">Type of objects.</typeparam>
     public struct NativeArray2D<T> : IDisposable where T : struct
@@ -39,11 +42,11 @@ namespace GDX.Collections.Generic
         /// <summary>
         ///     Create a <see cref="NativeArray2D{T}" />.
         /// </summary>
-        /// <param name="columnCount">The number of columns (X).</param>
-        /// <param name="rowCount">The number of rows (Y).</param>
+        /// <param name="rowCount">The number of rows (X).</param>
+        /// <param name="columnCount">The number of columns (Y).</param>
         /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
         /// <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
-        public NativeArray2D(int columnCount, int rowCount, Allocator allocator,
+        public NativeArray2D(int rowCount, int columnCount, Allocator allocator,
             NativeArrayOptions nativeArrayOptions)
         {
             ColumnCount = columnCount;
@@ -54,8 +57,8 @@ namespace GDX.Collections.Generic
         /// <summary>
         ///     Get a typed object at a specific 2-dimensional index in <see cref="Array" />.
         /// </summary>
-        /// <param name="x">The column number (X).</param>
-        /// <param name="y">The row number (Y).</param>
+        /// <param name="x">The row/line number (vertical axis).</param>
+        /// <param name="y">The column number (horizontal axis).</param>
         public T this[int x, int y]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -10,6 +10,7 @@ namespace GDX.Collections.Generic
     /// <summary>
     ///     A 2-dimensional array backed by a flat array.
     /// </summary>
+    /// <remarks>Mimics multi-dimensional array format.</remarks>
     /// <typeparam name="T">Type of objects.</typeparam>
     [VisualScriptingCollection]
     public class Array2D<T>
@@ -34,9 +35,9 @@ namespace GDX.Collections.Generic
         /// <summary>
         ///     Create a <see cref="Array2D{T}" />.
         /// </summary>
-        /// <param name="columnCount">The number of columns (X).</param>
-        /// <param name="rowCount">The number of rows (Y).</param>
-        public Array2D(int columnCount, int rowCount)
+        /// <param name="rowCount">The number of rows (X).</param>
+        /// <param name="columnCount">The number of columns (Y).</param>
+        public Array2D(int rowCount, int columnCount)
         {
             ColumnCount = columnCount;
             RowCount = rowCount;
@@ -46,9 +47,8 @@ namespace GDX.Collections.Generic
         /// <summary>
         ///     Get a typed object at a specific 2-dimensional index in <see cref="Array" />.
         /// </summary>
-        /// <remarks>This does not follow graphing axis standards, but mimics the framing of a multi-dimensional array.</remarks>
-        /// <param name="x">The row number (X).</param>
-        /// <param name="y">The column number (Y).</param>
+        /// <param name="x">The row/line number (vertical axis).</param>
+        /// <param name="y">The column number (horizontal axis).</param>
         public T this[int x, int y]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -90,6 +90,7 @@ namespace GDX.Collections.Generic
                 newArray[i * newLengthOfArrays + j] = Array[i * currentLengthOfArrays + j];
             }
 
+            Array = newArray;
             ColumnCount = newLengthOfArrays;
         }
 

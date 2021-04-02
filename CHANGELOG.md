@@ -19,7 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Stated support for GDX has shifted to current release cycle Unity, with support for 2018.4 LTS, 2019.4 LTS and 2020.3 LTS. This doesn't mean that it will not work with other versions, just our automation only checks against LTS and current versions.
 - Removed the extension `Get` method from `GameObjectPool` to match the other methods.
 - Only Unity 2020+ supports the Package Manager resolve function, previous versions of Unity will be presented with an options dialog.
-- Consilidated access/creation of to `GDXConfig`
+- Consilidated access/creation of `GDXConfig`.
+- Altered `NativeArray2D` to index accessor to function like `Array2D`.
 
 ### Fixed
 - Force the Package Manager to resolve the package manifest during an update.
