@@ -23,8 +23,8 @@ namespace Runtime.Collections.Generic
 
             mockArray.AddColumns(1);
 
-            bool evaluate = (mockArray.ColumnCount == 4) &&
-                            (mockArray.Array.Length == pre + 2);
+            bool evaluate = mockArray.ColumnCount == 4 &&
+                            mockArray.Array.Length == pre + 2;
 
             Assert.IsTrue(evaluate);
         }
@@ -38,8 +38,8 @@ namespace Runtime.Collections.Generic
 
             mockArray.AddRows(1);
 
-            bool evaluate = (mockArray.RowCount == 3) &&
-                            (mockArray.Array.Length == pre + 4);
+            bool evaluate = mockArray.RowCount == 3 &&
+                            mockArray.Array.Length == pre + 4;
 
             Assert.IsTrue(evaluate);
         }
@@ -48,11 +48,7 @@ namespace Runtime.Collections.Generic
         [Category("GDX.Tests")]
         public void ReverseColumns_MockDataEven_ValuesReversed()
         {
-            Array2D<int> mockArray = new Array2D<int>(2, 4);
-            mockArray[1, 0] = 0;
-            mockArray[1, 1] = 1;
-            mockArray[1, 2] = 2;
-            mockArray[1, 3] = 3;
+            Array2D<int> mockArray = new Array2D<int>(2, 4) {[1, 0] = 0, [1, 1] = 1, [1, 2] = 2, [1, 3] = 3};
 
 
             mockArray.ReverseColumns();
@@ -69,12 +65,14 @@ namespace Runtime.Collections.Generic
         [Category("GDX.Tests")]
         public void ReverseColumns_MockDataOdd_ValuesReversed()
         {
-            Array2D<int> mockArray = new Array2D<int>(2, 5);
-            mockArray[1, 0] = 0;
-            mockArray[1, 1] = 1;
-            mockArray[1, 2] = 2;
-            mockArray[1, 3] = 3;
-            mockArray[1, 4] = 4;
+            Array2D<int> mockArray = new Array2D<int>(2, 5)
+            {
+                [1, 0] = 0,
+                [1, 1] = 1,
+                [1, 2] = 2,
+                [1, 3] = 3,
+                [1, 4] = 4
+            };
 
 
             mockArray.ReverseColumns();
@@ -92,13 +90,15 @@ namespace Runtime.Collections.Generic
         [Category("GDX.Tests")]
         public void ReverseRows_MockDataEven_ValuesReversed()
         {
-            Array2D<int> mockArray = new Array2D<int>(6, 2);
-            mockArray[0, 0] = 0;
-            mockArray[1, 0] = 1;
-            mockArray[2, 0] = 2;
-            mockArray[3, 0] = 3;
-            mockArray[4, 0] = 4;
-            mockArray[5, 0] = 5;
+            Array2D<int> mockArray = new Array2D<int>(6, 2)
+            {
+                [0, 0] = 0,
+                [1, 0] = 1,
+                [2, 0] = 2,
+                [3, 0] = 3,
+                [4, 0] = 4,
+                [5, 0] = 5
+            };
 
             mockArray.ReverseRows();
 
@@ -116,12 +116,14 @@ namespace Runtime.Collections.Generic
         [Category("GDX.Tests")]
         public void ReverseRows_MockDataOdd_ValuesReversed()
         {
-            Array2D<int> mockArray = new Array2D<int>(5, 2);
-            mockArray[0, 0] = 0;
-            mockArray[1, 0] = 1;
-            mockArray[2, 0] = 2;
-            mockArray[3, 0] = 3;
-            mockArray[4, 0] = 4;
+            Array2D<int> mockArray = new Array2D<int>(5, 2)
+            {
+                [0, 0] = 0,
+                [1, 0] = 1,
+                [2, 0] = 2,
+                [3, 0] = 3,
+                [4, 0] = 4
+            };
 
             mockArray.ReverseRows();
 
@@ -138,9 +140,7 @@ namespace Runtime.Collections.Generic
         [Category("GDX.Tests")]
         public void ToMultiDimensionalArray_MockData_MatchingValues()
         {
-            Array2D<int> mockArray = new Array2D<int>(2, 2);
-            mockArray[0, 0] = 0;
-            mockArray[1, 0] = 1;
+            Array2D<int> mockArray = new Array2D<int>(2, 2) {[0, 0] = 0, [1, 0] = 1};
 
             int[,] mockConvert = mockArray.ToMultiDimensionalArray();
 

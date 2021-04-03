@@ -69,11 +69,12 @@ namespace GDX.Editor.ProjectSettings
         private static readonly GUIContent s_visualScriptingLoadingContent = new GUIContent(
             "The visual scripting subsystem is currently loading.");
 
+
+#if GDX_VISUALSCRIPTING
         /// <summary>
         ///     Draw the Visual Scripting settings section.
         /// </summary>
         /// <param name="settings">Serialized <see cref="GDXConfig" /> object to be modified.</param>
-#if GDX_VISUALSCRIPTING
         public static void Draw(SerializedObject settings)
         {
             GUI.enabled = true;

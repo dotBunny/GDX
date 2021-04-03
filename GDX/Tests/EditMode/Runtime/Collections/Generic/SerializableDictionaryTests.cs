@@ -3,6 +3,7 @@
 
 using GDX.Collections.Generic;
 using NUnit.Framework;
+using UnityEngine;
 
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable
@@ -29,9 +30,9 @@ namespace Runtime.Collections.Generic
         [Category("GDX.Tests")]
         public void SaveSerializedData_MockData_ReturnsSerializedDataLength()
         {
-            SerializableDictionary<int, string> mockDictionary = new SerializableDictionary<int, string>();
-            mockDictionary.Add(1, "one");
-            mockDictionary.Add(2, "two");
+            SerializableDictionary<int, string> mockDictionary =
+                new SerializableDictionary<int, string> {{1, "one"}, {2, "two"}};
+
             mockDictionary.SaveSerializedData();
 
             bool evaluate = mockDictionary.GetSerializedDataLength() == 2;
@@ -43,9 +44,9 @@ namespace Runtime.Collections.Generic
         [Category("GDX.Tests")]
         public void IsSerializableType_UnityObject_ReturnsTrue()
         {
-            SerializableDictionary<UnityEngine.Object, string> mockDictionary = new SerializableDictionary<UnityEngine.Object, string>();
+            SerializableDictionary<Object, string> mockDictionary = new SerializableDictionary<Object, string>();
 
-            bool evaluate = mockDictionary.IsSerializableType(typeof(UnityEngine.Object));
+            bool evaluate = mockDictionary.IsSerializableType(typeof(Object));
 
             Assert.IsTrue(evaluate);
         }

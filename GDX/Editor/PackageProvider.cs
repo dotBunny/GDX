@@ -211,11 +211,10 @@ namespace GDX.Editor
                     continue;
                 }
 
-                string[] defines = null;
 #if UNITY_2020_1_OR_NEWER
-                PlayerSettings.GetScriptingDefineSymbolsForGroup(group, out defines);
+                PlayerSettings.GetScriptingDefineSymbolsForGroup(group, out string[] defines);
 #else
-                defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(group).Split(';');
+                string[] defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(group).Split(';');
 #endif
                 int location = defines.FirstIndexOfItem("GDX");
 
