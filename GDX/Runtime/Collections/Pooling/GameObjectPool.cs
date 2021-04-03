@@ -431,7 +431,7 @@ namespace GDX.Collections.Pooling
         {
             if (item == null) return;
 
-            Object unityObject = null;
+            Object unityObject;
             if (item is IGameObjectPoolItem poolItem && poolItem.IsValidItem())
             {
                 unityObject = poolItem.GetGameObject();
