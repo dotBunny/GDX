@@ -69,34 +69,6 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
-        public void AddWithExpandCheckUniqueValue_NonUniqueInteger_ReturnsFalse()
-        {
-            SimpleList<int> listOfIntegers = new SimpleList<int>(3);
-            listOfIntegers.AddWithExpandCheckUniqueValue(1);
-            listOfIntegers.AddWithExpandCheckUniqueValue(2);
-            listOfIntegers.AddWithExpandCheckUniqueValue(3);
-
-            bool evaluate = listOfIntegers.AddWithExpandCheckUniqueValue(1);
-
-            Assert.IsFalse(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void AddWithExpandCheckUniqueValue_UniqueInteger_ReturnsTrue()
-        {
-            SimpleList<int> listOfIntegers = new SimpleList<int>(3);
-            listOfIntegers.AddWithExpandCheckUniqueValue(1);
-            listOfIntegers.AddWithExpandCheckUniqueValue(2);
-            listOfIntegers.AddWithExpandCheckUniqueValue(3);
-
-            bool evaluate = listOfIntegers.AddWithExpandCheckUniqueValue(4);
-
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
         public void AddUncheckedUniqueItem_NonUniqueString_ReturnsFalse()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(3);
@@ -128,41 +100,6 @@ namespace Runtime
             listOfStrings.AddUncheckedUniqueItem("test2");
 
             Assert.Throws<IndexOutOfRangeException>(() => { listOfStrings.AddUncheckedUniqueItem("test3"); });
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void AddUncheckedUniqueValue_NonUniqueInteger_ReturnsFalse()
-        {
-            SimpleList<int> listOfIntegers = new SimpleList<int>(3);
-            listOfIntegers.AddUncheckedUniqueValue(1);
-            listOfIntegers.AddUncheckedUniqueValue(2);
-
-            bool evaluate = listOfIntegers.AddUncheckedUniqueValue(2);
-
-            Assert.IsFalse(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void AddUncheckedUniqueValue_UniqueIntegerWithRoom_NoException()
-        {
-            SimpleList<int> listOfIntegers = new SimpleList<int>(3);
-            listOfIntegers.AddUncheckedUniqueValue(1);
-            listOfIntegers.AddUncheckedUniqueValue(2);
-
-            Assert.DoesNotThrow(() => { listOfIntegers.AddUncheckedUniqueValue(3); });
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void AddUncheckedUniqueValue_UniqueIntegerWithNoRoom_ThrowsException()
-        {
-            SimpleList<int> listOfIntegers = new SimpleList<int>(2);
-            listOfIntegers.AddUncheckedUniqueValue(1);
-            listOfIntegers.AddUncheckedUniqueValue(2);
-
-            Assert.Throws<IndexOutOfRangeException>(() => { listOfIntegers.AddUncheckedUniqueValue(3); });
         }
 
         [Test]
@@ -201,50 +138,6 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
-        public void ContainsValue_FirstValue_ReturnsTrue()
-        {
-            const int searchValue = 0;
-
-            bool evaluate = _mockData.ContainsValue(searchValue);
-
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void ContainsValue_LastValue_ReturnsTrue()
-        {
-            const int searchValue = 4;
-
-            bool evaluate = _mockData.ContainsValue(searchValue);
-
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void ContainsValue_MidValue_ReturnsTrue()
-        {
-            const int searchValue = 1;
-
-            bool evaluate = _mockData.ContainsValue(searchValue);
-
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void ContainsValue_MissingValue_ReturnsFalse()
-        {
-            const int searchValue = 12;
-
-            bool evaluate = _mockData.ContainsValue(searchValue);
-
-            Assert.IsFalse(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
         public void RemoveFirstItem_MockData_RemovedItem()
         {
             CircularBuffer<int> searchItem = new CircularBuffer<int>(3, new[] {0, 1, 2});
@@ -262,26 +155,6 @@ namespace Runtime
 
             bool evaluate = listItems.Array[1] != searchItem &&
                             listItems.ContainsItem(searchItem);
-
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void RemoveFirstValue_MockData_RemovedValue()
-        {
-            const int searchValue = 1;
-            SimpleList<int> listValues = new SimpleList<int>(6);
-            listValues.AddUnchecked(0);
-            listValues.AddUnchecked(searchValue);
-            listValues.AddUnchecked(2);
-            listValues.AddUnchecked(3);
-            listValues.AddUnchecked(4);
-            listValues.AddUnchecked(searchValue);
-
-            listValues.RemoveFirstValue(searchValue);
-
-            bool evaluate = listValues.Array[1] == 2 && listValues.ContainsValue(searchValue);
 
             Assert.IsTrue(evaluate);
         }
@@ -329,46 +202,6 @@ namespace Runtime
                             listItems.ContainsItem(searchItem);
 
             Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void RemoveLastValue_MockData_RemovedValue()
-        {
-            SimpleList<int> listValues = new SimpleList<int>(7);
-            listValues.AddUnchecked(0);
-            listValues.AddUnchecked(1);
-            listValues.AddUnchecked(2);
-            listValues.AddUnchecked(3);
-            listValues.AddUnchecked(4);
-            listValues.AddUnchecked(1);
-            listValues.AddUnchecked(2);
-
-            listValues.RemoveLastValue(1);
-
-            bool evaluate = listValues.Array[5] == 2;
-
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void RemoveValues_MockData_RemovedValue()
-        {
-            SimpleList<int> listValues = new SimpleList<int>(7);
-            listValues.AddUnchecked(0);
-            listValues.AddUnchecked(1);
-            listValues.AddUnchecked(2);
-            listValues.AddUnchecked(3);
-            listValues.AddUnchecked(4);
-            listValues.AddUnchecked(1);
-            listValues.AddUnchecked(2);
-
-            listValues.RemoveValues(1);
-
-            bool evaluate = listValues.ContainsValue(1);
-
-            Assert.IsFalse(evaluate);
         }
     }
 }

@@ -4,7 +4,6 @@
 using System;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -234,7 +233,7 @@ namespace GDX.Editor
 #if UNITY_2020_2_OR_NEWER
                 PlayerSettings.SetScriptingDefineSymbolsForGroup(@group, newDefines);
 #else
-                StringBuilder output = new StringBuilder();
+                System.Text.StringBuilder output = new System.Text.StringBuilder();
                 foreach (string s in newDefines)
                 {
                     output.Append(s);
@@ -242,8 +241,6 @@ namespace GDX.Editor
                 }
                 PlayerSettings.SetScriptingDefineSymbolsForGroup(group,output.ToString().TrimEnd(new[] {';'}));
 #endif
-
-
             }
         }
 
