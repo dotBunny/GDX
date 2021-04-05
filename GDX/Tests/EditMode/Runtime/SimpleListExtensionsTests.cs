@@ -161,6 +161,26 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
+        public void RemoveFirstItem_MockData_NoItemReturnsFalse()
+        {
+            CircularBuffer<int> searchItem = new CircularBuffer<int>(3, new[] {0, 1, 2});
+            SimpleList<CircularBuffer<int>> listItems = new SimpleList<CircularBuffer<int>>(6);
+
+            // Build test rig
+            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(searchItem);
+            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(searchItem);
+            listItems.AddUnchecked(new CircularBuffer<int>(5));
+
+            bool evaluate = listItems.RemoveFirstItem(new CircularBuffer<int>(12));
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
         public void RemoveItems_MockData_RemovedItems()
         {
             CircularBuffer<int> searchItem = new CircularBuffer<int>(3, new[] {0, 1, 2});
@@ -202,6 +222,26 @@ namespace Runtime
                             listItems.ContainsItem(searchItem);
 
             Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void RemoveLastItem_MockData_NoItemReturnsFalse()
+        {
+            CircularBuffer<int> searchItem = new CircularBuffer<int>(3, new[] {0, 1, 2});
+            SimpleList<CircularBuffer<int>> listItems = new SimpleList<CircularBuffer<int>>(6);
+
+            // Build test rig
+            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(searchItem);
+            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(searchItem);
+            listItems.AddUnchecked(new CircularBuffer<int>(5));
+
+            bool evaluate = listItems.RemoveLastItem(new CircularBuffer<int>(12));
+
+            Assert.IsFalse(evaluate);
         }
     }
 }
