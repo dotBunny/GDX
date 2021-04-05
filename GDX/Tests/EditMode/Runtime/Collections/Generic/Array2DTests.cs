@@ -138,6 +138,58 @@ namespace Runtime.Collections.Generic
 
         [Test]
         [Category("GDX.Tests")]
+        public void RotateClockwise_MockDataOdd_ValuesRotated()
+        {
+            Array2D<int> mockArray = new Array2D<int>(5, 2)
+            {
+                [0, 0] = 0,
+                [1, 0] = 1,
+                [2, 0] = 2,
+                [3, 0] = 3,
+                [4, 0] = 4,
+
+                [0, 1] = 5,
+                [1, 1] = 6,
+                [2, 1] = 7,
+                [3, 1] = 8,
+                [4, 1] = 9
+            };
+
+            mockArray.RotateClockwise();
+
+            bool evaluate = mockArray[0, 4] == 0 && mockArray[1, 2] == 7;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void RotateCounterClockwise_MockDataOdd_ValuesRotated()
+        {
+            Array2D<int> mockArray = new Array2D<int>(5, 2)
+            {
+                [0, 0] = 0,
+                [1, 0] = 1,
+                [2, 0] = 2,
+                [3, 0] = 3,
+                [4, 0] = 4,
+
+                [0, 1] = 5,
+                [1, 1] = 6,
+                [2, 1] = 7,
+                [3, 1] = 8,
+                [4, 1] = 9
+            };
+
+            mockArray.RotateCounterClockwise();
+
+            bool evaluate = mockArray[0, 4] == 9 && mockArray[1, 2] == 2;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
         public void ToMultiDimensionalArray_MockData_MatchingValues()
         {
             Array2D<int> mockArray = new Array2D<int>(2, 2) {[0, 0] = 0, [1, 0] = 1};
