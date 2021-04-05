@@ -3,7 +3,7 @@
 
 namespace GDX.Collections.Pooling
 {
-    public struct ManagedArrayPool<T>
+    public struct JaggedArrayWithCount<T>
     {
         public T[][] Pool;
         public int Count;

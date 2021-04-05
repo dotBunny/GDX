@@ -3,14 +3,14 @@
 
 namespace GDX.Collections.Pooling
 {
-    public struct ManagedArrayPool_PowerOfTwoLengths<T>
+    public struct ArrayPool<T>
     {
-        public ManagedArrayPool<T>[] ArrayPools;
+        public JaggedArrayWithCount<T>[] ArrayPools;
         public int[] MaxPoolCapacities;
 
-        public ManagedArrayPool_PowerOfTwoLengths(int[] initialArrayStorageCounts, int[] maxPoolCapacities)
+        public ArrayPool(int[] initialArrayStorageCounts, int[] maxPoolCapacities)
         {
-            ArrayPools = new ManagedArrayPool<T>[30];
+            ArrayPools = new JaggedArrayWithCount<T>[30];
             MaxPoolCapacities = maxPoolCapacities;
 
             for (int i = 0; i < 30; i++)
@@ -24,7 +24,7 @@ namespace GDX.Collections.Pooling
                     arrayPoolForSize[j] = new T[1 << i];
                 }
 
-                ManagedArrayPool<T> pool = new ManagedArrayPool<T>();
+                JaggedArrayWithCount<T> pool = new JaggedArrayWithCount<T>();
 
                 pool.Pool = arrayPoolForSize;
                 pool.Count = maxPoolCapacities[i];
@@ -40,7 +40,7 @@ namespace GDX.Collections.Pooling
             requestedSize |= requestedSize >> 4;
             requestedSize |= requestedSize >> 8;
             requestedSize |= requestedSize >> 16;
-            int nextPowerOfTwo = requestedSize++;
+            int nextPowerOfTwo = requestedSize + 1;
 
             LongDoubleConversionUnion u;
             u.doubleValue = 0.0;
@@ -48,7 +48,7 @@ namespace GDX.Collections.Pooling
             u.doubleValue -= 4503599627370496.0;
             int index = (int)(u.longValue >> 52) - 0x3FF;
 
-            ManagedArrayPool<T> arrayPool = ArrayPools[index];
+            JaggedArrayWithCount<T> arrayPool = ArrayPools[index];
 
             T[] array;
             if (arrayPool.Count < 1)
@@ -77,7 +77,7 @@ namespace GDX.Collections.Pooling
             u.doubleValue -= 4503599627370496.0;
             int index = (int)(u.longValue >> 52) - 0x3FF;
 
-            ManagedArrayPool<T> arrayPool = ArrayPools[index];
+            JaggedArrayWithCount<T> arrayPool = ArrayPools[index];
             int maxPoolCapacity = MaxPoolCapacities[index];
             int currentPoolCapacity = arrayPool.Pool.Length;
             int nextPoolCapacity = currentPoolCapacity * 2;
