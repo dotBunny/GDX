@@ -1,10 +1,12 @@
 // dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Runtime.InteropServices;
+
 namespace GDX.Collections.Pooling
 {
     /// <summary>
-    /// An object pool for arrays with power-of-two lengths.
+    ///     An object pool for arrays with power-of-two lengths.
     /// </summary>
     /// <typeparam name="T">The data type contained by pooled arrays.</typeparam>
     public struct ArrayPool<T>
@@ -13,7 +15,8 @@ namespace GDX.Collections.Pooling
         public int[] MaxPoolCapacities;
 
         /// <summary>
-        /// Initialize the array pool with initial and maximum sizes for each power-of-two, 0 through 30 inclusive (the maximum power-of-two length supported in C#).
+        ///     Initialize the array pool with initial and maximum sizes for each power-of-two, 0 through 30 inclusive (the maximum
+        ///     power-of-two length supported in C#).
         /// </summary>
         /// <param name="initialPoolCounts"></param>
         /// <param name="maxPoolCapacities"></param>
@@ -43,9 +46,13 @@ namespace GDX.Collections.Pooling
         }
 
         /// <summary>
-        /// Allocates an array from the pool. Finds an array of the smallest power-of-two length larger than or equal to the requested size.
+        ///     Allocates an array from the pool. Finds an array of the smallest power-of-two length larger than or equal to the
+        ///     requested size.
         /// </summary>
-        /// <param name="requestedSize">The desired array length. The returned array will be the smallest power-of-two larger than or equal to this size.</param>
+        /// <param name="requestedSize">
+        ///     The desired array length. The returned array will be the smallest power-of-two larger than
+        ///     or equal to this size.
+        /// </param>
         /// <returns></returns>
         public T[] GetArrayFromPool(int requestedSize)
         {
@@ -84,12 +91,14 @@ namespace GDX.Collections.Pooling
         }
 
         /// <summary>
-        /// Return a power-of-two sized array to the pool. Only pass power-of-two sized arrays to this function. Does not clear the array.
+        ///     Return a power-of-two sized array to the pool. Only pass power-of-two sized arrays to this function. Does not clear
+        ///     the array.
         /// </summary>
         /// <param name="array">The power-of-two sized array to return to the pool. Power-of-two sizes only.</param>
         public void ReturnArrayToPool(T[] array)
         {
-            uint length = unchecked((uint)array.Length); // Counting on people to be cool and not pass in a non-power-of-two here.
+            uint length =
+                unchecked((uint)array.Length); // Counting on people to be cool and not pass in a non-power-of-two here.
 
             LongDoubleConversionUnion u;
             u.doubleValue = 0.0;
@@ -110,10 +119,10 @@ namespace GDX.Collections.Pooling
         }
     }
 
-    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
+    [StructLayout(LayoutKind.Explicit)]
     public struct LongDoubleConversionUnion
     {
-       [System.Runtime.InteropServices.FieldOffset(0)] public long longValue;
-       [System.Runtime.InteropServices.FieldOffset(0)] public double doubleValue;
+        [FieldOffset(0)] public long longValue;
+        [FieldOffset(0)] public double doubleValue;
     }
 }

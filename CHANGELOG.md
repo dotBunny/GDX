@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.8] - 2021-04-05
+## [1.3.0] - 2021-04-06
 ***"Visual Time"***
 > An effort to make GDX more accessible to Visual Scripting.
 
@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automated compatibility tests for 2018.4 LTS, 2019.4 LTS and 2020.3 LTS have been added to internal CI.
 - Automated portability checks for .NET Standard 2.0 and .NET Core 3.1 to internal CI.
 - Support for Visual Scripting (Bolt) with options in **Project Settings** to add a currated portion of the `GDX` API for usage with Visual Scripting.
-- New array pooling type `ManagedArrayPools`, with corresponding `ManagedArrayPool_PowerOfTwoLengths` implementation.
+- New array pooling type `ArrayPool`, with corresponding `JaggedArrayWithCount`.
 - Numerous collections gained `Reverse()` methods, and the newly added `Array2D` also having `ReverseRows()` and `ReverseColumns()`.
 
 ### Changed
@@ -28,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unsupported attributes for Unity 2018.
 
 ### Removed
-- Struct type extension methods have been removed from `IListExtensions` and `SimpleListExtensions`; explicitly to avoid obsfucating boxing types and hiding a problem.
+- Struct specific extension methods have been removed from `IListExtensions` and `SimpleListExtensions`; explicitly to avoid obsfucating boxing types and hiding a problem.
 
 ## [1.2.7] - 2021-03-16
 ***"Never Say Never"***
