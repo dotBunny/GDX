@@ -4,6 +4,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2021-04-06
+***"Visual Time"***
+> An effort to make GDX more accessible to Visual Scripting.
+
+### Added
+- Automated compatibility tests for 2018.4 LTS, 2019.4 LTS and 2020.3 LTS have been added to internal CI.
+- Automated portability checks for .NET Standard 2.0 and .NET Core 3.1 to internal CI.
+- Support for Visual Scripting (Bolt) with options in **Project Settings** to add a currated portion of the `GDX` API for usage with Visual Scripting.
+- New array pooling type `ArrayPool`, with corresponding `JaggedArrayWithCount`.
+- Numerous collections gained `Reverse()` methods, and the newly added `Array2D` also having `ReverseRows()` and `ReverseColumns()`.
+
+### Changed
+- Stated support for GDX has shifted to current release cycle Unity, with support for 2018.4 LTS, 2019.4 LTS and 2020.3 LTS. This doesn't mean that it will not work with other versions, just our automation only checks against LTS and current versions.
+- Removed the extension `Get` method from `GameObjectPool` to match the other methods.
+- Only Unity 2020+ supports the Package Manager resolve function, previous versions of Unity will be presented with an options dialog.
+- Consilidated access/creation of `GDXConfig`.
+- Altered `NativeArray2D` to index accessor to function like `Array2D`.
+
+### Fixed
+- Force the Package Manager to resolve the package manifest during an update.
+- Occasional infinite loop importing `GDXConfig` with a cache server.
+- Unsupported attributes for Unity 2018.
+
+### Removed
+- Struct specific extension methods have been removed from `IListExtensions` and `SimpleListExtensions`; explicitly to avoid obsfucating boxing types and hiding a problem.
+
 ## [1.2.7] - 2021-03-16
 ***"Never Say Never"***
 > Updates have been tested across different installation methods, a pooling system, and some fixes!

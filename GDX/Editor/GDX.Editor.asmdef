@@ -5,6 +5,9 @@
         "GDX",
         "Unity.ScriptableBuildPipeline",
         "Unity.ScriptableBuildPipeline.Editor",
+        "Unity.VisualScripting.Core",
+        "Unity.VisualScripting.Core.Editor",
+        "Unity.VisualScripting.Flow.Editor",
         "Unity.Build",
         "Unity.Build.Classic"
     ],
@@ -22,6 +25,11 @@
             "name": "com.unity.platforms",
             "expression": "0.9",
             "define": "GDX_PLATFORMS"
+        },
+        {
+            "name": "com.unity.visualscripting",
+            "expression": "1.5.2",
+            "define": "GDX_VISUALSCRIPTING"
         }
     ],
     "noEngineReferences": false

@@ -10,6 +10,7 @@ namespace GDX.Collections.Pooling
     ///     <see cref="GameObject" /> based functionality extending the <see cref="ListManagedPool" /> to better support
     ///     <see cref="GameObject" /> patterns.
     /// </summary>
+    [VisualScriptingCollection]
     public static class GameObjectPool
     {
         /// <summary>
@@ -73,7 +74,7 @@ namespace GDX.Collections.Pooling
         /// <param name="triggerOnSpawnedFromPool">Should the <see cref="OnSpawnedFromPoolAction"/> be called when getting this item.</param>
         /// <returns>A <see cref="GameObject" /> from the <see cref="ListManagedPool"/>, or null if no item is available.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GameObject Get(this ListManagedPool pool, bool triggerOnSpawnedFromPool = true)
+        public static GameObject Get(ListManagedPool pool, bool triggerOnSpawnedFromPool = true)
         {
             // Pull
             object item = pool.Get(false);
@@ -430,7 +431,7 @@ namespace GDX.Collections.Pooling
         {
             if (item == null) return;
 
-            Object unityObject = null;
+            Object unityObject;
             if (item is IGameObjectPoolItem poolItem && poolItem.IsValidItem())
             {
                 unityObject = poolItem.GetGameObject();

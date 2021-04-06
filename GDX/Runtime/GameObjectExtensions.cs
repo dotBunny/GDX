@@ -12,6 +12,7 @@ namespace GDX
     /// <remarks>
     ///     Used for MonoBehaviour workflows.
     /// </remarks>
+    [VisualScriptingExtension]
     public static class GameObjectExtensions
     {
         /// <summary>

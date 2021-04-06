@@ -4,11 +4,11 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using GDX.Editor.ProjectSettings;
 using GDX.IO.Compression;
 using UnityEditor;
 using UnityEditor.VersionControl;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace GDX.Editor
 {
@@ -52,13 +52,23 @@ namespace GDX.Editor
             // Create a copy of the local package provider
             // ReSharper disable once HeapView.ObjectAllocation.Evident
             LocalPackage = new PackageProvider();
-            if (!ConfigProvider.Get().updateProviderCheckForUpdates)
+
+            EditorApplication.delayCall += DelayCall;
+
+        }
+
+        /// <summary>
+        /// Execute delayed logic that won't interfere with a current import process.
+        /// </summary>
+        private static void DelayCall()
+        {
+            if (!GDXConfig.Get().updateProviderCheckForUpdates)
             {
                 return;
             }
 
             // Should we check for updates?
-            DateTime targetDate = GetLastChecked().AddDays(Settings.UpdateDayCountSetting);
+            DateTime targetDate = GetLastChecked().AddDays(AutomaticUpdatesSettings.UpdateDayCountSetting);
             if (DateTime.Now >= targetDate)
             {
                 CheckForUpdates();
@@ -97,6 +107,11 @@ namespace GDX.Editor
         /// <param name="forceUpgrade">Should we bypass all safety checks?</param>
         public static void AttemptUpgrade(bool forceUpgrade = false)
         {
+            if (UpdatePackageDefinition == null)
+            {
+                UpdatePackageDefinition = GetMainPackageDefinition();
+            }
+
             string messageStart =
                 $"There is a new version of GDX available ({UpdatePackageDefinition.version}).\n";
             if (!forceUpgrade && !IsUpgradable())
@@ -142,6 +157,7 @@ namespace GDX.Editor
                     {
                         SetLastNotifiedVersion(UpdatePackageDefinition.version);
                     }
+
                     break;
                 case PackageProvider.InstallationType.Assets:
                     if (EditorUtility.DisplayDialog("GDX Update Available",
@@ -198,7 +214,6 @@ namespace GDX.Editor
         {
             switch (LocalPackage.InstallationMethod)
             {
-
                 case PackageProvider.InstallationType.GitHub:
                 case PackageProvider.InstallationType.GitHubBranch:
                 case PackageProvider.InstallationType.GitHubTag:
@@ -472,6 +487,15 @@ namespace GDX.Editor
                 if (newFileContent.Count != lockFileLength)
                 {
                     File.WriteAllLines(packageManifestLockFile, newFileContent.ToArray());
+
+#if UNITY_2020_1_OR_NEWER
+                    // Tell PackageManager to resolve our newly altered file.
+                    UnityEditor.PackageManager.Client.Resolve();
+#else
+                    EditorUtility.DisplayDialog("GDX Package Update",
+                        "Your version of Unity requires that you either loose focus and return to Unity, or simply restart the editor to detect the change.",
+                        "OK");
+#endif
                 }
             }
         }

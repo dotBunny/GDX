@@ -10,6 +10,7 @@ namespace GDX
     ///     A collection of display related helper utilities.
     /// </summary>
     /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
+    [VisualScriptingUtility]
     public static class Display
     {
         /// <summary>
@@ -39,6 +40,7 @@ namespace GDX
         /// </summary>
         /// <returns>true/false</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // ReSharper disable once InconsistentNaming
         public static bool IsHDRSupported()
         {
 #if UNITY_PS4
@@ -54,6 +56,7 @@ namespace GDX
         /// </summary>
         /// <returns>true/false</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // ReSharper disable once InconsistentNaming
         public static bool IsHDREnabled()
         {
 #if UNITY_PS4

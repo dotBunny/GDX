@@ -4,10 +4,8 @@
 using System;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -124,12 +122,7 @@ namespace GDX.Editor
         /// </summary>
         public PackageProvider()
         {
-
-            // Make sure that the project has the GDX preprocessor added
-            if (ConfigProvider.Get().environmentScriptingDefineSymbol)
-            {
-                EnsureScriptingDefineSymbol();
-            }
+            EditorApplication.delayCall += DelayCall;
 
             // Find Local Definition
             // ReSharper disable once StringLiteralTypo
@@ -177,6 +170,18 @@ namespace GDX.Editor
         }
 
         /// <summary>
+        /// Execute delayed logic that won't interfere with a current import process.
+        /// </summary>
+        private void DelayCall()
+        {
+            // Make sure that the project has the GDX preprocessor added
+            if (GDXConfig.Get().environmentScriptingDefineSymbol)
+            {
+                EnsureScriptingDefineSymbol();
+            }
+        }
+
+        /// <summary>
         ///     Ensure that the GDX define is present across all viable platforms.
         /// </summary>
         public static void EnsureScriptingDefineSymbol()
@@ -205,11 +210,10 @@ namespace GDX.Editor
                     continue;
                 }
 
-                string[] defines = null;
 #if UNITY_2020_1_OR_NEWER
-                PlayerSettings.GetScriptingDefineSymbolsForGroup(group, out defines);
+                PlayerSettings.GetScriptingDefineSymbolsForGroup(group, out string[] defines);
 #else
-                defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(group).Split(';');
+                string[] defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(group).Split(';');
 #endif
                 int location = defines.FirstIndexOfItem("GDX");
 
@@ -229,7 +233,7 @@ namespace GDX.Editor
 #if UNITY_2020_2_OR_NEWER
                 PlayerSettings.SetScriptingDefineSymbolsForGroup(@group, newDefines);
 #else
-                StringBuilder output = new StringBuilder();
+                System.Text.StringBuilder output = new System.Text.StringBuilder();
                 foreach (string s in newDefines)
                 {
                     output.Append(s);
@@ -237,8 +241,6 @@ namespace GDX.Editor
                 }
                 PlayerSettings.SetScriptingDefineSymbolsForGroup(group,output.ToString().TrimEnd(new[] {';'}));
 #endif
-
-
             }
         }
 

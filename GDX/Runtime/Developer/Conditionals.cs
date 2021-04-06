@@ -47,5 +47,15 @@ namespace GDX.Developer
 #else
         public const bool HasPlatformsPackage = false;
 #endif
+
+
+        /// <summary>
+        ///     Is a compatible version of the Visual Scripting package present in the project?
+        /// </summary>
+#if GDX_VISUALSCRIPTING
+        public const bool HasVisualScriptingPackage = true;
+#else
+        public const bool HasVisualScriptingPackage = false;
+#endif
     }
 }

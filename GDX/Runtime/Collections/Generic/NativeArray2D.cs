@@ -13,8 +13,11 @@ namespace GDX.Collections.Generic
     ///     A 2-dimension <see cref="NativeArray{T}" /> backed array.
     /// </summary>
     /// <remarks>
+    ///     <para>
     ///     The <see cref="NativeArray2D{T}" /> is backed by a <see cref="Unity.Collections.NativeArray{T}" /> which requires
     ///     UnityEngine.CoreModule.dll.
+    ///     </para>
+    ///     <para>Use X (horizontal) and Y (vertical) arrangement.</para>
     /// </remarks>
     /// <typeparam name="T">Type of objects.</typeparam>
     public struct NativeArray2D<T> : IDisposable where T : struct
@@ -39,11 +42,11 @@ namespace GDX.Collections.Generic
         /// <summary>
         ///     Create a <see cref="NativeArray2D{T}" />.
         /// </summary>
-        /// <param name="columnCount">The number of columns (X).</param>
-        /// <param name="rowCount">The number of rows (Y).</param>
+        /// <param name="rowCount">The number of rows (X).</param>
+        /// <param name="columnCount">The number of columns (Y).</param>
         /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
         /// <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
-        public NativeArray2D(int columnCount, int rowCount, Allocator allocator,
+        public NativeArray2D(int rowCount, int columnCount, Allocator allocator,
             NativeArrayOptions nativeArrayOptions)
         {
             ColumnCount = columnCount;
@@ -54,8 +57,8 @@ namespace GDX.Collections.Generic
         /// <summary>
         ///     Get a typed object at a specific 2-dimensional index in <see cref="Array" />.
         /// </summary>
-        /// <param name="x">The column number (X).</param>
-        /// <param name="y">The row number (Y).</param>
+        /// <param name="x">The row/line number (vertical axis).</param>
+        /// <param name="y">The column number (horizontal axis).</param>
         public T this[int x, int y]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -82,20 +85,6 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Properly dispose of <see cref="Array" />.
-        /// </summary>
-        public void Dispose()
-        {
-            if (!Array.IsCreated)
-            {
-                return;
-            }
-
-            Array.Dispose();
-            Array = default;
-        }
-
-        /// <summary>
         ///     Add additional columns to the dataset.
         /// </summary>
         /// <param name="numberOfNewColumns">The number of columns add.</param>
@@ -114,6 +103,94 @@ namespace GDX.Collections.Generic
             }
 
             ColumnCount = newLengthOfArrays;
+        }
+
+        /// <summary>
+        ///     Properly dispose of <see cref="Array" />.
+        /// </summary>
+        public void Dispose()
+        {
+            if (!Array.IsCreated)
+            {
+                return;
+            }
+
+            Array.Dispose();
+            Array = default;
+        }
+
+        /// <summary>
+        ///     Reverse the order of the columns in the backing <see cref="Array" />.
+        /// </summary>
+        public void ReverseColumns()
+        {
+            T temporaryStorage;
+
+            int lastIndex = ColumnCount - 1;
+            int middleIndex = ColumnCount / 2;
+
+            for (int rowIndex = 0; rowIndex < RowCount; rowIndex++)
+            {
+                for (int columnIndex = 0; columnIndex < middleIndex; columnIndex++)
+                {
+                    // Cache our indexes
+                    int currentElementIndex = rowIndex * ColumnCount + columnIndex;
+                    int swapElementIndex = rowIndex * ColumnCount + (lastIndex - columnIndex);
+
+                    // Store the swap value
+                    temporaryStorage = Array[currentElementIndex];
+
+                    // Swap values
+                    Array[currentElementIndex] = Array[swapElementIndex];
+                    Array[swapElementIndex] = temporaryStorage;
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Reverse the order of the rows in the backing <see cref="Array" />.
+        /// </summary>
+        public void ReverseRows()
+        {
+            NativeArray<T> temporaryStorage =
+                new NativeArray<T>(ColumnCount, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
+
+            int lastIndex = RowCount - 1;
+            int middleIndex = RowCount / 2;
+
+            for (int rowIndex = 0; rowIndex < middleIndex; rowIndex++)
+            {
+                // Save existing line
+                NativeArray<T>.Copy(Array, rowIndex * ColumnCount, temporaryStorage, 0, ColumnCount);
+
+                // Get line on other side of the flip and put in place
+                NativeArray<T>.Copy(Array, (lastIndex - rowIndex) * ColumnCount, Array, rowIndex * ColumnCount,
+                    ColumnCount);
+
+                // Write other side content
+                NativeArray<T>.Copy(temporaryStorage, 0, Array, (lastIndex - rowIndex) * ColumnCount, ColumnCount);
+            }
+
+            temporaryStorage.Dispose();
+        }
+
+        /// <summary>
+        ///     Creates a copy of the internal array as a traditional multi-dimensional array.
+        /// </summary>
+        /// <remarks>Useful for scenarios where fills need to be done with [,] structured multi-dimensional arrays.</remarks>
+        /// <returns>A new copy of the backing <see cref="Array" /> in multi-dimensional form.</returns>
+        public T[,] ToMultiDimensionalArray()
+        {
+            T[,] returnArray = new T[RowCount, ColumnCount];
+            for (int x = 0; x < RowCount; x++)
+            {
+                for (int y = 0; y < ColumnCount; y++)
+                {
+                    returnArray[x, y] = Array[x * ColumnCount + y];
+                }
+            }
+
+            return returnArray;
         }
     }
 }

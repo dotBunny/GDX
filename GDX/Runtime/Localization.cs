@@ -13,6 +13,7 @@ namespace GDX
     /// <summary>
     ///     A collection of localization related helper utilities.
     /// </summary>
+    [VisualScriptingUtility]
     public static class Localization
     {
         /// <summary>
@@ -34,12 +35,12 @@ namespace GDX
         }
 
         /// <summary>
-        ///     The UTC ISO 8601 compliant <see cref="System.DateTime" />.<see cref="DateTime.ToString(System.String)" />.
+        ///     The UTC ISO 8601 compliant <see cref="DateTime.ToString(System.String)" />.
         /// </summary>
         public const string UtcTimestampFormat = "yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz";
 
         /// <summary>
-        ///     The local ISO 8601 compliant <see cref="System.DateTime" />.<see cref="DateTime.ToString(System.String)" />.
+        ///     The local ISO 8601 compliant <see cref="DateTime.ToString(System.String)" />.
         /// </summary>
         public const string LocalTimestampFormat = "yyyy-MM-dd HH\\:mm\\:ss";
 
@@ -110,6 +111,7 @@ namespace GDX
         /// <param name="targetLanguage">The target <see cref="Language" />.</param>
         /// <returns>The language code.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // ReSharper disable once InconsistentNaming
         public static string GetIETF(this Language targetLanguage)
         {
             switch (targetLanguage)
@@ -196,7 +198,11 @@ namespace GDX
         ///     Can be used to avoid issues with culture settings without a Gregorian Calendar. Configurable to automatically
         ///     execute after assemblies are loaded.
         /// </remarks>
+#if UNITY_2019_1_OR_NEWER
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+#else
+        [RuntimeInitializeOnLoadMethod]
+#endif
         public static void SetDefaultCulture()
         {
             GDXConfig config = GDXConfig.Get();

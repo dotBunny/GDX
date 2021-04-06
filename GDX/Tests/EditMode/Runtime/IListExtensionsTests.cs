@@ -48,31 +48,6 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
-        public void AddUniqueValue_UniqueValue_ReturnsTrue()
-        {
-            const int searchValue = 1;
-            List<int> listValues = new List<int> {0, 2, 3};
-
-            bool evaluate = listValues.AddUniqueValue(searchValue);
-
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void AddUniqueValue_NonUniqueValue_ReturnsFalse()
-        {
-            const int searchValue = 1;
-            List<int> listValues = new List<int> {0, 2, 3};
-
-            listValues.AddUniqueValue(searchValue);
-            bool evaluate = listValues.AddUniqueValue(searchValue);
-
-            Assert.IsFalse(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
         public void ContainsItem_MockData_ReturnsIndex()
         {
             CircularBuffer<int> mockObject = new CircularBuffer<int>(5);
@@ -86,25 +61,6 @@ namespace Runtime
             };
 
             bool evaluate = mockData.ContainsItem(mockObject);
-
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void ContainsValue_MockData_ReturnsIndex()
-        {
-            const int searchValue = 1;
-            List<int> mockValues = new List<int>
-            {
-                0,
-                searchValue,
-                2,
-                3,
-                searchValue
-            };
-
-            bool evaluate = mockValues.ContainsValue(searchValue);
 
             Assert.IsTrue(evaluate);
         }
@@ -147,45 +103,6 @@ namespace Runtime
             };
 
             bool evaluate = listItems.RemoveFirstItem(mockData);
-
-            Assert.IsFalse(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void RemoveFirstValue_MockData_RemovedItem()
-        {
-            const int searchValue = 9;
-
-            List<int> listItems = new List<int>
-            {
-                2,
-                searchValue,
-                4,
-                15,
-                searchValue
-            };
-            listItems.RemoveFirstValue(searchValue);
-
-            bool evaluate = listItems[0] != searchValue &&
-                            listItems.ContainsValue(searchValue);
-
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void RemoveFirstValue_BadMockData_ReturnsFalse()
-        {
-            List<int> listItems = new List<int>
-            {
-                2,
-                9,
-                4,
-                15,
-                9
-            };
-            bool evaluate = listItems.RemoveFirstValue(6);
 
             Assert.IsFalse(evaluate);
         }
@@ -264,69 +181,6 @@ namespace Runtime
             listItems.RemoveItems(searchItem);
 
             bool evaluate = listItems.ContainsItem(searchItem);
-
-            Assert.IsFalse(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void RemoveValues_MockData_RemovedValues()
-        {
-            const int searchValue = 9;
-
-            List<int> listItems = new List<int>
-            {
-                2,
-                searchValue,
-                4,
-                15,
-                searchValue,
-                9
-            };
-
-            listItems.RemoveValues(searchValue);
-
-            bool evaluate = listItems.ContainsValue(searchValue);
-
-            Assert.IsFalse(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void RemoveLastValue_MockData_RemovedValue()
-        {
-            const int searchValue = 9;
-            List<int> mockData = new List<int>
-            {
-                2,
-                searchValue,
-                4,
-                15,
-                searchValue,
-                98
-            };
-            mockData.RemoveLastValue(searchValue);
-
-            bool evaluate = mockData[4] != searchValue &&
-                            mockData.ContainsValue(searchValue);
-
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void RemoveLastValue_BadMockData_ReturnsFalse()
-        {
-            List<int> mockData = new List<int>
-            {
-                2,
-                9,
-                4,
-                15,
-                9,
-                98
-            };
-            bool evaluate = mockData.RemoveLastValue(6);
 
             Assert.IsFalse(evaluate);
         }

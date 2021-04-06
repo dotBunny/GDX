@@ -11,6 +11,7 @@ namespace GDX
     /// <summary>
     ///     A collection of platform related helper utilities.
     /// </summary>
+    [VisualScriptingUtility]
     public static class Platform
     {
         /// <summary>
@@ -20,10 +21,9 @@ namespace GDX
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void EnsureFolderHierarchyExists(string folderPath)
         {
-            string targetDirectory = Path.GetDirectoryName(folderPath);
-            if (!string.IsNullOrEmpty(targetDirectory))
+            if (!string.IsNullOrEmpty(folderPath))
             {
-                Directory.CreateDirectory(targetDirectory);
+                Directory.CreateDirectory(folderPath);
             }
         }
 

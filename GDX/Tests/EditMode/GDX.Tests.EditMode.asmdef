@@ -2,8 +2,6 @@
     "name": "GDX.Tests.EditMode",
     "rootNamespace": "GDX",
     "references": [
-        "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner",
         "Unity.PerformanceTesting",
         "GDX",
         "GDX.Editor"
@@ -14,12 +12,9 @@
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
-    "precompiledReferences": [
-        "nunit.framework.dll"
-    ],
     "autoReferenced": false,
-    "defineConstraints": [
-        "UNITY_INCLUDE_TESTS"
+    "optionalUnityReferences": [
+      "TestAssemblies"
     ],
     "versionDefines": [
         {

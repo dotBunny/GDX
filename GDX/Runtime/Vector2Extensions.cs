@@ -13,6 +13,7 @@ namespace GDX
     /// <summary>
     ///     <see cref="Vector2" /> Based Extension Methods
     /// </summary>
+    [VisualScriptingExtension]
     public static class Vector2Extensions
     {
         /// <summary>

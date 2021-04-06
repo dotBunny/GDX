@@ -7,6 +7,7 @@ namespace GDX.Collections.Generic
     ///     A <see cref="System.Collections.Generic.List{T}" />-like data structure.
     /// </summary>
     /// <typeparam name="T">The type of the <see cref="object" />s contained within.</typeparam>
+    [VisualScriptingCollection]
     public struct SimpleList<T>
     {
         /// <summary>
@@ -164,6 +165,28 @@ namespace GDX.Collections.Generic
             if (combinedLength > Array.Length)
             {
                 System.Array.Resize(ref Array, combinedLength);
+            }
+        }
+
+        /// <summary>
+        ///     Reverse the order of <see cref="Array"/>.
+        /// </summary>
+        public void Reverse()
+        {
+            T temporaryStorage;
+
+            int lastIndex = Count - 1;
+            int middleIndex = Count / 2;
+
+            for (int currentElementIndex = 0; currentElementIndex < middleIndex; currentElementIndex++)
+            {
+                // Store the swap value
+                temporaryStorage = Array[currentElementIndex];
+                int swapElementIndex = lastIndex - currentElementIndex;
+
+                // Swap values
+                Array[currentElementIndex] = Array[swapElementIndex];
+                Array[swapElementIndex] = temporaryStorage;
             }
         }
     }

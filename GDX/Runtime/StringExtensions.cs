@@ -2,7 +2,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
@@ -19,6 +18,7 @@ namespace GDX
     /// <summary>
     ///     <see cref="System.String" /> Based Extension Methods
     /// </summary>
+    [VisualScriptingExtension]
     public static class StringExtensions
     {
         /// <summary>
@@ -174,15 +174,14 @@ namespace GDX
         /// <param name="splitString">The divider which the <paramref name="targetString" /> should be split on.</param>
         /// <param name="comparison">Specifies the culture, case, and sort rules to be used.</param>
         /// <returns>
-        ///     The content following the <paramref name="splitString" />, or <paramref name="targetString" /> if none is
-        ///     found.
+        ///     The content following the <paramref name="splitString" />, or <c>null</c> if none is found.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GetAfterFirst(this string targetString, string splitString,
             StringComparison comparison = StringComparison.Ordinal)
         {
             int splitIndex = targetString.IndexOf(splitString, 0, comparison);
-            return splitIndex < 0 ? targetString : targetString.Substring(splitIndex + splitString.Length);
+            return splitIndex < 0 ? null : targetString.Substring(splitIndex + splitString.Length);
         }
 
         /// <summary>
@@ -193,15 +192,14 @@ namespace GDX
         /// <param name="splitString">The divider which the <paramref name="targetString" /> should be split on.</param>
         /// <param name="comparison">Specifies the culture, case, and sort rules to be used.</param>
         /// <returns>
-        ///     The content following the <paramref name="splitString" />, or <paramref name="targetString" /> if none is
-        ///     found.
+        ///     The content following the <paramref name="splitString" />, or <c>null</c> if none is found.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GetAfterLast(this string targetString, string splitString,
             StringComparison comparison = StringComparison.Ordinal)
         {
             int splitIndex = targetString.LastIndexOf(splitString, targetString.Length - 1, comparison);
-            return splitIndex < 0 ? targetString : targetString.Substring(splitIndex + splitString.Length);
+            return splitIndex < 0 ? null : targetString.Substring(splitIndex + splitString.Length);
         }
 
         /// <summary>
@@ -211,13 +209,13 @@ namespace GDX
         /// <param name="targetString">The target <see cref="System.String" /> to look in.</param>
         /// <param name="splitString">The divider which the <paramref name="targetString" /> should be split on.</param>
         /// <param name="comparison">Specifies the culture, case, and sort rules to be used.</param>
-        /// <returns>The content before the <paramref name="splitString" />, or <paramref name="targetString" /> if none is found.</returns>
+        /// <returns>The content before the <paramref name="splitString" />, or <c>null</c> if none is found.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GetBeforeFirst(this string targetString, string splitString,
             StringComparison comparison = StringComparison.Ordinal)
         {
             int splitIndex = targetString.IndexOf(splitString, 0, comparison);
-            return splitIndex < 0 ? targetString : targetString.Substring(0, splitIndex);
+            return splitIndex < 0 ? null : targetString.Substring(0, splitIndex);
         }
 
         /// <summary>
@@ -227,13 +225,13 @@ namespace GDX
         /// <param name="targetString">The target <see cref="System.String" /> to look in.</param>
         /// <param name="splitString">The divider which the <paramref name="targetString" /> should be split on.</param>
         /// <param name="comparison">Specifies the culture, case, and sort rules to be used.</param>
-        /// <returns>The content before the <paramref name="splitString" />, or <paramref name="targetString" /> if none is found.</returns>
+        /// <returns>The content before the <paramref name="splitString" />, or <c>null</c> if none is found.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GetBeforeLast(this string targetString, string splitString,
             StringComparison comparison = StringComparison.Ordinal)
         {
             int splitIndex = targetString.LastIndexOf(splitString, targetString.Length - 1, comparison);
-            return splitIndex < 0 ? targetString : targetString.Substring(0, splitIndex);
+            return splitIndex < 0 ? null : targetString.Substring(0, splitIndex);
         }
 
         /// <summary>
@@ -582,6 +580,35 @@ namespace GDX
             }
 
             return true;
+        }
+
+        /// <summary>
+        ///     Counts the number of times the needle (<paramref name="targetCharacter"/>) appears in the haystack (<paramref name="targetString"/>).
+        /// </summary>
+        /// <remarks>Specifically created to avoid using LINQ and avoid an allocation.</remarks>
+        /// <param name="targetString">The haystack.</param>
+        /// <param name="targetCharacter">The needle.</param>
+        /// <returns>The number of times <paramref name="targetCharacter"/> is found in <paramref name="targetString"/>.</returns>
+        [SecuritySafeCritical]
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
+        public static unsafe int CountOccurence(this string targetString, char targetCharacter)
+        {
+            int counter = 0;
+            fixed (char* src = targetString)
+            {
+                int c;
+                char* s = src;
+                while ((c = s[0]) != 0)
+                {
+                    if (c == targetCharacter)
+                    {
+                        counter++;
+                    }
+                    s += 1;
+                }
+            }
+
+            return counter;
         }
 
         /// <summary>

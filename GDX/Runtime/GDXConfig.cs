@@ -138,9 +138,28 @@ namespace GDX
         public static GDXConfig Get()
         {
 #if UNITY_EDITOR
-            // Special handler for scenarios where we need runtime logic, that is getting called from editor automation
-            // and things like that.
-            return AssetDatabase.LoadAssetAtPath<GDXConfig>("Assets/Resources/GDX/GDXConfig.asset");
+
+            // Attempt to load the settings file from the asset database.
+            GDXConfig settings = AssetDatabase.LoadAssetAtPath<GDXConfig>("Assets/Resources/GDX/GDXConfig.asset");
+
+            // If it worked, send it back!
+            if (settings != null)
+            {
+                return settings;
+            }
+
+            // Looks like we need to make one
+            settings = CreateInstance<GDXConfig>();
+
+            // Ensure the folder structure is in place before we manually make the asset
+            Platform.EnsureFileFolderHierarchyExists(
+                System.IO.Path.Combine(Application.dataPath, "Resources/GDX/GDXConfig.asset"));
+
+            // Create and save the asset
+            AssetDatabase.CreateAsset(settings, "Assets/Resources/GDX/GDXConfig.asset");
+
+            // Send it back!
+            return settings;
 #else
             if (s_runtimeInstance == null)
             {
