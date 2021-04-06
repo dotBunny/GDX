@@ -45,6 +45,19 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
+        ///     Create a <see cref="Array2D{T}" /> providing an existing <paramref name="arrayToUse" />.
+        /// </summary>
+        /// <param name="rowCount">The number of rows (X).</param>
+        /// <param name="columnCount">The number of columns (Y).</param>
+        /// <param name="arrayToUse">An existing array to use in the <see cref="Array2D{T}" />.</param>
+        public Array2D(int rowCount, int columnCount, T[] arrayToUse)
+        {
+            ColumnCount = columnCount;
+            RowCount = rowCount;
+            Array = arrayToUse;
+        }
+
+        /// <summary>
         ///     Get a typed object at a specific 2-dimensional index in <see cref="Array" />.
         /// </summary>
         /// <param name="x">The row/line number (vertical axis).</param>
@@ -145,6 +158,65 @@ namespace GDX.Collections.Generic
                 System.Array.Copy(temporaryStorage, 0, Array, (lastIndex - rowIndex) * ColumnCount, ColumnCount);
             }
         }
+
+        /// <summary>
+        /// Rotate internal dataset clockwise.
+        /// </summary>
+        public void RotateClockwise()
+        {
+            // TODO: There should be a way to do this without making a transient array.
+
+            // Make our new array
+            T[] newArray = new T[Array.Length];
+
+            int newColumnCount = RowCount;
+            int runningIndex = 0;
+
+            // Transpose values to new array
+            for (int column = 0; column < ColumnCount; column++)
+            {
+                for (int row = RowCount - 1; row >= 0; row--)
+                {
+                    newArray[runningIndex] = Array[row * ColumnCount + column];
+                    runningIndex++;
+                }
+            }
+
+            // Assign Data
+            RowCount = ColumnCount;
+            ColumnCount = newColumnCount;
+            Array = newArray;
+        }
+
+        /// <summary>
+        /// Rotate internal dataset counter-clockwise.
+        /// </summary>
+        public void RotateCounterClockwise()
+        {
+            // TODO: There should be a way to do this without making a transient array.
+
+            // Make our new array
+            T[] newArray = new T[Array.Length];
+
+            int newColumnCount = RowCount;
+            int runningIndex = 0;
+
+            // Transpose values to new array
+            for (int column = ColumnCount - 1; column >= 0; column--)
+            {
+                for (int row = 0; row < RowCount; row++)
+                {
+                    newArray[runningIndex] = Array[row * ColumnCount + column];
+                    runningIndex++;
+                }
+            }
+
+            // Assign Data
+            RowCount = ColumnCount;
+            ColumnCount = newColumnCount;
+            Array = newArray;
+        }
+
 
         /// <summary>
         ///     Creates a copy of the internal array as a traditional multi-dimensional array.

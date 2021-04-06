@@ -196,7 +196,7 @@ namespace GDX.Collections.Generic
             {
                 // Store the swap value
                 temporaryStorage = Array[currentElementIndex];
-                int swapElementIndex = currentElementIndex + (lastIndex - currentElementIndex);
+                int swapElementIndex = lastIndex - currentElementIndex;
 
                 // Swap values
                 Array[currentElementIndex] = Array[swapElementIndex];

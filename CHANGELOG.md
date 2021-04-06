@@ -27,6 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Occasional infinite loop importing `GDXConfig` with a cache server.
 - Unsupported attributes for Unity 2018.
 
+### Removed
+- Struct type extension methods have been removed from `IListExtensions` and `SimpleListExtensions`; explicitly to avoid obsfucating boxing types and hiding a problem.
+
 ## [1.2.7] - 2021-03-16
 ***"Never Say Never"***
 > Updates have been tested across different installation methods, a pooling system, and some fixes!

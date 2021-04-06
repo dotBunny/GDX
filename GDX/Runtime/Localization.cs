@@ -111,6 +111,7 @@ namespace GDX
         /// <param name="targetLanguage">The target <see cref="Language" />.</param>
         /// <returns>The language code.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // ReSharper disable once InconsistentNaming
         public static string GetIETF(this Language targetLanguage)
         {
             switch (targetLanguage)

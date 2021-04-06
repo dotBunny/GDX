@@ -40,6 +40,7 @@ namespace GDX
         /// </summary>
         /// <returns>true/false</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // ReSharper disable once InconsistentNaming
         public static bool IsHDRSupported()
         {
 #if UNITY_PS4
@@ -55,6 +56,7 @@ namespace GDX
         /// </summary>
         /// <returns>true/false</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // ReSharper disable once InconsistentNaming
         public static bool IsHDREnabled()
         {
 #if UNITY_PS4
