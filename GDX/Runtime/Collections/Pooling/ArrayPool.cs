@@ -3,19 +3,28 @@
 
 namespace GDX.Collections.Pooling
 {
+    /// <summary>
+    /// An object pool for arrays with power-of-two lengths.
+    /// </summary>
+    /// <typeparam name="T">The data type contained by pooled arrays.</typeparam>
     public struct ArrayPool<T>
     {
         public JaggedArrayWithCount<T>[] ArrayPools;
         public int[] MaxPoolCapacities;
 
-        public ArrayPool(int[] initialArrayStorageCounts, int[] maxPoolCapacities)
+        /// <summary>
+        /// Initialize the array pool with initial and maximum sizes for each power-of-two, 0 through 30 inclusive (the maximum power-of-two length supported in C#).
+        /// </summary>
+        /// <param name="initialPoolCounts"></param>
+        /// <param name="maxPoolCapacities"></param>
+        public ArrayPool(int[] initialPoolCounts, int[] maxPoolCapacities)
         {
-            ArrayPools = new JaggedArrayWithCount<T>[30];
+            ArrayPools = new JaggedArrayWithCount<T>[31];
             MaxPoolCapacities = maxPoolCapacities;
 
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < 31; i++)
             {
-                int initialArrayCount = initialArrayStorageCounts[i];
+                int initialArrayCount = initialPoolCounts[i];
                 int maxArraysForSize = maxPoolCapacities[i];
                 T[][] arrayPoolForSize = new T[maxArraysForSize][];
 
@@ -27,10 +36,17 @@ namespace GDX.Collections.Pooling
                 JaggedArrayWithCount<T> pool = new JaggedArrayWithCount<T>();
 
                 pool.Pool = arrayPoolForSize;
-                pool.Count = maxPoolCapacities[i];
+                pool.Count = initialPoolCounts[i];
+
+                ArrayPools[i] = pool;
             }
         }
 
+        /// <summary>
+        /// Allocates an array from the pool. Finds an array of the smallest power-of-two length larger than or equal to the requested size.
+        /// </summary>
+        /// <param name="requestedSize">The desired array length. The returned array will be the smallest power-of-two larger than or equal to this size.</param>
+        /// <returns></returns>
         public T[] GetArrayFromPool(int requestedSize)
         {
             requestedSize = requestedSize < 1 ? 1 : requestedSize;
@@ -67,6 +83,10 @@ namespace GDX.Collections.Pooling
             return array;
         }
 
+        /// <summary>
+        /// Return a power-of-two sized array to the pool. Only pass power-of-two sized arrays to this function. Does not clear the array.
+        /// </summary>
+        /// <param name="array">The power-of-two sized array to return to the pool. Power-of-two sizes only.</param>
         public void ReturnArrayToPool(T[] array)
         {
             uint length = unchecked((uint)array.Length); // Counting on people to be cool and not pass in a non-power-of-two here.
@@ -79,9 +99,6 @@ namespace GDX.Collections.Pooling
 
             JaggedArrayWithCount<T> arrayPool = ArrayPools[index];
             int maxPoolCapacity = MaxPoolCapacities[index];
-            int currentPoolCapacity = arrayPool.Pool.Length;
-            int nextPoolCapacity = currentPoolCapacity * 2;
-            nextPoolCapacity = (nextPoolCapacity > maxPoolCapacity) ? maxPoolCapacity : nextPoolCapacity;
 
             if (arrayPool.Count < maxPoolCapacity)
             {
