@@ -276,15 +276,6 @@
             <typeparam name="T">The type of the System.Collections.Generic.IList`1.</typeparam>
             <returns>true/false if this operation was able to add the item.</returns>
         </member>
-        <member name="M:GDX.IListExtensions.AddUniqueValue``1(System.Collections.Generic.IList{``0},``0)">
-            <summary>
-                Add a value to a System.Collections.Generic.IList`1, but only if it is not already contained.
-            </summary>
-            <param name="targetList">The System.Collections.Generic.IList`1 to add too.</param>
-            <param name="targetValue">The target value to add..</param>
-            <typeparam name="T">The type of the System.Collections.Generic.IList`1.</typeparam>
-            <returns>true/false if this operation was able to add the value.</returns>
-        </member>
         <member name="M:GDX.IListExtensions.ContainsItem``1(System.Collections.Generic.IList{``0},``0)">
             <summary>
                 <para>Does targetList contain targetItem?</para>
@@ -292,19 +283,6 @@
             <remarks>Avoids using System.Collections.Generic.EqualityComparer`1.</remarks>
             <param name="targetList">The System.Collections.Generic.IList`1 to look in.</param>
             <param name="targetItem">The target object to look for.</param>
-            <typeparam name="T">The type of the System.Collections.Generic.IList`1.</typeparam>
-            <returns>true/false</returns>
-        </member>
-        <member name="M:GDX.IListExtensions.ContainsValue``1(System.Collections.Generic.IList{``0},System.Object)">
-            <summary>
-                <para>Does targetList contain targetValue?</para>
-            </summary>
-            <remarks>
-                WARNING: This will box the targetValue. You should probably write your own explicit
-                implementation.
-            </remarks>
-            <param name="targetList">The System.Collections.Generic.IList`1 to look in.</param>
-            <param name="targetValue">The value to look for.</param>
             <typeparam name="T">The type of the System.Collections.Generic.IList`1.</typeparam>
             <returns>true/false</returns>
         </member>
@@ -318,21 +296,6 @@
             <typeparam name="T">The type of the System.Collections.Generic.IList`1.</typeparam>
             <returns>true/false if the item was removed.</returns>
         </member>
-        <member name="M:GDX.IListExtensions.RemoveFirstValue``1(System.Collections.Generic.IList{``0},System.Object)">
-            <summary>
-                Removes the first targetValue from the provided targetList.
-            </summary>
-            <remarks>
-                <para>
-                    WARNING: This will box the targetValue. You should probably write your own explicit
-                    implementation.
-                </para>
-            </remarks>
-            <param name="targetList">The target System.Collections.Generic.IList`1.</param>
-            <param name="targetValue">The value to remove from the targetList.</param>
-            <typeparam name="T">The type of the System.Collections.Generic.IList`1.</typeparam>
-            <returns>true/false if a value was removed.</returns>
-        </member>
         <member name="M:GDX.IListExtensions.RemoveItems``1(System.Collections.Generic.IList{``0},``0)">
             <summary>
                 <para>Removes all targetItem from the provided targetList.</para>
@@ -342,21 +305,6 @@
             <param name="targetItem">The target object to remove from the targetList.</param>
             <typeparam name="T">The type of the System.Collections.Generic.IList`1.</typeparam>
             <returns>true/false if the item was removed.</returns>
-        </member>
-        <member name="M:GDX.IListExtensions.RemoveValues``1(System.Collections.Generic.IList{``0},System.Object)">
-            <summary>
-                Removes all targetValue from the provided targetList.
-            </summary>
-            <remarks>
-                <para>
-                    WARNING: This will box the targetValue. You should probably write your own explicit
-                    implementation.
-                </para>
-            </remarks>
-            <param name="targetList">The target System.Collections.Generic.IList`1.</param>
-            <param name="targetValue">The value to remove from the targetList.</param>
-            <typeparam name="T">The type of the System.Collections.Generic.IList`1.</typeparam>
-            <returns>true/false if values were removed.</returns>
         </member>
         <member name="M:GDX.IListExtensions.RemoveItemSwap``1(System.Collections.Generic.IList{``0},System.Int32)">
             <summary>
@@ -383,21 +331,6 @@
             <typeparam name="T">The type of the System.Collections.Generic.IList`1.</typeparam>
             <returns>true/false if the item was removed.</returns>
         </member>
-        <member name="M:GDX.IListExtensions.RemoveLastValue``1(System.Collections.Generic.IList{``0},System.Object)">
-            <summary>
-                Removes the last targetValue from the provided targetList.
-            </summary>
-            <remarks>
-                <para>
-                    WARNING: This will box the targetValue. You should probably write your own explicit
-                    implementation.
-                </para>
-            </remarks>
-            <param name="targetList">The target System.Collections.Generic.IList`1.</param>
-            <param name="targetValue">The value to remove from the targetList.</param>
-            <typeparam name="T">The type of the System.Collections.Generic.IList`1.</typeparam>
-            <returns>true/false if a value was removed.</returns>
-        </member>
         <member name="M:GDX.IListExtensions.Shuffle``1(System.Collections.Generic.IList{``0})">
             <summary>
                 Shuffle the items in the targetList.
@@ -411,8 +344,11 @@
                 A 2-dimension Unity.Collections.NativeArray`1 backed array.
             </summary>
             <remarks>
+                <para>
                 The GDX.Collections.Generic.NativeArray2D`1 is backed by a Unity.Collections.NativeArray`1 which requires
                 UnityEngine.CoreModule.dll.
+                </para>
+                <para>Use X (horizontal) and Y (vertical) arrangement.</para>
             </remarks>
             <typeparam name="T">Type of objects.</typeparam>
         </member>
@@ -437,8 +373,8 @@
             <summary>
                 Create a GDX.Collections.Generic.NativeArray2D`1.
             </summary>
-            <param name="columnCount">The number of columns (X).</param>
-            <param name="rowCount">The number of rows (Y).</param>
+            <param name="rowCount">The number of rows (X).</param>
+            <param name="columnCount">The number of columns (Y).</param>
             <param name="allocator">The Unity.Collections.Allocator type to use.</param>
             <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
         </member>
@@ -446,8 +382,8 @@
             <summary>
                 Get a typed object at a specific 2-dimensional index in GDX.Collections.Generic.NativeArray2D`1.Array.
             </summary>
-            <param name="x">The column number (X).</param>
-            <param name="y">The row number (Y).</param>
+            <param name="x">The row/line number (vertical axis).</param>
+            <param name="y">The column number (horizontal axis).</param>
         </member>
         <member name="M:GDX.Collections.Generic.NativeArray2D`1.AddRows(System.Int32,Unity.Collections.Allocator,Unity.Collections.NativeArrayOptions)">
             <summary>
@@ -457,11 +393,6 @@
             <param name="allocator">The Unity.Collections.Allocator type to use.</param>
             <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
         </member>
-        <member name="M:GDX.Collections.Generic.NativeArray2D`1.Dispose">
-            <summary>
-                Properly dispose of GDX.Collections.Generic.NativeArray2D`1.Array.
-            </summary>
-        </member>
         <member name="M:GDX.Collections.Generic.NativeArray2D`1.AddColumns(System.Int32,Unity.Collections.Allocator,Unity.Collections.NativeArrayOptions)">
             <summary>
                 Add additional columns to the dataset.
@@ -469,6 +400,28 @@
             <param name="numberOfNewColumns">The number of columns add.</param>
             <param name="allocator">The Unity.Collections.Allocator type to use.</param>
             <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.NativeArray2D`1.Dispose">
+            <summary>
+                Properly dispose of GDX.Collections.Generic.NativeArray2D`1.Array.
+            </summary>
+        </member>
+        <member name="M:GDX.Collections.Generic.NativeArray2D`1.ReverseColumns">
+            <summary>
+                Reverse the order of the columns in the backing GDX.Collections.Generic.NativeArray2D`1.Array.
+            </summary>
+        </member>
+        <member name="M:GDX.Collections.Generic.NativeArray2D`1.ReverseRows">
+            <summary>
+                Reverse the order of the rows in the backing GDX.Collections.Generic.NativeArray2D`1.Array.
+            </summary>
+        </member>
+        <member name="M:GDX.Collections.Generic.NativeArray2D`1.ToMultiDimensionalArray">
+            <summary>
+                Creates a copy of the internal array as a traditional multi-dimensional array.
+            </summary>
+            <remarks>Useful for scenarios where fills need to be done with [,] structured multi-dimensional arrays.</remarks>
+            <returns>A new copy of the backing GDX.Collections.Generic.NativeArray2D`1.Array in multi-dimensional form.</returns>
         </member>
         <member name="T:GDX.Collections.Generic.SerializableDictionary`2">
             <summary>
@@ -651,6 +604,96 @@
                 Remove the last element in the GDX.Collections.Generic.NativeSimpleList`1.
             </summary>
         </member>
+        <member name="M:GDX.Collections.Generic.NativeSimpleList`1.Reverse">
+            <summary>
+                Reverse the order of GDX.Collections.Generic.NativeSimpleList`1.Array.
+            </summary>
+        </member>
+        <member name="T:GDX.Collections.Generic.Array2D`1">
+            <summary>
+                A 2-dimensional array backed by a flat array.
+            </summary>
+            <remarks>Mimics multi-dimensional array format.</remarks>
+            <typeparam name="T">Type of objects.</typeparam>
+        </member>
+        <member name="F:GDX.Collections.Generic.Array2D`1.Array">
+            <summary>
+                The backing flat array.
+            </summary>
+        </member>
+        <member name="F:GDX.Collections.Generic.Array2D`1.ColumnCount">
+            <summary>
+                The length of each pseudo-array in the dataset.
+            </summary>
+            <remarks>CAUTION! Changing this will alter the understanding of the data.</remarks>
+        </member>
+        <member name="F:GDX.Collections.Generic.Array2D`1.RowCount">
+            <summary>
+                The number of pseudo-arrays created to support the dimensionality.
+            </summary>
+            <remarks>CAUTION! Changing this will alter the understanding of the data.</remarks>
+        </member>
+        <member name="M:GDX.Collections.Generic.Array2D`1.#ctor(System.Int32,System.Int32)">
+            <summary>
+                Create a GDX.Collections.Generic.Array2D`1.
+            </summary>
+            <param name="rowCount">The number of rows (X).</param>
+            <param name="columnCount">The number of columns (Y).</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.Array2D`1.#ctor(System.Int32,System.Int32,`0[])">
+            <summary>
+                Create a GDX.Collections.Generic.Array2D`1 providing an existing arrayToUse.
+            </summary>
+            <param name="rowCount">The number of rows (X).</param>
+            <param name="columnCount">The number of columns (Y).</param>
+            <param name="arrayToUse">An existing array to use in the GDX.Collections.Generic.Array2D`1.</param>
+        </member>
+        <member name="P:GDX.Collections.Generic.Array2D`1.Item(System.Int32,System.Int32)">
+            <summary>
+                Get a typed object at a specific 2-dimensional index in GDX.Collections.Generic.Array2D`1.Array.
+            </summary>
+            <param name="x">The row/line number (vertical axis).</param>
+            <param name="y">The column number (horizontal axis).</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.Array2D`1.AddRows(System.Int32)">
+            <summary>
+                Add additional rows to the dataset.
+            </summary>
+            <param name="numberOfNewRows">The number of rows/arrays to add.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.Array2D`1.AddColumns(System.Int32)">
+            <summary>
+                Add additional columns to the dataset.
+            </summary>
+            <param name="numberOfNewColumns">The number of columns add.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.Array2D`1.ReverseColumns">
+            <summary>
+                Reverse the order of the columns in the backing GDX.Collections.Generic.Array2D`1.Array.
+            </summary>
+        </member>
+        <member name="M:GDX.Collections.Generic.Array2D`1.ReverseRows">
+            <summary>
+                Reverse the order of the rows in the backing GDX.Collections.Generic.Array2D`1.Array.
+            </summary>
+        </member>
+        <member name="M:GDX.Collections.Generic.Array2D`1.RotateClockwise">
+            <summary>
+            Rotate internal dataset clockwise.
+            </summary>
+        </member>
+        <member name="M:GDX.Collections.Generic.Array2D`1.RotateCounterClockwise">
+            <summary>
+            Rotate internal dataset counter-clockwise.
+            </summary>
+        </member>
+        <member name="M:GDX.Collections.Generic.Array2D`1.ToMultiDimensionalArray">
+            <summary>
+                Creates a copy of the internal array as a traditional multi-dimensional array.
+            </summary>
+            <remarks>Useful for scenarios where fills need to be done with [,] structured multi-dimensional arrays.</remarks>
+            <returns>A new copy of the backing GDX.Collections.Generic.Array2D`1.Array in multi-dimensional form.</returns>
+        </member>
         <member name="T:GDX.Collections.Generic.SimpleList`1">
             <summary>
                 A System.Collections.Generic.List`1-like data structure.
@@ -735,6 +778,11 @@
                 Resizes the GDX.Collections.Generic.SimpleList`1.Array, ensuring there are the provided number of empty spots in it.
             </summary>
             <param name="numberToReserve">Number of desired empty spots.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.SimpleList`1.Reverse">
+            <summary>
+                Reverse the order of GDX.Collections.Generic.SimpleList`1.Array.
+            </summary>
         </member>
         <member name="T:GDX.Collections.Generic.NativeUniformArray3D`1">
             <summary>
@@ -1342,6 +1390,38 @@
             <summary>
                 The GDX.Collections.Pooling.ListManagedPool destructor which unregisters itself from GDX.Collections.Pooling.ManagedPools.
             </summary>
+        </member>
+        <member name="T:GDX.Collections.Pooling.ArrayPool`1">
+            <summary>
+                An object pool for arrays with power-of-two lengths.
+            </summary>
+            <typeparam name="T">The data type contained by pooled arrays.</typeparam>
+        </member>
+        <member name="M:GDX.Collections.Pooling.ArrayPool`1.#ctor(System.Int32[],System.Int32[])">
+            <summary>
+                Initialize the array pool with initial and maximum sizes for each power-of-two, 0 through 30 inclusive (the maximum
+                power-of-two length supported in C#).
+            </summary>
+            <param name="initialPoolCounts"></param>
+            <param name="maxPoolCapacities"></param>
+        </member>
+        <member name="M:GDX.Collections.Pooling.ArrayPool`1.GetArrayFromPool(System.Int32)">
+            <summary>
+                Allocates an array from the pool. Finds an array of the smallest power-of-two length larger than or equal to the
+                requested size.
+            </summary>
+            <param name="requestedSize">
+                The desired array length. The returned array will be the smallest power-of-two larger than
+                or equal to this size.
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:GDX.Collections.Pooling.ArrayPool`1.ReturnArrayToPool(`0[])">
+            <summary>
+                Return a power-of-two sized array to the pool. Only pass power-of-two sized arrays to this function. Does not clear
+                the array.
+            </summary>
+            <param name="array">The power-of-two sized array to return to the pool. Power-of-two sizes only.</param>
         </member>
         <member name="T:GDX.Collections.Pooling.IManagedPool">
             <summary>
@@ -4622,16 +4702,6 @@
             <typeparam name="T">The type of the GDX.Collections.Generic.SimpleList`1.</typeparam>
             <returns>true/false if the operation was able to add the item successfully.</returns>
         </member>
-        <member name="M:GDX.SimpleListExtensions.AddUncheckedUniqueValue``1(GDX.Collections.Generic.SimpleList{``0}@,``0)">
-            <summary>
-                Add a value to the GDX.Collections.Generic.SimpleList`1 without checking the internal size,
-                making sure that the value is not already contained in the GDX.Collections.Generic.SimpleList`1.
-            </summary>
-            <param name="targetSimpleList">The target GDX.Collections.Generic.SimpleList`1 to add to.</param>
-            <param name="targetValue">The value to add.</param>
-            <typeparam name="T">The type of the GDX.Collections.Generic.SimpleList`1.</typeparam>
-            <returns>true/false if the operation was able to add the value successfully.</returns>
-        </member>
         <member name="M:GDX.SimpleListExtensions.AddWithExpandCheckUniqueItem``1(GDX.Collections.Generic.SimpleList{``0}@,``0)">
             <summary>
                 Add an item to the GDX.Collections.Generic.SimpleList`1 with checking the internal size (expanding as necessary),
@@ -4642,16 +4712,6 @@
             <typeparam name="T">The type of the GDX.Collections.Generic.SimpleList`1.</typeparam>
             <returns>true/false if the operation was able to add the item successfully.</returns>
         </member>
-        <member name="M:GDX.SimpleListExtensions.AddWithExpandCheckUniqueValue``1(GDX.Collections.Generic.SimpleList{``0}@,``0)">
-            <summary>
-                Add a value to the GDX.Collections.Generic.SimpleList`1 with checking the internal size (expanding as necessary),
-                making sure that the value is not already contained in the GDX.Collections.Generic.SimpleList`1.
-            </summary>
-            <param name="targetSimpleList">The target GDX.Collections.Generic.SimpleList`1 to add to.</param>
-            <param name="targetValue">The value to add.</param>
-            <typeparam name="T">The type of the GDX.Collections.Generic.SimpleList`1.</typeparam>
-            <returns>true/false if the operation was able to add the value successfully.</returns>
-        </member>
         <member name="M:GDX.SimpleListExtensions.ContainsItem``1(GDX.Collections.Generic.SimpleList{``0}@,``0)">
             <summary>
                 <para>Does targetSimpleList contain targetItem?</para>
@@ -4659,19 +4719,6 @@
             <remarks>Avoids using System.Collections.Generic.EqualityComparer`1.</remarks>
             <param name="targetSimpleList">The GDX.Collections.Generic.SimpleList`1 to look in.</param>
             <param name="targetItem">The target class object to look for.</param>
-            <typeparam name="T">The type of the GDX.Collections.Generic.SimpleList`1.</typeparam>
-            <returns>true/false</returns>
-        </member>
-        <member name="M:GDX.SimpleListExtensions.ContainsValue``1(GDX.Collections.Generic.SimpleList{``0}@,System.Object)">
-            <summary>
-                <para>Does targetSimpleList contain targetValue?</para>
-            </summary>
-            <remarks>
-                WARNING: This will box the targetValue. You should probably write your own explicit
-                implementation.
-            </remarks>
-            <param name="targetSimpleList">The GDX.Collections.Generic.SimpleList`1 to look in.</param>
-            <param name="targetValue">The value to look for.</param>
             <typeparam name="T">The type of the GDX.Collections.Generic.SimpleList`1.</typeparam>
             <returns>true/false</returns>
         </member>
@@ -4684,21 +4731,6 @@
             <param name="targetItem">The target object to remove from the targetSimpleList.</param>
             <typeparam name="T">The type of the GDX.Collections.Generic.SimpleList`1.</typeparam>
             <returns>true/false if an item was removed.</returns>
-        </member>
-        <member name="M:GDX.SimpleListExtensions.RemoveFirstValue``1(GDX.Collections.Generic.SimpleList{``0}@,System.Object)">
-            <summary>
-                Removes the first targetValue from the provided targetSimpleList.
-            </summary>
-            <remarks>
-                <para>
-                    WARNING: This will box the targetValue. You should probably write your own explicit
-                    implementation.
-                </para>
-            </remarks>
-            <param name="targetSimpleList">The target GDX.Collections.Generic.SimpleList`1.</param>
-            <param name="targetValue">The value to remove from the targetSimpleList.</param>
-            <typeparam name="T">The type of the GDX.Collections.Generic.SimpleList`1.</typeparam>
-            <returns>true/false if a value was removed.</returns>
         </member>
         <member name="M:GDX.SimpleListExtensions.RemoveItems``1(GDX.Collections.Generic.SimpleList{``0}@,``0)">
             <summary>
@@ -4718,36 +4750,6 @@
             <param name="targetItem">The target object to remove from the targetSimpleList.</param>
             <typeparam name="T">The type of the GDX.Collections.Generic.SimpleList`1.</typeparam>
             <returns>true/false if an item was removed.</returns>
-        </member>
-        <member name="M:GDX.SimpleListExtensions.RemoveLastValue``1(GDX.Collections.Generic.SimpleList{``0}@,System.Object)">
-            <summary>
-                Removes the last targetValue from the provided targetSimpleList.
-            </summary>
-            <remarks>
-                <para>
-                    WARNING: This will box the targetValue. You should probably write your own explicit
-                    implementation.
-                </para>
-            </remarks>
-            <param name="targetSimpleList">The target GDX.Collections.Generic.SimpleList`1.</param>
-            <param name="targetValue">The value to remove from the targetSimpleList.</param>
-            <typeparam name="T">The type of the GDX.Collections.Generic.SimpleList`1.</typeparam>
-            <returns>true/false if a value was removed.</returns>
-        </member>
-        <member name="M:GDX.SimpleListExtensions.RemoveValues``1(GDX.Collections.Generic.SimpleList{``0}@,System.Object)">
-            <summary>
-                Removes all targetValue from the provided targetSimpleList.
-            </summary>
-            <remarks>
-                <para>
-                    WARNING: This will box the targetValue. You should probably write your own explicit
-                    implementation.
-                </para>
-            </remarks>
-            <param name="targetSimpleList">The target GDX.Collections.Generic.SimpleList`1.</param>
-            <param name="targetValue">The value to remove from the targetSimpleList.</param>
-            <typeparam name="T">The type of the GDX.Collections.Generic.SimpleList`1.</typeparam>
-            <returns>true/false if values were removed.</returns>
         </member>
         <member name="T:GDX.CapsuleColliderExtensions">
             <summary>
