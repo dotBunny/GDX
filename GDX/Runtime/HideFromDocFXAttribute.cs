@@ -19,6 +19,7 @@ namespace GDX
     ///         uid: GDX.HideFromDocFXAttribute
     ///     </code>
     /// </example>
+    [HideFromDocFX]
     [ExcludeFromCodeCoverage]
     // ReSharper disable once InconsistentNaming
     public sealed class HideFromDocFXAttribute : Attribute

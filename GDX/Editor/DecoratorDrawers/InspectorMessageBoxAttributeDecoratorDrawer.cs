@@ -9,6 +9,7 @@ namespace GDX.Editor.DecoratorDrawers
     /// <summary>
     ///     The drawing component of the <see cref="InspectorMessageBoxAttribute" />.
     /// </summary>
+    [HideFromDocFX]
     [CustomPropertyDrawer(typeof(InspectorMessageBoxAttribute))]
     public class InspectorMessageBoxAttributeDecoratorDrawer : DecoratorDrawer
     {

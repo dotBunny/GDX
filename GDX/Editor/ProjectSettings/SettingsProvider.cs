@@ -8,6 +8,7 @@ namespace GDX.Editor.ProjectSettings
     /// <summary>
     ///     GDX Assembly Settings Provider
     /// </summary>
+    [HideFromDocFX]
     public static class SettingsProvider
     {
         /// <summary>

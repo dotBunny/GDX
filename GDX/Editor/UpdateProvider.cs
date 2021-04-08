@@ -15,6 +15,7 @@ namespace GDX.Editor
     /// <summary>
     ///     An autonomous provider which detects and notifies if updates are available for the GDX package.
     /// </summary>
+    [HideFromDocFX]
     [InitializeOnLoad]
     public static class UpdateProvider
     {

@@ -9,6 +9,7 @@ namespace GDX.Editor.ProjectSettings
     /// <summary>
     ///     A collection of styles and layout options used by the settings window.
     /// </summary>
+    [HideFromDocFX]
     public static class SettingsStyles
     {
          /// <summary>

@@ -9,6 +9,7 @@ namespace GDX
     /// <summary>
     ///     Create a message box of information above the property in the inspector.
     /// </summary>
+    [HideFromDocFX]
     [ExcludeFromCodeCoverage]
     public class InspectorMessageBoxAttribute : PropertyAttribute
     {

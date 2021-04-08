@@ -14,6 +14,7 @@ namespace GDX
     /// </summary>
     /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
     // ReSharper disable once InconsistentNaming
+    [HideFromDocFX]
     public class GDXConfig : ScriptableObject
     {
         /// <summary>

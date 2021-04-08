@@ -10,6 +10,7 @@ namespace GDX.Editor
     /// <summary>
     ///     A information warehouse about the GDX assemblies used in editor specific logic.
     /// </summary>
+    [HideFromDocFX]
     public class AssemblyProvider
     {
         /// <summary>

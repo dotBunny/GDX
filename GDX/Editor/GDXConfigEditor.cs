@@ -11,6 +11,7 @@ namespace GDX.Editor
     /// <remarks>
     ///     This just enforces editing through the project settings window only.
     /// </remarks>
+    [HideFromDocFX]
     [CustomEditor(typeof(GDXConfig))]
     // ReSharper disable once InconsistentNaming
     public class GDXConfigEditor : UnityEditor.Editor

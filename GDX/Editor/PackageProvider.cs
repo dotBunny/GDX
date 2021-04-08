@@ -14,6 +14,7 @@ namespace GDX.Editor
     /// <summary>
     ///     A collection of information regarding the GDX package.
     /// </summary>
+    [HideFromDocFX]
     public class PackageProvider
     {
         /// <summary>

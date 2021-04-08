@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - ??
+***"Untitled"***
+> 
+
+### Removed
+- Removed from [documentation](https://gdx.dotbunny.com) many of supporting GDX editor only types used in drawing GDX's project settings, and some internal attributes.
+
 ## [1.3.0] - 2021-04-06
 ***"Visual Time"***
 > An effort to make GDX more accessible to Visual Scripting.

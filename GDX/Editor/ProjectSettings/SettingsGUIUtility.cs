@@ -10,6 +10,7 @@ namespace GDX.Editor.ProjectSettings
     /// <summary>
     ///     A collection of IMGUI based layout methods used by the settings window.
     /// </summary>
+    [HideFromDocFX]
     public static class SettingsGUIUtility
     {
         /// <summary>

@@ -9,6 +9,7 @@ namespace GDX
     /// <summary>
     ///     Make the field in the inspector disabled by toggling GUI.enabled before and after.
     /// </summary>
+    [HideFromDocFX]
     [ExcludeFromCodeCoverage]
     public sealed class DisableInInspectorAttribute : PropertyAttribute
     {
