@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ***"Untitled"***
 > 
 
+### Added
+
+### Changed
+- Refactored 'MersenneTwister' internals to reflect their expected usage more, adding a range based `NextSingle`, `NextBias` and `NextBoolean` methods; while creating a `string` seed constructor.
+- Added **Third Party Licenses** section to `LICENSE` doc including reference to original MersenneTwister license.
+
 ### Removed
 - Removed from [documentation](https://gdx.dotbunny.com) many of supporting GDX editor only types used in drawing GDX's project settings, and some internal attributes.
 

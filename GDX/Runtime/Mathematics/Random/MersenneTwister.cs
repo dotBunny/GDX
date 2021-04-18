@@ -1,7 +1,41 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+/*
+   Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura,
+   All rights reserved.
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+
+     1. Redistributions of source code must retain the above copyright
+        notice, this list of conditions and the following disclaimer.
+
+     2. Redistributions in binary form must reproduce the above copyright
+        notice, this list of conditions and the following disclaimer in the
+        documentation and/or other materials provided with the distribution.
+
+     3. The names of its contributors may not be used to endorse or promote
+        products derived from this software without specific prior written
+        permission.
+
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+   A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+   PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 using System;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -23,9 +57,12 @@ namespace GDX.Mathematics.Random
     ///         </a>
     ///         for details on the algorithm.
     ///     </para>
+    ///     <para>
+    ///         Modifications have been made to augment and produce a cleaner developer experience.
+    ///     </para>
     /// </remarks>
     [VisualScriptingType]
-    public class MersenneTwister : System.Random
+    public sealed class MersenneTwister : System.Random
     {
         /// <summary>
         ///     The degree of recurrence.
@@ -58,7 +95,7 @@ namespace GDX.Mathematics.Random
         /// </summary>
         /// <remarks>
         ///     A value of 9007199254740991.0 is the maximum <see cref="System.Double" /> value which the 53
-        ///     significant can hold when the exponent is 0.
+        ///     significant bits can hold when the exponent is 0.
         /// </remarks>
         private const double FiftyThreeBitsOf1S = 9007199254740991.0;
 
@@ -81,6 +118,11 @@ namespace GDX.Mathematics.Random
         private const double InverseOnePlus53BitsOf1S = 1.0 / OnePlus53BitsOf1S;
 
         /// <summary>
+        ///     The size of the <see cref="string" /> used for creating a seed with <see cref="GenerateSeed" />.
+        /// </summary>
+        private const int FriendlySeedLength = 64;
+
+        /// <summary>
         ///     Magnitude lookup.
         /// </summary>
         // ReSharper disable once HeapView.ObjectAllocation.Evident
@@ -94,6 +136,14 @@ namespace GDX.Mathematics.Random
         private readonly uint[] _mersenneTwisterState = new uint[N];
 
         /// <summary>
+        ///     A copy of the original seed used to initialize the <see cref="MersenneTwister" />.
+        /// </summary>
+        /// <remarks>
+        ///     This will always be <c>19650218U</c> if initialized with an array of keys.
+        /// </remarks>
+        public readonly uint OriginalSeed;
+
+        /// <summary>
         ///     The current index in the array for the state of the twister.
         /// </summary>
         private short _mersenneTwisterIndex;
@@ -101,10 +151,34 @@ namespace GDX.Mathematics.Random
         /// <summary>
         ///     Creates a new pseudo-random number generator with the given <paramref name="seed" />.
         /// </summary>
+        /// <remarks>
+        ///     The <paramref name="seed" /> will have its sign stripped in converting to an <see cref="uint" />.
+        /// </remarks>
         /// <param name="seed">A <see cref="System.Int32" /> value to use as a seed.</param>
         public MersenneTwister(int seed)
         {
-            Initialize((uint)seed);
+            OriginalSeed = (uint)seed;
+            Initialize(OriginalSeed);
+        }
+
+        public MersenneTwister(uint seed)
+        {
+            OriginalSeed = seed;
+            Initialize(OriginalSeed);
+        }
+
+        public MersenneTwister(string seed, bool forceUpperCase = true)
+        {
+            if (forceUpperCase)
+            {
+                OriginalSeed = (uint)seed.GetStableUpperCaseHashCode();
+            }
+            else
+            {
+                OriginalSeed = (uint)seed.GetHashCode();
+            }
+
+            Initialize(OriginalSeed);
         }
 
         /// <summary>
@@ -139,47 +213,8 @@ namespace GDX.Mathematics.Random
                 initArray[i] = (uint)initKey[i];
             }
 
+            OriginalSeed = 19650218U;
             InitializeByKeys(initArray);
-        }
-
-        /// <summary>
-        ///     Generates a new pseudo-random <see cref="System.UInt32" />.
-        /// </summary>
-        /// <returns>A pseudo-random <see cref="System.UInt32" />.</returns>
-        private uint GenerateUnsignedInteger()
-        {
-            uint y;
-            if (_mersenneTwisterIndex >= N)
-            {
-                short kk = 0;
-
-                for (; kk < N - M; ++kk)
-                {
-                    y = (_mersenneTwisterState[kk] & UpperMask) | (_mersenneTwisterState[kk + 1] & LowerMask);
-                    _mersenneTwisterState[kk] = _mersenneTwisterState[kk + M] ^ (y >> 1) ^ s_mag01[y & 0x1];
-                }
-
-                for (; kk < N - 1; ++kk)
-                {
-                    y = (_mersenneTwisterState[kk] & UpperMask) | (_mersenneTwisterState[kk + 1] & LowerMask);
-                    _mersenneTwisterState[kk] = _mersenneTwisterState[kk + (M - N)] ^ (y >> 1) ^ s_mag01[y & 0x1];
-                }
-
-                y = (_mersenneTwisterState[N - 1] & UpperMask) | (_mersenneTwisterState[0] & LowerMask);
-                _mersenneTwisterState[N - 1] = _mersenneTwisterState[M - 1] ^ (y >> 1) ^ s_mag01[y & 0x1];
-
-                _mersenneTwisterIndex = 0;
-            }
-
-            y = _mersenneTwisterState[_mersenneTwisterIndex++];
-
-            // Apply bit shifts (aka Tempering)
-            y ^= y >> 11;
-            y ^= (y << 7) & 0x9d2c5680;
-            y ^= (y << 15) & 0xefc60000;
-            y ^= y >> 18;
-
-            return y;
         }
 
         private void Initialize(uint seed)
@@ -262,20 +297,51 @@ namespace GDX.Mathematics.Random
 
         private double Compute53BitRandom(double translate, double scale)
         {
-            ulong a = (ulong)GenerateUnsignedInteger() >> 5;
-            ulong b = (ulong)GenerateUnsignedInteger() >> 6;
+            ulong a = (ulong)NextUnsignedInteger() >> 5;
+            ulong b = (ulong)NextUnsignedInteger() >> 6;
             return (a * 67108864.0 + b + translate) * scale;
         }
 
         #region Random Value Getters
 
         /// <summary>
-        ///     Returns the next pseudo-random <see cref="System.UInt32" />.
+        ///     Generates a new pseudo-random <see cref="System.UInt32" />.
         /// </summary>
-        /// <returns>A pseudo-random <see cref="System.UInt32" /> value.</returns>
-        public virtual uint NextUInt()
+        /// <returns>A pseudo-random <see cref="System.UInt32" />.</returns>
+        public uint NextUnsignedInteger()
         {
-            return GenerateUnsignedInteger();
+            uint y;
+            if (_mersenneTwisterIndex >= N)
+            {
+                short kk = 0;
+
+                for (; kk < N - M; ++kk)
+                {
+                    y = (_mersenneTwisterState[kk] & UpperMask) | (_mersenneTwisterState[kk + 1] & LowerMask);
+                    _mersenneTwisterState[kk] = _mersenneTwisterState[kk + M] ^ (y >> 1) ^ s_mag01[y & 0x1];
+                }
+
+                for (; kk < N - 1; ++kk)
+                {
+                    y = (_mersenneTwisterState[kk] & UpperMask) | (_mersenneTwisterState[kk + 1] & LowerMask);
+                    _mersenneTwisterState[kk] = _mersenneTwisterState[kk + (M - N)] ^ (y >> 1) ^ s_mag01[y & 0x1];
+                }
+
+                y = (_mersenneTwisterState[N - 1] & UpperMask) | (_mersenneTwisterState[0] & LowerMask);
+                _mersenneTwisterState[N - 1] = _mersenneTwisterState[M - 1] ^ (y >> 1) ^ s_mag01[y & 0x1];
+
+                _mersenneTwisterIndex = 0;
+            }
+
+            y = _mersenneTwisterState[_mersenneTwisterIndex++];
+
+            // Apply bit shifts (aka Tempering)
+            y ^= y >> 11;
+            y ^= (y << 7) & 0x9d2c5680;
+            y ^= (y << 15) & 0xefc60000;
+            y ^= y >> 18;
+
+            return y;
         }
 
         /// <summary>
@@ -287,9 +353,10 @@ namespace GDX.Mathematics.Random
         /// <returns>
         ///     A pseudo-random <see cref="System.UInt32" /> value which is at most <paramref name="maxValue" />.
         /// </returns>
-        public virtual uint NextUInt(uint maxValue)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public uint NextUnsignedInteger(uint maxValue)
         {
-            return (uint)(GenerateUnsignedInteger() / ((double)uint.MaxValue / maxValue));
+            return (uint)(NextUnsignedInteger() / ((double)uint.MaxValue / maxValue));
         }
 
         /// <summary>
@@ -305,20 +372,21 @@ namespace GDX.Mathematics.Random
         /// <exception cref="ArgumentOutOfRangeException">
         ///     If <c><paramref name="minValue" /> &gt;= <paramref name="maxValue" /></c>.
         /// </exception>
-        public virtual uint NextUInt(uint minValue, uint maxValue) /* throws ArgumentOutOfRangeException */
+        public uint NextUnsignedInteger(uint minValue, uint maxValue) /* throws ArgumentOutOfRangeException */
         {
             if (minValue >= maxValue)
             {
                 throw new ArgumentOutOfRangeException();
             }
 
-            return (uint)(GenerateUnsignedInteger() / ((double)uint.MaxValue / (maxValue - minValue)) + minValue);
+            return (uint)(NextUnsignedInteger() / ((double)uint.MaxValue / (maxValue - minValue)) + minValue);
         }
 
         /// <summary>
         ///     Returns the next pseudo-random <see cref="System.Int32" />.
         /// </summary>
         /// <returns>A pseudo-random <see cref="System.Int32" /> value.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int Next()
         {
             return Next(int.MaxValue);
@@ -334,6 +402,7 @@ namespace GDX.Mathematics.Random
         /// <exception cref="ArgumentOutOfRangeException">
         ///     When <paramref name="maxValue" /> &lt; 0.
         /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int Next(int maxValue)
         {
             if (maxValue > 1)
@@ -362,6 +431,7 @@ namespace GDX.Mathematics.Random
         /// <exception cref="ArgumentOutOfRangeException">
         ///     If <c><paramref name="minValue" /> &gt;= <paramref name="maxValue" /></c>.
         /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int Next(int minValue, int maxValue)
         {
             if (maxValue <= minValue)
@@ -375,6 +445,38 @@ namespace GDX.Mathematics.Random
             }
 
             return Next(maxValue - minValue) + minValue;
+        }
+
+        /// <summary>
+        ///     Returns a pseudo random <see cref="System.Boolean" />. value based on chance (<code>0</code>-<code>1</code> roll),
+        ///     if the result is included.
+        /// </summary>
+        /// <param name="chance">The 0-1 percent chance of success.</param>
+        /// <returns>A pseudo random <see cref="System.Boolean" />.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool NextBias(float chance)
+        {
+            // No chance at all
+            if (chance == 0f)
+            {
+                return false;
+            }
+
+            // Roll the dice
+            float pseudoRandomValue = NextSingle(0.0f, 1.0f);
+
+            // If it's inclusive we nailed it
+            return pseudoRandomValue <= chance;
+        }
+
+        /// <summary>
+        ///     Returns a pseudo-random <see cref="System.Boolean" />.
+        /// </summary>
+        /// <returns>A <see cref="System.Boolean" /> value of either true or false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool NextBoolean()
+        {
+            return Next(1) == 1;
         }
 
         /// <summary>
@@ -406,7 +508,7 @@ namespace GDX.Mathematics.Random
         /// <remarks>
         ///     <para>
         ///         There are two common ways to create a double floating point using MT19937:
-        ///         using <see cref="GenerateUnsignedInteger" /> and dividing by 0xFFFFFFFF + 1,
+        ///         using <see cref="NextUnsignedInteger" /> and dividing by 0xFFFFFFFF + 1,
         ///         or else generating two double words and shifting the first by 26 bits and
         ///         adding the second.
         ///     </para>
@@ -427,6 +529,7 @@ namespace GDX.Mathematics.Random
         ///         </code>
         ///     </para>
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override double NextDouble()
         {
             return Compute53BitRandom(0, InverseOnePlus53BitsOf1S);
@@ -449,6 +552,7 @@ namespace GDX.Mathematics.Random
         ///     returns a <see cref="System.Double" />-precision pseudo-random number greater than or equal to zero and
         ///     strictly less than one.
         /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public double NextDouble(bool includeOne)
         {
             return includeOne ? Compute53BitRandom(0, Inverse53BitsOf1S) : NextDouble();
@@ -470,9 +574,33 @@ namespace GDX.Mathematics.Random
         ///     A <see cref="System.Single" />-precision floating point number greater than or equal to 0.0,
         ///     and less than 1.0.
         /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float NextSingle()
         {
             return (float)NextDouble();
+        }
+
+        /// <summary>
+        ///     Generate a random <see cref="System.Single" /> between <paramref name="minValue" /> and
+        ///     <paramref name="maxValue" /> .
+        /// </summary>
+        /// <param name="minValue">The lowest possible value.</param>
+        /// <param name="maxValue">The highest possible value.</param>
+        /// <returns>A pseudo random <see cref="System.Single" />.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public float NextSingle(float minValue, float maxValue)
+        {
+            if (maxValue <= minValue)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            if (maxValue == minValue)
+            {
+                return minValue;
+            }
+
+            return (float)(NextDouble() * (maxValue - minValue) + minValue);
         }
 
         /// <summary>
@@ -492,6 +620,7 @@ namespace GDX.Mathematics.Random
         ///     this method returns a single-precision pseudo-random number greater than or equal to zero and
         ///     strictly less than one.
         /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float NextSingle(bool includeOne)
         {
             return (float)NextDouble(includeOne);
@@ -501,18 +630,10 @@ namespace GDX.Mathematics.Random
         ///     Returns a pseudo-random positive <see cref="System.Single" /> number greater than 0.0 and less than 1.0.
         /// </summary>
         /// <returns>A pseudo-random number greater than 0.0 and less than 1.0.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float NextSinglePositive()
         {
             return (float)NextDoublePositive();
-        }
-
-        /// <summary>
-        ///     Returns a pseudo-random <see cref="System.Boolean" />.
-        /// </summary>
-        /// <returns>A <see cref="System.Boolean" /> value of either true or false.</returns>
-        public bool NextBoolean()
-        {
-            return Next(1) == 1;
         }
 
         #endregion
