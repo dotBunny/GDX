@@ -8,10 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ***"Untitled"***
 > 
 
-### Added
-
 ### Changed
-- Refactored 'MersenneTwister' internals to reflect their expected usage more, adding a range based `NextSingle`, `NextBias` and `NextBoolean` methods; while creating a `string` seed constructor.
+- Refactored 'MersenneTwister' internals to reflect their expected usage more, adding a range based `NextSingle`, `NextBias` and `NextBoolean` methods; while creating a `string` seed constructor. Minor tweaks internally correcting some intended behaviour, not effecting outward results.
 - Added **Third Party Licenses** section to `LICENSE` doc including reference to original MersenneTwister license.
 
 ### Removed

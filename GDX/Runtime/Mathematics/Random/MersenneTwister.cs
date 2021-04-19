@@ -35,7 +35,6 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -372,7 +371,7 @@ namespace GDX.Mathematics.Random
         /// <exception cref="ArgumentOutOfRangeException">
         ///     If <c><paramref name="minValue" /> &gt;= <paramref name="maxValue" /></c>.
         /// </exception>
-        public uint NextUnsignedInteger(uint minValue, uint maxValue) /* throws ArgumentOutOfRangeException */
+        public uint NextUnsignedInteger(uint minValue, uint maxValue)
         {
             if (minValue >= maxValue)
             {
@@ -434,7 +433,7 @@ namespace GDX.Mathematics.Random
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int Next(int minValue, int maxValue)
         {
-            if (maxValue <= minValue)
+            if (maxValue < minValue)
             {
                 throw new ArgumentOutOfRangeException();
             }
@@ -590,7 +589,7 @@ namespace GDX.Mathematics.Random
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float NextSingle(float minValue, float maxValue)
         {
-            if (maxValue <= minValue)
+            if (maxValue < minValue)
             {
                 throw new ArgumentOutOfRangeException();
             }
