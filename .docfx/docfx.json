@@ -2,11 +2,12 @@
   "metadata": [
     {
       "src": [
-        { 
+        {
           "src": "../../..",
-          "files": [            
+          "files": [
             "GDX.csproj",
-            "GDX.Editor.csproj",            
+            "GDX.Editor.csproj",
+            "GDX.Licensed.csproj"
           ]
         }
       ],
@@ -31,7 +32,7 @@
       {
         "files": [
           "manual/**.md",
-          "manual/**/toc.yml",          
+          "manual/**/toc.yml",
           "toc.yml",
           "*.md"
         ]
@@ -67,7 +68,7 @@
         "branch": "main",
         "apiSpecFolder": ".docfx/apispec"
       }
-    },  
+    },
     "dest": "_site",
     "globalMetadataFiles": [],
     "fileMetadataFiles": [],
