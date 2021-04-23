@@ -38,7 +38,7 @@ using System.Runtime.CompilerServices;
 
 // ReSharper disable MemberCanBePrivate.Global
 
-namespace GDX.Mathematics.Random
+namespace GDX.Licensed.Mathematics.Random
 {
     /// <summary>
     ///     Generates pseudo-random value using the Mersenne Twister algorithm.
@@ -61,7 +61,7 @@ namespace GDX.Mathematics.Random
     ///     </para>
     /// </remarks>
     [VisualScriptingType]
-    public sealed class MersenneTwister : System.Random
+    public sealed class MersenneTwister : System.Random, GDX.Mathematics.IRandomProvider
     {
         /// <summary>
         ///     The degree of recurrence.

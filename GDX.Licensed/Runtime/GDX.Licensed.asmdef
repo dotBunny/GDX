@@ -1,0 +1,16 @@
+{
+    "name": "GDX.Licensed",
+    "rootNamespace": "GDX.Licensed",
+    "references": [
+        "GDX"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
