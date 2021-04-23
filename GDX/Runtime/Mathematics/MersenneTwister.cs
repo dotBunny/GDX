@@ -1,6 +1,8 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+#if GDX_LICENSED
+
 /*
    Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura,
    All rights reserved.
@@ -35,11 +37,10 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using GDX.Mathematics;
 
 // ReSharper disable MemberCanBePrivate.Global
 
-namespace GDX.Licensed.Mathematics.Random
+namespace GDX.Mathematics
 {
     /// <summary>
     ///     Generates pseudo-random value using the Mersenne Twister algorithm.
@@ -62,7 +63,7 @@ namespace GDX.Licensed.Mathematics.Random
     ///     </para>
     /// </remarks>
     [VisualScriptingType]
-    public sealed class MersenneTwister : System.Random, GDX.Mathematics.IRandomProvider
+    public sealed class MersenneTwister : System.Random, IPseudoRandomGenerator
     {
         /// <summary>
         ///     The degree of recurrence.
@@ -116,11 +117,6 @@ namespace GDX.Licensed.Mathematics.Random
         ///     Inverse of <see cref="OnePlus53BitsOf1S" />.
         /// </summary>
         private const double InverseOnePlus53BitsOf1S = 1.0 / OnePlus53BitsOf1S;
-
-        /// <summary>
-        ///     The size of the <see cref="string" /> used for creating a seed with <see cref="GenerateSeed" />.
-        /// </summary>
-        private const int FriendlySeedLength = 64;
 
         /// <summary>
         ///     Magnitude lookup.
@@ -304,7 +300,7 @@ namespace GDX.Licensed.Mathematics.Random
 
         #region Random Value Getters
 
-        /// <inheritdoc cref="IRandomProvider.NextUnsignedInteger()"/>
+        /// <inheritdoc cref="IPseudoRandomGenerator.NextUnsignedInteger()"/>
         public uint NextUnsignedInteger()
         {
             uint y;
@@ -341,14 +337,14 @@ namespace GDX.Licensed.Mathematics.Random
             return y;
         }
 
-        /// <inheritdoc cref="IRandomProvider.NextUnsignedInteger(uint)"/>
+        /// <inheritdoc cref="IPseudoRandomGenerator.NextUnsignedInteger(uint)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint NextUnsignedInteger(uint maxValue)
         {
             return (uint)(NextUnsignedInteger() / ((double)uint.MaxValue / maxValue));
         }
 
-        /// <inheritdoc cref="IRandomProvider.NextUnsignedInteger(uint,uint)"/>
+        /// <inheritdoc cref="IPseudoRandomGenerator.NextUnsignedInteger(uint,uint)"/>
         public uint NextUnsignedInteger(uint minValue, uint maxValue)
         {
             if (minValue >= maxValue)
@@ -359,14 +355,14 @@ namespace GDX.Licensed.Mathematics.Random
             return (uint)(NextUnsignedInteger() / ((double)uint.MaxValue / (maxValue - minValue)) + minValue);
         }
 
-        /// <inheritdoc cref="IRandomProvider.Next()"/>
+        /// <inheritdoc cref="IPseudoRandomGenerator.Next()"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int Next()
         {
             return Next(int.MaxValue);
         }
 
-        /// <inheritdoc cref="IRandomProvider.Next(int)"/>
+        /// <inheritdoc cref="IPseudoRandomGenerator.Next(int)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int Next(int maxValue)
         {
@@ -383,7 +379,7 @@ namespace GDX.Licensed.Mathematics.Random
             return 0;
         }
 
-        /// <inheritdoc cref="IRandomProvider.Next(int,int)"/>
+        /// <inheritdoc cref="IPseudoRandomGenerator.Next(int,int)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int Next(int minValue, int maxValue)
         {
@@ -400,7 +396,7 @@ namespace GDX.Licensed.Mathematics.Random
             return Next(maxValue - minValue) + minValue;
         }
 
-        /// <inheritdoc cref="IRandomProvider.NextBias"/>
+        /// <inheritdoc cref="IPseudoRandomGenerator.NextBias"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool NextBias(float chance)
         {
@@ -417,14 +413,14 @@ namespace GDX.Licensed.Mathematics.Random
             return pseudoRandomValue <= chance;
         }
 
-        /// <inheritdoc cref="IRandomProvider.NextBoolean"/>
+        /// <inheritdoc cref="IPseudoRandomGenerator.NextBoolean"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool NextBoolean()
         {
             return Next(1) == 1;
         }
 
-        /// <inheritdoc cref="IRandomProvider.NextBytes"/>
+        /// <inheritdoc cref="IPseudoRandomGenerator.NextBytes"/>
         public override void NextBytes(byte[] buffer)
         {
             if (buffer == null)
@@ -440,7 +436,7 @@ namespace GDX.Licensed.Mathematics.Random
             }
         }
 
-        /// <inheritdoc cref="IRandomProvider.NextDouble()"/>
+        /// <inheritdoc cref="IPseudoRandomGenerator.NextDouble()"/>
         /// <remarks>
         ///     <para>
         ///         There are two common ways to create a double floating point using MT19937:
@@ -471,27 +467,27 @@ namespace GDX.Licensed.Mathematics.Random
             return Compute53BitRandom(0, InverseOnePlus53BitsOf1S);
         }
 
-        /// <inheritdoc cref="IRandomProvider.NextDouble(bool)"/>
+        /// <inheritdoc cref="IPseudoRandomGenerator.NextDouble(bool)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public double NextDouble(bool includeOne)
         {
             return includeOne ? Compute53BitRandom(0, Inverse53BitsOf1S) : NextDouble();
         }
 
-        /// <inheritdoc cref="IRandomProvider.NextDoublePositive"/>
+        /// <inheritdoc cref="IPseudoRandomGenerator.NextDoublePositive"/>
         public double NextDoublePositive()
         {
             return Compute53BitRandom(0.5, Inverse53BitsOf1S);
         }
 
-        /// <inheritdoc cref="IRandomProvider.NextSingle()"/>
+        /// IPseudoRandomc cref="IPseudoRNG.NextSingle()"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float NextSingle()
         {
             return (float)NextDouble();
         }
 
-        /// <inheritdoc cref="IRandomProvider.NextSingle(float,float)"/>
+        /// <inheritdoc cref="IPseudoRandomGenerator.NextSingle(float,float)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float NextSingle(float minValue, float maxValue)
         {
@@ -508,14 +504,14 @@ namespace GDX.Licensed.Mathematics.Random
             return (float)(NextDouble() * (maxValue - minValue) + minValue);
         }
 
-        /// <inheritdoc cref="IRandomProvider.NextSingle(bool)"/>
+        /// <inheritdoc cref="IPseudoRandomGenerator.NextSingle(bool)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float NextSingle(bool includeOne)
         {
             return (float)NextDouble(includeOne);
         }
 
-        /// <inheritdoc cref="IRandomProvider.NextSinglePositive"/>
+        /// <inheritdoc cref="IPseudoRandomGenerator.NextSinglePositive"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float NextSinglePositive()
         {
@@ -525,3 +521,5 @@ namespace GDX.Licensed.Mathematics.Random
         #endregion
     }
 }
+
+#endif

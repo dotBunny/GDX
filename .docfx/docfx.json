@@ -7,7 +7,6 @@
           "files": [
             "GDX.csproj",
             "GDX.Editor.csproj",
-            "GDX.Licensed.csproj"
           ]
         }
       ],
@@ -17,7 +16,7 @@
       "filter": "filterConfig.yml" ,
       "properties": {
         "TargetFramework": "netstandard2.0",
-        "DefineConstants": "UNITY_EDITOR;GDX_ADDRESSABLES;GDX_BURST;GDX_JOBS;GDX_MATHEMATICS;GDX_PLATFORMS"
+        "DefineConstants": "UNITY_EDITOR;GDX_LICENSED;GDX_ADDRESSABLES;GDX_BURST;GDX_JOBS;GDX_MATHEMATICS;GDX_PLATFORMS"
       }
     }
   ],

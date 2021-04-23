@@ -1,6 +1,6 @@
 namespace GDX.Mathematics
 {
-    public interface IRandomProvider
+    public interface IPseudoRandomGenerator
     {
         /// <summary>
         ///     Returns the next pseudo-random <see cref="System.Int32" />.
