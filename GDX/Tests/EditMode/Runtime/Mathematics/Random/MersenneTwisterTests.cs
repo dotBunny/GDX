@@ -4,10 +4,10 @@
 #if GDX_LICENSED
 
 using System;
-using GDX.Mathematics;
+using GDX.Mathematics.Random;
 using NUnit.Framework;
 
-namespace Runtime.Mathematics
+namespace Runtime.Mathematics.Random
 {
     public class MersenneTwisterTests
     {

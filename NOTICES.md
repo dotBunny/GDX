@@ -1,6 +1,8 @@
 # Third Party Notices
 
-This NOTICES file provides notices and information below about the third party code or other materials ("Third Party Software") listed below which are included with the Software.
+This NOTICES file provides notices and information below about the third party code or other materials ("Third Party Software") listed below which are included with the Software. 
+
+> The Third Party Software is **only included** if the **GDX_LICENSED** scripting define symbol is present during compilation. 
 
 ## [Mersenne Twister](https://github.com/dotBunny/GDX/blob/main/GDX/Runtime/Mathematics/Random/MersenneTwister.cs)
 ```text

@@ -1,6 +1,10 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+/*
+ *  Utilizing this code adds additional licensing requirements outlined
+ *  in the codes license below.
+ */
 #if GDX_LICENSED
 
 /*
@@ -40,7 +44,7 @@ using System.Runtime.CompilerServices;
 
 // ReSharper disable MemberCanBePrivate.Global
 
-namespace GDX.Mathematics
+namespace GDX.Mathematics.Random
 {
     /// <summary>
     ///     Generates pseudo-random value using the Mersenne Twister algorithm.
@@ -63,7 +67,7 @@ namespace GDX.Mathematics
     ///     </para>
     /// </remarks>
     [VisualScriptingType]
-    public sealed class MersenneTwister : System.Random, IPseudoRandomGenerator
+    public sealed class MersenneTwister : System.Random
     {
         /// <summary>
         ///     The degree of recurrence.
