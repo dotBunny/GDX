@@ -35,6 +35,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using GDX.Mathematics;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -303,10 +304,7 @@ namespace GDX.Licensed.Mathematics.Random
 
         #region Random Value Getters
 
-        /// <summary>
-        ///     Generates a new pseudo-random <see cref="System.UInt32" />.
-        /// </summary>
-        /// <returns>A pseudo-random <see cref="System.UInt32" />.</returns>
+        /// <inheritdoc cref="IRandomProvider.NextUnsignedInteger()"/>
         public uint NextUnsignedInteger()
         {
             uint y;
@@ -343,34 +341,14 @@ namespace GDX.Licensed.Mathematics.Random
             return y;
         }
 
-        /// <summary>
-        ///     Returns the next pseudo-random <see cref="System.UInt32" /> up to <paramref name="maxValue" />.
-        /// </summary>
-        /// <param name="maxValue">
-        ///     The maximum value of the pseudo-random number to create.
-        /// </param>
-        /// <returns>
-        ///     A pseudo-random <see cref="System.UInt32" /> value which is at most <paramref name="maxValue" />.
-        /// </returns>
+        /// <inheritdoc cref="IRandomProvider.NextUnsignedInteger(uint)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint NextUnsignedInteger(uint maxValue)
         {
             return (uint)(NextUnsignedInteger() / ((double)uint.MaxValue / maxValue));
         }
 
-        /// <summary>
-        ///     Returns the next pseudo-random <see cref="System.UInt32" /> at least
-        ///     <paramref name="minValue" /> and up to <paramref name="maxValue" />.
-        /// </summary>
-        /// <param name="minValue">The minimum value of the pseudo-random number to create.</param>
-        /// <param name="maxValue">The maximum value of the pseudo-random number to create.</param>
-        /// <returns>
-        ///     A pseudo-random <see cref="System.UInt32" /> value which is at least
-        ///     <paramref name="minValue" /> and at most <paramref name="maxValue" />.
-        /// </returns>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     If <c><paramref name="minValue" /> &gt;= <paramref name="maxValue" /></c>.
-        /// </exception>
+        /// <inheritdoc cref="IRandomProvider.NextUnsignedInteger(uint,uint)"/>
         public uint NextUnsignedInteger(uint minValue, uint maxValue)
         {
             if (minValue >= maxValue)
@@ -381,26 +359,14 @@ namespace GDX.Licensed.Mathematics.Random
             return (uint)(NextUnsignedInteger() / ((double)uint.MaxValue / (maxValue - minValue)) + minValue);
         }
 
-        /// <summary>
-        ///     Returns the next pseudo-random <see cref="System.Int32" />.
-        /// </summary>
-        /// <returns>A pseudo-random <see cref="System.Int32" /> value.</returns>
+        /// <inheritdoc cref="IRandomProvider.Next()"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int Next()
         {
             return Next(int.MaxValue);
         }
 
-        /// <summary>
-        ///     Returns the next pseudo-random <see cref="System.Int32" /> up to <paramref name="maxValue" />.
-        /// </summary>
-        /// <param name="maxValue">The maximum value of the pseudo-random number to create.</param>
-        /// <returns>
-        ///     A pseudo-random <see cref="Int32" /> value which is at most <paramref name="maxValue" />.
-        /// </returns>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     When <paramref name="maxValue" /> &lt; 0.
-        /// </exception>
+        /// <inheritdoc cref="IRandomProvider.Next(int)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int Next(int maxValue)
         {
@@ -417,19 +383,7 @@ namespace GDX.Licensed.Mathematics.Random
             return 0;
         }
 
-        /// <summary>
-        ///     Returns the next pseudo-random <see cref="System.Int32" /> at least <paramref name="minValue" />
-        ///     and up to <paramref name="maxValue" />.
-        /// </summary>
-        /// <param name="minValue">The minimum value of the pseudo-random number to create.</param>
-        /// <param name="maxValue">The maximum value of the pseudo-random number to create.</param>
-        /// <returns>
-        ///     A pseudo-random <see cref="System.Int32" /> value which is at least <paramref name="minValue" /> and at
-        ///     most <paramref name="maxValue" />.
-        /// </returns>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     If <c><paramref name="minValue" /> &gt;= <paramref name="maxValue" /></c>.
-        /// </exception>
+        /// <inheritdoc cref="IRandomProvider.Next(int,int)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override int Next(int minValue, int maxValue)
         {
@@ -446,12 +400,7 @@ namespace GDX.Licensed.Mathematics.Random
             return Next(maxValue - minValue) + minValue;
         }
 
-        /// <summary>
-        ///     Returns a pseudo random <see cref="System.Boolean" />. value based on chance (<code>0</code>-<code>1</code> roll),
-        ///     if the result is included.
-        /// </summary>
-        /// <param name="chance">The 0-1 percent chance of success.</param>
-        /// <returns>A pseudo random <see cref="System.Boolean" />.</returns>
+        /// <inheritdoc cref="IRandomProvider.NextBias"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool NextBias(float chance)
         {
@@ -468,23 +417,14 @@ namespace GDX.Licensed.Mathematics.Random
             return pseudoRandomValue <= chance;
         }
 
-        /// <summary>
-        ///     Returns a pseudo-random <see cref="System.Boolean" />.
-        /// </summary>
-        /// <returns>A <see cref="System.Boolean" /> value of either true or false.</returns>
+        /// <inheritdoc cref="IRandomProvider.NextBoolean"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool NextBoolean()
         {
             return Next(1) == 1;
         }
 
-        /// <summary>
-        ///     Fills a buffer with pseudo-random <see cref="System.Byte" />.
-        /// </summary>
-        /// <param name="buffer">The buffer to fill.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     If <c><paramref name="buffer" /> == <see langword="null" /></c>.
-        /// </exception>
+        /// <inheritdoc cref="IRandomProvider.NextBytes"/>
         public override void NextBytes(byte[] buffer)
         {
             if (buffer == null)
@@ -500,10 +440,7 @@ namespace GDX.Licensed.Mathematics.Random
             }
         }
 
-        /// <summary>
-        ///     Returns the next pseudo-random <see cref="System.Double" /> value.
-        /// </summary>
-        /// <returns>A pseudo-random <see cref="System.Double" /> floating point value.</returns>
+        /// <inheritdoc cref="IRandomProvider.NextDouble()"/>
         /// <remarks>
         ///     <para>
         ///         There are two common ways to create a double floating point using MT19937:
@@ -534,58 +471,27 @@ namespace GDX.Licensed.Mathematics.Random
             return Compute53BitRandom(0, InverseOnePlus53BitsOf1S);
         }
 
-        /// <summary>
-        ///     Returns a pseudo-random <see cref="System.Double" /> number greater than or equal to zero, and
-        ///     either strictly less than one, or less than or equal to one,
-        ///     depending on the value of the given parameter.
-        /// </summary>
-        /// <param name="includeOne">
-        ///     If <see langword="true" />, the pseudo-random <see cref="System.Double" /> number returned will be
-        ///     less than or equal to one; otherwise, the pseudo-random number returned will
-        ///     be strictly less than one.
-        /// </param>
-        /// <returns>
-        ///     If <paramref name="includeOne" /> is <see langword="true" />, this method returns a
-        ///     <see cref="System.Double" />-precision pseudo-random number greater than or equal to zero, and less
-        ///     than or equal to one. If <paramref name="includeOne" /> is <see langword="false" />, this method
-        ///     returns a <see cref="System.Double" />-precision pseudo-random number greater than or equal to zero and
-        ///     strictly less than one.
-        /// </returns>
+        /// <inheritdoc cref="IRandomProvider.NextDouble(bool)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public double NextDouble(bool includeOne)
         {
             return includeOne ? Compute53BitRandom(0, Inverse53BitsOf1S) : NextDouble();
         }
 
-        /// <summary>
-        ///     Returns a pseudo-random <see cref="System.Double" /> number greater than 0.0 and less than 1.0.
-        /// </summary>
-        /// <returns>A pseudo-random <see cref="System.Double" /> number greater than 0.0 and less than 1.0.</returns>
+        /// <inheritdoc cref="IRandomProvider.NextDoublePositive"/>
         public double NextDoublePositive()
         {
             return Compute53BitRandom(0.5, Inverse53BitsOf1S);
         }
 
-        /// <summary>
-        ///     Returns a pseudo-random <see cref="System.Single" /> number between 0.0 and 1.0.
-        /// </summary>
-        /// <returns>
-        ///     A <see cref="System.Single" />-precision floating point number greater than or equal to 0.0,
-        ///     and less than 1.0.
-        /// </returns>
+        /// <inheritdoc cref="IRandomProvider.NextSingle()"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float NextSingle()
         {
             return (float)NextDouble();
         }
 
-        /// <summary>
-        ///     Generate a random <see cref="System.Single" /> between <paramref name="minValue" /> and
-        ///     <paramref name="maxValue" /> .
-        /// </summary>
-        /// <param name="minValue">The lowest possible value.</param>
-        /// <param name="maxValue">The highest possible value.</param>
-        /// <returns>A pseudo random <see cref="System.Single" />.</returns>
+        /// <inheritdoc cref="IRandomProvider.NextSingle(float,float)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float NextSingle(float minValue, float maxValue)
         {
@@ -602,33 +508,14 @@ namespace GDX.Licensed.Mathematics.Random
             return (float)(NextDouble() * (maxValue - minValue) + minValue);
         }
 
-        /// <summary>
-        ///     Returns a pseudo-random <see cref="System.Single" /> number greater than or equal to zero,
-        ///     and either strictly less than one, or less than or equal to one, depending on the value of the
-        ///     given boolean parameter.
-        /// </summary>
-        /// <param name="includeOne">
-        ///     If <see langword="true" />, the pseudo-random number returned will be
-        ///     less than or equal to one; otherwise, the pseudo-random number returned will
-        ///     be strictly less than one.
-        /// </param>
-        /// <returns>
-        ///     If <paramref name="includeOne" /> is <see langword="true" />, this method returns a
-        ///     <see cref="System.Single" />-precision pseudo-random number greater than or equal to zero, and less
-        ///     than or equal to one. If <paramref name="includeOne" /> is <see langword="false" />,
-        ///     this method returns a single-precision pseudo-random number greater than or equal to zero and
-        ///     strictly less than one.
-        /// </returns>
+        /// <inheritdoc cref="IRandomProvider.NextSingle(bool)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float NextSingle(bool includeOne)
         {
             return (float)NextDouble(includeOne);
         }
 
-        /// <summary>
-        ///     Returns a pseudo-random positive <see cref="System.Single" /> number greater than 0.0 and less than 1.0.
-        /// </summary>
-        /// <returns>A pseudo-random number greater than 0.0 and less than 1.0.</returns>
+        /// <inheritdoc cref="IRandomProvider.NextSinglePositive"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float NextSinglePositive()
         {
