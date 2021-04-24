@@ -3,13 +3,20 @@ using System.Runtime.CompilerServices;
 
 namespace GDX.Mathematics.Random
 {
-    // http://lomont.org/papers/2008/Lomont_PRNG_2008.pdf
-    // http://www.iro.umontreal.ca/~panneton/WELLRNG.html
-    // http://www.iro.umontreal.ca/~panneton/well/WELL1024a.c
-
+    /// <summary>
+    ///     Generates pseudorandom values based on the WELL1024a algorithm.
+    /// </summary>
+    /// <remarks>
+    ///     Primarily based on the work of Chris Lomont, available at http://lomont.org/papers/2008/Lomont_PRNG_2008.pdf.
+    ///     Additional understanding from Francois Panneton and Pierre L`Ecuyer, available at
+    ///     http://www.iro.umontreal.ca/~lecuyer/myftp/papers/lfsr04.pdf
+    /// </remarks>
     // ReSharper disable once InconsistentNaming
     public class WELL1024a
     {
+        /// <summary>
+        ///     The state array of the well.
+        /// </summary>
         private readonly uint[] _state = new uint[32];
 
         /// <summary>
@@ -17,6 +24,9 @@ namespace GDX.Mathematics.Random
         /// </summary>
         public readonly uint OriginalSeed;
 
+        /// <summary>
+        ///     The current index of use for the well array.
+        /// </summary>
         private uint _index;
 
         public WELL1024a(int seed)
