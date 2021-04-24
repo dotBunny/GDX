@@ -22,7 +22,7 @@ namespace GDX.Mathematics.Random
         /// <summary>
         ///     The state array of the well.
         /// </summary>
-        private readonly uint[] _state = new uint[32];
+        public readonly uint[] State = new uint[32];
 
         /// <summary>
         ///     A copy of the original seed used to initialize the <see cref="WELL1024a" />.
@@ -32,39 +32,80 @@ namespace GDX.Mathematics.Random
         /// <summary>
         ///     The current index of use for the well array.
         /// </summary>
-        private uint _index;
+        /// <remarks>CAUTION! Changing this will alter the understanding of the data.</remarks>
+        public uint Index;
 
+        /// <summary>
+        ///     Creates a new pseudorandom number generator with the given <paramref name="seed" />.
+        /// </summary>
+        /// <remarks>
+        ///     The <paramref name="seed" /> will have its sign stripped and stored as such in
+        ///     <see cref="OriginalSeed" />.
+        /// </remarks>
+        /// <param name="seed">A <see cref="int" /> value to use as a seed.</param>
         public WELL1024a(int seed)
         {
-            OriginalSeed = (uint)seed;
+#if GDX_MATHEMATICS
+            OriginalSeed = (uint)Unity.Mathematics.math.abs(seed);
+#else
+            OriginalSeed = (uint)UnityEngine.Mathf.Abs(seed);
+#endif
             Initialize(OriginalSeed);
         }
 
+        /// <summary>
+        ///     Creates a new pseudorandom number generator with the given <paramref name="seed" />.
+        /// </summary>
+        /// <param name="seed">A <see cref="uint" /> value to use as a seed.</param>
         public WELL1024a(uint seed)
         {
             OriginalSeed = seed;
             Initialize(OriginalSeed);
         }
 
+        /// <summary>
+        ///     Creates a new pseudorandom number generator with the given <paramref name="seed" />.
+        /// </summary>
+        /// <remarks>
+        ///     The created hashcode will have its sign stripped and stored as such in
+        ///     <see cref="OriginalSeed" />.
+        /// </remarks>
+        /// <param name="seed">A <see cref="string" /> to create a <see cref="uint" /> seed from.</param>
+        /// <param name="forceUpperCase">
+        ///     Should the generated hashcode used as the seed be generated from an uppercase version of
+        ///     the <paramref name="seed" />.
+        /// </param>
         public WELL1024a(string seed, bool forceUpperCase = true)
         {
             if (forceUpperCase)
             {
-                OriginalSeed = (uint)seed.GetStableUpperCaseHashCode();
+#if GDX_MATHEMATICS
+                OriginalSeed = (uint)Unity.Mathematics.math.abs(seed.GetStableUpperCaseHashCode());
+#else
+                OriginalSeed = (uint)UnityEngine.Mathf.Abs(seed.GetStableUpperCaseHashCode());
+#endif
             }
             else
             {
-                OriginalSeed = (uint)seed.GetHashCode();
+#if GDX_MATHEMATICS
+                OriginalSeed = (uint)Unity.Mathematics.math.abs(seed.GetHashCode());
+#else
+                OriginalSeed = (uint)UnityEngine.Mathf.Abs(seed.GetHashCode());
+#endif
             }
 
             Initialize(OriginalSeed);
         }
 
+        /// <summary>
+        ///     Create a pseudorandom number generator from a <paramref name="restoreState" />.
+        /// </summary>
+        /// <param name="restoreState">A saved <see cref="WELL1024a" /> state.</param>
         public WELL1024a(WellState restoreState)
         {
             OriginalSeed = restoreState.Seed;
-            _index = restoreState.Index;
-            _state = restoreState.State;
+            Index = restoreState.Index;
+            State = restoreState.State;
         }
 
         /// <summary>
@@ -73,21 +114,21 @@ namespace GDX.Mathematics.Random
         /// <param name="seed">A <see cref="uint" /> value.</param>
         private void Initialize(uint seed)
         {
-            _state[0] = seed & 4294967295u;
+            State[0] = seed & 4294967295u;
             for (int i = 1; i < 32; ++i)
             {
-                _state[i] = (69069u * _state[i - 1]) & 4294967295u;
+                State[i] = (69069u * State[i - 1]) & 4294967295u;
             }
         }
 
         /// <summary>
-        ///     Get a <see cref="WellState"/> for the <see cref="WELL1024a"/>.
+        ///     Get a <see cref="WellState" /> for the <see cref="WELL1024a" />.
         /// </summary>
-        /// <remarks>Useful to save and restore the state of the <see cref="WELL1024a"/>.</remarks>
+        /// <remarks>Useful to save and restore the state of the <see cref="WELL1024a" />.</remarks>
         /// <returns></returns>
         public WellState GetState()
         {
-            return new WellState {Index = _index, State = _state, Seed = OriginalSeed};
+            return new WellState {Index = Index, State = State, Seed = OriginalSeed};
         }
 
         /// <summary>
@@ -96,18 +137,18 @@ namespace GDX.Mathematics.Random
         /// <returns>A pseudorandom <see cref="double" /> floating point value.</returns>
         public double Next()
         {
-            uint a = _state[(_index + 3u) & 31u];
-            uint z1 = _state[_index] ^ a ^ (a >> 8);
-            uint b = _state[(_index + 24u) & 31u];
-            uint c = _state[(_index + 10u) & 31u];
+            uint a = State[(Index + 3u) & 31u];
+            uint z1 = State[Index] ^ a ^ (a >> 8);
+            uint b = State[(Index + 24u) & 31u];
+            uint c = State[(Index + 10u) & 31u];
             uint z2 = b ^ (b << 19) ^ c ^ (c << 14);
 
-            _state[_index] = z1 ^ z2;
-            uint d = _state[(_index + 31u) & 31u];
-            _state[(_index + 31u) & 31u] = d ^ (d << 11) ^ z1 ^ (z1 << 7) ^ z2 ^ (z2 << 13);
-            _index = (_index + 31u) & 31u;
+            State[Index] = z1 ^ z2;
+            uint d = State[(Index + 31u) & 31u];
+            State[(Index + 31u) & 31u] = d ^ (d << 11) ^ z1 ^ (z1 << 7) ^ z2 ^ (z2 << 13);
+            Index = (Index + 31u) & 31u;
 
-            return _state[_index] * 2.32830643653869628906e-10d;
+            return State[Index] * 2.32830643653869628906e-10d;
         }
 
         /// <summary>
@@ -143,7 +184,7 @@ namespace GDX.Mathematics.Random
         ///     Fills a buffer with pseudorandom <see cref="System.Byte" />.
         /// </summary>
         /// <remarks>
-        ///     The <paramref name="buffer"/> shouldn't be <see lanwgword="null" />.<paramref name="minValue" /> should not be greater then <paramref name="maxValue" />.
+        ///     The <paramref name="buffer" /> shouldn't be <see lanwgword="null" />.
         /// </remarks>
         /// <param name="buffer">The buffer to fill.</param>
         public void NextBytes(byte[] buffer)

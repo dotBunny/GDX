@@ -1,7 +1,6 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using GDX.Mathematics.Random;
 using NUnit.Framework;
 
@@ -9,19 +8,86 @@ namespace Runtime.Mathematics.Random
 {
     public class WELL1024aTests
     {
-         private const string MockSeed = "TestSeed";
-        //
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void WELL1024a_MockSeed_FromKeyArray()
-        // {
-        //     int[] keys = {1, 2, 3};
-        //     WELL1024a mockWell = new WELL1024a(keys);
-        //
-        //     bool evaluate = mockWell != null && mockWell.OriginalSeed == 19650218U;
-        //
-        //     Assert.IsTrue(evaluate);
-        // }
+        private const string MockSeed = "TestSeed";
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void WELL1024a_FromInteger_StrippedSeed()
+        {
+            WELL1024a mockWell = new WELL1024a(-999);
+
+            bool evaluate = mockWell != null && mockWell.OriginalSeed == 999u;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void WELL1024a_FromString_NonAndForcedDifferent()
+        {
+            WELL1024a mockWell = new WELL1024a(MockSeed, false);
+            WELL1024a mockWellUpper = new WELL1024a(MockSeed);
+
+            bool evaluate = mockWell != null && mockWellUpper != null &&
+                            mockWell.OriginalSeed != mockWellUpper.OriginalSeed;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void WELL1024a_FromStringUppercase_SameOriginalSeed()
+        {
+            WELL1024a mockWell = new WELL1024a("BOB", false);
+            WELL1024a mockWellUpper = new WELL1024a("BoB");
+
+            bool evaluate = mockWell != null && mockWellUpper != null &&
+                            mockWell.OriginalSeed == mockWellUpper.OriginalSeed;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void WELL1024a_FromUnsignedInteger_MatchedSeed()
+        {
+            WELL1024a mockWell = new WELL1024a(999u);
+
+            bool evaluate = mockWell != null && mockWell.OriginalSeed == 999u;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void WELL1024a_FromRestoreState_Matched()
+        {
+            WELL1024a mockWell = new WELL1024a(MockSeed);
+            mockWell.Next();
+            mockWell.Next();
+            mockWell.Next();
+            WELL1024a.WellState saved = mockWell.GetState();
+            WELL1024a restoreWell = new WELL1024a(saved);
+
+            bool evaluate = mockWell != null && restoreWell != null &&
+                            mockWell.Index == restoreWell.Index &&
+                            mockWell.OriginalSeed == restoreWell.OriginalSeed;
+
+            if (evaluate)
+            {
+                for (int i = 0; i < 32; i++)
+                {
+                    if (mockWell.State[i] != restoreWell.State[i])
+                    {
+                        evaluate = false;
+                        break;
+                    }
+                }
+            }
+
+            Assert.IsTrue(evaluate);
+        }
+
         //
         // [Test]
         // [Category("GDX.Tests")]
@@ -96,7 +162,6 @@ namespace Runtime.Mathematics.Random
         // {
         //     Assert.Throws<ArgumentNullException>(() => { new WELL1024a(null); });
         // }
-
 
 
         // [Test]
