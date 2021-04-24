@@ -52,6 +52,10 @@ namespace GDX.Mathematics.Random
             _state = restoreState.State;
         }
 
+        /// <summary>
+        ///     Prepare the <see cref="WELL1024a" /> with the provided seed.
+        /// </summary>
+        /// <param name="seed">A <see cref="uint" /> value.</param>
         private void Initialize(uint seed)
         {
             _state[0] = seed & 4294967295u;
@@ -62,50 +66,31 @@ namespace GDX.Mathematics.Random
         }
 
         /// <summary>
-        ///     Returns the next pseudo-random <see cref="System.Int32" />.
+        ///     Returns the next pseudorandom <see cref="double" /> value .
         /// </summary>
-        /// <returns>A pseudo-random <see cref="System.Int32" /> value.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int NextInteger()
+        /// <returns>A pseudorandom <see cref="double" /> floating point value.</returns>
+        public double Next()
         {
-            throw new NotImplementedException();
+            uint a = _state[(_index + 3u) & 31u];
+            uint z1 = _state[_index] ^ a ^ (a >> 8);
+            uint b = _state[(_index + 24u) & 31u];
+            uint c = _state[(_index + 10u) & 31u];
+            uint z2 = b ^ (b << 19) ^ c ^ (c << 14);
+
+            _state[_index] = z1 ^ z2;
+            uint d = _state[(_index + 31u) & 31u];
+            _state[(_index + 31u) & 31u] = d ^ (d << 11) ^ z1 ^ (z1 << 7) ^ z2 ^ (z2 << 13);
+            _index = (_index + 31u) & 31u;
+
+            return _state[_index] * 2.32830643653869628906e-10d;
         }
 
         /// <summary>
-        ///     Returns the next pseudo-random <see cref="System.Int32" /> at least <paramref name="minValue" />
-        ///     and up to <paramref name="maxValue" />.
-        /// </summary>
-        /// <param name="minValue">The minimum value of the pseudo-random number to create.</param>
-        /// <param name="maxValue">The maximum value of the pseudo-random number to create.</param>
-        /// <returns>
-        ///     A pseudo-random <see cref="System.Int32" /> value which is at least <paramref name="minValue" /> and at
-        ///     most <paramref name="maxValue" />.
-        /// </returns>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     If <c><paramref name="minValue" /> &gt;= <paramref name="maxValue" /></c>.
-        /// </exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int NextInteger(int minValue, int maxValue)
-        {
-            if (maxValue < minValue)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-
-            if (maxValue == minValue)
-            {
-                return minValue;
-            }
-
-            return NextInteger() * (maxValue - minValue) + minValue;
-        }
-
-        /// <summary>
-        ///     Returns a pseudo random <see cref="System.Boolean" />. value based on chance (<c>0</c>-<c>1</c> roll),
+        ///     Returns a pseudorandom <see cref="System.Boolean" /> value based on chance (<c>0</c>-<c>1</c> roll),
         ///     favoring false.
         /// </summary>
         /// <param name="chance">The 0-1 percent chance of success.</param>
-        /// <returns>A pseudo random <see cref="System.Boolean" />.</returns>
+        /// <returns>A pseudorandom <see cref="System.Boolean" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool NextBias(float chance)
         {
@@ -115,15 +100,12 @@ namespace GDX.Mathematics.Random
                 return false;
             }
 
-            // Roll the dice
-            float pseudoRandomValue = NextSingle(0.0f, 1.0f);
-
             // If it's inclusive we nailed it
-            return pseudoRandomValue <= chance;
+            return Next() <= chance;
         }
 
         /// <summary>
-        ///     Returns a pseudo-random <see cref="System.Boolean" />.
+        ///     Returns a pseudorandom <see cref="System.Boolean" />.
         /// </summary>
         /// <returns>A <see cref="System.Boolean" /> value of either true or false.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -133,7 +115,7 @@ namespace GDX.Mathematics.Random
         }
 
         /// <summary>
-        ///     Fills a buffer with pseudo-random <see cref="System.Byte" />.
+        ///     Fills a buffer with pseudorandom <see cref="System.Byte" />.
         /// </summary>
         /// <param name="buffer">The buffer to fill.</param>
         /// <exception cref="ArgumentNullException">
@@ -155,86 +137,66 @@ namespace GDX.Mathematics.Random
         }
 
         /// <summary>
-        ///     Returns the next pseudo-random <see cref="System.Double" /> value.
+        ///     Returns the next pseudorandom <see cref="double" /> between <paramref name="minValue" /> and
+        ///     <paramref name="maxValue" />.
         /// </summary>
-        /// <returns>A pseudo-random <see cref="System.Double" /> floating point value.</returns>
-        public double NextDouble()
-        {
-            uint a = _state[(_index + 3u) & 31u];
-            uint z1 = _state[_index] ^ a ^ (a >> 8);
-            uint b = _state[(_index + 24u) & 31u];
-            uint c = _state[(_index + 10u) & 31u];
-            uint z2 = b ^ (b << 19) ^ c ^ (c << 14);
-
-            _state[_index] = z1 ^ z2;
-            uint d = _state[(_index + 31u) & 31u];
-            _state[(_index + 31u) & 31u] = d ^ (d << 11) ^ z1 ^ (z1 << 7) ^ z2 ^ (z2 << 13);
-            _index = (_index + 31u) & 31u;
-
-            return _state[_index] * 2.32830643653869628906e-10d;
-        }
-
-        /// <summary>
-        ///     Returns a pseudo-random <see cref="System.Single" /> number between 0.0 and 1.0.
-        /// </summary>
-        /// <returns>
-        ///     A <see cref="System.Single" />-precision floating point number greater than or equal to 0.0,
-        ///     and less than 1.0.
-        /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float NextSingle()
-        {
-            return (float)NextDouble();
-        }
-
-        /// <summary>
-        ///     Generate a random <see cref="System.Single" /> between <paramref name="minValue" /> and
-        ///     <paramref name="maxValue" /> .
-        /// </summary>
+        /// <remarks>
+        ///     <paramref name="minValue" /> should not be greater then <paramref name="maxValue" />.
+        /// </remarks>
         /// <param name="minValue">The lowest possible value.</param>
         /// <param name="maxValue">The highest possible value.</param>
-        /// <returns>A pseudo random <see cref="System.Single" />.</returns>
+        /// <returns>A pseudorandom <see cref="double" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float NextSingle(float minValue, float maxValue)
+        public double NextDouble(double minValue = double.MinValue, double maxValue = double.MaxValue)
         {
-            if (maxValue < minValue)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-
-            if (maxValue == minValue)
-            {
-                return minValue;
-            }
-
-            return (float)(NextDouble() * (maxValue - minValue) + minValue);
+            return Range.GetDouble(Next(), minValue, maxValue);
         }
 
         /// <summary>
-        ///     Generates a new pseudo-random <see cref="System.UInt32" />.
+        ///     Returns the next pseudorandom <see cref="int" /> between <paramref name="minValue" /> and
+        ///     <paramref name="maxValue" />.
         /// </summary>
-        /// <returns>A pseudo-random <see cref="System.UInt32" />.</returns>
-        public uint NextUnsignedInteger()
+        /// <remarks>
+        ///     <paramref name="minValue" /> should not be greater then <paramref name="maxValue" />.
+        /// </remarks>
+        /// <param name="minValue">The lowest possible value.</param>
+        /// <param name="maxValue">The highest possible value.</param>
+        /// <returns>A pseudorandom <see cref="int" />.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int NextInteger(int minValue = int.MinValue, int maxValue = int.MaxValue)
         {
-            throw new NotImplementedException();
+            return Range.GetInteger(Next(), minValue, maxValue);
         }
 
         /// <summary>
-        ///     Returns the next pseudo-random <see cref="System.UInt32" /> at least
-        ///     <paramref name="minValue" /> and up to <paramref name="maxValue" />.
+        ///     Returns the next pseudorandom <see cref="System.Single" /> between <paramref name="minValue" /> and
+        ///     <paramref name="maxValue" />.
         /// </summary>
-        /// <param name="minValue">The minimum value of the pseudo-random number to create.</param>
-        /// <param name="maxValue">The maximum value of the pseudo-random number to create.</param>
-        /// <returns>
-        ///     A pseudo-random <see cref="System.UInt32" /> value which is at least
-        ///     <paramref name="minValue" /> and at most <paramref name="maxValue" />.
-        /// </returns>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     If <c><paramref name="minValue" /> &gt;= <paramref name="maxValue" /></c>.
-        /// </exception>
-        public uint NextUnsignedInteger(uint minValue, uint maxValue)
+        /// <remarks>
+        ///     <paramref name="minValue" /> should not be greater then <paramref name="maxValue" />.
+        /// </remarks>
+        /// <param name="minValue">The lowest possible value.</param>
+        /// <param name="maxValue">The highest possible value.</param>
+        /// <returns>A pseudorandom <see cref="System.Single" />.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public float NextSingle(float minValue = float.MinValue, float maxValue = float.MaxValue)
         {
-            throw new NotImplementedException();
+            return Range.GetSingle(Next(), minValue, maxValue);
+        }
+
+        /// <summary>
+        ///     Returns the next pseudorandom <see cref="uint" /> between <paramref name="minValue" /> and
+        ///     <paramref name="maxValue" />.
+        /// </summary>
+        /// <remarks>
+        ///     <paramref name="minValue" /> should not be greater then <paramref name="maxValue" />.
+        /// </remarks>
+        /// <param name="minValue">The lowest possible value.</param>
+        /// <param name="maxValue">The highest possible value.</param>
+        /// <returns>A pseudorandom <see cref="uint" />.</returns>
+        public uint NextUnsignedInteger(uint minValue = uint.MinValue, uint maxValue = uint.MaxValue)
+        {
+            return Range.GetUnsignedInteger(Next(), minValue, maxValue);
         }
 
         /// <summary>
