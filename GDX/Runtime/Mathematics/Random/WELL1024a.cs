@@ -7,9 +7,11 @@ namespace GDX.Mathematics.Random
     ///     Generates pseudorandom values based on the WELL1024a algorithm.
     /// </summary>
     /// <remarks>
-    ///     Primarily based on the work of Chris Lomont, available at http://lomont.org/papers/2008/Lomont_PRNG_2008.pdf.
-    ///     Additional understanding from Francois Panneton and Pierre L`Ecuyer, available at
-    ///     http://www.iro.umontreal.ca/~lecuyer/myftp/papers/lfsr04.pdf
+    ///     Primarily based on the work of <a href="http://lomont.org/papers/2008/Lomont_PRNG_2008.pdf">Chris Lomont</a>,
+    ///     accessed on 2021-04-23.
+    ///     Additional understanding from
+    ///     <a href="http://www.iro.umontreal.ca/~lecuyer/myftp/papers/lfsr04.pdf">Francois Panneton and Pierre L`Ecuyer</a>,
+    ///     accessed on 2021-04-23.
     /// </remarks>
     // ReSharper disable once InconsistentNaming
     public class WELL1024a
