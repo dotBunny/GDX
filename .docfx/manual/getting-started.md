@@ -63,4 +63,3 @@ Project-specific configuration values are stored in [GDXConfig](xref:GDX.GDXConf
 
 
 
-

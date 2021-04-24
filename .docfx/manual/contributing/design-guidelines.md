@@ -10,11 +10,10 @@ We are trying to get as much coverage in tests as possible on the package to try
 
 > Arrange, Act, Assert
 
-
-
 ## Code Organization
 - Typically sections of classes are ordered alphabetically.
 - Preference to expose backing data, indices, etc.
+- Don't throw exceptions; garbage in, garbage out.
 
 ## EditorConfig Support
 - Embedded in the project is an [EditorConfig](https://editorconfig.org/), which should standardize much of the formatting.

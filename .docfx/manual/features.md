@@ -77,5 +77,5 @@ A few other notable inclusions which have been found useful.
 
 Feature | Description
 :--- | :---
-[Mersenne Twister](xref:GDX.Mathematics.Random.MersenneTwister) | A deterministic random number generator.
+[WELL1024a](xref:GDX.Mathematics.Random.WELL1024a) | A deterministic random number generator.
 [Tarball Support](xref:GDX.IO.Compression.TarFile) | A native method to inflate `.tar` and `.tar.gz` files. Used internally in the `GDX` package to handle upgrades from [GitHub](https://github.com/dotBunny/GDX/releases).

@@ -4,20 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - ??
-***"The Great Divide"***
+## [1.3.1] - ??
+***"New License"***
 > Transitioning away from the MIT license to being even more open, sorta.
 
 ### Added
-- An `IRandomProvider` interface has been added to support the new licensed model for the `MersenneTwister`.
-- New `NOTICES.md` document to list all **Third Party Notices** from the `GDX.Licensed` assembly.
+- New FAQ section of the website, addressing some of the more frequently asked questions.
 
 ### Changed
-- All code that requires attribution/notices when used is now situated in the `GDX.Licensed` assembly, the idea being that if you do not want to have to do any distributable notices, dont use that assembly.
-- Refactored 'MersenneTwister' internals to reflect their expected usage more, adding a range based `NextSingle`, `NextBias` and `NextBoolean` methods; while creating a `string` seed constructor. Minor tweaks internally correcting some intended behaviour, not effecting outward results.
+
 
 ### Removed
 - Removed from [documentation](https://gdx.dotbunny.com) many of supporting GDX editor only types used in drawing GDX's project settings, and some internal attributes.
+- Removed `MersenneTwister` to allow for our new licensing model (functionaly replaced with `WELL1024a` implementation).
 
 ## [1.3.0] - 2021-04-06
 ***"Visual Time"***

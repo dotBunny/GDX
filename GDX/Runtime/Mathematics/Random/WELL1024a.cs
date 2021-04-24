@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace GDX.Mathematics.Random
 {
+    // ReSharper disable CommentTypo
     /// <summary>
     ///     Generates pseudorandom values based on the WELL1024a algorithm.
     /// </summary>
@@ -13,7 +14,9 @@ namespace GDX.Mathematics.Random
     ///     <a href="http://www.iro.umontreal.ca/~lecuyer/myftp/papers/lfsr04.pdf">Francois Panneton and Pierre L`Ecuyer</a>,
     ///     accessed on 2021-04-23.
     /// </remarks>
+    // ReSharper restore CommentTypo
     // ReSharper disable once InconsistentNaming
+    [VisualScriptingType]
     public class WELL1024a
     {
         /// <summary>
@@ -78,6 +81,16 @@ namespace GDX.Mathematics.Random
         }
 
         /// <summary>
+        ///     Get a <see cref="WellState"/> for the <see cref="WELL1024a"/>.
+        /// </summary>
+        /// <remarks>Useful to save and restore the state of the <see cref="WELL1024a"/>.</remarks>
+        /// <returns></returns>
+        public WellState GetState()
+        {
+            return new WellState {Index = _index, State = _state, Seed = OriginalSeed};
+        }
+
+        /// <summary>
         ///     Returns the next pseudorandom <see cref="double" /> value .
         /// </summary>
         /// <returns>A pseudorandom <see cref="double" /> floating point value.</returns>
@@ -129,19 +142,13 @@ namespace GDX.Mathematics.Random
         /// <summary>
         ///     Fills a buffer with pseudorandom <see cref="System.Byte" />.
         /// </summary>
+        /// <remarks>
+        ///     The <paramref name="buffer"/> shouldn't be <see lanwgword="null" />.<paramref name="minValue" /> should not be greater then <paramref name="maxValue" />.
+        /// </remarks>
         /// <param name="buffer">The buffer to fill.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     If <c><paramref name="buffer" /> == <see langword="null" /></c>.
-        /// </exception>
         public void NextBytes(byte[] buffer)
         {
-            if (buffer == null)
-            {
-                throw new ArgumentNullException();
-            }
-
             int bufLen = buffer.Length;
-
             for (int idx = 0; idx < bufLen; ++idx)
             {
                 buffer[idx] = (byte)NextInteger(0, 256);
@@ -211,9 +218,11 @@ namespace GDX.Mathematics.Random
             return Range.GetUnsignedInteger(Next(), minValue, maxValue);
         }
 
+
         /// <summary>
         ///     A complete state of <see cref="WELL1024a" />.
         /// </summary>
+        [Serializable]
         public struct WellState
         {
             /// <summary>
