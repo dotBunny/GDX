@@ -12,6 +12,3 @@ _disableContribution: true
 [![License: BSL-1.0](https://img.shields.io/badge/License-BSL-blue.svg)](https://github.com/dotBunny/GDX/blob/main/LICENSE)
 
 > Game Development Extensions, a battle-tested library of game-ready high-performance C# code.
-
-<a class="btn btn-primary" href="/manual/getting-started.html" role="button">Getting Started</a>
-<a class="btn btn-primary" href="/manual/features.html" role="button">Features</a>
