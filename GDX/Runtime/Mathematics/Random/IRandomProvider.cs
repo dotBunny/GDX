@@ -4,6 +4,7 @@
 
 namespace GDX.Mathematics.Random
 {
+    [VisualScriptingType]
     public interface IRandomProvider
     {
         /// <summary>

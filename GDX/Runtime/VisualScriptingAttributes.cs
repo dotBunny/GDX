@@ -30,7 +30,7 @@ namespace GDX
     ///     Indicate that the tagged <c>class</c> or <c>struct</c> should be considered as containing a type when adding to Visual Scripting.
     /// </summary>
     [HideFromDocFX]
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
     public sealed class VisualScriptingTypeAttribute : Attribute
     {
 

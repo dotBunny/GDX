@@ -5,8 +5,10 @@
 namespace GDX.Mathematics.Random
 {
     /// <summary>
-    ///     Adapter to utilize a <see cref="IRandomProvider" /> with <see cref="System.Random" /> based systems.
+    ///     Adapter to utilize a <see cref="IRandomProvider" /> with <see cref="System.Random" /> based systems, wrapping the
+    ///     provider in a class object with expected overrides.
     /// </summary>
+    [VisualScriptingType]
     public class RandomAdapter : System.Random
     {
         private readonly IRandomProvider _provider;
@@ -32,6 +34,7 @@ namespace GDX.Mathematics.Random
             {
                 maxValue++;
             }
+
             return _provider.NextInteger(minValue, maxValue);
         }
 
@@ -41,6 +44,7 @@ namespace GDX.Mathematics.Random
             {
                 maxValue++;
             }
+
             return _provider.NextInteger(0, maxValue);
         }
 
