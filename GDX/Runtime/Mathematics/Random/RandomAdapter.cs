@@ -8,6 +8,7 @@ namespace GDX.Mathematics.Random
     ///     Adapter to utilize a <see cref="IRandomProvider" /> with <see cref="System.Random" /> based systems, wrapping the
     ///     provider in a class object with expected overrides.
     /// </summary>
+    /// <remarks>This will create IL <c>callvert</c> operation codes! Try not to use this.</remarks>
     [VisualScriptingType]
     public class RandomAdapter : System.Random
     {
