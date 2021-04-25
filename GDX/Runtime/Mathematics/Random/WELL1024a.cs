@@ -24,7 +24,7 @@ namespace GDX.Mathematics.Random
     // ReSharper restore CommentTypo
     [VisualScriptingType]
     // ReSharper disable once InconsistentNaming
-    public class WELL1024a : IRandomProvider
+    public sealed class WELL1024a : IRandomProvider
     {
         /// <summary>
         ///     A copy of the original seed used to initialize the <see cref="WELL1024a" />.
