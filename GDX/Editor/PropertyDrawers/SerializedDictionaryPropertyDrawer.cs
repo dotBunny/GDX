@@ -152,7 +152,7 @@ namespace GDX.Editor.PropertyDrawers
         {
             // Safe to cache!
             _displayName = property.displayName;
-            _addKeyFieldID = Content.AddKeyFieldIDPrefix + _displayName.GetHashCode();
+            _addKeyFieldID = Content.AddKeyFieldIDPrefix + _displayName.GetStableHashCode();
             _targetObject = property.serializedObject.targetObject;
 
             // Build our top level position

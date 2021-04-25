@@ -110,7 +110,7 @@ namespace GDX.Mathematics.Random
             else
             {
 #if GDX_MATHEMATICS
-                OriginalSeed = (uint)math.abs(seed.GetHashCode());
+                OriginalSeed = (uint)math.abs(seed.GetStableHashCode());
 #else
                 OriginalSeed = (uint)UnityEngine.Mathf.Abs(seed.GetHashCode());
 #endif
