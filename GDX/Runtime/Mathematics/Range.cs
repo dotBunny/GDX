@@ -25,7 +25,12 @@ namespace GDX.Mathematics
         public static double GetDouble(double percent, double minValue = double.MinValue,
             double maxValue = double.MaxValue)
         {
-            return percent * (maxValue - minValue) + minValue;
+            double range = (maxValue - minValue);
+            double rangeMult = percent * range;
+            double returnVa = rangeMult + minValue;
+
+            return returnVa;
+            //return percent * (maxValue - minValue) + minValue;
         }
 
         /// <summary>

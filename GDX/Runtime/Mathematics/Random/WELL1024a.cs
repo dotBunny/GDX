@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
+using Unity.Mathematics;
 
 namespace GDX.Mathematics.Random
 {
@@ -15,19 +16,19 @@ namespace GDX.Mathematics.Random
     ///     accessed on 2021-04-23.
     /// </remarks>
     // ReSharper restore CommentTypo
-    // ReSharper disable once InconsistentNaming
     [VisualScriptingType]
+    // ReSharper disable once InconsistentNaming
     public class WELL1024a
     {
-        /// <summary>
-        ///     The state array of the well.
-        /// </summary>
-        public readonly uint[] State = new uint[32];
-
         /// <summary>
         ///     A copy of the original seed used to initialize the <see cref="WELL1024a" />.
         /// </summary>
         public readonly uint OriginalSeed;
+
+        /// <summary>
+        ///     The state array of the well.
+        /// </summary>
+        public readonly uint[] State = new uint[32];
 
         /// <summary>
         ///     The current index of use for the well array.
@@ -46,7 +47,7 @@ namespace GDX.Mathematics.Random
         public WELL1024a(int seed)
         {
 #if GDX_MATHEMATICS
-            OriginalSeed = (uint)Unity.Mathematics.math.abs(seed);
+            OriginalSeed = (uint)math.abs(seed);
 #else
             OriginalSeed = (uint)UnityEngine.Mathf.Abs(seed);
 #endif
@@ -80,7 +81,7 @@ namespace GDX.Mathematics.Random
             if (forceUpperCase)
             {
 #if GDX_MATHEMATICS
-                OriginalSeed = (uint)Unity.Mathematics.math.abs(seed.GetStableUpperCaseHashCode());
+                OriginalSeed = (uint)math.abs(seed.GetStableUpperCaseHashCode());
 #else
                 OriginalSeed = (uint)UnityEngine.Mathf.Abs(seed.GetStableUpperCaseHashCode());
 #endif
@@ -88,7 +89,7 @@ namespace GDX.Mathematics.Random
             else
             {
 #if GDX_MATHEMATICS
-                OriginalSeed = (uint)Unity.Mathematics.math.abs(seed.GetHashCode());
+                OriginalSeed = (uint)math.abs(seed.GetHashCode());
 #else
                 OriginalSeed = (uint)UnityEngine.Mathf.Abs(seed.GetHashCode());
 #endif
@@ -160,13 +161,6 @@ namespace GDX.Mathematics.Random
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool NextBias(float chance)
         {
-            // No chance at all
-            if (chance == 0f)
-            {
-                return false;
-            }
-
-            // If it's inclusive we nailed it
             return Next() <= chance;
         }
 
