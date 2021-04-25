@@ -18,7 +18,7 @@ namespace GDX.Mathematics.Random
     // ReSharper restore CommentTypo
     [VisualScriptingType]
     // ReSharper disable once InconsistentNaming
-    public class WELL1024a
+    public class WELL1024a : IRandomProvider
     {
         /// <summary>
         ///     A copy of the original seed used to initialize the <see cref="WELL1024a" />.
@@ -51,7 +51,12 @@ namespace GDX.Mathematics.Random
 #else
             OriginalSeed = (uint)UnityEngine.Mathf.Abs(seed);
 #endif
-            Initialize(OriginalSeed);
+            // Initialize
+            State[0] = OriginalSeed & 4294967295u;
+            for (int i = 1; i < 32; ++i)
+            {
+                State[i] = (69069u * State[i - 1]) & 4294967295u;
+            }
         }
 
         /// <summary>
@@ -61,7 +66,13 @@ namespace GDX.Mathematics.Random
         public WELL1024a(uint seed)
         {
             OriginalSeed = seed;
-            Initialize(OriginalSeed);
+
+            // Initialize
+            State[0] = OriginalSeed & 4294967295u;
+            for (int i = 1; i < 32; ++i)
+            {
+                State[i] = (69069u * State[i - 1]) & 4294967295u;
+            }
         }
 
         /// <summary>
@@ -95,7 +106,12 @@ namespace GDX.Mathematics.Random
 #endif
             }
 
-            Initialize(OriginalSeed);
+            // Initialize
+            State[0] = OriginalSeed & 4294967295u;
+            for (int i = 1; i < 32; ++i)
+            {
+                State[i] = (69069u * State[i - 1]) & 4294967295u;
+            }
         }
 
         /// <summary>
@@ -110,19 +126,6 @@ namespace GDX.Mathematics.Random
         }
 
         /// <summary>
-        ///     Prepare the <see cref="WELL1024a" /> with the provided seed.
-        /// </summary>
-        /// <param name="seed">A <see cref="uint" /> value.</param>
-        private void Initialize(uint seed)
-        {
-            State[0] = seed & 4294967295u;
-            for (int i = 1; i < 32; ++i)
-            {
-                State[i] = (69069u * State[i - 1]) & 4294967295u;
-            }
-        }
-
-        /// <summary>
         ///     Get a <see cref="WellState" /> for the <see cref="WELL1024a" />.
         /// </summary>
         /// <remarks>Useful to save and restore the state of the <see cref="WELL1024a" />.</remarks>
@@ -132,11 +135,65 @@ namespace GDX.Mathematics.Random
             return new WellState {Index = Index, State = State, Seed = OriginalSeed};
         }
 
-        /// <summary>
-        ///     Returns the next pseudorandom <see cref="double" /> value .
-        /// </summary>
-        /// <returns>A pseudorandom <see cref="double" /> floating point value.</returns>
-        public double Next()
+        /// <inheritdoc cref="IRandomProvider.NextBoolean"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool NextBoolean(float chance = 0.5f)
+        {
+            return Sample() <= chance;
+        }
+
+        /// <inheritdoc cref="IRandomProvider.NextBytes"/>
+        public void NextBytes(byte[] buffer)
+        {
+            int bufLen = buffer.Length;
+            for (int idx = 0; idx < bufLen; ++idx)
+            {
+                buffer[idx] = (byte)NextInteger(0, 256);
+            }
+        }
+
+        /// <inheritdoc cref="IRandomProvider.NextDouble"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public double NextDouble(double minValue = double.MinValue, double maxValue = double.MaxValue)
+        {
+            return Range.GetDouble(Sample(), minValue, maxValue);
+        }
+
+        /// <inheritdoc cref="IRandomProvider.NextInteger"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int NextInteger(int minValue = int.MinValue, int maxValue = Range.SafeIntegerMaxValue)
+        {
+            return Range.GetInteger(Sample(), minValue, maxValue + 1);
+        }
+
+        /// <inheritdoc cref="IRandomProvider.NextIntegerExclusive"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int NextIntegerExclusive(int minValue = int.MinValue, int maxValue = int.MaxValue)
+        {
+            return Range.GetInteger(Sample(), minValue, maxValue);
+        }
+
+        /// <inheritdoc cref="IRandomProvider.NextSingle"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public float NextSingle(float minValue = float.MinValue, float maxValue = float.MaxValue)
+        {
+            return Range.GetSingle(Sample(), minValue, maxValue);
+        }
+
+        /// <inheritdoc cref="IRandomProvider.NextUnsignedInteger"/>
+        public uint NextUnsignedInteger(uint minValue = uint.MinValue, uint maxValue = Range.SafeUnsignedIntegerMaxValue)
+        {
+            return Range.GetUnsignedInteger(Sample(), minValue, maxValue + 1);
+        }
+
+        /// <inheritdoc cref="IRandomProvider.NextUnsignedIntegerExclusive"/>
+        public uint NextUnsignedIntegerExclusive(uint minValue = uint.MinValue, uint maxValue = uint.MaxValue)
+        {
+            return Range.GetUnsignedInteger(Sample(), minValue, maxValue);
+        }
+
+        /// <inheritdoc cref="IRandomProvider.Sample"/>
+        public double Sample()
         {
             uint a = State[(Index + 3u) & 31u];
             uint z1 = State[Index] ^ a ^ (a >> 8);
@@ -151,108 +208,6 @@ namespace GDX.Mathematics.Random
 
             return State[Index] * 2.32830643653869628906e-10d;
         }
-
-        /// <summary>
-        ///     Returns a pseudorandom <see cref="System.Boolean" /> value based on chance (<c>0</c>-<c>1</c> roll),
-        ///     favoring false.
-        /// </summary>
-        /// <param name="chance">The 0-1 percent chance of success.</param>
-        /// <returns>A pseudorandom <see cref="System.Boolean" />.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool NextBias(float chance)
-        {
-            return Next() <= chance;
-        }
-
-        /// <summary>
-        ///     Returns a pseudorandom <see cref="System.Boolean" />.
-        /// </summary>
-        /// <returns>A <see cref="System.Boolean" /> value of either true or false.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool NextBoolean()
-        {
-            return NextBias(0.5f);
-        }
-
-        /// <summary>
-        ///     Fills a buffer with pseudorandom <see cref="System.Byte" />.
-        /// </summary>
-        /// <remarks>
-        ///     The <paramref name="buffer" /> shouldn't be <see lanwgword="null" />.
-        /// </remarks>
-        /// <param name="buffer">The buffer to fill.</param>
-        public void NextBytes(byte[] buffer)
-        {
-            int bufLen = buffer.Length;
-            for (int idx = 0; idx < bufLen; ++idx)
-            {
-                buffer[idx] = (byte)NextInteger(0, 256);
-            }
-        }
-
-        /// <summary>
-        ///     Returns the next pseudorandom <see cref="double" /> between <paramref name="minValue" /> and
-        ///     <paramref name="maxValue" />.
-        /// </summary>
-        /// <remarks>
-        ///     <paramref name="minValue" /> should not be greater then <paramref name="maxValue" />.
-        /// </remarks>
-        /// <param name="minValue">The lowest possible value.</param>
-        /// <param name="maxValue">The highest possible value.</param>
-        /// <returns>A pseudorandom <see cref="double" />.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double NextDouble(double minValue = double.MinValue, double maxValue = double.MaxValue)
-        {
-            return Range.GetDouble(Next(), minValue, maxValue);
-        }
-
-        /// <summary>
-        ///     Returns the next pseudorandom <see cref="int" /> between <paramref name="minValue" /> and
-        ///     <paramref name="maxValue" />.
-        /// </summary>
-        /// <remarks>
-        ///     <paramref name="minValue" /> should not be greater then <paramref name="maxValue" />.
-        /// </remarks>
-        /// <param name="minValue">The lowest possible value.</param>
-        /// <param name="maxValue">The highest possible value.</param>
-        /// <returns>A pseudorandom <see cref="int" />.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int NextInteger(int minValue = int.MinValue, int maxValue = int.MaxValue)
-        {
-            return Range.GetInteger(Next(), minValue, maxValue);
-        }
-
-        /// <summary>
-        ///     Returns the next pseudorandom <see cref="System.Single" /> between <paramref name="minValue" /> and
-        ///     <paramref name="maxValue" />.
-        /// </summary>
-        /// <remarks>
-        ///     <paramref name="minValue" /> should not be greater then <paramref name="maxValue" />.
-        /// </remarks>
-        /// <param name="minValue">The lowest possible value.</param>
-        /// <param name="maxValue">The highest possible value.</param>
-        /// <returns>A pseudorandom <see cref="System.Single" />.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float NextSingle(float minValue = float.MinValue, float maxValue = float.MaxValue)
-        {
-            return Range.GetSingle(Next(), minValue, maxValue);
-        }
-
-        /// <summary>
-        ///     Returns the next pseudorandom <see cref="uint" /> between <paramref name="minValue" /> and
-        ///     <paramref name="maxValue" />.
-        /// </summary>
-        /// <remarks>
-        ///     <paramref name="minValue" /> should not be greater then <paramref name="maxValue" />.
-        /// </remarks>
-        /// <param name="minValue">The lowest possible value.</param>
-        /// <param name="maxValue">The highest possible value.</param>
-        /// <returns>A pseudorandom <see cref="uint" />.</returns>
-        public uint NextUnsignedInteger(uint minValue = uint.MinValue, uint maxValue = uint.MaxValue)
-        {
-            return Range.GetUnsignedInteger(Next(), minValue, maxValue);
-        }
-
 
         /// <summary>
         ///     A complete state of <see cref="WELL1024a" />.

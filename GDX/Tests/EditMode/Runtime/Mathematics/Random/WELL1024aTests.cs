@@ -1,6 +1,8 @@
 ﻿// dotBunny licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+using System.Text;
 using GDX.Mathematics.Random;
 using NUnit.Framework;
 
@@ -63,9 +65,9 @@ namespace Runtime.Mathematics.Random
         public void WELL1024a_FromRestoreState_Matched()
         {
             WELL1024a mockWell = new WELL1024a(MockSeed);
-            mockWell.Next();
-            mockWell.Next();
-            mockWell.Next();
+            mockWell.Sample();
+            mockWell.Sample();
+            mockWell.Sample();
             WELL1024a.WellState saved = mockWell.GetState();
             WELL1024a restoreWell = new WELL1024a(saved);
 
@@ -90,107 +92,25 @@ namespace Runtime.Mathematics.Random
 
         [Test]
         [Category("GDX.Tests")]
-        public void NextBias_ZeroChance_ReturnsFalse()
+        public void NextBoolean_ZeroChance_ReturnsFalse()
         {
             WELL1024a mockWell = new WELL1024a(MockSeed);
 
-            bool evaluate = mockWell.NextBias(0f);
+            bool evaluate = mockWell.NextBoolean(0f);
 
             Assert.IsFalse(evaluate);
         }
 
         [Test]
         [Category("GDX.Tests")]
-        public void NextBias_PerfectChance_ReturnsTrue()
+        public void NextBoolean_PerfectChance_ReturnsTrue()
         {
             WELL1024a mockWell = new WELL1024a(MockSeed);
 
-            bool evaluate = mockWell.NextBias(1f);
+            bool evaluate = mockWell.NextBoolean(1f);
 
             Assert.IsTrue(evaluate);
         }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void NextBias_Simple_ReturnsDeterministic()
-        {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
-
-            bool evaluate = mockWell.NextBias(0.5f);
-
-            Assert.IsFalse(evaluate);
-        }
-
-
-        //
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void NextInteger_Simple_ReturnsDeterministicValue()
-        // {
-        //     WELL1024a mockWell = new WELL1024a(MockSeed);
-        //     int nextValue = mockWell.NextInteger();
-        //
-        //     bool evaluate = nextValue == 7985211;
-        //
-        //     Assert.IsTrue(evaluate);
-        // }
-        //
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void NextInteger_MaxValue_ReturnsDeterministicValue()
-        // {
-        //     WELL1024a mockWell = new WELL1024a(MockSeed);
-        //     int nextValue = mockWell.NextInteger(-11, 11);
-        //
-        //     bool evaluate = nextValue <= 11;
-        //
-        //     Assert.IsTrue(evaluate);
-        // }
-        //
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void NextInteger_SameRange_ReturnsSame()
-        // {
-        //     WELL1024a mockWell = new WELL1024a(MockSeed);
-        //     int nextValue = mockWell.NextInteger(1, 1);
-        //
-        //     bool evaluate = nextValue == 1;
-        //
-        //     Assert.IsTrue(evaluate);
-        // }
-        //
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void NextInteger_ZeroValues_ReturnsZero()
-        // {
-        //     WELL1024a mockWell = new WELL1024a(MockSeed);
-        //     int nextValue = mockWell.NextInteger(0, 0);
-        //
-        //     bool evaluate = nextValue == 0;
-        //
-        //     Assert.IsTrue(evaluate);
-        // }
-        //
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void NextInteger_MinMaxValue_ReturnsDeterministicValue()
-        // {
-        //     WELL1024a mockWell = new WELL1024a(MockSeed);
-        //     int nextValue = mockWell.NextInteger(11, 22);
-        //
-        //     bool evaluate = nextValue >= 11 && nextValue <= 22;
-        //
-        //     Assert.IsTrue(evaluate);
-        // }
-        //
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void Next_BadMinMaxValue_ThrowsException()
-        // {
-        //     WELL1024a mockWell = new WELL1024a(MockSeed);
-        //     Assert.Throws<ArgumentOutOfRangeException>(() => { mockWell.NextInteger(90, 80); });
-        // }
-        //
 
         [Test]
         [Category("GDX.Tests")]
@@ -201,6 +121,79 @@ namespace Runtime.Mathematics.Random
             bool evaluate = mockWell.NextBoolean();
 
             Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void NextInteger_Simple_ReturnsDeterministicValue()
+        {
+            WELL1024a mockWell = new WELL1024a(MockSeed);
+            int nextValue = mockWell.NextInteger();
+
+            bool evaluate = nextValue == 1696340346;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void NextInteger_SameRange_ReturnsSameValue()
+        {
+            WELL1024a mockWell = new WELL1024a(MockSeed);
+            int nextValue = mockWell.NextInteger(1, 1);
+
+            bool evaluate = nextValue == 1;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void NextInteger_ZeroValues_ReturnsZeroValue()
+        {
+            WELL1024a mockWell = new WELL1024a(MockSeed);
+            int nextValue = mockWell.NextInteger(0, 0);
+
+            bool evaluate = nextValue == 0;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void NextInteger_MinMaxValue_ReturnsDeterministicValue()
+        {
+            WELL1024a mockWell = new WELL1024a(MockSeed);
+            int nextValue = mockWell.NextInteger(11, 22);
+
+            bool evaluate = nextValue >= 11 && nextValue <= 22;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void NextInteger_Multiple_ReturnsDifferentValues()
+        {
+            WELL1024a mockWell = new WELL1024a(MockSeed);
+
+            int[] nextValues = new int[64];
+            for (int i = 0; i < 64; i++)
+            {
+                nextValues[i] = mockWell.NextInteger();
+            }
+
+            bool evaluate = true;
+            for (int i = 1; i < 64; i++)
+            {
+                if (nextValues[i - 1] == nextValues[i])
+                {
+                    evaluate = false;
+                    break;
+                }
+            }
+
+            Assert.IsTrue(evaluate);
         }
 
         [Test]
@@ -226,149 +219,133 @@ namespace Runtime.Mathematics.Random
 
         [Test]
         [Category("GDX.Tests")]
+        public void NextDouble_Multiple_ReturnsDifferentValues()
+        {
+            WELL1024a mockWell = new WELL1024a(MockSeed);
+
+            double[] nextValues = new double[64];
+            for (int i = 0; i < 64; i++)
+            {
+                nextValues[i] = mockWell.NextDouble();
+            }
+
+            bool evaluate = true;
+            for (int i = 1; i < 64; i++)
+            {
+                if (nextValues[i - 1] == nextValues[i])
+                {
+                    evaluate = false;
+                    break;
+                }
+            }
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
         public void NextDouble_Simple_ReturnsDeterministicValue()
         {
             WELL1024a mockWell = new WELL1024a(MockSeed);
             double nextValue = mockWell.NextDouble();
 
-            bool evaluate = nextValue < 1f;
-
-            double nextValue1 = mockWell.NextDouble();
-            double nextValue2 = mockWell.NextDouble();
-            double nextValue3 = mockWell.NextDouble();
-            double nextValue4 = mockWell.NextDouble();
-            double nextValue5 = mockWell.NextDouble();
-            double nextValue6 = mockWell.NextDouble();
-
-            double nextA0 = mockWell.Next();
-            double nextA1 = mockWell.Next();
-            double nextA2 = mockWell.Next();
-            double nextA3 = mockWell.Next();
-            double nextA4 = mockWell.Next();
-            double nextA5 = mockWell.Next();
-            double nextA6 = mockWell.Next();
-            double nextA7 = mockWell.Next();
-            double nextA8 = mockWell.Next();
-            double nextA9 = mockWell.Next();
-
+            bool evaluate = nextValue == 1.4200338144748743E+308;
 
             Assert.IsTrue(evaluate);
         }
-        //
-        //
-        //
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void NextSingle_Simple_ReturnsDeterministicValue()
+        {
+            WELL1024a mockWell = new WELL1024a(MockSeed);
+            float nextValue = mockWell.NextSingle();
+
+            bool evaluate =  nextValue.ToString().Substring(0,5) == "2.687";
+
+            Assert.IsTrue(evaluate, nextValue.ToString());
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void NextSingle_Multiple_ReturnsDifferentValues()
+        {
+            WELL1024a mockWell = new WELL1024a(MockSeed);
+
+            float[] nextValues = new float[64];
+            for (int i = 0; i < 64; i++)
+            {
+                nextValues[i] = mockWell.NextSingle();
+            }
+
+            bool evaluate = true;
+            for (int i = 1; i < 64; i++)
+            {
+                if (nextValues[i - 1] == nextValues[i])
+                {
+                    evaluate = false;
+                    break;
+                }
+            }
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void NextUnsignedInteger_Simple_ReturnsDeterministicValue()
+        {
+            WELL1024a mockWell = new WELL1024a(MockSeed);
+            uint nextValue = mockWell.NextUnsignedInteger();
+
+            bool evaluate = nextValue == 3843823994;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void NextUnsignedInteger_Multiple_ReturnsDifferentValues()
+        {
+            WELL1024a mockWell = new WELL1024a(MockSeed);
+
+            uint[] nextValues = new uint[64];
+            for (int i = 0; i < 64; i++)
+            {
+                nextValues[i] = mockWell.NextUnsignedInteger();
+            }
+
+            bool evaluate = true;
+            for (int i = 1; i < 64; i++)
+            {
+                if (nextValues[i - 1] == nextValues[i])
+                {
+                    evaluate = false;
+                    break;
+                }
+            }
+
+            Assert.IsTrue(evaluate);
+        }
+
+
         // [Test]
         // [Category("GDX.Tests")]
-        // public void NextDoublePositive_ReturnsDeterministicValue()
+        // public void RangeAnalysis()
         // {
         //     WELL1024a mockWell = new WELL1024a(MockSeed);
-        //     double nextValue = mockWell.NextDouble(0);
+        //     int valueCount = 10000000;
+        //     StringBuilder fileContent = new StringBuilder();
+        //     for (int i = 0; i < valueCount; i++)
+        //     {
+        //         fileContent.AppendLine($"{mockWell.NextUnsignedInteger(uint.MinValue, uint.MaxValue).ToString()}");
+        //     }
         //
-        //     bool evaluate = nextValue > 0f;
-        //
-        //     Assert.IsTrue(evaluate);
+        //     System.IO.File.WriteAllText(
+        //         System.IO.Path.Combine(UnityEngine.Application.dataPath, "ranges.txt"),
+        //         fileContent.ToString()
+        //         );
         // }
-        //
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void NextUnsignedInteger_Simple_ReturnsDeterministicValue()
-        // {
-        //     WELL1024a mockWell = new WELL1024a(MockSeed);
-        //     uint nextValue = mockWell.NextUnsignedInteger();
-        //
-        //     bool evaluate = nextValue == 15970430;
-        //
-        //     Assert.IsTrue(evaluate);
-        // }
-        //
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void NextSingle_Simple_ReturnsDeterministicValue()
-        // {
-        //     WELL1024a mockWell = new WELL1024a(MockSeed);
-        //     float nextValue = mockWell.NextSingle();
-        //
-        //     bool evaluate = nextValue == 0.003718404f;
-        //
-        //     Assert.IsTrue(evaluate);
-        // }
-        //
-        //
-        //
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void NextSingle_SameRange_ReturnsSame()
-        // {
-        //     WELL1024a mockWell = new WELL1024a(MockSeed);
-        //     float nextValue = mockWell.NextSingle(1f, 1f);
-        //
-        //     bool evaluate = nextValue == 1f;
-        //
-        //     Assert.IsTrue(evaluate);
-        // }
-        //
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void NextSingle_MinMaxValue_ReturnsDeterministicValue()
-        // {
-        //     WELL1024a mockWell = new WELL1024a(MockSeed);
-        //     float nextValue = mockWell.NextSingle(2f, 10f);
-        //
-        //     bool evaluate = nextValue >= 2f && nextValue <= 10f;
-        //
-        //     Assert.IsTrue(evaluate);
-        // }
-        //
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void NextSingle_BadMinMaxValue_ThrowsException()
-        // {
-        //     WELL1024a mockWell = new WELL1024a(MockSeed);
-        //     Assert.Throws<ArgumentOutOfRangeException>(() => { mockWell.NextSingle(90f, 80f); });
-        // }
-        //
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void NextSinglePositive_Simple_ReturnsDeterministicValue()
-        // {
-        //     WELL1024a mockWell = new WELL1024a(MockSeed);
-        //     float nextValue = mockWell.NextSingle();
-        //
-        //     bool evaluate = nextValue > 0f;
-        //
-        //     Assert.IsTrue(evaluate);
-        // }
-        //
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void NextUnsignedInteger_MaxValue_ReturnsDeterministicValue()
-        // {
-        //     WELL1024a mockWell = new WELL1024a(MockSeed);
-        //     uint nextValue = mockWell.NextUnsignedInteger(100);
-        //
-        //     bool evaluate = nextValue <= 100;
-        //
-        //     Assert.IsTrue(evaluate);
-        // }
-        //
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void NextUnsignedInteger_MinMaxValue_ReturnsDeterministicValue()
-        // {
-        //     WELL1024a mockWell = new WELL1024a(MockSeed);
-        //     uint nextValue = mockWell.NextUnsignedInteger(98, 100);
-        //
-        //     bool evaluate = nextValue >= 98 && nextValue <= 100;
-        //
-        //     Assert.IsTrue(evaluate);
-        // }
-        //
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void NextUnsignedInteger_BadMinMaxValue_ThrowsException()
-        // {
-        //     WELL1024a mockWell = new WELL1024a(MockSeed);
-        //     Assert.Throws<ArgumentOutOfRangeException>(() => { mockWell.NextUnsignedInteger(90, 80); });
-        // }
+
     }
 }

@@ -4,19 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.3.1] - ??
-***"New License"***
-> Transitioning away from the MIT license to being even more open, sorta.
+## [2.0.0] - ??
+***"Fresh Paint"***
+> Breaking changes as we transition away from the MIT license to something even more open and awesome.
 
 ### Added
 - New FAQ section of the website, addressing some of the more frequently asked questions.
+- `WELL1024a` implementation to replace PRNG in GDX .
+- `IRandomProvider` and `RandomAdaptor` too allow for some interchange with existing codebases.
 
 ### Changed
-
+- File license headers, repository wide.
+- Documentation usage of `langword` has been replaced with `see` functionality.
 
 ### Removed
 - Removed from [documentation](https://gdx.dotbunny.com) many of supporting GDX editor only types used in drawing GDX's project settings, and some internal attributes.
-- Removed `MersenneTwister` to allow for our new licensing model (functionaly replaced with `WELL1024a` implementation).
+- Removed `MersenneTwister` to allow for our new licensing model (functionally replaced with `WELL1024a` implementation).
 
 ## [1.3.0] - 2021-04-06
 ***"Visual Time"***
