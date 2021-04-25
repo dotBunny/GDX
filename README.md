@@ -3,7 +3,7 @@
 [![Latest Release](https://img.shields.io/github/release/dotBunny/GDX.svg?logo=github)](https://github.com/dotBunny/GDX/releases)
 [![OpenUPM](https://img.shields.io/npm/v/com.dotbunny.gdx?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.dotbunny.gdx/)
 [![Discord Server](https://img.shields.io/discord/582190573897908224.svg?label=discord&logo=discord&color=informational)](https://discord.gg/EcceFGAuJs)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/dotBunny/GDX/blob/main/LICENSE)
+[![License: BSL-1.0](https://img.shields.io/badge/License-BSL-blue.svg)](https://github.com/dotBunny/GDX/blob/main/LICENSE)
 
 Game Development Extensions, a battle-tested library of game-ready high-performance C# code.
 
@@ -30,5 +30,5 @@ GDX is an open-source project, and we encourage and welcome contributions. While
 > Please review the manual's [Contributing](https://gdx.dotbunny.com/manual/contributing.html) section for info on how you can contribute to this package and our awesome community. :heart:
 
 ## License
-GDX is licensed under the [MIT License](https://choosealicense.com/licenses/mit/).
+GDX is licensed under the [BSL-1.0 License](https://choosealicense.com/licenses/bsl-1.0/).
 > A copy of this license can be found at the root of the project in the `LICENSE` file, or [here](https://gdx.dotbunny.com/license.html).
