@@ -280,6 +280,28 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
+        public void GetStableHashCode_MockData_IsEqual()
+        {
+            int oldSimpleHash = "HelloWorld!".GetHashCode();
+            int newSimpleHash = "HelloWorld!".GetStableHashCode();
+            int oldLowerCaseHash = "this is all lowercase".GetHashCode();
+            int newLowerCaseHash = "this is all lowercase".GetStableHashCode();
+            int oldUpperCaseHash = "THIS IS ALL UPPERCASE".GetHashCode();
+            int newUpperCaseHash = "THIS IS ALL UPPERCASE".GetStableHashCode();
+            int oldComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetHashCode();
+            int newComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetStableHashCode();
+
+            bool evaluate = oldSimpleHash == newSimpleHash &&
+                            oldComplexHash == newComplexHash &&
+                            oldLowerCaseHash == newLowerCaseHash &&
+                            oldUpperCaseHash == newUpperCaseHash;
+
+            Assert.IsTrue(evaluate);
+        }
+
+
+        [Test]
+        [Category("GDX.Tests")]
         public void GetStableLowerCaseHashCode_ToLowerGetHashCode_IsEqual()
         {
             int oldSimpleHash = "HelloWorld!".ToLower().GetHashCode();

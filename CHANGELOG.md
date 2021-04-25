@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New FAQ section of the website, addressing some of the more frequently asked questions.
 - `WELL1024a` implementation to replace PRNG in GDX .
 - `IRandomProvider` and `RandomAdaptor` too allow for some interchange with existing codebases.
+- `GetStableHashCode` for strings beats the builtin `GetHashCode`.
 
 ### Changed
 - File license headers, repository wide.
