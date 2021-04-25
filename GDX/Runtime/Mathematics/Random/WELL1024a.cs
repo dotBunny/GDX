@@ -1,6 +1,8 @@
 using System;
 using System.Runtime.CompilerServices;
+#if GDX_MATHEMATICS
 using Unity.Mathematics;
+#endif
 
 namespace GDX.Mathematics.Random
 {
