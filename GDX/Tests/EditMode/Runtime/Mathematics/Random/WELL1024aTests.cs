@@ -19,7 +19,7 @@ namespace Runtime.Mathematics.Random
         {
             WELL1024a mockWell = new WELL1024a(-999);
 
-            bool evaluate = mockWell != null && mockWell.OriginalSeed == 999u;
+            bool evaluate = mockWell.OriginalSeed == 999u;
 
             Assert.IsTrue(evaluate);
         }
@@ -31,8 +31,7 @@ namespace Runtime.Mathematics.Random
             WELL1024a mockWell = new WELL1024a(MockSeed, false);
             WELL1024a mockWellUpper = new WELL1024a(MockSeed);
 
-            bool evaluate = mockWell != null && mockWellUpper != null &&
-                            mockWell.OriginalSeed != mockWellUpper.OriginalSeed;
+            bool evaluate = mockWell.OriginalSeed != mockWellUpper.OriginalSeed;
 
             Assert.IsTrue(evaluate);
         }
@@ -44,8 +43,7 @@ namespace Runtime.Mathematics.Random
             WELL1024a mockWell = new WELL1024a("BOB", false);
             WELL1024a mockWellUpper = new WELL1024a("BoB");
 
-            bool evaluate = mockWell != null && mockWellUpper != null &&
-                            mockWell.OriginalSeed == mockWellUpper.OriginalSeed;
+            bool evaluate = mockWell.OriginalSeed == mockWellUpper.OriginalSeed;
 
             Assert.IsTrue(evaluate);
         }
@@ -56,7 +54,7 @@ namespace Runtime.Mathematics.Random
         {
             WELL1024a mockWell = new WELL1024a(999u);
 
-            bool evaluate = mockWell != null && mockWell.OriginalSeed == 999u;
+            bool evaluate = mockWell.OriginalSeed == 999u;
 
             Assert.IsTrue(evaluate);
         }
@@ -72,8 +70,7 @@ namespace Runtime.Mathematics.Random
             WELL1024a.WellState saved = mockWell.GetState();
             WELL1024a restoreWell = new WELL1024a(saved);
 
-            bool evaluate = mockWell != null && restoreWell != null &&
-                            mockWell.Index == restoreWell.Index &&
+            bool evaluate = mockWell.Index == restoreWell.Index &&
                             mockWell.OriginalSeed == restoreWell.OriginalSeed;
 
             if (evaluate)

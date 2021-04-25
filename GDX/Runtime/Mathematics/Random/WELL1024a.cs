@@ -24,7 +24,7 @@ namespace GDX.Mathematics.Random
     // ReSharper restore CommentTypo
     [VisualScriptingType]
     // ReSharper disable once InconsistentNaming
-    public sealed class WELL1024a : IRandomProvider
+    public struct WELL1024a : IRandomProvider
     {
         /// <summary>
         ///     A copy of the original seed used to initialize the <see cref="WELL1024a" />.
@@ -34,7 +34,7 @@ namespace GDX.Mathematics.Random
         /// <summary>
         ///     The state array of the well.
         /// </summary>
-        public readonly uint[] State = new uint[32];
+        public readonly uint[] State;
 
         /// <summary>
         ///     The current index of use for the well array.
@@ -58,6 +58,8 @@ namespace GDX.Mathematics.Random
             OriginalSeed = (uint)UnityEngine.Mathf.Abs(seed);
 #endif
             // Initialize
+            Index = 0;
+            State = new uint[32];
             State[0] = OriginalSeed & 4294967295u;
             for (int i = 1; i < 32; ++i)
             {
@@ -74,6 +76,8 @@ namespace GDX.Mathematics.Random
             OriginalSeed = seed;
 
             // Initialize
+            Index = 0;
+            State = new uint[32];
             State[0] = OriginalSeed & 4294967295u;
             for (int i = 1; i < 32; ++i)
             {
@@ -113,6 +117,8 @@ namespace GDX.Mathematics.Random
             }
 
             // Initialize
+            Index = 0;
+            State = new uint[32];
             State[0] = OriginalSeed & 4294967295u;
             for (int i = 1; i < 32; ++i)
             {
