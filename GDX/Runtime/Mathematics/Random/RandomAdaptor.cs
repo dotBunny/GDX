@@ -10,11 +10,19 @@ namespace GDX.Mathematics.Random
     /// </summary>
     /// <remarks>This will create IL <c>callvert</c> operation codes! Try not to use this.</remarks>
     [VisualScriptingType]
-    public class RandomAdapter : System.Random
+    public class RandomAdaptor : System.Random
     {
         private readonly IRandomProvider _provider;
 
-        public RandomAdapter(IRandomProvider provider)
+        /// <summary>
+        ///     Create an adaptor object which behaves like <see cref="System.Random" />.
+        /// </summary>
+        /// <remarks>
+        ///     Will cause boxing of <see langword="struct" /> based types like <see cref="WELL1024a" />.
+        ///     This adaptor really should only be used where a method is expecting a <see cref="System.Random" />.
+        /// </remarks>
+        /// <param name="provider">A qualified <see cref="IRandomProvider" />.</param>
+        public RandomAdaptor(IRandomProvider provider)
         {
             _provider = provider;
         }

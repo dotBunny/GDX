@@ -11,7 +11,7 @@ namespace Runtime.Mathematics.Random
 {
     public class WELL1024aTests
     {
-        private const string MockSeed = "TestSeed";
+        public const string MockSeed = "TestSeed";
 
         [Test]
         [Category("GDX.Tests")]
@@ -71,7 +71,8 @@ namespace Runtime.Mathematics.Random
             WELL1024a restoreWell = new WELL1024a(saved);
 
             bool evaluate = mockWell.Index == restoreWell.Index &&
-                            mockWell.OriginalSeed == restoreWell.OriginalSeed;
+                            mockWell.OriginalSeed == restoreWell.OriginalSeed &&
+                            mockWell.SampleCount == restoreWell.SampleCount;
 
             if (evaluate)
             {
