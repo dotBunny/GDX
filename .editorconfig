@@ -47,7 +47,7 @@ end_of_line = crlf
 trim_trailing_whitespace = false
 
 # Dotnet code style settings:
-[*.{cs}]
+[*.cs]
 indent_size = 4
 
 # IDE0055: Fix formatting

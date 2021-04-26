@@ -6,8 +6,9 @@ In the unlikely situation where `GDX` is found to contain a security vulnerabili
 
 | Version | Supported          |
 | ------- | ------------------ |
+| `2.0.x`   | :white_check_mark: |
 | `1.3.x`   | :white_check_mark: |
-| `1.2.x`   | :white_check_mark: |
+| `1.2.x`   | :x:                |
 | `1.1.x`   | :x:                |
 | `1.0.x`   | :x:                |
 

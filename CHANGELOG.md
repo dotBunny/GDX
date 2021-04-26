@@ -6,20 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - ??
 ***"Fresh Paint"***
-> Breaking changes as we transition away from the MIT license to something even more open and awesome.
+> Breaking changes as we transition away from the MIT license to BSL-1.0 for more freedom.
 
 ### Added
-- New FAQ section of the website, addressing some of the more frequently asked questions.
-- `WELL1024a` implementation to replace PRNG in GDX .
-- `IRandomProvider` and `RandomAdaptor` too allow for some interchange with existing codebases.
-- `GetStableHashCode` for strings beats the builtin `GetHashCode`.
+- New [FAQ](https://gdx.dotbunny.com/manual/faq.html) section of the website, addressing some of the more frequently asked questions.
+- `WELL1024a` implementation to replace removed `MersenneTwister` in GDX .
+- `IRandomProvider` and `RandomAdaptor` too allow for some interchange with existing codebases; these are slow and should be used as a last resort.
+- `GetStableHashCode` for generating hashcodes of strings identical to `GetHashCode`, without the virtual call.
 
 ### Changed
-- File license headers, repository wide.
-- Documentation usage of `langword` has been replaced with `see` functionality.
+- File license headers, repository wide now reference the BSL-1.0 license.
+- Corrected minimum compatible version to `2018.4` in `README.md`
+- Added latest version `2.0.0` to `SECURITY.md`, sunsetting `1.2.x`.
 
 ### Removed
-- Removed from [documentation](https://gdx.dotbunny.com) many of supporting GDX editor only types used in drawing GDX's project settings, and some internal attributes.
+- Removed some supporting types and methods used by GDX's project settings from [documentation](https://gdx.dotbunny.com).
 - Removed `MersenneTwister` to allow for our new licensing model (functionally replaced with `WELL1024a` implementation).
 
 ## [1.3.0] - 2021-04-06

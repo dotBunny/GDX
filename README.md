@@ -22,7 +22,7 @@ Add `com.dotbunny.gdx` as a dependency to the project `Packages/manifest.json` f
 > For a full breakdown of all installation methods please refer to the [Installation](https://gdx.dotbunny.com/manual/getting-started.html#installation) section of [Getting Started](https://gdx.dotbunny.com/manual/getting-started.html) in the manual.
 
 ## Requirements
-The `GDX` package can be dropped into any compatible [Unity](http://unity3d.com) (>=`2019.1`) project and selectively enables portions of its functionality based on what packages it finds in the project.
+The `GDX` package can be dropped into any compatible [Unity](http://unity3d.com) (>=`2018.4`) project and selectively enables portions of its functionality based on what packages it finds in the project.
 > For more detailed infromation, please consult [Requirements](https://gdx.dotbunny.com/manual/requirements.html) in the manual.
 
 ## Contributing
