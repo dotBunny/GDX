@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Corrected minimum compatible version to `2018.4` in `README.md`
 - Added latest version `2.0.0` to `SECURITY.md`, sunsetting `1.2.x`.
 - `VisualScriptingCollectionAttribute`, `VisualScriptingExtensionAttribute`, `VisualScriptingTypeAttribute`, `VisualScriptingUtilityAttribute` have been consolidated to `VisualScriptingCompatible`.
+- `NextDouble`, `NextSingle` functionality on `IRandomProviders` do not default to extreme values.
 
 ### Removed
 - Removed some supporting types and methods used by GDX's project settings from [documentation](https://gdx.dotbunny.com).
