@@ -38,7 +38,7 @@ namespace GDX.Mathematics.Random
         /// <param name="minValue">The lowest possible value (inclusive).</param>
         /// <param name="maxValue">The highest possible value (exclusive).</param>
         /// <returns>A pseudorandom <see cref="double" />.</returns>
-        double NextDouble(double minValue = double.MinValue, double maxValue = double.MaxValue);
+        double NextDouble(double minValue = 0d, double maxValue = 1d);
 
         /// <summary>
         ///     Returns the next pseudorandom <see cref="int" /> between <paramref name="minValue" /> and
@@ -52,7 +52,7 @@ namespace GDX.Mathematics.Random
         /// <param name="minValue">The lowest possible value.</param>
         /// <param name="maxValue">The highest possible value, including itself.</param>
         /// <returns>A pseudorandom <see cref="int" />.</returns>
-        int NextInteger(int minValue = int.MinValue, int maxValue = Range.SafeIntegerMaxValue);
+        int NextInteger(int minValue = 0, int maxValue = Range.SafeIntegerMaxValue);
 
         /// <summary>
         ///     Returns the next pseudorandom <see cref="int" /> between <paramref name="minValue" /> and
@@ -65,7 +65,7 @@ namespace GDX.Mathematics.Random
         /// <param name="minValue">The lowest possible value.</param>
         /// <param name="maxValue">The highest possible value, excluding itself.</param>
         /// <returns>A pseudorandom <see cref="int" />.</returns>
-        int NextIntegerExclusive(int minValue = int.MinValue, int maxValue = int.MaxValue);
+        int NextIntegerExclusive(int minValue = 0, int maxValue = int.MaxValue);
 
         /// <summary>
         ///     Returns the next pseudorandom <see cref="System.Single" /> between <paramref name="minValue" /> and
@@ -78,7 +78,7 @@ namespace GDX.Mathematics.Random
         /// <param name="minValue">The lowest possible value (inclusive).</param>
         /// <param name="maxValue">The highest possible value (exclusive).</param>
         /// <returns>A pseudorandom <see cref="System.Single" />.</returns>
-        float NextSingle(float minValue = float.MinValue, float maxValue = float.MaxValue);
+        float NextSingle(float minValue = 0f, float maxValue = 1f);
 
         /// <summary>
         ///     Returns the next pseudorandom <see cref="uint" /> between <paramref name="minValue" /> and

@@ -176,28 +176,28 @@ namespace GDX.Mathematics.Random
 
         /// <inheritdoc cref="IRandomProvider.NextDouble" />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public double NextDouble(double minValue = double.MinValue, double maxValue = double.MaxValue)
+        public double NextDouble(double minValue = 0d, double maxValue = 1d)
         {
             return Range.GetDouble(Sample(), minValue, maxValue);
         }
 
         /// <inheritdoc cref="IRandomProvider.NextInteger" />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int NextInteger(int minValue = int.MinValue, int maxValue = Range.SafeIntegerMaxValue)
+        public int NextInteger(int minValue = 0, int maxValue = Range.SafeIntegerMaxValue)
         {
             return Range.GetInteger(Sample(), minValue, maxValue + 1);
         }
 
         /// <inheritdoc cref="IRandomProvider.NextIntegerExclusive" />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int NextIntegerExclusive(int minValue = int.MinValue, int maxValue = int.MaxValue)
+        public int NextIntegerExclusive(int minValue = 0, int maxValue = int.MaxValue)
         {
             return Range.GetInteger(Sample(), minValue, maxValue);
         }
 
         /// <inheritdoc cref="IRandomProvider.NextSingle" />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public float NextSingle(float minValue = float.MinValue, float maxValue = float.MaxValue)
+        public float NextSingle(float minValue = 0f, float maxValue = 1f)
         {
             return Range.GetSingle(Sample(), minValue, maxValue);
         }
