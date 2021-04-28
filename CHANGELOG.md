@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - File license headers, repository wide now reference the BSL-1.0 license.
 - Corrected minimum compatible version to `2018.4` in `README.md`
 - Added latest version `2.0.0` to `SECURITY.md`, sunsetting `1.2.x`.
+- `VisualScriptingCollectionAttribute`, `VisualScriptingExtensionAttribute`, `VisualScriptingTypeAttribute`, `VisualScriptingUtilityAttribute` have been consolidated to `VisualScriptingCompatible`.
 
 ### Removed
 - Removed some supporting types and methods used by GDX's project settings from [documentation](https://gdx.dotbunny.com).

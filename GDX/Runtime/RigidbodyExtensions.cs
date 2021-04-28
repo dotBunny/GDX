@@ -9,7 +9,7 @@ namespace GDX
     /// <summary>
     ///     <see cref="UnityEngine.Rigidbody" /> Based Extension Methods
     /// </summary>
-    [VisualScriptingExtension]
+    [VisualScriptingCompatible(12)]
     public static class RigidbodyExtensions
     {
         /// <summary>

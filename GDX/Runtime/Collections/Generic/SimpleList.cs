@@ -8,7 +8,7 @@ namespace GDX.Collections.Generic
     ///     A <see cref="System.Collections.Generic.List{T}" />-like data structure.
     /// </summary>
     /// <typeparam name="T">The type of the <see cref="object" />s contained within.</typeparam>
-    [VisualScriptingCollection]
+    [VisualScriptingCompatible(1)]
     public struct SimpleList<T>
     {
         /// <summary>

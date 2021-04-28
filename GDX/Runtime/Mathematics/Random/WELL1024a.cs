@@ -23,7 +23,7 @@ namespace GDX.Mathematics.Random
     ///     accessed on 2021-04-23.
     /// </remarks>
     // ReSharper restore CommentTypo
-    [VisualScriptingType]
+    [VisualScriptingCompatible(4)]
     // ReSharper disable once InconsistentNaming
     public struct WELL1024a : IRandomProvider, IEquatable<WELL1024a>
     {

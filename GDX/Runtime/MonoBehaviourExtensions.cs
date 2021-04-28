@@ -13,7 +13,7 @@ namespace GDX
     /// <remarks>
     ///     Used for MonoBehaviour workflows.
     /// </remarks>
-    [VisualScriptingExtension]
+    [VisualScriptingCompatible(12)]
     public static class MonoBehaviourExtensions
     {
         /// <summary>

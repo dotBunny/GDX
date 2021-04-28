@@ -12,7 +12,7 @@ namespace GDX
     /// <summary>
     ///     A collection of platform related helper utilities.
     /// </summary>
-    [VisualScriptingUtility]
+    [VisualScriptingCompatible(8)]
     public static class Platform
     {
         /// <summary>

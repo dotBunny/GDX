@@ -9,7 +9,7 @@ namespace GDX.Mathematics.Random
     ///     provider in a class object with expected overrides.
     /// </summary>
     /// <remarks>This will create IL <c>callvert</c> operation codes! Try not to use this.</remarks>
-    [VisualScriptingType]
+    [VisualScriptingCompatible(4)]
     public class RandomAdaptor : System.Random
     {
         private readonly IRandomProvider _provider;
@@ -59,6 +59,7 @@ namespace GDX.Mathematics.Random
 
         public override double NextDouble()
         {
+
             return _provider.NextDouble(0, 1d);
         }
 

@@ -13,7 +13,7 @@ namespace GDX
     /// <summary>
     ///     Trace logging functionality.
     /// </summary>
-    [VisualScriptingUtility]
+    [VisualScriptingCompatible(8)]
     public static class Trace
     {
         // TODO: Create trace levels output methods which can be compiled out?

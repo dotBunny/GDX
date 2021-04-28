@@ -54,21 +54,28 @@ namespace GDX.Editor
 
             foreach(Type type in RuntimeAssembly.GetTypes())
             {
-                if (type.GetCustomAttributes(typeof(VisualScriptingCollectionAttribute), true).Length > 0)
+                VisualScriptingCompatibleAttribute targetType = (VisualScriptingCompatibleAttribute)type.GetCustomAttribute(typeof(VisualScriptingCompatibleAttribute), true);
+                if (targetType == null)
+                {
+                    continue;
+                }
+
+                // A whole lot of frustrating boxing
+                if (targetType.VisualScriptingCategories.HasFlag(VisualScriptingCompatibleAttribute.VisualScriptingCategory.Collection))
                 {
                     VisualScriptingCollections.Add(type);
                 }
-                if (type.GetCustomAttributes(typeof(VisualScriptingExtensionAttribute), true).Length > 0)
+                if (targetType.VisualScriptingCategories.HasFlag(VisualScriptingCompatibleAttribute.VisualScriptingCategory.Extension))
                 {
                     VisualScriptingExtensions.Add(type);
                 }
-                if (type.GetCustomAttributes(typeof(VisualScriptingUtilityAttribute), true).Length > 0)
-                {
-                    VisualScriptingUtilities.Add(type);
-                }
-                if (type.GetCustomAttributes(typeof(VisualScriptingTypeAttribute), true).Length > 0)
+                if (targetType.VisualScriptingCategories.HasFlag(VisualScriptingCompatibleAttribute.VisualScriptingCategory.Type))
                 {
                     VisualScriptingTypes.Add(type);
+                }
+                if (targetType.VisualScriptingCategories.HasFlag(VisualScriptingCompatibleAttribute.VisualScriptingCategory.Utility))
+                {
+                    VisualScriptingUtilities.Add(type);
                 }
             }
         }

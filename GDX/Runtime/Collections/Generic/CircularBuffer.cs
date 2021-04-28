@@ -15,7 +15,7 @@ namespace GDX.Collections.Generic
     ///     A sized buffer which loops back over itself as elements are used.
     /// </summary>
     /// <typeparam name="T">The type of <see cref="object" />s contained within.</typeparam>
-    [VisualScriptingCollection]
+    [VisualScriptingCompatible(1)]
     public class CircularBuffer<T> : IEnumerable<T>
     {
         /// <summary>

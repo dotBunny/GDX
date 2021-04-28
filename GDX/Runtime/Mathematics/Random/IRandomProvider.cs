@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace GDX.Mathematics.Random
 {
-    [VisualScriptingType]
+    [VisualScriptingCompatible(4)]
     public interface IRandomProvider
     {
         /// <summary>

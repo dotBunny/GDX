@@ -22,7 +22,7 @@ namespace GDX
     ///     <para>Requires UnityEngine.CoreModule.dll to function correctly.</para>
     ///     <para>Requires <c>com.unity.addressables</c> Package.</para>
     /// </remarks>
-    [VisualScriptingExtension]
+    [VisualScriptingCompatible(12)]
     public static class AddressablesExtensions
     {
         /// <summary>

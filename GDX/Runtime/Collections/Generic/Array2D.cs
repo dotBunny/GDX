@@ -13,7 +13,7 @@ namespace GDX.Collections.Generic
     /// </summary>
     /// <remarks>Mimics multi-dimensional array format.</remarks>
     /// <typeparam name="T">Type of objects.</typeparam>
-    [VisualScriptingCollection]
+    [VisualScriptingCompatible(1)]
     public class Array2D<T>
     {
         /// <summary>

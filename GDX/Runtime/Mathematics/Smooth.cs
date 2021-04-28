@@ -16,7 +16,7 @@ namespace GDX.Mathematics
     /// <summary>
     ///     Some helpful interpolation functionality.
     /// </summary>
-    [VisualScriptingUtility]
+    [VisualScriptingCompatible(8)]
     public static class Smooth
     {
         // ReSharper disable CommentTypo
