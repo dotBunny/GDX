@@ -129,7 +129,7 @@ namespace Runtime.Mathematics.Random
             WELL1024a mockWell = new WELL1024a(MockSeed);
             int nextValue = mockWell.NextInteger();
 
-            bool evaluate = nextValue == 1696340346;
+            bool evaluate = nextValue == 1921911996;
 
             Assert.IsTrue(evaluate);
         }
@@ -248,7 +248,7 @@ namespace Runtime.Mathematics.Random
             WELL1024a mockWell = new WELL1024a(MockSeed);
             double nextValue = mockWell.NextDouble();
 
-            bool evaluate = nextValue == 1.4200338144748743E+308;
+            bool evaluate = nextValue == 0.89496001484803855d;
 
             Assert.IsTrue(evaluate);
         }
@@ -260,7 +260,7 @@ namespace Runtime.Mathematics.Random
             WELL1024a mockWell = new WELL1024a(MockSeed);
             float nextValue = mockWell.NextSingle();
 
-            bool evaluate =  nextValue.ToString().Substring(0,5) == "2.687";
+            bool evaluate =  nextValue == 0.894959986f;
 
             Assert.IsTrue(evaluate, nextValue.ToString());
         }
