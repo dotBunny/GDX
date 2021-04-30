@@ -7,12 +7,14 @@ using UnityEngine.Experimental.Rendering;
 
 namespace GDX.Developer.Reports
 {
-    public class TextureObjectInfo : ObjectInfo
+    public sealed class TextureObjectInfo : ObjectInfo
     {
         public bool IsReadable;
         public int Height;
         public int Width;
+#if UNITY_2019_1_OR_NEWER
         public GraphicsFormat Format;
+#endif
 
         public override void Populate(UnityEngine.Object targetObject)
         {
@@ -23,7 +25,9 @@ namespace GDX.Developer.Reports
             Width = textureAsset.width;
             Height = textureAsset.height;
             IsReadable = textureAsset.isReadable;
+#if UNITY_2019_1_OR_NEWER
             Format = textureAsset.graphicsFormat;
+#endif
         }
     }
 }

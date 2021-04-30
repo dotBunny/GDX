@@ -17,11 +17,11 @@ namespace Runtime.Developer.Reports
     {
         [Test]
         [Category("GDX.Tests")]
-        public void Clear_MockData_HasDefaultValues()
+        public void ManagedHeapSnapshot_NoData_CreatesState()
         {
             var state = MemoryDump.ManagedHeapSnapshot();
 
-            bool evaluate = false;
+            bool evaluate = state != null;
 
             Assert.IsTrue(evaluate);
         }

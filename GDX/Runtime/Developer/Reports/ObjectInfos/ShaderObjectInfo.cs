@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace GDX.Developer.Reports
 {
-    public class ShaderObjectInfo : ObjectInfo
+    public sealed class ShaderObjectInfo : ObjectInfo
     {
         public int PassCount;
         public bool IsSupported;

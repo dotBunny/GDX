@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace GDX.Developer.Reports
 {
-    public class MeshObjectInfo : ObjectInfo
+    public sealed class MeshObjectInfo : ObjectInfo
     {
         public int VertexCount;
         public int SubMeshCount;
