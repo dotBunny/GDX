@@ -17,7 +17,7 @@ namespace Runtime.Developer
     {
         [Test]
         [Category("GDX.Tests")]
-        public void ResourceSnapshot_NoData_CreatesState()
+        public void GeneralReport_MockData_ReturnsReport()
         {
             var state = ResourcesReport.GeneralReport();
 
@@ -28,10 +28,10 @@ namespace Runtime.Developer
 
         [Test]
         [Category("GDX.Tests")]
-        public void ManagedHeapSnapshotString_NoData_CreatesState()
+        public void Generate_MockData_ReturnsReport()
         {
 
-            var state = ResourcesReport.Generate(new ResourcesQuery[]
+            var state = ResourcesReport.Generate(new []
             {
                 new ResourcesQuery( "UnityEngine.Texture2D,UnityEngine"),
                 new ResourcesQuery(
