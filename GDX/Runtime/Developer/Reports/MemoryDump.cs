@@ -14,45 +14,26 @@ using Object = UnityEngine.Object;
 
 namespace GDX.Developer.Reports
 {
-    // TODO: Add way to maybe writee out whats referencing?
-    // instead of just counts? bool flag
     public static class MemoryDump
     {
-        // TODO configurable tyes ... command line names?
-        // has special object info
-
-        public enum ObjectInfoType
-        {
-            Default,
-            Mesh,
-            Shader,
-            Texture
-        }
-
         public struct HeapQuery
         {
-            public string FullType;
-
-            public string AssemblyName;
-
             public string Category;
+            public string TypeDefinition;
+            public string ObjectInfoTypeDefinition;
 
-            public string ObjectInfoType;
-
-            public HeapQuery(string category, string assemblyName, string fullType)
+            public HeapQuery(string category, string typeDefinition)
             {
                 Category = category;
-                AssemblyName = assemblyName;
-                FullType = fullType;
-                ObjectInfoType = "GDX.Developer.Reports.ObjectInfo, GDX";
+                TypeDefinition = typeDefinition;
+                ObjectInfoTypeDefinition = ObjectInfo.TypeDefinition;
             }
 
-            public HeapQuery(string category, string assemblyName, string fullType, string objectInfo)
+            public HeapQuery(string category, string typeDefinition, string objectInfoTypeDefinition)
             {
                 Category = category;
-                AssemblyName = assemblyName;
-                FullType = fullType;
-                ObjectInfoType = objectInfo;
+                TypeDefinition = typeDefinition;
+                ObjectInfoTypeDefinition = objectInfoTypeDefinition;
             }
         }
 
@@ -78,13 +59,13 @@ namespace GDX.Developer.Reports
             {
                 // Attempt to try and make a type based on the full name (+namespace), and the assembly.
                 // ex: UnityEngine.Texture2D, UnityEngine
-                Type typeActual = Type.GetType($"{queries[i].FullType}, {queries[i].AssemblyName}", false);
+                Type typeActual = Type.GetType(queries[i].TypeDefinition, false);
 
                 // If we actually got a valid type
                 if (typeActual != null)
                 {
                     // Create our ObjectInfo type, defaulting if invalid
-                    Type objectInfoActual = Type.GetType(queries[i].ObjectInfoType, false);
+                    Type objectInfoActual = Type.GetType(queries[i].ObjectInfoTypeDefinition, false);
                     if (objectInfoActual == null)
                     {
                         objectInfoActual = typeof(ObjectInfo);

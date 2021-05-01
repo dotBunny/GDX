@@ -9,6 +9,8 @@ namespace GDX.Developer.Reports
 {
     public sealed class TextureObjectInfo : ObjectInfo
     {
+        public const string TypeDefinition = "GDX.Developer.Reports.TextureObjectInfo, GDX";
+
         public bool IsReadable;
         public int Height;
         public int Width;

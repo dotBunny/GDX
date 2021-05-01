@@ -8,6 +8,8 @@ namespace GDX.Developer.Reports
 {
     public sealed class ShaderObjectInfo : ObjectInfo
     {
+        public const string TypeDefinition = "GDX.Developer.Reports.ShaderObjectInfo, GDX";
+
 #if UNITY_2019_1_OR_NEWER
         public int PassCount;
 #endif

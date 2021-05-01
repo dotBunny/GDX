@@ -33,8 +33,12 @@ namespace Runtime.Developer.Reports
 
             var state = MemoryDump.ManagedHeapSnapshot(new MemoryDump.HeapQuery[]
             {
-                new MemoryDump.HeapQuery("Texture2D", "UnityEngine", "UnityEngine.Texture2D"),
-                new MemoryDump.HeapQuery("Texture3D", "UnityEngine", "UnityEngine.Texture3D")
+                new MemoryDump.HeapQuery("Texture2D", "UnityEngine.Texture2D,UnityEngine"),
+
+                new MemoryDump.HeapQuery(
+                    "Texture3D",
+                    "UnityEngine.Texture3D,UnityEngine",
+                    TextureObjectInfo.TypeDefinition)
             });
 
             bool evaluate = state != null;

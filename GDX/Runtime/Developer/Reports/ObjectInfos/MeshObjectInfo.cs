@@ -8,6 +8,8 @@ namespace GDX.Developer.Reports
 {
     public sealed class MeshObjectInfo : ObjectInfo
     {
+        public const string TypeDefinition = "GDX.Developer.Reports.MeshObjectInfo, GDX";
+
         public int VertexCount;
         public int SubMeshCount;
         public int Triangles;

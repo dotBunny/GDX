@@ -9,6 +9,8 @@ namespace GDX.Developer.Reports
 {
     public class ObjectInfo
     {
+        public const string TypeDefinition = "GDX.Developer.Reports.ObjectInfo, GDX";
+
         public long MemoryUsageBytes;
         public string Name;
         public System.Type Type;
