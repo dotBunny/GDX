@@ -2,24 +2,24 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Developer.Reports;
+using GDX.Developer;
 using NUnit.Framework;
 
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable
 
-namespace Runtime.Developer.Reports
+namespace Runtime.Developer
 {
     /// <summary>
-    ///     A collection of unit tests to validate functionality of the <see cref="MemoryDump" /> class.
+    ///     A collection of unit tests to validate functionality of the <see cref="MemoryReport" /> class.
     /// </summary>
-    public class MemoryDumpTests
+    public class ResourcesReportTests
     {
         [Test]
         [Category("GDX.Tests")]
-        public void ManagedHeapSnapshot_NoData_CreatesState()
+        public void ResourceSnapshot_NoData_CreatesState()
         {
-            var state = MemoryDump.ManagedHeapSnapshot();
+            var state = ResourcesReport.GeneralReport();
 
             bool evaluate = state != null;
 
@@ -31,14 +31,12 @@ namespace Runtime.Developer.Reports
         public void ManagedHeapSnapshotString_NoData_CreatesState()
         {
 
-            var state = MemoryDump.ManagedHeapSnapshot(new MemoryDump.HeapQuery[]
+            var state = ResourcesReport.Generate(new ResourcesQuery[]
             {
-                new MemoryDump.HeapQuery("Texture2D", "UnityEngine.Texture2D,UnityEngine"),
-
-                new MemoryDump.HeapQuery(
-                    "Texture3D",
+                new ResourcesQuery( "UnityEngine.Texture2D,UnityEngine"),
+                new ResourcesQuery(
                     "UnityEngine.Texture3D,UnityEngine",
-                    TextureObjectInfo.TypeDefinition)
+                    GDX.Developer.ObjectInfos.TextureObjectInfo.TypeDefinition)
             });
 
             bool evaluate = state != null;

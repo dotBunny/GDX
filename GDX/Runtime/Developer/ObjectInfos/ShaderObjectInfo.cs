@@ -4,11 +4,11 @@
 
 using UnityEngine;
 
-namespace GDX.Developer.Reports
+namespace GDX.Developer.ObjectInfos
 {
     public sealed class ShaderObjectInfo : ObjectInfo
     {
-        public const string TypeDefinition = "GDX.Developer.Reports.ShaderObjectInfo, GDX";
+        public const string TypeDefinition = "GDX.Developer.ObjectInfos.ShaderObjectInfo,GDX";
 
 #if UNITY_2019_1_OR_NEWER
         public int PassCount;
@@ -18,6 +18,18 @@ namespace GDX.Developer.Reports
         public override void Populate(UnityEngine.Object targetObject)
         {
             base.Populate(targetObject);
+            Shader shaderAsset = (Shader)targetObject;
+
+            // Useful shader information
+#if UNITY_2019_1_OR_NEWER
+            PassCount = shaderAsset.passCount;
+#endif
+            IsSupported = shaderAsset.isSupported;
+        }
+
+        public override void Populate(UnityEngine.Object targetObject, TransientReference reference)
+        {
+            base.Populate(targetObject, reference);
             Shader shaderAsset = (Shader)targetObject;
 
             // Useful shader information

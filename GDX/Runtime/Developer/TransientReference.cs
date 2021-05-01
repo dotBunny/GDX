@@ -4,7 +4,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using JetBrains.Annotations;
 
 namespace GDX
 {
@@ -32,7 +31,7 @@ namespace GDX
         }
 
         /// <inheritdoc />
-        protected TransientReference([NotNull] SerializationInfo info, StreamingContext context) : base(info, context)
+        protected TransientReference(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 

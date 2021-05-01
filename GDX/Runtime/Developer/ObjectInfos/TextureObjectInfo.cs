@@ -5,11 +5,11 @@
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 
-namespace GDX.Developer.Reports
+namespace GDX.Developer.ObjectInfos
 {
     public sealed class TextureObjectInfo : ObjectInfo
     {
-        public const string TypeDefinition = "GDX.Developer.Reports.TextureObjectInfo, GDX";
+        public const string TypeDefinition = "GDX.Developer.ObjectInfos.TextureObjectInfo,GDX";
 
         public bool IsReadable;
         public int Height;
@@ -21,6 +21,20 @@ namespace GDX.Developer.Reports
         public override void Populate(UnityEngine.Object targetObject)
         {
             base.Populate(targetObject);
+            Texture textureAsset = (Texture)targetObject;
+
+            // Useful texture information
+            Width = textureAsset.width;
+            Height = textureAsset.height;
+            IsReadable = textureAsset.isReadable;
+#if UNITY_2019_1_OR_NEWER
+            Format = textureAsset.graphicsFormat;
+#endif
+        }
+
+        public override void Populate(UnityEngine.Object targetObject, TransientReference reference)
+        {
+            base.Populate(targetObject, reference);
             Texture textureAsset = (Texture)targetObject;
 
             // Useful texture information

@@ -4,11 +4,11 @@
 
 using UnityEngine;
 
-namespace GDX.Developer.Reports
+namespace GDX.Developer.ObjectInfos
 {
     public sealed class MeshObjectInfo : ObjectInfo
     {
-        public const string TypeDefinition = "GDX.Developer.Reports.MeshObjectInfo, GDX";
+        public const string TypeDefinition = "GDX.Developer.ObjectInfos.MeshObjectInfo,GDX";
 
         public int VertexCount;
         public int SubMeshCount;
@@ -18,6 +18,18 @@ namespace GDX.Developer.Reports
         public override void Populate(UnityEngine.Object targetObject)
         {
             base.Populate(targetObject);
+            Mesh meshAsset = (Mesh)targetObject;
+
+            // Useful mesh information
+            VertexCount = meshAsset.vertexCount;
+            SubMeshCount = meshAsset.subMeshCount;
+            Triangles = meshAsset.triangles.Length;
+            IsReadable = meshAsset.isReadable;
+        }
+
+        public override void Populate(UnityEngine.Object targetObject, TransientReference reference)
+        {
+            base.Populate(targetObject, reference);
             Mesh meshAsset = (Mesh)targetObject;
 
             // Useful mesh information

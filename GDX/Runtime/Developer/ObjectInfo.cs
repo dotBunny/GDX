@@ -5,23 +5,34 @@
 using UnityEngine;
 using UnityEngine.Profiling;
 
-namespace GDX.Developer.Reports
+namespace GDX.Developer
 {
     public class ObjectInfo
     {
-        public const string TypeDefinition = "GDX.Developer.Reports.ObjectInfo, GDX";
+        public const string TypeDefinition = "GDX.Developer.Reports.ObjectInfo,GDX";
 
         public long MemoryUsageBytes;
         public string Name;
         public System.Type Type;
         public uint CopyCount;
+        public TransientReference Reference;
 
-        public virtual void Populate(UnityEngine.Object targetObject)
+        public virtual void Populate(Object targetObject)
         {
             CopyCount = 1;
             Name = targetObject.name;
             Type = targetObject.GetType();
             MemoryUsageBytes = Profiler.GetRuntimeMemorySizeLong(targetObject);
+            Reference = new TransientReference(targetObject);
+        }
+
+        public virtual void Populate(Object targetObject, TransientReference reference)
+        {
+            CopyCount = 1;
+            Name = targetObject.name;
+            Type = targetObject.GetType();
+            MemoryUsageBytes = Profiler.GetRuntimeMemorySizeLong(targetObject);
+            Reference = reference;
         }
     }
 }
