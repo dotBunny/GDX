@@ -9,7 +9,7 @@ namespace GDX.Developer
 {
     public class ObjectInfo
     {
-        public const string TypeDefinition = "GDX.Developer.Reports.ObjectInfo,GDX";
+        public const string TypeDefinition = "GDX.Developer.ObjectInfo,GDX";
 
         public long MemoryUsageBytes;
         public string Name;
