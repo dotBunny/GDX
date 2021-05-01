@@ -5,7 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using GDX.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 using Object = UnityEngine.Object;
 
 namespace GDX.Developer
@@ -25,12 +27,15 @@ namespace GDX.Developer
         public readonly Dictionary<Type, Dictionary<TransientReference, ObjectInfo>> KnownObjects =
             new Dictionary<Type, Dictionary<TransientReference, ObjectInfo>>();
 
+        public readonly Dictionary<Type, long> KnownUsage = new SerializableDictionary<Type, long>();
+
         /// <summary>
         ///     Remove all information regarding all types from <see cref="KnownObjects" />.
         /// </summary>
         public void Clear()
         {
             KnownObjects.Clear();
+            KnownUsage.Clear();
         }
 
         /// <summary>
@@ -42,6 +47,11 @@ namespace GDX.Developer
             if (KnownObjects.ContainsKey(type))
             {
                 KnownObjects.Remove(type);
+            }
+
+            if (KnownUsage.ContainsKey(type))
+            {
+                KnownUsage.Remove(type);
             }
         }
 
@@ -99,6 +109,11 @@ namespace GDX.Developer
                 KnownObjects.Add(typeClass, new Dictionary<TransientReference, ObjectInfo>());
             }
 
+            if (!KnownUsage.ContainsKey(typeClass))
+            {
+                KnownUsage.Add(typeClass, 0);
+            }
+
             // Get reference to the dictionary for the specified category
             Dictionary<TransientReference, ObjectInfo> typeObjects = KnownObjects[typeClass];
 
@@ -111,13 +126,24 @@ namespace GDX.Developer
                 // We can use the hashcode of a specific type at this level to determine duplication
                 if (typeObjects.ContainsKey(pseudoWeakReference))
                 {
-                    typeObjects[pseudoWeakReference].CopyCount++;
+                    ObjectInfo foundObjectInfo = typeObjects[pseudoWeakReference];
+
+                    // Increment copy count
+                    foundObjectInfo.CopyCount++;
+
+                    // We actively not going to use the existing size, in case the copy is different.
+                    long usage = Profiler.GetRuntimeMemorySizeLong(foundObject);
+                    foundObjectInfo.TotalMemoryUsageBytes += usage;
+                    KnownUsage[typeClass] += usage;
                 }
                 else
                 {
                     TObjectInfo objectInfo = new TObjectInfo();
                     objectInfo.Populate(foundObject, pseudoWeakReference);
                     typeObjects.Add(pseudoWeakReference, objectInfo);
+
+                    // Add to size
+                    KnownUsage[typeClass] += objectInfo.MemoryUsageBytes;
                 }
             }
         }

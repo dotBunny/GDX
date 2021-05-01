@@ -12,6 +12,7 @@ namespace GDX.Developer
         public const string TypeDefinition = "GDX.Developer.ObjectInfo,GDX";
 
         public long MemoryUsageBytes;
+        public long TotalMemoryUsageBytes;
         public string Name;
         public System.Type Type;
         public uint CopyCount;
@@ -23,6 +24,7 @@ namespace GDX.Developer
             Name = targetObject.name;
             Type = targetObject.GetType();
             MemoryUsageBytes = Profiler.GetRuntimeMemorySizeLong(targetObject);
+            TotalMemoryUsageBytes = MemoryUsageBytes;
             Reference = new TransientReference(targetObject);
         }
 
@@ -32,6 +34,7 @@ namespace GDX.Developer
             Name = targetObject.name;
             Type = targetObject.GetType();
             MemoryUsageBytes = Profiler.GetRuntimeMemorySizeLong(targetObject);
+            TotalMemoryUsageBytes = MemoryUsageBytes;
             Reference = reference;
         }
     }
