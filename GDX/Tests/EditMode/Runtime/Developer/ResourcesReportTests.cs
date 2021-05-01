@@ -11,7 +11,7 @@ using NUnit.Framework;
 namespace Runtime.Developer
 {
     /// <summary>
-    ///     A collection of unit tests to validate functionality of the <see cref="MemoryReport" /> class.
+    ///     A collection of unit tests to validate functionality of the <see cref="ResourcesReport"/> class.
     /// </summary>
     public class ResourcesReportTests
     {

@@ -8,6 +8,7 @@ using System.Reflection;
 using GDX.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Profiling;
+using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 namespace GDX.Developer
@@ -29,30 +30,40 @@ namespace GDX.Developer
 
         public readonly Dictionary<Type, long> KnownUsage = new SerializableDictionary<Type, long>();
 
-        /// <summary>
-        ///     Remove all information regarding all types from <see cref="KnownObjects" />.
-        /// </summary>
-        public void Clear()
+
+        public DateTime LastQueryCalled = DateTime.Now;
+
+        public int ObjectCount;
+
+        public readonly RuntimePlatform Platform;
+        public readonly long MonoUsedSize;
+        public readonly long MonoHeapSize;
+        public readonly long UnityUsedHeapSize;
+        public readonly long UnityTotalAllocatedMemory;
+        public readonly long UnityTotalReservedMemory;
+        public readonly long UnityTotalUnusedReservedMemory;
+        public readonly long UnityGraphicsDriverAllocatedMemory;
+        public readonly string ActiveScene;
+        public readonly DateTime Created;
+
+        public ResourcesState()
         {
-            KnownObjects.Clear();
-            KnownUsage.Clear();
+            ActiveScene = SceneManager.GetActiveScene().name;
+            Platform = Application.platform;
+            MonoUsedSize = Profiler.GetMonoUsedSizeLong();
+            MonoHeapSize = Profiler.GetMonoHeapSizeLong();
+            Created = DateTime.Now;
+
+            UnityUsedHeapSize = Profiler.usedHeapSizeLong;
+            UnityTotalAllocatedMemory = Profiler.GetTotalAllocatedMemoryLong();
+            UnityTotalReservedMemory = Profiler.GetTotalReservedMemoryLong();
+            UnityGraphicsDriverAllocatedMemory = Profiler.GetAllocatedMemoryForGraphicsDriver();
+            UnityTotalUnusedReservedMemory = Profiler.GetTotalUnusedReservedMemoryLong();
         }
 
-        /// <summary>
-        ///     Remove all information regarding a specific <paramref name="type" /> from the <see cref="KnownObjects" />.
-        /// </summary>
-        /// <param name="type">The type to remove from the <see cref="KnownObjects" />.</param>
-        public void Clear(Type type)
+        ~ResourcesState()
         {
-            if (KnownObjects.ContainsKey(type))
-            {
-                KnownObjects.Remove(type);
-            }
-
-            if (KnownUsage.ContainsKey(type))
-            {
-                KnownUsage.Remove(type);
-            }
+            KnownObjects.Clear();
         }
 
         /// <summary>
@@ -88,6 +99,7 @@ namespace GDX.Developer
 
             // Invoke the method on our container
             generic.Invoke(this, null);
+            LastQueryCalled = DateTime.Now;
         }
 
         /// <summary>
@@ -144,7 +156,32 @@ namespace GDX.Developer
 
                     // Add to size
                     KnownUsage[typeClass] += objectInfo.MemoryUsageBytes;
+                    ObjectCount++;
                 }
+            }
+
+            LastQueryCalled = DateTime.Now;
+        }
+
+        /// <summary>
+        ///     Remove all information regarding a specific <paramref name="type" /> from the <see cref="KnownObjects" />.
+        /// </summary>
+        /// <param name="type">The type to remove from the <see cref="KnownObjects" />.</param>
+        public void Remove(Type type)
+        {
+            if (KnownObjects.ContainsKey(type))
+            {
+                // Decrement the object count
+                ObjectCount -= KnownObjects.Count;
+
+                // Remove the known objects type
+                KnownObjects.Remove(type);
+            }
+
+            // Remove the size data
+            if (KnownUsage.ContainsKey(type))
+            {
+                KnownUsage.Remove(type);
             }
         }
     }

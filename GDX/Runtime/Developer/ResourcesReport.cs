@@ -2,6 +2,10 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using GDX.Collections.Generic;
 using GDX.Developer.ObjectInfos;
 using UnityEngine;
 
@@ -56,5 +60,36 @@ namespace GDX.Developer
 
             return resourcesState;
         }
+
+
+        public static bool Output(this ResourcesState resources, StreamWriter writer)
+        {
+            return true;
+        }
+
+        public static bool Output(this ResourcesState resources, StringBuilder builder)
+        {
+            return true;
+        }
+
+        public static string[] GenerateReport(this ResourcesState resources)
+        {
+            SimpleList<string> returnLines = new SimpleList<string>(resources.ObjectCount + 10);
+
+
+
+            return returnLines.Array;
+        }
+
+
+        private static void CreateHeader(ResourcesState resources, ref StringBuilder builder)
+        {
+
+
+        }
+
+
+
+
     }
 }
