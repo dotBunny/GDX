@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using GDX.Collections.Generic;
+using GDX.Developer.ObjectInfos;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.SceneManagement;
@@ -22,6 +23,9 @@ namespace GDX.Developer
     /// </remarks>
     public class ResourcesState
     {
+        public readonly string ActiveScene;
+        public readonly DateTime Created;
+
         /// <summary>
         ///     A collection of known (loaded in memory) <see cref="UnityEngine.Object" /> keyed by type.
         /// </summary>
@@ -29,22 +33,20 @@ namespace GDX.Developer
             new Dictionary<Type, Dictionary<TransientReference, ObjectInfo>>();
 
         public readonly Dictionary<Type, long> KnownUsage = new SerializableDictionary<Type, long>();
+        public readonly long MonoHeapSize;
+        public readonly long MonoUsedSize;
+
+        public readonly RuntimePlatform Platform;
+        public readonly long UnityGraphicsDriverAllocatedMemory;
+        public readonly long UnityTotalAllocatedMemory;
+        public readonly long UnityTotalReservedMemory;
+        public readonly long UnityTotalUnusedReservedMemory;
+        public readonly long UnityUsedHeapSize;
 
 
         public DateTime LastQueryCalled = DateTime.Now;
 
         public int ObjectCount;
-
-        public readonly RuntimePlatform Platform;
-        public readonly long MonoUsedSize;
-        public readonly long MonoHeapSize;
-        public readonly long UnityUsedHeapSize;
-        public readonly long UnityTotalAllocatedMemory;
-        public readonly long UnityTotalReservedMemory;
-        public readonly long UnityTotalUnusedReservedMemory;
-        public readonly long UnityGraphicsDriverAllocatedMemory;
-        public readonly string ActiveScene;
-        public readonly DateTime Created;
 
         public ResourcesState()
         {
@@ -103,10 +105,10 @@ namespace GDX.Developer
         }
 
         /// <summary>
-        ///     Identify loaded <typeparamref name="TType"/>, using <typeparamref name="TObjectInfo"/> for report generation.
+        ///     Identify loaded <typeparamref name="TType" />, using <typeparamref name="TObjectInfo" /> for report generation.
         /// </summary>
         /// <typeparam name="TType">The object type to query for.</typeparam>
-        /// <typeparam name="TObjectInfo">The <see cref="ObjectInfo"/> used to generate report entries.</typeparam>
+        /// <typeparam name="TObjectInfo">The <see cref="ObjectInfo" /> used to generate report entries.</typeparam>
         public void QueryForType<TType, TObjectInfo>()
             where TType : Object
             where TObjectInfo : ObjectInfo, new()
@@ -183,6 +185,54 @@ namespace GDX.Developer
             {
                 KnownUsage.Remove(type);
             }
+        }
+
+        /// <summary>
+        ///     Generate a <see cref="ResourcesState" /> for the provided <see cref="ResourcesQuery" /> array.
+        /// </summary>
+        /// <remarks>
+        ///     This method uses reflection to generate the necessary typed parameters, its often more efficient to
+        ///     create your own custom reports like in <see cref="GetGeneralState" />.
+        /// </remarks>
+        /// <param name="queries">A list of <see cref="ResourcesQuery" /> to generate a report from.</param>
+        /// <returns>A <see cref="ResourcesState" /> containing the outlined types.</returns>
+        public static ResourcesState Get(ResourcesQuery[] queries)
+        {
+            // Create our collection object, this is going to effect memory based on its size
+            ResourcesState resourcesState = new ResourcesState();
+
+            // Types to actual?
+            int count = queries.Length;
+            for (int i = 0; i < count; i++)
+            {
+                resourcesState.Query(queries[i]);
+            }
+
+            return resourcesState;
+        }
+
+        /// <summary>
+        ///     Get a <see cref="ResourcesState" /> of a common subset of data which usually eats a large portion of
+        ///     memory, and often can reveal memory leaks.
+        /// </summary>
+        /// <returns>A <see cref="ResourcesState" /> of textures, shaders, materials and animations.</returns>
+        public static ResourcesState GetGeneralState()
+        {
+            // Create our collection object, this is going to effect memory based on its size
+            ResourcesState resourcesState = new ResourcesState();
+
+            // Sections
+            resourcesState.QueryForType<RenderTexture, TextureObjectInfo>();
+            resourcesState.QueryForType<Texture3D, TextureObjectInfo>();
+            resourcesState.QueryForType<Texture2D, TextureObjectInfo>();
+            resourcesState.QueryForType<Texture2DArray, TextureObjectInfo>();
+            resourcesState.QueryForType<Cubemap, TextureObjectInfo>();
+            resourcesState.QueryForType<CubemapArray, TextureObjectInfo>();
+            resourcesState.QueryForType<Material, ObjectInfo>();
+            resourcesState.QueryForType<Shader, ObjectInfo>();
+            resourcesState.QueryForType<AnimationClip, ObjectInfo>();
+
+            return resourcesState;
         }
     }
 }

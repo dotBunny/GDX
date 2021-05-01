@@ -14,6 +14,9 @@ namespace GDX.Developer
         /// </summary>
         public const int CharacterWidth = 80;
 
+        public static string NewLine = System.Environment.NewLine;
+        public static string[] NewLineSplit = new[] {System.Environment.NewLine};
+
         /// <summary>
         ///     Create a sized divider string for use in generating reports.
         /// </summary>

@@ -2,10 +2,9 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections.Generic;
+using System;
 using System.IO;
 using System.Text;
-using GDX.Collections.Generic;
 using GDX.Developer.ObjectInfos;
 using UnityEngine;
 
@@ -14,82 +13,46 @@ namespace GDX.Developer
     public static class ResourcesReport
     {
         /// <summary>
-        ///     Generate a report for the provided <see cref="ResourcesQuery"/> array.
+        ///     Output the provided <paramref name="resources" /> int report format as an array of <see cref="string" />.
         /// </summary>
-        /// <remarks>
-        ///     This method uses reflection to generate the necessary typed parameters, its often more efficient to
-        ///     create your own custom reports like in <see cref="GeneralReport"/>.
-        /// </remarks>
-        /// <param name="queries">A list of <see cref="ResourcesQuery"/> to generate a report from.</param>
-        /// <returns></returns>
-        public static ResourcesState Generate(ResourcesQuery[] queries)
+        /// <remarks>It is usually best to provide a <see cref="StringBuilder" /> or <see cref="StreamWriter" /> instead.</remarks>
+        /// <param name="resources"></param>
+        /// <returns>A generated report as an array of <see cref="string" />.</returns>
+        public static string[] Output(this ResourcesState resources)
         {
-            // Create our collection object, this is going to effect memory based on its size
-            ResourcesState resourcesState = new ResourcesState();
-
-            // Types to actual?
-            int count = queries.Length;
-            for (int i = 0; i < count; i++)
-            {
-                resourcesState.Query(queries[i]);
-            }
-
-            return resourcesState;
+            StringBuilder builder = new StringBuilder();
+            return Output(resources, ref builder)
+                ? builder.ToString().Split(Report.NewLineSplit, StringSplitOptions.None)
+                : null;
         }
 
         /// <summary>
-        ///     Generate a report of a common subset of data which usually eats a large portion of memory, and often can reveal
-        ///     memory leaks.
+        ///     Output the provided <paramref name="resources" /> in report format utilizing the provided
+        ///     <paramref name="writer" />, optionally limiting the write buffers by <paramref name="bufferSize" />.
         /// </summary>
-        /// <returns></returns>
-        public static ResourcesState GeneralReport()
+        /// <param name="resources"></param>
+        /// <param name="writer"></param>
+        /// <param name="bufferSize"></param>
+        /// <returns>true/false if the report was successfully written to the provided <paramref name="writer" />.</returns>
+        public static bool Output(this ResourcesState resources, ref StreamWriter writer, int bufferSize = -1)
         {
-            // Create our collection object, this is going to effect memory based on its size
-            ResourcesState resourcesState = new ResourcesState();
+            StringBuilder builder = new StringBuilder();
+            if (Output(resources, ref builder))
+            {
+                //writer.Write();
+            }
 
-            // Sections
-            resourcesState.QueryForType<RenderTexture, TextureObjectInfo>();
-            resourcesState.QueryForType<Texture3D, TextureObjectInfo>();
-            resourcesState.QueryForType<Texture2D, TextureObjectInfo>();
-            resourcesState.QueryForType<Texture2DArray, TextureObjectInfo>();
-            resourcesState.QueryForType<Cubemap, TextureObjectInfo>();
-            resourcesState.QueryForType<CubemapArray, TextureObjectInfo>();
-            resourcesState.QueryForType<Material, ObjectInfo>();
-            resourcesState.QueryForType<Shader, ObjectInfo>();
-            resourcesState.QueryForType<AnimationClip, ObjectInfo>();
-
-            return resourcesState;
+            return false;
         }
 
-
-        public static bool Output(this ResourcesState resources, StreamWriter writer)
+        public static bool Output(this ResourcesState resources, ref StringBuilder builder)
         {
             return true;
-        }
-
-        public static bool Output(this ResourcesState resources, StringBuilder builder)
-        {
-            return true;
-        }
-
-        public static string[] GenerateReport(this ResourcesState resources)
-        {
-            SimpleList<string> returnLines = new SimpleList<string>(resources.ObjectCount + 10);
-
-
-
-            return returnLines.Array;
         }
 
 
         private static void CreateHeader(ResourcesState resources, ref StringBuilder builder)
         {
-
-
         }
-
-
-
-
     }
 }

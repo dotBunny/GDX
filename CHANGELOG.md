@@ -4,9 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - ??
+## [2.0.0] - 2021-05-09
 ***"Fresh Paint"***
-> Breaking changes as we transition away from the MIT license to BSL-1.0 for more freedom.
+> Breaking changes and a new license (BSL-1.0); making GDX even easier to include in projects!
 
 ### Added
 - New [FAQ](https://gdx.dotbunny.com/manual/faq.html) section of the website, addressing some of the more frequently asked questions.
