@@ -8,7 +8,9 @@ namespace GDX.Developer.Reports
 {
     public sealed class ShaderObjectInfo : ObjectInfo
     {
+#if UNITY_2019_1_OR_NEWER
         public int PassCount;
+#endif
         public bool IsSupported;
 
         public override void Populate(UnityEngine.Object targetObject)
@@ -17,7 +19,9 @@ namespace GDX.Developer.Reports
             Shader shaderAsset = (Shader)targetObject;
 
             // Useful shader information
+#if UNITY_2019_1_OR_NEWER
             PassCount = shaderAsset.passCount;
+#endif
             IsSupported = shaderAsset.isSupported;
         }
     }

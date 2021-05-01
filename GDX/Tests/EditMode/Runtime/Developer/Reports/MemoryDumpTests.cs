@@ -25,5 +25,21 @@ namespace Runtime.Developer.Reports
 
             Assert.IsTrue(evaluate);
         }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void ManagedHeapSnapshotString_NoData_CreatesState()
+        {
+
+            var state = MemoryDump.ManagedHeapSnapshot(new MemoryDump.HeapQuery[]
+            {
+                new MemoryDump.HeapQuery("Texture2D", "UnityEngine", "UnityEngine.Texture2D"),
+                new MemoryDump.HeapQuery("Texture3D", "UnityEngine", "UnityEngine.Texture3D")
+            });
+
+            bool evaluate = state != null;
+
+            Assert.IsTrue(evaluate);
+        }
     }
 }

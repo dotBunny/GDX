@@ -41,6 +41,9 @@ namespace GDX.Developer.Reports
             {
                 UnityEngine.Object foundObject = foundLoadedObjects[i];
                 TransientReference pseudoWeakReference = new TransientReference(foundObject);
+
+                // TODO: Validate that the gethashcode is actually the same for transient / etc
+                // (ie lets figure out if this count works)
                 if (categoryObjects.ContainsKey(pseudoWeakReference))
                 {
                     categoryObjects[pseudoWeakReference].CopyCount++;
