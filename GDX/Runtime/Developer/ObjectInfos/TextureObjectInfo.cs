@@ -31,5 +31,10 @@ namespace GDX.Developer.ObjectInfos
             Format = textureAsset.graphicsFormat;
 #endif
         }
+
+        public override string GetDetailedInformation()
+        {
+            return $"{Width.ToString()}x{Height.ToString()} {Format.ToString()} Readable: {IsReadable.ToString()},";
+        }
     }
 }

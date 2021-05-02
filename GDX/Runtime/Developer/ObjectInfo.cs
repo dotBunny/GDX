@@ -11,7 +11,7 @@ namespace GDX.Developer
     /// <summary>
     ///     An information storage object for a target <see cref="object" />.
     /// </summary>
-    public class ObjectInfo
+    public class ObjectInfo : IComparable
     {
         /// <summary>
         ///     The fully qualified reflection definition of the <see cref="ObjectInfo" />.
@@ -78,6 +78,25 @@ namespace GDX.Developer
 
             // It's new, so there's only one.
             CopyCount = 1;
+        }
+
+        /// <summary>
+        /// Evaluate if the compared <see cref="ObjectInfo"/> utilizes more memory then this one.
+        /// </summary>
+        /// <param name="obj">The <see cref="ObjectInfo"/> to compare against.</param>
+        /// <returns>1 if larger, otherwise 0.</returns>
+        public int CompareTo(object obj)
+        {
+            if (!(obj is ObjectInfo info))
+            {
+                return 0;
+            }
+
+            if (TotalMemoryUsage > info.TotalMemoryUsage)
+            {
+                return -1;
+            }
+            return 1;
         }
     }
 }

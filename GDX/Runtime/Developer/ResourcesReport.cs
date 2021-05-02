@@ -55,18 +55,42 @@ namespace GDX.Developer
         public override bool Output(ref StringBuilder builder)
         {
             // Create Header
-            builder.AppendLine(ReportBuilder.CreateHeader("Resources Report"));
-            builder.AppendLine();
+            builder.AppendLine(ReportBuilder.CreateHeader("START: Resources Report"));
             ReportBuilder.AddInstanceInformation(this, ref builder);
-            builder.AppendLine($"Last Touched:\t{LastTouched.ToString(Localization.LocalTimestampFormat)}");
+            builder.AppendLine($"{"Last Touched:".PadRight(ReportBuilder.TwoColumnWidth)}{LastTouched.ToString(Localization.LocalTimestampFormat)}");
             builder.AppendLine();
             ReportBuilder.AddMemoryInformation(this, ref builder);
             builder.AppendLine();
-            builder.AppendLine(ReportBuilder.CreateDivider());
 
-            // sort??
+            // We iterate over each defined type in the order they were added to the known objects
+            foreach (var typeKVP in KnownObjects)
+            {
+                int count = typeKVP.Value.Count;
 
-            // TODO: some sort of category sorting?
+                builder.AppendLine(ReportBuilder.CreateHeader(typeKVP.Key.ToString(), '-'));
+                builder.AppendLine($"{"Count:".PadRight(ReportBuilder.TwoColumnWidth)}{count.ToString()}");
+                builder.AppendLine($"{"Total Size:".PadRight(ReportBuilder.TwoColumnWidth)}{Localization.GetHumanReadableFileSize(KnownUsage[typeKVP.Key])}");
+                builder.AppendLine(ReportBuilder.CreateDivider());
+
+                // Sort the known objects based on size as that's the most useful context to have them listed
+                List<ObjectInfo> newList = new List<ObjectInfo>(count);
+                foreach (var objectKVP in typeKVP.Value)
+                {
+                    newList.Add(objectKVP.Value);
+                }
+
+                newList.Sort();
+
+                // Output each item
+                for (int i = 0; i < count; i++)
+                {
+                    ReportBuilder.AddObjectInfoLine(newList[i], ref builder);
+                }
+            }
+
+            // Footer
+            builder.AppendLine(ReportBuilder.CreateHeader("END: Resources Report"));
+
             return true;
         }
 

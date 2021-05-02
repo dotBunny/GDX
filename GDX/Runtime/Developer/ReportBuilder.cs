@@ -17,6 +17,14 @@ namespace GDX.Developer
         /// </summary>
         public const int CharacterWidth = 80;
 
+        public const int ColumnOneWidth = 40;
+        public const int ColumnTwoWidth = 15;
+
+
+        public const int TwoColumnWidth = 40;
+        public const int ThreeColumnWidth = 26;
+
+
         /// <summary>
         ///     A <see cref="string" /> array used to represent the end of a line for splitting purposes.
         /// </summary>
@@ -24,28 +32,44 @@ namespace GDX.Developer
 
         public static void AddInstanceInformation(Report report, ref StringBuilder builder)
         {
-            builder.AppendLine($"Active Scene:\t{report.ActiveScene}");
-            builder.AppendLine($"Platform:\t{report.Platform.ToString()}");
-            builder.AppendLine($"Created:\t{report.Created.ToString(Localization.LocalTimestampFormat)}");
+            builder.AppendLine($"{"Active Scene:".PadRight(TwoColumnWidth)}{report.ActiveScene}");
+            builder.AppendLine($"{"Platform:".PadRight(TwoColumnWidth)}{report.Platform.ToString()}");
+            builder.AppendLine($"{"Created Scene:".PadRight(TwoColumnWidth)}{report.Created.ToString(Localization.LocalTimestampFormat)}");
         }
 
         public static void AddMemoryInformation(ResourcesReport resources, ref StringBuilder builder,
             bool detailed = true)
         {
-            builder.AppendLine($"Total Mono Heap:\t{Localization.GetHumanReadableFileSize(resources.MonoHeapSize)}");
-            builder.AppendLine($"Used Mono Heap:\t{Localization.GetHumanReadableFileSize(resources.MonoUsedSize)}");
+            builder.AppendLine($"{"Total Mono Heap:".PadRight(ReportBuilder.TwoColumnWidth)}{Localization.GetHumanReadableFileSize(resources.MonoHeapSize)}");
+            builder.AppendLine($"{"Used Mono Heap:".PadRight(ReportBuilder.TwoColumnWidth)}{Localization.GetHumanReadableFileSize(resources.MonoUsedSize)}");
 
             if (detailed)
             {
-                builder.AppendLine(
-                    $"GFX Driver Allocated Memory:\t{Localization.GetHumanReadableFileSize(resources.UnityGraphicsDriverAllocatedMemory)}");
-
-                builder.AppendLine();
-
+                builder.AppendLine($"{"GFX Driver Allocated Memory:".PadRight(ReportBuilder.TwoColumnWidth)}{Localization.GetHumanReadableFileSize(resources.UnityGraphicsDriverAllocatedMemory)}");
                 //UnityTotalAllocatedMemory
                 //UnityTotalReservedMemory
                 //UnityTotalUnusedReservedMemory
                 //UnityUsedHeapSize
+            }
+        }
+
+        public static void AddObjectInfoLine(ObjectInfo info, ref StringBuilder builder)
+        {
+            string typeName = info.Type.Name.GetAfterLast(".");
+            builder.Append($"{typeName} {info.Name}".PadRight(ColumnOneWidth));
+
+            builder.Append( $"{Localization.GetHumanReadableFileSize(info.MemoryUsage)} x {info.CopyCount.ToString()}"
+                .PadRight(ColumnTwoWidth));
+
+            // Additional information
+            string additional = info.GetDetailedInformation();
+            if (additional != null)
+            {
+                builder.AppendLine(additional);
+            }
+            else
+            {
+                builder.AppendLine();
             }
         }
 

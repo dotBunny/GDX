@@ -17,7 +17,7 @@ namespace Runtime.Developer
     {
         [Test]
         [Category("GDX.Tests")]
-        public void Get_MockData_ReturnsState()
+        public void Get_MockData_ReturnsObject()
         {
 
             var state = ResourcesReport.Get(new []
@@ -28,6 +28,10 @@ namespace Runtime.Developer
                     GDX.Developer.ObjectInfos.TextureObjectInfo.TypeDefinition)
             });
 
+
+            System.IO.File.WriteAllLines(
+                System.IO.Path.Combine(UnityEngine.Application.dataPath, "test.log"), state.Output());
+
             bool evaluate = state != null && state.KnownObjects.Count == 2;
 
             Assert.IsTrue(evaluate);
@@ -35,11 +39,25 @@ namespace Runtime.Developer
 
         [Test]
         [Category("GDX.Tests")]
-        public void GetGeneralState_MockData_ReturnsState()
+        public void Output_GetCommon_ReturnsReport()
         {
-            var state = ResourcesReport.GetCommon();
+            var report = ResourcesReport.GetCommon().Output();
 
-            bool evaluate = state != null;
+            bool evaluate = report != null && report.Length > 0;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void Output_GetAll_ReturnsReport()
+        {
+            var report = ResourcesReport.GetAll().Output();
+
+            System.IO.File.WriteAllLines(
+                System.IO.Path.Combine(UnityEngine.Application.dataPath, "test.log"), report);
+
+            bool evaluate = report != null && report.Length > 0;
 
             Assert.IsTrue(evaluate);
         }

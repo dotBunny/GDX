@@ -26,5 +26,10 @@ namespace GDX.Developer.ObjectInfos
             Triangles = meshAsset.triangles.Length;
             IsReadable = meshAsset.isReadable;
         }
+
+        public override string GetDetailedInformation()
+        {
+            return $"Readable: {IsReadable.ToString()}, Vertices: {VertexCount.ToString()}, SubMeshes: {SubMeshCount.ToString()}";
+        }
     }
 }

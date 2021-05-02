@@ -26,5 +26,13 @@ namespace GDX.Developer.ObjectInfos
 #endif
             IsSupported = shaderAsset.isSupported;
         }
+
+#if UNITY_2019_1_OR_NEWER
+        /// <inheritdoc />
+        public override string GetDetailedInformation()
+        {
+            return $"Passes: {PassCount}";
+        }
+#endif
     }
 }
