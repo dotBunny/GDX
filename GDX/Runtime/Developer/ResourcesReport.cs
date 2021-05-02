@@ -47,6 +47,14 @@ namespace GDX.Developer
 
         public static bool Output(this ResourcesState resources, ref StringBuilder builder)
         {
+            // build out header
+
+            // sort??
+
+            // TODO: some sort of category sorting?
+
+
+
             return true;
         }
 

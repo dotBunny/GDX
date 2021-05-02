@@ -23,7 +23,15 @@ namespace GDX.Developer
     /// </remarks>
     public class ResourcesState
     {
+        /// <summary>
+        ///     The name of the scene that was known to the <see cref="UnityEngine.SceneManagement" /> as being the active scene
+        ///     when this <see cref="ResourcesState" /> was created.
+        /// </summary>
         public readonly string ActiveScene;
+
+        /// <summary>
+        ///     The time of creation for the <see cref="ResourcesState" />.
+        /// </summary>
         public readonly DateTime Created;
 
         /// <summary>
@@ -32,22 +40,66 @@ namespace GDX.Developer
         public readonly Dictionary<Type, Dictionary<TransientReference, ObjectInfo>> KnownObjects =
             new Dictionary<Type, Dictionary<TransientReference, ObjectInfo>>();
 
+        /// <summary>
+        ///     A collection of known <see cref="UnityEngine.Object" /> types in memory and their total usage.
+        /// </summary>
         public readonly Dictionary<Type, long> KnownUsage = new SerializableDictionary<Type, long>();
+
+        /// <summary>
+        ///     The size of the Mono heap when the <see cref="ResourcesState" /> was created.
+        /// </summary>
+        /// <remarks>This is cached so that the <see cref="ResourcesState" /> does not effect this value.</remarks>
         public readonly long MonoHeapSize;
+
+        /// <summary>
+        ///     The amount of the Mono heap used when the <see cref="ResourcesState" /> was created.
+        /// </summary>
+        /// <remarks>This is cached so that the <see cref="ResourcesState" /> does not effect this value.</remarks>
         public readonly long MonoUsedSize;
 
+        /// <summary>
+        ///     The platform that the <see cref="ResourcesState" /> was created on.
+        /// </summary>
         public readonly RuntimePlatform Platform;
+
+        /// <summary>
+        ///     Unity's allocated native memory for the graphics driver (in bytes).
+        /// </summary>
         public readonly long UnityGraphicsDriverAllocatedMemory;
+
+        /// <summary>
+        ///     Unity's total allocated memory (in bytes).
+        /// </summary>
         public readonly long UnityTotalAllocatedMemory;
+
+        /// <summary>
+        ///     Unity's total reserved memory (in bytes).
+        /// </summary>
         public readonly long UnityTotalReservedMemory;
+
+        /// <summary>
+        ///     Unity's total unused reserved memory (in bytes).
+        /// </summary>
         public readonly long UnityTotalUnusedReservedMemory;
+
+        /// <summary>
+        ///     Unity's used portion of the heap (in bytes).
+        /// </summary>
         public readonly long UnityUsedHeapSize;
 
+        /// <summary>
+        ///     The last time that the <see cref="ResourcesState" /> has had a query of types.
+        /// </summary>
+        public DateTime LastTouched = DateTime.Now;
 
-        public DateTime LastQueryCalled = DateTime.Now;
-
+        /// <summary>
+        ///     The total number of objects which are known to the <see cref="ResourcesState" />.
+        /// </summary>
         public int ObjectCount;
 
+        /// <summary>
+        ///     Create a <see cref="ResourcesState" />.
+        /// </summary>
         public ResourcesState()
         {
             ActiveScene = SceneManager.GetActiveScene().name;
@@ -63,6 +115,9 @@ namespace GDX.Developer
             UnityTotalUnusedReservedMemory = Profiler.GetTotalUnusedReservedMemoryLong();
         }
 
+        /// <summary>
+        ///     Process to destroy a <see cref="ResourcesState" />.
+        /// </summary>
         ~ResourcesState()
         {
             KnownObjects.Clear();
@@ -97,11 +152,19 @@ namespace GDX.Developer
 
             // Build out using reflection (yes bad, but you choose this).
             MethodInfo method = typeof(ResourcesState).GetMethod(nameof(QueryForType));
+
+            // Did we find the method?
+            if (method is null)
+            {
+                return;
+            }
+
             MethodInfo generic = method.MakeGenericMethod(typeActual, objectInfoActual);
 
             // Invoke the method on our container
             generic.Invoke(this, null);
-            LastQueryCalled = DateTime.Now;
+
+            LastTouched = DateTime.Now;
         }
 
         /// <summary>
@@ -162,7 +225,7 @@ namespace GDX.Developer
                 }
             }
 
-            LastQueryCalled = DateTime.Now;
+            LastTouched = DateTime.Now;
         }
 
         /// <summary>

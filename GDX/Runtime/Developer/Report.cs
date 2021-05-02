@@ -2,6 +2,8 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+
 namespace GDX.Developer
 {
     /// <summary>
@@ -14,8 +16,10 @@ namespace GDX.Developer
         /// </summary>
         public const int CharacterWidth = 80;
 
-        public static string NewLine = System.Environment.NewLine;
-        public static string[] NewLineSplit = new[] {System.Environment.NewLine};
+        /// <summary>
+        ///     A <see cref="string" /> array used to represent the end of a line for splitting purposes.
+        /// </summary>
+        public static readonly string[] NewLineSplit = {Environment.NewLine};
 
         /// <summary>
         ///     Create a sized divider string for use in generating reports.
