@@ -52,15 +52,25 @@ namespace GDX.Developer
             KnownObjects.Clear();
         }
 
-        public override bool Output(ref StringBuilder builder)
+        public override bool Output(StringBuilder builder, ReportContext context = null)
         {
-            // Create Header
-            builder.AppendLine(ReportBuilder.CreateHeader("START: Resources Report"));
-            ReportBuilder.AddInstanceInformation(this, ref builder);
-            builder.AppendLine($"{"Last Touched:".PadRight(ReportBuilder.DataTableItemWidth)}{LastTouched.ToString(Localization.LocalTimestampFormat)}");
-            builder.AppendLine($"{"Total Objects:".PadRight(ReportBuilder.DataTableItemWidth)}{ObjectCount.ToString()}");
+            // We need to make the context if its not provided
+            if (context == null) context = new ReportContext();
+
+            // Create header
+            builder.AppendLine(context.CreateHeader("START: Resources Report"));
+
+            // Add standard report information
+            ReportBuilder.AddInstanceInformation(this, context, builder);
+
+            // Custom header information
+            builder.AppendLine(context.CreateKVP("Last Touched", LastTouched.ToString(Localization.LocalTimestampFormat)));
+            builder.AppendLine(context.CreateKVP("Total Objects", ObjectCount.ToString()));
+
             builder.AppendLine();
-            ReportBuilder.AddMemoryInformation(this, ref builder);
+
+            // Add memory information
+            ReportBuilder.AddMemoryInformation(this, context, builder);
             builder.AppendLine();
 
             // We iterate over each defined type in the order they were added to the known objects
@@ -68,10 +78,11 @@ namespace GDX.Developer
             {
                 int count = typeKVP.Value.Count;
 
-                builder.AppendLine(ReportBuilder.CreateHeader(typeKVP.Key.ToString(), '-'));
-                builder.AppendLine($"{"Count:".PadRight(ReportBuilder.DataTableItemWidth)}{count.ToString()}");
-                builder.AppendLine($"{"Total Size:".PadRight(ReportBuilder.DataTableItemWidth)}{Localization.GetHumanReadableFileSize(KnownUsage[typeKVP.Key])}");
-                builder.AppendLine(ReportBuilder.CreateDivider());
+                builder.AppendLine(context.CreateHeader(typeKVP.Key.ToString(), '-'));
+                builder.AppendLine(context.CreateKVP("Count", count.ToString()));
+                builder.AppendLine(context.CreateKVP("Total Size",
+                    Localization.GetHumanReadableFileSize(KnownUsage[typeKVP.Key])));
+                builder.AppendLine();
 
                 // Sort the known objects based on size as that's the most useful context to have them listed
                 List<ObjectInfo> newList = new List<ObjectInfo>(count);
@@ -85,14 +96,14 @@ namespace GDX.Developer
                 // Output each item
                 for (int i = 0; i < count; i++)
                 {
-                    ReportBuilder.AddObjectInfoLine(newList[i], ref builder);
+                    ReportBuilder.AddObjectInfoLine(newList[i], context, builder);
                 }
 
                 builder.AppendLine();
             }
 
             // Footer
-            builder.AppendLine(ReportBuilder.CreateHeader("END: Resources Report"));
+            builder.AppendLine(ReportBuilder.CreateHeader(context, "END: Resources Report"));
 
             return true;
         }

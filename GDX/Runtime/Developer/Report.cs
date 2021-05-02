@@ -85,11 +85,12 @@ namespace GDX.Developer
         ///     Output the report format as an array of <see cref="string" />.
         /// </summary>
         /// <remarks>It is usually best to provide a <see cref="StringBuilder" /> or <see cref="StreamWriter" /> instead.</remarks>
+        /// <param name="context"></param>
         /// <returns>A generated report as an array of <see cref="string" />.</returns>
-        public string[] Output()
+        public string[] Output(ReportContext context = null)
         {
             StringBuilder builder = new StringBuilder();
-            return Output(ref builder)
+            return Output(builder, context)
                 ? builder.ToString().Split(ReportBuilder.NewLineSplit, StringSplitOptions.None)
                 : null;
         }
@@ -98,20 +99,21 @@ namespace GDX.Developer
         ///     Output the report format utilizing the provided <paramref name="writer" />, optionally limiting the
         ///     write buffers by <paramref name="bufferSize" />.
         /// </summary>
+        /// <param name="context">Contextual information regarding the generation of the report.</param>
         /// <param name="writer"></param>
         /// <param name="bufferSize"></param>
         /// <returns>true/false if the report was successfully written to the provided <paramref name="writer" />.</returns>
-        public bool Output(ref StreamWriter writer, int bufferSize = -1)
+        public bool Output(StreamWriter writer, int bufferSize = -1, ReportContext context = null)
         {
             StringBuilder builder = new StringBuilder();
-            if (Output(ref builder))
+            if (Output(builder, context))
             {
                 //writer.Write();
             }
             return false;
         }
 
-        public virtual bool Output(ref StringBuilder builder)
+        public virtual bool Output(StringBuilder builder, ReportContext context = null)
         {
             return false;
         }

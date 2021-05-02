@@ -13,72 +13,69 @@ namespace GDX.Developer
     public static class ReportBuilder
     {
         /// <summary>
-        ///     The number of characters to be considered a line in a report.
-        /// </summary>
-        public const int CharacterWidth = 120;
-
-        public const int DataTableItemWidth = 40;
-
-        public const int ObjectTypeWidth = 19;
-        public const int ObjectNameTotalWidth = 64;
-        public const int ObjectSizeWidth = 14;
-        public const int ObjectInfoWidth = 20;
-
-        /// <summary>
         ///     A <see cref="string" /> array used to represent the end of a line for splitting purposes.
         /// </summary>
         public static readonly string[] NewLineSplit = {Environment.NewLine};
 
-        public static void AddInstanceInformation(Report report, ref StringBuilder builder)
+        public static void AddInstanceInformation(Report report, ReportContext context, StringBuilder builder)
         {
-            builder.AppendLine($"{"Active Scene:".PadRight(DataTableItemWidth)}{report.ActiveScene}");
-            builder.AppendLine($"{"Platform:".PadRight(DataTableItemWidth)}{report.Platform.ToString()}");
-            builder.AppendLine($"{"Created Scene:".PadRight(DataTableItemWidth)}{report.Created.ToString(Localization.LocalTimestampFormat)}");
+            builder.AppendLine(context.CreateKVP("Active Scene", report.ActiveScene));
+            builder.AppendLine(context.CreateKVP("Platform", report.Platform.ToString()));
+            builder.AppendLine(context.CreateKVP("Created",
+                report.Created.ToString(Localization.LocalTimestampFormat)));
         }
 
-        public static void AddMemoryInformation(ResourcesReport resources, ref StringBuilder builder,
+        public static void AddMemoryInformation(ResourcesReport resources, ReportContext context, StringBuilder builder,
             bool detailed = true)
         {
-            builder.AppendLine($"{"Total Mono Heap:".PadRight(DataTableItemWidth)}{Localization.GetHumanReadableFileSize(resources.MonoHeapSize)}");
-            builder.AppendLine($"{"Used Mono Heap:".PadRight(DataTableItemWidth)}{Localization.GetHumanReadableFileSize(resources.MonoUsedSize)}");
+            builder.AppendLine(context.CreateKVP("Total Mono Heap",
+                Localization.GetHumanReadableFileSize(resources.MonoHeapSize)));
+            builder.AppendLine(context.CreateKVP("Used Mono Heap",
+                Localization.GetHumanReadableFileSize(resources.MonoUsedSize)));
 
             if (detailed)
             {
-                builder.AppendLine($"{"GFX Driver Allocated Memory:".PadRight(DataTableItemWidth)}{Localization.GetHumanReadableFileSize(resources.UnityGraphicsDriverAllocatedMemory)}");
-                builder.AppendLine($"{"Total Allocated Memory:".PadRight(DataTableItemWidth)}{Localization.GetHumanReadableFileSize(resources.UnityTotalAllocatedMemory)}");
-                builder.AppendLine($"{"Total Reserved Memory:".PadRight(DataTableItemWidth)}{Localization.GetHumanReadableFileSize(resources.UnityTotalReservedMemory)}");
-                builder.AppendLine($"{"Total Unused Reserved Memory:".PadRight(DataTableItemWidth)}{Localization.GetHumanReadableFileSize(resources.UnityTotalUnusedReservedMemory)}");
-                builder.AppendLine($"{"Used Heap:".PadRight(DataTableItemWidth)}{Localization.GetHumanReadableFileSize(resources.UnityUsedHeapSize)}");
+                builder.AppendLine(context.CreateKVP("GFX Driver Allocated Memory",
+                    Localization.GetHumanReadableFileSize(resources.UnityGraphicsDriverAllocatedMemory)));
+                builder.AppendLine(context.CreateKVP("Total Allocated Memory",
+                    Localization.GetHumanReadableFileSize(resources.UnityTotalAllocatedMemory)));
+                builder.AppendLine(context.CreateKVP("Total Reserved Memory",
+                    Localization.GetHumanReadableFileSize(resources.UnityTotalReservedMemory)));
+                builder.AppendLine(context.CreateKVP("Total Unused Reserved Memory",
+                    Localization.GetHumanReadableFileSize(resources.UnityTotalUnusedReservedMemory)));
+                builder.AppendLine(context.CreateKVP("Used Heap",
+                    Localization.GetHumanReadableFileSize(resources.UnityUsedHeapSize)));
             }
         }
 
-        public static void AddObjectInfoLine(ObjectInfo info, ref StringBuilder builder)
+        public static void AddObjectInfoLine(ObjectInfo info, ReportContext context, StringBuilder builder)
         {
-            string workingNameString = info.Type.Name.PadRight(ObjectTypeWidth);
-            if (workingNameString.Length > ObjectTypeWidth)
+            string workingNameString = info.Type.Name.PadRight(context.ObjectTypeWidth);
+            if (workingNameString.Length > context.ObjectTypeWidth)
             {
-                workingNameString = workingNameString.Substring(0, ObjectTypeWidth);
-            }
-            workingNameString = $"{workingNameString} {info.Name}".PadRight(ObjectNameTotalWidth);
-            if (workingNameString.Length > ObjectNameTotalWidth)
-            {
-                workingNameString = workingNameString.Substring(0, ObjectNameTotalWidth);
+                workingNameString = workingNameString.Substring(0, context.ObjectTypeWidth);
             }
 
+            workingNameString = $"{workingNameString} {info.Name}".PadRight(context.ObjectNameTotalWidth);
+            if (workingNameString.Length > context.ObjectNameTotalWidth)
+            {
+                workingNameString = workingNameString.Substring(0, context.ObjectNameTotalWidth);
+            }
 
 
             builder.Append(workingNameString);
-            builder.Append( $" {Localization.GetHumanReadableFileSize(info.MemoryUsage)} x {info.CopyCount.ToString()}"
-                .PadRight(ObjectSizeWidth));
+            builder.Append($" {Localization.GetHumanReadableFileSize(info.MemoryUsage)} x {info.CopyCount.ToString()}"
+                .PadRight(context.ObjectSizeWidth));
 
             // Additional information
             string additional = info.GetDetailedInformation();
             if (additional != null)
             {
-                if (additional.Length > ObjectInfoWidth)
+                if (additional.Length > context.ObjectInfoWidth)
                 {
-                    additional = additional.Substring(0, ObjectInfoWidth);
+                    additional = additional.Substring(0, context.ObjectInfoWidth);
                 }
+
                 builder.AppendLine(additional);
             }
             else
@@ -90,32 +87,51 @@ namespace GDX.Developer
         /// <summary>
         ///     Create a sized divider string for use in generating reports.
         /// </summary>
+        /// <param name="context">Contextual information regarding the generation of the report.</param>
         /// <param name="divider">The optional character to use as the divider.</param>
         /// <returns>A sized string to be used as a divider.</returns>
-        public static string CreateDivider(char divider = '-')
+        public static string CreateDivider(this ReportContext context, char divider = '-')
         {
-            return "".PadRight(CharacterWidth, divider);
+            return "".PadRight(context.CharacterWidth, divider);
         }
 
         /// <summary>
         ///     Create a header with <paramref name="title" /> with repeated <paramref name="decorator" />s on the sides, filling
-        ///     out to <see cref="CharacterWidth" />.
+        ///     out to <see cref="ReportContext.CharacterWidth" />.
         /// </summary>
+        /// <param name="context">Contextual information regarding the generation of the report.</param>
         /// <param name="title">The text to be treated as the title for the header.</param>
         /// <param name="decorator">The optional character to be used as the decorator.</param>
         /// <returns>A sized string to be used as a header.</returns>
-        public static string CreateHeader(string title, char decorator = '=')
+        public static string CreateHeader(this ReportContext context, string title, char decorator = '=')
         {
             string workingTitle = $" {title.Trim()} ";
 
             int titleWidth = workingTitle.Length;
-            int decoratorSideWidth = (CharacterWidth - titleWidth) / 2;
+            int decoratorSideWidth = (context.CharacterWidth - titleWidth) / 2;
 
             // Pad left side first to ensure it is always the most accurate in length
             workingTitle = workingTitle.PadLeft(titleWidth + decoratorSideWidth, decorator);
-            workingTitle = workingTitle.PadRight(CharacterWidth, decorator);
+            workingTitle = workingTitle.PadRight(context.CharacterWidth, decorator);
 
             return workingTitle;
+        }
+
+        public static string CreateKVP(this ReportContext context, string itemKey, string itemValue)
+        {
+            string workingLine = $"{itemKey}: ".PadRight(context.KeyValuePairWidth);
+            if (workingLine.Length > context.KeyValuePairWidth)
+            {
+                workingLine = workingLine.Substring(0, context.KeyValuePairWidth);
+            }
+
+            workingLine = $"{workingLine}{itemValue}";
+            if (workingLine.Length > context.CharacterWidth)
+            {
+                workingLine = workingLine.Substring(0, context.CharacterWidth);
+            }
+
+            return workingLine;
         }
     }
 }
