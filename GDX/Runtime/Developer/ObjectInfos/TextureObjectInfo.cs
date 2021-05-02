@@ -32,9 +32,17 @@ namespace GDX.Developer.ObjectInfos
 #endif
         }
 
+#if UNITY_2019_1_OR_NEWER
         public override string GetDetailedInformation()
         {
             return $"{Width.ToString()}x{Height.ToString()} {Format.ToString()} Readable: {IsReadable.ToString()},";
         }
+#else
+        public override string GetDetailedInformation()
+        {
+            return $"{Width.ToString()}x{Height.ToString()} Readable: {IsReadable.ToString()},";
+        }
+#endif
+
     }
 }
