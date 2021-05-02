@@ -16,9 +16,9 @@ namespace Runtime.Developer
         public void CreateDivider_MockData_CorrectLength()
         {
 
-            string mockData = GDX.Developer.Report.CreateDivider();
+            string mockData = GDX.Developer.ReportBuilder.CreateDivider();
 
-            bool evaluate = mockData.Length == GDX.Developer.Report.CharacterWidth;
+            bool evaluate = mockData.Length == GDX.Developer.ReportBuilder.CharacterWidth;
 
             Assert.IsTrue(evaluate);
         }
@@ -28,9 +28,9 @@ namespace Runtime.Developer
         public void CreateHeader_MockData_CorrectLength()
         {
 
-            string mockData = GDX.Developer.Report.CreateHeader("My Name");
+            string mockData = GDX.Developer.ReportBuilder.CreateHeader("My Name");
 
-            bool evaluate = mockData.Length == GDX.Developer.Report.CharacterWidth;
+            bool evaluate = mockData.Length == GDX.Developer.ReportBuilder.CharacterWidth;
 
             Assert.IsTrue(evaluate);
         }

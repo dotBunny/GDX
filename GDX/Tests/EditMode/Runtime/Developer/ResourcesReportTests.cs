@@ -15,33 +15,33 @@ namespace Runtime.Developer
     /// </summary>
     public class ResourcesReportTests
     {
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void GeneralReport_MockData_ReturnsReport()
-        // {
-        //     var state = ResourcesReport.GetGeneralState();
-        //
-        //     bool evaluate = state != null;
-        //
-        //     Assert.IsTrue(evaluate);
-        // }
-        //
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void Generate_MockData_ReturnsReport()
-        // {
-        //
-        //     var state = ResourcesReport.GetState(new []
-        //     {
-        //         new ResourcesQuery( "UnityEngine.Texture2D,UnityEngine"),
-        //         new ResourcesQuery(
-        //             "UnityEngine.Texture3D,UnityEngine",
-        //             GDX.Developer.ObjectInfos.TextureObjectInfo.TypeDefinition)
-        //     });
-        //
-        //     bool evaluate = state != null;
-        //
-        //     Assert.IsTrue(evaluate);
-        // }
+        [Test]
+        [Category("GDX.Tests")]
+        public void Get_MockData_ReturnsState()
+        {
+
+            var state = ResourcesReport.Get(new []
+            {
+                new ResourcesQuery( "UnityEngine.Texture2D,UnityEngine"),
+                new ResourcesQuery(
+                    "UnityEngine.Texture3D,UnityEngine",
+                    GDX.Developer.ObjectInfos.TextureObjectInfo.TypeDefinition)
+            });
+
+            bool evaluate = state != null && state.KnownObjects.Count == 2;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void GetGeneralState_MockData_ReturnsState()
+        {
+            var state = ResourcesReport.GetCommon();
+
+            bool evaluate = state != null;
+
+            Assert.IsTrue(evaluate);
+        }
     }
 }

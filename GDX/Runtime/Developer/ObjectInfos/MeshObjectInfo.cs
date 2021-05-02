@@ -15,19 +15,7 @@ namespace GDX.Developer.ObjectInfos
 
         public int VertexCount;
 
-        public override void Populate(Object targetObject)
-        {
-            base.Populate(targetObject);
-            Mesh meshAsset = (Mesh)targetObject;
-
-            // Useful mesh information
-            VertexCount = meshAsset.vertexCount;
-            SubMeshCount = meshAsset.subMeshCount;
-            Triangles = meshAsset.triangles.Length;
-            IsReadable = meshAsset.isReadable;
-        }
-
-        public override void Populate(Object targetObject, TransientReference reference)
+        public override void Populate(Object targetObject, TransientReference reference = null)
         {
             base.Populate(targetObject, reference);
             Mesh meshAsset = (Mesh)targetObject;

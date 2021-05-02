@@ -13,6 +13,9 @@ namespace GDX.Developer
     /// </remarks>
     public readonly struct ResourcesQuery
     {
+        // TODO: FILTER BY NAME?
+        // TODO: FILTER BY ASSET PATH/
+
         /// <summary>
         ///     The fully qualified type that is going to be evaluated.
         /// </summary>

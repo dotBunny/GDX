@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `IRandomProvider` and `RandomAdaptor` to allow for some interchange with existing usages; these are slow and should be used as a last resort.
 - `GetStableHashCode` for generating hashcode of strings identical to `GetHashCode`, without the virtual call.
 - `TransientReference` provides a comparable non-garbage collection blocking reference type.
-- `Report` provides some of the common logic used by the newly added `ResourcesReport`, which relies on `ResourcesState` captures. Think of this as an incredibly simple way to find resource memory leaks.
+- `Report` provides some of the common logic used by the newly added `ResourcesReport`. Think of this as an incredibly simple way to find resource memory leaks.
 - `ObjectInfo` and some derivatives (`MeshObjectInfo`, `ShaderObjectInfo`, and `TextureObjectInfo`) provide context to objects for reporting purposes.
 
 ### Changed

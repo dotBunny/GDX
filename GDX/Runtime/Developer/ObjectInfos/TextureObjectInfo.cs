@@ -18,21 +18,7 @@ namespace GDX.Developer.ObjectInfos
         public bool IsReadable;
         public int Width;
 
-        public override void Populate(Object targetObject)
-        {
-            base.Populate(targetObject);
-            Texture textureAsset = (Texture)targetObject;
-
-            // Useful texture information
-            Width = textureAsset.width;
-            Height = textureAsset.height;
-            IsReadable = textureAsset.isReadable;
-#if UNITY_2019_1_OR_NEWER
-            Format = textureAsset.graphicsFormat;
-#endif
-        }
-
-        public override void Populate(Object targetObject, TransientReference reference)
+        public override void Populate(Object targetObject, TransientReference reference = null)
         {
             base.Populate(targetObject, reference);
             Texture textureAsset = (Texture)targetObject;

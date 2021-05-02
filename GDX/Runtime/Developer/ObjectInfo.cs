@@ -8,35 +8,76 @@ using Object = UnityEngine.Object;
 
 namespace GDX.Developer
 {
+    /// <summary>
+    ///     An information storage object for a target <see cref="object" />.
+    /// </summary>
     public class ObjectInfo
     {
+        /// <summary>
+        ///     The fully qualified reflection definition of the <see cref="ObjectInfo" />.
+        /// </summary>
         public const string TypeDefinition = "GDX.Developer.ObjectInfo,GDX";
+
+        /// <summary>
+        ///     The number of copies of the <see cref="Reference" /> object known by Unity.
+        /// </summary>
         public uint CopyCount;
 
-        public long MemoryUsageBytes;
+        /// <summary>
+        ///     The memory usage of the actual <see cref="Reference" /> object (in bytes).
+        /// </summary>
+        public long MemoryUsage;
+
+        /// <summary>
+        ///     The name of the <see cref="Reference" /> object.
+        /// </summary>
         public string Name;
+
+        /// <summary>
+        ///     A <see cref="TransientReference" /> to the target object.
+        /// </summary>
         public TransientReference Reference;
-        public long TotalMemoryUsageBytes;
+
+        /// <summary>
+        ///     The total memory usage of the <see cref="Reference" /> object (in bytes).
+        /// </summary>
+        public long TotalMemoryUsage;
+
+        /// <summary>
+        ///     The cached <see cref="Type" /> of the <see cref="Reference" /> object.
+        /// </summary>
         public Type Type;
 
-        public virtual void Populate(Object targetObject)
+        /// <summary>
+        ///     Get additional information about the specific <see cref="Reference" />.
+        /// </summary>
+        /// <returns>A <see cref="string" /> of additional information.</returns>
+        public virtual string GetDetailedInformation()
         {
-            CopyCount = 1;
-            Name = targetObject.name;
-            Type = targetObject.GetType();
-            MemoryUsageBytes = Profiler.GetRuntimeMemorySizeLong(targetObject);
-            TotalMemoryUsageBytes = MemoryUsageBytes;
-            Reference = new TransientReference(targetObject);
+            return null;
         }
 
-        public virtual void Populate(Object targetObject, TransientReference reference)
+        /// <summary>
+        ///     Populate an <see cref="ObjectInfo" /> from the <paramref name="targetObject" />. Optionally providing an existing
+        ///     <paramref name="reference" /> created prior.
+        /// </summary>
+        /// <param name="targetObject">The <see cref="object" /> which to cache information about.</param>
+        /// <param name="reference">An existing <see cref="TransientReference" /> targeting the <paramref name="targetObject" />.</param>
+        public virtual void Populate(Object targetObject, TransientReference reference = null)
         {
-            CopyCount = 1;
+            // Basic info
             Name = targetObject.name;
             Type = targetObject.GetType();
-            MemoryUsageBytes = Profiler.GetRuntimeMemorySizeLong(targetObject);
-            TotalMemoryUsageBytes = MemoryUsageBytes;
-            Reference = reference;
+
+            // Assign initial memory usage stats
+            MemoryUsage = Profiler.GetRuntimeMemorySizeLong(targetObject);
+            TotalMemoryUsage = MemoryUsage;
+
+            // Assign or create the transient reference to the target object
+            Reference = reference != null ? reference : new TransientReference(targetObject);
+
+            // It's new, so there's only one.
+            CopyCount = 1;
         }
     }
 }
