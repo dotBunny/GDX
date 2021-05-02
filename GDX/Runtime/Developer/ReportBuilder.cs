@@ -15,15 +15,14 @@ namespace GDX.Developer
         /// <summary>
         ///     The number of characters to be considered a line in a report.
         /// </summary>
-        public const int CharacterWidth = 80;
+        public const int CharacterWidth = 120;
 
-        public const int ColumnOneWidth = 40;
-        public const int ColumnTwoWidth = 15;
+        public const int DataTableItemWidth = 40;
 
-
-        public const int TwoColumnWidth = 40;
-        public const int ThreeColumnWidth = 26;
-
+        public const int ObjectTypeWidth = 19;
+        public const int ObjectNameTotalWidth = 64;
+        public const int ObjectSizeWidth = 14;
+        public const int ObjectInfoWidth = 20;
 
         /// <summary>
         ///     A <see cref="string" /> array used to represent the end of a line for splitting purposes.
@@ -32,39 +31,54 @@ namespace GDX.Developer
 
         public static void AddInstanceInformation(Report report, ref StringBuilder builder)
         {
-            builder.AppendLine($"{"Active Scene:".PadRight(TwoColumnWidth)}{report.ActiveScene}");
-            builder.AppendLine($"{"Platform:".PadRight(TwoColumnWidth)}{report.Platform.ToString()}");
-            builder.AppendLine($"{"Created Scene:".PadRight(TwoColumnWidth)}{report.Created.ToString(Localization.LocalTimestampFormat)}");
+            builder.AppendLine($"{"Active Scene:".PadRight(DataTableItemWidth)}{report.ActiveScene}");
+            builder.AppendLine($"{"Platform:".PadRight(DataTableItemWidth)}{report.Platform.ToString()}");
+            builder.AppendLine($"{"Created Scene:".PadRight(DataTableItemWidth)}{report.Created.ToString(Localization.LocalTimestampFormat)}");
         }
 
         public static void AddMemoryInformation(ResourcesReport resources, ref StringBuilder builder,
             bool detailed = true)
         {
-            builder.AppendLine($"{"Total Mono Heap:".PadRight(ReportBuilder.TwoColumnWidth)}{Localization.GetHumanReadableFileSize(resources.MonoHeapSize)}");
-            builder.AppendLine($"{"Used Mono Heap:".PadRight(ReportBuilder.TwoColumnWidth)}{Localization.GetHumanReadableFileSize(resources.MonoUsedSize)}");
+            builder.AppendLine($"{"Total Mono Heap:".PadRight(DataTableItemWidth)}{Localization.GetHumanReadableFileSize(resources.MonoHeapSize)}");
+            builder.AppendLine($"{"Used Mono Heap:".PadRight(DataTableItemWidth)}{Localization.GetHumanReadableFileSize(resources.MonoUsedSize)}");
 
             if (detailed)
             {
-                builder.AppendLine($"{"GFX Driver Allocated Memory:".PadRight(ReportBuilder.TwoColumnWidth)}{Localization.GetHumanReadableFileSize(resources.UnityGraphicsDriverAllocatedMemory)}");
-                //UnityTotalAllocatedMemory
-                //UnityTotalReservedMemory
-                //UnityTotalUnusedReservedMemory
-                //UnityUsedHeapSize
+                builder.AppendLine($"{"GFX Driver Allocated Memory:".PadRight(DataTableItemWidth)}{Localization.GetHumanReadableFileSize(resources.UnityGraphicsDriverAllocatedMemory)}");
+                builder.AppendLine($"{"Total Allocated Memory:".PadRight(DataTableItemWidth)}{Localization.GetHumanReadableFileSize(resources.UnityTotalAllocatedMemory)}");
+                builder.AppendLine($"{"Total Reserved Memory:".PadRight(DataTableItemWidth)}{Localization.GetHumanReadableFileSize(resources.UnityTotalReservedMemory)}");
+                builder.AppendLine($"{"Total Unused Reserved Memory:".PadRight(DataTableItemWidth)}{Localization.GetHumanReadableFileSize(resources.UnityTotalUnusedReservedMemory)}");
+                builder.AppendLine($"{"Used Heap:".PadRight(DataTableItemWidth)}{Localization.GetHumanReadableFileSize(resources.UnityUsedHeapSize)}");
             }
         }
 
         public static void AddObjectInfoLine(ObjectInfo info, ref StringBuilder builder)
         {
-            string typeName = info.Type.Name.GetAfterLast(".");
-            builder.Append($"{typeName} {info.Name}".PadRight(ColumnOneWidth));
+            string workingNameString = info.Type.Name.PadRight(ObjectTypeWidth);
+            if (workingNameString.Length > ObjectTypeWidth)
+            {
+                workingNameString = workingNameString.Substring(0, ObjectTypeWidth);
+            }
+            workingNameString = $"{workingNameString} {info.Name}".PadRight(ObjectNameTotalWidth);
+            if (workingNameString.Length > ObjectNameTotalWidth)
+            {
+                workingNameString = workingNameString.Substring(0, ObjectNameTotalWidth);
+            }
 
-            builder.Append( $"{Localization.GetHumanReadableFileSize(info.MemoryUsage)} x {info.CopyCount.ToString()}"
-                .PadRight(ColumnTwoWidth));
+
+
+            builder.Append(workingNameString);
+            builder.Append( $" {Localization.GetHumanReadableFileSize(info.MemoryUsage)} x {info.CopyCount.ToString()}"
+                .PadRight(ObjectSizeWidth));
 
             // Additional information
             string additional = info.GetDetailedInformation();
             if (additional != null)
             {
+                if (additional.Length > ObjectInfoWidth)
+                {
+                    additional = additional.Substring(0, ObjectInfoWidth);
+                }
                 builder.AppendLine(additional);
             }
             else

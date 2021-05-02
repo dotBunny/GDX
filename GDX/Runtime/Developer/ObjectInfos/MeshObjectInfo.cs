@@ -29,7 +29,7 @@ namespace GDX.Developer.ObjectInfos
 
         public override string GetDetailedInformation()
         {
-            return $"Readable: {IsReadable.ToString()}, Vertices: {VertexCount.ToString()}, SubMeshes: {SubMeshCount.ToString()}";
+            return $"R: {IsReadable.ToString()}, Vertices: {VertexCount.ToString()}, SubMeshes: {SubMeshCount.ToString()}";
         }
     }
 }

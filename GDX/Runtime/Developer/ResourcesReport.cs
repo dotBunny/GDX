@@ -57,7 +57,8 @@ namespace GDX.Developer
             // Create Header
             builder.AppendLine(ReportBuilder.CreateHeader("START: Resources Report"));
             ReportBuilder.AddInstanceInformation(this, ref builder);
-            builder.AppendLine($"{"Last Touched:".PadRight(ReportBuilder.TwoColumnWidth)}{LastTouched.ToString(Localization.LocalTimestampFormat)}");
+            builder.AppendLine($"{"Last Touched:".PadRight(ReportBuilder.DataTableItemWidth)}{LastTouched.ToString(Localization.LocalTimestampFormat)}");
+            builder.AppendLine($"{"Total Objects:".PadRight(ReportBuilder.DataTableItemWidth)}{ObjectCount.ToString()}");
             builder.AppendLine();
             ReportBuilder.AddMemoryInformation(this, ref builder);
             builder.AppendLine();
@@ -68,8 +69,8 @@ namespace GDX.Developer
                 int count = typeKVP.Value.Count;
 
                 builder.AppendLine(ReportBuilder.CreateHeader(typeKVP.Key.ToString(), '-'));
-                builder.AppendLine($"{"Count:".PadRight(ReportBuilder.TwoColumnWidth)}{count.ToString()}");
-                builder.AppendLine($"{"Total Size:".PadRight(ReportBuilder.TwoColumnWidth)}{Localization.GetHumanReadableFileSize(KnownUsage[typeKVP.Key])}");
+                builder.AppendLine($"{"Count:".PadRight(ReportBuilder.DataTableItemWidth)}{count.ToString()}");
+                builder.AppendLine($"{"Total Size:".PadRight(ReportBuilder.DataTableItemWidth)}{Localization.GetHumanReadableFileSize(KnownUsage[typeKVP.Key])}");
                 builder.AppendLine(ReportBuilder.CreateDivider());
 
                 // Sort the known objects based on size as that's the most useful context to have them listed
@@ -86,6 +87,8 @@ namespace GDX.Developer
                 {
                     ReportBuilder.AddObjectInfoLine(newList[i], ref builder);
                 }
+
+                builder.AppendLine();
             }
 
             // Footer

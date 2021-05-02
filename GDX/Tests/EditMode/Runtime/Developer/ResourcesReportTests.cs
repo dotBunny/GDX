@@ -43,6 +43,9 @@ namespace Runtime.Developer
         {
             var report = ResourcesReport.GetCommon().Output();
 
+            System.IO.File.WriteAllLines(
+                System.IO.Path.Combine(UnityEngine.Application.dataPath, "test.log"), report);
+
             bool evaluate = report != null && report.Length > 0;
 
             Assert.IsTrue(evaluate);

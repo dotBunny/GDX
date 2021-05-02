@@ -35,12 +35,18 @@ namespace GDX.Developer.ObjectInfos
 #if UNITY_2019_1_OR_NEWER
         public override string GetDetailedInformation()
         {
-            return $"{Width.ToString()}x{Height.ToString()} {Format.ToString()} Readable: {IsReadable.ToString()},";
+            string format = Format.ToString();
+            if (format.IsNumeric())
+            {
+                format = $"Unknown ({format})";
+            }
+
+            return $"{Width.ToString()}x{Height.ToString()} {format} R: {IsReadable.ToString()}";
         }
 #else
         public override string GetDetailedInformation()
         {
-            return $"{Width.ToString()}x{Height.ToString()} Readable: {IsReadable.ToString()},";
+            return $"{Width.ToString()}x{Height.ToString()} R: {IsReadable.ToString()}";
         }
 #endif
 
