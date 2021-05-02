@@ -291,8 +291,9 @@ namespace GDX.Developer
             resourcesState.QueryForType<Texture2DArray, TextureObjectInfo>();
             resourcesState.QueryForType<Cubemap, TextureObjectInfo>();
             resourcesState.QueryForType<CubemapArray, TextureObjectInfo>();
+            resourcesState.QueryForType<Shader, ShaderObjectInfo>();
             resourcesState.QueryForType<Material, ObjectInfo>();
-            resourcesState.QueryForType<Shader, ObjectInfo>();
+            resourcesState.QueryForType<Mesh, MeshObjectInfo>();
             resourcesState.QueryForType<AnimationClip, ObjectInfo>();
 
             return resourcesState;

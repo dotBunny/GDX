@@ -10,15 +10,15 @@ namespace GDX.Developer.ObjectInfos
     public sealed class TextureObjectInfo : ObjectInfo
     {
         public const string TypeDefinition = "GDX.Developer.ObjectInfos.TextureObjectInfo,GDX";
-
-        public bool IsReadable;
-        public int Height;
-        public int Width;
 #if UNITY_2019_1_OR_NEWER
         public GraphicsFormat Format;
 #endif
+        public int Height;
 
-        public override void Populate(UnityEngine.Object targetObject)
+        public bool IsReadable;
+        public int Width;
+
+        public override void Populate(Object targetObject)
         {
             base.Populate(targetObject);
             Texture textureAsset = (Texture)targetObject;
@@ -32,7 +32,7 @@ namespace GDX.Developer.ObjectInfos
 #endif
         }
 
-        public override void Populate(UnityEngine.Object targetObject, TransientReference reference)
+        public override void Populate(Object targetObject, TransientReference reference)
         {
             base.Populate(targetObject, reference);
             Texture textureAsset = (Texture)targetObject;

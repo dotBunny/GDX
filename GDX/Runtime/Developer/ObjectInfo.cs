@@ -2,21 +2,22 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using UnityEngine;
+using System;
 using UnityEngine.Profiling;
+using Object = UnityEngine.Object;
 
 namespace GDX.Developer
 {
     public class ObjectInfo
     {
         public const string TypeDefinition = "GDX.Developer.ObjectInfo,GDX";
+        public uint CopyCount;
 
         public long MemoryUsageBytes;
-        public long TotalMemoryUsageBytes;
         public string Name;
-        public System.Type Type;
-        public uint CopyCount;
         public TransientReference Reference;
+        public long TotalMemoryUsageBytes;
+        public Type Type;
 
         public virtual void Populate(Object targetObject)
         {

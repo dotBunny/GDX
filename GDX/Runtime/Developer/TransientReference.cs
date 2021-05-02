@@ -12,7 +12,7 @@ namespace GDX
     ///     compare against similar targeted reference trackers as well as the actual target object.
     /// </summary>
     /// <remarks>
-    ///     There isn't a lot of great use cases for using this sort of thing; <see cref="WeakReference"/> on its own
+    ///     There isn't a lot of great use cases for using this sort of thing; <see cref="WeakReference" /> on its own
     ///     is sufficient in most of the use cases, however this particular arrangement is useful for developer-ish
     ///     stuff.
     /// </remarks>
@@ -20,12 +20,19 @@ namespace GDX
         IComparable<WeakReference>, IEquatable<TransientReference>,
         IEquatable<WeakReference>
     {
-        /// <inheritdoc />
+        /// <summary>
+        ///     Create a <see cref="TransientReference" /> referencing the <paramref name="target" />.
+        /// </summary>
+        /// <param name="target">The target <see cref="object" /> to reference.</param>
         public TransientReference(object target) : base(target)
         {
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Create a <see cref="TransientReference" /> referencing the <paramref name="target" />.
+        /// </summary>
+        /// <param name="target">The target <see cref="object" /> to reference.</param>
+        /// <param name="trackResurrection">Should the object remain tracked after it has been finalized.</param>
         public TransientReference(object target, bool trackResurrection) : base(target, trackResurrection)
         {
         }

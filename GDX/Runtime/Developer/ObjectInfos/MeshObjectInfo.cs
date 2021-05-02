@@ -9,13 +9,13 @@ namespace GDX.Developer.ObjectInfos
     public sealed class MeshObjectInfo : ObjectInfo
     {
         public const string TypeDefinition = "GDX.Developer.ObjectInfos.MeshObjectInfo,GDX";
-
-        public int VertexCount;
+        public bool IsReadable;
         public int SubMeshCount;
         public int Triangles;
-        public bool IsReadable;
 
-        public override void Populate(UnityEngine.Object targetObject)
+        public int VertexCount;
+
+        public override void Populate(Object targetObject)
         {
             base.Populate(targetObject);
             Mesh meshAsset = (Mesh)targetObject;
@@ -27,7 +27,7 @@ namespace GDX.Developer.ObjectInfos
             IsReadable = meshAsset.isReadable;
         }
 
-        public override void Populate(UnityEngine.Object targetObject, TransientReference reference)
+        public override void Populate(Object targetObject, TransientReference reference)
         {
             base.Populate(targetObject, reference);
             Mesh meshAsset = (Mesh)targetObject;

@@ -18,6 +18,7 @@ GDX_BURST | com.unity.burst | 2018.4 | `1.4.6`
 GDX_MATHEMATICS | com.unity.mathematics | 2018.4 | `1.2.1`
 GDX_PLATFORMS | com.unity.platforms | 2020.3 |`0.11.0-preview.17`
 GDX_VISUALSCRIPTING | com.unity.visual-scripting | 2021.1 |`1.52`
+GDX_COLLECTIONS | com.unity.collections | 2019.4 | `0.14.0`
 
 > [!NOTE]
 > It is essential to remember that the GDX_* defines are only valid inside the `GDX` assembly, see [Conditionals](xref:GDX.Developer.Conditionals) if you wish to access some semblance outside of `GDX`.

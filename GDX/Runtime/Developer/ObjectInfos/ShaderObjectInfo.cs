@@ -9,13 +9,13 @@ namespace GDX.Developer.ObjectInfos
     public sealed class ShaderObjectInfo : ObjectInfo
     {
         public const string TypeDefinition = "GDX.Developer.ObjectInfos.ShaderObjectInfo,GDX";
+        public bool IsSupported;
 
 #if UNITY_2019_1_OR_NEWER
         public int PassCount;
 #endif
-        public bool IsSupported;
 
-        public override void Populate(UnityEngine.Object targetObject)
+        public override void Populate(Object targetObject)
         {
             base.Populate(targetObject);
             Shader shaderAsset = (Shader)targetObject;
@@ -27,7 +27,7 @@ namespace GDX.Developer.ObjectInfos
             IsSupported = shaderAsset.isSupported;
         }
 
-        public override void Populate(UnityEngine.Object targetObject, TransientReference reference)
+        public override void Populate(Object targetObject, TransientReference reference)
         {
             base.Populate(targetObject, reference);
             Shader shaderAsset = (Shader)targetObject;

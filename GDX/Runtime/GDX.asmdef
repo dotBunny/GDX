@@ -39,6 +39,11 @@
             "name": "com.unity.visualscripting",
             "expression": "1.5.2",
             "define": "GDX_VISUALSCRIPTING"
+        },
+        {
+            "name": "com.unity.collections",
+            "expression": "0.14.0",
+            "define": "GDX_COLLECTIONS"
         }
     ],
     "noEngineReferences": false
