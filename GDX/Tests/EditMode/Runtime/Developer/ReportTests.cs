@@ -59,11 +59,6 @@ namespace Runtime.Developer
                 writerOutput = Encoding.ASCII.GetString(memoryStream.ToArray());
             }
 
-            string pathA = System.IO.Path.Combine(UnityEngine.Application.dataPath, "builder.log");
-            string pathB = System.IO.Path.Combine(UnityEngine.Application.dataPath, "writer.log");
-            File.WriteAllText(pathA, builderOutput);
-            File.WriteAllText(pathB, writerOutput);
-
             bool evaluate = builderOutput == writerOutput;
 
             Assert.IsTrue(evaluate);

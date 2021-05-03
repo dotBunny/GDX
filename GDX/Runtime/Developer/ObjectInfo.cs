@@ -52,7 +52,7 @@ namespace GDX.Developer
         ///     Get additional information about the specific <see cref="Reference" />.
         /// </summary>
         /// <returns>A <see cref="string" /> of additional information.</returns>
-        public virtual string GetDetailedInformation()
+        public virtual string GetDetailedInformation(int maximumWidth)
         {
             return null;
         }

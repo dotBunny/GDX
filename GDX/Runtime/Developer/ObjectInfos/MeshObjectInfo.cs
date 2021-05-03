@@ -27,9 +27,11 @@ namespace GDX.Developer.ObjectInfos
             IsReadable = meshAsset.isReadable;
         }
 
-        public override string GetDetailedInformation()
+        public override string GetDetailedInformation(int maximumWidth)
         {
-            return $"RW: {(IsReadable ? "Y" : "N")}, Vertices: {VertexCount.ToString()}, SubMeshes: {SubMeshCount.ToString()}";
+            return maximumWidth < 40
+                ? $"{(IsReadable ? "RW" : "")} (V:{VertexCount.ToString()}, SM:{SubMeshCount.ToString()})"
+                : $"{(IsReadable ? "RW" : "")} (Verts:{VertexCount.ToString()}, SubMeshes:{SubMeshCount.ToString()})";
         }
     }
 }

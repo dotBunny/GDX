@@ -29,9 +29,9 @@ namespace GDX.Developer.ObjectInfos
 
 #if UNITY_2019_1_OR_NEWER
         /// <inheritdoc />
-        public override string GetDetailedInformation()
+        public override string GetDetailedInformation(int maximumWidth)
         {
-            return $"Passes: {PassCount}";
+            return $"Passes:{PassCount}";
         }
 #endif
     }

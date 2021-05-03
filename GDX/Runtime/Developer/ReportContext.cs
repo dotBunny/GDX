@@ -25,8 +25,7 @@ namespace GDX.Developer
             ObjectNameWidth = (int)(percent * 33.333f);
             ObjectSizeWidth = (int)percent * 11;
 
-            ObjectInfoWidth = characterWidth - (ObjectInfoWidth + ObjectNameWidth + ObjectSizeWidth + 3);
-
+            ObjectInfoWidth = characterWidth - (ObjectTypeWidth + ObjectNameWidth + ObjectSizeWidth + 3);
         }
     }
 }

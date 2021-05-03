@@ -32,23 +32,28 @@ namespace GDX.Developer.ObjectInfos
 #endif
         }
 
-#if UNITY_2019_1_OR_NEWER
-        public override string GetDetailedInformation()
+        public override string GetDetailedInformation(int maximumWidth)
         {
+
+            // Always a width of 11
+            string size = $"{Width.ToString()}x{Height.ToString()}".PadRight(11);
+
+#if UNITY_2019_1_OR_NEWER
+            int formatWidth = maximumWidth - 15;
             string format = Format.ToString();
             if (format.IsNumeric())
             {
                 format = $"Unknown ({format})";
             }
-
-            return $"{Width.ToString()}x{Height.ToString()} {format} RW: {(IsReadable ? "Y" : "N")}";
-        }
+            format = format.PadRight(formatWidth);
+            if (format.Length > formatWidth)
+            {
+                format = format.Substring(0, formatWidth);
+            }
+            return $"{size} {format} {(IsReadable ? "RW" : "")}";
 #else
-        public override string GetDetailedInformation()
-        {
-            return $"{Width.ToString()}x{Height.ToString()} RW: {(IsReadable ? "Y" : "N")}";
-        }
+            return $"{size} {(IsReadable ? "RW":"")}";
 #endif
-
+        }
     }
 }

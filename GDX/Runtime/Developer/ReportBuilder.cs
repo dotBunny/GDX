@@ -70,7 +70,7 @@ namespace GDX.Developer
 
 
             // Additional information
-            string additionalInfo = info.GetDetailedInformation();
+            string additionalInfo = info.GetDetailedInformation(context.ObjectInfoWidth);
 
             // Add to builder
             builder.AppendLine( additionalInfo != null
