@@ -129,11 +129,16 @@ namespace GDX.Developer
             }
 
             // Create our ObjectInfo type, defaulting if invalid
-            Type objectInfoActual = Type.GetType(query.ObjectInfoTypeDefinition, false);
+            Type objectInfoActual = null;
+            if (query.ObjectInfoTypeDefinition != null)
+            {
+                objectInfoActual = Type.GetType(query.ObjectInfoTypeDefinition, false);
+            }
             if (objectInfoActual == null)
             {
-                objectInfoActual = typeof(ObjectInfo);
+                objectInfoActual = GetObjectInfoType(typeActual);
             }
+
 
             // Build out using reflection (yes bad, but you choose this).
             MethodInfo method = typeof(ResourcesReport).GetMethod(nameof(QueryForType));
@@ -293,6 +298,30 @@ namespace GDX.Developer
             resourcesReport.QueryForType<AnimationClip, ObjectInfo>();
 
             return resourcesReport;
+        }
+
+        private static Type GetObjectInfoType(Type targetType)
+        {
+            if (targetType == typeof(Texture2D) ||
+                targetType == typeof(Texture3D) ||
+                targetType == typeof(Texture2DArray) ||
+                targetType == typeof(RenderTexture) ||
+                targetType == typeof(Cubemap) ||
+                targetType == typeof(CubemapArray))
+            {
+                return typeof(TextureObjectInfo);
+            }
+
+            if (targetType == typeof(Mesh))
+            {
+                return typeof(MeshObjectInfo);
+            }
+
+            if (targetType == typeof(Shader))
+            {
+                return typeof(ShaderObjectInfo);
+            }
+            return typeof(ObjectInfo);
         }
     }
 }

@@ -33,20 +33,6 @@ namespace GDX.Developer
         public readonly string ObjectInfoTypeDefinition;
 
         /// <summary>
-        ///     Create a <see cref="ResourcesQuery" /> for the given <paramref name="typeDefinition" />.
-        /// </summary>
-        /// <remarks>Uses the default <see cref="ObjectInfo" /> for report generation.</remarks>
-        /// <example>
-        ///     var queryTexture2D = new ResourcesQuery("UnityEngine.AnimationClip,UnityEngine");
-        /// </example>
-        /// <param name="typeDefinition">The fully qualified type that is going to be evaluated.</param>
-        public ResourcesQuery(string typeDefinition)
-        {
-            TypeDefinition = typeDefinition;
-            ObjectInfoTypeDefinition = ObjectInfo.TypeDefinition;
-        }
-
-        /// <summary>
         ///     Create a <see cref="ResourcesQuery" /> for the given <paramref name="typeDefinition" />, while
         ///     attempting to use the provided <paramref name="objectInfoTypeDefinition" /> for report generation.
         /// </summary>
@@ -57,13 +43,13 @@ namespace GDX.Developer
         /// <param name="typeDefinition">The fully qualified type that is going to be evaluated.</param>
         /// <param name="objectInfoTypeDefinition">
         ///     The fully qualified type that is going to be used to generate a report on the
-        ///     type.
+        ///     type. If left null, system will attempt to find an appropriate info generator.
         /// </param>
         /// <example>
         ///     var queryTexture2D = new ResourcesQuery("UnityEngine.Texture2D,UnityEngine",
         ///     "GDX.Developer.Reports.ObjectInfos.TextureObjectInfo,GDX");
         /// </example>
-        public ResourcesQuery(string typeDefinition, string objectInfoTypeDefinition)
+        public ResourcesQuery(string typeDefinition, string objectInfoTypeDefinition = null)
         {
             TypeDefinition = typeDefinition;
             ObjectInfoTypeDefinition = objectInfoTypeDefinition;
