@@ -41,12 +41,12 @@ namespace GDX.Developer.ObjectInfos
                 format = $"Unknown ({format})";
             }
 
-            return $"{Width.ToString()}x{Height.ToString()} {format} R: {IsReadable.ToString()}";
+            return $"{Width.ToString()}x{Height.ToString()} {format} RW: {(IsReadable ? "Y" : "N")}";
         }
 #else
         public override string GetDetailedInformation()
         {
-            return $"{Width.ToString()}x{Height.ToString()} R: {IsReadable.ToString()}";
+            return $"{Width.ToString()}x{Height.ToString()} RW: {(IsReadable ? "Y" : "N")}";
         }
 #endif
 

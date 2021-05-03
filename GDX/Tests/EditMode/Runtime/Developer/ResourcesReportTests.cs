@@ -28,23 +28,15 @@ namespace Runtime.Developer
                     GDX.Developer.ObjectInfos.TextureObjectInfo.TypeDefinition)
             });
 
-
-            System.IO.File.WriteAllLines(
-                System.IO.Path.Combine(UnityEngine.Application.dataPath, "test.log"), state.Output());
-
             bool evaluate = state != null && state.KnownObjects.Count == 2;
 
             Assert.IsTrue(evaluate);
         }
 
         [Test]
-        [Category("GDX.Tests")]
         public void Output_GetCommon_ReturnsReport()
         {
             var report = ResourcesReport.GetCommon().Output();
-
-            System.IO.File.WriteAllLines(
-                System.IO.Path.Combine(UnityEngine.Application.dataPath, "test.log"), report);
 
             bool evaluate = report != null && report.Length > 0;
 
@@ -56,9 +48,6 @@ namespace Runtime.Developer
         public void Output_GetAll_ReturnsReport()
         {
             var report = ResourcesReport.GetAll().Output();
-
-            System.IO.File.WriteAllLines(
-                System.IO.Path.Combine(UnityEngine.Application.dataPath, "test.log"), report);
 
             bool evaluate = report != null && report.Length > 0;
 

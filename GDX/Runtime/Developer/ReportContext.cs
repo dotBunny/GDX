@@ -8,6 +8,12 @@ namespace GDX.Developer
     {
         public readonly int CharacterWidth;
         public readonly int KeyValuePairWidth;
+
+        public readonly int ObjectTypeWidth;
+        public readonly int ObjectNameWidth;
+        public readonly int ObjectSizeWidth;
+        public readonly int ObjectInfoWidth;
+
         public ReportContext(int characterWidth = 120)
         {
             CharacterWidth = characterWidth;
@@ -15,13 +21,12 @@ namespace GDX.Developer
 
             float percent = characterWidth / 100f;
 
+            ObjectTypeWidth = (int)percent * 15;
+            ObjectNameWidth = (int)(percent * 33.333f);
+            ObjectSizeWidth = (int)percent * 11;
+
+            ObjectInfoWidth = characterWidth - (ObjectInfoWidth + ObjectNameWidth + ObjectSizeWidth + 3);
+
         }
-
-        public readonly int ObjectTypeWidth = 19;
-        public readonly int ObjectNameTotalWidth = 64;
-        public readonly int ObjectSizeWidth = 14;
-        public readonly int ObjectInfoWidth = 20;
-
-        public static ReportContext Default = new ReportContext();
     }
 }

@@ -37,51 +37,45 @@ namespace GDX.Developer
             {
                 builder.AppendLine(context.CreateKVP("GFX Driver Allocated Memory",
                     Localization.GetHumanReadableFileSize(resources.UnityGraphicsDriverAllocatedMemory)));
-                builder.AppendLine(context.CreateKVP("Total Allocated Memory",
-                    Localization.GetHumanReadableFileSize(resources.UnityTotalAllocatedMemory)));
                 builder.AppendLine(context.CreateKVP("Total Reserved Memory",
                     Localization.GetHumanReadableFileSize(resources.UnityTotalReservedMemory)));
+                builder.AppendLine(context.CreateKVP("Total Allocated Memory",
+                    Localization.GetHumanReadableFileSize(resources.UnityTotalAllocatedMemory)));
                 builder.AppendLine(context.CreateKVP("Total Unused Reserved Memory",
                     Localization.GetHumanReadableFileSize(resources.UnityTotalUnusedReservedMemory)));
-                builder.AppendLine(context.CreateKVP("Used Heap",
-                    Localization.GetHumanReadableFileSize(resources.UnityUsedHeapSize)));
             }
         }
 
         public static void AddObjectInfoLine(ObjectInfo info, ReportContext context, StringBuilder builder)
         {
-            string workingNameString = info.Type.Name.PadRight(context.ObjectTypeWidth);
-            if (workingNameString.Length > context.ObjectTypeWidth)
+            string typeName = info.Type.Name.PadRight(context.ObjectTypeWidth);
+            if (typeName.Length > context.ObjectTypeWidth)
             {
-                workingNameString = workingNameString.Substring(0, context.ObjectTypeWidth);
+                typeName = typeName.Substring(0, context.ObjectTypeWidth);
             }
 
-            workingNameString = $"{workingNameString} {info.Name}".PadRight(context.ObjectNameTotalWidth);
-            if (workingNameString.Length > context.ObjectNameTotalWidth)
+            string objectName = info.Name.PadRight(context.ObjectNameWidth);
+            if (objectName.Length > context.ObjectNameWidth)
             {
-                workingNameString = workingNameString.Substring(0, context.ObjectNameTotalWidth);
+                objectName = objectName.Substring(0, context.ObjectNameWidth);
             }
 
+            string sizeInfo =
+                $"{Localization.GetHumanReadableFileSize(info.MemoryUsage)} x {info.CopyCount.ToString()}".PadRight(
+                    context.ObjectSizeWidth);
+            if (sizeInfo.Length > context.ObjectSizeWidth)
+            {
+                sizeInfo = sizeInfo.Substring(0, context.ObjectSizeWidth);
+            }
 
-            builder.Append(workingNameString);
-            builder.Append($" {Localization.GetHumanReadableFileSize(info.MemoryUsage)} x {info.CopyCount.ToString()}"
-                .PadRight(context.ObjectSizeWidth));
 
             // Additional information
-            string additional = info.GetDetailedInformation();
-            if (additional != null)
-            {
-                if (additional.Length > context.ObjectInfoWidth)
-                {
-                    additional = additional.Substring(0, context.ObjectInfoWidth);
-                }
+            string additionalInfo = info.GetDetailedInformation();
 
-                builder.AppendLine(additional);
-            }
-            else
-            {
-                builder.AppendLine();
-            }
+            // Add to builder
+            builder.AppendLine( additionalInfo != null
+                ? $"{typeName} {objectName} {sizeInfo} {additionalInfo}"
+                : $"{typeName} {objectName} {sizeInfo}");
         }
 
         /// <summary>
@@ -132,6 +126,11 @@ namespace GDX.Developer
             }
 
             return workingLine;
+        }
+
+        public static string CreateYesNo(this bool flag)
+        {
+            return flag ? "Y" : "N";
         }
     }
 }

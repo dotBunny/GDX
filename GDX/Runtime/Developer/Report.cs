@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 
 namespace GDX.Developer
 {
-    public class Report
+    public abstract class Report
     {
         /// <summary>
         ///     The name of the scene that was known to the <see cref="UnityEngine.SceneManagement" /> as being the active scene
@@ -61,12 +61,7 @@ namespace GDX.Developer
         /// </summary>
         public readonly long UnityTotalUnusedReservedMemory;
 
-        /// <summary>
-        ///     Unity's used portion of the heap (in bytes).
-        /// </summary>
-        public readonly long UnityUsedHeapSize;
-
-        public Report()
+        protected Report()
         {
             ActiveScene = SceneManager.GetActiveScene().name;
             Platform = Application.platform;
@@ -74,7 +69,6 @@ namespace GDX.Developer
             MonoHeapSize = Profiler.GetMonoHeapSizeLong();
             Created = DateTime.Now;
 
-            UnityUsedHeapSize = Profiler.usedHeapSizeLong;
             UnityTotalAllocatedMemory = Profiler.GetTotalAllocatedMemoryLong();
             UnityTotalReservedMemory = Profiler.GetTotalReservedMemoryLong();
             UnityGraphicsDriverAllocatedMemory = Profiler.GetAllocatedMemoryForGraphicsDriver();
@@ -103,19 +97,36 @@ namespace GDX.Developer
         /// <param name="writer"></param>
         /// <param name="bufferSize"></param>
         /// <returns>true/false if the report was successfully written to the provided <paramref name="writer" />.</returns>
-        public bool Output(StreamWriter writer, int bufferSize = -1, ReportContext context = null)
+        public bool Output(StreamWriter writer, int bufferSize = 1024, ReportContext context = null)
         {
             StringBuilder builder = new StringBuilder();
-            if (Output(builder, context))
+            if (!Output(builder, context))
             {
-                //writer.Write();
+                return false;
             }
-            return false;
+
+            int contentLength = builder.Length;
+            char[] content = new char[bufferSize];
+            int leftOvers = (contentLength % bufferSize);
+            int writeCount = (contentLength - leftOvers) / bufferSize;
+
+            // Fixed sized writes
+            for (int i = 0; i < writeCount; i++)
+            {
+                builder.CopyTo(i * bufferSize, content, 0, bufferSize);
+                writer.Write(content, 0, bufferSize);
+            }
+
+            if (leftOvers > 0)
+            {
+                builder.CopyTo(writeCount * bufferSize, content, 0, leftOvers);
+                writer.Write(content, 0, leftOvers);
+            }
+
+            writer.Flush();
+            return true;
         }
 
-        public virtual bool Output(StringBuilder builder, ReportContext context = null)
-        {
-            return false;
-        }
+        public abstract bool Output(StringBuilder builder, ReportContext context = null);
     }
 }
