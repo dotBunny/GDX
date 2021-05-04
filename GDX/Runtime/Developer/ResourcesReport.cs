@@ -35,6 +35,11 @@ namespace GDX.Developer
         public readonly Dictionary<Type, long> KnownUsage = new SerializableDictionary<Type, long>();
 
         /// <summary>
+        ///     Is this report infact a diff between two <see cref="ResourcesReport" />?
+        /// </summary>
+        public bool IsDiff = false;
+
+        /// <summary>
         ///     The last time that the <see cref="ResourcesReport" /> has had a query of types.
         /// </summary>
         public DateTime LastTouched = DateTime.Now;
@@ -52,19 +57,27 @@ namespace GDX.Developer
             KnownObjects.Clear();
         }
 
+        /// <inheritdoc />
         public override bool Output(StringBuilder builder, ReportContext context = null)
         {
             // We need to make the context if its not provided
-            if (context == null) context = new ReportContext();
+            if (context == null)
+            {
+                context = new ReportContext();
+            }
 
             // Create header
-            builder.AppendLine(context.CreateHeader("START: Resources Report"));
+            builder.AppendLine(IsDiff
+                ? context.CreateHeader("START: Resources DIFF Report")
+                : context.CreateHeader("START: Resources Report"));
+
 
             // Add standard report information
             ReportBuilder.AddInstanceInformation(this, context, builder);
 
             // Custom header information
-            builder.AppendLine(context.CreateKVP("Last Touched", LastTouched.ToString(Localization.LocalTimestampFormat)));
+            builder.AppendLine(context.CreateKVP("Last Touched",
+                LastTouched.ToString(Localization.LocalTimestampFormat)));
             builder.AppendLine(context.CreateKVP("Total Objects", ObjectCount.ToString()));
 
             builder.AppendLine();
@@ -74,7 +87,7 @@ namespace GDX.Developer
             builder.AppendLine();
 
             // We iterate over each defined type in the order they were added to the known objects
-            foreach (var typeKVP in KnownObjects)
+            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> typeKVP in KnownObjects)
             {
                 int count = typeKVP.Value.Count;
 
@@ -86,7 +99,7 @@ namespace GDX.Developer
 
                 // Sort the known objects based on size as that's the most useful context to have them listed
                 List<ObjectInfo> newList = new List<ObjectInfo>(count);
-                foreach (var objectKVP in typeKVP.Value)
+                foreach (KeyValuePair<TransientReference, ObjectInfo> objectKVP in typeKVP.Value)
                 {
                     newList.Add(objectKVP.Value);
                 }
@@ -103,7 +116,9 @@ namespace GDX.Developer
             }
 
             // Footer
-            builder.AppendLine(ReportBuilder.CreateHeader(context, "END: Resources Report"));
+            builder.AppendLine(IsDiff
+                ? context.CreateHeader("END: Resources DIFF Report")
+                : context.CreateHeader("END: Resources Report"));
 
             return true;
         }
@@ -134,6 +149,7 @@ namespace GDX.Developer
             {
                 objectInfoActual = Type.GetType(query.ObjectInfoTypeDefinition, false);
             }
+
             if (objectInfoActual == null)
             {
                 objectInfoActual = GetObjectInfoType(typeActual);
@@ -152,7 +168,7 @@ namespace GDX.Developer
             MethodInfo generic = method.MakeGenericMethod(typeActual, objectInfoActual);
 
             // Invoke the method on our container
-            generic.Invoke(this, null);
+            generic.Invoke(this, new object[] {query.NameFilter});
 
             LastTouched = DateTime.Now;
         }
@@ -162,7 +178,7 @@ namespace GDX.Developer
         /// </summary>
         /// <typeparam name="TType">The object type to query for.</typeparam>
         /// <typeparam name="TObjectInfo">The <see cref="ObjectInfo" /> used to generate report entries.</typeparam>
-        public void QueryForType<TType, TObjectInfo>()
+        public void QueryForType<TType, TObjectInfo>(string nameFilter = null)
             where TType : Object
             where TObjectInfo : ObjectInfo, new()
         {
@@ -184,10 +200,18 @@ namespace GDX.Developer
             // Get reference to the dictionary for the specified category
             Dictionary<TransientReference, ObjectInfo> typeObjects = KnownObjects[typeClass];
 
+            bool evaluateNames = !string.IsNullOrEmpty(nameFilter);
             int count = foundLoadedObjects.Length;
             for (int i = 0; i < count; i++)
             {
                 Object foundObject = foundLoadedObjects[i];
+
+                // If we have a provided filter, and our objects name doesnt contain the filter, skip
+                if (evaluateNames && !foundObject.name.Contains(nameFilter))
+                {
+                    continue;
+                }
+
                 TransientReference pseudoWeakReference = new TransientReference(foundObject);
 
                 // We can use the hashcode of a specific type at this level to determine duplication
@@ -296,6 +320,7 @@ namespace GDX.Developer
             resourcesReport.QueryForType<Material, ObjectInfo>();
             resourcesReport.QueryForType<Mesh, MeshObjectInfo>();
             resourcesReport.QueryForType<AnimationClip, ObjectInfo>();
+            resourcesReport.QueryForType<AssetBundle, AssetBundleObjectInfo>();
 
             return resourcesReport;
         }
@@ -321,7 +346,56 @@ namespace GDX.Developer
             {
                 return typeof(ShaderObjectInfo);
             }
+
+            if (targetType == typeof(AssetBundle))
+            {
+                return typeof(AssetBundleObjectInfo);
+            }
+
             return typeof(ObjectInfo);
+        }
+
+        public static ResourcesReport Diff(ResourcesReport lhs, ResourcesReport rhs)
+        {
+            ResourcesReport returnReport = new ResourcesReport();
+
+            // Not valid data
+            returnReport.ActiveScene = "N/A";
+
+            // Simple difference values
+            returnReport.ObjectCount = rhs.ObjectCount - lhs.ObjectCount;
+            returnReport.MonoUsedSize = rhs.MonoUsedSize - lhs.MonoUsedSize;
+            returnReport.MonoHeapSize = rhs.MonoHeapSize - lhs.MonoHeapSize ;
+            returnReport.UnityTotalAllocatedMemory = rhs.UnityTotalAllocatedMemory - lhs.UnityTotalAllocatedMemory;
+            returnReport.UnityTotalReservedMemory = rhs.UnityTotalReservedMemory - lhs.UnityTotalReservedMemory;
+            returnReport.UnityGraphicsDriverAllocatedMemory =
+                rhs.UnityGraphicsDriverAllocatedMemory - lhs.UnityGraphicsDriverAllocatedMemory;
+            returnReport.UnityTotalUnusedReservedMemory =
+                rhs.UnityTotalUnusedReservedMemory - lhs.UnityTotalUnusedReservedMemory;
+
+            // Calculate Known Usage Changes
+            foreach (var kvp in lhs.KnownUsage)
+            {
+                if (rhs.KnownUsage.ContainsKey(kvp.Key))
+                {
+                    returnReport.KnownUsage.Add(kvp.Key, rhs.KnownUsage[kvp.Key] - kvp.Value);
+                }
+                else
+                {
+                    returnReport.KnownUsage.Add(kvp.Key, -kvp.Value);
+                }
+            }
+            foreach (var kvp in rhs.KnownUsage)
+            {
+                if (!lhs.KnownUsage.ContainsKey(kvp.Key))
+                {
+                    returnReport.KnownUsage.Add(kvp.Key, kvp.Value);
+                }
+            }
+
+            // Figure out Known Objects
+
+            return returnReport;
         }
     }
 }

@@ -13,9 +13,6 @@ namespace GDX.Developer
     /// </remarks>
     public readonly struct ResourcesQuery
     {
-        // TODO: FILTER BY NAME?
-        // TODO: FILTER BY ASSET PATH/
-
         /// <summary>
         ///     The fully qualified type that is going to be evaluated.
         /// </summary>
@@ -32,6 +29,15 @@ namespace GDX.Developer
         /// </example>
         public readonly string ObjectInfoTypeDefinition;
 
+
+        /// <summary>
+        ///     A <see cref="string.Contains" /> check against a <see cref="UnityEngine.Object" /> name.
+        /// </summary>
+        /// <example>
+        ///     Armor
+        /// </example>
+        public readonly string NameFilter;
+
         /// <summary>
         ///     Create a <see cref="ResourcesQuery" /> for the given <paramref name="typeDefinition" />, while
         ///     attempting to use the provided <paramref name="objectInfoTypeDefinition" /> for report generation.
@@ -45,14 +51,18 @@ namespace GDX.Developer
         ///     The fully qualified type that is going to be used to generate a report on the
         ///     type. If left null, system will attempt to find an appropriate info generator.
         /// </param>
+        /// <param name="nameFilter">
+        ///     A string that must be contained in an objects name for it to be valid in the query.
+        /// </param>
         /// <example>
         ///     var queryTexture2D = new ResourcesQuery("UnityEngine.Texture2D,UnityEngine",
-        ///     "GDX.Developer.Reports.ObjectInfos.TextureObjectInfo,GDX");
+        ///     "GDX.Developer.Reports.ObjectInfos.TextureObjectInfo,GDX", "Armor");
         /// </example>
-        public ResourcesQuery(string typeDefinition, string objectInfoTypeDefinition = null)
+        public ResourcesQuery(string typeDefinition, string objectInfoTypeDefinition = null, string nameFilter = null)
         {
             TypeDefinition = typeDefinition;
             ObjectInfoTypeDefinition = objectInfoTypeDefinition;
+            NameFilter = nameFilter;
         }
     }
 }

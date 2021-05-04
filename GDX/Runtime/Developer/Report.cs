@@ -17,7 +17,7 @@ namespace GDX.Developer
         ///     The name of the scene that was known to the <see cref="UnityEngine.SceneManagement" /> as being the active scene
         ///     when this <see cref="ResourcesReport" /> was created.
         /// </summary>
-        public readonly string ActiveScene;
+        public string ActiveScene;
 
         /// <summary>
         ///     The time of creation for the <see cref="ResourcesReport" />.
@@ -28,13 +28,13 @@ namespace GDX.Developer
         ///     The size of the Mono heap when the <see cref="ResourcesReport" /> was created.
         /// </summary>
         /// <remarks>This is cached so that the <see cref="ResourcesReport" /> does not effect this value.</remarks>
-        public readonly long MonoHeapSize;
+        public long MonoHeapSize;
 
         /// <summary>
         ///     The amount of the Mono heap used when the <see cref="ResourcesReport" /> was created.
         /// </summary>
         /// <remarks>This is cached so that the <see cref="ResourcesReport" /> does not effect this value.</remarks>
-        public readonly long MonoUsedSize;
+        public long MonoUsedSize;
 
         /// <summary>
         ///     The platform that the <see cref="ResourcesReport" /> was created on.
@@ -44,22 +44,22 @@ namespace GDX.Developer
         /// <summary>
         ///     Unity's allocated native memory for the graphics driver (in bytes).
         /// </summary>
-        public readonly long UnityGraphicsDriverAllocatedMemory;
+        public long UnityGraphicsDriverAllocatedMemory;
 
         /// <summary>
         ///     Unity's total allocated memory (in bytes).
         /// </summary>
-        public readonly long UnityTotalAllocatedMemory;
+        public long UnityTotalAllocatedMemory;
 
         /// <summary>
         ///     Unity's total reserved memory (in bytes).
         /// </summary>
-        public readonly long UnityTotalReservedMemory;
+        public long UnityTotalReservedMemory;
 
         /// <summary>
         ///     Unity's total unused reserved memory (in bytes).
         /// </summary>
-        public readonly long UnityTotalUnusedReservedMemory;
+        public long UnityTotalUnusedReservedMemory;
 
         protected Report()
         {
@@ -94,8 +94,8 @@ namespace GDX.Developer
         ///     write buffers by <paramref name="bufferSize" />.
         /// </summary>
         /// <param name="context">Contextual information regarding the generation of the report.</param>
-        /// <param name="writer"></param>
-        /// <param name="bufferSize"></param>
+        /// <param name="writer">A <see cref="StreamWriter"/> instance to use for output.</param>
+        /// <param name="bufferSize">The write buffer size.</param>
         /// <returns>true/false if the report was successfully written to the provided <paramref name="writer" />.</returns>
         public bool Output(StreamWriter writer, int bufferSize = 1024, ReportContext context = null)
         {
@@ -127,6 +127,12 @@ namespace GDX.Developer
             return true;
         }
 
+        /// <summary>
+        ///     Output the report format utilizing the provided <paramref name="builder" />.
+        /// </summary>
+        /// <param name="builder">A <see cref="StringBuilder"/> to use when generating the report.</param>
+        /// <param name="context">Contextual information regarding the generation of the report.</param>
+        /// <returns>true/false if report was added to <paramref name="builder"/>.</returns>
         public abstract bool Output(StringBuilder builder, ReportContext context = null);
     }
 }
