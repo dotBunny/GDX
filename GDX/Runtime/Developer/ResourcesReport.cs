@@ -35,11 +35,6 @@ namespace GDX.Developer
         public readonly Dictionary<Type, long> KnownUsage = new SerializableDictionary<Type, long>();
 
         /// <summary>
-        ///     Is this report infact a diff between two <see cref="ResourcesReport" />?
-        /// </summary>
-        public bool IsDiff = false;
-
-        /// <summary>
         ///     The last time that the <see cref="ResourcesReport" /> has had a query of types.
         /// </summary>
         public DateTime LastTouched = DateTime.Now;
@@ -67,9 +62,7 @@ namespace GDX.Developer
             }
 
             // Create header
-            builder.AppendLine(IsDiff
-                ? context.CreateHeader("START: Resources DIFF Report")
-                : context.CreateHeader("START: Resources Report"));
+            builder.AppendLine(context.CreateHeader("START: Resources Report"));
 
 
             // Add standard report information
@@ -116,9 +109,7 @@ namespace GDX.Developer
             }
 
             // Footer
-            builder.AppendLine(IsDiff
-                ? context.CreateHeader("END: Resources DIFF Report")
-                : context.CreateHeader("END: Resources Report"));
+            builder.AppendLine(context.CreateHeader("END: Resources Report"));
 
             return true;
         }
@@ -353,49 +344,6 @@ namespace GDX.Developer
             }
 
             return typeof(ObjectInfo);
-        }
-
-        public static ResourcesReport Diff(ResourcesReport lhs, ResourcesReport rhs)
-        {
-            ResourcesReport returnReport = new ResourcesReport();
-
-            // Not valid data
-            returnReport.ActiveScene = "N/A";
-
-            // Simple difference values
-            returnReport.ObjectCount = rhs.ObjectCount - lhs.ObjectCount;
-            returnReport.MonoUsedSize = rhs.MonoUsedSize - lhs.MonoUsedSize;
-            returnReport.MonoHeapSize = rhs.MonoHeapSize - lhs.MonoHeapSize ;
-            returnReport.UnityTotalAllocatedMemory = rhs.UnityTotalAllocatedMemory - lhs.UnityTotalAllocatedMemory;
-            returnReport.UnityTotalReservedMemory = rhs.UnityTotalReservedMemory - lhs.UnityTotalReservedMemory;
-            returnReport.UnityGraphicsDriverAllocatedMemory =
-                rhs.UnityGraphicsDriverAllocatedMemory - lhs.UnityGraphicsDriverAllocatedMemory;
-            returnReport.UnityTotalUnusedReservedMemory =
-                rhs.UnityTotalUnusedReservedMemory - lhs.UnityTotalUnusedReservedMemory;
-
-            // Calculate Known Usage Changes
-            foreach (var kvp in lhs.KnownUsage)
-            {
-                if (rhs.KnownUsage.ContainsKey(kvp.Key))
-                {
-                    returnReport.KnownUsage.Add(kvp.Key, rhs.KnownUsage[kvp.Key] - kvp.Value);
-                }
-                else
-                {
-                    returnReport.KnownUsage.Add(kvp.Key, -kvp.Value);
-                }
-            }
-            foreach (var kvp in rhs.KnownUsage)
-            {
-                if (!lhs.KnownUsage.ContainsKey(kvp.Key))
-                {
-                    returnReport.KnownUsage.Add(kvp.Key, kvp.Value);
-                }
-            }
-
-            // Figure out Known Objects
-
-            return returnReport;
         }
     }
 }

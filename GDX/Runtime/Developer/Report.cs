@@ -28,13 +28,13 @@ namespace GDX.Developer
         ///     The size of the Mono heap when the <see cref="ResourcesReport" /> was created.
         /// </summary>
         /// <remarks>This is cached so that the <see cref="ResourcesReport" /> does not effect this value.</remarks>
-        public long MonoHeapSize;
+        public readonly long MonoHeapSize;
 
         /// <summary>
         ///     The amount of the Mono heap used when the <see cref="ResourcesReport" /> was created.
         /// </summary>
         /// <remarks>This is cached so that the <see cref="ResourcesReport" /> does not effect this value.</remarks>
-        public long MonoUsedSize;
+        public readonly long MonoUsedSize;
 
         /// <summary>
         ///     The platform that the <see cref="ResourcesReport" /> was created on.
@@ -44,22 +44,22 @@ namespace GDX.Developer
         /// <summary>
         ///     Unity's allocated native memory for the graphics driver (in bytes).
         /// </summary>
-        public long UnityGraphicsDriverAllocatedMemory;
+        public readonly long UnityGraphicsDriverAllocatedMemory;
 
         /// <summary>
         ///     Unity's total allocated memory (in bytes).
         /// </summary>
-        public long UnityTotalAllocatedMemory;
+        public readonly long UnityTotalAllocatedMemory;
 
         /// <summary>
         ///     Unity's total reserved memory (in bytes).
         /// </summary>
-        public long UnityTotalReservedMemory;
+        public readonly long UnityTotalReservedMemory;
 
         /// <summary>
         ///     Unity's total unused reserved memory (in bytes).
         /// </summary>
-        public long UnityTotalUnusedReservedMemory;
+        public readonly long UnityTotalUnusedReservedMemory;
 
         protected Report()
         {
