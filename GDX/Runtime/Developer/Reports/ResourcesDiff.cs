@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using GDX.Collections.Generic;
-using GDX.Developer.Reports.Elements;
 using GDX.Developer.Reports.Objects;
 using GDX.Developer.Reports.Sections;
 
