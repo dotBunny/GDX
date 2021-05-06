@@ -4,11 +4,11 @@
 
 using UnityEngine;
 
-namespace GDX.Developer.ObjectInfos
+namespace GDX.Developer.Reports.Objects
 {
     public sealed class AssetBundleObjectInfo : ObjectInfo
     {
-        public const string TypeDefinition = "GDX.Developer.ObjectInfos.AssetBundleObjectInfo,GDX";
+        public const string TypeDefinition = "GDX.Developer.Reports.Objects.AssetBundleObjectInfo,GDX";
 
         public bool IsStreamedSceneAssetBundle;
         public int AssetCount;

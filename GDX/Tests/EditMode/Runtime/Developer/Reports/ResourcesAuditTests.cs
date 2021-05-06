@@ -2,30 +2,30 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Developer;
+using GDX.Developer.Reports;
 using NUnit.Framework;
 
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable
 
-namespace Runtime.Developer
+namespace Runtime.Developer.Reports
 {
     /// <summary>
-    ///     A collection of unit tests to validate functionality of the <see cref="ResourcesReport"/> class.
+    ///     A collection of unit tests to validate functionality of the <see cref="ResourcesAudit"/> class.
     /// </summary>
-    public class ResourcesReportTests
+    public class ResourcesAuditTests
     {
         [Test]
         [Category("GDX.Tests")]
         public void Get_MockData_ReturnsObject()
         {
 
-            var state = ResourcesReport.Get(new []
+            var state = ResourcesAudit.Get(new []
             {
-                new ResourcesQuery( "UnityEngine.Texture2D,UnityEngine"),
-                new ResourcesQuery(
+                new ResourcesAudit.ResourcesQuery( "UnityEngine.Texture2D,UnityEngine"),
+                new ResourcesAudit.ResourcesQuery(
                     "UnityEngine.Texture3D,UnityEngine",
-                    GDX.Developer.ObjectInfos.TextureObjectInfo.TypeDefinition)
+                    GDX.Developer.Reports.Objects.TextureObjectInfo.TypeDefinition)
             });
 
             bool evaluate = state != null && state.KnownObjects.Count == 2;
@@ -36,7 +36,7 @@ namespace Runtime.Developer
         [Test]
         public void Output_GetCommon_ReturnsReport()
         {
-            var report = ResourcesReport.GetCommon().Output();
+            var report = ResourcesAudit.GetCommon().Output();
 
             bool evaluate = report != null && report.Length > 0;
 
@@ -47,7 +47,7 @@ namespace Runtime.Developer
         [Category("GDX.Tests")]
         public void Output_GetAll_ReturnsReport()
         {
-            var report = ResourcesReport.GetAll().Output();
+            var report = ResourcesAudit.GetAll().Output();
 
             bool evaluate = report != null && report.Length > 0;
 

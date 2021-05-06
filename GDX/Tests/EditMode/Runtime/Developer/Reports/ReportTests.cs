@@ -4,10 +4,10 @@
 
 using System.IO;
 using System.Text;
-using GDX.Developer;
+using GDX.Developer.Reports;
 using NUnit.Framework;
 
-namespace Runtime.Developer
+namespace Runtime.Developer.Reports
 {
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="Report"/> class.
@@ -16,34 +16,9 @@ namespace Runtime.Developer
     {
         [Test]
         [Category("GDX.Tests")]
-        public void CreateDivider_MockData_CorrectLength()
-        {
-
-            ReportContext context = new ReportContext();
-            string mockData = context.CreateDivider();
-
-            bool evaluate = mockData.Length == context.CharacterWidth;
-
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void CreateHeader_MockData_CorrectLength()
-        {
-            ReportContext context = new ReportContext();
-            string mockData = context.CreateHeader("My Name");
-
-            bool evaluate = mockData.Length == context.CharacterWidth;
-
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
         public void Output_MockData_StringBuilderSameAsStreamWriter()
         {
-            var report = ResourcesReport.GetCommon();
+            var report = ResourcesAudit.GetCommon();
 
             // String Builder
             StringBuilder builderString = new StringBuilder();

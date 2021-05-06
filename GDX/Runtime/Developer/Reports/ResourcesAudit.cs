@@ -7,22 +7,25 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using GDX.Collections.Generic;
-using GDX.Developer.ObjectInfos;
+using GDX.Developer.Reports.Objects;
+using GDX.Developer.Reports.Sections;
 using UnityEngine;
 using UnityEngine.Profiling;
 using Object = UnityEngine.Object;
 
-namespace GDX.Developer
+namespace GDX.Developer.Reports
 {
     /// <summary>
-    ///     An understanding of loaded <see cref="UnityEngine.Object" />.
+    ///     An audit of loaded <see cref="UnityEngine.Object" /> for queried types.
     /// </summary>
     /// <remarks>
     ///     Information is referenced to the target objects by a modified weak reference (<see cref="TransientReference" />),
     ///     thus this will not prevent garbage collection.
     /// </remarks>
-    public class ResourcesReport : Report
+    public class ResourcesAudit : Report
     {
+        public readonly ApplicationSection ApplicationContext = ApplicationSection.Get();
+
         /// <summary>
         ///     A collection of known (loaded in memory) <see cref="UnityEngine.Object" /> keyed by type.
         /// </summary>
@@ -34,20 +37,22 @@ namespace GDX.Developer
         /// </summary>
         public readonly Dictionary<Type, long> KnownUsage = new SerializableDictionary<Type, long>();
 
+        public readonly MemorySection MemoryContext = MemorySection.Get();
+
         /// <summary>
-        ///     The last time that the <see cref="ResourcesReport" /> has had a query of types.
+        ///     The last time that the <see cref="ResourcesAudit" /> has had a query of types.
         /// </summary>
         public DateTime LastTouched = DateTime.Now;
 
         /// <summary>
-        ///     The total number of objects which are known to the <see cref="ResourcesReport" />.
+        ///     The total number of objects which are known to the <see cref="ResourcesAudit" />.
         /// </summary>
         public int ObjectCount;
 
         /// <summary>
-        ///     Process to destroy a <see cref="ResourcesReport" />.
+        ///     Process to destroy a <see cref="ResourcesAudit" />.
         /// </summary>
-        ~ResourcesReport()
+        ~ResourcesAudit()
         {
             KnownObjects.Clear();
         }
@@ -66,7 +71,7 @@ namespace GDX.Developer
 
 
             // Add standard report information
-            ReportBuilder.AddInstanceInformation(this, context, builder);
+            ApplicationContext.Output(context, builder);
 
             // Custom header information
             builder.AppendLine(context.CreateKVP("Last Touched",
@@ -76,7 +81,7 @@ namespace GDX.Developer
             builder.AppendLine();
 
             // Add memory information
-            ReportBuilder.AddMemoryInformation(this, context, builder);
+            MemoryContext.Output(context, builder);
             builder.AppendLine();
 
             // We iterate over each defined type in the order they were added to the known objects
@@ -102,7 +107,7 @@ namespace GDX.Developer
                 // Output each item
                 for (int i = 0; i < count; i++)
                 {
-                    ReportBuilder.AddObjectInfoLine(newList[i], context, builder);
+                    newList[i].Output(context, builder);
                 }
 
                 builder.AppendLine();
@@ -148,7 +153,7 @@ namespace GDX.Developer
 
 
             // Build out using reflection (yes bad, but you choose this).
-            MethodInfo method = typeof(ResourcesReport).GetMethod(nameof(QueryForType));
+            MethodInfo method = typeof(ResourcesAudit).GetMethod(nameof(QueryForType));
 
             // Did we find the method?
             if (method is null)
@@ -256,64 +261,64 @@ namespace GDX.Developer
         }
 
         /// <summary>
-        ///     Generate a <see cref="ResourcesReport" /> for the provided <see cref="ResourcesQuery" /> array.
+        ///     Generate a <see cref="ResourcesAudit" /> for the provided <see cref="ResourcesQuery" /> array.
         /// </summary>
         /// <remarks>
         ///     This method uses reflection to generate the necessary typed parameters, its often more efficient to
         ///     create your own custom reports like in <see cref="GetCommon" />.
         /// </remarks>
         /// <param name="queries">A list of <see cref="ResourcesQuery" /> to generate a report from.</param>
-        /// <returns>A <see cref="ResourcesReport" /> containing the outlined types.</returns>
-        public static ResourcesReport Get(ResourcesQuery[] queries)
+        /// <returns>A <see cref="ResourcesAudit" /> containing the outlined types.</returns>
+        public static ResourcesAudit Get(ResourcesQuery[] queries)
         {
             // Create our collection object, this is going to effect memory based on its size
-            ResourcesReport resourcesReport = new ResourcesReport();
+            ResourcesAudit resourcesAudit = new ResourcesAudit();
 
             // Types to actual?
             int count = queries.Length;
             for (int i = 0; i < count; i++)
             {
-                resourcesReport.Query(queries[i]);
+                resourcesAudit.Query(queries[i]);
             }
 
-            return resourcesReport;
+            return resourcesAudit;
         }
 
         /// <summary>
-        ///     Get a <see cref="ResourcesReport" /> of all <see cref="UnityEngine.Object" />.
+        ///     Get a <see cref="ResourcesAudit" /> of all <see cref="UnityEngine.Object" />.
         /// </summary>
-        /// <returns>A <see cref="ResourcesReport" /> of all objects.</returns>
-        public static ResourcesReport GetAll()
+        /// <returns>A <see cref="ResourcesAudit" /> of all objects.</returns>
+        public static ResourcesAudit GetAll()
         {
-            ResourcesReport resourcesReport = new ResourcesReport();
-            resourcesReport.QueryForType<Object, ObjectInfo>();
-            return resourcesReport;
+            ResourcesAudit resourcesAudit = new ResourcesAudit();
+            resourcesAudit.QueryForType<Object, ObjectInfo>();
+            return resourcesAudit;
         }
 
         /// <summary>
-        ///     Get a <see cref="ResourcesReport" /> of a common subset of data which usually eats a large portion of
+        ///     Get a <see cref="ResourcesAudit" /> of a common subset of data which usually eats a large portion of
         ///     memory, and often can reveal memory leaks.
         /// </summary>
-        /// <returns>A <see cref="ResourcesReport" /> of textures, shaders, materials and animations.</returns>
-        public static ResourcesReport GetCommon()
+        /// <returns>A <see cref="ResourcesAudit" /> of textures, shaders, materials and animations.</returns>
+        public static ResourcesAudit GetCommon()
         {
             // Create our collection object, this is going to effect memory based on its size
-            ResourcesReport resourcesReport = new ResourcesReport();
+            ResourcesAudit resourcesAudit = new ResourcesAudit();
 
             // Sections
-            resourcesReport.QueryForType<RenderTexture, TextureObjectInfo>();
-            resourcesReport.QueryForType<Texture3D, TextureObjectInfo>();
-            resourcesReport.QueryForType<Texture2D, TextureObjectInfo>();
-            resourcesReport.QueryForType<Texture2DArray, TextureObjectInfo>();
-            resourcesReport.QueryForType<Cubemap, TextureObjectInfo>();
-            resourcesReport.QueryForType<CubemapArray, TextureObjectInfo>();
-            resourcesReport.QueryForType<Shader, ShaderObjectInfo>();
-            resourcesReport.QueryForType<Material, ObjectInfo>();
-            resourcesReport.QueryForType<Mesh, MeshObjectInfo>();
-            resourcesReport.QueryForType<AnimationClip, ObjectInfo>();
-            resourcesReport.QueryForType<AssetBundle, AssetBundleObjectInfo>();
+            resourcesAudit.QueryForType<RenderTexture, TextureObjectInfo>();
+            resourcesAudit.QueryForType<Texture3D, TextureObjectInfo>();
+            resourcesAudit.QueryForType<Texture2D, TextureObjectInfo>();
+            resourcesAudit.QueryForType<Texture2DArray, TextureObjectInfo>();
+            resourcesAudit.QueryForType<Cubemap, TextureObjectInfo>();
+            resourcesAudit.QueryForType<CubemapArray, TextureObjectInfo>();
+            resourcesAudit.QueryForType<Shader, ShaderObjectInfo>();
+            resourcesAudit.QueryForType<Material, ObjectInfo>();
+            resourcesAudit.QueryForType<Mesh, MeshObjectInfo>();
+            resourcesAudit.QueryForType<AnimationClip, ObjectInfo>();
+            resourcesAudit.QueryForType<AssetBundle, AssetBundleObjectInfo>();
 
-            return resourcesReport;
+            return resourcesAudit;
         }
 
         private static Type GetObjectInfoType(Type targetType)
@@ -344,6 +349,69 @@ namespace GDX.Developer
             }
 
             return typeof(ObjectInfo);
+        }
+
+        /// <summary>
+        ///     A structure that defines the string inputs necessary to query for loaded resources of a specific type.
+        /// </summary>
+        /// <remarks>
+        ///     This forces the path through reflection when querying; there are faster methods available. These queries are
+        ///     built ideally to support dynamic developer console calls.
+        /// </remarks>
+        public readonly struct ResourcesQuery
+        {
+            /// <summary>
+            ///     The fully qualified type that is going to be evaluated.
+            /// </summary>
+            /// <example>
+            ///     UnityEngine.Texture2D,UnityEngine
+            /// </example>
+            public readonly string TypeDefinition;
+
+            /// <summary>
+            ///     The fully qualified type that is going to be used to generate a report on the type.
+            /// </summary>
+            /// <example>
+            ///     GDX.Developer.Reports.ObjectInfo,GDX
+            /// </example>
+            public readonly string ObjectInfoTypeDefinition;
+
+
+            /// <summary>
+            ///     A <see cref="string.Contains" /> check against a <see cref="UnityEngine.Object" /> name.
+            /// </summary>
+            /// <example>
+            ///     Armor
+            /// </example>
+            public readonly string NameFilter;
+
+            /// <summary>
+            ///     Create a <see cref="ResourcesQuery" /> for the given <paramref name="typeDefinition" />, while
+            ///     attempting to use the provided <paramref name="objectInfoTypeDefinition" /> for report generation.
+            /// </summary>
+            /// <remarks>
+            ///     Uses the default <see cref="ObjectInfo" /> for report generation if
+            ///     <paramref name="objectInfoTypeDefinition" /> fails to qualify.
+            /// </remarks>
+            /// <param name="typeDefinition">The fully qualified type that is going to be evaluated.</param>
+            /// <param name="objectInfoTypeDefinition">
+            ///     The fully qualified type that is going to be used to generate a report on the
+            ///     type. If left null, system will attempt to find an appropriate info generator.
+            /// </param>
+            /// <param name="nameFilter">
+            ///     A string that must be contained in an objects name for it to be valid in the query.
+            /// </param>
+            /// <example>
+            ///     var queryTexture2D = new ResourcesQuery("UnityEngine.Texture2D,UnityEngine",
+            ///     "GDX.Developer.Reports.ObjectInfos.TextureObjectInfo,GDX", "Armor");
+            /// </example>
+            public ResourcesQuery(string typeDefinition, string objectInfoTypeDefinition = null,
+                string nameFilter = null)
+            {
+                TypeDefinition = typeDefinition;
+                ObjectInfoTypeDefinition = objectInfoTypeDefinition;
+                NameFilter = nameFilter;
+            }
         }
     }
 }

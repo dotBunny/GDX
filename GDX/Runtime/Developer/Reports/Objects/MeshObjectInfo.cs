@@ -4,11 +4,11 @@
 
 using UnityEngine;
 
-namespace GDX.Developer.ObjectInfos
+namespace GDX.Developer.Reports.Objects
 {
     public sealed class MeshObjectInfo : ObjectInfo
     {
-        public const string TypeDefinition = "GDX.Developer.ObjectInfos.MeshObjectInfo,GDX";
+        public const string TypeDefinition = "GDX.Developer.Reports.Objects.MeshObjectInfo,GDX";
         public bool IsReadable;
         public int SubMeshCount;
         public int Triangles;

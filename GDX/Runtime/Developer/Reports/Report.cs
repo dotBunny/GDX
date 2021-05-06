@@ -5,76 +5,11 @@
 using System;
 using System.IO;
 using System.Text;
-using UnityEngine;
-using UnityEngine.Profiling;
-using UnityEngine.SceneManagement;
 
-namespace GDX.Developer
+namespace GDX.Developer.Reports
 {
     public abstract class Report
     {
-        /// <summary>
-        ///     The name of the scene that was known to the <see cref="UnityEngine.SceneManagement" /> as being the active scene
-        ///     when this <see cref="ResourcesReport" /> was created.
-        /// </summary>
-        public string ActiveScene;
-
-        /// <summary>
-        ///     The time of creation for the <see cref="ResourcesReport" />.
-        /// </summary>
-        public readonly DateTime Created;
-
-        /// <summary>
-        ///     The size of the Mono heap when the <see cref="ResourcesReport" /> was created.
-        /// </summary>
-        /// <remarks>This is cached so that the <see cref="ResourcesReport" /> does not effect this value.</remarks>
-        public readonly long MonoHeapSize;
-
-        /// <summary>
-        ///     The amount of the Mono heap used when the <see cref="ResourcesReport" /> was created.
-        /// </summary>
-        /// <remarks>This is cached so that the <see cref="ResourcesReport" /> does not effect this value.</remarks>
-        public readonly long MonoUsedSize;
-
-        /// <summary>
-        ///     The platform that the <see cref="ResourcesReport" /> was created on.
-        /// </summary>
-        public readonly RuntimePlatform Platform;
-
-        /// <summary>
-        ///     Unity's allocated native memory for the graphics driver (in bytes).
-        /// </summary>
-        public readonly long UnityGraphicsDriverAllocatedMemory;
-
-        /// <summary>
-        ///     Unity's total allocated memory (in bytes).
-        /// </summary>
-        public readonly long UnityTotalAllocatedMemory;
-
-        /// <summary>
-        ///     Unity's total reserved memory (in bytes).
-        /// </summary>
-        public readonly long UnityTotalReservedMemory;
-
-        /// <summary>
-        ///     Unity's total unused reserved memory (in bytes).
-        /// </summary>
-        public readonly long UnityTotalUnusedReservedMemory;
-
-        protected Report()
-        {
-            ActiveScene = SceneManager.GetActiveScene().name;
-            Platform = Application.platform;
-            MonoUsedSize = Profiler.GetMonoUsedSizeLong();
-            MonoHeapSize = Profiler.GetMonoHeapSizeLong();
-            Created = DateTime.Now;
-
-            UnityTotalAllocatedMemory = Profiler.GetTotalAllocatedMemoryLong();
-            UnityTotalReservedMemory = Profiler.GetTotalReservedMemoryLong();
-            UnityGraphicsDriverAllocatedMemory = Profiler.GetAllocatedMemoryForGraphicsDriver();
-            UnityTotalUnusedReservedMemory = Profiler.GetTotalUnusedReservedMemoryLong();
-        }
-
         /// <summary>
         ///     Output the report format as an array of <see cref="string" />.
         /// </summary>
@@ -85,7 +20,7 @@ namespace GDX.Developer
         {
             StringBuilder builder = new StringBuilder();
             return Output(builder, context)
-                ? builder.ToString().Split(ReportBuilder.NewLineSplit, StringSplitOptions.None)
+                ? builder.ToString().Split(ReportExtensions.NewLineSplit, StringSplitOptions.None)
                 : null;
         }
 

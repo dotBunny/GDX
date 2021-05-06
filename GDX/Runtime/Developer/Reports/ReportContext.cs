@@ -2,7 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-namespace GDX.Developer
+namespace GDX.Developer.Reports
 {
     public sealed class ReportContext
     {

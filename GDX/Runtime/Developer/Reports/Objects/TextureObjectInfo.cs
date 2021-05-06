@@ -5,11 +5,11 @@
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 
-namespace GDX.Developer.ObjectInfos
+namespace GDX.Developer.Reports.Objects
 {
     public sealed class TextureObjectInfo : ObjectInfo
     {
-        public const string TypeDefinition = "GDX.Developer.ObjectInfos.TextureObjectInfo,GDX";
+        public const string TypeDefinition = "GDX.Developer.Reports.Objects.TextureObjectInfo,GDX";
 #if UNITY_2019_1_OR_NEWER
         public GraphicsFormat Format;
 #endif

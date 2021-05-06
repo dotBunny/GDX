@@ -3,12 +3,11 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using GDX.Developer.ObjectInfos;
-using UnityEngine;
+using System.Text;
 using UnityEngine.Profiling;
 using Object = UnityEngine.Object;
 
-namespace GDX.Developer
+namespace GDX.Developer.Reports.Objects
 {
     /// <summary>
     ///     An information storage object for a target <see cref="object" />.
@@ -18,7 +17,7 @@ namespace GDX.Developer
         /// <summary>
         ///     The fully qualified reflection definition of the <see cref="ObjectInfo" />.
         /// </summary>
-        public const string TypeDefinition = "GDX.Developer.ObjectInfo,GDX";
+        public const string TypeDefinition = "GDX.Developer.Reports.Objects.ObjectInfo,GDX";
 
         /// <summary>
         ///     The number of copies of the <see cref="Reference" /> object known by Unity.
@@ -99,6 +98,39 @@ namespace GDX.Developer
                 return -1;
             }
             return 1;
+        }
+
+
+        public void Output(ReportContext context, StringBuilder builder)
+        {
+            string typeName = Type.Name.PadRight(context.ObjectTypeWidth);
+            if (typeName.Length > context.ObjectTypeWidth)
+            {
+                typeName = typeName.Substring(0, context.ObjectTypeWidth);
+            }
+
+            string objectName = Name.PadRight(context.ObjectNameWidth);
+            if (objectName.Length > context.ObjectNameWidth)
+            {
+                objectName = objectName.Substring(0, context.ObjectNameWidth);
+            }
+
+            string sizeInfo =
+                $"{Localization.GetHumanReadableFileSize(MemoryUsage)} x {CopyCount.ToString()}".PadRight(
+                    context.ObjectSizeWidth);
+            if (sizeInfo.Length > context.ObjectSizeWidth)
+            {
+                sizeInfo = sizeInfo.Substring(0, context.ObjectSizeWidth);
+            }
+
+
+            // Additional information
+            string additionalInfo = GetDetailedInformation(context.ObjectInfoWidth);
+
+            // Add to builder
+            builder.AppendLine( additionalInfo != null
+                ? $"{typeName} {objectName} {sizeInfo} {additionalInfo}"
+                : $"{typeName} {objectName} {sizeInfo}");
         }
 
 

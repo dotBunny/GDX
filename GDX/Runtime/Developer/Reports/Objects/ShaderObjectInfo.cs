@@ -4,11 +4,11 @@
 
 using UnityEngine;
 
-namespace GDX.Developer.ObjectInfos
+namespace GDX.Developer.Reports.Objects
 {
     public sealed class ShaderObjectInfo : ObjectInfo
     {
-        public const string TypeDefinition = "GDX.Developer.ObjectInfos.ShaderObjectInfo,GDX";
+        public const string TypeDefinition = "GDX.Developer.Reports.Objects.ShaderObjectInfo,GDX";
         public bool IsSupported;
 
 #if UNITY_2019_1_OR_NEWER
