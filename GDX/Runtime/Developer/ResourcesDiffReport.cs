@@ -2,79 +2,88 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+using System.Collections.Generic;
+using GDX.Collections.Generic;
+
 namespace GDX.Developer
 {
     public class ResourcesDiffReport
     {
-        public int ObjectCount;
-        public float ObjectCountChange;
-        public long MonoUsedSize;
-        public float MonoUsedSizeChange;
-        public long MonoHeapSize;
-        public float MonoHeapSizeChange;
-        public long UnityTotalAllocatedMemory;
-        public float UnityTotalAllocatedMemoryChange;
-        public long UnityTotalReservedMemory;
-        public float UnityTotalReservedMemoryChange;
-        public long UnityGraphicsDriverAllocatedMemory;
-        public float UnityGraphicsDriverAllocatedMemoryChange;
-        public long UnityTotalUnusedReservedMemory;
-        public float UnityTotalUnusedReservedMemoryChange;
+        public readonly LongDiff MonoHeapSize;
+        public readonly LongDiff MonoUsedSize;
+        public readonly IntegerDiff ObjectCount;
+        public readonly LongDiff UnityGraphicsDriverAllocated;
+        public readonly LongDiff UnityTotalAllocatedMemory;
+        public readonly LongDiff UnityTotalReservedMemory;
+        public readonly LongDiff UnityTotalUnusedReservedMemory;
 
-        public static ResourcesDiffReport Generate(ResourcesReport lhs, ResourcesReport rhs)
+        public readonly Dictionary<Type, LongDiff> KnownUsage = new SerializableDictionary<Type, LongDiff>();
+
+        public readonly Dictionary<Type, Dictionary<TransientReference, ObjectInfo>> AddedObjects =
+            new Dictionary<Type, Dictionary<TransientReference, ObjectInfo>>();
+        public readonly Dictionary<Type, Dictionary<TransientReference, ObjectInfo>> CommonObjects =
+            new Dictionary<Type, Dictionary<TransientReference, ObjectInfo>>();
+        public readonly Dictionary<Type, Dictionary<TransientReference, ObjectInfo>> RemovedObjects =
+            new Dictionary<Type, Dictionary<TransientReference, ObjectInfo>>();
+
+        public ResourcesDiffReport(ResourcesReport lhs, ResourcesReport rhs)
         {
-            ResourcesDiffReport returnReport = new ResourcesDiffReport();
-
             // Simple difference values
-            returnReport.ObjectCount = rhs.ObjectCount - lhs.ObjectCount;
-            returnReport.ObjectCountChange = rhs.ObjectCount / lhs.ObjectCount;
-            returnReport.MonoUsedSize = rhs.MonoUsedSize - lhs.MonoUsedSize;
-            returnReport.MonoUsedSizeChange = rhs.MonoUsedSize / lhs.MonoUsedSize;
-            returnReport.MonoHeapSize = rhs.MonoHeapSize - lhs.MonoHeapSize;
-            returnReport.MonoHeapSizeChange = rhs.MonoHeapSize / lhs.MonoHeapSize;
-            returnReport.UnityTotalAllocatedMemory = rhs.UnityTotalAllocatedMemory - lhs.UnityTotalAllocatedMemory;
-            returnReport.UnityTotalAllocatedMemoryChange = rhs.UnityTotalAllocatedMemory / lhs.UnityTotalAllocatedMemory;
-            returnReport.UnityTotalReservedMemory = rhs.UnityTotalReservedMemory - lhs.UnityTotalReservedMemory;
-            returnReport.UnityTotalReservedMemoryChange = rhs.UnityTotalReservedMemory / lhs.UnityTotalReservedMemory;
-            returnReport.UnityGraphicsDriverAllocatedMemory =
-                rhs.UnityGraphicsDriverAllocatedMemory - lhs.UnityGraphicsDriverAllocatedMemory;
-            returnReport.UnityGraphicsDriverAllocatedMemoryChange =
-                rhs.UnityGraphicsDriverAllocatedMemory / lhs.UnityGraphicsDriverAllocatedMemory;
-            returnReport.UnityTotalUnusedReservedMemory =
-                rhs.UnityTotalUnusedReservedMemory - lhs.UnityTotalUnusedReservedMemory;
-            returnReport.UnityTotalUnusedReservedMemoryChange =
-                rhs.UnityTotalUnusedReservedMemory / lhs.UnityTotalUnusedReservedMemory;
+            ObjectCount = new IntegerDiff(lhs.ObjectCount, rhs.ObjectCount);
+            MonoUsedSize = new LongDiff(lhs.MonoUsedSize, rhs.MonoUsedSize);
+            MonoHeapSize = new LongDiff(lhs.MonoHeapSize, rhs.MonoHeapSize);
+            UnityTotalAllocatedMemory = new LongDiff(lhs.UnityTotalAllocatedMemory, rhs.UnityTotalAllocatedMemory);
+            UnityTotalReservedMemory = new LongDiff(lhs.UnityTotalReservedMemory, rhs.UnityTotalReservedMemory);
+            UnityTotalUnusedReservedMemory = new LongDiff(lhs.UnityTotalUnusedReservedMemory, lhs.UnityTotalUnusedReservedMemory);
+            UnityGraphicsDriverAllocated = new LongDiff(lhs.UnityGraphicsDriverAllocatedMemory, rhs.UnityGraphicsDriverAllocatedMemory);
 
             // Known Usage Changes
+            foreach (var kvp in lhs.KnownUsage)
+            {
+                KnownUsage.Add(kvp.Key,
+                    rhs.KnownUsage.ContainsKey(kvp.Key)
+                        ? new LongDiff(kvp.Value, rhs.KnownUsage[kvp.Key])
+                        : new LongDiff(kvp.Value, 0));
+            }
+            foreach (var kvp in rhs.KnownUsage)
+            {
+                if (!lhs.KnownUsage.ContainsKey(kvp.Key))
+                {
+                    KnownUsage.Add(kvp.Key, new LongDiff(0, kvp.Value));
+                }
+            }
 
-            //
-            // // Calculate Known Usage Changes
-            // foreach (var kvp in lhs.KnownUsage)
-            // {
-            //     if (rhs.KnownUsage.ContainsKey(kvp.Key))
-            //     {
-            //         returnReport.KnownUsage.Add(kvp.Key, rhs.KnownUsage[kvp.Key] - kvp.Value);
-            //     }
-            //     else
-            //     {
-            //         returnReport.KnownUsage.Add(kvp.Key, -kvp.Value);
-            //     }
-            // }
-            // foreach (var kvp in rhs.KnownUsage)
-            // {
-            //     if (!lhs.KnownUsage.ContainsKey(kvp.Key))
-            //     {
-            //         returnReport.KnownUsage.Add(kvp.Key, kvp.Value);
-            //     }
-            // }
-            //
-            // // Figure out Known Objects
+
+            // Known Objects
             // foreach (var kvpType in lhs.KnownObjects)
             // {
             //
             // }
+        }
 
-            return returnReport;
+        public struct IntegerDiff
+        {
+            public float Percentage;
+            public int Change;
+
+            public IntegerDiff(int lhs, int rhs)
+            {
+                Percentage = rhs / lhs;
+                Change = rhs - lhs;
+            }
+        }
+
+        public struct LongDiff
+        {
+            public float Percentage;
+            public long Change;
+
+            public LongDiff(long lhs, long rhs)
+            {
+                Percentage = rhs / lhs;
+                Change = rhs - lhs;
+            }
         }
     }
 }
