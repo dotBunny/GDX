@@ -8,11 +8,23 @@ namespace GDX.Developer.Reports
     {
         public readonly float Percentage;
         public readonly long Change;
+        public readonly long A;
+        public readonly long B;
 
         public LongDiff(long lhs, long rhs)
         {
-            Percentage = rhs / lhs;
+            A = lhs;
+            B = rhs;
+
             Change = rhs - lhs;
+            if (lhs == 0)
+            {
+                Percentage = Change;
+            }
+            else
+            {
+                Percentage = Change / lhs;
+            }
         }
     }
 }

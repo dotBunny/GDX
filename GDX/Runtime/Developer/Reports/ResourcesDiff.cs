@@ -41,7 +41,6 @@ namespace GDX.Developer.Reports
                         ? new LongDiff(kvp.Value, rhs.KnownUsage[kvp.Key])
                         : new LongDiff(kvp.Value, 0));
             }
-
             foreach (KeyValuePair<Type, long> kvp in rhs.KnownUsage)
             {
                 if (!lhs.KnownUsage.ContainsKey(kvp.Key))
@@ -50,12 +49,106 @@ namespace GDX.Developer.Reports
                 }
             }
 
+            // Known Objects - Start on right hand side
+            foreach (var kvpType in lhs.KnownObjects)
+            {
+                // Lets just add something ahead to be safe
+                if (!AddedObjects.ContainsKey(kvpType.Key))
+                {
+                    AddedObjects.Add(kvpType.Key, new Dictionary<TransientReference, ObjectInfo>());
+                }
+                if (!RemovedObjects.ContainsKey(kvpType.Key))
+                {
+                    RemovedObjects.Add(kvpType.Key, new Dictionary<TransientReference, ObjectInfo>());
+                }
+                if (!CommonObjects.ContainsKey(kvpType.Key))
+                {
+                    CommonObjects.Add(kvpType.Key, new Dictionary<TransientReference, ObjectInfo>());
+                }
 
-            // Known Objects
-            // foreach (var kvpType in lhs.KnownObjects)
-            // {
-            //
-            // }
+                // RHS Dictionary?
+                Dictionary<TransientReference, ObjectInfo> rhsKnownObjects = null;
+                if (rhs.KnownObjects.ContainsKey(kvpType.Key))
+                {
+                    rhsKnownObjects = rhs.KnownObjects[kvpType.Key];
+                }
+
+                // Iterate over everything in the left hand side
+                foreach (var knownObject in kvpType.Value)
+                {
+                    // None of this type in the right, means removed
+                    if (rhsKnownObjects == null)
+                    {
+                        RemovedObjects[kvpType.Key].Add(knownObject.Key, knownObject.Value);
+                    }
+                    else
+                    {
+                        if (rhsKnownObjects.ContainsKey(knownObject.Key))
+                        {
+                            ObjectInfo clone = rhsKnownObjects[knownObject.Key].Clone();
+                            clone.CopyCount = clone.CopyCount - knownObject.Value.CopyCount;
+
+                            CommonObjects[kvpType.Key].Add(knownObject.Key, clone);
+                        }
+                        else
+                        {
+                            RemovedObjects[kvpType.Key].Add(knownObject.Key, knownObject.Value);
+                        }
+
+                    }
+                }
+            }
+
+            // Iterate over rhs for added
+            foreach (var kvpType in rhs.KnownObjects)
+            {
+                if (!lhs.KnownObjects.ContainsKey(kvpType.Key))
+                {
+                    AddedObjects.Add(kvpType.Key, new Dictionary<TransientReference, ObjectInfo>());
+                    // Iterate over everything in the left hand side
+                    foreach (var knownObject in kvpType.Value)
+                    {
+                        AddedObjects[kvpType.Key].Add(knownObject.Key, knownObject.Value);
+                    }
+                }
+            }
+
+            List<Type> removeType = new List<Type>();
+            foreach (var kvpType in AddedObjects)
+            {
+                if (kvpType.Value.Count == 0)
+                {
+                    removeType.Add(kvpType.Key);
+                }
+            }
+            foreach (var type in removeType)
+            {
+                AddedObjects.Remove(type);
+            }
+            removeType.Clear();
+            foreach (var kvpType in RemovedObjects)
+            {
+                if (kvpType.Value.Count == 0)
+                {
+                    removeType.Add(kvpType.Key);
+                }
+            }
+            foreach (var type in removeType)
+            {
+                RemovedObjects.Remove(type);
+            }
+            removeType.Clear();
+            foreach (var kvpType in CommonObjects)
+            {
+                if (kvpType.Value.Count == 0)
+                {
+                    removeType.Add(kvpType.Key);
+                }
+            }
+            foreach (var type in removeType)
+            {
+                CommonObjects.Remove(type);
+            }
         }
     }
 }

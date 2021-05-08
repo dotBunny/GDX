@@ -8,11 +8,24 @@ namespace GDX.Developer.Reports
     {
         public readonly float Percentage;
         public readonly int Change;
+        public readonly int A;
+        public readonly int B;
 
         public IntegerDiff(int lhs, int rhs)
         {
-            Percentage = rhs / lhs;
+            A = lhs;
+            B = rhs;
+
+
             Change = rhs - lhs;
+            if (lhs == 0)
+            {
+                Percentage = Change;
+            }
+            else
+            {
+                Percentage = Change / lhs;
+            }
         }
     }
 

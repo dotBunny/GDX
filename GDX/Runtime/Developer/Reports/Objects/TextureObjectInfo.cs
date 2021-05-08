@@ -18,6 +18,29 @@ namespace GDX.Developer.Reports.Objects
         public bool IsReadable;
         public int Width;
 
+        /// <summary>
+        /// Create a clone of this object.
+        /// </summary>
+        /// <returns></returns>
+        public override ObjectInfo Clone()
+        {
+            return new TextureObjectInfo()
+            {
+                CopyCount = this.CopyCount,
+                MemoryUsage = this.MemoryUsage,
+                Name = this.Name,
+                Reference = this.Reference,
+                TotalMemoryUsage = this.TotalMemoryUsage,
+                Type = this.Type,
+                Height = this.Height,
+                IsReadable = this.IsReadable,
+                Width = this.Width,
+#if UNITY_2019_1_OR_NEWER
+                Format = this.Format
+#endif
+            };
+        }
+
         public override void Populate(Object targetObject, TransientReference reference = null)
         {
             base.Populate(targetObject, reference);

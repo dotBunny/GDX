@@ -13,6 +13,25 @@ namespace GDX.Developer.Reports.Objects
         public bool IsStreamedSceneAssetBundle;
         public int AssetCount;
 
+        /// <summary>
+        /// Create a clone of this object.
+        /// </summary>
+        /// <returns></returns>
+        public override ObjectInfo Clone()
+        {
+            return new AssetBundleObjectInfo()
+            {
+                CopyCount = this.CopyCount,
+                MemoryUsage = this.MemoryUsage,
+                Name = this.Name,
+                Reference = this.Reference,
+                TotalMemoryUsage = this.TotalMemoryUsage,
+                Type = this.Type,
+                IsStreamedSceneAssetBundle =  this.IsStreamedSceneAssetBundle,
+                AssetCount = this.AssetCount
+            };
+        }
+
         public override void Populate(Object targetObject, TransientReference reference = null)
         {
             base.Populate(targetObject, reference);

@@ -15,6 +15,27 @@ namespace GDX.Developer.Reports.Objects
         public int PassCount;
 #endif
 
+        /// <summary>
+        /// Create a clone of this object.
+        /// </summary>
+        /// <returns></returns>
+        public override ObjectInfo Clone()
+        {
+            return new ShaderObjectInfo()
+            {
+                CopyCount = this.CopyCount,
+                MemoryUsage = this.MemoryUsage,
+                Name = this.Name,
+                Reference = this.Reference,
+                TotalMemoryUsage = this.TotalMemoryUsage,
+                Type = this.Type,
+                IsSupported = this.IsSupported,
+#if UNITY_2019_1_OR_NEWER
+                PassCount = this.PassCount
+#endif
+            };
+        }
+
         public override void Populate(Object targetObject, TransientReference reference = null)
         {
             base.Populate(targetObject, reference);

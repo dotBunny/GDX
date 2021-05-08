@@ -50,6 +50,23 @@ namespace GDX.Developer.Reports.Objects
         public Type Type;
 
         /// <summary>
+        /// Create a clone of this object.
+        /// </summary>
+        /// <returns></returns>
+        public virtual ObjectInfo Clone()
+        {
+            return new ObjectInfo()
+            {
+                CopyCount = this.CopyCount,
+                MemoryUsage = this.MemoryUsage,
+                Name = this.Name,
+                Reference = this.Reference,
+                TotalMemoryUsage = this.TotalMemoryUsage,
+                Type = this.Type
+            };
+        }
+
+        /// <summary>
         ///     Get additional information about the specific <see cref="Reference" />.
         /// </summary>
         /// <returns>A <see cref="string" /> of additional information.</returns>

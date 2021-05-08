@@ -13,6 +13,26 @@ namespace GDX.Developer.Reports.Objects
         public int SubMeshCount;
         public int Triangles;
 
+        /// <summary>
+        /// Create a clone of this object.
+        /// </summary>
+        /// <returns></returns>
+        public override ObjectInfo Clone()
+        {
+            return new MeshObjectInfo()
+            {
+                CopyCount = this.CopyCount,
+                MemoryUsage = this.MemoryUsage,
+                Name = this.Name,
+                Reference = this.Reference,
+                TotalMemoryUsage = this.TotalMemoryUsage,
+                Type = this.Type,
+                IsReadable =  this.IsReadable,
+                SubMeshCount = this.SubMeshCount,
+                Triangles =  this.Triangles
+            };
+        }
+
         public int VertexCount;
 
         public override void Populate(Object targetObject, TransientReference reference = null)
