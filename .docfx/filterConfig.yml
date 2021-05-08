@@ -32,3 +32,6 @@ apiRules:
 - exclude:
       uidRegex: ^GDX\.Editor\.PropertyDrawers 
       type: Namespace 
+- exclude:
+      uidRegex: ^GDX\.Developer\.Reports\.Sections
+      type: Namespace       
