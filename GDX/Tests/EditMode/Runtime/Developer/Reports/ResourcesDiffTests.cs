@@ -1,4 +1,5 @@
 ﻿using GDX.Developer.Reports;
+using GDX.Developer.Reports.Objects;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -27,17 +28,16 @@ namespace Runtime.Developer.Reports
 
         [Test]
         [Category("GDX.Tests")]
-        public void Output_GetCommon_GetAll_ReturnsReport()
+        public void Output_GetCommonAndAll_ReturnsReport()
         {
             var lhs = ResourcesAudit.GetCommon();
             var rhs = ResourcesAudit.GetAll();
             var diff = new ResourcesDiff(lhs, rhs);
             string[] report = diff.Output();
-            
+
             bool evaluate = report != null && report.Length > 0;
 
             Assert.IsTrue(evaluate);
         }
-
     }
 }
