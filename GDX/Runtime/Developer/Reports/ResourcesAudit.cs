@@ -67,8 +67,7 @@ namespace GDX.Developer.Reports
             }
 
             // Create header
-            builder.AppendLine(context.CreateHeader("START: Resources Report"));
-
+            builder.AppendLine(context.CreateHeader("START: Resources Audit Report"));
 
             // Add standard report information
             ApplicationContext.Output(context, builder);
@@ -114,7 +113,7 @@ namespace GDX.Developer.Reports
             }
 
             // Footer
-            builder.AppendLine(context.CreateHeader("END: Resources Report"));
+            builder.AppendLine(context.CreateHeader("END: Resources Audit Report"));
 
             return true;
         }
@@ -148,7 +147,7 @@ namespace GDX.Developer.Reports
 
             if (objectInfoActual == null)
             {
-                objectInfoActual = GetObjectInfoType(typeActual);
+                objectInfoActual = ObjectInfoFactory.GetObjectInfoType(typeActual);
             }
 
 
@@ -319,36 +318,6 @@ namespace GDX.Developer.Reports
             resourcesAudit.QueryForType<AssetBundle, AssetBundleObjectInfo>();
 
             return resourcesAudit;
-        }
-
-        private static Type GetObjectInfoType(Type targetType)
-        {
-            if (targetType == typeof(Texture2D) ||
-                targetType == typeof(Texture3D) ||
-                targetType == typeof(Texture2DArray) ||
-                targetType == typeof(RenderTexture) ||
-                targetType == typeof(Cubemap) ||
-                targetType == typeof(CubemapArray))
-            {
-                return typeof(TextureObjectInfo);
-            }
-
-            if (targetType == typeof(Mesh))
-            {
-                return typeof(MeshObjectInfo);
-            }
-
-            if (targetType == typeof(Shader))
-            {
-                return typeof(ShaderObjectInfo);
-            }
-
-            if (targetType == typeof(AssetBundle))
-            {
-                return typeof(AssetBundleObjectInfo);
-            }
-
-            return typeof(ObjectInfo);
         }
 
         /// <summary>

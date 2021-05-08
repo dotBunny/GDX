@@ -1,5 +1,6 @@
 ﻿using GDX.Developer.Reports;
 using NUnit.Framework;
+using UnityEngine;
 
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable
@@ -23,5 +24,22 @@ namespace Runtime.Developer.Reports
 
             Assert.IsTrue(evaluate);
         }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void Output_GetCommon_GetAll_ReturnsReport()
+        {
+            var lhs = ResourcesAudit.GetCommon();
+            var rhs = ResourcesAudit.GetAll();
+            var diff = new ResourcesDiff(lhs, rhs);
+            string[] report = diff.Output();
+
+            System.IO.File.WriteAllLines(System.IO.Path.Combine(Application.dataPath, "test.txt"), report);
+
+            bool evaluate = report != null && report.Length > 0;
+
+            Assert.IsTrue(evaluate);
+        }
+
     }
 }

@@ -4,13 +4,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using GDX.Collections.Generic;
 using GDX.Developer.Reports.Objects;
 using GDX.Developer.Reports.Sections;
 
 namespace GDX.Developer.Reports
 {
-    public class ResourcesDiff
+    public class ResourcesDiff : Report
     {
         public readonly Dictionary<Type, Dictionary<TransientReference, ObjectInfo>> AddedObjects =
             new Dictionary<Type, Dictionary<TransientReference, ObjectInfo>>();
@@ -148,6 +149,73 @@ namespace GDX.Developer.Reports
             foreach (var type in removeType)
             {
                 CommonObjects.Remove(type);
+            }
+        }
+
+        /// <inheritdoc />
+        public override bool Output(StringBuilder builder, ReportContext context = null)
+        {
+            // We need to make the context if its not provided
+            if (context == null)
+            {
+                context = new ReportContext();
+            }
+
+            // Create header
+            builder.AppendLine(context.CreateHeader("START: Resources Diff Report"));
+
+            // Custom header information
+            builder.AppendLine(context.CreateKVP("Total Objects", ObjectCount.GetOutput(context)));
+            builder.AppendLine();
+            foreach (KeyValuePair<Type, LongDiff> typeKVP in KnownUsage)
+            {
+                builder.AppendLine(context.CreateKVP(typeKVP.Key.ToString(), typeKVP.Value.GetSizeOutput(context)));
+            }
+            builder.AppendLine();
+
+            // Add memory information
+            MemoryContext.Output(context, builder);
+            builder.AppendLine();
+
+            builder.AppendLine(context.CreateHeader("Added Objects"));
+            OutputObjectInfos(builder, context, AddedObjects);
+
+            builder.AppendLine(context.CreateHeader("Common Objects"));
+            OutputObjectInfos(builder, context, CommonObjects);
+
+            builder.AppendLine(context.CreateHeader("Removed Objects"));
+            OutputObjectInfos(builder, context, RemovedObjects);
+
+            // Footer
+            builder.AppendLine(context.CreateHeader("END: Resources Diff Report"));
+
+            return true;
+        }
+
+        private void OutputObjectInfos(StringBuilder builder, ReportContext context, Dictionary<Type, Dictionary<TransientReference, ObjectInfo>> targetObjects)
+        {
+            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> typeKVP in targetObjects)
+            {
+                int count = typeKVP.Value.Count;
+
+                builder.AppendLine(context.CreateHeader($"{typeKVP.Key.ToString()} [{count.ToString()}] ", '-'));
+
+                // Sort the known objects based on size as that's the most useful context to have them listed
+                List<ObjectInfo> newList = new List<ObjectInfo>(count);
+                foreach (KeyValuePair<TransientReference, ObjectInfo> objectKVP in typeKVP.Value)
+                {
+                    newList.Add(objectKVP.Value);
+                }
+
+                newList.Sort();
+
+                // Output each item
+                for (int i = 0; i < count; i++)
+                {
+                    newList[i].Output(context, builder);
+                }
+
+                builder.AppendLine();
             }
         }
     }

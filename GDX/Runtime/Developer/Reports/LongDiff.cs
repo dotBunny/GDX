@@ -2,19 +2,21 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using UnityEngine;
+
 namespace GDX.Developer.Reports
 {
     public readonly struct LongDiff
     {
         public readonly float Percentage;
         public readonly long Change;
-        public readonly long A;
-        public readonly long B;
+        public readonly long LeftHandSide;
+        public readonly long RightHandSide;
 
         public LongDiff(long lhs, long rhs)
         {
-            A = lhs;
-            B = rhs;
+            LeftHandSide = lhs;
+            RightHandSide = rhs;
 
             Change = rhs - lhs;
             if (lhs == 0)
@@ -23,8 +25,60 @@ namespace GDX.Developer.Reports
             }
             else
             {
-                Percentage = Change / lhs;
+                Percentage = 100f * (Change / lhs);
             }
+        }
+
+        public string GetSizeOutput(ReportContext context, bool fileSize = true, bool fullWidth = false)
+        {
+            if (Change == 0)
+            {
+                return GetBeforeAndAfterOutput();
+            }
+
+            // We dont have an idea of the width
+            if (!fullWidth && context != null)
+            {
+                return fileSize
+                    ? $"{GetBeforeAndAfterOutput().PadRight(context.KeyValuePairInfoWidth)} {ReportExtensions.PositiveSign(Change)}{Localization.GetHumanReadableFileSize(Change).PadRight(12)} {OptionalPercentageOutput()}"
+                    : $"{GetBeforeAndAfterOutput().PadRight(context.KeyValuePairInfoWidth)} {ReportExtensions.PositiveSign(Change)}{Change.ToString().PadRight(12)} {OptionalPercentageOutput()}";
+            }
+
+            if (fileSize)
+            {
+                return LeftHandSide == 0
+                    ? $"{GetBeforeAndAfterOutput()} = {ReportExtensions.PositiveSign(Change)}{Localization.GetHumanReadableFileSize(Change)}"
+                    : $"{GetBeforeAndAfterOutput()} = {ReportExtensions.PositiveSign(Change)}{Localization.GetHumanReadableFileSize(Change).PadRight(12)} {OptionalPercentageOutput()}";
+            }
+
+            return LeftHandSide == 0
+                ? $"{GetBeforeAndAfterOutput()} = {ReportExtensions.PositiveSign(Change)}{Change.ToString()}"
+                : $"{GetBeforeAndAfterOutput()} = {ReportExtensions.PositiveSign(Change)}{Change.ToString().PadRight(12)} {OptionalPercentageOutput()}";
+        }
+
+        private string GetBeforeAndAfterOutput()
+        {
+            return $"{LeftHandSide.ToString()} => {RightHandSide.ToString()}";
+        }
+
+        private string OptionalPercentageOutput()
+        {
+            if (LeftHandSide == 0)
+            {
+                return null;
+            }
+
+            if (Percentage > 0)
+            {
+                return $" +{Mathf.RoundToInt(Percentage).ToString()}%";
+            }
+
+            if (Percentage < 0)
+            {
+                return $" {Mathf.RoundToInt(Percentage).ToString()}%";
+            }
+
+            return null;
         }
     }
 }

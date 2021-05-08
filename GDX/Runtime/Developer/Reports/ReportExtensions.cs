@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace GDX.Developer.Reports
@@ -67,9 +68,22 @@ namespace GDX.Developer.Reports
             return workingLine;
         }
 
-        public static string CreateYesNo(this bool flag)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string CreateYesNo(bool flag)
         {
             return flag ? "Y" : "N";
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string PositiveSign(long targetValue)
+        {
+            return targetValue > 0 ? "+" : null;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string PositiveSign(int targetValue)
+        {
+            return targetValue > 0 ? "+" : null;
         }
     }
 }

@@ -34,6 +34,7 @@ namespace Runtime.Developer.Reports
         }
 
         [Test]
+        [Category("GDX.Tests")]
         public void Output_GetCommon_ReturnsReport()
         {
             var report = ResourcesAudit.GetCommon().Output();

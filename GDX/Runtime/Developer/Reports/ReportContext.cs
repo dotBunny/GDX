@@ -8,6 +8,7 @@ namespace GDX.Developer.Reports
     {
         public readonly int CharacterWidth;
         public readonly int KeyValuePairWidth;
+        public readonly int KeyValuePairInfoWidth;
 
         public readonly int ObjectTypeWidth;
         public readonly int ObjectNameWidth;
@@ -18,6 +19,7 @@ namespace GDX.Developer.Reports
         {
             CharacterWidth = characterWidth;
             KeyValuePairWidth = characterWidth / 3;
+            KeyValuePairInfoWidth = (CharacterWidth - KeyValuePairWidth) / 2;
 
             float percent = characterWidth / 100f;
 

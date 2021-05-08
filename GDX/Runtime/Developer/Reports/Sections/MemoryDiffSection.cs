@@ -2,6 +2,8 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System.Text;
+
 namespace GDX.Developer.Reports.Sections
 {
     public readonly struct MemoryDiffSection
@@ -22,7 +24,7 @@ namespace GDX.Developer.Reports.Sections
             UnityTotalReservedMemory =
                 new LongDiff(lhs.UnityTotalReservedMemory, rhs.UnityTotalReservedMemory);
             UnityTotalUnusedReservedMemory = new LongDiff(lhs.UnityTotalUnusedReservedMemory,
-                lhs.UnityTotalUnusedReservedMemory);
+                rhs.UnityTotalUnusedReservedMemory);
             UnityGraphicsDriverAllocated = new LongDiff(lhs.UnityGraphicsDriverAllocatedMemory,
                 rhs.UnityGraphicsDriverAllocatedMemory);
         }
@@ -32,5 +34,24 @@ namespace GDX.Developer.Reports.Sections
             return new MemoryDiffSection(lhs, rhs);
         }
 
+        public void Output(ReportContext context, StringBuilder builder, bool detailed = true)
+        {
+            builder.AppendLine(context.CreateKVP("Total Mono Heap",
+                MonoHeapSize.GetSizeOutput(context)));
+            builder.AppendLine(context.CreateKVP("Used Mono Heap",
+                MonoUsedSize.GetSizeOutput(context)));
+
+            if (detailed)
+            {
+                builder.AppendLine(context.CreateKVP("GFX Driver Allocated Memory",
+                    UnityGraphicsDriverAllocated.GetSizeOutput(context)));
+                builder.AppendLine(context.CreateKVP("Total Reserved Memory",
+                    UnityTotalReservedMemory.GetSizeOutput(context)));
+                builder.AppendLine(context.CreateKVP("Total Allocated Memory",
+                    UnityTotalAllocatedMemory.GetSizeOutput(context)));
+                builder.AppendLine(context.CreateKVP("Total Unused Reserved Memory",
+                    UnityTotalUnusedReservedMemory.GetSizeOutput(context)));
+            }
+        }
     }
 }
