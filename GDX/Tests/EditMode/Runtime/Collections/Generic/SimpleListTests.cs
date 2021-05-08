@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2021 dotBunny Inc.
+// Copyright (c) 2020-2021 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -16,6 +16,17 @@ namespace Runtime.Collections.Generic
     /// </summary>
     public class SimpleListTests
     {
+        [Test]
+        [Category("GDX.Tests")]
+        public void Constructor_CreateWithCount()
+        {
+            SimpleList<int> mockList = new SimpleList<int>(4);
+
+            bool evaluate = mockList.Count == 0 && mockList.Array != null && mockList.Array.Length == 4;
+
+            Assert.IsTrue(evaluate);
+        }
+
         [Test]
         [Category("GDX.Tests")]
         public void Constructor_CreateWithExisting_FillsList()
@@ -91,6 +102,132 @@ namespace Runtime.Collections.Generic
             mockList.AddWithExpandCheck(7, 10);
 
             bool evaluate = (mockList.Array[0] == 2 && mockList.Array[1] == 7 && mockList.Array.Length == 11);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddExpandNoClear_MockDataWithExpansion_ValueAdded()
+        {
+            SimpleList<int> mockList = new SimpleList<int>(2);
+            int[] initialBackingArray = mockList.Array;
+            int[] poolMinimums = new int[32];
+            int[] poolMaximums = new int[32];
+            poolMinimums[1] = 0;
+            poolMinimums[2] = 1;
+            poolMaximums[1] = 1;
+            poolMaximums[2] = 1;
+
+            GDX.Collections.Pooling.ArrayPool<int> pool = new GDX.Collections.Pooling.ArrayPool<int>(poolMinimums, poolMaximums);
+            int[] replacementArrayOnExpand = pool.ArrayPools[2].Pool[0];
+            replacementArrayOnExpand[3] = 5;
+            mockList.AddExpandNoClear(2, pool);
+            mockList.AddExpandNoClear(7, pool);
+            mockList.AddExpandNoClear(3, pool);
+
+            bool evaluate = mockList.Array.Length == 4 &&
+                            mockList.Array[0] == 2 &&
+                            mockList.Array[1] == 7 &&
+                            mockList.Array[2] == 3 &&
+                            mockList.Array[3] == 5 &&
+                            initialBackingArray[0] == 2 &&
+                            initialBackingArray[1] == 7 &&
+                            pool.ArrayPools[1].Count == 1 &&
+                            pool.ArrayPools[2].Count == 0;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddExpandClearOld_MockDataWithExpansion_ValueAdded()
+        {
+            SimpleList<int> mockList = new SimpleList<int>(1);
+            int[] initialBackingArray = mockList.Array;
+            int[] poolMinimums = new int[32];
+            int[] poolMaximums = new int[32];
+            poolMinimums[0] = 0;
+            poolMinimums[1] = 1;
+            poolMaximums[0] = 1;
+            poolMaximums[1] = 1;
+
+            GDX.Collections.Pooling.ArrayPool<int> pool = new GDX.Collections.Pooling.ArrayPool<int>(poolMinimums, poolMaximums);
+            mockList.AddExpandClearOld(2, pool);
+            mockList.AddExpandClearOld(7, pool);
+
+            bool evaluate = mockList.Array.Length == 2 &&
+                            mockList.Array[0] == 2 &&
+                            mockList.Array[1] == 7 &&
+                            initialBackingArray[0] == 0 &&
+                            pool.ArrayPools[0].Count == 1 &&
+                            pool.ArrayPools[1].Count == 0;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddExpandClearNew_MockDataWithExpansion_ValueAdded()
+        {
+            SimpleList<int> mockList = new SimpleList<int>(2);
+            int[] initialBackingArray = mockList.Array;
+            int[] poolMinimums = new int[32];
+            int[] poolMaximums = new int[32];
+            poolMinimums[1] = 0;
+            poolMinimums[2] = 1;
+            poolMaximums[1] = 1;
+            poolMaximums[2] = 1;
+
+            GDX.Collections.Pooling.ArrayPool<int> pool = new GDX.Collections.Pooling.ArrayPool<int>(poolMinimums, poolMaximums);
+            int[] replacementArrayOnExpand = pool.ArrayPools[2].Pool[0];
+            replacementArrayOnExpand[3] = 5;
+            mockList.AddExpandClearNew(2, pool);
+            mockList.AddExpandClearNew(7, pool);
+            mockList.AddExpandClearNew(3, pool);
+
+            bool evaluate = mockList.Array.Length == 4 &&
+                            mockList.Array[0] == 2 &&
+                            mockList.Array[1] == 7 &&
+                            mockList.Array[2] == 3 &&
+                            mockList.Array[3] == 0 &&
+                            initialBackingArray[0] == 2 &&
+                            initialBackingArray[1] == 7 &&
+                            pool.ArrayPools[1].Count == 1 &&
+                            pool.ArrayPools[2].Count == 0;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void AddExpandClearBoth_MockDataWithExpansion_ValueAdded()
+        {
+            SimpleList<int> mockList = new SimpleList<int>(2);
+            int[] initialBackingArray = mockList.Array;
+            int[] poolMinimums = new int[32];
+            int[] poolMaximums = new int[32];
+            poolMinimums[1] = 0;
+            poolMinimums[2] = 1;
+            poolMaximums[1] = 1;
+            poolMaximums[2] = 1;
+
+            GDX.Collections.Pooling.ArrayPool<int> pool = new GDX.Collections.Pooling.ArrayPool<int>(poolMinimums, poolMaximums);
+            int[] replacementArrayOnExpand = pool.ArrayPools[2].Pool[0];
+            replacementArrayOnExpand[3] = 5;
+            mockList.AddExpandClearBoth(2, pool);
+            mockList.AddExpandClearBoth(7, pool);
+            mockList.AddExpandClearBoth(3, pool);
+            
+            bool evaluate = mockList.Array.Length == 4 &&
+                            mockList.Array[0] == 2 &&
+                            mockList.Array[1] == 7 &&
+                            mockList.Array[2] == 3 &&
+                            mockList.Array[3] == 0 &&
+                            initialBackingArray[0] == 0 &&
+                            initialBackingArray[1] == 0 &&
+                            pool.ArrayPools[1].Count == 1 &&
+                            pool.ArrayPools[2].Count == 0;
 
             Assert.IsTrue(evaluate);
         }
