@@ -37,12 +37,20 @@ namespace GDX
         {
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Create a <see cref="TransientReference" /> from the <paramref name="info" />.
+        /// </summary>
+        /// <param name="info">A <see cref="SerializationInfo" /> representation of a <see cref="TransientReference" />.</param>
+        /// <param name="context">Describes the source of the <see cref="SerializationInfo" />.</param>
         protected TransientReference(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Compare this <see cref="TransientReference" /> to the target <see cref="object" />.
+        /// </summary>
+        /// <param name="obj">The target <see cref="object" /> to compare against.</param>
+        /// <returns>1 if the same, 0 otherwise.</returns>
         public int CompareTo(object obj)
         {
             if (obj == Target || obj == this)
@@ -53,6 +61,11 @@ namespace GDX
             return 0;
         }
 
+        /// <summary>
+        ///     Compare this <see cref="TransientReference" /> to the target <see cref="TransientReference" />.
+        /// </summary>
+        /// <param name="obj">The target <see cref="TransientReference" /> to compare against.</param>
+        /// <returns>1 if the same, 0 otherwise.</returns>
         public int CompareTo(TransientReference obj)
         {
             if (obj.Target == Target || obj == this)
@@ -63,6 +76,11 @@ namespace GDX
             return 0;
         }
 
+        /// <summary>
+        ///     Compare this <see cref="TransientReference" /> to the target <see cref="WeakReference" />.
+        /// </summary>
+        /// <param name="obj">The target <see cref="WeakReference" /> to compare against.</param>
+        /// <returns>1 if the same, 0 otherwise.</returns>
         public int CompareTo(WeakReference obj)
         {
             if (obj.Target == Target || obj == this)
@@ -73,7 +91,11 @@ namespace GDX
             return 0;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Does this <see cref="TransientReference" /> equal the target <see cref="TransientReference" />.
+        /// </summary>
+        /// <param name="other">The target <see cref="TransientReference" /> to compare with.</param>
+        /// <returns>true if it is the same, false otherwise.</returns>
         public bool Equals(TransientReference other)
         {
             if (other == null)
@@ -84,7 +106,11 @@ namespace GDX
             return Target == other.Target;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Does this <see cref="TransientReference" /> equal the target <see cref="WeakReference" />.
+        /// </summary>
+        /// <param name="other">The target <see cref="WeakReference" /> to compare with.</param>
+        /// <returns>true if it is the same, false otherwise.</returns>
         public bool Equals(WeakReference other)
         {
             if (other == null)
@@ -95,7 +121,11 @@ namespace GDX
             return Target == other.Target;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Does this <see cref="TransientReference" /> equal the target <see cref="object" />.
+        /// </summary>
+        /// <param name="other">The target <see cref="object" /> to compare with.</param>
+        /// <returns>true if it is the same, false otherwise.</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj) || ReferenceEquals(this, obj))
@@ -116,17 +146,37 @@ namespace GDX
             return Equals((TransientReference)obj);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Return the hashcode of the <see cref="WeakReference.Target"/>.
+        /// </summary>
+        /// <returns>Returns the <see cref="WeakReference.Target"/>'s hash code, or -1 if null.</returns>
         public override int GetHashCode()
         {
+            if (Target == null)
+            {
+                return -1;
+            }
+
             return Target.GetHashCode();
         }
 
+        /// <summary>
+        ///     Compare <see cref="TransientReference" />s to see if they are equal.
+        /// </summary>
+        /// <param name="left">Left-side <see cref="TransientReference" />.</param>
+        /// <param name="right">Right-side <see cref="TransientReference" />.</param>
+        /// <returns>true/false if they are equal.</returns>
         public static bool operator ==(TransientReference left, TransientReference right)
         {
             return Equals(left, right);
         }
 
+        /// <summary>
+        ///     Compare <see cref="TransientReference" />s to see if they are not equal.
+        /// </summary>
+        /// <param name="left">Left-side <see cref="TransientReference" />.</param>
+        /// <param name="right">Right-side <see cref="TransientReference" />.</param>
+        /// <returns>true/false if they are not equal.</returns>
         public static bool operator !=(TransientReference left, TransientReference right)
         {
             return !Equals(left, right);

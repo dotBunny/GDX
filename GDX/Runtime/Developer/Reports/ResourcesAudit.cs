@@ -119,7 +119,7 @@ namespace GDX.Developer.Reports
         }
 
         /// <summary>
-        ///     Identify loaded <see cref="UnityEngine.Object" /> of the description provided in <see cref="query" />.
+        ///     Identify loaded <see cref="UnityEngine.Object" /> of the description provided in <paramref cref="query" />.
         /// </summary>
         /// <remarks>
         ///     This method of querying uses reflection to allow for dynamic developer console calls,
