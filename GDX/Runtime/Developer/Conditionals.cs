@@ -32,6 +32,15 @@ namespace GDX.Developer
 #endif
 
         /// <summary>
+        ///     Is a compatible version of the Collections package present in the project?
+        /// </summary>
+#if GDX_COLLECTIONS
+        public const bool HasCollectionsPackage = true;
+#else
+        public const bool HasCollectionsPackage = false;
+#endif
+
+        /// <summary>
         ///     Is a compatible version of the Mathematics package present in the project?
         /// </summary>
 #if GDX_MATHEMATICS
