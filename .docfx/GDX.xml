@@ -209,6 +209,11 @@
                 Is a compatible version of the Burst package present in the project?
             </summary>
         </member>
+        <member name="F:GDX.Developer.Conditionals.HasCollectionsPackage">
+            <summary>
+                Is a compatible version of the Collections package present in the project?
+            </summary>
+        </member>
         <member name="F:GDX.Developer.Conditionals.HasMathematicsPackage">
             <summary>
                 Is a compatible version of the Mathematics package present in the project?
@@ -223,6 +228,341 @@
             <summary>
                 Is a compatible version of the Visual Scripting package present in the project?
             </summary>
+        </member>
+        <member name="M:GDX.Developer.Reports.Objects.AssetBundleObjectInfo.Clone">
+            <summary>
+            Create a clone of this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:GDX.Developer.Reports.Objects.ShaderObjectInfo.Clone">
+            <summary>
+            Create a clone of this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:GDX.Developer.Reports.Objects.ObjectInfo">
+            <summary>
+                An information storage object for a target System.Object.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.Reports.Objects.ObjectInfo.TypeDefinition">
+            <summary>
+                The fully qualified reflection definition of the GDX.Developer.Reports.Objects.ObjectInfo.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.Reports.Objects.ObjectInfo.CopyCount">
+            <summary>
+                The number of copies of the GDX.Developer.Reports.Objects.ObjectInfo.Reference object known by Unity.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.Reports.Objects.ObjectInfo.MemoryUsage">
+            <summary>
+                The memory usage of the actual GDX.Developer.Reports.Objects.ObjectInfo.Reference object (in bytes).
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.Reports.Objects.ObjectInfo.Name">
+            <summary>
+                The name of the GDX.Developer.Reports.Objects.ObjectInfo.Reference object.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.Reports.Objects.ObjectInfo.Reference">
+            <summary>
+                A GDX.TransientReference to the target object.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.Reports.Objects.ObjectInfo.TotalMemoryUsage">
+            <summary>
+                The total memory usage of the GDX.Developer.Reports.Objects.ObjectInfo.Reference object (in bytes).
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.Reports.Objects.ObjectInfo.Type">
+            <summary>
+                The cached GDX.Developer.Reports.Objects.ObjectInfo.Type of the GDX.Developer.Reports.Objects.ObjectInfo.Reference object.
+            </summary>
+        </member>
+        <member name="M:GDX.Developer.Reports.Objects.ObjectInfo.Clone">
+            <summary>
+            Create a clone of this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:GDX.Developer.Reports.Objects.ObjectInfo.GetDetailedInformation(System.Int32)">
+            <summary>
+                Get additional information about the specific GDX.Developer.Reports.Objects.ObjectInfo.Reference.
+            </summary>
+            <returns>A System.String of additional information.</returns>
+        </member>
+        <member name="M:GDX.Developer.Reports.Objects.ObjectInfo.Populate(UnityEngine.Object,GDX.TransientReference)">
+            <summary>
+                Populate an GDX.Developer.Reports.Objects.ObjectInfo from the targetObject. Optionally providing an existing
+                reference created prior.
+            </summary>
+            <param name="targetObject">The System.Object which to cache information about.</param>
+            <param name="reference">An existing GDX.TransientReference targeting the targetObject.</param>
+        </member>
+        <member name="M:GDX.Developer.Reports.Objects.ObjectInfo.CompareTo(System.Object)">
+            <summary>
+            Evaluate if the compared GDX.Developer.Reports.Objects.ObjectInfo utilizes more memory then this one.
+            </summary>
+            <param name="obj">The GDX.Developer.Reports.Objects.ObjectInfo to compare against.</param>
+            <returns>1 if larger, otherwise 0.</returns>
+        </member>
+        <member name="M:GDX.Developer.Reports.Objects.TextureObjectInfo.Clone">
+            <summary>
+            Create a clone of this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:GDX.Developer.Reports.Objects.MeshObjectInfo.Clone">
+            <summary>
+            Create a clone of this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:GDX.Developer.Reports.ReportExtensions">
+            <summary>
+                A set of functionality used to generate reports.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.Reports.ReportExtensions.NewLineSplit">
+            <summary>
+                A System.String array used to represent the end of a line for splitting purposes.
+            </summary>
+        </member>
+        <member name="M:GDX.Developer.Reports.ReportExtensions.CreateDivider(GDX.Developer.Reports.ReportContext,System.Char)">
+            <summary>
+                Create a sized divider string for use in generating reports.
+            </summary>
+            <param name="context">Contextual information regarding the generation of the report.</param>
+            <param name="divider">The optional character to use as the divider.</param>
+            <returns>A sized string to be used as a divider.</returns>
+        </member>
+        <member name="M:GDX.Developer.Reports.ReportExtensions.CreateHeader(GDX.Developer.Reports.ReportContext,System.String,System.Char)">
+            <summary>
+                Create a header with title with repeated decorators on the sides, filling
+                out to GDX.Developer.Reports.ReportContext.CharacterWidth.
+            </summary>
+            <param name="context">Contextual information regarding the generation of the report.</param>
+            <param name="title">The text to be treated as the title for the header.</param>
+            <param name="decorator">The optional character to be used as the decorator.</param>
+            <returns>A sized string to be used as a header.</returns>
+        </member>
+        <member name="F:GDX.Developer.Reports.Sections.ApplicationSection.ActiveScene">
+            <summary>
+                The name of the scene that was known to the N:UnityEngine.SceneManagement as being the active scene
+                when this GDX.Developer.Reports.Sections.ApplicationSection was created.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.Reports.Sections.ApplicationSection.Created">
+            <summary>
+                The time of creation for the GDX.Developer.Reports.Sections.ApplicationSection.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.Reports.Sections.ApplicationSection.Platform">
+            <summary>
+                The platform that the GDX.Developer.Reports.Sections.ApplicationSection was created on.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.Reports.Sections.MemorySection.MonoHeapSize">
+            <summary>
+                The size of the Mono heap when the GDX.Developer.Reports.ResourcesAudit was created.
+            </summary>
+            <remarks>This is cached so that the GDX.Developer.Reports.ResourcesAudit does not effect this value.</remarks>
+        </member>
+        <member name="F:GDX.Developer.Reports.Sections.MemorySection.MonoUsedSize">
+            <summary>
+                The amount of the Mono heap used when the GDX.Developer.Reports.ResourcesAudit was created.
+            </summary>
+            <remarks>This is cached so that the GDX.Developer.Reports.ResourcesAudit does not effect this value.</remarks>
+        </member>
+        <member name="F:GDX.Developer.Reports.Sections.MemorySection.UnityGraphicsDriverAllocatedMemory">
+            <summary>
+                Unity's allocated native memory for the graphics driver (in bytes).
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.Reports.Sections.MemorySection.UnityTotalAllocatedMemory">
+            <summary>
+                Unity's total allocated memory (in bytes).
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.Reports.Sections.MemorySection.UnityTotalReservedMemory">
+            <summary>
+                Unity's total reserved memory (in bytes).
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.Reports.Sections.MemorySection.UnityTotalUnusedReservedMemory">
+            <summary>
+                Unity's total unused reserved memory (in bytes).
+            </summary>
+        </member>
+        <member name="T:GDX.Developer.Reports.ResourcesAudit">
+            <summary>
+                An audit of loaded UnityEngine.Object for queried types.
+            </summary>
+            <remarks>
+                Information is referenced to the target objects by a modified weak reference (GDX.TransientReference),
+                thus this will not prevent garbage collection.
+            </remarks>
+        </member>
+        <member name="F:GDX.Developer.Reports.ResourcesAudit.KnownObjects">
+            <summary>
+                A collection of known (loaded in memory) UnityEngine.Object keyed by type.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.Reports.ResourcesAudit.KnownUsage">
+            <summary>
+                A collection of known UnityEngine.Object types in memory and their total usage.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.Reports.ResourcesAudit.LastTouched">
+            <summary>
+                The last time that the GDX.Developer.Reports.ResourcesAudit has had a query of types.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.Reports.ResourcesAudit.ObjectCount">
+            <summary>
+                The total number of objects which are known to the GDX.Developer.Reports.ResourcesAudit.
+            </summary>
+        </member>
+        <member name="M:GDX.Developer.Reports.ResourcesAudit.Finalize">
+            <summary>
+                Process to destroy a GDX.Developer.Reports.ResourcesAudit.
+            </summary>
+        </member>
+        <member name="M:GDX.Developer.Reports.ResourcesAudit.Output(System.Text.StringBuilder,GDX.Developer.Reports.ReportContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:GDX.Developer.Reports.ResourcesAudit.Query(GDX.Developer.Reports.ResourcesAudit.ResourcesQuery)">
+            <summary>
+                Identify loaded UnityEngine.Object of the description provided in <paramref cref="!:query" />.
+            </summary>
+            <remarks>
+                This method of querying uses reflection to allow for dynamic developer console calls,
+                GDX.Developer.Reports.ResourcesAudit.QueryForType``2(System.String) for a much faster typed operation.
+            </remarks>
+            <param name="query">Description of UnityEngine.Object type to search for.</param>
+        </member>
+        <member name="M:GDX.Developer.Reports.ResourcesAudit.QueryForType``2(System.String)">
+            <summary>
+                Identify loaded <typeparamref name="TType" />, using <typeparamref name="TObjectInfo" /> for report generation.
+            </summary>
+            <typeparam name="TType">The object type to query for.</typeparam>
+            <typeparam name="TObjectInfo">The GDX.Developer.Reports.Objects.ObjectInfo used to generate report entries.</typeparam>
+        </member>
+        <member name="M:GDX.Developer.Reports.ResourcesAudit.Remove(System.Type)">
+            <summary>
+                Remove all information regarding a specific type from the GDX.Developer.Reports.ResourcesAudit.KnownObjects.
+            </summary>
+            <param name="type">The type to remove from the GDX.Developer.Reports.ResourcesAudit.KnownObjects.</param>
+        </member>
+        <member name="M:GDX.Developer.Reports.ResourcesAudit.Get(GDX.Developer.Reports.ResourcesAudit.ResourcesQuery[])">
+            <summary>
+                Generate a GDX.Developer.Reports.ResourcesAudit for the provided GDX.Developer.Reports.ResourcesAudit.ResourcesQuery array.
+            </summary>
+            <remarks>
+                This method uses reflection to generate the necessary typed parameters, its often more efficient to
+                create your own custom reports like in GDX.Developer.Reports.ResourcesAudit.GetCommon.
+            </remarks>
+            <param name="queries">A list of GDX.Developer.Reports.ResourcesAudit.ResourcesQuery to generate a report from.</param>
+            <returns>A GDX.Developer.Reports.ResourcesAudit containing the outlined types.</returns>
+        </member>
+        <member name="M:GDX.Developer.Reports.ResourcesAudit.GetAll">
+            <summary>
+                Get a GDX.Developer.Reports.ResourcesAudit of all UnityEngine.Object.
+            </summary>
+            <returns>A GDX.Developer.Reports.ResourcesAudit of all objects.</returns>
+        </member>
+        <member name="M:GDX.Developer.Reports.ResourcesAudit.GetCommon">
+            <summary>
+                Get a GDX.Developer.Reports.ResourcesAudit of a common subset of data which usually eats a large portion of
+                memory, and often can reveal memory leaks.
+            </summary>
+            <returns>A GDX.Developer.Reports.ResourcesAudit of textures, shaders, materials and animations.</returns>
+        </member>
+        <member name="T:GDX.Developer.Reports.ResourcesAudit.ResourcesQuery">
+            <summary>
+                A structure that defines the string inputs necessary to query for loaded resources of a specific type.
+            </summary>
+            <remarks>
+                This forces the path through reflection when querying; there are faster methods available. These queries are
+                built ideally to support dynamic developer console calls.
+            </remarks>
+        </member>
+        <member name="F:GDX.Developer.Reports.ResourcesAudit.ResourcesQuery.TypeDefinition">
+            <summary>
+                The fully qualified type that is going to be evaluated.
+            </summary>
+            <example>
+                UnityEngine.Texture2D,UnityEngine
+            </example>
+        </member>
+        <member name="F:GDX.Developer.Reports.ResourcesAudit.ResourcesQuery.ObjectInfoTypeDefinition">
+            <summary>
+                The fully qualified type that is going to be used to generate a report on the type.
+            </summary>
+            <example>
+                GDX.Developer.Reports.ObjectInfo,GDX
+            </example>
+        </member>
+        <member name="F:GDX.Developer.Reports.ResourcesAudit.ResourcesQuery.NameFilter">
+            <summary>
+                A System.String.Contains(System.String) check against a UnityEngine.Object name.
+            </summary>
+            <example>
+                Armor
+            </example>
+        </member>
+        <member name="M:GDX.Developer.Reports.ResourcesAudit.ResourcesQuery.#ctor(System.String,System.String,System.String)">
+            <summary>
+                Create a GDX.Developer.Reports.ResourcesAudit.ResourcesQuery for the given typeDefinition, while
+                attempting to use the provided objectInfoTypeDefinition for report generation.
+            </summary>
+            <remarks>
+                Uses the default GDX.Developer.Reports.Objects.ObjectInfo for report generation if
+                objectInfoTypeDefinition fails to qualify.
+            </remarks>
+            <param name="typeDefinition">The fully qualified type that is going to be evaluated.</param>
+            <param name="objectInfoTypeDefinition">
+                The fully qualified type that is going to be used to generate a report on the
+                type. If left null, system will attempt to find an appropriate info generator.
+            </param>
+            <param name="nameFilter">
+                A string that must be contained in an objects name for it to be valid in the query.
+            </param>
+            <example>
+                var queryTexture2D = new ResourcesQuery("UnityEngine.Texture2D,UnityEngine",
+                "GDX.Developer.Reports.ObjectInfos.TextureObjectInfo,GDX", "Armor");
+            </example>
+        </member>
+        <member name="M:GDX.Developer.Reports.ResourcesDiff.Output(System.Text.StringBuilder,GDX.Developer.Reports.ReportContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:GDX.Developer.Reports.Report.Output(GDX.Developer.Reports.ReportContext)">
+            <summary>
+                Output the report format as an array of System.String.
+            </summary>
+            <remarks>It is usually best to provide a System.Text.StringBuilder or System.IO.StreamWriter instead.</remarks>
+            <param name="context"></param>
+            <returns>A generated report as an array of System.String.</returns>
+        </member>
+        <member name="M:GDX.Developer.Reports.Report.Output(System.IO.StreamWriter,System.Int32,GDX.Developer.Reports.ReportContext)">
+            <summary>
+                Output the report format utilizing the provided writer, optionally limiting the
+                write buffers by bufferSize.
+            </summary>
+            <param name="context">Contextual information regarding the generation of the report.</param>
+            <param name="writer">A System.IO.StreamWriter instance to use for output.</param>
+            <param name="bufferSize">The write buffer size.</param>
+            <returns>true/false if the report was successfully written to the provided writer.</returns>
+        </member>
+        <member name="M:GDX.Developer.Reports.Report.Output(System.Text.StringBuilder,GDX.Developer.Reports.ReportContext)">
+            <summary>
+                Output the report format utilizing the provided builder.
+            </summary>
+            <param name="builder">A System.Text.StringBuilder to use when generating the report.</param>
+            <param name="context">Contextual information regarding the generation of the report.</param>
+            <returns>true/false if report was added to builder.</returns>
         </member>
         <member name="T:GDX.Developer.CommandLineParser">
             <summary>
@@ -750,10 +1090,91 @@
             <param name="item">A typed System.Object to add.</param>
             <param name="howMuchToExpand">How much to expand the array by.</param>
         </member>
+        <member name="M:GDX.Collections.Generic.SimpleList`1.AddExpandNoClear(`0,GDX.Collections.Pooling.ArrayPool{`0})">
+            <summary>
+                Add an item to the GDX.Collections.Generic.SimpleList`1, checking if GDX.Collections.Generic.SimpleList`1.Array needs to be resized.
+            </summary>
+            <param name="item">A typed System.Object to add.</param>
+            <param name="pool">Pool to allocate the array from if resizing.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.SimpleList`1.AddExpandClearOld(`0,GDX.Collections.Pooling.ArrayPool{`0})">
+            <summary>
+                Add an item to the GDX.Collections.Generic.SimpleList`1, checking if GDX.Collections.Generic.SimpleList`1.Array needs to be resized. Clears the old array on resize after copying its contents.
+            </summary>
+            <param name="item">A typed System.Object to add.</param>
+            <param name="pool">Pool to allocate the array from if resizing.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.SimpleList`1.AddExpandClearNew(`0,GDX.Collections.Pooling.ArrayPool{`0})">
+            <summary>
+                Add an item to the GDX.Collections.Generic.SimpleList`1, checking if GDX.Collections.Generic.SimpleList`1.Array needs to be resized. Clears unused indices of the new array on resize.
+            </summary>
+            <param name="item">A typed System.Object to add.</param>
+            <param name="pool">Pool to allocate the array from if resizing.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.SimpleList`1.AddExpandClearBoth(`0,GDX.Collections.Pooling.ArrayPool{`0})">
+            <summary>
+                Add an item to the GDX.Collections.Generic.SimpleList`1, checking if GDX.Collections.Generic.SimpleList`1.Array needs to be resized.  Clears old and new arrays on resize.
+            </summary>
+            <param name="item">A typed System.Object to add.</param>
+            <param name="pool">Pool to allocate the array from if resizing.</param>
+        </member>
         <member name="M:GDX.Collections.Generic.SimpleList`1.Clear">
             <summary>
                 Clear out the GDX.Collections.Generic.SimpleList`1.Array in GDX.Collections.Generic.SimpleList`1 and sets the GDX.Collections.Generic.SimpleList`1.Count to 0.
             </summary>
+        </member>
+        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertUnchecked(`0,System.Int32)">
+            <summary>
+                Insert an item into the GDX.Collections.Generic.SimpleList`1 without checking the GDX.Collections.Generic.SimpleList`1.Array size.
+            </summary>
+            <param name="item">A typed System.Object to insert.</param>
+            <param name="index">The index in GDX.Collections.Generic.SimpleList`1.Array to add the item at.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertWithExpandCheck(`0,System.Int32)">
+            <summary>
+                Insert an item into the GDX.Collections.Generic.SimpleList`1, checking if GDX.Collections.Generic.SimpleList`1.Array needs to be resized.
+            </summary>
+            <param name="item">A typed System.Object to insert.</param>
+            <param name="index">The index in GDX.Collections.Generic.SimpleList`1.Array to add the item at.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertWithExpandCheck(`0,System.Int32,System.Int32)">
+            <summary>
+                Insert an item into the GDX.Collections.Generic.SimpleList`1, checking if GDX.Collections.Generic.SimpleList`1.Array needs to be resized.
+            </summary>
+            <param name="item">A typed System.Object to insert.</param>
+            <param name="index">The index in GDX.Collections.Generic.SimpleList`1.Array to add the item at.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertExpandNoClear(`0,System.Int32,GDX.Collections.Pooling.ArrayPool{`0})">
+            <summary>
+                Insert an item into the GDX.Collections.Generic.SimpleList`1, checking if GDX.Collections.Generic.SimpleList`1.Array needs to be resized.
+            </summary>
+            <param name="item">A typed System.Object to insert.</param>
+            <param name="index">The index in GDX.Collections.Generic.SimpleList`1.Array to add the item at.</param>
+            <param name="pool">Pool to allocate the array from if resizing.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertExpandClearOld(`0,System.Int32,GDX.Collections.Pooling.ArrayPool{`0})">
+            <summary>
+                Insert an item into the GDX.Collections.Generic.SimpleList`1, checking if GDX.Collections.Generic.SimpleList`1.Array needs to be resized. Clears the old array on resize after copying its contents.
+            </summary>
+            <param name="item">A typed System.Object to insert.</param>
+            <param name="index">The index in GDX.Collections.Generic.SimpleList`1.Array to add the item at.</param>
+            <param name="pool">Pool to allocate the array from if resizing.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertExpandClearNew(`0,System.Int32,GDX.Collections.Pooling.ArrayPool{`0})">
+            <summary>
+                Insert an item into the GDX.Collections.Generic.SimpleList`1, checking if GDX.Collections.Generic.SimpleList`1.Array needs to be resized. Clears unused indices of the new array on resize.
+            </summary>
+            <param name="item">A typed System.Object to insert.</param>
+            <param name="index">The index in GDX.Collections.Generic.SimpleList`1.Array to add the item at.</param>
+            <param name="pool">Pool to allocate the array from if resizing.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertExpandClearBoth(`0,System.Int32,GDX.Collections.Pooling.ArrayPool{`0})">
+            <summary>
+                Insert an item into the GDX.Collections.Generic.SimpleList`1, checking if GDX.Collections.Generic.SimpleList`1.Array needs to be resized. Clears old and new arrays on resize.
+            </summary>
+            <param name="item">A typed System.Object to insert.</param>
+            <param name="index">The index in GDX.Collections.Generic.SimpleList`1.Array to add the item at.</param>
+            <param name="pool">Pool to allocate the array from if resizing.</param>
         </member>
         <member name="M:GDX.Collections.Generic.SimpleList`1.Insert(`0,System.Int32)">
             <summary>
@@ -768,6 +1189,12 @@
             </summary>
             <param name="index">The target index.</param>
         </member>
+        <member name="M:GDX.Collections.Generic.SimpleList`1.RemoveAtSwapBack(System.Int32)">
+            <summary>
+                Remove an item from the GDX.Collections.Generic.SimpleList`1 at a specific index, swapping it with the item from the highest used index.
+            </summary>
+            <param name="index">The target index.</param>
+        </member>
         <member name="M:GDX.Collections.Generic.SimpleList`1.RemoveFromBack">
             <summary>
                 Remove the last element in the GDX.Collections.Generic.SimpleList`1.
@@ -778,6 +1205,34 @@
                 Resizes the GDX.Collections.Generic.SimpleList`1.Array, ensuring there are the provided number of empty spots in it.
             </summary>
             <param name="numberToReserve">Number of desired empty spots.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.SimpleList`1.ReserveNoClear(System.Int32,GDX.Collections.Pooling.ArrayPool{`0})">
+            <summary>
+                Resizes the GDX.Collections.Generic.SimpleList`1.Array, ensuring there are the provided number of empty spots in it.
+            </summary>
+            <param name="numberToReserve">Number of desired empty spots.</param>
+            <param name="pool">Pool to allocate the array from if resizing.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.SimpleList`1.ReserveClearOld(System.Int32,GDX.Collections.Pooling.ArrayPool{`0})">
+            <summary>
+                Resizes the GDX.Collections.Generic.SimpleList`1.Array, ensuring there are the provided number of empty spots in it. Clears the old array on resize after copying its contents.
+            </summary>
+            <param name="numberToReserve">Number of desired empty spots.</param>
+            <param name="pool">Pool to allocate the array from if resizing.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.SimpleList`1.ReserveClearNew(System.Int32,GDX.Collections.Pooling.ArrayPool{`0})">
+            <summary>
+                Resizes the GDX.Collections.Generic.SimpleList`1.Array, ensuring there are the provided number of empty spots in it.  Clears unused indices of the new array on resize.
+            </summary>
+            <param name="numberToReserve">Number of desired empty spots.</param>
+            <param name="pool">Pool to allocate the array from if resizing.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.SimpleList`1.ReserveClearBoth(System.Int32,GDX.Collections.Pooling.ArrayPool{`0})">
+            <summary>
+                Resizes the GDX.Collections.Generic.SimpleList`1.Array, ensuring there are the provided number of empty spots in it. Clears old and new arrays on resize.
+            </summary>
+            <param name="numberToReserve">Number of desired empty spots.</param>
+            <param name="pool">Pool to allocate the array from if resizing.</param>
         </member>
         <member name="M:GDX.Collections.Generic.SimpleList`1.Reverse">
             <summary>
@@ -1405,7 +1860,7 @@
             <param name="initialPoolCounts"></param>
             <param name="maxPoolCapacities"></param>
         </member>
-        <member name="M:GDX.Collections.Pooling.ArrayPool`1.GetArrayFromPool(System.Int32)">
+        <member name="M:GDX.Collections.Pooling.ArrayPool`1.Get(System.Int32)">
             <summary>
                 Allocates an array from the pool. Finds an array of the smallest power-of-two length larger than or equal to the
                 requested size.
@@ -1416,7 +1871,7 @@
             </param>
             <returns></returns>
         </member>
-        <member name="M:GDX.Collections.Pooling.ArrayPool`1.ReturnArrayToPool(`0[])">
+        <member name="M:GDX.Collections.Pooling.ArrayPool`1.Return(`0[])">
             <summary>
                 Return a power-of-two sized array to the pool. Only pass power-of-two sized arrays to this function. Does not clear
                 the array.
@@ -2770,289 +3225,288 @@
             <param name="elapsedTime">The time since the last sample.</param>
             <returns>The coefficient value applied to the weight(t) of a lerp.</returns>
         </member>
-        <member name="T:GDX.Mathematics.Random.MersenneTwister">
+        <member name="M:GDX.Mathematics.Random.IRandomProvider.NextBoolean(System.Single)">
             <summary>
-                Generates pseudo-random value using the Mersenne Twister algorithm.
+                Returns a pseudorandom System.Boolean value based on chance, favoring false,
+                with a default 50% chance.
+            </summary>
+            <param name="chance">The 0-1 System.Single percent chance of success.</param>
+            <returns>A pseudorandom System.Boolean.</returns>
+        </member>
+        <member name="M:GDX.Mathematics.Random.IRandomProvider.NextBytes(System.Byte[])">
+            <summary>
+                Fills a buffer with pseudorandom System.Byte.
             </summary>
             <remarks>
-                <para>
-                    Adapted from the work of Akihilo Kramot (Takel), originally based on a
-                    <a href="http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/MT2002/CODES/mt19937ar.c">
-                        C-program for MT19937
-                    </a>
-                    by Takuji Nishimura, considering the suggestions by Topher Cooper and Marc Rieffel in July-Aug. 1997.
-                    See the
-                    <a href="http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html">
-                        Mersenne Twister Homepage
-                    </a>
-                    for details on the algorithm.
-                </para>
+                The buffer shouldn't be null.
             </remarks>
+            <param name="buffer">The buffer to fill.</param>
         </member>
-        <member name="F:GDX.Mathematics.Random.MersenneTwister.N">
+        <member name="M:GDX.Mathematics.Random.IRandomProvider.NextDouble(System.Double,System.Double)">
             <summary>
-                The degree of recurrence.
+                Returns the next pseudorandom System.Double between minValue and
+                less then maxValue.
             </summary>
             <remarks>
-                Size of byte pool.
+                Distribution of values falls within a linear scale.
+                minValue should not be greater then maxValue.
             </remarks>
+            <param name="minValue">The lowest possible value (inclusive).</param>
+            <param name="maxValue">The highest possible value (exclusive).</param>
+            <returns>A pseudorandom System.Double.</returns>
         </member>
-        <member name="F:GDX.Mathematics.Random.MersenneTwister.M">
+        <member name="M:GDX.Mathematics.Random.IRandomProvider.NextInteger(System.Int32,System.Int32)">
             <summary>
-                The middle word value.
+                Returns the next pseudorandom System.Int32 between minValue and
+                maxValue.
             </summary>
             <remarks>
-                Period second parameter.
+                Distribution of values falls within a linear scale.
+                minValue should not be greater then maxValue.
+                Never pass System.Int32.MaxValue to maxValue.
             </remarks>
+            <param name="minValue">The lowest possible value.</param>
+            <param name="maxValue">The highest possible value, including itself.</param>
+            <returns>A pseudorandom System.Int32.</returns>
         </member>
-        <member name="F:GDX.Mathematics.Random.MersenneTwister.UpperMask">
+        <member name="M:GDX.Mathematics.Random.IRandomProvider.NextIntegerExclusive(System.Int32,System.Int32)">
             <summary>
-                The most significant w-r bits.
-            </summary>
-        </member>
-        <member name="F:GDX.Mathematics.Random.MersenneTwister.LowerMask">
-            <summary>
-                Least significant r bits.
-            </summary>
-        </member>
-        <member name="F:GDX.Mathematics.Random.MersenneTwister.FiftyThreeBitsOf1S">
-            <summary>
-                A magic inducing value.
+                Returns the next pseudorandom System.Int32 between minValue and
+                maxValue, excluding maxValue itself.
             </summary>
             <remarks>
-                A value of 9007199254740991.0 is the maximum System.Double value which the 53
-                significant can hold when the exponent is 0.
+                Distribution of values falls within a linear scale.
+                minValue should not be greater then maxValue.
             </remarks>
+            <param name="minValue">The lowest possible value.</param>
+            <param name="maxValue">The highest possible value, excluding itself.</param>
+            <returns>A pseudorandom System.Int32.</returns>
         </member>
-        <member name="F:GDX.Mathematics.Random.MersenneTwister.Inverse53BitsOf1S">
+        <member name="M:GDX.Mathematics.Random.IRandomProvider.NextSingle(System.Single,System.Single)">
             <summary>
-                Inverse of GDX.Mathematics.Random.MersenneTwister.FiftyThreeBitsOf1S.
+                Returns the next pseudorandom System.Single between minValue and
+                less then maxValue.
             </summary>
             <remarks>
-                Multiply by inverse to (vainly?) try to avoid a division.
+                Distribution of values falls within a linear scale.
+                minValue should not be greater then maxValue.
+            </remarks>
+            <param name="minValue">The lowest possible value (inclusive).</param>
+            <param name="maxValue">The highest possible value (exclusive).</param>
+            <returns>A pseudorandom System.Single.</returns>
+        </member>
+        <member name="M:GDX.Mathematics.Random.IRandomProvider.NextUnsignedInteger(System.UInt32,System.UInt32)">
+            <summary>
+                Returns the next pseudorandom System.UInt32 between minValue and
+                maxValue.
+            </summary>
+            <remarks>
+                Distribution of values falls within a linear scale.
+                minValue should not be greater then maxValue.
+                Never pass System.UInt32.MaxValue to maxValue.
+            </remarks>
+            <param name="minValue">The lowest possible value.</param>
+            <param name="maxValue">The highest possible value, including itself.</param>
+            <returns>A pseudorandom System.UInt32.</returns>
+        </member>
+        <member name="M:GDX.Mathematics.Random.IRandomProvider.NextUnsignedIntegerExclusive(System.UInt32,System.UInt32)">
+            <summary>
+                Returns the next pseudorandom System.UInt32 between minValue and
+                maxValue, excluding maxValue itself.
+            </summary>
+            <remarks>
+                Distribution of values falls within a linear scale.
+                minValue should not be greater then maxValue.
+            </remarks>
+            <param name="minValue">The lowest possible value.</param>
+            <param name="maxValue">The highest possible value, excluding itself.</param>
+            <returns>A pseudorandom System.UInt32.</returns>
+        </member>
+        <member name="M:GDX.Mathematics.Random.IRandomProvider.Sample">
+            <summary>
+                Returns the next pseudorandom System.Double value, between 0.0 and 1.0.
+            </summary>
+            <returns>A pseudorandom System.Double floating point value.</returns>
+        </member>
+        <member name="T:GDX.Mathematics.Random.WELL1024a">
+            <summary>
+                Generates pseudorandom values based on the WELL1024a algorithm.
+            </summary>
+            <remarks>
+                Primarily based on the work of <a href="http://lomont.org/papers/2008/Lomont_PRNG_2008.pdf">Chris Lomont</a>,
+                accessed on 2021-04-23.
+                Additional understanding from
+                <a href="http://www.iro.umontreal.ca/~lecuyer/myftp/papers/lfsr04.pdf">Francois Panneton and Pierre L`Ecuyer</a>,
+                accessed on 2021-04-23.
             </remarks>
         </member>
-        <member name="F:GDX.Mathematics.Random.MersenneTwister.OnePlus53BitsOf1S">
+        <member name="F:GDX.Mathematics.Random.WELL1024a.OriginalSeed">
             <summary>
-                1 plus GDX.Mathematics.Random.MersenneTwister.FiftyThreeBitsOf1S.
+                A copy of the original seed used to initialize the GDX.Mathematics.Random.WELL1024a.
             </summary>
         </member>
-        <member name="F:GDX.Mathematics.Random.MersenneTwister.InverseOnePlus53BitsOf1S">
+        <member name="F:GDX.Mathematics.Random.WELL1024a.State">
             <summary>
-                Inverse of GDX.Mathematics.Random.MersenneTwister.OnePlus53BitsOf1S.
+                The state array of the well.
             </summary>
         </member>
-        <member name="F:GDX.Mathematics.Random.MersenneTwister.s_mag01">
+        <member name="F:GDX.Mathematics.Random.WELL1024a.Index">
             <summary>
-                Magnitude lookup.
+                The current index of use for the well array.
+            </summary>
+            <remarks>CAUTION! Changing this will alter the understanding of the data.</remarks>
+        </member>
+        <member name="F:GDX.Mathematics.Random.WELL1024a.SampleCount">
+            <summary>
+                The number of times that this well has been sampled.
             </summary>
         </member>
-        <member name="F:GDX.Mathematics.Random.MersenneTwister._mersenneTwisterState">
+        <member name="M:GDX.Mathematics.Random.WELL1024a.#ctor(System.Int32)">
             <summary>
-                The array for the state vector of the twister.
+                Creates a new pseudorandom number generator with the given seed.
             </summary>
-            <remarks>Also known as it's byte pool.</remarks>
-        </member>
-        <member name="F:GDX.Mathematics.Random.MersenneTwister._mersenneTwisterIndex">
-            <summary>
-                The current index in the array for the state of the twister.
-            </summary>
-        </member>
-        <member name="M:GDX.Mathematics.Random.MersenneTwister.#ctor(System.Int32)">
-            <summary>
-                Creates a new pseudo-random number generator with the given seed.
-            </summary>
+            <remarks>
+                The seed will have its sign stripped and stored as such in
+                GDX.Mathematics.Random.WELL1024a.OriginalSeed.
+            </remarks>
             <param name="seed">A System.Int32 value to use as a seed.</param>
         </member>
-        <member name="M:GDX.Mathematics.Random.MersenneTwister.#ctor">
+        <member name="M:GDX.Mathematics.Random.WELL1024a.#ctor(System.UInt32)">
             <summary>
-                Creates a new pseudo-random number generator with a default seed.
+                Creates a new pseudorandom number generator with the given seed.
+            </summary>
+            <param name="seed">A System.UInt32 value to use as a seed.</param>
+        </member>
+        <member name="M:GDX.Mathematics.Random.WELL1024a.#ctor(System.String,System.Boolean)">
+            <summary>
+                Creates a new pseudorandom number generator with the given seed.
             </summary>
             <remarks>
-                <c>new System.Random().System.Random.Next</c>
-                is used for the seed.
+                The created hashcode will have its sign stripped and stored as such in
+                GDX.Mathematics.Random.WELL1024a.OriginalSeed.
             </remarks>
-        </member>
-        <member name="M:GDX.Mathematics.Random.MersenneTwister.#ctor(System.Int32[])">
-            <summary>
-                Creates a pseudo-random number generator initialized with the given array.
-            </summary>
-            <param name="initKey">The array for System.Int32 initializing keys.</param>
-        </member>
-        <member name="M:GDX.Mathematics.Random.MersenneTwister.GenerateUnsignedInteger">
-            <summary>
-                Generates a new pseudo-random System.UInt32.
-            </summary>
-            <returns>A pseudo-random System.UInt32.</returns>
-        </member>
-        <member name="M:GDX.Mathematics.Random.MersenneTwister.NextUInt">
-            <summary>
-                Returns the next pseudo-random System.UInt32.
-            </summary>
-            <returns>A pseudo-random System.UInt32 value.</returns>
-        </member>
-        <member name="M:GDX.Mathematics.Random.MersenneTwister.NextUInt(System.UInt32)">
-            <summary>
-                Returns the next pseudo-random System.UInt32 up to maxValue.
-            </summary>
-            <param name="maxValue">
-                The maximum value of the pseudo-random number to create.
+            <param name="seed">A System.String to create a System.UInt32 seed from.</param>
+            <param name="forceUpperCase">
+                Should the generated hashcode used as the seed be generated from an uppercase version of
+                the seed.
             </param>
-            <returns>
-                A pseudo-random System.UInt32 value which is at most maxValue.
-            </returns>
         </member>
-        <member name="M:GDX.Mathematics.Random.MersenneTwister.NextUInt(System.UInt32,System.UInt32)">
+        <member name="M:GDX.Mathematics.Random.WELL1024a.#ctor(GDX.Mathematics.Random.WELL1024a.WellState)">
             <summary>
-                Returns the next pseudo-random System.UInt32 at least
-                minValue and up to maxValue.
+                Create a pseudorandom number generator from a restoreState.
             </summary>
-            <param name="minValue">The minimum value of the pseudo-random number to create.</param>
-            <param name="maxValue">The maximum value of the pseudo-random number to create.</param>
-            <returns>
-                A pseudo-random System.UInt32 value which is at least
-                minValue and at most maxValue.
-            </returns>
-            <exception cref="T:System.ArgumentOutOfRangeException">
-                If <c>minValue &gt;= maxValue</c>.
-            </exception>
+            <param name="restoreState">A saved GDX.Mathematics.Random.WELL1024a state.</param>
         </member>
-        <member name="M:GDX.Mathematics.Random.MersenneTwister.Next">
+        <member name="M:GDX.Mathematics.Random.WELL1024a.GetState">
             <summary>
-                Returns the next pseudo-random System.Int32.
+                Get a GDX.Mathematics.Random.WELL1024a.WellState for the GDX.Mathematics.Random.WELL1024a.
             </summary>
-            <returns>A pseudo-random System.Int32 value.</returns>
+            <remarks>Useful to save and restore the state of the GDX.Mathematics.Random.WELL1024a.</remarks>
+            <returns></returns>
         </member>
-        <member name="M:GDX.Mathematics.Random.MersenneTwister.Next(System.Int32)">
-            <summary>
-                Returns the next pseudo-random System.Int32 up to maxValue.
-            </summary>
-            <param name="maxValue">The maximum value of the pseudo-random number to create.</param>
-            <returns>
-                A pseudo-random System.Int32 value which is at most maxValue.
-            </returns>
-            <exception cref="T:System.ArgumentOutOfRangeException">
-                When maxValue &lt; 0.
-            </exception>
+        <member name="M:GDX.Mathematics.Random.WELL1024a.NextBoolean(System.Single)">
+            <inheritdoc cref="M:GDX.Mathematics.Random.IRandomProvider.NextBoolean(System.Single)" />
         </member>
-        <member name="M:GDX.Mathematics.Random.MersenneTwister.Next(System.Int32,System.Int32)">
-            <summary>
-                Returns the next pseudo-random System.Int32 at least minValue
-                and up to maxValue.
-            </summary>
-            <param name="minValue">The minimum value of the pseudo-random number to create.</param>
-            <param name="maxValue">The maximum value of the pseudo-random number to create.</param>
-            <returns>
-                A pseudo-random System.Int32 value which is at least minValue and at
-                most maxValue.
-            </returns>
-            <exception cref="T:System.ArgumentOutOfRangeException">
-                If <c>minValue &gt;= maxValue</c>.
-            </exception>
+        <member name="M:GDX.Mathematics.Random.WELL1024a.NextBytes(System.Byte[])">
+            <inheritdoc cref="M:GDX.Mathematics.Random.IRandomProvider.NextBytes(System.Byte[])" />
         </member>
-        <member name="M:GDX.Mathematics.Random.MersenneTwister.NextBytes(System.Byte[])">
-            <summary>
-                Fills a buffer with pseudo-random System.Byte.
-            </summary>
-            <param name="buffer">The buffer to fill.</param>
-            <exception cref="T:System.ArgumentNullException">
-                If <c>buffer == null</c>.
-            </exception>
+        <member name="M:GDX.Mathematics.Random.WELL1024a.NextDouble(System.Double,System.Double)">
+            <inheritdoc cref="M:GDX.Mathematics.Random.IRandomProvider.NextDouble(System.Double,System.Double)" />
         </member>
-        <member name="M:GDX.Mathematics.Random.MersenneTwister.NextDouble">
+        <member name="M:GDX.Mathematics.Random.WELL1024a.NextInteger(System.Int32,System.Int32)">
+            <inheritdoc cref="M:GDX.Mathematics.Random.IRandomProvider.NextInteger(System.Int32,System.Int32)" />
+        </member>
+        <member name="M:GDX.Mathematics.Random.WELL1024a.NextIntegerExclusive(System.Int32,System.Int32)">
+            <inheritdoc cref="M:GDX.Mathematics.Random.IRandomProvider.NextIntegerExclusive(System.Int32,System.Int32)" />
+        </member>
+        <member name="M:GDX.Mathematics.Random.WELL1024a.NextSingle(System.Single,System.Single)">
+            <inheritdoc cref="M:GDX.Mathematics.Random.IRandomProvider.NextSingle(System.Single,System.Single)" />
+        </member>
+        <member name="M:GDX.Mathematics.Random.WELL1024a.NextUnsignedInteger(System.UInt32,System.UInt32)">
+            <inheritdoc cref="M:GDX.Mathematics.Random.IRandomProvider.NextUnsignedInteger(System.UInt32,System.UInt32)" />
+        </member>
+        <member name="M:GDX.Mathematics.Random.WELL1024a.NextUnsignedIntegerExclusive(System.UInt32,System.UInt32)">
+            <inheritdoc cref="M:GDX.Mathematics.Random.IRandomProvider.NextUnsignedIntegerExclusive(System.UInt32,System.UInt32)" />
+        </member>
+        <member name="M:GDX.Mathematics.Random.WELL1024a.Sample">
+            <inheritdoc cref="M:GDX.Mathematics.Random.IRandomProvider.Sample" />
+        </member>
+        <member name="T:GDX.Mathematics.Random.WELL1024a.WellState">
             <summary>
-                Returns the next pseudo-random System.Double value.
+                A complete state of GDX.Mathematics.Random.WELL1024a.
             </summary>
-            <returns>A pseudo-random System.Double floating point value.</returns>
+        </member>
+        <member name="F:GDX.Mathematics.Random.WELL1024a.WellState.Seed">
+            <summary>
+                The seed used to originally create the GDX.Mathematics.Random.WELL1024a.
+            </summary>
+        </member>
+        <member name="F:GDX.Mathematics.Random.WELL1024a.WellState.Index">
+            <summary>
+                The internal state index.
+            </summary>
+        </member>
+        <member name="F:GDX.Mathematics.Random.WELL1024a.WellState.State">
+            <summary>
+                The internal state array.
+            </summary>
+        </member>
+        <member name="F:GDX.Mathematics.Random.WELL1024a.WellState.Count">
+            <summary>
+                The internal sample count.
+            </summary>
+        </member>
+        <member name="M:GDX.Mathematics.Random.WELL1024a.Equals(GDX.Mathematics.Random.WELL1024a@)">
+            <summary>
+                Is one GDX.Mathematics.Random.WELL1024a the same as the other.
+            </summary>
+            <param name="other">The GDX.Mathematics.Random.WELL1024a to compare with.</param>
+            <returns>true/false if they are fundamentally the same.</returns>
+        </member>
+        <member name="M:GDX.Mathematics.Random.WELL1024a.Equals(GDX.Mathematics.Random.WELL1024a)">
+            <summary>
+                Is one GDX.Mathematics.Random.WELL1024a the same as the other.
+            </summary>
             <remarks>
-                <para>
-                    There are two common ways to create a double floating point using MT19937:
-                    using GDX.Mathematics.Random.MersenneTwister.GenerateUnsignedInteger and dividing by 0xFFFFFFFF + 1,
-                    or else generating two double words and shifting the first by 26 bits and
-                    adding the second.
-                </para>
-                <para>
-                    In a newer measurement of the randomness of MT19937 published in the
-                    journal "Monte Carlo Methods and Applications, Vol. 12, No. 5-6, pp. 385 – 393 (2006)"
-                    entitled "A Repetition Test for Pseudo-Random Number Generators",
-                    it was found that the 32-bit version of generating a double fails at the 95%
-                    confidence level when measuring for expected repetitions of a particular
-                    number in a sequence of numbers generated by the algorithm.
-                </para>
-                <para>
-                    Due to this, the 53-bit method is implemented here and the 32-bit method
-                    of generating a double is not. If, for some reason,
-                    the 32-bit method is needed, it can be generated by the following:
-                    <code>
-                        (System.Double)NextUInt32() / ((UInt64)UInt32.MaxValue + 1);
-                    </code>
-                </para>
+                Avoid using this format for comparison as it copies the data, where as
+                GDX.Mathematics.Random.WELL1024a.Equals(GDX.Mathematics.Random.WELL1024a@) does not.
             </remarks>
+            <param name="other">The GDX.Mathematics.Random.WELL1024a to compare with.</param>
+            <returns>true/false if they are fundamentally the same.</returns>
         </member>
-        <member name="M:GDX.Mathematics.Random.MersenneTwister.NextDouble(System.Boolean)">
+        <member name="M:GDX.Mathematics.Random.WELL1024a.Equals(System.Object)">
             <summary>
-                Returns a pseudo-random System.Double number greater than or equal to zero, and
-                either strictly less than one, or less than or equal to one,
-                depending on the value of the given parameter.
+                Determines if the provided obj's hash code is equal to this GDX.Mathematics.Random.WELL1024a's
+                GDX.Mathematics.Random.WELL1024a.GetHashCode.
             </summary>
-            <param name="includeOne">
-                If true, the pseudo-random System.Double number returned will be
-                less than or equal to one; otherwise, the pseudo-random number returned will
-                be strictly less than one.
-            </param>
-            <returns>
-                If includeOne is true, this method returns a
-                System.Double-precision pseudo-random number greater than or equal to zero, and less
-                than or equal to one. If includeOne is false, this method
-                returns a System.Double-precision pseudo-random number greater than or equal to zero and
-                strictly less than one.
-            </returns>
+            <remarks>
+                This doesnt preclude other objects of different types from having the same hashcode.
+            </remarks>
+            <param name="obj">The System.Object to compare hash codes with.</param>
+            <returns>true/false if the hash codes match.</returns>
         </member>
-        <member name="M:GDX.Mathematics.Random.MersenneTwister.NextDoublePositive">
+        <member name="M:GDX.Mathematics.Random.WELL1024a.GetHashCode">
             <summary>
-                Returns a pseudo-random System.Double number greater than 0.0 and less than 1.0.
+                Generate a hash code value for the given GDX.Mathematics.Random.WELL1024a at its current state.
             </summary>
-            <returns>A pseudo-random System.Double number greater than 0.0 and less than 1.0.</returns>
+            <returns>The hash code value.</returns>
         </member>
-        <member name="M:GDX.Mathematics.Random.MersenneTwister.NextSingle">
+        <member name="T:GDX.Mathematics.Random.RandomAdaptor">
             <summary>
-                Returns a pseudo-random System.Single number between 0.0 and 1.0.
+                Adapter to utilize a GDX.Mathematics.Random.IRandomProvider with System.Random based systems, wrapping the
+                provider in a class object with expected overrides.
             </summary>
-            <returns>
-                A System.Single-precision floating point number greater than or equal to 0.0,
-                and less than 1.0.
-            </returns>
+            <remarks>This will create IL <c>callvert</c> operation codes! Try not to use this.</remarks>
         </member>
-        <member name="M:GDX.Mathematics.Random.MersenneTwister.NextSingle(System.Boolean)">
+        <member name="M:GDX.Mathematics.Random.RandomAdaptor.#ctor(GDX.Mathematics.Random.IRandomProvider)">
             <summary>
-                Returns a pseudo-random System.Single number greater than or equal to zero,
-                and either strictly less than one, or less than or equal to one, depending on the value of the
-                given boolean parameter.
+                Create an adaptor object which behaves like System.Random.
             </summary>
-            <param name="includeOne">
-                If true, the pseudo-random number returned will be
-                less than or equal to one; otherwise, the pseudo-random number returned will
-                be strictly less than one.
-            </param>
-            <returns>
-                If includeOne is true, this method returns a
-                System.Single-precision pseudo-random number greater than or equal to zero, and less
-                than or equal to one. If includeOne is false,
-                this method returns a single-precision pseudo-random number greater than or equal to zero and
-                strictly less than one.
-            </returns>
-        </member>
-        <member name="M:GDX.Mathematics.Random.MersenneTwister.NextSinglePositive">
-            <summary>
-                Returns a pseudo-random positive System.Single number greater than 0.0 and less than 1.0.
-            </summary>
-            <returns>A pseudo-random number greater than 0.0 and less than 1.0.</returns>
-        </member>
-        <member name="M:GDX.Mathematics.Random.MersenneTwister.NextBoolean">
-            <summary>
-                Returns a pseudo-random System.Boolean.
-            </summary>
-            <returns>A System.Boolean value of either true or false.</returns>
+            <remarks>
+                Will cause boxing of struct based types like GDX.Mathematics.Random.WELL1024a.
+                This adaptor really should only be used where a method is expecting a System.Random.
+            </remarks>
+            <param name="provider">A qualified GDX.Mathematics.Random.IRandomProvider.</param>
         </member>
         <member name="T:GDX.Mathematics.Rotate">
             <summary>
@@ -3068,6 +3522,63 @@
             <param name="rotationRate">How fast should the rotation occur.</param>
             <param name="elapsedTime">How long has elapsed since the rotation started.</param>
             <returns>A rotational value.</returns>
+        </member>
+        <member name="T:GDX.Mathematics.Range">
+            <summary>
+                Some simple logic to pick a value from a range.
+            </summary>
+        </member>
+        <member name="F:GDX.Mathematics.Range.SafeIntegerMaxValue">
+            <summary>
+                The safe maximum integer value when using inclusive range methods such as
+                GDX.Mathematics.Random.IRandomProvider.NextInteger(System.Int32,System.Int32).
+            </summary>
+        </member>
+        <member name="F:GDX.Mathematics.Range.SafeUnsignedIntegerMaxValue">
+            <summary>
+                The safe maximum unsigned integer value when using inclusive range methods such as
+                GDX.Mathematics.Random.IRandomProvider.NextUnsignedInteger(System.UInt32,System.UInt32).
+            </summary>
+        </member>
+        <member name="M:GDX.Mathematics.Range.GetDouble(System.Double,System.Double,System.Double)">
+            <summary>
+                Returns the System.Double between minValue and
+                maxValue range at percent.
+            </summary>
+            <param name="percent">The percentage (0-1) used to find a value in the range provided.</param>
+            <param name="minValue">The lowest possible value.</param>
+            <param name="maxValue">The highest possible value.</param>
+            <returns>A System.Double value.</returns>
+        </member>
+        <member name="M:GDX.Mathematics.Range.GetInteger(System.Double,System.Int32,System.Int32)">
+            <summary>
+                Returns the System.Int32 between minValue and
+                maxValue range at percent.
+            </summary>
+            <param name="percent">The percentage (0-1) used to find a value in the range provided.</param>
+            <param name="minValue">The lowest possible value.</param>
+            <param name="maxValue">The highest possible value.</param>
+            <returns>The System.Int32 value.</returns>
+        </member>
+        <member name="M:GDX.Mathematics.Range.GetSingle(System.Double,System.Single,System.Single)">
+            <summary>
+                Returns the System.Single between minValue and
+                maxValue range at percent.
+            </summary>
+            <param name="percent">The percentage (0-1) used to find a value in the range provided.</param>
+            <param name="minValue">The lowest possible value.</param>
+            <param name="maxValue">The highest possible value.</param>
+            <returns>A System.Single value.</returns>
+        </member>
+        <member name="M:GDX.Mathematics.Range.GetUnsignedInteger(System.Double,System.UInt32,System.UInt32)">
+            <summary>
+                Returns the System.UInt32 between minValue and
+                maxValue range at percent.
+            </summary>
+            <param name="percent">The percentage (0-1) used to find a value in the range provided.</param>
+            <param name="minValue">The lowest possible value.</param>
+            <param name="maxValue">The highest possible value.</param>
+            <returns>A System.UInt32 value.</returns>
         </member>
         <member name="T:GDX.Mathematics.Byte2">
             <summary>
@@ -3897,18 +4408,16 @@
             <param name="comparison">Specifies the culture, case, and sort rules to be used.</param>
             <returns>The content before the splitString, or <c>null</c> if none is found.</returns>
         </member>
-        <member name="M:GDX.StringExtensions.GetStableUpperCaseHashCode(System.String)">
+        <member name="M:GDX.StringExtensions.GetStableHashCode(System.String)">
             <summary>
                 <para>
-                    Get the stable hash code value of targetString (converted to an uppercase
-                    System.String).
+                    Get the stable hash code value of targetString.
                 </para>
             </summary>
             <remarks>
                 This loosely based on the Fowler–Noll–Vo (FNV) hash function. It's value will be identical
                 to the value produced natively by processing a System.String with
-                System.String.ToUpper.System.String.GetHashCode, but with no
-                allocations.
+                System.String.GetHashCode, but with no allocations and no virtual calls.
             </remarks>
             <param name="targetString">The target System.String.</param>
             <returns>A System.Int32 value.</returns>
@@ -3924,6 +4433,22 @@
                 This loosely based on the Fowler–Noll–Vo (FNV) hash function. It's value will be identical
                 to the value produced natively by processing a System.String with
                 System.String.ToLower.System.String.GetHashCode, but with no
+                allocations.
+            </remarks>
+            <param name="targetString">The target System.String.</param>
+            <returns>A System.Int32 value.</returns>
+        </member>
+        <member name="M:GDX.StringExtensions.GetStableUpperCaseHashCode(System.String)">
+            <summary>
+                <para>
+                    Get the stable hash code value of targetString (converted to an uppercase
+                    System.String).
+                </para>
+            </summary>
+            <remarks>
+                This loosely based on the Fowler–Noll–Vo (FNV) hash function. It's value will be identical
+                to the value produced natively by processing a System.String with
+                System.String.ToUpper.System.String.GetHashCode, but with no
                 allocations.
             </remarks>
             <param name="targetString">The target System.String.</param>
@@ -4173,24 +4698,36 @@
                 </code>
             </example>
         </member>
-        <member name="T:GDX.VisualScriptingCollectionAttribute">
+        <member name="T:GDX.VisualScriptingCompatibleAttribute">
             <summary>
-                Indicate that the tagged <c>class</c> or <c>struct</c> should be considered as containing a collection when adding to Visual Scripting.
+                Indicate that the tagged class should be considered for use with Visual Scripting.
             </summary>
         </member>
-        <member name="T:GDX.VisualScriptingExtensionAttribute">
+        <member name="T:GDX.VisualScriptingCompatibleAttribute.VisualScriptingCategory">
             <summary>
-                Indicate that the tagged <c>class</c> should be considered as containing extension methods when adding to Visual Scripting.
+                Predetermined categories used when sorting functionality.
             </summary>
         </member>
-        <member name="T:GDX.VisualScriptingTypeAttribute">
+        <member name="F:GDX.VisualScriptingCompatibleAttribute.VisualScriptingCategories">
             <summary>
-                Indicate that the tagged <c>class</c> or <c>struct</c> should be considered as containing a type when adding to Visual Scripting.
+                A specific objects categories.
             </summary>
         </member>
-        <member name="T:GDX.VisualScriptingUtilityAttribute">
+        <member name="M:GDX.VisualScriptingCompatibleAttribute.#ctor(GDX.VisualScriptingCompatibleAttribute.VisualScriptingCategory)">
             <summary>
-                Indicate that the tagged <c>class</c> should be considered as containing utility functionality when adding to Visual Scripting.
+                Indicate that the target should be part of visualScriptingCategories.
+            </summary>
+            <param name="visualScriptingCategories">The category flags.</param>
+        </member>
+        <member name="M:GDX.VisualScriptingCompatibleAttribute.#ctor(System.Int16)">
+            <summary>
+                Indicate that the target should be part of a specific GDX.VisualScriptingCompatibleAttribute.VisualScriptingCategory.
+            </summary>
+            <param name="visualScriptingCategory">The value of the intended category.</param>
+        </member>
+        <member name="M:GDX.VisualScriptingCompatibleAttribute.#ctor">
+            <summary>
+                Indicate that the target should be part of Visual Scripting, but not defining a category.
             </summary>
         </member>
         <member name="T:GDX.DisableInInspectorAttribute">
@@ -4932,6 +5469,101 @@
             <param name="targetBoxCollider">The UnityEngine.BoxCollider to use for evaluation.</param>
             <param name="worldPosition">A UnityEngine.Vector3 point in world space.</param>
             <returns>true/false if the world position is contained within the targetBoxCollider.</returns>
+        </member>
+        <member name="T:GDX.TransientReference">
+            <summary>
+                A comparable weak reference to an object which will not prevent garbage collection. It will positively
+                compare against similar targeted reference trackers as well as the actual target object.
+            </summary>
+            <remarks>
+                There isn't a lot of great use cases for using this sort of thing; System.WeakReference on its own
+                is sufficient in most of the use cases, however this particular arrangement is useful for developer-ish
+                stuff.
+            </remarks>
+        </member>
+        <member name="M:GDX.TransientReference.#ctor(System.Object)">
+            <summary>
+                Create a GDX.TransientReference referencing the target.
+            </summary>
+            <param name="target">The target System.Object to reference.</param>
+        </member>
+        <member name="M:GDX.TransientReference.#ctor(System.Object,System.Boolean)">
+            <summary>
+                Create a GDX.TransientReference referencing the target.
+            </summary>
+            <param name="target">The target System.Object to reference.</param>
+            <param name="trackResurrection">Should the object remain tracked after it has been finalized.</param>
+        </member>
+        <member name="M:GDX.TransientReference.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Create a GDX.TransientReference from the info.
+            </summary>
+            <param name="info">A System.Runtime.Serialization.SerializationInfo representation of a GDX.TransientReference.</param>
+            <param name="context">Describes the source of the System.Runtime.Serialization.SerializationInfo.</param>
+        </member>
+        <member name="M:GDX.TransientReference.CompareTo(System.Object)">
+            <summary>
+                Compare this GDX.TransientReference to the target System.Object.
+            </summary>
+            <param name="obj">The target System.Object to compare against.</param>
+            <returns>1 if the same, 0 otherwise.</returns>
+        </member>
+        <member name="M:GDX.TransientReference.CompareTo(GDX.TransientReference)">
+            <summary>
+                Compare this GDX.TransientReference to the target GDX.TransientReference.
+            </summary>
+            <param name="obj">The target GDX.TransientReference to compare against.</param>
+            <returns>1 if the same, 0 otherwise.</returns>
+        </member>
+        <member name="M:GDX.TransientReference.CompareTo(System.WeakReference)">
+            <summary>
+                Compare this GDX.TransientReference to the target System.WeakReference.
+            </summary>
+            <param name="obj">The target System.WeakReference to compare against.</param>
+            <returns>1 if the same, 0 otherwise.</returns>
+        </member>
+        <member name="M:GDX.TransientReference.Equals(GDX.TransientReference)">
+            <summary>
+                Does this GDX.TransientReference equal the target GDX.TransientReference.
+            </summary>
+            <param name="other">The target GDX.TransientReference to compare with.</param>
+            <returns>true if it is the same, false otherwise.</returns>
+        </member>
+        <member name="M:GDX.TransientReference.Equals(System.WeakReference)">
+            <summary>
+                Does this GDX.TransientReference equal the target System.WeakReference.
+            </summary>
+            <param name="other">The target System.WeakReference to compare with.</param>
+            <returns>true if it is the same, false otherwise.</returns>
+        </member>
+        <member name="M:GDX.TransientReference.Equals(System.Object)">
+            <summary>
+                Does this GDX.TransientReference equal the target System.Object.
+            </summary>
+            <param name="obj">The target System.Object to compare with.</param>
+            <returns>true if it is the same, false otherwise.</returns>
+        </member>
+        <member name="M:GDX.TransientReference.GetHashCode">
+            <summary>
+                Return the hashcode of the P:System.WeakReference.Target.
+            </summary>
+            <returns>Returns the P:System.WeakReference.Target's hash code, or -1 if null.</returns>
+        </member>
+        <member name="M:GDX.TransientReference.op_Equality(GDX.TransientReference,GDX.TransientReference)">
+            <summary>
+                Compare GDX.TransientReferences to see if they are equal.
+            </summary>
+            <param name="left">Left-side GDX.TransientReference.</param>
+            <param name="right">Right-side GDX.TransientReference.</param>
+            <returns>true/false if they are equal.</returns>
+        </member>
+        <member name="M:GDX.TransientReference.op_Inequality(GDX.TransientReference,GDX.TransientReference)">
+            <summary>
+                Compare GDX.TransientReferences to see if they are not equal.
+            </summary>
+            <param name="left">Left-side GDX.TransientReference.</param>
+            <param name="right">Right-side GDX.TransientReference.</param>
+            <returns>true/false if they are not equal.</returns>
         </member>
         <member name="T:GDX.GameObjectExtensions">
             <summary>
