@@ -24,3 +24,5 @@
       href: https://github.com/dotBunny/GDX/projects/1 
 - name: Security Policy
   href: security.md
+- name: FAQ
+  href: faq.md

@@ -29,3 +29,8 @@ a[title="Kanban Board"]:after
     -moz-osx-font-smoothing:grayscale;
     content:"\e066"
 }
+
+.toc .nav > li > span.expand-stub + a
+{
+    font-weight: bold !important;
+}

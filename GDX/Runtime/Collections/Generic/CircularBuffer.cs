@@ -1,4 +1,5 @@
-﻿// dotBunny licenses this file to you under the MIT license.
+﻿// Copyright (c) 2020-2021 dotBunny Inc.
+// dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 using System;
@@ -14,7 +15,7 @@ namespace GDX.Collections.Generic
     ///     A sized buffer which loops back over itself as elements are used.
     /// </summary>
     /// <typeparam name="T">The type of <see cref="object" />s contained within.</typeparam>
-    [VisualScriptingCollection]
+    [VisualScriptingCompatible(1)]
     public class CircularBuffer<T> : IEnumerable<T>
     {
         /// <summary>

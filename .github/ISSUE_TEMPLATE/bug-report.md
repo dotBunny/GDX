@@ -24,8 +24,8 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Environment**
- - Unity Version [e.g. 2019.1]
- - GDX Version [e.g. 1.2.1]
+ - Unity Version [e.g. 2019.4]
+ - GDX Version [e.g. 2.0.0]
  - OS: [e.g. Windows]
 
 **Additional context**

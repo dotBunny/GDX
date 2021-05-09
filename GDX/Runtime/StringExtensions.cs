@@ -1,4 +1,5 @@
-﻿// dotBunny licenses this file to you under the MIT license.
+﻿// Copyright (c) 2020-2021 dotBunny Inc.
+// dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 using System;
@@ -18,7 +19,7 @@ namespace GDX
     /// <summary>
     ///     <see cref="System.String" /> Based Extension Methods
     /// </summary>
-    [VisualScriptingExtension]
+    [VisualScriptingCompatible(12)]
     public static class StringExtensions
     {
         /// <summary>
@@ -234,23 +235,22 @@ namespace GDX
             return splitIndex < 0 ? null : targetString.Substring(0, splitIndex);
         }
 
+
         /// <summary>
         ///     <para>
-        ///         Get the stable hash code value of <paramref name="targetString" /> (converted to an uppercase
-        ///         <see cref="System.String" />).
+        ///         Get the stable hash code value of <paramref name="targetString" />.
         ///     </para>
         /// </summary>
         /// <remarks>
         ///     This loosely based on the Fowler–Noll–Vo (FNV) hash function. It's value will be identical
         ///     to the value produced natively by processing a <see cref="System.String" /> with
-        ///     <see cref="System.String.ToUpper()" />.<see cref="System.String.GetHashCode()" />, but with no
-        ///     allocations.
+        ///     <see cref="System.String.GetHashCode()" />, but with no allocations and no virtual calls.
         /// </remarks>
         /// <param name="targetString">The target <see cref="System.String" />.</param>
         /// <returns>A <see cref="System.Int32" /> value.</returns>
         [SecuritySafeCritical]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-        public static unsafe int GetStableUpperCaseHashCode(this string targetString)
+        public static unsafe int GetStableHashCode(this string targetString)
         {
             fixed (char* src = targetString)
             {
@@ -262,12 +262,6 @@ namespace GDX
                 // Get character
                 while ((c = s[0]) != 0)
                 {
-                    // Check character value and shift it if necessary (32)
-                    if (c >= AsciiLowerCaseStart && c <= AsciiLowerCaseEnd)
-                    {
-                        c ^= AsciiCaseShift;
-                    }
-
                     // Add to Hash #1
                     hash1 = ((hash1 << 5) + hash1) ^ c;
 
@@ -277,12 +271,6 @@ namespace GDX
                     if (c == 0)
                     {
                         break;
-                    }
-
-                    // Check character value and shift it if necessary (32)
-                    if (c >= AsciiLowerCaseStart && c <= AsciiLowerCaseEnd)
-                    {
-                        c ^= AsciiCaseShift;
                     }
 
                     hash2 = ((hash2 << 5) + hash2) ^ c;
@@ -340,6 +328,65 @@ namespace GDX
 
                     // Check character value and shift it if necessary (32)
                     if (c >= AsciiUpperCaseStart && c <= AsciiUpperCaseEnd)
+                    {
+                        c ^= AsciiCaseShift;
+                    }
+
+                    hash2 = ((hash2 << 5) + hash2) ^ c;
+                    s += 2;
+                }
+
+                return hash1 + hash2 * 1566083941;
+            }
+        }
+
+        /// <summary>
+        ///     <para>
+        ///         Get the stable hash code value of <paramref name="targetString" /> (converted to an uppercase
+        ///         <see cref="System.String" />).
+        ///     </para>
+        /// </summary>
+        /// <remarks>
+        ///     This loosely based on the Fowler–Noll–Vo (FNV) hash function. It's value will be identical
+        ///     to the value produced natively by processing a <see cref="System.String" /> with
+        ///     <see cref="System.String.ToUpper()" />.<see cref="System.String.GetHashCode()" />, but with no
+        ///     allocations.
+        /// </remarks>
+        /// <param name="targetString">The target <see cref="System.String" />.</param>
+        /// <returns>A <see cref="System.Int32" /> value.</returns>
+        [SecuritySafeCritical]
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
+        public static unsafe int GetStableUpperCaseHashCode(this string targetString)
+        {
+            fixed (char* src = targetString)
+            {
+                int hash1 = 5381;
+                int hash2 = hash1;
+                int c;
+                char* s = src;
+
+                // Get character
+                while ((c = s[0]) != 0)
+                {
+                    // Check character value and shift it if necessary (32)
+                    if (c >= AsciiLowerCaseStart && c <= AsciiLowerCaseEnd)
+                    {
+                        c ^= AsciiCaseShift;
+                    }
+
+                    // Add to Hash #1
+                    hash1 = ((hash1 << 5) + hash1) ^ c;
+
+                    // Get our second character
+                    c = s[1];
+
+                    if (c == 0)
+                    {
+                        break;
+                    }
+
+                    // Check character value and shift it if necessary (32)
+                    if (c >= AsciiLowerCaseStart && c <= AsciiLowerCaseEnd)
                     {
                         c ^= AsciiCaseShift;
                     }

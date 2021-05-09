@@ -1,4 +1,5 @@
-// dotBunny licenses this file to you under the MIT license.
+// Copyright (c) 2020-2021 dotBunny Inc.
+// dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 // ReSharper disable CommentTypo
@@ -28,6 +29,15 @@ namespace GDX.Developer
         public const bool HasBurstPackage = true;
 #else
         public const bool HasBurstPackage = false;
+#endif
+
+        /// <summary>
+        ///     Is a compatible version of the Collections package present in the project?
+        /// </summary>
+#if GDX_COLLECTIONS
+        public const bool HasCollectionsPackage = true;
+#else
+        public const bool HasCollectionsPackage = false;
 #endif
 
         /// <summary>

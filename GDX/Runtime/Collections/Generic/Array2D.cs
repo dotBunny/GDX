@@ -1,4 +1,5 @@
-// dotBunny licenses this file to you under the MIT license.
+// Copyright (c) 2020-2021 dotBunny Inc.
+// dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 using System.Runtime.CompilerServices;
@@ -12,7 +13,7 @@ namespace GDX.Collections.Generic
     /// </summary>
     /// <remarks>Mimics multi-dimensional array format.</remarks>
     /// <typeparam name="T">Type of objects.</typeparam>
-    [VisualScriptingCollection]
+    [VisualScriptingCompatible(1)]
     public class Array2D<T>
     {
         /// <summary>

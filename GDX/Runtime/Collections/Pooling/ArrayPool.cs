@@ -1,4 +1,5 @@
-// dotBunny licenses this file to you under the MIT license.
+// Copyright (c) 2020-2021 dotBunny Inc.
+// dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 using System.Runtime.InteropServices;
@@ -39,7 +40,7 @@ namespace GDX.Collections.Pooling
                 JaggedArrayWithCount<T> pool = new JaggedArrayWithCount<T>();
 
                 pool.Pool = arrayPoolForSize;
-                pool.Count = initialPoolCounts[i];
+                pool.Count = initialArrayCount;
 
                 ArrayPools[i] = pool;
             }
@@ -54,7 +55,7 @@ namespace GDX.Collections.Pooling
         ///     or equal to this size.
         /// </param>
         /// <returns></returns>
-        public T[] GetArrayFromPool(int requestedSize)
+        public T[] Get(int requestedSize)
         {
             requestedSize = requestedSize < 1 ? 1 : requestedSize;
             requestedSize--;
@@ -95,7 +96,7 @@ namespace GDX.Collections.Pooling
         ///     the array.
         /// </summary>
         /// <param name="array">The power-of-two sized array to return to the pool. Power-of-two sizes only.</param>
-        public void ReturnArrayToPool(T[] array)
+        public void Return(T[] array)
         {
             uint length =
                 unchecked((uint)array.Length); // Counting on people to be cool and not pass in a non-power-of-two here.

@@ -47,8 +47,8 @@ Feature | Description | Type
 :--- | :--- | ---
 [Circular Buffer](xref:GDX.Collections.Generic.CircularBuffer`1) | A sized buffer which loops back over itself as elements are filled. | `class`
 [Native 2D Array](xref:GDX.Collections.Generic.NativeArray2D`1) | A 2-dimension `NativeArray` with a `xy` based accessor. | `struct`
-[Native Simple List](xref:GDX.Collections.Generic.NativeSimpleList`1) | A [SimpleList](xref:GDX.Collections.Generic.SimpleList`1), backed by a `NativeArray`. | `struct`
-[Native Simple Queue](xref:GDX.Collections.Generic.NativeSimpleQueue`1) | A simple queue, backed by a `NativeArray`. | `struct`
+[Native Simple List](xref:GDX.Collections.Generic.NativeSimpleList`1) | A [SimpleList](xref:GDX.Collections.Generic.SimpleList`1), backed by a `NativeArray`. Available when `com.unity.collections` is not found. | `struct`
+[Native Simple Queue](xref:GDX.Collections.Generic.NativeSimpleQueue`1) | A simple queue, backed by a `NativeArray`. Available when `com.unity.collections` is not found. | `struct`
 [Native Uniform 3D Array](xref:GDX.Collections.Generic.NativeUniformArray3D`1) | A 3-dimension `NativeArray` where all axis are the same length. Numerous accessors available, including a `xyz` based. | `struct`
 [SerializableDictionary](xref:GDX.Collections.Generic.SerializableDictionary`2) | A dictionary that can be serialized by Unity into its native YAML format. Usage of the editor side property drawer **requires Unity 2020.1+**. | `class`
 
@@ -77,5 +77,5 @@ A few other notable inclusions which have been found useful.
 
 Feature | Description
 :--- | :---
-[Mersenne Twister](xref:GDX.Mathematics.Random.MersenneTwister) | A deterministic random number generator.
+[WELL1024a](xref:GDX.Mathematics.Random.WELL1024a) | A deterministic random number generator.
 [Tarball Support](xref:GDX.IO.Compression.TarFile) | A native method to inflate `.tar` and `.tar.gz` files. Used internally in the `GDX` package to handle upgrades from [GitHub](https://github.com/dotBunny/GDX/releases).

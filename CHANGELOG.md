@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2021-05-09
+***"Fresh Paint"***
+> Breaking changes and a new license (BSL-1.0); making GDX even easier to include in projects!
+
+### Added
+- New [FAQ](https://gdx.dotbunny.com/manual/faq.html) section of the website, addressing some of the more frequently asked questions.
+- `WELL1024a` implementation to replace removed `MersenneTwister` in GDX .
+- `IRandomProvider` and `RandomAdaptor` to allow for some interchange with existing usages; these are slow and should be used as a last resort.
+- `GetStableHashCode` for generating hashcode of strings identical to `GetHashCode`, without the virtual call.
+- `TransientReference` provides a comparable non-garbage collection blocking reference type.
+- `Report` provides some of the common logic used by the newly added `ResourcesAudit` and `ResourcesDiff`. Think of this as an incredibly simple way to find resource memory leaks.
+
+### Changed
+- File license headers, repository wide now reference the BSL-1.0 license.
+- Corrected minimum compatible version to `2018.4` in `README.md`
+- Added latest version `2.0.0` to `SECURITY.md`, sunsetting `1.2.x`.
+- `VisualScriptingCollectionAttribute`, `VisualScriptingExtensionAttribute`, `VisualScriptingTypeAttribute`, `VisualScriptingUtilityAttribute` have been consolidated to `VisualScriptingCompatible`.
+- `NextDouble`, `NextSingle` functionality on `IRandomProviders` do not default to extreme values.
+- `NativeSimpleList` and `NativeSimpleQueue` are only available when `com.unity.collections` is not present.
+- Altered API documentation to have a heirachial namespace index using custom tooling.  
+
+### Removed
+- Removed some supporting types and methods used by GDX's project settings from [documentation](https://gdx.dotbunny.com).
+- Removed `MersenneTwister` to allow for our new licensing model (functionally replaced with `WELL1024a` implementation).
+
 ## [1.3.0] - 2021-04-06
 ***"Visual Time"***
 > An effort to make GDX more accessible to Visual Scripting.
@@ -19,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Stated support for GDX has shifted to current release cycle Unity, with support for 2018.4 LTS, 2019.4 LTS and 2020.3 LTS. This doesn't mean that it will not work with other versions, just our automation only checks against LTS and current versions.
 - Removed the extension `Get` method from `GameObjectPool` to match the other methods.
 - Only Unity 2020+ supports the Package Manager resolve function, previous versions of Unity will be presented with an options dialog.
-- Consilidated access/creation of `GDXConfig`.
+- Consolidated access/creation of `GDXConfig`.
 - Altered `NativeArray2D` to index accessor to function like `Array2D`.
 
 ### Fixed

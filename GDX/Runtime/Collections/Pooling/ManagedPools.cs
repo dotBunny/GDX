@@ -1,4 +1,5 @@
-// dotBunny licenses this file to you under the MIT license.
+// Copyright (c) 2020-2021 dotBunny Inc.
+// dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace GDX.Collections.Pooling
     ///     A managed pooling system implementation primarily meant for the object oriented patterns, based on the C# base
     ///     object.
     /// </summary>
-    [VisualScriptingCollection]
+    [VisualScriptingCompatible(1)]
     public static class ManagedPools
     {
         /// <summary>

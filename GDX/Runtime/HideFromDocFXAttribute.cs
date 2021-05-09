@@ -1,4 +1,5 @@
-﻿// dotBunny licenses this file to you under the MIT license.
+﻿// Copyright (c) 2020-2021 dotBunny Inc.
+// dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 using System;
@@ -19,6 +20,7 @@ namespace GDX
     ///         uid: GDX.HideFromDocFXAttribute
     ///     </code>
     /// </example>
+    [HideFromDocFX]
     [ExcludeFromCodeCoverage]
     // ReSharper disable once InconsistentNaming
     public sealed class HideFromDocFXAttribute : Attribute

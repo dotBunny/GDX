@@ -2,7 +2,7 @@
   href: manual/
 - name: API
   href: api/
-  homepage: api/index.md
+  homepage: api/gdx.yml
 - name: Changelog
   href: changelog.md
 - name: License
