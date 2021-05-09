@@ -4,13 +4,13 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace GDX.Developer.Reports
 {
     /// <summary>
     ///     A set of functionality used to generate reports.
     /// </summary>
+    [HideFromDocFX]
     public static class ReportExtensions
     {
         /// <summary>

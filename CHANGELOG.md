@@ -14,8 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `IRandomProvider` and `RandomAdaptor` to allow for some interchange with existing usages; these are slow and should be used as a last resort.
 - `GetStableHashCode` for generating hashcode of strings identical to `GetHashCode`, without the virtual call.
 - `TransientReference` provides a comparable non-garbage collection blocking reference type.
-- `Report` provides some of the common logic used by the newly added `ResourcesReport`. Think of this as an incredibly simple way to find resource memory leaks.
-- `ObjectInfo` and some derivatives (`MeshObjectInfo`, `ShaderObjectInfo`, and `TextureObjectInfo`) provide context to objects for reporting purposes.
+- `Report` provides some of the common logic used by the newly added `ResourcesAudit` and `ResourcesDiff`. Think of this as an incredibly simple way to find resource memory leaks.
 
 ### Changed
 - File license headers, repository wide now reference the BSL-1.0 license.
@@ -24,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `VisualScriptingCollectionAttribute`, `VisualScriptingExtensionAttribute`, `VisualScriptingTypeAttribute`, `VisualScriptingUtilityAttribute` have been consolidated to `VisualScriptingCompatible`.
 - `NextDouble`, `NextSingle` functionality on `IRandomProviders` do not default to extreme values.
 - `NativeSimpleList` and `NativeSimpleQueue` are only available when `com.unity.collections` is not present.
+- Altered API documentation to have a heirachial namespace index using custom tooling.  
 
 ### Removed
 - Removed some supporting types and methods used by GDX's project settings from [documentation](https://gdx.dotbunny.com).

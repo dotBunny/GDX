@@ -8,7 +8,7 @@ namespace GDX.Developer.Reports.Objects
 {
     public sealed class MeshObjectInfo : ObjectInfo
     {
-        public const string TypeDefinition = "GDX.Developer.Reports.Objects.MeshObjectInfo,GDX";
+        public new const string TypeDefinition = "GDX.Developer.Reports.Objects.MeshObjectInfo,GDX";
         public bool IsReadable;
         public int SubMeshCount;
         public int Triangles;

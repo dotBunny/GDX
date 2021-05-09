@@ -8,7 +8,7 @@ namespace GDX.Developer.Reports.Objects
 {
     public sealed class AssetBundleObjectInfo : ObjectInfo
     {
-        public const string TypeDefinition = "GDX.Developer.Reports.Objects.AssetBundleObjectInfo,GDX";
+        public new const string TypeDefinition = "GDX.Developer.Reports.Objects.AssetBundleObjectInfo,GDX";
 
         public bool IsStreamedSceneAssetBundle;
         public int AssetCount;

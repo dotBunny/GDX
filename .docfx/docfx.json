@@ -1,12 +1,13 @@
 {
   "metadata": [
     {
+      "force": false,
       "src": [
         {
           "src": "../../..",
           "files": [
             "GDX.csproj",
-            "GDX.Editor.csproj",
+            "GDX.Editor.csproj"
           ]
         }
       ],
@@ -80,6 +81,11 @@
     "noLangKeyword": false,
     "keepFileLink": false,
     "cleanupCacheHistory": false,
-    "disableGitFeatures": false
+    "disableGitFeatures": false,
+    "sitemap":{
+      "baseUrl": "https://gdx.dotbunny.com/",
+      "priority": 0.1,
+      "changefreq": "monthly"
+     }
   }
 }

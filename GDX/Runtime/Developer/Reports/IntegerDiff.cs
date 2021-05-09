@@ -5,6 +5,7 @@
 
 namespace GDX.Developer.Reports
 {
+    [HideFromDocFX]
     public readonly struct IntegerDiff
     {
         public readonly float Percentage;

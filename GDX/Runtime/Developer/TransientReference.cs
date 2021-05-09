@@ -53,7 +53,7 @@ namespace GDX
         /// <returns>1 if the same, 0 otherwise.</returns>
         public int CompareTo(object obj)
         {
-            if (obj == Target || obj == this)
+            if (obj == Target || (TransientReference) obj == this)
             {
                 return 1;
             }
@@ -83,7 +83,7 @@ namespace GDX
         /// <returns>1 if the same, 0 otherwise.</returns>
         public int CompareTo(WeakReference obj)
         {
-            if (obj.Target == Target || obj == this)
+            if (obj.Target == Target || (TransientReference) obj == this)
             {
                 return 1;
             }
@@ -124,7 +124,7 @@ namespace GDX
         /// <summary>
         ///     Does this <see cref="TransientReference" /> equal the target <see cref="object" />.
         /// </summary>
-        /// <param name="other">The target <see cref="object" /> to compare with.</param>
+        /// <param name="obj">The target <see cref="object" /> to compare with.</param>
         /// <returns>true if it is the same, false otherwise.</returns>
         public override bool Equals(object obj)
         {

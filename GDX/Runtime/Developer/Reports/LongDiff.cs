@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace GDX.Developer.Reports
 {
+    [HideFromDocFX]
     public readonly struct LongDiff
     {
         public readonly float Percentage;

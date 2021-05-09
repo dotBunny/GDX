@@ -17,7 +17,7 @@ Path | Description
 --- | ---
 \\\\Documentation | Git clone of `https://github.com/dotBunny/GDX.Documentation`
 \\\\Projects\000_Development\Assets\com.dotbunny.gdx | Git clone of `https://github.com/dotBunny/GDX`
-\\\\Tools\docfx\docfx.exe | Extracted version from `https://github.com/dotnet/docfx/releases`
+\\\\External\docfx\docfx.exe | Extracted version (2.x) from `https://github.com/dotnet/docfx/releases`
 
 ### Scripts
 Path | Description
