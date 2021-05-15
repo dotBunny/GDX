@@ -47,6 +47,32 @@ namespace Runtime.Collections.Generic
 
         [Test]
         [Category("GDX.Tests")]
+        public void GetColumnIndex_MockData_ReturnsIndex()
+        {
+            Array2D<int> mockArray = new Array2D<int>(2, 4) {[1, 0] = 0, [1, 1] = 1, [1, 2] = 2, [1, 3] = 3};
+
+            int columnIndex = mockArray.GetColumnIndex(5);
+
+            bool evaluate = columnIndex == 1;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void GetRowIndex_MockData_ReturnsIndex()
+        {
+            Array2D<int> mockArray = new Array2D<int>(2, 4) {[1, 0] = 0, [1, 1] = 1, [1, 2] = 2, [1, 3] = 3};
+
+            int rowIndex = mockArray.GetRowIndex(5);
+
+            bool evaluate = rowIndex == 1;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
         public void ReverseColumns_MockDataEven_ValuesReversed()
         {
             Array2D<int> mockArray = new Array2D<int>(2, 4) {[1, 0] = 0, [1, 1] = 1, [1, 2] = 2, [1, 3] = 3};

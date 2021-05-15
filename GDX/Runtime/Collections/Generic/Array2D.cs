@@ -109,6 +109,28 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
+        /// Get the column index of the provided <paramref name="index"/>.
+        /// </summary>
+        /// <param name="index">A valid index contained within <see cref="Array"/>.</param>
+        /// <returns>The column index.</returns>
+        public int GetColumnIndex(int index)
+        {
+            int leftOvers = index % ColumnCount;
+            return leftOvers;
+        }
+
+        /// <summary>
+        /// Get the row index of the provided <paramref name="index"/>.
+        /// </summary>
+        /// <param name="index">A valid index contained within <see cref="Array"/>.</param>
+        /// <returns>The row index.</returns>
+        public int GetRowIndex(int index)
+        {
+            int leftOvers = index % ColumnCount;
+            return (index - leftOvers) / ColumnCount;
+        }
+
+        /// <summary>
         ///     Reverse the order of the columns in the backing <see cref="Array" />.
         /// </summary>
         public void ReverseColumns()
@@ -217,7 +239,6 @@ namespace GDX.Collections.Generic
             ColumnCount = newColumnCount;
             Array = newArray;
         }
-
 
         /// <summary>
         ///     Creates a copy of the internal array as a traditional multi-dimensional array.
