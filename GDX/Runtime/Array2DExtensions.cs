@@ -20,48 +20,6 @@ namespace GDX
         /// <summary>
         ///     Generate an array scaled by bilinear interpolation.
         /// </summary>
-        /// <remarks>Works with <see cref="double"/> values.</remarks>
-        /// <param name="inputArray">The existing <see cref="Array2D{T}"/> to scale.</param>
-        /// <param name="scaleFactor">The multiple to scale by.</param>
-        public static Array2D<double> Scale(this Array2D<double> inputArray, int scaleFactor = 2)
-        {
-            int originalRowsMinusOne = inputArray.RowCount - 1;
-            int originalColsMinusOne = inputArray.ColumnCount - 1;
-
-            int newRows = inputArray.RowCount * scaleFactor;
-            int newCols = inputArray.ColumnCount * scaleFactor;
-
-            Array2D<double> returnArray = new Array2D<double>(inputArray.RowCount * scaleFactor,
-                inputArray.ColumnCount * scaleFactor);
-
-            for (int x = 0; x < newCols; x++)
-            for (int y = 0; y < newRows; y++)
-            {
-                double gx = (double)x / newCols * originalColsMinusOne;
-                double gy = (double)y / newCols * originalRowsMinusOne;
-                int gxi = (int)gx;
-                int gyi = (int)gy;
-
-                double c00 = inputArray[gxi, gyi];
-                double c10 = inputArray[gxi + 1, gyi];
-                double c01 = inputArray[gxi, gyi + 1];
-                double c11 = inputArray[gxi + 1, gyi + 1];
-
-                double tx = gx - gxi;
-                double ty = gy - gyi;
-#if GDX_MATHEMATICS
-                returnArray[x, y] = math.lerp(math.lerp(c00, c10, tx), math.lerp(c01, c11, tx), ty);
-#else
-                returnArray[x, y] = Mathf.Lerp(Mathf.Lerp(c00, c10, tx), Mathf.Lerp(c01, c11, tx), ty);
-#endif
-            }
-
-            return returnArray;
-        }
-
-        /// <summary>
-        ///     Generate an array scaled by bilinear interpolation.
-        /// </summary>
         /// <remarks>Works with <see cref="float"/> values.</remarks>
         /// <param name="inputArray">The existing <see cref="Array2D{T}"/> to scale.</param>
         /// <param name="scaleFactor">The multiple to scale by.</param>
