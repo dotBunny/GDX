@@ -66,6 +66,23 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
+        public void DistanceSqr_MockData_ReturnsSame()
+        {
+            Vector3 a = new Vector3(0,20.5f, 16.5f);
+            Vector3 b = new Vector3(18,17.5f, 92.5f);
+
+            float originalDistance = Vector3.Distance(a, b);
+            float original = Mathf.Round(originalDistance * originalDistance);
+            float optimized = Mathf.Round(a.DistanceSqr(b));
+
+            bool evaluate = original == optimized;
+
+            Assert.IsTrue(evaluate);
+        }
+
+
+        [Test]
+        [Category("GDX.Tests")]
         public void Midpoint_ZeroAndOne_ReturnsHalf()
         {
             Vector3 a = new Vector3(0, 0, 0);
