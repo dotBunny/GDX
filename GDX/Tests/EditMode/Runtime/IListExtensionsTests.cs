@@ -49,7 +49,7 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
-        public void ContainsItem_MockData_ReturnsIndex()
+        public void ContainsItem_MockData_FindsItem()
         {
             CircularBuffer<int> mockObject = new CircularBuffer<int>(5);
             List<CircularBuffer<int>> mockData = new List<CircularBuffer<int>>
@@ -62,6 +62,16 @@ namespace Runtime
             };
 
             bool evaluate = mockData.ContainsItem(mockObject);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
+        public void ContainsItem_StringArray_FindsItem()
+        {
+            string[] mockObject = new string[] {"Hello", "Jello", "Mello", "Tello", "Dello"};
+            bool evaluate = mockObject.ContainsItem("Jello");
 
             Assert.IsTrue(evaluate);
         }

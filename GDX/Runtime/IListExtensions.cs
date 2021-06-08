@@ -2,9 +2,10 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace GDX
 {
@@ -48,7 +49,7 @@ namespace GDX
             int length = targetList.Count;
             for (int i = 0; i < length; i++)
             {
-                if (targetList[i] == targetItem)
+                if (targetList[i].Equals(targetItem))
                 {
                     return true;
                 }
