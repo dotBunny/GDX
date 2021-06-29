@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.1] - 2021-06-??
 ### Fixed
 - `IListExtensions.ContainsItem` now uses `Equals()` to resolve literals issues with strings.
+- Categories for Visual Scripting based entries are now correct.
 
 ## [2.0.0] - 2021-05-09
 ***"Fresh Paint"***

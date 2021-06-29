@@ -10,7 +10,7 @@ namespace GDX
     /// <summary>
     ///     Enumeration Based Extension Methods
     /// </summary>
-    [VisualScriptingCompatible(12)]
+    [VisualScriptingCompatible(2)]
     public static class EnumExtensions
     {
         /// <summary>
