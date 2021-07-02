@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2021-06-??
+### Fixed
+- `IListExtensions.ContainsItem` now uses `Equals()` to resolve literals issues with strings.
+- Categories for Visual Scripting based entries are now correct.
+
 ## [2.0.0] - 2021-05-09
 ***"Fresh Paint"***
 > Breaking changes and a new license (BSL-1.0); making GDX even easier to include in projects!

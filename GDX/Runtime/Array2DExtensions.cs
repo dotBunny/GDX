@@ -14,7 +14,7 @@ namespace GDX
     /// <summary>
     ///     Array2D Based Extension Methods
     /// </summary>
-    [VisualScriptingCompatible(12)]
+    [VisualScriptingCompatible(2)]
     public static class Array2DExtensions
     {
         /// <summary>
