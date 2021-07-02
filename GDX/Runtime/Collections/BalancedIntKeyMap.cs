@@ -132,6 +132,10 @@ namespace GDX.Collections.Generic
                 LengthMinusOne = newLength - 1;
 
                 newEntries = new IntKeyValuePair<TValue>[newLength];
+                for (int i = 0; i < newLength; i++)
+                {
+                    newEntries[i].Key = emptyKey;
+                }
 
                 for (int i = 0; i < oldLength && sizeFitsAllEntries; i++)
                 {
