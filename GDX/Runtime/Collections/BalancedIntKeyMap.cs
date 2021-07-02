@@ -66,6 +66,32 @@ namespace GDX.Collections.Generic
                     Expand();
                 }
             }
+
+            ++Count;
+        }
+
+        public void Remove(int key)
+        {
+            int emptyKey = EmptyKey;
+            int maxProbeDistance = MaxProbeDistance;
+            int fibonacciShift = FibonacciShift;
+            int lengthMinusOne = LengthMinusOne;
+            int fibonacciHash = unchecked((int)(unchecked((uint)key) * 2654435769)); // The magic number is equal to (1 << 32) divided by the golden ratio.
+            int idealIndex = fibonacciHash >> fibonacciShift;
+            IntKeyValuePair<TValue>[] entries = Entries;
+
+            for (int distance = 0; distance <= maxProbeDistance; distance++)
+            {
+                int index = (idealIndex + distance) & lengthMinusOne;
+
+                if (entries[index].Key == key)
+                {
+                    entries[index].Key = EmptyKey;
+                    entries[index].Value = default(TValue);
+                    --Count;
+                    return;
+                }
+            }
         }
 
         public void Expand()
