@@ -15,73 +15,58 @@ namespace GDX.Collections.Generic
         public byte FibonacciShift; // Equal to (32 - N), where N is the log of the current length, which for powers of two means the "bit index" of the current array length.
         public byte MaxSize; // The size beyond which the map should fall back to prioritizing memory over search time. Stored as (1 << MaxSize).
         public short Padding;
-        //public void AddWithExpandCheckAndBalance(int key, TValue value)
-        //{
-        //    if (Count > (LengthMinusOne >> 1))
-        //    {
-        //        Expand();
-        //    }
 
-        //    int length = keys.Length;
-        //    Pooling.LongDoubleConversionUnion u;
-        //    u.doubleValue = 0.0;
-        //    u.longValue = 0x4330000000000000L + length;
-        //    u.doubleValue -= 4503599627370496.0;
-        //    int maxProbeDistance = (int)(u.longValue >> 52) - 0x3FF;
+        public void Add(int key, TValue value)
+        {
+            if (Count > (LengthMinusOne >> 1))
+            {
+                Expand();
+            }
 
-        //    int idealIndex = key & (length - 1);
+            int emptyKey = EmptyKey;
 
-        //    // Variants:
-        //    // Readonly lookup with GREAT distribution and key/value pairs separated    ReadOnlyAlignedMap
-        //    // Readonly lookup with GREAT distribution and key/value pairs together     ReadOnlyMap
+            while (key != emptyKey)
+            {
+                int maxProbeDistance = MaxProbeDistance;
+                int fibonacciShift = FibonacciShift;
+                int lengthMinusOne = LengthMinusOne;
+                int fibonacciHash = unchecked((int)(unchecked((uint)key) * 2654435769)); // The magic number is equal to (1 << 32) divided by the golden ratio.
+                int idealIndex = fibonacciHash >> fibonacciShift;
+                IntKeyValuePair<TValue>[] entries = Entries;
 
-        //    // More robust lookup with good distribution and key/value pairs separated  SimpleAlignedMap
-        //    // More robust lookup with good distribution and key/value pairs together   SimpleMap
+                for (int distance = 0; distance <= maxProbeDistance; distance++)
+                {
+                    int index = (idealIndex + distance) & lengthMinusOne;
+                    int otherKey = entries[index].Key;
+                    TValue otherValue = entries[index].Value;
 
-        //    // Balanced lookup with good distribution and key/value pairs separated     BalancedAlignedMap
-        //    // Balanced lookup with good distribution and key/value pairs together      BalancedMap
+                    int idealIndexForOther = otherKey & lengthMinusOne;
 
-        //    // Paranoid lookup with bad distribution and key/value pairs separated      ParanoidAlignedMap
-        //    // Paranoid lookup with bad distribution and key/value pairs together       ParanoidMap
+                    int distanceDefault = index - idealIndexForOther;
+                    int distanceWrapped = (lengthMinusOne + 1 - index) + idealIndexForOther;
 
-        //    int emptyKey = EmptyKey;
+                    int distanceForOther = distanceDefault >= 0 ? distanceDefault : distanceWrapped;
 
-        //    while (key != emptyKey)
-        //    {
-        //        for (int distance = 0; distance <= maxProbeDistance; distance++)
-        //        {
-        //            int index = (idealIndex + distance) & (length - 1);
-        //            int otherKey = keys[index];
+                    bool isFurtherThanOther = distanceForOther < distance;
 
-        //            int idealIndexForOther = otherKey & (length - 1);
+                    distance = isFurtherThanOther ? distanceForOther : distance;
+                    distance = otherKey == emptyKey ? maxProbeDistance : distance;
 
-        //            int distanceDefault = index - idealIndexForOther;
-        //            int distanceWrapped = (length - index) + idealIndexForOther;
+                    if (otherKey == emptyKey || isFurtherThanOther)
+                    {
+                        entries[index].Key = key;
+                        entries[index].Value = value;
+                        key = otherKey;
+                        value = otherValue;
+                    }
+                }
 
-        //            int distanceForOther = distanceDefault >= 0 ? distanceDefault : distanceWrapped;
-
-        //            bool isFurtherThanOther = distanceForOther < distance;
-
-        //            distance = isFurtherThanOther ? distanceForOther : distance;
-        //            distance = otherKey == emptyKey ? maxProbeDistance : distance;
-
-        //            if (otherKey == emptyKey || isFurtherThanOther)
-        //            {
-        //                keys[index] = key;
-        //                TValue otherValue = values[index];
-
-        //                values[index] = value;
-        //                key = otherKey;
-        //                value = otherValue;
-        //            }
-        //        }
-
-        //        if (key != emptyKey)
-        //        {
-        //            Expand();
-        //        }
-        //    }
-        //}
+                if (key != emptyKey)
+                {
+                    Expand();
+                }
+            }
+        }
 
         public void Expand()
         {
