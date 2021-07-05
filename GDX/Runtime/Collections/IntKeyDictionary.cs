@@ -320,19 +320,6 @@ public struct IntKeyConfidentLookupTable<TValue>
 
         int idealIndex = key & (length - 1);
 
-        // Variants:
-        // Readonly lookup with GREAT distribution and key/value pairs separated    ReadOnlyAlignedMap
-        // Readonly lookup with GREAT distribution and key/value pairs together     ReadOnlyMap
-
-        // More robust lookup with good distribution and key/value pairs separated  SimpleAlignedMap
-        // More robust lookup with good distribution and key/value pairs together   SimpleMap
-
-        // Balanced lookup with good distribution and key/value pairs separated     BalancedAlignedMap
-        // Balanced lookup with good distribution and key/value pairs together      BalancedMap
-
-        // Paranoid lookup with bad distribution and key/value pairs separated      ParanoidAlignedMap
-        // Paranoid lookup with bad distribution and key/value pairs together       ParanoidMap
-
         while (key != emptyKey)
         {
             for (int distance = 0; distance <= maxProbeDistance; distance++)
@@ -521,80 +508,4 @@ public struct IntKeyLookupTable<TValue>
         }
     }
 }
-//public struct IntKeyDictionary2<T>
-//{
-//    public int[] intArrays; // Stores buckets, then keys, then next indices. Buckets portion is 2x bigger than keys and next indices.
-
-//    public T[] values;
-//    public int[] keys;  
-//    public int[] buckets;
-//    public int[] nextIndices;
-//    public byte[] keyStates;
-
-//    public int version;
-//    public int freeIndex;
-//    public int freeCount;
-//    public int capacity;
-//    public int usedIndices;
-
-//    public IntKeyDictionary2(int minCapacity)
-//    {
-//        minCapacity = minCapacity < 1 ? 1 : minCapacity;
-//        minCapacity--;
-//        minCapacity |= minCapacity >> 1;
-//        minCapacity |= minCapacity >> 2;
-//        minCapacity |= minCapacity >> 4;
-//        minCapacity |= minCapacity >> 8;
-//        minCapacity |= minCapacity >> 16;
-//        int arrayLength = 2 * (minCapacity + 1);
-
-//        keys = new int[arrayLength];   
-//        nextIndices = new int[arrayLength];
-//        values = new T[arrayLength];
-//        buckets = new int[arrayLength];
-
-//        for (int i = 0; i < arrayLength; i++)
-//        {
-//            buckets[i] = -1;
-//        }
-
-//        freeIndex = -1;
-//        freeCount = 0;
-//        version = 0;
-//        capacity = arrayLength;
-//        usedIndices = 0;
-//    }
-
-//    public int Count()
-//    {
-//        int min = capacity < freeCount ? capacity : freeCount;
-//        return Math.Min(capacity, usedIndices) - freeCount;
-//    }
-
-//    public int FindEntry(int key)
-//    {
-//        if (buckets != null)
-//        {
-//            int hashCode = key & 0x7FFFFFFF;
-//            int capacityMask = buckets.Length - 1;
-//            for (int i = buckets[hashCode % buckets.Length]; i >= 0; i = entries[i].next)
-//            {
-//                if (entries[i].hashCode == hashCode && entries[i].key == key) return i;
-//            }
-//        }
-//        return -1;
-//    }
-
-//    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-//    public static int Ceilpow2(int x)
-//    {
-//        x -= 1;
-//        x |= x >> 1;
-//        x |= x >> 2;
-//        x |= x >> 4;
-//        x |= x >> 8;
-//        x |= x >> 16;
-//        return x + 1;
-//    }
-//}
 
