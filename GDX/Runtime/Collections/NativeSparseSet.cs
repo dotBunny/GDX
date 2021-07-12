@@ -739,5 +739,62 @@ namespace GDX.Collections
                 SparseArray[i] = i + 1; // Build the free list chain.
             }
         }
+
+        public void Reserve(int numberToReserve, Allocator allocator, NativeArrayOptions nativeArrayOptions)
+        {
+            int currentCapacity = SparseArray.Length;
+            int currentCount = Count;
+            int newCount = currentCount + numberToReserve;
+
+            if (newCount > currentCapacity)
+            {
+                NativeArray<int> newSparseArray = new NativeArray<int>(newCount, allocator, nativeArrayOptions);
+                NativeSlice<int> newSparseArraySlice = new NativeSlice<int>(newSparseArray, 0, currentCapacity);
+                newSparseArraySlice.CopyFrom(SparseArray);
+                SparseArray = newSparseArray;
+
+                NativeArray<int> newDenseArray = new NativeArray<int>(newCount, allocator, nativeArrayOptions);
+                NativeSlice<int> newDenseArraySlice = new NativeSlice<int>(newDenseArray, 0, currentCapacity);
+                newDenseArraySlice.CopyFrom(DenseArray);
+                DenseArray = newDenseArray;
+
+                for (int i = currentCapacity; i < newCount; i++)
+                {
+                    DenseArray[i] = -1; // Set new dense indices as unclaimed.
+                    SparseArray[i] = i + 1; // Build the free list chain.
+                }
+            }
+        }
+
+        public void Reserve(int numberToReserve, ref NativeArray<ulong> versionArray, Allocator allocator, NativeArrayOptions nativeArrayOptions)
+        {
+            int currentCapacity = SparseArray.Length;
+            int currentCount = Count;
+            int newCount = currentCount + numberToReserve;
+
+            if (newCount > currentCapacity)
+            {
+                NativeArray<int> newSparseArray = new NativeArray<int>(newCount, allocator, nativeArrayOptions);
+                NativeSlice<int> newSparseArraySlice = new NativeSlice<int>(newSparseArray, 0, currentCapacity);
+                newSparseArraySlice.CopyFrom(SparseArray);
+                SparseArray = newSparseArray;
+
+                NativeArray<int> newDenseArray = new NativeArray<int>(newCount, allocator, nativeArrayOptions);
+                NativeSlice<int> newDenseArraySlice = new NativeSlice<int>(newDenseArray, 0, currentCapacity);
+                newDenseArraySlice.CopyFrom(DenseArray);
+                DenseArray = newDenseArray;
+
+                NativeArray<ulong> newVersionArray = new NativeArray<ulong>(newCount, allocator, nativeArrayOptions);
+                NativeSlice<ulong> newVersionArraySlice = new NativeSlice<ulong>(newVersionArray, 0, currentCapacity);
+                newVersionArraySlice.CopyFrom(versionArray);
+                versionArray = newVersionArray;
+
+                for (int i = currentCapacity; i < newCount; i++)
+                {
+                    DenseArray[i] = -1; // Set new dense indices as unclaimed.
+                    SparseArray[i] = i + 1; // Build the free list chain.
+                }
+            }
+        }
     }
 }

@@ -4,7 +4,8 @@
 
 using System;
 using System.Runtime.CompilerServices;
-
+using System.Collections;
+using System.Collections.Generic;
 namespace GDX.Collections
 {
     /// <summary>
@@ -716,6 +717,58 @@ namespace GDX.Collections
             {
                 DenseArray[i] = -1; // Set new dense indices as unclaimed.
                 SparseArray[i] = i + 1; // Build the free list chain.
+            }
+        }
+
+        public void Reserve(int numberToReserve)
+        {
+            int currentCapacity = SparseArray.Length;
+            int currentCount = Count;
+            int newCount = currentCount + numberToReserve;
+
+            if (newCount > currentCapacity)
+            {
+                int[] newSparseArray = new int[newCount];
+                Array.Copy(SparseArray, 0, newSparseArray, 0, currentCapacity);
+                SparseArray = newSparseArray;
+
+                int[] newDenseArray = new int[newCount];
+                Array.Copy(DenseArray, 0, newDenseArray, 0, currentCapacity);
+                DenseArray = newDenseArray;
+
+                for (int i = currentCapacity; i < newCount; i++)
+                {
+                    DenseArray[i] = -1; // Set new dense indices as unclaimed.
+                    SparseArray[i] = i + 1; // Build the free list chain.
+                }
+            }
+        }
+
+        public void Reserve(int numberToReserve, ref ulong[] versionArray)
+        {
+            int currentCapacity = SparseArray.Length;
+            int currentCount = Count;
+            int newCount = currentCount + numberToReserve;
+
+            if (newCount > currentCapacity)
+            {
+                int[] newSparseArray = new int[newCount];
+                Array.Copy(SparseArray, 0, newSparseArray, 0, currentCapacity);
+                SparseArray = newSparseArray;
+
+                int[] newDenseArray = new int[newCount];
+                Array.Copy(DenseArray, 0, newDenseArray, 0, currentCapacity);
+                DenseArray = newDenseArray;
+
+                ulong[] newVersionArray = new ulong[newCount];
+                Array.Copy(versionArray, 0, newVersionArray, 0, currentCapacity);
+                versionArray = newVersionArray;
+
+                for (int i = currentCapacity; i < newCount; i++)
+                {
+                    DenseArray[i] = -1; // Set new dense indices as unclaimed.
+                    SparseArray[i] = i + 1; // Build the free list chain.
+                }
             }
         }
 
