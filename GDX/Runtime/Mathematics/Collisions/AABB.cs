@@ -1,7 +1,9 @@
 using System;
 using UnityEngine;
 using System.Runtime.CompilerServices;
+#if GDX_MATHEMATICS
 using Unity.Mathematics;
+#endif
 using GDX.Collections.Pooling;
 
 namespace GDX.Mathematics
@@ -18,7 +20,7 @@ namespace GDX.Mathematics
         }
     }
 
-    public struct AABB 
+    public struct AABB
     {
         public Vector3 Min;
         public Vector3 Max;
@@ -87,6 +89,7 @@ namespace GDX.Mathematics
             return overlapsX & overlapsY & overlapsZ;
         }
 
+        #if GDX_MATHEMATICS
         public static int Overlaps(AABB[] boxes, int2[] results)
         {
             int collisionCount = 0;
@@ -271,40 +274,6 @@ namespace GDX.Mathematics
             return collisionCount;
         }
 
-        public static void Overlaps(AABB[] firsts, AABB[] seconds, bool[] results)
-        {
-            int firstLength = firsts.Length;
-            int secondLength = seconds.Length;
-            for (int i = 0; i < firstLength; i++)
-            {
-                for (int j = 0; j < secondLength; j++)
-                {
-                    ref readonly AABB first = ref firsts[i];
-                    ref readonly AABB second = ref seconds[j];
-                    bool overlapsX = (first.Max.x >= second.Min.x) & (first.Min.x <= second.Max.x);
-                    bool overlapsY = (first.Max.y >= second.Min.y) & (first.Min.y <= second.Max.y);
-                    bool overlapsZ = (first.Max.z >= second.Min.z) & (first.Min.z <= second.Max.z);
-                    results[(i * firstLength) + j] = overlapsX & overlapsY & overlapsZ;
-                }
-            }
-        }
-
-        public static void Overlaps(AABB[] firsts, int firstIndex, int firstLength, AABB[] seconds, int secondIndex, int secondLength, bool[] results)
-        {
-            for (int i = 0; i < firstLength; i++)
-            {
-                for (int j = 0; j < secondLength; j++)
-                {
-                    ref readonly AABB first = ref firsts[firstIndex + i];
-                    ref readonly AABB second = ref seconds[secondIndex + j];
-                    bool overlapsX = (first.Max.x >= second.Min.x) & (first.Min.x <= second.Max.x);
-                    bool overlapsY = (first.Max.y >= second.Min.y) & (first.Min.y <= second.Max.y);
-                    bool overlapsZ = (first.Max.z >= second.Min.z) & (first.Min.z <= second.Max.z);
-                    results[(i * firstLength) + j] = overlapsX & overlapsY & overlapsZ;
-                }
-            }
-        }
-
         public static void Overlaps(AABB[] firsts, AABB[] seconds, int2[] results)
         {
             int collisionCount = 0;
@@ -324,29 +293,6 @@ namespace GDX.Mathematics
                     if (overlaps)
                     {
                         results[collisionCount] = new int2(i, j);
-                        ++collisionCount;
-                    }
-                }
-            }
-        }
-
-        public static void Overlaps(AABB[] firsts, int firstIndex, int firstLength, AABB[] seconds, int secondIndex, int secondLength, int2[] results)
-        {
-            int collisionCount = 0;
-            for (int i = 0; i < firstLength; i++)
-            {
-                for (int j = 0; j < secondLength; j++)
-                {
-                    ref readonly AABB first = ref firsts[firstIndex + i];
-                    ref readonly AABB second = ref seconds[secondIndex + j];
-                    bool overlapsX = (first.Max.x >= second.Min.x) & (first.Min.x <= second.Max.x);
-                    bool overlapsY = (first.Max.y >= second.Min.y) & (first.Min.y <= second.Max.y);
-                    bool overlapsZ = (first.Max.z >= second.Min.z) & (first.Min.z <= second.Max.z);
-                    bool overlaps = overlapsX & overlapsY & overlapsZ;
-
-                    if (overlaps)
-                    {
-                        results[collisionCount] = new Unity.Mathematics.int2(firstIndex + i, secondIndex + j);
                         ++collisionCount;
                     }
                 }
@@ -387,6 +333,30 @@ namespace GDX.Mathematics
 
             return collisionCount;
         }
+
+        public static void Overlaps(AABB[] firsts, int firstIndex, int firstLength, AABB[] seconds, int secondIndex, int secondLength, int2[] results)
+        {
+            int collisionCount = 0;
+            for (int i = 0; i < firstLength; i++)
+            {
+                for (int j = 0; j < secondLength; j++)
+                {
+                    ref readonly AABB first = ref firsts[firstIndex + i];
+                    ref readonly AABB second = ref seconds[secondIndex + j];
+                    bool overlapsX = (first.Max.x >= second.Min.x) & (first.Min.x <= second.Max.x);
+                    bool overlapsY = (first.Max.y >= second.Min.y) & (first.Min.y <= second.Max.y);
+                    bool overlapsZ = (first.Max.z >= second.Min.z) & (first.Min.z <= second.Max.z);
+                    bool overlaps = overlapsX & overlapsY & overlapsZ;
+
+                    if (overlaps)
+                    {
+                        results[collisionCount] = new Unity.Mathematics.int2(firstIndex + i, secondIndex + j);
+                        ++collisionCount;
+                    }
+                }
+            }
+        }
+
 
         public static int Overlaps(AABB[] firsts, int firstIndex, int firstLength, AABB[] seconds, int secondIndex, int secondLength, ref int2[] results)
         {
@@ -496,6 +466,43 @@ namespace GDX.Mathematics
             Array.Copy(array, 0, newArray, 0, newLength);
             arrayPool.Return(array);
             array = newArray;
+        }
+
+
+        #endif
+
+        public static void Overlaps(AABB[] firsts, AABB[] seconds, bool[] results)
+        {
+            int firstLength = firsts.Length;
+            int secondLength = seconds.Length;
+            for (int i = 0; i < firstLength; i++)
+            {
+                for (int j = 0; j < secondLength; j++)
+                {
+                    ref readonly AABB first = ref firsts[i];
+                    ref readonly AABB second = ref seconds[j];
+                    bool overlapsX = (first.Max.x >= second.Min.x) & (first.Min.x <= second.Max.x);
+                    bool overlapsY = (first.Max.y >= second.Min.y) & (first.Min.y <= second.Max.y);
+                    bool overlapsZ = (first.Max.z >= second.Min.z) & (first.Min.z <= second.Max.z);
+                    results[(i * firstLength) + j] = overlapsX & overlapsY & overlapsZ;
+                }
+            }
+        }
+
+        public static void Overlaps(AABB[] firsts, int firstIndex, int firstLength, AABB[] seconds, int secondIndex, int secondLength, bool[] results)
+        {
+            for (int i = 0; i < firstLength; i++)
+            {
+                for (int j = 0; j < secondLength; j++)
+                {
+                    ref readonly AABB first = ref firsts[firstIndex + i];
+                    ref readonly AABB second = ref seconds[secondIndex + j];
+                    bool overlapsX = (first.Max.x >= second.Min.x) & (first.Min.x <= second.Max.x);
+                    bool overlapsY = (first.Max.y >= second.Min.y) & (first.Min.y <= second.Max.y);
+                    bool overlapsZ = (first.Max.z >= second.Min.z) & (first.Min.z <= second.Max.z);
+                    results[(i * firstLength) + j] = overlapsX & overlapsY & overlapsZ;
+                }
+            }
         }
 
         public static bool Overlaps(in Sphere first, in Sphere second)
