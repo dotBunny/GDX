@@ -5,8 +5,10 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
+using Application = UnityEngine.Application;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -344,6 +346,7 @@ namespace GDX.Editor
 
                 // Loop through lockfile for the package to determine further information on how it has been added.
                 bool insidePackage = false;
+                StringBuilder manifestContent = new StringBuilder();
                 for (int i = 0; i < lockFileLength; i++)
                 {
                     string workingLine = lockFile[i].Trim();
@@ -353,35 +356,17 @@ namespace GDX.Editor
                         continue;
                     }
 
-                    // We want to make sure that we are inside the package definition and that we are looking at the version line.
-                    if (!insidePackage || !workingLine.StartsWith("\"version\""))
+                    switch (insidePackage)
                     {
-                        continue;
+                        case true when workingLine.StartsWith("},"):
+                            {
+                                ManifestEntry manifestEntry = ManifestEntry.Get(manifestContent.ToString());
+                                return (manifestEntry.installationType, manifestEntry.tag);
+                            }
+                        case true:
+                            manifestContent.AppendLine(workingLine);
+                            break;
                     }
-
-                    string versionLine = workingLine.Substring(12, workingLine.Length - (12 + 2));
-                    string tag = versionLine.GetAfterLast("#");
-
-
-                    // No actual tag found, so we are a straight UPM but we should consider it main line
-                    if (tag == versionLine)
-                    {
-                        return (InstallationType.UPM, "main");
-                    }
-
-                    // All of our release tags start with 'v'
-                    if (tag.StartsWith("v"))
-                    {
-                        return (InstallationType.UPMTag, tag);
-                    }
-
-                    // Check for what we assume is a commit hash
-                    if (tag.Length == 40 && tag.HasLowerCase() && !tag.HasUpperCase())
-                    {
-                        return (InstallationType.GitHubCommit, tag);
-                    }
-
-                    return (InstallationType.UPMBranch, tag);
                 }
 
                 // Well we at least can say it was UPM bound
