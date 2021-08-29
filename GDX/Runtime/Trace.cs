@@ -96,11 +96,19 @@ namespace GDX
             }
 #endif
 
-            // We were going to have to allocate at some point
-            string outputMessage = $"{traceObject}\n{memberName}\n{sourceFilePath}:{sourceLineNumber.ToString()}";
+            // Build output content
+            string outputContent;
+            if (traceObject is Exception traceException)
+            {
+                outputContent = $"{traceException.Message}\n{traceException.StackTrace}\n{memberName}\n{sourceFilePath}:{sourceLineNumber.ToString()}";
+            }
+            else
+            {
+                outputContent = $"{traceObject}\n{memberName}\n{sourceFilePath}:{sourceLineNumber.ToString()}";
+            }
 
             // This will output to anything internally registered for tracing (IDE consoles for example)
-            Debug.WriteLine(outputMessage);
+            Debug.WriteLine(outputContent);
 
             // Is outputting to the Unity console enabled?
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
