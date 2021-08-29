@@ -61,6 +61,7 @@ namespace GDX
             Fatal = 32
         }
 
+
         /// <summary>
         ///     Log a trace message to the appropriate subscribers and the Unity console where applicable.
         /// </summary>
@@ -69,9 +70,7 @@ namespace GDX
         /// <param name="contextObject">An <see cref="UnityEngine.Object" /> indicating context for the given message.</param>
         public static void Output(TraceLevel level, object traceObject, Object contextObject = null)
         {
-
             // Get a reference to the config
-            // TODO: Would it be better to cache this?
             GDXConfig config = GDXConfig.Get();
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -136,6 +135,85 @@ namespace GDX
                 case TraceLevel.Log:
                 default:
                     UnityEngine.Debug.Log(traceObject, contextObject);
+                    break;
+                // ReSharper restore RedundantCaseLabel
+            }
+        }
+
+        /// <summary>
+        ///     Log a trace message to the appropriate subscribers and the Unity console where applicable with additional context on invoke location.
+        /// </summary>
+        /// <param name="level">The <see cref="TraceLevel" /> of the particular message.</param>
+        /// <param name="message">The message to be recorded.</param>
+        /// <param name="memberName">Automatically filled out member name which invoked this method.</param>
+        /// <param name="sourceFilePath">Automatically filled out source code path of the invoking method.</param>
+        /// <param name="sourceLineNumber">Automatically filled out line number of the invoking method.</param>
+        public static void Output(TraceLevel level, string message,
+            [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+            [System.Runtime.CompilerServices.CallerFilePath]string sourceFilePath = "",
+            [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
+        {
+            // Get a reference to the config
+            GDXConfig config = GDXConfig.Get();
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (!config.traceDevelopmentLevels.HasFlags(level))
+            {
+                return;
+            }
+#elif DEBUG
+            if (!config.traceDebugLevels.HasFlags(level))
+            {
+                return;
+            }
+#else
+            if (!config.traceReleaseLevels.HasFlags(level))
+            {
+                return;
+            }
+#endif
+
+            string trace = $"{message}\n{memberName}\n{sourceFilePath}:{sourceLineNumber.ToString()}";
+
+            // This will output to anything internally registered for tracing (IDE consoles for example)
+            Debug.WriteLine(trace);
+
+            // Is outputting to the Unity console enabled?
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (!config.traceDevelopmentOutputToUnityConsole)
+            {
+                return;
+            }
+#elif DEBUG
+            if (!config.traceDebugOutputToUnityConsole)
+            {
+                return;
+            }
+#endif
+
+            // Figure out what path to take based on the level
+            switch (level)
+            {
+                case TraceLevel.Assertion:
+                    UnityEngine.Debug.LogAssertion(trace);
+                    break;
+
+                case TraceLevel.Warning:
+                    UnityEngine.Debug.LogWarning(trace);
+                    break;
+                case TraceLevel.Error:
+                    UnityEngine.Debug.LogError(trace);
+                    break;
+                case TraceLevel.Fatal:
+                    UnityEngine.Debug.LogError(trace);
+                    Utils.ForceCrash(ForcedCrashCategory.FatalError);
+                    break;
+
+                // ReSharper disable RedundantCaseLabel
+                case TraceLevel.Info:
+                case TraceLevel.Log:
+                default:
+                    UnityEngine.Debug.Log(trace);
                     break;
                 // ReSharper restore RedundantCaseLabel
             }
