@@ -353,6 +353,7 @@ namespace GDX.Editor
                     if (workingLine.StartsWith("\"com.dotbunny.gdx\""))
                     {
                         insidePackage = true;
+                        manifestContent.AppendLine("{");
                         continue;
                     }
 
@@ -360,6 +361,7 @@ namespace GDX.Editor
                     {
                         case true when workingLine.StartsWith("},"):
                             {
+                                manifestContent.AppendLine("}");
                                 ManifestEntry manifestEntry = ManifestEntry.Get(manifestContent.ToString());
                                 return (manifestEntry.installationType, manifestEntry.tag);
                             }
