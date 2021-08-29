@@ -47,7 +47,7 @@ namespace GDX.Editor.ProjectSettings
                 {
                     // ReSharper disable once InvertIf
                     if (GUILayout.Button(SettingsStyles.PlusIcon, SettingsStyles.SectionHeaderExpandButtonStyle,
-                        SettingsStyles.SectionHeaderExpandLayoutOptions))
+                        SettingsLayoutOptions.SectionHeaderExpandLayoutOptions))
                     {
                         GUIUtility.hotControl = 0;
                         SetCachedEditorBoolean(id, true);
@@ -57,7 +57,7 @@ namespace GDX.Editor.ProjectSettings
                 {
                     // ReSharper disable once InvertIf
                     if (GUILayout.Button(SettingsStyles.MinusIcon, SettingsStyles.SectionHeaderExpandButtonStyle,
-                        SettingsStyles.SectionHeaderExpandLayoutOptions))
+                        SettingsLayoutOptions.SectionHeaderExpandLayoutOptions))
                     {
                         GUIUtility.hotControl = 0;
                         SetCachedEditorBoolean(id, false);
@@ -91,7 +91,7 @@ namespace GDX.Editor.ProjectSettings
                 {
                     // ReSharper disable once InvertIf
                     if (GUILayout.Button(SettingsStyles.PlusIcon, SettingsStyles.SectionHeaderExpandButtonStyle,
-                        SettingsStyles.SectionHeaderExpandLayoutOptions))
+                        SettingsLayoutOptions.SectionHeaderExpandLayoutOptions))
                     {
                         GUIUtility.hotControl = 0;
                         SetCachedEditorBoolean(id, true);
@@ -101,7 +101,7 @@ namespace GDX.Editor.ProjectSettings
                 {
                     // ReSharper disable once InvertIf
                     if (GUILayout.Button(SettingsStyles.MinusIcon, SettingsStyles.SectionHeaderExpandButtonStyle,
-                        SettingsStyles.SectionHeaderExpandLayoutOptions))
+                        SettingsLayoutOptions.SectionHeaderExpandLayoutOptions))
                     {
                         GUIUtility.hotControl = 0;
                         SetCachedEditorBoolean(id, false);
@@ -120,7 +120,7 @@ namespace GDX.Editor.ProjectSettings
 
                 GUILayout.FlexibleSpace();
                 EditorGUILayout.PropertyField(sectionToggleProperty, sectionToggleContent,
-                    SettingsStyles.SectionHeaderToggleLayoutOptions);
+                    SettingsLayoutOptions.SectionHeaderToggleLayoutOptions);
             }
             else
             {
@@ -131,7 +131,7 @@ namespace GDX.Editor.ProjectSettings
                 {
                     // ReSharper disable once InvertIf
                     if (GUILayout.Button(SettingsStyles.PlusIcon, SettingsStyles.SectionHeaderExpandButtonStyle,
-                        SettingsStyles.SectionHeaderExpandLayoutOptions))
+                        SettingsLayoutOptions.SectionHeaderExpandLayoutOptions))
                     {
                         GUIUtility.hotControl = 0;
                         SetCachedEditorBoolean(id, true);
@@ -141,7 +141,7 @@ namespace GDX.Editor.ProjectSettings
                 {
                     // ReSharper disable once InvertIf
                     if (GUILayout.Button(SettingsStyles.MinusIcon, SettingsStyles.SectionHeaderExpandButtonStyle,
-                        SettingsStyles.SectionHeaderExpandLayoutOptions))
+                        SettingsLayoutOptions.SectionHeaderExpandLayoutOptions))
                     {
                         GUIUtility.hotControl = 0;
                         SetCachedEditorBoolean(id, false);
@@ -161,7 +161,7 @@ namespace GDX.Editor.ProjectSettings
 
                 GUILayout.FlexibleSpace();
                 EditorGUILayout.PropertyField(sectionToggleProperty, sectionToggleContent,
-                    SettingsStyles.SectionHeaderToggleLayoutOptions);
+                    SettingsLayoutOptions.SectionHeaderToggleLayoutOptions);
             }
 
             GUILayout.EndHorizontal();

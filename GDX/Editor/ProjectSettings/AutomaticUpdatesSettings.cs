@@ -66,14 +66,14 @@ namespace GDX.Editor.ProjectSettings
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Local Version:", EditorStyles.boldLabel,
-                    SettingsStyles.FixedWidth130LayoutOptions);
+                    SettingsLayoutOptions.FixedWidth130LayoutOptions);
                 GUILayout.Label(UpdateProvider.LocalPackage.Definition.version);
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Installation Method:", EditorStyles.boldLabel,
-                    SettingsStyles.FixedWidth130LayoutOptions);
+                    SettingsLayoutOptions.FixedWidth130LayoutOptions);
                 GUILayout.Label(PackageProvider.GetFriendlyName(UpdateProvider.LocalPackage.InstallationMethod));
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
@@ -86,7 +86,7 @@ namespace GDX.Editor.ProjectSettings
                     case PackageProvider.InstallationType.GitHub:
                         GUILayout.BeginHorizontal();
                         GUILayout.Label("Source Branch:", EditorStyles.boldLabel,
-                            SettingsStyles.FixedWidth130LayoutOptions);
+                            SettingsLayoutOptions.FixedWidth130LayoutOptions);
                         GUILayout.Label(!string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
                             ? UpdateProvider.LocalPackage.SourceTag
                             : "N/A");
@@ -97,7 +97,7 @@ namespace GDX.Editor.ProjectSettings
                     case PackageProvider.InstallationType.GitHubTag:
                         GUILayout.BeginHorizontal();
                         GUILayout.Label("Source Tag:", EditorStyles.boldLabel,
-                            SettingsStyles.FixedWidth130LayoutOptions);
+                            SettingsLayoutOptions.FixedWidth130LayoutOptions);
                         GUILayout.Label(!string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
                             ? UpdateProvider.LocalPackage.SourceTag
                             : "N/A");
@@ -108,7 +108,7 @@ namespace GDX.Editor.ProjectSettings
                     case PackageProvider.InstallationType.GitHubCommit:
                         GUILayout.BeginHorizontal();
                         GUILayout.Label("Source Commit:", EditorStyles.boldLabel,
-                            SettingsStyles.FixedWidth130LayoutOptions);
+                            SettingsLayoutOptions.FixedWidth130LayoutOptions);
                         GUILayout.Label(!string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
                             ? UpdateProvider.LocalPackage.SourceTag
                             : "N/A");
@@ -122,14 +122,14 @@ namespace GDX.Editor.ProjectSettings
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Remote Version:", EditorStyles.boldLabel,
-                        SettingsStyles.FixedWidth130LayoutOptions);
+                        SettingsLayoutOptions.FixedWidth130LayoutOptions);
                     GUILayout.Label(UpdateProvider.UpdatePackageDefinition.version);
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
                 }
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Last Checked:", EditorStyles.boldLabel, SettingsStyles.FixedWidth130LayoutOptions);
+                GUILayout.Label("Last Checked:", EditorStyles.boldLabel, SettingsLayoutOptions.FixedWidth130LayoutOptions);
                 GUILayout.Label(UpdateProvider.GetLastChecked().ToString(Localization.LocalTimestampFormat));
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();

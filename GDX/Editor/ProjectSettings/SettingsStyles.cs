@@ -13,11 +13,6 @@ namespace GDX.Editor.ProjectSettings
     [HideFromDocFX]
     public static class SettingsStyles
     {
-         /// <summary>
-        ///     A collection of layout parameters to use when rendering the expand button on section headers.
-        /// </summary>
-        public static readonly GUILayoutOption[] BulletLayoutOptions;
-
         /// <summary>
         ///     A <see cref="UnityEngine.GUIStyle" />" /> representing a button.
         /// </summary>
@@ -65,10 +60,9 @@ namespace GDX.Editor.ProjectSettings
         public static readonly GUIStyle TableRowStyle;
 
         /// <summary>
-        ///     A specific max width (130) for layout options to allow for organized width layouts.
+        ///     A style for column headers.
         /// </summary>
-        public static readonly GUILayoutOption[] FixedWidth130LayoutOptions;
-
+        public static readonly GUIStyle ColumnHeaderStyle;
 
         public static readonly GUIStyle CombinedFoldoutStyle;
 
@@ -86,16 +80,6 @@ namespace GDX.Editor.ProjectSettings
         ///     A <see cref="UnityEngine.GUIStyle" /> representing the expand button for section headers.
         /// </summary>
         public static readonly GUIStyle SectionHeaderExpandButtonStyle;
-
-        /// <summary>
-        ///     A collection of layout parameters to use when rendering the expand button on section headers.
-        /// </summary>
-        public static readonly GUILayoutOption[] SectionHeaderExpandLayoutOptions;
-
-        /// <summary>
-        ///     A collection of layout parameters to use when rendering the toggle option on section headers.
-        /// </summary>
-        public static readonly GUILayoutOption[] SectionHeaderToggleLayoutOptions;
 
         /// <summary>
         ///     A <see cref="UnityEngine.GUIStyle" /> representing the header of a sub section definition.
@@ -208,6 +192,8 @@ namespace GDX.Editor.ProjectSettings
                 //padding = { right = 0 }
             };
 
+            ColumnHeaderStyle = new GUIStyle("label") { fontStyle = FontStyle.Italic };
+
             // Section Headers
             SectionHeaderStyle = new GUIStyle("box") {margin = {left = -20}};
 
@@ -218,13 +204,7 @@ namespace GDX.Editor.ProjectSettings
             SectionHeaderTextDisabledStyle =
                 new GUIStyle(SectionHeaderTextDefaultStyle) {normal = {textColor = s_whiteBlend25Color}};
 
-            SectionHeaderToggleLayoutOptions =
-                new[] {GUILayout.Width(EditorStyles.toggle.CalcSize(GUIContent.none).x)};
-
             SectionHeaderExpandButtonStyle = new GUIStyle("button") {fontStyle = FontStyle.Bold};
-
-            SectionHeaderExpandLayoutOptions = new[] {GUILayout.Width(25)};
-            BulletLayoutOptions = new[] {GUILayout.Width(10)};
 
             SubSectionHeaderTextStyle = new GUIStyle(EditorStyles.largeLabel)
             {
@@ -233,9 +213,6 @@ namespace GDX.Editor.ProjectSettings
 
             WordWrappedLabelStyle = new GUIStyle("label") {wordWrap = true};
             HelpButtonStyle = new GUIStyle("IconButton") {margin = {top = 5}};
-
-            FixedWidth130LayoutOptions =
-                new[] {GUILayout.MaxWidth(130), GUILayout.MinWidth(130), GUILayout.Width(130)};
         }
     }
 }

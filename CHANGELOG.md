@@ -9,7 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `AABB`
 - `IntDictionary`
+
 - `Trace.Output` now supports automatic caller information.
+- `Trace` configuration matrix available in project settings.
+
+### Changed
+- Internally used `SettingsStyles` has been split into `SettingsStyles` and `SettingsLayoutOptions` accordingly.
 
 ### Fixed
 - Optimized referencing of `GDXConfig` in author time operations (now similar to runtime).

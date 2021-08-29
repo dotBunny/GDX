@@ -37,7 +37,7 @@ namespace GDX.Editor.ProjectSettings
 
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("-", SettingsStyles.BulletLayoutOptions);
+            GUILayout.Label("-", SettingsLayoutOptions.BulletLayoutOptions);
 #if UNITY_2021_1_OR_NEWER
             if (EditorGUILayout.LinkButton("Repository"))
 #elif UNITY_2019_1_OR_NEWER
@@ -54,7 +54,7 @@ namespace GDX.Editor.ProjectSettings
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("-", SettingsStyles.BulletLayoutOptions);
+            GUILayout.Label("-", SettingsLayoutOptions.BulletLayoutOptions);
 #if UNITY_2021_1_OR_NEWER
             if (EditorGUILayout.LinkButton("Documentation"))
 #elif UNITY_2019_1_OR_NEWER
@@ -71,7 +71,7 @@ namespace GDX.Editor.ProjectSettings
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("-", SettingsStyles.BulletLayoutOptions);
+            GUILayout.Label("-", SettingsLayoutOptions.BulletLayoutOptions);
 #if UNITY_2021_1_OR_NEWER
             if (EditorGUILayout.LinkButton("Report an Issue"))
 #elif UNITY_2019_1_OR_NEWER

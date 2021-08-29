@@ -199,7 +199,7 @@ namespace GDX.Editor.ProjectSettings
                 SettingsStyles.CombinedFoldoutStyle);
             SettingsGUIUtility.SetCachedEditorBoolean(foldoutID, sectionFoldout);
 
-            GUILayout.Label(category, EditorStyles.boldLabel, SettingsStyles.FixedWidth130LayoutOptions);
+            GUILayout.Label(category, EditorStyles.boldLabel, SettingsLayoutOptions.FixedWidth130LayoutOptions);
 
             GUILayout.BeginVertical();
             GUILayout.Label(description, SettingsStyles.WordWrappedLabelStyle);
@@ -243,7 +243,7 @@ namespace GDX.Editor.ProjectSettings
             GUILayout.EndVertical();
 
             bool hasAllTypes = HasAllTypesInConfiguration(types);
-            bool changed = GUILayout.Toggle(hasAllTypes, "", SettingsStyles.SectionHeaderToggleLayoutOptions);
+            bool changed = GUILayout.Toggle(hasAllTypes, "", SettingsLayoutOptions.SectionHeaderToggleLayoutOptions);
 
             // A change has occured
             if (changed != hasAllTypes)
