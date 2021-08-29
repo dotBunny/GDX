@@ -21,9 +21,8 @@ namespace GDX
         /// <summary>
         ///     A runtime only instance of <see cref="GDXConfig" />.
         /// </summary>
-#pragma warning disable 414
-        private static GDXConfig s_runtimeInstance = null;
-#pragma warning restore 414
+        private static GDXConfig s_instance = null;
+
         /// <summary>
         ///     Should GDX check for updates at editor time?
         /// </summary>
@@ -140,34 +139,36 @@ namespace GDX
         public static GDXConfig Get()
         {
 #if UNITY_EDITOR
-
-            // Attempt to load the settings file from the asset database.
-            GDXConfig settings = AssetDatabase.LoadAssetAtPath<GDXConfig>("Assets/Resources/GDX/GDXConfig.asset");
-
-            // If it worked, send it back!
-            if (settings != null)
+            if (s_instance != null)
             {
-                return settings;
+                return s_instance;
+            }
+
+            // Load from disk
+            s_instance = AssetDatabase.LoadAssetAtPath<GDXConfig>("Assets/Resources/GDX/GDXConfig.asset");
+            if (s_instance != null)
+            {
+                return s_instance;
             }
 
             // Looks like we need to make one
-            settings = CreateInstance<GDXConfig>();
+            s_instance = CreateInstance<GDXConfig>();
 
             // Ensure the folder structure is in place before we manually make the asset
             Platform.EnsureFileFolderHierarchyExists(
                 System.IO.Path.Combine(Application.dataPath, "Resources/GDX/GDXConfig.asset"));
 
             // Create and save the asset
-            AssetDatabase.CreateAsset(settings, "Assets/Resources/GDX/GDXConfig.asset");
+            AssetDatabase.CreateAsset(s_instance, "Assets/Resources/GDX/GDXConfig.asset");
 
             // Send it back!
-            return settings;
+            return s_instance;
 #else
-            if (s_runtimeInstance == null)
+            if (s_instance == null)
             {
-                s_runtimeInstance = Resources.Load<GDXConfig>("GDX/GDXConfig");
+                s_instance = Resources.Load<GDXConfig>("GDX/GDXConfig");
             }
-            return s_runtimeInstance;
+            return s_instance;
 #endif
         }
     }

@@ -4,10 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.1] - 2021-06-??
+## [2.0.1] - 2021-09-03
+
+### Added
+- `AABB`
+- `IntDictionary`
+
 ### Fixed
+- Optimized referencing of `GDXConfig` in author time operations (now similar to runtime).
 - `IListExtensions.ContainsItem` now uses `Equals()` to resolve literals issues with strings.
 - Categories for Visual Scripting based entries are now correct.
+- Resolved issue with newer Package Manager based lock files having no tag identities.
 
 ## [2.0.0] - 2021-05-09
 ***"Fresh Paint"***
