@@ -5,7 +5,9 @@
 using System;
 using GDX.Collections.Pooling;
 using GDX.Mathematics.Shapes;
+#if GDX_MATHEMATICS
 using Unity.Mathematics;
+#endif
 using UnityEngine;
 
 namespace GDX.Mathematics

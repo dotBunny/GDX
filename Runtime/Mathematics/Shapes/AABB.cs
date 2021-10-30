@@ -1,10 +1,5 @@
-using System;
 using UnityEngine;
 using System.Runtime.CompilerServices;
-#if GDX_MATHEMATICS
-using Unity.Mathematics;
-#endif
-using GDX.Collections.Pooling;
 
 namespace GDX.Mathematics.Shapes
 {

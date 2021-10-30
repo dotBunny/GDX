@@ -15,9 +15,6 @@ public class EditorStrings : ScriptableObject
     // 3. Possibly separate runtime tags from literals.
     // 4. Figure out if I'm supporting duplicate tags between categories at runtime, or if it's just a convenience thing for editor like file folders.
     // 5. Runtime int-to-string conversion support to start with, float-to-string (and others) later.
-    // 6. 
-
-
     [HideInInspector] public int StringCount; // Total number of strings ( falls out of sync with NextStringID if some strings are removed in development ).
     [HideInInspector] public int NextStringID; // The next available string ID. Incremented each time a new string is added.
 
@@ -342,7 +339,7 @@ public struct StringUtil
     public static int GetString(int stringID, in RuntimeStringDatabase stringDatabase, in RuntimeTagDatabase tagDatabase, char[] outBuffer)
     {
         ref readonly RuntimeStringData stringData = ref stringDatabase.stringLookupTable[stringID];
-        
+
         int length = 0;
 
 
