@@ -4,17 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.1] - 2021-09-03
+## [2.0.1] - 2021-11-01
 
-### Added
-- `AABB`
-- `IntDictionary`
-
+### Added 
+- Initial `AABB` collision detection work
+- An `IntDictionary` based collection
 - `Trace.Output` now supports automatic caller information.
 - `Trace` configuration matrix available in project settings.
 
 ### Changed
 - Internally used `SettingsStyles` has been split into `SettingsStyles` and `SettingsLayoutOptions` accordingly.
+- Moved everything up one folder layer in package to fit with package standards.
 
 ### Fixed
 - Optimized referencing of `GDXConfig` in author time operations (now similar to runtime).

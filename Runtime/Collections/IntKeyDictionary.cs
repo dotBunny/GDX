@@ -4,23 +4,23 @@
 
 using System.Runtime.CompilerServices;
 
-public static class DictionaryPerformanceTests
-{
-    public static void Test()
-    {
-        int illegalKey = int.MaxValue;
-
-        int[] keys = new int[1_000_000];
-        int[] buffer = new int[16_000_000]; // 64MB, make sure we clear the L3 cache.
-        for (int i = 0; i < 1_000_000; i++)
-        {
-            keys[i] = UnityEngine.Random.Range(int.MinValue, int.MaxValue - 1);
-        }
-
-        // First up, IntKeyChainingDictionary
-
-    }
-}
+// public static class DictionaryPerformanceTests
+// {
+//     public static void Test()
+//     {
+//         int illegalKey = int.MaxValue;
+//
+//         int[] keys = new int[1_000_000];
+//         int[] buffer = new int[16_000_000]; // 64MB, make sure we clear the L3 cache.
+//         for (int i = 0; i < 1_000_000; i++)
+//         {
+//             keys[i] = UnityEngine.Random.Range(int.MinValue, int.MaxValue - 1);
+//         }
+//
+//         // First up, IntKeyChainingDictionary
+//
+//     }
+// }
 
 namespace GDX.Collections.Generic
 {
@@ -114,7 +114,7 @@ public struct IntKeyConfidentLookupTable<TValue>
 
     public void AddUnchecked(int key, TValue value)
     {
-        int length = keys.Length; 
+        int length = keys.Length;
         int idealIndex = key & (length - 1);
 
         for (int i = 0; i < length; i++)
@@ -164,7 +164,7 @@ public struct IntKeyConfidentLookupTable<TValue>
     public void AddWithExpandCheck(int key, TValue value, ref int maxProbeDistance, int maxSize)
     {
         int length = keys.Length;
-        
+
         if (length < maxSize && count >= (length >> 1))
         {
             Expand();
@@ -289,7 +289,7 @@ public struct IntKeyConfidentLookupTable<TValue>
                 {
                     keys[index] = key;
                     TValue otherValue = values[index];
-                    
+
                     values[index] = value;
                     key = otherKey;
                     value = otherValue;
