@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Runtime.InteropServices;
+using GDX.Mathematics;
 
 namespace GDX.Collections.Pooling
 {
@@ -118,12 +119,5 @@ namespace GDX.Collections.Pooling
 
             ArrayPools[index] = arrayPool;
         }
-    }
-
-    [StructLayout(LayoutKind.Explicit)]
-    public struct LongDoubleConversionUnion
-    {
-        [FieldOffset(0)] public long longValue;
-        [FieldOffset(0)] public double doubleValue;
     }
 }

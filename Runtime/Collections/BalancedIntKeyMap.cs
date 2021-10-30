@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using GDX.Mathematics;
 
 namespace GDX.Collections.Generic
 {
@@ -113,7 +114,7 @@ namespace GDX.Collections.Generic
                 sizeFitsAllEntries = true;
 
                 newLength <<= 1;
-                Pooling.LongDoubleConversionUnion u;
+                LongDoubleConversionUnion u;
                 u.doubleValue = 0.0;
                 u.longValue = 0x4330000000000000L + newLength;
                 u.doubleValue -= 4503599627370496.0;

@@ -386,12 +386,6 @@ namespace GDX.Collections.Generic
         }
     }
 
-    public struct IntKeyEntry
-    {
-        public int key;
-        public int next;
-    }
-
     public enum DictionaryMoveNextCode : byte
     {
         NoEntryFound = 0,

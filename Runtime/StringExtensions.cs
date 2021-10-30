@@ -235,7 +235,6 @@ namespace GDX
             return splitIndex < 0 ? null : targetString.Substring(0, splitIndex);
         }
 
-
         /// <summary>
         ///     <para>
         ///         Get the stable hash code value of <paramref name="targetString" />.
