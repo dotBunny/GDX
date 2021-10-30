@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added 
 - Initial `AABB` collision detection work
 - An `IntDictionary` based collection
-- `Trace.Output` now supports automatic caller information.
 - `Trace` configuration matrix available in project settings.
 
 ### Changed

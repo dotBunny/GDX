@@ -18,7 +18,7 @@ namespace GDX.Collections.Generic
         {
             const int maxPrime = int.MaxValue;
             int primeCapacity = maxPrime;
-            int[] primes = DictionaryPrimes.primes;
+            int[] primes = DictionaryPrimes.Primes;
             for (int i = 0; i < primes.Length; i++)
             {
                 int prime = primes[i];

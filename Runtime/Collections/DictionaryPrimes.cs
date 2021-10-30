@@ -9,7 +9,7 @@ namespace GDX.Collections.Generic
 #endif
     public static class DictionaryPrimes
     {
-        public static int[] primes;
+        public static int[] Primes;
 
 #if UNITY_EDITOR
         static DictionaryPrimes()
@@ -19,27 +19,25 @@ namespace GDX.Collections.Generic
 #endif
 
 #if UNITY_2019_1_OR_NEWER
-        //TODO: verion wrap this to do parameterless version
+        //TODO: version wrap this to do parameterless version
         [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.AfterAssembliesLoaded)]
 #else
-    [UnityEngine.RuntimeInitializeOnLoadMethod]
+        [UnityEngine.RuntimeInitializeOnLoadMethod]
 #endif
         public static void Init()
         {
-            primes = new int[]{ 53, 97, 193, 389, 769, 1543, 3079, 6151, 12289, 24593, 49157, 98317, 196613, 393241, 786433, 1572869,
+            Primes = new int[]{ 53, 97, 193, 389, 769, 1543, 3079, 6151, 12289, 24593, 49157, 98317, 196613, 393241, 786433, 1572869,
                             3145739, 6291469, 12582917, 25165843, 50331653, 100663319, 201326611, 402653189, 805306457, 1610612741};
         }
 
         public static int GetPrime(int min)
         {
-            const int maxPrime = int.MaxValue;
-            for (int i = 0; i < primes.Length; i++)
+            for (int i = 0; i < Primes.Length; i++)
             {
-                int prime = primes[i];
+                int prime = Primes[i];
                 if (prime >= min) return prime;
             }
-
-            return maxPrime;
+            return int.MaxValue;;
         }
 
         // Returns size of hashtable to grow to.
@@ -50,9 +48,9 @@ namespace GDX.Collections.Generic
             const int maxPrime = int.MaxValue;
             newSize = (newSize > maxPrime) ? maxPrime : newSize;
 
-            for (int i = 0; i < primes.Length; i++)
+            for (int i = 0; i < Primes.Length; i++)
             {
-                int prime = primes[i];
+                int prime = Primes[i];
                 if (prime >= newSize) return prime;
             }
 

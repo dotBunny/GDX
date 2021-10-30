@@ -28,27 +28,27 @@ namespace GDX
         public static bool Approximately(this Vector3 targetVector3, Vector3 otherVector3)
         {
             float moddedEpsilon = Mathf.Epsilon * 8f;
-            const float baseMultiplier = 1E-06f;
+            const float BaseMultiplier = 1E-06f;
 
 #if GDX_MATHEMATICS
             return math.abs(otherVector3.x - targetVector3.x) < math.max(
-                       baseMultiplier * math.max(math.abs(targetVector3.x), math.abs(otherVector3.x)),
+                       BaseMultiplier * math.max(math.abs(targetVector3.x), math.abs(otherVector3.x)),
                        moddedEpsilon) &&
                    math.abs(otherVector3.y - targetVector3.y) < math.max(
-                       baseMultiplier * math.max(math.abs(targetVector3.y), math.abs(otherVector3.y)),
+                       BaseMultiplier * math.max(math.abs(targetVector3.y), math.abs(otherVector3.y)),
                        moddedEpsilon) &&
                    math.abs(otherVector3.z - targetVector3.z) < math.max(
-                       baseMultiplier * math.max(math.abs(targetVector3.z), math.abs(otherVector3.z)),
+                       BaseMultiplier * math.max(math.abs(targetVector3.z), math.abs(otherVector3.z)),
                        moddedEpsilon);
 #else
             return Mathf.Abs(otherVector3.x - targetVector3.x) < (double)Mathf.Max(
-                       baseMultiplier * Mathf.Max(Mathf.Abs(targetVector3.x), Mathf.Abs(otherVector3.x)),
+                       BaseMultiplier * Mathf.Max(Mathf.Abs(targetVector3.x), Mathf.Abs(otherVector3.x)),
                        moddedEpsilon) &&
                    Mathf.Abs(otherVector3.y - targetVector3.y) < (double)Mathf.Max(
-                       baseMultiplier * Mathf.Max(Mathf.Abs(targetVector3.y), Mathf.Abs(otherVector3.y)),
+                       BaseMultiplier * Mathf.Max(Mathf.Abs(targetVector3.y), Mathf.Abs(otherVector3.y)),
                        moddedEpsilon) &&
                    Mathf.Abs(otherVector3.z - targetVector3.z) < (double)Mathf.Max(
-                       baseMultiplier * Mathf.Max(Mathf.Abs(targetVector3.z), Mathf.Abs(otherVector3.z)),
+                       BaseMultiplier * Mathf.Max(Mathf.Abs(targetVector3.z), Mathf.Abs(otherVector3.z)),
                        moddedEpsilon);
 #endif
         }

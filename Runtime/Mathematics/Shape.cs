@@ -1,85 +1,16 @@
+﻿// Copyright (c) 2020-2021 dotBunny Inc.
+// dotBunny licenses this file to you under the BSL-1.0 license.
+// See the LICENSE file in the project root for more information.
+
 using System;
-using UnityEngine;
-using System.Runtime.CompilerServices;
-#if GDX_MATHEMATICS
-using Unity.Mathematics;
-#endif
 using GDX.Collections.Pooling;
+using GDX.Mathematics.Shapes;
+using Unity.Mathematics;
+using UnityEngine;
 
 namespace GDX.Mathematics
 {
-    public struct BitFieldPow2
-    {
-        public int[] Array;
-        public int Count;
-
-        public bool this[int index]
-        {
-            get { return false; }
-            set { Array[0] = 0; }
-        }
-    }
-
-    public struct AABB
-    {
-        public Vector3 Min;
-        public Vector3 Max;
-
-        public Vector3 Extents
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get { return Max - Min; }
-        }
-
-        public Vector3 Center
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get { return (Max + Min) * 0.5f; }
-        }
-
-        public bool Intersects(in AABB other)
-        {
-            bool overlapsX = (Max.x >= other.Min.x) & (Min.x <= other.Max.x);
-            bool overlapsY = (Max.y >= other.Min.y) & (Min.y <= other.Max.y);
-            bool overlapsZ = (Max.z >= other.Min.z) & (Min.z <= other.Max.z);
-            return overlapsX & overlapsY & overlapsZ;
-        }
-    }
-
-    public struct Sphere
-    {
-        public Vector3 Position;
-        public float Radius;
-    }
-
-    public struct OBB
-    {
-        public Quaternion Rotation;
-        public Vector3 Position;
-        public Vector3 Size;
-    }
-
-    public struct Capsule
-    {
-        public Vector3 Center0;
-        public Vector3 Center1;
-        public float Radius;
-    }
-
-    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
-    public struct ShapeUnion
-    {
-        [System.Runtime.InteropServices.FieldOffset(0)]
-        public OBB obb;
-        [System.Runtime.InteropServices.FieldOffset(0)]
-        public Capsule capsule;
-        [System.Runtime.InteropServices.FieldOffset(0)]
-        public Sphere sphere;
-        [System.Runtime.InteropServices.FieldOffset(40)]
-        public int type;
-    }
-
-    public static class ShapeQueries
+    public static class Shape
     {
         public static bool Overlaps(in AABB first, in AABB second)
         {
@@ -89,7 +20,7 @@ namespace GDX.Mathematics
             return overlapsX & overlapsY & overlapsZ;
         }
 
-        #if GDX_MATHEMATICS
+#if GDX_MATHEMATICS
         public static int Overlaps(AABB[] boxes, int2[] results)
         {
             int collisionCount = 0;
