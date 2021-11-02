@@ -4,13 +4,10 @@
 
 namespace GDX.Collections.Generic
 {
-#if UNITY_EDITOR
-    [UnityEditor.InitializeOnLoad]
-#endif
     public static class DictionaryPrimes
     {
         public static int[] Primes;
-        
+
 #if UNITY_EDITOR
         [UnityEditor.InitializeOnLoadMethod]
 #if UNITY_2019_1_OR_NEWER
