@@ -4,7 +4,7 @@
 
 using GDX.Mathematics.Shapes;
 
-namespace GDX.Mathematics.Collisions
+namespace GDX.Mathematics
 {
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
     public struct ShapeUnion

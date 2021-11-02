@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ***"Funny Shapes"***
 
 ### Added 
-- Initial `AABB` collision detection work
+- Initial `Shape` based collision detection functionality allowing for simple detection without PhysX queries.
 - `Trace` configuration matrix available in project settings.
 
 ### Changed

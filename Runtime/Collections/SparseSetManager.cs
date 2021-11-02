@@ -5,7 +5,7 @@
 using System;
 using System.Runtime.CompilerServices;
 
-public static class SparseSetExtensions
+public static class SparseSetManager
 {
     /// <summary>
     ///     Create a <see cref="SparseSet" /> with an <paramref name="initialCapacity" />.
