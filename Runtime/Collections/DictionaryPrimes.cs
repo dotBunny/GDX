@@ -10,7 +10,7 @@ namespace GDX.Collections.Generic
 
 #if UNITY_EDITOR
         [UnityEditor.InitializeOnLoadMethod]
-#if UNITY_2019_1_OR_NEWER
+#elif UNITY_2019_1_OR_NEWER
         //TODO: version wrap this to do parameterless version
         [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.AfterAssembliesLoaded)]
 #else
