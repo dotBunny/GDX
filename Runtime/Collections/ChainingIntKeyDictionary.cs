@@ -16,18 +16,7 @@ namespace GDX.Collections.Generic
 
         public ChainingIntKeyDictionary(int minCapacity)
         {
-            const int maxPrime = int.MaxValue;
-            int primeCapacity = maxPrime;
-            int[] primes = DictionaryPrimes.Primes;
-            for (int i = 0; i < primes.Length; i++)
-            {
-                int prime = primes[i];
-                if (prime >= minCapacity)
-                {
-                    primeCapacity = prime;
-                    break;
-                }
-            }
+            int primeCapacity = DictionaryPrimes.GetPrime(minCapacity);
 
             Buckets = new int[primeCapacity];
             for (int i = 0; i < primeCapacity; i++)
