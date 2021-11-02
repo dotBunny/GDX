@@ -10,14 +10,9 @@ namespace GDX.Collections.Generic
     public static class DictionaryPrimes
     {
         public static int[] Primes;
-
+        
 #if UNITY_EDITOR
-        static DictionaryPrimes()
-        {
-            Init();
-        }
-#endif
-
+        [UnityEditor.InitializeOnLoadMethod]
 #if UNITY_2019_1_OR_NEWER
         //TODO: version wrap this to do parameterless version
         [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.AfterAssembliesLoaded)]
