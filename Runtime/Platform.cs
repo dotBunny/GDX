@@ -43,10 +43,24 @@ namespace GDX
         }
 
         /// <summary>
+        ///     Use our best attempt to remove a file at the designated <paramref name="filePath"/>.
+        /// </summary>
+        /// <param name="filePath">The file path to remove forcefully.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ForceDeleteFile(this string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                File.SetAttributes(filePath, File.GetAttributes(filePath) & ~FileAttributes.ReadOnly);
+                File.Delete(filePath);
+            }
+        }
+
+        /// <summary>
         ///     Gets the current platforms hardware generation number?
         /// </summary>
         /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
-        /// <returns>true/false</returns>
+        /// <returns>Returns 0 for base hardware, 1 for updates.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetHardwareGeneration()
         {
@@ -71,6 +85,7 @@ namespace GDX
         ///     There are issues on some platforms with getting an accurate reading.
         /// </remarks>
         /// <returns>true/false if the application has focus.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsFocused()
         {
 #if UNITY_XBOXONE && !UNITY_EDITOR
@@ -87,9 +102,55 @@ namespace GDX
         /// </summary>
         /// <remarks>Useful for detecting running a server.</remarks>
         /// <returns>true/false if the application is without an initialized graphics device.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsHeadless()
         {
             return SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null;
+        }
+
+        /// <summary>
+        /// Is it safe to write to the indicated <paramref name="filePath"/>?
+        /// </summary>
+        /// <param name="filePath">The file path to check if it can be written.</param>
+        /// <returns>true/false if the path can be written too.</returns>
+        public static bool IsSafeToWriteFile(this string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                FileAttributes attributes = File.GetAttributes(filePath);
+                if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly ||
+                    (attributes & FileAttributes.Offline) == FileAttributes.Offline)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public static void MakeFileWritable(this string absolutePath)
+        {
+            string fileName = Path.GetFileName(absolutePath);
+            if (fileName != null)
+            {
+                string directoryPath = absolutePath.TrimEnd(fileName.ToCharArray());
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+            }
+
+            if (File.Exists(absolutePath))
+            {
+                File.SetAttributes(absolutePath,
+                    File.GetAttributes(absolutePath).RemoveAttribute(FileAttributes.ReadOnly));
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static FileAttributes RemoveAttribute(this FileAttributes attributes, FileAttributes attributesToRemove)
+        {
+            return attributes & ~attributesToRemove;
         }
     }
 }
