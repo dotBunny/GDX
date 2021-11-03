@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.1] - 2021-11-02
 ***"Feature Branches"***
-> We've moved to a better branching model for future development to make the release cycle faster.
+> A lot of experimental work is being now done in _feature_ branches; this should speed up iteration time on releases.
 
 ### Added 
 - `Trace` configuration matrix available in project settings.
