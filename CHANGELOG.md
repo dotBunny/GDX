@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2] - 2021-11-03
+***"Told Ya"***
+> Mistakes were made; fixes happened.
+
+### Added
+- Infinitely sized `CoalesceStream` available for dealing with large data streams.
+- A few minor file permission operations (`EnsureFileWritable`, `ForceDeleteFile`, `IsFileWritable`, ) have been added to `Platform`.
+
+### Fixed
+- The manifest for the package can be found again! Corrected path information to reflect new hierarchy.
+
+## [2.0.1] - 2021-11-02
+***"Feature Branches"***
+> A lot of experimental work is being now done in _feature_ branches; this should speed up iteration time on releases.
+
+### Added 
+- `Trace` configuration matrix available in project settings.
+
+### Changed
+- Internally used `SettingsStyles` has been split into `SettingsStyles` and `SettingsLayoutOptions` accordingly.
+- Moved everything up one folder layer in package to fit with package standards.
+
+### Fixed
+- Optimized referencing of `GDXConfig` in author time operations (now similar to runtime).
+- `IListExtensions.ContainsItem` now uses `Equals()` to resolve literals issues with strings.
+- Categories for Visual Scripting based entries are now correct.
+- Resolved issue with newer Package Manager based lock files having no tag identities.
+
 ## [2.0.0] - 2021-05-09
 ***"Fresh Paint"***
 > Breaking changes and a new license (BSL-1.0); making GDX even easier to include in projects!
