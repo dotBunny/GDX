@@ -354,13 +354,7 @@ namespace GDX.Editor
             // Get desired target placement
             string targetPath = Path.GetDirectoryName(LocalPackage.PackageManifestPath);
 
-            // Handle VCS
-            if (Provider.enabled && Provider.isActive)
-            {
-                AssetList checkoutAssets = VersionControl.GetAssetListFromFolder(targetPath);
-                Task checkoutTask = Provider.Checkout(checkoutAssets, CheckoutMode.Both);
-                checkoutTask.Wait();
-            }
+
 
             // Remove all existing content
             if (targetPath != null)
@@ -368,6 +362,7 @@ namespace GDX.Editor
                 try
                 {
                     AssetDatabase.StartAssetEditing();
+                    VersionControl.CheckoutFolder(targetPath);
                     Directory.Delete(targetPath, true);
 
                     // Drop in new content
@@ -401,18 +396,11 @@ namespace GDX.Editor
             string targetPath = Path.GetDirectoryName(LocalPackage.PackageManifestPath);
             if (targetPath != null)
             {
-                // Handle VCS
-                if (Provider.enabled && Provider.isActive)
-                {
-                    AssetList checkoutAssets = VersionControl.GetAssetListFromFolder(targetPath);
-                    Task checkoutTask = Provider.Checkout(checkoutAssets, CheckoutMode.Both);
-                    checkoutTask.Wait();
-                }
-
                 try
                 {
                     // Pause asset database
                     AssetDatabase.StartAssetEditing();
+                    VersionControl.CheckoutFolder(targetPath);
 
                     if (LocalPackage?.PackageManifestPath != null)
                     {
