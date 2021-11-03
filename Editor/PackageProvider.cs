@@ -137,7 +137,7 @@ namespace GDX.Editor
                 PackageAssetPath =
                     Path.Combine(
                         Path.GetDirectoryName(AssetDatabase.GUIDToAssetPath(editorAssemblyDefinition[0])) ??
-                        string.Empty, "..", "..");
+                        string.Empty, "..");
 
                 // Build the package manifest path
                 PackageManifestPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6),
