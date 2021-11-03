@@ -13,6 +13,21 @@ namespace GDX.Editor
     public static class VersionControl
     {
         /// <summary>
+        /// Synchronously checkout the contents of a folder if under source control known to Unity, and with it enabled.
+        /// </summary>
+        /// <param name="folderPath">The absolute path to the target folder.</param>
+        public static void CheckoutFolder(string folderPath)
+        {
+            // Handle VCS
+            if (Provider.enabled && Provider.isActive)
+            {
+                AssetList checkoutAssets = GetAssetListFromFolder(folderPath);
+                Task checkoutTask = Provider.Checkout(checkoutAssets, CheckoutMode.Both);
+                checkoutTask.Wait();
+            }
+        }
+
+        /// <summary>
         /// Get an <see cref="UnityEditor.VersionControl.AssetList"/> from an <paramref name="absoluteDirectoryPath"/>.
         /// </summary>
         /// <param name="absoluteDirectoryPath">A fully qualified path on disk to query.</param>
