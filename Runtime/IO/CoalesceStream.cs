@@ -10,7 +10,7 @@ namespace K9.IO
 {
     public class CoalesceStream : Stream
     {
-        private readonly List<byte[]> _blocks = new();
+        private readonly List<byte[]> _blocks = new List<byte[]>();
 
         private readonly long blockSize = 65536;
 
