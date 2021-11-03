@@ -43,6 +43,27 @@ namespace GDX
         }
 
         /// <summary>
+        ///     Validate that the file path is writable, making the necessary folder structure and setting permissions.
+        /// </summary>
+        /// <param name="filePath">The absolute path to validate.</param>
+        public static void EnsureFileWritable(this string filePath)
+        {
+            string fileName = Path.GetFileName(filePath);
+            if (fileName != null)
+            {
+                string directoryPath = filePath.TrimEnd(fileName.ToCharArray());
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+            }
+            if (File.Exists(filePath))
+            {
+                File.SetAttributes(filePath, File.GetAttributes(filePath) & ~FileAttributes.ReadOnly);
+            }
+        }
+
+        /// <summary>
         ///     Use our best attempt to remove a file at the designated <paramref name="filePath"/>.
         /// </summary>
         /// <param name="filePath">The file path to remove forcefully.</param>
@@ -79,6 +100,25 @@ namespace GDX
         }
 
         /// <summary>
+        /// Is it safe to write to the indicated <paramref name="filePath"/>?
+        /// </summary>
+        /// <param name="filePath">The file path to check if it can be written.</param>
+        /// <returns>true/false if the path can be written too.</returns>
+        public static bool IsFileWritable(this string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                FileAttributes attributes = File.GetAttributes(filePath);
+                if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly ||
+                    (attributes & FileAttributes.Offline) == FileAttributes.Offline)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
         ///     Is the application focused?
         /// </summary>
         /// <remarks>
@@ -106,51 +146,6 @@ namespace GDX
         public static bool IsHeadless()
         {
             return SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null;
-        }
-
-        /// <summary>
-        /// Is it safe to write to the indicated <paramref name="filePath"/>?
-        /// </summary>
-        /// <param name="filePath">The file path to check if it can be written.</param>
-        /// <returns>true/false if the path can be written too.</returns>
-        public static bool IsSafeToWriteFile(this string filePath)
-        {
-            if (File.Exists(filePath))
-            {
-                FileAttributes attributes = File.GetAttributes(filePath);
-                if ((attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly ||
-                    (attributes & FileAttributes.Offline) == FileAttributes.Offline)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        public static void MakeFileWritable(this string absolutePath)
-        {
-            string fileName = Path.GetFileName(absolutePath);
-            if (fileName != null)
-            {
-                string directoryPath = absolutePath.TrimEnd(fileName.ToCharArray());
-                if (!Directory.Exists(directoryPath))
-                {
-                    Directory.CreateDirectory(directoryPath);
-                }
-            }
-
-            if (File.Exists(absolutePath))
-            {
-                File.SetAttributes(absolutePath,
-                    File.GetAttributes(absolutePath).RemoveAttribute(FileAttributes.ReadOnly));
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static FileAttributes RemoveAttribute(this FileAttributes attributes, FileAttributes attributesToRemove)
-        {
-            return attributes & ~attributesToRemove;
         }
     }
 }
