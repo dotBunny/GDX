@@ -2,6 +2,9 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using UnityEditor;
+using UnityEditorInternal;
+using UnityEngine;
 #if UNITY_2019_1_OR_NEWER
 using Unity.CodeEditor;
 #endif
@@ -51,6 +54,26 @@ namespace GDX.Editor
 #endif // UNITY_2019_1_OR_NEWER
 
 
+        }
+
+        public static void SetEditorWindowSize()
+        {
+        }
+        public static void CaptureFocusedWindow(string outputPath)
+        {
+
+            Rect windowRect = EditorWindow.focusedWindow.position;
+            int width = (int)windowRect.width;
+            int height = (int)windowRect.height;
+            Color[] screenPixels = InternalEditorUtility.ReadScreenPixel(windowRect.min, width, height);
+            Texture2D texture = new Texture2D(width, height);
+            texture.SetPixels(screenPixels);
+            System.IO.File.WriteAllBytes(outputPath, texture.EncodeToPNG());
+        }
+
+        public static void ResetEditor()
+        {
+            InternalEditorUtility.LoadDefaultLayout();
         }
     }
 }
