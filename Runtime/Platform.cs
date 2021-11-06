@@ -132,8 +132,10 @@ namespace GDX
             return !XboxOnePLM.AmConstrained();
 #elif UNITY_PS4 && !UNITY_EDITOR
             return true;
-#else
+#elif !DOTS_RUNTIME
             return Application.isFocused;
+#else
+            return true;
 #endif
         }
 
@@ -145,7 +147,11 @@ namespace GDX
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsHeadless()
         {
+#if DOTS_RUNTIME
+            return true;
+#else
             return SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null;
+#endif
         }
     }
 }
