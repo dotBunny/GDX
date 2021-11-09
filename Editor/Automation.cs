@@ -11,8 +11,53 @@ using Unity.CodeEditor;
 
 namespace GDX.Editor
 {
+    /// <summary>
+    /// A collection of helper methods used for automation processes.
+    /// </summary>
     public static class Automation
     {
+        /// <summary>
+        /// Capture a PNG image of the designated <see cref="EditorWindow"/>.
+        /// </summary>
+        /// <param name="outputPath">The absolute path for the image file.</param>
+        /// <typeparam name="T">The type of <see cref="EditorWindow"/> to be captured.</typeparam>
+        public static void CaptureEditorWindow<T>(string outputPath) where T : EditorWindow
+        {
+            T window = GetWindow<T>();
+            if (window != null)
+            {
+                CaptureFocusedEditorWindow(outputPath);
+            }
+        }
+
+        /// <summary>
+        /// Capture a PNG image of the currently focused window.
+        /// </summary>
+        /// <param name="outputPath">The absolute path for the image file.</param>
+        public static void CaptureFocusedEditorWindow(string outputPath)
+        {
+            Rect windowRect = EditorWindow.focusedWindow.position;
+            int width = (int)windowRect.width;
+            int height = (int)windowRect.height;
+            Color[] screenPixels = InternalEditorUtility.ReadScreenPixel(windowRect.min, width, height);
+            Texture2D texture = new Texture2D(width, height);
+            texture.SetPixels(screenPixels);
+            System.IO.File.WriteAllBytes(outputPath, texture.EncodeToPNG());
+        }
+
+        /// <summary>
+        /// Capture a PNG image of the GameView
+        /// </summary>
+        /// <param name="outputPath">The absolute path for the image file.</param>
+        public static void CaptureGameView(string outputPath)
+        {
+            InternalEditorUtility.OnGameViewFocus(true);
+            CaptureFocusedEditorWindow(outputPath);
+        }
+
+        /// <summary>
+        /// Generate the project's solution and associated project files.
+        /// </summary>
         public static void GenerateProjectFiles()
         {
             Trace.Output(Trace.TraceLevel.Info, "Syncing Project Files ...");
@@ -56,21 +101,39 @@ namespace GDX.Editor
 
         }
 
-        public static void SetEditorWindowSize()
+        /// <summary>
+        /// Get the existing or open a new window with the indicated size / flags.
+        /// </summary>
+        /// <param name="autoFocus">Should the window get focus?</param>
+        /// <param name="shouldMaximize">Should the window be maximized?</param>
+        /// <param name="width">The desired window pixel width.</param>
+        /// <param name="height">The desired window pixel height.</param>
+        /// <typeparam name="T">The type of the window requested.</typeparam>
+        /// <returns>The instantiated window, or null.</returns>
+        public static T GetWindow<T>(bool autoFocus = true, bool shouldMaximize = false, int width = 800, int height = 600) where T : EditorWindow
         {
-        }
-        public static void CaptureFocusedWindow(string outputPath)
-        {
+            Rect windowRect = new Rect(0, 0, width, height);
+            T window = EditorWindow.GetWindowWithRect<T>(windowRect, false);
+            if (window != null)
+            {
+                // Do we want it to me maximized?
+                if (shouldMaximize)
+                {
+                    window.maximized = true;
+                }
 
-            Rect windowRect = EditorWindow.focusedWindow.position;
-            int width = (int)windowRect.width;
-            int height = (int)windowRect.height;
-            Color[] screenPixels = InternalEditorUtility.ReadScreenPixel(windowRect.min, width, height);
-            Texture2D texture = new Texture2D(width, height);
-            texture.SetPixels(screenPixels);
-            System.IO.File.WriteAllBytes(outputPath, texture.EncodeToPNG());
+                // Lets make sure that its focused
+                if (autoFocus)
+                {
+                    window.Focus();
+                }
+            }
+            return window;
         }
 
+        /// <summary>
+        /// Reset the editor to a default state.
+        /// </summary>
         public static void ResetEditor()
         {
             InternalEditorUtility.LoadDefaultLayout();
