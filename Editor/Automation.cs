@@ -2,12 +2,16 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 #if UNITY_2019_1_OR_NEWER
 using Unity.CodeEditor;
 #endif
+
+// TODO: Add conditional entities world ticking/update duration?
+// TODO: Add loading scene helper?
 
 namespace GDX.Editor
 {
@@ -16,25 +20,108 @@ namespace GDX.Editor
     /// </summary>
     public static class Automation
     {
+        public static Texture2D CaptureCamera(Camera targetCamera, int width = 1920, int height = 1080)
+        {
+            // Get a temporary render texture from the pool since its gonna be rapid.
+            RenderTexture screenshotRenderTexture = RenderTexture.GetTemporary(width, height, 24);
+
+            // Cache a few previous things to restore after we are done
+            RenderTexture previousTargetTexture = targetCamera.targetTexture;
+            RenderTexture previousActiveTarget = RenderTexture.active;
+
+            // Tell the camera to render to the render texture.
+            targetCamera.targetTexture = screenshotRenderTexture;
+            targetCamera.Render();
+
+            Texture2D screenshotTexture = new Texture2D(width, height, TextureFormat.RGB24, false);
+            RenderTexture.active = screenshotRenderTexture;
+            screenshotTexture.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            screenshotTexture.Apply();
+
+            // Release our render texture.
+            RenderTexture.active = previousActiveTarget;
+            targetCamera.targetTexture = previousTargetTexture;
+            screenshotRenderTexture.Release();
+
+            return screenshotTexture;
+        }
+
+        public static bool CaptureCameraToPNG(Camera targetCamera, string outputPath, int width = 1920, int height = 1080 )
+        {
+            Texture2D captureTexture = CaptureCamera(targetCamera, width, height);
+            if (captureTexture == null)
+            {
+                return false;
+            }
+            System.IO.File.WriteAllBytes(outputPath, captureTexture.EncodeToPNG());
+            return true;
+        }
+
+        public static Texture2D CaptureCamera(Vector3 position, Quaternion rotation, int width = 1920, int height = 1080)
+        {
+            GameObject cameraObject = new GameObject {hideFlags = HideFlags.HideAndDontSave};
+            Camera captureCamera = cameraObject.AddComponent<Camera>();
+
+            // TODO: Add stack of stuff based on game content?
+
+            // Move and rotate the camera
+            Transform cameraTransform = captureCamera.gameObject.transform;
+            cameraTransform.position = position;
+            cameraTransform.rotation = rotation;
+
+            Texture2D captureTexture = CaptureCamera(captureCamera, width, height);
+
+            Object.DestroyImmediate(cameraObject);
+
+            return captureTexture;
+        }
+
+        public static bool CaptureCameraToPNG(Vector3 position, Quaternion rotation, string outputPath, int width = 1920, int height = 1080)
+        {
+            Texture2D captureTexture = CaptureCamera(position, rotation, width, height);
+            if (captureTexture == null)
+            {
+                return false;
+            }
+            System.IO.File.WriteAllBytes(outputPath, captureTexture.EncodeToPNG());
+            return true;
+        }
+
+        /// <summary>
+        /// Capture a <see cref="Texture2D"/> of the designated <see cref="EditorWindow"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of <see cref="EditorWindow"/> to be captured.</typeparam>
+        /// <returns>The <see cref="Texture2D"/> captured.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Texture2D CaptureEditorWindow<T>() where T : EditorWindow
+        {
+            T window = GetWindow<T>();
+            return window != null ? CaptureFocusedEditorWindow() : null;
+        }
+
         /// <summary>
         /// Capture a PNG image of the designated <see cref="EditorWindow"/>.
         /// </summary>
         /// <param name="outputPath">The absolute path for the image file.</param>
         /// <typeparam name="T">The type of <see cref="EditorWindow"/> to be captured.</typeparam>
-        public static void CaptureEditorWindow<T>(string outputPath) where T : EditorWindow
+        /// <returns>true/false if the capture was successful.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool CaptureEditorWindowToPNG<T>(string outputPath) where T : EditorWindow
         {
             T window = GetWindow<T>();
             if (window != null)
             {
-                CaptureFocusedEditorWindow(outputPath);
+                return CaptureFocusedEditorWindowToPNG(outputPath);
             }
+
+            return false;
         }
 
         /// <summary>
-        /// Capture a PNG image of the currently focused window.
+        /// Capture a <see cref="Texture2D"/> of the focused editor window.
         /// </summary>
-        /// <param name="outputPath">The absolute path for the image file.</param>
-        public static void CaptureFocusedEditorWindow(string outputPath)
+        /// <returns>The <see cref="Texture2D"/> captured.</returns>
+        public static Texture2D CaptureFocusedEditorWindow()
         {
             Rect windowRect = EditorWindow.focusedWindow.position;
             int width = (int)windowRect.width;
@@ -42,17 +129,52 @@ namespace GDX.Editor
             Color[] screenPixels = InternalEditorUtility.ReadScreenPixel(windowRect.min, width, height);
             Texture2D texture = new Texture2D(width, height);
             texture.SetPixels(screenPixels);
-            System.IO.File.WriteAllBytes(outputPath, texture.EncodeToPNG());
+            return texture;
         }
 
         /// <summary>
-        /// Capture a PNG image of the GameView
+        /// Capture a PNG image of the currently focused window.
         /// </summary>
         /// <param name="outputPath">The absolute path for the image file.</param>
-        public static void CaptureGameView(string outputPath)
+        /// <returns>true/false if the capture was successful.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool CaptureFocusedEditorWindowToPNG(string outputPath)
+        {
+            Texture2D texture = CaptureFocusedEditorWindow();
+            if (texture == null)
+            {
+                return false;
+            }
+            System.IO.File.WriteAllBytes(outputPath, texture.EncodeToPNG());
+            return true;
+        }
+
+        /// <summary>
+        /// Capture a <see cref="Texture2D"/> of the GameView window.
+        /// </summary>
+        /// <returns>The <see cref="Texture2D"/> captured.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Texture2D CaptureGameViewWindow()
         {
             InternalEditorUtility.OnGameViewFocus(true);
-            CaptureFocusedEditorWindow(outputPath);
+            return CaptureFocusedEditorWindow();
+        }
+
+        /// <summary>
+        /// Capture a PNG image of the GameView window.
+        /// </summary>
+        /// <param name="outputPath">The absolute path for the image file.</param>
+        /// <returns>true/false if the capture was successful.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool CaptureGameViewWindowToPNG(string outputPath)
+        {
+            Texture2D texture = CaptureGameViewWindow();
+            if (texture == null)
+            {
+                return false;
+            }
+            System.IO.File.WriteAllBytes(outputPath, texture.EncodeToPNG());
+            return true;
         }
 
         /// <summary>
@@ -134,6 +256,7 @@ namespace GDX.Editor
         /// <summary>
         /// Reset the editor to a default state.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ResetEditor()
         {
             InternalEditorUtility.LoadDefaultLayout();
