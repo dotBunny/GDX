@@ -2,7 +2,10 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
+using System.Text;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -20,6 +23,9 @@ namespace GDX.Editor
     /// </summary>
     public static class Automation
     {
+        const string CharacterPool = "abcdefghijklmnopqrstuvwxyz0123456789";
+        const int CharacterPoolLength = 35;
+
         public static Texture2D CaptureCamera(Camera targetCamera, int width = 1920, int height = 1080)
         {
             // Get a temporary render texture from the pool since its gonna be rapid.
@@ -178,6 +184,35 @@ namespace GDX.Editor
         }
 
         /// <summary>
+        /// Clear the automation temporary folder.
+        /// </summary>
+        /// <param name="deleteFolder">Should the automation folder be deleted?</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ClearTempFolder(bool deleteFolder = false)
+        {
+            string path = GetTempFolder(false);
+            if (!Directory.Exists(path))
+            {
+                return;
+            }
+
+            DirectoryInfo di = new DirectoryInfo(path);
+            foreach (FileInfo file in di.GetFiles())
+            {
+                file.Delete();
+            }
+            foreach (DirectoryInfo dir in di.GetDirectories())
+            {
+                dir.Delete(true);
+            }
+
+            if (deleteFolder)
+            {
+                Directory.Delete(path);
+            }
+        }
+
+        /// <summary>
         /// Generate the project's solution and associated project files.
         /// </summary>
         public static void GenerateProjectFiles()
@@ -199,7 +234,7 @@ namespace GDX.Editor
 
                 foreach (string path in paths)
                 {
-                    if (!System.IO.File.Exists(path))
+                    if (!File.Exists(path))
                     {
                         continue;
                     }
@@ -219,8 +254,58 @@ namespace GDX.Editor
             System.Reflection.MethodInfo SyncSolution = T.GetMethod("SyncSolution", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
             SyncSolution.Invoke(null, null);
 #endif // UNITY_2019_1_OR_NEWER
+        }
 
+        /// <summary>
+        /// Gets and ensures the temporary GDX automation folder exists.
+        /// </summary>
+        /// <param name="ensureExists"></param>
+        /// <returns>The fully evaluated path to a temporary GDX folder</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GetTempFolder(bool ensureExists = true)
+        {
+            string tempPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "GDX_Automation"));
+            if (ensureExists)
+            {
+                Platform.EnsureFolderHierarchyExists(tempPath);
+            }
+            return tempPath;
+        }
 
+        public static string GetTempFilePath(string prefix = "tmp", string extension = ".tmp", bool ensureFolderExists = true)
+        {
+            string tempFolder = GetTempFolder(ensureFolderExists);
+            StringBuilder tmpFileName = new StringBuilder(260);
+            tmpFileName.Append(prefix);
+            System.Random random = new System.Random(
+                StringExtensions.GetStableHashCode(System.DateTime.Now.Ticks.ToString()));
+
+            tmpFileName.Append(CharacterPool[random.Next(CharacterPoolLength)]);
+            tmpFileName.Append(CharacterPool[random.Next(CharacterPoolLength)]);
+            tmpFileName.Append(CharacterPool[random.Next(CharacterPoolLength)]);
+            tmpFileName.Append(CharacterPool[random.Next(CharacterPoolLength)]);
+            tmpFileName.Append(CharacterPool[random.Next(CharacterPoolLength)]);
+
+            while (true)
+            {
+                tmpFileName.Append(CharacterPool[random.Next(CharacterPoolLength)]);
+                string filePath = Path.Combine(tempFolder, $"{tmpFileName}{extension}");
+                if (!File.Exists(filePath))
+                {
+                    return filePath;
+                }
+
+                if (tmpFileName.Length > 260)
+                {
+                    tmpFileName.Clear();
+                    tmpFileName.Append(prefix);
+                    tmpFileName.Append(CharacterPool[random.Next(CharacterPoolLength)]);
+                    tmpFileName.Append(CharacterPool[random.Next(CharacterPoolLength)]);
+                    tmpFileName.Append(CharacterPool[random.Next(CharacterPoolLength)]);
+                    tmpFileName.Append(CharacterPool[random.Next(CharacterPoolLength)]);
+                    tmpFileName.Append(CharacterPool[random.Next(CharacterPoolLength)]);
+                }
+            }
         }
 
         /// <summary>
@@ -238,6 +323,8 @@ namespace GDX.Editor
             T window = EditorWindow.GetWindowWithRect<T>(windowRect, false);
             if (window != null)
             {
+                // TODO: Enforce the size of existing windows?
+
                 // Do we want it to me maximized?
                 if (shouldMaximize)
                 {
