@@ -47,7 +47,7 @@
         },
         {
           "name": "com.unity.entities",
-          "expression": "0.20.0",
+          "expression": "0.18.0",
           "define": "GDX_ENTITIES"
         }
     ],
