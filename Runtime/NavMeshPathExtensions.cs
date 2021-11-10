@@ -10,6 +10,8 @@ using Unity.Mathematics;
 
 #endif
 
+#if !GDX_ENTITIES
+
 namespace GDX
 {
     /// <summary>
@@ -165,3 +167,5 @@ namespace GDX
         }
     }
 }
+
+#endif
