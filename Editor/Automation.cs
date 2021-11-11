@@ -4,11 +4,11 @@
 
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using System.Text;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.UI;
 #if UNITY_2019_1_OR_NEWER
 using Unity.CodeEditor;
 #endif
@@ -99,10 +99,19 @@ namespace GDX.Editor
         /// <typeparam name="T">The type of <see cref="EditorWindow"/> to be captured.</typeparam>
         /// <returns>The <see cref="Texture2D"/> captured.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Texture2D CaptureEditorWindow<T>() where T : EditorWindow
+        public static Texture2D CaptureEditorWindow<T>(bool shouldCloseWindow = true) where T : EditorWindow
         {
             T window = GetWindow<T>();
-            return window != null ? CaptureFocusedEditorWindow() : null;
+            Texture2D returnTexture = null;
+            if (window != null)
+            {
+                returnTexture = CaptureFocusedEditorWindow();
+                if (shouldCloseWindow)
+                {
+                    window.Close();
+                }
+            }
+            return returnTexture;
         }
 
         /// <summary>
@@ -112,15 +121,19 @@ namespace GDX.Editor
         /// <typeparam name="T">The type of <see cref="EditorWindow"/> to be captured.</typeparam>
         /// <returns>true/false if the capture was successful.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool CaptureEditorWindowToPNG<T>(string outputPath) where T : EditorWindow
+        public static bool CaptureEditorWindowToPNG<T>(string outputPath, bool shouldCloseWindow = true) where T : EditorWindow
         {
+            bool result = false;
             T window = GetWindow<T>();
             if (window != null)
             {
-                return CaptureFocusedEditorWindowToPNG(outputPath);
+                result = CaptureFocusedEditorWindowToPNG(outputPath);
+                if (shouldCloseWindow)
+                {
+                    window.Close();
+                }
             }
-
-            return false;
+            return result;
         }
 
         /// <summary>
@@ -147,34 +160,6 @@ namespace GDX.Editor
         public static bool CaptureFocusedEditorWindowToPNG(string outputPath)
         {
             Texture2D texture = CaptureFocusedEditorWindow();
-            if (texture == null)
-            {
-                return false;
-            }
-            System.IO.File.WriteAllBytes(outputPath, texture.EncodeToPNG());
-            return true;
-        }
-
-        /// <summary>
-        /// Capture a <see cref="Texture2D"/> of the GameView window.
-        /// </summary>
-        /// <returns>The <see cref="Texture2D"/> captured.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Texture2D CaptureGameViewWindow()
-        {
-            InternalEditorUtility.OnGameViewFocus(true);
-            return CaptureFocusedEditorWindow();
-        }
-
-        /// <summary>
-        /// Capture a PNG image of the GameView window.
-        /// </summary>
-        /// <param name="outputPath">The absolute path for the image file.</param>
-        /// <returns>true/false if the capture was successful.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool CaptureGameViewWindowToPNG(string outputPath)
-        {
-            Texture2D texture = CaptureGameViewWindow();
             if (texture == null)
             {
                 return false;
@@ -311,6 +296,7 @@ namespace GDX.Editor
         /// <summary>
         /// Get the existing or open a new window with the indicated size / flags.
         /// </summary>
+        /// <remarks>This will undock a window.</remarks>
         /// <param name="autoFocus">Should the window get focus?</param>
         /// <param name="shouldMaximize">Should the window be maximized?</param>
         /// <param name="width">The desired window pixel width.</param>
@@ -323,7 +309,8 @@ namespace GDX.Editor
             T window = EditorWindow.GetWindowWithRect<T>(windowRect, false);
             if (window != null)
             {
-                // TODO: Enforce the size of existing windows?
+                // Enforce the size of the window through setting its position. It's not great but works.
+                window.position = new Rect(0, 0, width, height);
 
                 // Do we want it to me maximized?
                 if (shouldMaximize)
@@ -336,6 +323,12 @@ namespace GDX.Editor
                 {
                     window.Focus();
                 }
+
+                // Force a repaint here so we dont get the annoying white window
+                EditorUtility.SetDirty(window);
+                window.Repaint();
+
+                // TODO NEED TO WAIT A FRAME
             }
             return window;
         }
@@ -343,6 +336,7 @@ namespace GDX.Editor
         /// <summary>
         /// Reset the editor to a default state.
         /// </summary>
+        /// <remarks>Using this method inside of a unit test will break the runner/chain.</remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ResetEditor()
         {
