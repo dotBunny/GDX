@@ -45,6 +45,7 @@ namespace Editor
         [Category("GDX.Tests")]
         public void CaptureFocusedEditorWindow_ReturnsTexture()
         {
+
             Texture2D texture = Automation.CaptureFocusedEditorWindow();
             bool evaluate = (texture != null);
             Assert.IsTrue(evaluate);
@@ -55,36 +56,13 @@ namespace Editor
         public void CaptureFocusedEditorWindowToPNG_OutputsImage()
         {
             string outputPath = Automation.GetTempFilePath("CaptureFocusedEditorWindowToPNG_OutputsImage-",".png");
-            bool execute = Automation.CaptureGameViewWindowToPNG(outputPath);
+            bool execute = Automation.CaptureFocusedEditorWindowToPNG(outputPath);
             bool evaluate = execute && File.Exists(outputPath);
 #if !GDX_SAVE_TEST_OUTPUT
             File.Delete(outputPath);
 #endif
             Assert.IsTrue(evaluate);
         }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void CaptureGameViewWindow_ReturnsTexture()
-        {
-            Texture2D texture = Automation.CaptureGameViewWindow();
-            bool evaluate = (texture != null);
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void CaptureGameViewWindowToPNG_OutputsImage()
-        {
-            string outputPath = Automation.GetTempFilePath("CaptureGameViewWindowToPNG_OutputsImage-",".png");
-            bool execute = Automation.CaptureGameViewWindowToPNG(outputPath);
-            bool evaluate = execute && File.Exists(outputPath);
-#if !GDX_SAVE_TEST_OUTPUT
-            File.Delete(outputPath);
-#endif
-            Assert.IsTrue(evaluate);
-        }
-
 
         [Test]
         [Category("GDX.Tests")]
