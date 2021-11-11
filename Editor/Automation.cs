@@ -3,12 +3,12 @@
 // See the LICENSE file in the project root for more information.
 
 using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.UI;
 #if UNITY_2019_1_OR_NEWER
 using Unity.CodeEditor;
 #endif
@@ -111,6 +111,7 @@ namespace GDX.Editor
                     window.Close();
                 }
             }
+
             return returnTexture;
         }
 
@@ -311,6 +312,7 @@ namespace GDX.Editor
             {
                 // Enforce the size of the window through setting its position. It's not great but works.
                 window.position = new Rect(0, 0, width, height);
+                window.Show(true);
 
                 // Do we want it to me maximized?
                 if (shouldMaximize)
@@ -324,11 +326,14 @@ namespace GDX.Editor
                     window.Focus();
                 }
 
-                // Force a repaint here so we dont get the annoying white window
-                EditorUtility.SetDirty(window);
-                window.Repaint();
-
-                // TODO NEED TO WAIT A FRAME
+                // We need to force an internal repaint event without having the API surface area to do so. We'll
+                // exploit reflection a bit to get around this for now.
+                MethodInfo dynMethod = window.GetType().GetMethod("RepaintImmediately",
+                    BindingFlags.NonPublic | BindingFlags.Instance);
+                if (dynMethod != null)
+                {
+                    dynMethod.Invoke(window, new object[] { });
+                }
             }
             return window;
         }
