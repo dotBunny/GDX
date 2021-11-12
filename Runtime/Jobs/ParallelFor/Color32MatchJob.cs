@@ -11,25 +11,29 @@ using UnityEngine;
 
 namespace GDX.Jobs.ParallelFor
 {
+    /// <summary>
+    ///     Determines if the <see cref="Color32"/>s in the provided <see cref="Unity.Collections.NativeArray{T}" />s match each other in
+    ///     parallel.
+    /// </summary>
 #if GDX_BURST
     [BurstCompile]
 #endif
-    public struct ColorCompareJob : IJobParallelFor
+    public struct Color32MatchJob : IJobParallelFor
     {
         /// <summary>
         ///     The left-hand side <see cref="Unity.Collections.NativeArray{T}" /> typed as <see cref="byte" />.
         /// </summary>
-        [ReadOnly] public NativeArray<Color> A;
+        [ReadOnly] public NativeArray<Color32> A;
 
         /// <summary>
         ///     The right-hand side <see cref="Unity.Collections.NativeArray{T}" /> typed as <see cref="byte" />.
         /// </summary>
-        [ReadOnly] public NativeArray<Color> B;
+        [ReadOnly] public NativeArray<Color32> B;
 
         /// <summary>
-        ///     The percent difference between the two values.
+        ///     Does the color match?
         /// </summary>
-        [WriteOnly] public NativeArray<float> Percentage;
+        [WriteOnly] public NativeArray<bool> Match;
 
         /// <summary>
         /// Executable work for the provided index.
@@ -37,14 +41,16 @@ namespace GDX.Jobs.ParallelFor
         /// <param name="index">The index of the Parallel for loop at which to perform work.</param>
         public void Execute(int index)
         {
-            if (A[index] == B[index])
+            if (A[index].r == B[index].r &&
+                A[index].g == B[index].g &&
+                A[index].b == B[index].b &&
+                A[index].a == B[index].a)
             {
-                Percentage[index] = 1f;
+                Match[index] = true;
             }
             else
             {
-                Percentage[index] = ((A[index].r / B[index].r) + (A[index].g / B[index].g) + (A[index].b / B[index].b) +
-                                     (A[index].a / B[index].a)) / 4f;
+                Match[index] = false;
             }
         }
     }

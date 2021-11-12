@@ -147,7 +147,7 @@ namespace GDX.Editor
             int width = (int)windowRect.width;
             int height = (int)windowRect.height;
             Color[] screenPixels = InternalEditorUtility.ReadScreenPixel(windowRect.min, width, height);
-            Texture2D texture = new Texture2D(width, height);
+            Texture2D texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
             texture.SetPixels(screenPixels);
             return texture;
         }
