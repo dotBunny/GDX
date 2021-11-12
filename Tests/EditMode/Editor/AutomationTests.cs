@@ -49,33 +49,40 @@ namespace Editor
 #if GDX_COLLECTIONS
             Texture2D screenshotA = Automation.CaptureEditorWindow<SceneView>();
             Texture2D screenshotB = Automation.CaptureEditorWindow<SceneView>();
+            NativeArray<Color32> screenshotDataA = screenshotA.GetRawTextureData<Color32>();
+            NativeArray<Color32> screenshotDataB = screenshotB.GetRawTextureData<Color32>();
 #if GDX_SAVE_TEST_OUTPUT
             string outputPathA = Automation.GetTempFilePath("CaptureEditorWindow_SceneView_SameTextureA-",".png");
             string outputPathB = Automation.GetTempFilePath("CaptureEditorWindow_SceneView_SameTextureB-",".png");
             File.WriteAllBytes(outputPathA, screenshotA.EncodeToPNG());
             File.WriteAllBytes(outputPathB, screenshotB.EncodeToPNG());
 #endif // GDX_SAVE_TEST_OUTPUT
-            NativeArray<Color> screenshotDataA = screenshotA.GetPixelData<Color>(0);
-            NativeArray<Color> screenshotDataB = screenshotB.GetPixelData<Color>(0);
-            int arrayLength = screenshotDataA.Length;
-            NativeArray<float> percentages = new NativeArray<float>(arrayLength, Allocator.TempJob);
 
-            ColorCompareJob calcDifferencesJob = new GDX.Jobs.ParallelFor.ColorCompareJob()
+            int arrayLengthA = screenshotDataA.Length;
+            int arrayLengthB = screenshotDataB.Length;
+            if (arrayLengthA != arrayLengthB)
+            {
+                Assert.Fail("Screenshot array lengths differ.");
+                return;
+            }
+            NativeArray<float> percentages = new NativeArray<float>(arrayLengthA, Allocator.TempJob);
+
+            Color32CompareJob calcDifferencesJob = new GDX.Jobs.ParallelFor.Color32CompareJob()
             {
                 A = screenshotDataA,
                 B = screenshotDataB,
                 Percentage = percentages
             };
 
-            JobHandle handle = calcDifferencesJob.Schedule(arrayLength, 256);
+            JobHandle handle = calcDifferencesJob.Schedule(arrayLengthA, 256);
             handle.Complete();
 
             float average = 0f;
-            for (int i = 0; i < arrayLength; i++)
+            for (int i = 0; i < arrayLengthA; i++)
             {
                 average += percentages[i];
             }
-            average /= arrayLength;
+            average /= arrayLengthA;
 
             // Cleanup arrays
             screenshotDataA.Dispose();
