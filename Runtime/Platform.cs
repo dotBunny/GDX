@@ -4,6 +4,7 @@
 
 using System.IO;
 using System.Runtime.CompilerServices;
+using GDX.Mathematics.Random;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -15,6 +16,15 @@ namespace GDX
     [VisualScriptingCompatible(8)]
     public static class Platform
     {
+        public const string SafeCharacterPool = "abcdefghijklmnopqrstuvwxyz";
+        public const int CharacterPoolLength = 25;
+        public const int CharacterPoolLengthExclusive = 24;
+
+        public static char GetRandomSafeCharacter(IRandomProvider random)
+        {
+            return SafeCharacterPool[random.NextInteger(0, CharacterPoolLengthExclusive)];
+        }
+
         /// <summary>
         ///     Validate that all directories are created for a given <paramref name="folderPath" />.
         /// </summary>

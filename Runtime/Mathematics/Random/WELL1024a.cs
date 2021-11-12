@@ -192,7 +192,7 @@ namespace GDX.Mathematics.Random
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int NextIntegerExclusive(int minValue = 0, int maxValue = int.MaxValue)
         {
-            return Range.GetInteger(Sample(), minValue, maxValue);
+            return Range.GetInteger(Sample(), minValue + 1,  maxValue - 1);
         }
 
         /// <inheritdoc cref="IRandomProvider.NextSingle" />
@@ -212,7 +212,7 @@ namespace GDX.Mathematics.Random
         /// <inheritdoc cref="IRandomProvider.NextUnsignedIntegerExclusive" />
         public uint NextUnsignedIntegerExclusive(uint minValue = uint.MinValue, uint maxValue = uint.MaxValue)
         {
-            return Range.GetUnsignedInteger(Sample(), minValue, maxValue);
+            return Range.GetUnsignedInteger(Sample(), minValue + 1, maxValue - 1);
         }
 
         /// <inheritdoc cref="IRandomProvider.Sample" />
