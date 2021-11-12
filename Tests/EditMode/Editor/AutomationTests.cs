@@ -49,6 +49,12 @@ namespace Editor
 #if GDX_COLLECTIONS
             Texture2D screenshotA = Automation.CaptureEditorWindow<SceneView>();
             Texture2D screenshotB = Automation.CaptureEditorWindow<SceneView>();
+#if GDX_SAVE_TEST_OUTPUT
+            string outputPathA = Automation.GetTempFilePath("CaptureEditorWindow_SceneView_SameTextureA-",".png");
+            string outputPathB = Automation.GetTempFilePath("CaptureEditorWindow_SceneView_SameTextureB-",".png");
+            File.WriteAllBytes(outputPathA, screenshotA.EncodeToPNG());
+            File.WriteAllBytes(outputPathB, screenshotB.EncodeToPNG());
+#endif // GDX_SAVE_TEST_OUTPUT
             NativeArray<Color> screenshotDataA = screenshotA.GetPixelData<Color>(0);
             NativeArray<Color> screenshotDataB = screenshotB.GetPixelData<Color>(0);
             int arrayLength = screenshotDataA.Length;
