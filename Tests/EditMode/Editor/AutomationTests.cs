@@ -4,7 +4,12 @@
 
 using System.IO;
 using GDX.Editor;
+using GDX.Jobs.ParallelFor;
 using NUnit.Framework;
+#if GDX_COLLECTIONS
+using Unity.Collections;
+#endif
+using Unity.Jobs;
 using UnityEditor;
 using UnityEngine;
 
@@ -23,6 +28,10 @@ namespace Editor
         [Category("GDX.Tests")]
         public void CaptureEditorWindow_SceneView_ReturnsTexture()
         {
+            if (Application.isBatchMode)
+            {
+                Assert.Ignore("Unable to run test through Batch Mode.");
+            }
             Texture2D texture = Automation.CaptureEditorWindow<SceneView>();
             bool evaluate = (texture != null);
             Assert.IsTrue(evaluate);
@@ -30,8 +39,58 @@ namespace Editor
 
         [Test]
         [Category("GDX.Tests")]
+        public void CaptureEditorWindow_SceneView_SameTexture()
+        {
+            if (Application.isBatchMode)
+            {
+                Assert.Ignore("Unable to run test through Batch Mode.");
+                return;
+            }
+#if GDX_COLLECTIONS
+            Texture2D screenshotA = Automation.CaptureEditorWindow<SceneView>();
+            Texture2D screenshotB = Automation.CaptureEditorWindow<SceneView>();
+            NativeArray<Color> screenshotDataA = screenshotA.GetPixelData<Color>(0);
+            NativeArray<Color> screenshotDataB = screenshotB.GetPixelData<Color>(0);
+            int arrayLength = screenshotDataA.Length;
+            NativeArray<float> percentages = new NativeArray<float>(arrayLength, Allocator.TempJob);
+
+            ColorCompareJob calcDifferencesJob = new GDX.Jobs.ParallelFor.ColorCompareJob()
+            {
+                A = screenshotDataA,
+                B = screenshotDataB,
+                Percentage = percentages
+            };
+
+            JobHandle handle = calcDifferencesJob.Schedule(arrayLength, 256);
+            handle.Complete();
+
+            float average = 0f;
+            for (int i = 0; i < arrayLength; i++)
+            {
+                average += percentages[i];
+            }
+            average /= arrayLength;
+
+            // Cleanup arrays
+            screenshotDataA.Dispose();
+            screenshotDataB.Dispose();
+            percentages.Dispose();
+
+            Assert.IsTrue(average == 1, $"Similarity was {average}%.");
+#else
+            Assert.Ignore("Collections required.");
+#endif
+        }
+
+        [Test]
+        [Category("GDX.Tests")]
         public void CaptureEditorWindowToPNG_SceneView_OutputsImage()
         {
+            if (Application.isBatchMode)
+            {
+                Assert.Ignore("Unable to run test through Batch Mode.");
+                return;
+            }
             string outputPath = Automation.GetTempFilePath("CaptureEditorWindowToPNG_SceneView_OutputsImage-",".png");
             bool execute = Automation.CaptureEditorWindowToPNG<SceneView>(outputPath);
             bool evaluate = execute && File.Exists(outputPath);
@@ -45,7 +104,11 @@ namespace Editor
         [Category("GDX.Tests")]
         public void CaptureFocusedEditorWindow_ReturnsTexture()
         {
-
+            if (Application.isBatchMode)
+            {
+                Assert.Ignore("Unable to run test through Batch Mode.");
+                return;
+            }
             Texture2D texture = Automation.CaptureFocusedEditorWindow();
             bool evaluate = (texture != null);
             Assert.IsTrue(evaluate);
@@ -55,6 +118,11 @@ namespace Editor
         [Category("GDX.Tests")]
         public void CaptureFocusedEditorWindowToPNG_OutputsImage()
         {
+            if (Application.isBatchMode)
+            {
+                Assert.Ignore("Unable to run test through Batch Mode.");
+                return;
+            }
             string outputPath = Automation.GetTempFilePath("CaptureFocusedEditorWindowToPNG_OutputsImage-",".png");
             bool execute = Automation.CaptureFocusedEditorWindowToPNG(outputPath);
             bool evaluate = execute && File.Exists(outputPath);
@@ -108,6 +176,11 @@ namespace Editor
         [Category("GDX.Tests")]
         public void GetWindow_SceneView_NotNull()
         {
+            if (Application.isBatchMode)
+            {
+                Assert.Ignore("Unable to run test through Batch Mode.");
+                return;
+            }
             EditorWindow sceneView = Automation.GetWindow<SceneView>();
             bool evaluate = (sceneView != null);
             Assert.IsTrue(evaluate);
