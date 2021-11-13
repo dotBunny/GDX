@@ -52,7 +52,7 @@ namespace GDX.Mathematics.Random
         /// <param name="minValue">The lowest possible value.</param>
         /// <param name="maxValue">The highest possible value, including itself.</param>
         /// <returns>A pseudorandom <see cref="int" />.</returns>
-        int NextInteger(int minValue = 0, int maxValue = Range.SafeIntegerMaxValue);
+        int NextInteger(int minValue = 0, int maxValue = int.MaxValue);
 
         /// <summary>
         ///     Returns the next pseudorandom <see cref="int" /> between <paramref name="minValue" /> and
@@ -92,7 +92,7 @@ namespace GDX.Mathematics.Random
         /// <param name="minValue">The lowest possible value.</param>
         /// <param name="maxValue">The highest possible value, including itself.</param>
         /// <returns>A pseudorandom <see cref="uint" />.</returns>
-        uint NextUnsignedInteger(uint minValue = uint.MinValue, uint maxValue = Range.SafeUnsignedIntegerMaxValue);
+        uint NextUnsignedInteger(uint minValue = uint.MinValue, uint maxValue = uint.MaxValue);
 
         /// <summary>
         ///     Returns the next pseudorandom <see cref="uint" /> between <paramref name="minValue" /> and
