@@ -196,6 +196,11 @@ namespace Editor
             }
             EditorWindow sceneView = Automation.GetWindow<SceneView>();
             bool evaluate = (sceneView != null);
+            if (sceneView != null)
+            {
+                sceneView.Close();
+            }
+
             Assert.IsTrue(evaluate);
         }
 

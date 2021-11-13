@@ -38,13 +38,13 @@ namespace GDX.Mathematics.Random
         }
 
         /// <inheritdoc />
-        public int NextInteger(int minValue = 0, int maxValue = Range.SafeIntegerMaxValue)
+        public int NextInteger(int minValue = 0, int maxValue = int.MaxValue)
         {
             return Range.GetInteger(Sample(), minValue, maxValue);
         }
 
         /// <inheritdoc />
-        public int NextIntegerExclusive(int minValue = 0, int maxValue = Int32.MaxValue)
+        public int NextIntegerExclusive(int minValue = 0, int maxValue = int.MaxValue)
         {
             return Range.GetInteger(Sample(), minValue + 1, maxValue - 1);
         }
@@ -56,13 +56,13 @@ namespace GDX.Mathematics.Random
         }
 
         /// <inheritdoc />
-        public uint NextUnsignedInteger(uint minValue = UInt32.MinValue, uint maxValue = Range.SafeUnsignedIntegerMaxValue)
+        public uint NextUnsignedInteger(uint minValue = uint.MinValue, uint maxValue = uint.MaxValue)
         {
             return Range.GetUnsignedInteger(Sample(), minValue, maxValue);
         }
 
         /// <inheritdoc />
-        public uint NextUnsignedIntegerExclusive(uint minValue = UInt32.MinValue, uint maxValue = UInt32.MaxValue)
+        public uint NextUnsignedIntegerExclusive(uint minValue = uint.MinValue, uint maxValue = uint.MaxValue)
         {
             return Range.GetUnsignedInteger(Sample(), minValue + 1, maxValue - 1);
         }

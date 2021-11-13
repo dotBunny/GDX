@@ -12,18 +12,6 @@ namespace GDX.Mathematics
     public static class Range
     {
         /// <summary>
-        ///     The safe maximum integer value when using inclusive range methods such as
-        ///     <see cref="GDX.Mathematics.Random.IRandomProvider.NextInteger(int,int)" />.
-        /// </summary>
-        public const int SafeIntegerMaxValue = int.MaxValue - 1;
-
-        /// <summary>
-        ///     The safe maximum unsigned integer value when using inclusive range methods such as
-        ///     <see cref="GDX.Mathematics.Random.IRandomProvider.NextUnsignedInteger(uint,uint)" />.
-        /// </summary>
-        public const uint SafeUnsignedIntegerMaxValue = uint.MaxValue - 1;
-
-        /// <summary>
         ///     Returns the <see cref="double" /> between <paramref name="minValue" /> and
         ///     <paramref name="maxValue" /> range at <paramref name="percent" />.
         /// </summary>
