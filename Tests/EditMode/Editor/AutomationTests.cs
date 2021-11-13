@@ -17,13 +17,6 @@ namespace Editor
 {
     public class AutomationTests
     {
-        /*
-         * CaptureCamera
-         * CaptureCameraToPNG
-         * CaptureCamera
-         * CaptureCameraToPNG
-         */
-
         [Test]
         [Category("GDX.Tests")]
         public void CaptureEditorWindow_SceneView_ReturnsTexture()

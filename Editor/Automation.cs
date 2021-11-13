@@ -259,13 +259,19 @@ namespace GDX.Editor
                     window.Focus();
                 }
 
-                // We need to force an internal repaint event without having the API surface area to do so. We'll
-                // exploit reflection a bit to get around this for now.
-                MethodInfo dynMethod = window.GetType().GetMethod("RepaintImmediately",
+                // We need to force some internal repainting/resizing without having the API surface area to do so.
+                // We'll exploit reflection a bit to get around this for now.
+                MethodInfo repaintMethod = window.GetType().GetMethod("RepaintImmediately",
                     BindingFlags.NonPublic | BindingFlags.Instance);
-                if (dynMethod != null)
+                if (repaintMethod != null)
                 {
-                    dynMethod.Invoke(window, new object[] { });
+                    repaintMethod.Invoke(window, new object[] { });
+                }
+                MethodInfo resizedMethod = window.GetType().GetMethod("OnResized",
+                    BindingFlags.NonPublic | BindingFlags.Instance);
+                if (resizedMethod != null)
+                {
+                    resizedMethod.Invoke(window, new object[] { });
                 }
             }
             return window;
