@@ -7,12 +7,13 @@ using Unity.Burst;
 #endif
 using Unity.Collections;
 using Unity.Jobs;
+using UnityEditor;
 using UnityEngine;
 
 namespace GDX.Jobs.ParallelFor
 {
 #if GDX_BURST
-    [BurstCompile]
+    //[BurstCompile]
 #endif
     public struct Color32CompareJob : IJobParallelFor
     {
@@ -46,8 +47,12 @@ namespace GDX.Jobs.ParallelFor
             }
             else
             {
-                Percentage[index] = ((A[index].r / B[index].r) + (A[index].g / B[index].g) + (A[index].b / B[index].b) +
-                                     (A[index].a / B[index].a)) / 4f;
+                float rDiff = 1f - Mathf.Abs((A[index].r / 255) - (B[index].r / 255));
+                float gDiff = 1f - Mathf.Abs((A[index].g / 255) - (B[index].g / 255));
+                float bDiff = 1f - Mathf.Abs((A[index].b / 255) - (B[index].b / 255));
+                float aDiff = 1f - Mathf.Abs((A[index].a / 255) - (B[index].a / 255));
+
+                Percentage[index] = ((rDiff + gDiff + bDiff + aDiff) / 4f);
             }
         }
     }

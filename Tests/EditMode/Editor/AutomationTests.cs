@@ -2,16 +2,18 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.IO;
-using GDX.Editor;
 using GDX.Jobs.ParallelFor;
 using NUnit.Framework;
 #if GDX_COLLECTIONS
+using GDX;
 using Unity.Collections;
 #endif
 using Unity.Jobs;
 using UnityEditor;
 using UnityEngine;
+using Automation = GDX.Editor.Automation;
 
 namespace Editor
 {
@@ -82,7 +84,7 @@ namespace Editor
             screenshotDataB.Dispose();
             percentages.Dispose();
 
-            Assert.IsTrue(average == 1, $"Similarity was {average}%.");
+            Assert.IsTrue(Math.Abs(average - 1) < Platform.FloatTolerance, $"Similarity was {average}%.");
 #else
             Assert.Ignore("Collections required.");
 #endif

@@ -43,8 +43,12 @@ namespace GDX.Jobs.ParallelFor
             }
             else
             {
-                Percentage[index] = ((A[index].r / B[index].r) + (A[index].g / B[index].g) + (A[index].b / B[index].b) +
-                                     (A[index].a / B[index].a)) / 4f;
+                float rDiff = A[index].r - B[index].r;
+                float gDiff = A[index].g - B[index].g;
+                float bDiff = A[index].b - B[index].b;
+                float aDiff = A[index].a - B[index].a;
+
+                Percentage[index] = 1f - ((rDiff + gDiff + bDiff + aDiff) / 4f);
             }
         }
     }
