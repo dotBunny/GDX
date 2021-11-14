@@ -16,6 +16,8 @@ namespace GDX
     [VisualScriptingCompatible(8)]
     public static class Platform
     {
+        public const float FloatTolerance = 0.000001f;
+        public const double DoubleTolerance = 0.000001d;
         public const string SafeCharacterPool = "abcdefghijklmnopqrstuvwxyz";
         public const int CharacterPoolLength = 25;
         public const int CharacterPoolLengthExclusive = 24;

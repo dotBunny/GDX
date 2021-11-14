@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Text;
+using System.Globalization;
 using GDX.Mathematics.Random;
 using NUnit.Framework;
 
@@ -231,7 +231,7 @@ namespace Runtime.Mathematics.Random
             bool evaluate = true;
             for (int i = 1; i < 64; i++)
             {
-                if (nextValues[i - 1] == nextValues[i])
+                if (Math.Abs(nextValues[i - 1] - nextValues[i]) < GDX.Platform.DoubleTolerance)
                 {
                     evaluate = false;
                     break;
@@ -248,7 +248,7 @@ namespace Runtime.Mathematics.Random
             WELL1024a mockWell = new WELL1024a(MockSeed);
             double nextValue = mockWell.NextDouble();
 
-            bool evaluate = nextValue == 0.89496001484803855d;
+            bool evaluate = Math.Abs(nextValue - 0.89496001484803855d) < GDX.Platform.DoubleTolerance;
 
             Assert.IsTrue(evaluate);
         }
@@ -260,9 +260,9 @@ namespace Runtime.Mathematics.Random
             WELL1024a mockWell = new WELL1024a(MockSeed);
             float nextValue = mockWell.NextSingle();
 
-            bool evaluate =  nextValue == 0.894959986f;
+            bool evaluate =  Math.Abs(nextValue - 0.894959986f) < GDX.Platform.DoubleTolerance;
 
-            Assert.IsTrue(evaluate, nextValue.ToString());
+            Assert.IsTrue(evaluate, nextValue.ToString(CultureInfo.InvariantCulture));
         }
 
         [Test]
@@ -280,7 +280,7 @@ namespace Runtime.Mathematics.Random
             bool evaluate = true;
             for (int i = 1; i < 64; i++)
             {
-                if (nextValues[i - 1] == nextValues[i])
+                if (Math.Abs(nextValues[i - 1] - nextValues[i]) < GDX.Platform.DoubleTolerance)
                 {
                     evaluate = false;
                     break;
