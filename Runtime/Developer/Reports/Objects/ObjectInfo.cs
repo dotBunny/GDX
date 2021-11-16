@@ -128,7 +128,7 @@ namespace GDX.Developer.Reports.Objects
             }
             if (stripUnicode)
             {
-                typeName = typeName.StripUnicode();
+                typeName = typeName.StripNonAscii();
             }
 
             string objectName = Name.PadRight(context.ObjectNameWidth);
@@ -138,7 +138,7 @@ namespace GDX.Developer.Reports.Objects
             }
             if (stripUnicode)
             {
-                objectName = objectName.StripUnicode();
+                objectName = objectName.StripNonAscii();
             }
 
             string sizeInfo =
