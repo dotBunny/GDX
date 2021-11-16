@@ -36,6 +36,8 @@ namespace Editor
             /// <inheritdoc />
             public void RunFinished(ITestResultAdaptor result)
             {
+
+                //Debug.Log($"PASS: {result.PassCount} SKIP:{result.SkipCount} FAIL:{result.FailCount}");
 #if !GDX_SAVE_TEST_OUTPUT
                 if (result.FailCount == 0)
                 {
