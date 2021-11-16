@@ -9,6 +9,7 @@ using UnityEngine;
 
 namespace Editor
 {
+#if UNITY_2019_1_OR_NEWER
     public static class TestFramework
     {
         private static TestRunnerApi s_testRunner;
@@ -58,4 +59,14 @@ namespace Editor
             }
         }
     }
+#else
+    public static class TestFramework
+    {
+        [InitializeOnLoadMethod]
+        public static void Initialize()
+        {
+            GDX.Editor.Automation.ClearTempFolder();
+        }
+    }
+#endif
 }
