@@ -46,12 +46,10 @@ namespace Editor
             Texture2D screenshotB = Automation.CaptureEditorWindow<SceneView>();
             NativeArray<Color32> screenshotDataA = screenshotA.GetRawTextureData<Color32>();
             NativeArray<Color32> screenshotDataB = screenshotB.GetRawTextureData<Color32>();
-#if GDX_SAVE_TEST_OUTPUT
             string outputPathA = Automation.GetTempFilePath("CaptureEditorWindow_SceneView_SameTextureA-",".png");
             string outputPathB = Automation.GetTempFilePath("CaptureEditorWindow_SceneView_SameTextureB-",".png");
             File.WriteAllBytes(outputPathA, screenshotA.EncodeToPNG());
             File.WriteAllBytes(outputPathB, screenshotB.EncodeToPNG());
-#endif // GDX_SAVE_TEST_OUTPUT
 
             int arrayLengthA = screenshotDataA.Length;
             int arrayLengthB = screenshotDataB.Length;
@@ -102,9 +100,6 @@ namespace Editor
             string outputPath = Automation.GetTempFilePath("CaptureEditorWindowToPNG_SceneView_OutputsImage-",".png");
             bool execute = Automation.CaptureEditorWindowToPNG<SceneView>(outputPath);
             bool evaluate = execute && File.Exists(outputPath);
-#if !GDX_SAVE_TEST_OUTPUT
-            File.Delete(outputPath);
-#endif // !GDX_SAVE_TEST_OUTPUT
             Assert.IsTrue(evaluate);
         }
 
@@ -134,9 +129,6 @@ namespace Editor
             string outputPath = Automation.GetTempFilePath("CaptureFocusedEditorWindowToPNG_OutputsImage-",".png");
             bool execute = Automation.CaptureFocusedEditorWindowToPNG(outputPath);
             bool evaluate = execute && File.Exists(outputPath);
-#if !GDX_SAVE_TEST_OUTPUT
-            File.Delete(outputPath);
-#endif
             Assert.IsTrue(evaluate);
         }
 
@@ -198,12 +190,5 @@ namespace Editor
 
             Assert.IsTrue(evaluate);
         }
-
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void ResetEditor_ResetsLayout()
-        // {
-        //     //ProcessArguments_MockData_ContainsFlag()
-        // }
     }
 }
