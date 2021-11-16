@@ -764,7 +764,7 @@ namespace GDX
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string StripUnicode(this string targetString)
+        public static string StripNonAscii(this string targetString)
         {
             return Regex.Replace(targetString, @"[^\u0000-\u007F]+", string.Empty);
         }
