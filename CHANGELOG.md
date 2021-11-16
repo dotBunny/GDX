@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A `RandomWrapper` was created to allow for `System.Random` to be used with the `IRandomProvider` interface.
 
 ### Fixed
-- `WELL1024a` exclusive methods truly will exclude the values correctly. NEED TO TRIPLE CHECK THIS!
- 
+- `WELL1024a` exclusive methods truly will exclude the values correctly.
+- A new `StripUnicode` has been added for strings.
 
 ## [2.0.2] - 2021-11-03
 ***"Told Ya"***
