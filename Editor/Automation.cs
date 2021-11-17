@@ -245,16 +245,7 @@ namespace GDX.Editor
         /// <returns>The instantiated window, or null.</returns>
         public static T GetWindow<T>(bool autoFocus = true, bool shouldMaximize = false, int width = 800, int height = 600) where T : EditorWindow
         {
-            Rect windowRect = new Rect(0, 0, width, height);
-            T window;
-            if (EditorWindow.HasOpenInstances<T>())
-            {
-                window = EditorWindow.GetWindowWithRect<T>(windowRect, false);
-            }
-            else
-            {
-                window = EditorWindow.CreateWindow<T>();
-            }
+            T window = EditorWindow.GetWindowWithRect<T>(new Rect(0, 0, width, height), false);
 
             if (window != null)
             {
