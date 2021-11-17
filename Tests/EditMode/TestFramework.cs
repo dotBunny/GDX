@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEditor.TestTools.TestRunner.Api;
 using UnityEngine;
 
-namespace Editor
+namespace GDX
 {
 #if UNITY_2019_1_OR_NEWER
     public static class TestFramework
