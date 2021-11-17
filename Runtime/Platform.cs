@@ -58,7 +58,7 @@ namespace GDX
         ///     Validate that the file path is writable, making the necessary folder structure and setting permissions.
         /// </summary>
         /// <param name="filePath">The absolute path to validate.</param>
-        public static void EnsureFileWritable(this string filePath)
+        public static void EnsureFileWritable(string filePath)
         {
             string fileName = Path.GetFileName(filePath);
             if (fileName != null)
@@ -80,7 +80,7 @@ namespace GDX
         /// </summary>
         /// <param name="filePath">The file path to remove forcefully.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ForceDeleteFile(this string filePath)
+        public static void ForceDeleteFile(string filePath)
         {
             if (File.Exists(filePath))
             {
@@ -116,7 +116,7 @@ namespace GDX
         /// </summary>
         /// <param name="filePath">The file path to check if it can be written.</param>
         /// <returns>true/false if the path can be written too.</returns>
-        public static bool IsFileWritable(this string filePath)
+        public static bool IsFileWritable(string filePath)
         {
             if (File.Exists(filePath))
             {
