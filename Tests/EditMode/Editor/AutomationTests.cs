@@ -23,10 +23,10 @@ namespace Editor
         [Category("GDX.Tests")]
         public void CaptureEditorWindow_SceneView_ReturnsTexture()
         {
-            if (Application.isBatchMode)
-            {
-                Assert.Ignore("Unable to run test through Batch Mode.");
-            }
+            // if (Application.isBatchMode)
+            // {
+            //     Assert.Ignore("Unable to run test through Batch Mode.");
+            // }
             Texture2D texture = Automation.CaptureEditorWindow<SceneView>();
             bool evaluate = (texture != null);
             Assert.IsTrue(evaluate);
@@ -36,11 +36,11 @@ namespace Editor
         [Category("GDX.Tests")]
         public void CaptureEditorWindow_SceneView_SameTexture()
         {
-            if (Application.isBatchMode)
-            {
-                Assert.Ignore("Unable to run test through Batch Mode.");
-                return;
-            }
+            // if (Application.isBatchMode)
+            // {
+            //     Assert.Ignore("Unable to run test through Batch Mode.");
+            //     return;
+            // }
 #if GDX_COLLECTIONS
             Texture2D screenshotA = Automation.CaptureEditorWindow<SceneView>();
             Texture2D screenshotB = Automation.CaptureEditorWindow<SceneView>();
@@ -92,11 +92,11 @@ namespace Editor
         [Category("GDX.Tests")]
         public void CaptureEditorWindowToPNG_SceneView_OutputsImage()
         {
-            if (Application.isBatchMode)
-            {
-                Assert.Ignore("Unable to run test through Batch Mode.");
-                return;
-            }
+            // if (Application.isBatchMode)
+            // {
+            //     Assert.Ignore("Unable to run test through Batch Mode.");
+            //     return;
+            // }
             string outputPath = Automation.GetTempFilePath("CaptureEditorWindowToPNG_SceneView_OutputsImage-",".png");
             bool execute = Automation.CaptureEditorWindowToPNG<SceneView>(outputPath);
             bool evaluate = execute && File.Exists(outputPath);
@@ -107,11 +107,11 @@ namespace Editor
         [Category("GDX.Tests")]
         public void CaptureFocusedEditorWindow_ReturnsTexture()
         {
-            if (Application.isBatchMode)
-            {
-                Assert.Ignore("Unable to run test through Batch Mode.");
-                return;
-            }
+            // if (Application.isBatchMode)
+            // {
+            //     Assert.Ignore("Unable to run test through Batch Mode.");
+            //     return;
+            // }
             Texture2D texture = Automation.CaptureFocusedEditorWindow();
             bool evaluate = (texture != null);
             Assert.IsTrue(evaluate);
@@ -121,11 +121,11 @@ namespace Editor
         [Category("GDX.Tests")]
         public void CaptureFocusedEditorWindowToPNG_OutputsImage()
         {
-            if (Application.isBatchMode)
-            {
-                Assert.Ignore("Unable to run test through Batch Mode.");
-                return;
-            }
+            // if (Application.isBatchMode)
+            // {
+            //     Assert.Ignore("Unable to run test through Batch Mode.");
+            //     return;
+            // }
             string outputPath = Automation.GetTempFilePath("CaptureFocusedEditorWindowToPNG_OutputsImage-",".png");
             bool execute = Automation.CaptureFocusedEditorWindowToPNG(outputPath);
             bool evaluate = execute && File.Exists(outputPath);
@@ -158,11 +158,11 @@ namespace Editor
         [Category("GDX.Tests")]
         public void GetWindow_SceneView_NotNull()
         {
-            if (Application.isBatchMode)
-            {
-                Assert.Ignore("Unable to run test through Batch Mode.");
-                return;
-            }
+            // if (Application.isBatchMode)
+            // {
+            //     Assert.Ignore("Unable to run test through Batch Mode.");
+            //     return;
+            // }
             EditorWindow sceneView = Automation.GetWindow<SceneView>();
             bool evaluate = (sceneView != null);
             if (sceneView != null)
