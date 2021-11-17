@@ -1,13 +1,14 @@
-﻿// // Copyright (c) 2020-2021 dotBunny Inc.
-// // dotBunny licenses this file to you under the BSL-1.0 license.
-// // See the LICENSE file in the project root for more information.
-//
+﻿// Copyright (c) 2020-2021 dotBunny Inc.
+// dotBunny licenses this file to you under the BSL-1.0 license.
+// See the LICENSE file in the project root for more information.
 
 using UnityEditor;
-using UnityEditor.TestTools.TestRunner.Api;
 using UnityEngine;
+#if UNITY_2019_1_OR_NEWER
+using UnityEditor.TestTools.TestRunner.Api;
+#endif
 
-namespace GDX
+namespace GDX.Tests.EditMode
 {
 #if UNITY_2019_1_OR_NEWER
     public static class TestFramework
@@ -22,41 +23,11 @@ namespace GDX
             {
                 s_testRunner = ScriptableObject.CreateInstance<TestRunnerApi>();
             }
-            s_testMonitor = new TestMonitor();
+            if (s_testMonitor == null)
+            {
+                s_testMonitor = new TestMonitor();
+            }
             s_testRunner.RegisterCallbacks(s_testMonitor);
-        }
-
-        class TestMonitor : ICallbacks
-        {
-            /// <inheritdoc />
-            public void RunStarted(ITestAdaptor testsToRun)
-            {
-                GDX.Editor.Automation.ClearTempFolder();
-            }
-
-            /// <inheritdoc />
-            public void RunFinished(ITestResultAdaptor result)
-            {
-
-                //Debug.Log($"PASS: {result.PassCount} SKIP:{result.SkipCount} FAIL:{result.FailCount}");
-#if !GDX_SAVE_TEST_OUTPUT
-                if (result.FailCount == 0)
-                {
-                    GDX.Editor.Automation.ClearTempFolder();
-                }
-#endif
-            }
-
-            /// <inheritdoc />
-            public void TestStarted(ITestAdaptor test)
-            {
-
-            }
-
-            /// <inheritdoc />
-            public void TestFinished(ITestResultAdaptor result)
-            {
-            }
         }
     }
 #else
