@@ -13,13 +13,11 @@ namespace GDX.Tests.EditMode
     class TestMonitor : ICallbacks
     {
         private string _cachedTempFolder;
-        private List<string> _knownArtifacts = new List<string>(20);
 
         /// <inheritdoc />
         public void RunStarted(ITestAdaptor testsToRun)
         {
             _cachedTempFolder = Editor.Automation.GetTempFolder();
-            _knownArtifacts.Clear();
 
             // Make sure our temp folder is absolutely clear at the start
             Editor.Automation.ClearTempFolder();
@@ -39,27 +37,45 @@ namespace GDX.Tests.EditMode
         /// <inheritdoc />
         public void TestFinished(ITestResultAdaptor result)
         {
-#if !GDX_SAVE_TEST_OUTPUT
-            string[] foundFiles = Directory.GetFiles(_cachedTempFolder, "*", SearchOption.AllDirectories);
+            // We dont want to do any processing during the parent suites currently, only after an actual test method
+            // has been invoked/ran
+            if (result.Test.IsSuite)
+            {
+                return;
+            }
+
+#if GDX_SAVE_TEST_OUTPUT
+            string testFolder = Path.Combine(_cachedTempFolder, $"{result.Test.FullName}");
+            Platform.EnsureFolderHierarchyExists(testFolder);
+            string[] foundFiles = Directory.GetFiles(_cachedTempFolder, "*", SearchOption.TopDirectoryOnly);
             foreach (string file in foundFiles)
             {
-                // We already know about it and have decided to keep it
-                if (_knownArtifacts.Contains(file))
+                string newFilePath = Path.Combine(testFolder, Path.GetFileName(file));
+                File.Move(file, newFilePath);
+            }
+#else
+            if (result.FailCount > 0)
+            {
+                string testFolder = Path.Combine(_cachedTempFolder, $"{result.Test.FullName}");
+                Platform.EnsureFolderHierarchyExists(testFolder);
+                string[] foundFiles = Directory.GetFiles(_cachedTempFolder, "*", SearchOption.TopDirectoryOnly);
+                foreach (string file in foundFiles)
                 {
-
-                }
-                else if (result.FailCount > 0)
-                {
-                    _knownArtifacts.Add(file);
-                }
-                else
-                {
-                    Platform.ForceDeleteFile(file);
+                    string newFilePath = Path.Combine(testFolder, Path.GetFileName(file));
+                    File.Move(file, newFilePath);
                 }
             }
-#endif
+            else
+            {
+                string[] foundFiles = Directory.GetFiles(_cachedTempFolder, "*", SearchOption.TopDirectoryOnly);
+                foreach (string file in foundFiles)
+                {
+                    File.Delete(file);
+                }
+            }
+#endif // GDX_SAVE_TEST_OUTPUT
         }
     }
 }
 
-#endif
+#endif // UNITY_2019_1_OR_NEWER
