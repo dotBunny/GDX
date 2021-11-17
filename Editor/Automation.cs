@@ -237,13 +237,12 @@ namespace GDX.Editor
         /// Get the existing or open a new window with the indicated size / flags.
         /// </summary>
         /// <remarks>This will undock a window.</remarks>
-        /// <param name="autoFocus">Should the window get focus?</param>
         /// <param name="shouldMaximize">Should the window be maximized?</param>
         /// <param name="width">The desired window pixel width.</param>
         /// <param name="height">The desired window pixel height.</param>
         /// <typeparam name="T">The type of the window requested.</typeparam>
         /// <returns>The instantiated window, or null.</returns>
-        public static T GetWindow<T>(bool autoFocus = true, bool shouldMaximize = false, int width = 800, int height = 600) where T : EditorWindow
+        public static T GetWindow<T>(bool shouldMaximize = false, int width = 800, int height = 600) where T : EditorWindow
         {
             T window = EditorWindow.GetWindowWithRect<T>(new Rect(0, 0, width, height), false);
 
@@ -257,12 +256,6 @@ namespace GDX.Editor
                 if (shouldMaximize)
                 {
                     window.maximized = true;
-                }
-
-                // Lets make sure that its focused
-                if (autoFocus)
-                {
-                    window.Focus();
                 }
 
                 // We need to force some internal repainting/resizing without having the API surface area to do so.
