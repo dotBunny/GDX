@@ -24,7 +24,7 @@ namespace GDX.Editor
     /// </summary>
     public static class Automation
     {
-
+        public static object[] s_EmptyParametersArray = new object[] { };
 
         /// <summary>
         /// Capture a <see cref="Texture2D"/> of the designated <see cref="EditorWindow"/>.
@@ -263,15 +263,31 @@ namespace GDX.Editor
                 // We'll exploit reflection a bit to get around this for now.
                 MethodInfo repaintMethod = window.GetType().GetMethod("RepaintImmediately",
                     BindingFlags.NonPublic | BindingFlags.Instance);
-                if (repaintMethod != null)
-                {
-                    repaintMethod.Invoke(window, new object[] { });
-                }
                 MethodInfo resizedMethod = window.GetType().GetMethod("OnResized",
                     BindingFlags.NonPublic | BindingFlags.Instance);
+
+                // The exact sequence is frustrating and I'm not entirely sure that it will cover the dreaded white
+                // screen that happens from time to time, but as we expanded out the number of steps we haven't seen
+                // a fail yet from testing.
+                if (repaintMethod != null)
+                {
+                    repaintMethod.Invoke(window, s_EmptyParametersArray);
+                }
                 if (resizedMethod != null)
                 {
-                    resizedMethod.Invoke(window, new object[] { });
+                    resizedMethod.Invoke(window, s_EmptyParametersArray);
+                }
+                if (repaintMethod != null)
+                {
+                    repaintMethod.Invoke(window, s_EmptyParametersArray);
+                }
+                if (resizedMethod != null)
+                {
+                    resizedMethod.Invoke(window, s_EmptyParametersArray);
+                }
+                if (repaintMethod != null)
+                {
+                    repaintMethod.Invoke(window, s_EmptyParametersArray);
                 }
             }
             return window;

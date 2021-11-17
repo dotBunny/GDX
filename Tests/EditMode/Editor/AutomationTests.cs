@@ -132,24 +132,6 @@ namespace Editor
             Assert.IsTrue(evaluate);
         }
 
-        [Test]
-        [Category("GDX.Tests")]
-        public void ClearTempFolder_DontDelete_EmptyFolder()
-        {
-#if !GDX_SAVE_TEST_OUTPUT
-            string path = Automation.GetTempFolder();
-            File.WriteAllText(Path.Combine(path, "test.dat"), "ClearTempFolder_DontDelete_EmptyFolder");
-
-            Automation.ClearTempFolder();
-            DirectoryInfo di = new DirectoryInfo(path);
-
-            bool evaluate = !(di.GetFiles().Length > 0 || di.GetDirectories().Length > 0);
-            Assert.IsTrue(evaluate);
-#else
-            Assert.Ignore("Disabled due to GDX_SAVE_TEST_OUTPUT.");
-#endif
-        }
-
         // [Test]
         // [Category("GDX.Tests")]
         // public void GenerateProjectFiles_CreatesSolution()
