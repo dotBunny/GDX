@@ -39,25 +39,25 @@ namespace GDX.Tests.EditMode
         /// <inheritdoc />
         public void TestFinished(ITestResultAdaptor result)
         {
-            #if !GDX_SAVE_TEST_OUTPUT
-            DirectoryInfo di = new DirectoryInfo(_cachedTempFolder);
-            foreach (FileInfo file in di.GetFiles("*", SearchOption.AllDirectories))
+#if !GDX_SAVE_TEST_OUTPUT
+            string[] foundFiles = Directory.GetFiles(_cachedTempFolder, "*", SearchOption.AllDirectories);
+            foreach (string file in foundFiles)
             {
                 // We already know about it and have decided to keep it
-                if (_knownArtifacts.Contains(file.FullName))
+                if (_knownArtifacts.Contains(file))
                 {
 
                 }
                 else if (result.FailCount > 0)
                 {
-                    _knownArtifacts.Add(file.FullName);
+                    _knownArtifacts.Add(file);
                 }
                 else
                 {
-                    Platform.ForceDeleteFile(file.FullName);
+                    Platform.ForceDeleteFile(file);
                 }
             }
-            #endif
+#endif
         }
     }
 }
