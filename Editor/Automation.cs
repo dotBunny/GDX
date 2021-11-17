@@ -246,7 +246,16 @@ namespace GDX.Editor
         public static T GetWindow<T>(bool autoFocus = true, bool shouldMaximize = false, int width = 800, int height = 600) where T : EditorWindow
         {
             Rect windowRect = new Rect(0, 0, width, height);
-            T window = EditorWindow.GetWindowWithRect<T>(windowRect, false);
+            T window;
+            if (EditorWindow.HasOpenInstances<T>())
+            {
+                window = EditorWindow.GetWindowWithRect<T>(windowRect, false);
+            }
+            else
+            {
+                window = EditorWindow.CreateWindow<T>();
+            }
+
             if (window != null)
             {
                 // Enforce the size of the window through setting its position. It's not great but works.
