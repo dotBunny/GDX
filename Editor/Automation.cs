@@ -76,6 +76,12 @@ namespace GDX.Editor
         /// <returns>The <see cref="Texture2D"/> captured.</returns>
         public static Texture2D CaptureFocusedEditorWindow()
         {
+            // In the off chance nothing is focused, return null
+            if (EditorWindow.focusedWindow == null)
+            {
+                return null;
+            }
+
             Rect windowRect = EditorWindow.focusedWindow.position;
             int width = (int)windowRect.width;
             int height = (int)windowRect.height;
