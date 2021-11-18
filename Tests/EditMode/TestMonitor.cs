@@ -6,7 +6,11 @@
 
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 using UnityEditor.TestTools.TestRunner.Api;
+using UnityEditorInternal;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace GDX.Tests.EditMode
 {
@@ -17,7 +21,18 @@ namespace GDX.Tests.EditMode
         /// <inheritdoc />
         public void RunStarted(ITestAdaptor testsToRun)
         {
+
             _cachedTempFolder = Editor.Automation.GetTempFolder();
+            if (Application.isBatchMode)
+            {
+                Editor.Automation.StashWindowLayout();
+            }
+
+            EditorWindow gameView = Editor.Automation.GetGameView();
+            if (gameView != null)
+            {
+                gameView.Show(true);
+            }
 
             // Make sure our temp folder is absolutely clear at the start
             Editor.Automation.ClearTempFolder();
@@ -26,9 +41,12 @@ namespace GDX.Tests.EditMode
         /// <inheritdoc />
         public void RunFinished(ITestResultAdaptor result)
         {
+            if (Application.isBatchMode)
+            {
+                Editor.Automation.RestoreWindowLayout();
+            }
         }
 
-        private string[] _knownFiles;
         /// <inheritdoc />
         public void TestStarted(ITestAdaptor test)
         {
