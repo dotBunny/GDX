@@ -191,7 +191,7 @@ namespace GDX.Editor
             if (gameView != null)
             {
                 MethodInfo getMethod = gameView.GetMethod("GetMainPlayModeView",BindingFlags.NonPublic | BindingFlags.Static);
-                if (getMethod is not null)
+                if (getMethod != null)
                 {
                     object returnedObject = getMethod.Invoke(null, s_EmptyParametersArray);
                     return (EditorWindow)returnedObject;
@@ -327,7 +327,7 @@ namespace GDX.Editor
             if (windowLayout != null)
             {
                 MethodInfo saveMethod = windowLayout.GetMethod("SaveWindowLayout",BindingFlags.Public | BindingFlags.Static);
-                if (saveMethod is not null)
+                if (saveMethod != null)
                 {
                     saveMethod.Invoke(null,new object[]{LayoutStashPath()});
                 }
