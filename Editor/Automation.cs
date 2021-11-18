@@ -26,6 +26,10 @@ namespace GDX.Editor
     {
         public static object[] s_EmptyParametersArray = new object[] { };
 
+        private static string LayoutStashPath()
+        {
+            return Path.Combine(Application.dataPath, "..", "GDX.layout");
+        }
         /// <summary>
         /// Capture a <see cref="Texture2D"/> of the designated <see cref="EditorWindow"/>.
         /// </summary>
@@ -181,6 +185,21 @@ namespace GDX.Editor
 #endif // UNITY_2019_1_OR_NEWER
         }
 
+        public static EditorWindow GetGameView()
+        {
+            System.Type gameView = System.Type.GetType("UnityEditor.GameView,UnityEditor");
+            if (gameView != null)
+            {
+                MethodInfo getMethod = gameView.GetMethod("GetMainPlayModeView",BindingFlags.NonPublic | BindingFlags.Static);
+                if (getMethod is not null)
+                {
+                    object returnedObject = getMethod.Invoke(null, s_EmptyParametersArray);
+                    return (EditorWindow)returnedObject;
+                }
+            }
+            return null;
+        }
+
         /// <summary>
         /// Gets and ensures the temporary GDX automation folder exists.
         /// </summary>
@@ -300,6 +319,37 @@ namespace GDX.Editor
         public static void ResetEditor()
         {
             InternalEditorUtility.LoadDefaultLayout();
+        }
+
+        public static void StashWindowLayout()
+        {
+            System.Type windowLayout = System.Type.GetType("UnityEditor.WindowLayout,UnityEditor");
+            if (windowLayout != null)
+            {
+                MethodInfo saveMethod = windowLayout.GetMethod("SaveWindowLayout",BindingFlags.Public | BindingFlags.Static);
+                if (saveMethod is not null)
+                {
+                    saveMethod.Invoke(null,new object[]{LayoutStashPath()});
+                }
+            }
+        }
+
+        public static void RestoreWindowLayout()
+        {
+            string path = LayoutStashPath();
+            if (File.Exists(path))
+            {
+                System.Type windowLayout = System.Type.GetType("UnityEditor.WindowLayout,UnityEditor");
+                if (windowLayout != null)
+                {
+                    MethodInfo loadMethod = windowLayout.GetMethod("LoadWindowLayout", new System.Type[] {typeof(string), typeof(bool), typeof(bool), typeof(bool)});
+                    if (loadMethod != null)
+                    {
+                        loadMethod.Invoke(null,new object[]{LayoutStashPath(), false, false, true});
+                    }
+                }
+                Platform.ForceDeleteFile(path);
+            }
         }
     }
 }
