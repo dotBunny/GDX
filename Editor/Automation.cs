@@ -263,7 +263,7 @@ namespace GDX.Editor
         /// <returns>The instantiated window, or null.</returns>
         public static T GetWindow<T>(bool shouldMaximize = false, int width = 800, int height = 600) where T : EditorWindow
         {
-            T window = EditorWindow.GetWindowWithRect<T>(new Rect(0, 0, width, height), false);
+            T window = EditorWindow.GetWindowWithRect<T>(new Rect(0, 0, width, height), false, typeof(T).ToString(), true);
 
             if (window != null)
             {
@@ -277,36 +277,36 @@ namespace GDX.Editor
                     window.maximized = true;
                 }
 
-                // // We need to force some internal repainting/resizing without having the API surface area to do so.
-                // // We'll exploit reflection a bit to get around this for now.
-                // MethodInfo repaintMethod = window.GetType().GetMethod("RepaintImmediately",
-                //     BindingFlags.NonPublic | BindingFlags.Instance);
-                // MethodInfo resizedMethod = window.GetType().GetMethod("OnResized",
-                //     BindingFlags.NonPublic | BindingFlags.Instance);
-                //
-                // // The exact sequence is frustrating and I'm not entirely sure that it will cover the dreaded white
-                // // screen that happens from time to time, but as we expanded out the number of steps we haven't seen
-                // // a fail yet from testing.
-                // if (repaintMethod != null)
-                // {
-                //     repaintMethod.Invoke(window, s_EmptyParametersArray);
-                // }
-                // if (resizedMethod != null)
-                // {
-                //     resizedMethod.Invoke(window, s_EmptyParametersArray);
-                // }
-                // if (repaintMethod != null)
-                // {
-                //     repaintMethod.Invoke(window, s_EmptyParametersArray);
-                // }
-                // if (resizedMethod != null)
-                // {
-                //     resizedMethod.Invoke(window, s_EmptyParametersArray);
-                // }
-                // if (repaintMethod != null)
-                // {
-                //     repaintMethod.Invoke(window, s_EmptyParametersArray);
-                // }
+                // We need to force some internal repainting/resizing without having the API surface area to do so.
+                // We'll exploit reflection a bit to get around this for now.
+                MethodInfo repaintMethod = window.GetType().GetMethod("RepaintImmediately",
+                    BindingFlags.NonPublic | BindingFlags.Instance);
+                MethodInfo resizedMethod = window.GetType().GetMethod("OnResized",
+                    BindingFlags.NonPublic | BindingFlags.Instance);
+
+                // The exact sequence is frustrating and I'm not entirely sure that it will cover the dreaded white
+                // screen that happens from time to time, but as we expanded out the number of steps we haven't seen
+                // a fail yet from testing.
+                if (repaintMethod != null)
+                {
+                    repaintMethod.Invoke(window, s_EmptyParametersArray);
+                }
+                if (resizedMethod != null)
+                {
+                    resizedMethod.Invoke(window, s_EmptyParametersArray);
+                }
+                if (repaintMethod != null)
+                {
+                    repaintMethod.Invoke(window, s_EmptyParametersArray);
+                }
+                if (resizedMethod != null)
+                {
+                    resizedMethod.Invoke(window, s_EmptyParametersArray);
+                }
+                if (repaintMethod != null)
+                {
+                    repaintMethod.Invoke(window, s_EmptyParametersArray);
+                }
             }
             return window;
         }
