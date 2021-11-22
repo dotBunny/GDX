@@ -192,11 +192,7 @@ namespace GDX.Editor
         public static EditorWindow GetGameView()
         {
             System.Type gameView = System.Type.GetType("UnityEditor.GameView,UnityEditor");
-            if (gameView != null)
-            {
-                return EditorWindow.GetWindow(gameView, false);
-            }
-            return null;
+            return gameView != null ? EditorWindow.GetWindow(gameView, false) : null;
         }
 
         /// <summary>
