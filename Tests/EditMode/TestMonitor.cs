@@ -63,9 +63,12 @@ namespace GDX.Tests.EditMode
             }
 
 #if GDX_SAVE_TEST_OUTPUT
-            string testFolder = Path.Combine(_cachedTempFolder, $"{result.Test.FullName}");
-            Platform.EnsureFolderHierarchyExists(testFolder);
+            string testFolder = Path.Combine(_cachedTempFolder, $"TEST_{result.Test.FullName}");
             string[] foundFiles = Directory.GetFiles(_cachedTempFolder, "*", SearchOption.TopDirectoryOnly);
+            if (foundFiles.Length > 0)
+            {
+                Platform.EnsureFolderHierarchyExists(testFolder);
+            }
             foreach (string file in foundFiles)
             {
                 string newFilePath = Path.Combine(testFolder, Path.GetFileName(file));
@@ -74,9 +77,13 @@ namespace GDX.Tests.EditMode
 #else
             if (result.FailCount > 0)
             {
-                string testFolder = Path.Combine(_cachedTempFolder, $"{result.Test.FullName}");
-                Platform.EnsureFolderHierarchyExists(testFolder);
+                System.Console.WriteLine($"Test {result.Test.FullName} Failed.");
+                string testFolder = Path.Combine(_cachedTempFolder, $"TEST_{result.Test.FullName}");
                 string[] foundFiles = Directory.GetFiles(_cachedTempFolder, "*", SearchOption.TopDirectoryOnly);
+                if (foundFiles.Length > 0)
+                {
+                    Platform.EnsureFolderHierarchyExists(testFolder);
+                }
                 foreach (string file in foundFiles)
                 {
                     string newFilePath = Path.Combine(testFolder, Path.GetFileName(file));

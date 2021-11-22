@@ -93,6 +93,7 @@ namespace Editor
         [Category("GDX.Tests")]
         public void CaptureFocusedEditorWindow_ReturnsTexture()
         {
+            Automation.GetGameView().Focus();
             Texture2D texture = Automation.CaptureFocusedEditorWindow();
             bool evaluate = (texture != null);
             Assert.IsTrue(evaluate);
@@ -102,6 +103,7 @@ namespace Editor
         [Category("GDX.Tests")]
         public void CaptureFocusedEditorWindowToPNG_OutputsImage()
         {
+            Automation.GetGameView().Focus();
             string outputPath = Automation.GetTempFilePath("CaptureFocusedEditorWindowToPNG_OutputsImage-",".png");
             bool execute = Automation.CaptureFocusedEditorWindowToPNG(outputPath);
             bool evaluate = execute && File.Exists(outputPath);
