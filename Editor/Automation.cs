@@ -185,17 +185,16 @@ namespace GDX.Editor
 #endif // UNITY_2019_1_OR_NEWER
         }
 
+        /// <summary>
+        /// Returns a reference to the first available GameView.
+        /// </summary>
+        /// <returns>An reference to an instance of the GameView</returns>
         public static EditorWindow GetGameView()
         {
             System.Type gameView = System.Type.GetType("UnityEditor.GameView,UnityEditor");
             if (gameView != null)
             {
-                MethodInfo getMethod = gameView.GetMethod("GetMainPlayModeView",BindingFlags.NonPublic | BindingFlags.Static);
-                if (getMethod != null)
-                {
-                    object returnedObject = getMethod.Invoke(null, s_EmptyParametersArray);
-                    return (EditorWindow)returnedObject;
-                }
+                return EditorWindow.GetWindow(gameView, false);
             }
             return null;
         }
