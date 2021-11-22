@@ -4,6 +4,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using Unity.Collections;
 #if GDX_MATHEMATICS
 using Unity.Mathematics;
 
@@ -13,7 +14,7 @@ namespace GDX.Mathematics.Random
 {
     // ReSharper disable CommentTypo
     /// <summary>
-    ///     Generates pseudorandom values based on the WELL1024a algorithm.
+    ///     Generates pseudorandom values based on the WELL1024a algorithm. You must <see cref="Dispose"/> manually.
     /// </summary>
     /// <remarks>
     ///     Primarily based on the work of <a href="http://lomont.org/papers/2008/Lomont_PRNG_2008.pdf">Chris Lomont</a>,
@@ -25,7 +26,7 @@ namespace GDX.Mathematics.Random
     // ReSharper restore CommentTypo
     [VisualScriptingCompatible(4)]
     // ReSharper disable once InconsistentNaming
-    public struct WELL1024a : IRandomProvider, IEquatable<WELL1024a>
+    public struct WELL1024a : IRandomProvider, IEquatable<WELL1024a>, IDisposable
     {
         /// <summary>
         ///     A copy of the original seed used to initialize the <see cref="WELL1024a" />.
@@ -35,13 +36,13 @@ namespace GDX.Mathematics.Random
         /// <summary>
         ///     The state array of the well.
         /// </summary>
-        public readonly uint[] State;
+        public NativeArray<uint> State;
 
         /// <summary>
         ///     The current index of use for the well array.
         /// </summary>
         /// <remarks>CAUTION! Changing this will alter the understanding of the data.</remarks>
-        public uint Index;
+        public int Index;
 
         /// <summary>
         ///     The number of times that this well has been sampled.
@@ -66,7 +67,7 @@ namespace GDX.Mathematics.Random
             // Initialize
             Index = 0;
             SampleCount = 0;
-            State = new uint[32];
+            State = new NativeArray<uint>(32, Allocator.Persistent);
             State[0] = OriginalSeed & 4294967295u;
             for (int i = 1; i < 32; ++i)
             {
@@ -85,7 +86,7 @@ namespace GDX.Mathematics.Random
             // Initialize
             Index = 0;
             SampleCount = 0;
-            State = new uint[32];
+            State = new NativeArray<uint>(32, Allocator.Persistent);
             State[0] = OriginalSeed & 4294967295u;
             for (int i = 1; i < 32; ++i)
             {
@@ -127,7 +128,7 @@ namespace GDX.Mathematics.Random
             // Initialize
             Index = 0;
             SampleCount = 0;
-            State = new uint[32];
+            State = new NativeArray<uint>(32, Allocator.Persistent);
             State[0] = OriginalSeed & 4294967295u;
             for (int i = 1; i < 32; ++i)
             {
@@ -143,7 +144,12 @@ namespace GDX.Mathematics.Random
         {
             OriginalSeed = restoreState.Seed;
             Index = restoreState.Index;
-            State = restoreState.State;
+            // Create new native array
+            State = new NativeArray<uint>(32, Allocator.Persistent);
+            for (int i = 0; i < 32; i++)
+            {
+                State[i] = restoreState.State[i];
+            }
             SampleCount = restoreState.Count;
         }
 
@@ -219,16 +225,16 @@ namespace GDX.Mathematics.Random
         {
             SampleCount++;
 
-            uint a = State[(Index + 3u) & 31u];
+            uint a = State[(int)((Index + 3u) & 31u)];
             uint z1 = State[Index] ^ a ^ (a >> 8);
-            uint b = State[(Index + 24u) & 31u];
-            uint c = State[(Index + 10u) & 31u];
+            uint b = State[(int)((Index + 24u) & 31u)];
+            uint c = State[(int)((Index + 10u) & 31u)];
             uint z2 = b ^ (b << 19) ^ c ^ (c << 14);
 
             State[Index] = z1 ^ z2;
-            uint d = State[(Index + 31u) & 31u];
-            State[(Index + 31u) & 31u] = d ^ (d << 11) ^ z1 ^ (z1 << 7) ^ z2 ^ (z2 << 13);
-            Index = (Index + 31u) & 31u;
+            uint d = State[(int)((Index + 31u) & 31u)];
+            State[(int)((Index + 31u) & 31u)] = d ^ (d << 11) ^ z1 ^ (z1 << 7) ^ z2 ^ (z2 << 13);
+            Index = (int)((Index + 31u) & 31u);
 
             return State[Index] * 2.32830643653869628906e-10d;
         }
@@ -247,12 +253,12 @@ namespace GDX.Mathematics.Random
             /// <summary>
             ///     The internal state index.
             /// </summary>
-            public uint Index;
+            public int Index;
 
             /// <summary>
             ///     The internal state array.
             /// </summary>
-            public uint[] State;
+            public NativeArray<uint> State;
 
             /// <summary>
             ///     The internal sample count.
@@ -260,6 +266,11 @@ namespace GDX.Mathematics.Random
             public uint Count;
         }
 
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            State.Dispose();
+        }
 
         /// <summary>
         ///     Is one <see cref="WELL1024a" /> the same as the <paramref name="other" />.
@@ -312,7 +323,7 @@ namespace GDX.Mathematics.Random
             unchecked
             {
                 int hashCode = (int)OriginalSeed;
-                hashCode = (hashCode * 397) ^ (int)Index;
+                hashCode = (hashCode * 397) ^ Index;
                 hashCode = (hashCode * 397) ^ (int)SampleCount;
                 return hashCode;
             }
