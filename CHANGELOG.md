@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.3] - 2021-12-01
 ***"Automate This"***
+> This marks the start of our effort to refactor **GDX** to be more compatible outside of the GameObject world that we currently live in. Over the next couple versions a lot of effort will be going into making types Burst compatible. We will do this by changing the backing types to NativeCollections, however this will result in some slight changes to the API to force cleanup.
 
 ### Added
 - A `RandomWrapper` was created to allow for `System.Random` to be used with the `IRandomProvider` interface.
@@ -22,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `Jobs.ParallelFor.ColorMatchJob`
 
 ### Changed
-- Use a `NativeArray<uint>` to store state in the 'WELL1024a', now requiring `Dispose()`.
+- Now using a `NativeArray<uint>` to store state in the 'WELL1024a', now requires `Dispose()`.
 - Some `Platform` methods behaved like extensions when they should not have been.
 
 ### Fixed

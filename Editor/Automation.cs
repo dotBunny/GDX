@@ -260,6 +260,10 @@ namespace GDX.Editor
         {
             T window = EditorWindow.GetWindowWithRect<T>(new Rect(0, 0, width, height), false, typeof(T).ToString(), true);
 
+
+            // We are going to arbitrarily wait 100ms after asking for the window.
+            System.Threading.Thread.Sleep(100);
+
             if (window != null)
             {
                 // Enforce the size of the window through setting its position. It's not great but works.
