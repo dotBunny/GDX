@@ -2,6 +2,8 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+#define GDX_SAVE_TEST_OUTPUT
+
 #if UNITY_2019_1_OR_NEWER
 
 using System.Collections.Generic;
@@ -12,7 +14,6 @@ using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 
-#define GDX_SAVE_TEST_OUTPUT 1
 namespace GDX.Tests.EditMode
 {
     class TestMonitor : ICallbacks
