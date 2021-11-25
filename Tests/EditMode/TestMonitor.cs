@@ -30,11 +30,11 @@ namespace GDX.Tests.EditMode
                 Editor.Automation.StashWindowLayout();
             }
 
-            // EditorWindow gameView = Editor.Automation.GetGameView();
-            // if (gameView != null)
-            // {
-            //     gameView.Show(true);
-            // }
+            EditorWindow gameView = Editor.Automation.GetGameView();
+            if (gameView != null)
+            {
+                gameView.Show(true);
+            }
 
             // Make sure our temp folder is absolutely clear at the start
             Editor.Automation.ClearTempFolder();
