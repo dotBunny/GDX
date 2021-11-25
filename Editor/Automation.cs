@@ -259,7 +259,7 @@ namespace GDX.Editor
         public static T GetWindow<T>(bool shouldMaximize = false, int width = 800, int height = 600) where T : EditorWindow
         {
             T window = EditorWindow.GetWindowWithRect<T>(new Rect(0, 0, width, height), false, typeof(T).ToString(), true);
-            
+
             if (window != null)
             {
                 // Enforce the size of the window through setting its position. It's not great but works.
@@ -284,24 +284,31 @@ namespace GDX.Editor
                 // a fail yet from testing.
                 if (repaintMethod != null)
                 {
+                    Debug.Log("REPAINT IMMEDIATELY");
                     repaintMethod.Invoke(window, s_EmptyParametersArray);
                 }
                 if (resizedMethod != null)
                 {
+                    Debug.Log("RESIZED IMMEDIATELY");
                     resizedMethod.Invoke(window, s_EmptyParametersArray);
                 }
                 if (repaintMethod != null)
                 {
+                    Debug.Log("REPAINT IMMEDIATELY");
                     repaintMethod.Invoke(window, s_EmptyParametersArray);
                 }
                 if (resizedMethod != null)
                 {
+                    Debug.Log("RESIZED IMMEDIATELY");
                     resizedMethod.Invoke(window, s_EmptyParametersArray);
                 }
                 if (repaintMethod != null)
                 {
+                    Debug.Log("REPAINT IMMEDIATELY");
                     repaintMethod.Invoke(window, s_EmptyParametersArray);
                 }
+
+
             }
             return window;
         }
