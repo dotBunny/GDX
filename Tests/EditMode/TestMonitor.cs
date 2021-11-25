@@ -12,6 +12,7 @@ using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 
+#define GDX_SAVE_TEST_OUTPUT 1
 namespace GDX.Tests.EditMode
 {
     class TestMonitor : ICallbacks
