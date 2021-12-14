@@ -126,6 +126,8 @@ namespace GDX
             return;
 #endif
 
+            
+#if UNITY_EDITOR || DEVELOPMENT_BUILD || DEBUG
             // Figure out what path to take based on the level
             switch (level)
             {
@@ -158,6 +160,7 @@ namespace GDX
                     break;
                 // ReSharper restore RedundantCaseLabel
             }
+#endif
         }
     }
 }
