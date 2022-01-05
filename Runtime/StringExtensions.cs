@@ -762,5 +762,11 @@ namespace GDX
         {
             return Regex.Replace(targetString, "([A-Z])", $"{divider}$1", RegexOptions.None).Trim();
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string StripNonAscii(this string targetString)
+        {
+            return Regex.Replace(targetString, @"[^\u0000-\u007F]+", string.Empty);
+        }
     }
 }

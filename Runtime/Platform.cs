@@ -4,6 +4,7 @@
 
 using System.IO;
 using System.Runtime.CompilerServices;
+using GDX.Mathematics.Random;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -15,6 +16,17 @@ namespace GDX
     [VisualScriptingCompatible(8)]
     public static class Platform
     {
+        public const float FloatTolerance = 0.000001f;
+        public const double DoubleTolerance = 0.000001d;
+        public const string SafeCharacterPool = "abcdefghijklmnopqrstuvwxyz";
+        public const int CharacterPoolLength = 25;
+        public const int CharacterPoolLengthExclusive = 24;
+
+        public static char GetRandomSafeCharacter(IRandomProvider random)
+        {
+            return SafeCharacterPool[random.NextInteger(0, CharacterPoolLengthExclusive)];
+        }
+
         /// <summary>
         ///     Validate that all directories are created for a given <paramref name="folderPath" />.
         /// </summary>
@@ -46,7 +58,7 @@ namespace GDX
         ///     Validate that the file path is writable, making the necessary folder structure and setting permissions.
         /// </summary>
         /// <param name="filePath">The absolute path to validate.</param>
-        public static void EnsureFileWritable(this string filePath)
+        public static void EnsureFileWritable(string filePath)
         {
             string fileName = Path.GetFileName(filePath);
             if (fileName != null)
@@ -68,7 +80,7 @@ namespace GDX
         /// </summary>
         /// <param name="filePath">The file path to remove forcefully.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ForceDeleteFile(this string filePath)
+        public static void ForceDeleteFile(string filePath)
         {
             if (File.Exists(filePath))
             {
@@ -104,7 +116,7 @@ namespace GDX
         /// </summary>
         /// <param name="filePath">The file path to check if it can be written.</param>
         /// <returns>true/false if the path can be written too.</returns>
-        public static bool IsFileWritable(this string filePath)
+        public static bool IsFileWritable(string filePath)
         {
             if (File.Exists(filePath))
             {
@@ -132,8 +144,10 @@ namespace GDX
             return !XboxOnePLM.AmConstrained();
 #elif UNITY_PS4 && !UNITY_EDITOR
             return true;
-#else
+#elif !DOTS_RUNTIME
             return Application.isFocused;
+#else
+            return true;
 #endif
         }
 
@@ -145,7 +159,11 @@ namespace GDX
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsHeadless()
         {
+#if DOTS_RUNTIME
+            return true;
+#else
             return SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null;
+#endif
         }
     }
 }

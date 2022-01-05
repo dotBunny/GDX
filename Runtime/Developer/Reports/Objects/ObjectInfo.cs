@@ -4,6 +4,7 @@
 
 using System;
 using System.Text;
+using System.Text.RegularExpressions;
 using UnityEngine.Profiling;
 using Object = UnityEngine.Object;
 
@@ -118,18 +119,26 @@ namespace GDX.Developer.Reports.Objects
         }
 
 
-        public void Output(ReportContext context, StringBuilder builder)
+        public void Output(ReportContext context, StringBuilder builder, bool stripUnicode = true)
         {
             string typeName = Type.Name.PadRight(context.ObjectTypeWidth);
             if (typeName.Length > context.ObjectTypeWidth)
             {
                 typeName = typeName.Substring(0, context.ObjectTypeWidth);
             }
+            if (stripUnicode)
+            {
+                typeName = typeName.StripNonAscii();
+            }
 
             string objectName = Name.PadRight(context.ObjectNameWidth);
             if (objectName.Length > context.ObjectNameWidth)
             {
                 objectName = objectName.Substring(0, context.ObjectNameWidth);
+            }
+            if (stripUnicode)
+            {
+                objectName = objectName.StripNonAscii();
             }
 
             string sizeInfo =
@@ -145,10 +154,12 @@ namespace GDX.Developer.Reports.Objects
             string additionalInfo = GetDetailedInformation(context.ObjectInfoWidth);
 
             // Add to builder
-            builder.AppendLine( additionalInfo != null
+            builder.AppendLine(additionalInfo != null
                 ? $"{typeName} {objectName} {sizeInfo} {additionalInfo}"
                 : $"{typeName} {objectName} {sizeInfo}");
         }
+
+
 
 
     }

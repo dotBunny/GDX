@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Text;
+using System.Globalization;
 using GDX.Mathematics.Random;
 using NUnit.Framework;
 
@@ -21,6 +21,8 @@ namespace Runtime.Mathematics.Random
 
             bool evaluate = mockWell.OriginalSeed == 999u;
 
+            mockWell.Dispose();
+
             Assert.IsTrue(evaluate);
         }
 
@@ -32,6 +34,9 @@ namespace Runtime.Mathematics.Random
             WELL1024a mockWellUpper = new WELL1024a(MockSeed);
 
             bool evaluate = mockWell.OriginalSeed != mockWellUpper.OriginalSeed;
+
+            mockWell.Dispose();
+            mockWellUpper.Dispose();
 
             Assert.IsTrue(evaluate);
         }
@@ -45,6 +50,9 @@ namespace Runtime.Mathematics.Random
 
             bool evaluate = mockWell.OriginalSeed == mockWellUpper.OriginalSeed;
 
+            mockWell.Dispose();
+            mockWellUpper.Dispose();
+
             Assert.IsTrue(evaluate);
         }
 
@@ -55,6 +63,8 @@ namespace Runtime.Mathematics.Random
             WELL1024a mockWell = new WELL1024a(999u);
 
             bool evaluate = mockWell.OriginalSeed == 999u;
+
+            mockWell.Dispose();
 
             Assert.IsTrue(evaluate);
         }
@@ -68,6 +78,7 @@ namespace Runtime.Mathematics.Random
             mockWell.Sample();
             mockWell.Sample();
             WELL1024a.WellState saved = mockWell.GetState();
+
             WELL1024a restoreWell = new WELL1024a(saved);
 
             bool evaluate = mockWell.Index == restoreWell.Index &&
@@ -86,6 +97,9 @@ namespace Runtime.Mathematics.Random
                 }
             }
 
+
+            mockWell.Dispose();
+            restoreWell.Dispose();
             Assert.IsTrue(evaluate);
         }
 
@@ -96,6 +110,8 @@ namespace Runtime.Mathematics.Random
             WELL1024a mockWell = new WELL1024a(MockSeed);
 
             bool evaluate = mockWell.NextBoolean(0f);
+
+            mockWell.Dispose();
 
             Assert.IsFalse(evaluate);
         }
@@ -108,6 +124,8 @@ namespace Runtime.Mathematics.Random
 
             bool evaluate = mockWell.NextBoolean(1f);
 
+            mockWell.Dispose();
+
             Assert.IsTrue(evaluate);
         }
 
@@ -119,6 +137,7 @@ namespace Runtime.Mathematics.Random
 
             bool evaluate = mockWell.NextBoolean();
 
+            mockWell.Dispose();
             Assert.IsFalse(evaluate);
         }
 
@@ -131,6 +150,7 @@ namespace Runtime.Mathematics.Random
 
             bool evaluate = nextValue == 1921911996;
 
+            mockWell.Dispose();
             Assert.IsTrue(evaluate);
         }
 
@@ -143,6 +163,7 @@ namespace Runtime.Mathematics.Random
 
             bool evaluate = nextValue == 1;
 
+            mockWell.Dispose();
             Assert.IsTrue(evaluate);
         }
 
@@ -155,6 +176,7 @@ namespace Runtime.Mathematics.Random
 
             bool evaluate = nextValue == 0;
 
+            mockWell.Dispose();
             Assert.IsTrue(evaluate);
         }
 
@@ -167,6 +189,7 @@ namespace Runtime.Mathematics.Random
 
             bool evaluate = nextValue >= 11 && nextValue <= 22;
 
+            mockWell.Dispose();
             Assert.IsTrue(evaluate);
         }
 
@@ -192,6 +215,7 @@ namespace Runtime.Mathematics.Random
                 }
             }
 
+            mockWell.Dispose();
             Assert.IsTrue(evaluate);
         }
 
@@ -213,6 +237,7 @@ namespace Runtime.Mathematics.Random
                 }
             }
 
+            mockWell.Dispose();
             Assert.IsTrue(evaluate);
         }
 
@@ -231,13 +256,14 @@ namespace Runtime.Mathematics.Random
             bool evaluate = true;
             for (int i = 1; i < 64; i++)
             {
-                if (nextValues[i - 1] == nextValues[i])
+                if (Math.Abs(nextValues[i - 1] - nextValues[i]) < GDX.Platform.DoubleTolerance)
                 {
                     evaluate = false;
                     break;
                 }
             }
 
+            mockWell.Dispose();
             Assert.IsTrue(evaluate);
         }
 
@@ -248,8 +274,9 @@ namespace Runtime.Mathematics.Random
             WELL1024a mockWell = new WELL1024a(MockSeed);
             double nextValue = mockWell.NextDouble();
 
-            bool evaluate = nextValue == 0.89496001484803855d;
+            bool evaluate = Math.Abs(nextValue - 0.89496001484803855d) < GDX.Platform.DoubleTolerance;
 
+            mockWell.Dispose();
             Assert.IsTrue(evaluate);
         }
 
@@ -260,9 +287,10 @@ namespace Runtime.Mathematics.Random
             WELL1024a mockWell = new WELL1024a(MockSeed);
             float nextValue = mockWell.NextSingle();
 
-            bool evaluate =  nextValue == 0.894959986f;
+            bool evaluate =  Math.Abs(nextValue - 0.894959986f) < GDX.Platform.DoubleTolerance;
 
-            Assert.IsTrue(evaluate, nextValue.ToString());
+            mockWell.Dispose();
+            Assert.IsTrue(evaluate, nextValue.ToString(CultureInfo.InvariantCulture));
         }
 
         [Test]
@@ -280,13 +308,14 @@ namespace Runtime.Mathematics.Random
             bool evaluate = true;
             for (int i = 1; i < 64; i++)
             {
-                if (nextValues[i - 1] == nextValues[i])
+                if (Math.Abs(nextValues[i - 1] - nextValues[i]) < GDX.Platform.DoubleTolerance)
                 {
                     evaluate = false;
                     break;
                 }
             }
 
+            mockWell.Dispose();
             Assert.IsTrue(evaluate);
         }
 
@@ -299,6 +328,7 @@ namespace Runtime.Mathematics.Random
 
             bool evaluate = nextValue == 3843823994;
 
+            mockWell.Dispose();
             Assert.IsTrue(evaluate);
         }
 
@@ -324,27 +354,8 @@ namespace Runtime.Mathematics.Random
                 }
             }
 
+            mockWell.Dispose();
             Assert.IsTrue(evaluate);
         }
-
-
-        // [Test]
-        // [Category("GDX.Tests")]
-        // public void RangeAnalysis()
-        // {
-        //     WELL1024a mockWell = new WELL1024a(MockSeed);
-        //     int valueCount = 10000000;
-        //     StringBuilder fileContent = new StringBuilder();
-        //     for (int i = 0; i < valueCount; i++)
-        //     {
-        //         fileContent.AppendLine($"{mockWell.NextUnsignedInteger(uint.MinValue, uint.MaxValue).ToString()}");
-        //     }
-        //
-        //     System.IO.File.WriteAllText(
-        //         System.IO.Path.Combine(UnityEngine.Application.dataPath, "ranges.txt"),
-        //         fileContent.ToString()
-        //         );
-        // }
-
     }
 }

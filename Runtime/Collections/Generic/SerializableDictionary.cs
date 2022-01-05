@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+#if !DOTS_RUNTIME
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -272,3 +273,5 @@ namespace GDX.Collections.Generic
 #pragma warning restore 414
     }
 }
+
+#endif

@@ -5,6 +5,7 @@
 using System.IO;
 using System.Text;
 using GDX.Developer.Reports;
+using GDX.Editor;
 using NUnit.Framework;
 
 namespace Runtime.Developer.Reports
@@ -34,9 +35,14 @@ namespace Runtime.Developer.Reports
                 writerOutput = Encoding.ASCII.GetString(memoryStream.ToArray());
             }
 
+            string outputPathA = Automation.GetTempFilePath("Output_MockData_StringBuilderSameAsStreamWriter-builderOutput-",".txt");
+            string outputPathB = Automation.GetTempFilePath("Output_MockData_StringBuilderSameAsStreamWriter-writerOutput-",".txt");
+            File.WriteAllText(outputPathA, builderOutput);
+            File.WriteAllText(outputPathB, writerOutput);
+
             bool evaluate = builderOutput == writerOutput;
 
-            Assert.IsTrue(evaluate);
+            Assert.IsTrue(evaluate, $"{builderOutput} != {writerOutput}");
         }
     }
 }
