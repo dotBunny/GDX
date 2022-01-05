@@ -4,14 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.3] - 2021-12-01
+## [2.0.3] - 2022-01-05
 ***"Automate This"***
 > This marks the start of our effort to refactor **GDX** to be more compatible outside of the GameObject world that we currently live in. Over the next couple versions a lot of effort will be going into making types Burst compatible. We will do this by changing the backing types to NativeCollections, however this will result in some slight changes to the API to force cleanup.
 
 ### Added
 - A `RandomWrapper` was created to allow for `System.Random` to be used with the `IRandomProvider` interface.
 - Cleaning method `StripNonAscii()` to `StringExtensions`.
-- Editor scoped `Automation` functionality, with supporting functionality builtin to provide reliable Unity editor testing.
+- Experimental editor scoped `Automation` functionality, with supporting functionality builtin to provide Unity editor testing.
   - `CaptureEditorWindow<T>()`
   - `CaptureEditorWindowToPNG<T>()`
   - `CaptureFocusedEditorWindow()`
@@ -25,9 +25,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Now using a `NativeArray<uint>` to store state in the 'WELL1024a', now requires `Dispose()`.
 - Some `Platform` methods behaved like extensions when they should not have been.
+- `GetStableLowerCaseHashCode_ToLowerGetHashCode_IsEqual` was renamed `GetStableLowerCaseHashCode_ToLowerGetStableHashCode_IsEqual` to reflect new coverage.
+- `GetStableUpperCaseHashCode_ToUpperGetHashCode_IsEqual` was renamed `GetStableUpperCaseHashCode_ToUpperGetStableHashCode_IsEqual` to reflect new coverage.
 
 ### Fixed
 - `WELL1024a` exclusive methods truly will exclude the values correctly.
+
+### Removed
+- `GetStableHashCode_MockData_IsEqual` was removed due to change in Unity 2022 behaviour.
 
 ## [2.0.2] - 2021-11-03
 ***"Told Ya"***
