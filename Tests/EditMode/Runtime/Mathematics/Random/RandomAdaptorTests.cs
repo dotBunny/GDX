@@ -21,6 +21,7 @@ namespace Runtime.Mathematics.Random
 
             bool evaluate = random != null;
 
+            mockWell.Dispose();
             Assert.IsTrue(evaluate);
         }
 
@@ -52,6 +53,8 @@ namespace Runtime.Mathematics.Random
                 d != e &&
                 e != f;
 
+            mockWell.Dispose();
+            mockWell2.Dispose();
             Assert.IsTrue(evaluate);
         }
 
@@ -71,6 +74,7 @@ namespace Runtime.Mathematics.Random
                             b >= 0 && b <= 10 &&
                             c >= 0 && c <= 10;
 
+            mockWell.Dispose();
             Assert.IsTrue(evaluate);
         }
 
@@ -90,6 +94,7 @@ namespace Runtime.Mathematics.Random
                             b >= 0 && b <= 10 &&
                             c >= 0 && c <= 10;
 
+            mockWell.Dispose();
             Assert.IsTrue(evaluate);
         }
     }
