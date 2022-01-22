@@ -38,18 +38,9 @@ namespace GDX.IO.Compression
             if (forceGZipDataFormat ||
                 sourceArchiveFileName.EndsWith(".gz", StringComparison.InvariantCultureIgnoreCase))
             {
-#if UNITY_2020_2_OR_NEWER
                 using FileStream stream = File.OpenRead(sourceArchiveFileName);
                 using GZipStream gzip = new GZipStream(stream, CompressionMode.Decompress);
                 using MemoryStream memoryStream = new MemoryStream();
-#else
-                using (FileStream stream = File.OpenRead(sourceArchiveFileName))
-                {
-                    using (GZipStream gzip = new GZipStream(stream, CompressionMode.Decompress))
-                    {
-                        using (MemoryStream memoryStream = new MemoryStream())
-                        {
-#endif
                 // Loop through the stream
                 int readByteCount;
                 byte[] readBuffer = new byte[readBufferSize];
@@ -61,24 +52,11 @@ namespace GDX.IO.Compression
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 ExtractStream(memoryStream, destinationDirectoryName);
-
-#if !UNITY_2020_2_OR_NEWER
-                        }
-                    }
-                }
-#endif
             }
             else
             {
-#if UNITY_2020_2_OR_NEWER
                 using FileStream fileStream = File.OpenRead(sourceArchiveFileName);
                 ExtractStream(fileStream, destinationDirectoryName);
-#else
-                using (FileStream fileStream = File.OpenRead(sourceArchiveFileName))
-                {
-                    ExtractStream(fileStream, destinationDirectoryName);
-                }
-#endif
             }
         }
 

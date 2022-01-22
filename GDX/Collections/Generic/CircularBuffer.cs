@@ -9,6 +9,8 @@ using System.Runtime.CompilerServices;
 
 // ReSharper disable MemberCanBePrivate.Global
 
+// TODO: Change to struct + unit tests
+
 namespace GDX.Collections.Generic
 {
     /// <summary>

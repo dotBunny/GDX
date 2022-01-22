@@ -3,7 +3,6 @@ root = true
 
 # Don't use tabs for indentation.
 [*]
-indent_style = space
 charset = utf-8
 indent_style = space
 insert_final_newline = false
