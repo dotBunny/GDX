@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX;
-using GDX.Editor.Build;
+using GDX.Classic.Editor.Build;
 using NUnit.Framework;
 
 namespace Editor.Build
@@ -20,7 +20,7 @@ namespace Editor.Build
         [Category("GDX.Tests")]
         public void GetContent_ForceDefaults_ReturnsDefaultContent()
         {
-            string generateContent = BuildInfoProvider.GetContent(Config.Get(), true);
+            string generateContent = BuildInfoProvider.GetContent(true);
 
             bool evaluate = generateContent.Contains(" public const int Changelist = 0;");
 

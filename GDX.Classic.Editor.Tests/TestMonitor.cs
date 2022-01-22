@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using GDX.Classic;
 using UnityEditor;
 using UnityEditor.TestTools.TestRunner.Api;
 using UnityEditorInternal;
@@ -22,20 +23,20 @@ namespace GDX.Tests.EditMode
         public void RunStarted(ITestAdaptor testsToRun)
         {
 
-            _cachedTempFolder = Editor.Automation.GetTempFolder();
+            _cachedTempFolder = GDX.Classic.Editor.Automation.GetTempFolder();
             if (Application.isBatchMode)
             {
-                Editor.Automation.StashWindowLayout();
+                Classic.Editor.Automation.StashWindowLayout();
             }
 
-            EditorWindow gameView = Editor.Automation.GetGameView();
+            EditorWindow gameView = Classic.Editor.Automation.GetGameView();
             if (gameView != null)
             {
                 gameView.Show(true);
             }
 
             // Make sure our temp folder is absolutely clear at the start
-            Editor.Automation.ClearTempFolder();
+            Classic.Editor.Automation.ClearTempFolder();
         }
 
         /// <inheritdoc />
@@ -43,7 +44,7 @@ namespace GDX.Tests.EditMode
         {
             if (Application.isBatchMode)
             {
-                Editor.Automation.RestoreWindowLayout();
+                Classic.Editor.Automation.RestoreWindowLayout();
             }
         }
 

@@ -5,7 +5,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace GDX.Classic.Editor.ProjectSettings
+namespace GDX.Editor.ProjectSettings
 {
     /// <summary>
     ///     A collection of styles and layout options used by the settings window.

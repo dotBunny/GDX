@@ -2,15 +2,16 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using GDX.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace GDX.Classic.Editor.ProjectSettings
+namespace GDX.Editor.ProjectSettings
 {
     /// <summary>
     ///     Command Line Processor Settings
     /// </summary>
-    internal static  class CommandLineProcessorSettings
+    internal class CommandLineProcessorSettings : IConfigSection
     {
         /// <summary>
         ///     Internal section identifier.
@@ -20,14 +21,14 @@ namespace GDX.Classic.Editor.ProjectSettings
         /// <summary>
         ///     Settings content for <see cref="Config.developerCommandLineParserArgumentPrefix" />.
         /// </summary>
-        private static readonly GUIContent s_argumentPrefixContent = new GUIContent(
+        private readonly GUIContent s_argumentPrefixContent = new GUIContent(
             "Argument Prefix",
             "The prefix used to denote arguments in the command line.");
 
         /// <summary>
         ///     Settings content for <see cref="Config.developerCommandLineParserArgumentSplit" />.
         /// </summary>
-        private static readonly GUIContent s_argumentSplitContent = new GUIContent(
+        private readonly GUIContent s_argumentSplitContent = new GUIContent(
             "Argument Split",
             "The string used to split arguments from their values.");
 
@@ -35,22 +36,22 @@ namespace GDX.Classic.Editor.ProjectSettings
         ///     Draw the Command Line Processor section of settings.
         /// </summary>
         /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
-        internal static void Draw(GDXConfig settings)
+        public void Draw(GDXConfig settings)
         {
-            GUI.enabled = true;
-
-            SettingsGUIUtility.CreateSettingsSection(SectionID, false, "Command Line Parser",
-                $"{SettingsProvider.DocumentationUri}api/GDX.Developer.CommandLineParser.html");
-
-            if (!SettingsGUIUtility.GetCachedEditorBoolean(SectionID))
-            {
-                return;
-            }
-
-            EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentPrefix"),
-                s_argumentPrefixContent);
-            EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentSplit"),
-                s_argumentSplitContent);
+            // GUI.enabled = true;
+            //
+            // SettingsGUIUtility.CreateSettingsSection(SectionID, false, "Command Line Parser",
+            //     $"{SettingsProvider.DocumentationUri}api/GDX.Developer.CommandLineParser.html");
+            //
+            // if (!SettingsGUIUtility.GetCachedEditorBoolean(SectionID))
+            // {
+            //     return;
+            // }
+            //
+            // EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentPrefix"),
+            //     s_argumentPrefixContent);
+            // EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentSplit"),
+            //     s_argumentSplitContent);
         }
     }
 }

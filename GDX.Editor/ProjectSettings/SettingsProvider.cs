@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 
-namespace GDX.Classic.Editor.ProjectSettings
+namespace GDX.Editor.ProjectSettings
 {
     /// <summary>
     ///     GDX Assembly Settings Provider
@@ -25,6 +25,8 @@ namespace GDX.Classic.Editor.ProjectSettings
             "gdx", "update", "parser", "commandline", "build"
         });
 
+        private static readonly List<IConfigSection> s_configSections = new List<IConfigSection>();
+
         /// <summary>
         ///     Get <see cref="UnityEditor.SettingsProvider" /> for GDX assembly.
         /// </summary>
@@ -44,26 +46,12 @@ namespace GDX.Classic.Editor.ProjectSettings
                     // Start wrapping the content
                     UnityEditor.EditorGUILayout.BeginVertical(SettingsStyles.WrapperStyle);
 
-                    PackageStatusSection.Draw();
+                   // PackageStatusSection.Draw(tempConfig);
 
-                    // Build out sections
-                    AutomaticUpdatesSettings.Draw(tempConfig);
-                    UnityEngine.GUILayout.Space(5);
-
-                    BuildInfoSettings.Draw(tempConfig);
-                    UnityEngine.GUILayout.Space(5);
-
-                    CommandLineProcessorSettings.Draw(tempConfig);
-                    UnityEngine.GUILayout.Space(5);
-
-                    EnvironmentSettings.Draw(tempConfig);
-                    UnityEngine.GUILayout.Space(5);
-
-                    LocaleSettings.Draw(tempConfig);
-#if GDX_VISUALSCRIPTING
-                    UnityEngine.GUILayout.Space(5);
-                    VisualScriptingSettings.Draw(tempConfig);
-#endif
+                    foreach (IConfigSection section in s_configSections)
+                    {
+                        section.Draw(tempConfig);
+                    }
 
 
                     // check for changes
@@ -75,6 +63,12 @@ namespace GDX.Classic.Editor.ProjectSettings
                 },
                 keywords = s_searchKeywords
             };
+        }
+
+        public static void RegisterConfigSection(IConfigSection section)
+        {
+            if(s_configSections.Contains(section)) return;
+            s_configSections.Add(section);
         }
     }
 }

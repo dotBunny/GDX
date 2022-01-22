@@ -4,14 +4,15 @@
 
 using System;
 using System.IO;
-using GDX.Jobs.ParallelFor;
 using NUnit.Framework;
 using GDX;
+using GDX.Classic;
+using GDX.Classic.Jobs.ParallelFor;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEditor;
 using UnityEngine;
-using Automation = GDX.Editor.Automation;
+using Automation = GDX.Classic.Editor.Automation;
 
 namespace Editor
 {
@@ -48,7 +49,7 @@ namespace Editor
             }
             NativeArray<float> percentages = new NativeArray<float>(arrayLengthA, Allocator.TempJob);
 
-            Color32CompareJob calcDifferencesJob = new GDX.Jobs.ParallelFor.Color32CompareJob()
+            Color32CompareJob calcDifferencesJob = new GDX.Classic.Jobs.ParallelFor.Color32CompareJob()
             {
                 A = screenshotDataA,
                 B = screenshotDataB,
@@ -70,7 +71,7 @@ namespace Editor
             screenshotDataB.Dispose();
             percentages.Dispose();
 
-            Assert.IsTrue(Math.Abs(average - 1) < Platform.FloatTolerance, $"Similarity was {average}%.");
+            Assert.IsTrue(Math.Abs(average - 1) < GDX.Platform.FloatTolerance, $"Similarity was {average}%.");
         }
 
         [Test]
