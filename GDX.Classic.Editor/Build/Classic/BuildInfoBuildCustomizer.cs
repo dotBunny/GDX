@@ -91,8 +91,7 @@ namespace GDX.Classic.Editor.Build
         /// </summary>
         public override void OnBeforeBuild()
         {
-            GDXConfig config = GDXConfig.Get();
-            if (config == null || !config.developerBuildInfoEnabled)
+            if (!Core.Config.developerBuildInfoEnabled)
             {
                 return;
             }
@@ -102,9 +101,9 @@ namespace GDX.Classic.Editor.Build
 
             try
             {
-                string path = Path.Combine(Application.dataPath, config.developerBuildInfoPath);
-                Platform.EnsureFileFolderHierarchyExists(path);
-                File.WriteAllText(path, BuildInfoProvider.GetContent(config, false, Context.BuildConfigurationName));
+                string path = Path.Combine(Application.dataPath, Core.Config.developerBuildInfoPath);
+                GDX.Platform.EnsureFileFolderHierarchyExists(path);
+                File.WriteAllText(path, BuildInfoProvider.GetContent(false, Context.BuildConfigurationName));
 
                 BuildInfoProvider.CheckForAssemblyDefinition();
             }
