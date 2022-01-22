@@ -10,9 +10,7 @@ using GDX.Mathematics.Random;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
-#if UNITY_2019_1_OR_NEWER
 using Unity.CodeEditor;
-#endif
 
 // TODO: Add conditional entities world ticking/update duration?
 // TODO: Add loading scene helper?
@@ -150,7 +148,6 @@ namespace GDX.Editor
 
             UnityEditor.AssetDatabase.Refresh();
 
-#if UNITY_2019_1_OR_NEWER
             // We haven't actually opened up Unity on this machine, so no editor has been set
             if (string.IsNullOrEmpty(CodeEditor.CurrentEditorInstallation))
             {
@@ -185,11 +182,6 @@ namespace GDX.Editor
             }
 
             CodeEditor.CurrentEditor.SyncAll();
-#else
-            System.Type T = System.Type.GetType("UnityEditor.SyncVS,UnityEditor");
-            System.Reflection.MethodInfo SyncSolution = T.GetMethod("SyncSolution", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-            SyncSolution.Invoke(null, null);
-#endif // UNITY_2019_1_OR_NEWER
         }
 
         /// <summary>

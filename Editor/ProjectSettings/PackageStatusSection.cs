@@ -40,10 +40,8 @@ namespace GDX.Editor.ProjectSettings
             GUILayout.Label("-", SettingsLayoutOptions.BulletLayoutOptions);
 #if UNITY_2021_1_OR_NEWER
             if (EditorGUILayout.LinkButton("Repository"))
-#elif UNITY_2019_1_OR_NEWER
-            if (GUILayout.Button("Repository", EditorStyles.linkLabel))
 #else
-            if (GUILayout.Button("Repository", EditorStyles.boldLabel))
+            if (GUILayout.Button("Repository", EditorStyles.linkLabel))
 #endif
             {
                 GUIUtility.hotControl = 0;
@@ -57,10 +55,8 @@ namespace GDX.Editor.ProjectSettings
             GUILayout.Label("-", SettingsLayoutOptions.BulletLayoutOptions);
 #if UNITY_2021_1_OR_NEWER
             if (EditorGUILayout.LinkButton("Documentation"))
-#elif UNITY_2019_1_OR_NEWER
-            if (GUILayout.Button("Documentation", EditorStyles.linkLabel))
 #else
-            if (GUILayout.Button("Documentation", EditorStyles.boldLabel))
+            if (GUILayout.Button("Documentation", EditorStyles.linkLabel))
 #endif
             {
                 GUIUtility.hotControl = 0;
@@ -74,10 +70,8 @@ namespace GDX.Editor.ProjectSettings
             GUILayout.Label("-", SettingsLayoutOptions.BulletLayoutOptions);
 #if UNITY_2021_1_OR_NEWER
             if (EditorGUILayout.LinkButton("Report an Issue"))
-#elif UNITY_2019_1_OR_NEWER
-            if (GUILayout.Button("Report an Issue", EditorStyles.linkLabel))
 #else
-            if (GUILayout.Button("Report an Issue", EditorStyles.boldLabel))
+            if (GUILayout.Button("Report an Issue", EditorStyles.linkLabel))
 #endif
             {
                 GUIUtility.hotControl = 0;
@@ -108,22 +102,6 @@ namespace GDX.Editor.ProjectSettings
                 ? SettingsStyles.TestPassedIcon
                 : SettingsStyles.TestNormalIcon);
 
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Burst");
-            GUILayout.FlexibleSpace();
-            GUILayout.Label(Conditionals.HasBurstPackage
-                ? SettingsStyles.TestPassedIcon
-                : SettingsStyles.TestNormalIcon);
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Mathematics");
-            GUILayout.FlexibleSpace();
-            GUILayout.Label(Conditionals.HasMathematicsPackage
-                ? SettingsStyles.TestPassedIcon
-                : SettingsStyles.TestNormalIcon);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();

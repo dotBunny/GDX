@@ -4,13 +4,10 @@
 
 using UnityEditor;
 using UnityEngine;
-#if UNITY_2019_1_OR_NEWER
 using UnityEditor.TestTools.TestRunner.Api;
-#endif
 
 namespace GDX.Tests.EditMode
 {
-#if UNITY_2019_1_OR_NEWER
     public static class TestFramework
     {
         private static TestRunnerApi s_testRunner;
@@ -30,14 +27,4 @@ namespace GDX.Tests.EditMode
             s_testRunner.RegisterCallbacks(s_testMonitor);
         }
     }
-#else
-    public static class TestFramework
-    {
-        [InitializeOnLoadMethod]
-        public static void Initialize()
-        {
-            GDX.Editor.Automation.ClearTempFolder();
-        }
-    }
-#endif
 }

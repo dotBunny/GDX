@@ -4,8 +4,6 @@
 
 #define GDX_SAVE_TEST_OUTPUT
 
-#if UNITY_2019_1_OR_NEWER
-
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
@@ -104,5 +102,3 @@ namespace GDX.Tests.EditMode
         }
     }
 }
-
-#endif // UNITY_2019_1_OR_NEWER

@@ -217,10 +217,8 @@ namespace GDX.Editor.ProjectSettings
 
 #if UNITY_2021_1_OR_NEWER
                     if (EditorGUILayout.LinkButton(cleanedType))
-#elif UNITY_2019_1_OR_NEWER
-                    if (GUILayout.Button(cleanedType, EditorStyles.linkLabel))
 #else
-                    if (GUILayout.Button(cleanedType, EditorStyles.boldLabel))
+                    if (GUILayout.Button(cleanedType, EditorStyles.linkLabel))
 #endif
                     {
                         GUIUtility.hotControl = 0;
