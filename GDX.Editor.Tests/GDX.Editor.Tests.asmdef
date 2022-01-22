@@ -3,6 +3,7 @@
   "rootNamespace": "GDX.Editor.Tests",
   "references": [
     "Unity.PerformanceTesting",
+    "GDX",
     "GDX.Editor",
     "UnityEngine.TestRunner",
     "UnityEditor.TestRunner"

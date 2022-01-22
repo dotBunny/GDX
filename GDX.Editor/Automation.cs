@@ -15,7 +15,7 @@ using Unity.CodeEditor;
 // TODO: Add conditional entities world ticking/update duration?
 // TODO: Add loading scene helper?
 
-namespace GDX.Classic.Editor
+namespace GDX.Editor
 {
     /// <summary>
     /// A collection of helper methods used for automation processes.

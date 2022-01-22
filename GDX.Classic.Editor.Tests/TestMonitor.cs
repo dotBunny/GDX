@@ -23,20 +23,20 @@ namespace GDX.Tests.EditMode
         public void RunStarted(ITestAdaptor testsToRun)
         {
 
-            _cachedTempFolder = GDX.Classic.Editor.Automation.GetTempFolder();
+            _cachedTempFolder = GDX.Editor.Automation.GetTempFolder();
             if (Application.isBatchMode)
             {
-                Classic.Editor.Automation.StashWindowLayout();
+                GDX.Editor.Automation.StashWindowLayout();
             }
 
-            EditorWindow gameView = Classic.Editor.Automation.GetGameView();
+            EditorWindow gameView = GDX.Editor.Automation.GetGameView();
             if (gameView != null)
             {
                 gameView.Show(true);
             }
 
             // Make sure our temp folder is absolutely clear at the start
-            Classic.Editor.Automation.ClearTempFolder();
+            GDX.Editor.Automation.ClearTempFolder();
         }
 
         /// <inheritdoc />
@@ -44,7 +44,7 @@ namespace GDX.Tests.EditMode
         {
             if (Application.isBatchMode)
             {
-                Classic.Editor.Automation.RestoreWindowLayout();
+                GDX.Editor.Automation.RestoreWindowLayout();
             }
         }
 

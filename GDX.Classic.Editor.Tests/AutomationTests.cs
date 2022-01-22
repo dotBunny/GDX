@@ -4,28 +4,19 @@
 
 using System;
 using System.IO;
-using NUnit.Framework;
-using GDX;
-using GDX.Classic;
 using GDX.Classic.Jobs.ParallelFor;
+using GDX.Editor;
+using NUnit.Framework;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEditor;
 using UnityEngine;
-using Automation = GDX.Classic.Editor.Automation;
 
 namespace Editor
 {
     public class AutomationTests
     {
-        [Test]
-        [Category("GDX.Tests")]
-        public void CaptureEditorWindow_SceneView_ReturnsTexture()
-        {
-            Texture2D texture = Automation.CaptureEditorWindow<SceneView>();
-            bool evaluate = (texture != null);
-            Assert.IsTrue(evaluate);
-        }
+
 
         [Test]
         [Category("GDX.Tests")]
@@ -72,60 +63,6 @@ namespace Editor
             percentages.Dispose();
 
             Assert.IsTrue(Math.Abs(average - 1) < GDX.Platform.FloatTolerance, $"Similarity was {average}%.");
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void CaptureEditorWindowToPNG_SceneView_OutputsImage()
-        {
-            string outputPath = Automation.GetTempFilePath("CaptureEditorWindowToPNG_SceneView_OutputsImage-",".png");
-            bool execute = Automation.CaptureEditorWindowToPNG<SceneView>(outputPath);
-            bool evaluate = execute && File.Exists(outputPath);
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void CaptureFocusedEditorWindow_ReturnsTexture()
-        {
-            Automation.GetGameView().Focus();
-            Texture2D texture = Automation.CaptureFocusedEditorWindow();
-            bool evaluate = (texture != null);
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void CaptureFocusedEditorWindowToPNG_OutputsImage()
-        {
-            Automation.GetGameView().Focus();
-            string outputPath = Automation.GetTempFilePath("CaptureFocusedEditorWindowToPNG_OutputsImage-",".png");
-            bool execute = Automation.CaptureFocusedEditorWindowToPNG(outputPath);
-            bool evaluate = execute && File.Exists(outputPath);
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void GetTempFolder_EnsureExists_FolderExists()
-        {
-            string path = Automation.GetTempFolder();
-            bool evaluate = Directory.Exists(path);
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void GetWindow_SceneView_NotNull()
-        {
-            EditorWindow sceneView = Automation.GetWindow<SceneView>();
-            bool evaluate = (sceneView != null);
-            if (sceneView != null)
-            {
-                sceneView.Close();
-            }
-
-            Assert.IsTrue(evaluate);
         }
     }
 }
