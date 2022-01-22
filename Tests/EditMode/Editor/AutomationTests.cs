@@ -6,10 +6,8 @@ using System;
 using System.IO;
 using GDX.Jobs.ParallelFor;
 using NUnit.Framework;
-#if GDX_COLLECTIONS
 using GDX;
 using Unity.Collections;
-#endif
 using Unity.Jobs;
 using UnityEditor;
 using UnityEngine;
@@ -32,7 +30,6 @@ namespace Editor
         [Category("GDX.Tests")]
         public void CaptureEditorWindow_SceneView_SameTexture()
         {
-#if GDX_COLLECTIONS
             Texture2D screenshotA = Automation.CaptureEditorWindow<SceneView>();
             Texture2D screenshotB = Automation.CaptureEditorWindow<SceneView>();
             NativeArray<Color32> screenshotDataA = screenshotA.GetRawTextureData<Color32>();
@@ -74,9 +71,6 @@ namespace Editor
             percentages.Dispose();
 
             Assert.IsTrue(Math.Abs(average - 1) < Platform.FloatTolerance, $"Similarity was {average}%.");
-#else
-            Assert.Ignore("Collections required.");
-#endif
         }
 
         [Test]

@@ -4,6 +4,7 @@
     "references": [
         "Unity.PerformanceTesting",
         "GDX",
+        "GDX.Classic",
         "GDX.Editor",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
@@ -31,16 +32,6 @@
             "name": "com.unity.test-framework.performance",
             "expression": "2.0.0",
             "define": "GDX_PERFORMANCETESTING"
-        },
-        {
-            "name": "com.unity.burst",
-            "expression": "1.0.0",
-            "define": "GDX_BURST"
-        },
-        {
-            "name": "com.unity.collections",
-            "expression": "0.14.0",
-            "define": "GDX_COLLECTIONS"
         }
     ],
     "noEngineReferences": false

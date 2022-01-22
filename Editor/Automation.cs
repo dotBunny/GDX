@@ -284,27 +284,22 @@ namespace GDX.Editor
                 // a fail yet from testing.
                 if (repaintMethod != null)
                 {
-                    Debug.Log("REPAINT IMMEDIATELY");
                     repaintMethod.Invoke(window, s_EmptyParametersArray);
                 }
                 if (resizedMethod != null)
                 {
-                    Debug.Log("RESIZED IMMEDIATELY");
                     resizedMethod.Invoke(window, s_EmptyParametersArray);
                 }
                 if (repaintMethod != null)
                 {
-                    Debug.Log("REPAINT IMMEDIATELY");
                     repaintMethod.Invoke(window, s_EmptyParametersArray);
                 }
                 if (resizedMethod != null)
                 {
-                    Debug.Log("RESIZED IMMEDIATELY");
                     resizedMethod.Invoke(window, s_EmptyParametersArray);
                 }
                 if (repaintMethod != null)
                 {
-                    Debug.Log("REPAINT IMMEDIATELY");
                     repaintMethod.Invoke(window, s_EmptyParametersArray);
                 }
 

@@ -1,0 +1,20 @@
+{
+    "name": "GDX.Classic",
+    "rootNamespace": "GDX.Classic",
+    "references": [
+        "GDX",
+        "Unity.Burst",
+        "Unity.Mathematics"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "!DOTS_RUNTIME"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

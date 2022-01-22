@@ -21,5 +21,10 @@
   "repository": {
     "url": "https://github.com/dotBunny/GDX.git",
     "type": "git"
+  },
+  "dependencies": {
+    "com.unity.collections": "1.1.0",
+    "com.unity.mathematics": "1.2.5",
+    "com.unity.burst": "1.6.4"
   }
 }
