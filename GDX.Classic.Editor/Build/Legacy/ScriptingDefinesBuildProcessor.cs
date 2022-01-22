@@ -5,7 +5,7 @@
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 
-namespace GDX.Editor.Build.Legacy
+namespace GDX.Classic.Editor.Build.Legacy
 {
 #if !GDX_PLATFORMS
     /// <summary>

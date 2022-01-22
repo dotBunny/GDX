@@ -15,7 +15,7 @@ using Unity.CodeEditor;
 // TODO: Add conditional entities world ticking/update duration?
 // TODO: Add loading scene helper?
 
-namespace GDX.Editor
+namespace GDX.Classic.Editor
 {
     /// <summary>
     /// A collection of helper methods used for automation processes.
@@ -205,7 +205,7 @@ namespace GDX.Editor
             string tempPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "GDX_Automation"));
             if (ensureExists)
             {
-                Platform.EnsureFolderHierarchyExists(tempPath);
+                GDX.Platform.EnsureFolderHierarchyExists(tempPath);
             }
             return tempPath;
         }
@@ -218,15 +218,15 @@ namespace GDX.Editor
             RandomWrapper random = new RandomWrapper(
                 StringExtensions.GetStableHashCode(System.DateTime.Now.Ticks.ToString()));
 
-            tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-            tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-            tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-            tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-            tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
+            tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
+            tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
+            tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
+            tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
+            tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
 
             while (true)
             {
-                tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
+                tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
                 string filePath = Path.Combine(tempFolder, $"{tmpFileName}{extension}");
                 if (!File.Exists(filePath))
                 {
@@ -237,11 +237,11 @@ namespace GDX.Editor
                 {
                     tmpFileName.Clear();
                     tmpFileName.Append(prefix);
-                    tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-                    tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-                    tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-                    tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-                    tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
+                    tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
+                    tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
+                    tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
+                    tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
+                    tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
                 }
             }
         }
@@ -342,7 +342,7 @@ namespace GDX.Editor
                         loadMethod.Invoke(null,new object[]{LayoutStashPath(), false, false, true});
                     }
                 }
-                Platform.ForceDeleteFile(path);
+                GDX.Platform.ForceDeleteFile(path);
             }
         }
     }

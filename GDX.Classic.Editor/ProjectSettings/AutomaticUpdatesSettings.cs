@@ -5,7 +5,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace GDX.Editor.ProjectSettings
+namespace GDX.Classic.Editor.ProjectSettings
 {
     /// <summary>
     ///     Automatic Updates Settings
@@ -130,7 +130,7 @@ namespace GDX.Editor.ProjectSettings
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Last Checked:", EditorStyles.boldLabel, SettingsLayoutOptions.FixedWidth130LayoutOptions);
-                GUILayout.Label(UpdateProvider.GetLastChecked().ToString(Localization.LocalTimestampFormat));
+                GUILayout.Label(UpdateProvider.GetLastChecked().ToString(GDX.Localization.LocalTimestampFormat));
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
 

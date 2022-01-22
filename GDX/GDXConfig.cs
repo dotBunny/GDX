@@ -149,5 +149,10 @@ namespace GDX
                 localizationSetDefaultCulture = initialState.localizationSetDefaultCulture;
                 localizationDefaultCulture = initialState.localizationDefaultCulture;
             }
+
+            public string GetGeneratedOverrideSource()
+            {
+                return null;
+            }
         }
 }

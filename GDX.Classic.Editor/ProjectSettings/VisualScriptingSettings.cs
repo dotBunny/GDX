@@ -12,7 +12,7 @@ using UnityEngine.PlayerLoop;
 
 #endif
 
-namespace GDX.Editor.ProjectSettings
+namespace GDX.Classic.Editor.ProjectSettings
 {
     /// <summary>
     ///     Visual Scripting Settings
@@ -133,7 +133,7 @@ namespace GDX.Editor.ProjectSettings
                         UpdateProvider.LocalPackage.PackageAssetPath,
                         ".docfx", "GDX.xml");
 
-                    Platform.EnsureFolderHierarchyExists(BoltCore.Paths.assemblyDocumentations);
+                    GDX.Platform.EnsureFolderHierarchyExists(BoltCore.Paths.assemblyDocumentations);
 
                     string targetFile = System.IO.Path.Combine(BoltCore.Paths.assemblyDocumentations, "GDX.xml");
                     System.IO.File.Copy(sourceFile,targetFile, true);

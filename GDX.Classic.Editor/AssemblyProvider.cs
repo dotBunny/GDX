@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace GDX.Editor
+namespace GDX.Classic.Editor
 {
     /// <summary>
     ///     A information warehouse about the GDX assemblies used in editor specific logic.

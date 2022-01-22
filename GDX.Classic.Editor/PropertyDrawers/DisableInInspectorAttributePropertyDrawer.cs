@@ -5,7 +5,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace GDX.Editor.PropertyDrawers
+namespace GDX.Classic.Editor.PropertyDrawers
 {
     /// <summary>
     ///     The drawing component of the <see cref="DisableInInspectorAttribute" />.

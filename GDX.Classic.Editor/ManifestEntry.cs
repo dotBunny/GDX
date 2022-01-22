@@ -7,7 +7,7 @@ using GDX;
 using GDX.Editor;
 using Newtonsoft.Json;
 
-namespace GDX.Editor
+namespace GDX.Classic.Editor
 {
     /// <summary>
     /// An object representative of the GDX entry in a manifest lockfile.

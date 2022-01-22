@@ -8,7 +8,7 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
-namespace GDX.Editor.Build.Legacy
+namespace GDX.Classic.Editor.Build.Legacy
 {
     /// <summary>
     ///     <para>
@@ -104,7 +104,7 @@ namespace GDX.Editor.Build.Legacy
             try
             {
                 string path = Path.Combine(Application.dataPath, Core.Config.developerBuildInfoPath);
-                Platform.EnsureFileFolderHierarchyExists(path);
+                GDX.Platform.EnsureFileFolderHierarchyExists(path);
                 File.WriteAllText(path, BuildInfoProvider.GetContent(false, "Legacy"));
 
                 BuildInfoProvider.CheckForAssemblyDefinition();

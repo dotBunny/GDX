@@ -12,7 +12,7 @@ using Application = UnityEngine.Application;
 
 // ReSharper disable MemberCanBePrivate.Global
 
-namespace GDX.Editor
+namespace GDX.Classic.Editor
 {
     /// <summary>
     ///     A collection of information regarding the GDX package.

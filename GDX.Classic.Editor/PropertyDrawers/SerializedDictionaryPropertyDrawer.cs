@@ -2,11 +2,11 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using GDX.Classic.Collections.Generic;
 
-namespace GDX.Editor.PropertyDrawers
+namespace GDX.Classic.Editor.PropertyDrawers
 {
 #if UNITY_2020_1_OR_NEWER
     /// <summary>

@@ -9,7 +9,7 @@ using GDX.Developer;
 using UnityEditor;
 using UnityEngine;
 
-namespace GDX.Editor.Build
+namespace GDX.Classic.Editor.Build
 {
     /// <summary>
     ///     A set of tools to produce the content used for the <c>BuildInfo</c> generated file, as well as the surrounding
@@ -118,7 +118,7 @@ namespace GDX.Editor.Build
             fileContent.AppendLine("        /// </summary>");
             fileContent.Append("        public const string Timestamp = \"");
             fileContent.Append(!forceDefaults
-                ? DateTime.Now.ToString(Localization.Language.Default.GetTimestampFormat())
+                ? DateTime.Now.ToString(GDX.Localization.Language.Default.GetTimestampFormat())
                 : "N/A");
             fileContent.AppendLine("\";");
 
@@ -138,7 +138,7 @@ namespace GDX.Editor.Build
             try
             {
                 string path = Path.Combine(Application.dataPath, Core.Config.developerBuildInfoPath);
-                Platform.EnsureFileFolderHierarchyExists(path);
+                GDX.Platform.EnsureFileFolderHierarchyExists(path);
                 File.WriteAllText(path, GetContent(true));
 
                 CheckForAssemblyDefinition();

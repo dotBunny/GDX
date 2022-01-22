@@ -7,7 +7,7 @@ using GDX.Editor.Build;
 using UnityEditor;
 using UnityEngine;
 
-namespace GDX.Editor.ProjectSettings
+namespace GDX.Classic.Editor.ProjectSettings
 {
     /// <summary>
     ///     Build Info Settings

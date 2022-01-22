@@ -4,13 +4,11 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
-using GDX.Editor.ProjectSettings;
 using GDX.IO.Compression;
 using UnityEditor;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
-namespace GDX.Editor
+namespace GDX.Classic.Editor
 {
     /// <summary>
     ///     An autonomous provider which detects and notifies if updates are available for the GDX package.
@@ -69,7 +67,7 @@ namespace GDX.Editor
             }
 
             // Should we check for updates?
-            DateTime targetDate = GetLastChecked().AddDays(AutomaticUpdatesSettings.UpdateDayCountSetting);
+            DateTime targetDate = GetLastChecked().AddDays(ProjectSettings.AutomaticUpdatesSettings.UpdateDayCountSetting);
             if (DateTime.Now >= targetDate)
             {
                 CheckForUpdates();
@@ -346,7 +344,7 @@ namespace GDX.Editor
                 Directory.Delete(tempExtractFolder, true);
             }
 
-            Platform.EnsureFolderHierarchyExists(tempExtractFolder);
+            GDX.Platform.EnsureFolderHierarchyExists(tempExtractFolder);
 
             // Extract downloaded tarball to the temp folder
             TarFile.ExtractToDirectory(tempFile, tempExtractFolder, true);
@@ -400,7 +398,7 @@ namespace GDX.Editor
                 {
                     // Pause asset database
                     AssetDatabase.StartAssetEditing();
-                    VersionControl.CheckoutFolder(targetPath);
+                    GDX.Editor.VersionControl.CheckoutFolder(targetPath);
 
                     if (LocalPackage?.PackageManifestPath != null)
                     {

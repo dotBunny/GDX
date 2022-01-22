@@ -6,7 +6,7 @@ using GDX.Developer;
 using UnityEditor;
 using UnityEngine;
 
-namespace GDX.Editor.ProjectSettings
+namespace GDX.Classic.Editor.ProjectSettings
 {
     /// <summary>
     ///     Package Status Section

@@ -5,7 +5,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace GDX.Editor.ProjectSettings
+namespace GDX.Classic.Editor.ProjectSettings
 {
     /// <summary>
     ///     Command Line Processor Settings

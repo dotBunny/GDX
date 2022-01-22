@@ -5,7 +5,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace GDX.Editor.DecoratorDrawers
+namespace GDX.Classic.Editor.DecoratorDrawers
 {
     /// <summary>
     ///     The drawing component of the <see cref="InspectorMessageBoxAttribute" />.

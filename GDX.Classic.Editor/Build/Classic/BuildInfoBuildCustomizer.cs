@@ -9,7 +9,7 @@ using UnityEngine;
 
 // ReSharper disable MemberCanBePrivate.Global
 
-namespace GDX.Editor.Build.Classic
+namespace GDX.Classic.Editor.Build
 {
 
 #if GDX_PLATFORMS

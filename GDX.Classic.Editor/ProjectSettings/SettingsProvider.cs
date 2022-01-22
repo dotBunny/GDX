@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 
-namespace GDX.Editor.ProjectSettings
+namespace GDX.Classic.Editor.ProjectSettings
 {
     /// <summary>
     ///     GDX Assembly Settings Provider
