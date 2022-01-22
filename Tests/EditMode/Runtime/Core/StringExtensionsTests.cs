@@ -280,37 +280,15 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
-        public void GetStableHashCode_MockData_IsEqual()
+        public void GetStableLowerCaseHashCode_ToLowerGetStableHashCode_IsEqual()
         {
-            int oldSimpleHash = "HelloWorld!".GetHashCode();
-            int newSimpleHash = "HelloWorld!".GetStableHashCode();
-            int oldLowerCaseHash = "this is all lowercase".GetHashCode();
-            int newLowerCaseHash = "this is all lowercase".GetStableHashCode();
-            int oldUpperCaseHash = "THIS IS ALL UPPERCASE".GetHashCode();
-            int newUpperCaseHash = "THIS IS ALL UPPERCASE".GetStableHashCode();
-            int oldComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetHashCode();
-            int newComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetStableHashCode();
-
-            bool evaluate = oldSimpleHash == newSimpleHash &&
-                            oldComplexHash == newComplexHash &&
-                            oldLowerCaseHash == newLowerCaseHash &&
-                            oldUpperCaseHash == newUpperCaseHash;
-
-            Assert.IsTrue(evaluate);
-        }
-
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void GetStableLowerCaseHashCode_ToLowerGetHashCode_IsEqual()
-        {
-            int oldSimpleHash = "HelloWorld!".ToLower().GetHashCode();
+            int oldSimpleHash = "HelloWorld!".ToLower().GetStableHashCode();
             int newSimpleHash = "HelloWorld!".GetStableLowerCaseHashCode();
-            int oldLowerCaseHash = "this is all lowercase".ToLower().GetHashCode();
+            int oldLowerCaseHash = "this is all lowercase".ToLower().GetStableHashCode();
             int newLowerCaseHash = "this is all lowercase".GetStableLowerCaseHashCode();
-            int oldUpperCaseHash = "THIS IS ALL UPPERCASE".ToLower().GetHashCode();
+            int oldUpperCaseHash = "THIS IS ALL UPPERCASE".ToLower().GetStableHashCode();
             int newUpperCaseHash = "THIS IS ALL UPPERCASE".GetStableLowerCaseHashCode();
-            int oldComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".ToLower().GetHashCode();
+            int oldComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".ToLower().GetStableHashCode();
             int newComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetStableLowerCaseHashCode();
 
             bool evaluate = oldSimpleHash == newSimpleHash &&
@@ -323,15 +301,15 @@ namespace Runtime
 
         [Test]
         [Category("GDX.Tests")]
-        public void GetStableUpperCaseHashCode_ToUpperGetHashCode_IsEqual()
+        public void GetStableUpperCaseHashCode_ToUpperGetStableHashCode_IsEqual()
         {
-            int oldComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".ToUpper().GetHashCode();
+            int oldComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".ToUpper().GetStableHashCode();
             int newComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetStableUpperCaseHashCode();
-            int oldLowerCaseHash = "this is all lowercase".ToUpper().GetHashCode();
+            int oldLowerCaseHash = "this is all lowercase".ToUpper().GetStableHashCode();
             int newLowerCaseHash = "this is all lowercase".GetStableUpperCaseHashCode();
-            int oldSimpleHash = "HelloWorld!".ToUpper().GetHashCode();
+            int oldSimpleHash = "HelloWorld!".ToUpper().GetStableHashCode();
             int newSimpleHash = "HelloWorld!".GetStableUpperCaseHashCode();
-            int oldUpperCaseHash = "THIS IS ALL UPPERCASE".ToUpper().GetHashCode();
+            int oldUpperCaseHash = "THIS IS ALL UPPERCASE".ToUpper().GetStableHashCode();
             int newUpperCaseHash = "THIS IS ALL UPPERCASE".GetStableUpperCaseHashCode();
 
             bool evaluate = oldComplexHash == newComplexHash &&
