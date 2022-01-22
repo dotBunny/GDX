@@ -62,7 +62,7 @@ namespace GDX.Editor.ProjectSettings
         private static readonly GUIContent s_traceNoticeContent = new GUIContent(
             "Make sure to disable console output if you have subscribed additional logging systems which may echo back to the console.");
 
-        internal static void Draw(SerializedObject settings)
+        internal static void Draw(GDXConfig settings)
         {
             GUI.enabled = true;
 

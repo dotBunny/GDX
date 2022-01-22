@@ -76,7 +76,7 @@ namespace GDX.Editor.ProjectSettings
         ///     Draw the Visual Scripting settings section.
         /// </summary>
         /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
-        public static void Draw(SerializedObject settings)
+        public static void Draw(GDXConfig settings)
         {
             GUI.enabled = true;
 

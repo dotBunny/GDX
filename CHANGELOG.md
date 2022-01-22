@@ -5,8 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [3.0.0] 
+***"Rip The Bandaid Off"***
+> As we began planning what this release might look like, we knew that it was going to break a lot of things. For years we have tried to support as many past versions of Unity as possible. Many new features become unlocked because of not having to support sunsetted versions.
 - Require mathematics, burst, collections
 ### Changed
+- Move to UIElements based editor UI !!!!!!!!! TODO
 - `HalfLifeToSmoothingFactor` no longer defaults elapsed time to `Time.deltaTime`
 ### Removed
 - NativeSimpleList - UnsafeList

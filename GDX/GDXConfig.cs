@@ -2,8 +2,11 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+
 namespace GDX
 {
+
         /// <summary>
         ///     Project-wide configuration configurable for runtime override.
         /// </summary>
@@ -117,5 +120,34 @@ namespace GDX
             ///     The language to set the default thread culture too.
             /// </summary>
             public Localization.Language localizationDefaultCulture = Localization.Language.English;
+
+            public GDXConfig()
+            {
+
+            }
+
+            public GDXConfig(GDXConfig initialState)
+            {
+                updateProviderCheckForUpdates = initialState.updateProviderCheckForUpdates;
+                developerCommandLineParserArgumentPrefix = initialState.developerCommandLineParserArgumentPrefix;
+                developerCommandLineParserArgumentSplit = initialState.developerCommandLineParserArgumentSplit;
+                developerBuildInfoAssemblyDefinition = initialState.developerBuildInfoAssemblyDefinition;
+                developerBuildInfoEnabled = initialState.developerBuildInfoEnabled;
+                developerBuildInfoPath = initialState.developerBuildInfoPath;
+                developerBuildInfoNamespace = initialState.developerBuildInfoNamespace;
+                developerBuildInfoBuildNumberArgument = initialState.developerBuildInfoBuildNumberArgument;
+                developerBuildInfoBuildDescriptionArgument = initialState.developerBuildInfoBuildDescriptionArgument;
+                developerBuildInfoBuildChangelistArgument = initialState.developerBuildInfoBuildChangelistArgument;
+                developerBuildInfoBuildTaskArgument = initialState.developerBuildInfoBuildTaskArgument;
+                developerBuildInfoBuildStreamArgument = initialState.developerBuildInfoBuildStreamArgument;
+                environmentScriptingDefineSymbol = initialState.environmentScriptingDefineSymbol;
+                traceDevelopmentLevels = initialState.traceDevelopmentLevels;
+                traceDebugLevels = initialState.traceDebugLevels;
+                traceReleaseLevels = initialState.traceReleaseLevels;
+                traceDevelopmentOutputToUnityConsole = initialState.traceDevelopmentOutputToUnityConsole;
+                traceDebugOutputToUnityConsole = initialState.traceDebugOutputToUnityConsole;
+                localizationSetDefaultCulture = initialState.localizationSetDefaultCulture;
+                localizationDefaultCulture = initialState.localizationDefaultCulture;
+            }
         }
 }

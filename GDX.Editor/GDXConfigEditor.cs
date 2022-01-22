@@ -7,23 +7,23 @@ using UnityEditor;
 namespace GDX.Editor
 {
     /// <summary>
-    ///     A custom editor for the <see cref="Config" /> scriptable object.
+    ///     A custom editor for the <see cref="GDXConfig" /> scriptable object.
     /// </summary>
     /// <remarks>
     ///     This just enforces editing through the project settings window only.
     /// </remarks>
     [HideFromDocFX]
-    [CustomEditor(typeof(Config))]
+    [CustomEditor(typeof(GDXConfig))]
     // ReSharper disable once InconsistentNaming
     public class GDXConfigEditor : UnityEditor.Editor
     {
         /// <summary>
-        ///     Message to display in the inspector if a <see cref="Config" /> is selected in the project.
+        ///     Message to display in the inspector if a <see cref="GDXConfig" /> is selected in the project.
         /// </summary>
         private const string HelpContent = "GDX project settings must be changed via the Project Settings window.";
 
         /// <summary>
-        ///     Prevent the inspector actually showing for a <see cref="Config" /> to prevent unintentional editing.
+        ///     Prevent the inspector actually showing for a <see cref="GDXConfig" /> to prevent unintentional editing.
         /// </summary>
         public override void OnInspectorGUI()
         {

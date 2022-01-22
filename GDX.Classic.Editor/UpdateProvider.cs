@@ -362,7 +362,7 @@ namespace GDX.Editor
                 try
                 {
                     AssetDatabase.StartAssetEditing();
-                    VersionControl.CheckoutFolder(targetPath);
+                    GDX.Editor.VersionControl.CheckoutFolder(targetPath);
                     Directory.Delete(targetPath, true);
 
                     // Drop in new content

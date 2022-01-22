@@ -5,7 +5,7 @@
 using System;
 using GDX;
 using GDX.Editor;
-using UnityEngine;
+using Newtonsoft.Json;
 
 namespace GDX.Editor
 {
@@ -28,7 +28,8 @@ namespace GDX.Editor
 
         public static ManifestEntry Get(string json)
         {
-            ManifestEntry returnObject = JsonUtility.FromJson<ManifestEntry>(json);
+
+            ManifestEntry returnObject = JsonConvert.DeserializeObject<ManifestEntry>(json);
             if (returnObject == null)
             {
                 return null;

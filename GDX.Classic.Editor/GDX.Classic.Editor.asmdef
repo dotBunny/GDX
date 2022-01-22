@@ -2,7 +2,8 @@
     "name": "GDX.Classic.Editor",
     "rootNamespace": "GDX.Classic.Editor",
     "references": [
-        "GDX"
+        "GDX",
+        "GDX.Editor",
         "GDX.Classic",
         "Unity.ScriptableBuildPipeline",
         "Unity.ScriptableBuildPipeline.Editor",

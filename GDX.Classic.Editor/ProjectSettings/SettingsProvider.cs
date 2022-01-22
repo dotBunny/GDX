@@ -38,8 +38,8 @@ namespace GDX.Editor.ProjectSettings
                 label = "GDX",
                 guiHandler = searchContext =>
                 {
-                    // Get a serialized version of the settings
-                    UnityEditor.SerializedObject settingsObject = new UnityEditor.SerializedObject(Config.Get());
+                    // Get a working copy
+                    GDXConfig tempConfig = new GDXConfig(Core.Config);
 
                     // Start wrapping the content
                     UnityEditor.EditorGUILayout.BeginVertical(SettingsStyles.WrapperStyle);
@@ -47,25 +47,28 @@ namespace GDX.Editor.ProjectSettings
                     PackageStatusSection.Draw();
 
                     // Build out sections
-                    AutomaticUpdatesSettings.Draw(settingsObject);
+                    AutomaticUpdatesSettings.Draw(tempConfig);
                     UnityEngine.GUILayout.Space(5);
 
-                    BuildInfoSettings.Draw(settingsObject);
+                    BuildInfoSettings.Draw(tempConfig);
                     UnityEngine.GUILayout.Space(5);
 
-                    CommandLineProcessorSettings.Draw(settingsObject);
+                    CommandLineProcessorSettings.Draw(tempConfig);
                     UnityEngine.GUILayout.Space(5);
 
-                    EnvironmentSettings.Draw(settingsObject);
+                    EnvironmentSettings.Draw(tempConfig);
                     UnityEngine.GUILayout.Space(5);
 
-                    LocaleSettings.Draw(settingsObject);
+                    LocaleSettings.Draw(tempConfig);
 #if GDX_VISUALSCRIPTING
                     UnityEngine.GUILayout.Space(5);
-                    VisualScriptingSettings.Draw(settingsObject);
+                    VisualScriptingSettings.Draw(tempConfig);
 #endif
-                    // Apply any serialized setting changes
-                    settingsObject.ApplyModifiedPropertiesWithoutUndo();
+
+
+                    // check for changes
+                    // save newconfig?
+
 
                     // Stop wrapping the content
                     UnityEditor.EditorGUILayout.EndVertical();

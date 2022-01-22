@@ -35,7 +35,7 @@ namespace GDX.Editor.ProjectSettings
         ///     Draw the Command Line Processor section of settings.
         /// </summary>
         /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
-        internal static void Draw(SerializedObject settings)
+        internal static void Draw(GDXConfig settings)
         {
             GUI.enabled = true;
 
