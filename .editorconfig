@@ -158,7 +158,7 @@ dotnet_diagnostic.RS2008.severity = none
 
 # IDE0073: File header
 dotnet_diagnostic.IDE0073.severity = warning
-file_header_template = Copyright (c) 2020-2021 dotBunny Inc.\ndotBunny licenses this file to you under the BSL-1.0 license.\nSee the LICENSE file in the project root for more information.
+file_header_template = Copyright (c) 2020-2022 dotBunny Inc.\ndotBunny licenses this file to you under the BSL-1.0 license.\nSee the LICENSE file in the project root for more information.
 
 # IDE0035: Remove unreachable code
 dotnet_diagnostic.IDE0035.severity = warning

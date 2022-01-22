@@ -1,0 +1,37 @@
+{
+    "name": "GDX.Classic.Editor",
+    "rootNamespace": "GDX.Classic.Editor",
+    "references": [
+        "GDX"
+        "GDX.Classic",
+        "Unity.ScriptableBuildPipeline",
+        "Unity.ScriptableBuildPipeline.Editor",
+        "Unity.VisualScripting.Core",
+        "Unity.VisualScripting.Core.Editor",
+        "Unity.VisualScripting.Flow.Editor",
+        "Unity.Build",
+        "Unity.Build.Classic"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.platforms",
+            "expression": "0.9",
+            "define": "GDX_PLATFORMS"
+        },
+        {
+            "name": "com.unity.visualscripting",
+            "expression": "1.5.2",
+            "define": "GDX_VISUALSCRIPTING"
+        }
+    ],
+    "noEngineReferences": false
+}

@@ -1,8 +1,8 @@
 {
   "name": "com.dotbunny.gdx",
   "displayName": "GDX",
-  "version": "2.0.3",
-  "unity": "2018.4",
+  "version": "3.0.0",
+  "unity": "2020.3",
   "description": "Game Development Extensions\nA battle-tested library of game-ready high-performance C# code.",
   "keywords": [
     "game",

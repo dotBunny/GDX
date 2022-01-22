@@ -22,8 +22,8 @@ Add `com.dotbunny.gdx` as a dependency to the project `Packages/manifest.json` f
 > For a full breakdown of all installation methods please refer to the [Installation](https://gdx.dotbunny.com/manual/getting-started.html#installation) section of [Getting Started](https://gdx.dotbunny.com/manual/getting-started.html) in the manual.
 
 ## Requirements
-The `GDX` package can be dropped into any compatible [Unity](http://unity3d.com) (>=`2018.4`) project and selectively enables portions of its functionality based on what packages it finds in the project.
-> For more detailed infromation, please consult [Requirements](https://gdx.dotbunny.com/manual/requirements.html) in the manual.
+The `GDX` package can be dropped into any compatible [Unity](http://unity3d.com) (>=`2020.3`) project and selectively enables portions of its functionality based on what packages it finds in the project.
+> For more detailed infromation as well as legacy support, please consult [Requirements](https://gdx.dotbunny.com/manual/requirements.html) in the manual.
 
 ## Contributing
 GDX is an open-source project, and we encourage and welcome contributions. While the `GDX` package has Unity employees amongst its contributors, it is **not officially supported by Unity**, and it is not on Unity's roadmap.

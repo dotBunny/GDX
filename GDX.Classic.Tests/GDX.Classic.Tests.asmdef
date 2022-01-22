@@ -1,0 +1,37 @@
+{
+  "name": "GDX.Classic.Tests",
+  "rootNamespace": "GDX.Classic.Tests",
+  "references": [
+    "Unity.PerformanceTesting",
+    "GDX",
+    "GDX.Classic",
+    "UnityEngine.TestRunner",
+    "UnityEditor.TestRunner"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": true,
+  "precompiledReferences": [
+    "nunit.framework.dll"
+  ],
+  "autoReferenced": false,
+  "defineConstraints": [
+    "UNITY_INCLUDE_TESTS"
+  ],
+  "versionDefines": [
+    {
+      "name": "com.unity.test-framework",
+      "expression": "1.1.0",
+      "define": "GDX_TESTFRAMEWORK"
+    },
+    {
+      "name": "com.unity.test-framework.performance",
+      "expression": "2.0.0",
+      "define": "GDX_PERFORMANCETESTING"
+    }
+  ],
+  "noEngineReferences": false
+}
