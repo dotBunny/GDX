@@ -162,6 +162,10 @@ namespace GDX.Classic.Editor.ProjectSettings
             //
             // DrawNodeSection("Utilities", s_categoryUtilitiesContent, s_assembly.VisualScriptingUtilities);
         }
+#else
+        public void Draw(GDXConfig settings)
+        {
+        }
 #endif
 
         /// <summary>
