@@ -9,6 +9,31 @@
     margin-left: 10px;
 }
 
+.gdx-project-settings-section-header
+{
+
+}
+
+.gdx-project-settings-section-header .button-expand
+{
+
+}
+
+.gdx-project-settings-section-header .button-help
+{
+
+}
+
+.gdx-project-settings-section-header Label
+{
+    -unity-font-style: bold;
+}
+
+.gdx-project-settings-section-content
+{
+
+}
+
 .gdx-big-title
 {
     font-size: 19px;
