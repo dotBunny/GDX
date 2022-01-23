@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+// Copyright (c) 2020-2022 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -21,10 +21,10 @@ namespace Runtime
         [Category("GDX.Tests")]
         public void AddUniqueItem_UniqueItem_ReturnsTrue()
         {
-            CircularBuffer<int> searchValue = new CircularBuffer<int>(5);
-            List<CircularBuffer<int>> listValues = new List<CircularBuffer<int>>
+            object searchValue = new object();
+            List<object> listValues = new List<object>
             {
-                new CircularBuffer<int>(2), new CircularBuffer<int>(4), new CircularBuffer<int>(15)
+                new object(), new object(), new object()
             };
 
             bool evaluate = listValues.AddUniqueItem(searchValue);
@@ -36,10 +36,10 @@ namespace Runtime
         [Category("GDX.Tests")]
         public void AddUniqueItem_NonUniqueItem_ReturnsFalse()
         {
-            CircularBuffer<int> searchValue = new CircularBuffer<int>(5);
-            List<CircularBuffer<int>> listValues = new List<CircularBuffer<int>>
+            object searchValue = new object();
+            List<object> listValues = new List<object>
             {
-                new CircularBuffer<int>(2), new CircularBuffer<int>(4), searchValue, new CircularBuffer<int>(15)
+                new object(), new object(), searchValue, new object()
             };
 
             bool evaluate = listValues.AddUniqueItem(searchValue);
@@ -51,13 +51,13 @@ namespace Runtime
         [Category("GDX.Tests")]
         public void ContainsItem_MockData_FindsItem()
         {
-            CircularBuffer<int> mockObject = new CircularBuffer<int>(5);
-            List<CircularBuffer<int>> mockData = new List<CircularBuffer<int>>
+            object mockObject = new object();
+            List<object> mockData = new List<object>
             {
-                new CircularBuffer<int>(2),
+                new object(),
                 mockObject,
-                new CircularBuffer<int>(4),
-                new CircularBuffer<int>(15),
+                new object(),
+                new object(),
                 mockObject
             };
 
@@ -80,13 +80,13 @@ namespace Runtime
         [Category("GDX.Tests")]
         public void RemoveFirstItem_MockData_RemovedItem()
         {
-            CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
-            List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
+            object searchItem = new object();
+            List<object> listItems = new List<object>
             {
-                new CircularBuffer<int>(2),
+                new object(),
                 searchItem,
-                new CircularBuffer<int>(4),
-                new CircularBuffer<int>(15),
+                new object(),
+                new object(),
                 searchItem
             };
 
@@ -102,14 +102,14 @@ namespace Runtime
         [Category("GDX.Tests")]
         public void RemoveFirstItem_BadMockData_ReturnsFalse()
         {
-            CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
-            CircularBuffer<int> mockData = new CircularBuffer<int>(2);
-            List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
+            object searchItem = new object();
+            object mockData = new object();
+            List<object> listItems = new List<object>
             {
-                new CircularBuffer<int>(2),
+                new object(),
                 searchItem,
-                new CircularBuffer<int>(4),
-                new CircularBuffer<int>(15),
+                new object(),
+                new object(),
                 searchItem
             };
 
@@ -122,10 +122,10 @@ namespace Runtime
         [Category("GDX.Tests")]
         public void RemoveItemSwap_MockData_RemovedItem()
         {
-            CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
-            List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
+            object searchItem = new object();
+            List<object> listItems = new List<object>
             {
-                new CircularBuffer<int>(2), searchItem, new CircularBuffer<int>(4), new CircularBuffer<int>(15)
+                new object(), searchItem, new object(), new object()
             };
 
             listItems.RemoveItemSwap(1);
@@ -139,13 +139,13 @@ namespace Runtime
         [Category("GDX.Tests")]
         public void RemoveLastItem_MockData_RemovedItems()
         {
-            CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
-            List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
+            object searchItem = new object();
+            List<object> listItems = new List<object>
             {
-                new CircularBuffer<int>(2),
+                new object(),
                 searchItem,
-                new CircularBuffer<int>(4),
-                new CircularBuffer<int>(15),
+                new object(),
+                new object(),
                 searchItem
             };
 
@@ -162,12 +162,12 @@ namespace Runtime
         [Category("GDX.Tests")]
         public void RemoveLastItem_BadMockData_ReturnsFalse()
         {
-            CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
-            List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
+            object searchItem = new object();
+            List<object> listItems = new List<object>
             {
-                new CircularBuffer<int>(2),
-                new CircularBuffer<int>(4),
-                new CircularBuffer<int>(15),
+                new object(),
+                new object(),
+                new object(),
             };
 
             bool evaluate = listItems.RemoveLastItem(searchItem);
@@ -179,13 +179,13 @@ namespace Runtime
         [Category("GDX.Tests")]
         public void RemoveItems_MockData_RemovedItems()
         {
-            CircularBuffer<int> searchItem = new CircularBuffer<int>(5);
-            List<CircularBuffer<int>> listItems = new List<CircularBuffer<int>>
+            object searchItem = new object();
+            List<object> listItems = new List<object>
             {
-                new CircularBuffer<int>(2),
+                new object(),
                 searchItem,
-                new CircularBuffer<int>(4),
-                new CircularBuffer<int>(15),
+                new object(),
+                new object(),
                 searchItem
             };
 

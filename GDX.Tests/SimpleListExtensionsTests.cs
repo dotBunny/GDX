@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+// Copyright (c) 2020-2022 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -122,15 +122,15 @@ namespace Runtime
         [Category("GDX.Tests")]
         public void ContainsItem_CircularBuffer_ReturnsTrue()
         {
-            CircularBuffer<int> searchItem = new CircularBuffer<int>(3, new[] {0, 1, 2});
-            SimpleList<CircularBuffer<int>> listItems = new SimpleList<CircularBuffer<int>>(5);
+            object searchItem = new object();
+            SimpleList<object> listItems = new SimpleList<object>(5);
 
             // Build test rig
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new object());
             listItems.AddUnchecked(searchItem);
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(new object());
 
             bool evaluate = listItems.ContainsItem(searchItem);
 
@@ -141,16 +141,16 @@ namespace Runtime
         [Category("GDX.Tests")]
         public void RemoveFirstItem_MockData_RemovedItem()
         {
-            CircularBuffer<int> searchItem = new CircularBuffer<int>(3, new[] {0, 1, 2});
-            SimpleList<CircularBuffer<int>> listItems = new SimpleList<CircularBuffer<int>>(6);
+            object searchItem = new object();
+            SimpleList<object> listItems = new SimpleList<object>(6);
 
             // Build test rig
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new object());
             listItems.AddUnchecked(searchItem);
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(new object());
             listItems.AddUnchecked(searchItem);
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new object());
 
             listItems.RemoveFirstItem(searchItem);
 
@@ -164,18 +164,18 @@ namespace Runtime
         [Category("GDX.Tests")]
         public void RemoveFirstItem_MockData_NoItemReturnsFalse()
         {
-            CircularBuffer<int> searchItem = new CircularBuffer<int>(3, new[] {0, 1, 2});
-            SimpleList<CircularBuffer<int>> listItems = new SimpleList<CircularBuffer<int>>(6);
+            object searchItem = new object();
+            SimpleList<object> listItems = new SimpleList<object>(6);
 
             // Build test rig
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new object());
             listItems.AddUnchecked(searchItem);
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(new object());
             listItems.AddUnchecked(searchItem);
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new object());
 
-            bool evaluate = listItems.RemoveFirstItem(new CircularBuffer<int>(12));
+            bool evaluate = listItems.RemoveFirstItem(new object());
 
             Assert.IsFalse(evaluate);
         }
@@ -184,16 +184,16 @@ namespace Runtime
         [Category("GDX.Tests")]
         public void RemoveItems_MockData_RemovedItems()
         {
-            CircularBuffer<int> searchItem = new CircularBuffer<int>(3, new[] {0, 1, 2});
-            SimpleList<CircularBuffer<int>> listItems = new SimpleList<CircularBuffer<int>>(6);
+            object searchItem = new object();
+            SimpleList<object> listItems = new SimpleList<object>(6);
 
             // Build test rig
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new object());
             listItems.AddUnchecked(searchItem);
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(new object());
             listItems.AddUnchecked(searchItem);
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new object());
 
             listItems.RemoveItems(searchItem);
 
@@ -206,16 +206,16 @@ namespace Runtime
         [Category("GDX.Tests")]
         public void RemoveLastItem_MockData_RemovedItem()
         {
-            CircularBuffer<int> searchItem = new CircularBuffer<int>(3, new[] {0, 1, 2});
-            SimpleList<CircularBuffer<int>> listItems = new SimpleList<CircularBuffer<int>>(6);
+            object searchItem = new object();
+            SimpleList<object> listItems = new SimpleList<object>(6);
 
             // Build test rig
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new object());
             listItems.AddUnchecked(searchItem);
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(new object());
             listItems.AddUnchecked(searchItem);
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new object());
 
             listItems.RemoveLastItem(searchItem);
 
@@ -229,18 +229,18 @@ namespace Runtime
         [Category("GDX.Tests")]
         public void RemoveLastItem_MockData_NoItemReturnsFalse()
         {
-            CircularBuffer<int> searchItem = new CircularBuffer<int>(3, new[] {0, 1, 2});
-            SimpleList<CircularBuffer<int>> listItems = new SimpleList<CircularBuffer<int>>(6);
+            object searchItem = new object();
+            SimpleList<object> listItems = new SimpleList<object>(6);
 
             // Build test rig
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new object());
             listItems.AddUnchecked(searchItem);
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(new object());
             listItems.AddUnchecked(searchItem);
-            listItems.AddUnchecked(new CircularBuffer<int>(5));
+            listItems.AddUnchecked(new object());
 
-            bool evaluate = listItems.RemoveLastItem(new CircularBuffer<int>(12));
+            bool evaluate = listItems.RemoveLastItem(new object());
 
             Assert.IsFalse(evaluate);
         }

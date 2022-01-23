@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+// Copyright (c) 2020-2022 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -18,7 +18,7 @@ namespace GDX.Collections.Generic
     /// </summary>
     /// <typeparam name="T">The type of <see cref="object" />s contained within.</typeparam>
     [VisualScriptingCompatible(1)]
-    public class CircularBuffer<T> : IEnumerable<T>
+    public struct CircularBuffer<T>
     {
         /// <summary>
         ///     Internal array of backed data for the <see cref="CircularBuffer{T}" />.
@@ -53,8 +53,20 @@ namespace GDX.Collections.Generic
         /// </summary>
         /// <param name="capacity">The maximum number of items allowed in the <see cref="CircularBuffer{T}" /></param>
         // ReSharper disable once HeapView.ObjectAllocation.Evident
-        public CircularBuffer(int capacity) : this(capacity, new T[] { })
+        public CircularBuffer(int capacity)
         {
+            if (capacity < 1)
+            {
+                throw new ArgumentException("Circular buffer cannot have negative or zero capacity.", nameof(capacity));
+            }
+
+            Array = new T[capacity];
+            Capacity = capacity;
+
+            Count = 0;
+
+            StartIndex = 0;
+            EndIndex = Count == capacity ? 0 : Count;
         }
 
         /// <summary>
@@ -105,75 +117,17 @@ namespace GDX.Collections.Generic
         {
             get
             {
-                if (Count == 0)
-                {
-                    throw new IndexOutOfRangeException($"Cannot access index {pseudoIndex}. Buffer is empty");
-                }
-
-                if (pseudoIndex >= Count)
-                {
-                    throw new IndexOutOfRangeException(
-                        $"Cannot access index {pseudoIndex}. Buffer size is {Count}");
-                }
-
                 return Array[
                     StartIndex +
                     (pseudoIndex < Capacity - StartIndex ? pseudoIndex : pseudoIndex - Capacity)];
             }
             set
             {
-                if (Count == 0)
-                {
-                    throw new IndexOutOfRangeException($"Cannot access index {pseudoIndex}. Buffer is empty");
-                }
-
-                if (pseudoIndex >= Count)
-                {
-                    throw new IndexOutOfRangeException(
-                        $"Cannot access index {pseudoIndex}. Buffer size is {Count}");
-                }
-
                 Array[
                     StartIndex +
                     (pseudoIndex < Capacity - StartIndex ? pseudoIndex : pseudoIndex - Capacity)] = value;
             }
         }
-
-        #region IEnumerable<T> Implementation
-
-        /// <summary>
-        ///     Get <see cref="Array" /> Enumerator.
-        /// </summary>
-        /// <returns>A <see cref="IEnumerator{T}" /> for the <see cref="Array" />.</returns>
-        public IEnumerator<T> GetEnumerator()
-        {
-            // ReSharper disable once HeapView.ObjectAllocation.Evident
-            ArraySegment<T>[] segments = {ArrayOne(), ArrayTwo()};
-            foreach (ArraySegment<T> segment in segments)
-            {
-                for (int i = 0; i < segment.Count; i++)
-                {
-                    // ReSharper disable once PossibleNullReferenceException
-                    yield return segment.Array[segment.Offset + i];
-                }
-            }
-        }
-
-        #endregion
-
-        #region IEnumerable Implementation
-
-        /// <summary>
-        ///     Get <see cref="CircularBuffer{T}" /> Enumerator.
-        /// </summary>
-        /// <returns>A <see cref="IEnumerator{T}" /> for the <see cref="CircularBuffer{T}" />.</returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            // ReSharper disable once HeapView.ObjectAllocation
-            return GetEnumerator();
-        }
-
-        #endregion
 
         /// <summary>
         ///     Add an <paramref name="item" /> to the <see cref="Array" />.
@@ -204,11 +158,6 @@ namespace GDX.Collections.Generic
         /// <returns>The last typed object in <see cref="Array" />.</returns>
         public T GetBack()
         {
-            if (Count == 0)
-            {
-                throw new InvalidOperationException("Cannot access a buffer that is empty.");
-            }
-
             return Array[(EndIndex != 0 ? EndIndex : Capacity) - 1];
         }
 
@@ -218,11 +167,6 @@ namespace GDX.Collections.Generic
         /// <returns>The first typed object in <see cref="Array" />.</returns>
         public T GetFront()
         {
-            if (Count == 0)
-            {
-                throw new InvalidOperationException("Cannot access a buffer that is empty.");
-            }
-
             return Array[StartIndex];
         }
 
@@ -252,11 +196,6 @@ namespace GDX.Collections.Generic
         /// </summary>
         public void PopBack()
         {
-            if (Count == 0)
-            {
-                throw new InvalidOperationException("Cannot take elements from an empty buffer.");
-            }
-
             if (EndIndex == 0)
             {
                 EndIndex = Capacity;
@@ -272,11 +211,6 @@ namespace GDX.Collections.Generic
         /// </summary>
         public void PopFront()
         {
-            if (Count == 0)
-            {
-                throw new InvalidOperationException("Cannot take elements from an empty buffer.");
-            }
-
             Array[StartIndex] = default;
             if (++StartIndex == Capacity)
             {
@@ -354,7 +288,7 @@ namespace GDX.Collections.Generic
             T[] newArray = new T[Count];
             int newArrayOffset = 0;
             // ReSharper disable once HeapView.ObjectAllocation.Evident
-            ArraySegment<T>[] segments = {ArrayOne(), ArrayTwo()};
+            ArraySegment<T>[] segments = { ArrayOne(), ArrayTwo() };
             foreach (ArraySegment<T> segment in segments)
             {
                 // ReSharper disable once AssignNullToNotNullAttribute

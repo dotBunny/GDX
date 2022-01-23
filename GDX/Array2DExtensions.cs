@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+// Copyright (c) 2020-2022 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -19,7 +19,7 @@ namespace GDX
         /// <remarks>Works with <see cref="float"/> values.</remarks>
         /// <param name="inputArray">The existing <see cref="Array2D{T}"/> to scale.</param>
         /// <param name="scaleFactor">The multiple to scale by.</param>
-        public static Array2D<float> Scale(this Array2D<float> inputArray, int scaleFactor = 2)
+        public static Array2D<float> Scale(ref this Array2D<float> inputArray, int scaleFactor = 2)
         {
             int originalRowsMinusOne = inputArray.RowCount - 1;
             int originalColsMinusOne = inputArray.ColumnCount - 1;

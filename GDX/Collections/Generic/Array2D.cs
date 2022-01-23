@@ -15,7 +15,7 @@ namespace GDX.Collections.Generic
     /// <remarks>Mimics multi-dimensional array format.</remarks>
     /// <typeparam name="T">Type of objects.</typeparam>
     [VisualScriptingCompatible(1)]
-    public class Array2D<T>
+    public struct Array2D<T>
     {
         /// <summary>
         ///     The backing flat array.
