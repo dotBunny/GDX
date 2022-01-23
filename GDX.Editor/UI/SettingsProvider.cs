@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 
-namespace GDX.Editor.ProjectSettings
+namespace GDX.Editor.UI
 {
     /// <summary>
     ///     GDX Assembly Settings Provider
@@ -38,29 +38,34 @@ namespace GDX.Editor.ProjectSettings
             return new UnityEditor.SettingsProvider("Project/GDX", UnityEditor.SettingsScope.Project)
             {
                 label = "GDX",
-                guiHandler = searchContext =>
+                activateHandler = (searchContext, rootElement) =>
                 {
-                    // Get a working copy
-                    GDXConfig tempConfig = new GDXConfig(Core.Config);
-
-                    // Start wrapping the content
-                    UnityEditor.EditorGUILayout.BeginVertical(SettingsStyles.WrapperStyle);
-
-                   // PackageStatusSection.Draw(tempConfig);
-
-                    foreach (IConfigSection section in s_configSections)
-                    {
-                        section.Draw(tempConfig);
-                    }
-
-
-                    // check for changes
-                    // save newconfig?
-
-
-                    // Stop wrapping the content
-                    UnityEditor.EditorGUILayout.EndVertical();
+                    rootElement.styleSheets.Add(ResourcesProvider.GetStyleSheet());
+                    ResourcesProvider.GetVisualTreeAsset("GDXProjectSettings").CloneTree(rootElement);
                 },
+                // guiHandler = searchContext =>
+                // {
+                //     // Get a working copy
+                //     GDXConfig tempConfig = new GDXConfig(Core.Config);
+                //
+                //     // Start wrapping the content
+                //     UnityEditor.EditorGUILayout.BeginVertical(GDX.Editor.ProjectSettings.SettingsStyles.WrapperStyle);
+                //
+                //    // PackageStatusSection.Draw(tempConfig);
+                //
+                //     foreach (IConfigSection section in s_configSections)
+                //     {
+                //         section.Draw(tempConfig);
+                //     }
+                //
+                //
+                //     // check for changes
+                //     // save newconfig?
+                //
+                //
+                //     // Stop wrapping the content
+                //     UnityEditor.EditorGUILayout.EndVertical();
+                // },
                 keywords = s_searchKeywords
             };
         }

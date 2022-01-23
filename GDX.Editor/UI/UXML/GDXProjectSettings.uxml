@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/com.dotbunny.gdx/GDX.Editor/UI/GDXStyles.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStyles" />
+    <ui:VisualElement name="gdx-project-settings-header">
+        <ui:Label text="Game Development Extensions" display-tooltip-when-elided="true" class="gdx-big-title" />
+    </ui:VisualElement>
+    <ui:ScrollView name="gdx-project-settings-content">
+        <ui:VisualElement name="gdx-project-settings-info" style="flex-direction: row;">
+            <ui:VisualElement style="flex-grow: 1; flex-wrap: nowrap;">
+                <ui:Label text="A battle-tested library of game-ready high-performance C# code." display-tooltip-when-elided="true" style="flex-wrap: wrap;" />
+            </ui:VisualElement>
+            <ui:GroupBox name="gdx-project-settings-packages" style="width: 200px;">
+                <ui:Label text="Packages Found" display-tooltip-when-elided="true" class="gdx-small-title" />
+            </ui:GroupBox>
+        </ui:VisualElement>
+    </ui:ScrollView>
+</ui:UXML>

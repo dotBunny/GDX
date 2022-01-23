@@ -12,12 +12,14 @@ using UnityEngine.PlayerLoop;
 
 #endif
 
-namespace GDX.Classic.Editor.ProjectSettings
+using GDX.Editor;
+
+namespace GDX.Editor.ProjectSettings
 {
     /// <summary>
     ///     Visual Scripting Settings
     /// </summary>
-    internal class VisualScriptingSettings : GDX.Editor.IConfigSection
+    internal class VisualScriptingSettings : IConfigSection
     {
         /// <summary>
         ///     Internal section identifier.
