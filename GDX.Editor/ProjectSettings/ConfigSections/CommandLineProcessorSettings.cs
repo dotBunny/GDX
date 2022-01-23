@@ -32,11 +32,17 @@ namespace GDX.Editor.ProjectSettings
             "Argument Split",
             "The string used to split arguments from their values.");
 
+        [InitializeOnLoadMethod]
+        static void Register()
+        {
+            UI.SettingsProvider.RegisterConfigSection(new CommandLineProcessorSettings());
+        }
+
         /// <summary>
         ///     Draw the Command Line Processor section of settings.
         /// </summary>
         /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
-        public void Draw(GDXConfig settings)
+        public void DrawSectionContent(GDXConfig settings)
         {
             // GUI.enabled = true;
             //
@@ -52,6 +58,32 @@ namespace GDX.Editor.ProjectSettings
             //     s_argumentPrefixContent);
             // EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentSplit"),
             //     s_argumentSplitContent);
+        }
+
+        public void DrawSectionHeader(GDXConfig config)
+        {
+
+        }
+
+        public bool GetDefaultVisibility()
+        {
+            return false;
+        }
+        public string GetSectionHeaderLabel()
+        {
+            return "Command Line Parser";
+        }
+        public string GetSectionID()
+        {
+            return "GDX.Developer.CommandLineParser";
+        }
+        public string GetSectionHelpLink()
+        {
+            return "api/GDX.Developer.CommandLineParser.html";
+        }
+        public bool GetToggleSupport()
+        {
+            return false;
         }
     }
 }

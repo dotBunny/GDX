@@ -1,49 +1,73 @@
-#gdx-project-settings-header
-{
+.root {
+
+    --color-blue: rgb(24, 116, 218);
+    --color-blue-a: rgba(0.0941176470588235, 0.4549019607843137, 0.8549019607843137, 1);
+    --color-yellow: rgb(228, 230, 105);
+    --color-green: rgb(46, 164, 79);
+}
+
+
+#gdx-project-settings-header {
     margin-bottom: 12px;
     margin-left: 8px;
     margin-top: 1px;
 }
-#gdx-project-settings-content
-{
+
+#gdx-project-settings-content {
     margin-left: 10px;
 }
 
-.gdx-project-settings-section-header
-{
-
+.gdx-project-settings-section-header {
+    background-color: rgb(24, 116, 218);
 }
 
-.gdx-project-settings-section-header .button-expand
-{
-
+.gdx-project-settings-section-header.enabled {
+    background-color: rgb(46, 164, 79);
+}
+.gdx-project-settings-section-header.disabled {
+    background-color: rgb(228, 230, 105);
 }
 
-.gdx-project-settings-section-header .button-help
-{
-
+.gdx-project-settings-section-header #button-expand {
+    width: 16px;
+    border-width: 0;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 4px;
+    margin-bottom: 0;
+    padding: 0;
+    background-image: resource('Icons/d_Toolbar Plus.png');
+    background-color: rgba(0, 0, 0, 0);
 }
 
-.gdx-project-settings-section-header Label
-{
+.gdx-project-settings-section-header #button-help {
+    width: 16px;
+    border-width: 0;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 4px;
+    margin-bottom: 0;
+    padding: 0;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: resource('Icons/d__Help.png');
+}
+
+.gdx-project-settings-section-header #label-name {
     -unity-font-style: bold;
+    margin-left: 2px;
 }
 
-.gdx-project-settings-section-content
-{
-
+.gdx-project-settings-section-content {
 }
 
-.gdx-big-title
-{
+.gdx-big-title {
     font-size: 19px;
     -unity-font-style: bold;
 }
-.gdx-medium-title
-{
 
+.gdx-medium-title {
 }
-.gdx-small-title
-{
+
+.gdx-small-title {
     -unity-font-style: bold;
 }

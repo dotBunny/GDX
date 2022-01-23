@@ -72,13 +72,18 @@ namespace GDX.Editor.ProjectSettings
         private static readonly GUIContent s_visualScriptingLoadingContent = new GUIContent(
             "The visual scripting subsystem is currently loading.");
 
+        [InitializeOnLoadMethod]
+        static void Register()
+        {
+            UI.SettingsProvider.RegisterConfigSection(new VisualScriptingSettings());
+        }
 
 #if GDX_VISUALSCRIPTING
         /// <summary>
         ///     Draw the Visual Scripting settings section.
         /// </summary>
         /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
-        public void Draw(GDXConfig settings)
+        public void DrawSectionContent(GDXConfig settings)
         {
             // GUI.enabled = true;
             //
@@ -165,10 +170,15 @@ namespace GDX.Editor.ProjectSettings
             // DrawNodeSection("Utilities", s_categoryUtilitiesContent, s_assembly.VisualScriptingUtilities);
         }
 #else
-        public void Draw(GDXConfig settings)
+        public void DrawSectionContent(GDXConfig settings)
         {
         }
 #endif
+
+        public void DrawSectionHeader(GDXConfig config)
+        {
+
+        }
 
         /// <summary>
         ///     Adds a provided list of types to the Visual Scripting configuration; the database still
@@ -322,6 +332,27 @@ namespace GDX.Editor.ProjectSettings
                 }
             }
 #endif
+        }
+
+        public bool GetDefaultVisibility()
+        {
+            return false;
+        }
+        public string GetSectionHeaderLabel()
+        {
+            return "Visual Scripting";
+        }
+        public string GetSectionID()
+        {
+            return "GDX.VisualScripting";
+        }
+        public string GetSectionHelpLink()
+        {
+            return "manual/features/visual-scripting.html";
+        }
+        public bool GetToggleSupport()
+        {
+            return false;
         }
     }
 }

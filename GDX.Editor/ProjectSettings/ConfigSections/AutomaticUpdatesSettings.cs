@@ -42,11 +42,17 @@ namespace GDX.Editor.ProjectSettings
             private set => EditorPrefs.SetInt("GDX.UpdateProvider.UpdateDayCount", value);
         }
 
+        [InitializeOnLoadMethod]
+        static void Register()
+        {
+            UI.SettingsProvider.RegisterConfigSection(new AutomaticUpdatesSettings());
+        }
+
         /// <summary>
         ///     Draw the Automatic Updates section of settings.
         /// </summary>
         /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
-        public void Draw(GDXConfig settings)
+        public void DrawSectionContent(GDXConfig settings)
         {
             // GUI.enabled = true;
             //
@@ -194,6 +200,35 @@ namespace GDX.Editor.ProjectSettings
             // UpdateDayCountSetting =
             //     EditorGUILayout.IntSlider(s_updateDayCountContent, UpdateDayCountSetting, 1,
             //         31);
+        }
+
+        public void DrawSectionHeader(GDXConfig config)
+        {
+
+        }
+
+
+        public bool GetDefaultVisibility()
+        {
+            return true;
+        }
+        public string GetSectionHeaderLabel()
+        {
+            return "Automatic Package Updates";
+        }
+        public string GetSectionID()
+        {
+            return "GDX.Editor.UpdateProvider";
+        }
+
+        public string GetSectionHelpLink()
+        {
+            return null;
+        }
+
+        public bool GetToggleSupport()
+        {
+            return true;
         }
     }
 }

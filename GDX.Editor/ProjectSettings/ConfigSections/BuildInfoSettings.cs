@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 namespace GDX.Editor.ProjectSettings
@@ -80,11 +81,17 @@ namespace GDX.Editor.ProjectSettings
             "Output Path",
             "The asset database relative path to output the file.");
 
+        [InitializeOnLoadMethod]
+        static void Register()
+        {
+            UI.SettingsProvider.RegisterConfigSection(new BuildInfoSettings());
+        }
+
         /// <summary>
         ///     Draw the Build Info section of settings.
         /// </summary>
         /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
-        public void Draw(GDXConfig settings)
+        public void DrawSectionContent(GDXConfig settings)
         {
             // GUI.enabled = true;
             //
@@ -174,6 +181,32 @@ namespace GDX.Editor.ProjectSettings
             // {
             //     buildStreamProperty.stringValue = buildStreamProperty.stringValue.ToUpper();
             // }
+        }
+
+        public void DrawSectionHeader(GDXConfig config)
+        {
+
+        }
+
+        public bool GetDefaultVisibility()
+        {
+            return false;
+        }
+        public string GetSectionHeaderLabel()
+        {
+            return "BuildInfo Generation";
+        }
+        public string GetSectionID()
+        {
+            return "GDX.Editor.Build.BuildInfoProvider";
+        }
+        public string GetSectionHelpLink()
+        {
+            return "api/GDX.Editor.Build.BuildInfoProvider.html";
+        }
+        public bool GetToggleSupport()
+        {
+            return false;
         }
     }
 }

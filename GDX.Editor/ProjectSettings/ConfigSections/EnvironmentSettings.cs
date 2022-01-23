@@ -63,7 +63,13 @@ namespace GDX.Editor.ProjectSettings
         private readonly GUIContent s_traceNoticeContent = new GUIContent(
             "Make sure to disable console output if you have subscribed additional logging systems which may echo back to the console.");
 
-        public void Draw(GDXConfig settings)
+        [InitializeOnLoadMethod]
+        static void Register()
+        {
+            UI.SettingsProvider.RegisterConfigSection(new EnvironmentSettings());
+        }
+
+        public void DrawSectionContent(GDXConfig settings)
         {
             // GUI.enabled = true;
             //
@@ -136,6 +142,32 @@ namespace GDX.Editor.ProjectSettings
             //     releaseLevelsProperty.intValue = newReleaseLevels;
             // }
             // EditorGUILayout.EndHorizontal();
+        }
+
+        public void DrawSectionHeader(GDXConfig config)
+        {
+
+        }
+
+        public bool GetDefaultVisibility()
+        {
+            return false;
+        }
+        public string GetSectionHeaderLabel()
+        {
+            return "Environment";
+        }
+        public string GetSectionID()
+        {
+            return "GDX.Environment";
+        }
+        public string GetSectionHelpLink()
+        {
+            return null;
+        }
+        public bool GetToggleSupport()
+        {
+            return false;
         }
     }
 }

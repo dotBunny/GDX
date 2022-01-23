@@ -1,10 +1,10 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/com.dotbunny.gdx/GDX.Editor/UI/GDXStyles.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStyles" />
     <ui:VisualElement name="gdx-project-settings-section-header" class="gdx-project-settings-section-header" style="flex-direction: row;">
-        <ui:Button text="Button" display-tooltip-when-elided="true" class="button-expand" />
-        <ui:Label text="Label" display-tooltip-when-elided="true" />
-        <ui:Button text="Button" display-tooltip-when-elided="true" class="button-help" />
+        <ui:Button display-tooltip-when-elided="true" name="button-expand" />
+        <ui:Label text="Label" display-tooltip-when-elided="true" name="label-name" />
+        <ui:Button display-tooltip-when-elided="true" name="button-help" />
         <ui:VisualElement style="flex-grow: 1;" />
-        <ui:Toggle />
+        <ui:Toggle name="toggle-enabled" />
     </ui:VisualElement>
 </ui:UXML>

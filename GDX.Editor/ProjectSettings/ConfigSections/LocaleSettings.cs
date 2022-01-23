@@ -32,11 +32,17 @@ namespace GDX.Editor.ProjectSettings
             "Set Default Culture",
             "For situations where a culture does not have a calendar available, this can be corrected after assemblies have been loaded by setting the CultureInfo.DefaultThreadCurrentCulture to a setting with one.");
 
+        [InitializeOnLoadMethod]
+        static void Register()
+        {
+            UI.SettingsProvider.RegisterConfigSection(new LocaleSettings());
+        }
+
         /// <summary>
         ///     Draw the Localization section of settings.
         /// </summary>
         /// <param name="settings">Serialized <see cref="GDXConfig" /> object to be modified.</param>
-        public void Draw(GDXConfig settings)
+        public void DrawSectionContent(GDXConfig settings)
         {
             // GUI.enabled = true;
             //
@@ -57,6 +63,32 @@ namespace GDX.Editor.ProjectSettings
             //     (GDX.Localization.Language)EditorGUILayout.EnumPopup(s_defaultCultureContent, settings.localizationDefaultCulture);
             //
             // return EditorGUI.EndChangeCheck();
+        }
+
+        public void DrawSectionHeader(GDXConfig config)
+        {
+
+        }
+
+        public bool GetDefaultVisibility()
+        {
+            return false;
+        }
+        public string GetSectionHeaderLabel()
+        {
+            return "Localization";
+        }
+        public string GetSectionID()
+        {
+            return "GDX.Localization";
+        }
+        public string GetSectionHelpLink()
+        {
+            return "api/GDX.Localization.html";
+        }
+        public bool GetToggleSupport()
+        {
+            return false;
         }
     }
 }
