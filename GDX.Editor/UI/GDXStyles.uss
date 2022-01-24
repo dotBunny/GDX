@@ -16,8 +16,13 @@
 #gdx-project-settings-content {
     margin-left: 10px;
 }
+#gdx-project-settings-content #unity-content-container {
+    margin-right: 10px;
+}
+
 
 .gdx-project-settings-section-header {
+    height: 25px;
     background-color: rgb(24, 116, 218);
 }
 
@@ -26,6 +31,13 @@
 }
 .gdx-project-settings-section-header.disabled {
     background-color: rgb(228, 230, 105);
+}
+
+.gdx-project-settings-section-header.disabled #label-name {
+    color: black;
+}
+.gdx-project-settings-section-header.disabled #button-help {
+    -unity-background-image-tint-color: black;
 }
 
 .gdx-project-settings-section-header #button-expand {
