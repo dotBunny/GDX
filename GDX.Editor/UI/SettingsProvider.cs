@@ -66,32 +66,11 @@ namespace GDX.Editor.UI
                         contentScrollView.contentContainer.Add(sectionHeader);
                         ProjectSettings.ConfigSectionsProvider.UpdateSectionHeaderStyle(section.Key);
 
-                        //section.DrawSectionContent(tempConfig);
+                        VisualElement sectionContentBase = ProjectSettings.ConfigSectionsProvider.BuildSectionContent(section.Value);
+                        contentScrollView.contentContainer.Add(sectionContentBase);
+                        ProjectSettings.ConfigSectionsProvider.UpdateSectionContent(section.Key);
                     }
                 },
-                // guiHandler = searchContext =>
-                // {
-                //     // Get a working copy
-                //
-                //
-                //     // Start wrapping the content
-                //     UnityEditor.EditorGUILayout.BeginVertical(GDX.Editor.ProjectSettings.SettingsStyles.WrapperStyle);
-                //
-                //    // PackageStatusSection.Draw(tempConfig);
-                //
-                //     foreach (IConfigSection section in s_configSections)
-                //     {
-                //         section.Draw(tempConfig);
-                //     }
-                //
-                //
-                //     // check for changes
-                //     // save newconfig?
-                //
-                //
-                //     // Stop wrapping the content
-                //     UnityEditor.EditorGUILayout.EndVertical();
-                // },
                 keywords = s_searchKeywords
             };
         }

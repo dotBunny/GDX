@@ -93,6 +93,24 @@ namespace GDX.Editor.UI.ProjectSettings
             return headerInstance;
         }
 
+        public static VisualElement BuildSectionContent(IConfigSection section)
+        {
+            string sectionID = section.GetSectionID();
+            if (s_configSectionContents.ContainsKey(sectionID))
+            {
+                return s_configSectionContents[sectionID];
+            }
+
+            VisualTreeAsset contentAsset =
+                ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsSectionContent");
+
+            VisualElement contentInstance = contentAsset.Instantiate()[0];
+
+            // Send back created instance
+            s_configSectionContents.Add(sectionID, contentInstance);
+            return contentInstance;
+        }
+
         public static void ClearSectionCache()
         {
             s_configSectionHeaders.Clear();
@@ -109,6 +127,16 @@ namespace GDX.Editor.UI.ProjectSettings
             SettingsProvider.SetCachedEditorBoolean(sectionID, !setting);
         }
 
+        static void OnToggleSectionHeaderClicked(string sectionID)
+        {
+            IConfigSection section = SettingsProvider.ConfigSections[sectionID];
+            section.SetToggleState(!section.GetToggleState());
+            UpdateSectionHeaderStyle(sectionID);
+        }
+        public static void UpdateSectionContent(string sectionID)
+        {
+
+        }
         public static void UpdateSectionHeaderStyle(string sectionID)
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionID];
@@ -139,11 +167,6 @@ namespace GDX.Editor.UI.ProjectSettings
             }
         }
 
-        static void OnToggleSectionHeaderClicked(string sectionID)
-        {
-            IConfigSection section = SettingsProvider.ConfigSections[sectionID];
-            section.SetToggleState(!section.GetToggleState());
-            UpdateSectionHeaderStyle(sectionID);
-        }
+
     }
 }
