@@ -204,9 +204,19 @@ namespace GDX.Editor.ProjectSettings
         {
             return "api/GDX.Editor.Build.BuildInfoProvider.html";
         }
+
         public bool GetToggleSupport()
         {
             return false;
+        }
+        public bool GetToggleState()
+        {
+            return false;
+        }
+
+        public void SetToggleState(bool newState)
+        {
+
         }
     }
 }

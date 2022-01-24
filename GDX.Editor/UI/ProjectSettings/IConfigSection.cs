@@ -12,6 +12,8 @@ namespace GDX.Editor
         string GetSectionID();
         string GetSectionHeaderLabel();
         string GetSectionHelpLink();
+        bool GetToggleState();
+        void SetToggleState(bool newState);
         bool GetToggleSupport();
 
         void DrawSectionHeader(GDXConfig config);

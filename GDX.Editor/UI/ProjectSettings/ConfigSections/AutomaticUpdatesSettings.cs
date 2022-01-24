@@ -230,5 +230,15 @@ namespace GDX.Editor.ProjectSettings
         {
             return true;
         }
+
+        public bool GetToggleState()
+        {
+            return false;
+        }
+
+        public void SetToggleState(bool newState)
+        {
+
+        }
     }
 }
