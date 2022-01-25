@@ -72,7 +72,8 @@
     margin-left: 2px;
 }
 
-.gdx-project-settings-section-content {
+.gdx-project-settings-section-content.hidden {
+    display: none;
 }
 
 .gdx-big-title {

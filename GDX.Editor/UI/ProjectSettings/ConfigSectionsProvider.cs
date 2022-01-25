@@ -12,6 +12,7 @@ namespace GDX.Editor.UI.ProjectSettings
     public static class ConfigSectionsProvider
     {
         public const string ExpandedClass = "expanded";
+        public const string HiddenClass = "hidden";
         public const string EnabledClass = "enabled";
         public const string DisabledClass = "disabled";
 
@@ -136,6 +137,7 @@ namespace GDX.Editor.UI.ProjectSettings
             section.SetToggleState(!section.GetToggleState());
             UpdateSectionHeaderStyles(sectionID);
         }
+
         public static void UpdateSectionContent(string sectionID)
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionID];
@@ -156,30 +158,37 @@ namespace GDX.Editor.UI.ProjectSettings
         public static void UpdateSectionHeaderStyles(string sectionID)
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionID];
-            VisualElement element = s_configSectionHeaders[sectionID];
+            VisualElement sectionHeaderElement = s_configSectionHeaders[sectionID];
+            VisualElement sectionContentElement = null;
+            if (s_configSectionContents.ContainsKey(sectionID))
+            {
+                sectionContentElement = s_configSectionContents[sectionID];
+            }
 
             if (section.GetToggleSupport())
             {
                 bool toggleState = section.GetToggleState();
                 if (toggleState)
                 {
-                    element.RemoveFromClassList(DisabledClass);
-                    element.AddToClassList(EnabledClass);
+                    sectionHeaderElement.RemoveFromClassList(DisabledClass);
+                    sectionHeaderElement.AddToClassList(EnabledClass);
                 }
                 else
                 {
-                    element.RemoveFromClassList(EnabledClass);
-                    element.AddToClassList(DisabledClass);
+                    sectionHeaderElement.RemoveFromClassList(EnabledClass);
+                    sectionHeaderElement.AddToClassList(DisabledClass);
                 }
             }
 
             if (SettingsProvider.GetCachedEditorBoolean(sectionID, section.GetDefaultVisibility()))
             {
-                element.AddToClassList(ExpandedClass);
+                sectionHeaderElement.AddToClassList(ExpandedClass);
+                sectionContentElement?.RemoveFromClassList(HiddenClass);
             }
             else
             {
-                element.RemoveFromClassList(ExpandedClass);
+                sectionHeaderElement.RemoveFromClassList(ExpandedClass);
+                sectionContentElement?.AddToClassList(HiddenClass);
             }
         }
 
