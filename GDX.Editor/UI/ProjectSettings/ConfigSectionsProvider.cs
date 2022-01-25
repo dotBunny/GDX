@@ -146,9 +146,11 @@ namespace GDX.Editor.UI.ProjectSettings
             if (SettingsProvider.GetCachedEditorBoolean(sectionID, section.GetDefaultVisibility()))
             {
                 element.AddToClassList(ExpandedClass);
+                element.RemoveFromClassList(HiddenClass);
             }
             else
             {
+                element.AddToClassList(HiddenClass);
                 element.RemoveFromClassList(ExpandedClass);
             }
 
@@ -183,12 +185,12 @@ namespace GDX.Editor.UI.ProjectSettings
             if (SettingsProvider.GetCachedEditorBoolean(sectionID, section.GetDefaultVisibility()))
             {
                 sectionHeaderElement.AddToClassList(ExpandedClass);
-                sectionContentElement?.RemoveFromClassList(HiddenClass);
+             ///   sectionContentElement?.RemoveFromClassList(HiddenClass);
             }
             else
             {
                 sectionHeaderElement.RemoveFromClassList(ExpandedClass);
-                sectionContentElement?.AddToClassList(HiddenClass);
+                //sectionContentElement?.AddToClassList(HiddenClass);
             }
         }
 

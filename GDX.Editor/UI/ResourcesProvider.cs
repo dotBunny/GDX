@@ -23,7 +23,7 @@ namespace GDX.Editor.UI
         /// <summary>
         ///     A cached pathing to where our UXML are stored.
         /// </summary>
-        private static string s_uxmlFolder;
+        private static string s_foundAssetFolder;
 
         /// <summary>
         ///     Return the global stylesheet.
@@ -61,7 +61,7 @@ namespace GDX.Editor.UI
                 return s_assets[targetName];
             }
 
-            if (s_uxmlFolder == null)
+            if (s_foundAssetFolder == null)
             {
                 string[] potentialTree = AssetDatabase.FindAssets($"t:VisualTreeAsset {targetName}");
                 if (potentialTree.Length <= 0)
@@ -71,14 +71,14 @@ namespace GDX.Editor.UI
 
                 string assetPath = AssetDatabase.GUIDToAssetPath(potentialTree[0]);
 
-                s_uxmlFolder = assetPath.Substring(0, assetPath.IndexOf(targetName));
+                s_foundAssetFolder = assetPath.Substring(0, assetPath.IndexOf(targetName));
                 s_assets.Add(targetName,
                     AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(assetPath));
             }
             else
             {
                 s_assets.Add(targetName,
-                    AssetDatabase.LoadAssetAtPath<VisualTreeAsset>($"{s_uxmlFolder}{targetName}.uxml"));
+                    AssetDatabase.LoadAssetAtPath<VisualTreeAsset>($"{s_foundAssetFolder}{targetName}.uxml"));
             }
 
             return s_assets[targetName];

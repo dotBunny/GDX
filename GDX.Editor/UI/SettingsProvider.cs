@@ -63,11 +63,13 @@ namespace GDX.Editor.UI
                     foreach (KeyValuePair<string, IConfigSection> section in ConfigSections)
                     {
                         VisualElement sectionHeader = ProjectSettings.ConfigSectionsProvider.CreateAndBindSectionHeader(section.Value);
+
                         contentScrollView.contentContainer.Add(sectionHeader);
                         ProjectSettings.ConfigSectionsProvider.UpdateSectionHeaderStyles(section.Key);
 
                         VisualElement sectionContentBase = ProjectSettings.ConfigSectionsProvider.CreateAndBindSectionContent(section.Value);
-                        contentScrollView.contentContainer.Add(sectionContentBase); // Add wrapper
+
+                        contentScrollView.contentContainer.Add(sectionContentBase);
                         ProjectSettings.ConfigSectionsProvider.UpdateSectionContent(section.Key);
                     }
                 },
