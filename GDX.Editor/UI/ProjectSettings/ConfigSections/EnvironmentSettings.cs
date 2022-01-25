@@ -3,8 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.Editor;
+using GDX.Editor.UI;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace GDX.Editor.ProjectSettings
 {
@@ -13,6 +15,8 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     internal class EnvironmentSettings : IConfigSection
     {
+        private VisualElement _element;
+
         /// <summary>
         ///     Internal section identifier.
         /// </summary>
@@ -68,8 +72,12 @@ namespace GDX.Editor.ProjectSettings
         {
             UI.SettingsProvider.RegisterConfigSection(new EnvironmentSettings());
         }
+        public string GetTemplateName()
+        {
+            return "GDXProjectSettingsEnvironment";
+        }
 
-        public void DrawSectionContent(GDXConfig settings)
+        public void BindSectionContent(VisualElement rootElement, GDXConfig settings)
         {
             // GUI.enabled = true;
             //
@@ -144,11 +152,6 @@ namespace GDX.Editor.ProjectSettings
             // EditorGUILayout.EndHorizontal();
         }
 
-        public void DrawSectionHeader(GDXConfig config)
-        {
-
-        }
-
         public bool GetDefaultVisibility()
         {
             return false;
@@ -176,6 +179,11 @@ namespace GDX.Editor.ProjectSettings
         }
 
         public void SetToggleState(bool newState)
+        {
+
+        }
+
+        public void UpdateSectionContent(GDXConfig config)
         {
 
         }

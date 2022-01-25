@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/com.dotbunny.gdx/GDX.Editor/UI/GDXStyles.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStyles" />
+    <ui:VisualElement name="gdx-locale">
+        <ui:Toggle label="Set Default Culture" tooltip="For situations where a culture does not have a calendar available, this can be corrected after assemblies have been loaded by setting the CultureInfo.DefaultThreadCurrentCulture to a setting with one." name="toggle-set-default-culture" />
+        <ui:EnumField label="Default Culture" type="GDX.Localization+Language, GDX" tooltip="The value to be used when setting the CultureInfo.DefaultThreadCurrentCulture." value="Default" name="enum-default-culture" />
+    </ui:VisualElement>
+</ui:UXML>

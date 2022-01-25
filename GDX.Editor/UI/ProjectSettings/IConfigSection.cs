@@ -15,8 +15,9 @@ namespace GDX.Editor
         bool GetToggleState();
         void SetToggleState(bool newState);
         bool GetToggleSupport();
+        void BindSectionContent(VisualElement rootElement, GDXConfig settings);
+        void UpdateSectionContent(GDXConfig config);
 
-        void DrawSectionHeader(GDXConfig config);
-        void DrawSectionContent(GDXConfig config);
+        string GetTemplateName();
     }
 }

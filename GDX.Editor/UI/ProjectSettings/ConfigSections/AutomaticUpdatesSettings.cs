@@ -3,8 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.Editor;
+using GDX.Editor.UI;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace GDX.Editor.ProjectSettings
 {
@@ -13,6 +15,8 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     internal class AutomaticUpdatesSettings : IConfigSection
     {
+        private VisualElement _element;
+
         /// <summary>
         ///     Internal section identifier.
         /// </summary>
@@ -52,7 +56,7 @@ namespace GDX.Editor.ProjectSettings
         ///     Draw the Automatic Updates section of settings.
         /// </summary>
         /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
-        public void DrawSectionContent(GDXConfig settings)
+        public void BindSectionContent(VisualElement rootElement, GDXConfig settings)
         {
             // GUI.enabled = true;
             //
@@ -202,12 +206,6 @@ namespace GDX.Editor.ProjectSettings
             //         31);
         }
 
-        public void DrawSectionHeader(GDXConfig config)
-        {
-
-        }
-
-
         public bool GetDefaultVisibility()
         {
             return true;
@@ -237,6 +235,16 @@ namespace GDX.Editor.ProjectSettings
         }
 
         public void SetToggleState(bool newState)
+        {
+
+        }
+
+        public string GetTemplateName()
+        {
+            return "GDXProjectSettingsAutomaticUpdates";
+        }
+
+        public void UpdateSectionContent(GDXConfig config)
         {
 
         }

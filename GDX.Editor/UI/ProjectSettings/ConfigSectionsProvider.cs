@@ -21,7 +21,7 @@ namespace GDX.Editor.UI.ProjectSettings
         private static readonly Dictionary<string, VisualElement> s_configSectionHeaders =
             new Dictionary<string, VisualElement>();
 
-        public static VisualElement BuildSectionHeader(IConfigSection section)
+        public static VisualElement CreateAndBindSectionHeader(IConfigSection section)
         {
             string sectionID = section.GetSectionID();
             if (s_configSectionHeaders.ContainsKey(sectionID))
@@ -41,6 +41,8 @@ namespace GDX.Editor.UI.ProjectSettings
                 expandButton.clicked += () =>
                 {
                     OnExpandSectionHeaderClicked(sectionID);
+                    UpdateSectionHeaderStyles(sectionID);
+                    UpdateSectionContent(sectionID);
                 };
             }
 
@@ -93,7 +95,7 @@ namespace GDX.Editor.UI.ProjectSettings
             return headerInstance;
         }
 
-        public static VisualElement BuildSectionContent(IConfigSection section)
+        public static VisualElement CreateAndBindSectionContent(IConfigSection section)
         {
             string sectionID = section.GetSectionID();
             if (s_configSectionContents.ContainsKey(sectionID))
@@ -101,14 +103,26 @@ namespace GDX.Editor.UI.ProjectSettings
                 return s_configSectionContents[sectionID];
             }
 
-            VisualTreeAsset contentAsset =
+            VisualTreeAsset wrapperAsset =
                 ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsSectionContent");
 
-            VisualElement contentInstance = contentAsset.Instantiate()[0];
+            VisualElement wrapperInstance = wrapperAsset.Instantiate()[0];
 
-            // Send back created instance
-            s_configSectionContents.Add(sectionID, contentInstance);
-            return contentInstance;
+            VisualTreeAsset sectionAsset =
+                ResourcesProvider.GetVisualTreeAsset(section.GetTemplateName());
+
+            VisualElement sectionInstance = sectionAsset.Instantiate()[0];
+
+            section.BindSectionContent(sectionInstance, Core.Config);
+
+            wrapperInstance.Add(sectionInstance);
+
+            // Record the whole section
+            s_configSectionContents.Add(sectionID, sectionInstance);
+
+
+
+            return wrapperInstance;
         }
 
         public static void ClearSectionCache()
@@ -122,8 +136,6 @@ namespace GDX.Editor.UI.ProjectSettings
             GUIUtility.hotControl = 0;
             IConfigSection section = SettingsProvider.ConfigSections[sectionID];
             bool setting = SettingsProvider.GetCachedEditorBoolean(sectionID, section.GetDefaultVisibility());
-
-            // Toggle
             SettingsProvider.SetCachedEditorBoolean(sectionID, !setting);
         }
 
@@ -131,13 +143,26 @@ namespace GDX.Editor.UI.ProjectSettings
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionID];
             section.SetToggleState(!section.GetToggleState());
-            UpdateSectionHeaderStyle(sectionID);
+            UpdateSectionHeaderStyles(sectionID);
         }
         public static void UpdateSectionContent(string sectionID)
         {
+            IConfigSection section = SettingsProvider.ConfigSections[sectionID];
+            VisualElement element = s_configSectionContents[sectionID];
 
+            if (SettingsProvider.GetCachedEditorBoolean(sectionID, section.GetDefaultVisibility()))
+            {
+                element.AddToClassList(ExpandedClass);
+            }
+            else
+            {
+                element.RemoveFromClassList(ExpandedClass);
+            }
+
+            // TODO : Transient?
+            section.UpdateSectionContent(Core.Config);
         }
-        public static void UpdateSectionHeaderStyle(string sectionID)
+        public static void UpdateSectionHeaderStyles(string sectionID)
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionID];
             VisualElement element = s_configSectionHeaders[sectionID];

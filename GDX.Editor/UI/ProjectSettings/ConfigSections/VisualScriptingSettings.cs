@@ -13,6 +13,8 @@ using UnityEngine.PlayerLoop;
 #endif
 
 using GDX.Editor;
+using GDX.Editor.UI;
+using UnityEngine.UIElements;
 
 namespace GDX.Editor.ProjectSettings
 {
@@ -21,6 +23,8 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     internal class VisualScriptingSettings : IConfigSection
     {
+        private VisualElement _element;
+
         /// <summary>
         ///     Internal section identifier.
         /// </summary>
@@ -83,8 +87,15 @@ namespace GDX.Editor.ProjectSettings
         ///     Draw the Visual Scripting settings section.
         /// </summary>
         /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
-        public void DrawSectionContent(GDXConfig settings)
+        public void BindSectionContent(VisualElement rootElement, GDXConfig settings)
         {
+            if (_element == null)
+            {
+                VisualTreeAsset templateAsset =
+                    ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsVisualScripting");
+                _element = templateAsset.Instantiate()[0];
+            }
+            rootElement.Add(_element);
             // GUI.enabled = true;
             //
             //
@@ -170,15 +181,10 @@ namespace GDX.Editor.ProjectSettings
             // DrawNodeSection("Utilities", s_categoryUtilitiesContent, s_assembly.VisualScriptingUtilities);
         }
 #else
-        public void DrawSectionContent(GDXConfig settings)
+        public void BindSectionContent(VisualElement rootElement, GDXConfig settings)
         {
         }
 #endif
-
-        public void DrawSectionHeader(GDXConfig config)
-        {
-
-        }
 
         /// <summary>
         ///     Adds a provided list of types to the Visual Scripting configuration; the database still
@@ -362,6 +368,16 @@ namespace GDX.Editor.ProjectSettings
         public void SetToggleState(bool newState)
         {
 
+        }
+
+        public void UpdateSectionContent(GDXConfig config)
+        {
+
+        }
+
+        public string GetTemplateName()
+        {
+            return "GDXProjectSettingsVisualScripting";
         }
     }
 }

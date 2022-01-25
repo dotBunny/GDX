@@ -53,7 +53,9 @@ namespace GDX.Editor.UI
         {
             if (s_assets.ContainsKey(targetName))
             {
-                return s_assets[targetName];
+                // TODO  : reoptimize
+                s_assets.Remove(targetName);
+                // return s_assets[targetName];
             }
 
             string[] potentialTree = AssetDatabase.FindAssets($"t:VisualTreeAsset {targetName}");

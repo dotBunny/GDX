@@ -62,12 +62,12 @@ namespace GDX.Editor.UI
                     ProjectSettings.ConfigSectionsProvider.ClearSectionCache();
                     foreach (KeyValuePair<string, IConfigSection> section in ConfigSections)
                     {
-                        VisualElement sectionHeader = ProjectSettings.ConfigSectionsProvider.BuildSectionHeader(section.Value);
+                        VisualElement sectionHeader = ProjectSettings.ConfigSectionsProvider.CreateAndBindSectionHeader(section.Value);
                         contentScrollView.contentContainer.Add(sectionHeader);
-                        ProjectSettings.ConfigSectionsProvider.UpdateSectionHeaderStyle(section.Key);
+                        ProjectSettings.ConfigSectionsProvider.UpdateSectionHeaderStyles(section.Key);
 
-                        VisualElement sectionContentBase = ProjectSettings.ConfigSectionsProvider.BuildSectionContent(section.Value);
-                        contentScrollView.contentContainer.Add(sectionContentBase);
+                        VisualElement sectionContentBase = ProjectSettings.ConfigSectionsProvider.CreateAndBindSectionContent(section.Value);
+                        contentScrollView.contentContainer.Add(sectionContentBase.parent); // Add wrapper
                         ProjectSettings.ConfigSectionsProvider.UpdateSectionContent(section.Key);
                     }
                 },

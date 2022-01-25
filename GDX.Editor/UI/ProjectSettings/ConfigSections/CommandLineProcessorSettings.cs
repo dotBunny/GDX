@@ -3,8 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.Editor;
+using GDX.Editor.UI;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace GDX.Editor.ProjectSettings
 {
@@ -13,24 +15,7 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     internal class CommandLineProcessorSettings : IConfigSection
     {
-        /// <summary>
-        ///     Internal section identifier.
-        /// </summary>
-        const string SectionID = "GDX.Developer.CommandLineParser";
-
-        /// <summary>
-        ///     Settings content for <see cref="Config.developerCommandLineParserArgumentPrefix" />.
-        /// </summary>
-        private readonly GUIContent s_argumentPrefixContent = new GUIContent(
-            "Argument Prefix",
-            "The prefix used to denote arguments in the command line.");
-
-        /// <summary>
-        ///     Settings content for <see cref="Config.developerCommandLineParserArgumentSplit" />.
-        /// </summary>
-        private readonly GUIContent s_argumentSplitContent = new GUIContent(
-            "Argument Split",
-            "The string used to split arguments from their values.");
+        private VisualElement _element;
 
         [InitializeOnLoadMethod]
         static void Register()
@@ -38,12 +23,20 @@ namespace GDX.Editor.ProjectSettings
             UI.SettingsProvider.RegisterConfigSection(new CommandLineProcessorSettings());
         }
 
+        public string GetTemplateName()
+        {
+            return "GDXProjectSettingsCommandLineProcessor";
+        }
+
         /// <summary>
         ///     Draw the Command Line Processor section of settings.
         /// </summary>
         /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
-        public void DrawSectionContent(GDXConfig settings)
+        public void BindSectionContent(VisualElement rootElement, GDXConfig settings)
         {
+            TextField textArgumentPrefix = rootElement.Q<TextField>("text-argument-prefix");
+            TextField textArgumentSplit= rootElement.Q<TextField>("text-argument-split");
+
             // GUI.enabled = true;
             //
             // SettingsGUIUtility.CreateSettingsSection(SectionID, false, "Command Line Parser",
@@ -58,11 +51,6 @@ namespace GDX.Editor.ProjectSettings
             //     s_argumentPrefixContent);
             // EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentSplit"),
             //     s_argumentSplitContent);
-        }
-
-        public void DrawSectionHeader(GDXConfig config)
-        {
-
         }
 
         public bool GetDefaultVisibility()
@@ -91,6 +79,11 @@ namespace GDX.Editor.ProjectSettings
         }
 
         public void SetToggleState(bool newState)
+        {
+
+        }
+
+        public void UpdateSectionContent(GDXConfig config)
         {
 
         }

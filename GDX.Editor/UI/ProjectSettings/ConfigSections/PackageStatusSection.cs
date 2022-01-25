@@ -23,8 +23,9 @@ namespace GDX.Editor.ProjectSettings
         /// <summary>
         ///     Draw the packages status section of the settings window.
         /// </summary>
-        public void DrawSectionContent(GDXConfig config)
+        public void BuildSection(GDXConfig config)
         {
+
 //             GUI.enabled = true;
 //
 //             // ReSharper disable ConditionIsAlwaysTrueOrFalse
