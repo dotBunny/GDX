@@ -28,29 +28,24 @@ namespace GDX.Editor.ProjectSettings
             return "GDXProjectSettingsCommandLineProcessor";
         }
 
-        /// <summary>
-        ///     Draw the Command Line Processor section of settings.
-        /// </summary>
-        /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
+        /// <inheritdoc />
         public void BindSectionContent(VisualElement rootElement, GDXConfig settings)
         {
             TextField textArgumentPrefix = rootElement.Q<TextField>("text-argument-prefix");
-            TextField textArgumentSplit= rootElement.Q<TextField>("text-argument-split");
+            textArgumentPrefix.value = Core.Config.developerCommandLineParserArgumentPrefix;
+            textArgumentPrefix.RegisterValueChangedCallback(evt =>
+            {
+                Core.Config.developerCommandLineParserArgumentPrefix = evt.newValue;
+                Core.ConfigDirty = true;
+            });
 
-            // GUI.enabled = true;
-            //
-            // SettingsGUIUtility.CreateSettingsSection(SectionID, false, "Command Line Parser",
-            //     $"{SettingsProvider.DocumentationUri}api/GDX.Developer.CommandLineParser.html");
-            //
-            // if (!SettingsGUIUtility.GetCachedEditorBoolean(SectionID))
-            // {
-            //     return;
-            // }
-            //
-            // EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentPrefix"),
-            //     s_argumentPrefixContent);
-            // EditorGUILayout.PropertyField(settings.FindProperty("developerCommandLineParserArgumentSplit"),
-            //     s_argumentSplitContent);
+            TextField textArgumentSplit = rootElement.Q<TextField>("text-argument-split");
+            textArgumentSplit.value = Core.Config.developerCommandLineParserArgumentSplit;
+            textArgumentSplit.RegisterValueChangedCallback(evt =>
+            {
+                Core.Config.developerCommandLineParserArgumentSplit = evt.newValue;
+                Core.ConfigDirty = true;
+            });
         }
 
         public bool GetDefaultVisibility()

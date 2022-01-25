@@ -21,15 +21,24 @@ namespace GDX.Editor.ProjectSettings
             UI.SettingsProvider.RegisterConfigSection(new LocaleSettings());
         }
 
-        /// <summary>
-        ///     Draw the Localization section of settings.
-        /// </summary>
-        /// <param name="rootElement"></param>
-        /// <param name="settings">Serialized <see cref="GDXConfig" /> object to be modified.</param>
+        /// <inheritdoc />
         public void BindSectionContent(VisualElement rootElement, GDXConfig settings)
         {
             Toggle toggleSetDefaultCulture = rootElement.Q<Toggle>("toggle-set-default-culture");
+            toggleSetDefaultCulture.value = Core.Config.localizationSetDefaultCulture;
+            toggleSetDefaultCulture.RegisterValueChangedCallback(evt =>
+            {
+                Core.Config.localizationSetDefaultCulture = evt.newValue;
+                Core.ConfigDirty = true;
+            });
+
             EnumField enumDefaultCulture= rootElement.Q<EnumField>("enum-default-culture");
+            enumDefaultCulture.value = Core.Config.localizationDefaultCulture;
+            enumDefaultCulture.RegisterValueChangedCallback(evt =>
+            {
+                Core.Config.localizationDefaultCulture = (Localization.Language)evt.newValue;
+                Core.ConfigDirty = true;
+            });
         }
         public string GetTemplateName()
         {
