@@ -11,14 +11,19 @@ namespace GDX.Editor.UI
     public static class ResourcesProvider
     {
         /// <summary>
+        ///     A collection of queried <see cref="VisualTreeAsset" /> assets keyed by their search.
+        /// </summary>
+        private static readonly Dictionary<string, VisualTreeAsset> s_assets = new Dictionary<string, VisualTreeAsset>();
+
+        /// <summary>
         ///     The cached reference to the global stylesheet.
         /// </summary>
         private static StyleSheet s_stylesheet;
 
         /// <summary>
-        ///     A collection of queried <see cref="VisualTreeAsset" /> assets keyed by their search.
+        ///     A cached pathing to where our UXML are stored.
         /// </summary>
-        private static readonly Dictionary<string, VisualTreeAsset> s_assets = new Dictionary<string, VisualTreeAsset>();
+        private static string s_uxmlFolder;
 
         /// <summary>
         ///     Return the global stylesheet.
@@ -49,21 +54,33 @@ namespace GDX.Editor.UI
         /// <remarks>This will find and cache the reference for future use, using the first asset to match the query.</remarks>
         /// <param name="targetName">Target assets name (with no extension)</param>
         /// <returns>The queried asset if found, or null.</returns>
-        public static VisualTreeAsset GetVisualTreeAsset(string targetName)
+        internal static VisualTreeAsset GetVisualTreeAsset(string targetName)
         {
             if (s_assets.ContainsKey(targetName))
             {
                 return s_assets[targetName];
             }
 
-            string[] potentialTree = AssetDatabase.FindAssets($"t:VisualTreeAsset {targetName}");
-            if (potentialTree.Length <= 0)
+            if (s_uxmlFolder == null)
             {
-                return null;
+                string[] potentialTree = AssetDatabase.FindAssets($"t:VisualTreeAsset {targetName}");
+                if (potentialTree.Length <= 0)
+                {
+                    return null;
+                }
+
+                string assetPath = AssetDatabase.GUIDToAssetPath(potentialTree[0]);
+
+                s_uxmlFolder = assetPath.Substring(0, assetPath.IndexOf(targetName));
+                s_assets.Add(targetName,
+                    AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(assetPath));
+            }
+            else
+            {
+                s_assets.Add(targetName,
+                    AssetDatabase.LoadAssetAtPath<VisualTreeAsset>($"{s_uxmlFolder}{targetName}.uxml"));
             }
 
-            s_assets.Add(targetName,
-                AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(AssetDatabase.GUIDToAssetPath(potentialTree[0])));
             return s_assets[targetName];
         }
     }

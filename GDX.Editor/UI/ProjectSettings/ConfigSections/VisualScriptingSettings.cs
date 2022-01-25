@@ -87,7 +87,7 @@ namespace GDX.Editor.ProjectSettings
         ///     Draw the Visual Scripting settings section.
         /// </summary>
         /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
-        public void BindSectionContent(VisualElement rootElement, GDXConfig settings)
+        public void BindSectionContent(VisualElement rootElement)
         {
             if (_element == null)
             {
@@ -181,7 +181,7 @@ namespace GDX.Editor.ProjectSettings
             // DrawNodeSection("Utilities", s_categoryUtilitiesContent, s_assembly.VisualScriptingUtilities);
         }
 #else
-        public void BindSectionContent(VisualElement rootElement, GDXConfig settings)
+        public void BindSectionContent(VisualElement rootElement)
         {
         }
 #endif
@@ -370,7 +370,7 @@ namespace GDX.Editor.ProjectSettings
 
         }
 
-        public void UpdateSectionContent(GDXConfig config)
+        public void UpdateSectionContent()
         {
 
         }

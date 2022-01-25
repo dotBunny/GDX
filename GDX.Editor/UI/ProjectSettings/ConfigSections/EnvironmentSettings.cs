@@ -77,7 +77,7 @@ namespace GDX.Editor.ProjectSettings
             return "GDXProjectSettingsEnvironment";
         }
 
-        public void BindSectionContent(VisualElement rootElement, GDXConfig settings)
+        public void BindSectionContent(VisualElement rootElement)
         {
             // GUI.enabled = true;
             //
@@ -183,7 +183,7 @@ namespace GDX.Editor.ProjectSettings
 
         }
 
-        public void UpdateSectionContent(GDXConfig config)
+        public void UpdateSectionContent()
         {
 
         }

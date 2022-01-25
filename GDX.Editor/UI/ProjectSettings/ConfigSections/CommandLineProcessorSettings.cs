@@ -2,10 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Editor;
-using GDX.Editor.UI;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor.ProjectSettings
@@ -15,7 +12,7 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     internal class CommandLineProcessorSettings : IConfigSection
     {
-        private VisualElement _element;
+        private VisualElement _rootElement;
 
         [InitializeOnLoadMethod]
         static void Register()
@@ -23,15 +20,12 @@ namespace GDX.Editor.ProjectSettings
             UI.SettingsProvider.RegisterConfigSection(new CommandLineProcessorSettings());
         }
 
-        public string GetTemplateName()
-        {
-            return "GDXProjectSettingsCommandLineProcessor";
-        }
-
         /// <inheritdoc />
-        public void BindSectionContent(VisualElement rootElement, GDXConfig settings)
+        public void BindSectionContent(VisualElement rootElement)
         {
-            TextField textArgumentPrefix = rootElement.Q<TextField>("text-argument-prefix");
+            _rootElement = rootElement;
+
+            TextField textArgumentPrefix = _rootElement.Q<TextField>("text-argument-prefix");
             textArgumentPrefix.value = Core.Config.developerCommandLineParserArgumentPrefix;
             textArgumentPrefix.RegisterValueChangedCallback(evt =>
             {
@@ -39,7 +33,7 @@ namespace GDX.Editor.ProjectSettings
                 Core.ConfigDirty = true;
             });
 
-            TextField textArgumentSplit = rootElement.Q<TextField>("text-argument-split");
+            TextField textArgumentSplit = _rootElement.Q<TextField>("text-argument-split");
             textArgumentSplit.value = Core.Config.developerCommandLineParserArgumentSplit;
             textArgumentSplit.RegisterValueChangedCallback(evt =>
             {
@@ -52,22 +46,32 @@ namespace GDX.Editor.ProjectSettings
         {
             return false;
         }
+
         public string GetSectionHeaderLabel()
         {
             return "Command Line Parser";
         }
-        public string GetSectionID()
-        {
-            return "GDX.Developer.CommandLineParser";
-        }
+
         public string GetSectionHelpLink()
         {
             return "api/GDX.Developer.CommandLineParser.html";
         }
+
+        public string GetSectionID()
+        {
+            return "GDX.Developer.CommandLineParser";
+        }
+
+        public string GetTemplateName()
+        {
+            return "GDXProjectSettingsCommandLineProcessor";
+        }
+
         public bool GetToggleSupport()
         {
             return false;
         }
+
         public bool GetToggleState()
         {
             return false;
@@ -78,9 +82,14 @@ namespace GDX.Editor.ProjectSettings
 
         }
 
-        public void UpdateSectionContent(GDXConfig config)
+        /// <inheritdoc />
+        public void UpdateSectionContent()
         {
+            TextField textArgumentPrefix = _rootElement.Q<TextField>("text-argument-prefix");
+            textArgumentPrefix.SetValueWithoutNotify(Core.Config.developerCommandLineParserArgumentPrefix);
 
+            TextField textArgumentSplit = _rootElement.Q<TextField>("text-argument-split");
+            textArgumentSplit.SetValueWithoutNotify(Core.Config.developerCommandLineParserArgumentSplit);
         }
     }
 }

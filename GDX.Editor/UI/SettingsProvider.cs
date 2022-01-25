@@ -67,7 +67,7 @@ namespace GDX.Editor.UI
                         ProjectSettings.ConfigSectionsProvider.UpdateSectionHeaderStyles(section.Key);
 
                         VisualElement sectionContentBase = ProjectSettings.ConfigSectionsProvider.CreateAndBindSectionContent(section.Value);
-                        contentScrollView.contentContainer.Add(sectionContentBase.parent); // Add wrapper
+                        contentScrollView.contentContainer.Add(sectionContentBase); // Add wrapper
                         ProjectSettings.ConfigSectionsProvider.UpdateSectionContent(section.Key);
                     }
                 },

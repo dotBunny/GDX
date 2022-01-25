@@ -103,26 +103,17 @@ namespace GDX.Editor.UI.ProjectSettings
                 return s_configSectionContents[sectionID];
             }
 
-            VisualTreeAsset wrapperAsset =
-                ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsSectionContent");
-
-            VisualElement wrapperInstance = wrapperAsset.Instantiate()[0];
-
             VisualTreeAsset sectionAsset =
                 ResourcesProvider.GetVisualTreeAsset(section.GetTemplateName());
 
             VisualElement sectionInstance = sectionAsset.Instantiate()[0];
 
-            section.BindSectionContent(sectionInstance, Core.Config);
-
-            wrapperInstance.Add(sectionInstance);
+            section.BindSectionContent(sectionInstance);
 
             // Record the whole section
             s_configSectionContents.Add(sectionID, sectionInstance);
 
-
-
-            return wrapperInstance;
+            return sectionInstance;
         }
 
         public static void ClearSectionCache()
@@ -160,7 +151,7 @@ namespace GDX.Editor.UI.ProjectSettings
             }
 
             // TODO : Transient?
-            section.UpdateSectionContent(Core.Config);
+            section.UpdateSectionContent();
         }
         public static void UpdateSectionHeaderStyles(string sectionID)
         {

@@ -56,7 +56,7 @@ namespace GDX.Editor.ProjectSettings
         ///     Draw the Automatic Updates section of settings.
         /// </summary>
         /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
-        public void BindSectionContent(VisualElement rootElement, GDXConfig settings)
+        public void BindSectionContent(VisualElement rootElement)
         {
             // GUI.enabled = true;
             //
@@ -244,7 +244,7 @@ namespace GDX.Editor.ProjectSettings
             return "GDXProjectSettingsAutomaticUpdates";
         }
 
-        public void UpdateSectionContent(GDXConfig config)
+        public void UpdateSectionContent()
         {
 
         }

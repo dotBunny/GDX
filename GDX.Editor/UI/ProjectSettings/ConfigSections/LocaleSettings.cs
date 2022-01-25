@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Editor.UI;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -13,7 +12,7 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     internal class LocaleSettings : IConfigSection
     {
-        private VisualElement _element;
+        private VisualElement _rootElement;
 
         [InitializeOnLoadMethod]
         static void Register()
@@ -22,9 +21,11 @@ namespace GDX.Editor.ProjectSettings
         }
 
         /// <inheritdoc />
-        public void BindSectionContent(VisualElement rootElement, GDXConfig settings)
+        public void BindSectionContent(VisualElement rootElement)
         {
-            Toggle toggleSetDefaultCulture = rootElement.Q<Toggle>("toggle-set-default-culture");
+            _rootElement = rootElement;
+
+            Toggle toggleSetDefaultCulture = _rootElement.Q<Toggle>("toggle-set-default-culture");
             toggleSetDefaultCulture.value = Core.Config.localizationSetDefaultCulture;
             toggleSetDefaultCulture.RegisterValueChangedCallback(evt =>
             {
@@ -32,7 +33,7 @@ namespace GDX.Editor.ProjectSettings
                 Core.ConfigDirty = true;
             });
 
-            EnumField enumDefaultCulture= rootElement.Q<EnumField>("enum-default-culture");
+            EnumField enumDefaultCulture= _rootElement.Q<EnumField>("enum-default-culture");
             enumDefaultCulture.value = Core.Config.localizationDefaultCulture;
             enumDefaultCulture.RegisterValueChangedCallback(evt =>
             {
@@ -40,42 +41,55 @@ namespace GDX.Editor.ProjectSettings
                 Core.ConfigDirty = true;
             });
         }
-        public string GetTemplateName()
-        {
-            return "GDXProjectSettingsLocale";
-        }
 
         public bool GetDefaultVisibility()
         {
             return false;
         }
+
         public string GetSectionHeaderLabel()
         {
             return "Localization";
         }
-        public string GetSectionID()
-        {
-            return "GDX.Localization";
-        }
+
         public string GetSectionHelpLink()
         {
             return "api/GDX.Localization.html";
         }
+
+        public string GetSectionID()
+        {
+            return "GDX.Localization";
+        }
+
+        public string GetTemplateName()
+        {
+            return "GDXProjectSettingsLocale";
+        }
+
         public bool GetToggleSupport()
         {
             return false;
         }
+
         public bool GetToggleState()
         {
             return false;
         }
+
         public void SetToggleState(bool newState)
         {
 
         }
-        public void UpdateSectionContent(GDXConfig config)
-        {
 
+        /// <inheritdoc />
+        public void UpdateSectionContent()
+        {
+            Toggle toggleSetDefaultCulture = _rootElement.Q<Toggle>("toggle-set-default-culture");
+            toggleSetDefaultCulture.SetValueWithoutNotify(Core.Config.localizationSetDefaultCulture);
+
+            EnumField enumDefaultCulture= _rootElement.Q<EnumField>("enum-default-culture");
+            enumDefaultCulture.SetValueWithoutNotify(Core.Config.localizationDefaultCulture);
         }
     }
 }
