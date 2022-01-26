@@ -191,31 +191,31 @@ namespace GDX
                 fileContent.AppendLine("\t\tpublic static void Init()");
                 fileContent.AppendLine("\t\t{");
 
-                OverrideBoolean(ref fileContent, "updateProviderCheckForUpdates",
+                OverrideBoolean(fileContent, "updateProviderCheckForUpdates",
                     coreConfig.updateProviderCheckForUpdates, updateProviderCheckForUpdates);
-                OverrideString(ref fileContent, "developerCommandLineParserArgumentPrefix",
+                OverrideString(fileContent, "developerCommandLineParserArgumentPrefix",
                     coreConfig.developerCommandLineParserArgumentPrefix, developerCommandLineParserArgumentPrefix);
-                OverrideString(ref fileContent, "developerCommandLineParserArgumentSplit",
+                OverrideString(fileContent, "developerCommandLineParserArgumentSplit",
                     coreConfig.developerCommandLineParserArgumentSplit, developerCommandLineParserArgumentSplit);
-                OverrideBoolean(ref fileContent, "developerBuildInfoAssemblyDefinition",
+                OverrideBoolean(fileContent, "developerBuildInfoAssemblyDefinition",
                     coreConfig.developerBuildInfoAssemblyDefinition, developerBuildInfoAssemblyDefinition);
-                OverrideBoolean(ref fileContent, "developerBuildInfoEnabled",
+                OverrideBoolean(fileContent, "developerBuildInfoEnabled",
                     coreConfig.developerBuildInfoEnabled, developerBuildInfoEnabled);
-                OverrideString(ref fileContent, "developerBuildInfoPath",
+                OverrideString(fileContent, "developerBuildInfoPath",
                     coreConfig.developerBuildInfoPath, developerBuildInfoPath);
-                OverrideString(ref fileContent, "developerBuildInfoNamespace",
+                OverrideString(fileContent, "developerBuildInfoNamespace",
                     coreConfig.developerBuildInfoNamespace, developerBuildInfoNamespace);
-                OverrideString(ref fileContent, "developerBuildInfoBuildNumberArgument",
+                OverrideString(fileContent, "developerBuildInfoBuildNumberArgument",
                     coreConfig.developerBuildInfoBuildNumberArgument, developerBuildInfoBuildNumberArgument);
-                OverrideString(ref fileContent, "developerBuildInfoBuildDescriptionArgument",
+                OverrideString(fileContent, "developerBuildInfoBuildDescriptionArgument",
                     coreConfig.developerBuildInfoBuildDescriptionArgument, developerBuildInfoBuildDescriptionArgument);
-                OverrideString(ref fileContent, "developerBuildInfoBuildChangelistArgument",
+                OverrideString(fileContent, "developerBuildInfoBuildChangelistArgument",
                     coreConfig.developerBuildInfoBuildChangelistArgument, developerBuildInfoBuildChangelistArgument);
-                OverrideString(ref fileContent, "developerBuildInfoBuildTaskArgument",
+                OverrideString(fileContent, "developerBuildInfoBuildTaskArgument",
                     coreConfig.developerBuildInfoBuildTaskArgument, developerBuildInfoBuildTaskArgument);
-                OverrideString(ref fileContent, "developerBuildInfoBuildStreamArgument",
+                OverrideString(fileContent, "developerBuildInfoBuildStreamArgument",
                     coreConfig.developerBuildInfoBuildStreamArgument, developerBuildInfoBuildStreamArgument);
-                OverrideBoolean(ref fileContent, "environmentScriptingDefineSymbol",
+                OverrideBoolean(fileContent, "environmentScriptingDefineSymbol",
                     coreConfig.environmentScriptingDefineSymbol, environmentScriptingDefineSymbol);
 
 
@@ -226,11 +226,11 @@ namespace GDX
                 // fileContent.AppendLine(
                 //     $"\t\t\tCore.Config.traceReleaseLevels = Trace.TraceLevel.{traceReleaseLevels}");
 
-                OverrideBoolean(ref fileContent, "traceDevelopmentOutputToUnityConsole",
+                OverrideBoolean(fileContent, "traceDevelopmentOutputToUnityConsole",
                     coreConfig.traceDevelopmentOutputToUnityConsole, traceDevelopmentOutputToUnityConsole);
-                OverrideBoolean(ref fileContent, "traceDebugOutputToUnityConsole",
+                OverrideBoolean(fileContent, "traceDebugOutputToUnityConsole",
                     coreConfig.traceDebugOutputToUnityConsole, traceDebugOutputToUnityConsole);
-                OverrideBoolean(ref fileContent, "localizationSetDefaultCulture",
+                OverrideBoolean(fileContent, "localizationSetDefaultCulture",
                     coreConfig.localizationSetDefaultCulture, localizationSetDefaultCulture);
 
                 // fileContent.AppendLine(
@@ -244,12 +244,12 @@ namespace GDX
 
             }
 
-            private void OverrideString(ref StringBuilder builder, string member, string lhs, string rhs)
+            private void OverrideString(StringBuilder builder, string member, string lhs, string rhs)
             {
                 if (lhs == rhs) return;
                 builder.AppendLine($"\t\t\tCore.Config.{member} = \"{rhs}\";");
             }
-            private void OverrideBoolean(ref StringBuilder builder, string member, bool lhs, bool rhs)
+            private void OverrideBoolean(StringBuilder builder, string member, bool lhs, bool rhs)
             {
                 if (lhs == rhs) return;
                 builder.AppendLine(rhs
