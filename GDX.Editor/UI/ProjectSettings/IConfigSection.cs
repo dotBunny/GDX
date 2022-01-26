@@ -13,7 +13,7 @@ namespace GDX.Editor
         string GetSectionHeaderLabel();
         string GetSectionHelpLink();
         bool GetToggleState();
-        void SetToggleState(bool newState);
+        void SetToggleState(VisualElement toggleElement, bool newState);
         bool GetToggleSupport();
         void BindSectionContent(VisualElement rootElement);
         void UpdateSectionContent();

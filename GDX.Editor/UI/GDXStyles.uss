@@ -87,3 +87,7 @@
 .gdx-small-title {
     -unity-font-style: bold;
 }
+
+.changed {
+    background-color: blueviolet;
+}

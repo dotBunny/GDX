@@ -178,7 +178,7 @@ namespace GDX.Editor.ProjectSettings
             return false;
         }
 
-        public void SetToggleState(bool newState)
+        public void SetToggleState(VisualElement toggleElement, bool newState)
         {
 
         }

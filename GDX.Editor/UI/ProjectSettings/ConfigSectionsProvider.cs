@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,10 +10,11 @@ namespace GDX.Editor.UI.ProjectSettings
 {
     public static class ConfigSectionsProvider
     {
-        public const string ExpandedClass = "expanded";
-        public const string HiddenClass = "hidden";
-        public const string EnabledClass = "enabled";
-        public const string DisabledClass = "disabled";
+        private const string ExpandedClass = "expanded";
+        private const string HiddenClass = "hidden";
+        private const string EnabledClass = "enabled";
+        private const string DisabledClass = "disabled";
+        public const string ChangedClass = "changed";
 
         private static readonly Dictionary<string, VisualElement> s_configSectionContents =
             new Dictionary<string, VisualElement>();
@@ -42,7 +42,7 @@ namespace GDX.Editor.UI.ProjectSettings
                 expandButton.clicked += () =>
                 {
                     OnExpandSectionHeaderClicked(sectionID);
-                    UpdateSectionHeaderStyles(sectionID);
+                    UpdateSectionHeader(sectionID);
                     UpdateSectionContent(sectionID);
                 };
             }
@@ -78,16 +78,14 @@ namespace GDX.Editor.UI.ProjectSettings
                 if (section.GetToggleSupport())
                 {
                     enabledToggle.visible = true;
-
-                    // enabledToggle.RegisterValueChangedCallback(evt =>
-                    // {
-                    //     OnToggleSectionHeaderClicked()
-                    // });
+                    enabledToggle.RegisterValueChangedCallback(evt =>
+                    {
+                        OnToggleSectionHeaderClicked(enabledToggle, sectionID, evt.newValue);
+                    });
                 }
                 else
                 {
                     enabledToggle.visible = false;
-                    //enabledToggle.UnregisterValueChangedCallback();
                 }
             }
 
@@ -131,11 +129,20 @@ namespace GDX.Editor.UI.ProjectSettings
             SettingsProvider.SetCachedEditorBoolean(sectionID, !setting);
         }
 
-        static void OnToggleSectionHeaderClicked(string sectionID)
+        static void OnToggleSectionHeaderClicked(VisualElement toggleElement, string sectionID, bool newValue)
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionID];
-            section.SetToggleState(!section.GetToggleState());
-            UpdateSectionHeaderStyles(sectionID);
+            section.SetToggleState(toggleElement, newValue);
+            UpdateSectionHeader(sectionID);
+        }
+
+        public static void UpdateAll()
+        {
+            foreach(KeyValuePair<string,IConfigSection> section in SettingsProvider.ConfigSections)
+            {
+                UpdateSectionHeader(section.Key);
+                UpdateSectionContent(section.Key);
+            }
         }
 
         public static void UpdateSectionContent(string sectionID)
@@ -145,30 +152,25 @@ namespace GDX.Editor.UI.ProjectSettings
 
             if (SettingsProvider.GetCachedEditorBoolean(sectionID, section.GetDefaultVisibility()))
             {
-                element.AddToClassList(ExpandedClass);
                 element.RemoveFromClassList(HiddenClass);
             }
             else
             {
                 element.AddToClassList(HiddenClass);
-                element.RemoveFromClassList(ExpandedClass);
             }
-
-            // TODO : Transient?
             section.UpdateSectionContent();
         }
-        public static void UpdateSectionHeaderStyles(string sectionID)
+        public static void UpdateSectionHeader(string sectionID)
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionID];
             VisualElement sectionHeaderElement = s_configSectionHeaders[sectionID];
-            VisualElement sectionContentElement = null;
-            if (s_configSectionContents.ContainsKey(sectionID))
-            {
-                sectionContentElement = s_configSectionContents[sectionID];
-            }
 
             if (section.GetToggleSupport())
             {
+                // Do this here
+                Toggle enabledToggle = sectionHeaderElement.Q<Toggle>("toggle-enabled");
+                enabledToggle.value = section.GetToggleState();
+
                 bool toggleState = section.GetToggleState();
                 if (toggleState)
                 {
@@ -185,15 +187,11 @@ namespace GDX.Editor.UI.ProjectSettings
             if (SettingsProvider.GetCachedEditorBoolean(sectionID, section.GetDefaultVisibility()))
             {
                 sectionHeaderElement.AddToClassList(ExpandedClass);
-             ///   sectionContentElement?.RemoveFromClassList(HiddenClass);
             }
             else
             {
                 sectionHeaderElement.RemoveFromClassList(ExpandedClass);
-                //sectionContentElement?.AddToClassList(HiddenClass);
             }
         }
-
-
     }
 }

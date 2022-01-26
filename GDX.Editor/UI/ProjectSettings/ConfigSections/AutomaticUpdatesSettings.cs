@@ -7,6 +7,7 @@ using GDX.Editor.UI;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using SettingsProvider = UnityEditor.SettingsProvider;
 
 namespace GDX.Editor.ProjectSettings
 {
@@ -231,12 +232,21 @@ namespace GDX.Editor.ProjectSettings
 
         public bool GetToggleState()
         {
-            return false;
+            return GDX.Editor.UI.SettingsProvider.WorkingConfig.updateProviderCheckForUpdates;
         }
 
-        public void SetToggleState(bool newState)
+        public void SetToggleState(VisualElement toggleElement, bool newState)
         {
-
+            GDX.Editor.UI.SettingsProvider.WorkingConfig.updateProviderCheckForUpdates = newState;
+            if (Core.Config.updateProviderCheckForUpdates != newState)
+            {
+                toggleElement.AddToClassList(UI.ProjectSettings.ConfigSectionsProvider.ChangedClass);
+            }
+            else
+            {
+                toggleElement.RemoveFromClassList(UI.ProjectSettings.ConfigSectionsProvider.ChangedClass);
+            }
+            GDX.Editor.UI.SettingsProvider.CheckForChanges();
         }
 
         public string GetTemplateName()

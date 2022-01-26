@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using GDX.Editor.UI.ProjectSettings;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -26,19 +27,35 @@ namespace GDX.Editor.ProjectSettings
             _rootElement = rootElement;
 
             Toggle toggleSetDefaultCulture = _rootElement.Q<Toggle>("toggle-set-default-culture");
-            toggleSetDefaultCulture.value = Core.Config.localizationSetDefaultCulture;
+            toggleSetDefaultCulture.value = UI.SettingsProvider.WorkingConfig.localizationSetDefaultCulture;
             toggleSetDefaultCulture.RegisterValueChangedCallback(evt =>
             {
-                Core.Config.localizationSetDefaultCulture = evt.newValue;
-                Core.ConfigDirty = true;
+                UI.SettingsProvider.WorkingConfig.localizationSetDefaultCulture = evt.newValue;
+                if (Core.Config.localizationSetDefaultCulture != evt.newValue)
+                {
+                    toggleSetDefaultCulture.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                else
+                {
+                    toggleSetDefaultCulture.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                UI.SettingsProvider.CheckForChanges();
             });
 
             EnumField enumDefaultCulture= _rootElement.Q<EnumField>("enum-default-culture");
-            enumDefaultCulture.value = Core.Config.localizationDefaultCulture;
+            enumDefaultCulture.value = UI.SettingsProvider.WorkingConfig.localizationDefaultCulture;
             enumDefaultCulture.RegisterValueChangedCallback(evt =>
             {
-                Core.Config.localizationDefaultCulture = (Localization.Language)evt.newValue;
-                Core.ConfigDirty = true;
+                UI.SettingsProvider.WorkingConfig.localizationDefaultCulture = (Localization.Language)evt.newValue;
+                if (Core.Config.localizationDefaultCulture != (Localization.Language)evt.newValue)
+                {
+                    enumDefaultCulture.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                else
+                {
+                    enumDefaultCulture.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                UI.SettingsProvider.CheckForChanges();
             });
         }
 
@@ -77,7 +94,7 @@ namespace GDX.Editor.ProjectSettings
             return false;
         }
 
-        public void SetToggleState(bool newState)
+        public void SetToggleState(VisualElement toggleElement, bool newState)
         {
 
         }
@@ -86,10 +103,26 @@ namespace GDX.Editor.ProjectSettings
         public void UpdateSectionContent()
         {
             Toggle toggleSetDefaultCulture = _rootElement.Q<Toggle>("toggle-set-default-culture");
-            toggleSetDefaultCulture.SetValueWithoutNotify(Core.Config.localizationSetDefaultCulture);
+            toggleSetDefaultCulture.SetValueWithoutNotify(UI.SettingsProvider.WorkingConfig.localizationSetDefaultCulture);
+            if (Core.Config.localizationSetDefaultCulture != UI.SettingsProvider.WorkingConfig.localizationSetDefaultCulture)
+            {
+                toggleSetDefaultCulture.AddToClassList(ConfigSectionsProvider.ChangedClass);
+            }
+            else
+            {
+                toggleSetDefaultCulture.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+            }
 
             EnumField enumDefaultCulture= _rootElement.Q<EnumField>("enum-default-culture");
-            enumDefaultCulture.SetValueWithoutNotify(Core.Config.localizationDefaultCulture);
+            enumDefaultCulture.SetValueWithoutNotify(UI.SettingsProvider.WorkingConfig.localizationDefaultCulture);
+            if (Core.Config.localizationDefaultCulture != UI.SettingsProvider.WorkingConfig.localizationDefaultCulture)
+            {
+                enumDefaultCulture.AddToClassList(ConfigSectionsProvider.ChangedClass);
+            }
+            else
+            {
+                enumDefaultCulture.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+            }
         }
     }
 }

@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor.UI
@@ -21,7 +20,6 @@ namespace GDX.Editor.UI
         /// </summary>
         public const string DocumentationUri = "https://gdx.dotbunny.com/";
 
-
         /// <summary>
         ///     A cache of boolean values backed by <see cref="EditorPrefs" /> to assist with optimizing layout.
         /// </summary>
@@ -36,6 +34,8 @@ namespace GDX.Editor.UI
         });
 
         public static readonly Dictionary<string, IConfigSection> ConfigSections = new Dictionary<string, IConfigSection>();
+
+        public static GDXConfig WorkingConfig = null;
 
         /// <summary>
         ///     Get <see cref="UnityEditor.SettingsProvider" /> for GDX assembly.
@@ -53,11 +53,26 @@ namespace GDX.Editor.UI
                     rootElement.styleSheets.Add(ResourcesProvider.GetStyleSheet());
                     ResourcesProvider.GetVisualTreeAsset("GDXProjectSettings").CloneTree(rootElement);
 
+                    // Handle state buttons
+                    Button clearChangesButton = rootElement.Q<Button>("button-clear-changes");
+                    clearChangesButton.clicked += () =>
+                    {
+                        WorkingConfig = new GDXConfig(Core.Config);
+                        ProjectSettings.ConfigSectionsProvider.UpdateAll();
+                    };
+
+                    Button saveChangesButton = rootElement.Q<Button>("button-save-changes");
+                    saveChangesButton.clicked += OutputConfigOverride;
+
                     // Build some useful references
                     ScrollView contentScrollView = rootElement.Q<ScrollView>("gdx-project-settings-content");
 
-                    // Build out panels
-                    GDXConfig tempConfig = new GDXConfig(Core.Config);
+                    // Create our working copy of the config - we do this to catch if theres an override that happens
+                    // during domain reload callbacks
+                    if (WorkingConfig == null)
+                    {
+                        WorkingConfig = new GDXConfig(Core.Config);
+                    }
 
                     ProjectSettings.ConfigSectionsProvider.ClearSectionCache();
                     foreach (KeyValuePair<string, IConfigSection> section in ConfigSections)
@@ -65,7 +80,7 @@ namespace GDX.Editor.UI
                         VisualElement sectionHeader = ProjectSettings.ConfigSectionsProvider.CreateAndBindSectionHeader(section.Value);
 
                         contentScrollView.contentContainer.Add(sectionHeader);
-                        ProjectSettings.ConfigSectionsProvider.UpdateSectionHeaderStyles(section.Key);
+                        ProjectSettings.ConfigSectionsProvider.UpdateSectionHeader(section.Key);
 
                         VisualElement sectionContentBase = ProjectSettings.ConfigSectionsProvider.CreateAndBindSectionContent(section.Value);
 
@@ -125,6 +140,21 @@ namespace GDX.Editor.UI
                 s_cachedEditorPreferences[id] = setValue;
                 EditorPrefs.SetBool(id, setValue);
             }
+        }
+
+        public static void CheckForChanges()
+        {
+            if (!Core.Config.Compare(WorkingConfig))
+            {
+                // DIFFERENT
+            }
+        }
+
+        private static void OutputConfigOverride()
+        {
+            // Write file
+            // Force compilation
+            // will reset everything nicely
         }
     }
 }

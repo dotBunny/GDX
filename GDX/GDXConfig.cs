@@ -150,6 +150,30 @@ namespace GDX
                 localizationDefaultCulture = initialState.localizationDefaultCulture;
             }
 
+            public bool Compare(GDXConfig rhs)
+            {
+                return updateProviderCheckForUpdates == rhs.updateProviderCheckForUpdates &&
+                developerCommandLineParserArgumentPrefix == rhs.developerCommandLineParserArgumentPrefix &&
+                developerCommandLineParserArgumentSplit == rhs.developerCommandLineParserArgumentSplit &&
+                developerBuildInfoAssemblyDefinition == rhs.developerBuildInfoAssemblyDefinition &&
+                developerBuildInfoEnabled == rhs.developerBuildInfoEnabled &&
+                developerBuildInfoPath == rhs.developerBuildInfoPath &&
+                developerBuildInfoNamespace == rhs.developerBuildInfoNamespace &&
+                developerBuildInfoBuildNumberArgument == rhs.developerBuildInfoBuildNumberArgument &&
+                developerBuildInfoBuildDescriptionArgument == rhs.developerBuildInfoBuildDescriptionArgument &&
+                developerBuildInfoBuildChangelistArgument == rhs.developerBuildInfoBuildChangelistArgument &&
+                developerBuildInfoBuildTaskArgument == rhs.developerBuildInfoBuildTaskArgument &&
+                developerBuildInfoBuildStreamArgument == rhs.developerBuildInfoBuildStreamArgument &&
+                environmentScriptingDefineSymbol == rhs.environmentScriptingDefineSymbol &&
+                traceDevelopmentLevels == rhs.traceDevelopmentLevels &&
+                traceDebugLevels == rhs.traceDebugLevels &&
+                traceReleaseLevels == rhs.traceReleaseLevels &&
+                traceDevelopmentOutputToUnityConsole == rhs.traceDevelopmentOutputToUnityConsole &&
+                traceDebugOutputToUnityConsole == rhs.traceDebugOutputToUnityConsole &&
+                localizationSetDefaultCulture == rhs.localizationSetDefaultCulture &&
+                localizationDefaultCulture == rhs.localizationDefaultCulture;
+            }
+
             public string GetGeneratedOverrideSource()
             {
                 return null;
