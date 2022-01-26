@@ -2,7 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
+using System.Text;
 
 namespace GDX
 {
@@ -174,9 +174,88 @@ namespace GDX
                 localizationDefaultCulture == rhs.localizationDefaultCulture;
             }
 
-            public string GetGeneratedOverrideSource()
+            public string GetGeneratedOverrideSource(GDXConfig coreConfig)
             {
-                return null;
+                StringBuilder fileContent = new StringBuilder();
+
+                // Start header
+                fileContent.AppendLine("// Generated GDXConfig");
+                fileContent.AppendLine("namespace GDX");
+                fileContent.AppendLine("{");
+                fileContent.AppendLine("\tpublic static class GDXConfigSetup");
+                fileContent.AppendLine("\t{");
+                fileContent.AppendLine("#if UNITY_EDITOR");
+                fileContent.AppendLine("\t\t[UnityEditor.InitializeOnLoadMethod]");
+                fileContent.AppendLine("#endif");
+                fileContent.AppendLine("\t\t[UnityEngine.RuntimeInitializeOnLoadMethod]");
+                fileContent.AppendLine("\t\tpublic static void Init()");
+                fileContent.AppendLine("\t\t{");
+
+                OverrideBoolean(ref fileContent, "updateProviderCheckForUpdates",
+                    coreConfig.updateProviderCheckForUpdates, updateProviderCheckForUpdates);
+                OverrideString(ref fileContent, "developerCommandLineParserArgumentPrefix",
+                    coreConfig.developerCommandLineParserArgumentPrefix, developerCommandLineParserArgumentPrefix);
+                OverrideString(ref fileContent, "developerCommandLineParserArgumentSplit",
+                    coreConfig.developerCommandLineParserArgumentSplit, developerCommandLineParserArgumentSplit);
+                OverrideBoolean(ref fileContent, "developerBuildInfoAssemblyDefinition",
+                    coreConfig.developerBuildInfoAssemblyDefinition, developerBuildInfoAssemblyDefinition);
+                OverrideBoolean(ref fileContent, "developerBuildInfoEnabled",
+                    coreConfig.developerBuildInfoEnabled, developerBuildInfoEnabled);
+                OverrideString(ref fileContent, "developerBuildInfoPath",
+                    coreConfig.developerBuildInfoPath, developerBuildInfoPath);
+                OverrideString(ref fileContent, "developerBuildInfoNamespace",
+                    coreConfig.developerBuildInfoNamespace, developerBuildInfoNamespace);
+                OverrideString(ref fileContent, "developerBuildInfoBuildNumberArgument",
+                    coreConfig.developerBuildInfoBuildNumberArgument, developerBuildInfoBuildNumberArgument);
+                OverrideString(ref fileContent, "developerBuildInfoBuildDescriptionArgument",
+                    coreConfig.developerBuildInfoBuildDescriptionArgument, developerBuildInfoBuildDescriptionArgument);
+                OverrideString(ref fileContent, "developerBuildInfoBuildChangelistArgument",
+                    coreConfig.developerBuildInfoBuildChangelistArgument, developerBuildInfoBuildChangelistArgument);
+                OverrideString(ref fileContent, "developerBuildInfoBuildTaskArgument",
+                    coreConfig.developerBuildInfoBuildTaskArgument, developerBuildInfoBuildTaskArgument);
+                OverrideString(ref fileContent, "developerBuildInfoBuildStreamArgument",
+                    coreConfig.developerBuildInfoBuildStreamArgument, developerBuildInfoBuildStreamArgument);
+                OverrideBoolean(ref fileContent, "environmentScriptingDefineSymbol",
+                    coreConfig.environmentScriptingDefineSymbol, environmentScriptingDefineSymbol);
+
+
+                // fileContent.AppendLine(
+                //     $"\t\t\tCore.Config.traceDevelopmentLevels = Trace.TraceLevel.{traceDevelopmentLevels}");
+                // fileContent.AppendLine(
+                //     $"\t\t\tCore.Config.traceDebugLevels = Trace.TraceLevel.{traceDebugLevels}");
+                // fileContent.AppendLine(
+                //     $"\t\t\tCore.Config.traceReleaseLevels = Trace.TraceLevel.{traceReleaseLevels}");
+
+                OverrideBoolean(ref fileContent, "traceDevelopmentOutputToUnityConsole",
+                    coreConfig.traceDevelopmentOutputToUnityConsole, traceDevelopmentOutputToUnityConsole);
+                OverrideBoolean(ref fileContent, "traceDebugOutputToUnityConsole",
+                    coreConfig.traceDebugOutputToUnityConsole, traceDebugOutputToUnityConsole);
+                OverrideBoolean(ref fileContent, "localizationSetDefaultCulture",
+                    coreConfig.localizationSetDefaultCulture, localizationSetDefaultCulture);
+
+                // fileContent.AppendLine(
+                //     $"\t\t\tCore.Config.localizationDefaultCulture = Localization.Language.{localizationDefaultCulture}");
+
+                // Finish file
+                fileContent.AppendLine("\t\t}");
+                fileContent.AppendLine("\t}");
+                fileContent.AppendLine("}");
+                return fileContent.ToString();
+
             }
+
+            private void OverrideString(ref StringBuilder builder, string member, string lhs, string rhs)
+            {
+                if (lhs == rhs) return;
+                builder.AppendLine($"\t\t\tCore.Config.{member} = \"{rhs}\";");
+            }
+            private void OverrideBoolean(ref StringBuilder builder, string member, bool lhs, bool rhs)
+            {
+                if (lhs == rhs) return;
+                builder.AppendLine(rhs
+                    ? $"\t\t\tCore.Config.{member} = true;"
+                    : $"\t\t\tCore.Config.{member} = false;");
+            }
+
         }
 }

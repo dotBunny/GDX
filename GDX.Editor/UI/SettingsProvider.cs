@@ -152,9 +152,10 @@ namespace GDX.Editor.UI
 
         private static void OutputConfigOverride()
         {
-            // Write file
-            // Force compilation
-            // will reset everything nicely
+            string codePath =
+                System.IO.Path.Combine(UnityEngine.Application.dataPath, "Generated", "GDXConfigOverride.cs");
+            System.IO.File.WriteAllText(codePath, WorkingConfig.GetGeneratedOverrideSource(Core.Config));
+            AssetDatabase.ImportAsset("Assets/Generated/GDXConfigOverride.cs");
         }
     }
 }
