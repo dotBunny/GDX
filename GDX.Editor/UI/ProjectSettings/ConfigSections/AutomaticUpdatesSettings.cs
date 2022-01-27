@@ -211,6 +211,10 @@ namespace GDX.Editor.ProjectSettings
         {
             return true;
         }
+        public int GetPriority()
+        {
+            return 1000;
+        }
         public string GetSectionHeaderLabel()
         {
             return "Automatic Package Updates";

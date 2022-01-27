@@ -64,6 +64,11 @@ namespace GDX.Editor.ProjectSettings
             return false;
         }
 
+        public int GetPriority()
+        {
+            return 800;
+        }
+
         public string GetSectionHeaderLabel()
         {
             return "Command Line Parser";

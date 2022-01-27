@@ -344,6 +344,10 @@ namespace GDX.Editor.ProjectSettings
         {
             return false;
         }
+        public int GetPriority()
+        {
+            return 0;
+        }
         public string GetSectionHeaderLabel()
         {
             return "Visual Scripting";

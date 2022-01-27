@@ -63,6 +63,10 @@ namespace GDX.Editor.ProjectSettings
         {
             return false;
         }
+        public int GetPriority()
+        {
+            return 600;
+        }
 
         public string GetSectionHeaderLabel()
         {

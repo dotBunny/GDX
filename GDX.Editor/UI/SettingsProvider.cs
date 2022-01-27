@@ -45,7 +45,7 @@ namespace GDX.Editor.UI
         public static UnityEditor.SettingsProvider Get()
         {
             // ReSharper disable once HeapView.ObjectAllocation.Evident
-            return new UnityEditor.SettingsProvider("Project/GDX", UnityEditor.SettingsScope.Project)
+            return new("Project/GDX", UnityEditor.SettingsScope.Project)
             {
                 label = "GDX",
                 activateHandler = (searchContext, rootElement) =>
@@ -62,7 +62,13 @@ namespace GDX.Editor.UI
                     };
 
                     Button saveChangesButton = rootElement.Q<Button>("button-save-changes");
-                    saveChangesButton.clicked += OutputConfigOverride;
+                    saveChangesButton.clicked += () =>
+                    {
+                        string codePath =
+                            System.IO.Path.Combine(UnityEngine.Application.dataPath, "Generated", "GDXSettings.cs");
+                        System.IO.File.WriteAllText(codePath, SettingsGenerator.Build(Core.Config, WorkingConfig));
+                        AssetDatabase.ImportAsset("Assets/Generated/GDXSettings.cs");
+                    };
 
                     // Build some useful references
                     ScrollView contentScrollView = rootElement.Q<ScrollView>("gdx-project-settings-content");
@@ -75,17 +81,32 @@ namespace GDX.Editor.UI
                     }
 
                     ProjectSettings.ConfigSectionsProvider.ClearSectionCache();
-                    foreach (KeyValuePair<string, IConfigSection> section in ConfigSections)
+
+
+                    // Create ordered list of sections
+                    List<IConfigSection> sections = new List<IConfigSection>(ConfigSections.Count);
+                    sections.AddRange(ConfigSections.Values);
+                    sections.Sort((lhs, rhs) =>
                     {
-                        VisualElement sectionHeader = ProjectSettings.ConfigSectionsProvider.CreateAndBindSectionHeader(section.Value);
+                        int l = lhs.GetPriority();
+                        int r = rhs.GetPriority();
+                        if (l > r) return -1;
+                        if (l < r) return 1;
+                        return 0;
+                    });
+
+                    foreach (IConfigSection section in sections)
+                    {
+                        string sectionID = section.GetSectionID();
+                        VisualElement sectionHeader = ProjectSettings.ConfigSectionsProvider.CreateAndBindSectionHeader(section);
 
                         contentScrollView.contentContainer.Add(sectionHeader);
-                        ProjectSettings.ConfigSectionsProvider.UpdateSectionHeader(section.Key);
+                        ProjectSettings.ConfigSectionsProvider.UpdateSectionHeader(sectionID);
 
-                        VisualElement sectionContentBase = ProjectSettings.ConfigSectionsProvider.CreateAndBindSectionContent(section.Value);
+                        VisualElement sectionContentBase = ProjectSettings.ConfigSectionsProvider.CreateAndBindSectionContent(section);
 
                         contentScrollView.contentContainer.Add(sectionContentBase);
-                        ProjectSettings.ConfigSectionsProvider.UpdateSectionContent(section.Key);
+                        ProjectSettings.ConfigSectionsProvider.UpdateSectionContent(sectionID);
                     }
                 },
                 keywords = s_searchKeywords
@@ -108,13 +129,10 @@ namespace GDX.Editor.UI
             return s_cachedEditorPreferences[id];
         }
 
-        // TODO: Sections need to register ... somehow order
-        public static void RegisterConfigSection(IConfigSection section, Type afterSection = null,
-            Type beforeSection = null)
+
+        public static void RegisterConfigSection(IConfigSection section)
         {
             if(ConfigSections.ContainsKey(section.GetSectionID())) return;
-
-
             ConfigSections.Add(section.GetSectionID(), section);
         }
 
@@ -150,12 +168,5 @@ namespace GDX.Editor.UI
             }
         }
 
-        private static void OutputConfigOverride()
-        {
-            string codePath =
-                System.IO.Path.Combine(UnityEngine.Application.dataPath, "Generated", "GDXConfigOverride.cs");
-            System.IO.File.WriteAllText(codePath, WorkingConfig.GetGeneratedOverrideSource(Core.Config));
-            AssetDatabase.ImportAsset("Assets/Generated/GDXConfigOverride.cs");
-        }
     }
 }

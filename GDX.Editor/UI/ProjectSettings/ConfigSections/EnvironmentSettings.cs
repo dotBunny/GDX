@@ -156,6 +156,10 @@ namespace GDX.Editor.ProjectSettings
         {
             return false;
         }
+        public int GetPriority()
+        {
+            return 700;
+        }
         public string GetSectionHeaderLabel()
         {
             return "Environment";

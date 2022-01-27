@@ -191,6 +191,10 @@ namespace GDX.Editor.ProjectSettings
         {
             return false;
         }
+        public int GetPriority()
+        {
+            return 900;
+        }
         public string GetSectionHeaderLabel()
         {
             return "BuildInfo Generation";
