@@ -5,6 +5,10 @@
 using GDX.Editor.UI.ProjectSettings;
 using UnityEditor;
 using UnityEngine.UIElements;
+#if UNITY_2020_3
+using UnityEditor.UIElements;
+#endif
+
 
 namespace GDX.Editor.ProjectSettings
 {

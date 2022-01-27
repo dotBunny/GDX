@@ -45,7 +45,7 @@ namespace GDX.Editor.UI
         public static UnityEditor.SettingsProvider Get()
         {
             // ReSharper disable once HeapView.ObjectAllocation.Evident
-            return new("Project/GDX", UnityEditor.SettingsScope.Project)
+            return new UnityEditor.SettingsProvider("Project/GDX", UnityEditor.SettingsScope.Project)
             {
                 label = "GDX",
                 activateHandler = (searchContext, rootElement) =>
