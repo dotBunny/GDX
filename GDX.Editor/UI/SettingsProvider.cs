@@ -2,7 +2,10 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine.UIElements;
 
 namespace GDX.Editor.UI
 {
@@ -18,6 +21,11 @@ namespace GDX.Editor.UI
         public const string DocumentationUri = "https://gdx.dotbunny.com/";
 
         /// <summary>
+        ///     A cache of boolean values backed by <see cref="EditorPrefs" /> to assist with optimizing layout.
+        /// </summary>
+        private static readonly Dictionary<string, bool> s_cachedEditorPreferences = new Dictionary<string, bool>();
+
+        /// <summary>
         ///     A list of keywords to flag when searching project settings.
         /// </summary>
         private static readonly List<string> s_searchKeywords = new List<string>(new[]
@@ -25,7 +33,9 @@ namespace GDX.Editor.UI
             "gdx", "update", "parser", "commandline", "build"
         });
 
-        private static readonly List<IConfigSection> s_configSections = new List<IConfigSection>();
+        public static readonly Dictionary<string, IConfigSection> ConfigSections = new Dictionary<string, IConfigSection>();
+
+        public static GDXConfig WorkingConfig = null;
 
         /// <summary>
         ///     Get <see cref="UnityEditor.SettingsProvider" /> for GDX assembly.
@@ -42,38 +52,121 @@ namespace GDX.Editor.UI
                 {
                     rootElement.styleSheets.Add(ResourcesProvider.GetStyleSheet());
                     ResourcesProvider.GetVisualTreeAsset("GDXProjectSettings").CloneTree(rootElement);
+
+                    // Handle state buttons
+                    Button clearChangesButton = rootElement.Q<Button>("button-clear-changes");
+                    clearChangesButton.clicked += () =>
+                    {
+                        WorkingConfig = new GDXConfig(Core.Config);
+                        ProjectSettings.ConfigSectionsProvider.UpdateAll();
+                    };
+
+                    Button saveChangesButton = rootElement.Q<Button>("button-save-changes");
+                    saveChangesButton.clicked += () =>
+                    {
+                        string codePath =
+                            System.IO.Path.Combine(UnityEngine.Application.dataPath, "Generated", "GDXSettings.cs");
+                        System.IO.File.WriteAllText(codePath, SettingsGenerator.Build(Core.Config, WorkingConfig));
+                        AssetDatabase.ImportAsset("Assets/Generated/GDXSettings.cs");
+                    };
+
+                    // Build some useful references
+                    ScrollView contentScrollView = rootElement.Q<ScrollView>("gdx-project-settings-content");
+
+                    // Create our working copy of the config - we do this to catch if theres an override that happens
+                    // during domain reload callbacks
+                    if (WorkingConfig == null)
+                    {
+                        WorkingConfig = new GDXConfig(Core.Config);
+                    }
+
+                    ProjectSettings.ConfigSectionsProvider.ClearSectionCache();
+
+
+                    // Create ordered list of sections
+                    List<IConfigSection> sections = new List<IConfigSection>(ConfigSections.Count);
+                    sections.AddRange(ConfigSections.Values);
+                    sections.Sort((lhs, rhs) =>
+                    {
+                        int l = lhs.GetPriority();
+                        int r = rhs.GetPriority();
+                        if (l > r) return -1;
+                        if (l < r) return 1;
+                        return 0;
+                    });
+
+                    foreach (IConfigSection section in sections)
+                    {
+                        string sectionID = section.GetSectionID();
+                        VisualElement sectionHeader = ProjectSettings.ConfigSectionsProvider.CreateAndBindSectionHeader(section);
+
+                        contentScrollView.contentContainer.Add(sectionHeader);
+                        ProjectSettings.ConfigSectionsProvider.UpdateSectionHeader(sectionID);
+
+                        VisualElement sectionContentBase = ProjectSettings.ConfigSectionsProvider.CreateAndBindSectionContent(section);
+
+                        contentScrollView.contentContainer.Add(sectionContentBase);
+                        ProjectSettings.ConfigSectionsProvider.UpdateSectionContent(sectionID);
+                    }
                 },
-                // guiHandler = searchContext =>
-                // {
-                //     // Get a working copy
-                //     GDXConfig tempConfig = new GDXConfig(Core.Config);
-                //
-                //     // Start wrapping the content
-                //     UnityEditor.EditorGUILayout.BeginVertical(GDX.Editor.ProjectSettings.SettingsStyles.WrapperStyle);
-                //
-                //    // PackageStatusSection.Draw(tempConfig);
-                //
-                //     foreach (IConfigSection section in s_configSections)
-                //     {
-                //         section.Draw(tempConfig);
-                //     }
-                //
-                //
-                //     // check for changes
-                //     // save newconfig?
-                //
-                //
-                //     // Stop wrapping the content
-                //     UnityEditor.EditorGUILayout.EndVertical();
-                // },
                 keywords = s_searchKeywords
             };
         }
 
+        /// <summary>
+        ///     Get a cached value or fill it from <see cref="EditorPrefs" />.
+        /// </summary>
+        /// <param name="id">Identifier for the <see cref="bool" /> value.</param>
+        /// <param name="defaultValue">If no value is found, what should be used.</param>
+        /// <returns></returns>
+        public static bool GetCachedEditorBoolean(string id, bool defaultValue = true)
+        {
+            if (!s_cachedEditorPreferences.ContainsKey(id))
+            {
+                s_cachedEditorPreferences[id] = EditorPrefs.GetBool(id, defaultValue);
+            }
+
+            return s_cachedEditorPreferences[id];
+        }
+
+
         public static void RegisterConfigSection(IConfigSection section)
         {
-            if(s_configSections.Contains(section)) return;
-            s_configSections.Add(section);
+            if(ConfigSections.ContainsKey(section.GetSectionID())) return;
+            ConfigSections.Add(section.GetSectionID(), section);
         }
+
+        /// <summary>
+        ///     Sets the cached value (and <see cref="EditorPrefs" />) for the <paramref name="id" />.
+        /// </summary>
+        /// <param name="id">Identifier for the <see cref="bool" /> value.</param>
+        /// <param name="setValue">The desired value to set.</param>
+        public static void SetCachedEditorBoolean(string id, bool setValue)
+        {
+            if (!s_cachedEditorPreferences.ContainsKey(id))
+            {
+                s_cachedEditorPreferences[id] = setValue;
+                EditorPrefs.SetBool(id, setValue);
+            }
+            else
+            {
+                if (s_cachedEditorPreferences[id] == setValue)
+                {
+                    return;
+                }
+
+                s_cachedEditorPreferences[id] = setValue;
+                EditorPrefs.SetBool(id, setValue);
+            }
+        }
+
+        public static void CheckForChanges()
+        {
+            if (!Core.Config.Compare(WorkingConfig))
+            {
+                // DIFFERENT
+            }
+        }
+
     }
 }

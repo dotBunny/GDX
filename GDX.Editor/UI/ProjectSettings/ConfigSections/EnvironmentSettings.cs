@@ -3,8 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.Editor;
+using GDX.Editor.UI;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace GDX.Editor.ProjectSettings
 {
@@ -13,6 +15,8 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     internal class EnvironmentSettings : IConfigSection
     {
+        private VisualElement _element;
+
         /// <summary>
         ///     Internal section identifier.
         /// </summary>
@@ -63,7 +67,17 @@ namespace GDX.Editor.ProjectSettings
         private readonly GUIContent s_traceNoticeContent = new GUIContent(
             "Make sure to disable console output if you have subscribed additional logging systems which may echo back to the console.");
 
-        public void Draw(GDXConfig settings)
+        [InitializeOnLoadMethod]
+        static void Register()
+        {
+            UI.SettingsProvider.RegisterConfigSection(new EnvironmentSettings());
+        }
+        public string GetTemplateName()
+        {
+            return "GDXProjectSettingsEnvironment";
+        }
+
+        public void BindSectionContent(VisualElement rootElement)
         {
             // GUI.enabled = true;
             //
@@ -136,6 +150,46 @@ namespace GDX.Editor.ProjectSettings
             //     releaseLevelsProperty.intValue = newReleaseLevels;
             // }
             // EditorGUILayout.EndHorizontal();
+        }
+
+        public bool GetDefaultVisibility()
+        {
+            return false;
+        }
+        public int GetPriority()
+        {
+            return 700;
+        }
+        public string GetSectionHeaderLabel()
+        {
+            return "Environment";
+        }
+        public string GetSectionID()
+        {
+            return "GDX.Environment";
+        }
+        public string GetSectionHelpLink()
+        {
+            return null;
+        }
+        public bool GetToggleSupport()
+        {
+            return false;
+        }
+
+        public bool GetToggleState()
+        {
+            return false;
+        }
+
+        public void SetToggleState(VisualElement toggleElement, bool newState)
+        {
+
+        }
+
+        public void UpdateSectionContent()
+        {
+
         }
     }
 }

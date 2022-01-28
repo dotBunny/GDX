@@ -2,7 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
+using System.Text;
 
 namespace GDX
 {
@@ -150,9 +150,28 @@ namespace GDX
                 localizationDefaultCulture = initialState.localizationDefaultCulture;
             }
 
-            public string GetGeneratedOverrideSource()
+            public bool Compare(GDXConfig rhs)
             {
-                return null;
+                return updateProviderCheckForUpdates == rhs.updateProviderCheckForUpdates &&
+                developerCommandLineParserArgumentPrefix == rhs.developerCommandLineParserArgumentPrefix &&
+                developerCommandLineParserArgumentSplit == rhs.developerCommandLineParserArgumentSplit &&
+                developerBuildInfoAssemblyDefinition == rhs.developerBuildInfoAssemblyDefinition &&
+                developerBuildInfoEnabled == rhs.developerBuildInfoEnabled &&
+                developerBuildInfoPath == rhs.developerBuildInfoPath &&
+                developerBuildInfoNamespace == rhs.developerBuildInfoNamespace &&
+                developerBuildInfoBuildNumberArgument == rhs.developerBuildInfoBuildNumberArgument &&
+                developerBuildInfoBuildDescriptionArgument == rhs.developerBuildInfoBuildDescriptionArgument &&
+                developerBuildInfoBuildChangelistArgument == rhs.developerBuildInfoBuildChangelistArgument &&
+                developerBuildInfoBuildTaskArgument == rhs.developerBuildInfoBuildTaskArgument &&
+                developerBuildInfoBuildStreamArgument == rhs.developerBuildInfoBuildStreamArgument &&
+                environmentScriptingDefineSymbol == rhs.environmentScriptingDefineSymbol &&
+                traceDevelopmentLevels == rhs.traceDevelopmentLevels &&
+                traceDebugLevels == rhs.traceDebugLevels &&
+                traceReleaseLevels == rhs.traceReleaseLevels &&
+                traceDevelopmentOutputToUnityConsole == rhs.traceDevelopmentOutputToUnityConsole &&
+                traceDebugOutputToUnityConsole == rhs.traceDebugOutputToUnityConsole &&
+                localizationSetDefaultCulture == rhs.localizationSetDefaultCulture &&
+                localizationDefaultCulture == rhs.localizationDefaultCulture;
             }
         }
 }

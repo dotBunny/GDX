@@ -9,6 +9,7 @@ namespace GDX
 {
     public static class Core
     {
+        public static bool ConfigDirty = false;
         public static readonly GDXConfig Config;
         public static readonly long StartTicks;
         public static WELL1024a Random;

@@ -3,8 +3,11 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.Editor;
+using GDX.Editor.UI;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
+using SettingsProvider = UnityEditor.SettingsProvider;
 
 namespace GDX.Editor.ProjectSettings
 {
@@ -13,6 +16,8 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     internal class AutomaticUpdatesSettings : IConfigSection
     {
+        private VisualElement _element;
+
         /// <summary>
         ///     Internal section identifier.
         /// </summary>
@@ -42,11 +47,17 @@ namespace GDX.Editor.ProjectSettings
             private set => EditorPrefs.SetInt("GDX.UpdateProvider.UpdateDayCount", value);
         }
 
+        [InitializeOnLoadMethod]
+        static void Register()
+        {
+            UI.SettingsProvider.RegisterConfigSection(new AutomaticUpdatesSettings());
+        }
+
         /// <summary>
         ///     Draw the Automatic Updates section of settings.
         /// </summary>
         /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
-        public void Draw(GDXConfig settings)
+        public void BindSectionContent(VisualElement rootElement)
         {
             // GUI.enabled = true;
             //
@@ -194,6 +205,62 @@ namespace GDX.Editor.ProjectSettings
             // UpdateDayCountSetting =
             //     EditorGUILayout.IntSlider(s_updateDayCountContent, UpdateDayCountSetting, 1,
             //         31);
+        }
+
+        public bool GetDefaultVisibility()
+        {
+            return true;
+        }
+        public int GetPriority()
+        {
+            return 1000;
+        }
+        public string GetSectionHeaderLabel()
+        {
+            return "Automatic Package Updates";
+        }
+        public string GetSectionID()
+        {
+            return "GDX.Editor.UpdateProvider";
+        }
+
+        public string GetSectionHelpLink()
+        {
+            return null;
+        }
+
+        public bool GetToggleSupport()
+        {
+            return true;
+        }
+
+        public bool GetToggleState()
+        {
+            return GDX.Editor.UI.SettingsProvider.WorkingConfig.updateProviderCheckForUpdates;
+        }
+
+        public void SetToggleState(VisualElement toggleElement, bool newState)
+        {
+            GDX.Editor.UI.SettingsProvider.WorkingConfig.updateProviderCheckForUpdates = newState;
+            if (Core.Config.updateProviderCheckForUpdates != newState)
+            {
+                toggleElement.AddToClassList(UI.ProjectSettings.ConfigSectionsProvider.ChangedClass);
+            }
+            else
+            {
+                toggleElement.RemoveFromClassList(UI.ProjectSettings.ConfigSectionsProvider.ChangedClass);
+            }
+            GDX.Editor.UI.SettingsProvider.CheckForChanges();
+        }
+
+        public string GetTemplateName()
+        {
+            return "GDXProjectSettingsAutomaticUpdates";
+        }
+
+        public void UpdateSectionContent()
+        {
+
         }
     }
 }

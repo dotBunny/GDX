@@ -13,6 +13,8 @@ using UnityEngine.PlayerLoop;
 #endif
 
 using GDX.Editor;
+using GDX.Editor.UI;
+using UnityEngine.UIElements;
 
 namespace GDX.Editor.ProjectSettings
 {
@@ -21,6 +23,8 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     internal class VisualScriptingSettings : IConfigSection
     {
+        private VisualElement _element;
+
         /// <summary>
         ///     Internal section identifier.
         /// </summary>
@@ -72,14 +76,26 @@ namespace GDX.Editor.ProjectSettings
         private static readonly GUIContent s_visualScriptingLoadingContent = new GUIContent(
             "The visual scripting subsystem is currently loading.");
 
+        [InitializeOnLoadMethod]
+        static void Register()
+        {
+            UI.SettingsProvider.RegisterConfigSection(new VisualScriptingSettings());
+        }
 
 #if GDX_VISUALSCRIPTING
         /// <summary>
         ///     Draw the Visual Scripting settings section.
         /// </summary>
         /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
-        public void Draw(GDXConfig settings)
+        public void BindSectionContent(VisualElement rootElement)
         {
+            if (_element == null)
+            {
+                VisualTreeAsset templateAsset =
+                    ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsVisualScripting");
+                _element = templateAsset.Instantiate()[0];
+            }
+            rootElement.Add(_element);
             // GUI.enabled = true;
             //
             //
@@ -165,7 +181,7 @@ namespace GDX.Editor.ProjectSettings
             // DrawNodeSection("Utilities", s_categoryUtilitiesContent, s_assembly.VisualScriptingUtilities);
         }
 #else
-        public void Draw(GDXConfig settings)
+        public void BindSectionContent(VisualElement rootElement)
         {
         }
 #endif
@@ -322,6 +338,50 @@ namespace GDX.Editor.ProjectSettings
                 }
             }
 #endif
+        }
+
+        public bool GetDefaultVisibility()
+        {
+            return false;
+        }
+        public int GetPriority()
+        {
+            return 0;
+        }
+        public string GetSectionHeaderLabel()
+        {
+            return "Visual Scripting";
+        }
+        public string GetSectionID()
+        {
+            return "GDX.VisualScripting";
+        }
+        public string GetSectionHelpLink()
+        {
+            return "manual/features/visual-scripting.html";
+        }
+        public bool GetToggleSupport()
+        {
+            return false;
+        }
+        public bool GetToggleState()
+        {
+            return false;
+        }
+
+        public void SetToggleState(VisualElement toggleElement, bool newState)
+        {
+
+        }
+
+        public void UpdateSectionContent()
+        {
+
+        }
+
+        public string GetTemplateName()
+        {
+            return "GDXProjectSettingsVisualScripting";
         }
     }
 }

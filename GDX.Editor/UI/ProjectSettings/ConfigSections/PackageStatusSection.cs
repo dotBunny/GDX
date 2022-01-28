@@ -12,7 +12,7 @@ namespace GDX.Editor.ProjectSettings
     /// <summary>
     ///     Package Status Section
     /// </summary>
-    internal class PackageStatusSection : IConfigSection
+    internal class PackageStatusSection //: IConfigSection
     {
         /// <summary>
         ///     Content for the initial introduction of the projects settings window.
@@ -23,8 +23,9 @@ namespace GDX.Editor.ProjectSettings
         /// <summary>
         ///     Draw the packages status section of the settings window.
         /// </summary>
-        public void Draw(GDXConfig config)
+        public void BuildSection(GDXConfig config)
         {
+
 //             GUI.enabled = true;
 //
 //             // ReSharper disable ConditionIsAlwaysTrueOrFalse
@@ -130,6 +131,11 @@ namespace GDX.Editor.ProjectSettings
 //             // ReSharper enable ConditionIsAlwaysTrueOrFalse
 //
 //             GUILayout.Space(5);
+        }
+
+        public void DrawSectionHeader(GDXConfig config)
+        {
+
         }
     }
 }

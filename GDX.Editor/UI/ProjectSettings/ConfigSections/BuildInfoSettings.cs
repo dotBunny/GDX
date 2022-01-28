@@ -3,7 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 using System.IO;
+using GDX.Editor.UI;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace GDX.Editor.ProjectSettings
 {
@@ -12,6 +15,8 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     internal class BuildInfoSettings : IConfigSection
     {
+        private VisualElement _element;
+
         /// <summary>
         ///     Internal section identifier.
         /// </summary>
@@ -80,11 +85,17 @@ namespace GDX.Editor.ProjectSettings
             "Output Path",
             "The asset database relative path to output the file.");
 
+        [InitializeOnLoadMethod]
+        static void Register()
+        {
+            UI.SettingsProvider.RegisterConfigSection(new BuildInfoSettings());
+        }
+
         /// <summary>
         ///     Draw the Build Info section of settings.
         /// </summary>
         /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
-        public void Draw(GDXConfig settings)
+        public void BindSectionContent(VisualElement rootElement)
         {
             // GUI.enabled = true;
             //
@@ -174,6 +185,51 @@ namespace GDX.Editor.ProjectSettings
             // {
             //     buildStreamProperty.stringValue = buildStreamProperty.stringValue.ToUpper();
             // }
+        }
+
+        public bool GetDefaultVisibility()
+        {
+            return false;
+        }
+        public int GetPriority()
+        {
+            return 900;
+        }
+        public string GetSectionHeaderLabel()
+        {
+            return "BuildInfo Generation";
+        }
+        public string GetSectionID()
+        {
+            return "GDX.Editor.Build.BuildInfoProvider";
+        }
+        public string GetSectionHelpLink()
+        {
+            return "api/GDX.Editor.Build.BuildInfoProvider.html";
+        }
+
+        public bool GetToggleSupport()
+        {
+            return false;
+        }
+        public bool GetToggleState()
+        {
+            return false;
+        }
+
+        public void SetToggleState(VisualElement toggleElement, bool newState)
+        {
+
+        }
+
+        public string GetTemplateName()
+        {
+            return "GDXProjectSettingsBuildInfo";
+        }
+
+        public void UpdateSectionContent()
+        {
+
         }
     }
 }
