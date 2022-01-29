@@ -4,8 +4,10 @@
         <ui:VisualElement name="gdx-project-settings-header" style="flex-direction: row;">
             <ui:Label text="Game Development Extensions" display-tooltip-when-elided="true" class="gdx-big-title" />
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:Button text="Clear Changes" display-tooltip-when-elided="true" name="button-clear-changes" />
-            <ui:Button text="Save Changes" display-tooltip-when-elided="true" name="button-save-changes" />
+            <ui:VisualElement name="gdx-config-changes">
+                <ui:Button text="Clear Changes" display-tooltip-when-elided="true" name="button-clear-changes" />
+                <ui:Button text="Save Changes" display-tooltip-when-elided="true" name="button-save-changes" />
+            </ui:VisualElement>
         </ui:VisualElement>
         <ui:ScrollView name="gdx-project-settings-content">
             <ui:VisualElement name="gdx-project-settings-info" style="flex-direction: row;">

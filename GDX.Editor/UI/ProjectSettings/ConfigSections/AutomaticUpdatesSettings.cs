@@ -227,7 +227,7 @@ namespace GDX.Editor.ProjectSettings
             {
                 toggleElement.AddToClassList(UI.ProjectSettings.ConfigSectionsProvider.ChangedClass);
             }
-            else
+            else 
             {
                 toggleElement.RemoveFromClassList(UI.ProjectSettings.ConfigSectionsProvider.ChangedClass);
             }

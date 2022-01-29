@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using GDX.Editor.UI.ProjectSettings;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -37,6 +38,10 @@ namespace GDX.Editor.UI
 
         public static GDXConfig WorkingConfig = null;
 
+        private static VisualElement _changesElement;
+        private static Button _clearButton;
+        private static Button _saveButton;
+
         /// <summary>
         ///     Get <see cref="UnityEditor.SettingsProvider" /> for GDX assembly.
         /// </summary>
@@ -56,16 +61,18 @@ namespace GDX.Editor.UI
                     // Early handle of theme
                     ResourcesProvider.CheckTheme(rootElement);
 
+                    _changesElement = rootElement.Q<VisualElement>("gdx-config-changes");
+
                     // Handle state buttons
-                    Button clearChangesButton = rootElement.Q<Button>("button-clear-changes");
-                    clearChangesButton.clicked += () =>
+                    _clearButton = _changesElement.Q<Button>("button-clear-changes");
+                    _clearButton.clicked += () =>
                     {
                         WorkingConfig = new GDXConfig(Core.Config);
                         ProjectSettings.ConfigSectionsProvider.UpdateAll();
                     };
 
-                    Button saveChangesButton = rootElement.Q<Button>("button-save-changes");
-                    saveChangesButton.clicked += () =>
+                    _saveButton = _changesElement.Q<Button>("button-save-changes");
+                    _saveButton.clicked += () =>
                     {
                         string codePath =
                             System.IO.Path.Combine(UnityEngine.Application.dataPath, "Generated", "GDXSettings.cs");
@@ -168,6 +175,11 @@ namespace GDX.Editor.UI
             if (!Core.Config.Compare(WorkingConfig))
             {
                 // DIFFERENT
+                _changesElement.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+            }
+            else
+            {
+                _changesElement.AddToClassList(ConfigSectionsProvider.HiddenClass);
             }
         }
 
