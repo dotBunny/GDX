@@ -6,6 +6,10 @@
     --color-green: rgb(46, 164, 79);
 }
 
+.hidden {
+    display: none;
+}
+
 .gdx-groupbox
 {
     -unity-text-align: middle-left;
@@ -106,13 +110,6 @@
     -unity-background-image-tint-color: rgb(228, 230, 105);
 }
 
-.gdx-project-settings-section-header.disabled #label-name {
-    color: black;
-}
-.gdx-project-settings-section-header.disabled #button-help {
-    -unity-background-image-tint-color: black;
-}
-
 .gdx-project-settings-section-header #button-expand {
     width: 16px;
     border-width: 0;
@@ -145,9 +142,6 @@
     margin-left: 2px;
 }
 
-.gdx-project-settings-section-content.hidden {
-    display: none;
-}
 
 .gdx-big-title {
     font-size: 19px;

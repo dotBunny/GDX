@@ -48,7 +48,7 @@ namespace GDX.Editor.UI
             return s_stylesheet;
         }
 
-        public static void HandleTheme(VisualElement element)
+        public static void CheckTheme(VisualElement element)
         {
             // Handle Skin
             if (EditorGUIUtility.isProSkin)

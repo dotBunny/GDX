@@ -9,7 +9,7 @@ using GDX.Developer;
 using UnityEditor;
 using UnityEngine;
 
-namespace GDX.Classic.Editor.Build
+namespace GDX.Editor.Build
 {
     /// <summary>
     ///     A set of tools to produce the content used for the <c>BuildInfo</c> generated file, as well as the surrounding

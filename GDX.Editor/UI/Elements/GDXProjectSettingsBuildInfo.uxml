@@ -1,20 +1,22 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/com.dotbunny.gdx/GDX.Editor/UI/Elements/GDXStyles.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStyles" />
+    <Style src="GDXStyles.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStyles" />
     <ui:VisualElement name="gdx-build-info" class="gdx-project-settings-section-content">
         <ui:VisualElement name="notice" class="gdx-groupbox" style="flex-direction: row;">
             <ui:VisualElement class="gdx-notice-icon" />
             <ui:Label text="There is currently no BuildInfo file in the target location. Would you like some default content written in its place?" display-tooltip-when-elided="true" style="flex-wrap: wrap; flex-shrink: 1; flex-grow: 1;" />
             <ui:Button text="Create Default" display-tooltip-when-elided="true" name="button-create-default" />
         </ui:VisualElement>
-        <ui:TextField picking-mode="Ignore" label="Output Path" tooltip="The asset database relative path to output the file." name="text-output-path" />
-        <ui:TextField picking-mode="Ignore" label="Namespace" name="text-namespace" tooltip="The namespace where the BuildInfo should be placed." />
-        <ui:Toggle label="Assembly Definition" name="toggle-assembly-definition" tooltip="Ensure that the folder of the BuildInfo has an assembly definition." />
-        <ui:VisualElement class="gdx-fixed-vertical-spacer" />
-        <ui:Label text="Build Arguments" display-tooltip-when-elided="true" />
-        <ui:TextField picking-mode="Ignore" label="Number" name="text-number" tooltip="The argument key for the build number to be passed to the BuildInfoProvider." />
-        <ui:TextField picking-mode="Ignore" label="Description" name="text-description" tooltip="The argument key for the build description to be passed to the BuildInfoProvider." />
-        <ui:TextField picking-mode="Ignore" label="Changelist" name="text-changelist" tooltip="The argument key for the build changelist to be passed to the BuildInfoProvider." />
-        <ui:TextField picking-mode="Ignore" label="Task" tooltip="The argument key for the build task to be passed to the BuildInfoProvider." name="text-task" />
-        <ui:TextField picking-mode="Ignore" label="Stream" name="text-stream" tooltip="The argument key for the build stream to be passed to the BuildInfoProvider." style="justify-content: center;" />
+        <ui:VisualElement name="gdx-build-info-content">
+            <ui:TextField picking-mode="Ignore" label="Output Path" tooltip="The asset database relative path to output the file." name="text-output-path" />
+            <ui:TextField picking-mode="Ignore" label="Namespace" name="text-namespace" tooltip="The namespace where the BuildInfo should be placed." />
+            <ui:Toggle label="Assembly Definition" name="toggle-assembly-definition" tooltip="Ensure that the folder of the BuildInfo has an assembly definition." />
+            <ui:VisualElement class="gdx-fixed-vertical-spacer" />
+            <ui:Label text="Build Arguments" display-tooltip-when-elided="true" />
+            <ui:TextField picking-mode="Ignore" label="Number" name="text-number" tooltip="The argument key for the build number to be passed to the BuildInfoProvider." />
+            <ui:TextField picking-mode="Ignore" label="Description" name="text-description" tooltip="The argument key for the build description to be passed to the BuildInfoProvider." />
+            <ui:TextField picking-mode="Ignore" label="Changelist" name="text-changelist" tooltip="The argument key for the build changelist to be passed to the BuildInfoProvider." />
+            <ui:TextField picking-mode="Ignore" label="Task" tooltip="The argument key for the build task to be passed to the BuildInfoProvider." name="text-task" />
+            <ui:TextField picking-mode="Ignore" label="Stream" name="text-stream" tooltip="The argument key for the build stream to be passed to the BuildInfoProvider." style="justify-content: center;" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
