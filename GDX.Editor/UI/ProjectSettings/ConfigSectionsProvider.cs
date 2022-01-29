@@ -77,6 +77,7 @@ namespace GDX.Editor.UI.ProjectSettings
             {
                 if (section.GetToggleSupport())
                 {
+                    enabledToggle.tooltip = section.GetToggleTooltip();
                     enabledToggle.visible = true;
                     enabledToggle.RegisterValueChangedCallback(evt =>
                     {
@@ -86,6 +87,7 @@ namespace GDX.Editor.UI.ProjectSettings
                 else
                 {
                     enabledToggle.visible = false;
+                    enabledToggle.tooltip = null;
                 }
             }
 

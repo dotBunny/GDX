@@ -182,6 +182,11 @@ namespace GDX.Editor.ProjectSettings
             return false;
         }
 
+        public string GetToggleTooltip()
+        {
+            return null;
+        }
+
         public void SetToggleState(VisualElement toggleElement, bool newState)
         {
 

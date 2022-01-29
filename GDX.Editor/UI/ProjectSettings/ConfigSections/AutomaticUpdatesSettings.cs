@@ -19,25 +19,6 @@ namespace GDX.Editor.ProjectSettings
         private VisualElement _element;
 
         /// <summary>
-        ///     Internal section identifier.
-        /// </summary>
-        private const string SectionID = "GDX.Editor.UpdateProvider";
-
-        /// <summary>
-        ///     Settings content for <see cref="Config.updateProviderCheckForUpdates" />.
-        /// </summary>
-        private readonly GUIContent s_enabledContent = new GUIContent(
-            "",
-            "Should the package check the GitHub repository to see if there is a new version?");
-
-        /// <summary>
-        ///     Settings content for <see cref="AutomaticUpdatesSettings.UpdateDayCountSetting" />.
-        /// </summary>
-        private readonly GUIContent s_updateDayCountContent = new GUIContent(
-            "Update Timer (Days)",
-            "After how many days should updates be checked for?");
-
-        /// <summary>
         ///     The number of days between checks for updates.
         /// </summary>
         /// <remarks>We use a property over methods in this case so that Unity's UI can be easily tied to this value.</remarks>
@@ -251,6 +232,11 @@ namespace GDX.Editor.ProjectSettings
                 toggleElement.RemoveFromClassList(UI.ProjectSettings.ConfigSectionsProvider.ChangedClass);
             }
             GDX.Editor.UI.SettingsProvider.CheckForChanges();
+        }
+
+        public string GetToggleTooltip()
+        {
+            return "Should the package check the GitHub repository to see if there is a new version?";
         }
 
         public string GetTemplateName()

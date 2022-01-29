@@ -53,6 +53,9 @@ namespace GDX.Editor.UI
                     rootElement.styleSheets.Add(ResourcesProvider.GetStyleSheet());
                     ResourcesProvider.GetVisualTreeAsset("GDXProjectSettings").CloneTree(rootElement);
 
+                    // Early handle of theme
+                    ResourcesProvider.HandleTheme(rootElement);
+
                     // Handle state buttons
                     Button clearChangesButton = rootElement.Q<Button>("button-clear-changes");
                     clearChangesButton.clicked += () =>

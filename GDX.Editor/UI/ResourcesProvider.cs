@@ -48,6 +48,21 @@ namespace GDX.Editor.UI
             return s_stylesheet;
         }
 
+        public static void HandleTheme(VisualElement element)
+        {
+            // Handle Skin
+            if (EditorGUIUtility.isProSkin)
+            {
+                element.AddToClassList("dark");
+                element.RemoveFromClassList("light");
+            }
+            else
+            {
+                element.RemoveFromClassList("dark");
+                element.AddToClassList("light");
+            }
+        }
+
         /// <summary>
         ///     Return the target visual tree asset, by name.
         /// </summary>

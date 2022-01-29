@@ -6,6 +6,38 @@
     --color-green: rgb(46, 164, 79);
 }
 
+.gdx-groupbox
+{
+    -unity-text-align: upper-center;
+    -unity-slice-left: 3;
+    -unity-slice-right: 3;
+    -unity-slice-top: 3;
+    -unity-slice-bottom: 3;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.light .gdx-groupbox
+{
+    background-image: resource("Builtin Skins/LightSkin/Images/OL box.png");
+}
+
+.dark .gdx-groupbox
+{
+    background-image: resource("Builtin Skins/DarkSkin/Images/OL box.png");
+}
+
+.gdx-notice-icon
+{
+    width: 42px;
+    height: 42px;
+    background-image: resource("Icons/console.infoicon.png");
+}
 
 #gdx-project-settings-header {
     margin-bottom: 12px;
@@ -16,6 +48,13 @@
 #gdx-project-settings-content {
     margin-left: 10px;
 }
+
+#gdx-project-settings-content .gdx-groupbox
+{
+    margin-left: 0;
+    margin-right: 0;
+}
+
 #gdx-project-settings-content #unity-content-container {
     margin-right: 10px;
 }

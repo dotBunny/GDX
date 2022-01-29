@@ -18,39 +18,6 @@ namespace GDX.Editor.ProjectSettings
         private VisualElement _element;
 
         /// <summary>
-        ///     Internal section identifier.
-        /// </summary>
-        private const string SectionID = "GDX.Editor.Build.BuildInfoProvider";
-
-        /// <summary>
-        ///     Settings content for <see cref="Config.developerBuildInfoAssemblyDefinition" />.
-        /// </summary>
-        private readonly GUIContent s_assemblyDefinitionContent = new GUIContent(
-            "Assembly Definition",
-            "Ensure that the folder of the BuildInfo has an assembly definition.");
-
-        /// <summary>
-        ///     Settings content for <see cref="Config.developerBuildInfoBuildChangelistArgument" />.
-        /// </summary>
-        private readonly GUIContent s_buildChangelistArgumentContent = new GUIContent(
-            "Changelist",
-            "The argument key for the build changelist to be passed to the BuildInfoProvider.");
-
-        /// <summary>
-        ///     Settings content for <see cref="Config.developerBuildInfoBuildDescriptionArgument" />.
-        /// </summary>
-        private readonly GUIContent s_buildDescriptionArgumentContent = new GUIContent(
-            "Description",
-            "The argument key for the build description to be passed to the BuildInfoProvider.");
-
-        /// <summary>
-        ///     Settings content for <see cref="Config.developerBuildInfoBuildNumberArgument" />.
-        /// </summary>
-        private readonly GUIContent s_buildNumberArgumentContent = new GUIContent(
-            "Number",
-            "The argument key for the build number to be passed to the BuildInfoProvider.");
-
-        /// <summary>
         ///     Settings content for <see cref="Config.developerBuildInfoBuildStreamArgument" />.
         /// </summary>
         private readonly GUIContent s_buildStreamArgumentContent = new GUIContent(
@@ -64,26 +31,6 @@ namespace GDX.Editor.ProjectSettings
             "Task",
             "The argument key for the build task to be passed to the BuildInfoProvider.");
 
-        /// <summary>
-        ///     Settings content for <see cref="Config.developerBuildInfoEnabled" />.
-        /// </summary>
-        private readonly GUIContent s_enabledContent = new GUIContent(
-            "",
-            "During the build process should a BuildInfo be written?");
-
-        /// <summary>
-        ///     Settings content for <see cref="Config.developerBuildInfoNamespace" />.
-        /// </summary>
-        private readonly GUIContent s_namespaceContent = new GUIContent(
-            "Namespace",
-            "The namespace where the BuildInfo should be placed.");
-
-        /// <summary>
-        ///     Settings content for <see cref="Config.developerBuildInfoPath" />.
-        /// </summary>
-        private readonly GUIContent s_outputPathContent = new GUIContent(
-            "Output Path",
-            "The asset database relative path to output the file.");
 
         [InitializeOnLoadMethod]
         static void Register()
@@ -210,16 +157,30 @@ namespace GDX.Editor.ProjectSettings
 
         public bool GetToggleSupport()
         {
-            return false;
+            return true;
         }
         public bool GetToggleState()
         {
-            return false;
+            return GDX.Editor.UI.SettingsProvider.WorkingConfig.developerBuildInfoEnabled;
         }
 
         public void SetToggleState(VisualElement toggleElement, bool newState)
         {
+            GDX.Editor.UI.SettingsProvider.WorkingConfig.developerBuildInfoEnabled = newState;
+            if (Core.Config.developerBuildInfoEnabled != newState)
+            {
+                toggleElement.AddToClassList(UI.ProjectSettings.ConfigSectionsProvider.ChangedClass);
+            }
+            else
+            {
+                toggleElement.RemoveFromClassList(UI.ProjectSettings.ConfigSectionsProvider.ChangedClass);
+            }
+            GDX.Editor.UI.SettingsProvider.CheckForChanges();
+        }
 
+        public string GetToggleTooltip()
+        {
+            return "During the build process should a BuildInfo be written?";
         }
 
         public string GetTemplateName()
