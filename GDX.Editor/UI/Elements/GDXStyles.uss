@@ -39,6 +39,11 @@
     background-image: resource("Icons/console.infoicon.png");
 }
 
+.gdx-fixed-vertical-spacer
+{
+    height: 20px;
+}
+
 #gdx-project-settings-header {
     margin-bottom: 12px;
     margin-left: 8px;

@@ -9,7 +9,7 @@
         <ui:TextField picking-mode="Ignore" label="Output Path" tooltip="The asset database relative path to output the file." name="text-output-path" />
         <ui:TextField picking-mode="Ignore" label="Namespace" name="text-namespace" tooltip="The namespace where the BuildInfo should be placed." />
         <ui:Toggle label="Assembly Definition" name="toggle-assembly-definition" tooltip="Ensure that the folder of the BuildInfo has an assembly definition." />
-        <ui:VisualElement style="height: 20px;" />
+        <ui:VisualElement class="gdx-fixed-vertical-spacer" />
         <ui:Label text="Build Arguments" display-tooltip-when-elided="true" />
         <ui:TextField picking-mode="Ignore" label="Number" name="text-number" tooltip="The argument key for the build number to be passed to the BuildInfoProvider." />
         <ui:TextField picking-mode="Ignore" label="Description" name="text-description" tooltip="The argument key for the build description to be passed to the BuildInfoProvider." />
