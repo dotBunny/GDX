@@ -58,6 +58,16 @@
 
 #gdx-project-settings
 {
+    --color-primary: #1ED6F6;
+    --color-primary-75: #56E0F8;
+    --color-primary-75-alpha: rgba(30,214,246, .75);
+    --color-primary-55: #83E8FA;
+    --color-primary-55-alpha: rgba(30,214,246, .55);
+
+
+
+    --gdx-purple: #4481DF;
+
     --color-gdx-green: #0F391A;
     --color-gdx-yellow: #4F4F24;
     --color-gdx-blue: #08284B;
