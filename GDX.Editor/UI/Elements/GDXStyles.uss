@@ -1,11 +1,3 @@
-.root {
-
-    --color-blue: rgb(24, 116, 218);
-    --color-blue-a: rgba(0.0941176470588235, 0.4549019607843137, 0.8549019607843137, 1);
-    --color-yellow: rgb(228, 230, 105);
-    --color-green: rgb(46, 164, 79);
-}
-
 .hidden {
     display: none;
 }
@@ -64,6 +56,27 @@
     height: 20px;
 }
 
+#gdx-project-settings
+{
+    --color-gdx-green: #0F391A;
+    --color-gdx-yellow: #4F4F24;
+    --color-gdx-blue: #08284B;
+
+    --color-bright-blue: #29B9F2;
+    --color-light-purple: #4167D9;
+    --color-dark-purple: #203C73;
+    --color-mute-blue: #224D73;
+    --color-white: #F2F2F2;
+
+    --color-hover-tint: var(--color-bright-blue);
+    --color-header-normal: var(--color-gdx-blue);
+    --color-header-enabled: var(--color-gdx-green);
+    --color-header-disabled: var(--color-gdx-yellow);
+    --color-header-footer: #222222;
+
+    --size-header: 26px;
+}
+
 #gdx-project-settings-header {
     margin-bottom: 12px;
     margin-left: 8px;
@@ -86,40 +99,52 @@
 
 .gdx-project-settings-section-header {
     -unity-text-align: middle-left;
-    height: 25px;
-    -unity-slice-left: 3;
-    -unity-slice-right: 3;
-    -unity-slice-top: 2;
-    -unity-slice-bottom: 2;
-    margin-left: 4px;
-    margin-right: 4px;
+    height: var(--size-header);
     margin-top: 4px;
     margin-bottom: 4px;
-    padding-left: 3px;
+    padding-left: 0px;
     padding-right: 3px;
     padding-top: 3px;
     padding-bottom: 3px;
-    background-image: resource("Builtin Skins/Processed/Images/helpbox.png") ;
-    -unity-background-image-tint-color: rgb(24, 116, 218);
+    background-image: resource("Builtin Skins/Shared/Images/white.png") ;
+    -unity-background-image-tint-color: var(--color-header-normal);
+    border-bottom-width: 1px;
+    border-bottom-color: var(--color-header-footer);
+}
+.gdx-project-settings-section-header.enabled
+{
+    -unity-background-image-tint-color: var(--color-header-enabled);
+}
+.gdx-project-settings-section-header.disabled
+{
+    -unity-background-image-tint-color: var(--color-header-disabled);
 }
 
-.gdx-project-settings-section-header.enabled {
-    -unity-background-image-tint-color: rgb(46, 164, 79);
-}
-.gdx-project-settings-section-header.disabled {
-    -unity-background-image-tint-color: rgb(228, 230, 105);
+
+.gdx-project-settings-section-header .gdx-icon-button {
+    background-color: var(--color-header-footer);
+    width: var(--size-header);
+    height: var(--size-header);
+    padding: 0;
+    margin-top: -3px;
+    margin-left: 0px;
+    margin-right: 2px;
 }
 
 .gdx-project-settings-section-header #button-expand {
     width: 16px;
-    border-width: 0;
-    margin-left: 4px;
-    margin-right: 4px;
+    height: 16px;
+    border-width: 0px;
+    margin-left: 5px;
     margin-top: 4px;
     margin-bottom: 0;
-    padding: 0;
+    padding: 0px;
     background-image: resource('Icons/d_Toolbar Plus.png');
     background-color: rgba(0, 0, 0, 0);
+}
+.gdx-project-settings-section-header #button-expand:hover
+{
+    -unity-background-image-tint-color: var(--color-hover-tint);
 }
 .gdx-project-settings-section-header.expanded #button-expand {
     background-image: resource('Icons/d_Toolbar Minus.png');
@@ -127,19 +152,25 @@
 
 .gdx-project-settings-section-header #button-help {
     width: 16px;
+    height: 16px;
     border-width: 0;
     margin-left: 4px;
     margin-right: 4px;
-    margin-top: 4px;
-    margin-bottom: 0;
+    margin-top: 2px;
+    /*margin-bottom: 4px;*/
     padding: 0;
     background-color: rgba(0, 0, 0, 0);
     background-image: resource('Icons/d__Help.png');
+    cursor: link;
+}
+.gdx-project-settings-section-header #button-help:hover {
+    -unity-background-image-tint-color: var(--color-hover-tint);
 }
 
 .gdx-project-settings-section-header #label-name {
     -unity-font-style: bold;
     margin-left: 2px;
+    color: white;
 }
 
 

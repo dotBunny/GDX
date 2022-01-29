@@ -1,7 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="GDXStyles.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStyles" />
     <ui:VisualElement name="gdx-project-settings-section-header" class="gdx-project-settings-section-header" style="flex-direction: row;">
-        <ui:Button display-tooltip-when-elided="true" name="button-expand" />
+        <ui:VisualElement class="gdx-icon-button">
+            <ui:Button display-tooltip-when-elided="true" name="button-expand" />
+        </ui:VisualElement>
         <ui:Label text="Label" display-tooltip-when-elided="true" name="label-name" />
         <ui:Button display-tooltip-when-elided="true" name="button-help" />
         <ui:VisualElement style="flex-grow: 1;" />
