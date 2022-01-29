@@ -8,7 +8,7 @@
 
 .gdx-groupbox
 {
-    -unity-text-align: upper-center;
+    -unity-text-align: middle-left;
     -unity-slice-left: 3;
     -unity-slice-right: 3;
     -unity-slice-top: 3;
@@ -32,11 +32,27 @@
     background-image: resource("Builtin Skins/DarkSkin/Images/OL box.png");
 }
 
+.gdx-groupbox .unity-label
+{
+    white-space: normal;
+}
+.gdx-groupbox .p
+{
+    margin-bottom: 10px;
+}
+
 .gdx-notice-icon
 {
     width: 42px;
     height: 42px;
     background-image: resource("Icons/console.infoicon.png");
+}
+
+.gdx-warning-icon
+{
+    width: 42px;
+    height: 42px;
+    background-image: resource("Icons/console.warnicon.png");
 }
 
 .gdx-fixed-vertical-spacer
@@ -64,17 +80,30 @@
     margin-right: 10px;
 }
 
-
 .gdx-project-settings-section-header {
+    -unity-text-align: middle-left;
     height: 25px;
-    background-color: rgb(24, 116, 218);
+    -unity-slice-left: 3;
+    -unity-slice-right: 3;
+    -unity-slice-top: 2;
+    -unity-slice-bottom: 2;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    background-image: resource("Builtin Skins/Processed/Images/helpbox.png") ;
+    -unity-background-image-tint-color: rgb(24, 116, 218);
 }
 
 .gdx-project-settings-section-header.enabled {
-    background-color: rgb(46, 164, 79);
+    -unity-background-image-tint-color: rgb(46, 164, 79);
 }
 .gdx-project-settings-section-header.disabled {
-    background-color: rgb(228, 230, 105);
+    -unity-background-image-tint-color: rgb(228, 230, 105);
 }
 
 .gdx-project-settings-section-header.disabled #label-name {

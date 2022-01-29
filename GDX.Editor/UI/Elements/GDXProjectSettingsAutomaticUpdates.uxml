@@ -24,7 +24,7 @@
                     <ui:Label display-tooltip-when-elided="true" name="label-data" />
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement>
+            <ui:VisualElement style="align-items: flex-start;">
                 <ui:Button text="Manual Upgrade" display-tooltip-when-elided="true" />
                 <ui:Button text="Changelog" display-tooltip-when-elided="true" />
                 <ui:Button text="Update" display-tooltip-when-elided="true" />

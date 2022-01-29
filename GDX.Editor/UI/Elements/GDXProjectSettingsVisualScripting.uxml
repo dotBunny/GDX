@@ -1,4 +1,19 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="GDXStyles.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStyles" />
-    <ui:VisualElement name="gdx-visual-scripting" class="gdx-project-settings-section-content" />
+    <Style src="project://database/Assets/com.dotbunny.gdx/GDX.Editor/UI/Elements/GDXStyles.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStyles" />
+    <ui:VisualElement name="gdx-visual-scripting" class="gdx-project-settings-section-content" style="flex-grow: 0;">
+        <ui:VisualElement name="notice" class="gdx-groupbox" style="flex-direction: row;">
+            <ui:VisualElement class="gdx-warning-icon" />
+            <ui:VisualElement style="flex-grow: 1; flex-wrap: wrap; white-space: nowrap;">
+                <ui:Label text="By selecting and deselecting the below categories, items will be added or removed from the Visual Scripting type options configuration." display-tooltip-when-elided="true" class="p" style="flex-wrap: wrap; flex-shrink: 1; flex-grow: 1;" />
+                <ui:Label text="You still NEED to Regenerate Units!" display-tooltip-when-elided="true" class="p" style="-unity-font-style: bold;" />
+                <ui:Label text="You can do this by clicking the Regenerate Units button to the right or by finding the same button available in the Visual Scripting section of the Project Settings." display-tooltip-when-elided="true" class="p" />
+                <ui:Label text="These categories represents a curated selection of predefined content from the GDX API which has proven useful; it is not meant to represent everything available for inclusion to Visual Scripting." display-tooltip-when-elided="true" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 0; align-items: flex-start;">
+                <ui:Button text="Regenerate Units" display-tooltip-when-elided="true" name="button-regenerate-units" />
+                <ui:Button text="Install Docs" display-tooltip-when-elided="true" name="button-install-docs" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="sections" style="flex-grow: 1;" />
+    </ui:VisualElement>
 </ui:UXML>
