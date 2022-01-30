@@ -46,11 +46,11 @@ namespace GDX.Editor.UI
         ///     Get <see cref="UnityEditor.SettingsProvider" /> for GDX assembly.
         /// </summary>
         /// <returns>A provider for project settings.</returns>
-        [UnityEditor.SettingsProvider]
+        [SettingsProvider]
         public static UnityEditor.SettingsProvider Get()
         {
             // ReSharper disable once HeapView.ObjectAllocation.Evident
-            return new UnityEditor.SettingsProvider("Project/GDX", UnityEditor.SettingsScope.Project)
+            return new UnityEditor.SettingsProvider("Project/GDX", SettingsScope.Project)
             {
                 label = "GDX",
                 activateHandler = (searchContext, rootElement) =>
@@ -68,7 +68,7 @@ namespace GDX.Editor.UI
                     _clearButton.clicked += () =>
                     {
                         WorkingConfig = new GDXConfig(Core.Config);
-                        ProjectSettings.ConfigSectionsProvider.UpdateAll();
+                        ConfigSectionsProvider.UpdateAll();
                     };
 
                     _saveButton = _changesElement.Q<Button>("button-save-changes");
@@ -98,9 +98,9 @@ namespace GDX.Editor.UI
                     };
 
                     VisualElement packageHolderElement = rootElement.Q<VisualElement>("gdx-project-settings-packages");
-                    packageHolderElement.Add(GetPackageStatus("Addressables", GDX.Developer.Conditionals.HasAddressablesPackage));
-                    packageHolderElement.Add(GetPackageStatus("Platforms", GDX.Developer.Conditionals.HasPlatformsPackage));
-                    packageHolderElement.Add(GetPackageStatus("Visual Scripting", GDX.Developer.Conditionals.HasVisualScriptingPackage));
+                    packageHolderElement.Add(GetPackageStatus("Addressables", Developer.Conditionals.HasAddressablesPackage));
+                    packageHolderElement.Add(GetPackageStatus("Platforms", Developer.Conditionals.HasPlatformsPackage));
+                    packageHolderElement.Add(GetPackageStatus("Visual Scripting", Developer.Conditionals.HasVisualScriptingPackage));
 
                     // Build some useful references
                     ScrollView contentScrollView = rootElement.Q<ScrollView>("gdx-project-settings-content");
@@ -112,7 +112,7 @@ namespace GDX.Editor.UI
                         WorkingConfig = new GDXConfig(Core.Config);
                     }
 
-                    ProjectSettings.ConfigSectionsProvider.ClearSectionCache();
+                    ConfigSectionsProvider.ClearSectionCache();
 
 
                     // Create ordered list of sections
@@ -130,15 +130,15 @@ namespace GDX.Editor.UI
                     foreach (IConfigSection section in sections)
                     {
                         string sectionID = section.GetSectionID();
-                        VisualElement sectionHeader = ProjectSettings.ConfigSectionsProvider.CreateAndBindSectionHeader(section);
+                        VisualElement sectionHeader = ConfigSectionsProvider.CreateAndBindSectionHeader(section);
 
                         contentScrollView.contentContainer.Add(sectionHeader);
-                        ProjectSettings.ConfigSectionsProvider.UpdateSectionHeader(sectionID);
+                        ConfigSectionsProvider.UpdateSectionHeader(sectionID);
 
-                        VisualElement sectionContentBase = ProjectSettings.ConfigSectionsProvider.CreateAndBindSectionContent(section);
+                        VisualElement sectionContentBase = ConfigSectionsProvider.CreateAndBindSectionContent(section);
 
                         contentScrollView.contentContainer.Add(sectionContentBase);
-                        ProjectSettings.ConfigSectionsProvider.UpdateSectionContent(sectionID);
+                        ConfigSectionsProvider.UpdateSectionContent(sectionID);
                     }
                 },
                 keywords = s_searchKeywords

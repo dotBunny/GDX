@@ -54,7 +54,7 @@ Label.gdx-notice-text {
     background-image: resource('Icons/console.warnicon.png');
 }
 
-.gdx-fixed-vertical-spacer {
+.gdx-fixed-vertical-spacer-20 {
     height: 20px;
 }
 
@@ -99,14 +99,6 @@ Button.gdx-link:hover {
     --color-primary: rgb(65, 136, 225);
     --color-primary-75: rgba(65, 136, 225, 0.75);
     --color-primary-55: rgba(65, 136, 225, 0.55);
-    --gdx-purple: rgb(68, 129, 223);
-    --color-gdx-green: rgb(15, 57, 26);
-    --color-gdx-yellow: rgb(79, 79, 36);
-    --color-gdx-blue: rgb(8, 40, 75);
-    --color-hover-tint: var(--color-primary);
-    --color-header-normal: var(--color-primary);
-    --color-header-enabled: var(--color-primary);
-    --color-header-disabled: var(--color-primary-55);
     --color-header-footer: rgb(0, 0, 0);
     --size-header: 26px;
 }
@@ -154,17 +146,17 @@ Button.gdx-link:hover {
     padding-top: 3px;
     padding-bottom: 3px;
     background-image: resource('Builtin Skins/Shared/Images/white.png');
-    -unity-background-image-tint-color: var(--color-header-normal);
+    -unity-background-image-tint-color: var(--color-primary);
     border-bottom-width: 1px;
     border-bottom-color: var(--color-header-footer);
 }
 
 .gdx-project-settings-section-header.enabled {
-    -unity-background-image-tint-color: var(--color-header-enabled);
+    -unity-background-image-tint-color: var(--color-primary);
 }
 
 .gdx-project-settings-section-header.disabled {
-    -unity-background-image-tint-color: var(--color-header-disabled);
+    -unity-background-image-tint-color: var(--color-primary-55);
 }
 
 .gdx-project-settings-section-header .gdx-icon-button {
@@ -190,7 +182,7 @@ Button.gdx-link:hover {
 }
 
 .gdx-project-settings-section-header #button-expand:hover {
-    -unity-background-image-tint-color: var(--color-hover-tint);
+    -unity-background-image-tint-color: var(--color-primary);
 }
 
 .gdx-project-settings-section-header.expanded #button-expand {
@@ -216,7 +208,7 @@ Button.gdx-link:hover {
 }
 
 .gdx-project-settings-section-header #button-help:hover {
-    -unity-background-image-tint-color: var(--color-hover-tint);
+    -unity-background-image-tint-color: var(--color-primary);
 }
 
 .gdx-project-settings-section-header #label-name {
@@ -271,5 +263,5 @@ Button.gdx-link:hover {
 }
 
 .changed {
-    background-color: blueviolet;
+    -unity-font-style: bold-and-italic;
 }
