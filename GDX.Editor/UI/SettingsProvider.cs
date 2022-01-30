@@ -97,7 +97,10 @@ namespace GDX.Editor.UI
                         UnityEngine.Application.OpenURL("https://github.com/dotBunny/GDX/issues");
                     };
 
-                    // TODO : PACKAGE STATUS
+                    VisualElement packageHolderElement = rootElement.Q<VisualElement>("gdx-project-settings-packages");
+                    packageHolderElement.Add(GetPackageStatus("Addressables", GDX.Developer.Conditionals.HasAddressablesPackage));
+                    packageHolderElement.Add(GetPackageStatus("Platforms", GDX.Developer.Conditionals.HasPlatformsPackage));
+                    packageHolderElement.Add(GetPackageStatus("Visual Scripting", GDX.Developer.Conditionals.HasVisualScriptingPackage));
 
                     // Build some useful references
                     ScrollView contentScrollView = rootElement.Q<ScrollView>("gdx-project-settings-content");
@@ -140,6 +143,25 @@ namespace GDX.Editor.UI
                 },
                 keywords = s_searchKeywords
             };
+        }
+
+        private static VisualElement GetPackageStatus(string package, bool status)
+        {
+            VisualTreeAsset packageStatusAsset =
+                ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsPackageStatus");
+
+            VisualElement newInstance = packageStatusAsset.Instantiate()[0];
+
+            Label label = newInstance.Q<Label>("label-package");
+            label.text = package;
+
+            VisualElement statusElement = newInstance.Q<VisualElement>("element-status");
+            if (status)
+            {
+                statusElement.AddToClassList("found");
+            }
+
+            return newInstance;
         }
 
         /// <summary>

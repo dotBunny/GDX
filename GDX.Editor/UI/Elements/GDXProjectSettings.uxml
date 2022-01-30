@@ -30,6 +30,7 @@
                 </ui:VisualElement>
                 <ui:VisualElement name="gdx-project-settings-packages" class="gdx-groupbox" style="width: 200px;">
                     <ui:Label text="Packages Found" display-tooltip-when-elided="true" class="gdx-small-title" />
+                    <ui:VisualElement class="gdx-fixed-vertical-spacer-5" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:ScrollView>

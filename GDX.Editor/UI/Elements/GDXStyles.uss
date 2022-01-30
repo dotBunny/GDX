@@ -33,6 +33,10 @@
     margin-bottom: 10px;
 }
 
+
+Label.gdx-notice-text {
+    margin-left: 5px
+}
 .gdx-notice-icon {
     width: 26px;
     height: 26px;
@@ -49,6 +53,9 @@
 }
 .gdx-fixed-vertical-spacer-10 {
     height: 10px;
+}
+.gdx-fixed-vertical-spacer-5 {
+    height: 5px;
 }
 
 Label.gdx-bullet
@@ -108,6 +115,23 @@ Button.gdx-link:hover
     margin-left: 8px;
     margin-top: 1px;
 }
+
+#gdx-package-status
+{
+    margin-top: 5px;
+}
+
+#gdx-package-status #element-status
+{
+    width: 16px;
+    height: 16px;
+    background-image: resource("Icons/TestNormal.png");
+}
+#gdx-package-status #element-status.found
+{
+    background-image: resource("Icons/TestPassed.png");
+}
+
 
 #gdx-project-settings-content {
     margin-left: 10px;
