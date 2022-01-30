@@ -174,7 +174,6 @@ namespace GDX.Editor.UI
         {
             if (!Core.Config.Compare(WorkingConfig))
             {
-                // DIFFERENT
                 _changesElement.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
             }
             else

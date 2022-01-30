@@ -176,6 +176,11 @@
 }
 
 
+#gdx-project-settings-content #label-item
+{
+    -unity-font-style: bold;
+}
+
 .gdx-big-title {
     font-size: 19px;
     -unity-font-style: bold;

@@ -209,11 +209,6 @@ namespace GDX.Editor.UI.ProjectSettings
         public static void SetClassChangeCheck<T1, T2>(T1 element, T2 lhs, T2 rhs)
             where T1 : BaseField<T2> where T2 : class
         {
-            if (element == null)
-            {
-                return;
-            }
-
             element.SetValueWithoutNotify(rhs);
 
             if (lhs != rhs)
@@ -229,11 +224,6 @@ namespace GDX.Editor.UI.ProjectSettings
         public static void SetStructChangeCheck<T1, T2>(T1 element, T2 lhs, T2 rhs)
             where T1 : BaseField<T2> where T2 : struct
         {
-            if (element == null)
-            {
-                return;
-            }
-
             element.SetValueWithoutNotify(rhs);
 
             if (!lhs.Equals(rhs))
@@ -248,10 +238,6 @@ namespace GDX.Editor.UI.ProjectSettings
         public static void SetEnumChangeCheck<T1, T2>(T1 element, T2 lhs, T2 rhs)
             where T1 : EnumField where T2 : Enum
         {
-            if (element == null)
-            {
-                return;
-            }
             element.SetValueWithoutNotify(rhs);
             if (lhs.ToString() != rhs.ToString())
             {

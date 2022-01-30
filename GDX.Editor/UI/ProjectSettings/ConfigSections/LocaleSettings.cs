@@ -33,44 +33,38 @@ namespace GDX.Editor.ProjectSettings
             _rootElement = rootElement;
 
             _toggleSetDefaultCulture = _rootElement.Q<Toggle>("toggle-set-default-culture");
-            if (_toggleSetDefaultCulture != null)
+            _toggleSetDefaultCulture.value = UI.SettingsProvider.WorkingConfig.localizationSetDefaultCulture;
+            _toggleSetDefaultCulture.RegisterValueChangedCallback(evt =>
             {
-                _toggleSetDefaultCulture.value = UI.SettingsProvider.WorkingConfig.localizationSetDefaultCulture;
-                _toggleSetDefaultCulture.RegisterValueChangedCallback(evt =>
+                UI.SettingsProvider.WorkingConfig.localizationSetDefaultCulture = evt.newValue;
+                if (Core.Config.localizationSetDefaultCulture != evt.newValue)
                 {
-                    UI.SettingsProvider.WorkingConfig.localizationSetDefaultCulture = evt.newValue;
-                    if (Core.Config.localizationSetDefaultCulture != evt.newValue)
-                    {
-                        _toggleSetDefaultCulture.AddToClassList(ConfigSectionsProvider.ChangedClass);
-                    }
-                    else
-                    {
-                        _toggleSetDefaultCulture.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
-                    }
+                    _toggleSetDefaultCulture.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                else
+                {
+                    _toggleSetDefaultCulture.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                }
 
-                    UI.SettingsProvider.CheckForChanges();
-                });
-            }
+                UI.SettingsProvider.CheckForChanges();
+            });
 
             _enumDefaultCulture = _rootElement.Q<EnumField>("enum-default-culture");
-            if (_enumDefaultCulture != null)
+            _enumDefaultCulture.value = UI.SettingsProvider.WorkingConfig.localizationDefaultCulture;
+            _enumDefaultCulture.RegisterValueChangedCallback(evt =>
             {
-                _enumDefaultCulture.value = UI.SettingsProvider.WorkingConfig.localizationDefaultCulture;
-                _enumDefaultCulture.RegisterValueChangedCallback(evt =>
+                UI.SettingsProvider.WorkingConfig.localizationDefaultCulture = (Localization.Language)evt.newValue;
+                if (Core.Config.localizationDefaultCulture != (Localization.Language)evt.newValue)
                 {
-                    UI.SettingsProvider.WorkingConfig.localizationDefaultCulture = (Localization.Language)evt.newValue;
-                    if (Core.Config.localizationDefaultCulture != (Localization.Language)evt.newValue)
-                    {
-                        _enumDefaultCulture.AddToClassList(ConfigSectionsProvider.ChangedClass);
-                    }
-                    else
-                    {
-                        _enumDefaultCulture.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
-                    }
+                    _enumDefaultCulture.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                else
+                {
+                    _enumDefaultCulture.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                }
 
-                    UI.SettingsProvider.CheckForChanges();
-                });
-            }
+                UI.SettingsProvider.CheckForChanges();
+            });
         }
 
         public bool GetDefaultVisibility()

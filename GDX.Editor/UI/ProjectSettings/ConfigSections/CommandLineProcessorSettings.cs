@@ -29,44 +29,40 @@ namespace GDX.Editor.ProjectSettings
             _rootElement = rootElement;
 
             _textArgumentPrefix = _rootElement.Q<TextField>("text-argument-prefix");
-            if (_textArgumentPrefix != null)
+            _textArgumentPrefix.value = UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentPrefix;
+            _textArgumentPrefix.RegisterValueChangedCallback(evt =>
             {
-                _textArgumentPrefix.value = UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentPrefix;
-                _textArgumentPrefix.RegisterValueChangedCallback(evt =>
+                UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentPrefix = evt.newValue;
+                if (Core.Config.developerCommandLineParserArgumentPrefix != evt.newValue)
                 {
-                    UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentPrefix = evt.newValue;
-                    if (Core.Config.developerCommandLineParserArgumentPrefix != evt.newValue)
-                    {
-                        _textArgumentPrefix.AddToClassList(ConfigSectionsProvider.ChangedClass);
-                    }
-                    else
-                    {
-                        _textArgumentPrefix.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
-                    }
+                    _textArgumentPrefix.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                else
+                {
+                    _textArgumentPrefix.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                }
 
-                    UI.SettingsProvider.CheckForChanges();
-                });
-            }
+                UI.SettingsProvider.CheckForChanges();
+            });
+
 
             _textArgumentSplit = _rootElement.Q<TextField>("text-argument-split");
-            if (_textArgumentSplit != null)
+            _textArgumentSplit.value = UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentSplit;
+            _textArgumentSplit.RegisterValueChangedCallback(evt =>
             {
-                _textArgumentSplit.value = UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentSplit;
-                _textArgumentSplit.RegisterValueChangedCallback(evt =>
+                UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentSplit = evt.newValue;
+                if (Core.Config.developerCommandLineParserArgumentSplit != evt.newValue)
                 {
-                    UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentSplit = evt.newValue;
-                    if (Core.Config.developerCommandLineParserArgumentSplit != evt.newValue)
-                    {
-                        _textArgumentSplit.AddToClassList(ConfigSectionsProvider.ChangedClass);
-                    }
-                    else
-                    {
-                        _textArgumentSplit.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
-                    }
+                    _textArgumentSplit.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                else
+                {
+                    _textArgumentSplit.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                }
 
-                    UI.SettingsProvider.CheckForChanges();
-                });
-            }
+                UI.SettingsProvider.CheckForChanges();
+            });
+
         }
 
         public bool GetDefaultVisibility()
