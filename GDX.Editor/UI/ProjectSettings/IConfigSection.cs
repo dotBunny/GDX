@@ -16,6 +16,7 @@ namespace GDX.Editor
         bool GetToggleState();
         void SetToggleState(VisualElement toggleElement, bool newState);
         bool GetToggleSupport();
+        string GetToggleTooltip();
         void BindSectionContent(VisualElement rootElement);
         void UpdateSectionContent();
 

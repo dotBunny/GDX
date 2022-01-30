@@ -14,6 +14,8 @@ namespace GDX.Editor.ProjectSettings
     internal class CommandLineProcessorSettings : IConfigSection
     {
         private VisualElement _rootElement;
+        private TextField _textArgumentPrefix;
+        private TextField _textArgumentSplit;
 
         [InitializeOnLoadMethod]
         static void Register()
@@ -26,37 +28,41 @@ namespace GDX.Editor.ProjectSettings
         {
             _rootElement = rootElement;
 
-            TextField textArgumentPrefix = _rootElement.Q<TextField>("text-argument-prefix");
-            textArgumentPrefix.value = UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentPrefix;
-            textArgumentPrefix.RegisterValueChangedCallback(evt =>
+            _textArgumentPrefix = _rootElement.Q<TextField>("text-argument-prefix");
+            _textArgumentPrefix.value = UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentPrefix;
+            _textArgumentPrefix.RegisterValueChangedCallback(evt =>
             {
                 UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentPrefix = evt.newValue;
                 if (Core.Config.developerCommandLineParserArgumentPrefix != evt.newValue)
                 {
-                    textArgumentPrefix.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                    _textArgumentPrefix.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
                 else
                 {
-                    textArgumentPrefix.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                    _textArgumentPrefix.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
                 }
+
                 UI.SettingsProvider.CheckForChanges();
             });
 
-            TextField textArgumentSplit = _rootElement.Q<TextField>("text-argument-split");
-            textArgumentSplit.value = UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentSplit;
-            textArgumentSplit.RegisterValueChangedCallback(evt =>
+
+            _textArgumentSplit = _rootElement.Q<TextField>("text-argument-split");
+            _textArgumentSplit.value = UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentSplit;
+            _textArgumentSplit.RegisterValueChangedCallback(evt =>
             {
                 UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentSplit = evt.newValue;
                 if (Core.Config.developerCommandLineParserArgumentSplit != evt.newValue)
                 {
-                    textArgumentSplit.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                    _textArgumentSplit.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
                 else
                 {
-                    textArgumentSplit.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                    _textArgumentSplit.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
                 }
+
                 UI.SettingsProvider.CheckForChanges();
             });
+
         }
 
         public bool GetDefaultVisibility()
@@ -99,6 +105,11 @@ namespace GDX.Editor.ProjectSettings
             return false;
         }
 
+        public string GetToggleTooltip()
+        {
+            return null;
+        }
+
         public void SetToggleState(VisualElement toggleElement, bool newState)
         {
 
@@ -107,27 +118,13 @@ namespace GDX.Editor.ProjectSettings
         /// <inheritdoc />
         public void UpdateSectionContent()
         {
-            TextField textArgumentPrefix = _rootElement.Q<TextField>("text-argument-prefix");
-            textArgumentPrefix.SetValueWithoutNotify(UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentPrefix);
-            if (Core.Config.developerCommandLineParserArgumentPrefix != UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentPrefix)
-            {
-                textArgumentPrefix.AddToClassList(ConfigSectionsProvider.ChangedClass);
-            }
-            else
-            {
-                textArgumentPrefix.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
-            }
+            ConfigSectionsProvider.SetClassChangeCheck(_textArgumentPrefix,
+                Core.Config.developerCommandLineParserArgumentPrefix,
+                UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentPrefix);
 
-            TextField textArgumentSplit = _rootElement.Q<TextField>("text-argument-split");
-            textArgumentSplit.SetValueWithoutNotify(UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentSplit);
-            if (Core.Config.developerCommandLineParserArgumentSplit != UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentSplit)
-            {
-                textArgumentSplit.AddToClassList(ConfigSectionsProvider.ChangedClass);
-            }
-            else
-            {
-                textArgumentSplit.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
-            }
+            ConfigSectionsProvider.SetClassChangeCheck(_textArgumentSplit,
+                Core.Config.developerCommandLineParserArgumentSplit,
+                UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentSplit);
         }
     }
 }

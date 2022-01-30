@@ -2,9 +2,12 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections.Generic;
 using GDX.Editor;
 using GDX.Editor.UI;
+using GDX.Editor.UI.ProjectSettings;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -15,57 +18,34 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     internal class EnvironmentSettings : IConfigSection
     {
-        private VisualElement _element;
+        private VisualElement _rootElement;
+        private Toggle _toggleEnsureSymbol;
+        private Toggle _toggleDebugConsole;
+        private Toggle _toggleDevelopmentConsole;
+        private MaskField _maskDevelopment;
+        private MaskField _maskDebug;
+        private MaskField _maskRelease;
 
-        /// <summary>
-        ///     Internal section identifier.
-        /// </summary>
-        private const string SectionID = "GDX.Environment";
-
-        /// <summary>
-        ///     Settings content for <see cref="Config.traceDebugLevels" />.
-        /// </summary>
-        private readonly GUIContent s_debugLevelsContent = new GUIContent(
-            "",
-            "The levels of trace call to be logged in a debug build.");
-
-        /// <summary>
-        ///     Settings content for <see cref="Config.traceDebugOutputToUnityConsole" />.
-        /// </summary>
-        private readonly GUIContent s_debugConsoleOutput = new GUIContent(
-            "",
-            "Should traces be outputted to Unity's console in debug builds");
-
-        /// <summary>
-        ///     Settings content for <see cref="Config.traceDevelopmentLevels" />.
-        /// </summary>
-        private readonly GUIContent s_developmentLevelsContent = new GUIContent(
-            "",
-            "The levels of trace call to be logged in a development/editor build.");
-
-        /// <summary>
-        ///     Settings content for <see cref="Config.traceDevelopmentOutputToUnityConsole" />.
-        /// </summary>
-        private readonly GUIContent s_developmentConsoleOutput = new GUIContent(
-            "",
-            "Should traces be outputted to Unity's console in development builds.");
-
-        /// <summary>
-        ///     Settings content for <see cref="Config.traceReleaseLevels" />.
-        /// </summary>
-        private readonly GUIContent s_releaseLevelsContent = new GUIContent(
-            "",
-            "The levels of trace call to be logged in a release build.");
-
-        /// <summary>
-        ///     Settings content for <see cref="Config.environmentScriptingDefineSymbol" />.
-        /// </summary>
-        private readonly GUIContent s_scriptingDefineSymbolContent = new GUIContent(
-            "Ensure GDX Symbol",
-            "Should GDX make sure that there is a GDX scripting define symbol across all viable build target groups.");
-
-        private readonly GUIContent s_traceNoticeContent = new GUIContent(
-            "Make sure to disable console output if you have subscribed additional logging systems which may echo back to the console.");
+        private static List<string> s_traceChoices = new List<string>()
+        {
+            "Info",
+            "Log",
+            "Warning",
+            "Error",
+            "Exception",
+            "Assertion",
+            "Fatal"
+        };
+        private static List<int> s_traceValues = new List<int>()
+        {
+            0,
+            1,
+            2,
+            4,
+            8,
+            16,
+            32
+        };
 
         [InitializeOnLoadMethod]
         static void Register()
@@ -79,77 +59,109 @@ namespace GDX.Editor.ProjectSettings
 
         public void BindSectionContent(VisualElement rootElement)
         {
-            // GUI.enabled = true;
-            //
-            // SettingsGUIUtility.CreateSettingsSection(SectionID, false, "Environment");
-            //
-            // if (!SettingsGUIUtility.GetCachedEditorBoolean(SectionID))
-            // {
-            //     return;
-            // }
-            //
-            // settings.environmentScriptingDefineSymbol = EditorGUILayout.Toggle(s_scriptingDefineSymbolContent, settings.environmentScriptingDefineSymbol);
-            //
-            // GUILayout.Space(10);
-            // // Arguments (we're going to make sure they are forced to uppercase).
-            // GUILayout.Label("Traces", SettingsStyles.SubSectionHeaderTextStyle);
-            //
-            // GUILayout.BeginHorizontal(SettingsStyles.InfoBoxStyle);
-            // GUILayout.Label(SettingsStyles.NoticeIcon, SettingsStyles.NoHorizontalStretchStyle);
-            // GUILayout.Label(s_traceNoticeContent, SettingsStyles.WordWrappedLabelStyle);
-            // GUILayout.EndHorizontal();
-            //
-            // EditorGUILayout.BeginHorizontal();
-            // EditorGUILayout.LabelField(GUIContent.none, SettingsStyles.ColumnHeaderStyle, SettingsLayoutOptions.FixedWidth130LayoutOptions);
-            // GUILayout.Space(10);
-            // EditorGUILayout.LabelField("Flags", SettingsStyles.ColumnHeaderStyle, SettingsLayoutOptions.FixedWidth150LayoutOptions);
-            // GUILayout.Space(10);
-            // EditorGUILayout.LabelField("Console Output", SettingsStyles.ColumnHeaderStyle, SettingsLayoutOptions.FixedWidth150LayoutOptions);
-            // EditorGUILayout.EndHorizontal();
-            //
-            // EditorGUILayout.BeginHorizontal();
-            // GUILayout.Label("Development", SettingsLayoutOptions.FixedWidth130LayoutOptions);
-            // GUILayout.Space(10);
-            // SerializedProperty developmentLevelsProperty = settings.FindProperty("traceDevelopmentLevels");
-            // EditorGUI.BeginChangeCheck();
-            // ushort newDevelopmentLevels = (ushort)EditorGUILayout.MaskField(s_developmentLevelsContent, developmentLevelsProperty.intValue,
-            //     developmentLevelsProperty.enumDisplayNames,  SettingsLayoutOptions.FixedWidth150LayoutOptions);
-            // if (EditorGUI.EndChangeCheck())
-            // {
-            //     developmentLevelsProperty.intValue = newDevelopmentLevels;
-            // }
-            // GUILayout.Space(10);
-            // EditorGUILayout.PropertyField(settings.FindProperty("traceDevelopmentOutputToUnityConsole"), s_developmentConsoleOutput, SettingsLayoutOptions.FixedWidth150LayoutOptions);
-            // EditorGUILayout.EndHorizontal();
-            //
-            // EditorGUILayout.BeginHorizontal();
-            // GUILayout.Label("Debug", SettingsLayoutOptions.FixedWidth130LayoutOptions);
-            // GUILayout.Space(10);
-            // SerializedProperty debugLevelsProperty = settings.FindProperty("traceDebugLevels");
-            // EditorGUI.BeginChangeCheck();
-            // ushort newDebugLevels = (ushort)EditorGUILayout.MaskField(s_debugLevelsContent, debugLevelsProperty.intValue,
-            //     debugLevelsProperty.enumDisplayNames, SettingsLayoutOptions.FixedWidth150LayoutOptions);
-            // if (EditorGUI.EndChangeCheck())
-            // {
-            //     debugLevelsProperty.intValue = newDebugLevels;
-            // }
-            // GUILayout.Space(10);
-            // EditorGUILayout.PropertyField(settings.FindProperty("traceDebugOutputToUnityConsole"),
-            //     s_debugConsoleOutput, SettingsLayoutOptions.FixedWidth150LayoutOptions);
-            // EditorGUILayout.EndHorizontal();
-            //
-            // EditorGUILayout.BeginHorizontal();
-            // GUILayout.Label("Release", SettingsLayoutOptions.FixedWidth130LayoutOptions);
-            // GUILayout.Space(10);
-            // SerializedProperty releaseLevelsProperty = settings.FindProperty("traceReleaseLevels");
-            // EditorGUI.BeginChangeCheck();
-            // ushort newReleaseLevels = (ushort)EditorGUILayout.MaskField(s_releaseLevelsContent, releaseLevelsProperty.intValue,
-            //     releaseLevelsProperty.enumDisplayNames,SettingsLayoutOptions.FixedWidth150LayoutOptions);
-            // if (EditorGUI.EndChangeCheck())
-            // {
-            //     releaseLevelsProperty.intValue = newReleaseLevels;
-            // }
-            // EditorGUILayout.EndHorizontal();
+            _rootElement = rootElement;
+
+            _toggleEnsureSymbol = _rootElement.Q<Toggle>("toggle-ensure-symbol");
+            _toggleEnsureSymbol.value = UI.SettingsProvider.WorkingConfig.environmentScriptingDefineSymbol;
+            _toggleEnsureSymbol.RegisterValueChangedCallback(evt =>
+            {
+                UI.SettingsProvider.WorkingConfig.environmentScriptingDefineSymbol = evt.newValue;
+                if (Core.Config.environmentScriptingDefineSymbol != evt.newValue)
+                {
+                    _toggleEnsureSymbol.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                else
+                {
+                    _toggleEnsureSymbol.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                }
+
+                UI.SettingsProvider.CheckForChanges();
+            });
+
+            _toggleDevelopmentConsole = _rootElement.Q<Toggle>("toggle-console-development");
+            _toggleDevelopmentConsole.value = UI.SettingsProvider.WorkingConfig.traceDevelopmentOutputToUnityConsole;
+            _toggleDevelopmentConsole.RegisterValueChangedCallback(evt =>
+            {
+                UI.SettingsProvider.WorkingConfig.traceDevelopmentOutputToUnityConsole = evt.newValue;
+                if (Core.Config.traceDevelopmentOutputToUnityConsole != evt.newValue)
+                {
+                    _toggleDevelopmentConsole.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                else
+                {
+                    _toggleDevelopmentConsole.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                UI.SettingsProvider.CheckForChanges();
+            });
+            _toggleDebugConsole = _rootElement.Q<Toggle>("toggle-console-debug");
+            _toggleDebugConsole.value = UI.SettingsProvider.WorkingConfig.traceDebugOutputToUnityConsole;
+            _toggleDebugConsole.RegisterValueChangedCallback(evt =>
+            {
+                UI.SettingsProvider.WorkingConfig.traceDebugOutputToUnityConsole = evt.newValue;
+                if (Core.Config.traceDebugOutputToUnityConsole != evt.newValue)
+                {
+                    _toggleDebugConsole.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                else
+                {
+                    _toggleDebugConsole.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                UI.SettingsProvider.CheckForChanges();
+            });
+
+            _maskDevelopment = _rootElement.Q<MaskField>("mask-development");
+            _maskDevelopment.choices = s_traceChoices;
+            _maskDevelopment.choicesMasks = s_traceValues;
+            _maskDevelopment.value = (int)UI.SettingsProvider.WorkingConfig.traceDevelopmentLevels;
+            _maskDevelopment.RegisterValueChangedCallback(evt =>
+            {
+                UI.SettingsProvider.WorkingConfig.traceDevelopmentLevels = (Trace.TraceLevel)evt.newValue;
+                if (Core.Config.traceDevelopmentLevels != (Trace.TraceLevel)evt.newValue)
+                {
+                    _maskDevelopment.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                else
+                {
+                    _maskDevelopment.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                UI.SettingsProvider.CheckForChanges();
+            });
+
+            _maskDebug = _rootElement.Q<MaskField>("mask-debug");
+            _maskDebug.choices = s_traceChoices;
+            _maskDebug.choicesMasks = s_traceValues;
+            _maskDebug.value = (int)UI.SettingsProvider.WorkingConfig.traceDebugLevels;
+            _maskDebug.RegisterValueChangedCallback(evt =>
+            {
+                UI.SettingsProvider.WorkingConfig.traceDebugLevels = (Trace.TraceLevel)evt.newValue;
+                if (Core.Config.traceDebugLevels != (Trace.TraceLevel)evt.newValue)
+                {
+                    _maskDebug.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                else
+                {
+                    _maskDebug.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                UI.SettingsProvider.CheckForChanges();
+            });
+
+            _maskRelease = _rootElement.Q<MaskField>("mask-release");
+            _maskRelease.choices = s_traceChoices;
+            _maskRelease.choicesMasks = s_traceValues;
+            _maskRelease.value = (int)UI.SettingsProvider.WorkingConfig.traceReleaseLevels;
+            _maskRelease.RegisterValueChangedCallback(evt =>
+            {
+                UI.SettingsProvider.WorkingConfig.traceReleaseLevels = (Trace.TraceLevel)evt.newValue;
+                if (Core.Config.traceReleaseLevels != (Trace.TraceLevel)evt.newValue)
+                {
+                    _maskRelease.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                else
+                {
+                    _maskRelease.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                }
+                UI.SettingsProvider.CheckForChanges();
+            });
         }
 
         public bool GetDefaultVisibility()
@@ -182,6 +194,11 @@ namespace GDX.Editor.ProjectSettings
             return false;
         }
 
+        public string GetToggleTooltip()
+        {
+            return null;
+        }
+
         public void SetToggleState(VisualElement toggleElement, bool newState)
         {
 
@@ -189,7 +206,29 @@ namespace GDX.Editor.ProjectSettings
 
         public void UpdateSectionContent()
         {
+            ConfigSectionsProvider.SetStructChangeCheck(_toggleEnsureSymbol,
+                Core.Config.environmentScriptingDefineSymbol,
+                UI.SettingsProvider.WorkingConfig.environmentScriptingDefineSymbol);
 
+            ConfigSectionsProvider.SetMaskChangeCheck(_maskDevelopment,
+                (int)Core.Config.traceDevelopmentLevels,
+                (int)UI.SettingsProvider.WorkingConfig.traceDevelopmentLevels);
+
+            ConfigSectionsProvider.SetStructChangeCheck(_toggleDevelopmentConsole,
+                Core.Config.traceDevelopmentOutputToUnityConsole,
+                UI.SettingsProvider.WorkingConfig.traceDevelopmentOutputToUnityConsole);
+
+            ConfigSectionsProvider.SetMaskChangeCheck(_maskDebug,
+                (int)Core.Config.traceDebugLevels,
+                (int)UI.SettingsProvider.WorkingConfig.traceDebugLevels);
+
+            ConfigSectionsProvider.SetStructChangeCheck(_toggleDebugConsole,
+                Core.Config.traceDebugOutputToUnityConsole,
+                UI.SettingsProvider.WorkingConfig.traceDebugOutputToUnityConsole);
+
+            ConfigSectionsProvider.SetMaskChangeCheck(_maskRelease,
+                (int)Core.Config.traceReleaseLevels,
+                (int)UI.SettingsProvider.WorkingConfig.traceReleaseLevels);
         }
     }
 }

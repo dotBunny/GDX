@@ -2,7 +2,12 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
+using UnityEditor.UIElements;
+#if UNITY_2020_3
+using UnityEditor.UIElements;
+#endif
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,7 +16,7 @@ namespace GDX.Editor.UI.ProjectSettings
     public static class ConfigSectionsProvider
     {
         private const string ExpandedClass = "expanded";
-        private const string HiddenClass = "hidden";
+        public const string HiddenClass = "hidden";
         private const string EnabledClass = "enabled";
         private const string DisabledClass = "disabled";
         public const string ChangedClass = "changed";
@@ -49,7 +54,10 @@ namespace GDX.Editor.UI.ProjectSettings
 
             // Label
             Label nameLabel = headerInstance.Q<Label>("label-name");
-            if (nameLabel != null) nameLabel.text = section.GetSectionHeaderLabel();
+            if (nameLabel != null)
+            {
+                nameLabel.text = section.GetSectionHeaderLabel();
+            }
 
             // Help Button
             Button helpButton = headerInstance.Q<Button>("button-help");
@@ -77,6 +85,7 @@ namespace GDX.Editor.UI.ProjectSettings
             {
                 if (section.GetToggleSupport())
                 {
+                    enabledToggle.tooltip = section.GetToggleTooltip();
                     enabledToggle.visible = true;
                     enabledToggle.RegisterValueChangedCallback(evt =>
                     {
@@ -86,6 +95,7 @@ namespace GDX.Editor.UI.ProjectSettings
                 else
                 {
                     enabledToggle.visible = false;
+                    enabledToggle.tooltip = null;
                 }
             }
 
@@ -121,7 +131,7 @@ namespace GDX.Editor.UI.ProjectSettings
             s_configSectionContents.Clear();
         }
 
-        static void OnExpandSectionHeaderClicked(string sectionID)
+        private static void OnExpandSectionHeaderClicked(string sectionID)
         {
             GUIUtility.hotControl = 0;
             IConfigSection section = SettingsProvider.ConfigSections[sectionID];
@@ -129,7 +139,7 @@ namespace GDX.Editor.UI.ProjectSettings
             SettingsProvider.SetCachedEditorBoolean(sectionID, !setting);
         }
 
-        static void OnToggleSectionHeaderClicked(VisualElement toggleElement, string sectionID, bool newValue)
+        private static void OnToggleSectionHeaderClicked(VisualElement toggleElement, string sectionID, bool newValue)
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionID];
             section.SetToggleState(toggleElement, newValue);
@@ -138,7 +148,7 @@ namespace GDX.Editor.UI.ProjectSettings
 
         public static void UpdateAll()
         {
-            foreach(KeyValuePair<string,IConfigSection> section in SettingsProvider.ConfigSections)
+            foreach (KeyValuePair<string, IConfigSection> section in SettingsProvider.ConfigSections)
             {
                 UpdateSectionHeader(section.Key);
                 UpdateSectionContent(section.Key);
@@ -158,8 +168,10 @@ namespace GDX.Editor.UI.ProjectSettings
             {
                 element.AddToClassList(HiddenClass);
             }
+
             section.UpdateSectionContent();
         }
+
         public static void UpdateSectionHeader(string sectionID)
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionID];
@@ -193,5 +205,62 @@ namespace GDX.Editor.UI.ProjectSettings
                 sectionHeaderElement.RemoveFromClassList(ExpandedClass);
             }
         }
+
+
+        public static void SetClassChangeCheck<T1, T2>(T1 element, T2 lhs, T2 rhs)
+            where T1 : BaseField<T2> where T2 : class
+        {
+            element.SetValueWithoutNotify(rhs);
+
+            if (lhs != rhs)
+            {
+                element.AddToClassList(ChangedClass);
+            }
+            else
+            {
+                element.RemoveFromClassList(ChangedClass);
+            }
+        }
+
+        public static void SetStructChangeCheck<T1, T2>(T1 element, T2 lhs, T2 rhs)
+            where T1 : BaseField<T2> where T2 : struct
+        {
+            element.SetValueWithoutNotify(rhs);
+
+            if (!lhs.Equals(rhs))
+            {
+                element.AddToClassList(ChangedClass);
+            }
+            else
+            {
+                element.RemoveFromClassList(ChangedClass);
+            }
+        }
+        public static void SetEnumChangeCheck<T>(EnumField element, T lhs, T rhs) where T : Enum
+        {
+            element.SetValueWithoutNotify(rhs);
+            if (lhs.ToString() != rhs.ToString())
+            {
+                element.AddToClassList(ChangedClass);
+            }
+            else
+            {
+                element.RemoveFromClassList(ChangedClass);
+            }
+        }
+
+        public static void SetMaskChangeCheck(MaskField element, int lhs, int rhs)
+        {
+            element.SetValueWithoutNotify(rhs);
+            if (lhs != rhs)
+            {
+                element.AddToClassList(ChangedClass);
+            }
+            else
+            {
+                element.RemoveFromClassList(ChangedClass);
+            }
+        }
+
     }
 }

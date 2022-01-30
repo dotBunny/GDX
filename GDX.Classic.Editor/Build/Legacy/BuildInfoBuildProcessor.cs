@@ -87,7 +87,7 @@ namespace GDX.Classic.Editor.Build.Legacy
                 return;
             }
 
-            BuildInfoProvider.WriteDefaultFile();
+            GDX.Editor.Build.BuildInfoProvider.WriteDefaultFile();
         }
 #if !GDX_PLATFORMS
         /// <summary>
@@ -105,9 +105,9 @@ namespace GDX.Classic.Editor.Build.Legacy
             {
                 string path = Path.Combine(Application.dataPath, Core.Config.developerBuildInfoPath);
                 GDX.Platform.EnsureFileFolderHierarchyExists(path);
-                File.WriteAllText(path, BuildInfoProvider.GetContent(false, "Legacy"));
+                File.WriteAllText(path, GDX.Editor.Build.BuildInfoProvider.GetContent(false, "Legacy"));
 
-                BuildInfoProvider.CheckForAssemblyDefinition();
+                GDX.Editor.Build.BuildInfoProvider.CheckForAssemblyDefinition();
             }
             catch (Exception e)
             {

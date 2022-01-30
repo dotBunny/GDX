@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using GDX.Editor.UI.ProjectSettings;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -37,6 +38,10 @@ namespace GDX.Editor.UI
 
         public static GDXConfig WorkingConfig = null;
 
+        private static VisualElement _changesElement;
+        private static Button _clearButton;
+        private static Button _saveButton;
+
         /// <summary>
         ///     Get <see cref="UnityEditor.SettingsProvider" /> for GDX assembly.
         /// </summary>
@@ -53,22 +58,49 @@ namespace GDX.Editor.UI
                     rootElement.styleSheets.Add(ResourcesProvider.GetStyleSheet());
                     ResourcesProvider.GetVisualTreeAsset("GDXProjectSettings").CloneTree(rootElement);
 
+                    // Early handle of theme
+                    ResourcesProvider.CheckTheme(rootElement);
+
+                    _changesElement = rootElement.Q<VisualElement>("gdx-config-changes");
+
                     // Handle state buttons
-                    Button clearChangesButton = rootElement.Q<Button>("button-clear-changes");
-                    clearChangesButton.clicked += () =>
+                    _clearButton = _changesElement.Q<Button>("button-clear-changes");
+                    _clearButton.clicked += () =>
                     {
                         WorkingConfig = new GDXConfig(Core.Config);
                         ProjectSettings.ConfigSectionsProvider.UpdateAll();
                     };
 
-                    Button saveChangesButton = rootElement.Q<Button>("button-save-changes");
-                    saveChangesButton.clicked += () =>
+                    _saveButton = _changesElement.Q<Button>("button-save-changes");
+                    _saveButton.clicked += () =>
                     {
                         string codePath =
                             System.IO.Path.Combine(UnityEngine.Application.dataPath, "Generated", "GDXSettings.cs");
                         System.IO.File.WriteAllText(codePath, SettingsGenerator.Build(Core.Config, WorkingConfig));
                         AssetDatabase.ImportAsset("Assets/Generated/GDXSettings.cs");
                     };
+
+                    // Handle Links
+                    Button buttonRepository = rootElement.Q<Button>("button-repository");
+                    buttonRepository.clicked += () =>
+                    {
+                        UnityEngine.Application.OpenURL("https://github.com/dotBunny/GDX/");
+                    };
+                    Button buttonDocumentation = rootElement.Q<Button>("button-documentation");
+                    buttonDocumentation.clicked += () =>
+                    {
+                        UnityEngine.Application.OpenURL("https://gdx.dotbunny.com/");
+                    };
+                    Button buttonIssue = rootElement.Q<Button>("button-issue");
+                    buttonIssue.clicked += () =>
+                    {
+                        UnityEngine.Application.OpenURL("https://github.com/dotBunny/GDX/issues");
+                    };
+
+                    VisualElement packageHolderElement = rootElement.Q<VisualElement>("gdx-project-settings-packages");
+                    packageHolderElement.Add(GetPackageStatus("Addressables", GDX.Developer.Conditionals.HasAddressablesPackage));
+                    packageHolderElement.Add(GetPackageStatus("Platforms", GDX.Developer.Conditionals.HasPlatformsPackage));
+                    packageHolderElement.Add(GetPackageStatus("Visual Scripting", GDX.Developer.Conditionals.HasVisualScriptingPackage));
 
                     // Build some useful references
                     ScrollView contentScrollView = rootElement.Q<ScrollView>("gdx-project-settings-content");
@@ -111,6 +143,25 @@ namespace GDX.Editor.UI
                 },
                 keywords = s_searchKeywords
             };
+        }
+
+        private static VisualElement GetPackageStatus(string package, bool status)
+        {
+            VisualTreeAsset packageStatusAsset =
+                ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsPackageStatus");
+
+            VisualElement newInstance = packageStatusAsset.Instantiate()[0];
+
+            Label label = newInstance.Q<Label>("label-package");
+            label.text = package;
+
+            VisualElement statusElement = newInstance.Q<VisualElement>("element-status");
+            if (status)
+            {
+                statusElement.AddToClassList("found");
+            }
+
+            return newInstance;
         }
 
         /// <summary>
@@ -164,7 +215,11 @@ namespace GDX.Editor.UI
         {
             if (!Core.Config.Compare(WorkingConfig))
             {
-                // DIFFERENT
+                _changesElement.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+            }
+            else
+            {
+                _changesElement.AddToClassList(ConfigSectionsProvider.HiddenClass);
             }
         }
 

@@ -8,7 +8,7 @@ using GDX.IO.Compression;
 using UnityEditor;
 using UnityEngine;
 
-namespace GDX.Classic.Editor
+namespace GDX.Editor
 {
     /// <summary>
     ///     An autonomous provider which detects and notifies if updates are available for the GDX package.
@@ -267,12 +267,8 @@ namespace GDX.Classic.Editor
             try
             {
                 // ReSharper disable once HeapView.ObjectAllocation.Evident
-#if UNITY_2020_2_OR_NEWER
                 using WebClient webClient = new WebClient();
-#else
-                using (WebClient webClient = new WebClient())
-                {
-#endif
+
                 // Get content of the package definition file
                 string updateLocation = "main";
                 if (LocalPackage.InstallationMethod == PackageProvider.InstallationType.GitHubBranch ||
@@ -289,9 +285,6 @@ namespace GDX.Classic.Editor
                 return string.IsNullOrEmpty(packageJsonContent)
                     ? null
                     : JsonUtility.FromJson<PackageProvider.PackageDefinition>(packageJsonContent);
-#if !UNITY_2020_2_OR_NEWER
-                }
-#endif
             }
             catch (Exception)
             {
@@ -313,17 +306,9 @@ namespace GDX.Classic.Editor
             EditorUtility.DisplayProgressBar("GDX", "Downloading Update ...", 0.25f);
             try
             {
-#if UNITY_2020_2_OR_NEWER
                 using WebClient webClient = new WebClient();
                 webClient.DownloadFile(GitHubLatestUri + UpdatePackageDefinition.version + ".tar.gz",
                     tempFile);
-#else
-                using (WebClient webClient = new WebClient())
-                {
-                    webClient.DownloadFile(GitHubLatestUri + UpdatePackageDefinition.version + ".tar.gz",
-                        tempFile);
-                }
-#endif
             }
             catch (Exception e)
             {

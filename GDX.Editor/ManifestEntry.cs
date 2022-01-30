@@ -3,11 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using GDX;
-using GDX.Editor;
 using Newtonsoft.Json;
 
-namespace GDX.Classic.Editor
+namespace GDX.Editor
 {
     /// <summary>
     /// An object representative of the GDX entry in a manifest lockfile.
