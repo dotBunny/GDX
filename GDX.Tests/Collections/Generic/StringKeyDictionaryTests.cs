@@ -253,36 +253,5 @@ namespace Runtime.Collections.Generic
 
             Assert.IsTrue(allegedIndex0 == realIndex0 && allegedIndex1 == realIndex1 && allegedIndex0 != allegedIndex1 && nextIndex == allegedIndex0 && stableHashCode0 == stableHashCode1);
         }
-
-        [Test]
-        [Category("GDX.Tests")]
-        public void TestCollision()
-        {
-            
-
-            Assert.IsTrue("942".GetStableHashCode() == "9331582".GetStableHashCode());
-        }
-
-        void Main()
-        {
-
-            
-        }
-
-        static Random r = new Random();
-
-        // Define other methods and classes here
-        static string RandomString()
-        {
-
-            var s = ((char)r.Next((int)'a', ((int)'z') + 1)).ToString() +
-                    ((char)r.Next((int)'a', ((int)'z') + 1)).ToString() +
-                    ((char)r.Next((int)'a', ((int)'z') + 1)).ToString() +
-                    ((char)r.Next((int)'a', ((int)'z') + 1)).ToString() +
-                    ((char)r.Next((int)'a', ((int)'z') + 1)).ToString() +
-                    ((char)r.Next((int)'a', ((int)'z') + 1)).ToString();
-
-            return s;
-        }
     }
 }
