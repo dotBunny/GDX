@@ -110,7 +110,7 @@ namespace GDX.Collections.Generic
             while (nextKeyIndex != -1)
             {
                 StringKeyEntry<TValue> currEntry = Entries[nextKeyIndex];
-                nextKeyIndex = currEntry.next & 0x7FFFFFFF;
+                nextKeyIndex = currEntry.next;
                 if (currEntry.key == key)
                 {
                     return false;
@@ -184,6 +184,47 @@ namespace GDX.Collections.Generic
             Entries = newEntries;
         }
 
+        public void Reserve(int capacityToReserve)
+        {
+            int oldCapacity = Entries.Length;   
+            if (Count + capacityToReserve > oldCapacity)
+            {
+                int minCapacity = Count + capacityToReserve;
+                int nextPrimeCapacity = DictionaryPrimes.GetNextSize(minCapacity);
+
+                int[] newBuckets = new int[nextPrimeCapacity];
+                for (int i = 0; i < nextPrimeCapacity; i++)
+                {
+                    newBuckets[i] = -1;
+                }
+
+                StringKeyEntry<TValue>[] newEntries = new StringKeyEntry<TValue>[nextPrimeCapacity];
+                Array.Copy(Entries, 0, newEntries, 0, oldCapacity);
+
+                for (int i = oldCapacity; i < nextPrimeCapacity; i++)
+                {
+                    newEntries[i].next = (i + 1) | (1 << 31);
+                }
+
+                for (int i = 0; i < oldCapacity; i++)
+                {
+                    ref StringKeyEntry<TValue> entry = ref newEntries[i];
+
+                    if (entry.next != -1)
+                    {
+                        int newBucketIndex = (entry.hashCode & 0x7FFFFFFF) % nextPrimeCapacity;
+
+                        int indexAtBucket = newBuckets[newBucketIndex];
+                        entry.next = indexAtBucket;
+                        newBuckets[newBucketIndex] = i;
+                    }
+                }
+
+                Buckets = newBuckets;
+                Entries = newEntries;
+            }
+        }
+
         public int IndexOf(string key)
         {
             if (key == null) throw new ArgumentNullException();
@@ -201,7 +242,7 @@ namespace GDX.Collections.Generic
                     return nextKeyIndex;
                 }
 
-                nextKeyIndex = currEntry.next & 0x7FFFFFFF;
+                nextKeyIndex = currEntry.next;
             }
 
             return -1;
@@ -218,7 +259,7 @@ namespace GDX.Collections.Generic
             while (nextKeyIndex != -1)
             {
                 ref StringKeyEntry<TValue> currEntry = ref Entries[nextKeyIndex];
-                nextKeyIndex = currEntry.next & 0x7FFFFFFF;
+                nextKeyIndex = currEntry.next;
 
                 if (currEntry.key == key)
                 {
@@ -253,7 +294,7 @@ namespace GDX.Collections.Generic
                 }
 
                 previousIndex = indexOfKey;
-                indexOfKey = currEntry.next & 0x7FFFFFFF;
+                indexOfKey = currEntry.next;
             }
 
             if (foundIndex)
@@ -298,7 +339,7 @@ namespace GDX.Collections.Generic
                 while (nextKeyIndex != -1)
                 {
                     ref StringKeyEntry<TValue> currEntry = ref Entries[nextKeyIndex];
-                    nextKeyIndex = currEntry.next & 0x7FFFFFFF;
+                    nextKeyIndex = currEntry.next;
 
                     if (currEntry.key == key)
                     {
@@ -329,7 +370,7 @@ namespace GDX.Collections.Generic
                 while (nextKeyIndex != -1)
                 {
                     ref StringKeyEntry<TValue> currEntry = ref Entries[nextKeyIndex];
-                    nextKeyIndex = currEntry.next & 0x7FFFFFFF;
+                    nextKeyIndex = currEntry.next;
                     if (currEntry.key == key)
                     {
                         currEntry.value = value;
