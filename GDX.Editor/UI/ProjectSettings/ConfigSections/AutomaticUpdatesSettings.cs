@@ -32,6 +32,7 @@ namespace GDX.Editor.ProjectSettings
         private Button _buttonManualUpgrade;
         private Button _buttonChangeLog;
         private Button _buttonUpdate;
+        private Button _buttonManualCheck;
 
         private SliderInt _sliderUpdateTime;
 
@@ -77,6 +78,7 @@ namespace GDX.Editor.ProjectSettings
             _buttonUpdate = _rootElement.Q<Button>("button-update");
             _buttonChangeLog = _rootElement.Q<Button>("button-changelog");
             _buttonManualUpgrade = _rootElement.Q<Button>("button-manual-upgrade");
+            _buttonManualCheck = _rootElement.Q<Button>("button-manual-check");
 
             _sliderUpdateTime = _rootElement.Q<SliderInt>("gdx-slider-update-time");
             _sliderUpdateTime.value = UpdateDayCountSetting;
@@ -146,47 +148,24 @@ namespace GDX.Editor.ProjectSettings
 
             _labelLastChecked.text = UpdateProvider.GetLastChecked().ToString(Localization.LocalTimestampFormat);
 
+            _buttonChangeLog.clicked += () =>
+            {
+                Application.OpenURL("https://github.com/dotBunny/GDX/blob/main/CHANGELOG.md");
+            };
+            _buttonUpdate.clicked += () =>
+            {
+                UpdateProvider.AttemptUpgrade();
+            };
+            _buttonManualCheck.clicked += UpdateProvider.CheckForUpdates;
+            _buttonManualUpgrade.clicked += () =>
+            {
+                UpdateProvider.AttemptUpgrade(true);
+            };
 
-            //     // Force things to the right
-            //     GUILayout.FlexibleSpace();
-            //
-            //     EditorGUILayout.BeginVertical();
-            //     if (UpdateProvider.HasUpdate(UpdateProvider.UpdatePackageDefinition))
-            //     {
-            //         if (GUILayout.Button("Changelog", SettingsStyles.ButtonStyle))
-            //         {
-            //             Application.OpenURL("https://github.com/dotBunny/GDX/blob/main/CHANGELOG.md");
-            //         }
-            //
-            //         if (UpdateProvider.IsUpgradable())
-            //         {
-            //             if (GUILayout.Button("Update", SettingsStyles.ButtonStyle))
-            //             {
-            //                 UpdateProvider.AttemptUpgrade();
-            //             }
-            //         }
-            //     }
-            //     else
-            //     {
-            //         if (GUILayout.Button("Manual Check", SettingsStyles.ButtonStyle))
-            //         {
-            //             UpdateProvider.CheckForUpdates();
-            //         }
-            //
-            //         // Special allowance to force pull dev branch to avoid having to increment the version code.
-            //         if ((UpdateProvider.LocalPackage.InstallationMethod ==
-            //              PackageProvider.InstallationType.GitHubBranch ||
-            //              UpdateProvider.LocalPackage.InstallationMethod ==
-            //              PackageProvider.InstallationType.UPMBranch) &&
-            //             UpdateProvider.LocalPackage.SourceTag == "dev")
-            //         {
-            //             if (GUILayout.Button("Force Upgrade", SettingsStyles.ButtonStyle))
-            //             {
-            //                 UpdateProvider.AttemptUpgrade(true);
-            //             }
-            //         }
-            //     }
-            //
+
+
+
+
             //     EditorGUILayout.EndVertical();
             // }
             // else
@@ -195,15 +174,7 @@ namespace GDX.Editor.ProjectSettings
             //         $"An error occured trying to find the package definition.\nPresumed Root: {UpdateProvider.LocalPackage.PackageAssetPath}\nPresumed Manifest:{UpdateProvider.LocalPackage.PackageManifestPath})",
             //         EditorStyles.boldLabel);
             // }
-            //
-            // EditorGUILayout.EndHorizontal();
-            //
-            // // Disable based on if we have this enabled
-            // GUI.enabled = packageSectionEnabled;
-            //
-            // UpdateDayCountSetting =
-            //     EditorGUILayout.IntSlider(s_updateDayCountContent, UpdateDayCountSetting, 1,
-            //         31);
+
         }
 
         public bool GetDefaultVisibility()
@@ -264,7 +235,43 @@ namespace GDX.Editor.ProjectSettings
 
         public void UpdateSectionContent()
         {
+            if (UpdateProvider.HasUpdate(UpdateProvider.UpdatePackageDefinition))
+            {
+                _buttonManualCheck.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                _buttonManualUpgrade.AddToClassList(ConfigSectionsProvider.HiddenClass);
 
+                _buttonChangeLog.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+
+                if (UpdateProvider.IsUpgradable())
+                {
+                    _buttonUpdate.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                }
+                else
+                {
+                    _buttonUpdate.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                }
+            }
+            else
+            {
+                _buttonChangeLog.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                _buttonUpdate.AddToClassList(ConfigSectionsProvider.HiddenClass);
+
+                _buttonManualCheck.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+
+                if ((UpdateProvider.LocalPackage.InstallationMethod ==
+                     PackageProvider.InstallationType.GitHubBranch ||
+                     UpdateProvider.LocalPackage.InstallationMethod ==
+                     PackageProvider.InstallationType.UPMBranch) &&
+                    UpdateProvider.LocalPackage.SourceTag == "dev")
+                {
+                    _buttonManualUpgrade.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                }
+                else
+                {
+                    _buttonManualUpgrade.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                }
+
+            }
         }
     }
 }

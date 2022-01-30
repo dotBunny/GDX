@@ -13,8 +13,22 @@
             <ui:VisualElement name="gdx-project-settings-info" style="flex-direction: row;">
                 <ui:VisualElement style="flex-grow: 1; flex-wrap: nowrap;">
                     <ui:Label text="A battle-tested library of game-ready high-performance C# code." display-tooltip-when-elided="true" style="flex-wrap: wrap;" />
+                    <ui:VisualElement class="gdx-fixed-vertical-spacer-10" />
+                    <ui:VisualElement style="white-space: nowrap; align-items: flex-start; flex-direction: row;">
+                        <ui:Label text="-" class="gdx-bullet"/>
+                        <ui:Button name="button-repository" text="Repository" display-tooltip-when-elided="true" class="gdx-link" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="white-space: nowrap; align-items: flex-start; flex-direction: row;">
+                        <ui:Label text="-" class="gdx-bullet" />
+                        <ui:Button name="button-documentation"  text="Documentation" display-tooltip-when-elided="true" class="gdx-link" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="white-space: nowrap; align-items: flex-start; flex-direction: row;">
+                        <ui:Label text="-" class="gdx-bullet" />
+                        <ui:Button name="button-issue" text="Report an Issue" display-tooltip-when-elided="true" class="gdx-link" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="gdx-fixed-vertical-spacer-10" />
                 </ui:VisualElement>
-                <ui:VisualElement name="gdx-project-settings-packages" style="width: 200px;">
+                <ui:VisualElement name="gdx-project-settings-packages" class="gdx-groupbox" style="width: 200px;">
                     <ui:Label text="Packages Found" display-tooltip-when-elided="true" class="gdx-small-title" />
                 </ui:VisualElement>
             </ui:VisualElement>

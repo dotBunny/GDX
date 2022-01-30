@@ -80,6 +80,25 @@ namespace GDX.Editor.UI
                         AssetDatabase.ImportAsset("Assets/Generated/GDXSettings.cs");
                     };
 
+                    // Handle Links
+                    Button buttonRepository = rootElement.Q<Button>("button-repository");
+                    buttonRepository.clicked += () =>
+                    {
+                        UnityEngine.Application.OpenURL("https://github.com/dotBunny/GDX/");
+                    };
+                    Button buttonDocumentation = rootElement.Q<Button>("button-documentation");
+                    buttonDocumentation.clicked += () =>
+                    {
+                        UnityEngine.Application.OpenURL("https://gdx.dotbunny.com/");
+                    };
+                    Button buttonIssue = rootElement.Q<Button>("button-issue");
+                    buttonIssue.clicked += () =>
+                    {
+                        UnityEngine.Application.OpenURL("https://github.com/dotBunny/GDX/issues");
+                    };
+
+                    // TODO : PACKAGE STATUS
+
                     // Build some useful references
                     ScrollView contentScrollView = rootElement.Q<ScrollView>("gdx-project-settings-content");
 

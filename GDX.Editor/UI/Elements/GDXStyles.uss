@@ -1,9 +1,7 @@
 .hidden {
     display: none;
 }
-
-.gdx-groupbox
-{
+.gdx-groupbox {
     -unity-text-align: middle-left;
     -unity-slice-left: 3;
     -unity-slice-right: 3;
@@ -18,46 +16,73 @@
     padding-top: 10px;
     padding-bottom: 10px;
 }
-.light .gdx-groupbox
-{
+.light .gdx-groupbox {
     background-image: resource("Builtin Skins/LightSkin/Images/OL box.png");
 }
-
-.dark .gdx-groupbox
-{
+.dark .gdx-groupbox {
     background-image: resource("Builtin Skins/DarkSkin/Images/OL box.png");
 }
 
-.gdx-groupbox .unity-label
-{
+.gdx-groupbox .unity-label {
     white-space: normal;
 }
-.gdx-groupbox .p
-{
+.gdx-groupbox .lp {
+    margin-bottom: 2px;
+}
+.gdx-groupbox .p {
     margin-bottom: 10px;
 }
 
-.gdx-notice-icon
-{
-    width: 42px;
-    height: 42px;
+.gdx-notice-icon {
+    width: 26px;
+    height: 26px;
     background-image: resource("Icons/console.infoicon.png");
 }
-
-.gdx-warning-icon
-{
-    width: 42px;
-    height: 42px;
+.gdx-warning-icon {
+    width: 26px;
+    height: 26px;
     background-image: resource("Icons/console.warnicon.png");
 }
 
-.gdx-fixed-vertical-spacer
-{
+.gdx-fixed-vertical-spacer {
     height: 20px;
 }
+.gdx-fixed-vertical-spacer-10 {
+    height: 10px;
+}
 
-#gdx-project-settings
+Label.gdx-bullet
 {
+    margin-right: 3px;
+    -unity-font-style: bold;
+}
+Button.gdx-link
+{
+
+    margin: 0px;
+    padding: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-top-width: 0px;
+    border-bottom-width: 1px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    background-color: rgba(0,0,0,0);
+    border-bottom-color: var(--color-primary);
+    color: var(--color-primary);
+    margin-bottom: 6px;
+}
+Button.gdx-link:hover
+{
+    border-width: 0;
+    background-color: rgba(0,0,0,0);
+    color: var(--color-primary-55);
+    border-bottom-color: var(--color-primary-55);
+    cursor: link;
+    border-bottom-width: 1px;
+}
+
+#gdx-project-settings {
     --color-primary: rgba(65,136,225,1);
     --color-primary-75: rgba(65,136,225,0.75);
     --color-primary-55: rgba(65,136,225,0.55);
@@ -76,7 +101,6 @@
     --color-header-footer: #000000;
 
     --size-header: 26px;
-
 }
 
 #gdx-project-settings-header {
@@ -128,7 +152,7 @@
     width: var(--size-header);
     height: var(--size-header);
     padding: 0;
-    margin-top: -3px;
+    margin-top: -4px;
     margin-left: 0px;
     margin-right: 2px;
 }
@@ -150,6 +174,11 @@
 }
 .gdx-project-settings-section-header.expanded #button-expand {
     background-image: resource('Icons/d_Toolbar Minus.png');
+}
+.gdx-project-settings-section-content
+{
+    margin-top: 0;
+    margin-bottom: 10px;
 }
 
 .gdx-project-settings-section-header #button-help {
@@ -179,6 +208,12 @@
 #gdx-project-settings-content #label-item
 {
     -unity-font-style: bold;
+    width: 150px;
+}
+
+#gdx-project-settings-content .unity-base-field__label
+{
+    width: 150px;
 }
 
 .gdx-big-title {
