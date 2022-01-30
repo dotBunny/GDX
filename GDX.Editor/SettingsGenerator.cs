@@ -92,7 +92,39 @@ namespace GDX.Editor
         private static void GetOverrideTraceLevel(StringBuilder builder, string member, Trace.TraceLevel lhs, Trace.TraceLevel rhs)
         {
             if (lhs == rhs) return;
-            builder.AppendLine($"\t\t\t{CoreConfigPath}.{member} = Trace.TraceLevel.{rhs.ToString()};");
+
+            StringBuilder maskBuilder = new StringBuilder();
+            if (rhs.HasFlags(Trace.TraceLevel.Info))
+            {
+                maskBuilder.Append(" Trace.TraceLevel.Info |");
+            }
+            if (rhs.HasFlags(Trace.TraceLevel.Log))
+            {
+                maskBuilder.Append(" Trace.TraceLevel.Log |");
+            }
+            if (rhs.HasFlags(Trace.TraceLevel.Warning))
+            {
+                maskBuilder.Append(" Trace.TraceLevel.Warning |");
+            }
+            if (rhs.HasFlags(Trace.TraceLevel.Error))
+            {
+                maskBuilder.Append(" Trace.TraceLevel.Error |");
+            }
+            if (rhs.HasFlags(Trace.TraceLevel.Exception))
+            {
+                maskBuilder.Append(" Trace.TraceLevel.Exception |");
+            }
+            if (rhs.HasFlags(Trace.TraceLevel.Assertion))
+            {
+                maskBuilder.Append(" Trace.TraceLevel.Assertion |");
+            }
+            if (rhs.HasFlags(Trace.TraceLevel.Fatal))
+            {
+                maskBuilder.Append(" Trace.TraceLevel.Fatal |");
+            }
+
+            string masks = maskBuilder.ToString().Trim();
+            builder.AppendLine($"\t\t\t{CoreConfigPath}.{member} = {masks.Substring(0,masks.Length - 2)};");
         }
 
         private static void OverrideLocalizationLanguage(StringBuilder builder, string member, Localization.Language lhs, Localization.Language rhs)

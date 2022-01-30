@@ -172,7 +172,7 @@ Button.gdx-link:hover {
     width: var(--size-header);
     height: var(--size-header);
     padding: 0;
-    margin-top: -4px;
+    margin-top: -3px;
     margin-left: 0;
     margin-right: 2px;
 }

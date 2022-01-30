@@ -252,7 +252,7 @@ namespace GDX.Editor.UI.ProjectSettings
         public static void SetMaskChangeCheck(MaskField element, int lhs, int rhs)
         {
             element.SetValueWithoutNotify(rhs);
-            if (lhs.ToString() != rhs.ToString())
+            if (lhs != rhs)
             {
                 element.AddToClassList(ChangedClass);
             }
