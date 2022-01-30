@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEditor.UIElements;
 #if UNITY_2020_3
 using UnityEditor.UIElements;
 #endif
@@ -235,8 +236,7 @@ namespace GDX.Editor.UI.ProjectSettings
                 element.RemoveFromClassList(ChangedClass);
             }
         }
-        public static void SetEnumChangeCheck<T1, T2>(T1 element, T2 lhs, T2 rhs)
-            where T1 : EnumField where T2 : Enum
+        public static void SetEnumChangeCheck<T>(EnumField element, T lhs, T rhs) where T : Enum
         {
             element.SetValueWithoutNotify(rhs);
             if (lhs.ToString() != rhs.ToString())
@@ -248,5 +248,19 @@ namespace GDX.Editor.UI.ProjectSettings
                 element.RemoveFromClassList(ChangedClass);
             }
         }
+
+        public static void SetMaskChangeCheck(MaskField element, int lhs, int rhs)
+        {
+            element.SetValueWithoutNotify(rhs);
+            if (lhs.ToString() != rhs.ToString())
+            {
+                element.AddToClassList(ChangedClass);
+            }
+            else
+            {
+                element.RemoveFromClassList(ChangedClass);
+            }
+        }
+
     }
 }

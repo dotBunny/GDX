@@ -3,26 +3,25 @@
     <ui:VisualElement name="gdx-environment" class="gdx-project-settings-section-content">
         <ui:Toggle label="Ensure GDX Symbol" name="toggle-ensure-symbol" tooltip="Should GDX make sure that there is a GDX scripting define symbol across all viable build target groups." />
         <ui:VisualElement class="gdx-fixed-vertical-spacer" />
-        <ui:Label text="Traces" display-tooltip-when-elided="true" />
+        <ui:Label text="Traces" display-tooltip-when-elided="true" class="gdx-small-title" />
         <ui:VisualElement name="notice" class="gdx-groupbox" style="flex-direction: row;">
             <ui:VisualElement class="gdx-notice-icon" />
-            <ui:Label text="Make sure to disable console output if you have subscribed additional logging systems which may echo back to the console." display-tooltip-when-elided="true" style="flex-wrap: wrap; flex-shrink: 1; flex-grow: 1;" />
+            <ui:Label text="Make sure to disable console output if you have subscribed additional logging systems which may echo back to the console." display-tooltip-when-elided="true" class="gdx-notice-text" style="flex-wrap: wrap; flex-shrink: 1; flex-grow: 1;" />
         </ui:VisualElement>
-        <ui:VisualElement name="table" style="flex-direction: column;">
+        <ui:VisualElement name="gdx-trace-table" style="flex-direction: column;">
             <ui:VisualElement name="table-header" style="flex-direction: row; flex-grow: 1;">
                 <ui:VisualElement name="label-spacer" />
-                <ui:Label text="Flags" display-tooltip-when-elided="true" name="label-flags" />
-                <ui:Label text="Console Output" display-tooltip-when-elided="true" name="label-console" />
+                <ui:Label text="Flags" display-tooltip-when-elided="true" name="label-flags" style="-unity-font-style: italic; white-space: normal;" />
+                <ui:Label text="Console Output" display-tooltip-when-elided="true" name="label-console" style="-unity-font-style: italic;" />
             </ui:VisualElement>
-            <uie:MaskField label="Mask" choices="System.Collections.Generic.List`1[System.String]">
-                <ui:Toggle />
+            <ui:VisualElement class="gdx-fixed-vertical-spacer-5" />
+            <uie:MaskField label="Development" choices="System.Collections.Generic.List`1[System.String]" name="mask-development" tooltip="The levels of trace call to be logged in a development/editor build.">
+                <ui:Toggle name="toggle-console-development" tooltip="Should traces be outputted to Unity's console in development builds"/>
             </uie:MaskField>
-            <uie:MaskField label="Mask" choices="System.Collections.Generic.List`1[System.String]">
-                <ui:Toggle />
+            <uie:MaskField label="Debug" choices="System.Collections.Generic.List`1[System.String]" name="mask-debug" tooltip="The levels of trace call to be logged in a debug build.">
+                <ui:Toggle name="toggle-console-debug" tooltip="Should traces be outputted to Unity's console in debug builds" />
             </uie:MaskField>
-            <uie:MaskField label="Mask" choices="System.Collections.Generic.List`1[System.String]">
-                <ui:Toggle />
-            </uie:MaskField>
+            <uie:MaskField label="Release" choices="System.Collections.Generic.List`1[System.String]" name="mask-release" tooltip="The levels of trace call to be logged in a release build."/>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
