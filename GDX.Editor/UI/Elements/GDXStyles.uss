@@ -84,6 +84,7 @@ Button.gdx-link {
     border-bottom-color: var(--color-primary);
     color: var(--color-primary);
     margin-bottom: 6px;
+    cursor: link;
 }
 
 Button.gdx-link:hover {
@@ -91,7 +92,6 @@ Button.gdx-link:hover {
     background-color: rgba(0, 0, 0, 0);
     color: var(--color-primary-55);
     border-bottom-color: var(--color-primary-55);
-    cursor: link;
     border-bottom-width: 1px;
 }
 
@@ -246,7 +246,7 @@ Button.gdx-button {
 }
 
 .gdx-project-settings-section-header #button-help:hover {
-    -unity-background-image-tint-color: var(--color-primary);
+    -unity-background-image-tint-color: var(--color-header-footer);
 }
 
 .gdx-project-settings-section-header #label-name {

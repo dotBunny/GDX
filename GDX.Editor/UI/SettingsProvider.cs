@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Collections.Generic;
 using GDX.Editor.UI.ProjectSettings;
 using UnityEditor;
@@ -31,7 +30,9 @@ namespace GDX.Editor.UI
         /// </summary>
         private static readonly List<string> s_searchKeywords = new List<string>(new[]
         {
-            "gdx", "update", "parser", "commandline", "build"
+            "gdx", "automatic", "package", "update", "buildinfo", "task", "stream", "changelist",
+            "cli", "argument", "environment", "trace", "symbol", "locale", "localization", "culture",
+            "visual", "scripting", "vs", "parser", "commandline", "build"
         });
 
         public static readonly Dictionary<string, IConfigSection> ConfigSections = new Dictionary<string, IConfigSection>();
