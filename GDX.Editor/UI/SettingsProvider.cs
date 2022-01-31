@@ -69,6 +69,7 @@ namespace GDX.Editor.UI
                     {
                         WorkingConfig = new GDXConfig(Core.Config);
                         ConfigSectionsProvider.UpdateAll();
+                        CheckForChanges();
                     };
 
                     _saveButton = _changesElement.Q<Button>("button-save-changes");

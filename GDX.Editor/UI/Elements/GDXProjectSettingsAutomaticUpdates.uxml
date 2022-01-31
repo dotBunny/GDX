@@ -25,10 +25,10 @@
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement style="align-items: flex-start;">
-                <ui:Button name="button-manual-upgrade" text="Force Upgrade" display-tooltip-when-elided="true" />
-                <ui:Button name="button-changelog" text="Changelog" display-tooltip-when-elided="true" />
-                <ui:Button name="button-update" text="Update" display-tooltip-when-elided="true" />
-                <ui:Button name="button-manual-check" text="Manual Check" display-tooltip-when-elided="true" />
+                <ui:Button name="button-manual-upgrade" text="Force Upgrade" display-tooltip-when-elided="true" class="gdx-button"/>
+                <ui:Button name="button-changelog" text="Changelog" display-tooltip-when-elided="true" class="gdx-button" />
+                <ui:Button name="button-update" text="Update" display-tooltip-when-elided="true" class="gdx-button" />
+                <ui:Button name="button-manual-check" text="Manual Check" display-tooltip-when-elided="true" class="gdx-button" />
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:SliderInt picking-mode="Ignore" label="Update Timer (Days)" value="7" high-value="31" low-value="1" show-input-field="true" name="gdx-slider-update-time" tooltip="After how many days should updates be checked for?" />
