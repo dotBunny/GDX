@@ -16,7 +16,7 @@ If you wish to utilize those scripts you will need to arrange your folders accor
 Path | Description
 --- | ---
 \\\\Documentation | Git clone of `https://github.com/dotBunny/GDX.Documentation`
-\\\\Projects\000_Development\Assets\com.dotbunny.gdx | Git clone of `https://github.com/dotBunny/GDX`
+\\\\Projects\000_Development\Packages\com.dotbunny.gdx | Git clone of `https://github.com/dotBunny/GDX`
 \\\\External\docfx\docfx.exe | Extracted version (2.x) from `https://github.com/dotnet/docfx/releases`
 
 ### Scripts
