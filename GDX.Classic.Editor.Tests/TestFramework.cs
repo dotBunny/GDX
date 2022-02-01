@@ -10,6 +10,8 @@ namespace GDX.Tests.EditMode
 {
     public static class TestFramework
     {
+        public const string TestCategory = "GDX.Tests";
+        public const string PerformanceCategory = "GDX.Performance";
         private static TestRunnerApi s_testRunner;
         private static TestMonitor s_testMonitor;
 

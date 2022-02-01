@@ -2,8 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-#define GDX_SAVE_TEST_OUTPUT
-
 using System.Collections.Generic;
 using System.IO;
 using GDX.Classic;
@@ -62,6 +60,20 @@ namespace GDX.Tests.EditMode
             {
                 return;
             }
+
+            int categoryCount = result.Test.Categories.Length;
+            bool validTest = false;
+            for (int i = 0; i < categoryCount; i++)
+            {
+                // TODO: We're only going to watch GDX tests atm, maybe in the future add an option
+                if (result.Test.Categories[i] == TestFramework.TestCategory ||
+                    result.Test.Categories[i] == TestFramework.PerformanceCategory)
+                {
+                    validTest = true;
+                    break;
+                }
+            }
+            if (!validTest) return;
 
 #if GDX_SAVE_TEST_OUTPUT
             string testFolder = Path.Combine(_cachedTempFolder, $"TEST_{result.Test.FullName}");
