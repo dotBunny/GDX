@@ -13,7 +13,7 @@ namespace Editor
     public class PackageProviderTests
     {
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void Get_DefaultPackage_NotNull()
         {
             PackageProvider localPackage = new PackageProvider();

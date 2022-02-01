@@ -16,7 +16,7 @@ namespace Editor.Build
         ///     Check if the default content is returned when asked for.
         /// </summary>
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void GetContent_ForceDefaults_ReturnsDefaultContent()
         {
             string generateContent = BuildInfoProvider.GetContent(true);

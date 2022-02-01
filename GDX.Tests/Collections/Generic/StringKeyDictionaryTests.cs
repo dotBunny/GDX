@@ -14,7 +14,7 @@ namespace Runtime.Collections.Generic
     public class StringKeyDictionaryTests
     {
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void AddSafe_CheckExists()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -28,7 +28,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void IndexerAdd_CheckExists()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -42,7 +42,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void AddWithExpandCheck_CheckExists()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -56,7 +56,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void AddWithUniqueCheck_CheckExists()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -70,7 +70,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void AddUnchecked_CheckExists()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -84,7 +84,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void TryRemove_CheckActuallyRemoved()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -112,7 +112,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void TryRemoveTwice_CheckCorrectReturnvalues()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -130,7 +130,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void AddWithUniqueCheckTwice_CheckAddedOnlyOnce()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -172,7 +172,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void IndexOf_CheckCorrectIndex()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -199,7 +199,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void IndexOf_CheckEntryDoesNotExist()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -224,7 +224,7 @@ namespace Runtime.Collections.Generic
             int arrayLength = entries.Length;
 
             int realIndex0 = -1;
-            
+
             for (int i = 0; i < arrayLength; i++)
             {
                 StringKeyEntry<string> entry = entries[i];

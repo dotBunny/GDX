@@ -16,7 +16,7 @@ namespace Runtime.Classic.Developer.Reports
     public class ReportTests
     {
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void Output_MockData_StringBuilderSameAsStreamWriter()
         {
             var report = ResourcesAudit.GetCommon();

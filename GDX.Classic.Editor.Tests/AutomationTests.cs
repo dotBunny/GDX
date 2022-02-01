@@ -19,7 +19,7 @@ namespace Editor
 
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void CaptureEditorWindow_SceneView_SameTexture()
         {
             Texture2D screenshotA = Automation.CaptureEditorWindow<SceneView>();

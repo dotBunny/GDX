@@ -17,7 +17,7 @@ namespace Runtime
     public class Array2DExtensionsTests
     {
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void Scale_MockFloatData_ScaledData()
         {
             int scaleFactor = 2;

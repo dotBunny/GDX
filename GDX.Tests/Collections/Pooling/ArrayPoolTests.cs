@@ -14,7 +14,7 @@ namespace Runtime.Collections.Generic
     public class ArrayPoolTests
     {
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void Constructor_InitializeWithMinimumAndMaximum()
         {
             int[] minimums = new int[] { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -35,7 +35,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void GetArrayFromPool_PowerOfTwoRequested_ArrayExistsInPool()
         {
             int[] minimums = new int[] { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -65,7 +65,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void GetArrayFromPool_PowerOfTwoRequested_PoolIsEmpty()
         {
             int[] minimums = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -94,7 +94,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void GetArrayFromPool_NonPowerOfTwoRequested_ArrayExistsInPool()
         {
             int[] minimums = new int[] { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -124,7 +124,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void ReturnArrayToPool_MaximumNotReached()
         {
             int[] arrayToPool = new int[16];
@@ -155,7 +155,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void ReturnArrayToPool_MaximumReached()
         {
             int[] arrayToPool = new int[16];

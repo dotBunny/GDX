@@ -17,7 +17,7 @@ namespace Runtime
     public class LocalizationTests
     {
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void GetHumanReadableFileSize_100_ReturnsValidString()
         {
             string mockString = Localization.GetHumanReadableFileSize(100);
@@ -28,7 +28,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void GetHumanReadableFileSize_1024_ReturnsValidString()
         {
             string mockString = Localization.GetHumanReadableFileSize(1024);
@@ -39,7 +39,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void GetHumanReadableFileSize_1048576_ReturnsValidString()
         {
             string mockString = Localization.GetHumanReadableFileSize(1048576);

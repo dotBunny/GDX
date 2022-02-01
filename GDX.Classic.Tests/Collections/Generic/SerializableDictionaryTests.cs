@@ -17,7 +17,7 @@ namespace Runtime.Classic.Collections.Generic
     public class SerializableDictionaryTests
     {
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void IsSerializableType_SystemObject_ReturnsFalse()
         {
             SerializableDictionary<object, string> mockDictionary = new SerializableDictionary<object, string>();
@@ -28,7 +28,7 @@ namespace Runtime.Classic.Collections.Generic
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void SaveSerializedData_MockData_ReturnsSerializedDataLength()
         {
             SerializableDictionary<int, string> mockDictionary =
@@ -42,7 +42,7 @@ namespace Runtime.Classic.Collections.Generic
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void IsSerializableType_UnityObject_ReturnsTrue()
         {
             SerializableDictionary<Object, string> mockDictionary = new SerializableDictionary<Object, string>();
@@ -53,7 +53,7 @@ namespace Runtime.Classic.Collections.Generic
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void OverwriteSerializedData_MockData_PopulatesDictionary()
         {
             SerializableDictionary<int, string> mockDictionary = new SerializableDictionary<int, string>();
@@ -66,7 +66,7 @@ namespace Runtime.Classic.Collections.Generic
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void SaveSerializedData_NoData_ReturnsZeroSerializedDataLength()
         {
             SerializableDictionary<int, string> mockDictionary = new SerializableDictionary<int, string>();

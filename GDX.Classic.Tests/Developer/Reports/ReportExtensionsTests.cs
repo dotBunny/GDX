@@ -2,8 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System.IO;
-using System.Text;
 using GDX.Classic.Developer.Reports;
 using NUnit.Framework;
 
@@ -15,7 +13,7 @@ namespace Runtime.Classic.Developer.Reports
     public class ReportExtensionsTests
     {
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void CreateDivider_MockData_CorrectLength()
         {
 
@@ -28,7 +26,7 @@ namespace Runtime.Classic.Developer.Reports
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void CreateHeader_MockData_CorrectLength()
         {
             ReportContext context = new ReportContext();

@@ -20,7 +20,7 @@ namespace Runtime
 
         [Test]
         [Performance]
-        [Category("GDX.Performance")]
+        [Category(GDX.Core.PerformanceCategory)]
         public void ToLower_GetHashCode()
         {
             Measure.Method(() =>
@@ -63,7 +63,7 @@ namespace Runtime
 
         [Test]
         [Performance]
-        [Category("GDX.Performance")]
+        [Category(GDX.Core.PerformanceCategory)]
         public void GetStableLowerCaseHashCode()
         {
             Measure.Method(() =>
@@ -106,7 +106,7 @@ namespace Runtime
 
         [Test]
         [Performance]
-        [Category("GDX.Performance")]
+        [Category(GDX.Core.PerformanceCategory)]
         public void ToUpper_GetHashCode()
         {
             Measure.Method(() =>
@@ -149,7 +149,7 @@ namespace Runtime
 
         [Test]
         [Performance]
-        [Category("GDX.Performance")]
+        [Category(GDX.Core.PerformanceCategory)]
         public void IntTryParse()
         {
             Measure.Method(() =>
@@ -174,7 +174,7 @@ namespace Runtime
 
         [Test]
         [Performance]
-        [Category("GDX.Performance")]
+        [Category(GDX.Core.PerformanceCategory)]
         public void IsIntegerValue()
         {
             Measure.Method(() =>
@@ -199,7 +199,7 @@ namespace Runtime
 
         [Test]
         [Performance]
-        [Category("GDX.Performance")]
+        [Category(GDX.Core.PerformanceCategory)]
         public void GetStableUpperCaseHashCode()
         {
             Measure.Method(() =>

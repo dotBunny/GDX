@@ -14,7 +14,7 @@ namespace Runtime.Developer.Reports
     public class ResourcesDiffTests
     {
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void Constructor_MockData_ReturnsObject()
         {
             var lhs = ResourcesAudit.GetCommon();
@@ -27,7 +27,7 @@ namespace Runtime.Developer.Reports
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void Output_GetCommonAndAll_ReturnsReport()
         {
             var lhs = ResourcesAudit.GetCommon();
