@@ -5,7 +5,8 @@
 using GDX.Editor.UI.ProjectSettings;
 using UnityEditor;
 using UnityEngine.UIElements;
-#if UNITY_2020_3
+
+#if !UNITY_2022_1_OR_NEWER
 using UnityEditor.UIElements;
 #endif
 
