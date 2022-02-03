@@ -38,6 +38,7 @@ namespace GDX.Editor
         {
             T window = GetWindow<T>();
             window.Focus();
+            UnityEngine.Assertions.Assert.IsTrue(EditorWindow.focusedWindow == window);
             Texture2D returnTexture = null;
             if (window != null)
             {
@@ -62,6 +63,8 @@ namespace GDX.Editor
         {
             bool result = false;
             T window = GetWindow<T>();
+            window.Focus();
+            UnityEngine.Assertions.Assert.IsTrue(EditorWindow.focusedWindow == window);
             if (window != null)
             {
                 result = CaptureFocusedEditorWindowToPNG(outputPath);
