@@ -64,7 +64,7 @@ namespace GDX.Editor
             bool result = false;
             T window = GetWindow<T>();
             EditorWindow.FocusWindowIfItsOpen<T>();
-            UnityEngine.Assertions.Assert.IsTrue(EditorWindow.focusedWindow == window);
+            UnityEngine.Assertions.Assert.IsTrue(EditorWindow.focusedWindow == window, $"Focused on {EditorWindow.focusedWindow.name}");
             if (window != null)
             {
                 result = CaptureFocusedEditorWindowToPNG(outputPath);
