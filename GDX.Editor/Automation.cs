@@ -302,34 +302,17 @@ namespace GDX.Editor
                     window.maximized = true;
                 }
 
+                // Lets do it proper
                 window.Repaint();
 
-                // We need to force some internal repainting/resizing without having the API surface area to do so.
+                // We need to force some internal repainting without having the API surface area to do so.
                 // We'll exploit reflection a bit to get around this for now.
                 MethodInfo repaintMethod = window.GetType().GetMethod("RepaintImmediately",
-                    BindingFlags.NonPublic | BindingFlags.Instance);
-                MethodInfo resizedMethod = window.GetType().GetMethod("OnResized",
                     BindingFlags.NonPublic | BindingFlags.Instance);
 
                 // The exact sequence is frustrating and I'm not entirely sure that it will cover the dreaded white
                 // screen that happens from time to time, but as we expanded out the number of steps we haven't seen
                 // a fail yet from testing.
-                if (repaintMethod != null)
-                {
-                    repaintMethod.Invoke(window, s_EmptyParametersArray);
-                }
-                if (resizedMethod != null)
-                {
-                    resizedMethod.Invoke(window, s_EmptyParametersArray);
-                }
-                if (repaintMethod != null)
-                {
-                    repaintMethod.Invoke(window, s_EmptyParametersArray);
-                }
-                if (resizedMethod != null)
-                {
-                    resizedMethod.Invoke(window, s_EmptyParametersArray);
-                }
                 if (repaintMethod != null)
                 {
                     repaintMethod.Invoke(window, s_EmptyParametersArray);
