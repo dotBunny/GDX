@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Unity.Mathematics;
 
-#if !GDX_ENTITIES
+#if GDX_AI
 
 namespace GDX.Classic
 {
@@ -143,4 +143,4 @@ namespace GDX.Classic
     }
 }
 
-#endif // !GDX_ENTITIES
+#endif // GDX_AI

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using GDX.Editor.Build;
 using UnityEngine;
 
 // ReSharper disable MemberCanBePrivate.Global

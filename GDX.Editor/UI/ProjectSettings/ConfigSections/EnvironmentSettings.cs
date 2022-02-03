@@ -110,9 +110,14 @@ namespace GDX.Editor.ProjectSettings
             });
 
             _maskDevelopment = _rootElement.Q<MaskField>("mask-development");
+#if UNITY_2021_1_OR_NEWER
             _maskDevelopment.choices = s_traceChoices;
             _maskDevelopment.choicesMasks = s_traceValues;
             _maskDevelopment.value = (int)UI.SettingsProvider.WorkingConfig.traceDevelopmentLevels;
+#else
+            _maskDevelopment = new MaskField(s_traceChoices, (int)UI.SettingsProvider.WorkingConfig.traceDevelopmentLevels);
+#endif
+
             _maskDevelopment.RegisterValueChangedCallback(evt =>
             {
                 UI.SettingsProvider.WorkingConfig.traceDevelopmentLevels = (Trace.TraceLevel)evt.newValue;
@@ -128,9 +133,13 @@ namespace GDX.Editor.ProjectSettings
             });
 
             _maskDebug = _rootElement.Q<MaskField>("mask-debug");
+#if UNITY_2021_1_OR_NEWER
             _maskDebug.choices = s_traceChoices;
             _maskDebug.choicesMasks = s_traceValues;
             _maskDebug.value = (int)UI.SettingsProvider.WorkingConfig.traceDebugLevels;
+#else
+            _maskDebug = new MaskField(s_traceChoices, (int)UI.SettingsProvider.WorkingConfig.traceDebugLevels);
+#endif
             _maskDebug.RegisterValueChangedCallback(evt =>
             {
                 UI.SettingsProvider.WorkingConfig.traceDebugLevels = (Trace.TraceLevel)evt.newValue;
@@ -146,9 +155,14 @@ namespace GDX.Editor.ProjectSettings
             });
 
             _maskRelease = _rootElement.Q<MaskField>("mask-release");
+#if UNITY_2021_1_OR_NEWER
             _maskRelease.choices = s_traceChoices;
             _maskRelease.choicesMasks = s_traceValues;
             _maskRelease.value = (int)UI.SettingsProvider.WorkingConfig.traceReleaseLevels;
+#else
+            _maskRelease = new MaskField(s_traceChoices, (int)UI.SettingsProvider.WorkingConfig.traceReleaseLevels);
+#endif
+
             _maskRelease.RegisterValueChangedCallback(evt =>
             {
                 UI.SettingsProvider.WorkingConfig.traceReleaseLevels = (Trace.TraceLevel)evt.newValue;
