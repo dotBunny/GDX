@@ -36,9 +36,9 @@ namespace GDX.Collections.Generic
 
             int freeIndex = FreeListHead;
 
-            if (freeIndex > Buckets.Length)
+            if (freeIndex >= Buckets.Length)
             {
-                Expand();
+                ExpandWhenFull();
             }
 
             int hashCode = key.GetStableHashCode() & 0x7FFFFFFF;
@@ -96,9 +96,9 @@ namespace GDX.Collections.Generic
 
             int freeIndex = FreeListHead;
 
-            if (freeIndex > Buckets.Length)
+            if (freeIndex >= Buckets.Length)
             {
-                Expand();
+                ExpandWhenFull();
             }
 
             int hashCode = key.GetStableHashCode() & 0x7FFFFFFF;
@@ -147,7 +147,7 @@ namespace GDX.Collections.Generic
             Buckets[bucketIndex] = dataIndex;
         }
 
-        public void Expand()
+        public void ExpandWhenFull()
         {
             int oldCapacity = Buckets.Length;
             int nextPrimeCapacity = DictionaryPrimes.GetNextSize(oldCapacity);
@@ -161,23 +161,20 @@ namespace GDX.Collections.Generic
             StringKeyEntry<TValue>[] newEntries = new StringKeyEntry<TValue>[nextPrimeCapacity];
             Array.Copy(Entries, 0, newEntries, 0, oldCapacity);
 
-            for (int i = oldCapacity; i < nextPrimeCapacity; i++)
-            {
-                newEntries[i].next = (i + 1) | (1 << 31);
-            }
-
             for (int i = 0; i < oldCapacity; i++)
             {
                 ref StringKeyEntry<TValue> entry = ref newEntries[i];
 
-                if (entry.next != -1)
-                {
-                    int newBucketIndex = (entry.hashCode & 0x7FFFFFFF) % nextPrimeCapacity;
+                int newBucketIndex = (entry.hashCode & 0x7FFFFFFF) % nextPrimeCapacity;
 
-                    int indexAtBucket = newBuckets[newBucketIndex];
-                    entry.next = indexAtBucket;
-                    newBuckets[newBucketIndex] = i;
-                }
+                int indexAtBucket = newBuckets[newBucketIndex];
+                entry.next = indexAtBucket;
+                newBuckets[newBucketIndex] = i;
+            }
+
+            for (int i = oldCapacity; i < nextPrimeCapacity; i++)
+            {
+                newEntries[i].next = (1 << 31) | (i + 1);
             }
 
             Buckets = newBuckets;
@@ -201,16 +198,11 @@ namespace GDX.Collections.Generic
                 StringKeyEntry<TValue>[] newEntries = new StringKeyEntry<TValue>[nextPrimeCapacity];
                 Array.Copy(Entries, 0, newEntries, 0, oldCapacity);
 
-                for (int i = oldCapacity; i < nextPrimeCapacity; i++)
-                {
-                    newEntries[i].next = (i + 1) | (1 << 31);
-                }
-
                 for (int i = 0; i < oldCapacity; i++)
                 {
                     ref StringKeyEntry<TValue> entry = ref newEntries[i];
 
-                    if (entry.next != -1)
+                    if (entry.key != null)
                     {
                         int newBucketIndex = (entry.hashCode & 0x7FFFFFFF) % nextPrimeCapacity;
 
@@ -218,6 +210,11 @@ namespace GDX.Collections.Generic
                         entry.next = indexAtBucket;
                         newBuckets[newBucketIndex] = i;
                     }
+                }
+
+                for (int i = oldCapacity; i < nextPrimeCapacity; i++)
+                {
+                    newEntries[i].next = (1 << 31) | (i + 1);
                 }
 
                 Buckets = newBuckets;
@@ -356,9 +353,9 @@ namespace GDX.Collections.Generic
 
                 int freeIndex = FreeListHead;
 
-                if (freeIndex > Buckets.Length)
+                if (freeIndex >= Buckets.Length)
                 {
-                    Expand();
+                    ExpandWhenFull();
                 }
 
                 int hashCode = key.GetStableHashCode() & 0x7FFFFFFF;
