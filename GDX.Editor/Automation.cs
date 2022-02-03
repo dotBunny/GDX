@@ -271,6 +271,8 @@ namespace GDX.Editor
                     window.maximized = true;
                 }
 
+                window.Repaint();
+
                 // We need to force some internal repainting/resizing without having the API surface area to do so.
                 // We'll exploit reflection a bit to get around this for now.
                 MethodInfo repaintMethod = window.GetType().GetMethod("RepaintImmediately",

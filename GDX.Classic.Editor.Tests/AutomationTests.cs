@@ -35,7 +35,7 @@ namespace Editor
             int arrayLengthB = screenshotDataB.Length;
             if (arrayLengthA != arrayLengthB)
             {
-                Assert.Fail("Screenshot array lengths differ.");
+                Assert.Fail($"Screenshot array lengths differ ({arrayLengthA} vs {arrayLengthB}).");
                 return;
             }
             NativeArray<float> percentages = new NativeArray<float>(arrayLengthA, Allocator.TempJob);
