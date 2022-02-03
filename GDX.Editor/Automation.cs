@@ -38,7 +38,7 @@ namespace GDX.Editor
         {
             T window = GetWindow<T>();
             EditorWindow.FocusWindowIfItsOpen<T>();
-            UnityEngine.Assertions.Assert.IsTrue(EditorWindow.focusedWindow == window);
+            UnityEngine.Assertions.Assert.IsTrue(EditorWindow.focusedWindow == window, $"Focused on {EditorWindow.focusedWindow.name}");
             Texture2D returnTexture = null;
             if (window != null)
             {
