@@ -38,6 +38,11 @@ namespace GDX.Editor
         {
             T window = GetWindow<T>();
             EditorWindow.FocusWindowIfItsOpen<T>();
+            if (EditorWindow.focusedWindow != window)
+            {
+                Trace.Output(Trace.TraceLevel.Fatal,
+                    $"Focused on {EditorWindow.focusedWindow.name}");
+            }
             UnityEngine.Assertions.Assert.IsTrue(EditorWindow.focusedWindow == window, $"Focused on {EditorWindow.focusedWindow.name}");
             Texture2D returnTexture = null;
             if (window != null)
@@ -64,6 +69,11 @@ namespace GDX.Editor
             bool result = false;
             T window = GetWindow<T>();
             EditorWindow.FocusWindowIfItsOpen<T>();
+            if (EditorWindow.focusedWindow != window)
+            {
+                Trace.Output(Trace.TraceLevel.Fatal,
+                    $"Focused on {EditorWindow.focusedWindow.name}");
+            }
             UnityEngine.Assertions.Assert.IsTrue(EditorWindow.focusedWindow == window, $"Focused on {EditorWindow.focusedWindow.name}");
             if (window != null)
             {
