@@ -37,7 +37,7 @@ namespace GDX.Editor
         public static Texture2D CaptureEditorWindow<T>(bool shouldCloseWindow = true) where T : EditorWindow
         {
             T window = GetWindow<T>();
-            window.Focus();
+            EditorWindow.FocusWindowIfItsOpen<T>();
             UnityEngine.Assertions.Assert.IsTrue(EditorWindow.focusedWindow == window);
             Texture2D returnTexture = null;
             if (window != null)
@@ -63,7 +63,7 @@ namespace GDX.Editor
         {
             bool result = false;
             T window = GetWindow<T>();
-            window.Focus();
+            EditorWindow.FocusWindowIfItsOpen<T>();
             UnityEngine.Assertions.Assert.IsTrue(EditorWindow.focusedWindow == window);
             if (window != null)
             {
