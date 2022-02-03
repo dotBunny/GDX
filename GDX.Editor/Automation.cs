@@ -37,6 +37,7 @@ namespace GDX.Editor
         public static Texture2D CaptureEditorWindow<T>(bool shouldCloseWindow = true) where T : EditorWindow
         {
             T window = GetWindow<T>();
+            window.Focus();
             Texture2D returnTexture = null;
             if (window != null)
             {
