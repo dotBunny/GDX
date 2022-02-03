@@ -37,23 +37,11 @@ namespace GDX.Editor
         public static Texture2D CaptureEditorWindow<T>(bool shouldCloseWindow = true) where T : EditorWindow
         {
             T window = GetWindow<T>();
-            EditorWindow.FocusWindowIfItsOpen<T>();
-            if (EditorWindow.focusedWindow != window)
-            {
-                Trace.Output(Trace.TraceLevel.Fatal,
-                    $"Focused on {EditorWindow.focusedWindow.name}");
-            }
-
-            if (EditorWindow.focusedWindow == null)
-            {
-                Trace.Output(Trace.TraceLevel.Fatal,
-                    $"Focused on nothing.");
-            }
-            UnityEngine.Assertions.Assert.IsTrue(EditorWindow.focusedWindow == window, $"Focused on {EditorWindow.focusedWindow.name}");
+            //EditorWindow.FocusWindowIfItsOpen<T>();
             Texture2D returnTexture = null;
             if (window != null)
             {
-                returnTexture = CaptureFocusedEditorWindow();
+                returnTexture = CaptureEditorWindow(window);
                 if (shouldCloseWindow)
                 {
                     window.Close();
@@ -74,21 +62,10 @@ namespace GDX.Editor
         {
             bool result = false;
             T window = GetWindow<T>();
-            EditorWindow.FocusWindowIfItsOpen<T>();
-            if (EditorWindow.focusedWindow != window)
-            {
-                Trace.Output(Trace.TraceLevel.Fatal,
-                    $"Focused on {EditorWindow.focusedWindow.name}");
-            }
-            if (EditorWindow.focusedWindow == null)
-            {
-                Trace.Output(Trace.TraceLevel.Fatal,
-                    $"Focused on nothing.");
-            }
-            UnityEngine.Assertions.Assert.IsTrue(EditorWindow.focusedWindow == window, $"Focused on {EditorWindow.focusedWindow.name}");
+            //EditorWindow.FocusWindowIfItsOpen<T>();
             if (window != null)
             {
-                result = CaptureFocusedEditorWindowToPNG(outputPath);
+                result = CapturEditorWindowToPNG(window, outputPath);
                 if (shouldCloseWindow)
                 {
                     window.Close();
@@ -98,24 +75,53 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        /// Capture a <see cref="Texture2D"/> of the focused editor window.
+        /// Capture a <see cref="Texture2D"/> of the editor window.
         /// </summary>
         /// <returns>The <see cref="Texture2D"/> captured.</returns>
-        public static Texture2D CaptureFocusedEditorWindow()
+        public static Texture2D CaptureEditorWindow(EditorWindow window)
         {
-            // In the off chance nothing is focused, return null
-            if (EditorWindow.focusedWindow == null)
+            if (window == null)
             {
                 return null;
             }
 
-            Rect windowRect = EditorWindow.focusedWindow.position;
+            // Bring to front
+            window.Show();
+
+            Rect windowRect = window.position;
             int width = (int)windowRect.width;
             int height = (int)windowRect.height;
             Color[] screenPixels = InternalEditorUtility.ReadScreenPixel(windowRect.min, width, height);
             Texture2D texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
             texture.SetPixels(screenPixels);
             return texture;
+        }
+
+        /// <summary>
+        /// Capture a <see cref="Texture2D"/> of the focused editor window.
+        /// </summary>
+        /// <returns>The <see cref="Texture2D"/> captured.</returns>
+        public static Texture2D CaptureFocusedEditorWindow()
+        {
+            return CaptureEditorWindow(EditorWindow.focusedWindow);
+        }
+
+        /// <summary>
+        /// Capture a PNG image of the provided window.
+        /// </summary>
+        /// <param name="window">The target window.</param>
+        /// <param name="outputPath">The absolute path for the image file.</param>
+        /// <returns>true/false if the capture was successful.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool CapturEditorWindowToPNG(EditorWindow window, string outputPath)
+        {
+            Texture2D texture = CaptureEditorWindow(window);
+            if (texture == null)
+            {
+                return false;
+            }
+            System.IO.File.WriteAllBytes(outputPath, texture.EncodeToPNG());
+            return true;
         }
 
         /// <summary>
