@@ -5,7 +5,7 @@ namespace GDX.Collections.Generic
         /// <remarks>
         /// This is kept isolated to attempt to hint to the compiler to avoid adding static initialization checks.
         /// </remarks>
-        private static int[] primes;
+        public static int[] primes;
 
 #if UNITY_EDITOR
         [UnityEditor.InitializeOnLoadMethod]
