@@ -43,6 +43,12 @@ namespace GDX.Editor
                 Trace.Output(Trace.TraceLevel.Fatal,
                     $"Focused on {EditorWindow.focusedWindow.name}");
             }
+
+            if (EditorWindow.focusedWindow == null)
+            {
+                Trace.Output(Trace.TraceLevel.Fatal,
+                    $"Focused on nothing.");
+            }
             UnityEngine.Assertions.Assert.IsTrue(EditorWindow.focusedWindow == window, $"Focused on {EditorWindow.focusedWindow.name}");
             Texture2D returnTexture = null;
             if (window != null)
@@ -73,6 +79,11 @@ namespace GDX.Editor
             {
                 Trace.Output(Trace.TraceLevel.Fatal,
                     $"Focused on {EditorWindow.focusedWindow.name}");
+            }
+            if (EditorWindow.focusedWindow == null)
+            {
+                Trace.Output(Trace.TraceLevel.Fatal,
+                    $"Focused on nothing.");
             }
             UnityEngine.Assertions.Assert.IsTrue(EditorWindow.focusedWindow == window, $"Focused on {EditorWindow.focusedWindow.name}");
             if (window != null)
