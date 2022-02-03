@@ -9,6 +9,8 @@ namespace GDX
 {
     public static class Core
     {
+        public const string TestCategory = "GDX.Tests";
+        public const string PerformanceCategory = "GDX.Performance";
         public static bool ConfigDirty = false;
         public static readonly GDXConfig Config;
         public static readonly long StartTicks;

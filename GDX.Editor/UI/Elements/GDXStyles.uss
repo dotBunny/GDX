@@ -84,6 +84,7 @@ Button.gdx-link {
     border-bottom-color: var(--color-primary);
     color: var(--color-primary);
     margin-bottom: 6px;
+    cursor: link;
 }
 
 Button.gdx-link:hover {
@@ -91,7 +92,6 @@ Button.gdx-link:hover {
     background-color: rgba(0, 0, 0, 0);
     color: var(--color-primary-55);
     border-bottom-color: var(--color-primary-55);
-    cursor: link;
     border-bottom-width: 1px;
 }
 
@@ -99,6 +99,13 @@ Button.gdx-link:hover {
     --color-primary: rgb(65, 136, 225);
     --color-primary-75: rgba(65, 136, 225, 0.75);
     --color-primary-55: rgba(65, 136, 225, 0.55);
+    --color-secondary: rgb(225, 65, 136);
+    --color-secondary-75: rgba(225, 65, 136, 0.75);
+    --color-secondary-55: rgba(225, 65, 136, 0.55);
+    --color-tertiary: rgb(136, 225, 65);
+    --color-tertiary-75: rgba(136, 225, 65, 0.75);
+    --color-tertiary-55: rgba(136, 225, 65, 0.55);
+
     --color-header-footer: rgb(0, 0, 0);
     --size-header: 26px;
 }
@@ -107,6 +114,37 @@ Button.gdx-link:hover {
     margin-bottom: 12px;
     margin-left: 8px;
     margin-top: 1px;
+    height: 28px;
+}
+
+#gdx-config-changes {
+    margin-top: 2px;
+}
+
+Button.gdx-button {
+    height: 25px;
+    border-radius: 3px;
+    border-width: 1px;
+}
+
+#gdx-config-changes #button-clear-changes {
+    border-color: var(--color-secondary-55);
+    background-color: var(--color-secondary-75);
+    color: var(--color-header-footer);
+    -unity-font-style: bold;
+}
+#gdx-config-changes #button-clear-changes:hover {
+    background-color: var(--color-secondary);
+}
+
+#gdx-config-changes #button-save-changes {
+    border-color: var(--color-tertiary-55);
+    background-color: var(--color-tertiary-75);
+    color: var(--color-header-footer);
+    -unity-font-style: bold;
+}
+#gdx-config-changes #button-save-changes:hover {
+    background-color: var(--color-tertiary);
 }
 
 #gdx-package-status {
@@ -208,7 +246,7 @@ Button.gdx-link:hover {
 }
 
 .gdx-project-settings-section-header #button-help:hover {
-    -unity-background-image-tint-color: var(--color-primary);
+    -unity-background-image-tint-color: var(--color-header-footer);
 }
 
 .gdx-project-settings-section-header #label-name {
@@ -226,7 +264,7 @@ Button.gdx-link:hover {
     width: 150px;
 }
 
-#gdx-trace-table #label-spacer {
+#gdx-trace-table #label-trace {
     width: 155px;
 }
 
@@ -241,12 +279,12 @@ Button.gdx-link:hover {
 }
 
 #gdx-trace-table #label-console {
-    margin-left: 5px;
+    margin-left: 8px;
     width: 100px;
 }
 
 #gdx-trace-table Toggle {
-    margin-left: 5px;
+    margin-left: 10px;
     width: 100px;
 }
 

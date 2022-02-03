@@ -5,9 +5,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEditor.UIElements;
-#if UNITY_2020_3
-using UnityEditor.UIElements;
-#endif
 using UnityEngine;
 using UnityEngine.UIElements;
 

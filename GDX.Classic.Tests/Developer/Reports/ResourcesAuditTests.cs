@@ -16,7 +16,7 @@ namespace Runtime.Classic.Developer.Reports
     public class ResourcesAuditTests
     {
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void Get_MockData_ReturnsObject()
         {
 
@@ -34,7 +34,7 @@ namespace Runtime.Classic.Developer.Reports
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void Output_GetCommon_ReturnsReport()
         {
             var report = ResourcesAudit.GetCommon().Output();
@@ -45,7 +45,7 @@ namespace Runtime.Classic.Developer.Reports
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void Output_GetAll_ReturnsReport()
         {
             var report = ResourcesAudit.GetAll().Output();

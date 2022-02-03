@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Move to UIElements based editor UI !!!!!!!!! TODO
 - `HalfLifeToSmoothingFactor` no longer defaults elapsed time to `Time.deltaTime`
+
+- Visual Scripting in 2021 out of box
 ### Removed
 - NativeSimpleList - UnsafeList
 - NativeSimpleQueue  - UnsafeQueue

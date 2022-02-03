@@ -17,7 +17,7 @@ namespace Runtime
     public class ArrayExtensionsTests
     {
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void Clear_MockData_HasDefaultValues()
         {
             int[] mockArray = { 0, 1, 2, 3 };
@@ -33,7 +33,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void FirstIndexOfItem_MockDataObject_ReturnsIndex()
         {
             object mockSearchObject = new object();
@@ -49,7 +49,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void FirstIndexOfItem_NoMockDataObject_ReturnsIndex()
         {
             object mockSearchObject = new object();
@@ -66,7 +66,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void FirstIndexOfValue_MockDataValue_ReturnsIndex()
         {
             int[] mockArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2 };
@@ -77,7 +77,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void FirstIndexOfValue_NoMockDataValue_ReturnsNegativeOne()
         {
             int[] mockArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2 };
@@ -88,7 +88,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void LastIndexOfItem_MockDataObject_ReturnsIndex()
         {
             object mockSearchObject = new object();
@@ -104,7 +104,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void LastIndexOfItem_NoMockDataObject_ReturnsNegativeOne()
         {
             object mockSearchBuffer = new object();
@@ -121,7 +121,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void LastIndexOfValue_MockDataValue_ReturnsIndex()
         {
             int[] mockArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2 };
@@ -132,7 +132,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void LastIndexOfValue_NoMockDataValue_ReturnsNegativeOne()
         {
             int[] mockArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2 };

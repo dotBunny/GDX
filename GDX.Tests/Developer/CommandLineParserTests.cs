@@ -36,7 +36,7 @@ namespace Runtime.Developer
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void ProcessArguments_MockData_ContainsFlag()
         {
             CommandLineParser.ProcessArguments(_mockData);
@@ -47,7 +47,7 @@ namespace Runtime.Developer
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void ProcessArguments_MockData_HasValue()
         {
             CommandLineParser.ProcessArguments(_mockData);

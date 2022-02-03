@@ -16,7 +16,7 @@ namespace Editor
     public class AutomationTests
     {
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void CaptureEditorWindow_SceneView_ReturnsTexture()
         {
             Texture2D texture = Automation.CaptureEditorWindow<SceneView>();
@@ -25,7 +25,7 @@ namespace Editor
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void CaptureEditorWindowToPNG_SceneView_OutputsImage()
         {
             string outputPath = Automation.GetTempFilePath("CaptureEditorWindowToPNG_SceneView_OutputsImage-",".png");
@@ -35,7 +35,7 @@ namespace Editor
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void CaptureFocusedEditorWindow_ReturnsTexture()
         {
             Automation.GetGameView().Focus();
@@ -45,7 +45,7 @@ namespace Editor
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void CaptureFocusedEditorWindowToPNG_OutputsImage()
         {
             Automation.GetGameView().Focus();
@@ -56,7 +56,7 @@ namespace Editor
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void GetTempFolder_EnsureExists_FolderExists()
         {
             string path = Automation.GetTempFolder();
@@ -65,7 +65,7 @@ namespace Editor
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void GetWindow_SceneView_NotNull()
         {
             EditorWindow sceneView = Automation.GetWindow<SceneView>();

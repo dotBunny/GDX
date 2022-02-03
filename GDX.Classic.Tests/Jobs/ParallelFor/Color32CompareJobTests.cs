@@ -14,7 +14,7 @@ namespace Runtime.Classic.Jobs.ParallelFor
     public class Color32CompareJobTests
     {
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void Compare_WhiteTexture_Same()
         {
             NativeArray<Color32> whiteData = Texture2D.whiteTexture.GetRawTextureData<Color32>();
@@ -47,7 +47,7 @@ namespace Runtime.Classic.Jobs.ParallelFor
         }
 
         [Test]
-        [Category("GDX.Tests")]
+        [Category(GDX.Core.TestCategory)]
         public void Compare_WhiteBlack_Different()
         {
             NativeArray<Color32> whiteData = Texture2D.whiteTexture.GetRawTextureData<Color32>();

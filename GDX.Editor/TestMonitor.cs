@@ -2,20 +2,15 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-#define GDX_SAVE_TEST_OUTPUT
-
-using System.Collections.Generic;
 using System.IO;
-using GDX.Classic;
 using UnityEditor;
 using UnityEditor.TestTools.TestRunner.Api;
-using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace GDX.Tests.EditMode
+// TODO: Make GDX_SAVE_TEST_OUTPUT and option to define
+namespace GDX.Editor
 {
-    class TestMonitor : ICallbacks
+    internal class TestMonitor : ICallbacks
     {
         private string _cachedTempFolder;
 
@@ -23,20 +18,20 @@ namespace GDX.Tests.EditMode
         public void RunStarted(ITestAdaptor testsToRun)
         {
 
-            _cachedTempFolder = GDX.Editor.Automation.GetTempFolder();
+            _cachedTempFolder = Automation.GetTempFolder();
             if (Application.isBatchMode)
             {
-                GDX.Editor.Automation.StashWindowLayout();
+                Automation.StashWindowLayout();
             }
 
-            EditorWindow gameView = GDX.Editor.Automation.GetGameView();
+            EditorWindow gameView = Automation.GetGameView();
             if (gameView != null)
             {
                 gameView.Show(true);
             }
 
             // Make sure our temp folder is absolutely clear at the start
-            GDX.Editor.Automation.ClearTempFolder();
+            Automation.ClearTempFolder();
         }
 
         /// <inheritdoc />
@@ -44,7 +39,7 @@ namespace GDX.Tests.EditMode
         {
             if (Application.isBatchMode)
             {
-                GDX.Editor.Automation.RestoreWindowLayout();
+                Automation.RestoreWindowLayout();
             }
         }
 
@@ -62,6 +57,20 @@ namespace GDX.Tests.EditMode
             {
                 return;
             }
+
+            int categoryCount = result.Test.Categories.Length;
+            bool validTest = false;
+            for (int i = 0; i < categoryCount; i++)
+            {
+                // TODO: We're only going to watch GDX tests atm, maybe in the future add an option
+                if (result.Test.Categories[i] == Core.TestCategory ||
+                    result.Test.Categories[i] == Core.PerformanceCategory)
+                {
+                    validTest = true;
+                    break;
+                }
+            }
+            if (!validTest) return;
 
 #if GDX_SAVE_TEST_OUTPUT
             string testFolder = Path.Combine(_cachedTempFolder, $"TEST_{result.Test.FullName}");

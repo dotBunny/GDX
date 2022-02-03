@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEditor.TestTools.TestRunner.Api;
 
-namespace GDX.Tests.EditMode
+namespace GDX.Editor
 {
     public static class TestFramework
     {
