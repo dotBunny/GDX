@@ -76,11 +76,14 @@ namespace GDX.Editor.ProjectSettings
         private static readonly GUIContent s_visualScriptingLoadingContent = new GUIContent(
             "The visual scripting subsystem is currently loading.");
 
+#if GDX_VISUALSCRIPTING
         [InitializeOnLoadMethod]
         static void Register()
         {
             UI.SettingsProvider.RegisterConfigSection(new VisualScriptingSettings());
+
         }
+#endif
 
 #if GDX_VISUALSCRIPTING
         /// <summary>
