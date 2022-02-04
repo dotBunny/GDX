@@ -30,6 +30,11 @@
             "name": "com.unity.visualscripting",
             "expression": "1.4.15",
             "define": "GDX_VISUALSCRIPTING"
+        },
+        {
+            "name": "Unity",
+            "expression": "2020.3.25",
+            "define": "GDX_MASKFIELD"
         }
     ],
     "noEngineReferences": false
