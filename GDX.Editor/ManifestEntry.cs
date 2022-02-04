@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using Newtonsoft.Json;
+using UnityEngine;
 
 namespace GDX.Editor
 {
@@ -27,7 +27,7 @@ namespace GDX.Editor
         public static ManifestEntry Get(string json)
         {
 
-            ManifestEntry returnObject = JsonConvert.DeserializeObject<ManifestEntry>(json);
+            ManifestEntry returnObject = JsonUtility.FromJson<ManifestEntry>(json);
             if (returnObject == null)
             {
                 return null;
