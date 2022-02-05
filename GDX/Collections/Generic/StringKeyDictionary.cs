@@ -2,6 +2,7 @@ using System;
 
 namespace GDX.Collections.Generic
 {
+    [Serializable]
     public struct StringKeyDictionary<TValue>
     {
         public int[] Buckets;
@@ -448,6 +449,7 @@ namespace GDX.Collections.Generic
         }
     }
 
+    [Serializable]
     public struct StringKeyEntry<T>
     {
         public string key;
