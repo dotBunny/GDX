@@ -10,6 +10,9 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+#if !GDX_MASKFIELD
+using System.Reflection;
+#endif
 
 namespace GDX.Editor.ProjectSettings
 {
@@ -110,8 +113,14 @@ namespace GDX.Editor.ProjectSettings
             });
 
             _maskDevelopment = _rootElement.Q<MaskField>("mask-development");
+
+
+#if GDX_MASKFIELD
             _maskDevelopment.choices = s_traceChoices;
             _maskDevelopment.choicesMasks = s_traceValues;
+#else
+            SetMaskFieldValues(_maskDevelopment);
+#endif
             _maskDevelopment.value = (int)UI.SettingsProvider.WorkingConfig.traceDevelopmentLevels;
             _maskDevelopment.RegisterValueChangedCallback(evt =>
             {
@@ -128,8 +137,12 @@ namespace GDX.Editor.ProjectSettings
             });
 
             _maskDebug = _rootElement.Q<MaskField>("mask-debug");
+#if GDX_MASKFIELD
             _maskDebug.choices = s_traceChoices;
             _maskDebug.choicesMasks = s_traceValues;
+#else
+            SetMaskFieldValues(_maskDebug);
+#endif
             _maskDebug.value = (int)UI.SettingsProvider.WorkingConfig.traceDebugLevels;
             _maskDebug.RegisterValueChangedCallback(evt =>
             {
@@ -146,8 +159,12 @@ namespace GDX.Editor.ProjectSettings
             });
 
             _maskRelease = _rootElement.Q<MaskField>("mask-release");
+#if GDX_MASKFIELD
             _maskRelease.choices = s_traceChoices;
             _maskRelease.choicesMasks = s_traceValues;
+#else
+            SetMaskFieldValues(_maskRelease);
+#endif
             _maskRelease.value = (int)UI.SettingsProvider.WorkingConfig.traceReleaseLevels;
             _maskRelease.RegisterValueChangedCallback(evt =>
             {
@@ -163,6 +180,24 @@ namespace GDX.Editor.ProjectSettings
                 UI.SettingsProvider.CheckForChanges();
             });
         }
+
+#if !GDX_MASKFIELD
+        void SetMaskFieldValues(MaskField maskField)
+        {
+            System.Type type = maskField.GetType();
+            PropertyInfo choiceProperty = type.GetProperty("choices", BindingFlags.NonPublic | BindingFlags.Instance);
+            PropertyInfo choiceMaskProperty = type.GetProperty("choicesMasks", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (choiceProperty != null)
+            {
+                choiceProperty.SetValue(maskField, s_traceChoices, null);
+            }
+
+            if (choiceMaskProperty != null)
+            {
+                choiceMaskProperty.SetValue(maskField, s_traceValues, null);
+            }
+        }
+#endif
 
         public bool GetDefaultVisibility()
         {

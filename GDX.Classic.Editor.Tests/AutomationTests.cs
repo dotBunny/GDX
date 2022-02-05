@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.IO;
 using GDX.Classic.Jobs.ParallelFor;
 using GDX.Editor;
@@ -11,18 +12,22 @@ using Unity.Collections;
 using Unity.Jobs;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace Editor
 {
     public class AutomationTests
     {
-
-
-        [Test]
+        [UnityTest]
         [Category(GDX.Core.TestCategory)]
-        public void CaptureEditorWindow_SceneView_SameTexture()
+        public IEnumerator CaptureEditorWindow_SceneView_SameTexture()
         {
+            yield return new TestWaitMilliseconds(1000f).While();
+
+
             Texture2D screenshotA = Automation.CaptureEditorWindow<SceneView>();
+            yield return new TestWaitMilliseconds(1000f).While();
+
             Texture2D screenshotB = Automation.CaptureEditorWindow<SceneView>();
             NativeArray<Color32> screenshotDataA = screenshotA.GetRawTextureData<Color32>();
             NativeArray<Color32> screenshotDataB = screenshotB.GetRawTextureData<Color32>();
@@ -35,8 +40,8 @@ namespace Editor
             int arrayLengthB = screenshotDataB.Length;
             if (arrayLengthA != arrayLengthB)
             {
-                Assert.Fail("Screenshot array lengths differ.");
-                return;
+                Assert.Fail($"Screenshot array lengths differ ({arrayLengthA} vs {arrayLengthB}).");
+                yield break;
             }
             NativeArray<float> percentages = new NativeArray<float>(arrayLengthA, Allocator.TempJob);
 
