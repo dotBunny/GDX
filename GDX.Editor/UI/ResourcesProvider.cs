@@ -21,6 +21,14 @@ namespace GDX.Editor.UI
         private static StyleSheet s_stylesheet;
 
         /// <summary>
+        ///     The cached reference to the override stylesheet.
+        /// </summary>
+        /// <remarks>
+        ///     Used to accomodate version specific styling.
+        /// </remarks>
+        private static StyleSheet s_styleSheetOverride;
+
+        /// <summary>
         ///     A cached pathing to where our UXML are stored.
         /// </summary>
         private static string s_foundAssetFolder;
@@ -37,7 +45,7 @@ namespace GDX.Editor.UI
                 return s_stylesheet;
             }
 
-            string[] potentialStyles = AssetDatabase.FindAssets("t:Stylesheet GDXStyle");
+            string[] potentialStyles = AssetDatabase.FindAssets("t:Stylesheet GDXStylesShared");
             if (potentialStyles.Length <= 0)
             {
                 return s_stylesheet;
@@ -46,6 +54,32 @@ namespace GDX.Editor.UI
             s_stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(potentialStyles[0]));
 
             return s_stylesheet;
+        }
+
+        /// <summary>
+        ///     Return the override stylesheet.
+        /// </summary>
+        /// <remarks>This will find and cache the stylesheet reference for future use, using the first asset to match the query.</remarks>
+        /// <returns>The stylesheet if found, or null.</returns>
+        public static StyleSheet GetStyleSheetOverride()
+        {
+#if UNITY_2021_1_OR_NEWER
+            return null;
+#endif
+            if (s_styleSheetOverride != null)
+            {
+                return s_styleSheetOverride;
+            }
+
+            string[] potentialStyles = AssetDatabase.FindAssets("t:Stylesheet GDXStylesUnity2020");
+            if (potentialStyles.Length <= 0)
+            {
+                return s_styleSheetOverride;
+            }
+
+            s_styleSheetOverride = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(potentialStyles[0]));
+
+            return s_styleSheetOverride;
         }
 
         public static void CheckTheme(VisualElement element)

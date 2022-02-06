@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="GDXStyles.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStyles" />
+    <Style src="GDXStylesShared.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStyles" />
     <ui:VisualElement name="gdx-visual-scripting" class="gdx-project-settings-section-content" style="flex-grow: 0;">
         <ui:VisualElement name="notice" class="gdx-groupbox" style="flex-direction: row;">
             <ui:VisualElement class="gdx-warning-icon" />
