@@ -82,6 +82,11 @@ namespace GDX.Editor.UI
                     {
                         string codePath =
                             System.IO.Path.Combine(UnityEngine.Application.dataPath, "Generated", "GDXSettings.cs");
+
+                        // Ensure folder structure is present
+                        Platform.EnsureFileFolderHierarchyExists(codePath);
+
+                        // Write file
                         System.IO.File.WriteAllText(codePath, SettingsGenerator.Build(Core.Config, WorkingConfig));
                         AssetDatabase.ImportAsset("Assets/Generated/GDXSettings.cs");
                     };
