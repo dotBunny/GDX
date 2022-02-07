@@ -280,7 +280,7 @@ namespace GDX.Editor
         /// <summary>
         /// Get the existing or open a new window with the indicated size / flags.
         /// </summary>
-        /// <remarks>This will undock a window.</remarks>
+        /// <remarks>This will undock a window.  It is important to wait for the window to paint itself.</remarks>
         /// <param name="shouldMaximize">Should the window be maximized?</param>
         /// <param name="width">The desired window pixel width.</param>
         /// <param name="height">The desired window pixel height.</param>

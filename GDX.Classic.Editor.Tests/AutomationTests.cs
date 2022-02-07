@@ -22,13 +22,15 @@ namespace Editor
         [Category(GDX.Core.TestCategory)]
         public IEnumerator CaptureEditorWindow_SceneView_SameTexture()
         {
-            yield return new TestWaitMilliseconds(1000f).While();
+            EditorWindow sceneView = Automation.GetWindow<SceneView>();
 
+            // You really do need to wait for this to work thanks to the whiteness
+            yield return new GDX.Developer.WaitForMilliseconds(1000).While();
 
-            Texture2D screenshotA = Automation.CaptureEditorWindow<SceneView>();
-            yield return new TestWaitMilliseconds(1000f).While();
+            Texture2D screenshotA = Automation.CaptureEditorWindow(sceneView);
+            Texture2D screenshotB = Automation.CaptureEditorWindow(sceneView);
 
-            Texture2D screenshotB = Automation.CaptureEditorWindow<SceneView>();
+            sceneView.Close();
             NativeArray<Color32> screenshotDataA = screenshotA.GetRawTextureData<Color32>();
             NativeArray<Color32> screenshotDataB = screenshotB.GetRawTextureData<Color32>();
             string outputPathA = Automation.GetTempFilePath("CaptureEditorWindow_SceneView_SameTextureA-",".png");
