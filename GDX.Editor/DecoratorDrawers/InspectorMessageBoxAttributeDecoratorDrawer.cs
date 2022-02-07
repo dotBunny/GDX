@@ -2,10 +2,11 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using GDX.Classic;
 using UnityEngine;
 using UnityEditor;
 
-namespace GDX.Classic.Editor.DecoratorDrawers
+namespace GDX.Editor.DecoratorDrawers
 {
     /// <summary>
     ///     The drawing component of the <see cref="InspectorMessageBoxAttribute" />.
