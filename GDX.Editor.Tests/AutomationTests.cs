@@ -87,11 +87,13 @@ namespace Editor
         public IEnumerator CaptureEditorWindow_SceneView_SameTexture()
         {
             EditorWindow sceneViewA = Automation.GetWindow<SceneView>();
+            sceneViewA.Focus();
             yield return new GDX.Developer.WaitForMilliseconds(500).While();
             Texture2D screenshotA = Automation.CaptureEditorWindow(sceneViewA);
             sceneViewA.Close();
 
             EditorWindow sceneViewB = Automation.GetWindow<SceneView>();
+            sceneViewB.Focus();
             yield return new GDX.Developer.WaitForMilliseconds(500).While();
             Texture2D screenshotB = Automation.CaptureEditorWindow(sceneViewB);
             sceneViewB.Close();
