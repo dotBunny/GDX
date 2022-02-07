@@ -202,7 +202,7 @@ Button.gdx-button {
     width: var(--size-header);
     height: var(--size-header);
     padding: 0;
-    margin-top: -5px;
+    margin-top: -4px;
     margin-left: 0;
     margin-right: 2px;
 }
