@@ -136,7 +136,7 @@ namespace Editor
             screenshotDataB.Dispose();
             percentages.Dispose();
 
-            Assert.IsTrue(Math.Abs(average - 1) < GDX.Platform.FloatTolerance, $"Similarity was {average}%.");
+            Assert.IsTrue(average > GDX.Platform.ImageCompareTolerance, $"Similarity was {average}%.");
         }
     }
 }
