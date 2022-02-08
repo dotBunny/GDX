@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using GDX.Classic.Collections.Generic;
 
-namespace GDX.Classic.Editor.PropertyDrawers
+namespace GDX.Editor.PropertyDrawers
 {
 #if UNITY_2020_1_OR_NEWER
     /// <summary>
