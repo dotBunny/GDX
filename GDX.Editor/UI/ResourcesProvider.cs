@@ -85,7 +85,7 @@ namespace GDX.Editor.UI
         {
 #if UNITY_2021_1_OR_NEWER
             return null;
-#endif
+#else
             if (s_styleSheetOverride != null)
             {
                 return s_styleSheetOverride;
@@ -100,6 +100,7 @@ namespace GDX.Editor.UI
             s_styleSheetOverride = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(potentialStyles[0]));
 
             return s_styleSheetOverride;
+#endif
         }
 
         /// <summary>

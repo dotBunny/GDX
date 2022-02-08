@@ -67,7 +67,7 @@ namespace GDX.Editor
             }
 
             // Should we check for updates?
-            DateTime targetDate = GetLastChecked().AddDays(GDX.Editor.ProjectSettings.AutomaticUpdatesSettings.UpdateDayCountSetting);
+            DateTime targetDate = GetLastChecked().AddDays(ProjectSettings.AutomaticUpdatesSettings.UpdateDayCountSetting);
             if (DateTime.Now >= targetDate)
             {
                 CheckForUpdates();
@@ -329,7 +329,7 @@ namespace GDX.Editor
                 Directory.Delete(tempExtractFolder, true);
             }
 
-            GDX.Platform.EnsureFolderHierarchyExists(tempExtractFolder);
+            Platform.EnsureFolderHierarchyExists(tempExtractFolder);
 
             // Extract downloaded tarball to the temp folder
             TarFile.ExtractToDirectory(tempFile, tempExtractFolder, true);
@@ -345,7 +345,7 @@ namespace GDX.Editor
                 try
                 {
                     AssetDatabase.StartAssetEditing();
-                    GDX.Editor.VersionControl.CheckoutFolder(targetPath);
+                    VersionControl.CheckoutFolder(targetPath);
                     Directory.Delete(targetPath, true);
 
                     // Drop in new content
@@ -383,7 +383,7 @@ namespace GDX.Editor
                 {
                     // Pause asset database
                     AssetDatabase.StartAssetEditing();
-                    GDX.Editor.VersionControl.CheckoutFolder(targetPath);
+                    VersionControl.CheckoutFolder(targetPath);
 
                     if (LocalPackage?.PackageManifestPath != null)
                     {

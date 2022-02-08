@@ -56,11 +56,19 @@ namespace GDX.Editor.UI
                 label = "GDX",
                 activateHandler = (searchContext, rootElement) =>
                 {
-                    rootElement.styleSheets.Add(ResourcesProvider.GetStyleSheet());
+                    // Add base style sheet
+                    if (ResourcesProvider.GetStyleSheet() != null)
+                    {
+                        rootElement.styleSheets.Add(ResourcesProvider.GetStyleSheet());
+                    }
+
+                    // Add any overrides
                     if (ResourcesProvider.GetStyleSheetOverride() != null)
                     {
                         rootElement.styleSheets.Add(ResourcesProvider.GetStyleSheetOverride());
                     }
+
+                    // Get our base element
                     ResourcesProvider.GetVisualTreeAsset("GDXProjectSettings").CloneTree(rootElement);
 
                     // Early handle of theme
