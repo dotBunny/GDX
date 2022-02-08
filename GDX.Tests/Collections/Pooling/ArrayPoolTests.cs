@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using GDX.Collections.Pooling;
 using NUnit.Framework;
 
@@ -55,10 +54,7 @@ namespace Runtime.Collections.Generic
             if (evaluate)
             {
                 int[] array = arrayPool.Get(16);
-
-                evaluate = evaluate &&
-                            array != null &&
-                            array.Length == 16;
+                evaluate =  array != null && array.Length == 16;
             }
 
             Assert.IsTrue(evaluate);
@@ -84,10 +80,7 @@ namespace Runtime.Collections.Generic
             if (evaluate)
             {
                 int[] array = arrayPool.Get(16);
-
-                evaluate = evaluate &&
-                            array != null &&
-                            array.Length == 16;
+                evaluate = array != null && array.Length == 16;
             }
 
             Assert.IsTrue(evaluate);
@@ -114,10 +107,7 @@ namespace Runtime.Collections.Generic
             if (evaluate)
             {
                 int[] array = arrayPool.Get(13);
-
-                evaluate = evaluate &&
-                            array != null &&
-                            array.Length == 16;
+                evaluate = array != null && array.Length == 16;
             }
 
             Assert.IsTrue(evaluate);
@@ -145,10 +135,8 @@ namespace Runtime.Collections.Generic
             if (evaluate)
             {
                 arrayPool.Return(arrayToPool);
-
-                evaluate = evaluate &&
-                            arrayPool.ArrayPools[4].Count == 2 &&
-                            arrayPool.ArrayPools[4].Pool[1] == arrayToPool;
+                evaluate = arrayPool.ArrayPools[4].Count == 2 &&
+                           arrayPool.ArrayPools[4].Pool[1] == arrayToPool;
             }
 
             Assert.IsTrue(evaluate);
@@ -178,10 +166,9 @@ namespace Runtime.Collections.Generic
             {
                 arrayPool.Return(arrayToPool);
                 arrayPool.Return(arrayToFail);
-                evaluate = evaluate &&
-                            arrayPool.ArrayPools[4].Count == 2 &&
-                            arrayPool.ArrayPools[4].Pool[1] == arrayToPool &&
-                            arrayPool.ArrayPools[4].Pool[0] != arrayToFail;
+                evaluate = arrayPool.ArrayPools[4].Count == 2 &&
+                           arrayPool.ArrayPools[4].Pool[1] == arrayToPool &&
+                           arrayPool.ArrayPools[4].Pool[0] != arrayToFail;
             }
 
             Assert.IsTrue(evaluate);

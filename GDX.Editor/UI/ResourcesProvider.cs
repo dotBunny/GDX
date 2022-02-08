@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine.UIElements;
@@ -32,6 +33,25 @@ namespace GDX.Editor.UI
         ///     A cached pathing to where our UXML are stored.
         /// </summary>
         private static string s_foundAssetFolder;
+
+        /// <summary>
+        ///     Apply light/dark mode classes.
+        /// </summary>
+        /// <param name="element">The target element to have classes applied to.</param>
+        public static void CheckTheme(VisualElement element)
+        {
+            // Handle Skin
+            if (EditorGUIUtility.isProSkin)
+            {
+                element.AddToClassList("dark");
+                element.RemoveFromClassList("light");
+            }
+            else
+            {
+                element.RemoveFromClassList("dark");
+                element.AddToClassList("light");
+            }
+        }
 
         /// <summary>
         ///     Return the global stylesheet.
@@ -82,21 +102,6 @@ namespace GDX.Editor.UI
             return s_styleSheetOverride;
         }
 
-        public static void CheckTheme(VisualElement element)
-        {
-            // Handle Skin
-            if (EditorGUIUtility.isProSkin)
-            {
-                element.AddToClassList("dark");
-                element.RemoveFromClassList("light");
-            }
-            else
-            {
-                element.RemoveFromClassList("dark");
-                element.AddToClassList("light");
-            }
-        }
-
         /// <summary>
         ///     Return the target visual tree asset, by name.
         /// </summary>
@@ -120,7 +125,8 @@ namespace GDX.Editor.UI
 
                 string assetPath = AssetDatabase.GUIDToAssetPath(potentialTree[0]);
 
-                s_foundAssetFolder = assetPath.Substring(0, assetPath.IndexOf(targetName));
+                s_foundAssetFolder = assetPath.Substring(0,
+                    assetPath.IndexOf(targetName, StringComparison.Ordinal));
                 s_assets.Add(targetName,
                     AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(assetPath));
             }

@@ -19,8 +19,7 @@ namespace Runtime.Classic.Developer.Reports
         [Category(GDX.Core.TestCategory)]
         public void Get_MockData_ReturnsObject()
         {
-
-            var state = ResourcesAudit.Get(new []
+            ResourcesAudit state = ResourcesAudit.Get(new []
             {
                 new ResourcesAudit.ResourcesQuery( "UnityEngine.Texture2D,UnityEngine"),
                 new ResourcesAudit.ResourcesQuery(
@@ -37,7 +36,7 @@ namespace Runtime.Classic.Developer.Reports
         [Category(GDX.Core.TestCategory)]
         public void Output_GetCommon_ReturnsReport()
         {
-            var report = ResourcesAudit.GetCommon().Output();
+            string[] report = ResourcesAudit.GetCommon().Output();
 
             bool evaluate = report != null && report.Length > 0;
 
@@ -48,7 +47,7 @@ namespace Runtime.Classic.Developer.Reports
         [Category(GDX.Core.TestCategory)]
         public void Output_GetAll_ReturnsReport()
         {
-            var report = ResourcesAudit.GetAll().Output();
+            string[] report = ResourcesAudit.GetAll().Output();
 
             bool evaluate = report != null && report.Length > 0;
 

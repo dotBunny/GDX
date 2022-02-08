@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using GDX.Collections.Generic;
 using GDX.Classic.Developer.Reports.Objects;
 using GDX.Classic.Developer.Reports.Sections;
 using UnityEngine;

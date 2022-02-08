@@ -2,13 +2,11 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-
 namespace GDX.Mathematics.Random
 {
     public class RandomWrapper : IRandomProvider
     {
-        private System.Random _random;
+        private readonly System.Random _random;
 
         public RandomWrapper()
         {

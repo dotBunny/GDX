@@ -26,6 +26,7 @@ namespace GDX.Classic.Developer.Reports
             }
             else
             {
+                // ReSharper disable once PossibleLossOfFraction
                 Percentage = 100f * (Change / lhs);
             }
         }

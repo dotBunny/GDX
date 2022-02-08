@@ -139,6 +139,7 @@ namespace GDX.Classic
         public static string GetScenePath(this Transform targetTransform)
         {
             StringBuilder stringBuilder = new StringBuilder();
+            Transform originalTransform = targetTransform;
             while ( targetTransform != null )
             {
                 stringBuilder.Insert(0, targetTransform.name);
@@ -146,8 +147,8 @@ namespace GDX.Classic
                 targetTransform = targetTransform.parent;
             }
 #if UNITY_EDITOR
-            if (targetTransform &&
-                UnityEditor.EditorUtility.IsPersistent(targetTransform) )
+            if (originalTransform &&
+                UnityEditor.EditorUtility.IsPersistent(originalTransform) )
             {
                 stringBuilder.Append( " [P]" );
             }

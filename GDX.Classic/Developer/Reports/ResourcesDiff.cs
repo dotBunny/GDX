@@ -50,7 +50,7 @@ namespace GDX.Classic.Developer.Reports
             }
 
             // Known Objects - Start on right hand side
-            foreach (var kvpType in lhs.KnownObjects)
+            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> kvpType in lhs.KnownObjects)
             {
                 // Lets just add something ahead to be safe
                 if (!AddedObjects.ContainsKey(kvpType.Key))
@@ -74,7 +74,7 @@ namespace GDX.Classic.Developer.Reports
                 }
 
                 // Iterate over everything in the left hand side
-                foreach (var knownObject in kvpType.Value)
+                foreach (KeyValuePair<TransientReference, ObjectInfo> knownObject in kvpType.Value)
                 {
                     // None of this type in the right, means removed
                     if (rhsKnownObjects == null)
@@ -100,13 +100,13 @@ namespace GDX.Classic.Developer.Reports
             }
 
             // Iterate over rhs for added
-            foreach (var kvpType in rhs.KnownObjects)
+            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> kvpType in rhs.KnownObjects)
             {
                 if (!lhs.KnownObjects.ContainsKey(kvpType.Key))
                 {
                     AddedObjects.Add(kvpType.Key, new Dictionary<TransientReference, ObjectInfo>());
                     // Iterate over everything in the left hand side
-                    foreach (var knownObject in kvpType.Value)
+                    foreach (KeyValuePair<TransientReference, ObjectInfo> knownObject in kvpType.Value)
                     {
                         AddedObjects[kvpType.Key].Add(knownObject.Key, knownObject.Value);
                     }
@@ -114,38 +114,38 @@ namespace GDX.Classic.Developer.Reports
             }
 
             List<Type> removeType = new List<Type>();
-            foreach (var kvpType in AddedObjects)
+            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> kvpType in AddedObjects)
             {
                 if (kvpType.Value.Count == 0)
                 {
                     removeType.Add(kvpType.Key);
                 }
             }
-            foreach (var type in removeType)
+            foreach (Type type in removeType)
             {
                 AddedObjects.Remove(type);
             }
             removeType.Clear();
-            foreach (var kvpType in RemovedObjects)
+            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> kvpType in RemovedObjects)
             {
                 if (kvpType.Value.Count == 0)
                 {
                     removeType.Add(kvpType.Key);
                 }
             }
-            foreach (var type in removeType)
+            foreach (Type type in removeType)
             {
                 RemovedObjects.Remove(type);
             }
             removeType.Clear();
-            foreach (var kvpType in CommonObjects)
+            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> kvpType in CommonObjects)
             {
                 if (kvpType.Value.Count == 0)
                 {
                     removeType.Add(kvpType.Key);
                 }
             }
-            foreach (var type in removeType)
+            foreach (Type type in removeType)
             {
                 CommonObjects.Remove(type);
             }
@@ -197,7 +197,7 @@ namespace GDX.Classic.Developer.Reports
             {
                 int count = typeKVP.Value.Count;
 
-                builder.AppendLine(context.CreateHeader($"{typeKVP.Key.ToString()} [{count.ToString()}] ", '-'));
+                builder.AppendLine(context.CreateHeader($"{typeKVP.Key} [{count.ToString()}] ", '-'));
 
                 // Sort the known objects based on size as that's the most useful context to have them listed
                 List<ObjectInfo> newList = new List<ObjectInfo>(count);
