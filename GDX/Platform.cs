@@ -20,10 +20,42 @@ namespace GDX
         public const string SafeCharacterPool = "abcdefghijklmnopqrstuvwxyz";
         public const int CharacterPoolLength = 25;
         public const int CharacterPoolLengthExclusive = 24;
+        /// <summary>
+        ///     A filename safe version of the timestamp format.
+        /// </summary>
+        public const string FilenameTimestampFormat = "yyyyMMdd_HHmmss";
+
+        private static string s_outputFolder = null;
 
         public static char GetRandomSafeCharacter(IRandomProvider random)
         {
             return SafeCharacterPool[random.NextInteger(0, CharacterPoolLengthExclusive)];
+        }
+
+        /// <summary>
+        ///     Returns a runtime writable folder.
+        /// </summary>
+        /// <returns>The full path to a writable folder at runtime.</returns>
+        public static string GetOutputFolder()
+        {
+            if (s_outputFolder == null)
+            {
+#if UNITY_EDITOR
+                s_outputFolder = Path.Combine(UnityEngine.Application.dataPath, "..", "GDX");
+#elif UNITY_DOTSRUNTIME
+                s_outputFolder = Path.Combine(Directory.GetCurrentDirectory(), "GDX");
+#else
+                s_outputFolder = UnityEngine.Application.persistentDataPath;
+
+                // TODO: Add console safe folders for dev?
+                // Maybe throw exception on release builds?
+#endif
+                EnsureFolderHierarchyExists(s_outputFolder);
+            }
+
+            return s_outputFolder;
+
+
         }
 
         /// <summary>
@@ -33,7 +65,7 @@ namespace GDX
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void EnsureFolderHierarchyExists(string folderPath)
         {
-            if (!string.IsNullOrEmpty(folderPath))
+            if (!string.IsNullOrEmpty(folderPath) && !Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
             }
@@ -47,10 +79,7 @@ namespace GDX
         public static void EnsureFileFolderHierarchyExists(string filePath)
         {
             string targetDirectory = Path.GetDirectoryName(filePath);
-            if (!string.IsNullOrEmpty(targetDirectory))
-            {
-                Directory.CreateDirectory(targetDirectory);
-            }
+            EnsureFolderHierarchyExists(targetDirectory);
         }
 
         /// <summary>
