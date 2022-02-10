@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Xml.Serialization;
-using J2N.Collections.Generic;
+using System.Collections.Generic;
 
 namespace GDX.Developer.Reports.NUnit
 {
