@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using GDX.Collections.Generic;
 using NUnit.Framework;
 using GDX;
@@ -14,7 +13,7 @@ namespace Runtime.Collections.Generic
     public class StringKeyDictionaryTests
     {
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Constructor_RequestZeroMinimum_PrimeCapacity()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(0);
@@ -23,7 +22,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Constructor_RequestPrimeMinimum_PrimeCapacity()
         {
             int prime = DictionaryPrimes.primes[2];
@@ -32,7 +31,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Constructor_RequestBelowPrimeMinimum_PrimeCapacity()
         {
             int prime = DictionaryPrimes.primes[5];
@@ -43,7 +42,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddSafe_CheckExists()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -57,7 +56,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IndexerAdd_CheckExists()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -71,7 +70,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddWithExpandCheck_CheckExists()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -85,7 +84,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddWithExpandCheck_CheckExpanded()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -112,7 +111,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddWithExpandCheck_CheckEntriesMaintainConnection()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -159,7 +158,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddSafe_CheckExpanded()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -186,7 +185,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddSafe_CheckEntriesMaintainConnection()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -231,7 +230,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddWithIndexer_CheckExpanded()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -258,7 +257,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddWithIndexer_CheckEntriesMaintainConnection()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -303,7 +302,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddWithUniqueCheck_CheckExists()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -317,7 +316,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddUnchecked_CheckExists()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -331,7 +330,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TryRemove_CheckActuallyRemoved()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -359,8 +358,8 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
-        public void TryRemoveTwice_CheckCorrectReturnvalues()
+        [Category(Core.TestCategory)]
+        public void TryRemoveTwice_CheckCorrectReturnValues()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
             string myKey = "myKey";
@@ -377,7 +376,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddWithUniqueCheckTwice_CheckAddedOnlyOnce()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -419,7 +418,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Reserve_CheckExpandedCapacity()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -434,7 +433,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IndexOf_CheckCorrectIndex()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -461,7 +460,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IndexOf_CheckEntryDoesNotExist()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -472,7 +471,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddTwoCollidingEntries_CheckAccess()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -514,12 +513,12 @@ namespace Runtime.Collections.Generic
 
             int stableHashCode0 = collidingKey0.GetStableHashCode();
             int stableHashCode1 = collidingKey1.GetStableHashCode();
-            
+
             Assert.IsTrue(allegedIndex0 == realIndex0 && allegedIndex1 == realIndex1 && allegedIndex0 != allegedIndex1 && nextIndex == allegedIndex0 && stableHashCode0 == stableHashCode1);
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddTwoCollidingEntries_RemoveFirst_CheckSecondExists()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -543,7 +542,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddTwoCollidingEntries_RemoveSecond_CheckFirstExists()
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
@@ -567,7 +566,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void MoveNext_FindAllEntries()
         {
             string firstKey = "firstKey";
@@ -583,9 +582,8 @@ namespace Runtime.Collections.Generic
             bool foundFirst = false;
             bool foundSecond = false;
             int currentIndex = 0;
-            StringKeyEntry<string> currentEntry = default(StringKeyEntry<string>);
 
-            while (dictionary.MoveNext(ref currentIndex, out currentEntry))
+            while (dictionary.MoveNext(ref currentIndex, out StringKeyEntry<string> currentEntry))
             {
                 if (currentEntry.key == firstKey)
                 {
@@ -602,7 +600,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void MoveNextWithVersion_FindAllEntries()
         {
             string firstKey = "firstKey";
@@ -620,9 +618,8 @@ namespace Runtime.Collections.Generic
             int currentIndex = 0;
             int version = 0;
             int dictionaryVersion = 0;
-            StringKeyEntry<string> currentEntry = default(StringKeyEntry<string>);
 
-            while (dictionary.MoveNext(ref currentIndex, version, in dictionaryVersion, out currentEntry) == IteratorState.FoundEntry)
+            while (dictionary.MoveNext(ref currentIndex, version, in dictionaryVersion, out StringKeyEntry<string> currentEntry) == IteratorState.FoundEntry)
             {
                 if (currentEntry.key == firstKey)
                 {
@@ -639,7 +636,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void MoveNextWithVersion_CheckEarlyOutFromInvalidation()
         {
             string firstKey = "firstKey";
@@ -657,9 +654,8 @@ namespace Runtime.Collections.Generic
             int currentIndex = 0;
             int version = 0;
             int dictionaryVersion = 0;
-            StringKeyEntry<string> currentEntry = default(StringKeyEntry<string>);
 
-            IteratorState iteratorState = dictionary.MoveNext(ref currentIndex, version, in dictionaryVersion, out currentEntry);
+            IteratorState iteratorState = dictionary.MoveNext(ref currentIndex, version, in dictionaryVersion, out StringKeyEntry<string> currentEntry);
 
             while (iteratorState == IteratorState.FoundEntry)
             {

@@ -243,7 +243,7 @@ namespace GDX.Editor
             StringBuilder tmpFileName = new StringBuilder(260);
             tmpFileName.Append(prefix);
             RandomWrapper random = new RandomWrapper(
-                StringExtensions.GetStableHashCode(System.DateTime.Now.Ticks.ToString()));
+                System.DateTime.Now.Ticks.ToString().GetStableHashCode());
 
             tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
             tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
