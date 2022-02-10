@@ -131,6 +131,9 @@ namespace GDX.Editor.UI
                         WorkingConfig = new GDXConfig(Core.Config);
                     }
 
+                    // Update first state
+                    CheckForChanges();
+
                     ConfigSectionsProvider.ClearSectionCache();
 
 
