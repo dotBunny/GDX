@@ -2,8 +2,9 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+#if GDX_PLATFORMS
+
 using System;
-using System.Collections.Generic;
 using System.IO;
 using GDX.Editor.Build;
 using UnityEngine;
@@ -12,8 +13,6 @@ using UnityEngine;
 
 namespace GDX.Classic.Editor.Build
 {
-
-#if GDX_PLATFORMS
     /// <summary>
     ///     <para>
     ///         A customizer for the <c>ClassicBuildPipeline</c> that handles the generation of the <c>BuildInfo</c>.
@@ -114,5 +113,7 @@ namespace GDX.Classic.Editor.Build
             }
         }
     }
-#endif
+
 }
+
+#endif

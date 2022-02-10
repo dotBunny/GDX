@@ -4,9 +4,11 @@
 
 // ReSharper disable MemberCanBePrivate.Global
 
+#if GDX_PLATFORMS
+
 namespace GDX.Classic.Editor.Build
 {
-#if GDX_PLATFORMS
+
     /// <summary>
     ///     A customizer for the <c>ClassicBuildPipeline</c> that ensures the build is built with 'GDX' as a
     ///     scripting define.
@@ -22,5 +24,6 @@ namespace GDX.Classic.Editor.Build
             return new [] {"GDX"};
         }
     }
-#endif
 }
+
+#endif
