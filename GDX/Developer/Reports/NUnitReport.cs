@@ -10,10 +10,10 @@ namespace GDX.Developer.Reports
 {
     public class NUnitReport
     {
-        public const string FailedString = "Failed";
-        public const string PassedString = "Passed";
+        private const string FailedString = "Failed";
+        private const string PassedString = "Passed";
 
-        public TestRun Results = new TestRun();
+        private readonly TestRun _results = new TestRun();
 
         public TestCase AddDurationResult(string name, int seconds, bool passed = true, TestSuite testSuite = null)
         {
@@ -29,7 +29,7 @@ namespace GDX.Developer.Reports
             }
             else
             {
-                Results.TestSuite.TestCases.Add(testCase);
+                _results.TestSuite.TestCases.Add(testCase);
             }
             return testCase;
         }
@@ -37,9 +37,9 @@ namespace GDX.Developer.Reports
         /// <inheritdoc />
         public override string ToString()
         {
-            XmlSerializer reportSerializer = new XmlSerializer(Results.GetType());
+            XmlSerializer reportSerializer = new XmlSerializer(_results.GetType());
             using StringWriter textWriter = new StringWriter();
-            reportSerializer.Serialize(textWriter, Results);
+            reportSerializer.Serialize(textWriter, _results);
             return textWriter.ToString();
         }
     }

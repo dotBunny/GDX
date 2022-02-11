@@ -156,7 +156,7 @@ namespace Runtime.Classic.Collections.Pooling
 
             ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(movedObject, movedTransform.transform);
 
-            GameObject gameObject = GameObjectPool.Get(pool, _mockTransform, false, true);
+            GameObject gameObject = GameObjectPool.Get(pool, _mockTransform);
 
             bool evaluate = gameObject.transform.position == _mockTransform.transform.position;
 

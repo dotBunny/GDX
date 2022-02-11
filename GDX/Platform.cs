@@ -25,7 +25,7 @@ namespace GDX
         /// </summary>
         public const string FilenameTimestampFormat = "yyyyMMdd_HHmmss";
 
-        private static string s_outputFolder = null;
+        private static string s_outputFolder;
 
         public static char GetRandomSafeCharacter(IRandomProvider random)
         {

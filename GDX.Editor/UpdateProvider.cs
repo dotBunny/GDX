@@ -221,10 +221,10 @@ namespace GDX.Editor
                 case PackageProvider.InstallationType.UPMTag:
                 case PackageProvider.InstallationType.Assets:
                     return true;
-                case PackageProvider.InstallationType.Unknown:
-                case PackageProvider.InstallationType.UPMCommit:
-                case PackageProvider.InstallationType.UPMLocal:
-                case PackageProvider.InstallationType.GitHubCommit:
+                // case PackageProvider.InstallationType.Unknown:
+                // case PackageProvider.InstallationType.UPMCommit:
+                // case PackageProvider.InstallationType.UPMLocal:
+                // case PackageProvider.InstallationType.GitHubCommit:
                 default:
                     return false;
             }
@@ -459,15 +459,8 @@ namespace GDX.Editor
                 if (newFileContent.Count != lockFileLength)
                 {
                     File.WriteAllLines(packageManifestLockFile, newFileContent.ToArray());
-
-#if UNITY_2020_1_OR_NEWER
                     // Tell PackageManager to resolve our newly altered file.
                     UnityEditor.PackageManager.Client.Resolve();
-#else
-                    EditorUtility.DisplayDialog("GDX Package Update",
-                        "Your version of Unity requires that you either loose focus and return to Unity, or simply restart the editor to detect the change.",
-                        "OK");
-#endif
                 }
             }
         }

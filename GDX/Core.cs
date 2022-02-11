@@ -11,8 +11,8 @@ namespace GDX
     {
         public const string TestCategory = "GDX.Tests";
         public const string PerformanceCategory = "GDX.Performance";
-        public static bool ConfigDirty = false;
         public static readonly GDXConfig Config;
+        // ReSharper disable once MemberCanBePrivate.Global
         public static readonly long StartTicks;
         public static WELL1024a Random;
 

@@ -34,7 +34,7 @@ namespace GDX.Mathematics.Random
 
         public override int Next()
         {
-            return _provider.NextInteger(0);
+            return _provider.NextInteger();
         }
 
         public override int Next(int minValue, int maxValue)
@@ -60,7 +60,7 @@ namespace GDX.Mathematics.Random
         public override double NextDouble()
         {
 
-            return _provider.NextDouble(0, 1d);
+            return _provider.NextDouble();
         }
 
         public override void NextBytes(byte[] buffer)

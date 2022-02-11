@@ -19,7 +19,7 @@ namespace GDX.Editor
     /// </summary>
     public static class Automation
     {
-        public static object[] s_EmptyParametersArray = new object[] { };
+        private static readonly object[] s_emptyParametersArray = new object[] { };
 
         private static string LayoutStashPath()
         {
@@ -111,6 +111,7 @@ namespace GDX.Editor
         /// <param name="outputPath">The absolute path for the image file.</param>
         /// <returns>true/false if the capture was successful.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // ReSharper disable once MemberCanBePrivate.Global
         public static bool CaptureEditorWindowToPNG(EditorWindow window, string outputPath)
         {
             Texture2D texture = CaptureEditorWindow(window);
@@ -311,7 +312,7 @@ namespace GDX.Editor
                 // a fail yet from testing.
                 if (repaintMethod != null)
                 {
-                    repaintMethod.Invoke(window, s_EmptyParametersArray);
+                    repaintMethod.Invoke(window, s_emptyParametersArray);
                 }
             }
             return window;
@@ -348,13 +349,13 @@ namespace GDX.Editor
                 System.Type windowLayout = System.Type.GetType("UnityEditor.WindowLayout,UnityEditor");
                 if (windowLayout != null)
                 {
-                    MethodInfo loadMethod = windowLayout.GetMethod("LoadWindowLayout", new System.Type[] {typeof(string), typeof(bool), typeof(bool), typeof(bool)});
+                    MethodInfo loadMethod = windowLayout.GetMethod("LoadWindowLayout", new[] {typeof(string), typeof(bool), typeof(bool), typeof(bool)});
                     if (loadMethod != null)
                     {
                         loadMethod.Invoke(null,new object[]{LayoutStashPath(), false, false, true});
                     }
                 }
-                GDX.Platform.ForceDeleteFile(path);
+                Platform.ForceDeleteFile(path);
             }
         }
     }
