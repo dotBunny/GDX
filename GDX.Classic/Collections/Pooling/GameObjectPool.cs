@@ -117,7 +117,7 @@ namespace GDX.Classic.Collections.Pooling
             GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
             if (returnObject == null)
             {
-                return returnObject;
+                return null;
             }
 
             // Translate
@@ -159,7 +159,7 @@ namespace GDX.Classic.Collections.Pooling
             GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
             if (returnObject == null)
             {
-                return returnObject;
+                return null;
             }
 
             // Translate
@@ -199,7 +199,7 @@ namespace GDX.Classic.Collections.Pooling
             GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
             if (returnObject == null)
             {
-                return returnObject;
+                return null;
             }
 
             // Translate
@@ -238,7 +238,7 @@ namespace GDX.Classic.Collections.Pooling
             GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
             if (returnObject == null)
             {
-                return returnObject;
+                return null;
             }
 
             // Translate
@@ -276,7 +276,7 @@ namespace GDX.Classic.Collections.Pooling
             GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
             if (returnObject == null)
             {
-                return returnObject;
+                return null;
             }
 
             // Translate
@@ -314,7 +314,7 @@ namespace GDX.Classic.Collections.Pooling
             GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
             if (returnObject == null)
             {
-                return returnObject;
+                return null;
             }
 
             // Translate
@@ -353,7 +353,7 @@ namespace GDX.Classic.Collections.Pooling
             GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
             if (returnObject == null)
             {
-                return returnObject;
+                return null;
             }
 
             // Translate

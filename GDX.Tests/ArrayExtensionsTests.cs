@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX;
-using GDX.Collections.Generic;
 using NUnit.Framework;
 
 // ReSharper disable HeapView.ObjectAllocation.Evident

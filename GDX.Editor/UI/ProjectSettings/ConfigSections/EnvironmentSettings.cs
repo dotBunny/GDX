@@ -3,12 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
-using GDX.Editor;
-using GDX.Editor.UI;
 using GDX.Editor.UI.ProjectSettings;
 using UnityEditor;
 using UnityEditor.UIElements;
-using UnityEngine;
 using UnityEngine.UIElements;
 #if !GDX_MASKFIELD
 using System.Reflection;

@@ -27,6 +27,15 @@ namespace GDX.Mathematics.Random
             _provider = provider;
         }
 
+        /// <summary>
+        ///     Is the provider present, and not null?
+        /// </summary>
+        /// <returns>true/false a provider is not null.</returns>
+        public bool HasProvider()
+        {
+            return _provider != null;
+        }
+
         protected override double Sample()
         {
             return _provider.Sample();

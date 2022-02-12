@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -19,9 +18,9 @@ namespace GDX.Classic
     {
 
         /// <summary>
-        ///     Get the <see cref="Language" /> equivalent of the <see cref="SystemLanguage" />.
+        ///     Get the <see cref="GDX.Localization.Language" /> equivalent of the <see cref="SystemLanguage" />.
         /// </summary>
-        /// <returns>The appropriate <see cref="Language" />, or default.</returns>
+        /// <returns>The appropriate <see cref="GDX.Localization.Language" />, or default.</returns>
         public static GDX.Localization.Language GetSystemLanguage()
         {
             SystemLanguage language = Application.systemLanguage;

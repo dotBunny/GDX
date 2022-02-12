@@ -57,7 +57,7 @@ namespace Runtime.Classic.Collections.Generic
         public void OverwriteSerializedData_MockData_PopulatesDictionary()
         {
             SerializableDictionary<int, string> mockDictionary = new SerializableDictionary<int, string>();
-            mockDictionary.OverwriteSerializedData(new int[2] {1, 2}, new string[2] {"one", "two"});
+            mockDictionary.OverwriteSerializedData(new[] {1, 2}, new [] {"one", "two"});
             mockDictionary.LoadSerializedData();
 
             bool evaluate = mockDictionary.Count == 2 && mockDictionary[2] == "two";

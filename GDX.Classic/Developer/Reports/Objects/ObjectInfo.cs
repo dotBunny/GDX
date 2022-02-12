@@ -4,7 +4,6 @@
 
 using System;
 using System.Text;
-using System.Text.RegularExpressions;
 using UnityEngine.Profiling;
 using Object = UnityEngine.Object;
 
