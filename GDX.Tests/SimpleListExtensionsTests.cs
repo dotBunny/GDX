@@ -39,7 +39,7 @@ namespace Runtime
 
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddWithExpandCheckUniqueItem_NonUniqueString_ReturnsFalse()
         {
             SimpleList<string> mockData = new SimpleList<string>(3);
@@ -54,7 +54,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddWithExpandCheckUniqueItem_UniqueString_ReturnsTrue()
         {
             SimpleList<string> mockData = new SimpleList<string>(3);
@@ -69,7 +69,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddUncheckedUniqueItem_NonUniqueString_ReturnsFalse()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(3);
@@ -82,7 +82,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddUncheckedUniqueItem_UniqueStringWithRoom_NoException()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(3);
@@ -93,7 +93,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddUncheckedUniqueItem_UniqueStringWithNoRoom_ThrowsException()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(2);
@@ -104,22 +104,22 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ContainsItem_String_ReturnsTrue()
         {
-            const string searchItem = "Hello";
+            const string SearchItem = "Hello";
             SimpleList<string> listOfStrings = new SimpleList<string>(3);
-            listOfStrings.AddUnchecked(searchItem);
+            listOfStrings.AddUnchecked(SearchItem);
             listOfStrings.AddUnchecked("World");
             listOfStrings.AddUnchecked("!");
 
-            bool evaluate = listOfStrings.ContainsItem(searchItem);
+            bool evaluate = listOfStrings.ContainsItem(SearchItem);
 
             Assert.IsTrue(evaluate);
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ContainsItem_CircularBuffer_ReturnsTrue()
         {
             object searchItem = new object();
@@ -138,7 +138,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveFirstItem_MockData_RemovedItem()
         {
             object searchItem = new object();
@@ -161,7 +161,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveFirstItem_MockData_NoItemReturnsFalse()
         {
             object searchItem = new object();
@@ -181,7 +181,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveItems_MockData_RemovedItems()
         {
             object searchItem = new object();
@@ -203,7 +203,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveLastItem_MockData_RemovedItem()
         {
             object searchItem = new object();
@@ -226,7 +226,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveLastItem_MockData_NoItemReturnsFalse()
         {
             object searchItem = new object();

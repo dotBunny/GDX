@@ -2,13 +2,11 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Editor;
-using GDX.Editor.UI;
 using GDX.Editor.UI.ProjectSettings;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using SettingsProvider = UnityEditor.SettingsProvider;
+using SettingsProvider = GDX.Editor.UI.SettingsProvider;
 
 namespace GDX.Editor.ProjectSettings
 {
@@ -49,13 +47,13 @@ namespace GDX.Editor.ProjectSettings
         [InitializeOnLoadMethod]
         static void Register()
         {
-            UI.SettingsProvider.RegisterConfigSection(new AutomaticUpdatesSettings());
+            SettingsProvider.RegisterConfigSection(new AutomaticUpdatesSettings());
         }
 
         /// <summary>
-        ///     Draw the Automatic Updates section of settings.
+        ///     Bind the Automatic Update section.
         /// </summary>
-        /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
+        /// <param name="rootElement">The Automatic Update section <see cref="VisualElement"/>.</param>
         public void BindSectionContent(VisualElement rootElement)
         {
             _rootElement = rootElement;
@@ -206,21 +204,21 @@ namespace GDX.Editor.ProjectSettings
 
         public bool GetToggleState()
         {
-            return GDX.Editor.UI.SettingsProvider.WorkingConfig.updateProviderCheckForUpdates;
+            return SettingsProvider.WorkingConfig.updateProviderCheckForUpdates;
         }
 
         public void SetToggleState(VisualElement toggleElement, bool newState)
         {
-            GDX.Editor.UI.SettingsProvider.WorkingConfig.updateProviderCheckForUpdates = newState;
+            SettingsProvider.WorkingConfig.updateProviderCheckForUpdates = newState;
             if (Core.Config.updateProviderCheckForUpdates != newState)
             {
-                toggleElement.AddToClassList(UI.ProjectSettings.ConfigSectionsProvider.ChangedClass);
+                toggleElement.AddToClassList(ConfigSectionsProvider.ChangedClass);
             }
             else
             {
-                toggleElement.RemoveFromClassList(UI.ProjectSettings.ConfigSectionsProvider.ChangedClass);
+                toggleElement.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
             }
-            GDX.Editor.UI.SettingsProvider.CheckForChanges();
+            SettingsProvider.CheckForChanges();
         }
 
         public string GetToggleTooltip()

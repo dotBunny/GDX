@@ -18,7 +18,7 @@ namespace Runtime
     public class ByteExtensionsTests
     {
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetStableHashCode_MockData_ReturnsValidCode()
         {
             byte[] testArray = Encoding.UTF8.GetBytes("Hello World");
@@ -29,7 +29,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsSame_SameData_ReturnsTrue()
         {
             byte[] mockData = StringExtensions.EncryptionDefaultKey;
@@ -40,7 +40,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsSame_DifferentData_ReturnsFalse()
         {
             byte[] mockData = StringExtensions.EncryptionDefaultKey;
@@ -52,7 +52,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsSame_NullLeftHandSide_ReturnsFalse()
         {
             byte[] mockData = null;
@@ -65,7 +65,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsSame_NullRightHandSide_ReturnsFalse()
         {
             byte[] mockData = StringExtensions.EncryptionDefaultKey;
@@ -78,7 +78,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsSame_DifferentLengths_ReturnsFalse()
         {
             byte[] mockData = StringExtensions.EncryptionDefaultKey;

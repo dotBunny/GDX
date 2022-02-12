@@ -18,7 +18,7 @@ namespace Runtime
     public class ListExtensionsTests
     {
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddUniqueItem_UniqueItem_ReturnsTrue()
         {
             object searchValue = new object();
@@ -33,7 +33,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddUniqueItem_NonUniqueItem_ReturnsFalse()
         {
             object searchValue = new object();
@@ -48,7 +48,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ContainsItem_MockData_FindsItem()
         {
             object mockObject = new object();
@@ -67,7 +67,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ContainsItem_StringArray_FindsItem()
         {
             string[] mockObject = new string[] {"Hello", "Jello", "Mello", "Tello", "Dello"};
@@ -77,7 +77,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveFirstItem_MockData_RemovedItem()
         {
             object searchItem = new object();
@@ -99,7 +99,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveFirstItem_BadMockData_ReturnsFalse()
         {
             object searchItem = new object();
@@ -119,7 +119,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveItemSwap_MockData_RemovedItem()
         {
             object searchItem = new object();
@@ -136,7 +136,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveLastItem_MockData_RemovedItems()
         {
             object searchItem = new object();
@@ -159,7 +159,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveLastItem_BadMockData_ReturnsFalse()
         {
             object searchItem = new object();
@@ -176,7 +176,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveItems_MockData_RemovedItems()
         {
             object searchItem = new object();
@@ -197,7 +197,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Shuffle_MockData_HasDifferences()
         {
             List<int> mockData = new List<int>

@@ -37,9 +37,9 @@ namespace GDX.Editor.ProjectSettings
         }
 
         /// <summary>
-        ///     Draw the Build Info section of settings.
+        ///     Bind the Build Info content.
         /// </summary>
-        /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
+        /// <param name="rootElement">The Build Info section <see cref="VisualElement"/>.</param>
         public void BindSectionContent(VisualElement rootElement)
         {
             _rootElement = rootElement;
@@ -226,12 +226,12 @@ namespace GDX.Editor.ProjectSettings
         }
         public bool GetToggleState()
         {
-            return GDX.Editor.UI.SettingsProvider.WorkingConfig.developerBuildInfoEnabled;
+            return UI.SettingsProvider.WorkingConfig.developerBuildInfoEnabled;
         }
 
         public void SetToggleState(VisualElement toggleElement, bool newState)
         {
-            GDX.Editor.UI.SettingsProvider.WorkingConfig.developerBuildInfoEnabled = newState;
+            UI.SettingsProvider.WorkingConfig.developerBuildInfoEnabled = newState;
             if (Core.Config.developerBuildInfoEnabled != newState)
             {
                 toggleElement.AddToClassList(ConfigSectionsProvider.ChangedClass);
@@ -242,7 +242,7 @@ namespace GDX.Editor.ProjectSettings
             }
 
             CheckForDisabledContent();
-            GDX.Editor.UI.SettingsProvider.CheckForChanges();
+            UI.SettingsProvider.CheckForChanges();
         }
 
         public string GetToggleTooltip()

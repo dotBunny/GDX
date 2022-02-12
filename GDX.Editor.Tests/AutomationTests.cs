@@ -2,9 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using GDX.Classic.Jobs.ParallelFor;
 using GDX.Editor;
@@ -110,7 +108,6 @@ namespace Editor
             if (arrayLengthA != arrayLengthB)
             {
                 Assert.Fail($"Screenshot array lengths differ ({arrayLengthA} vs {arrayLengthB}).");
-                yield break;
             }
             NativeArray<float> percentages = new NativeArray<float>(arrayLengthA, Allocator.TempJob);
 
