@@ -32,6 +32,7 @@ namespace GDX.Classic.Collections.Pooling
         /// <param name="allowCreateMore">Can more items be created as needed when starved for items?</param>
         /// <param name="allowReuseWhenCapped">Should we reuse oldest items when starving for items?</param>
         /// <param name="allowManagedTearDown">Does the pool allow a managed tear down event call?</param>
+        // ReSharper disable once MemberCanBePrivate.Global
         public static IManagedPool CreatePool(
             GameObject gameObject,
             Transform parent,

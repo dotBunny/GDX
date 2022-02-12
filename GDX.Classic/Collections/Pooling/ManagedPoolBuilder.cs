@@ -21,11 +21,13 @@ namespace GDX.Classic.Collections.Pooling
         ///     During defined loading periods this value could be increased for faster allocations,
         ///     and then returned to a much more performant value afterwards.
         /// </remarks>
+        // ReSharper disable once MemberCanBePrivate.Global
         public static int InstantiatesPerFrame = 5;
 
         /// <summary>
         ///     Should the <see cref="ManagedPoolBuilder" /> destroy itself when finished?
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public static bool DestroyBuilderOnFinish = true;
 
         /// <summary>

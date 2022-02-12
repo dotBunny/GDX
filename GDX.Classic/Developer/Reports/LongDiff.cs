@@ -9,10 +9,12 @@ namespace GDX.Classic.Developer.Reports
     [HideFromDocFX]
     public readonly struct LongDiff
     {
+        // ReSharper disable MemberCanBePrivate.Global
         public readonly float Percentage;
         public readonly long Change;
         public readonly long LeftHandSide;
         public readonly long RightHandSide;
+        // ReSharper restore MemberCanBePrivate.Global
 
         public LongDiff(long lhs, long rhs)
         {
@@ -50,12 +52,12 @@ namespace GDX.Classic.Developer.Reports
             {
                 return LeftHandSide == 0
                     ? $"{GetBeforeAndAfterOutput()} = {ReportExtensions.PositiveSign(Change)}{GDX.Localization.GetHumanReadableFileSize(Change)}"
-                    : $"{GetBeforeAndAfterOutput()} = {ReportExtensions.PositiveSign(Change)}{GDX.Localization.GetHumanReadableFileSize(Change).PadRight(12)} {OptionalPercentageOutput()}";
+                    : $"{GetBeforeAndAfterOutput()} = {ReportExtensions.PositiveSign(Change)}{GDX.Localization.GetHumanReadableFileSize(Change),-12} {OptionalPercentageOutput()}";
             }
 
             return LeftHandSide == 0
                 ? $"{GetBeforeAndAfterOutput()} = {ReportExtensions.PositiveSign(Change)}{Change.ToString()}"
-                : $"{GetBeforeAndAfterOutput()} = {ReportExtensions.PositiveSign(Change)}{Change.ToString().PadRight(12)} {OptionalPercentageOutput()}";
+                : $"{GetBeforeAndAfterOutput()} = {ReportExtensions.PositiveSign(Change)}{Change.ToString(),-12} {OptionalPercentageOutput()}";
         }
 
         private string GetBeforeAndAfterOutput()

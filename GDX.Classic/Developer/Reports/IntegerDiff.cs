@@ -8,10 +8,12 @@ namespace GDX.Classic.Developer.Reports
     [HideFromDocFX]
     public readonly struct IntegerDiff
     {
+        // ReSharper disable MemberCanBePrivate.Global
         public readonly float Percentage;
         public readonly int Change;
         public readonly int LeftHandSide;
         public readonly int RightHandSide;
+        // ReSharper restore MemberCanBePrivate.Global
 
         public IntegerDiff(int lhs, int rhs)
         {
@@ -43,11 +45,11 @@ namespace GDX.Classic.Developer.Reports
             {
                 return LeftHandSide == 0
                     ? $"{GetBeforeAndAfterOutput()} = {ReportExtensions.PositiveSign(Change)}{Change.ToString()}"
-                    : $"{GetBeforeAndAfterOutput()} = {ReportExtensions.PositiveSign(Change)}{Change.ToString().PadRight(12)} {OptionalPercentageOutput()}";
+                    : $"{GetBeforeAndAfterOutput()} = {ReportExtensions.PositiveSign(Change)}{Change.ToString(),-12} {OptionalPercentageOutput()}";
             }
 
             return
-                $"{GetBeforeAndAfterOutput().PadRight(context.KeyValuePairInfoWidth)} {ReportExtensions.PositiveSign(Change)}{Change.ToString().PadRight(12)} {OptionalPercentageOutput()}";
+                $"{GetBeforeAndAfterOutput().PadRight(context.KeyValuePairInfoWidth)} {ReportExtensions.PositiveSign(Change)}{Change.ToString(),-12} {OptionalPercentageOutput()}";
         }
 
         private string GetBeforeAndAfterOutput()

@@ -31,7 +31,10 @@ namespace GDX.IO
         {
             SetLength(length);
             Position = length;
-            byte[] d = Block;
+            while (_blocks.Count <= BlockId)
+            {
+                _blocks.Add(new byte[blockSize]);
+            }
             Position = 0;
         }
 
@@ -39,7 +42,10 @@ namespace GDX.IO
         {
             SetLength(length);
             Position = length;
-            byte[] d = Block;
+            while (_blocks.Count <= BlockId)
+            {
+                _blocks.Add(new byte[blockSize]);
+            }
             Position = 0;
         }
 
