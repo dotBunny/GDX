@@ -14,14 +14,9 @@ namespace GDX.Editor.CodeGenerators
             CodeGenerator code = new CodeGenerator("GDX", "Generated file of difference from default config.");
 
             // Start header
-            code.AppendLine("public class GDXSettings");
+            code.AppendLine($"public class {Core.OverrideClass}");
             code.OpenBrace();
-
-            code.AppendLine("#if UNITY_EDITOR");
-            code.AppendLine("[UnityEditor.InitializeOnLoadMethod]");
-            code.AppendLine("#endif");
-            code.AppendLine("[UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.AfterAssembliesLoaded)]");
-            code.AppendLine("public static void Init()");
+            code.AppendLine($"public static void {Core.OverrideMethod}()");
             code.OpenBrace();
 
             GetOverrideBoolean(code, "UpdateProviderCheckForUpdates",

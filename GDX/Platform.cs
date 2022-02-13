@@ -30,37 +30,6 @@ namespace GDX
 
         private static string s_OutputFolder;
 
-        public static char GetRandomSafeCharacter(IRandomProvider random)
-        {
-            return SafeCharacterPool[random.NextInteger(0, CharacterPoolLengthExclusive)];
-        }
-
-        /// <summary>
-        ///     Returns a runtime writable folder.
-        /// </summary>
-        /// <returns>The full path to a writable folder at runtime.</returns>
-        public static string GetOutputFolder()
-        {
-            if (s_OutputFolder == null)
-            {
-#if UNITY_EDITOR
-                s_OutputFolder = Path.Combine(UnityEngine.Application.dataPath, "..", "GDX");
-#elif UNITY_DOTSRUNTIME
-                s_OutputFolder = Path.Combine(Directory.GetCurrentDirectory(), "GDX");
-#else
-                s_OutputFolder = UnityEngine.Application.persistentDataPath;
-
-                // TODO: Add console safe folders for dev?
-                // Maybe throw exception on release builds?
-#endif
-                EnsureFolderHierarchyExists(s_OutputFolder);
-            }
-
-            return s_OutputFolder;
-
-
-        }
-
         /// <summary>
         ///     Validate that all directories are created for a given <paramref name="folderPath" />.
         /// </summary>
@@ -140,6 +109,43 @@ namespace GDX
 #else
             return 0;
 #endif
+        }
+
+        public static System.Reflection.Assembly[] GetLoadedAssemblies()
+        {
+            //TODO: We might need to shim this based on platform compilation, investigate
+            return System.AppDomain.CurrentDomain.GetAssemblies();
+        }
+
+        /// <summary>
+        ///     Returns a runtime writable folder.
+        /// </summary>
+        /// <returns>The full path to a writable folder at runtime.</returns>
+        public static string GetOutputFolder()
+        {
+            if (s_OutputFolder == null)
+            {
+#if UNITY_EDITOR
+                s_OutputFolder = Path.Combine(UnityEngine.Application.dataPath, "..", "GDX");
+#elif UNITY_DOTSRUNTIME
+                s_OutputFolder = Path.Combine(Directory.GetCurrentDirectory(), "GDX");
+#else
+                s_OutputFolder = UnityEngine.Application.persistentDataPath;
+
+                // TODO: Add console safe folders for dev?
+                // Maybe throw exception on release builds?
+#endif
+                EnsureFolderHierarchyExists(s_OutputFolder);
+            }
+
+            return s_OutputFolder;
+
+
+        }
+
+        public static char GetRandomSafeCharacter(IRandomProvider random)
+        {
+            return SafeCharacterPool[random.NextInteger(0, CharacterPoolLengthExclusive)];
         }
 
         /// <summary>
