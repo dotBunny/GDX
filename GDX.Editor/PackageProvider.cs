@@ -235,7 +235,7 @@ namespace GDX.Editor
 
 
 #if UNITY_2020_2_OR_NEWER
-                PlayerSettings.SetScriptingDefineSymbolsForGroup(@group, newDefines);
+                PlayerSettings.SetScriptingDefineSymbolsForGroup(group, newDefines);
 #else
                 System.Text.StringBuilder output = new System.Text.StringBuilder();
                 foreach (string s in newDefines)
@@ -422,8 +422,12 @@ namespace GDX.Editor
         [Serializable]
         public class PackageDefinition
         {
+            // ReSharper disable NotAccessedField.Global
+            // ReSharper disable UnusedMember.Global
             public string version;
             public string unity;
+            // ReSharper restore NotAccessedField.Global
+            // ReSharper restore UnusedMember.Global
         }
     }
 }

@@ -27,7 +27,7 @@ namespace GDX.Editor.ProjectSettings
         private MaskField _maskDebug;
         private MaskField _maskRelease;
 
-        private static List<string> s_traceChoices = new List<string>()
+        private static readonly List<string> s_traceChoices = new List<string>()
         {
             "Info",
             "Log",
@@ -37,7 +37,7 @@ namespace GDX.Editor.ProjectSettings
             "Assertion",
             "Fatal"
         };
-        private static List<int> s_traceValues = new List<int>()
+        private static readonly List<int> s_traceValues = new List<int>()
         {
             0,
             1,

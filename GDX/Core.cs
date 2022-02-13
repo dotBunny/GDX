@@ -36,5 +36,12 @@ namespace GDX
 
             DictionaryPrimes.SetDefaultPrimes();
         }
+
+        public static void Init()
+        {
+            if (_initialized) return;
+
+
+        }
     }
 }

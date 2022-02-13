@@ -14,6 +14,7 @@ namespace GDX.Editor
     ///     A information warehouse about the GDX assemblies used in editor specific logic.
     /// </summary>
     [HideFromDocFX]
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class AssemblyProvider
     {
         /// <summary>

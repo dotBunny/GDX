@@ -111,7 +111,7 @@ namespace Editor
             }
             NativeArray<float> percentages = new NativeArray<float>(arrayLengthA, Allocator.TempJob);
 
-            Color32CompareJob calcDifferencesJob = new GDX.Classic.Jobs.ParallelFor.Color32CompareJob()
+            Color32CompareJob calcDifferencesJob = new Color32CompareJob()
             {
                 A = screenshotDataA,
                 B = screenshotDataB,

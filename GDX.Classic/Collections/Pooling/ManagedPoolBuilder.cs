@@ -12,6 +12,7 @@ namespace GDX.Classic.Collections.Pooling
     ///     A time-slicing builder behaviour for <see cref="IManagedPool" />.
     /// </summary>
     /// <remarks>A demonstration of usage can be found in <see cref="GameObjectPool" />.</remarks>
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class ManagedPoolBuilder : MonoBehaviour
     {
         /// <summary>
