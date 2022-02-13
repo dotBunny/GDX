@@ -68,7 +68,7 @@ namespace Runtime.Mathematics.Random
             int b = random1.Next(10);
             int c = random1.Next(10);
 
-#if UNITY_2021_1_OR_NEWER
+#if UNITY_2021_2_OR_NEWER
             bool evaluate = a is >= 0 and <= 10 && b is >= 0 and <= 10 && c is >= 0 and <= 10;
 #else
             bool evaluate = a >= 0 && a <= 10 &&
@@ -92,7 +92,7 @@ namespace Runtime.Mathematics.Random
             int b = random1.Next(0,10);
             int c = random1.Next(0,10);
 
-#if UNITY_2021_1_OR_NEWER
+#if UNITY_2021_2_OR_NEWER
             bool evaluate = a is >= 0 and <= 10 && b is >= 0 and <= 10 && c is >= 0 and <= 10;
 #else
             bool evaluate = a >= 0 && a <= 10 &&
