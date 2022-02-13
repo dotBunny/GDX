@@ -148,16 +148,16 @@ namespace GDX.Editor
                 {
                     return;
                 }
-            }
 
-            // Lets try and parse the package JSON
-            try
-            {
-                Definition = JsonUtility.FromJson<PackageDefinition>(File.ReadAllText(PackageManifestPath));
-            }
-            catch (Exception)
-            {
-                // Don't go any further if there is an error
+                // Lets try and parse the package JSON
+                try
+                {
+                    Definition = JsonUtility.FromJson<PackageDefinition>(File.ReadAllText(PackageManifestPath));
+                }
+                catch (Exception)
+                {
+                    // Don't go any further if there is an error
+                }
             }
 
             // It didn't actually parse correctly so lets just stop right now.
@@ -350,6 +350,7 @@ namespace GDX.Editor
                 for (int i = 0; i < lockFileLength; i++)
                 {
                     string workingLine = lockFile[i].Trim();
+                    // ReSharper disable once StringLiteralTypo
                     if (workingLine.StartsWith("\"com.dotbunny.gdx\""))
                     {
                         insidePackage = true;

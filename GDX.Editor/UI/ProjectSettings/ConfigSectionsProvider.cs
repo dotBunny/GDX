@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using GDX.Collections.Generic;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -145,10 +146,11 @@ namespace GDX.Editor.UI.ProjectSettings
 
         public static void UpdateAll()
         {
-            foreach (KeyValuePair<string, IConfigSection> section in SettingsProvider.ConfigSections)
+            int iterator = 0;
+            while (SettingsProvider.ConfigSections.MoveNext(ref iterator, out StringKeyEntry<IConfigSection> item))
             {
-                UpdateSectionHeader(section.Key);
-                UpdateSectionContent(section.Key);
+                UpdateSectionHeader(item.key);
+                UpdateSectionContent(item.key);
             }
         }
 

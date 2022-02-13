@@ -17,13 +17,13 @@ namespace GDX.Editor
             fileContent.AppendLine("// Generated file of difference from default config.");
             fileContent.AppendLine("namespace GDX");
             fileContent.AppendLine("{");
-            fileContent.AppendLine("\tpublic static class GDXSettings");
+            fileContent.AppendLine("\tpublic partial class GDXSettings");
             fileContent.AppendLine("\t{");
             fileContent.AppendLine("#if UNITY_EDITOR");
             fileContent.AppendLine("\t\t[UnityEditor.InitializeOnLoadMethod]");
             fileContent.AppendLine("#endif");
-            fileContent.AppendLine("\t\t[UnityEngine.RuntimeInitializeOnLoadMethod]");
-            fileContent.AppendLine("\t\tpublic static void Init()");
+            fileContent.AppendLine("\t\t[UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.AfterAssembliesLoaded)]");
+            fileContent.AppendLine("\t\tpublic void Init()");
             fileContent.AppendLine("\t\t{");
 
             GetOverrideBoolean(fileContent, "updateProviderCheckForUpdates",

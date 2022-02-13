@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
+using GDX.Collections.Generic;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -14,7 +14,7 @@ namespace GDX.Editor.UI
         /// <summary>
         ///     A collection of queried <see cref="VisualTreeAsset" /> assets keyed by their search.
         /// </summary>
-        private static readonly Dictionary<string, VisualTreeAsset> s_assets = new Dictionary<string, VisualTreeAsset>();
+        private static StringKeyDictionary<VisualTreeAsset> s_assets = new StringKeyDictionary<VisualTreeAsset>(10);
 
         /// <summary>
         ///     The cached reference to the global stylesheet.
@@ -128,12 +128,12 @@ namespace GDX.Editor.UI
 
                 s_foundAssetFolder = assetPath.Substring(0,
                     assetPath.IndexOf(targetName, StringComparison.Ordinal));
-                s_assets.Add(targetName,
+                s_assets.AddWithExpandCheck(targetName,
                     AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(assetPath));
             }
             else
             {
-                s_assets.Add(targetName,
+                s_assets.AddWithExpandCheck(targetName,
                     AssetDatabase.LoadAssetAtPath<VisualTreeAsset>($"{s_foundAssetFolder}{targetName}.uxml"));
             }
 

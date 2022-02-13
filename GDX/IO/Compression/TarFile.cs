@@ -101,21 +101,12 @@ namespace GDX.IO.Compression
                     !currentName.EndsWith("/") &&
                     !currentName.EndsWith("\\"))
                 {
-#if UNITY_2020_2_OR_NEWER
                     using FileStream newFileStream =
                         File.Open(destinationFilePath, FileMode.OpenOrCreate, FileAccess.Write);
-#else
-                    using (FileStream newFileStream =
-                        File.Open(destinationFilePath, FileMode.OpenOrCreate, FileAccess.Write))
-                    {
-#endif
                     byte[] fileContentBuffer = new byte[fileSize];
                     int newFileContentBufferLength = fileContentBuffer.Length;
                     sourceStream.Read(fileContentBuffer, 0, newFileContentBufferLength);
                     newFileStream.Write(fileContentBuffer, 0, newFileContentBufferLength);
-#if !UNITY_2020_2_OR_NEWER
-                    }
-#endif
                 }
 
                 long nextOffset = ContentOffset - sourceStream.Position % ContentOffset;

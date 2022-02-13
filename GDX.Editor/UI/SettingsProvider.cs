@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
+using GDX.Collections.Generic;
 using GDX.Editor.UI.ProjectSettings;
 using UnityEditor;
 using UnityEngine.UIElements;
@@ -23,7 +24,7 @@ namespace GDX.Editor.UI
         /// <summary>
         ///     A cache of boolean values backed by <see cref="EditorPrefs" /> to assist with optimizing layout.
         /// </summary>
-        private static readonly Dictionary<string, bool> s_cachedEditorPreferences = new Dictionary<string, bool>();
+        private static StringKeyDictionary<bool> s_cachedEditorPreferences = new StringKeyDictionary<bool>(10);
 
         /// <summary>
         ///     A list of keywords to flag when searching project settings.
@@ -35,13 +36,14 @@ namespace GDX.Editor.UI
             "visual", "scripting", "vs", "parser", "commandline", "build"
         });
 
-        public static readonly Dictionary<string, IConfigSection> ConfigSections = new Dictionary<string, IConfigSection>();
+        public static StringKeyDictionary<IConfigSection> ConfigSections = new StringKeyDictionary<IConfigSection>(10);
 
-        public static GDXConfig WorkingConfig = null;
+        public static GDXConfig WorkingConfig;
 
         private static VisualElement _changesElement;
         private static Button _clearButton;
         private static Button _saveButton;
+
 
         /// <summary>
         ///     Get <see cref="UnityEditor.SettingsProvider" /> for GDX assembly.
@@ -50,6 +52,10 @@ namespace GDX.Editor.UI
         [SettingsProvider]
         public static UnityEditor.SettingsProvider Get()
         {
+            // Create our working copy of the config - we do this to catch if theres an override that happens
+            // during domain reload callbacks
+            WorkingConfig ??= new GDXConfig(Core.Config);
+
             // ReSharper disable once HeapView.ObjectAllocation.Evident
             return new UnityEditor.SettingsProvider("Project/GDX", SettingsScope.Project)
             {
@@ -124,10 +130,6 @@ namespace GDX.Editor.UI
                     // Build some useful references
                     ScrollView contentScrollView = rootElement.Q<ScrollView>("gdx-project-settings-content");
 
-                    // Create our working copy of the config - we do this to catch if theres an override that happens
-                    // during domain reload callbacks
-                    WorkingConfig ??= new GDXConfig(Core.Config);
-
                     // Update first state
                     CheckForChanges();
 
@@ -136,7 +138,11 @@ namespace GDX.Editor.UI
 
                     // Create ordered list of sections
                     List<IConfigSection> sections = new List<IConfigSection>(ConfigSections.Count);
-                    sections.AddRange(ConfigSections.Values);
+                    int iterator = 0;
+                    while (ConfigSections.MoveNext(ref iterator, out StringKeyEntry<IConfigSection> item))
+                    {
+                        sections.Add(item.value);
+                    }
                     sections.Sort((lhs, rhs) =>
                     {
                         int l = lhs.GetPriority();
@@ -191,7 +197,7 @@ namespace GDX.Editor.UI
         /// <returns></returns>
         public static bool GetCachedEditorBoolean(string id, bool defaultValue = true)
         {
-            if (!s_cachedEditorPreferences.ContainsKey(id))
+            if (s_cachedEditorPreferences.IndexOf(id) == -1)
             {
                 s_cachedEditorPreferences[id] = EditorPrefs.GetBool(id, defaultValue);
             }
@@ -203,7 +209,7 @@ namespace GDX.Editor.UI
         public static void RegisterConfigSection(IConfigSection section)
         {
             if(ConfigSections.ContainsKey(section.GetSectionID())) return;
-            ConfigSections.Add(section.GetSectionID(), section);
+            ConfigSections.AddWithExpandCheck(section.GetSectionID(), section);
         }
 
         /// <summary>

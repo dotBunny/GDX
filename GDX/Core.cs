@@ -3,7 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using GDX.Collections.Generic;
 using GDX.Mathematics.Random;
+using UnityEngine;
 
 namespace GDX
 {
@@ -16,6 +18,12 @@ namespace GDX
         public static readonly long StartTicks;
         public static WELL1024a Random;
 
+        private static bool _initialized;
+
+        /// <summary>
+        ///     Static initializer.
+        /// </summary>
+        /// <remarks>Nothing in here can reference the Unity engine and must be thread-safe.</remarks>
         static Core()
         {
             // Record initialization time.
@@ -26,6 +34,8 @@ namespace GDX
 
             // Create new config
             Config = new GDXConfig();
+
+            DictionaryPrimes.SetDefaultPrimes();
         }
     }
 }

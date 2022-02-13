@@ -18,14 +18,14 @@ namespace Runtime.Collections.Generic
         {
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(0);
 
-            Assert.IsTrue(dictionary.Count == 0 && dictionary.Entries.Length == DictionaryPrimes.primes[0]);
+            Assert.IsTrue(dictionary.Count == 0 && dictionary.Entries.Length == DictionaryPrimes.GetPrimeAtIndex(0));
         }
 
         [Test]
         [Category(Core.TestCategory)]
         public void Constructor_RequestPrimeMinimum_PrimeCapacity()
         {
-            int prime = DictionaryPrimes.primes[2];
+            int prime = DictionaryPrimes.GetPrimeAtIndex(2);
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(prime);
             Assert.IsTrue(prime == dictionary.Entries.Length);
         }
@@ -34,7 +34,7 @@ namespace Runtime.Collections.Generic
         [Category(Core.TestCategory)]
         public void Constructor_RequestBelowPrimeMinimum_PrimeCapacity()
         {
-            int prime = DictionaryPrimes.primes[5];
+            int prime = DictionaryPrimes.GetPrimeAtIndex(5);
             int minCapacity = prime - 1;
             StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(minCapacity);
 
