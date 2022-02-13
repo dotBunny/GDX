@@ -32,7 +32,7 @@ namespace GDX.IO.Compression
         public static void ExtractToDirectory(string sourceArchiveFileName, string destinationDirectoryName,
             bool forceGZipDataFormat = false)
         {
-            const int readBufferSize = 4096;
+            const int ReadBufferSize = 4096;
 
             // We need to handle the gzip first before we address the archive itself
             if (forceGZipDataFormat ||
@@ -43,12 +43,12 @@ namespace GDX.IO.Compression
                 using MemoryStream memoryStream = new MemoryStream();
                 // Loop through the stream
                 int readByteCount;
-                byte[] readBuffer = new byte[readBufferSize];
+                byte[] readBuffer = new byte[ReadBufferSize];
                 do
                 {
-                    readByteCount = gzip.Read(readBuffer, 0, readBufferSize);
+                    readByteCount = gzip.Read(readBuffer, 0, ReadBufferSize);
                     memoryStream.Write(readBuffer, 0, readByteCount);
-                } while (readByteCount == readBufferSize);
+                } while (readByteCount == ReadBufferSize);
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 ExtractStream(memoryStream, destinationDirectoryName);
@@ -68,12 +68,12 @@ namespace GDX.IO.Compression
         /// <param name="destinationDirectoryName">Output directory to write the files.</param>
         public static void ExtractStream(Stream sourceStream, string destinationDirectoryName)
         {
-            const int readBufferSize = 100;
-            const int contentOffset = 512;
-            byte[] readBuffer = new byte[readBufferSize];
+            const int ReadBufferSize = 100;
+            const int ContentOffset = 512;
+            byte[] readBuffer = new byte[ReadBufferSize];
             while (true)
             {
-                sourceStream.Read(readBuffer, 0, readBufferSize);
+                sourceStream.Read(readBuffer, 0, ReadBufferSize);
                 string currentName = Encoding.ASCII.GetString(readBuffer).Trim('\0');
 
                 if (string.IsNullOrWhiteSpace(currentName))
@@ -118,8 +118,8 @@ namespace GDX.IO.Compression
 #endif
                 }
 
-                long nextOffset = contentOffset - sourceStream.Position % contentOffset;
-                if (nextOffset == contentOffset)
+                long nextOffset = ContentOffset - sourceStream.Position % ContentOffset;
+                if (nextOffset == ContentOffset)
                 {
                     nextOffset = 0;
                 }

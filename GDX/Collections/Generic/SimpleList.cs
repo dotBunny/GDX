@@ -254,6 +254,7 @@ namespace GDX.Collections.Generic
         /// </summary>
         /// <param name="item">A typed <see cref="object" /> to insert.</param>
         /// <param name="index">The index in <see cref="Array" /> to add the <paramref name="item" /> at.</param>
+        /// <param name="howMuchToExpand">The number of elements to add at the end of the array when expanding.</param>
         public void InsertWithExpandCheck(T item, int index, int howMuchToExpand)
         {
             int arrayLength = Array.Length;
@@ -477,7 +478,6 @@ namespace GDX.Collections.Generic
                 T[] newArray = pool.Get(combinedLength);
                 System.Array.Copy(array, 0, newArray, 0, arrayLength);
                 pool.Return(array);
-                array = newArray;
                 Array = newArray;
             }
         }
@@ -501,7 +501,6 @@ namespace GDX.Collections.Generic
                 System.Array.Copy(array, 0, newArray, 0, arrayLength);
                 System.Array.Clear(array, 0, arrayLength);
                 pool.Return(array);
-                array = newArray;
                 Array = newArray;
             }
         }
@@ -525,7 +524,6 @@ namespace GDX.Collections.Generic
                 System.Array.Copy(array, 0, newArray, 0, arrayLength);
                 System.Array.Clear(newArray, arrayLength, arrayLength);
                 pool.Return(array);
-                array = newArray;
                 Array = newArray;
             }
         }
@@ -550,7 +548,6 @@ namespace GDX.Collections.Generic
                 System.Array.Clear(array, 0, arrayLength);
                 System.Array.Clear(newArray, arrayLength, arrayLength);
                 pool.Return(array);
-                array = newArray;
                 Array = newArray;
             }
         }

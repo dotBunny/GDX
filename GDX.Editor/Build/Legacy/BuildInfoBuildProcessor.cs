@@ -17,7 +17,7 @@ namespace GDX.Classic.Editor.Build.Legacy
     ///     <para>
     ///         During the build process a <c>BuildInfo</c> file will be generated containing information passed in
     ///         through commandline arguments (parsed by <see cref="GDX.Developer.CommandLineParser" />). These arguments and
-    ///         their formats are configurable via the <see cref="Config" />.
+    ///         their formats are configurable via the <see cref="GDXConfig" />.
     ///     </para>
     /// </summary>
     /// <remarks>

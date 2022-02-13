@@ -5,7 +5,6 @@
 using System.Text;
 using GDX;
 using NUnit.Framework;
-using UnityEngine;
 
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable
@@ -257,14 +256,14 @@ namespace Runtime
         [Category(Core.TestCategory)]
         public void Encrypt_Decrypt_IsEqual()
         {
-            const string simpleString = "HelloWorld!";
-            const string complexString = "_tH\\is_I!is_M\"y_TEST_STR#$34343";
+            const string SimpleString = "HelloWorld!";
+            const string ComplexString = "_tH\\is_I!is_M\"y_TEST_STR#$34343";
 
-            string encryptedSimple = simpleString.Encrypt();
-            string encryptedComplex = complexString.Encrypt();
+            string encryptedSimple = SimpleString.Encrypt();
+            string encryptedComplex = ComplexString.Encrypt();
 
-            bool evaluate = encryptedSimple.Decrypt() == simpleString &&
-                            encryptedComplex.Decrypt() == complexString;
+            bool evaluate = encryptedSimple.Decrypt() == SimpleString &&
+                            encryptedComplex.Decrypt() == ComplexString;
 
             Assert.IsTrue(evaluate);
         }

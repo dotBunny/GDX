@@ -14,7 +14,7 @@ namespace GDX.Developer
     /// </summary>
     /// <remarks>
     ///     <para>
-    ///         The prefix and divider are configurable via the <see cref="Config" />, however the always, the <c>FLAG</c>
+    ///         The prefix and divider are configurable via the <see cref="GDXConfig" />, however the always, the <c>FLAG</c>
     ///         and <c>KEY</c> will be Uppercase.
     ///     </para>
     /// </remarks>

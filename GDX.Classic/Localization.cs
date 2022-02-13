@@ -47,7 +47,7 @@ namespace GDX.Classic
         ///     Get the localized <see cref="System.DateTime" />.<see cref="System.DateTime.ToString(string)" /> for
         ///     <paramref name="targetLanguage" />.
         /// </summary>
-        /// <param name="targetLanguage">The target <see cref="Language" />.</param>
+        /// <param name="targetLanguage">The target <see cref="GDX.Localization.Language" />.</param>
         /// <returns>The format <see cref="System.String" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GetTimestampFormat(this GDX.Localization.Language targetLanguage)
@@ -72,7 +72,7 @@ namespace GDX.Classic
         }
 
         /// <summary>
-        ///     Sets the current threads culture to a defined setting in <see cref="Config" />.
+        ///     Sets the current threads culture to a defined setting in <see cref="GDXConfig" />.
         /// </summary>
         /// <remarks>
         ///     Can be used to avoid issues with culture settings without a Gregorian Calendar. Configurable to automatically

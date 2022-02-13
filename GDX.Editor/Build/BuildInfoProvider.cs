@@ -20,7 +20,6 @@ namespace GDX.Editor.Build
         /// <summary>
         ///     Create the content for the <c>BuildInfo</c> file based on provided information.
         /// </summary>
-        /// <param name="config">A <see cref="Config" /> used to determine many of the keys for information.</param>
         /// <param name="forceDefaults">Should all default values be used instead?</param>
         /// <param name="internalDescription">An internally used description.</param>
         /// <returns>The files content.</returns>
@@ -118,7 +117,7 @@ namespace GDX.Editor.Build
             fileContent.AppendLine("        /// </summary>");
             fileContent.Append("        public const string Timestamp = \"");
             fileContent.Append(!forceDefaults
-                ? DateTime.Now.ToString(GDX.Localization.Language.Default.GetTimestampFormat())
+                ? DateTime.Now.ToString(Localization.Language.Default.GetTimestampFormat())
                 : "N/A");
             fileContent.AppendLine("\";");
 
@@ -138,7 +137,7 @@ namespace GDX.Editor.Build
             try
             {
                 string path = Path.Combine(Application.dataPath, Core.Config.developerBuildInfoPath);
-                GDX.Platform.EnsureFileFolderHierarchyExists(path);
+                Platform.EnsureFileFolderHierarchyExists(path);
                 File.WriteAllText(path, GetContent(true));
 
                 CheckForAssemblyDefinition();
@@ -192,6 +191,7 @@ namespace GDX.Editor.Build
             File.WriteAllText(assemblyDefinition, fileBuilder.ToString());
             AssetDatabase.ImportAsset("Assets/" +
                                       Path.GetDirectoryName(Core.Config.developerBuildInfoPath) + "/" +
+                                      // ReSharper disable once StringLiteralTypo
                                       Core.Config.developerBuildInfoNamespace + ".asmdef");
         }
     }

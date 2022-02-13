@@ -55,7 +55,7 @@ namespace GDX.Collections.Generic
             Buckets[hashIndex] = freeIndex;
 
             ++Count;
-        } 
+        }
 
         public bool AddWithUniqueCheck(string key, TValue value)
         {
@@ -148,6 +148,29 @@ namespace GDX.Collections.Generic
             Buckets[bucketIndex] = dataIndex;
         }
 
+        public bool ContainsKey(string key)
+        {
+            if (key == null) throw new ArgumentNullException();
+
+            int hashCode = key.GetStableHashCode() & 0x7FFFFFFF;
+            int bucketIndex = hashCode % Buckets.Length;
+            int nextKeyIndex = Buckets[bucketIndex];
+
+            while (nextKeyIndex != -1)
+            {
+                ref StringKeyEntry<TValue> currEntry = ref Entries[nextKeyIndex];
+
+                if (currEntry.key == key)
+                {
+                    return true;
+                }
+
+                nextKeyIndex = currEntry.next;
+            }
+
+            return false;
+        }
+
         public void ExpandWhenFull()
         {
             int oldCapacity = Buckets.Length;
@@ -184,7 +207,7 @@ namespace GDX.Collections.Generic
 
         public void Reserve(int capacityToReserve)
         {
-            int oldCapacity = Entries.Length;   
+            int oldCapacity = Entries.Length;
             if (Count + capacityToReserve > oldCapacity)
             {
                 int minCapacity = Count + capacityToReserve;
