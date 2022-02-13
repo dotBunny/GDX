@@ -35,6 +35,7 @@ namespace GDX
             Initialize();
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public static void Initialize()
         {
             if (s_initialized) return;
@@ -50,7 +51,7 @@ namespace GDX
 #if UNITY_EDITOR
         [UnityEditor.InitializeOnLoadMethod]
 #else
-        [UnityEngine.RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+        [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.AfterAssembliesLoaded)]
 #endif
         public static void InitializeOnMainThread()
         {
