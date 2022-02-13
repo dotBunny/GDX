@@ -190,7 +190,7 @@ namespace GDX.Classic.Developer.Reports
             return true;
         }
 
-        private void OutputObjectInfos(StringBuilder builder, ReportContext context, Dictionary<Type, Dictionary<TransientReference, ObjectInfo>> targetObjects)
+        static void OutputObjectInfos(StringBuilder builder, ReportContext context, Dictionary<Type, Dictionary<TransientReference, ObjectInfo>> targetObjects)
         {
             foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> target in targetObjects)
             {

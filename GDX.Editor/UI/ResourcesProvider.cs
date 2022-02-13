@@ -14,12 +14,12 @@ namespace GDX.Editor.UI
         /// <summary>
         ///     A collection of queried <see cref="VisualTreeAsset" /> assets keyed by their search.
         /// </summary>
-        private static StringKeyDictionary<VisualTreeAsset> s_Assets = new StringKeyDictionary<VisualTreeAsset>(10);
+        static StringKeyDictionary<VisualTreeAsset> s_Assets = new StringKeyDictionary<VisualTreeAsset>(10);
 
         /// <summary>
         ///     The cached reference to the global stylesheet.
         /// </summary>
-        private static StyleSheet s_Stylesheet;
+        static StyleSheet s_Stylesheet;
 
         /// <summary>
         ///     The cached reference to the override stylesheet.
@@ -27,12 +27,12 @@ namespace GDX.Editor.UI
         /// <remarks>
         ///     Used to accomodate version specific styling.
         /// </remarks>
-        private static StyleSheet s_StyleSheetOverride;
+        static StyleSheet s_StyleSheetOverride;
 
         /// <summary>
         ///     A cached pathing to where our UXML are stored.
         /// </summary>
-        private static string s_FoundAssetFolder;
+        static string s_FoundAssetFolder;
 
         /// <summary>
         ///     Apply light/dark mode classes.

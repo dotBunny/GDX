@@ -28,7 +28,7 @@ namespace GDX
         /// </summary>
         public const string FilenameTimestampFormat = "yyyyMMdd_HHmmss";
 
-        private static string s_OutputFolder;
+        static string s_OutputFolder;
 
         /// <summary>
         ///     Validate that all directories are created for a given <paramref name="folderPath" />.

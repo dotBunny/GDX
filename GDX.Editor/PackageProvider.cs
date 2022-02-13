@@ -174,18 +174,6 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        /// Execute delayed logic that won't interfere with a current import process.
-        /// </summary>
-        private void DelayCall()
-        {
-            // Make sure that the project has the GDX preprocessor added
-            if (Core.Config.EnvironmentScriptingDefineSymbol)
-            {
-                EnsureScriptingDefineSymbol();
-            }
-        }
-
-        /// <summary>
         ///     Ensure that the GDX define is present across all viable platforms.
         /// </summary>
         public static void EnsureScriptingDefineSymbol()
@@ -414,6 +402,18 @@ namespace GDX.Editor
 
             // Well we reached this point and don't actually know, so guess we should admit it.
             return (InstallationType.Unknown, null);
+        }
+
+        /// <summary>
+        /// Execute delayed logic that won't interfere with a current import process.
+        /// </summary>
+        static void DelayCall()
+        {
+            // Make sure that the project has the GDX preprocessor added
+            if (Core.Config.EnvironmentScriptingDefineSymbol)
+            {
+                EnsureScriptingDefineSymbol();
+            }
         }
 
         /// <summary>

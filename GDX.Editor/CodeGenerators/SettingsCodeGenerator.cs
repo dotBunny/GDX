@@ -8,7 +8,7 @@ namespace GDX.Editor.CodeGenerators
 {
     public static class SettingsCodeGenerator
     {
-        private const string k_CoreConfigPath = "Core.Config";
+        const string k_CoreConfigPath = "Core.Config";
         public static string Build(GDXConfig lhs, GDXConfig rhs)
         {
             CodeGenerator code = new CodeGenerator("GDX", "Generated file of difference from default config.");
@@ -66,19 +66,19 @@ namespace GDX.Editor.CodeGenerators
 
         }
 
-        private static void GetOverrideBoolean(CodeGenerator code, string member, bool lhs, bool rhs)
+        static void GetOverrideBoolean(CodeGenerator code, string member, bool lhs, bool rhs)
         {
             if (lhs == rhs) return;
             code.AppendLine(rhs ? $"{k_CoreConfigPath}.{member} = true;" : $"{k_CoreConfigPath}.{member} = false;");
         }
 
-        private static void GetOverrideString(CodeGenerator code, string member, string lhs, string rhs)
+        static void GetOverrideString(CodeGenerator code, string member, string lhs, string rhs)
         {
             if (lhs == rhs) return;
             code.AppendLine($"{k_CoreConfigPath}.{member} = \"{rhs}\";");
         }
 
-        private static void GetOverrideTraceLevel(CodeGenerator code, string member, Trace.TraceLevel lhs, Trace.TraceLevel rhs)
+        static void GetOverrideTraceLevel(CodeGenerator code, string member, Trace.TraceLevel lhs, Trace.TraceLevel rhs)
         {
             if (lhs == rhs) return;
 
@@ -116,7 +116,7 @@ namespace GDX.Editor.CodeGenerators
             code.AppendLine($"{k_CoreConfigPath}.{member} = {masks.Substring(0,masks.Length - 2)};");
         }
 
-        private static void OverrideLocalizationLanguage(CodeGenerator code, string member, Localization.Language lhs, Localization.Language rhs)
+        static void OverrideLocalizationLanguage(CodeGenerator code, string member, Localization.Language lhs, Localization.Language rhs)
         {
             if (lhs == rhs) return;
             code.AppendLine($"{k_CoreConfigPath}.{member} = Localization.Language.{rhs.ToString()};");

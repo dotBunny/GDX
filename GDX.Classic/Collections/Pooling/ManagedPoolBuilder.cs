@@ -125,7 +125,7 @@ namespace GDX.Classic.Collections.Pooling
         /// <summary>
         ///     Extracted tick update for the builder; creating a limited number of items per tick.
         /// </summary>
-        private void Tick()
+        static void Tick()
         {
             int spawnsThisUpdate = 0;
 

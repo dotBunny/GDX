@@ -21,8 +21,8 @@ namespace GDX
         public static readonly long StartTicks;
         public static WELL1024a Random;
 
-        private static bool s_Initialized;
-        private static bool s_InitializedMainThread;
+        static bool s_Initialized;
+        static bool s_InitializedMainThread;
 
         /// <summary>
         ///     Static constructor.
