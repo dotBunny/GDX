@@ -88,18 +88,18 @@ namespace GDX.Editor.UI
 #else
             if (s_styleSheetOverride != null)
             {
-                return s_styleSheetOverride;
+                return s_StyleSheetOverride;
             }
 
             string[] potentialStyles = AssetDatabase.FindAssets("t:Stylesheet GDXStylesUnity2020");
             if (potentialStyles.Length <= 0)
             {
-                return s_styleSheetOverride;
+                return s_StyleSheetOverride;
             }
 
             s_styleSheetOverride = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(potentialStyles[0]));
 
-            return s_styleSheetOverride;
+            return s_StyleSheetOverride;
 #endif
         }
 
