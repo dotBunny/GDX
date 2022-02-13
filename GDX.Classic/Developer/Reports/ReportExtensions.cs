@@ -5,6 +5,8 @@
 using System;
 using System.Runtime.CompilerServices;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Classic.Developer.Reports
 {
     /// <summary>

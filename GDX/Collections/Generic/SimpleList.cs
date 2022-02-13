@@ -4,6 +4,8 @@
 
 using GDX.Collections.Pooling;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Collections.Generic
 {
     /// <summary>

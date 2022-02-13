@@ -7,6 +7,8 @@ using UnityEngine;
 using UnityEngine.AI;
 using Unity.Mathematics;
 
+// ReSharper disable UnusedMember.Global
+
 #if GDX_AI
 
 namespace GDX.Classic

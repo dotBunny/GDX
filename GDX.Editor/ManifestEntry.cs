@@ -5,6 +5,8 @@
 using System;
 using UnityEngine;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Editor
 {
     /// <summary>

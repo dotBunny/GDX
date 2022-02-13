@@ -1,5 +1,7 @@
 namespace GDX.Collections.Generic
 {
+    // ReSharper disable UnusedMember.Global
+
     public static class DictionaryPrimes
     {
         private static int[] s_primes;

@@ -4,6 +4,8 @@
 
 using UnityEngine;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Classic
 {
     public class Automation

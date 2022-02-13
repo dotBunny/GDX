@@ -6,6 +6,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEditor.TestTools.TestRunner.Api;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Editor
 {
     public static class TestFramework

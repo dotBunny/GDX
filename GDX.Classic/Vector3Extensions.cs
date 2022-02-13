@@ -6,6 +6,8 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using Unity.Mathematics;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Classic
 {
     /// <summary>

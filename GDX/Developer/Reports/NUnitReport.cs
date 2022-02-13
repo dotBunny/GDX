@@ -6,6 +6,8 @@ using System.IO;
 using System.Xml.Serialization;
 using GDX.Developer.Reports.NUnit;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Developer.Reports
 {
     public class NUnitReport

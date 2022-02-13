@@ -5,6 +5,8 @@
 using UnityEngine;
 using GDX.Collections.Pooling;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Classic.Collections.Pooling
 {
     /// <summary>

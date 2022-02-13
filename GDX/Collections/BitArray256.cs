@@ -5,6 +5,8 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Collections
 {
     /// <summary>

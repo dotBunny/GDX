@@ -4,6 +4,8 @@
 
 using UnityEngine;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Classic.Developer.Reports.Objects
 {
     public sealed class MeshObjectInfo : ObjectInfo

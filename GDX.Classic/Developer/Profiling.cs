@@ -8,6 +8,8 @@ using UnityEngine.Profiling;
 using System.IO;
 using UnityEngine.Profiling.Memory.Experimental;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Classic.Developer
 {
     public class Profiling

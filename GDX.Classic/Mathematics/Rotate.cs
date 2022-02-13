@@ -4,10 +4,12 @@
 
 using System.Runtime.CompilerServices;
 using UnityEngine;
+
+// ReSharper disable UnusedMember.Global
+
 #if GDX_MATHEMATICS
 using Unity.Mathematics;
 #endif
-
 
 namespace GDX.Classic.Mathematics
 {

@@ -5,6 +5,8 @@
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Classic
 {
     /// <summary>

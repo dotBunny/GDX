@@ -12,6 +12,8 @@ using UnityEditorInternal;
 using UnityEngine;
 using Unity.CodeEditor;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Editor
 {
     /// <summary>

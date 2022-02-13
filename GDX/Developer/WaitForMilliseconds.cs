@@ -5,6 +5,8 @@
 using System.Collections;
 using System.Diagnostics;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Developer
 {
     public class WaitForMilliseconds
