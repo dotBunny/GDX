@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using GDX.Mathematics.Random;
 
 // ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace GDX
 {

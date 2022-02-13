@@ -5,6 +5,8 @@
 using System.Text;
 using UnityEngine.Profiling;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace GDX.Classic.Developer.Reports.Sections
 {
     public readonly struct MemorySection

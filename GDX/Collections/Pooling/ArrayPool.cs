@@ -4,6 +4,8 @@
 
 using GDX.Mathematics;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace GDX.Collections.Pooling
 {
     /// <summary>

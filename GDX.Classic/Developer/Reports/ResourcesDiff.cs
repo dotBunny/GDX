@@ -8,6 +8,8 @@ using System.Text;
 using GDX.Classic.Developer.Reports.Objects;
 using GDX.Classic.Developer.Reports.Sections;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace GDX.Classic.Developer.Reports
 {
     public class ResourcesDiff : Report

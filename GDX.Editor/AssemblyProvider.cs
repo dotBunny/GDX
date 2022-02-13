@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace GDX.Editor
 {
     /// <summary>
@@ -20,22 +22,22 @@ namespace GDX.Editor
         public readonly Assembly RuntimeAssembly;
 
         /// <summary>
-        ///     A list of all types with the <see cref="GDX.VisualScriptingCollectionAttribute"/> attribute.
+        ///     A list of all types with the <see cref="VisualScriptingCompatibleAttribute"/> attribute.
         /// </summary>
         public readonly List<Type> VisualScriptingCollections;
 
         /// <summary>
-        ///     A list of all types with the <see cref="GDX.VisualScriptingExtensionAttribute"/> attribute.
+        ///     A list of all types with the <see cref="VisualScriptingCompatibleAttribute"/> attribute.
         /// </summary>
         public readonly List<Type> VisualScriptingExtensions;
 
         /// <summary>
-        ///     A list of all types with the <see cref="GDX.VisualScriptingTypeAttribute"/> attribute.
+        ///     A list of all types with the <see cref="VisualScriptingCompatibleAttribute"/> attribute.
         /// </summary>
         public readonly List<Type> VisualScriptingTypes;
 
         /// <summary>
-        ///     A list of all types with the <see cref="GDX.VisualScriptingUtilityAttribute"/> attribute.
+        ///     A list of all types with the <see cref="VisualScriptingCompatibleAttribute"/> attribute.
         /// </summary>
         public readonly List<Type> VisualScriptingUtilities;
 

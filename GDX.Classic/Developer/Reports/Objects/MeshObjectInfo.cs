@@ -5,6 +5,7 @@
 using UnityEngine;
 
 // ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace GDX.Classic.Developer.Reports.Objects
 {

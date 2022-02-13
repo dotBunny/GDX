@@ -13,6 +13,7 @@ using UnityEngine.Profiling;
 using Object = UnityEngine.Object;
 
 // ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace GDX.Classic.Developer.Reports
 {

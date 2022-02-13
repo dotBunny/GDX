@@ -4,6 +4,8 @@
 
 using System.Text;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace GDX.Classic.Developer.Reports.Sections
 {
     public readonly struct MemoryDiffSection

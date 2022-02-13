@@ -7,6 +7,8 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace GDX.Classic.Developer.Reports.Sections
 {
     public readonly struct ApplicationSection

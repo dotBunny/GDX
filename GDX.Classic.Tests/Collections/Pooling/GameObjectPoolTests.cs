@@ -127,10 +127,8 @@ namespace Runtime.Classic.Collections.Pooling
         [Category(GDX.Core.TestCategory)]
         public void Get_MockData_ParentedWorldPositionStay()
         {
-            GameObject movedObject = new GameObject();
-            movedObject.transform.position = new Vector3(1, 0, 0);
-            GameObject movedTransform = new GameObject();
-            movedTransform.transform.position = new Vector3(10, 0, 0);
+            GameObject movedObject = new GameObject { transform = { position = new Vector3(1, 0, 0) } };
+            GameObject movedTransform = new GameObject { transform = { position = new Vector3(10, 0, 0) } };
 
             ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(movedObject, movedTransform.transform);
 
@@ -149,10 +147,8 @@ namespace Runtime.Classic.Collections.Pooling
         [Category(GDX.Core.TestCategory)]
         public void Get_MockData_ParentedZeroLocalPosition()
         {
-            GameObject movedObject = new GameObject();
-            movedObject.transform.position = new Vector3(1, 0, 0);
-            GameObject movedTransform = new GameObject();
-            movedTransform.transform.position = new Vector3(10, 0, 0);
+            GameObject movedObject = new GameObject { transform = { position = new Vector3(1, 0, 0) } };
+            GameObject movedTransform = new GameObject { transform = { position = new Vector3(10, 0, 0) } };
 
             ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(movedObject, movedTransform.transform);
 
@@ -283,10 +279,9 @@ namespace Runtime.Classic.Collections.Pooling
             Assert.IsFalse(ManagedPools.HasPool(cachePoolID));
         }
 
-        public class GameObjectPoolItemTest : MonoBehaviour, IGameObjectPoolItem
+        private class GameObjectPoolItemTest : MonoBehaviour, IGameObjectPoolItem
         {
             public bool triggeredOnSpawn;
-            public bool triggeredOnReturned;
             private IManagedPool _parentPool;
 
             /// <inheritdoc />
@@ -310,7 +305,6 @@ namespace Runtime.Classic.Collections.Pooling
             /// <inheritdoc />
             public void OnReturnedToPool()
             {
-                triggeredOnReturned = true;
             }
 
             /// <inheritdoc />
