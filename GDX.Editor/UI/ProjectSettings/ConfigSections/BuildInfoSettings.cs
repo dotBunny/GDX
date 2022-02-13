@@ -18,6 +18,7 @@ namespace GDX.Editor.ProjectSettings
     // ReSharper disable once UnusedType.Global
     internal class BuildInfoSettings : IConfigSection
     {
+        public const string SectionID = "GDX.Editor.Build.BuildInfoProvider";
         private VisualElement _rootElement;
         private VisualElement _content;
         private TextField _textOutputPath;
@@ -30,12 +31,6 @@ namespace GDX.Editor.ProjectSettings
         private TextField _textStream;
         private Button _buttonCreate;
         private VisualElement _notice;
-
-        [InitializeOnLoadMethod]
-        static void Register()
-        {
-            UI.SettingsProvider.RegisterConfigSection(new BuildInfoSettings());
-        }
 
         /// <summary>
         ///     Bind the Build Info content.
@@ -204,17 +199,14 @@ namespace GDX.Editor.ProjectSettings
         {
             return false;
         }
-        public int GetPriority()
-        {
-            return 900;
-        }
+
         public string GetSectionHeaderLabel()
         {
             return "BuildInfo Generation";
         }
         public string GetSectionID()
         {
-            return "GDX.Editor.Build.BuildInfoProvider";
+            return SectionID;
         }
         public string GetSectionHelpLink()
         {

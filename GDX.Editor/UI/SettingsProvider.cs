@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using GDX.Collections.Generic;
+using GDX.Editor.ProjectSettings;
 using GDX.Editor.UI.ProjectSettings;
 using UnityEditor;
 using UnityEngine.UIElements;
@@ -26,19 +27,14 @@ namespace GDX.Editor.UI
         /// <summary>
         ///     A cache of boolean values backed by <see cref="EditorPrefs" /> to assist with optimizing layout.
         /// </summary>
-        private static StringKeyDictionary<bool> s_cachedEditorPreferences = new StringKeyDictionary<bool>(10);
+        private static StringKeyDictionary<bool> s_cachedEditorPreferences = new StringKeyDictionary<bool>(30);
 
         /// <summary>
         ///     A list of keywords to flag when searching project settings.
         /// </summary>
-        private static readonly List<string> s_searchKeywords = new List<string>(new[]
-        {
-            "gdx", "automatic", "package", "update", "buildinfo", "task", "stream", "changelist",
-            "cli", "argument", "environment", "trace", "symbol", "locale", "localization", "culture",
-            "visual", "scripting", "vs", "parser", "commandline", "build"
-        });
+        private static List<string> s_searchKeywords;
 
-        public static StringKeyDictionary<IConfigSection> ConfigSections = new StringKeyDictionary<IConfigSection>(10);
+        public static StringKeyDictionary<IConfigSection> ConfigSections = new StringKeyDictionary<IConfigSection>(6);
 
         public static GDXConfig WorkingConfig;
 
@@ -57,6 +53,42 @@ namespace GDX.Editor.UI
             // Create our working copy of the config - we do this to catch if theres an override that happens
             // during domain reload callbacks
             WorkingConfig ??= new GDXConfig(Core.Config);
+
+            // Initialize some things here instead of static initializers
+            s_searchKeywords ??= new List<string>(new[]
+            {
+                "gdx", "automatic", "package", "update", "buildinfo", "task", "stream", "changelist",
+                "cli", "argument", "environment", "trace", "symbol", "locale", "localization", "culture",
+                "visual", "scripting", "vs", "parser", "commandline", "build"
+            });
+
+            // Register settings
+            if (!ConfigSections.ContainsKey(AutomaticUpdatesSettings.SectionID))
+            {
+                ConfigSections.AddUnchecked(AutomaticUpdatesSettings.SectionID, new AutomaticUpdatesSettings());
+            }
+            if (!ConfigSections.ContainsKey(BuildInfoSettings.SectionID))
+            {
+                ConfigSections.AddUnchecked(BuildInfoSettings.SectionID, new BuildInfoSettings());
+            }
+            if (!ConfigSections.ContainsKey(CommandLineProcessorSettings.SectionID))
+            {
+                ConfigSections.AddUnchecked(CommandLineProcessorSettings.SectionID, new CommandLineProcessorSettings());
+            }
+            if (!ConfigSections.ContainsKey(EnvironmentSettings.SectionID))
+            {
+                ConfigSections.AddUnchecked(EnvironmentSettings.SectionID, new EnvironmentSettings());
+            }
+            if (!ConfigSections.ContainsKey(LocaleSettings.SectionID))
+            {
+                ConfigSections.AddUnchecked(LocaleSettings.SectionID, new LocaleSettings());
+            }
+#if GDX_VISUALSCRIPTING
+            if (!ConfigSections.ContainsKey(VisualScriptingSettings.SectionID))
+            {
+                ConfigSections.AddUnchecked(VisualScriptingSettings.SectionID, new VisualScriptingSettings());
+            }
+#endif
 
             // ReSharper disable once HeapView.ObjectAllocation.Evident
             return new UnityEditor.SettingsProvider("Project/GDX", SettingsScope.Project)
@@ -137,25 +169,11 @@ namespace GDX.Editor.UI
 
                     ConfigSectionsProvider.ClearSectionCache();
 
-
                     // Create ordered list of sections
-                    List<IConfigSection> sections = new List<IConfigSection>(ConfigSections.Count);
                     int iterator = 0;
                     while (ConfigSections.MoveNext(ref iterator, out StringKeyEntry<IConfigSection> item))
                     {
-                        sections.Add(item.value);
-                    }
-                    sections.Sort((lhs, rhs) =>
-                    {
-                        int l = lhs.GetPriority();
-                        int r = rhs.GetPriority();
-                        if (l > r) return -1;
-                        if (l < r) return 1;
-                        return 0;
-                    });
-
-                    foreach (IConfigSection section in sections)
-                    {
+                        IConfigSection section = item.value;
                         string sectionID = section.GetSectionID();
                         VisualElement sectionHeader = ConfigSectionsProvider.CreateAndBindSectionHeader(section);
 
@@ -205,13 +223,6 @@ namespace GDX.Editor.UI
             }
 
             return s_cachedEditorPreferences[id];
-        }
-
-
-        public static void RegisterConfigSection(IConfigSection section)
-        {
-            if(ConfigSections.ContainsKey(section.GetSectionID())) return;
-            ConfigSections.AddWithExpandCheck(section.GetSectionID(), section);
         }
 
         /// <summary>

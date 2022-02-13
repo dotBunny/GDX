@@ -15,6 +15,8 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     internal class AutomaticUpdatesSettings : IConfigSection
     {
+        public const string SectionID = "GDX.Editor.UpdateProvider";
+
         private VisualElement _rootElement;
         private VisualElement _elementLocalVersion;
         private Label _labelLocalVersion;
@@ -42,12 +44,6 @@ namespace GDX.Editor.ProjectSettings
         {
             get => EditorPrefs.GetInt("GDX.UpdateProvider.UpdateDayCount", 7);
             private set => EditorPrefs.SetInt("GDX.UpdateProvider.UpdateDayCount", value);
-        }
-
-        [InitializeOnLoadMethod]
-        static void Register()
-        {
-            SettingsProvider.RegisterConfigSection(new AutomaticUpdatesSettings());
         }
 
         /// <summary>
@@ -159,37 +155,20 @@ namespace GDX.Editor.ProjectSettings
             {
                 UpdateProvider.AttemptUpgrade(true);
             };
-
-
-
-
-
-            //     EditorGUILayout.EndVertical();
-            // }
-            // else
-            // {
-            //     GUILayout.Label(
-            //         $"An error occured trying to find the package definition.\nPresumed Root: {UpdateProvider.LocalPackage.PackageAssetPath}\nPresumed Manifest:{UpdateProvider.LocalPackage.PackageManifestPath})",
-            //         EditorStyles.boldLabel);
-            // }
-
         }
 
         public bool GetDefaultVisibility()
         {
             return true;
         }
-        public int GetPriority()
-        {
-            return 1000;
-        }
+
         public string GetSectionHeaderLabel()
         {
             return "Automatic Package Updates";
         }
         public string GetSectionID()
         {
-            return "GDX.Editor.UpdateProvider";
+            return SectionID;
         }
 
         public string GetSectionHelpLink()

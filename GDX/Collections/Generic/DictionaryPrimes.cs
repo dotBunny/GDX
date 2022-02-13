@@ -8,22 +8,6 @@ namespace GDX.Collections.Generic
         private static int[] s_primes;
         private static int s_primesLength;
 
-#if UNITY_EDITOR
-        /// <summary>
-        ///     Initialize the known primes.
-        /// </summary>
-        static DictionaryPrimes()
-#else
-        /// <remarks>
-        ///     This is kept isolated to attempt to hint to the compiler to avoid adding static initialization checks.
-        /// </remarks>
-        [UnityEngine.RuntimeInitializeOnLoadMethod]
-        static void InitializeOnMainThread()
-#endif
-        {
-            SetDefaultPrimes();
-        }
-
         public static void SetDefaultPrimes()
         {
             SetPrimes( new []{

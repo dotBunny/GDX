@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.Editor.UI.ProjectSettings;
-using UnityEditor;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor.ProjectSettings
@@ -14,15 +13,10 @@ namespace GDX.Editor.ProjectSettings
     // ReSharper disable once UnusedType.Global
     internal class CommandLineProcessorSettings : IConfigSection
     {
+        public const string SectionID = "GDX.Developer.CommandLineParser";
         private VisualElement _rootElement;
         private TextField _textArgumentPrefix;
         private TextField _textArgumentSplit;
-
-        [InitializeOnLoadMethod]
-        static void Register()
-        {
-            UI.SettingsProvider.RegisterConfigSection(new CommandLineProcessorSettings());
-        }
 
         /// <inheritdoc />
         public void BindSectionContent(VisualElement rootElement)
@@ -71,11 +65,6 @@ namespace GDX.Editor.ProjectSettings
             return false;
         }
 
-        public int GetPriority()
-        {
-            return 800;
-        }
-
         public string GetSectionHeaderLabel()
         {
             return "Command Line Parser";
@@ -88,7 +77,7 @@ namespace GDX.Editor.ProjectSettings
 
         public string GetSectionID()
         {
-            return "GDX.Developer.CommandLineParser";
+            return SectionID;
         }
 
         public string GetTemplateName()

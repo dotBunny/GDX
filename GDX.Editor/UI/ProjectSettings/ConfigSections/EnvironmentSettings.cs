@@ -4,7 +4,6 @@
 
 using System.Collections.Generic;
 using GDX.Editor.UI.ProjectSettings;
-using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 #if !GDX_MASKFIELD
@@ -19,6 +18,7 @@ namespace GDX.Editor.ProjectSettings
     // ReSharper disable once UnusedType.Global
     internal class EnvironmentSettings : IConfigSection
     {
+        public const string SectionID = "GDX.Environment";
         private VisualElement _rootElement;
         private Toggle _toggleEnsureSymbol;
         private Toggle _toggleDebugConsole;
@@ -48,11 +48,6 @@ namespace GDX.Editor.ProjectSettings
             32
         };
 
-        [InitializeOnLoadMethod]
-        static void Register()
-        {
-            UI.SettingsProvider.RegisterConfigSection(new EnvironmentSettings());
-        }
         public string GetTemplateName()
         {
             return "GDXProjectSettingsEnvironment";
@@ -201,17 +196,13 @@ namespace GDX.Editor.ProjectSettings
         {
             return false;
         }
-        public int GetPriority()
-        {
-            return 700;
-        }
         public string GetSectionHeaderLabel()
         {
             return "Environment";
         }
         public string GetSectionID()
         {
-            return "GDX.Environment";
+            return SectionID;
         }
         public string GetSectionHelpLink()
         {

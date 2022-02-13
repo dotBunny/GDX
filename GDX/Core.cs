@@ -17,7 +17,8 @@ namespace GDX
         public static readonly long StartTicks;
         public static WELL1024a Random;
 
-        private static bool _initialized;
+        private static bool s_initialized;
+        private static bool s_initializedMainThread;
 
         /// <summary>
         ///     Static initializer.
@@ -28,20 +29,33 @@ namespace GDX
             // Record initialization time.
             StartTicks = DateTime.Now.Ticks;
 
-            // Initialize a random provider
-            Random = new WELL1024a((uint)StartTicks);
-
             // Create new config
             Config = new GDXConfig();
 
-            DictionaryPrimes.SetDefaultPrimes();
+            Initialize();
         }
 
-        public static void Init()
+        public static void Initialize()
         {
-            if (_initialized) return;
+            if (s_initialized) return;
 
+            // Initialize a random provider
+            Random = new WELL1024a((uint)StartTicks);
 
+            DictionaryPrimes.SetDefaultPrimes();
+
+            s_initialized = true;
+        }
+
+#if UNITY_EDITOR
+        [UnityEditor.InitializeOnLoadMethod]
+#else
+        [UnityEngine.RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+#endif
+        public static void InitializeOnMainThread()
+        {
+            if (s_initializedMainThread) return;
+            s_initializedMainThread = true;
         }
     }
 }

@@ -29,7 +29,7 @@ namespace GDX.Editor.ProjectSettings
         /// <summary>
         ///     Internal section identifier.
         /// </summary>
-        private const string SectionID = "GDX.VisualScripting";
+        public const string SectionID = "GDX.VisualScripting";
 
         /// <summary>
         ///     Information regarding the assembly
@@ -76,15 +76,6 @@ namespace GDX.Editor.ProjectSettings
         /// </summary>
         private static readonly GUIContent s_visualScriptingLoadingContent = new GUIContent(
             "The visual scripting subsystem is currently loading.");
-
-#if GDX_VISUALSCRIPTING
-        [InitializeOnLoadMethod]
-        static void Register()
-        {
-            UI.SettingsProvider.RegisterConfigSection(new VisualScriptingSettings());
-
-        }
-#endif
 
 #if GDX_VISUALSCRIPTING
         /// <summary>
@@ -358,7 +349,7 @@ namespace GDX.Editor.ProjectSettings
         }
         public string GetSectionID()
         {
-            return "GDX.VisualScripting";
+            return SectionID;
         }
         public string GetSectionHelpLink()
         {

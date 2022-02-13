@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.Editor.UI.ProjectSettings;
-using UnityEditor;
 using UnityEngine.UIElements;
 
 #if !UNITY_2022_1_OR_NEWER
@@ -19,15 +18,10 @@ namespace GDX.Editor.ProjectSettings
     // ReSharper disable once UnusedType.Global
     internal class LocaleSettings : IConfigSection
     {
+        public const string SectionID = "GDX.Localization";
         private VisualElement _rootElement;
         private Toggle _toggleSetDefaultCulture;
         private EnumField _enumDefaultCulture;
-
-        [InitializeOnLoadMethod]
-        static void Register()
-        {
-            UI.SettingsProvider.RegisterConfigSection(new LocaleSettings());
-        }
 
         /// <inheritdoc />
         public void BindSectionContent(VisualElement rootElement)
@@ -73,10 +67,6 @@ namespace GDX.Editor.ProjectSettings
         {
             return false;
         }
-        public int GetPriority()
-        {
-            return 600;
-        }
 
         public string GetSectionHeaderLabel()
         {
@@ -90,7 +80,7 @@ namespace GDX.Editor.ProjectSettings
 
         public string GetSectionID()
         {
-            return "GDX.Localization";
+            return SectionID;
         }
 
         public string GetTemplateName()
