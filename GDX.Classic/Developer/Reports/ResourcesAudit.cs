@@ -60,10 +60,7 @@ namespace GDX.Classic.Developer.Reports
         public override bool Output(StringBuilder builder, ReportContext context = null)
         {
             // We need to make the context if its not provided
-            if (context == null)
-            {
-                context = new ReportContext();
-            }
+            context ??= new ReportContext();
 
             // Create header
             builder.AppendLine(context.CreateHeader("START: Resources Audit Report"));
@@ -144,10 +141,7 @@ namespace GDX.Classic.Developer.Reports
                 objectInfoActual = Type.GetType(query.ObjectInfoTypeDefinition, false);
             }
 
-            if (objectInfoActual == null)
-            {
-                objectInfoActual = ObjectInfoFactory.GetObjectInfoType(typeActual);
-            }
+            objectInfoActual ??= ObjectInfoFactory.GetObjectInfoType(typeActual);
 
 
             // Build out using reflection (yes bad, but you choose this).
@@ -346,7 +340,7 @@ namespace GDX.Classic.Developer.Reports
 
 
             /// <summary>
-            ///     A <see cref="string.Contains" /> check against a <see cref="UnityEngine.Object" /> name.
+            ///     A <see cref="string" /> check against a <see cref="UnityEngine.Object" /> name.
             /// </summary>
             /// <example>
             ///     Armor
