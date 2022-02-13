@@ -17,6 +17,7 @@ namespace GDX.Classic
     ///     <see cref="UnityEngine.AI.NavMeshPath" /> Based Extension Methods
     /// </summary>
     [VisualScriptingCompatible(2)]
+    // ReSharper disable once UnusedType.Global
     public static class NavMeshPathExtensions
     {
         /// <summary>

@@ -10,6 +10,7 @@ using UnityEditor.TestTools.TestRunner.Api;
 
 namespace GDX.Editor
 {
+    // ReSharper disable once UnusedType.Global
     public static class TestFramework
     {
         private static TestRunnerApi s_testRunner;

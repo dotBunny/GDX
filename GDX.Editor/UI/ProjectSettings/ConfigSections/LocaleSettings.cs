@@ -16,6 +16,7 @@ namespace GDX.Editor.ProjectSettings
     /// <summary>
     ///     Locale Settings
     /// </summary>
+    // ReSharper disable once UnusedType.Global
     internal class LocaleSettings : IConfigSection
     {
         private VisualElement _rootElement;

@@ -20,6 +20,7 @@ namespace GDX.Collections
     ///         }
     ///     </code>
     /// </example>
+    // ReSharper disable once UnusedType.Global
     public struct BitArray64
     {
         /// <summary>

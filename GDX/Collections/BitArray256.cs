@@ -22,6 +22,7 @@ namespace GDX.Collections
     ///     </code>
     /// </example>
     [StructLayout(LayoutKind.Sequential)]
+    // ReSharper disable once UnusedType.Global
     public struct BitArray256
     {
         // ReSharper disable MemberCanBePrivate.Global

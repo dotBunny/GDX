@@ -16,6 +16,7 @@ namespace GDX.Collections.Generic
     /// </summary>
     /// <remarks>Use X (horizontal) and Y (vertical) arrangement.</remarks>
     /// <typeparam name="T">Type of objects.</typeparam>
+    // ReSharper disable once UnusedType.Global
     public struct NativeArray2D<T> : IDisposable where T : struct
     {
         /// <summary>

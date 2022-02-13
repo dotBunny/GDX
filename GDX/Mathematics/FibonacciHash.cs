@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 
 namespace GDX.Mathematics
 {
+    // ReSharper disable once UnusedType.Global
     public static class FibonacciHash
     {
         /// <summary>

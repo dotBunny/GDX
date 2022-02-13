@@ -13,6 +13,7 @@ namespace GDX.Editor.DecoratorDrawers
     /// </summary>
     [HideFromDocFX]
     [CustomPropertyDrawer(typeof(InspectorMessageBoxAttribute))]
+    // ReSharper disable once UnusedType.Global
     public class InspectorMessageBoxAttributeDecoratorDrawer : DecoratorDrawer
     {
         /// <summary>

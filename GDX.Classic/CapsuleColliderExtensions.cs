@@ -13,6 +13,7 @@ namespace GDX.Classic
     ///     <see cref="UnityEngine.CapsuleCollider" /> Based Extension Methods
     /// </summary>
     [VisualScriptingCompatible(2)]
+    // ReSharper disable once UnusedType.Global
     public static class CapsuleColliderExtensions
     {
         /// <summary>

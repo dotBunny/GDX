@@ -10,6 +10,7 @@ using UnityEngine;
 namespace GDX.Classic.Jobs.ParallelFor
 {
     [BurstCompile]
+    // ReSharper disable once UnusedType.Global
     public struct ColorCompareJob : IJobParallelFor
     {
         /// <summary>

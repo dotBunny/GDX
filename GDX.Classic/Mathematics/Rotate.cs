@@ -17,6 +17,7 @@ namespace GDX.Classic.Mathematics
     /// A set of functionality to extend on Unity's on rotation based methods.
     /// </summary>
     [VisualScriptingCompatible(8)]
+    // ReSharper disable once UnusedType.Global
     public static class Rotate
     {
         /// <summary>

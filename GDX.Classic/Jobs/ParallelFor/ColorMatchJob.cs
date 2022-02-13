@@ -14,6 +14,7 @@ namespace GDX.Classic.Jobs.ParallelFor
     ///     parallel.
     /// </summary>
     [BurstCompile]
+    // ReSharper disable once UnusedType.Global
     public struct ColorMatchJob : IJobParallelFor
     {
         /// <summary>

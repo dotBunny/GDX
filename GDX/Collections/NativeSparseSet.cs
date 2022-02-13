@@ -14,6 +14,7 @@ namespace GDX.Collections
     ///     An adapter collection for external data arrays that allows constant-time insertion, deletion, and lookup by
     ///     handle, as well as array-like iteration.
     /// </summary>
+    // ReSharper disable once UnusedType.Global
     public struct NativeSparseSet
     {
         /// <summary>

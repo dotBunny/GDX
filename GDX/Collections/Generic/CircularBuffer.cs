@@ -15,6 +15,7 @@ namespace GDX.Collections.Generic
     /// </summary>
     /// <typeparam name="T">The type of <see cref="object" />s contained within.</typeparam>
     [VisualScriptingCompatible(1)]
+    // ReSharper disable once UnusedType.Global
     public struct CircularBuffer<T>
     {
         /// <summary>

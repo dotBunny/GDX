@@ -10,6 +10,7 @@ using GDX.Developer.Reports.NUnit;
 
 namespace GDX.Developer.Reports
 {
+    // ReSharper disable once UnusedType.Global
     public class NUnitReport
     {
         private const string FailedString = "Failed";

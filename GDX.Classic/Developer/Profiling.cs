@@ -12,6 +12,7 @@ using UnityEngine.Profiling.Memory.Experimental;
 
 namespace GDX.Classic.Developer
 {
+    // ReSharper disable once UnusedType.Global
     public class Profiling
     {
         /// <summary>

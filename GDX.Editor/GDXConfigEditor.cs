@@ -15,6 +15,7 @@ namespace GDX.Editor
     [HideFromDocFX]
     [CustomEditor(typeof(GDXConfig))]
     // ReSharper disable once InconsistentNaming
+    // ReSharper disable once UnusedType.Global
     public class GDXConfigEditor : UnityEditor.Editor
     {
         /// <summary>

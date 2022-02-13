@@ -19,6 +19,7 @@ namespace GDX.Editor
             OpenBrace();
         }
 
+        // ReSharper disable once UnusedMember.Global
         public void Append(string text)
         {
             _builder.Append(text);

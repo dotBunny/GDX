@@ -16,6 +16,7 @@ namespace GDX.Classic
     ///     Used for MonoBehaviour workflows.
     /// </remarks>
     [VisualScriptingCompatible(2)]
+    // ReSharper disable once UnusedType.Global
     public static class MonoBehaviourExtensions
     {
         /// <summary>

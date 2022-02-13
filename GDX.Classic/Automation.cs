@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace GDX.Classic
 {
+    // ReSharper disable once UnusedType.Global
     public class Automation
     {
         // ReSharper disable once MemberCanBePrivate.Global

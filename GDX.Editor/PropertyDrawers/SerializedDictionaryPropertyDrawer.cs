@@ -24,6 +24,7 @@ namespace GDX.Editor.PropertyDrawers
     ///     </para>
     /// </remarks>
     [CustomPropertyDrawer(typeof(SerializableDictionary<,>))]
+    // ReSharper disable once UnusedType.Global
     internal class SerializableDictionaryPropertyDrawer : PropertyDrawer
     {
         /// <summary>

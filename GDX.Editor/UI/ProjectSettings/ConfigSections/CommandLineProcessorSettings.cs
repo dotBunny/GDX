@@ -11,6 +11,7 @@ namespace GDX.Editor.ProjectSettings
     /// <summary>
     ///     Command Line Processor Settings
     /// </summary>
+    // ReSharper disable once UnusedType.Global
     internal class CommandLineProcessorSettings : IConfigSection
     {
         private VisualElement _rootElement;

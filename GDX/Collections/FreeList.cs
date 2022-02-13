@@ -14,6 +14,7 @@ namespace GDX.Collections
     ///     but neither the allocated indices nor the free indices can be reliably iterated without an external data structure.
     ///     This structure can be adapted to an arbitrary of external, parallel arrays.
     /// </summary>
+    // ReSharper disable once UnusedType.Global
     public struct FreeList
     {
         // ReSharper disable MemberCanBePrivate.Global

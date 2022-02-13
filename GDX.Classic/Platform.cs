@@ -14,6 +14,7 @@ namespace GDX.Classic
     ///     A collection of platform related helper utilities.
     /// </summary>
     [VisualScriptingCompatible(8)]
+    // ReSharper disable once UnusedType.Global
     public static class Platform
     {
         /// <summary>

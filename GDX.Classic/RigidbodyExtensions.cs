@@ -12,6 +12,7 @@ namespace GDX.Classic
     ///     <see cref="UnityEngine.Rigidbody" /> Based Extension Methods
     /// </summary>
     [VisualScriptingCompatible(2)]
+    // ReSharper disable once UnusedType.Global
     public static class RigidbodyExtensions
     {
         /// <summary>
