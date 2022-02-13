@@ -83,21 +83,21 @@ namespace GDX.Classic.Developer.Reports
             builder.AppendLine();
 
             // We iterate over each defined type in the order they were added to the known objects
-            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> typeKVP in KnownObjects)
+            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> knownObject in KnownObjects)
             {
-                int count = typeKVP.Value.Count;
+                int count = knownObject.Value.Count;
 
-                builder.AppendLine(context.CreateHeader(typeKVP.Key.ToString(), '-'));
+                builder.AppendLine(context.CreateHeader(knownObject.Key.ToString(), '-'));
                 builder.AppendLine(context.CreateKeyValuePair("Count", count.ToString()));
                 builder.AppendLine(context.CreateKeyValuePair("Total Size",
-                    GDX.Localization.GetHumanReadableFileSize(KnownUsage[typeKVP.Key])));
+                    GDX.Localization.GetHumanReadableFileSize(KnownUsage[knownObject.Key])));
                 builder.AppendLine();
 
                 // Sort the known objects based on size as that's the most useful context to have them listed
                 List<ObjectInfo> newList = new List<ObjectInfo>(count);
-                foreach (KeyValuePair<TransientReference, ObjectInfo> objectKVP in typeKVP.Value)
+                foreach (KeyValuePair<TransientReference, ObjectInfo> objectInfo in knownObject.Value)
                 {
-                    newList.Add(objectKVP.Value);
+                    newList.Add(objectInfo.Value);
                 }
 
                 newList.Sort();

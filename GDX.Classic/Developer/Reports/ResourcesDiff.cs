@@ -165,9 +165,9 @@ namespace GDX.Classic.Developer.Reports
             // Custom header information
             builder.AppendLine(context.CreateKeyValuePair("Total Objects", ObjectCount.GetOutput(context)));
             builder.AppendLine();
-            foreach (KeyValuePair<Type, LongDiff> typeKVP in KnownUsage)
+            foreach (KeyValuePair<Type, LongDiff> usage in KnownUsage)
             {
-                builder.AppendLine(context.CreateKeyValuePair(typeKVP.Key.ToString(), typeKVP.Value.GetSizeOutput(context)));
+                builder.AppendLine(context.CreateKeyValuePair(usage.Key.ToString(), usage.Value.GetSizeOutput(context)));
             }
             builder.AppendLine();
 
@@ -192,17 +192,17 @@ namespace GDX.Classic.Developer.Reports
 
         private void OutputObjectInfos(StringBuilder builder, ReportContext context, Dictionary<Type, Dictionary<TransientReference, ObjectInfo>> targetObjects)
         {
-            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> typeKVP in targetObjects)
+            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> target in targetObjects)
             {
-                int count = typeKVP.Value.Count;
+                int count = target.Value.Count;
 
-                builder.AppendLine(context.CreateHeader($"{typeKVP.Key} [{count.ToString()}] ", '-'));
+                builder.AppendLine(context.CreateHeader($"{target.Key} [{count.ToString()}] ", '-'));
 
                 // Sort the known objects based on size as that's the most useful context to have them listed
                 List<ObjectInfo> newList = new List<ObjectInfo>(count);
-                foreach (KeyValuePair<TransientReference, ObjectInfo> objectKVP in typeKVP.Value)
+                foreach (KeyValuePair<TransientReference, ObjectInfo> objectInfo in target.Value)
                 {
-                    newList.Add(objectKVP.Value);
+                    newList.Add(objectInfo.Value);
                 }
 
                 newList.Sort();

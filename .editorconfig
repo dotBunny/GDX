@@ -131,6 +131,7 @@ dotnet_naming_rule.instance_fields_should_be_camel_case.severity = suggestion
 dotnet_naming_rule.instance_fields_should_be_camel_case.symbols = instance_fields
 dotnet_naming_rule.instance_fields_should_be_camel_case.style = instance_field_style
 dotnet_naming_symbols.instance_fields.applicable_kinds = field
+dotnet_naming_symbols.instance_fields.applicable_accessibilities = private, protected, internal, protected_internal, private_protected
 dotnet_naming_style.instance_field_style.capitalization = pascal_case
 dotnet_naming_style.instance_field_style.required_prefix = m_
 
