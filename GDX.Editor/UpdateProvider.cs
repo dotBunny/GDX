@@ -106,10 +106,7 @@ namespace GDX.Editor
         /// <param name="forceUpgrade">Should we bypass all safety checks?</param>
         public static void AttemptUpgrade(bool forceUpgrade = false)
         {
-            if (UpdatePackageDefinition == null)
-            {
-                UpdatePackageDefinition = GetMainPackageDefinition();
-            }
+            UpdatePackageDefinition ??= GetMainPackageDefinition();
 
             string messageStart =
                 $"There is a new version of GDX available ({UpdatePackageDefinition.version}).\n";
@@ -430,6 +427,7 @@ namespace GDX.Editor
                 for (int i = 0; i < lockFileLength; i++)
                 {
                     // Identify the block
+                    // ReSharper disable once StringLiteralTypo
                     if (lockFileContents[i].Trim() == "\"com.dotbunny.gdx\": {")
                     {
                         depth++;

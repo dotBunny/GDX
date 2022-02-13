@@ -126,10 +126,7 @@ namespace GDX.Editor.UI
 
                     // Create our working copy of the config - we do this to catch if theres an override that happens
                     // during domain reload callbacks
-                    if (WorkingConfig == null)
-                    {
-                        WorkingConfig = new GDXConfig(Core.Config);
-                    }
+                    WorkingConfig ??= new GDXConfig(Core.Config);
 
                     // Update first state
                     CheckForChanges();

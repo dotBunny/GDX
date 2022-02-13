@@ -20,10 +20,7 @@ namespace GDX.Editor
             {
                 s_testRunner = ScriptableObject.CreateInstance<TestRunnerApi>();
             }
-            if (s_testMonitor == null)
-            {
-                s_testMonitor = new TestMonitor();
-            }
+            s_testMonitor ??= new TestMonitor();
             s_testRunner.RegisterCallbacks(s_testMonitor);
         }
     }

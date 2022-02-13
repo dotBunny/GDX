@@ -155,10 +155,7 @@ namespace GDX.Classic.Developer.Reports
         public override bool Output(StringBuilder builder, ReportContext context = null)
         {
             // We need to make the context if its not provided
-            if (context == null)
-            {
-                context = new ReportContext();
-            }
+            context ??= new ReportContext();
 
             // Create header
             builder.AppendLine(context.CreateHeader("START: Resources Diff Report"));
