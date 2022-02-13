@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 // ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedMemberInSuper.Global
 
 namespace GDX.Mathematics.Random
 {

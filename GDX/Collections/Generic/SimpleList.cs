@@ -559,6 +559,7 @@ namespace GDX.Collections.Generic
         /// </summary>
         public void Reverse()
         {
+            // ReSharper disable once TooWideLocalVariableScope
             T temporaryStorage;
 
             int lastIndex = Count - 1;
