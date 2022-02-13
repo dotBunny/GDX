@@ -38,20 +38,20 @@ namespace GDX.Classic.Developer.Reports.Sections
 
         public void Output(ReportContext context, StringBuilder builder, bool detailed = true)
         {
-            builder.AppendLine(context.CreateKVP("Total Mono Heap",
+            builder.AppendLine(context.CreateKeyValuePair("Total Mono Heap",
                 MonoHeapSize.GetSizeOutput(context)));
-            builder.AppendLine(context.CreateKVP("Used Mono Heap",
+            builder.AppendLine(context.CreateKeyValuePair("Used Mono Heap",
                 MonoUsedSize.GetSizeOutput(context)));
 
             if (detailed)
             {
-                builder.AppendLine(context.CreateKVP("GFX Driver Allocated Memory",
+                builder.AppendLine(context.CreateKeyValuePair("GFX Driver Allocated Memory",
                     UnityGraphicsDriverAllocated.GetSizeOutput(context)));
-                builder.AppendLine(context.CreateKVP("Total Reserved Memory",
+                builder.AppendLine(context.CreateKeyValuePair("Total Reserved Memory",
                     UnityTotalReservedMemory.GetSizeOutput(context)));
-                builder.AppendLine(context.CreateKVP("Total Allocated Memory",
+                builder.AppendLine(context.CreateKeyValuePair("Total Allocated Memory",
                     UnityTotalAllocatedMemory.GetSizeOutput(context)));
-                builder.AppendLine(context.CreateKVP("Total Unused Reserved Memory",
+                builder.AppendLine(context.CreateKeyValuePair("Total Unused Reserved Memory",
                     UnityTotalUnusedReservedMemory.GetSizeOutput(context)));
             }
         }

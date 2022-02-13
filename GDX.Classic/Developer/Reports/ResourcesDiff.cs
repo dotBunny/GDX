@@ -163,11 +163,11 @@ namespace GDX.Classic.Developer.Reports
             builder.AppendLine(context.CreateHeader("START: Resources Diff Report"));
 
             // Custom header information
-            builder.AppendLine(context.CreateKVP("Total Objects", ObjectCount.GetOutput(context)));
+            builder.AppendLine(context.CreateKeyValuePair("Total Objects", ObjectCount.GetOutput(context)));
             builder.AppendLine();
             foreach (KeyValuePair<Type, LongDiff> typeKVP in KnownUsage)
             {
-                builder.AppendLine(context.CreateKVP(typeKVP.Key.ToString(), typeKVP.Value.GetSizeOutput(context)));
+                builder.AppendLine(context.CreateKeyValuePair(typeKVP.Key.ToString(), typeKVP.Value.GetSizeOutput(context)));
             }
             builder.AppendLine();
 

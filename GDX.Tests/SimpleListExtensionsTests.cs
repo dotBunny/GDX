@@ -17,24 +17,24 @@ namespace Runtime
     /// </summary>
     public class SimpleListExtensionsTests
     {
-        private SimpleList<int> _mockData;
+        private SimpleList<int> m_MockData;
 
         [SetUp]
         public void Setup()
         {
-            _mockData = new SimpleList<int>(5);
-            _mockData.AddUnchecked(0);
-            _mockData.AddUnchecked(1);
-            _mockData.AddUnchecked(2);
-            _mockData.AddUnchecked(3);
-            _mockData.AddUnchecked(4);
+            m_MockData = new SimpleList<int>(5);
+            m_MockData.AddUnchecked(0);
+            m_MockData.AddUnchecked(1);
+            m_MockData.AddUnchecked(2);
+            m_MockData.AddUnchecked(3);
+            m_MockData.AddUnchecked(4);
         }
 
         [TearDown]
         public void TearDown()
         {
-            _mockData.Clear();
-            _mockData = default;
+            m_MockData.Clear();
+            m_MockData = default;
         }
 
 
@@ -107,13 +107,13 @@ namespace Runtime
         [Category(Core.TestCategory)]
         public void ContainsItem_String_ReturnsTrue()
         {
-            const string SearchItem = "Hello";
+            const string k_SearchItem = "Hello";
             SimpleList<string> listOfStrings = new SimpleList<string>(3);
-            listOfStrings.AddUnchecked(SearchItem);
+            listOfStrings.AddUnchecked(k_SearchItem);
             listOfStrings.AddUnchecked("World");
             listOfStrings.AddUnchecked("!");
 
-            bool evaluate = listOfStrings.ContainsItem(SearchItem);
+            bool evaluate = listOfStrings.ContainsItem(k_SearchItem);
 
             Assert.IsTrue(evaluate);
         }

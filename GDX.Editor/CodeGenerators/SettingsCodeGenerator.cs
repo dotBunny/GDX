@@ -8,7 +8,7 @@ namespace GDX.Editor.CodeGenerators
 {
     public static class SettingsCodeGenerator
     {
-        private const string CoreConfigPath = "Core.Config";
+        private const string k_CoreConfigPath = "Core.Config";
         public static string Build(GDXConfig lhs, GDXConfig rhs)
         {
             CodeGenerator code = new CodeGenerator("GDX", "Generated file of difference from default config.");
@@ -24,48 +24,48 @@ namespace GDX.Editor.CodeGenerators
             code.AppendLine("public static void Init()");
             code.OpenBrace();
 
-            GetOverrideBoolean(code, "updateProviderCheckForUpdates",
-                lhs.updateProviderCheckForUpdates, rhs.updateProviderCheckForUpdates);
-            GetOverrideString(code, "developerCommandLineParserArgumentPrefix",
-                lhs.developerCommandLineParserArgumentPrefix, rhs.developerCommandLineParserArgumentPrefix);
-            GetOverrideString(code, "developerCommandLineParserArgumentSplit",
-                lhs.developerCommandLineParserArgumentSplit, rhs.developerCommandLineParserArgumentSplit);
-            GetOverrideBoolean(code, "developerBuildInfoAssemblyDefinition",
-                lhs.developerBuildInfoAssemblyDefinition, rhs.developerBuildInfoAssemblyDefinition);
-            GetOverrideBoolean(code, "developerBuildInfoEnabled",
-                lhs.developerBuildInfoEnabled, rhs.developerBuildInfoEnabled);
-            GetOverrideString(code, "developerBuildInfoPath",
-                lhs.developerBuildInfoPath, rhs.developerBuildInfoPath);
-            GetOverrideString(code, "developerBuildInfoNamespace",
-                lhs.developerBuildInfoNamespace, rhs.developerBuildInfoNamespace);
-            GetOverrideString(code, "developerBuildInfoBuildNumberArgument",
-                lhs.developerBuildInfoBuildNumberArgument, rhs.developerBuildInfoBuildNumberArgument);
-            GetOverrideString(code, "developerBuildInfoBuildDescriptionArgument",
-                lhs.developerBuildInfoBuildDescriptionArgument, rhs.developerBuildInfoBuildDescriptionArgument);
-            GetOverrideString(code, "developerBuildInfoBuildChangelistArgument",
-                lhs.developerBuildInfoBuildChangelistArgument, rhs.developerBuildInfoBuildChangelistArgument);
-            GetOverrideString(code, "developerBuildInfoBuildTaskArgument",
-                lhs.developerBuildInfoBuildTaskArgument, rhs.developerBuildInfoBuildTaskArgument);
-            GetOverrideString(code, "developerBuildInfoBuildStreamArgument",
-                lhs.developerBuildInfoBuildStreamArgument, rhs.developerBuildInfoBuildStreamArgument);
-            GetOverrideBoolean(code, "environmentScriptingDefineSymbol",
-                lhs.environmentScriptingDefineSymbol, rhs.environmentScriptingDefineSymbol);
+            GetOverrideBoolean(code, "UpdateProviderCheckForUpdates",
+                lhs.UpdateProviderCheckForUpdates, rhs.UpdateProviderCheckForUpdates);
+            GetOverrideString(code, "DeveloperCommandLineParserArgumentPrefix",
+                lhs.DeveloperCommandLineParserArgumentPrefix, rhs.DeveloperCommandLineParserArgumentPrefix);
+            GetOverrideString(code, "DeveloperCommandLineParserArgumentSplit",
+                lhs.DeveloperCommandLineParserArgumentSplit, rhs.DeveloperCommandLineParserArgumentSplit);
+            GetOverrideBoolean(code, "DeveloperBuildInfoAssemblyDefinition",
+                lhs.DeveloperBuildInfoAssemblyDefinition, rhs.DeveloperBuildInfoAssemblyDefinition);
+            GetOverrideBoolean(code, "DeveloperBuildInfoEnabled",
+                lhs.DeveloperBuildInfoEnabled, rhs.DeveloperBuildInfoEnabled);
+            GetOverrideString(code, "DeveloperBuildInfoPath",
+                lhs.DeveloperBuildInfoPath, rhs.DeveloperBuildInfoPath);
+            GetOverrideString(code, "DeveloperBuildInfoNamespace",
+                lhs.DeveloperBuildInfoNamespace, rhs.DeveloperBuildInfoNamespace);
+            GetOverrideString(code, "DeveloperBuildInfoBuildNumberArgument",
+                lhs.DeveloperBuildInfoBuildNumberArgument, rhs.DeveloperBuildInfoBuildNumberArgument);
+            GetOverrideString(code, "DeveloperBuildInfoBuildDescriptionArgument",
+                lhs.DeveloperBuildInfoBuildDescriptionArgument, rhs.DeveloperBuildInfoBuildDescriptionArgument);
+            GetOverrideString(code, "DeveloperBuildInfoBuildChangelistArgument",
+                lhs.DeveloperBuildInfoBuildChangelistArgument, rhs.DeveloperBuildInfoBuildChangelistArgument);
+            GetOverrideString(code, "DeveloperBuildInfoBuildTaskArgument",
+                lhs.DeveloperBuildInfoBuildTaskArgument, rhs.DeveloperBuildInfoBuildTaskArgument);
+            GetOverrideString(code, "DeveloperBuildInfoBuildStreamArgument",
+                lhs.DeveloperBuildInfoBuildStreamArgument, rhs.DeveloperBuildInfoBuildStreamArgument);
+            GetOverrideBoolean(code, "EnvironmentScriptingDefineSymbol",
+                lhs.EnvironmentScriptingDefineSymbol, rhs.EnvironmentScriptingDefineSymbol);
 
-            GetOverrideTraceLevel(code, "traceDevelopmentLevels",
-                lhs.traceDevelopmentLevels, rhs.traceDevelopmentLevels);
-            GetOverrideTraceLevel(code, "traceDebugLevels",
-                lhs.traceDebugLevels, rhs.traceDebugLevels);
-            GetOverrideTraceLevel(code, "traceReleaseLevels",
-                lhs.traceReleaseLevels, rhs.traceReleaseLevels);
+            GetOverrideTraceLevel(code, "TraceDevelopmentLevels",
+                lhs.TraceDevelopmentLevels, rhs.TraceDevelopmentLevels);
+            GetOverrideTraceLevel(code, "TraceDebugLevels",
+                lhs.TraceDebugLevels, rhs.TraceDebugLevels);
+            GetOverrideTraceLevel(code, "TraceReleaseLevels",
+                lhs.TraceReleaseLevels, rhs.TraceReleaseLevels);
 
-            GetOverrideBoolean(code, "traceDevelopmentOutputToUnityConsole",
-                lhs.traceDevelopmentOutputToUnityConsole, rhs.traceDevelopmentOutputToUnityConsole);
-            GetOverrideBoolean(code, "traceDebugOutputToUnityConsole",
-                lhs.traceDebugOutputToUnityConsole, rhs.traceDebugOutputToUnityConsole);
-            GetOverrideBoolean(code, "localizationSetDefaultCulture",
-                lhs.localizationSetDefaultCulture, rhs.localizationSetDefaultCulture);
-            OverrideLocalizationLanguage(code, "localizationDefaultCulture",
-                lhs.localizationDefaultCulture, rhs.localizationDefaultCulture);
+            GetOverrideBoolean(code, "TraceDevelopmentOutputToUnityConsole",
+                lhs.TraceDevelopmentOutputToUnityConsole, rhs.TraceDevelopmentOutputToUnityConsole);
+            GetOverrideBoolean(code, "TraceDebugOutputToUnityConsole",
+                lhs.TraceDebugOutputToUnityConsole, rhs.TraceDebugOutputToUnityConsole);
+            GetOverrideBoolean(code, "LocalizationSetDefaultCulture",
+                lhs.LocalizationSetDefaultCulture, rhs.LocalizationSetDefaultCulture);
+            OverrideLocalizationLanguage(code, "LocalizationDefaultCulture",
+                lhs.LocalizationDefaultCulture, rhs.LocalizationDefaultCulture);
 
             return code.ToString();
 
@@ -74,13 +74,13 @@ namespace GDX.Editor.CodeGenerators
         private static void GetOverrideBoolean(CodeGenerator code, string member, bool lhs, bool rhs)
         {
             if (lhs == rhs) return;
-            code.AppendLine(rhs ? $"{CoreConfigPath}.{member} = true;" : $"{CoreConfigPath}.{member} = false;");
+            code.AppendLine(rhs ? $"{k_CoreConfigPath}.{member} = true;" : $"{k_CoreConfigPath}.{member} = false;");
         }
 
         private static void GetOverrideString(CodeGenerator code, string member, string lhs, string rhs)
         {
             if (lhs == rhs) return;
-            code.AppendLine($"{CoreConfigPath}.{member} = \"{rhs}\";");
+            code.AppendLine($"{k_CoreConfigPath}.{member} = \"{rhs}\";");
         }
 
         private static void GetOverrideTraceLevel(CodeGenerator code, string member, Trace.TraceLevel lhs, Trace.TraceLevel rhs)
@@ -118,13 +118,13 @@ namespace GDX.Editor.CodeGenerators
             }
 
             string masks = maskBuilder.ToString().Trim();
-            code.AppendLine($"{CoreConfigPath}.{member} = {masks.Substring(0,masks.Length - 2)};");
+            code.AppendLine($"{k_CoreConfigPath}.{member} = {masks.Substring(0,masks.Length - 2)};");
         }
 
         private static void OverrideLocalizationLanguage(CodeGenerator code, string member, Localization.Language lhs, Localization.Language rhs)
         {
             if (lhs == rhs) return;
-            code.AppendLine($"{CoreConfigPath}.{member} = Localization.Language.{rhs.ToString()};");
+            code.AppendLine($"{k_CoreConfigPath}.{member} = Localization.Language.{rhs.ToString()};");
         }
     }
 }

@@ -17,8 +17,8 @@ namespace GDX
         public static readonly long StartTicks;
         public static WELL1024a Random;
 
-        private static bool s_initialized;
-        private static bool s_initializedMainThread;
+        private static bool s_Initialized;
+        private static bool s_InitializedMainThread;
 
         /// <summary>
         ///     Static initializer.
@@ -38,14 +38,14 @@ namespace GDX
         // ReSharper disable once MemberCanBePrivate.Global
         public static void Initialize()
         {
-            if (s_initialized) return;
+            if (s_Initialized) return;
 
             // Initialize a random provider
             Random = new WELL1024a((uint)StartTicks);
 
             DictionaryPrimes.SetDefaultPrimes();
 
-            s_initialized = true;
+            s_Initialized = true;
         }
 
 #if UNITY_EDITOR
@@ -55,8 +55,8 @@ namespace GDX
 #endif
         public static void InitializeOnMainThread()
         {
-            if (s_initializedMainThread) return;
-            s_initializedMainThread = true;
+            if (s_InitializedMainThread) return;
+            s_InitializedMainThread = true;
         }
     }
 }

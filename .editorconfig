@@ -1,4 +1,4 @@
-# GDX EditorConfig (modified Roslyn)
+# GDX EditorConfig (modified Roslyn w/ Unity specifics)
 root = true
 
 # Don't use tabs for indentation.
@@ -97,15 +97,23 @@ dotnet_naming_symbols.non_private_readonly_fields.required_modifiers = readonly
 
 dotnet_naming_style.non_private_readonly_field_style.capitalization = pascal_case
 
-# Constants are PascalCase
+# Non-private constants are PascalCase
+dotnet_naming_rule.non_private_constants_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.non_private_constants_should_be_pascal_case.symbols = non_private_constants
+dotnet_naming_rule.non_private_constants_should_be_pascal_case.style = non_private_constant_style
+dotnet_naming_symbols.non_private_constants.applicable_kinds = field
+dotnet_naming_symbols.non_private_constants.applicable_accessibilities = public
+dotnet_naming_symbols.non_private_constants.required_modifiers = const
+dotnet_naming_style.non_private_constant_style.capitalization = pascal_case
+
+# Constants are PascalCase and start with k_
 dotnet_naming_rule.constants_should_be_pascal_case.severity = suggestion
 dotnet_naming_rule.constants_should_be_pascal_case.symbols = constants
 dotnet_naming_rule.constants_should_be_pascal_case.style = constant_style
-
 dotnet_naming_symbols.constants.applicable_kinds = field, local
 dotnet_naming_symbols.constants.required_modifiers = const
-
 dotnet_naming_style.constant_style.capitalization = pascal_case
+dotnet_naming_style.constant_style.required_prefix = k_
 
 # Static fields are camelCase and start with s_
 dotnet_naming_rule.static_fields_should_be_camel_case.severity = suggestion
@@ -115,18 +123,26 @@ dotnet_naming_rule.static_fields_should_be_camel_case.style = static_field_style
 dotnet_naming_symbols.static_fields.applicable_kinds = field
 dotnet_naming_symbols.static_fields.required_modifiers = static
 
-dotnet_naming_style.static_field_style.capitalization = camel_case
+dotnet_naming_style.static_field_style.capitalization = pascal_case
 dotnet_naming_style.static_field_style.required_prefix = s_
 
-# Instance fields are camelCase and start with _
+# Instance fields are camelCase and start with m_
 dotnet_naming_rule.instance_fields_should_be_camel_case.severity = suggestion
 dotnet_naming_rule.instance_fields_should_be_camel_case.symbols = instance_fields
 dotnet_naming_rule.instance_fields_should_be_camel_case.style = instance_field_style
-
 dotnet_naming_symbols.instance_fields.applicable_kinds = field
+dotnet_naming_style.instance_field_style.capitalization = pascal_case
+dotnet_naming_style.instance_field_style.required_prefix = m_
 
-dotnet_naming_style.instance_field_style.capitalization = camel_case
-dotnet_naming_style.instance_field_style.required_prefix = _
+# Non-private instance fields are Pascal Case
+dotnet_naming_rule.non_private_instance_fields_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.non_private_instance_fields_should_be_pascal_case.symbols = non_private_instance_field
+dotnet_naming_rule.non_private_instance_fields_should_be_pascal_case.style = non_private_instance_field_style
+
+dotnet_naming_symbols.non_private_instance_field.applicable_kinds = field
+dotnet_naming_symbols.non_private_instance_field.applicable_accessibilities = public
+
+dotnet_naming_style.non_private_instance_field_style.capitalization = pascal_case
 
 # Locals and parameters are camelCase
 dotnet_naming_rule.locals_should_be_camel_case.severity = suggestion

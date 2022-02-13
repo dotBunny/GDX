@@ -14,45 +14,45 @@ namespace GDX.Editor.ProjectSettings
     internal class CommandLineProcessorSettings : IConfigSection
     {
         public const string SectionID = "GDX.Developer.CommandLineParser";
-        private VisualElement _rootElement;
-        private TextField _textArgumentPrefix;
-        private TextField _textArgumentSplit;
+        private VisualElement m_RootElement;
+        private TextField m_TextArgumentPrefix;
+        private TextField m_TextArgumentSplit;
 
         /// <inheritdoc />
         public void BindSectionContent(VisualElement rootElement)
         {
-            _rootElement = rootElement;
+            m_RootElement = rootElement;
 
-            _textArgumentPrefix = _rootElement.Q<TextField>("text-argument-prefix");
-            _textArgumentPrefix.value = UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentPrefix;
-            _textArgumentPrefix.RegisterValueChangedCallback(evt =>
+            m_TextArgumentPrefix = m_RootElement.Q<TextField>("text-argument-prefix");
+            m_TextArgumentPrefix.value = UI.SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix;
+            m_TextArgumentPrefix.RegisterValueChangedCallback(evt =>
             {
-                UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentPrefix = evt.newValue;
-                if (Core.Config.developerCommandLineParserArgumentPrefix != evt.newValue)
+                UI.SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix = evt.newValue;
+                if (Core.Config.DeveloperCommandLineParserArgumentPrefix != evt.newValue)
                 {
-                    _textArgumentPrefix.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                    m_TextArgumentPrefix.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
                 else
                 {
-                    _textArgumentPrefix.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                    m_TextArgumentPrefix.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
                 }
 
                 UI.SettingsProvider.CheckForChanges();
             });
 
 
-            _textArgumentSplit = _rootElement.Q<TextField>("text-argument-split");
-            _textArgumentSplit.value = UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentSplit;
-            _textArgumentSplit.RegisterValueChangedCallback(evt =>
+            m_TextArgumentSplit = m_RootElement.Q<TextField>("text-argument-split");
+            m_TextArgumentSplit.value = UI.SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit;
+            m_TextArgumentSplit.RegisterValueChangedCallback(evt =>
             {
-                UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentSplit = evt.newValue;
-                if (Core.Config.developerCommandLineParserArgumentSplit != evt.newValue)
+                UI.SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit = evt.newValue;
+                if (Core.Config.DeveloperCommandLineParserArgumentSplit != evt.newValue)
                 {
-                    _textArgumentSplit.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                    m_TextArgumentSplit.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
                 else
                 {
-                    _textArgumentSplit.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                    m_TextArgumentSplit.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
                 }
 
                 UI.SettingsProvider.CheckForChanges();
@@ -108,13 +108,13 @@ namespace GDX.Editor.ProjectSettings
         /// <inheritdoc />
         public void UpdateSectionContent()
         {
-            ConfigSectionsProvider.SetClassChangeCheck(_textArgumentPrefix,
-                Core.Config.developerCommandLineParserArgumentPrefix,
-                UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentPrefix);
+            ConfigSectionsProvider.SetClassChangeCheck(m_TextArgumentPrefix,
+                Core.Config.DeveloperCommandLineParserArgumentPrefix,
+                UI.SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix);
 
-            ConfigSectionsProvider.SetClassChangeCheck(_textArgumentSplit,
-                Core.Config.developerCommandLineParserArgumentSplit,
-                UI.SettingsProvider.WorkingConfig.developerCommandLineParserArgumentSplit);
+            ConfigSectionsProvider.SetClassChangeCheck(m_TextArgumentSplit,
+                Core.Config.DeveloperCommandLineParserArgumentSplit,
+                UI.SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit);
         }
     }
 }

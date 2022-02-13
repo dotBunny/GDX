@@ -8,27 +8,27 @@ namespace GDX.Mathematics.Random
 {
     public class RandomWrapper : IRandomProvider
     {
-        private readonly System.Random _random;
+        private readonly System.Random m_Random;
 
         public RandomWrapper()
         {
-            _random = new System.Random();
+            m_Random = new System.Random();
         }
         public RandomWrapper(int seed)
         {
-            _random = new System.Random(seed);
+            m_Random = new System.Random(seed);
         }
 
         /// <inheritdoc />
         public bool NextBoolean(float chance = 0.5f)
         {
-            return _random.NextDouble() <= chance;
+            return m_Random.NextDouble() <= chance;
         }
 
         /// <inheritdoc />
         public void NextBytes(byte[] buffer)
         {
-            _random.NextBytes(buffer);
+            m_Random.NextBytes(buffer);
         }
 
         /// <inheritdoc />
@@ -70,7 +70,7 @@ namespace GDX.Mathematics.Random
         /// <inheritdoc />
         public double Sample()
         {
-            return _random.NextDouble();
+            return m_Random.NextDouble();
         }
     }
 }

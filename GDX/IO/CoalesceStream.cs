@@ -11,11 +11,11 @@ namespace GDX.IO
     // ReSharper disable once UnusedType.Global
     public class CoalesceStream : Stream
     {
-        private readonly List<byte[]> _blocks = new List<byte[]>();
+        private readonly List<byte[]> m_Blocks = new List<byte[]>();
 
-        private readonly long blockSize = 65536;
+        private readonly long m_BlockSize = 65536;
 
-        private long _lengthInternal;
+        private long m_LengthInternal;
 
         public CoalesceStream()
         {
@@ -32,9 +32,9 @@ namespace GDX.IO
         {
             SetLength(length);
             Position = length;
-            while (_blocks.Count <= BlockId)
+            while (m_Blocks.Count <= BlockId)
             {
-                _blocks.Add(new byte[blockSize]);
+                m_Blocks.Add(new byte[m_BlockSize]);
             }
             Position = 0;
         }
@@ -43,9 +43,9 @@ namespace GDX.IO
         {
             SetLength(length);
             Position = length;
-            while (_blocks.Count <= BlockId)
+            while (m_Blocks.Count <= BlockId)
             {
-                _blocks.Add(new byte[blockSize]);
+                m_Blocks.Add(new byte[m_BlockSize]);
             }
             Position = 0;
         }
@@ -53,25 +53,25 @@ namespace GDX.IO
         public override bool CanRead => true;
         public override bool CanSeek => true;
         public override bool CanWrite => true;
-        public override long Length => _lengthInternal;
+        public override long Length => m_LengthInternal;
         public sealed override long Position { get; set; }
 
         private byte[] Block
         {
             get
             {
-                while (_blocks.Count <= BlockId)
+                while (m_Blocks.Count <= BlockId)
                 {
-                    _blocks.Add(new byte[blockSize]);
+                    m_Blocks.Add(new byte[m_BlockSize]);
                 }
 
-                return _blocks[(int)BlockId];
+                return m_Blocks[(int)BlockId];
             }
         }
 
-        private long BlockId => Position / blockSize;
+        private long BlockId => Position / m_BlockSize;
 
-        private long BlockOffset => Position % blockSize;
+        private long BlockOffset => Position % m_BlockSize;
 
 
         public override void Flush()
@@ -88,7 +88,7 @@ namespace GDX.IO
                     "Number of bytes to copy cannot be negative.");
             }
 
-            long remaining = _lengthInternal - Position;
+            long remaining = m_LengthInternal - Position;
             if (readCount > remaining)
             {
                 readCount = remaining;
@@ -107,7 +107,7 @@ namespace GDX.IO
             int read = 0;
             do
             {
-                long copySize = Math.Min(readCount, blockSize - BlockOffset);
+                long copySize = Math.Min(readCount, m_BlockSize - BlockOffset);
                 Buffer.BlockCopy(Block, (int)BlockOffset, buffer, offset, (int)copySize);
                 readCount -= copySize;
                 offset += (int)copySize;
@@ -139,7 +139,7 @@ namespace GDX.IO
 
         public sealed override void SetLength(long value)
         {
-            _lengthInternal = value;
+            m_LengthInternal = value;
         }
 
         public sealed override void Write(byte[] buffer, int offset, int count)
@@ -149,7 +149,7 @@ namespace GDX.IO
             {
                 do
                 {
-                    int copySize = Math.Min(count, (int)(blockSize - BlockOffset));
+                    int copySize = Math.Min(count, (int)(m_BlockSize - BlockOffset));
 
                     EnsureCapacity(Position + copySize);
 
@@ -169,7 +169,7 @@ namespace GDX.IO
 
         public override int ReadByte()
         {
-            if (Position >= _lengthInternal)
+            if (Position >= m_LengthInternal)
             {
                 return -1;
             }
@@ -189,9 +189,9 @@ namespace GDX.IO
 
         private void EnsureCapacity(long intendedLength)
         {
-            if (intendedLength > _lengthInternal)
+            if (intendedLength > m_LengthInternal)
             {
-                _lengthInternal = intendedLength;
+                m_LengthInternal = intendedLength;
             }
         }
     }

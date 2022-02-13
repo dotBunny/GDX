@@ -8,34 +8,34 @@ namespace GDX.Editor
 {
     public class CodeGenerator
     {
-        private readonly System.Text.StringBuilder _builder = new System.Text.StringBuilder();
-        private int _indentLevel;
-        private const string IndentContent = "    ";
+        private readonly System.Text.StringBuilder m_Builder = new System.Text.StringBuilder();
+        private int m_IndentLevel;
+        private const string k_IndentContent = "    ";
 
         public CodeGenerator(string namespaceIdentifier, string generatedNotice = "Generated file. DO NOT EDIT.")
         {
-            _builder.AppendLine($"// {generatedNotice}");
-            _builder.AppendLine($"namespace {namespaceIdentifier}");
+            m_Builder.AppendLine($"// {generatedNotice}");
+            m_Builder.AppendLine($"namespace {namespaceIdentifier}");
             OpenBrace();
         }
 
         // ReSharper disable once UnusedMember.Global
         public void Append(string text)
         {
-            _builder.Append(text);
+            m_Builder.Append(text);
         }
 
         public void AppendLine(string line = "")
         {
             ApplyIndent();
-            _builder.AppendLine(line);
+            m_Builder.AppendLine(line);
         }
 
         public void ApplyIndent()
         {
-            for (int i = 0; i < _indentLevel; i++)
+            for (int i = 0; i < m_IndentLevel; i++)
             {
-                _builder.Append(IndentContent);
+                m_Builder.Append(k_IndentContent);
             }
         }
 
@@ -53,24 +53,24 @@ namespace GDX.Editor
 
         public void PushIndent()
         {
-            _indentLevel++;
+            m_IndentLevel++;
         }
 
         public void PopIndent()
         {
-            if (_indentLevel > 0)
+            if (m_IndentLevel > 0)
             {
-                _indentLevel--;
+                m_IndentLevel--;
             }
         }
 
         public override string ToString()
         {
-            while (_indentLevel > 0)
+            while (m_IndentLevel > 0)
             {
                 CloseBrace();
             }
-            return _builder.ToString();
+            return m_Builder.ToString();
         }
     }
 }

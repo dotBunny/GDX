@@ -40,7 +40,7 @@ namespace GDX.Collections.Generic
         /// <summary>
         ///     Cached squared version of <see cref="Stride" />.
         /// </summary>
-        private readonly int _strideSquared;
+        private readonly int m_StrideSquared;
 
         /// <summary>
         ///     Create a <see cref="NativeUniformArray3D{T}" /> with a uniform dimensional length.
@@ -52,7 +52,7 @@ namespace GDX.Collections.Generic
         public NativeUniformArray3D(int stride, Allocator allocator, NativeArrayOptions nativeArrayOptions)
         {
             Stride = stride;
-            _strideSquared = stride * stride;
+            m_StrideSquared = stride * stride;
             Length = stride * stride * stride;
 
             Array = new NativeArray<T>(Length, allocator, nativeArrayOptions);

@@ -12,13 +12,13 @@ namespace GDX.Editor
 {
     internal class TestMonitor : ICallbacks
     {
-        private string _cachedTempFolder;
+        private string m_CachedTempFolder;
 
         /// <inheritdoc />
         public void RunStarted(ITestAdaptor testsToRun)
         {
 
-            _cachedTempFolder = Automation.GetTempFolder();
+            m_CachedTempFolder = Automation.GetTempFolder();
             if (Application.isBatchMode)
             {
                 Automation.StashWindowLayout();
@@ -88,8 +88,8 @@ namespace GDX.Editor
             if (result.FailCount > 0)
             {
                 System.Console.WriteLine($"Test {result.Test.FullName} Failed.");
-                string testFolder = Path.Combine(_cachedTempFolder, $"TEST_{result.Test.FullName}");
-                string[] foundFiles = Directory.GetFiles(_cachedTempFolder, "*", SearchOption.TopDirectoryOnly);
+                string testFolder = Path.Combine(m_CachedTempFolder, $"TEST_{result.Test.FullName}");
+                string[] foundFiles = Directory.GetFiles(m_CachedTempFolder, "*", SearchOption.TopDirectoryOnly);
                 if (foundFiles.Length > 0)
                 {
                     Platform.EnsureFolderHierarchyExists(testFolder);
@@ -102,7 +102,7 @@ namespace GDX.Editor
             }
             else
             {
-                string[] foundFiles = Directory.GetFiles(_cachedTempFolder, "*", SearchOption.TopDirectoryOnly);
+                string[] foundFiles = Directory.GetFiles(m_CachedTempFolder, "*", SearchOption.TopDirectoryOnly);
                 foreach (string file in foundFiles)
                 {
                     File.Delete(file);

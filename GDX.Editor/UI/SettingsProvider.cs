@@ -27,20 +27,20 @@ namespace GDX.Editor.UI
         /// <summary>
         ///     A cache of boolean values backed by <see cref="EditorPrefs" /> to assist with optimizing layout.
         /// </summary>
-        private static StringKeyDictionary<bool> s_cachedEditorPreferences = new StringKeyDictionary<bool>(30);
+        private static StringKeyDictionary<bool> s_CachedEditorPreferences = new StringKeyDictionary<bool>(30);
 
         /// <summary>
         ///     A list of keywords to flag when searching project settings.
         /// </summary>
-        private static List<string> s_searchKeywords;
+        private static List<string> s_SearchKeywords;
 
         public static StringKeyDictionary<IConfigSection> ConfigSections = new StringKeyDictionary<IConfigSection>(6);
 
         public static GDXConfig WorkingConfig;
 
-        private static VisualElement _changesElement;
-        private static Button _clearButton;
-        private static Button _saveButton;
+        private static VisualElement s_ChangesElement;
+        private static Button s_ClearButton;
+        private static Button s_SaveButton;
 
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace GDX.Editor.UI
             WorkingConfig ??= new GDXConfig(Core.Config);
 
             // Initialize some things here instead of static initializers
-            s_searchKeywords ??= new List<string>(new[]
+            s_SearchKeywords ??= new List<string>(new[]
             {
                 "gdx", "automatic", "package", "update", "buildinfo", "task", "stream", "changelist",
                 "cli", "argument", "environment", "trace", "symbol", "locale", "localization", "culture",
@@ -114,19 +114,19 @@ namespace GDX.Editor.UI
                     // Early handle of theme
                     ResourcesProvider.CheckTheme(rootElement);
 
-                    _changesElement = rootElement.Q<VisualElement>("gdx-config-changes");
+                    s_ChangesElement = rootElement.Q<VisualElement>("gdx-config-changes");
 
                     // Handle state buttons
-                    _clearButton = _changesElement.Q<Button>("button-clear-changes");
-                    _clearButton.clicked += () =>
+                    s_ClearButton = s_ChangesElement.Q<Button>("button-clear-changes");
+                    s_ClearButton.clicked += () =>
                     {
                         WorkingConfig = new GDXConfig(Core.Config);
                         ConfigSectionsProvider.UpdateAll();
                         CheckForChanges();
                     };
 
-                    _saveButton = _changesElement.Q<Button>("button-save-changes");
-                    _saveButton.clicked += () =>
+                    s_SaveButton = s_ChangesElement.Q<Button>("button-save-changes");
+                    s_SaveButton.clicked += () =>
                     {
                         string codePath =
                             System.IO.Path.Combine(UnityEngine.Application.dataPath, "Generated", "GDXSettings.cs");
@@ -186,7 +186,7 @@ namespace GDX.Editor.UI
                         ConfigSectionsProvider.UpdateSectionContent(sectionID);
                     }
                 },
-                keywords = s_searchKeywords
+                keywords = s_SearchKeywords
             };
         }
 
@@ -217,12 +217,12 @@ namespace GDX.Editor.UI
         /// <returns></returns>
         public static bool GetCachedEditorBoolean(string id, bool defaultValue = true)
         {
-            if (s_cachedEditorPreferences.IndexOf(id) == -1)
+            if (s_CachedEditorPreferences.IndexOf(id) == -1)
             {
-                s_cachedEditorPreferences[id] = EditorPrefs.GetBool(id, defaultValue);
+                s_CachedEditorPreferences[id] = EditorPrefs.GetBool(id, defaultValue);
             }
 
-            return s_cachedEditorPreferences[id];
+            return s_CachedEditorPreferences[id];
         }
 
         /// <summary>
@@ -232,19 +232,19 @@ namespace GDX.Editor.UI
         /// <param name="setValue">The desired value to set.</param>
         public static void SetCachedEditorBoolean(string id, bool setValue)
         {
-            if (!s_cachedEditorPreferences.ContainsKey(id))
+            if (!s_CachedEditorPreferences.ContainsKey(id))
             {
-                s_cachedEditorPreferences[id] = setValue;
+                s_CachedEditorPreferences[id] = setValue;
                 EditorPrefs.SetBool(id, setValue);
             }
             else
             {
-                if (s_cachedEditorPreferences[id] == setValue)
+                if (s_CachedEditorPreferences[id] == setValue)
                 {
                     return;
                 }
 
-                s_cachedEditorPreferences[id] = setValue;
+                s_CachedEditorPreferences[id] = setValue;
                 EditorPrefs.SetBool(id, setValue);
             }
         }
@@ -253,11 +253,11 @@ namespace GDX.Editor.UI
         {
             if (!Core.Config.Compare(WorkingConfig))
             {
-                _changesElement.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                s_ChangesElement.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
             }
             else
             {
-                _changesElement.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                s_ChangesElement.AddToClassList(ConfigSectionsProvider.HiddenClass);
             }
         }
 

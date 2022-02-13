@@ -83,9 +83,9 @@ namespace GDX.Classic
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
         public static void SetDefaultCulture()
         {
-            if (Core.Config.localizationSetDefaultCulture && GetSystemLanguage() == GDX.Localization.Language.Default)
+            if (Core.Config.LocalizationSetDefaultCulture && GetSystemLanguage() == GDX.Localization.Language.Default)
             {
-                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(Core.Config.localizationDefaultCulture.GetIETF());
+                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(Core.Config.LocalizationDefaultCulture.GetIETF());
             }
         }
     }

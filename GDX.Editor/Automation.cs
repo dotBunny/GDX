@@ -21,7 +21,7 @@ namespace GDX.Editor
     /// </summary>
     public static class Automation
     {
-        private static readonly object[] s_emptyParametersArray = new object[] { };
+        private static readonly object[] s_EmptyParametersArray = new object[] { };
 
         private static string LayoutStashPath()
         {
@@ -314,7 +314,7 @@ namespace GDX.Editor
                 // a fail yet from testing.
                 if (repaintMethod != null)
                 {
-                    repaintMethod.Invoke(window, s_emptyParametersArray);
+                    repaintMethod.Invoke(window, s_EmptyParametersArray);
                 }
             }
             return window;

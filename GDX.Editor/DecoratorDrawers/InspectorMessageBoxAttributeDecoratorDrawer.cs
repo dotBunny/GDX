@@ -19,17 +19,17 @@ namespace GDX.Editor.DecoratorDrawers
         /// <summary>
         ///     Cached reference to the target <see cref="InspectorMessageBoxAttribute"/>.
         /// </summary>
-        private InspectorMessageBoxAttribute _target;
+        private InspectorMessageBoxAttribute m_Target;
 
         /// <summary>
         ///     Cached GUIContent of text, strictly used by height calculations.
         /// </summary>
-        private GUIContent _targetMessage;
+        private GUIContent m_TargetMessage;
 
         /// <summary>
         ///     A cached reference to the "helpbox" style.
         /// </summary>
-        private static readonly GUIStyle s_cachedHelpBoxStyle = new GUIStyle("helpbox");
+        private static readonly GUIStyle s_CachedHelpBoxStyle = new GUIStyle("helpbox");
 
         /// <summary>
         ///     Returns the inspector height needed for this decorator.
@@ -38,16 +38,16 @@ namespace GDX.Editor.DecoratorDrawers
         public override float GetHeight()
         {
             // ReSharper disable once ConvertIfStatementToNullCoalescingAssignment
-            if (_target == null)
+            if (m_Target == null)
             {
-                _target = (InspectorMessageBoxAttribute)attribute;
+                m_Target = (InspectorMessageBoxAttribute)attribute;
             }
             // ReSharper disable once ConvertIfStatementToNullCoalescingAssignment
-            if (_targetMessage == null)
+            if (m_TargetMessage == null)
             {
-                _targetMessage = new GUIContent(_target.Message);
+                m_TargetMessage = new GUIContent(m_Target.Message);
             }
-            return s_cachedHelpBoxStyle.CalcHeight(_targetMessage, EditorGUIUtility.currentViewWidth) + 4;
+            return s_CachedHelpBoxStyle.CalcHeight(m_TargetMessage, EditorGUIUtility.currentViewWidth) + 4;
         }
 
         /// <summary>
@@ -57,24 +57,24 @@ namespace GDX.Editor.DecoratorDrawers
         public override void OnGUI(Rect position)
         {
             // ReSharper disable once ConvertIfStatementToNullCoalescingAssignment
-            if (_target == null)
+            if (m_Target == null)
             {
-                _target = (InspectorMessageBoxAttribute)attribute;
+                m_Target = (InspectorMessageBoxAttribute)attribute;
             }
 
-            switch (_target.MessageType)
+            switch (m_Target.MessageType)
             {
                 case InspectorMessageBoxAttribute.MessageBoxType.Info:
-                    EditorGUI.HelpBox(position, _target.Message, MessageType.Info);
+                    EditorGUI.HelpBox(position, m_Target.Message, MessageType.Info);
                     break;
                 case InspectorMessageBoxAttribute.MessageBoxType.Warning:
-                    EditorGUI.HelpBox(position, _target.Message, MessageType.Warning);
+                    EditorGUI.HelpBox(position, m_Target.Message, MessageType.Warning);
                     break;
                 case InspectorMessageBoxAttribute.MessageBoxType.Error:
-                    EditorGUI.HelpBox(position, _target.Message, MessageType.Error);
+                    EditorGUI.HelpBox(position, m_Target.Message, MessageType.Error);
                     break;
                 default:
-                    EditorGUI.HelpBox(position, _target.Message, MessageType.None);
+                    EditorGUI.HelpBox(position, m_Target.Message, MessageType.None);
                     break;
             }
         }

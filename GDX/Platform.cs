@@ -28,7 +28,7 @@ namespace GDX
         /// </summary>
         public const string FilenameTimestampFormat = "yyyyMMdd_HHmmss";
 
-        private static string s_outputFolder;
+        private static string s_OutputFolder;
 
         public static char GetRandomSafeCharacter(IRandomProvider random)
         {
@@ -41,22 +41,22 @@ namespace GDX
         /// <returns>The full path to a writable folder at runtime.</returns>
         public static string GetOutputFolder()
         {
-            if (s_outputFolder == null)
+            if (s_OutputFolder == null)
             {
 #if UNITY_EDITOR
-                s_outputFolder = Path.Combine(UnityEngine.Application.dataPath, "..", "GDX");
+                s_OutputFolder = Path.Combine(UnityEngine.Application.dataPath, "..", "GDX");
 #elif UNITY_DOTSRUNTIME
-                s_outputFolder = Path.Combine(Directory.GetCurrentDirectory(), "GDX");
+                s_OutputFolder = Path.Combine(Directory.GetCurrentDirectory(), "GDX");
 #else
-                s_outputFolder = UnityEngine.Application.persistentDataPath;
+                s_OutputFolder = UnityEngine.Application.persistentDataPath;
 
                 // TODO: Add console safe folders for dev?
                 // Maybe throw exception on release builds?
 #endif
-                EnsureFolderHierarchyExists(s_outputFolder);
+                EnsureFolderHierarchyExists(s_OutputFolder);
             }
 
-            return s_outputFolder;
+            return s_OutputFolder;
 
 
         }

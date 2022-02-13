@@ -16,14 +16,14 @@ namespace Runtime
     /// </summary>
     public class StringExtensionsTests
     {
-        private byte[] _previousEncryptionDefaultKey;
-        private byte[] _previousEncryptionInitializationVector;
+        private byte[] m_PreviousEncryptionDefaultKey;
+        private byte[] m_PreviousEncryptionInitializationVector;
 
         [SetUp]
         public void Setup()
         {
-            _previousEncryptionDefaultKey = StringExtensions.EncryptionDefaultKey;
-            _previousEncryptionInitializationVector = StringExtensions.EncryptionInitializationVector;
+            m_PreviousEncryptionDefaultKey = StringExtensions.EncryptionDefaultKey;
+            m_PreviousEncryptionInitializationVector = StringExtensions.EncryptionInitializationVector;
 
             StringExtensions.EncryptionDefaultKey = Encoding.UTF8.GetBytes("Awesome!");
             StringExtensions.EncryptionInitializationVector = Encoding.UTF8.GetBytes("dotBunny");
@@ -32,8 +32,8 @@ namespace Runtime
         [TearDown]
         public void TearDown()
         {
-            StringExtensions.EncryptionDefaultKey = _previousEncryptionDefaultKey;
-            StringExtensions.EncryptionInitializationVector = _previousEncryptionInitializationVector;
+            StringExtensions.EncryptionDefaultKey = m_PreviousEncryptionDefaultKey;
+            StringExtensions.EncryptionInitializationVector = m_PreviousEncryptionInitializationVector;
         }
 
         [Test]
@@ -256,14 +256,14 @@ namespace Runtime
         [Category(Core.TestCategory)]
         public void Encrypt_Decrypt_IsEqual()
         {
-            const string SimpleString = "HelloWorld!";
-            const string ComplexString = "_tH\\is_I!is_M\"y_TEST_STR#$34343";
+            const string k_SimpleString = "HelloWorld!";
+            const string k_ComplexString = "_tH\\is_I!is_M\"y_TEST_STR#$34343";
 
-            string encryptedSimple = SimpleString.Encrypt();
-            string encryptedComplex = ComplexString.Encrypt();
+            string encryptedSimple = k_SimpleString.Encrypt();
+            string encryptedComplex = k_ComplexString.Encrypt();
 
-            bool evaluate = encryptedSimple.Decrypt() == SimpleString &&
-                            encryptedComplex.Decrypt() == ComplexString;
+            bool evaluate = encryptedSimple.Decrypt() == k_SimpleString &&
+                            encryptedComplex.Decrypt() == k_ComplexString;
 
             Assert.IsTrue(evaluate);
         }

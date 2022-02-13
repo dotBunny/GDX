@@ -29,7 +29,7 @@ namespace GDX.Editor.Build
             StringBuilder fileContent = new StringBuilder();
 
             fileContent.Append("namespace ");
-            fileContent.Append(Core.Config.developerBuildInfoNamespace);
+            fileContent.Append(Core.Config.DeveloperBuildInfoNamespace);
             fileContent.AppendLine();
 
             fileContent.AppendLine("{");
@@ -50,8 +50,8 @@ namespace GDX.Editor.Build
             fileContent.AppendLine("        /// </remarks>");
             fileContent.Append("        public const int BuildNumber = ");
             fileContent.Append(!forceDefaults &&
-                               CommandLineParser.Arguments.ContainsKey(Core.Config.developerBuildInfoBuildNumberArgument)
-                ? CommandLineParser.Arguments[Core.Config.developerBuildInfoBuildNumberArgument]
+                               CommandLineParser.Arguments.ContainsKey(Core.Config.DeveloperBuildInfoBuildNumberArgument)
+                ? CommandLineParser.Arguments[Core.Config.DeveloperBuildInfoBuildNumberArgument]
                 : "0");
             fileContent.AppendLine(";");
 
@@ -61,8 +61,8 @@ namespace GDX.Editor.Build
             fileContent.AppendLine("        /// </summary>");
             fileContent.Append("        public const int Changelist = ");
             fileContent.Append(!forceDefaults &&
-                               CommandLineParser.Arguments.ContainsKey(Core.Config.developerBuildInfoBuildChangelistArgument)
-                ? CommandLineParser.Arguments[Core.Config.developerBuildInfoBuildChangelistArgument]
+                               CommandLineParser.Arguments.ContainsKey(Core.Config.DeveloperBuildInfoBuildChangelistArgument)
+                ? CommandLineParser.Arguments[Core.Config.DeveloperBuildInfoBuildChangelistArgument]
                 : "0");
             fileContent.AppendLine(";");
 
@@ -73,8 +73,8 @@ namespace GDX.Editor.Build
             fileContent.AppendLine("        /// </summary>");
             fileContent.Append("        public const string BuildTask = \"");
             fileContent.Append(!forceDefaults &&
-                               CommandLineParser.Arguments.ContainsKey(Core.Config.developerBuildInfoBuildTaskArgument)
-                ? CommandLineParser.Arguments[Core.Config.developerBuildInfoBuildTaskArgument]
+                               CommandLineParser.Arguments.ContainsKey(Core.Config.DeveloperBuildInfoBuildTaskArgument)
+                ? CommandLineParser.Arguments[Core.Config.DeveloperBuildInfoBuildTaskArgument]
                 : "N/A");
             fileContent.AppendLine("\";");
 
@@ -84,8 +84,8 @@ namespace GDX.Editor.Build
             fileContent.AppendLine("        /// </summary>");
             fileContent.Append("        public const string Stream = \"");
             fileContent.Append(!forceDefaults &&
-                               CommandLineParser.Arguments.ContainsKey(Core.Config.developerBuildInfoBuildStreamArgument)
-                ? CommandLineParser.Arguments[Core.Config.developerBuildInfoBuildStreamArgument]
+                               CommandLineParser.Arguments.ContainsKey(Core.Config.DeveloperBuildInfoBuildStreamArgument)
+                ? CommandLineParser.Arguments[Core.Config.DeveloperBuildInfoBuildStreamArgument]
                 : "N/A");
             fileContent.AppendLine("\";");
 
@@ -96,8 +96,8 @@ namespace GDX.Editor.Build
             fileContent.Append("        public const string Description = \"");
             fileContent.Append(!forceDefaults &&
                                CommandLineParser.Arguments.ContainsKey(
-                                   Core.Config.developerBuildInfoBuildDescriptionArgument)
-                ? CommandLineParser.Arguments[Core.Config.developerBuildInfoBuildDescriptionArgument]
+                                   Core.Config.DeveloperBuildInfoBuildDescriptionArgument)
+                ? CommandLineParser.Arguments[Core.Config.DeveloperBuildInfoBuildDescriptionArgument]
                 : "N/A");
             fileContent.AppendLine("\";");
 
@@ -136,7 +136,7 @@ namespace GDX.Editor.Build
 
             try
             {
-                string path = Path.Combine(Application.dataPath, Core.Config.developerBuildInfoPath);
+                string path = Path.Combine(Application.dataPath, Core.Config.DeveloperBuildInfoPath);
                 Platform.EnsureFileFolderHierarchyExists(path);
                 File.WriteAllText(path, GetContent(true));
 
@@ -153,15 +153,15 @@ namespace GDX.Editor.Build
         /// </summary>
         public static void CheckForAssemblyDefinition()
         {
-            if (Core.Config.developerBuildInfoAssemblyDefinition)
+            if (Core.Config.DeveloperBuildInfoAssemblyDefinition)
             {
                 return;
             }
 
             string assemblyDefinition = Path.Combine(
-                Path.GetDirectoryName(Path.Combine(Application.dataPath, Core.Config.developerBuildInfoPath)) ??
+                Path.GetDirectoryName(Path.Combine(Application.dataPath, Core.Config.DeveloperBuildInfoPath)) ??
                 string.Empty,
-                Core.Config.developerBuildInfoNamespace + ".asmdef");
+                Core.Config.DeveloperBuildInfoNamespace + ".asmdef");
 
             if (File.Exists(assemblyDefinition))
             {
@@ -171,10 +171,10 @@ namespace GDX.Editor.Build
             StringBuilder fileBuilder = new StringBuilder();
             fileBuilder.AppendLine("{");
             fileBuilder.Append("\t\"name\": \"");
-            fileBuilder.Append(Core.Config.developerBuildInfoNamespace);
+            fileBuilder.Append(Core.Config.DeveloperBuildInfoNamespace);
             fileBuilder.AppendLine("\",");
             fileBuilder.Append("\t\"rootNamespace\": \"");
-            fileBuilder.Append(Core.Config.developerBuildInfoNamespace);
+            fileBuilder.Append(Core.Config.DeveloperBuildInfoNamespace);
             fileBuilder.AppendLine("\",");
             fileBuilder.AppendLine("\t\"references\": [],");
             fileBuilder.AppendLine("\t\"includePlatforms\": [],");
@@ -190,9 +190,9 @@ namespace GDX.Editor.Build
 
             File.WriteAllText(assemblyDefinition, fileBuilder.ToString());
             AssetDatabase.ImportAsset("Assets/" +
-                                      Path.GetDirectoryName(Core.Config.developerBuildInfoPath) + "/" +
+                                      Path.GetDirectoryName(Core.Config.DeveloperBuildInfoPath) + "/" +
                                       // ReSharper disable once StringLiteralTypo
-                                      Core.Config.developerBuildInfoNamespace + ".asmdef");
+                                      Core.Config.DeveloperBuildInfoNamespace + ".asmdef");
         }
     }
 }

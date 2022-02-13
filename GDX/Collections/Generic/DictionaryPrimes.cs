@@ -5,8 +5,8 @@ namespace GDX.Collections.Generic
 
     public static class DictionaryPrimes
     {
-        private static int[] s_primes;
-        private static int s_primesLength;
+        private static int[] s_Primes;
+        private static int s_PrimesLength;
 
         public static void SetDefaultPrimes()
         {
@@ -21,15 +21,15 @@ namespace GDX.Collections.Generic
 
         public static void SetPrimes(int[] primes)
         {
-            s_primes = primes;
-            s_primesLength = primes.Length;
+            s_Primes = primes;
+            s_PrimesLength = primes.Length;
         }
 
         public static int GetPrime(int min)
         {
-            for (int i = 0; i < s_primesLength; i++)
+            for (int i = 0; i < s_PrimesLength; i++)
             {
-                int prime = s_primes[i];
+                int prime = s_Primes[i];
                 if (prime >= min) return prime;
             }
             return int.MaxValue;
@@ -37,12 +37,12 @@ namespace GDX.Collections.Generic
 
         public static int GetPrimeAtIndex(int index)
         {
-            return s_primes[index];
+            return s_Primes[index];
         }
 
         public static int GetPrimesLength()
         {
-            return s_primesLength;
+            return s_PrimesLength;
         }
 
 
@@ -55,16 +55,16 @@ namespace GDX.Collections.Generic
         {
             uint newSize = 2U * unchecked((uint)oldSize);
 
-            const int MaxPrime = int.MaxValue;
-            newSize = (newSize > MaxPrime) ? MaxPrime : newSize;
+            const int k_MaxPrime = int.MaxValue;
+            newSize = (newSize > k_MaxPrime) ? k_MaxPrime : newSize;
 
-            for (int i = 0; i < s_primesLength; i++)
+            for (int i = 0; i < s_PrimesLength; i++)
             {
-                int prime = s_primes[i];
+                int prime = s_Primes[i];
                 if (prime >= newSize) return prime;
             }
 
-            return MaxPrime;
+            return k_MaxPrime;
         }
     }
 }

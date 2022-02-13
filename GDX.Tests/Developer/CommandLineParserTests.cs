@@ -16,29 +16,29 @@ namespace Runtime.Developer
     /// </summary>
     public class CommandLineParserTests
     {
-        private string[] _mockData;
+        private string[] m_MockData;
 
         [SetUp]
         public void Setup()
         {
-            _mockData = new[]
+            m_MockData = new[]
             {
-                $"{Core.Config.developerCommandLineParserArgumentPrefix}KEY{Core.Config.developerCommandLineParserArgumentSplit}Value",
-                "job", $"{Core.Config.developerCommandLineParserArgumentPrefix}SOMETHING"
+                $"{Core.Config.DeveloperCommandLineParserArgumentPrefix}KEY{Core.Config.DeveloperCommandLineParserArgumentSplit}Value",
+                "job", $"{Core.Config.DeveloperCommandLineParserArgumentPrefix}SOMETHING"
             };
         }
 
         [TearDown]
         public void TearDown()
         {
-            _mockData = null;
+            m_MockData = null;
         }
 
         [Test]
         [Category(Core.TestCategory)]
         public void ProcessArguments_MockData_ContainsFlag()
         {
-            CommandLineParser.ProcessArguments(_mockData);
+            CommandLineParser.ProcessArguments(m_MockData);
 
             bool evaluate = CommandLineParser.Flags.Contains("SOMETHING");
 
@@ -49,7 +49,7 @@ namespace Runtime.Developer
         [Category(Core.TestCategory)]
         public void ProcessArguments_MockData_HasValue()
         {
-            CommandLineParser.ProcessArguments(_mockData);
+            CommandLineParser.ProcessArguments(m_MockData);
 
             bool evaluate = CommandLineParser.Arguments.ContainsKey("KEY") &&
                             CommandLineParser.Arguments["KEY"] == "Value";

@@ -31,47 +31,47 @@ namespace GDX.Editor.PropertyDrawers
         ///     Cached ID of the <see cref="EditorGUI.PropertyField(UnityEngine.Rect,UnityEditor.SerializedProperty)" />, used to
         ///     determine if it has focus across updates.
         /// </summary>
-        private string _addKeyFieldID;
+        private string m_AddKeyFieldID;
 
         /// <summary>
         ///     A cached version of the display name to use for the <see cref="PropertyDrawer" />.
         /// </summary>
-        private string _displayName = "Serializable Dictionary";
+        private string m_DisplayName = "Serializable Dictionary";
 
         /// <summary>
         ///     The cached calculated height of the entire content portion of the <see cref="PropertyDrawer" />.
         /// </summary>
-        private float _heightContent;
+        private float m_HeightContent;
 
         /// <summary>
         ///     The cached calculated height of the elements in the content portion of the <see cref="PropertyDrawer" />.
         /// </summary>
-        private float _heightContentElements;
+        private float m_HeightContentElements;
 
         /// <summary>
         ///     The cached calculated height of the footer for the content portion of the <see cref="PropertyDrawer" />.
         /// </summary>
-        private float _heightContentFooter;
+        private float m_HeightContentFooter;
 
         /// <summary>
         ///     The cached calculated height of the header for the content portion of the <see cref="PropertyDrawer" />.
         /// </summary>
-        private float _heightContentHeader;
+        private float m_HeightContentHeader;
 
         /// <summary>
         ///     The cached calculated height of the foldout portion of the <see cref="PropertyDrawer" />.
         /// </summary>
-        private float _heightFoldout;
+        private float m_HeightFoldout;
 
         /// <summary>
         ///     The cached calculated height of the footer portion of the <see cref="PropertyDrawer" />.
         /// </summary>
-        private float _heightFooter;
+        private float m_HeightFooter;
 
         /// <summary>
         ///     The cached calculated total height of the <see cref="PropertyDrawer" />.
         /// </summary>
-        private float _heightTotal;
+        private float m_HeightTotal;
 
         /// <summary>
         ///     Does the key and value array counts match, and do they match the serialized length?
@@ -79,29 +79,29 @@ namespace GDX.Editor.PropertyDrawers
         /// <remarks>
         ///     Used as a bit of a checksum for the serialized data.
         /// </remarks>
-        private bool _isKeyValueCountValid = true;
+        private bool m_IsKeyValueCountValid = true;
 
-        private SerializedProperty _propertyAddKey;
-        private SerializedProperty _propertyAddKeyValid;
-        private bool _propertyAddKeyValidCache;
-        private SerializedProperty _propertyCount;
-        private int _propertyCountCache = -1;
-        private SerializedProperty _propertyExpanded;
-        private bool _propertyExpandedCache;
-        private SerializedProperty _propertyIsSerializable;
-        private bool _propertyIsSerializableCache;
-        private SerializedProperty _propertyKeys;
-        private SerializedProperty _propertyValues;
+        private SerializedProperty m_PropertyAddKey;
+        private SerializedProperty m_PropertyAddKeyValid;
+        private bool m_PropertyAddKeyValidCache;
+        private SerializedProperty m_PropertyCount;
+        private int m_PropertyCountCache = -1;
+        private SerializedProperty m_PropertyExpanded;
+        private bool m_PropertyExpandedCache;
+        private SerializedProperty m_PropertyIsSerializable;
+        private bool m_PropertyIsSerializableCache;
+        private SerializedProperty m_PropertyKeys;
+        private SerializedProperty m_PropertyValues;
 
         /// <summary>
         ///     The index of in the data arrays to be considered selected.
         /// </summary>
-        private int _selectedIndex = -1;
+        private int m_SelectedIndex = -1;
 
         /// <summary>
         ///     The target object of the <see cref="PropertyDrawer" />.
         /// </summary>
-        private Object _targetObject;
+        private Object m_TargetObject;
 
         /// <summary>
         ///     Provide an adjusted height for the entire element to be rendered.
@@ -113,34 +113,34 @@ namespace GDX.Editor.PropertyDrawers
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             // In the case that we just have the foldout showing, we want the property drawer to just be a single line
-            _heightFoldout = EditorGUIUtility.singleLineHeight;
+            m_HeightFoldout = EditorGUIUtility.singleLineHeight;
 
             // Early out if the property drawer is not expanded, or we dont have any data
-            if (!_propertyExpandedCache || !_propertyIsSerializableCache)
+            if (!m_PropertyExpandedCache || !m_PropertyIsSerializableCache)
             {
-                _heightTotal = _heightFoldout;
-                return _heightTotal;
+                m_HeightTotal = m_HeightFoldout;
+                return m_HeightTotal;
             }
 
             // Determine the height of the elements portion of the content area
-            _heightContentHeader = 4;
-            _heightContentElements = (EditorGUIUtility.singleLineHeight + Styles.ContentAreaElementSpacing) *
+            m_HeightContentHeader = 4;
+            m_HeightContentElements = (EditorGUIUtility.singleLineHeight + Styles.ContentAreaElementSpacing) *
                 Mathf.Max(
-                    1, _propertyCountCache) - Styles.ContentAreaElementSpacing;
-            _heightContentFooter = 4;
-            _heightContent = _heightContentHeader +
-                             _heightContentElements +
-                             _heightContentFooter;
+                    1, m_PropertyCountCache) - Styles.ContentAreaElementSpacing;
+            m_HeightContentFooter = 4;
+            m_HeightContent = m_HeightContentHeader +
+                             m_HeightContentElements +
+                             m_HeightContentFooter;
 
             // Figure out our footer total height
-            _heightFooter = Styles.ActionButtonVerticalPadding +
+            m_HeightFooter = Styles.ActionButtonVerticalPadding +
                             EditorGUIUtility.singleLineHeight +
                             Styles.ActionButtonVerticalPadding;
 
             // Add up our total
-            _heightTotal = _heightFoldout + Styles.ContentAreaTopMargin + _heightContent + _heightFooter;
+            m_HeightTotal = m_HeightFoldout + Styles.ContentAreaTopMargin + m_HeightContent + m_HeightFooter;
 
-            return _heightTotal;
+            return m_HeightTotal;
         }
 
         /// <summary>
@@ -152,39 +152,39 @@ namespace GDX.Editor.PropertyDrawers
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             // Safe to cache!
-            _displayName = property.displayName;
-            _addKeyFieldID = Content.AddKeyFieldIDPrefix + _displayName.GetStableHashCode();
-            _targetObject = property.serializedObject.targetObject;
+            m_DisplayName = property.displayName;
+            m_AddKeyFieldID = Content.AddKeyFieldIDPrefix + m_DisplayName.GetStableHashCode();
+            m_TargetObject = property.serializedObject.targetObject;
 
             // Build our top level position
-            Rect foldoutRect = new Rect(position.x, position.y, position.width, _heightFoldout);
+            Rect foldoutRect = new Rect(position.x, position.y, position.width, m_HeightFoldout);
 
             // Editor only properties
-            _propertyIsSerializable = property.FindPropertyRelative("isSerializable");
-            _propertyIsSerializableCache = _propertyIsSerializable.boolValue;
-            if (!_propertyIsSerializableCache)
+            m_PropertyIsSerializable = property.FindPropertyRelative("isSerializable");
+            m_PropertyIsSerializableCache = m_PropertyIsSerializable.boolValue;
+            if (!m_PropertyIsSerializableCache)
             {
                 DrawErrorMessage(foldoutRect, Content.InvalidTypesError);
                 return;
             }
 
-            _propertyExpanded = property.FindPropertyRelative("drawerExpanded");
-            _propertyExpandedCache = _propertyExpanded.boolValue;
-            _propertyAddKey = property.FindPropertyRelative("serializedAddKey");
-            _propertyAddKeyValid = property.FindPropertyRelative("serializedAddKeyValid");
-            _propertyAddKeyValidCache = _propertyAddKeyValid.boolValue;
+            m_PropertyExpanded = property.FindPropertyRelative("drawerExpanded");
+            m_PropertyExpandedCache = m_PropertyExpanded.boolValue;
+            m_PropertyAddKey = property.FindPropertyRelative("serializedAddKey");
+            m_PropertyAddKeyValid = property.FindPropertyRelative("serializedAddKeyValid");
+            m_PropertyAddKeyValidCache = m_PropertyAddKeyValid.boolValue;
 
             // Grab the properties that matter!
-            _propertyCount = property.FindPropertyRelative("serializedLength");
-            _propertyCountCache = _propertyCount.intValue;
-            _propertyKeys = property.FindPropertyRelative("serializedKeys");
-            _propertyValues = property.FindPropertyRelative("serializedValues");
+            m_PropertyCount = property.FindPropertyRelative("serializedLength");
+            m_PropertyCountCache = m_PropertyCount.intValue;
+            m_PropertyKeys = property.FindPropertyRelative("serializedKeys");
+            m_PropertyValues = property.FindPropertyRelative("serializedValues");
 
             // Validate saved sizes
-            _isKeyValueCountValid = _propertyCountCache == _propertyValues.arraySize &&
-                                    _propertyCountCache == _propertyKeys.arraySize;
+            m_IsKeyValueCountValid = m_PropertyCountCache == m_PropertyValues.arraySize &&
+                                    m_PropertyCountCache == m_PropertyKeys.arraySize;
 
-            if (!_isKeyValueCountValid)
+            if (!m_IsKeyValueCountValid)
             {
                 DrawErrorMessage(foldoutRect, Content.CorruptDataError, true);
                 return;
@@ -194,12 +194,12 @@ namespace GDX.Editor.PropertyDrawers
             DrawFoldout(foldoutRect);
 
             // If the foldout is expanded, draw the actual content
-            if (_propertyExpandedCache)
+            if (m_PropertyExpandedCache)
             {
                 Rect contentRect = new Rect(position.x, foldoutRect.yMax + Styles.ContentAreaTopMargin, position.width,
-                    _heightContent);
+                    m_HeightContent);
                 DrawContentArea(contentRect);
-                Rect footerRect = new Rect(position.x, contentRect.yMax, position.width, _heightFooter);
+                Rect footerRect = new Rect(position.x, contentRect.yMax, position.width, m_HeightFooter);
                 DrawFooterActions(footerRect);
             }
 
@@ -219,13 +219,13 @@ namespace GDX.Editor.PropertyDrawers
         private void ClearAddKeyReference()
         {
             // If we already default, dont bother.
-            if (!HasValue(_propertyAddKey))
+            if (!HasValue(m_PropertyAddKey))
             {
                 return;
             }
 
-            DefaultValue(_propertyAddKey);
-            _propertyAddKey.serializedObject.ApplyModifiedPropertiesWithoutUndo();
+            DefaultValue(m_PropertyAddKey);
+            m_PropertyAddKey.serializedObject.ApplyModifiedPropertiesWithoutUndo();
         }
 
         /// <summary>
@@ -237,13 +237,13 @@ namespace GDX.Editor.PropertyDrawers
             // Paint the background
             if (Event.current.type == EventType.Repaint)
             {
-                Rect headerBackgroundRect = new Rect(position.x, position.y, position.width, _heightContentHeader);
+                Rect headerBackgroundRect = new Rect(position.x, position.y, position.width, m_HeightContentHeader);
 
                 // The extra 2 pixels are used to get rid of the rounded corners on the content box
                 Rect contentBackgroundRect = new Rect(position.x, headerBackgroundRect.yMax, position.width,
-                    _heightContentElements + 2);
+                    m_HeightContentElements + 2);
                 Rect footerBackgroundRect = new Rect(position.x, contentBackgroundRect.yMax - 2, position.width,
-                    _heightContentFooter);
+                    m_HeightContentFooter);
 
                 Styles.BoxBackground.Draw(contentBackgroundRect, false, false, false, false);
 
@@ -252,13 +252,13 @@ namespace GDX.Editor.PropertyDrawers
             }
 
             // Bring in the provided rect
-            position.yMin += _heightContentHeader;
-            position.yMax -= _heightContentFooter;
+            position.yMin += m_HeightContentHeader;
+            position.yMax -= m_HeightContentFooter;
             position.xMin += Styles.ContentAreaHorizontalPadding;
             position.xMax -= Styles.ContentAreaHorizontalPadding;
 
             // If we have nothing simply display the message
-            if (_propertyCountCache == 0)
+            if (m_PropertyCountCache == 0)
             {
                 EditorGUI.LabelField(position, Content.EmptyDictionary, EditorStyles.label);
                 return;
@@ -268,7 +268,7 @@ namespace GDX.Editor.PropertyDrawers
             float columnWidth = (position.width - 34) / 2f;
 
 
-            for (int i = 0; i < _propertyCountCache; i++)
+            for (int i = 0; i < m_PropertyCountCache; i++)
             {
                 float topOffset = (EditorGUIUtility.singleLineHeight + Styles.ContentAreaElementSpacing) * i;
 
@@ -283,13 +283,13 @@ namespace GDX.Editor.PropertyDrawers
                     Event.current.button == 0 &&
                     selectionRect.Contains(Event.current.mousePosition))
                 {
-                    _selectedIndex = i;
+                    m_SelectedIndex = i;
 
                     // Attempt to force a redraw of the inspector
-                    EditorUtility.SetDirty(_targetObject);
+                    EditorUtility.SetDirty(m_TargetObject);
                 }
 
-                if (i == _selectedIndex)
+                if (i == m_SelectedIndex)
                 {
                     if (Event.current.type == EventType.Repaint)
                     {
@@ -310,7 +310,7 @@ namespace GDX.Editor.PropertyDrawers
                 // Draw Key Property
                 Rect keyPropertyRect = new Rect(keyIconRect.xMax, position.y + topOffset, columnWidth,
                     EditorGUIUtility.singleLineHeight);
-                EditorGUI.PropertyField(keyPropertyRect, _propertyKeys.GetArrayElementAtIndex(i), GUIContent.none);
+                EditorGUI.PropertyField(keyPropertyRect, m_PropertyKeys.GetArrayElementAtIndex(i), GUIContent.none);
 
                 // Draw Value Icon
                 Rect valueIconRect = new Rect(keyPropertyRect.xMax + 3, position.y + topOffset - 1, 17,
@@ -320,7 +320,7 @@ namespace GDX.Editor.PropertyDrawers
                 // Draw Value Property
                 Rect valuePropertyRect = new Rect(valueIconRect.xMax, position.y + topOffset, columnWidth - 1,
                     EditorGUIUtility.singleLineHeight);
-                EditorGUI.PropertyField(valuePropertyRect, _propertyValues.GetArrayElementAtIndex(i), GUIContent.none);
+                EditorGUI.PropertyField(valuePropertyRect, m_PropertyValues.GetArrayElementAtIndex(i), GUIContent.none);
             }
         }
 
@@ -352,11 +352,11 @@ namespace GDX.Editor.PropertyDrawers
             }
 
             // Hitting enter while the add key field is selected
-            if (_propertyAddKeyValidCache &&
+            if (m_PropertyAddKeyValidCache &&
                 Event.current.type == EventType.KeyDown &&
                 (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter ||
                  Event.current.character == '\n') &&
-                GUI.GetNameOfFocusedControl() == _addKeyFieldID)
+                GUI.GetNameOfFocusedControl() == m_AddKeyFieldID)
             {
                 Event.current.Use();
                 GUIUtility.hotControl = 0;
@@ -364,10 +364,10 @@ namespace GDX.Editor.PropertyDrawers
             }
 
             // Draw the input before the button so it overlaps it
-            GUI.SetNextControlName(_addKeyFieldID);
-            EditorGUI.PropertyField(inputRect, _propertyAddKey, GUIContent.none);
+            GUI.SetNextControlName(m_AddKeyFieldID);
+            EditorGUI.PropertyField(inputRect, m_PropertyAddKey, GUIContent.none);
 
-            GUI.enabled = _propertyAddKeyValidCache;
+            GUI.enabled = m_PropertyAddKeyValidCache;
             if (GUI.Button(addRect, Content.IconPlus, Styles.FooterButton))
             {
                 // Remove control focus
@@ -379,7 +379,7 @@ namespace GDX.Editor.PropertyDrawers
             GUI.enabled = true;
 
             // Only visible when we have something selected (with a failsafe on item count)
-            if (_propertyCountCache == 0 || _selectedIndex == -1)
+            if (m_PropertyCountCache == 0 || m_SelectedIndex == -1)
             {
                 return;
             }
@@ -404,22 +404,22 @@ namespace GDX.Editor.PropertyDrawers
             {
                 // Remove control focus
                 GUIUtility.hotControl = 0;
-                RemoveElementAt(_selectedIndex);
+                RemoveElementAt(m_SelectedIndex);
 
                 // Keep next item selected.
-                _selectedIndex--;
-                if (_selectedIndex >= 0)
+                m_SelectedIndex--;
+                if (m_SelectedIndex >= 0)
                 {
                     return;
                 }
 
-                if (_propertyCountCache > 1)
+                if (m_PropertyCountCache > 1)
                 {
-                    _selectedIndex = 0;
+                    m_SelectedIndex = 0;
                 }
                 else
                 {
-                    _selectedIndex = -1;
+                    m_SelectedIndex = -1;
                 }
             }
         }
@@ -433,12 +433,12 @@ namespace GDX.Editor.PropertyDrawers
             // Generate a foldout GUI element representing the name of the dictionary
             bool newExpanded =
                 EditorGUI.Foldout(position,
-                    _propertyExpanded.boolValue, _displayName, true, EditorStyles.foldout);
-            if (newExpanded != _propertyExpandedCache)
+                    m_PropertyExpanded.boolValue, m_DisplayName, true, EditorStyles.foldout);
+            if (newExpanded != m_PropertyExpandedCache)
             {
                 // TODO: Is there some editor cache for whats unfolded? This would prevent over serialization / extra data
-                _propertyExpanded.boolValue = newExpanded;
-                _propertyExpandedCache = newExpanded;
+                m_PropertyExpanded.boolValue = newExpanded;
+                m_PropertyExpandedCache = newExpanded;
 
                 // If we're collapsing the foldout, make sure there is no key cached
                 if (!newExpanded)
@@ -449,9 +449,9 @@ namespace GDX.Editor.PropertyDrawers
 
             // Indicate Count - but ready only
             GUI.enabled = false;
-            const int itemCountSize = 48;
-            EditorGUI.TextField(new Rect(position.x + position.width - itemCountSize,
-                position.y, itemCountSize, position.height), _propertyCountCache.ToString());
+            const int k_ItemCountSize = 48;
+            EditorGUI.TextField(new Rect(position.x + position.width - k_ItemCountSize,
+                position.y, k_ItemCountSize, position.height), m_PropertyCountCache.ToString());
             GUI.enabled = true;
         }
 
@@ -468,7 +468,7 @@ namespace GDX.Editor.PropertyDrawers
             Content.IconError.tooltip = tooltip;
             EditorGUI.LabelField(iconRect, Content.IconError);
             Rect messageRect = new Rect(position.x, position.y, position.width - 17, position.height);
-            EditorGUI.LabelField(messageRect, new GUIContent(_displayName, tooltip), EditorStyles.label);
+            EditorGUI.LabelField(messageRect, new GUIContent(m_DisplayName, tooltip), EditorStyles.label);
 
             if (!displayResetButton)
             {
@@ -496,27 +496,27 @@ namespace GDX.Editor.PropertyDrawers
         /// </param>
         private void AddElement(bool defaultValue = true)
         {
-            if (_propertyCountCache == -1 || _propertyKeys == null || _propertyValues == null)
+            if (m_PropertyCountCache == -1 || m_PropertyKeys == null || m_PropertyValues == null)
             {
                 return;
             }
 
             // Add new key element, and fill with predetermined good key
-            _propertyKeys.arraySize++;
-            SerializedProperty addedKey = _propertyKeys.GetArrayElementAtIndex(_propertyCountCache);
-            ShallowCopy(addedKey, _propertyAddKey);
+            m_PropertyKeys.arraySize++;
+            SerializedProperty addedKey = m_PropertyKeys.GetArrayElementAtIndex(m_PropertyCountCache);
+            ShallowCopy(addedKey, m_PropertyAddKey);
 
             // Add new value element, and optionally default its value
-            _propertyValues.arraySize++;
+            m_PropertyValues.arraySize++;
             if (defaultValue)
             {
-                SerializedProperty addedValue = _propertyValues.GetArrayElementAtIndex(_propertyCountCache);
+                SerializedProperty addedValue = m_PropertyValues.GetArrayElementAtIndex(m_PropertyCountCache);
                 DefaultValue(addedValue);
             }
 
             // Increase Size
-            _propertyCountCache++;
-            _propertyCount.intValue = _propertyCountCache;
+            m_PropertyCountCache++;
+            m_PropertyCount.intValue = m_PropertyCountCache;
 
             ClearAddKeyReference();
         }
@@ -581,20 +581,20 @@ namespace GDX.Editor.PropertyDrawers
         {
             if (index == -1)
             {
-                _selectedIndex = -1;
+                m_SelectedIndex = -1;
             }
-            else if (_propertyKeys != null && _propertyValues != null)
+            else if (m_PropertyKeys != null && m_PropertyValues != null)
             {
-                _propertyKeys.DeleteArrayElementAtIndex(index);
-                _propertyValues.DeleteArrayElementAtIndex(index);
+                m_PropertyKeys.DeleteArrayElementAtIndex(index);
+                m_PropertyValues.DeleteArrayElementAtIndex(index);
 
-                _propertyCountCache--;
-                if (_propertyCountCache < 0)
+                m_PropertyCountCache--;
+                if (m_PropertyCountCache < 0)
                 {
-                    _propertyCountCache = 0;
+                    m_PropertyCountCache = 0;
                 }
 
-                _propertyCount.intValue = _propertyCountCache;
+                m_PropertyCount.intValue = m_PropertyCountCache;
             }
         }
 
@@ -603,11 +603,11 @@ namespace GDX.Editor.PropertyDrawers
         /// </summary>
         private void ResetSerializedData()
         {
-            _propertyKeys.ClearArray();
-            _propertyValues.ClearArray();
-            _propertyCount.intValue = 0;
-            _propertyCountCache = 0;
-            _selectedIndex = -1;
+            m_PropertyKeys.ClearArray();
+            m_PropertyValues.ClearArray();
+            m_PropertyCount.intValue = 0;
+            m_PropertyCountCache = 0;
+            m_SelectedIndex = -1;
         }
 
         /// <summary>

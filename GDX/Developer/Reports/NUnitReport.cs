@@ -13,10 +13,10 @@ namespace GDX.Developer.Reports
     // ReSharper disable once UnusedType.Global
     public class NUnitReport
     {
-        private const string FailedString = "Failed";
-        private const string PassedString = "Passed";
+        private const string k_FailedString = "Failed";
+        private const string k_PassedString = "Passed";
 
-        private readonly TestRun _results = new TestRun();
+        private readonly TestRun m_Results = new TestRun();
 
         public TestCase AddDurationResult(string name, int seconds, bool passed = true, TestSuite testSuite = null)
         {
@@ -24,7 +24,7 @@ namespace GDX.Developer.Reports
             {
                 Name = name,
                 Duration = seconds.ToString(),
-                Result = passed ? PassedString : FailedString
+                Result = passed ? k_PassedString : k_FailedString
             };
             if (testSuite != null)
             {
@@ -32,7 +32,7 @@ namespace GDX.Developer.Reports
             }
             else
             {
-                _results.TestSuite.TestCases.Add(testCase);
+                m_Results.TestSuite.TestCases.Add(testCase);
             }
             return testCase;
         }
@@ -40,9 +40,9 @@ namespace GDX.Developer.Reports
         /// <inheritdoc />
         public override string ToString()
         {
-            XmlSerializer reportSerializer = new XmlSerializer(_results.GetType());
+            XmlSerializer reportSerializer = new XmlSerializer(m_Results.GetType());
             using StringWriter textWriter = new StringWriter();
-            reportSerializer.Serialize(textWriter, _results);
+            reportSerializer.Serialize(textWriter, m_Results);
             return textWriter.ToString();
         }
     }

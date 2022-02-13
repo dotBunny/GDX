@@ -24,7 +24,7 @@ namespace GDX.Editor.ProjectSettings
     // ReSharper disable once UnusedType.Global
     internal class VisualScriptingSettings : IConfigSection
     {
-        private VisualElement _element;
+        private VisualElement m_Element;
 
         /// <summary>
         ///     Internal section identifier.
@@ -34,47 +34,47 @@ namespace GDX.Editor.ProjectSettings
         /// <summary>
         ///     Information regarding the assembly
         /// </summary>
-        private static AssemblyProvider s_assembly;
+        private static AssemblyProvider s_Assembly;
 
-        private static readonly GUIContent s_categoryCollectionsContent = new GUIContent(
+        private static readonly GUIContent s_CategoryCollectionsContent = new GUIContent(
             "An extensive group of collection based classes and structs designed with performance-sensitive environments in mind.");
-        private static readonly GUIContent s_categoryExtensionsContent = new GUIContent(
+        private static readonly GUIContent s_CategoryExtensionsContent = new GUIContent(
             "A gathering of aggressively inlined functionality that expands on many of the built-in Unity types.");
-        private static readonly GUIContent s_categoryTypesContent = new GUIContent(
+        private static readonly GUIContent s_CategoryTypesContent = new GUIContent(
             "Additional types proven useful in specific situations.");
-        private static readonly GUIContent s_categoryUtilitiesContent = new GUIContent(
+        private static readonly GUIContent s_CategoryUtilitiesContent = new GUIContent(
             "Function libraries useful throughout different areas of a games development.");
 
         /// <summary>
         ///     Content regarding this not being all of the content that can be added to visual scripting.
         /// </summary>
-        private static readonly GUIContent s_visualScriptingGenerationAdditionalContent = new GUIContent(
+        private static readonly GUIContent s_VisualScriptingGenerationAdditionalContent = new GUIContent(
             "These categories represents a curated selection of predefined content from the GDX API which has proven useful; it is not meant to represent everything available for inclusion to Visual Scripting.");
 
         /// <summary>
         ///     Content for instruction on how to regenerate quickly.
         /// </summary>
-        private static readonly GUIContent s_visualScriptingGenerationContent = new GUIContent(
+        private static readonly GUIContent s_VisualScriptingGenerationContent = new GUIContent(
             "You can do this by clicking the Regenerate Units button to the right or by finding the same button available in the Visual Scripting section of the Project Settings.");
 
         /// <summary>
         ///     Content for the warning about changing types units.
         /// </summary>
-        private static readonly GUIContent s_visualScriptingGenerationNoticeContent =
+        private static readonly GUIContent s_VisualScriptingGenerationNoticeContent =
             new GUIContent(
                 "By selecting and deselecting the below categories, items will be added or removed from the Visual Scripting type options configuration.");
 
         /// <summary>
         ///     Content for the warning about regenerating units.
         /// </summary>
-        private static readonly GUIContent s_visualScriptingGenerationWarningContent =
+        private static readonly GUIContent s_VisualScriptingGenerationWarningContent =
             new GUIContent(
                 "You still NEED to Regenerate Units!");
 
         /// <summary>
         ///     Content for the notice when visual scripting needs to regenerate its nodes.
         /// </summary>
-        private static readonly GUIContent s_visualScriptingLoadingContent = new GUIContent(
+        private static readonly GUIContent s_VisualScriptingLoadingContent = new GUIContent(
             "The visual scripting subsystem is currently loading.");
 
 #if GDX_VISUALSCRIPTING
@@ -84,13 +84,13 @@ namespace GDX.Editor.ProjectSettings
         /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
         public void BindSectionContent(VisualElement rootElement)
         {
-            if (_element == null)
+            if (m_Element == null)
             {
                 VisualTreeAsset templateAsset =
                     ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsVisualScripting");
-                _element = templateAsset.Instantiate()[0];
+                m_Element = templateAsset.Instantiate()[0];
             }
-            rootElement.Add(_element);
+            rootElement.Add(m_Element);
             // GUI.enabled = true;
             //
             //

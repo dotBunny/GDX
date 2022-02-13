@@ -12,7 +12,7 @@ namespace GDX.Mathematics.Random
     [VisualScriptingCompatible(4)]
     public class RandomAdaptor : System.Random
     {
-        private readonly IRandomProvider _provider;
+        private readonly IRandomProvider m_Provider;
 
         /// <summary>
         ///     Create an adaptor object which behaves like <see cref="System.Random" />.
@@ -24,7 +24,7 @@ namespace GDX.Mathematics.Random
         /// <param name="provider">A qualified <see cref="IRandomProvider" />.</param>
         public RandomAdaptor(IRandomProvider provider)
         {
-            _provider = provider;
+            m_Provider = provider;
         }
 
         /// <summary>
@@ -33,17 +33,17 @@ namespace GDX.Mathematics.Random
         /// <returns>true/false a provider is not null.</returns>
         public bool HasProvider()
         {
-            return _provider != null;
+            return m_Provider != null;
         }
 
         protected override double Sample()
         {
-            return _provider.Sample();
+            return m_Provider.Sample();
         }
 
         public override int Next()
         {
-            return _provider.NextInteger();
+            return m_Provider.NextInteger();
         }
 
         public override int Next(int minValue, int maxValue)
@@ -53,7 +53,7 @@ namespace GDX.Mathematics.Random
                 maxValue++;
             }
 
-            return _provider.NextInteger(minValue, maxValue);
+            return m_Provider.NextInteger(minValue, maxValue);
         }
 
         public override int Next(int maxValue)
@@ -63,18 +63,18 @@ namespace GDX.Mathematics.Random
                 maxValue++;
             }
 
-            return _provider.NextInteger(0, maxValue);
+            return m_Provider.NextInteger(0, maxValue);
         }
 
         public override double NextDouble()
         {
 
-            return _provider.NextDouble();
+            return m_Provider.NextDouble();
         }
 
         public override void NextBytes(byte[] buffer)
         {
-            _provider.NextBytes(buffer);
+            m_Provider.NextBytes(buffer);
         }
     }
 }

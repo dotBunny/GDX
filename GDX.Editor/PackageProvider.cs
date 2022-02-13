@@ -179,7 +179,7 @@ namespace GDX.Editor
         private void DelayCall()
         {
             // Make sure that the project has the GDX preprocessor added
-            if (Core.Config.environmentScriptingDefineSymbol)
+            if (Core.Config.EnvironmentScriptingDefineSymbol)
             {
                 EnsureScriptingDefineSymbol();
             }

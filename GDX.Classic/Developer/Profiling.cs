@@ -18,25 +18,25 @@ namespace GDX.Classic.Developer
         /// <summary>
         ///     The prefix to use with all capture files.
         /// </summary>
-        private const string MemoryCaptureFilePrefix = "MemCap-";
+        private const string k_MemoryCaptureFilePrefix = "MemCap-";
 
-        private const int MemoryCapturesToKeep = 10;
+        private const int k_MemoryCapturesToKeep = 10;
 
-        private const int ProfilesToKeep = 10;
+        private const int k_ProfilesToKeep = 10;
         /// <summary>
         ///     The prefix to use with all binary profile files.
         /// </summary>
-        private const string ProfileFilePrefix = "Profile-";
+        private const string k_ProfileFilePrefix = "Profile-";
 
-        private const CaptureFlags AllCaptureFlags = CaptureFlags.ManagedObjects | CaptureFlags.NativeAllocations | CaptureFlags.NativeObjects | CaptureFlags.NativeAllocationSites | CaptureFlags.NativeStackTraces;
+        private const CaptureFlags k_AllCaptureFlags = CaptureFlags.ManagedObjects | CaptureFlags.NativeAllocations | CaptureFlags.NativeObjects | CaptureFlags.NativeAllocationSites | CaptureFlags.NativeStackTraces;
 
-        public static void TakeMemorySnapshot(string prefix = null, Action<string, bool> finishCallback = null, CaptureFlags captureFlags = AllCaptureFlags, bool manageCaptures = true)
+        public static void TakeMemorySnapshot(string prefix = null, Action<string, bool> finishCallback = null, CaptureFlags captureFlags = k_AllCaptureFlags, bool manageCaptures = true)
         {
             string outputFolder = GDX.Platform.GetOutputFolder();
             if (manageCaptures)
             {
-                string[] files = Directory.GetFiles(outputFolder, prefix == null ? $"{MemoryCaptureFilePrefix}*" : $"{MemoryCaptureFilePrefix}{prefix}-*", SearchOption.TopDirectoryOnly);
-                int filesToRemove = files.Length - (MemoryCapturesToKeep - 1);
+                string[] files = Directory.GetFiles(outputFolder, prefix == null ? $"{k_MemoryCaptureFilePrefix}*" : $"{k_MemoryCaptureFilePrefix}{prefix}-*", SearchOption.TopDirectoryOnly);
+                int filesToRemove = files.Length - (k_MemoryCapturesToKeep - 1);
 
                 if (filesToRemove > 0)
                 {
@@ -51,8 +51,8 @@ namespace GDX.Classic.Developer
                 }
             }
 
-            string path = Path.Combine(outputFolder, prefix != null ? $"{MemoryCaptureFilePrefix}{prefix}-{DateTime.Now:GDX.Platform.FilenameTimestampFormat}.snap" :
-                $"{MemoryCaptureFilePrefix}{DateTime.Now:GDX.Platform.FilenameTimestampFormat}.raw");
+            string path = Path.Combine(outputFolder, prefix != null ? $"{k_MemoryCaptureFilePrefix}{prefix}-{DateTime.Now:GDX.Platform.FilenameTimestampFormat}.snap" :
+                $"{k_MemoryCaptureFilePrefix}{DateTime.Now:GDX.Platform.FilenameTimestampFormat}.raw");
             MemoryProfiler.TakeSnapshot(path, finishCallback, captureFlags);
             Trace.Output(Trace.TraceLevel.Info, $"[MemorySnapshot] {path}");
         }
@@ -70,9 +70,9 @@ namespace GDX.Classic.Developer
             string outputFolder = GDX.Platform.GetOutputFolder();
             if (manageProfiles)
             {
-                string[] files = Directory.GetFiles(outputFolder, prefix == null ? $"{ProfileFilePrefix}*" : $"{ProfileFilePrefix}{prefix}-*", SearchOption.TopDirectoryOnly);
+                string[] files = Directory.GetFiles(outputFolder, prefix == null ? $"{k_ProfileFilePrefix}*" : $"{k_ProfileFilePrefix}{prefix}-*", SearchOption.TopDirectoryOnly);
                 // If we have 15 files, and our max is 15, we need to remove just one.
-                int filesToRemove = files.Length - (ProfilesToKeep - 1);
+                int filesToRemove = files.Length - (k_ProfilesToKeep - 1);
 
                 if (filesToRemove > 0)
                 {
@@ -87,7 +87,7 @@ namespace GDX.Classic.Developer
                 }
             }
 
-            string path = Path.Combine(outputFolder, prefix != null ? $"{ProfileFilePrefix}{prefix}-{GDX.Platform.FilenameTimestampFormat}.raw" : $"{ProfileFilePrefix}{GDX.Platform.FilenameTimestampFormat}.raw");
+            string path = Path.Combine(outputFolder, prefix != null ? $"{k_ProfileFilePrefix}{prefix}-{GDX.Platform.FilenameTimestampFormat}.raw" : $"{k_ProfileFilePrefix}{GDX.Platform.FilenameTimestampFormat}.raw");
             Trace.Output(Trace.TraceLevel.Info, $"[Profiling Started] {path}");
             Profiler.logFile = path;
             Profiler.enableBinaryLog = true;

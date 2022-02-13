@@ -28,7 +28,7 @@ namespace GDX.Classic.Editor.Build.Legacy
         public void OnPreprocessBuild(BuildReport report)
         {
             // Make sure that the project has the GDX preprocessor added
-            if (Core.Config.environmentScriptingDefineSymbol)
+            if (Core.Config.EnvironmentScriptingDefineSymbol)
             {
                 GDX.Editor.PackageProvider.EnsureScriptingDefineSymbol();
             }

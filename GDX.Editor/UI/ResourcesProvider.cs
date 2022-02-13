@@ -14,12 +14,12 @@ namespace GDX.Editor.UI
         /// <summary>
         ///     A collection of queried <see cref="VisualTreeAsset" /> assets keyed by their search.
         /// </summary>
-        private static StringKeyDictionary<VisualTreeAsset> s_assets = new StringKeyDictionary<VisualTreeAsset>(10);
+        private static StringKeyDictionary<VisualTreeAsset> s_Assets = new StringKeyDictionary<VisualTreeAsset>(10);
 
         /// <summary>
         ///     The cached reference to the global stylesheet.
         /// </summary>
-        private static StyleSheet s_stylesheet;
+        private static StyleSheet s_Stylesheet;
 
         /// <summary>
         ///     The cached reference to the override stylesheet.
@@ -27,12 +27,12 @@ namespace GDX.Editor.UI
         /// <remarks>
         ///     Used to accomodate version specific styling.
         /// </remarks>
-        private static StyleSheet s_styleSheetOverride;
+        private static StyleSheet s_StyleSheetOverride;
 
         /// <summary>
         ///     A cached pathing to where our UXML are stored.
         /// </summary>
-        private static string s_foundAssetFolder;
+        private static string s_FoundAssetFolder;
 
         /// <summary>
         ///     Apply light/dark mode classes.
@@ -60,20 +60,20 @@ namespace GDX.Editor.UI
         /// <returns>The stylesheet if found, or null.</returns>
         public static StyleSheet GetStyleSheet()
         {
-            if (s_stylesheet != null)
+            if (s_Stylesheet != null)
             {
-                return s_stylesheet;
+                return s_Stylesheet;
             }
 
             string[] potentialStyles = AssetDatabase.FindAssets("t:Stylesheet GDXStylesShared");
             if (potentialStyles.Length <= 0)
             {
-                return s_stylesheet;
+                return s_Stylesheet;
             }
 
-            s_stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(potentialStyles[0]));
+            s_Stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(potentialStyles[0]));
 
-            return s_stylesheet;
+            return s_Stylesheet;
         }
 
         /// <summary>
@@ -111,12 +111,12 @@ namespace GDX.Editor.UI
         /// <returns>The queried asset if found, or null.</returns>
         internal static VisualTreeAsset GetVisualTreeAsset(string targetName)
         {
-            if (s_assets.ContainsKey(targetName))
+            if (s_Assets.ContainsKey(targetName))
             {
-                return s_assets[targetName];
+                return s_Assets[targetName];
             }
 
-            if (s_foundAssetFolder == null)
+            if (s_FoundAssetFolder == null)
             {
                 string[] potentialTree = AssetDatabase.FindAssets($"t:VisualTreeAsset {targetName}");
                 if (potentialTree.Length <= 0)
@@ -126,18 +126,18 @@ namespace GDX.Editor.UI
 
                 string assetPath = AssetDatabase.GUIDToAssetPath(potentialTree[0]);
 
-                s_foundAssetFolder = assetPath.Substring(0,
+                s_FoundAssetFolder = assetPath.Substring(0,
                     assetPath.IndexOf(targetName, StringComparison.Ordinal));
-                s_assets.AddWithExpandCheck(targetName,
+                s_Assets.AddWithExpandCheck(targetName,
                     AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(assetPath));
             }
             else
             {
-                s_assets.AddWithExpandCheck(targetName,
-                    AssetDatabase.LoadAssetAtPath<VisualTreeAsset>($"{s_foundAssetFolder}{targetName}.uxml"));
+                s_Assets.AddWithExpandCheck(targetName,
+                    AssetDatabase.LoadAssetAtPath<VisualTreeAsset>($"{s_FoundAssetFolder}{targetName}.uxml"));
             }
 
-            return s_assets[targetName];
+            return s_Assets[targetName];
         }
     }
 }

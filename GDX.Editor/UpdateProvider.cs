@@ -20,17 +20,17 @@ namespace GDX.Editor
         /// <summary>
         ///     The key used by <see cref="EditorPrefs" /> to store the last time we checked for an update.
         /// </summary>
-        private const string LastCheckedKey = "GDX.UpdateProvider.LastChecked";
+        private const string k_LastCheckedKey = "GDX.UpdateProvider.LastChecked";
 
         /// <summary>
         ///     The key used by <see cref="EditorPrefs" /> to store the last update version we notified the user about.
         /// </summary>
-        private const string LastNotifiedVersionKey = "GDX.UpdateProvider.LastNotifiedVersion";
+        private const string k_LastNotifiedVersionKey = "GDX.UpdateProvider.LastNotifiedVersion";
 
         /// <summary>
         ///     The base URI for downloading the latest released tarball.
         /// </summary>
-        private const string GitHubLatestUri = "https://github.com/dotBunny/GDX/archive/v";
+        private const string k_GitHubLatestUri = "https://github.com/dotBunny/GDX/archive/v";
 
         /// <summary>
         ///     A collection of information about the locally installed GDX package.
@@ -61,7 +61,7 @@ namespace GDX.Editor
         /// </summary>
         private static void DelayCall()
         {
-            if (!Core.Config.updateProviderCheckForUpdates)
+            if (!Core.Config.UpdateProviderCheckForUpdates)
             {
                 return;
             }
@@ -194,9 +194,9 @@ namespace GDX.Editor
         public static DateTime GetLastChecked()
         {
             DateTime lastTime = new DateTime(2020, 12, 14);
-            if (EditorPrefs.HasKey(LastCheckedKey))
+            if (EditorPrefs.HasKey(k_LastCheckedKey))
             {
-                DateTime.TryParse(EditorPrefs.GetString(LastCheckedKey), out lastTime);
+                DateTime.TryParse(EditorPrefs.GetString(k_LastCheckedKey), out lastTime);
             }
 
             return lastTime;
@@ -232,7 +232,7 @@ namespace GDX.Editor
         /// </summary>
         private static void SetLastChecked()
         {
-            EditorPrefs.SetString(LastCheckedKey, DateTime.Now.ToString(CultureInfo.InvariantCulture));
+            EditorPrefs.SetString(k_LastCheckedKey, DateTime.Now.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace GDX.Editor
         // ReSharper disable once MemberCanBePrivate.Global
         public static string GetLastNotifiedVersion()
         {
-            return EditorPrefs.GetString(LastNotifiedVersionKey);
+            return EditorPrefs.GetString(k_LastNotifiedVersionKey);
         }
 
         /// <summary>
@@ -251,7 +251,7 @@ namespace GDX.Editor
         /// <param name="versionTag">The package version string.</param>
         private static void SetLastNotifiedVersion(string versionTag)
         {
-            EditorPrefs.SetString(LastNotifiedVersionKey, versionTag);
+            EditorPrefs.SetString(k_LastNotifiedVersionKey, versionTag);
         }
 
         /// <summary>
@@ -304,7 +304,7 @@ namespace GDX.Editor
             try
             {
                 using WebClient webClient = new WebClient();
-                webClient.DownloadFile(GitHubLatestUri + UpdatePackageDefinition.version + ".tar.gz",
+                webClient.DownloadFile(k_GitHubLatestUri + UpdatePackageDefinition.version + ".tar.gz",
                     tempFile);
             }
             catch (Exception e)

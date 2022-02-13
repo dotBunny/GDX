@@ -72,9 +72,9 @@ namespace GDX.Classic.Developer.Reports
             ApplicationContext.Output(context, builder);
 
             // Custom header information
-            builder.AppendLine(context.CreateKVP("Last Touched",
+            builder.AppendLine(context.CreateKeyValuePair("Last Touched",
                 LastTouched.ToString(GDX.Localization.LocalTimestampFormat)));
-            builder.AppendLine(context.CreateKVP("Total Objects", ObjectCount.ToString()));
+            builder.AppendLine(context.CreateKeyValuePair("Total Objects", ObjectCount.ToString()));
 
             builder.AppendLine();
 
@@ -88,8 +88,8 @@ namespace GDX.Classic.Developer.Reports
                 int count = typeKVP.Value.Count;
 
                 builder.AppendLine(context.CreateHeader(typeKVP.Key.ToString(), '-'));
-                builder.AppendLine(context.CreateKVP("Count", count.ToString()));
-                builder.AppendLine(context.CreateKVP("Total Size",
+                builder.AppendLine(context.CreateKeyValuePair("Count", count.ToString()));
+                builder.AppendLine(context.CreateKeyValuePair("Total Size",
                     GDX.Localization.GetHumanReadableFileSize(KnownUsage[typeKVP.Key])));
                 builder.AppendLine();
 

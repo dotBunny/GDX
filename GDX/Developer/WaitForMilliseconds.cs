@@ -11,20 +11,20 @@ namespace GDX.Developer
 {
     public class WaitForMilliseconds
     {
-        private readonly Stopwatch _stopwatch = new Stopwatch();
-        private readonly float _duration;
+        private readonly Stopwatch m_Stopwatch = new Stopwatch();
+        private readonly float m_Duration;
 
         public WaitForMilliseconds(float milliseconds)
         {
-            _duration = milliseconds;
-            _stopwatch.Restart();
+            m_Duration = milliseconds;
+            m_Stopwatch.Restart();
         }
 
         public bool Wait()
         {
-            if (_stopwatch.ElapsedMilliseconds >= _duration)
+            if (m_Stopwatch.ElapsedMilliseconds >= m_Duration)
             {
-                _stopwatch.Stop();
+                m_Stopwatch.Stop();
                 return false;
             }
 
@@ -33,17 +33,17 @@ namespace GDX.Developer
 
         public IEnumerator While()
         {
-            while (_stopwatch.ElapsedMilliseconds < _duration)
+            while (m_Stopwatch.ElapsedMilliseconds < m_Duration)
             {
                 yield return null;
             }
 
-            _stopwatch.Stop();
+            m_Stopwatch.Stop();
         }
 
         public void Reset()
         {
-            _stopwatch.Restart();
+            m_Stopwatch.Restart();
         }
     }
 }
