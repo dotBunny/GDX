@@ -69,6 +69,40 @@ namespace GDX.Developer.Reports.NUnit
 
             [XmlElement(ElementName = "test-suite")]
             public List<TestSuite> TestSuites { get; set;  }= new List<TestSuite>();
+
+            public int GetPassCount()
+            {
+                int passCount = 0;
+                foreach (TestCase testCase in TestCases)
+                {
+                    if (testCase.Result == NUnitReport.PassedString)
+                    {
+                        passCount++;
+                    }
+                }
+                foreach (TestSuite testSuite in TestSuites)
+                {
+                    passCount += testSuite.GetPassCount();
+                }
+                return passCount;
+            }
+
+            public int GetFailCount()
+            {
+                int failCount = 0;
+                foreach (TestCase testCase in TestCases)
+                {
+                    if (testCase.Result == NUnitReport.FailedString)
+                    {
+                        failCount++;
+                    }
+                }
+                foreach (TestSuite testSuite in TestSuites)
+                {
+                    failCount += testSuite.GetPassCount();
+                }
+                return failCount;
+            }
         }
 
 }

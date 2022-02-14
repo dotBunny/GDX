@@ -15,7 +15,7 @@ namespace GDX.Developer.Reports.NUnit
         public int TestCaseCount { get; set; }
 
         [XmlAttribute(AttributeName = "result")]
-        public string Result { get; set; }
+        public string Result { get; set; } = "Incomplete";
 
         [XmlAttribute(AttributeName = "total")]
         public int Total { get; set; }
@@ -51,6 +51,6 @@ namespace GDX.Developer.Reports.NUnit
         public float Duration { get; set; }
 
         [XmlElement(ElementName = "test-suite")]
-        public TestSuite TestSuite { get; set; }
+        public TestSuite TestSuite { get; set; } = new TestSuite();
     }
 }

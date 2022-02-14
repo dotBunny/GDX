@@ -13,18 +13,19 @@ namespace GDX.Developer.Reports
     // ReSharper disable once UnusedType.Global
     public class NUnitReport
     {
-        private const string k_FailedString = "Failed";
-        private const string k_PassedString = "Passed";
+        public const string FailedString = "Failed";
+        public const string PassedString = "Passed";
 
         private readonly TestRun m_Results = new TestRun();
 
-        public TestCase AddDurationResult(string name, int seconds, bool passed = true, TestSuite testSuite = null)
+        public TestCase AddDurationResult(string name, int seconds, bool passed = true, string output = null, TestSuite testSuite = null)
         {
             TestCase testCase = new TestCase
             {
                 Name = name,
                 Duration = seconds.ToString(),
-                Result = passed ? k_PassedString : k_FailedString
+                Result = passed ? PassedString : FailedString,
+                Output = output
             };
             if (testSuite != null)
             {
@@ -35,6 +36,24 @@ namespace GDX.Developer.Reports
                 m_Results.TestSuite.TestCases.Add(testCase);
             }
             return testCase;
+        }
+
+        public string GetResult()
+        {
+            return m_Results.Result;
+        }
+
+        public void Stage(int uniqueIdentifier = 0, string testSuiteLabel = "Test Suite")
+        {
+            m_Results.Id = uniqueIdentifier;
+
+            m_Results.Failed = m_Results.TestSuite.GetFailCount();
+            m_Results.Passed = m_Results.TestSuite.GetFailCount();
+            m_Results.TestCaseCount = m_Results.Failed + m_Results.Passed;
+            m_Results.Total = m_Results.Failed + m_Results.Passed;
+
+            m_Results.Result = m_Results.Failed == 0 ? PassedString : FailedString;
+            m_Results.TestSuite.Label = testSuiteLabel;
         }
 
         /// <inheritdoc />
