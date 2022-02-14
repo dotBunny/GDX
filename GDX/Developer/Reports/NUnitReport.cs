@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.IO;
+using System.Text;
 using System.Xml.Serialization;
 using GDX.Developer.Reports.NUnit;
 
@@ -48,7 +49,7 @@ namespace GDX.Developer.Reports
             m_Results.Id = uniqueIdentifier;
 
             m_Results.Failed = m_Results.TestSuite.GetFailCount();
-            m_Results.Passed = m_Results.TestSuite.GetFailCount();
+            m_Results.Passed = m_Results.TestSuite.GetPassCount();
             m_Results.TestCaseCount = m_Results.Failed + m_Results.Passed;
             m_Results.Total = m_Results.Failed + m_Results.Passed;
 
