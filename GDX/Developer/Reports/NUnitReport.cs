@@ -57,9 +57,22 @@ namespace GDX.Developer.Reports
             m_Results.TestSuite.Label = testSuiteLabel;
         }
 
+        /// <summary>
+        ///     Saves the report to a UTF-8 formatted XML document.
+        /// </summary>
+        /// <param name="filePath">The absolute path where to save the content of the report.</param>
+        public void Save(string filePath)
+        {
+            XmlSerializer reportSerializer = new XmlSerializer(m_Results.GetType());
+            using StreamWriter outputFile = new StreamWriter(filePath);
+            reportSerializer.Serialize(outputFile, m_Results);
+        }
+
         /// <inheritdoc />
+        /// <remarks>Can result in a UTF-16 based XML document.</remarks>
         public override string ToString()
         {
+            // We need to make sure it is a UTF-8 xml serializer as most parsers wont know what to do with UTF-16
             XmlSerializer reportSerializer = new XmlSerializer(m_Results.GetType());
             using StringWriter textWriter = new StringWriter();
             reportSerializer.Serialize(textWriter, m_Results);
