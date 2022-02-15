@@ -16,6 +16,7 @@ namespace GDX.Editor.CodeGenerators
             // Start header
             code.AppendLine($"public class {Core.OverrideClass}");
             code.OpenBrace();
+            code.AppendLine("[UnityEngine.Scripting.Preserve]");
             code.AppendLine($"public static void {Core.OverrideMethod}()");
             code.OpenBrace();
 

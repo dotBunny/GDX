@@ -10,11 +10,14 @@ namespace GDX.Developer.Reports.NUnit
         [XmlRoot(ElementName = "test-suite")]
         public class TestSuite
         {
-            [XmlAttribute(AttributeName = "type")] public string Type { get; set; }
+            [XmlAttribute(AttributeName = "type")] 
+            public string Type { get; set; }
 
-            [XmlAttribute(AttributeName = "id")] public string Id { get; set; }
+            [XmlAttribute(AttributeName = "id")] 
+            public string Id { get; set; }
 
-            [XmlAttribute(AttributeName = "name")] public string Name { get; set; }
+            [XmlAttribute(AttributeName = "name")] 
+            public string Name { get; set; }
 
             [XmlAttribute(AttributeName = "fullname")]
             public string FullName { get; set; }

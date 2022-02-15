@@ -9,7 +9,8 @@ namespace GDX.Developer.Reports.NUnit
     [XmlRoot(ElementName = "test-run")]
     public class TestRun
     {
-        [XmlAttribute(AttributeName = "id")] public int Id { get; set; }
+        [XmlAttribute(AttributeName = "id")] 
+        public int Id { get; set; }
 
         [XmlAttribute(AttributeName = "testcasecount")]
         public int TestCaseCount { get; set; }
