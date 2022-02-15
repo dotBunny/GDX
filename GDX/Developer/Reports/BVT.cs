@@ -1,5 +1,6 @@
 ﻿using GDX.Developer.Reports.NUnit;
 using System.Diagnostics;
+using GDX.Collections.Generic;
 using Debug = UnityEngine.Debug;
 
 namespace GDX.Developer.Reports
@@ -8,15 +9,16 @@ namespace GDX.Developer.Reports
     public static class BVT
     {
         static readonly NUnitReport m_Report = new NUnitReport("BVT");
-        
+        private static SimpleList<string> m_PanicMessages = new SimpleList<string>(2);
+
         public static string OutputReport(string outputPath)
         {
-            m_Report.Stage(0, "GDX Build");
+            m_Report.Stage(0, "Build Verification Test", m_PanicMessages.Count);
             Platform.ForceDeleteFile(outputPath);
             m_Report.Save(outputPath);
             return m_Report.GetResult();
         }
-        
+
         public static void Assert(string identifier, bool condition, string failMessage = null)
         {
             if (!condition)
@@ -28,18 +30,25 @@ namespace GDX.Developer.Reports
                 AddTestCaseResult(identifier, true);
             }
         }
+
+        public static void Panic(string panicMessage)
+        {
+            m_PanicMessages.AddWithExpandCheck(panicMessage);
+            Debug.LogError($"[BVT] PANIC! {panicMessage}");   
+        }
         
-        static void AddTestCaseResult(string identifier, bool passed, int duration = 0, string output = null)
+        static TestCase AddTestCaseResult(string identifier, bool passed, int duration = 0, string output = null)
         {
             TestCase test = m_Report.AddDurationResult(identifier, duration, passed, output);
             if (passed)
             {
-                Debug.Log($"[BVT] PASS {test.Name}: {test.Result}");
+                Debug.Log($"[BVT] {test.Name}: {test.Result}");
             }
             else
             {
-                Debug.LogError($"[BVT] FAIL {test.Name}: {test.Output}");    
+                Debug.LogError($"[BVT] {test.Name}: {test.Result}, {test.Output}");    
             }
+            return test;
         }
 
         public class TimedCheck

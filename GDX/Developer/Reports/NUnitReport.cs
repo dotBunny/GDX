@@ -54,16 +54,18 @@ namespace GDX.Developer.Reports
             return m_Results.TestSuite;
         }
 
-        public void Stage(int uniqueIdentifier = 0, string testSuiteLabel = "Test Suite")
+        public void Stage(int uniqueIdentifier = 0, string testSuiteLabel = "Test Suite", int panicMessages = 0)
         {
             m_Results.Id = uniqueIdentifier;
 
             m_Results.Failed = m_Results.TestSuite.GetFailCount();
             m_Results.Passed = m_Results.TestSuite.GetPassCount();
+            m_Results.Asserts = panicMessages;
+            
             m_Results.TestCaseCount = m_Results.Failed + m_Results.Passed;
             m_Results.Total = m_Results.Failed + m_Results.Passed;
 
-            m_Results.Result = m_Results.Failed == 0 ? PassedString : FailedString;
+            m_Results.Result = (m_Results.Failed == 0 && m_Results.Asserts == 0) ? PassedString : FailedString;
             m_Results.TestSuite.Label = testSuiteLabel;
         }
 
