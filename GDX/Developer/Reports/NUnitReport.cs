@@ -19,6 +19,11 @@ namespace GDX.Developer.Reports
 
         private readonly TestRun m_Results = new TestRun();
 
+        public NUnitReport(string suiteName = null)
+        {
+            m_Results.TestSuite.Name = suiteName;
+        }
+
         public TestCase AddDurationResult(string name, int seconds, bool passed = true, string output = null, TestSuite testSuite = null)
         {
             TestCase testCase = new TestCase
@@ -42,6 +47,11 @@ namespace GDX.Developer.Reports
         public string GetResult()
         {
             return m_Results.Result;
+        }
+
+        public TestSuite GetRootSuite()
+        {
+            return m_Results.TestSuite;
         }
 
         public void Stage(int uniqueIdentifier = 0, string testSuiteLabel = "Test Suite")
