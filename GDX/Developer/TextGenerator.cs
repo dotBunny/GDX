@@ -4,8 +4,13 @@
     {
         private readonly System.Text.StringBuilder m_Builder = new System.Text.StringBuilder();
         private int m_IndentLevel;
-        private const string k_IndentContent = "\t";
+        private string m_IndentContent;
 
+        public TextGenerator(string indentContent = "\t")
+        {
+            m_IndentContent = indentContent;
+        }
+        
         // ReSharper disable once UnusedMember.Global
         public void Append(string text)
         {
@@ -27,7 +32,7 @@
         {
             for (int i = 0; i < m_IndentLevel; i++)
             {
-                m_Builder.Append(k_IndentContent);
+                m_Builder.Append(m_IndentContent);
             }
         }
 

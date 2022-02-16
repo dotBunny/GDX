@@ -12,19 +12,5 @@ namespace GDX.Developer.Reports.NUnit
     public class Properties
     {
         public List<Property> Property { get; set; }
-
-        internal void AddToGenerator(TextGenerator generator)
-        {
-            generator.AppendLine("<properties>");
-            generator.PushIndent();
-            int count = Property.Count;
-            for (int i = 0; i < count; i++)
-            {
-                Property[i].AddToGenerator(generator);
-            }
-            generator.PopIndent();
-            generator.AppendLine("</properties>");
-        }
     }
 }
-// TODO make data data, then the add as becomes as NUNIT format

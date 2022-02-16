@@ -19,7 +19,7 @@ namespace GDX.Developer.Reports.NUnit
         public string Result { get; set; }
         public string StartTime { get; set; }
         public string EndTime { get; set; }
-        public string Duration { get; set; }
+        public float Duration { get; set; }
         public int Asserts { get; set; }
         public Properties Properties { get; set; }
         public string Output { get; set; }
@@ -36,40 +36,6 @@ namespace GDX.Developer.Reports.NUnit
             }
 
             return foundProperty;
-        }
-
-        internal void AddToGenerator(TextGenerator generator)
-        {
-            generator.ApplyIndent();
-            generator.Append($"<test-case");
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "id", Id);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "name", Name);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "fullname", FullName);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "methodname", MethodName);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "classname", ClassName);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "runstate", RunState);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "seed", Seed);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "result", Result);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "start-time", StartTime);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "end-time", EndTime);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "duration", Duration);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "asserts", Asserts);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "output", Output);
-
-            if (Properties != null && Properties.Property.Count > 0)
-            {
-                generator.Append(">");
-                generator.NextLine();
-                generator.PushIndent();
-                Properties.AddToGenerator(generator);
-                generator.PopIndent();
-                generator.AppendLine("</test-case>");
-            }
-            else
-            {
-                generator.Append(" />");   
-                generator.NextLine();
-            }
         }
     }
 }

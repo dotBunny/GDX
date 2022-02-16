@@ -11,15 +11,5 @@ namespace GDX.Developer.Reports.NUnit
     {
         public string Name { get; set; }
         public string Value { get; set; }
-
-        internal void AddToGenerator(TextGenerator generator)
-        {
-            generator.ApplyIndent();
-            generator.Append("<property");
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "name", Name);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "value", Value);
-            generator.Append(" />");
-            generator.NextLine();
-        }
     }
 }

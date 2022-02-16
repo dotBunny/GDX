@@ -17,13 +17,13 @@ namespace GDX.Developer.Reports.NUnit
         public string FullName { get; set; }
         public string ClassName { get; set; }
         public string RunState { get; set; }
-        public string TestCaseCount { get; set; }
+        public int TestCaseCount { get; set; }
         public string Result { get; set; }
         public string Label { get; set; }
         public string StartTime { get; set; }
         public string EndTime { get; set; }
-        public string Duration { get; set; }
-        public int Total { get; set; }
+        public float Duration { get; set; }
+        public int Total => Passed + Failed + Inconclusive + Skipped;
         public int Passed { get; set; }
         public int Failed { get; set; }
         public int Inconclusive { get; set; }
@@ -32,6 +32,41 @@ namespace GDX.Developer.Reports.NUnit
         public Properties Properties { get; set; }
         public List<TestCase> TestCases { get; set; } = new List<TestCase>();
         public List<TestSuite> TestSuites { get; set;  }= new List<TestSuite>();
+
+        public void Process(string passedResult, string failedResult, string inconclusiveResult, string skippedResult)
+        {
+            foreach (TestCase t in TestCases)
+            {
+                if (t.Result == passedResult)
+                {
+                    Passed++;
+                } 
+                else if (t.Result == failedResult)
+                {
+                    Failed++;
+                }
+                else if (t.Result == inconclusiveResult)
+                {
+                    Inconclusive++;
+                }
+                else if (t.Result == skippedResult)
+                {
+                    Skipped++;
+                }
+            }
+            TestCaseCount = Total;
+            
+            // Update children
+            foreach (TestSuite s in TestSuites)
+            {
+                s.Process(passedResult, failedResult, inconclusiveResult, skippedResult);
+                Passed += s.Passed;
+                Failed += s.Failed;
+                Inconclusive += s.Inconclusive;
+                Skipped += s.Skipped;
+                TestCaseCount += Total;
+            }
+        }
 
         public int GetPassCount()
         {
@@ -65,52 +100,6 @@ namespace GDX.Developer.Reports.NUnit
                 failCount += testSuite.GetPassCount();
             }
             return failCount;
-        }
-
-        internal void AddToGenerator(TextGenerator generator)
-        {
-            generator.ApplyIndent();
-            generator.Append($"<test-suite");
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "type", Type);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "id", Id);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "name", Name);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "fullname", FullName);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "classname", ClassName);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "runstate", RunState);
-            
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "testcasecount", TestCaseCount);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "result", Result);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "label", Label);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "start-time", StartTime);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "end-time", EndTime);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "duration", Duration);
-            
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "total", Total);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "passed", Passed);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "failed", Failed);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "inconclusive", Inconclusive);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "skipped", Skipped);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "asserts", Asserts);
-
-            generator.Append(">");
-            generator.NextLine();
-            generator.PushIndent();
-            if (Properties != null)
-            {
-                Properties.AddToGenerator(generator);
-            }
-
-            foreach (TestCase t in TestCases)
-            {
-                t.AddToGenerator(generator);
-            }
-
-            foreach (TestSuite s in TestSuites)
-            {
-                s.AddToGenerator(generator);
-            }
-            generator.PopIndent();
-            generator.AppendLine("</test-suite>");
         }
     }
 
