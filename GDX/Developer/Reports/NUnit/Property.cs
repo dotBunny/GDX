@@ -2,16 +2,24 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System.Xml.Serialization;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace GDX.Developer.Reports.NUnit
 {
-    [XmlRoot(ElementName = "property", IsNullable = true)]
     public class Property
     {
-        [XmlAttribute(AttributeName = "name")] public string Name { get; set; }
-
-        [XmlAttribute(AttributeName = "value")]
+        public string Name { get; set; }
         public string Value { get; set; }
+
+        internal void AddToGenerator(TextGenerator generator)
+        {
+            generator.ApplyIndent();
+            generator.Append("<property");
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "name", Name);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "value", Value);
+            generator.Append(" />");
+            generator.NextLine();
+        }
     }
 }

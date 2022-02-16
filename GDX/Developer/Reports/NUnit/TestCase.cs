@@ -2,50 +2,27 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System.Xml.Serialization;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace GDX.Developer.Reports.NUnit
 {
-    [XmlRoot(ElementName = "test-case")]
     public class TestCase
     {
-        [XmlAttribute(AttributeName = "id")] public int Id { get; set; }
-
-        [XmlAttribute(AttributeName = "name")] public string Name { get; set; }
-
-        [XmlAttribute(AttributeName = "fullname")]
+        public int Id { get; set; }
+        public string Name { get; set; }
         public string FullName { get; set; }
-
-        [XmlAttribute(AttributeName = "methodname")]
         public string MethodName { get; set; }
-
-        [XmlAttribute(AttributeName = "classname")]
         public string ClassName { get; set; }
-
-        [XmlAttribute(AttributeName = "runstate")]
         public string RunState { get; set; }
-
-        [XmlAttribute(AttributeName = "seed")] public string Seed { get; set; }
-
-        [XmlAttribute(AttributeName = "result")]
+        public string Seed { get; set; }
         public string Result { get; set; }
-
-        [XmlAttribute(AttributeName = "start-time")]
         public string StartTime { get; set; }
-
-        [XmlAttribute(AttributeName = "end-time")]
         public string EndTime { get; set; }
-
-        [XmlAttribute(AttributeName = "duration")]
         public string Duration { get; set; }
-
-        [XmlAttribute(AttributeName = "asserts")]
         public int Asserts { get; set; }
-
-        [XmlElement(ElementName = "properties", IsNullable = true)]
         public Properties Properties { get; set; }
-
-        [XmlElement(ElementName = "output")] public string Output { get; set; }
+        public string Output { get; set; }
 
         public string GetCategory()
         {
@@ -60,6 +37,39 @@ namespace GDX.Developer.Reports.NUnit
 
             return foundProperty;
         }
-    }
 
+        internal void AddToGenerator(TextGenerator generator)
+        {
+            generator.ApplyIndent();
+            generator.Append($"<test-case");
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "id", Id);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "name", Name);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "fullname", FullName);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "methodname", MethodName);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "classname", ClassName);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "runstate", RunState);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "seed", Seed);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "result", Result);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "start-time", StartTime);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "end-time", EndTime);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "duration", Duration);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "asserts", Asserts);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "output", Output);
+
+            if (Properties != null && Properties.Property.Count > 0)
+            {
+                generator.Append(">");
+                generator.NextLine();
+                generator.PushIndent();
+                Properties.AddToGenerator(generator);
+                generator.PopIndent();
+                generator.AppendLine("</test-case>");
+            }
+            else
+            {
+                generator.Append(" />");   
+                generator.NextLine();
+            }
+        }
+    }
 }

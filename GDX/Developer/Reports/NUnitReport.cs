@@ -2,7 +2,9 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml.Serialization;
 using GDX.Developer.Reports.NUnit;
@@ -85,10 +87,28 @@ namespace GDX.Developer.Reports
         public override string ToString()
         {
             // We need to make sure it is a UTF-8 xml serializer as most parsers wont know what to do with UTF-16
-            XmlSerializer reportSerializer = new XmlSerializer(m_Results.GetType());
-            using StringWriter textWriter = new StringWriter();
-            reportSerializer.Serialize(textWriter, m_Results);
-            return textWriter.ToString();
+            TextGenerator generator = new TextGenerator();
+            m_Results.AddToGenerator(generator);
+            return generator.ToString();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void AddToGeneratorKeyValuePair(TextGenerator generator, string key, string value)
+        {
+            if (value == default) return;
+            generator.Append($" {key}=\"{value}\"");
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void AddToGeneratorKeyValuePair(TextGenerator generator, string key, int value)
+        {
+            if (value == default) return;
+            generator.Append($" {key}=\"{value}\"");
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void AddToGeneratorKeyValuePair(TextGenerator generator, string key, float value)
+        {
+            if (value == 0f) return;
+            generator.Append($" {key}=\"{value}\"");
         }
     }
 }

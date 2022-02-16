@@ -1,5 +1,6 @@
 ﻿using GDX.Developer.Reports.NUnit;
 using System.Diagnostics;
+using System.IO;
 using GDX.Collections.Generic;
 using Debug = UnityEngine.Debug;
 
@@ -15,7 +16,7 @@ namespace GDX.Developer.Reports
         {
             m_Report.Stage(0, "Build Verification Test", m_PanicMessages.Count);
             Platform.ForceDeleteFile(outputPath);
-            m_Report.Save(outputPath);
+            File.WriteAllText(outputPath, m_Report.ToString());
             return m_Report.GetResult();
         }
 

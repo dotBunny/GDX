@@ -4,39 +4,22 @@
 
 using System.Xml.Serialization;
 
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+
 namespace GDX.Developer.Reports.NUnit
 {
-    [XmlRoot(ElementName = "test-run")]
     public class TestRun
     {
-        [XmlAttribute(AttributeName = "id")] 
         public int Id { get; set; }
-
-        [XmlAttribute(AttributeName = "testcasecount")]
         public int TestCaseCount { get; set; }
-
-        [XmlAttribute(AttributeName = "result")]
         public string Result { get; set; } = "Incomplete";
-
-        [XmlAttribute(AttributeName = "total")]
         public int Total { get; set; }
-
-        [XmlAttribute(AttributeName = "passed")]
         public int Passed { get; set; }
-
-        [XmlAttribute(AttributeName = "failed")]
         public int Failed { get; set; }
-
-        [XmlAttribute(AttributeName = "inconclusive")]
         public int Inconclusive { get; set; }
-
-        [XmlAttribute(AttributeName = "skipped")]
         public int Skipped { get; set; }
-
-        [XmlAttribute(AttributeName = "asserts")]
         public int Asserts { get; set; }
-
-        [XmlAttribute(AttributeName = "engine-version")]
         public string EngineVersion { get; set; }
 
         [XmlAttribute(AttributeName = "clr-version")]
@@ -53,5 +36,31 @@ namespace GDX.Developer.Reports.NUnit
 
         [XmlElement(ElementName = "test-suite")]
         public TestSuite TestSuite { get; set; } = new TestSuite();
+
+        internal void AddToGenerator(TextGenerator generator)
+        {
+            generator.ApplyIndent();
+            generator.Append($"<test-run");
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "id", Id);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "testcasecount", TestCaseCount);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "result", Result);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "total", Total);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "passed", Passed);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "failed", Failed);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "inconclusive", Inconclusive);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "skipped", Skipped);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "asserts", Asserts);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "engine-version", EngineVersion);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "clr-version", CLRVersion);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "start-time", StartTime);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "end-time", EndTime);
+            NUnitReport.AddToGeneratorKeyValuePair(generator, "duration", Duration);
+            generator.Append(">");
+            generator.NextLine();
+            generator.PushIndent();
+            TestSuite.AddToGenerator(generator);
+            generator.PopIndent();
+            generator.AppendLine("</test-run>");
+        }
     }
 }
