@@ -68,41 +68,17 @@ namespace GDX.Developer.Reports
             AddToGenerator(generator, m_Results);
             return generator.ToString();
         }
-        
-        
-        
-        
-        
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void AddToGeneratorKeyValuePair(TextGenerator generator, string key, string value)
-        {
-            if (value == default) return;
-            generator.Append($" {key}=\"{value}\"");
-        }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void AddToGeneratorKeyValuePair(TextGenerator generator, string key, int value)
-        {
-            if (value == default) return;
-            generator.Append($" {key}=\"{value}\"");
-        }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static void AddToGeneratorKeyValuePair(TextGenerator generator, string key, float value)
-        {
-            if (value == 0f) return;
-            generator.Append($" {key}=\"{value}\"");
-        }
-
-        internal void AddToGenerator(TextGenerator generator, NUnit.Property property)
+        static void AddToGenerator(TextGenerator generator, Property property)
         {
             generator.ApplyIndent();
             generator.Append("<property");
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "name", property.Name);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "value", property.Value);
+            AddToGeneratorAttribute(generator, "name", property.Name);
+            AddToGeneratorAttribute(generator, "value", property.Value);
             generator.Append(" />");
             generator.NextLine();
         }
-        internal void AddToGenerator(TextGenerator generator, NUnit.Properties properties)
+        static void AddToGenerator(TextGenerator generator, Properties properties)
         {
             generator.AppendLine("<properties>");
             generator.PushIndent();
@@ -114,23 +90,23 @@ namespace GDX.Developer.Reports
             generator.PopIndent();
             generator.AppendLine("</properties>");
         }
-        internal void AddToGenerator(TextGenerator generator, NUnit.TestCase testCase)
+        static void AddToGenerator(TextGenerator generator, TestCase testCase)
         {
             generator.ApplyIndent();
             generator.Append($"<test-case");
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "id", testCase.Id);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "name", testCase.Name);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "fullname", testCase.FullName);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "methodname", testCase.MethodName);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "classname", testCase.ClassName);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "runstate", testCase.RunState);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "seed", testCase.Seed);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "result", testCase.Result);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "start-time", testCase.StartTime);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "end-time", testCase.EndTime);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "duration", testCase.Duration);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "asserts", testCase.Asserts);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "output", testCase.Output);
+            AddToGeneratorAttribute(generator, "id", testCase.Id);
+            AddToGeneratorAttribute(generator, "name", testCase.Name);
+            AddToGeneratorAttribute(generator, "fullname", testCase.FullName);
+            AddToGeneratorAttribute(generator, "methodname", testCase.MethodName);
+            AddToGeneratorAttribute(generator, "classname", testCase.ClassName);
+            AddToGeneratorAttribute(generator, "runstate", testCase.RunState);
+            AddToGeneratorAttribute(generator, "seed", testCase.Seed);
+            AddToGeneratorAttribute(generator, "result", testCase.Result);
+            AddToGeneratorAttribute(generator, "start-time", testCase.StartTime);
+            AddToGeneratorAttribute(generator, "end-time", testCase.EndTime);
+            AddToGeneratorAttribute(generator, "duration", testCase.Duration);
+            AddToGeneratorAttribute(generator, "asserts", testCase.Asserts);
+            AddToGeneratorAttribute(generator, "output", testCase.Output);
 
             if (testCase.Properties != null && testCase.Properties.Property.Count > 0)
             {
@@ -147,57 +123,30 @@ namespace GDX.Developer.Reports
                 generator.NextLine();
             }
         }
-        
-        internal void AddToGenerator(TextGenerator generator, NUnit.TestRun testRun)
-        {
-            generator.ApplyIndent();
-            generator.Append($"<test-run");
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "id", testRun.Id);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "testcasecount", testRun.TestCaseCount);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "result", testRun.Result);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "total", testRun.Total);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "passed", testRun.Passed);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "failed", testRun.Failed);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "inconclusive", testRun.Inconclusive);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "skipped", testRun.Skipped);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "asserts", testRun.Asserts);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "engine-version", testRun.EngineVersion);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "clr-version", testRun.CLRVersion);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "start-time", testRun.StartTime);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "end-time", testRun.EndTime);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "duration", testRun.Duration);
-            generator.Append(">");
-            generator.NextLine();
-            generator.PushIndent();
-            AddToGenerator(generator, testRun.TestSuite);
-            generator.PopIndent();
-            generator.AppendLine("</test-run>");
-        }
-        
-        internal void AddToGenerator(TextGenerator generator, NUnit.TestSuite testSuite)
+        static void AddToGenerator(TextGenerator generator, TestSuite testSuite)
         {
             generator.ApplyIndent();
             generator.Append($"<test-suite");
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "type", testSuite.Type);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "id", testSuite.Id);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "name", testSuite.Name);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "fullname", testSuite.FullName);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "classname", testSuite.ClassName);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "runstate", testSuite.RunState);
+            AddToGeneratorAttribute(generator, "type", testSuite.Type);
+            AddToGeneratorAttribute(generator, "id", testSuite.Id);
+            AddToGeneratorAttribute(generator, "name", testSuite.Name);
+            AddToGeneratorAttribute(generator, "fullname", testSuite.FullName);
+            AddToGeneratorAttribute(generator, "classname", testSuite.ClassName);
+            AddToGeneratorAttribute(generator, "runstate", testSuite.RunState);
             
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "testcasecount", testSuite.TestCaseCount);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "result", testSuite.Result);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "label", testSuite.Label);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "start-time", testSuite.StartTime);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "end-time", testSuite.EndTime);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "duration", testSuite.Duration);
+            AddToGeneratorAttribute(generator, "testcasecount", testSuite.TestCaseCount);
+            AddToGeneratorAttribute(generator, "result", testSuite.Result);
+            AddToGeneratorAttribute(generator, "label", testSuite.Label);
+            AddToGeneratorAttribute(generator, "start-time", testSuite.StartTime);
+            AddToGeneratorAttribute(generator, "end-time", testSuite.EndTime);
+            AddToGeneratorAttribute(generator, "duration", testSuite.Duration);
             
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "total", testSuite.Total);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "passed", testSuite.Passed);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "failed", testSuite.Failed);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "inconclusive", testSuite.Inconclusive);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "skipped", testSuite.Skipped);
-            NUnitReport.AddToGeneratorKeyValuePair(generator, "asserts", testSuite.Asserts);
+            AddToGeneratorAttribute(generator, "total", testSuite.Total);
+            AddToGeneratorAttribute(generator, "passed", testSuite.Passed);
+            AddToGeneratorAttribute(generator, "failed", testSuite.Failed);
+            AddToGeneratorAttribute(generator, "inconclusive", testSuite.Inconclusive);
+            AddToGeneratorAttribute(generator, "skipped", testSuite.Skipped);
+            AddToGeneratorAttribute(generator, "asserts", testSuite.Asserts);
 
             generator.Append(">");
             generator.NextLine();
@@ -219,6 +168,50 @@ namespace GDX.Developer.Reports
             }
             generator.PopIndent();
             generator.AppendLine("</test-suite>");
+        }
+        static void AddToGenerator(TextGenerator generator, TestRun testRun)
+        {
+            generator.ApplyIndent();
+            generator.Append($"<test-run");
+            AddToGeneratorAttribute(generator, "id", testRun.Id);
+            AddToGeneratorAttribute(generator, "testcasecount", testRun.TestCaseCount);
+            AddToGeneratorAttribute(generator, "result", testRun.Result);
+            AddToGeneratorAttribute(generator, "total", testRun.Total);
+            AddToGeneratorAttribute(generator, "passed", testRun.Passed);
+            AddToGeneratorAttribute(generator, "failed", testRun.Failed);
+            AddToGeneratorAttribute(generator, "inconclusive", testRun.Inconclusive);
+            AddToGeneratorAttribute(generator, "skipped", testRun.Skipped);
+            AddToGeneratorAttribute(generator, "asserts", testRun.Asserts);
+            AddToGeneratorAttribute(generator, "engine-version", testRun.EngineVersion);
+            AddToGeneratorAttribute(generator, "clr-version", testRun.CLRVersion);
+            AddToGeneratorAttribute(generator, "start-time", testRun.StartTime);
+            AddToGeneratorAttribute(generator, "end-time", testRun.EndTime);
+            AddToGeneratorAttribute(generator, "duration", testRun.Duration);
+            generator.Append(">");
+            generator.NextLine();
+            generator.PushIndent();
+            AddToGenerator(generator, testRun.TestSuite);
+            generator.PopIndent();
+            generator.AppendLine("</test-run>");
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static void AddToGeneratorAttribute(TextGenerator generator, string key, string value)
+        {
+            if (value == default) return;
+            generator.Append($" {key}=\"{value}\"");
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static void AddToGeneratorAttribute(TextGenerator generator, string key, int value)
+        {
+            if (value == default) return;
+            generator.Append($" {key}=\"{value}\"");
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static void AddToGeneratorAttribute(TextGenerator generator, string key, float value)
+        {
+            if (value == 0f) return;
+            generator.Append($" {key}=\"{value}\"");
         }
     }
 }

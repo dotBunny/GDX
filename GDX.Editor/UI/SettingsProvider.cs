@@ -135,7 +135,7 @@ namespace GDX.Editor.UI
                         Platform.EnsureFileFolderHierarchyExists(codePath);
 
                         // Write file
-                        System.IO.File.WriteAllText(codePath, CodeGenerators.SettingsCodeGenerator.Build(Core.Config, WorkingConfig));
+                        System.IO.File.WriteAllText(codePath, SettingsGenerator.Build(Core.Config, WorkingConfig));
                         AssetDatabase.ImportAsset("Assets/Generated/GDXSettings.cs");
                     };
 
