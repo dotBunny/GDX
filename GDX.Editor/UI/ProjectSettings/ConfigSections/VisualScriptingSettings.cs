@@ -90,28 +90,28 @@ namespace GDX.Editor.ProjectSettings
             
             m_CategorySectionsContainer = m_RootElement.Q<VisualElement>("sections");
             
-            m_CategorySectionsContainer.Add(CreateCategorySection(
+            m_CategorySectionsContainer.Add(CreateBindUpdateCategorySection(
                     "Collections", 
                     "An extensive group of collection based classes and structs designed with performance-sensitive environments in mind.", 
                     AssemblyProvider.VisualScriptingCollections));
 
-            m_CategorySectionsContainer.Add(CreateCategorySection(
+            m_CategorySectionsContainer.Add(CreateBindUpdateCategorySection(
                 "Extensions", 
                 "A gathering of aggressively inlined functionality that expands on many of the built-in Unity types.", 
                 AssemblyProvider.VisualScriptingExtensions));
             
-            m_CategorySectionsContainer.Add(CreateCategorySection(
+            m_CategorySectionsContainer.Add(CreateBindUpdateCategorySection(
                 "Types", 
                 "Additional types proven useful in specific situations.", 
                 AssemblyProvider.VisualScriptingTypes));
             
-            m_CategorySectionsContainer.Add(CreateCategorySection(
+            m_CategorySectionsContainer.Add(CreateBindUpdateCategorySection(
                 "Utilities", 
                 "Function libraries useful throughout different areas of a games development.", 
                 AssemblyProvider.VisualScriptingUtilities, false));
         }
 
-        VisualElement CreateCategorySection(string sectionName, string sectionDescription, List<Type> sectionTypes, bool bottomBorder = true)
+        VisualElement CreateBindUpdateCategorySection(string sectionName, string sectionDescription, List<Type> sectionTypes, bool bottomBorder = true)
         {
             VisualTreeAsset categoryAsset =
                 ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsVisualScriptingCategory");
@@ -137,6 +137,7 @@ namespace GDX.Editor.ProjectSettings
                 }
             };
             
+            // Populate the sub list of types
             foreach (Type type in sectionTypes)
             {
                 string typeString = type.ToString();
@@ -161,25 +162,26 @@ namespace GDX.Editor.ProjectSettings
                         Application.OpenURL($"https://gdx.dotbunny.com/api/{cleanedType}.html");
                     }
                 };
-
-                Toggle toggleCategory = m_RootElement.Q<Toggle>("toggle-category");
-                toggleCategory.RegisterValueChangedCallback(evt =>
-                {
-                    bool hasAllTypes = HasAllTypesInConfiguration(sectionTypes);
-                    if (evt.newValue && !hasAllTypes)
-                    {
-                        EnsureAssemblyReferenced();
-                        AddTypesToVisualScripting(sectionTypes);
-                    }
-                    else if(!evt.newValue)
-                    {
-                        RemoveTypesFromVisualScripting(sectionTypes);
-                    }
-                });
-
                 elementTypeContainer.Add(buttonType);
             }
+            
+            // Build toggle
+            Toggle toggleCategory = categoryInstance.Q<Toggle>("toggle-category");
+            toggleCategory.SetValueWithoutNotify(HasAllTypesInConfiguration(sectionTypes));
+            toggleCategory.RegisterValueChangedCallback(evt =>
+            {
+                if (evt.newValue)
+                {
+                    EnsureAssemblyReferenced();
+                    AddTypesToVisualScripting(sectionTypes);
+                }
+                else if (!evt.newValue)
+                {
+                    RemoveTypesFromVisualScripting(sectionTypes);
+                }
+            });
 
+            // Do we want the divider?
             if (bottomBorder)
             {
                 categoryInstance.AddToClassList("gdx-visual-scripting-divider");
