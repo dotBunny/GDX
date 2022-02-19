@@ -23,6 +23,8 @@ namespace GDX.Editor
             code.AppendLine($"public static void {Core.OverrideMethod}()");
             code.PushIndent();
 
+            AddToGenerator(code, "ConfigOutputPath",
+                lhs.ConfigOutputPath, rhs.ConfigOutputPath);
             AddToGenerator(code, "UpdateProviderCheckForUpdates",
                 lhs.UpdateProviderCheckForUpdates, rhs.UpdateProviderCheckForUpdates);
             AddToGenerator(code, "DeveloperCommandLineParserArgumentPrefix",

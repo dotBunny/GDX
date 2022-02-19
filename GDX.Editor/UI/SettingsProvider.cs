@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
+using System.IO;
 using GDX.Collections.Generic;
 using GDX.Editor.ProjectSettings;
 using GDX.Editor.UI.ProjectSettings;
@@ -34,7 +35,7 @@ namespace GDX.Editor.UI
         /// </summary>
         private static List<string> s_SearchKeywords;
 
-        public static StringKeyDictionary<IConfigSection> ConfigSections = new StringKeyDictionary<IConfigSection>(6);
+        public static StringKeyDictionary<IConfigSection> ConfigSections = new StringKeyDictionary<IConfigSection>(7);
 
         public static GDXConfig WorkingConfig;
 
@@ -66,6 +67,10 @@ namespace GDX.Editor.UI
             if (!ConfigSections.ContainsKey(AutomaticUpdatesSettings.SectionID))
             {
                 ConfigSections.AddUnchecked(AutomaticUpdatesSettings.SectionID, new AutomaticUpdatesSettings());
+            }
+            if (!ConfigSections.ContainsKey(ConfigSettings.SectionID))
+            {
+                ConfigSections.AddUnchecked(ConfigSettings.SectionID, new ConfigSettings());
             }
             if (!ConfigSections.ContainsKey(BuildInfoSettings.SectionID))
             {
@@ -137,15 +142,38 @@ namespace GDX.Editor.UI
                     s_SaveButton = s_ChangesElement.Q<Button>("button-save-changes");
                     s_SaveButton.clicked += () =>
                     {
-                        string codePath =
-                            System.IO.Path.Combine(UnityEngine.Application.dataPath, "Generated", "GDXSettings.cs");
+                        AssetDatabase.StartAssetEditing();
+                        
+                        // Remove old file
+                        string previousPath = Path.Combine(UnityEngine.Application.dataPath, Core.Config.ConfigOutputPath);
+                        if (File.Exists(previousPath))
+                        {
+                            AssetDatabase.DeleteAsset(Path.Combine("Assets",  Core.Config.ConfigOutputPath));
+                        }
 
-                        // Ensure folder structure is present
-                        Platform.EnsureFileFolderHierarchyExists(codePath);
+                        GDXConfig baseConfig = new GDXConfig();
+                        if (!baseConfig.Compare(WorkingConfig))
+                        {
+                            // Generate new file
+                            string codePath = Path.Combine(UnityEngine.Application.dataPath,
+                                WorkingConfig.ConfigOutputPath);
 
-                        // Write file
-                        System.IO.File.WriteAllText(codePath, SettingsGenerator.Build(Core.Config, WorkingConfig));
-                        AssetDatabase.ImportAsset("Assets/Generated/GDXSettings.cs");
+                            // Ensure folder structure is present
+                            Platform.EnsureFileFolderHierarchyExists(codePath);
+
+                            // Write file
+                            File.WriteAllText(codePath, SettingsGenerator.Build(baseConfig, WorkingConfig));
+
+                            string projectRelative =
+                                Path.Combine("Assets", WorkingConfig.ConfigOutputPath);
+
+                            AssetDatabase.StopAssetEditing();
+                            AssetDatabase.ImportAsset(projectRelative);
+                        }
+                        else
+                        {
+                            AssetDatabase.StopAssetEditing();
+                        }
                     };
 
                     // Handle Links

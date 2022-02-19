@@ -11,6 +11,11 @@ namespace GDX
     public class GDXConfig
     {
         /// <summary>
+        ///     The asset database relative path of the GDX config override file.
+        /// </summary>
+        public string ConfigOutputPath = "Generated/GDXSettings.cs";
+        
+        /// <summary>
         ///     Ensure that there is an assembly definition wrapping the generated content.
         /// </summary>
         public bool DeveloperBuildInfoAssemblyDefinition = true;
@@ -124,6 +129,7 @@ namespace GDX
 
         public GDXConfig(GDXConfig initialState)
         {
+            ConfigOutputPath = initialState.ConfigOutputPath;
             UpdateProviderCheckForUpdates = initialState.UpdateProviderCheckForUpdates;
             DeveloperCommandLineParserArgumentPrefix = initialState.DeveloperCommandLineParserArgumentPrefix;
             DeveloperCommandLineParserArgumentSplit = initialState.DeveloperCommandLineParserArgumentSplit;
@@ -167,7 +173,8 @@ namespace GDX
                    TraceDevelopmentOutputToUnityConsole == rhs.TraceDevelopmentOutputToUnityConsole &&
                    TraceDebugOutputToUnityConsole == rhs.TraceDebugOutputToUnityConsole &&
                    LocalizationSetDefaultCulture == rhs.LocalizationSetDefaultCulture &&
-                   LocalizationDefaultCulture == rhs.LocalizationDefaultCulture;
+                   LocalizationDefaultCulture == rhs.LocalizationDefaultCulture &&
+                   ConfigOutputPath == rhs.ConfigOutputPath;
         }
     }
 }
