@@ -24,7 +24,7 @@ namespace GDX.Editor.ProjectSettings
     // ReSharper disable once UnusedType.Global
     internal class VisualScriptingSettings : IConfigSection
     {
-        private VisualElement m_Element;
+        private VisualElement m_RootElement;
 
         /// <summary>
         ///     Internal section identifier.
@@ -44,26 +44,7 @@ namespace GDX.Editor.ProjectSettings
             "Additional types proven useful in specific situations.");
         private static readonly GUIContent s_CategoryUtilitiesContent = new GUIContent(
             "Function libraries useful throughout different areas of a games development.");
-
-        /// <summary>
-        ///     Content regarding this not being all of the content that can be added to visual scripting.
-        /// </summary>
-        private static readonly GUIContent s_VisualScriptingGenerationAdditionalContent = new GUIContent(
-            "These categories represents a curated selection of predefined content from the GDX API which has proven useful; it is not meant to represent everything available for inclusion to Visual Scripting.");
-
-        /// <summary>
-        ///     Content for instruction on how to regenerate quickly.
-        /// </summary>
-        private static readonly GUIContent s_VisualScriptingGenerationContent = new GUIContent(
-            "You can do this by clicking the Regenerate Units button to the right or by finding the same button available in the Visual Scripting section of the Project Settings.");
-
-        /// <summary>
-        ///     Content for the warning about changing types units.
-        /// </summary>
-        private static readonly GUIContent s_VisualScriptingGenerationNoticeContent =
-            new GUIContent(
-                "By selecting and deselecting the below categories, items will be added or removed from the Visual Scripting type options configuration.");
-
+        
         /// <summary>
         ///     Content for the warning about regenerating units.
         /// </summary>
@@ -77,60 +58,27 @@ namespace GDX.Editor.ProjectSettings
         private static readonly GUIContent s_VisualScriptingLoadingContent = new GUIContent(
             "The visual scripting subsystem is currently loading.");
 
+        
 #if GDX_VISUALSCRIPTING
-        /// <summary>
-        ///     Draw the Visual Scripting settings section.
-        /// </summary>
-        /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
+        /// <inheritdoc />
         public void BindSectionContent(VisualElement rootElement)
         {
-            if (m_Element == null)
-            {
-                VisualTreeAsset templateAsset =
-                    ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsVisualScripting");
-                m_Element = templateAsset.Instantiate()[0];
-            }
-            rootElement.Add(m_Element);
-            // GUI.enabled = true;
-            //
-            //
-            // SettingsGUIUtility.CreateSettingsSection(SectionID, false, "Visual Scripting",
-            //     $"{SettingsProvider.DocumentationUri}manual/features/visual-scripting.html");
-            //
-            // // Don't show section if not enabled OR if the visual scripting has not been initialized
-            // if (!SettingsGUIUtility.GetCachedEditorBoolean(SectionID))
-            // {
-            //     return;
-            // }
-            //
-            // if (!ProductContainer.initialized)
-            // {
-            //     GUILayout.BeginVertical(SettingsStyles.InfoBoxStyle);
-            //     GUILayout.Label(s_visualScriptingLoadingContent);
-            //     GUILayout.EndVertical();
-            //     return;
-            // }
-            //
-            // if (s_assembly == null)
-            // {
-            //     s_assembly = new AssemblyProvider();
-            // }
-            //
-            // GUILayout.BeginVertical(SettingsStyles.InfoBoxStyle);
-            // GUILayout.BeginHorizontal();
-            //
-            // GUILayout.Label(SettingsStyles.WarningIcon, SettingsStyles.NoHorizontalStretchStyle);
-            // GUILayout.BeginVertical();
-            // GUILayout.Label(s_visualScriptingGenerationNoticeContent, SettingsStyles.WordWrappedLabelStyle);
-            // GUILayout.Space(5);
-            // GUILayout.Label(s_visualScriptingGenerationWarningContent, EditorStyles.boldLabel);
-            // GUILayout.Space(5);
-            // GUILayout.Label(s_visualScriptingGenerationContent, SettingsStyles.WordWrappedLabelStyle);
-            // GUILayout.Space(5);
-            // GUILayout.Label(s_visualScriptingGenerationAdditionalContent, SettingsStyles.WordWrappedLabelStyle);
-            // GUILayout.EndVertical();
-            // GUILayout.Space(10);
-            // GUILayout.BeginVertical();
+            m_RootElement = rootElement;
+            
+            // Bind top part
+            
+            // Get container
+            
+            // We need to spawn the sections as well
+            VisualTreeAsset categoryAsset =
+                ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsVisualScriptingCategory");
+
+            VisualElement categoryInstance = categoryAsset.Instantiate()[0];
+            
+            // add to container
+            // Bind those
+            
+            
             // if (GUILayout.Button("Regenerate Units", SettingsStyles.ButtonStyle))
             // {
             //     BoltCore.Configuration.Save();
@@ -156,10 +104,11 @@ namespace GDX.Editor.ProjectSettings
             //         AssetDatabase.ImportAsset("Assets/" + targetFile.Replace(Application.dataPath, "").Replace("\\", "/"));
             //     }
             // }
-            // GUILayout.EndVertical();
-            //
-            // GUILayout.EndHorizontal();
-            // GUILayout.EndVertical();
+      
+            
+            
+            
+            
             //
             // DrawNodeSection("Collections", s_categoryCollectionsContent,  s_assembly.VisualScriptingCollections);
             //
