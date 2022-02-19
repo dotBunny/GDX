@@ -121,6 +121,15 @@ Button.gdx-link:hover {
     margin-top: 2px;
 }
 
+.gdx-icon-button {
+    width: var(--size-header);
+    height: var(--size-header);
+    padding: 0;
+    margin-top: -4px;
+    margin-left: 0;
+    margin-right: 2px;
+}
+
 Button.gdx-button {
     height: 25px;
     border-radius: 3px;
@@ -199,12 +208,6 @@ Button.gdx-button {
 
 .gdx-project-settings-section-header .gdx-icon-button {
     background-color: var(--color-header-footer);
-    width: var(--size-header);
-    height: var(--size-header);
-    padding: 0;
-    margin-top: -4px;
-    margin-left: 0;
-    margin-right: 2px;
 }
 
 .gdx-project-settings-section-header #button-expand {
@@ -287,6 +290,49 @@ Button.gdx-button {
     margin-left: 10px;
     width: 100px;
 }
+
+#gdx-visual-scripting-category #button-foldout {
+    margin-top: 2px;
+    background-color: rgba(0,0,0,0);
+    border-width: 0;
+    background-image: resource('Builtin Skins/DarkSkin/Images/IN foldout.png');
+}
+#gdx-visual-scripting-category #button-foldout:hover{
+    background-image: resource('Builtin Skins/DarkSkin/Images/IN foldout focus.png');
+}
+
+#gdx-visual-scripting-category #button-foldout.expanded {
+    background-image: resource('Builtin Skins/DarkSkin/Images/IN foldout on.png');
+}
+
+#gdx-visual-scripting-category #button-foldout.expanded:hover {
+    background-image: resource('Builtin Skins/DarkSkin/Images/IN foldout focus on.png');
+}
+
+#gdx-visual-scripting-category #label-category {
+    -unity-font-style: bold;
+}
+
+#gdx-visual-scripting-category #label-description {
+    white-space: normal;
+    margin-bottom: 5px;
+}
+#gdx-visual-scripting-category #type-container {
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+
+#gdx-visual-scripting-category .toggle-category-container {
+    width: 30px;
+}
+
+#gdx-visual-scripting-category.gdx-visual-scripting-divider {
+    border-bottom-color: rgba(0.1, 0.1, 0.1, 0.15);
+    border-bottom-width: 1px;
+    margin-bottom: 5px;
+}
+
+
 
 .gdx-big-title {
     font-size: 19px;

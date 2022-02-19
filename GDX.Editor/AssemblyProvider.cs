@@ -15,37 +15,39 @@ namespace GDX.Editor
     /// </summary>
     [HideFromDocFX]
     // ReSharper disable once ClassNeverInstantiated.Global
-    public class AssemblyProvider
+    public static class AssemblyProvider
     {
+        /// <summary>
+        ///     The assembly information been populated?
+        /// </summary>
+        public static bool IsPopulated;
+        
         /// <summary>
         ///     A reference to the main GDX assembly
         /// </summary>
-        public readonly Assembly RuntimeAssembly;
+        public static Assembly RuntimeAssembly;
 
         /// <summary>
         ///     A list of all types with the <see cref="VisualScriptingCompatibleAttribute"/> attribute.
         /// </summary>
-        public readonly List<Type> VisualScriptingCollections;
+        public static List<Type> VisualScriptingCollections;
 
         /// <summary>
         ///     A list of all types with the <see cref="VisualScriptingCompatibleAttribute"/> attribute.
         /// </summary>
-        public readonly List<Type> VisualScriptingExtensions;
+        public static List<Type> VisualScriptingExtensions;
 
         /// <summary>
         ///     A list of all types with the <see cref="VisualScriptingCompatibleAttribute"/> attribute.
         /// </summary>
-        public readonly List<Type> VisualScriptingTypes;
+        public static List<Type> VisualScriptingTypes;
 
         /// <summary>
         ///     A list of all types with the <see cref="VisualScriptingCompatibleAttribute"/> attribute.
         /// </summary>
-        public readonly List<Type> VisualScriptingUtilities;
+        public static List<Type> VisualScriptingUtilities;
 
-        /// <summary>
-        ///     <see cref="AssemblyProvider"/> Constructor.
-        /// </summary>
-        public AssemblyProvider()
+        public static void Populate()
         {
             RuntimeAssembly = Assembly.GetAssembly(typeof(Core));
 
@@ -81,6 +83,8 @@ namespace GDX.Editor
                     VisualScriptingUtilities.Add(type);
                 }
             }
+
+            IsPopulated = true;
         }
     }
 }
