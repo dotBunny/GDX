@@ -20,19 +20,27 @@ namespace GDX.Editor.UI
         ///     The cached reference to the global stylesheet.
         /// </summary>
         static StyleSheet s_Stylesheet;
-
+        
         /// <summary>
         ///     The cached reference to the override stylesheet.
         /// </summary>
         /// <remarks>
         ///     Used to accomodate version specific styling.
         /// </remarks>
-        static StyleSheet s_StyleSheetOverride;
+        static StyleSheet s_StylesheetOverride;
 
         /// <summary>
         ///     A cached pathing to where our UXML are stored.
         /// </summary>
         static string s_FoundAssetFolder;
+        
+        /// <summary>
+        ///     The cached reference to the light theme stylesheet.
+        /// </summary>
+        /// <remarks>
+        ///     Used to augment the styles used for those who use Unity's light theme. Who does this?
+        /// </remarks>
+        static StyleSheet s_LightThemeStylesheet;
 
         /// <summary>
         ///     Apply light/dark mode classes.
@@ -76,6 +84,24 @@ namespace GDX.Editor.UI
             return s_Stylesheet;
         }
 
+        public static StyleSheet GetLightThemeStylesheet()
+        {
+            if (s_LightThemeStylesheet != null)
+            {
+                return s_LightThemeStylesheet;
+            }
+
+            string[] potentialStyles = AssetDatabase.FindAssets("t:Stylesheet GDXStylesLightTheme");
+            if (potentialStyles.Length <= 0)
+            {
+                return s_LightThemeStylesheet;
+            }
+
+            s_LightThemeStylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(potentialStyles[0]));
+
+            return s_LightThemeStylesheet;
+        }
+
         /// <summary>
         ///     Return the override stylesheet.
         /// </summary>
@@ -86,20 +112,20 @@ namespace GDX.Editor.UI
 #if UNITY_2021_1_OR_NEWER
             return null;
 #else
-            if (s_StyleSheetOverride != null)
+            if (s_StylesheetOverride != null)
             {
-                return s_StyleSheetOverride;
+                return s_StylesheetOverride;
             }
 
             string[] potentialStyles = AssetDatabase.FindAssets("t:Stylesheet GDXStylesUnity2020");
             if (potentialStyles.Length <= 0)
             {
-                return s_StyleSheetOverride;
+                return s_StylesheetOverride;
             }
 
-            s_StyleSheetOverride = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(potentialStyles[0]));
+            s_StylesheetOverride = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(potentialStyles[0]));
 
-            return s_StyleSheetOverride;
+            return s_StylesheetOverride;
 #endif
         }
 

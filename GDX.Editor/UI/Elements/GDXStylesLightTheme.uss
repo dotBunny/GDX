@@ -1,0 +1,14 @@
+﻿#gdx-visual-scripting-category #button-foldout {
+    background-image: resource('Builtin Skins/LightSkin/Images/IN foldout.png');
+}
+#gdx-visual-scripting-category #button-foldout:hover{
+    background-image: resource('Builtin Skins/LightSkin/Images/IN foldout focus.png');
+}
+
+#gdx-visual-scripting-category #button-foldout.expanded {
+    background-image: resource('Builtin Skins/LightSkin/Images/IN foldout on.png');
+}
+
+#gdx-visual-scripting-category #button-foldout.expanded:hover {
+    background-image: resource('Builtin Skins/LightSkin/Images/IN foldout focus on.png');
+}

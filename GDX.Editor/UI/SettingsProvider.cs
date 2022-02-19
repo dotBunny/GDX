@@ -102,6 +102,15 @@ namespace GDX.Editor.UI
                         rootElement.styleSheets.Add(ResourcesProvider.GetStyleSheet());
                     }
 
+                    // Add a light mode style sheet if we have to
+                    if (!EditorGUIUtility.isProSkin)
+                    {
+                        if (ResourcesProvider.GetLightThemeStylesheet() != null)
+                        {
+                            rootElement.styleSheets.Add(ResourcesProvider.GetLightThemeStylesheet());
+                        }
+                    }
+                    
                     // Add any overrides
                     if (ResourcesProvider.GetStyleSheetOverride() != null)
                     {
