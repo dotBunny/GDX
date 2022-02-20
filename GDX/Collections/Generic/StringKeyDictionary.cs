@@ -10,6 +10,10 @@ namespace GDX.Collections.Generic
         public int FreeListHead;
         public int Count;
 
+        /// <summary>
+        /// Initializes the dictionary with at least <paramref name="minCapacity"/> capacity.
+        /// </summary>
+        /// <param name="minCapacity">The minimal initial capacity to reserve.</param>
         public StringKeyDictionary(int minCapacity)
         {
             int primeCapacity = DictionaryPrimes.GetPrime(minCapacity);
@@ -24,13 +28,18 @@ namespace GDX.Collections.Generic
 
             for (int i = 0; i < primeCapacity; i++)
             {
-                Entries[i].next = (1 << 31) | (i + 1);
+                Entries[i].Next = (1 << 31) | (i + 1);
             }
 
             Count = 0;
             FreeListHead = 0;
         }
 
+        /// <summary>
+        /// Adds the key value pair to the dictionary, expanding if necessary but not checking for duplicate entries.
+        /// </summary>
+        /// <param name="key">The key to add.</param>
+        /// <param name="value">The value to add.</param>
         public void AddWithExpandCheck(string key, TValue value)
         {
             if (key == null) throw new ArgumentNullException();
@@ -47,16 +56,22 @@ namespace GDX.Collections.Generic
             int indexAtBucket = Buckets[hashIndex];
             ref StringKeyEntry<TValue> entry = ref Entries[freeIndex];
 
-            FreeListHead = entry.next & 0x7FFFFFFF;
-            entry.next = indexAtBucket;
-            entry.key = key;
-            entry.value = value;
-            entry.hashCode = hashCode;
+            FreeListHead = entry.Next & 0x7FFFFFFF;
+            entry.Next = indexAtBucket;
+            entry.Key = key;
+            entry.Value = value;
+            entry.HashCode = hashCode;
             Buckets[hashIndex] = freeIndex;
 
             ++Count;
-        } 
+        }
 
+        /// <summary>
+        /// Adds the key value pair to the dictionary, checking for duplicates but not expanding if necessary.
+        /// </summary>
+        /// <param name="key">The key to add.</param>
+        /// <param name="value">The value to add.</param>
+        /// <returns>True if the entry was successfully created.</returns>
         public bool AddWithUniqueCheck(string key, TValue value)
         {
             if (key == null) throw new ArgumentNullException();
@@ -71,8 +86,8 @@ namespace GDX.Collections.Generic
             while (nextKeyIndex > -1)
             {
                 ref StringKeyEntry<TValue> currEntry = ref Entries[nextKeyIndex];
-                nextKeyIndex = currEntry.next;
-                if (currEntry.key == key)
+                nextKeyIndex = currEntry.Next;
+                if (currEntry.Key == key)
                 {
                     return false;
                 }
@@ -80,17 +95,23 @@ namespace GDX.Collections.Generic
 
             ref StringKeyEntry<TValue> entry = ref Entries[freeIndex];
 
-            FreeListHead = entry.next & 0x7FFFFFFF;
-            entry.next = indexAtBucket;
-            entry.key = key;
-            entry.value = value;
-            entry.hashCode = hashCode;
+            FreeListHead = entry.Next & 0x7FFFFFFF;
+            entry.Next = indexAtBucket;
+            entry.Key = key;
+            entry.Value = value;
+            entry.HashCode = hashCode;
             Buckets[hashIndex] = freeIndex;
 
             ++Count;
             return true;
         }
 
+        /// <summary>
+        /// Adds the key value pair to the dictionary, checking for duplicate entries and expanding if necessary.
+        /// </summary>
+        /// <param name="key">The key to add.</param>
+        /// <param name="value">The value to add.</param>
+        /// <returns>True if the entry was successfully created.</returns>
         public bool AddSafe(string key, TValue value)
         {
             if (key == null) throw new ArgumentNullException();
@@ -111,8 +132,8 @@ namespace GDX.Collections.Generic
             while (nextKeyIndex != -1)
             {
                 StringKeyEntry<TValue> currEntry = Entries[nextKeyIndex];
-                nextKeyIndex = currEntry.next;
-                if (currEntry.key == key)
+                nextKeyIndex = currEntry.Next;
+                if (currEntry.Key == key)
                 {
                     return false;
                 }
@@ -120,17 +141,22 @@ namespace GDX.Collections.Generic
 
             ref StringKeyEntry<TValue> entry = ref Entries[freeIndex];
 
-            FreeListHead = entry.next & 0x7FFFFFFF;
-            entry.next = indexAtBucket;
-            entry.key = key;
-            entry.value = value;
-            entry.hashCode = hashCode;
+            FreeListHead = entry.Next & 0x7FFFFFFF;
+            entry.Next = indexAtBucket;
+            entry.Key = key;
+            entry.Value = value;
+            entry.HashCode = hashCode;
             Buckets[hashIndex] = freeIndex;
 
             ++Count;
             return true;
         }
 
+        /// <summary>
+        /// Adds the key value pair to the dictionary, without checking for available capacity or duplicate entries.
+        /// </summary>
+        /// <param name="key">The key to add.</param>
+        /// <param name="value">The value to add.</param>
         public void AddUnchecked(string key, TValue value)
         {
             int dataIndex = FreeListHead;
@@ -140,14 +166,17 @@ namespace GDX.Collections.Generic
 
             ref StringKeyEntry<TValue> entry = ref Entries[dataIndex];
 
-            FreeListHead = entry.next & 0x7FFFFFFF;
-            entry.next = initialBucketValue;
-            entry.key = key;
-            entry.value = value;
-            entry.hashCode = hashCode;
+            FreeListHead = entry.Next & 0x7FFFFFFF;
+            entry.Next = initialBucketValue;
+            entry.Key = key;
+            entry.Value = value;
+            entry.HashCode = hashCode;
             Buckets[bucketIndex] = dataIndex;
         }
 
+        /// <summary>
+        /// Resizes the dictionary with the assumption that it is full. Do not use otherwise.
+        /// </summary>
         public void ExpandWhenFull()
         {
             int oldCapacity = Buckets.Length;
@@ -166,22 +195,26 @@ namespace GDX.Collections.Generic
             {
                 ref StringKeyEntry<TValue> entry = ref newEntries[i];
 
-                int newBucketIndex = (entry.hashCode & 0x7FFFFFFF) % nextPrimeCapacity;
+                int newBucketIndex = (entry.HashCode & 0x7FFFFFFF) % nextPrimeCapacity;
 
                 int indexAtBucket = newBuckets[newBucketIndex];
-                entry.next = indexAtBucket;
+                entry.Next = indexAtBucket;
                 newBuckets[newBucketIndex] = i;
             }
 
             for (int i = oldCapacity; i < nextPrimeCapacity; i++)
             {
-                newEntries[i].next = (1 << 31) | (i + 1);
+                newEntries[i].Next = (1 << 31) | (i + 1);
             }
 
             Buckets = newBuckets;
             Entries = newEntries;
         }
 
+        /// <summary>
+        /// Expands the dictionary if it does not have enough empty space for <paramref name="capacityToReserve"/>.
+        /// </summary>
+        /// <param name="capacityToReserve"></param>
         public void Reserve(int capacityToReserve)
         {
             int oldCapacity = Entries.Length;   
@@ -203,19 +236,19 @@ namespace GDX.Collections.Generic
                 {
                     ref StringKeyEntry<TValue> entry = ref newEntries[i];
 
-                    if (entry.key != null)
+                    if (entry.Key != null)
                     {
-                        int newBucketIndex = (entry.hashCode & 0x7FFFFFFF) % nextPrimeCapacity;
+                        int newBucketIndex = (entry.HashCode & 0x7FFFFFFF) % nextPrimeCapacity;
 
                         int indexAtBucket = newBuckets[newBucketIndex];
-                        entry.next = indexAtBucket;
+                        entry.Next = indexAtBucket;
                         newBuckets[newBucketIndex] = i;
                     }
                 }
 
                 for (int i = oldCapacity; i < nextPrimeCapacity; i++)
                 {
-                    newEntries[i].next = (1 << 31) | (i + 1);
+                    newEntries[i].Next = (1 << 31) | (i + 1);
                 }
 
                 Buckets = newBuckets;
@@ -223,6 +256,11 @@ namespace GDX.Collections.Generic
             }
         }
 
+        /// <summary>
+        /// Finds the index of the entry corresponding to a key.
+        /// </summary>
+        /// <param name="key">The key to find the index of.</param>
+        /// <returns>The index of the entry, or -1 if the entry does not exist.</returns>
         public int IndexOf(string key)
         {
             if (key == null) throw new ArgumentNullException();
@@ -235,17 +273,23 @@ namespace GDX.Collections.Generic
             {
                 ref StringKeyEntry<TValue> currEntry = ref Entries[nextKeyIndex];
 
-                if (currEntry.key == key)
+                if (currEntry.Key == key)
                 {
                     return nextKeyIndex;
                 }
 
-                nextKeyIndex = currEntry.next;
+                nextKeyIndex = currEntry.Next;
             }
 
             return -1;
         }
 
+        /// <summary>
+        /// Replaces the value of the entry if the entry exists.
+        /// </summary>
+        /// <param name="key">The key of the entry to modify.</param>
+        /// <param name="value">The new value of the entry.</param>
+        /// <returns>True if the entry was found.</returns>
         public bool TryModifyValue(string key, TValue value)
         {
             if (key == null) throw new ArgumentNullException();
@@ -257,11 +301,11 @@ namespace GDX.Collections.Generic
             while (nextKeyIndex != -1)
             {
                 ref StringKeyEntry<TValue> currEntry = ref Entries[nextKeyIndex];
-                nextKeyIndex = currEntry.next;
+                nextKeyIndex = currEntry.Next;
 
-                if (currEntry.key == key)
+                if (currEntry.Key == key)
                 {
-                    currEntry.value = value;
+                    currEntry.Value = value;
                     return true;
                 }
             }
@@ -269,6 +313,11 @@ namespace GDX.Collections.Generic
             return false;
         }
 
+        /// <summary>
+        /// Removes the entry if it exists.
+        /// </summary>
+        /// <param name="key">The key to remove.</param>
+        /// <returns>True if the entry was found.</returns>
         public bool TryRemove(string key)
         {
             if (key == null) throw new ArgumentNullException();
@@ -285,26 +334,26 @@ namespace GDX.Collections.Generic
             {
                 ref StringKeyEntry<TValue> currEntry = ref Entries[indexOfKey];
 
-                if (currEntry.key == key)
+                if (currEntry.Key == key)
                 {
                     foundIndex = true;
                     break;
                 }
 
                 previousIndex = indexOfKey;
-                indexOfKey = currEntry.next;
+                indexOfKey = currEntry.Next;
             }
 
             if (foundIndex)
             {
                 ref StringKeyEntry<TValue> currEntry = ref Entries[indexOfKey];
-                int nextUsedIndex = currEntry.next;
+                int nextUsedIndex = currEntry.Next;
                 int nextFreeIndex = FreeListHead;
 
-                currEntry.key = null;
-                currEntry.value = default(TValue);
-                currEntry.hashCode = 0;
-                currEntry.next = nextFreeIndex | (1 << 31);
+                currEntry.Key = null;
+                currEntry.Value = default(TValue);
+                currEntry.HashCode = 0;
+                currEntry.Next = nextFreeIndex | (1 << 31);
                 Entries[indexOfKey] = currEntry;
                 FreeListHead = indexOfKey;
 
@@ -314,7 +363,65 @@ namespace GDX.Collections.Generic
                 }
                 else
                 {
-                    Entries[previousIndex].next = nextUsedIndex;
+                    Entries[previousIndex].Next = nextUsedIndex;
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Removes the entry if it exists, but does not remove the value of the key value pair.
+        /// </summary>
+        /// <param name="key">The key to remove.</param>
+        /// <returns>True if the entry was found.</returns>
+        public bool TryRemoveNoValueClear(string key)
+        {
+            if (key == null) throw new ArgumentNullException();
+
+            int hashCode = key.GetStableHashCode() & 0x7FFFFFFF;
+            int bucketIndex = hashCode % Buckets.Length;
+            int indexAtBucket = Buckets[bucketIndex];
+            int indexOfKey = indexAtBucket;
+            int previousIndex = indexAtBucket;
+
+            bool foundIndex = false;
+
+            while (indexOfKey != -1)
+            {
+                ref StringKeyEntry<TValue> currEntry = ref Entries[indexOfKey];
+
+                if (currEntry.Key == key)
+                {
+                    foundIndex = true;
+                    break;
+                }
+
+                previousIndex = indexOfKey;
+                indexOfKey = currEntry.Next;
+            }
+
+            if (foundIndex)
+            {
+                ref StringKeyEntry<TValue> currEntry = ref Entries[indexOfKey];
+                int nextUsedIndex = currEntry.Next;
+                int nextFreeIndex = FreeListHead;
+
+                currEntry.Key = null;
+                currEntry.HashCode = 0;
+                currEntry.Next = nextFreeIndex | (1 << 31);
+                Entries[indexOfKey] = currEntry;
+                FreeListHead = indexOfKey;
+
+                if (indexOfKey == indexAtBucket)
+                {
+                    Buckets[bucketIndex] = nextUsedIndex;
+                }
+                else
+                {
+                    Entries[previousIndex].Next = nextUsedIndex;
                 }
 
                 return true;
@@ -337,11 +444,11 @@ namespace GDX.Collections.Generic
                 while (nextKeyIndex != -1)
                 {
                     ref StringKeyEntry<TValue> currEntry = ref Entries[nextKeyIndex];
-                    nextKeyIndex = currEntry.next;
+                    nextKeyIndex = currEntry.Next;
 
-                    if (currEntry.key == key)
+                    if (currEntry.Key == key)
                     {
-                        return currEntry.value;
+                        return currEntry.Value;
                     }
                 }
 
@@ -368,21 +475,21 @@ namespace GDX.Collections.Generic
                 while (nextKeyIndex != -1)
                 {
                     ref StringKeyEntry<TValue> currEntry = ref Entries[nextKeyIndex];
-                    nextKeyIndex = currEntry.next;
-                    if (currEntry.key == key)
+                    nextKeyIndex = currEntry.Next;
+                    if (currEntry.Key == key)
                     {
-                        currEntry.value = value;
+                        currEntry.Value = value;
                         return;
                     }
                 }
 
                 ref StringKeyEntry<TValue> entry = ref Entries[freeIndex];
 
-                FreeListHead = entry.next & 0x7FFFFFFF;
-                entry.next = indexAtBucket;
-                entry.key = key;
-                entry.value = value;
-                entry.hashCode = hashCode;
+                FreeListHead = entry.Next & 0x7FFFFFFF;
+                entry.Next = indexAtBucket;
+                entry.Key = key;
+                entry.Value = value;
+                entry.HashCode = hashCode;
                 Buckets[bucketIndex] = freeIndex;
 
                 ++Count;
@@ -392,12 +499,12 @@ namespace GDX.Collections.Generic
         /// <summary>
         /// Iterates the dictionary.
         /// </summary>
-        /// <param name="index">The number of indices iterated so far - pass in 0 at the start of iteration.</param>
+        /// <param name="iteratedIndexCount">The number of indices iterated so far - pass in 0 at the start of iteration.</param>
         /// <param name="iteratorVersion">The version when iteration started.</param>
         /// <param name="dictionaryVersion">The current version of the dictionary - update this on add, remove, or clear operations.</param>
         /// <param name="entry">The entry returned by the iterator</param>
         /// <returns>Whether the iterator found an entry, finished iteration, or could not continue due to an invalid version.</returns>
-        public IteratorState MoveNext(ref int index, int iteratorVersion, in int dictionaryVersion, out StringKeyEntry<TValue> entry)
+        public IteratorState MoveNext(ref int iteratedIndexCount, int iteratorVersion, in int dictionaryVersion, out StringKeyEntry<TValue> entry)
         {
             entry = default(StringKeyEntry<TValue>);
 
@@ -406,12 +513,12 @@ namespace GDX.Collections.Generic
                 return IteratorState.InvalidVersion;
             }
 
-            while (index < Entries.Length)
+            while (iteratedIndexCount < Entries.Length)
             {
-                ref StringKeyEntry<TValue> keyEntry = ref Entries[index];
-                index++;
+                ref StringKeyEntry<TValue> keyEntry = ref Entries[iteratedIndexCount];
+                iteratedIndexCount++;
 
-                if (keyEntry.key != null)
+                if (keyEntry.Key != null)
                 {
                     entry = keyEntry;
                     return IteratorState.FoundEntry;
@@ -425,19 +532,19 @@ namespace GDX.Collections.Generic
         /// Iterates the dictionary.
         /// NOTE: if you suspect the dictionary might be modified while iterating, this will not catch the error -- use the other overload instead.
         /// </summary>
-        /// <param name="index">The number of indices iterated so far - pass in 0 at the start of iteration.</param>
+        /// <param name="iteratedIndexCount">The number of indices iterated so far - pass in 0 at the start of iteration.</param>
         /// <param name="entry">The entry returned by the iterator</param>
         /// <returns>Whether or not the iterator found an entry</returns>
-        public bool MoveNext(ref int index, out StringKeyEntry<TValue> entry)
+        public bool MoveNext(ref int iteratedIndexCount, out StringKeyEntry<TValue> entry)
         {
             entry = default(StringKeyEntry<TValue>);
 
-            while (index < Entries.Length)
+            while (iteratedIndexCount < Entries.Length)
             {
-                ref StringKeyEntry<TValue> keyEntry = ref Entries[index];
-                index++;
+                ref StringKeyEntry<TValue> keyEntry = ref Entries[iteratedIndexCount];
+                iteratedIndexCount++;
 
-                if (keyEntry.key != null)
+                if (keyEntry.Key != null)
                 {
                     entry = keyEntry;
 
@@ -447,14 +554,60 @@ namespace GDX.Collections.Generic
 
             return false;
         }
+
+        /// <summary>
+        /// Iterates the dictionary.
+        /// NOTE: if you suspect the dictionary might be modified while iterating, this will not catch the error -- use the other overload instead.
+        /// </summary>
+        /// <param name="iteratedIndexCount">The number of indices iterated so far - pass in 0 at the start of iteration.</param>
+        /// <returns>Whether or not the iterator found an entry</returns>
+        public bool MoveNext(ref int iteratedIndexCount)
+        {
+            while (iteratedIndexCount < Entries.Length)
+            {
+                ref StringKeyEntry<TValue> keyEntry = ref Entries[iteratedIndexCount];
+                iteratedIndexCount++;
+
+                if (keyEntry.Key != null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Clears the dictionary.
+        /// </summary>
+        public void Clear()
+        {
+            int length = Entries.Length;
+
+            for (int i = 0; i < length; i++)
+            {
+                Buckets[i] = -1;
+            }
+
+            for (int i = 0; i < length; i++)
+            {
+                ref StringKeyEntry<TValue> entryAt = ref Entries[i];
+                entryAt.Next = (1 << 31) | (i + 1);
+                entryAt.Key = null;
+                entryAt.Value = default(TValue);
+                entryAt.HashCode = 0;
+            }
+
+            Count = 0;
+        }
     }
 
     [Serializable]
     public struct StringKeyEntry<T>
     {
-        public string key;
-        public T value;
-        public int next;
-        public int hashCode;
+        public string Key;
+        public T Value;
+        public int Next;
+        public int HashCode;
     }
 }

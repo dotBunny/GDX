@@ -348,7 +348,7 @@ namespace Runtime.Collections.Generic
             for (int i = 0; i < arrayLength; i++)
             {
                 StringKeyEntry<string> entry = entries[i];
-                if (entry.key == myKey)
+                if (entry.Key == myKey)
                 {
                     indexOfKey = i;
                     break;
@@ -393,7 +393,7 @@ namespace Runtime.Collections.Generic
             for (int i = 0; i < arrayLength; i++)
             {
                 StringKeyEntry<string> entry = entries[i];
-                if (entry.key == myKey)
+                if (entry.Key == myKey)
                 {
                     indexOfKey = i;
                     break;
@@ -407,7 +407,7 @@ namespace Runtime.Collections.Generic
                 for (int i = indexOfKey + 1; i < arrayLength; i++)
                 {
                     StringKeyEntry<string> entry = entries[i];
-                    if (entry.key == myKey)
+                    if (entry.Key == myKey)
                     {
                         otherIndexOfKey = i;
                         break;
@@ -450,7 +450,7 @@ namespace Runtime.Collections.Generic
             for (int i = 0; i < arrayLength; i++)
             {
                 StringKeyEntry<string> entry = entries[i];
-                if (entry.key == myKey)
+                if (entry.Key == myKey)
                 {
                     realIndex = i;
                     break;
@@ -492,7 +492,7 @@ namespace Runtime.Collections.Generic
             for (int i = 0; i < arrayLength; i++)
             {
                 StringKeyEntry<string> entry = entries[i];
-                if (entry.key == collidingKey0 && entry.value == myValue0)
+                if (entry.Key == collidingKey0 && entry.Value == myValue0)
                 {
                     realIndex0 = i;
                     break;
@@ -504,10 +504,10 @@ namespace Runtime.Collections.Generic
             for (int i = 0; i < arrayLength; i++)
             {
                 StringKeyEntry<string> entry = entries[i];
-                if (entry.key == collidingKey1 && entry.value == myValue1)
+                if (entry.Key == collidingKey1 && entry.Value == myValue1)
                 {
                     realIndex1 = i;
-                    nextIndex = entry.next;
+                    nextIndex = entry.Next;
                     break;
                 }
             }
@@ -587,11 +587,11 @@ namespace Runtime.Collections.Generic
 
             while (dictionary.MoveNext(ref currentIndex, out currentEntry))
             {
-                if (currentEntry.key == firstKey)
+                if (currentEntry.Key == firstKey)
                 {
                     foundFirst = true;
                 }
-                else if (currentEntry.key == secondKey)
+                else if (currentEntry.Key == secondKey)
                 {
                     foundSecond = true;
                 }
@@ -624,11 +624,11 @@ namespace Runtime.Collections.Generic
 
             while (dictionary.MoveNext(ref currentIndex, version, in dictionaryVersion, out currentEntry) == IteratorState.FoundEntry)
             {
-                if (currentEntry.key == firstKey)
+                if (currentEntry.Key == firstKey)
                 {
                     foundFirst = true;
                 }
-                else if (currentEntry.key == secondKey)
+                else if (currentEntry.Key == secondKey)
                 {
                     foundSecond = true;
                 }
@@ -663,11 +663,11 @@ namespace Runtime.Collections.Generic
 
             while (iteratorState == IteratorState.FoundEntry)
             {
-                if (currentEntry.key == firstKey)
+                if (currentEntry.Key == firstKey)
                 {
                     foundFirst = true;
                 }
-                else if (currentEntry.key == secondKey)
+                else if (currentEntry.Key == secondKey)
                 {
                     foundSecond = true;
                 }
