@@ -5,6 +5,8 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Collections
 {
     /// <summary>
@@ -20,6 +22,7 @@ namespace GDX.Collections
     ///     </code>
     /// </example>
     [StructLayout(LayoutKind.Sequential)]
+    // ReSharper disable once UnusedType.Global
     public struct BitArray128
     {
         // ReSharper disable MemberCanBePrivate.Global

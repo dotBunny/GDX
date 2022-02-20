@@ -7,6 +7,8 @@ using UnityEngine;
 using UnityEngine.AI;
 using Unity.Mathematics;
 
+// ReSharper disable UnusedMember.Global
+
 #if GDX_AI
 
 namespace GDX.Classic
@@ -15,6 +17,7 @@ namespace GDX.Classic
     ///     <see cref="UnityEngine.AI.NavMeshPath" /> Based Extension Methods
     /// </summary>
     [VisualScriptingCompatible(2)]
+    // ReSharper disable once UnusedType.Global
     public static class NavMeshPathExtensions
     {
         /// <summary>

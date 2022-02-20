@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using GDX.Classic;
 using NUnit.Framework;
 using UnityEngine;
@@ -75,7 +76,7 @@ namespace Runtime.Classic
             float original = Mathf.Round(originalDistance * originalDistance);
             float optimized = Mathf.Round(a.DistanceSqr(b));
 
-            bool evaluate = original == optimized;
+            bool evaluate = Math.Abs(original - optimized) < GDX.Platform.FloatTolerance;
 
             Assert.IsTrue(evaluate);
         }

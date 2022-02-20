@@ -4,6 +4,8 @@
 
 using System.Runtime.CompilerServices;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Collections
 {
     /// <summary>
@@ -18,6 +20,7 @@ namespace GDX.Collections
     ///         }
     ///     </code>
     /// </example>
+    // ReSharper disable once UnusedType.Global
     public struct BitArray32
     {
         /// <summary>

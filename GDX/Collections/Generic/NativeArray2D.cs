@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using Unity.Collections;
 
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace GDX.Collections.Generic
 {
@@ -15,6 +16,7 @@ namespace GDX.Collections.Generic
     /// </summary>
     /// <remarks>Use X (horizontal) and Y (vertical) arrangement.</remarks>
     /// <typeparam name="T">Type of objects.</typeparam>
+    // ReSharper disable once UnusedType.Global
     public struct NativeArray2D<T> : IDisposable where T : struct
     {
         /// <summary>
@@ -119,6 +121,7 @@ namespace GDX.Collections.Generic
         /// </summary>
         public void ReverseColumns()
         {
+            // ReSharper disable once TooWideLocalVariableScope
             T temporaryStorage;
 
             int lastIndex = ColumnCount - 1;

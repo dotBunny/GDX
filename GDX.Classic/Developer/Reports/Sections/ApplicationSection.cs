@@ -7,6 +7,8 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace GDX.Classic.Developer.Reports.Sections
 {
     public readonly struct ApplicationSection
@@ -44,9 +46,9 @@ namespace GDX.Classic.Developer.Reports.Sections
 
         public void Output(ReportContext context, StringBuilder builder)
         {
-            builder.AppendLine(context.CreateKVP("Active Scene", ActiveScene));
-            builder.AppendLine(context.CreateKVP("Platform", Platform.ToString()));
-            builder.AppendLine(context.CreateKVP("Created", Created.ToString(GDX.Localization.LocalTimestampFormat)));
+            builder.AppendLine(context.CreateKeyValuePair("Active Scene", ActiveScene));
+            builder.AppendLine(context.CreateKeyValuePair("Platform", Platform.ToString()));
+            builder.AppendLine(context.CreateKeyValuePair("Created", Created.ToString(GDX.Localization.LocalTimestampFormat)));
         }
     }
 }

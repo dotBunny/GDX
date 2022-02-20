@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using GDX;
 using GDX.Developer;
 using NUnit.Framework;
@@ -17,29 +16,29 @@ namespace Runtime.Developer
     /// </summary>
     public class CommandLineParserTests
     {
-        private string[] _mockData;
+        private string[] m_MockData;
 
         [SetUp]
         public void Setup()
         {
-            _mockData = new[]
+            m_MockData = new[]
             {
-                $"{Core.Config.developerCommandLineParserArgumentPrefix}KEY{Core.Config.developerCommandLineParserArgumentSplit}Value",
-                "job", $"{Core.Config.developerCommandLineParserArgumentPrefix}SOMETHING"
+                $"{Core.Config.DeveloperCommandLineParserArgumentPrefix}KEY{Core.Config.DeveloperCommandLineParserArgumentSplit}Value",
+                "job", $"{Core.Config.DeveloperCommandLineParserArgumentPrefix}SOMETHING"
             };
         }
 
         [TearDown]
         public void TearDown()
         {
-            _mockData = null;
+            m_MockData = null;
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ProcessArguments_MockData_ContainsFlag()
         {
-            CommandLineParser.ProcessArguments(_mockData);
+            CommandLineParser.ProcessArguments(m_MockData);
 
             bool evaluate = CommandLineParser.Flags.Contains("SOMETHING");
 
@@ -47,10 +46,10 @@ namespace Runtime.Developer
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ProcessArguments_MockData_HasValue()
         {
-            CommandLineParser.ProcessArguments(_mockData);
+            CommandLineParser.ProcessArguments(m_MockData);
 
             bool evaluate = CommandLineParser.Arguments.ContainsKey("KEY") &&
                             CommandLineParser.Arguments["KEY"] == "Value";

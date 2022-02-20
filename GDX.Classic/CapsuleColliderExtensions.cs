@@ -5,12 +5,15 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Classic
 {
     /// <summary>
     ///     <see cref="UnityEngine.CapsuleCollider" /> Based Extension Methods
     /// </summary>
     [VisualScriptingCompatible(2)]
+    // ReSharper disable once UnusedType.Global
     public static class CapsuleColliderExtensions
     {
         /// <summary>

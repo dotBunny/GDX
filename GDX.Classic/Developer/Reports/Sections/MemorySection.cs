@@ -5,6 +5,8 @@
 using System.Text;
 using UnityEngine.Profiling;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace GDX.Classic.Developer.Reports.Sections
 {
     public readonly struct MemorySection
@@ -61,20 +63,20 @@ namespace GDX.Classic.Developer.Reports.Sections
         public void Output(ReportContext context, StringBuilder builder,
             bool detailed = true)
         {
-            builder.AppendLine(context.CreateKVP("Total Mono Heap",
+            builder.AppendLine(context.CreateKeyValuePair("Total Mono Heap",
                 GDX.Localization.GetHumanReadableFileSize(MonoHeapSize)));
-            builder.AppendLine(context.CreateKVP("Used Mono Heap",
+            builder.AppendLine(context.CreateKeyValuePair("Used Mono Heap",
                 GDX.Localization.GetHumanReadableFileSize(MonoUsedSize)));
 
             if (detailed)
             {
-                builder.AppendLine(context.CreateKVP("GFX Driver Allocated Memory",
+                builder.AppendLine(context.CreateKeyValuePair("GFX Driver Allocated Memory",
                     GDX.Localization.GetHumanReadableFileSize(UnityGraphicsDriverAllocatedMemory)));
-                builder.AppendLine(context.CreateKVP("Total Reserved Memory",
+                builder.AppendLine(context.CreateKeyValuePair("Total Reserved Memory",
                     GDX.Localization.GetHumanReadableFileSize(UnityTotalReservedMemory)));
-                builder.AppendLine(context.CreateKVP("Total Allocated Memory",
+                builder.AppendLine(context.CreateKeyValuePair("Total Allocated Memory",
                     GDX.Localization.GetHumanReadableFileSize(UnityTotalAllocatedMemory)));
-                builder.AppendLine(context.CreateKVP("Total Unused Reserved Memory",
+                builder.AppendLine(context.CreateKeyValuePair("Total Unused Reserved Memory",
                     GDX.Localization.GetHumanReadableFileSize(UnityTotalUnusedReservedMemory)));
             }
         }

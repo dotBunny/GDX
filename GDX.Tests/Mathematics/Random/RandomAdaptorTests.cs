@@ -2,8 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Text;
 using GDX.Mathematics.Random;
 using NUnit.Framework;
 
@@ -19,7 +17,7 @@ namespace Runtime.Mathematics.Random
 
             RandomAdaptor random = new RandomAdaptor(mockWell);
 
-            bool evaluate = random != null;
+            bool evaluate = random.HasProvider();
 
             mockWell.Dispose();
             Assert.IsTrue(evaluate);
@@ -93,7 +91,6 @@ namespace Runtime.Mathematics.Random
             bool evaluate = a >= 0 && a <= 10 &&
                             b >= 0 && b <= 10 &&
                             c >= 0 && c <= 10;
-
             mockWell.Dispose();
             Assert.IsTrue(evaluate);
         }

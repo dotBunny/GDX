@@ -1,7 +1,5 @@
 ﻿using GDX.Classic.Developer.Reports;
-using GDX.Classic.Developer.Reports.Objects;
 using NUnit.Framework;
-using UnityEngine;
 
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable
@@ -15,24 +13,11 @@ namespace Runtime.Developer.Reports
     {
         [Test]
         [Category(GDX.Core.TestCategory)]
-        public void Constructor_MockData_ReturnsObject()
-        {
-            var lhs = ResourcesAudit.GetCommon();
-            var rhs = ResourcesAudit.GetAll();
-            var diff = new ResourcesDiff(lhs, rhs);
-
-            bool evaluate = diff != null;
-
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category(GDX.Core.TestCategory)]
         public void Output_GetCommonAndAll_ReturnsReport()
         {
-            var lhs = ResourcesAudit.GetCommon();
-            var rhs = ResourcesAudit.GetAll();
-            var diff = new ResourcesDiff(lhs, rhs);
+            ResourcesAudit lhs = ResourcesAudit.GetCommon();
+            ResourcesAudit rhs = ResourcesAudit.GetAll();
+            ResourcesDiff diff = new ResourcesDiff(lhs, rhs);
             string[] report = diff.Output();
 
             bool evaluate = report != null && report.Length > 0;

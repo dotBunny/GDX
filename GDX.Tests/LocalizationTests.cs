@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System.Text;
 using GDX;
 using NUnit.Framework;
 
@@ -17,7 +16,7 @@ namespace Runtime
     public class LocalizationTests
     {
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetHumanReadableFileSize_100_ReturnsValidString()
         {
             string mockString = Localization.GetHumanReadableFileSize(100);
@@ -28,7 +27,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetHumanReadableFileSize_1024_ReturnsValidString()
         {
             string mockString = Localization.GetHumanReadableFileSize(1024);
@@ -39,7 +38,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetHumanReadableFileSize_1048576_ReturnsValidString()
         {
             string mockString = Localization.GetHumanReadableFileSize(1048576);

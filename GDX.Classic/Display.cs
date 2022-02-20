@@ -5,6 +5,8 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Classic
 {
     /// <summary>
@@ -12,6 +14,7 @@ namespace GDX.Classic
     /// </summary>
     /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
     [VisualScriptingCompatible(8)]
+    // ReSharper disable once UnusedType.Global
     public static class Display
     {
         /// <summary>

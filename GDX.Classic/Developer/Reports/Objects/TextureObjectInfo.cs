@@ -5,6 +5,8 @@
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace GDX.Classic.Developer.Reports.Objects
 {
     public sealed class TextureObjectInfo : ObjectInfo

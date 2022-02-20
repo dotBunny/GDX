@@ -4,9 +4,11 @@
 
 using System;
 using System.Text;
-using System.Text.RegularExpressions;
 using UnityEngine.Profiling;
 using Object = UnityEngine.Object;
+
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBeProtected.Global
 
 namespace GDX.Classic.Developer.Reports.Objects
 {

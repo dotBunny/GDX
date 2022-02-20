@@ -6,25 +6,25 @@ using UnityEditor;
 using UnityEngine;
 using UnityEditor.TestTools.TestRunner.Api;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Editor
 {
+    // ReSharper disable once UnusedType.Global
     public static class TestFramework
     {
-        private static TestRunnerApi s_testRunner;
-        private static TestMonitor s_testMonitor;
+        private static TestRunnerApi s_TestRunner;
+        private static TestMonitor s_TestMonitor;
 
         [InitializeOnLoadMethod]
         public static void Initialize()
         {
-            if (s_testRunner == null)
+            if (s_TestRunner == null)
             {
-                s_testRunner = ScriptableObject.CreateInstance<TestRunnerApi>();
+                s_TestRunner = ScriptableObject.CreateInstance<TestRunnerApi>();
             }
-            if (s_testMonitor == null)
-            {
-                s_testMonitor = new TestMonitor();
-            }
-            s_testRunner.RegisterCallbacks(s_testMonitor);
+            s_TestMonitor ??= new TestMonitor();
+            s_TestRunner.RegisterCallbacks(s_TestMonitor);
         }
     }
 }

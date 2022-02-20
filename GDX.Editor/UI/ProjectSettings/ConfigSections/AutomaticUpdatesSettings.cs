@@ -2,13 +2,11 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Editor;
-using GDX.Editor.UI;
 using GDX.Editor.UI.ProjectSettings;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using SettingsProvider = UnityEditor.SettingsProvider;
+using SettingsProvider = GDX.Editor.UI.SettingsProvider;
 
 namespace GDX.Editor.ProjectSettings
 {
@@ -17,24 +15,26 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     internal class AutomaticUpdatesSettings : IConfigSection
     {
-        private VisualElement _rootElement;
-        private VisualElement _elementLocalVersion;
-        private Label _labelLocalVersion;
-        private VisualElement _elementInstallationMethod;
-        private Label _labelInstallationMethod;
-        private VisualElement _elementSource;
-        private Label _labelSourceItem;
-        private Label _labelSourceData;
-        private VisualElement _elementRemoteVersion;
-        private Label _labelRemoteVersion;
-        private VisualElement _elementLastChecked;
-        private Label _labelLastChecked;
-        private Button _buttonManualUpgrade;
-        private Button _buttonChangeLog;
-        private Button _buttonUpdate;
-        private Button _buttonManualCheck;
+        public const string SectionID = "GDX.Editor.UpdateProvider";
 
-        private SliderInt _sliderUpdateTime;
+        private VisualElement m_RootElement;
+        private VisualElement m_ElementLocalVersion;
+        private Label m_LabelLocalVersion;
+        private VisualElement m_ElementInstallationMethod;
+        private Label m_LabelInstallationMethod;
+        private VisualElement m_ElementSource;
+        private Label m_LabelSourceItem;
+        private Label m_LabelSourceData;
+        private VisualElement m_ElementRemoteVersion;
+        private Label m_LabelRemoteVersion;
+        private VisualElement m_ElementLastChecked;
+        private Label m_LabelLastChecked;
+        private Button m_ButtonManualUpgrade;
+        private Button m_ButtonChangeLog;
+        private Button m_ButtonUpdate;
+        private Button m_ButtonManualCheck;
+
+        private SliderInt m_SliderUpdateTime;
 
         /// <summary>
         ///     The number of days between checks for updates.
@@ -46,43 +46,37 @@ namespace GDX.Editor.ProjectSettings
             private set => EditorPrefs.SetInt("GDX.UpdateProvider.UpdateDayCount", value);
         }
 
-        [InitializeOnLoadMethod]
-        static void Register()
-        {
-            UI.SettingsProvider.RegisterConfigSection(new AutomaticUpdatesSettings());
-        }
-
         /// <summary>
-        ///     Draw the Automatic Updates section of settings.
+        ///     Bind the Automatic Update section.
         /// </summary>
-        /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
+        /// <param name="rootElement">The Automatic Update section <see cref="VisualElement"/>.</param>
         public void BindSectionContent(VisualElement rootElement)
         {
-            _rootElement = rootElement;
+            m_RootElement = rootElement;
 
-            _elementLocalVersion = _rootElement.Q<VisualElement>("gdx-automatic-update-local-version");
-            _labelLocalVersion = _elementLocalVersion.Q<Label>("label-data");
-            _elementInstallationMethod = _rootElement.Q<VisualElement>("gdx-automatic-update-installation-method");
-            _labelInstallationMethod = _elementInstallationMethod.Q<Label>("label-data");
+            m_ElementLocalVersion = m_RootElement.Q<VisualElement>("gdx-automatic-update-local-version");
+            m_LabelLocalVersion = m_ElementLocalVersion.Q<Label>("label-data");
+            m_ElementInstallationMethod = m_RootElement.Q<VisualElement>("gdx-automatic-update-installation-method");
+            m_LabelInstallationMethod = m_ElementInstallationMethod.Q<Label>("label-data");
 
-            _elementSource = _rootElement.Q<VisualElement>("gdx-automatic-update-source");
-            _labelSourceItem = _elementSource.Q<Label>("label-item");
-            _labelSourceData = _elementSource.Q<Label>("label-data");
+            m_ElementSource = m_RootElement.Q<VisualElement>("gdx-automatic-update-source");
+            m_LabelSourceItem = m_ElementSource.Q<Label>("label-item");
+            m_LabelSourceData = m_ElementSource.Q<Label>("label-data");
 
-            _elementRemoteVersion = _rootElement.Q<VisualElement>("gdx-automatic-update-remote-version");
-            _labelRemoteVersion = _elementRemoteVersion.Q<Label>("label-data");
+            m_ElementRemoteVersion = m_RootElement.Q<VisualElement>("gdx-automatic-update-remote-version");
+            m_LabelRemoteVersion = m_ElementRemoteVersion.Q<Label>("label-data");
 
-            _elementLastChecked = _rootElement.Q<VisualElement>("gdx-automatic-update-last-checked");
-            _labelLastChecked = _elementLastChecked.Q<Label>("label-data");
+            m_ElementLastChecked = m_RootElement.Q<VisualElement>("gdx-automatic-update-last-checked");
+            m_LabelLastChecked = m_ElementLastChecked.Q<Label>("label-data");
 
-            _buttonUpdate = _rootElement.Q<Button>("button-update");
-            _buttonChangeLog = _rootElement.Q<Button>("button-changelog");
-            _buttonManualUpgrade = _rootElement.Q<Button>("button-manual-upgrade");
-            _buttonManualCheck = _rootElement.Q<Button>("button-manual-check");
+            m_ButtonUpdate = m_RootElement.Q<Button>("button-update");
+            m_ButtonChangeLog = m_RootElement.Q<Button>("button-changelog");
+            m_ButtonManualUpgrade = m_RootElement.Q<Button>("button-manual-upgrade");
+            m_ButtonManualCheck = m_RootElement.Q<Button>("button-manual-check");
 
-            _sliderUpdateTime = _rootElement.Q<SliderInt>("gdx-slider-update-time");
-            _sliderUpdateTime.value = UpdateDayCountSetting;
-            _sliderUpdateTime.RegisterValueChangedCallback(evt =>
+            m_SliderUpdateTime = m_RootElement.Q<SliderInt>("gdx-slider-update-time");
+            m_SliderUpdateTime.value = UpdateDayCountSetting;
+            m_SliderUpdateTime.RegisterValueChangedCallback(evt =>
             {
                 UpdateDayCountSetting = evt.newValue;
             });
@@ -90,8 +84,8 @@ namespace GDX.Editor.ProjectSettings
 
             if (UpdateProvider.LocalPackage.Definition != null)
             {
-                _labelLocalVersion.text = UpdateProvider.LocalPackage.Definition.version;
-                _labelInstallationMethod.text =
+                m_LabelLocalVersion.text = UpdateProvider.LocalPackage.Definition.version;
+                m_LabelInstallationMethod.text =
                     PackageProvider.GetFriendlyName(UpdateProvider.LocalPackage.InstallationMethod);
 
                 switch (UpdateProvider.LocalPackage.InstallationMethod)
@@ -99,99 +93,82 @@ namespace GDX.Editor.ProjectSettings
                 case PackageProvider.InstallationType.UPMBranch:
                 case PackageProvider.InstallationType.GitHubBranch:
                 case PackageProvider.InstallationType.GitHub:
-                    _elementSource.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
-                    _labelSourceItem.text = "Branch:";
-                    _labelSourceData.text = !string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
+                    m_ElementSource.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                    m_LabelSourceItem.text = "Branch:";
+                    m_LabelSourceData.text = !string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
                         ? UpdateProvider.LocalPackage.SourceTag
                         : "N/A";
                     break;
                 case PackageProvider.InstallationType.UPMTag:
                 case PackageProvider.InstallationType.GitHubTag:
-                    _elementSource.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
-                    _labelSourceItem.text = "Tag:";
-                    _labelSourceData.text = !string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
+                    m_ElementSource.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                    m_LabelSourceItem.text = "Tag:";
+                    m_LabelSourceData.text = !string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
                         ? UpdateProvider.LocalPackage.SourceTag
                         : "N/A";
                     break;
                 case PackageProvider.InstallationType.UPMCommit:
                 case PackageProvider.InstallationType.GitHubCommit:
-                    _elementSource.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
-                    _labelSourceItem.text = "Commit:";
-                    _labelSourceData.text = !string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
+                    m_ElementSource.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                    m_LabelSourceItem.text = "Commit:";
+                    m_LabelSourceData.text = !string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
                         ? UpdateProvider.LocalPackage.SourceTag
                         : "N/A";
                     break;
                 default:
-                    _elementSource.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                    m_ElementSource.AddToClassList(ConfigSectionsProvider.HiddenClass);
                     break;
                 }
             }
             else
             {
-                _labelLocalVersion.text = "N/A";
-                _labelInstallationMethod.text = "N/A";
-                _labelSourceItem.text = "Branch:";
-                _labelSourceData.text = "N/A";
+                m_LabelLocalVersion.text = "N/A";
+                m_LabelInstallationMethod.text = "N/A";
+                m_LabelSourceItem.text = "Branch:";
+                m_LabelSourceData.text = "N/A";
             }
 
             if (UpdateProvider.UpdatePackageDefinition != null)
             {
-                _elementRemoteVersion.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
-                _labelRemoteVersion.text = UpdateProvider.UpdatePackageDefinition.version;
+                m_ElementRemoteVersion.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                m_LabelRemoteVersion.text = UpdateProvider.UpdatePackageDefinition.version;
             }
             else
             {
-                _elementRemoteVersion.AddToClassList(ConfigSectionsProvider.HiddenClass);
-                _labelRemoteVersion.text = "N/A";
-                _labelLastChecked.text = "N/A";
+                m_ElementRemoteVersion.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                m_LabelRemoteVersion.text = "N/A";
+                m_LabelLastChecked.text = "N/A";
             }
 
-            _labelLastChecked.text = UpdateProvider.GetLastChecked().ToString(Localization.LocalTimestampFormat);
+            m_LabelLastChecked.text = UpdateProvider.GetLastChecked().ToString(Localization.LocalTimestampFormat);
 
-            _buttonChangeLog.clicked += () =>
+            m_ButtonChangeLog.clicked += () =>
             {
                 Application.OpenURL("https://github.com/dotBunny/GDX/blob/main/CHANGELOG.md");
             };
-            _buttonUpdate.clicked += () =>
+            m_ButtonUpdate.clicked += () =>
             {
                 UpdateProvider.AttemptUpgrade();
             };
-            _buttonManualCheck.clicked += UpdateProvider.CheckForUpdates;
-            _buttonManualUpgrade.clicked += () =>
+            m_ButtonManualCheck.clicked += UpdateProvider.CheckForUpdates;
+            m_ButtonManualUpgrade.clicked += () =>
             {
                 UpdateProvider.AttemptUpgrade(true);
             };
-
-
-
-
-
-            //     EditorGUILayout.EndVertical();
-            // }
-            // else
-            // {
-            //     GUILayout.Label(
-            //         $"An error occured trying to find the package definition.\nPresumed Root: {UpdateProvider.LocalPackage.PackageAssetPath}\nPresumed Manifest:{UpdateProvider.LocalPackage.PackageManifestPath})",
-            //         EditorStyles.boldLabel);
-            // }
-
         }
 
         public bool GetDefaultVisibility()
         {
             return true;
         }
-        public int GetPriority()
-        {
-            return 1000;
-        }
+
         public string GetSectionHeaderLabel()
         {
             return "Automatic Package Updates";
         }
         public string GetSectionID()
         {
-            return "GDX.Editor.UpdateProvider";
+            return SectionID;
         }
 
         public string GetSectionHelpLink()
@@ -206,21 +183,21 @@ namespace GDX.Editor.ProjectSettings
 
         public bool GetToggleState()
         {
-            return GDX.Editor.UI.SettingsProvider.WorkingConfig.updateProviderCheckForUpdates;
+            return SettingsProvider.WorkingConfig.UpdateProviderCheckForUpdates;
         }
 
         public void SetToggleState(VisualElement toggleElement, bool newState)
         {
-            GDX.Editor.UI.SettingsProvider.WorkingConfig.updateProviderCheckForUpdates = newState;
-            if (Core.Config.updateProviderCheckForUpdates != newState)
+            SettingsProvider.WorkingConfig.UpdateProviderCheckForUpdates = newState;
+            if (Core.Config.UpdateProviderCheckForUpdates != newState)
             {
-                toggleElement.AddToClassList(UI.ProjectSettings.ConfigSectionsProvider.ChangedClass);
+                toggleElement.AddToClassList(ConfigSectionsProvider.ChangedClass);
             }
             else
             {
-                toggleElement.RemoveFromClassList(UI.ProjectSettings.ConfigSectionsProvider.ChangedClass);
+                toggleElement.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
             }
-            GDX.Editor.UI.SettingsProvider.CheckForChanges();
+            SettingsProvider.CheckForChanges();
         }
 
         public string GetToggleTooltip()
@@ -237,26 +214,26 @@ namespace GDX.Editor.ProjectSettings
         {
             if (UpdateProvider.HasUpdate(UpdateProvider.UpdatePackageDefinition))
             {
-                _buttonManualCheck.AddToClassList(ConfigSectionsProvider.HiddenClass);
-                _buttonManualUpgrade.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                m_ButtonManualCheck.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                m_ButtonManualUpgrade.AddToClassList(ConfigSectionsProvider.HiddenClass);
 
-                _buttonChangeLog.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                m_ButtonChangeLog.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
 
                 if (UpdateProvider.IsUpgradable())
                 {
-                    _buttonUpdate.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                    m_ButtonUpdate.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
                 }
                 else
                 {
-                    _buttonUpdate.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                    m_ButtonUpdate.AddToClassList(ConfigSectionsProvider.HiddenClass);
                 }
             }
             else
             {
-                _buttonChangeLog.AddToClassList(ConfigSectionsProvider.HiddenClass);
-                _buttonUpdate.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                m_ButtonChangeLog.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                m_ButtonUpdate.AddToClassList(ConfigSectionsProvider.HiddenClass);
 
-                _buttonManualCheck.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                m_ButtonManualCheck.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
 
                 if ((UpdateProvider.LocalPackage.InstallationMethod ==
                      PackageProvider.InstallationType.GitHubBranch ||
@@ -264,11 +241,11 @@ namespace GDX.Editor.ProjectSettings
                      PackageProvider.InstallationType.UPMBranch) &&
                     UpdateProvider.LocalPackage.SourceTag == "dev")
                 {
-                    _buttonManualUpgrade.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                    m_ButtonManualUpgrade.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
                 }
                 else
                 {
-                    _buttonManualUpgrade.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                    m_ButtonManualUpgrade.AddToClassList(ConfigSectionsProvider.HiddenClass);
                 }
 
             }

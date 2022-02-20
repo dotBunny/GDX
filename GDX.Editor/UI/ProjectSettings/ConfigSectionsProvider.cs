@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using GDX.Collections.Generic;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -12,24 +13,24 @@ namespace GDX.Editor.UI.ProjectSettings
 {
     public static class ConfigSectionsProvider
     {
-        private const string ExpandedClass = "expanded";
+        private const string k_ExpandedClass = "expanded";
         public const string HiddenClass = "hidden";
-        private const string EnabledClass = "enabled";
-        private const string DisabledClass = "disabled";
+        private const string k_EnabledClass = "enabled";
+        private const string k_DisabledClass = "disabled";
         public const string ChangedClass = "changed";
 
-        private static readonly Dictionary<string, VisualElement> s_configSectionContents =
+        private static readonly Dictionary<string, VisualElement> s_ConfigSectionContents =
             new Dictionary<string, VisualElement>();
 
-        private static readonly Dictionary<string, VisualElement> s_configSectionHeaders =
+        private static readonly Dictionary<string, VisualElement> s_ConfigSectionHeaders =
             new Dictionary<string, VisualElement>();
 
         public static VisualElement CreateAndBindSectionHeader(IConfigSection section)
         {
             string sectionID = section.GetSectionID();
-            if (s_configSectionHeaders.ContainsKey(sectionID))
+            if (s_ConfigSectionHeaders.ContainsKey(sectionID))
             {
-                return s_configSectionContents[sectionID];
+                return s_ConfigSectionContents[sectionID];
             }
 
             VisualTreeAsset headerAsset =
@@ -97,16 +98,16 @@ namespace GDX.Editor.UI.ProjectSettings
             }
 
             // Send back created instance
-            s_configSectionHeaders.Add(sectionID, headerInstance);
+            s_ConfigSectionHeaders.Add(sectionID, headerInstance);
             return headerInstance;
         }
 
         public static VisualElement CreateAndBindSectionContent(IConfigSection section)
         {
             string sectionID = section.GetSectionID();
-            if (s_configSectionContents.ContainsKey(sectionID))
+            if (s_ConfigSectionContents.ContainsKey(sectionID))
             {
-                return s_configSectionContents[sectionID];
+                return s_ConfigSectionContents[sectionID];
             }
 
             VisualTreeAsset sectionAsset =
@@ -117,15 +118,15 @@ namespace GDX.Editor.UI.ProjectSettings
             section.BindSectionContent(sectionInstance);
 
             // Record the whole section
-            s_configSectionContents.Add(sectionID, sectionInstance);
+            s_ConfigSectionContents.Add(sectionID, sectionInstance);
 
             return sectionInstance;
         }
 
         public static void ClearSectionCache()
         {
-            s_configSectionHeaders.Clear();
-            s_configSectionContents.Clear();
+            s_ConfigSectionHeaders.Clear();
+            s_ConfigSectionContents.Clear();
         }
 
         private static void OnExpandSectionHeaderClicked(string sectionID)
@@ -145,17 +146,18 @@ namespace GDX.Editor.UI.ProjectSettings
 
         public static void UpdateAll()
         {
-            foreach (KeyValuePair<string, IConfigSection> section in SettingsProvider.ConfigSections)
+            int iterator = 0;
+            while (SettingsProvider.ConfigSections.MoveNext(ref iterator, out StringKeyEntry<IConfigSection> item))
             {
-                UpdateSectionHeader(section.Key);
-                UpdateSectionContent(section.Key);
+                UpdateSectionHeader(item.key);
+                UpdateSectionContent(item.key);
             }
         }
 
         public static void UpdateSectionContent(string sectionID)
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionID];
-            VisualElement element = s_configSectionContents[sectionID];
+            VisualElement element = s_ConfigSectionContents[sectionID];
 
             if (SettingsProvider.GetCachedEditorBoolean(sectionID, section.GetDefaultVisibility()))
             {
@@ -172,7 +174,7 @@ namespace GDX.Editor.UI.ProjectSettings
         public static void UpdateSectionHeader(string sectionID)
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionID];
-            VisualElement sectionHeaderElement = s_configSectionHeaders[sectionID];
+            VisualElement sectionHeaderElement = s_ConfigSectionHeaders[sectionID];
 
             if (section.GetToggleSupport())
             {
@@ -183,23 +185,23 @@ namespace GDX.Editor.UI.ProjectSettings
                 bool toggleState = section.GetToggleState();
                 if (toggleState)
                 {
-                    sectionHeaderElement.RemoveFromClassList(DisabledClass);
-                    sectionHeaderElement.AddToClassList(EnabledClass);
+                    sectionHeaderElement.RemoveFromClassList(k_DisabledClass);
+                    sectionHeaderElement.AddToClassList(k_EnabledClass);
                 }
                 else
                 {
-                    sectionHeaderElement.RemoveFromClassList(EnabledClass);
-                    sectionHeaderElement.AddToClassList(DisabledClass);
+                    sectionHeaderElement.RemoveFromClassList(k_EnabledClass);
+                    sectionHeaderElement.AddToClassList(k_DisabledClass);
                 }
             }
 
             if (SettingsProvider.GetCachedEditorBoolean(sectionID, section.GetDefaultVisibility()))
             {
-                sectionHeaderElement.AddToClassList(ExpandedClass);
+                sectionHeaderElement.AddToClassList(k_ExpandedClass);
             }
             else
             {
-                sectionHeaderElement.RemoveFromClassList(ExpandedClass);
+                sectionHeaderElement.RemoveFromClassList(k_ExpandedClass);
             }
         }
 

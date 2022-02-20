@@ -4,6 +4,9 @@
 
 using UnityEngine;
 
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Classic.Developer.Reports.Objects
 {
     public sealed class AssetBundleObjectInfo : ObjectInfo

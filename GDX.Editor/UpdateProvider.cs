@@ -20,17 +20,17 @@ namespace GDX.Editor
         /// <summary>
         ///     The key used by <see cref="EditorPrefs" /> to store the last time we checked for an update.
         /// </summary>
-        private const string LastCheckedKey = "GDX.UpdateProvider.LastChecked";
+        private const string k_LastCheckedKey = "GDX.UpdateProvider.LastChecked";
 
         /// <summary>
         ///     The key used by <see cref="EditorPrefs" /> to store the last update version we notified the user about.
         /// </summary>
-        private const string LastNotifiedVersionKey = "GDX.UpdateProvider.LastNotifiedVersion";
+        private const string k_LastNotifiedVersionKey = "GDX.UpdateProvider.LastNotifiedVersion";
 
         /// <summary>
         ///     The base URI for downloading the latest released tarball.
         /// </summary>
-        private const string GitHubLatestUri = "https://github.com/dotBunny/GDX/archive/v";
+        private const string k_GitHubLatestUri = "https://github.com/dotBunny/GDX/archive/v";
 
         /// <summary>
         ///     A collection of information about the locally installed GDX package.
@@ -61,13 +61,13 @@ namespace GDX.Editor
         /// </summary>
         private static void DelayCall()
         {
-            if (!Core.Config.updateProviderCheckForUpdates)
+            if (!Core.Config.UpdateProviderCheckForUpdates)
             {
                 return;
             }
 
             // Should we check for updates?
-            DateTime targetDate = GetLastChecked().AddDays(GDX.Editor.ProjectSettings.AutomaticUpdatesSettings.UpdateDayCountSetting);
+            DateTime targetDate = GetLastChecked().AddDays(ProjectSettings.AutomaticUpdatesSettings.UpdateDayCountSetting);
             if (DateTime.Now >= targetDate)
             {
                 CheckForUpdates();
@@ -106,10 +106,7 @@ namespace GDX.Editor
         /// <param name="forceUpgrade">Should we bypass all safety checks?</param>
         public static void AttemptUpgrade(bool forceUpgrade = false)
         {
-            if (UpdatePackageDefinition == null)
-            {
-                UpdatePackageDefinition = GetMainPackageDefinition();
-            }
+            UpdatePackageDefinition ??= GetMainPackageDefinition();
 
             string messageStart =
                 $"There is a new version of GDX available ({UpdatePackageDefinition.version}).\n";
@@ -197,9 +194,9 @@ namespace GDX.Editor
         public static DateTime GetLastChecked()
         {
             DateTime lastTime = new DateTime(2020, 12, 14);
-            if (EditorPrefs.HasKey(LastCheckedKey))
+            if (EditorPrefs.HasKey(k_LastCheckedKey))
             {
-                DateTime.TryParse(EditorPrefs.GetString(LastCheckedKey), out lastTime);
+                DateTime.TryParse(EditorPrefs.GetString(k_LastCheckedKey), out lastTime);
             }
 
             return lastTime;
@@ -221,10 +218,10 @@ namespace GDX.Editor
                 case PackageProvider.InstallationType.UPMTag:
                 case PackageProvider.InstallationType.Assets:
                     return true;
-                case PackageProvider.InstallationType.Unknown:
-                case PackageProvider.InstallationType.UPMCommit:
-                case PackageProvider.InstallationType.UPMLocal:
-                case PackageProvider.InstallationType.GitHubCommit:
+                // case PackageProvider.InstallationType.Unknown:
+                // case PackageProvider.InstallationType.UPMCommit:
+                // case PackageProvider.InstallationType.UPMLocal:
+                // case PackageProvider.InstallationType.GitHubCommit:
                 default:
                     return false;
             }
@@ -235,7 +232,7 @@ namespace GDX.Editor
         /// </summary>
         private static void SetLastChecked()
         {
-            EditorPrefs.SetString(LastCheckedKey, DateTime.Now.ToString(CultureInfo.InvariantCulture));
+            EditorPrefs.SetString(k_LastCheckedKey, DateTime.Now.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -245,7 +242,7 @@ namespace GDX.Editor
         // ReSharper disable once MemberCanBePrivate.Global
         public static string GetLastNotifiedVersion()
         {
-            return EditorPrefs.GetString(LastNotifiedVersionKey);
+            return EditorPrefs.GetString(k_LastNotifiedVersionKey);
         }
 
         /// <summary>
@@ -254,7 +251,7 @@ namespace GDX.Editor
         /// <param name="versionTag">The package version string.</param>
         private static void SetLastNotifiedVersion(string versionTag)
         {
-            EditorPrefs.SetString(LastNotifiedVersionKey, versionTag);
+            EditorPrefs.SetString(k_LastNotifiedVersionKey, versionTag);
         }
 
         /// <summary>
@@ -307,7 +304,7 @@ namespace GDX.Editor
             try
             {
                 using WebClient webClient = new WebClient();
-                webClient.DownloadFile(GitHubLatestUri + UpdatePackageDefinition.version + ".tar.gz",
+                webClient.DownloadFile(k_GitHubLatestUri + UpdatePackageDefinition.version + ".tar.gz",
                     tempFile);
             }
             catch (Exception e)
@@ -329,7 +326,7 @@ namespace GDX.Editor
                 Directory.Delete(tempExtractFolder, true);
             }
 
-            GDX.Platform.EnsureFolderHierarchyExists(tempExtractFolder);
+            Platform.EnsureFolderHierarchyExists(tempExtractFolder);
 
             // Extract downloaded tarball to the temp folder
             TarFile.ExtractToDirectory(tempFile, tempExtractFolder, true);
@@ -345,7 +342,7 @@ namespace GDX.Editor
                 try
                 {
                     AssetDatabase.StartAssetEditing();
-                    GDX.Editor.VersionControl.CheckoutFolder(targetPath);
+                    VersionControl.CheckoutFolder(targetPath);
                     Directory.Delete(targetPath, true);
 
                     // Drop in new content
@@ -383,7 +380,7 @@ namespace GDX.Editor
                 {
                     // Pause asset database
                     AssetDatabase.StartAssetEditing();
-                    GDX.Editor.VersionControl.CheckoutFolder(targetPath);
+                    VersionControl.CheckoutFolder(targetPath);
 
                     if (LocalPackage?.PackageManifestPath != null)
                     {
@@ -430,6 +427,7 @@ namespace GDX.Editor
                 for (int i = 0; i < lockFileLength; i++)
                 {
                     // Identify the block
+                    // ReSharper disable once StringLiteralTypo
                     if (lockFileContents[i].Trim() == "\"com.dotbunny.gdx\": {")
                     {
                         depth++;
@@ -459,15 +457,8 @@ namespace GDX.Editor
                 if (newFileContent.Count != lockFileLength)
                 {
                     File.WriteAllLines(packageManifestLockFile, newFileContent.ToArray());
-
-#if UNITY_2020_1_OR_NEWER
                     // Tell PackageManager to resolve our newly altered file.
                     UnityEditor.PackageManager.Client.Resolve();
-#else
-                    EditorUtility.DisplayDialog("GDX Package Update",
-                        "Your version of Unity requires that you either loose focus and return to Unity, or simply restart the editor to detect the change.",
-                        "OK");
-#endif
                 }
             }
         }

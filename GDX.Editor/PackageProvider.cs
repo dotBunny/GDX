@@ -148,16 +148,16 @@ namespace GDX.Editor
                 {
                     return;
                 }
-            }
 
-            // Lets try and parse the package JSON
-            try
-            {
-                Definition = JsonUtility.FromJson<PackageDefinition>(File.ReadAllText(PackageManifestPath));
-            }
-            catch (Exception)
-            {
-                // Don't go any further if there is an error
+                // Lets try and parse the package JSON
+                try
+                {
+                    Definition = JsonUtility.FromJson<PackageDefinition>(File.ReadAllText(PackageManifestPath));
+                }
+                catch (Exception)
+                {
+                    // Don't go any further if there is an error
+                }
             }
 
             // It didn't actually parse correctly so lets just stop right now.
@@ -171,18 +171,6 @@ namespace GDX.Editor
             (InstallationType installationType, string sourceTag) = GetInstallationType();
             InstallationMethod = installationType;
             SourceTag = sourceTag;
-        }
-
-        /// <summary>
-        /// Execute delayed logic that won't interfere with a current import process.
-        /// </summary>
-        private void DelayCall()
-        {
-            // Make sure that the project has the GDX preprocessor added
-            if (Core.Config.environmentScriptingDefineSymbol)
-            {
-                EnsureScriptingDefineSymbol();
-            }
         }
 
         /// <summary>
@@ -235,7 +223,7 @@ namespace GDX.Editor
 
 
 #if UNITY_2020_2_OR_NEWER
-                PlayerSettings.SetScriptingDefineSymbolsForGroup(@group, newDefines);
+                PlayerSettings.SetScriptingDefineSymbolsForGroup(group, newDefines);
 #else
                 System.Text.StringBuilder output = new System.Text.StringBuilder();
                 foreach (string s in newDefines)
@@ -350,6 +338,7 @@ namespace GDX.Editor
                 for (int i = 0; i < lockFileLength; i++)
                 {
                     string workingLine = lockFile[i].Trim();
+                    // ReSharper disable once StringLiteralTypo
                     if (workingLine.StartsWith("\"com.dotbunny.gdx\""))
                     {
                         insidePackage = true;
@@ -416,13 +405,29 @@ namespace GDX.Editor
         }
 
         /// <summary>
+        /// Execute delayed logic that won't interfere with a current import process.
+        /// </summary>
+        static void DelayCall()
+        {
+            // Make sure that the project has the GDX preprocessor added
+            if (Core.Config.EnvironmentScriptingDefineSymbol)
+            {
+                EnsureScriptingDefineSymbol();
+            }
+        }
+
+        /// <summary>
         ///     A miniature package definition useful for quickly parsing a remote package definition.
         /// </summary>
         [Serializable]
         public class PackageDefinition
         {
+            // ReSharper disable NotAccessedField.Global
+            // ReSharper disable UnusedMember.Global
             public string version;
             public string unity;
+            // ReSharper restore NotAccessedField.Global
+            // ReSharper restore UnusedMember.Global
         }
     }
 }

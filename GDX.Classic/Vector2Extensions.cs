@@ -25,13 +25,13 @@ namespace GDX.Classic
         public static bool Approximately(this Vector2 targetVector2, Vector2 otherVector2)
         {
             float moddedEpsilon = Mathf.Epsilon * 8f;
-            const float baseMultiplier = 1E-06f;
+            const float k_BaseMultiplier = 1E-06f;
 
             return math.abs(otherVector2.x - targetVector2.x) < math.max(
-                       baseMultiplier * math.max(math.abs(targetVector2.x), math.abs(otherVector2.x)),
+                       k_BaseMultiplier * math.max(math.abs(targetVector2.x), math.abs(otherVector2.x)),
                        moddedEpsilon) &&
                    math.abs(otherVector2.y - targetVector2.y) < math.max(
-                       baseMultiplier * math.max(math.abs(targetVector2.y), math.abs(otherVector2.y)),
+                       k_BaseMultiplier * math.max(math.abs(targetVector2.y), math.abs(otherVector2.y)),
                        moddedEpsilon);
         }
 
@@ -59,10 +59,10 @@ namespace GDX.Classic
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 Midpoint(this Vector2 targetVector2, Vector2 otherVector2)
         {
-            const float halfMultiplier = 0.5f;
+            const float k_HalfMultiplier = 0.5f;
             return new Vector2(
-                targetVector2.x + (otherVector2.x - targetVector2.x) * halfMultiplier,
-                targetVector2.y + (otherVector2.y - targetVector2.y) * halfMultiplier
+                targetVector2.x + (otherVector2.x - targetVector2.x) * k_HalfMultiplier,
+                targetVector2.y + (otherVector2.y - targetVector2.y) * k_HalfMultiplier
             );
         }
 

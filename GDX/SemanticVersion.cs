@@ -15,7 +15,7 @@ namespace GDX
         /// <summary>
         ///     An array of <see cref="System.Char" /> used to split versions.
         /// </summary>
-        private static readonly char[] s_versionIndicators = {'.', ',', '_', 'f'};
+        private static readonly char[] s_VersionIndicators = {'.', ',', '_', 'f'};
 
         // ReSharper disable MemberCanBePrivate.Global
 
@@ -45,7 +45,7 @@ namespace GDX
         /// <param name="version">A formatted version semantic version string (2020.1.0).</param>
         public SemanticVersion(string version)
         {
-            string[] split = version.Split(s_versionIndicators);
+            string[] split = version.Split(s_VersionIndicators);
             switch (split.Length)
             {
                 case 4:

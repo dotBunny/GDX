@@ -12,39 +12,39 @@ namespace Runtime.Classic.Collections.Pooling
 {
     public class GameObjectPoolTests
     {
-        private GameObject _mockBaseObject;
-        private GameObject _mockBaseObjectWithInterface;
-        private Transform _mockBaseObjectWithInterfaceTransform;
-        private Transform _mockTransform;
+        private GameObject m_MockBaseObject;
+        private GameObject m_MockBaseObjectWithInterface;
+        private Transform m_MockBaseObjectWithInterfaceTransform;
+        private Transform m_MockTransform;
 
         [SetUp]
         public void Setup()
         {
-            _mockBaseObject = new GameObject();
-            _mockTransform = new GameObject().transform;
+            m_MockBaseObject = new GameObject();
+            m_MockTransform = new GameObject().transform;
 
 
-            _mockBaseObjectWithInterface = new GameObject();
-            _mockBaseObjectWithInterface.AddComponent<GameObjectPoolItemTest>();
-            _mockBaseObjectWithInterfaceTransform = new GameObject().transform;
+            m_MockBaseObjectWithInterface = new GameObject();
+            m_MockBaseObjectWithInterface.AddComponent<GameObjectPoolItemTest>();
+            m_MockBaseObjectWithInterfaceTransform = new GameObject().transform;
         }
 
         [TearDown]
         public void TearDown()
         {
-            Object.DestroyImmediate(_mockBaseObject);
-            Object.DestroyImmediate(_mockTransform.gameObject);
+            Object.DestroyImmediate(m_MockBaseObject);
+            Object.DestroyImmediate(m_MockTransform.gameObject);
 
-            Object.DestroyImmediate(_mockBaseObjectWithInterface);
-            Object.DestroyImmediate(_mockBaseObjectWithInterfaceTransform.gameObject);
+            Object.DestroyImmediate(m_MockBaseObjectWithInterface);
+            Object.DestroyImmediate(m_MockBaseObjectWithInterfaceTransform.gameObject);
         }
 
         [Test]
         [Category(GDX.Core.TestCategory)]
         public void OnDestroyItemAction_MockData_DestroysGameObject()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(_mockBaseObject,
-                _mockTransform);
+            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObject,
+                m_MockTransform);
             GameObject gameObject = GameObjectPool.Get(pool, false);
             pool.TearDown();
 
@@ -57,8 +57,8 @@ namespace Runtime.Classic.Collections.Pooling
         [Category(GDX.Core.TestCategory)]
         public void OnDestroyItemAction_MockData_DestroysInterface()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(_mockBaseObjectWithInterface,
-                _mockBaseObjectWithInterfaceTransform);
+            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
+                m_MockBaseObjectWithInterfaceTransform);
             GameObject gameObject = GameObjectPool.Get(pool, false);
             pool.TearDown();
 
@@ -71,12 +71,12 @@ namespace Runtime.Classic.Collections.Pooling
         [Category(GDX.Core.TestCategory)]
         public void Get_MockData_DontTrigger()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(_mockBaseObjectWithInterface,
-                _mockBaseObjectWithInterfaceTransform);
+            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
+                m_MockBaseObjectWithInterfaceTransform);
 
             GameObject gameObject = GameObjectPool.Get(pool, false);
 
-            bool evaluate = !gameObject.GetComponent<GameObjectPoolItemTest>().triggeredOnSpawn;
+            bool evaluate = !gameObject.GetComponent<GameObjectPoolItemTest>().TriggeredOnSpawn;
 
             Assert.IsTrue(evaluate);
 
@@ -87,16 +87,16 @@ namespace Runtime.Classic.Collections.Pooling
         [Category(GDX.Core.TestCategory)]
         public void Get_MockData_LocalPositionWorldLookAtParented()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(_mockBaseObjectWithInterface,
-                _mockBaseObjectWithInterfaceTransform);
+            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
+                m_MockBaseObjectWithInterfaceTransform);
 
-            GameObject gameObject = GameObjectPool.Get(pool, _mockTransform, new Vector3(3f,0f,0f), Vector3.zero);
+            GameObject gameObject = GameObjectPool.Get(pool, m_MockTransform, new Vector3(3f,0f,0f), Vector3.zero);
 
 
             bool evaluate = gameObject.transform.position == new Vector3(3, 0, 0) &&
                             gameObject.transform.eulerAngles.Approximately(
                                 new Vector3(0f, 270f, 0f)) &&
-                            gameObject.transform.parent == _mockTransform;
+                            gameObject.transform.parent == m_MockTransform;
 
             Assert.IsTrue(evaluate);
 
@@ -107,16 +107,16 @@ namespace Runtime.Classic.Collections.Pooling
         [Category(GDX.Core.TestCategory)]
         public void Get_MockData_LocalPositionLocalRotationParented()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(_mockBaseObjectWithInterface,
-                _mockBaseObjectWithInterfaceTransform);
+            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
+                m_MockBaseObjectWithInterfaceTransform);
 
-            GameObject gameObject = GameObjectPool.Get(pool, _mockTransform, new Vector3(3f,0f,0f), new Quaternion(0,90,0,0));
+            GameObject gameObject = GameObjectPool.Get(pool, m_MockTransform, new Vector3(3f,0f,0f), new Quaternion(0,90,0,0));
 
 
             bool evaluate = gameObject.transform.position == new Vector3(3, 0, 0) &&
                             gameObject.transform.eulerAngles.Approximately(
                                 new Vector3(0f, 180f, 0f)) &&
-                            gameObject.transform.parent == _mockTransform;
+                            gameObject.transform.parent == m_MockTransform;
 
             Assert.IsTrue(evaluate);
 
@@ -127,14 +127,12 @@ namespace Runtime.Classic.Collections.Pooling
         [Category(GDX.Core.TestCategory)]
         public void Get_MockData_ParentedWorldPositionStay()
         {
-            GameObject movedObject = new GameObject();
-            movedObject.transform.position = new Vector3(1, 0, 0);
-            GameObject movedTransform = new GameObject();
-            movedTransform.transform.position = new Vector3(10, 0, 0);
+            GameObject movedObject = new GameObject { transform = { position = new Vector3(1, 0, 0) } };
+            GameObject movedTransform = new GameObject { transform = { position = new Vector3(10, 0, 0) } };
 
             ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(movedObject, movedTransform.transform);
 
-            GameObject gameObject = GameObjectPool.Get(pool, _mockTransform, true);
+            GameObject gameObject = GameObjectPool.Get(pool, m_MockTransform, true);
 
             bool evaluate = gameObject.transform.position == new Vector3(1,0,0);
 
@@ -149,16 +147,14 @@ namespace Runtime.Classic.Collections.Pooling
         [Category(GDX.Core.TestCategory)]
         public void Get_MockData_ParentedZeroLocalPosition()
         {
-            GameObject movedObject = new GameObject();
-            movedObject.transform.position = new Vector3(1, 0, 0);
-            GameObject movedTransform = new GameObject();
-            movedTransform.transform.position = new Vector3(10, 0, 0);
+            GameObject movedObject = new GameObject { transform = { position = new Vector3(1, 0, 0) } };
+            GameObject movedTransform = new GameObject { transform = { position = new Vector3(10, 0, 0) } };
 
             ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(movedObject, movedTransform.transform);
 
-            GameObject gameObject = GameObjectPool.Get(pool, _mockTransform, false, true);
+            GameObject gameObject = GameObjectPool.Get(pool, m_MockTransform);
 
-            bool evaluate = gameObject.transform.position == _mockTransform.transform.position;
+            bool evaluate = gameObject.transform.position == m_MockTransform.transform.position;
 
             Assert.IsTrue(evaluate);
 
@@ -171,12 +167,12 @@ namespace Runtime.Classic.Collections.Pooling
         [Category(GDX.Core.TestCategory)]
         public void Get_MockData_Trigger()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(_mockBaseObjectWithInterface,
-                _mockBaseObjectWithInterfaceTransform);
+            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
+                m_MockBaseObjectWithInterfaceTransform);
 
             GameObject gameObject = GameObjectPool.Get(pool);
 
-            bool evaluate = gameObject.GetComponent<GameObjectPoolItemTest>().triggeredOnSpawn;
+            bool evaluate = gameObject.GetComponent<GameObjectPoolItemTest>().TriggeredOnSpawn;
 
             Assert.IsTrue(evaluate);
 
@@ -187,8 +183,8 @@ namespace Runtime.Classic.Collections.Pooling
         [Category(GDX.Core.TestCategory)]
         public void Get_MockData_WorldPositionWorldLookAt()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(_mockBaseObjectWithInterface,
-                _mockBaseObjectWithInterfaceTransform);
+            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
+                m_MockBaseObjectWithInterfaceTransform);
 
             GameObject gameObject = GameObjectPool.Get(pool, new Vector3(2, 6, 10), new Vector3(0, 0, 0));
 
@@ -205,16 +201,16 @@ namespace Runtime.Classic.Collections.Pooling
         [Category(GDX.Core.TestCategory)]
         public void Get_MockData_WorldPositionWorldLookAtParented()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(_mockBaseObjectWithInterface,
-                _mockBaseObjectWithInterfaceTransform);
+            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
+                m_MockBaseObjectWithInterfaceTransform);
 
             GameObject gameObject = GameObjectPool.Get(pool, new Vector3(2, 6, 10), new Vector3(0, 0, 0),
-                _mockBaseObjectWithInterfaceTransform);
+                m_MockBaseObjectWithInterfaceTransform);
 
             bool evaluate = gameObject.transform.position == new Vector3(2, 6, 10) &&
                             gameObject.transform.eulerAngles.Approximately(
                                 new Vector3(30.4703617f, 191.309921f, 2.47645289E-07f)) &&
-                            gameObject.transform.parent == _mockBaseObjectWithInterfaceTransform;
+                            gameObject.transform.parent == m_MockBaseObjectWithInterfaceTransform;
 
             Assert.IsTrue(evaluate);
 
@@ -225,8 +221,8 @@ namespace Runtime.Classic.Collections.Pooling
         [Category(GDX.Core.TestCategory)]
         public void Get_MockData_WorldPositionWorldRotation()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(_mockBaseObjectWithInterface,
-                _mockBaseObjectWithInterfaceTransform);
+            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
+                m_MockBaseObjectWithInterfaceTransform);
             Quaternion mockRotation = new Quaternion(90f, 90f, 45f, 1f);
 
             GameObject gameObject = GameObjectPool.Get(pool, new Vector3(2, 6, 10), mockRotation);
@@ -243,16 +239,16 @@ namespace Runtime.Classic.Collections.Pooling
         [Category(GDX.Core.TestCategory)]
         public void Get_MockData_WorldPositionWorldRotationParented()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(_mockBaseObjectWithInterface,
-                _mockBaseObjectWithInterfaceTransform);
+            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
+                m_MockBaseObjectWithInterfaceTransform);
             Quaternion mockRotation = new Quaternion(90f, 90f, 45f, 1f);
 
             GameObject gameObject = GameObjectPool.Get(pool, new Vector3(2, 6, 10), mockRotation,
-                _mockBaseObjectWithInterfaceTransform);
+                m_MockBaseObjectWithInterfaceTransform);
 
             bool evaluate = gameObject.transform.position == new Vector3(2, 6, 10) &&
                             gameObject.transform.rotation == mockRotation &&
-                            gameObject.transform.parent == _mockBaseObjectWithInterfaceTransform;
+                            gameObject.transform.parent == m_MockBaseObjectWithInterfaceTransform;
 
             Assert.IsTrue(evaluate);
 
@@ -264,7 +260,7 @@ namespace Runtime.Classic.Collections.Pooling
         [Category(GDX.Core.TestCategory)]
         public void GetOrCreatePool_MockData_ReturnsPool()
         {
-            IManagedPool pool = GameObjectPool.GetOrCreatePool(_mockBaseObject, _mockTransform);
+            IManagedPool pool = GameObjectPool.GetOrCreatePool(m_MockBaseObject, m_MockTransform);
 
             Assert.IsNotNull(pool);
 
@@ -275,19 +271,18 @@ namespace Runtime.Classic.Collections.Pooling
         [Category(GDX.Core.TestCategory)]
         public void TearDown_Pool_UnregistersPool()
         {
-            IManagedPool pool = GameObjectPool.GetOrCreatePool(_mockBaseObject, _mockTransform);
-            uint cachePoolID = pool.GetKey();
+            IManagedPool pool = GameObjectPool.GetOrCreatePool(m_MockBaseObject, m_MockTransform);
+            uint cachePoolKey = pool.GetKey();
 
             pool.TearDown();
 
-            Assert.IsFalse(ManagedPools.HasPool(cachePoolID));
+            Assert.IsFalse(ManagedPools.HasPool(cachePoolKey));
         }
 
-        public class GameObjectPoolItemTest : MonoBehaviour, IGameObjectPoolItem
+        private class GameObjectPoolItemTest : MonoBehaviour, IGameObjectPoolItem
         {
-            public bool triggeredOnSpawn;
-            public bool triggeredOnReturned;
-            private IManagedPool _parentPool;
+            public bool TriggeredOnSpawn { get; private set; }
+            private IManagedPool m_ParentPool;
 
             /// <inheritdoc />
             public GameObject GetGameObject()
@@ -298,7 +293,7 @@ namespace Runtime.Classic.Collections.Pooling
             /// <inheritdoc />
             public IManagedPool GetParentPool()
             {
-                return _parentPool;
+                return m_ParentPool;
             }
 
             /// <inheritdoc />
@@ -310,25 +305,24 @@ namespace Runtime.Classic.Collections.Pooling
             /// <inheritdoc />
             public void OnReturnedToPool()
             {
-                triggeredOnReturned = true;
             }
 
             /// <inheritdoc />
             public void OnSpawnedFromPool()
             {
-                triggeredOnSpawn = true;
+                TriggeredOnSpawn = true;
             }
 
             /// <inheritdoc />
             public void ReturnToPool()
             {
-                _parentPool.Return(this);
+                m_ParentPool.Return(this);
             }
 
             /// <inheritdoc />
             public void SetParentPool(IManagedPool targetManagedPool)
             {
-                _parentPool = targetManagedPool;
+                m_ParentPool = targetManagedPool;
             }
         }
     }

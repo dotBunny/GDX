@@ -2,8 +2,9 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System.Runtime.InteropServices;
 using GDX.Mathematics;
+
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace GDX.Collections.Pooling
 {
@@ -13,7 +14,9 @@ namespace GDX.Collections.Pooling
     /// <typeparam name="T">The data type contained by pooled arrays.</typeparam>
     public struct ArrayPool<T>
     {
+        // ReSharper disable once FieldCanBeMadeReadOnly.Global
         public JaggedArrayWithCount<T>[] ArrayPools;
+        // ReSharper disable once FieldCanBeMadeReadOnly.Global
         public int[] MaxPoolCapacities;
 
         /// <summary>
@@ -38,10 +41,8 @@ namespace GDX.Collections.Pooling
                     arrayPoolForSize[j] = new T[1 << i];
                 }
 
-                JaggedArrayWithCount<T> pool = new JaggedArrayWithCount<T>();
-
-                pool.Pool = arrayPoolForSize;
-                pool.Count = initialArrayCount;
+                JaggedArrayWithCount<T> pool =
+                    new JaggedArrayWithCount<T> { Pool = arrayPoolForSize, Count = initialArrayCount };
 
                 ArrayPools[i] = pool;
             }

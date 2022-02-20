@@ -3,13 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 // ReSharper disable MemberCanBePrivate.Global
-
-// TODO: Change to struct + unit tests
+// ReSharper disable UnusedMember.Global
 
 namespace GDX.Collections.Generic
 {
@@ -18,6 +15,7 @@ namespace GDX.Collections.Generic
     /// </summary>
     /// <typeparam name="T">The type of <see cref="object" />s contained within.</typeparam>
     [VisualScriptingCompatible(1)]
+    // ReSharper disable once UnusedType.Global
     public struct CircularBuffer<T>
     {
         /// <summary>

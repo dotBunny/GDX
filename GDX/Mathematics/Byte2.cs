@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 
+// ReSharper disable UnusedMember.Global
+
 #pragma warning disable 0660, 0661
 
 namespace GDX.Mathematics

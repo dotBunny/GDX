@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using Unity.Collections;
 
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace GDX.Collections
 {
@@ -13,6 +14,7 @@ namespace GDX.Collections
     ///     An adapter collection for external data arrays that allows constant-time insertion, deletion, and lookup by
     ///     handle, as well as array-like iteration.
     /// </summary>
+    // ReSharper disable once UnusedType.Global
     public struct NativeSparseSet
     {
         /// <summary>

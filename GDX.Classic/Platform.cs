@@ -2,11 +2,11 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System.IO;
 using System.Runtime.CompilerServices;
-using GDX.Mathematics.Random;
 using UnityEngine;
 using UnityEngine.Rendering;
+
+// ReSharper disable UnusedMember.Global
 
 namespace GDX.Classic
 {
@@ -14,6 +14,7 @@ namespace GDX.Classic
     ///     A collection of platform related helper utilities.
     /// </summary>
     [VisualScriptingCompatible(8)]
+    // ReSharper disable once UnusedType.Global
     public static class Platform
     {
         /// <summary>

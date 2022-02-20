@@ -15,6 +15,7 @@ namespace GDX.Jobs.ParallelFor
     ///     parallel.
     /// </summary>
     [BurstCompile]
+    // ReSharper disable once UnusedType.Global
     public struct IntegerBufferFillJob : IJobParallelFor
     {
         /// <summary>

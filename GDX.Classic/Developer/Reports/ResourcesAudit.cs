@@ -6,12 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using GDX.Collections.Generic;
 using GDX.Classic.Developer.Reports.Objects;
 using GDX.Classic.Developer.Reports.Sections;
 using UnityEngine;
 using UnityEngine.Profiling;
 using Object = UnityEngine.Object;
+
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace GDX.Classic.Developer.Reports
 {
@@ -61,10 +63,7 @@ namespace GDX.Classic.Developer.Reports
         public override bool Output(StringBuilder builder, ReportContext context = null)
         {
             // We need to make the context if its not provided
-            if (context == null)
-            {
-                context = new ReportContext();
-            }
+            context ??= new ReportContext();
 
             // Create header
             builder.AppendLine(context.CreateHeader("START: Resources Audit Report"));
@@ -73,9 +72,9 @@ namespace GDX.Classic.Developer.Reports
             ApplicationContext.Output(context, builder);
 
             // Custom header information
-            builder.AppendLine(context.CreateKVP("Last Touched",
+            builder.AppendLine(context.CreateKeyValuePair("Last Touched",
                 LastTouched.ToString(GDX.Localization.LocalTimestampFormat)));
-            builder.AppendLine(context.CreateKVP("Total Objects", ObjectCount.ToString()));
+            builder.AppendLine(context.CreateKeyValuePair("Total Objects", ObjectCount.ToString()));
 
             builder.AppendLine();
 
@@ -84,21 +83,21 @@ namespace GDX.Classic.Developer.Reports
             builder.AppendLine();
 
             // We iterate over each defined type in the order they were added to the known objects
-            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> typeKVP in KnownObjects)
+            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> knownObject in KnownObjects)
             {
-                int count = typeKVP.Value.Count;
+                int count = knownObject.Value.Count;
 
-                builder.AppendLine(context.CreateHeader(typeKVP.Key.ToString(), '-'));
-                builder.AppendLine(context.CreateKVP("Count", count.ToString()));
-                builder.AppendLine(context.CreateKVP("Total Size",
-                    GDX.Localization.GetHumanReadableFileSize(KnownUsage[typeKVP.Key])));
+                builder.AppendLine(context.CreateHeader(knownObject.Key.ToString(), '-'));
+                builder.AppendLine(context.CreateKeyValuePair("Count", count.ToString()));
+                builder.AppendLine(context.CreateKeyValuePair("Total Size",
+                    GDX.Localization.GetHumanReadableFileSize(KnownUsage[knownObject.Key])));
                 builder.AppendLine();
 
                 // Sort the known objects based on size as that's the most useful context to have them listed
                 List<ObjectInfo> newList = new List<ObjectInfo>(count);
-                foreach (KeyValuePair<TransientReference, ObjectInfo> objectKVP in typeKVP.Value)
+                foreach (KeyValuePair<TransientReference, ObjectInfo> objectInfo in knownObject.Value)
                 {
-                    newList.Add(objectKVP.Value);
+                    newList.Add(objectInfo.Value);
                 }
 
                 newList.Sort();
@@ -145,10 +144,7 @@ namespace GDX.Classic.Developer.Reports
                 objectInfoActual = Type.GetType(query.ObjectInfoTypeDefinition, false);
             }
 
-            if (objectInfoActual == null)
-            {
-                objectInfoActual = ObjectInfoFactory.GetObjectInfoType(typeActual);
-            }
+            objectInfoActual ??= ObjectInfoFactory.GetObjectInfoType(typeActual);
 
 
             // Build out using reflection (yes bad, but you choose this).
@@ -347,7 +343,7 @@ namespace GDX.Classic.Developer.Reports
 
 
             /// <summary>
-            ///     A <see cref="string.Contains" /> check against a <see cref="UnityEngine.Object" /> name.
+            ///     A <see cref="string" /> check against a <see cref="UnityEngine.Object" /> name.
             /// </summary>
             /// <example>
             ///     Armor

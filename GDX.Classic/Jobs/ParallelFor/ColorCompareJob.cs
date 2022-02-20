@@ -7,9 +7,12 @@ using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace GDX.Classic.Jobs.ParallelFor
 {
     [BurstCompile]
+    // ReSharper disable once UnusedType.Global
     public struct ColorCompareJob : IJobParallelFor
     {
         /// <summary>

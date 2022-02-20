@@ -22,7 +22,7 @@ namespace Runtime.Collections.Generic
         {
             SimpleList<int> mockList = new SimpleList<int>(4);
 
-            bool evaluate = mockList.Count == 0 && mockList.Array != null && mockList.Array.Length == 4;
+            bool evaluate = mockList.Count == 0 && mockList.Array is { Length: 4 };
 
             Assert.IsTrue(evaluate);
         }

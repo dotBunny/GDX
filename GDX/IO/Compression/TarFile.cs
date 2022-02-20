@@ -32,7 +32,7 @@ namespace GDX.IO.Compression
         public static void ExtractToDirectory(string sourceArchiveFileName, string destinationDirectoryName,
             bool forceGZipDataFormat = false)
         {
-            const int readBufferSize = 4096;
+            const int k_ReadBufferSize = 4096;
 
             // We need to handle the gzip first before we address the archive itself
             if (forceGZipDataFormat ||
@@ -43,12 +43,12 @@ namespace GDX.IO.Compression
                 using MemoryStream memoryStream = new MemoryStream();
                 // Loop through the stream
                 int readByteCount;
-                byte[] readBuffer = new byte[readBufferSize];
+                byte[] readBuffer = new byte[k_ReadBufferSize];
                 do
                 {
-                    readByteCount = gzip.Read(readBuffer, 0, readBufferSize);
+                    readByteCount = gzip.Read(readBuffer, 0, k_ReadBufferSize);
                     memoryStream.Write(readBuffer, 0, readByteCount);
-                } while (readByteCount == readBufferSize);
+                } while (readByteCount == k_ReadBufferSize);
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 ExtractStream(memoryStream, destinationDirectoryName);
@@ -68,12 +68,12 @@ namespace GDX.IO.Compression
         /// <param name="destinationDirectoryName">Output directory to write the files.</param>
         public static void ExtractStream(Stream sourceStream, string destinationDirectoryName)
         {
-            const int readBufferSize = 100;
-            const int contentOffset = 512;
-            byte[] readBuffer = new byte[readBufferSize];
+            const int k_ReadBufferSize = 100;
+            const int k_ContentOffset = 512;
+            byte[] readBuffer = new byte[k_ReadBufferSize];
             while (true)
             {
-                sourceStream.Read(readBuffer, 0, readBufferSize);
+                sourceStream.Read(readBuffer, 0, k_ReadBufferSize);
                 string currentName = Encoding.ASCII.GetString(readBuffer).Trim('\0');
 
                 if (string.IsNullOrWhiteSpace(currentName))
@@ -101,25 +101,16 @@ namespace GDX.IO.Compression
                     !currentName.EndsWith("/") &&
                     !currentName.EndsWith("\\"))
                 {
-#if UNITY_2020_2_OR_NEWER
                     using FileStream newFileStream =
                         File.Open(destinationFilePath, FileMode.OpenOrCreate, FileAccess.Write);
-#else
-                    using (FileStream newFileStream =
-                        File.Open(destinationFilePath, FileMode.OpenOrCreate, FileAccess.Write))
-                    {
-#endif
                     byte[] fileContentBuffer = new byte[fileSize];
                     int newFileContentBufferLength = fileContentBuffer.Length;
                     sourceStream.Read(fileContentBuffer, 0, newFileContentBufferLength);
                     newFileStream.Write(fileContentBuffer, 0, newFileContentBufferLength);
-#if !UNITY_2020_2_OR_NEWER
-                    }
-#endif
                 }
 
-                long nextOffset = contentOffset - sourceStream.Position % contentOffset;
-                if (nextOffset == contentOffset)
+                long nextOffset = k_ContentOffset - sourceStream.Position % k_ContentOffset;
+                if (nextOffset == k_ContentOffset)
                 {
                     nextOffset = 0;
                 }

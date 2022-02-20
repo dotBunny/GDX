@@ -6,6 +6,8 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using Unity.Mathematics;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Classic
 {
     /// <summary>
@@ -25,15 +27,15 @@ namespace GDX.Classic
         public static bool Approximately(this Vector3 targetVector3, Vector3 otherVector3)
         {
             float moddedEpsilon = Mathf.Epsilon * 8f;
-            const float BaseMultiplier = 1E-06f;
+            const float k_BaseMultiplier = 1E-06f;
             return math.abs(otherVector3.x - targetVector3.x) < math.max(
-                       BaseMultiplier * math.max(math.abs(targetVector3.x), math.abs(otherVector3.x)),
+                       k_BaseMultiplier * math.max(math.abs(targetVector3.x), math.abs(otherVector3.x)),
                        moddedEpsilon) &&
                    math.abs(otherVector3.y - targetVector3.y) < math.max(
-                       BaseMultiplier * math.max(math.abs(targetVector3.y), math.abs(otherVector3.y)),
+                       k_BaseMultiplier * math.max(math.abs(targetVector3.y), math.abs(otherVector3.y)),
                        moddedEpsilon) &&
                    math.abs(otherVector3.z - targetVector3.z) < math.max(
-                       BaseMultiplier * math.max(math.abs(targetVector3.z), math.abs(otherVector3.z)),
+                       k_BaseMultiplier * math.max(math.abs(targetVector3.z), math.abs(otherVector3.z)),
                        moddedEpsilon);
 
         }

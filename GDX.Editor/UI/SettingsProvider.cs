@@ -3,9 +3,14 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
+using System.IO;
+using GDX.Collections.Generic;
+using GDX.Editor.ProjectSettings;
 using GDX.Editor.UI.ProjectSettings;
 using UnityEditor;
 using UnityEngine.UIElements;
+
+// ReSharper disable UnusedMember.Global
 
 namespace GDX.Editor.UI
 {
@@ -23,25 +28,21 @@ namespace GDX.Editor.UI
         /// <summary>
         ///     A cache of boolean values backed by <see cref="EditorPrefs" /> to assist with optimizing layout.
         /// </summary>
-        private static readonly Dictionary<string, bool> s_cachedEditorPreferences = new Dictionary<string, bool>();
+        private static StringKeyDictionary<bool> s_CachedEditorPreferences = new StringKeyDictionary<bool>(30);
 
         /// <summary>
         ///     A list of keywords to flag when searching project settings.
         /// </summary>
-        private static readonly List<string> s_searchKeywords = new List<string>(new[]
-        {
-            "gdx", "automatic", "package", "update", "buildinfo", "task", "stream", "changelist",
-            "cli", "argument", "environment", "trace", "symbol", "locale", "localization", "culture",
-            "visual", "scripting", "vs", "parser", "commandline", "build"
-        });
+        private static List<string> s_SearchKeywords;
 
-        public static readonly Dictionary<string, IConfigSection> ConfigSections = new Dictionary<string, IConfigSection>();
+        public static StringKeyDictionary<IConfigSection> ConfigSections = new StringKeyDictionary<IConfigSection>(7);
 
-        public static GDXConfig WorkingConfig = null;
+        public static GDXConfig WorkingConfig;
 
-        private static VisualElement _changesElement;
-        private static Button _clearButton;
-        private static Button _saveButton;
+        private static VisualElement s_ChangesElement;
+        private static Button s_ClearButton;
+        private static Button s_SaveButton;
+
 
         /// <summary>
         ///     Get <see cref="UnityEditor.SettingsProvider" /> for GDX assembly.
@@ -50,36 +51,129 @@ namespace GDX.Editor.UI
         [SettingsProvider]
         public static UnityEditor.SettingsProvider Get()
         {
+            // Create our working copy of the config - we do this to catch if theres an override that happens
+            // during domain reload callbacks
+            WorkingConfig ??= new GDXConfig(Core.Config);
+
+            // Initialize some things here instead of static initializers
+            s_SearchKeywords ??= new List<string>(new[]
+            {
+                "gdx", "automatic", "package", "update", "buildinfo", "task", "stream", "changelist",
+                "cli", "argument", "environment", "trace", "symbol", "locale", "localization", "culture",
+                "visual", "scripting", "vs", "parser", "commandline", "build"
+            });
+
+            // Register settings
+            if (!ConfigSections.ContainsKey(AutomaticUpdatesSettings.SectionID))
+            {
+                ConfigSections.AddUnchecked(AutomaticUpdatesSettings.SectionID, new AutomaticUpdatesSettings());
+            }
+            if (!ConfigSections.ContainsKey(ConfigSettings.SectionID))
+            {
+                ConfigSections.AddUnchecked(ConfigSettings.SectionID, new ConfigSettings());
+            }
+            if (!ConfigSections.ContainsKey(BuildInfoSettings.SectionID))
+            {
+                ConfigSections.AddUnchecked(BuildInfoSettings.SectionID, new BuildInfoSettings());
+            }
+            if (!ConfigSections.ContainsKey(CommandLineProcessorSettings.SectionID))
+            {
+                ConfigSections.AddUnchecked(CommandLineProcessorSettings.SectionID, new CommandLineProcessorSettings());
+            }
+            if (!ConfigSections.ContainsKey(EnvironmentSettings.SectionID))
+            {
+                ConfigSections.AddUnchecked(EnvironmentSettings.SectionID, new EnvironmentSettings());
+            }
+            if (!ConfigSections.ContainsKey(LocaleSettings.SectionID))
+            {
+                ConfigSections.AddUnchecked(LocaleSettings.SectionID, new LocaleSettings());
+            }
+#if GDX_VISUALSCRIPTING
+            if (!ConfigSections.ContainsKey(VisualScriptingSettings.SectionID))
+            {
+                ConfigSections.AddUnchecked(VisualScriptingSettings.SectionID, new VisualScriptingSettings());
+            }
+#endif
+
             // ReSharper disable once HeapView.ObjectAllocation.Evident
             return new UnityEditor.SettingsProvider("Project/GDX", SettingsScope.Project)
             {
                 label = "GDX",
                 activateHandler = (searchContext, rootElement) =>
                 {
-                    rootElement.styleSheets.Add(ResourcesProvider.GetStyleSheet());
+                    // Add base style sheet
+                    if (ResourcesProvider.GetStyleSheet() != null)
+                    {
+                        rootElement.styleSheets.Add(ResourcesProvider.GetStyleSheet());
+                    }
+
+                    // Add a light mode style sheet if we have to
+                    if (!EditorGUIUtility.isProSkin)
+                    {
+                        if (ResourcesProvider.GetLightThemeStylesheet() != null)
+                        {
+                            rootElement.styleSheets.Add(ResourcesProvider.GetLightThemeStylesheet());
+                        }
+                    }
+                    
+                    // Add any overrides
+                    if (ResourcesProvider.GetStyleSheetOverride() != null)
+                    {
+                        rootElement.styleSheets.Add(ResourcesProvider.GetStyleSheetOverride());
+                    }
+
+                    // Get our base element
                     ResourcesProvider.GetVisualTreeAsset("GDXProjectSettings").CloneTree(rootElement);
 
                     // Early handle of theme
                     ResourcesProvider.CheckTheme(rootElement);
 
-                    _changesElement = rootElement.Q<VisualElement>("gdx-config-changes");
+                    s_ChangesElement = rootElement.Q<VisualElement>("gdx-config-changes");
 
                     // Handle state buttons
-                    _clearButton = _changesElement.Q<Button>("button-clear-changes");
-                    _clearButton.clicked += () =>
+                    s_ClearButton = s_ChangesElement.Q<Button>("button-clear-changes");
+                    s_ClearButton.clicked += () =>
                     {
                         WorkingConfig = new GDXConfig(Core.Config);
                         ConfigSectionsProvider.UpdateAll();
                         CheckForChanges();
                     };
 
-                    _saveButton = _changesElement.Q<Button>("button-save-changes");
-                    _saveButton.clicked += () =>
+                    s_SaveButton = s_ChangesElement.Q<Button>("button-save-changes");
+                    s_SaveButton.clicked += () =>
                     {
-                        string codePath =
-                            System.IO.Path.Combine(UnityEngine.Application.dataPath, "Generated", "GDXSettings.cs");
-                        System.IO.File.WriteAllText(codePath, SettingsGenerator.Build(Core.Config, WorkingConfig));
-                        AssetDatabase.ImportAsset("Assets/Generated/GDXSettings.cs");
+                        AssetDatabase.StartAssetEditing();
+                        
+                        // Remove old file
+                        string previousPath = Path.Combine(UnityEngine.Application.dataPath, Core.Config.ConfigOutputPath);
+                        if (File.Exists(previousPath))
+                        {
+                            AssetDatabase.DeleteAsset(Path.Combine("Assets",  Core.Config.ConfigOutputPath));
+                        }
+
+                        GDXConfig baseConfig = new GDXConfig();
+                        if (!baseConfig.Compare(WorkingConfig))
+                        {
+                            // Generate new file
+                            string codePath = Path.Combine(UnityEngine.Application.dataPath,
+                                WorkingConfig.ConfigOutputPath);
+
+                            // Ensure folder structure is present
+                            Platform.EnsureFileFolderHierarchyExists(codePath);
+
+                            // Write file
+                            File.WriteAllText(codePath, SettingsGenerator.Build(baseConfig, WorkingConfig));
+
+                            string projectRelative =
+                                Path.Combine("Assets", WorkingConfig.ConfigOutputPath);
+
+                            AssetDatabase.StopAssetEditing();
+                            AssetDatabase.ImportAsset(projectRelative);
+                        }
+                        else
+                        {
+                            AssetDatabase.StopAssetEditing();
+                        }
                     };
 
                     // Handle Links
@@ -107,30 +201,16 @@ namespace GDX.Editor.UI
                     // Build some useful references
                     ScrollView contentScrollView = rootElement.Q<ScrollView>("gdx-project-settings-content");
 
-                    // Create our working copy of the config - we do this to catch if theres an override that happens
-                    // during domain reload callbacks
-                    if (WorkingConfig == null)
-                    {
-                        WorkingConfig = new GDXConfig(Core.Config);
-                    }
+                    // Update first state
+                    CheckForChanges();
 
                     ConfigSectionsProvider.ClearSectionCache();
 
-
                     // Create ordered list of sections
-                    List<IConfigSection> sections = new List<IConfigSection>(ConfigSections.Count);
-                    sections.AddRange(ConfigSections.Values);
-                    sections.Sort((lhs, rhs) =>
+                    int iterator = 0;
+                    while (ConfigSections.MoveNext(ref iterator, out StringKeyEntry<IConfigSection> item))
                     {
-                        int l = lhs.GetPriority();
-                        int r = rhs.GetPriority();
-                        if (l > r) return -1;
-                        if (l < r) return 1;
-                        return 0;
-                    });
-
-                    foreach (IConfigSection section in sections)
-                    {
+                        IConfigSection section = item.value;
                         string sectionID = section.GetSectionID();
                         VisualElement sectionHeader = ConfigSectionsProvider.CreateAndBindSectionHeader(section);
 
@@ -143,7 +223,7 @@ namespace GDX.Editor.UI
                         ConfigSectionsProvider.UpdateSectionContent(sectionID);
                     }
                 },
-                keywords = s_searchKeywords
+                keywords = s_SearchKeywords
             };
         }
 
@@ -174,19 +254,12 @@ namespace GDX.Editor.UI
         /// <returns></returns>
         public static bool GetCachedEditorBoolean(string id, bool defaultValue = true)
         {
-            if (!s_cachedEditorPreferences.ContainsKey(id))
+            if (s_CachedEditorPreferences.IndexOf(id) == -1)
             {
-                s_cachedEditorPreferences[id] = EditorPrefs.GetBool(id, defaultValue);
+                s_CachedEditorPreferences[id] = EditorPrefs.GetBool(id, defaultValue);
             }
 
-            return s_cachedEditorPreferences[id];
-        }
-
-
-        public static void RegisterConfigSection(IConfigSection section)
-        {
-            if(ConfigSections.ContainsKey(section.GetSectionID())) return;
-            ConfigSections.Add(section.GetSectionID(), section);
+            return s_CachedEditorPreferences[id];
         }
 
         /// <summary>
@@ -196,19 +269,19 @@ namespace GDX.Editor.UI
         /// <param name="setValue">The desired value to set.</param>
         public static void SetCachedEditorBoolean(string id, bool setValue)
         {
-            if (!s_cachedEditorPreferences.ContainsKey(id))
+            if (!s_CachedEditorPreferences.ContainsKey(id))
             {
-                s_cachedEditorPreferences[id] = setValue;
+                s_CachedEditorPreferences[id] = setValue;
                 EditorPrefs.SetBool(id, setValue);
             }
             else
             {
-                if (s_cachedEditorPreferences[id] == setValue)
+                if (s_CachedEditorPreferences[id] == setValue)
                 {
                     return;
                 }
 
-                s_cachedEditorPreferences[id] = setValue;
+                s_CachedEditorPreferences[id] = setValue;
                 EditorPrefs.SetBool(id, setValue);
             }
         }
@@ -217,11 +290,11 @@ namespace GDX.Editor.UI
         {
             if (!Core.Config.Compare(WorkingConfig))
             {
-                _changesElement.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                s_ChangesElement.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
             }
             else
             {
-                _changesElement.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                s_ChangesElement.AddToClassList(ConfigSectionsProvider.HiddenClass);
             }
         }
 

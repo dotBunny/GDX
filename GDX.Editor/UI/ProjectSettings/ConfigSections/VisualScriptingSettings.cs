@@ -21,167 +21,173 @@ namespace GDX.Editor.ProjectSettings
     /// <summary>
     ///     Visual Scripting Settings
     /// </summary>
+    // ReSharper disable once UnusedType.Global
     internal class VisualScriptingSettings : IConfigSection
     {
-        private VisualElement _element;
+        private VisualElement m_RootElement;
 
         /// <summary>
         ///     Internal section identifier.
         /// </summary>
-        private const string SectionID = "GDX.VisualScripting";
-
-        /// <summary>
-        ///     Information regarding the assembly
-        /// </summary>
-        private static AssemblyProvider s_assembly;
-
-        private static readonly GUIContent s_categoryCollectionsContent = new GUIContent(
-            "An extensive group of collection based classes and structs designed with performance-sensitive environments in mind.");
-        private static readonly GUIContent s_categoryExtensionsContent = new GUIContent(
-            "A gathering of aggressively inlined functionality that expands on many of the built-in Unity types.");
-        private static readonly GUIContent s_categoryTypesContent = new GUIContent(
-            "Additional types proven useful in specific situations.");
-        private static readonly GUIContent s_categoryUtilitiesContent = new GUIContent(
-            "Function libraries useful throughout different areas of a games development.");
-
-        /// <summary>
-        ///     Content regarding this not being all of the content that can be added to visual scripting.
-        /// </summary>
-        private static readonly GUIContent s_visualScriptingGenerationAdditionalContent = new GUIContent(
-            "These categories represents a curated selection of predefined content from the GDX API which has proven useful; it is not meant to represent everything available for inclusion to Visual Scripting.");
-
-        /// <summary>
-        ///     Content for instruction on how to regenerate quickly.
-        /// </summary>
-        private static readonly GUIContent s_visualScriptingGenerationContent = new GUIContent(
-            "You can do this by clicking the Regenerate Units button to the right or by finding the same button available in the Visual Scripting section of the Project Settings.");
-
-        /// <summary>
-        ///     Content for the warning about changing types units.
-        /// </summary>
-        private static readonly GUIContent s_visualScriptingGenerationNoticeContent =
-            new GUIContent(
-                "By selecting and deselecting the below categories, items will be added or removed from the Visual Scripting type options configuration.");
-
+        public const string SectionID = "GDX.VisualScripting";
+        
         /// <summary>
         ///     Content for the warning about regenerating units.
         /// </summary>
-        private static readonly GUIContent s_visualScriptingGenerationWarningContent =
+        static readonly GUIContent s_VisualScriptingGenerationWarningContent =
             new GUIContent(
                 "You still NEED to Regenerate Units!");
 
         /// <summary>
         ///     Content for the notice when visual scripting needs to regenerate its nodes.
         /// </summary>
-        private static readonly GUIContent s_visualScriptingLoadingContent = new GUIContent(
+        static readonly GUIContent s_VisualScriptingLoadingContent = new GUIContent(
             "The visual scripting subsystem is currently loading.");
+        
+        Button m_ButtonRegenerateUnits;
+        Button m_ButtonInstallDocs;
+        VisualElement m_CategorySectionsContainer;
 
 #if GDX_VISUALSCRIPTING
-        [InitializeOnLoadMethod]
-        static void Register()
-        {
-            UI.SettingsProvider.RegisterConfigSection(new VisualScriptingSettings());
-
-        }
-#endif
-
-#if GDX_VISUALSCRIPTING
-        /// <summary>
-        ///     Draw the Visual Scripting settings section.
-        /// </summary>
-        /// <param name="settings">Serialized <see cref="Config" /> object to be modified.</param>
+        /// <inheritdoc />
         public void BindSectionContent(VisualElement rootElement)
         {
-            if (_element == null)
+            m_RootElement = rootElement;
+            
+            // Generate assembly information
+            if (!AssemblyProvider.IsPopulated)
             {
-                VisualTreeAsset templateAsset =
-                    ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsVisualScripting");
-                _element = templateAsset.Instantiate()[0];
+                AssemblyProvider.Populate();
             }
-            rootElement.Add(_element);
-            // GUI.enabled = true;
-            //
-            //
-            // SettingsGUIUtility.CreateSettingsSection(SectionID, false, "Visual Scripting",
-            //     $"{SettingsProvider.DocumentationUri}manual/features/visual-scripting.html");
-            //
-            // // Don't show section if not enabled OR if the visual scripting has not been initialized
-            // if (!SettingsGUIUtility.GetCachedEditorBoolean(SectionID))
-            // {
-            //     return;
-            // }
-            //
-            // if (!ProductContainer.initialized)
-            // {
-            //     GUILayout.BeginVertical(SettingsStyles.InfoBoxStyle);
-            //     GUILayout.Label(s_visualScriptingLoadingContent);
-            //     GUILayout.EndVertical();
-            //     return;
-            // }
-            //
-            // if (s_assembly == null)
-            // {
-            //     s_assembly = new AssemblyProvider();
-            // }
-            //
-            // GUILayout.BeginVertical(SettingsStyles.InfoBoxStyle);
-            // GUILayout.BeginHorizontal();
-            //
-            // GUILayout.Label(SettingsStyles.WarningIcon, SettingsStyles.NoHorizontalStretchStyle);
-            // GUILayout.BeginVertical();
-            // GUILayout.Label(s_visualScriptingGenerationNoticeContent, SettingsStyles.WordWrappedLabelStyle);
-            // GUILayout.Space(5);
-            // GUILayout.Label(s_visualScriptingGenerationWarningContent, EditorStyles.boldLabel);
-            // GUILayout.Space(5);
-            // GUILayout.Label(s_visualScriptingGenerationContent, SettingsStyles.WordWrappedLabelStyle);
-            // GUILayout.Space(5);
-            // GUILayout.Label(s_visualScriptingGenerationAdditionalContent, SettingsStyles.WordWrappedLabelStyle);
-            // GUILayout.EndVertical();
-            // GUILayout.Space(10);
-            // GUILayout.BeginVertical();
-            // if (GUILayout.Button("Regenerate Units", SettingsStyles.ButtonStyle))
-            // {
-            //     BoltCore.Configuration.Save();
-            //     UnitBase.Rebuild();
-            // }
-            // GUILayout.Space(10);
-            // if (GUILayout.Button("Install Docs", SettingsStyles.ButtonStyle))
-            // {
-            //     if (UpdateProvider.LocalPackage != null)
-            //     {
-            //         string sourceFile = System.IO.Path.Combine(
-            //             Application.dataPath.Substring(0, Application.dataPath.Length - 6),
-            //             UpdateProvider.LocalPackage.PackageAssetPath,
-            //             ".docfx", "GDX.xml");
-            //
-            //         GDX.Platform.EnsureFolderHierarchyExists(BoltCore.Paths.assemblyDocumentations);
-            //
-            //         string targetFile = System.IO.Path.Combine(BoltCore.Paths.assemblyDocumentations, "GDX.xml");
-            //         System.IO.File.Copy(sourceFile,targetFile, true);
-            //
-            //         XmlDocumentation.ClearCache();
-            //
-            //         AssetDatabase.ImportAsset("Assets/" + targetFile.Replace(Application.dataPath, "").Replace("\\", "/"));
-            //     }
-            // }
-            // GUILayout.EndVertical();
-            //
-            // GUILayout.EndHorizontal();
-            // GUILayout.EndVertical();
-            //
-            // DrawNodeSection("Collections", s_categoryCollectionsContent,  s_assembly.VisualScriptingCollections);
-            //
-            // GUILayout.Box(GUIContent.none, EditorStyles.helpBox, GUILayout.ExpandWidth(true), GUILayout.Height(1));
-            //
-            // DrawNodeSection("Extensions", s_categoryExtensionsContent,  s_assembly.VisualScriptingExtensions);
-            //
-            // GUILayout.Box(GUIContent.none, EditorStyles.helpBox, GUILayout.ExpandWidth(true), GUILayout.Height(1));
-            //
-            // DrawNodeSection("Types", s_categoryTypesContent, s_assembly.VisualScriptingTypes);
-            //
-            // GUILayout.Box(GUIContent.none, EditorStyles.helpBox, GUILayout.ExpandWidth(true), GUILayout.Height(1));
-            //
-            // DrawNodeSection("Utilities", s_categoryUtilitiesContent, s_assembly.VisualScriptingUtilities);
+            
+            // Bind Top
+            m_ButtonRegenerateUnits = m_RootElement.Q<Button>("button-regenerate-units");
+            m_ButtonRegenerateUnits.clicked += () =>
+            {
+                BoltCore.Configuration.Save();
+                UnitBase.Rebuild();
+            };
+            m_ButtonInstallDocs = m_RootElement.Q<Button>("button-install-docs");
+            m_ButtonInstallDocs.clicked += () =>
+            {
+                if (UpdateProvider.LocalPackage != null)
+                {
+                    string sourceFile = System.IO.Path.Combine(
+                        Application.dataPath.Substring(0, Application.dataPath.Length - 6),
+                        UpdateProvider.LocalPackage.PackageAssetPath,
+                        ".docfx", "GDX.xml");
+                
+                    Platform.EnsureFolderHierarchyExists(BoltCore.Paths.assemblyDocumentations);
+                
+                    string targetFile = System.IO.Path.Combine(BoltCore.Paths.assemblyDocumentations, "GDX.xml");
+                    System.IO.File.Copy(sourceFile,targetFile, true);
+                
+                    XmlDocumentation.ClearCache();
+                
+                    AssetDatabase.ImportAsset("Assets/" + targetFile.Replace(Application.dataPath, "").Replace("\\", "/"));
+                }
+            };
+            
+            m_CategorySectionsContainer = m_RootElement.Q<VisualElement>("sections");
+            
+            m_CategorySectionsContainer.Add(CreateBindUpdateCategorySection(
+                    "Collections", 
+                    "An extensive group of collection based classes and structs designed with performance-sensitive environments in mind.", 
+                    AssemblyProvider.VisualScriptingCollections));
+
+            m_CategorySectionsContainer.Add(CreateBindUpdateCategorySection(
+                "Extensions", 
+                "A gathering of aggressively inlined functionality that expands on many of the built-in Unity types.", 
+                AssemblyProvider.VisualScriptingExtensions));
+            
+            m_CategorySectionsContainer.Add(CreateBindUpdateCategorySection(
+                "Types", 
+                "Additional types proven useful in specific situations.", 
+                AssemblyProvider.VisualScriptingTypes));
+            
+            m_CategorySectionsContainer.Add(CreateBindUpdateCategorySection(
+                "Utilities", 
+                "Function libraries useful throughout different areas of a games development.", 
+                AssemblyProvider.VisualScriptingUtilities, false));
+        }
+
+        VisualElement CreateBindUpdateCategorySection(string sectionName, string sectionDescription, List<Type> sectionTypes, bool bottomBorder = true)
+        {
+            VisualTreeAsset categoryAsset =
+                ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsVisualScriptingCategory");
+            VisualElement categoryInstance = categoryAsset.Instantiate()[0];
+            
+            Label labelCategory = categoryInstance.Q<Label>("label-category");
+            labelCategory.text = sectionName;
+            Label labelDescription  = categoryInstance.Q<Label>("label-description");
+            labelDescription.text = sectionDescription;
+            VisualElement elementTypeContainer = categoryInstance.Q<VisualElement>("type-container");
+            
+            Button buttonFoldout = categoryInstance.Q<Button>("button-foldout");
+            buttonFoldout.clicked += () =>
+            {
+                buttonFoldout.ToggleInClassList("expanded");
+                if (buttonFoldout.ClassListContains("expanded"))
+                {
+                    elementTypeContainer.RemoveFromClassList("hidden");
+                }
+                else
+                {
+                    elementTypeContainer.AddToClassList("hidden");
+                }
+            };
+            
+            // Populate the sub list of types
+            foreach (Type type in sectionTypes)
+            {
+                string typeString = type.ToString();
+                string cleanedType = typeString.GetBeforeFirst("`") ?? typeString;
+
+                Button buttonType = new Button();
+                buttonType.AddToClassList("gdx-link");
+                buttonType.text = typeString;
+                buttonType.name = $"button-{cleanedType}";
+                buttonType.clicked += () =>
+                {
+                    string extrasType = typeString.GetAfterFirst("`");
+
+                    if (extrasType != null)
+                    {
+                        int parameterCount = extrasType.CountOccurence(',') + 1;
+                        Application.OpenURL(
+                            $"https://gdx.dotbunny.com/api/{cleanedType}-{parameterCount.ToString()}.html");
+                    }
+                    else
+                    {
+                        Application.OpenURL($"https://gdx.dotbunny.com/api/{cleanedType}.html");
+                    }
+                };
+                elementTypeContainer.Add(buttonType);
+            }
+            
+            // Build toggle
+            Toggle toggleCategory = categoryInstance.Q<Toggle>("toggle-category");
+            toggleCategory.SetValueWithoutNotify(HasAllTypesInConfiguration(sectionTypes));
+            toggleCategory.RegisterValueChangedCallback(evt =>
+            {
+                if (evt.newValue)
+                {
+                    EnsureAssemblyReferenced();
+                    AddTypesToVisualScripting(sectionTypes);
+                }
+                else if (!evt.newValue)
+                {
+                    RemoveTypesFromVisualScripting(sectionTypes);
+                }
+            });
+
+            // Do we want the divider?
+            if (bottomBorder)
+            {
+                categoryInstance.AddToClassList("gdx-visual-scripting-divider");
+            }
+            // Add back
+            return categoryInstance;
         }
 #else
         public void BindSectionContent(VisualElement rootElement)
@@ -189,6 +195,8 @@ namespace GDX.Editor.ProjectSettings
         }
 #endif
 
+        
+        
         /// <summary>
         ///     Adds a provided list of types to the Visual Scripting configuration; the database still
         ///     needs to be rebuilt afterwards.
@@ -205,85 +213,6 @@ namespace GDX.Editor.ProjectSettings
                 }
             }
 #endif
-        }
-
-        /// <summary>
-        ///     Draw the individual node sections for the Visual Scripting settings.
-        /// </summary>
-        /// <param name="category">The category label.</param>
-        /// <param name="description">The <see cref="GUIContent"/> used as the description for the category.</param>
-        /// <param name="types">A collection of <see cref="Type"/>.</param>
-        private static void DrawNodeSection(string category, GUIContent description, List<Type> types)
-        {
-//             GUILayout.BeginVertical(SettingsStyles.TableRowStyle);
-//             GUILayout.BeginHorizontal();
-//
-//             string foldoutID = $"{SectionID}_{category}";
-//
-//             bool sectionFoldout = EditorGUILayout.Foldout(SettingsGUIUtility.GetCachedEditorBoolean(foldoutID, false), "",
-//                 SettingsStyles.CombinedFoldoutStyle);
-//             SettingsGUIUtility.SetCachedEditorBoolean(foldoutID, sectionFoldout);
-//
-//             GUILayout.Label(category, EditorStyles.boldLabel, SettingsLayoutOptions.FixedWidth130LayoutOptions);
-//
-//             GUILayout.BeginVertical();
-//             GUILayout.Label(description, SettingsStyles.WordWrappedLabelStyle);
-//             if (sectionFoldout)
-//             {
-//                 GUILayout.Space(5);
-//                 foreach (Type type in types)
-//                 {
-//                     string typeString = type.ToString();
-//                     string cleanedType = typeString.GetBeforeFirst("`");
-//                     if (cleanedType == null)
-//                     {
-//                         cleanedType = typeString;
-//                     }
-//
-// #if UNITY_2021_1_OR_NEWER
-//                     if (EditorGUILayout.LinkButton(cleanedType))
-// #else
-//                     if (GUILayout.Button(cleanedType, EditorStyles.linkLabel))
-// #endif
-//                     {
-//                         GUIUtility.hotControl = 0;
-//
-//                         string extrasType = typeString.GetAfterFirst("`");
-//
-//                         if (extrasType != null)
-//                         {
-//                             int parameterCount = extrasType.CountOccurence(',') + 1;
-//                             Application.OpenURL($"https://gdx.dotbunny.com/api/{cleanedType}-{parameterCount.ToString()}.html");
-//                         }
-//                         else
-//                         {
-//                             Application.OpenURL($"https://gdx.dotbunny.com/api/{cleanedType}.html");
-//                         }
-//                     }
-//                 }
-//                 GUILayout.Space(5);
-//             }
-//             GUILayout.EndVertical();
-//
-//             bool hasAllTypes = HasAllTypesInConfiguration(types);
-//             bool changed = GUILayout.Toggle(hasAllTypes, "", SettingsLayoutOptions.SectionHeaderToggleLayoutOptions);
-//
-//             // A change has occured
-//             if (changed != hasAllTypes)
-//             {
-//                 if (changed)
-//                 {
-//                     EnsureAssemblyReferenced();
-//                     AddTypesToVisualScripting(types);
-//                 }
-//                 else
-//                 {
-//                     RemoveTypesFromVisualScripting(types);
-//                 }
-//             }
-//
-//             GUILayout.EndHorizontal();
-//             GUILayout.EndVertical();
         }
 
         /// <summary>
@@ -357,7 +286,7 @@ namespace GDX.Editor.ProjectSettings
         }
         public string GetSectionID()
         {
-            return "GDX.VisualScripting";
+            return SectionID;
         }
         public string GetSectionHelpLink()
         {

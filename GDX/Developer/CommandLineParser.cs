@@ -14,7 +14,7 @@ namespace GDX.Developer
     /// </summary>
     /// <remarks>
     ///     <para>
-    ///         The prefix and divider are configurable via the <see cref="Config" />, however the always, the <c>FLAG</c>
+    ///         The prefix and divider are configurable via the <see cref="GDXConfig" />, however the always, the <c>FLAG</c>
     ///         and <c>KEY</c> will be Uppercase.
     ///     </para>
     /// </remarks>
@@ -48,9 +48,9 @@ namespace GDX.Developer
                 Flags.Clear();
             }
 
-            string argumentPrefix = Core.Config.developerCommandLineParserArgumentPrefix;
+            string argumentPrefix = Core.Config.DeveloperCommandLineParserArgumentPrefix;
             int prefixLength = argumentPrefix.Length;
-            string argumentSplit = Core.Config.developerCommandLineParserArgumentSplit;
+            string argumentSplit = Core.Config.DeveloperCommandLineParserArgumentSplit;
             int argumentLength = argumentArray.Length;
             for (int i = 0; i < argumentLength; i++)
             {

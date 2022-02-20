@@ -12,8 +12,7 @@ using UnityEditorInternal;
 using UnityEngine;
 using Unity.CodeEditor;
 
-// TODO: Add conditional entities world ticking/update duration?
-// TODO: Add loading scene helper?
+// ReSharper disable UnusedMember.Global
 
 namespace GDX.Editor
 {
@@ -22,7 +21,7 @@ namespace GDX.Editor
     /// </summary>
     public static class Automation
     {
-        public static object[] s_EmptyParametersArray = new object[] { };
+        private static readonly object[] s_EmptyParametersArray = new object[] { };
 
         private static string LayoutStashPath()
         {
@@ -55,6 +54,7 @@ namespace GDX.Editor
         /// Capture a PNG image of the designated <see cref="EditorWindow"/>.
         /// </summary>
         /// <param name="outputPath">The absolute path for the image file.</param>
+        /// <param name="shouldCloseWindow">Should the gotten window be closed after the capture?</param>
         /// <typeparam name="T">The type of <see cref="EditorWindow"/> to be captured.</typeparam>
         /// <returns>true/false if the capture was successful.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -65,7 +65,7 @@ namespace GDX.Editor
             //EditorWindow.FocusWindowIfItsOpen<T>();
             if (window != null)
             {
-                result = CapturEditorWindowToPNG(window, outputPath);
+                result = CaptureEditorWindowToPNG(window, outputPath);
                 if (shouldCloseWindow)
                 {
                     window.Close();
@@ -113,14 +113,15 @@ namespace GDX.Editor
         /// <param name="outputPath">The absolute path for the image file.</param>
         /// <returns>true/false if the capture was successful.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool CapturEditorWindowToPNG(EditorWindow window, string outputPath)
+        // ReSharper disable once MemberCanBePrivate.Global
+        public static bool CaptureEditorWindowToPNG(EditorWindow window, string outputPath)
         {
             Texture2D texture = CaptureEditorWindow(window);
             if (texture == null)
             {
                 return false;
             }
-            System.IO.File.WriteAllBytes(outputPath, texture.EncodeToPNG());
+            File.WriteAllBytes(outputPath, texture.EncodeToPNG());
             return true;
         }
 
@@ -137,7 +138,7 @@ namespace GDX.Editor
             {
                 return false;
             }
-            System.IO.File.WriteAllBytes(outputPath, texture.EncodeToPNG());
+            File.WriteAllBytes(outputPath, texture.EncodeToPNG());
             return true;
         }
 
@@ -177,13 +178,12 @@ namespace GDX.Editor
         {
             Trace.Output(Trace.TraceLevel.Info, "Syncing Project Files ...");
 
-            UnityEditor.AssetDatabase.Refresh();
+            AssetDatabase.Refresh();
 
             // We haven't actually opened up Unity on this machine, so no editor has been set
             if (string.IsNullOrEmpty(CodeEditor.CurrentEditorInstallation))
             {
 #if UNITY_EDITOR_WIN
-                // TODO: Add Rider support?
                 string[] paths = {
                     "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe",
                     "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\IDE\\devenv.exe",
@@ -207,7 +207,6 @@ namespace GDX.Editor
                     break;
                 }
 #else
-                // TODO: Maybe do something for VSCode?
                 CodeEditor.SetExternalScriptEditor("/Applications/MonoDevelop.app");
 #endif // UNITY_EDITOR_WIN
             }
@@ -236,7 +235,7 @@ namespace GDX.Editor
             string tempPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "GDX_Automation"));
             if (ensureExists)
             {
-                GDX.Platform.EnsureFolderHierarchyExists(tempPath);
+                Platform.EnsureFolderHierarchyExists(tempPath);
             }
             return tempPath;
         }
@@ -247,17 +246,17 @@ namespace GDX.Editor
             StringBuilder tmpFileName = new StringBuilder(260);
             tmpFileName.Append(prefix);
             RandomWrapper random = new RandomWrapper(
-                StringExtensions.GetStableHashCode(System.DateTime.Now.Ticks.ToString()));
+                System.DateTime.Now.Ticks.ToString().GetStableHashCode());
 
-            tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
-            tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
-            tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
-            tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
-            tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
+            tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
+            tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
+            tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
+            tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
+            tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
 
             while (true)
             {
-                tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
+                tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
                 string filePath = Path.Combine(tempFolder, $"{tmpFileName}{extension}");
                 if (!File.Exists(filePath))
                 {
@@ -268,11 +267,11 @@ namespace GDX.Editor
                 {
                     tmpFileName.Clear();
                     tmpFileName.Append(prefix);
-                    tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
-                    tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
-                    tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
-                    tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
-                    tmpFileName.Append(GDX.Platform.GetRandomSafeCharacter(random));
+                    tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
+                    tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
+                    tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
+                    tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
+                    tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
                 }
             }
         }
@@ -280,7 +279,7 @@ namespace GDX.Editor
         /// <summary>
         /// Get the existing or open a new window with the indicated size / flags.
         /// </summary>
-        /// <remarks>This will undock a window.</remarks>
+        /// <remarks>This will undock a window.  It is important to wait for the window to paint itself.</remarks>
         /// <param name="shouldMaximize">Should the window be maximized?</param>
         /// <param name="width">The desired window pixel width.</param>
         /// <param name="height">The desired window pixel height.</param>
@@ -352,13 +351,13 @@ namespace GDX.Editor
                 System.Type windowLayout = System.Type.GetType("UnityEditor.WindowLayout,UnityEditor");
                 if (windowLayout != null)
                 {
-                    MethodInfo loadMethod = windowLayout.GetMethod("LoadWindowLayout", new System.Type[] {typeof(string), typeof(bool), typeof(bool), typeof(bool)});
+                    MethodInfo loadMethod = windowLayout.GetMethod("LoadWindowLayout", new[] {typeof(string), typeof(bool), typeof(bool), typeof(bool)});
                     if (loadMethod != null)
                     {
                         loadMethod.Invoke(null,new object[]{LayoutStashPath(), false, false, true});
                     }
                 }
-                GDX.Platform.ForceDeleteFile(path);
+                Platform.ForceDeleteFile(path);
             }
         }
     }

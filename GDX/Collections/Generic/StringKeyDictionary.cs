@@ -174,6 +174,35 @@ namespace GDX.Collections.Generic
             Buckets[bucketIndex] = dataIndex;
         }
 
+
+        /// <summary>
+        /// Checks if the dictionary contains the given key.
+        /// </summary>
+        /// <param name="key">The key to check for.</param>
+        /// <returns>True if the dictionary contains the key.</returns>
+        public bool ContainsKey(string key)
+        {
+            if (key == null) throw new ArgumentNullException();
+
+            int hashCode = key.GetStableHashCode() & 0x7FFFFFFF;
+            int bucketIndex = hashCode % Buckets.Length;
+            int nextKeyIndex = Buckets[bucketIndex];
+
+            while (nextKeyIndex != -1)
+            {
+                ref StringKeyEntry<TValue> currEntry = ref Entries[nextKeyIndex];
+
+                if (currEntry.Key == key)
+                {
+                    return true;
+                }
+
+                nextKeyIndex = currEntry.Next;
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Resizes the dictionary with the assumption that it is full. Do not use otherwise.
         /// </summary>
@@ -217,7 +246,7 @@ namespace GDX.Collections.Generic
         /// <param name="capacityToReserve"></param>
         public void Reserve(int capacityToReserve)
         {
-            int oldCapacity = Entries.Length;   
+            int oldCapacity = Entries.Length;
             if (Count + capacityToReserve > oldCapacity)
             {
                 int minCapacity = Count + capacityToReserve;

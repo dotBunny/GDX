@@ -5,12 +5,15 @@
 using System;
 using System.Runtime.CompilerServices;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Collections
 {
     /// <summary>
     ///     An adapter collection for external data arrays that allows constant-time insertion, deletion, and lookup by
     ///     handle, as well as array-like iteration.
     /// </summary>
+    // ReSharper disable once UnusedType.Global
     public struct SparseSet
     {
         // ReSharper disable MemberCanBePrivate.Global

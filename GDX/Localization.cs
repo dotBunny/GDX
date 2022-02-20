@@ -6,6 +6,7 @@ using System;
 using System.Runtime.CompilerServices;
 
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace GDX
 {
@@ -46,7 +47,7 @@ namespace GDX
         /// <summary>
         ///     An array of strings representative for file size formats.
         /// </summary>
-        private static readonly string[] s_readableByteSizes = { "B", "KB", "MB", "GB", "TB" };
+        private static readonly string[] s_ReadableByteSizes = { "B", "KB", "MB", "GB", "TB" };
 
         /// <summary>
         ///     Creates a more human readable <see cref="string" /> of a byte size.
@@ -61,14 +62,14 @@ namespace GDX
         {
             long length = base2Size;
             int order = 0;
-            const int incrementLengthAdjusted = 4;
-            while (length >= 1024 && order < incrementLengthAdjusted)
+            const int k_IncrementLengthAdjusted = 4;
+            while (length >= 1024 && order < k_IncrementLengthAdjusted)
             {
                 order++;
                 length /= 1024;
             }
 
-            return $"{length:0.##} {s_readableByteSizes[order]}";
+            return $"{length:0.##} {s_ReadableByteSizes[order]}";
         }
 
         /// <summary>

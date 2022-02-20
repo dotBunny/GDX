@@ -8,6 +8,8 @@ using System.Text;
 using GDX.Classic.Developer.Reports.Objects;
 using GDX.Classic.Developer.Reports.Sections;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace GDX.Classic.Developer.Reports
 {
     public class ResourcesDiff : Report
@@ -50,7 +52,7 @@ namespace GDX.Classic.Developer.Reports
             }
 
             // Known Objects - Start on right hand side
-            foreach (var kvpType in lhs.KnownObjects)
+            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> kvpType in lhs.KnownObjects)
             {
                 // Lets just add something ahead to be safe
                 if (!AddedObjects.ContainsKey(kvpType.Key))
@@ -74,7 +76,7 @@ namespace GDX.Classic.Developer.Reports
                 }
 
                 // Iterate over everything in the left hand side
-                foreach (var knownObject in kvpType.Value)
+                foreach (KeyValuePair<TransientReference, ObjectInfo> knownObject in kvpType.Value)
                 {
                     // None of this type in the right, means removed
                     if (rhsKnownObjects == null)
@@ -100,13 +102,13 @@ namespace GDX.Classic.Developer.Reports
             }
 
             // Iterate over rhs for added
-            foreach (var kvpType in rhs.KnownObjects)
+            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> kvpType in rhs.KnownObjects)
             {
                 if (!lhs.KnownObjects.ContainsKey(kvpType.Key))
                 {
                     AddedObjects.Add(kvpType.Key, new Dictionary<TransientReference, ObjectInfo>());
                     // Iterate over everything in the left hand side
-                    foreach (var knownObject in kvpType.Value)
+                    foreach (KeyValuePair<TransientReference, ObjectInfo> knownObject in kvpType.Value)
                     {
                         AddedObjects[kvpType.Key].Add(knownObject.Key, knownObject.Value);
                     }
@@ -114,38 +116,38 @@ namespace GDX.Classic.Developer.Reports
             }
 
             List<Type> removeType = new List<Type>();
-            foreach (var kvpType in AddedObjects)
+            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> kvpType in AddedObjects)
             {
                 if (kvpType.Value.Count == 0)
                 {
                     removeType.Add(kvpType.Key);
                 }
             }
-            foreach (var type in removeType)
+            foreach (Type type in removeType)
             {
                 AddedObjects.Remove(type);
             }
             removeType.Clear();
-            foreach (var kvpType in RemovedObjects)
+            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> kvpType in RemovedObjects)
             {
                 if (kvpType.Value.Count == 0)
                 {
                     removeType.Add(kvpType.Key);
                 }
             }
-            foreach (var type in removeType)
+            foreach (Type type in removeType)
             {
                 RemovedObjects.Remove(type);
             }
             removeType.Clear();
-            foreach (var kvpType in CommonObjects)
+            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> kvpType in CommonObjects)
             {
                 if (kvpType.Value.Count == 0)
                 {
                     removeType.Add(kvpType.Key);
                 }
             }
-            foreach (var type in removeType)
+            foreach (Type type in removeType)
             {
                 CommonObjects.Remove(type);
             }
@@ -155,20 +157,17 @@ namespace GDX.Classic.Developer.Reports
         public override bool Output(StringBuilder builder, ReportContext context = null)
         {
             // We need to make the context if its not provided
-            if (context == null)
-            {
-                context = new ReportContext();
-            }
+            context ??= new ReportContext();
 
             // Create header
             builder.AppendLine(context.CreateHeader("START: Resources Diff Report"));
 
             // Custom header information
-            builder.AppendLine(context.CreateKVP("Total Objects", ObjectCount.GetOutput(context)));
+            builder.AppendLine(context.CreateKeyValuePair("Total Objects", ObjectCount.GetOutput(context)));
             builder.AppendLine();
-            foreach (KeyValuePair<Type, LongDiff> typeKVP in KnownUsage)
+            foreach (KeyValuePair<Type, LongDiff> usage in KnownUsage)
             {
-                builder.AppendLine(context.CreateKVP(typeKVP.Key.ToString(), typeKVP.Value.GetSizeOutput(context)));
+                builder.AppendLine(context.CreateKeyValuePair(usage.Key.ToString(), usage.Value.GetSizeOutput(context)));
             }
             builder.AppendLine();
 
@@ -191,19 +190,19 @@ namespace GDX.Classic.Developer.Reports
             return true;
         }
 
-        private void OutputObjectInfos(StringBuilder builder, ReportContext context, Dictionary<Type, Dictionary<TransientReference, ObjectInfo>> targetObjects)
+        static void OutputObjectInfos(StringBuilder builder, ReportContext context, Dictionary<Type, Dictionary<TransientReference, ObjectInfo>> targetObjects)
         {
-            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> typeKVP in targetObjects)
+            foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> target in targetObjects)
             {
-                int count = typeKVP.Value.Count;
+                int count = target.Value.Count;
 
-                builder.AppendLine(context.CreateHeader($"{typeKVP.Key.ToString()} [{count.ToString()}] ", '-'));
+                builder.AppendLine(context.CreateHeader($"{target.Key} [{count.ToString()}] ", '-'));
 
                 // Sort the known objects based on size as that's the most useful context to have them listed
                 List<ObjectInfo> newList = new List<ObjectInfo>(count);
-                foreach (KeyValuePair<TransientReference, ObjectInfo> objectKVP in typeKVP.Value)
+                foreach (KeyValuePair<TransientReference, ObjectInfo> objectInfo in target.Value)
                 {
-                    newList.Add(objectKVP.Value);
+                    newList.Add(objectInfo.Value);
                 }
 
                 newList.Sort();

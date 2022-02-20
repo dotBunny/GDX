@@ -7,6 +7,8 @@ using System.Runtime.CompilerServices;
 using Unity.Collections;
 using Unity.Mathematics;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Mathematics.Random
 {
     // ReSharper disable CommentTypo

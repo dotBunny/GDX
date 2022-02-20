@@ -6,6 +6,9 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using GDX.Mathematics.Random;
 
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace GDX
 {
     /// <summary>
@@ -14,16 +17,18 @@ namespace GDX
     [VisualScriptingCompatible(8)]
     public static class Platform
     {
+        public const float ImageCompareTolerance = 0.99f;
         public const float FloatTolerance = 0.000001f;
         public const double DoubleTolerance = 0.000001d;
         public const string SafeCharacterPool = "abcdefghijklmnopqrstuvwxyz";
         public const int CharacterPoolLength = 25;
         public const int CharacterPoolLengthExclusive = 24;
+        /// <summary>
+        ///     A filename safe version of the timestamp format.
+        /// </summary>
+        public const string FilenameTimestampFormat = "yyyyMMdd_HHmmss";
 
-        public static char GetRandomSafeCharacter(IRandomProvider random)
-        {
-            return SafeCharacterPool[random.NextInteger(0, CharacterPoolLengthExclusive)];
-        }
+        static string s_OutputFolder;
 
         /// <summary>
         ///     Validate that all directories are created for a given <paramref name="folderPath" />.
@@ -32,7 +37,7 @@ namespace GDX
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void EnsureFolderHierarchyExists(string folderPath)
         {
-            if (!string.IsNullOrEmpty(folderPath))
+            if (!string.IsNullOrEmpty(folderPath) && !Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
             }
@@ -46,10 +51,7 @@ namespace GDX
         public static void EnsureFileFolderHierarchyExists(string filePath)
         {
             string targetDirectory = Path.GetDirectoryName(filePath);
-            if (!string.IsNullOrEmpty(targetDirectory))
-            {
-                Directory.CreateDirectory(targetDirectory);
-            }
+            EnsureFolderHierarchyExists(targetDirectory);
         }
 
         /// <summary>
@@ -107,6 +109,43 @@ namespace GDX
 #else
             return 0;
 #endif
+        }
+
+        public static System.Reflection.Assembly[] GetLoadedAssemblies()
+        {
+            //TODO: We might need to shim this based on platform compilation, investigate
+            return System.AppDomain.CurrentDomain.GetAssemblies();
+        }
+
+        /// <summary>
+        ///     Returns a runtime writable folder.
+        /// </summary>
+        /// <returns>The full path to a writable folder at runtime.</returns>
+        public static string GetOutputFolder()
+        {
+            if (s_OutputFolder == null)
+            {
+#if UNITY_EDITOR
+                s_OutputFolder = Path.Combine(UnityEngine.Application.dataPath, "..", "GDX");
+#elif UNITY_DOTSRUNTIME
+                s_OutputFolder = Path.Combine(Directory.GetCurrentDirectory(), "GDX");
+#else
+                s_OutputFolder = UnityEngine.Application.persistentDataPath;
+
+                // TODO: Add console safe folders for dev?
+                // Maybe throw exception on release builds?
+#endif
+                EnsureFolderHierarchyExists(s_OutputFolder);
+            }
+
+            return s_OutputFolder;
+
+
+        }
+
+        public static char GetRandomSafeCharacter(IRandomProvider random)
+        {
+            return SafeCharacterPool[random.NextInteger(0, CharacterPoolLengthExclusive)];
         }
 
         /// <summary>

@@ -7,6 +7,8 @@ using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace GDX.Classic.Jobs.ParallelFor
 {
     /// <summary>
@@ -14,6 +16,7 @@ namespace GDX.Classic.Jobs.ParallelFor
     ///     parallel.
     /// </summary>
     [BurstCompile]
+    // ReSharper disable once UnusedType.Global
     public struct Color32MatchJob : IJobParallelFor
     {
         /// <summary>

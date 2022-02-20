@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace GDX.Mathematics
 {
@@ -13,6 +14,7 @@ namespace GDX.Mathematics
     ///     Some helpful interpolation functionality.
     /// </summary>
     [VisualScriptingCompatible(8)]
+    // ReSharper disable once UnusedType.Global
     public static class Smooth
     {
         // ReSharper disable CommentTypo

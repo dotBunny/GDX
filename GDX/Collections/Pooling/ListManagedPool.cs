@@ -16,57 +16,57 @@ namespace GDX.Collections.Pooling
         ///     The <see cref="Flags" /> index used to determine if the <see cref="ListManagedPool" /> is able to create
         ///     more items as necessary.
         /// </summary>
-        private const int AllowCreateMoreFlag = 0;
+        private const int k_AllowCreateMoreFlag = 0;
 
         /// <summary>
         ///     The <see cref="Flags" /> index used to if <see cref="TearDown" /> can be called by a manager.
         /// </summary>
-        private const int AllowManagedTeardownFlag = 1;
+        private const int k_AllowManagedTeardownFlag = 1;
 
         /// <summary>
         ///     The <see cref="Flags" /> index used to determine if items should be reused when the pool is starved.
         /// </summary>
-        private const int AllowReuseFlag = 2;
+        private const int k_AllowReuseFlag = 2;
 
         /// <summary>
         ///     The <see cref="Flags" /> index used to determine if the pool should create items during its constructor.
         /// </summary>
-        private const int PrewarmPoolFlag = 3;
+        private const int k_PrewarmPoolFlag = 3;
 
         /// <summary>
         ///     A defined function to create items for the pool.
         /// </summary>
-        private readonly Func<ListManagedPool, object> _createItemFunc;
+        private readonly Func<ListManagedPool, object> m_CreateItemFunc;
 
         /// <summary>
         ///     The absolutely unique identifier for this pool.
         /// </summary>
-        private readonly uint _key;
+        private readonly uint m_Key;
 
         /// <summary>
         ///     The Maximum number of objects to be managed by the pool.
         /// </summary>
-        private readonly int _maximumObjects;
+        private readonly int m_MaximumObjects;
 
         /// <summary>
         ///     The minimum number of objects to be managed by the pool.
         /// </summary>
-        private readonly int _minimumObjects;
+        private readonly int m_MinimumObjects;
 
         /// <summary>
         ///     A collection of items that are currently considered out of the pool, that have been spawned.
         /// </summary>
-        private readonly List<object> _outItems;
+        private readonly List<object> m_OutItems;
 
         /// <summary>
         ///     A cached count of the number of items contained in <see cref="InItems" />.
         /// </summary>
-        public int _inCachedCount;
+        public int InCachedCount;
 
         /// <summary>
-        ///     A cached count of the number of items contained in <see cref="_outItems" />.
+        ///     A cached count of the number of items contained in <see cref="m_OutItems" />.
         /// </summary>
-        public int _outCachedCount;
+        public int OutCachedCount;
 
         /// <summary>
         ///     The object which the pool is based off of, used as a model when creating new items.
@@ -88,8 +88,8 @@ namespace GDX.Collections.Pooling
         ///     A <see cref="BitArray8" /> used to store pool based flags, as well as provide additional spots for implementations.
         /// </summary>
         /// <remarks>
-        ///     Index 0-3 (<see cref="AllowCreateMoreFlag" />, <see cref="AllowManagedTeardownFlag" />,
-        ///     <see cref="AllowReuseFlag" />, and <see cref="PrewarmPoolFlag" />) are used by the
+        ///     Index 0-3 (<see cref="k_AllowCreateMoreFlag" />, <see cref="k_AllowManagedTeardownFlag" />,
+        ///     <see cref="k_AllowReuseFlag" />, and <see cref="k_PrewarmPoolFlag" />) are used by the
         ///     <see cref="ListManagedPool" /> itself, leaving 4-7 for additional use.
         /// </remarks>
         public BitArray8 Flags;
@@ -138,24 +138,24 @@ namespace GDX.Collections.Pooling
             bool allowManagedTearDown = false)
         {
             // Get pool ID ticket
-            _key = ManagedPools.GetNextPoolKey();
+            m_Key = ManagedPools.GetNextPoolKey();
 
             BaseObject = baseObject;
-            _createItemFunc = createItemFunc;
-            _minimumObjects = minimumObjects;
-            _maximumObjects = maximumObjects;
+            m_CreateItemFunc = createItemFunc;
+            m_MinimumObjects = minimumObjects;
+            m_MaximumObjects = maximumObjects;
 
-            Flags[AllowCreateMoreFlag] = allowCreateMore;
-            Flags[AllowManagedTeardownFlag] = allowManagedTearDown;
-            Flags[AllowReuseFlag] = allowReuseWhenCapped;
-            Flags[PrewarmPoolFlag] = prewarmPool;
+            Flags[k_AllowCreateMoreFlag] = allowCreateMore;
+            Flags[k_AllowManagedTeardownFlag] = allowManagedTearDown;
+            Flags[k_AllowReuseFlag] = allowReuseWhenCapped;
+            Flags[k_PrewarmPoolFlag] = prewarmPool;
 
             ContainerObject = containerObject;
 
             ManagedPools.Register(this);
 
             InItems = new List<object>(maximumObjects);
-            _outItems = new List<object>(maximumObjects);
+            m_OutItems = new List<object>(maximumObjects);
 
             if (!prewarmPool)
             {
@@ -171,16 +171,16 @@ namespace GDX.Collections.Pooling
         /// <inheritdoc />
         public void CreateItem()
         {
-            _createItemFunc(this);
+            m_CreateItemFunc(this);
         }
 
         /// <inheritdoc />
         public void ForceRemove(object item)
         {
-            if (_outItems.Contains(item))
+            if (m_OutItems.Contains(item))
             {
-                _outItems.Remove(item);
-                _outCachedCount--;
+                m_OutItems.Remove(item);
+                OutCachedCount--;
             }
 
             if (!InItems.Contains(item))
@@ -189,37 +189,37 @@ namespace GDX.Collections.Pooling
             }
 
             InItems.Remove(item);
-            _inCachedCount--;
+            InCachedCount--;
         }
 
         /// <inheritdoc />
         public object Get(bool triggerOnSpawnedFromPool = true)
         {
             // Are we empty, but have refills?
-            if (_inCachedCount == 0 && _outCachedCount < _maximumObjects || _inCachedCount == 0 && Flags[AllowCreateMoreFlag])
+            if (InCachedCount == 0 && OutCachedCount < m_MaximumObjects || InCachedCount == 0 && Flags[k_AllowCreateMoreFlag])
             {
                 CreateItem();
             }
 
-            if (_inCachedCount > 0)
+            if (InCachedCount > 0)
             {
-                int targetIndex = _inCachedCount - 1;
+                int targetIndex = InCachedCount - 1;
 
                 // Make sure we don't pull badness
                 object returnItem = InItems[targetIndex];
                 if (returnItem == null)
                 {
                     Trace.Output(Trace.TraceLevel.Warning,
-                        $"[ListObjectPool->Get] A null object was pulled from a pool ({_key.ToString()}).");
-                    _inCachedCount--;
+                        $"[ListObjectPool->Get] A null object was pulled from a pool ({m_Key.ToString()}).");
+                    InCachedCount--;
                     return null;
                 }
 
                 // Handle counters
-                _outItems.Add(returnItem);
-                _outCachedCount++;
+                m_OutItems.Add(returnItem);
+                OutCachedCount++;
                 InItems.RemoveAt(targetIndex);
-                _inCachedCount--;
+                InCachedCount--;
 
                 if (triggerOnSpawnedFromPool)
                 {
@@ -229,13 +229,13 @@ namespace GDX.Collections.Pooling
                 return returnItem;
             }
 
-            if (Flags[AllowReuseFlag])
+            if (Flags[k_AllowReuseFlag])
             {
-                object returnItem = _outItems[0];
+                object returnItem = m_OutItems[0];
                 if (returnItem == null)
                 {
                     Trace.Output(Trace.TraceLevel.Warning,
-                        $"[ListObjectPool->Get] A null object was returned to the object pool ({_key.ToString()}).");
+                        $"[ListObjectPool->Get] A null object was returned to the object pool ({m_Key.ToString()}).");
                     return null;
                 }
 
@@ -249,7 +249,7 @@ namespace GDX.Collections.Pooling
             }
 
             Trace.Output(Trace.TraceLevel.Warning,
-                $"[ListObjectPool->Get] Hit maximum object cap of {_maximumObjects.ToString()} for object pool ({_key.ToString()}).");
+                $"[ListObjectPool->Get] Hit maximum object cap of {m_MaximumObjects.ToString()} for object pool ({m_Key.ToString()}).");
             return null;
         }
 
@@ -262,25 +262,25 @@ namespace GDX.Collections.Pooling
         /// <inheritdoc />
         public uint GetKey()
         {
-            return _key;
+            return m_Key;
         }
 
         /// <inheritdoc />
         public bool HasMinimumPooledItems()
         {
-            return _inCachedCount >= _minimumObjects;
+            return InCachedCount >= m_MinimumObjects;
         }
 
         /// <inheritdoc />
         public bool IsAllowedManagedTearDown()
         {
-            return Flags[AllowManagedTeardownFlag];
+            return Flags[k_AllowManagedTeardownFlag];
         }
 
         /// <inheritdoc />
         public bool IsManaged(object item)
         {
-            return _outItems.Contains(item) || InItems.Contains(item);
+            return m_OutItems.Contains(item) || InItems.Contains(item);
         }
 
         /// <inheritdoc />
@@ -295,10 +295,10 @@ namespace GDX.Collections.Pooling
             // Do we have the interface call?
             OnReturnedToPool?.Invoke(this, item);
 
-            if (_outItems.Contains(item))
+            if (m_OutItems.Contains(item))
             {
-                _outItems.Remove(item);
-                _outCachedCount--;
+                m_OutItems.Remove(item);
+                OutCachedCount--;
             }
 
             if (InItems.Contains(item))
@@ -307,23 +307,23 @@ namespace GDX.Collections.Pooling
             }
 
             InItems.Add(item);
-            _inCachedCount++;
+            InCachedCount++;
         }
 
         /// <inheritdoc />
         public void ReturnAll(bool shouldShrink = true)
         {
-            for (int i = _outCachedCount - 1; i >= 0; i--)
+            for (int i = OutCachedCount - 1; i >= 0; i--)
             {
-                Return(_outItems[i]);
+                Return(m_OutItems[i]);
             }
 
-            if (shouldShrink && _inCachedCount <= _maximumObjects)
+            if (shouldShrink && InCachedCount <= m_MaximumObjects)
             {
                 return;
             }
 
-            int removeCount = _inCachedCount - _maximumObjects;
+            int removeCount = InCachedCount - m_MaximumObjects;
             for (int i = 0; i < removeCount; i++)
             {
                 // Trigger specific logic, like Object.Destroy
@@ -331,7 +331,7 @@ namespace GDX.Collections.Pooling
 
                 // Dereferencing
                 InItems.RemoveAt(i);
-                _inCachedCount--;
+                InCachedCount--;
             }
         }
 
@@ -341,20 +341,20 @@ namespace GDX.Collections.Pooling
             OnTearDown?.Invoke(this);
 
             // Return all items to the pool
-            for (int i = _outCachedCount - 1; i >= 0; i--)
+            for (int i = OutCachedCount - 1; i >= 0; i--)
             {
-                if (_outItems[i] != null)
+                if (m_OutItems[i] != null)
                 {
-                    Return(_outItems[i]);
+                    Return(m_OutItems[i]);
 
                 }
             }
 
-            _outItems.Clear();
-            _outCachedCount = 0;
+            m_OutItems.Clear();
+            OutCachedCount = 0;
 
             // Wipe internals
-            for (int i = _inCachedCount - 1; i >= 0; i--)
+            for (int i = InCachedCount - 1; i >= 0; i--)
             {
                 if (InItems[i] != null)
                 {
@@ -362,7 +362,7 @@ namespace GDX.Collections.Pooling
                 }
             }
             InItems.Clear();
-            _inCachedCount = 0;
+            InCachedCount = 0;
 
             // Unregister
             ManagedPools.Unregister(this);

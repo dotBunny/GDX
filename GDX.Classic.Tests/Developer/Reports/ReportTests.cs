@@ -4,7 +4,6 @@
 
 using System.IO;
 using System.Text;
-using GDX.Classic;
 using GDX.Classic.Developer.Reports;
 using NUnit.Framework;
 
@@ -19,7 +18,7 @@ namespace Runtime.Classic.Developer.Reports
         [Category(GDX.Core.TestCategory)]
         public void Output_MockData_StringBuilderSameAsStreamWriter()
         {
-            var report = ResourcesAudit.GetCommon();
+            ResourcesAudit report = ResourcesAudit.GetCommon();
 
             // String Builder
             StringBuilder builderString = new StringBuilder();
@@ -27,7 +26,7 @@ namespace Runtime.Classic.Developer.Reports
             string builderOutput = builderString.ToString();
 
             // StreamWriter
-            string writerOutput = null;
+            string writerOutput;
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 StreamWriter writer = new StreamWriter(memoryStream);

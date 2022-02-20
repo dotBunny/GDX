@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using GDX.Collections.Pooling;
 using NUnit.Framework;
 
@@ -22,14 +21,9 @@ namespace Runtime.Collections.Generic
 
             ArrayPool<int> arrayPool = new ArrayPool<int>(minimums, maximums);
 
-            bool evaluate = arrayPool.ArrayPools != null &&
-                            arrayPool.ArrayPools.Length == 31 &&
-                            arrayPool.ArrayPools[4].Count == 1 &&
-                            arrayPool.ArrayPools[4].Pool != null &&
-                            arrayPool.ArrayPools[4].Pool.Length == 2 &&
-                            arrayPool.ArrayPools[4].Pool[0] != null &&
-                            arrayPool.ArrayPools[4].Pool[0].Length == 16 &&
-                            arrayPool.ArrayPools[4].Pool[1] == null;
+            bool evaluate = arrayPool.ArrayPools is { Length: 31 } && arrayPool.ArrayPools[4].Count == 1 &&
+                            arrayPool.ArrayPools[4].Pool is { Length: 2 } && arrayPool.ArrayPools[4].Pool[0] != null &&
+                            arrayPool.ArrayPools[4].Pool[0].Length == 16 && arrayPool.ArrayPools[4].Pool[1] == null;
 
             Assert.IsTrue(evaluate);
         }
@@ -43,22 +37,17 @@ namespace Runtime.Collections.Generic
 
             ArrayPool<int> arrayPool = new ArrayPool<int>(minimums, maximums);
 
-            bool evaluate = arrayPool.ArrayPools != null &&
-                            arrayPool.ArrayPools.Length == 31 &&
-                            arrayPool.ArrayPools[4].Count == 1 &&
-                            arrayPool.ArrayPools[4].Pool != null &&
-                            arrayPool.ArrayPools[4].Pool.Length == 2 &&
-                            arrayPool.ArrayPools[4].Pool[0] != null &&
-                            arrayPool.ArrayPools[4].Pool[0].Length == 16 &&
-                            arrayPool.ArrayPools[4].Pool[1] == null;
+            bool evaluate = arrayPool.ArrayPools is { Length: 31 } && arrayPool.ArrayPools[4].Count == 1 &&
+                            arrayPool.ArrayPools[4].Pool is
+                            {
+                                Length: 2
+                            } && arrayPool.ArrayPools[4].Pool[0] != null &&
+                            arrayPool.ArrayPools[4].Pool[0].Length == 16 && arrayPool.ArrayPools[4].Pool[1] == null;
 
             if (evaluate)
             {
                 int[] array = arrayPool.Get(16);
-
-                evaluate = evaluate &&
-                            array != null &&
-                            array.Length == 16;
+                evaluate =  array is { Length: 16 };
             }
 
             Assert.IsTrue(evaluate);
@@ -73,21 +62,14 @@ namespace Runtime.Collections.Generic
 
             ArrayPool<int> arrayPool = new ArrayPool<int>(minimums, maximums);
 
-            bool evaluate = arrayPool.ArrayPools != null &&
-                            arrayPool.ArrayPools.Length == 31 &&
-                            arrayPool.ArrayPools[4].Count == 0 &&
-                            arrayPool.ArrayPools[4].Pool != null &&
-                            arrayPool.ArrayPools[4].Pool.Length == 2 &&
-                            arrayPool.ArrayPools[4].Pool[0] == null &&
+            bool evaluate = arrayPool.ArrayPools is { Length: 31 } && arrayPool.ArrayPools[4].Count == 0 &&
+                            arrayPool.ArrayPools[4].Pool is { Length: 2 } && arrayPool.ArrayPools[4].Pool[0] == null &&
                             arrayPool.ArrayPools[4].Pool[1] == null;
 
             if (evaluate)
             {
                 int[] array = arrayPool.Get(16);
-
-                evaluate = evaluate &&
-                            array != null &&
-                            array.Length == 16;
+                evaluate = array is { Length: 16 };
             }
 
             Assert.IsTrue(evaluate);
@@ -102,22 +84,14 @@ namespace Runtime.Collections.Generic
 
             ArrayPool<int> arrayPool = new ArrayPool<int>(minimums, maximums);
 
-            bool evaluate = arrayPool.ArrayPools != null &&
-                            arrayPool.ArrayPools.Length == 31 &&
-                            arrayPool.ArrayPools[4].Count == 1 &&
-                            arrayPool.ArrayPools[4].Pool != null &&
-                            arrayPool.ArrayPools[4].Pool.Length == 2 &&
-                            arrayPool.ArrayPools[4].Pool[0] != null &&
-                            arrayPool.ArrayPools[4].Pool[0].Length == 16 &&
-                            arrayPool.ArrayPools[4].Pool[1] == null;
+            bool evaluate = arrayPool.ArrayPools is { Length: 31 } && arrayPool.ArrayPools[4].Count == 1 &&
+                            arrayPool.ArrayPools[4].Pool is { Length: 2 } && arrayPool.ArrayPools[4].Pool[0] != null &&
+                            arrayPool.ArrayPools[4].Pool[0].Length == 16 && arrayPool.ArrayPools[4].Pool[1] == null;
 
             if (evaluate)
             {
                 int[] array = arrayPool.Get(13);
-
-                evaluate = evaluate &&
-                            array != null &&
-                            array.Length == 16;
+                evaluate = array is { Length: 16 };
             }
 
             Assert.IsTrue(evaluate);
@@ -133,22 +107,18 @@ namespace Runtime.Collections.Generic
 
             ArrayPool<int> arrayPool = new ArrayPool<int>(minimums, maximums);
 
-            bool evaluate = arrayPool.ArrayPools != null &&
-                            arrayPool.ArrayPools.Length == 31 &&
-                            arrayPool.ArrayPools[4].Count == 1 &&
-                            arrayPool.ArrayPools[4].Pool != null &&
-                            arrayPool.ArrayPools[4].Pool.Length == 2 &&
-                            arrayPool.ArrayPools[4].Pool[0] != null &&
-                            arrayPool.ArrayPools[4].Pool[0].Length == 16 &&
-                            arrayPool.ArrayPools[4].Pool[1] == null;
+            bool evaluate = arrayPool.ArrayPools is { Length: 31 } && arrayPool.ArrayPools[4].Count == 1 &&
+                            arrayPool.ArrayPools[4].Pool is
+                            {
+                                Length: 2
+                            } && arrayPool.ArrayPools[4].Pool[0] != null &&
+                            arrayPool.ArrayPools[4].Pool[0].Length == 16 && arrayPool.ArrayPools[4].Pool[1] == null;
 
             if (evaluate)
             {
                 arrayPool.Return(arrayToPool);
-
-                evaluate = evaluate &&
-                            arrayPool.ArrayPools[4].Count == 2 &&
-                            arrayPool.ArrayPools[4].Pool[1] == arrayToPool;
+                evaluate = arrayPool.ArrayPools[4].Count == 2 &&
+                           arrayPool.ArrayPools[4].Pool[1] == arrayToPool;
             }
 
             Assert.IsTrue(evaluate);
@@ -165,23 +135,17 @@ namespace Runtime.Collections.Generic
 
             ArrayPool<int> arrayPool = new ArrayPool<int>(minimums, maximums);
 
-            bool evaluate = arrayPool.ArrayPools != null &&
-                            arrayPool.ArrayPools.Length == 31 &&
-                            arrayPool.ArrayPools[4].Count == 1 &&
-                            arrayPool.ArrayPools[4].Pool != null &&
-                            arrayPool.ArrayPools[4].Pool.Length == 2 &&
-                            arrayPool.ArrayPools[4].Pool[0] != null &&
-                            arrayPool.ArrayPools[4].Pool[0].Length == 16 &&
-                            arrayPool.ArrayPools[4].Pool[1] == null;
+            bool evaluate = arrayPool.ArrayPools is { Length: 31 } && arrayPool.ArrayPools[4].Count == 1 &&
+                            arrayPool.ArrayPools[4].Pool is { Length: 2 } && arrayPool.ArrayPools[4].Pool[0] != null &&
+                            arrayPool.ArrayPools[4].Pool[0].Length == 16 && arrayPool.ArrayPools[4].Pool[1] == null;
 
             if (evaluate)
             {
                 arrayPool.Return(arrayToPool);
                 arrayPool.Return(arrayToFail);
-                evaluate = evaluate &&
-                            arrayPool.ArrayPools[4].Count == 2 &&
-                            arrayPool.ArrayPools[4].Pool[1] == arrayToPool &&
-                            arrayPool.ArrayPools[4].Pool[0] != arrayToFail;
+                evaluate = arrayPool.ArrayPools[4].Count == 2 &&
+                           arrayPool.ArrayPools[4].Pool[1] == arrayToPool &&
+                           arrayPool.ArrayPools[4].Pool[0] != arrayToFail;
             }
 
             Assert.IsTrue(evaluate);

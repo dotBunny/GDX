@@ -5,7 +5,6 @@
 using System.Text;
 using GDX;
 using NUnit.Framework;
-using UnityEngine;
 
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable
@@ -17,14 +16,14 @@ namespace Runtime
     /// </summary>
     public class StringExtensionsTests
     {
-        private byte[] _previousEncryptionDefaultKey;
-        private byte[] _previousEncryptionInitializationVector;
+        private byte[] m_PreviousEncryptionDefaultKey;
+        private byte[] m_PreviousEncryptionInitializationVector;
 
         [SetUp]
         public void Setup()
         {
-            _previousEncryptionDefaultKey = StringExtensions.EncryptionDefaultKey;
-            _previousEncryptionInitializationVector = StringExtensions.EncryptionInitializationVector;
+            m_PreviousEncryptionDefaultKey = StringExtensions.EncryptionDefaultKey;
+            m_PreviousEncryptionInitializationVector = StringExtensions.EncryptionInitializationVector;
 
             StringExtensions.EncryptionDefaultKey = Encoding.UTF8.GetBytes("Awesome!");
             StringExtensions.EncryptionInitializationVector = Encoding.UTF8.GetBytes("dotBunny");
@@ -33,12 +32,12 @@ namespace Runtime
         [TearDown]
         public void TearDown()
         {
-            StringExtensions.EncryptionDefaultKey = _previousEncryptionDefaultKey;
-            StringExtensions.EncryptionInitializationVector = _previousEncryptionInitializationVector;
+            StringExtensions.EncryptionDefaultKey = m_PreviousEncryptionDefaultKey;
+            StringExtensions.EncryptionInitializationVector = m_PreviousEncryptionInitializationVector;
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetAfterFirst_MockData_ReturnsString()
         {
             string result = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetAfterFirst("_M");
@@ -49,7 +48,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetAfterLast_MockData_ReturnsString()
         {
             string result = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetAfterLast("_");
@@ -60,7 +59,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetBeforeFirst_MockData_ReturnsEmptyString()
         {
             string result = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetBeforeFirst("_");
@@ -71,7 +70,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetBeforeLast_MockData_ReturnsString()
         {
             string result = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetBeforeLast("_");
@@ -82,7 +81,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void HasUpperCase_LowerCaseString_ReturnsFalse()
         {
             bool evaluate = "this is all lowercase".HasUpperCase();
@@ -91,7 +90,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void HasLowerCase_UpperCaseString_ReturnsFalse()
         {
             bool evaluate = "THIS IS ALL UPPERCASE".HasLowerCase();
@@ -100,21 +99,21 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void HasUpperCase_MixedCaseString_ReturnsTrue()
         {
             Assert.IsTrue("HelloWorld!".HasUpperCase());
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void HasLowerCase_MixedCaseString_ReturnsTrue()
         {
             Assert.IsTrue("HelloWorld!".HasLowerCase());
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsBooleanPositiveValue_TrueString_ReturnsTrue()
         {
             bool evaluate = "true".IsBooleanPositiveValue();
@@ -123,7 +122,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsBooleanValue_OffString_ReturnsTrue()
         {
             bool evaluate = "off".IsBooleanValue();
@@ -132,7 +131,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsBooleanValue_BadString_ReturnsFalse()
         {
             bool evaluate = "off2".IsBooleanValue();
@@ -141,7 +140,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsBooleanPositiveValue_BadString_ReturnsFalse()
         {
             bool evaluate = "true2".IsBooleanPositiveValue();
@@ -150,7 +149,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsIntegerValue_NullNumber_ReturnsFalse()
         {
             bool evaluate = "".IsIntegerValue();
@@ -158,7 +157,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsIntegerValue_PositiveNumber_ReturnsTrue()
         {
             bool evaluate = "1".IsIntegerValue();
@@ -166,7 +165,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsIntegerValue_NegativeNumber_ReturnsTrue()
         {
             bool evaluate = "-100222".IsIntegerValue();
@@ -175,7 +174,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsIntegerValue_BadString_ReturnsFalse()
         {
             bool evaluate = "bob".IsIntegerValue();
@@ -184,7 +183,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsIntegerValue_MixedString_ReturnsFalse()
         {
             bool evaluate = "-100bob222".IsIntegerValue();
@@ -193,7 +192,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsNumericValue_PositiveNumber_ReturnsTrue()
         {
             bool evaluate = "1".IsNumeric();
@@ -202,7 +201,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsNumericValue_NullNumber_ReturnsFalse()
         {
             bool evaluate = "".IsNumeric();
@@ -210,7 +209,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsNumericValue_Characters_ReturnsFalse()
         {
             bool evaluate = "c111".IsNumeric();
@@ -218,7 +217,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsNumericValue_NegativeNumber_ReturnsTrue()
         {
             bool evaluate = "-100.12123".IsNumeric();
@@ -227,7 +226,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsNumericValue_TwoDecimals_ReturnsFalse()
         {
             bool evaluate = "-100..12123".IsNumeric();
@@ -236,7 +235,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void SplitCamelCase_CamelCase_ReturnsString()
         {
             bool evaluate = "SomethingSomethingDarkSide".SplitCamelCase() == "Something Something Dark Side";
@@ -245,7 +244,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void SplitCamelCase_camelCase_ReturnsString()
         {
             bool evaluate = "somethingSomethingDarkSide".SplitCamelCase() == "something Something Dark Side";
@@ -254,23 +253,23 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Encrypt_Decrypt_IsEqual()
         {
-            const string simpleString = "HelloWorld!";
-            const string complexString = "_tH\\is_I!is_M\"y_TEST_STR#$34343";
+            const string k_SimpleString = "HelloWorld!";
+            const string k_ComplexString = "_tH\\is_I!is_M\"y_TEST_STR#$34343";
 
-            string encryptedSimple = simpleString.Encrypt();
-            string encryptedComplex = complexString.Encrypt();
+            string encryptedSimple = k_SimpleString.Encrypt();
+            string encryptedComplex = k_ComplexString.Encrypt();
 
-            bool evaluate = encryptedSimple.Decrypt() == simpleString &&
-                            encryptedComplex.Decrypt() == complexString;
+            bool evaluate = encryptedSimple.Decrypt() == k_SimpleString &&
+                            encryptedComplex.Decrypt() == k_ComplexString;
 
             Assert.IsTrue(evaluate);
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Encrypt_MockData_ReturnsString()
         {
             bool evaluate = "HelloWorld!".Encrypt() != "HelloWorld!";
@@ -279,7 +278,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetStableLowerCaseHashCode_ToLowerGetStableHashCode_IsEqual()
         {
             int oldSimpleHash = "HelloWorld!".ToLower().GetStableHashCode();
@@ -300,7 +299,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetStableUpperCaseHashCode_ToUpperGetStableHashCode_IsEqual()
         {
             int oldComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".ToUpper().GetStableHashCode();
@@ -321,7 +320,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void CountOccurence_TwoMockData_ReturnsTwo()
         {
             string mockData = "this is a, count of sorts,";
@@ -332,7 +331,7 @@ namespace Runtime
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void CountOccurence_ZeroMockData_ReturnsTwo()
         {
             string mockData = "this is a, count of sorts,";

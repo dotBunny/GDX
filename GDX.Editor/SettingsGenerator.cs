@@ -8,88 +8,83 @@ namespace GDX.Editor
 {
     public static class SettingsGenerator
     {
-        private const string CoreConfigPath = "Core.Config";
+        const string k_CoreConfigPath = "Core.Config";
         public static string Build(GDXConfig lhs, GDXConfig rhs)
         {
-            StringBuilder fileContent = new StringBuilder();
+            Developer.TextGenerator code = new Developer.TextGenerator("    ", "{", "}");
 
             // Start header
-            fileContent.AppendLine("// Generated file of difference from default config.");
-            fileContent.AppendLine("namespace GDX");
-            fileContent.AppendLine("{");
-            fileContent.AppendLine("\tpublic static class GDXSettings");
-            fileContent.AppendLine("\t{");
-            fileContent.AppendLine("#if UNITY_EDITOR");
-            fileContent.AppendLine("\t\t[UnityEditor.InitializeOnLoadMethod]");
-            fileContent.AppendLine("#endif");
-            fileContent.AppendLine("\t\t[UnityEngine.RuntimeInitializeOnLoadMethod]");
-            fileContent.AppendLine("\t\tpublic static void Init()");
-            fileContent.AppendLine("\t\t{");
+            code.AppendLine($"// Generated file of difference from default config.");
+            code.AppendLine($"namespace GDX");
+            code.PushIndent();
+            code.AppendLine($"public class {Core.OverrideClass}");
+            code.PushIndent();
+            code.AppendLine("[UnityEngine.Scripting.Preserve]");
+            code.AppendLine($"public static void {Core.OverrideMethod}()");
+            code.PushIndent();
 
-            GetOverrideBoolean(fileContent, "updateProviderCheckForUpdates",
-                lhs.updateProviderCheckForUpdates, rhs.updateProviderCheckForUpdates);
-            GetOverrideString(fileContent, "developerCommandLineParserArgumentPrefix",
-                lhs.developerCommandLineParserArgumentPrefix, rhs.developerCommandLineParserArgumentPrefix);
-            GetOverrideString(fileContent, "developerCommandLineParserArgumentSplit",
-                lhs.developerCommandLineParserArgumentSplit, rhs.developerCommandLineParserArgumentSplit);
-            GetOverrideBoolean(fileContent, "developerBuildInfoAssemblyDefinition",
-                lhs.developerBuildInfoAssemblyDefinition, rhs.developerBuildInfoAssemblyDefinition);
-            GetOverrideBoolean(fileContent, "developerBuildInfoEnabled",
-                lhs.developerBuildInfoEnabled, rhs.developerBuildInfoEnabled);
-            GetOverrideString(fileContent, "developerBuildInfoPath",
-                lhs.developerBuildInfoPath, rhs.developerBuildInfoPath);
-            GetOverrideString(fileContent, "developerBuildInfoNamespace",
-                lhs.developerBuildInfoNamespace, rhs.developerBuildInfoNamespace);
-            GetOverrideString(fileContent, "developerBuildInfoBuildNumberArgument",
-                lhs.developerBuildInfoBuildNumberArgument, rhs.developerBuildInfoBuildNumberArgument);
-            GetOverrideString(fileContent, "developerBuildInfoBuildDescriptionArgument",
-                lhs.developerBuildInfoBuildDescriptionArgument, rhs.developerBuildInfoBuildDescriptionArgument);
-            GetOverrideString(fileContent, "developerBuildInfoBuildChangelistArgument",
-                lhs.developerBuildInfoBuildChangelistArgument, rhs.developerBuildInfoBuildChangelistArgument);
-            GetOverrideString(fileContent, "developerBuildInfoBuildTaskArgument",
-                lhs.developerBuildInfoBuildTaskArgument, rhs.developerBuildInfoBuildTaskArgument);
-            GetOverrideString(fileContent, "developerBuildInfoBuildStreamArgument",
-                lhs.developerBuildInfoBuildStreamArgument, rhs.developerBuildInfoBuildStreamArgument);
-            GetOverrideBoolean(fileContent, "environmentScriptingDefineSymbol",
-                lhs.environmentScriptingDefineSymbol, rhs.environmentScriptingDefineSymbol);
+            AddToGenerator(code, "ConfigOutputPath",
+                lhs.ConfigOutputPath, rhs.ConfigOutputPath);
+            AddToGenerator(code, "UpdateProviderCheckForUpdates",
+                lhs.UpdateProviderCheckForUpdates, rhs.UpdateProviderCheckForUpdates);
+            AddToGenerator(code, "DeveloperCommandLineParserArgumentPrefix",
+                lhs.DeveloperCommandLineParserArgumentPrefix, rhs.DeveloperCommandLineParserArgumentPrefix);
+            AddToGenerator(code, "DeveloperCommandLineParserArgumentSplit",
+                lhs.DeveloperCommandLineParserArgumentSplit, rhs.DeveloperCommandLineParserArgumentSplit);
+            AddToGenerator(code, "DeveloperBuildInfoAssemblyDefinition",
+                lhs.DeveloperBuildInfoAssemblyDefinition, rhs.DeveloperBuildInfoAssemblyDefinition);
+            AddToGenerator(code, "DeveloperBuildInfoEnabled",
+                lhs.DeveloperBuildInfoEnabled, rhs.DeveloperBuildInfoEnabled);
+            AddToGenerator(code, "DeveloperBuildInfoPath",
+                lhs.DeveloperBuildInfoPath, rhs.DeveloperBuildInfoPath);
+            AddToGenerator(code, "DeveloperBuildInfoNamespace",
+                lhs.DeveloperBuildInfoNamespace, rhs.DeveloperBuildInfoNamespace);
+            AddToGenerator(code, "DeveloperBuildInfoBuildNumberArgument",
+                lhs.DeveloperBuildInfoBuildNumberArgument, rhs.DeveloperBuildInfoBuildNumberArgument);
+            AddToGenerator(code, "DeveloperBuildInfoBuildDescriptionArgument",
+                lhs.DeveloperBuildInfoBuildDescriptionArgument, rhs.DeveloperBuildInfoBuildDescriptionArgument);
+            AddToGenerator(code, "DeveloperBuildInfoBuildChangelistArgument",
+                lhs.DeveloperBuildInfoBuildChangelistArgument, rhs.DeveloperBuildInfoBuildChangelistArgument);
+            AddToGenerator(code, "DeveloperBuildInfoBuildTaskArgument",
+                lhs.DeveloperBuildInfoBuildTaskArgument, rhs.DeveloperBuildInfoBuildTaskArgument);
+            AddToGenerator(code, "DeveloperBuildInfoBuildStreamArgument",
+                lhs.DeveloperBuildInfoBuildStreamArgument, rhs.DeveloperBuildInfoBuildStreamArgument);
+            AddToGenerator(code, "EnvironmentScriptingDefineSymbol",
+                lhs.EnvironmentScriptingDefineSymbol, rhs.EnvironmentScriptingDefineSymbol);
 
-            GetOverrideTraceLevel(fileContent, "traceDevelopmentLevels",
-                lhs.traceDevelopmentLevels, rhs.traceDevelopmentLevels);
-            GetOverrideTraceLevel(fileContent, "traceDebugLevels",
-                lhs.traceDebugLevels, rhs.traceDebugLevels);
-            GetOverrideTraceLevel(fileContent, "traceReleaseLevels",
-                lhs.traceReleaseLevels, rhs.traceReleaseLevels);
+            AddToGenerator(code, "TraceDevelopmentLevels",
+                lhs.TraceDevelopmentLevels, rhs.TraceDevelopmentLevels);
+            AddToGenerator(code, "TraceDebugLevels",
+                lhs.TraceDebugLevels, rhs.TraceDebugLevels);
+            AddToGenerator(code, "TraceReleaseLevels",
+                lhs.TraceReleaseLevels, rhs.TraceReleaseLevels);
 
-            GetOverrideBoolean(fileContent, "traceDevelopmentOutputToUnityConsole",
-                lhs.traceDevelopmentOutputToUnityConsole, rhs.traceDevelopmentOutputToUnityConsole);
-            GetOverrideBoolean(fileContent, "traceDebugOutputToUnityConsole",
-                lhs.traceDebugOutputToUnityConsole, rhs.traceDebugOutputToUnityConsole);
-            GetOverrideBoolean(fileContent, "localizationSetDefaultCulture",
-                lhs.localizationSetDefaultCulture, rhs.localizationSetDefaultCulture);
-            OverrideLocalizationLanguage(fileContent, "localizationDefaultCulture",
-                lhs.localizationDefaultCulture, rhs.localizationDefaultCulture);
+            AddToGenerator(code, "TraceDevelopmentOutputToUnityConsole",
+                lhs.TraceDevelopmentOutputToUnityConsole, rhs.TraceDevelopmentOutputToUnityConsole);
+            AddToGenerator(code, "TraceDebugOutputToUnityConsole",
+                lhs.TraceDebugOutputToUnityConsole, rhs.TraceDebugOutputToUnityConsole);
+            AddToGenerator(code, "LocalizationSetDefaultCulture",
+                lhs.LocalizationSetDefaultCulture, rhs.LocalizationSetDefaultCulture);
+            AddToGenerator(code, "LocalizationDefaultCulture",
+                lhs.LocalizationDefaultCulture, rhs.LocalizationDefaultCulture);
 
-            // Finish file
-            fileContent.AppendLine("\t\t}");
-            fileContent.AppendLine("\t}");
-            fileContent.AppendLine("}");
-            return fileContent.ToString();
+            return code.ToString();
 
         }
 
-        private static void GetOverrideBoolean(StringBuilder builder, string member, bool lhs, bool rhs)
+        static void AddToGenerator(Developer.TextGenerator code, string member, bool lhs, bool rhs)
         {
             if (lhs == rhs) return;
-            builder.AppendLine(rhs ? $"\t\t\t{CoreConfigPath}.{member} = true;" : $"\t\t\t{CoreConfigPath}.{member} = false;");
+            code.AppendLine(rhs ? $"{k_CoreConfigPath}.{member} = true;" : $"{k_CoreConfigPath}.{member} = false;");
         }
 
-        private static void GetOverrideString(StringBuilder builder, string member, string lhs, string rhs)
+        static void AddToGenerator(Developer.TextGenerator code, string member, string lhs, string rhs)
         {
             if (lhs == rhs) return;
-            builder.AppendLine($"\t\t\t{CoreConfigPath}.{member} = \"{rhs}\";");
+            code.AppendLine($"{k_CoreConfigPath}.{member} = \"{rhs}\";");
         }
 
-        private static void GetOverrideTraceLevel(StringBuilder builder, string member, Trace.TraceLevel lhs, Trace.TraceLevel rhs)
+        static void AddToGenerator(Developer.TextGenerator code, string member, Trace.TraceLevel lhs, Trace.TraceLevel rhs)
         {
             if (lhs == rhs) return;
 
@@ -124,13 +119,13 @@ namespace GDX.Editor
             }
 
             string masks = maskBuilder.ToString().Trim();
-            builder.AppendLine($"\t\t\t{CoreConfigPath}.{member} = {masks.Substring(0,masks.Length - 2)};");
+            code.AppendLine($"{k_CoreConfigPath}.{member} = {masks.Substring(0,masks.Length - 2)};");
         }
 
-        private static void OverrideLocalizationLanguage(StringBuilder builder, string member, Localization.Language lhs, Localization.Language rhs)
+        static void AddToGenerator(Developer.TextGenerator code, string member, Localization.Language lhs, Localization.Language rhs)
         {
             if (lhs == rhs) return;
-            builder.AppendLine($"\t\t\t{CoreConfigPath}.{member} = Localization.Language.{rhs.ToString()};");
+            code.AppendLine($"{k_CoreConfigPath}.{member} = Localization.Language.{rhs.ToString()};");
         }
     }
 }

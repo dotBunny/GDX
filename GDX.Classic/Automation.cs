@@ -4,10 +4,14 @@
 
 using UnityEngine;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Classic
 {
+    // ReSharper disable once UnusedType.Global
     public class Automation
     {
+        // ReSharper disable once MemberCanBePrivate.Global
         public static Texture2D CaptureCamera(Camera targetCamera, int width = 1920, int height = 1080)
         {
             // Get a temporary render texture from the pool since its gonna be rapid.
@@ -45,6 +49,7 @@ namespace GDX.Classic
             return true;
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public static Texture2D CaptureCamera(Vector3 position, Quaternion rotation, int width = 1920, int height = 1080)
         {
             GameObject cameraObject = new GameObject {hideFlags = HideFlags.HideAndDontSave};

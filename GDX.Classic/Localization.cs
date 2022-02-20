@@ -2,12 +2,12 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 
 namespace GDX.Classic
 {
@@ -15,13 +15,14 @@ namespace GDX.Classic
     ///     A collection of localization related helper utilities.
     /// </summary>
     [VisualScriptingCompatible(8)]
+    // ReSharper disable once UnusedType.Global
     public static class Localization
     {
 
         /// <summary>
-        ///     Get the <see cref="Language" /> equivalent of the <see cref="SystemLanguage" />.
+        ///     Get the <see cref="GDX.Localization.Language" /> equivalent of the <see cref="SystemLanguage" />.
         /// </summary>
-        /// <returns>The appropriate <see cref="Language" />, or default.</returns>
+        /// <returns>The appropriate <see cref="GDX.Localization.Language" />, or default.</returns>
         public static GDX.Localization.Language GetSystemLanguage()
         {
             SystemLanguage language = Application.systemLanguage;
@@ -48,7 +49,7 @@ namespace GDX.Classic
         ///     Get the localized <see cref="System.DateTime" />.<see cref="System.DateTime.ToString(string)" /> for
         ///     <paramref name="targetLanguage" />.
         /// </summary>
-        /// <param name="targetLanguage">The target <see cref="Language" />.</param>
+        /// <param name="targetLanguage">The target <see cref="GDX.Localization.Language" />.</param>
         /// <returns>The format <see cref="System.String" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GetTimestampFormat(this GDX.Localization.Language targetLanguage)
@@ -73,7 +74,7 @@ namespace GDX.Classic
         }
 
         /// <summary>
-        ///     Sets the current threads culture to a defined setting in <see cref="Config" />.
+        ///     Sets the current threads culture to a defined setting in <see cref="GDXConfig" />.
         /// </summary>
         /// <remarks>
         ///     Can be used to avoid issues with culture settings without a Gregorian Calendar. Configurable to automatically
@@ -82,9 +83,9 @@ namespace GDX.Classic
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
         public static void SetDefaultCulture()
         {
-            if (Core.Config.localizationSetDefaultCulture && GetSystemLanguage() == GDX.Localization.Language.Default)
+            if (Core.Config.LocalizationSetDefaultCulture && GetSystemLanguage() == GDX.Localization.Language.Default)
             {
-                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(GDX.Localization.GetIETF(Core.Config.localizationDefaultCulture));
+                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(Core.Config.LocalizationDefaultCulture.GetIETF());
             }
         }
     }

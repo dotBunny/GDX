@@ -4,9 +4,9 @@
 
 using System.Runtime.CompilerServices;
 
-// TODO: Change to struct + unit tests
-
+// ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
+
 namespace GDX.Collections.Generic
 {
     /// <summary>
@@ -136,6 +136,7 @@ namespace GDX.Collections.Generic
         /// </summary>
         public void ReverseColumns()
         {
+            // ReSharper disable once TooWideLocalVariableScope
             T temporaryStorage;
 
             int lastIndex = ColumnCount - 1;

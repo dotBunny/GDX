@@ -5,6 +5,8 @@
 using System;
 using System.Runtime.CompilerServices;
 
+// ReSharper disable UnusedMember.Global
+
 namespace GDX.Classic.Developer.Reports
 {
     /// <summary>
@@ -51,7 +53,7 @@ namespace GDX.Classic.Developer.Reports
             return workingTitle;
         }
 
-        public static string CreateKVP(this ReportContext context, string itemKey, string itemValue)
+        public static string CreateKeyValuePair(this ReportContext context, string itemKey, string itemValue)
         {
             string workingLine = $"{itemKey}: ".PadRight(context.KeyValuePairWidth);
             if (workingLine.Length > context.KeyValuePairWidth)

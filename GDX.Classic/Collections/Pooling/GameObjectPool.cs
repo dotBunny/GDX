@@ -19,7 +19,7 @@ namespace GDX.Classic.Collections.Pooling
         ///     The <see cref="ListManagedPool" /> flags index used to determine if the object which is used to create new objects
         ///     has the <see cref="IGameObjectPoolItem" /> interface on a root component.
         /// </summary>
-        private const int HasInterfaceFlag = 5;
+        private const int k_HasInterfaceFlag = 5;
 
         /// <summary>
         ///     Create a <see cref="GameObject" /> based <see cref="ListManagedPool" /> for the provided
@@ -32,6 +32,7 @@ namespace GDX.Classic.Collections.Pooling
         /// <param name="allowCreateMore">Can more items be created as needed when starved for items?</param>
         /// <param name="allowReuseWhenCapped">Should we reuse oldest items when starving for items?</param>
         /// <param name="allowManagedTearDown">Does the pool allow a managed tear down event call?</param>
+        // ReSharper disable once MemberCanBePrivate.Global
         public static IManagedPool CreatePool(
             GameObject gameObject,
             Transform parent,
@@ -53,12 +54,12 @@ namespace GDX.Classic.Collections.Pooling
                 allowReuseWhenCapped,
                 allowManagedTearDown)
             {
-                Flags = {[HasInterfaceFlag] = gameObject.GetComponent<IGameObjectPoolItem>() != null}
+                Flags = {[k_HasInterfaceFlag] = gameObject.GetComponent<IGameObjectPoolItem>() != null}
             };
 
             ManagedPoolBuilder.AddManagedPool(newGameManagedPool);
 
-            newGameManagedPool._outCachedCount = 0;
+            newGameManagedPool.OutCachedCount = 0;
 
             // Assign actions
             newGameManagedPool.OnDestroyItem += OnDestroyItemAction;
@@ -116,7 +117,7 @@ namespace GDX.Classic.Collections.Pooling
             GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
             if (returnObject == null)
             {
-                return returnObject;
+                return null;
             }
 
             // Translate
@@ -158,7 +159,7 @@ namespace GDX.Classic.Collections.Pooling
             GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
             if (returnObject == null)
             {
-                return returnObject;
+                return null;
             }
 
             // Translate
@@ -198,7 +199,7 @@ namespace GDX.Classic.Collections.Pooling
             GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
             if (returnObject == null)
             {
-                return returnObject;
+                return null;
             }
 
             // Translate
@@ -237,7 +238,7 @@ namespace GDX.Classic.Collections.Pooling
             GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
             if (returnObject == null)
             {
-                return returnObject;
+                return null;
             }
 
             // Translate
@@ -275,7 +276,7 @@ namespace GDX.Classic.Collections.Pooling
             GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
             if (returnObject == null)
             {
-                return returnObject;
+                return null;
             }
 
             // Translate
@@ -313,7 +314,7 @@ namespace GDX.Classic.Collections.Pooling
             GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
             if (returnObject == null)
             {
-                return returnObject;
+                return null;
             }
 
             // Translate
@@ -352,7 +353,7 @@ namespace GDX.Classic.Collections.Pooling
             GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
             if (returnObject == null)
             {
-                return returnObject;
+                return null;
             }
 
             // Translate
@@ -408,20 +409,20 @@ namespace GDX.Classic.Collections.Pooling
             GameObject spawnedObject =
                 Object.Instantiate((GameObject)pool.BaseObject, (Transform)pool.ContainerObject, true);
 
-            if (pool.Flags[HasInterfaceFlag])
+            if (pool.Flags[k_HasInterfaceFlag])
             {
                 // The old swap for the interface instead of the GameObject
                 IGameObjectPoolItem item = spawnedObject.GetComponent<IGameObjectPoolItem>();
                 item.SetParentPool(pool);
                 item.OnReturnedToPool();
                 pool.InItems.Add(item);
-                pool._inCachedCount++;
+                pool.InCachedCount++;
                 return item;
             }
 
             spawnedObject.SetActive(false);
             pool.InItems.Add(spawnedObject);
-            pool._inCachedCount++;
+            pool.InCachedCount++;
             return spawnedObject;
         }
 
@@ -469,7 +470,7 @@ namespace GDX.Classic.Collections.Pooling
         /// <param name="item">The item being returned to the <paramref name="pool"/>.</param>
         private static void OnReturnedToPoolAction(ListManagedPool pool, object item)
         {
-            if (!pool.Flags[HasInterfaceFlag])
+            if (!pool.Flags[k_HasInterfaceFlag])
             {
                 (item as GameObject)?.SetActive(false);
                 return;
@@ -485,7 +486,7 @@ namespace GDX.Classic.Collections.Pooling
         /// <param name="item">The spawned item.</param>
         private static void OnSpawnedFromPoolAction(ListManagedPool pool, object item)
         {
-            if (!pool.Flags[HasInterfaceFlag])
+            if (!pool.Flags[k_HasInterfaceFlag])
             {
                 (item as GameObject)?.SetActive(true);
                 return;

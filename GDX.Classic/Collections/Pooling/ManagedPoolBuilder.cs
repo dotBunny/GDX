@@ -12,6 +12,7 @@ namespace GDX.Classic.Collections.Pooling
     ///     A time-slicing builder behaviour for <see cref="IManagedPool" />.
     /// </summary>
     /// <remarks>A demonstration of usage can be found in <see cref="GameObjectPool" />.</remarks>
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class ManagedPoolBuilder : MonoBehaviour
     {
         /// <summary>
@@ -21,27 +22,29 @@ namespace GDX.Classic.Collections.Pooling
         ///     During defined loading periods this value could be increased for faster allocations,
         ///     and then returned to a much more performant value afterwards.
         /// </remarks>
+        // ReSharper disable once MemberCanBePrivate.Global
         public static int InstantiatesPerFrame = 5;
 
         /// <summary>
         ///     Should the <see cref="ManagedPoolBuilder" /> destroy itself when finished?
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public static bool DestroyBuilderOnFinish = true;
 
         /// <summary>
         ///     A cached reference to the <see cref="GameObject" /> the builder created for itself.
         /// </summary>
-        private static GameObject s_builderObject;
+        private static GameObject s_BuilderObject;
 
         /// <summary>
         ///     A <see cref="List{T}" /> of <see cref="IManagedPool" /> which are being built out.
         /// </summary>
-        private static readonly List<IManagedPool> s_targetPools = new List<IManagedPool>();
+        private static readonly List<IManagedPool> s_TargetPools = new List<IManagedPool>();
 
         /// <summary>
-        ///     A cached numerical count of the number of <see cref="IManagedPool" /> contained in <see cref="s_targetPools" />.
+        ///     A cached numerical count of the number of <see cref="IManagedPool" /> contained in <see cref="s_TargetPools" />.
         /// </summary>
-        private static int s_targetPoolsCount;
+        private static int s_TargetPoolsCount;
 
         /// <summary>
         ///     Unity's LateUpdate event
@@ -51,13 +54,13 @@ namespace GDX.Classic.Collections.Pooling
             Tick();
 
             // Do we have work to be done?
-            if (s_targetPoolsCount != 0)
+            if (s_TargetPoolsCount != 0)
             {
                 return;
             }
 
             // Nothing left to do, get rid of myself
-            s_builderObject = null;
+            s_BuilderObject = null;
             Destroy(gameObject);
         }
 
@@ -67,22 +70,22 @@ namespace GDX.Classic.Collections.Pooling
         /// <param name="targetManagedPool">The <see cref="IManagedPool" /> to build out.</param>
         public static void AddManagedPool(IManagedPool targetManagedPool)
         {
-            if (s_targetPools.Contains(targetManagedPool))
+            if (s_TargetPools.Contains(targetManagedPool))
             {
                 return;
             }
 
-            s_targetPools.Add(targetManagedPool);
-            s_targetPoolsCount++;
+            s_TargetPools.Add(targetManagedPool);
+            s_TargetPoolsCount++;
 
             // We already have a builder, no need to make one.
-            if (s_builderObject != null)
+            if (s_BuilderObject != null)
             {
                 return;
             }
 
-            s_builderObject = new GameObject("GDX.GameObjectPoolBuilder");
-            s_builderObject.AddComponent<ManagedPoolBuilder>();
+            s_BuilderObject = new GameObject("GDX.GameObjectPoolBuilder");
+            s_BuilderObject.AddComponent<ManagedPoolBuilder>();
         }
 
         /// <summary>
@@ -91,57 +94,57 @@ namespace GDX.Classic.Collections.Pooling
         /// <param name="targetManagedPool">The <see cref="IManagedPool" /> to be removed.</param>
         public static void RemoveManagedPool(IManagedPool targetManagedPool)
         {
-            if (!s_targetPools.Contains(targetManagedPool))
+            if (!s_TargetPools.Contains(targetManagedPool))
             {
                 return;
             }
 
-            s_targetPools.Remove(targetManagedPool);
-            s_targetPoolsCount--;
+            s_TargetPools.Remove(targetManagedPool);
+            s_TargetPoolsCount--;
 
             // We still have pools, no sense destroying anything yet
-            if (s_targetPoolsCount > 0 || !DestroyBuilderOnFinish)
+            if (s_TargetPoolsCount > 0 || !DestroyBuilderOnFinish)
             {
                 return;
             }
 #if UNITY_EDITOR
             if (Application.isPlaying)
             {
-                Destroy(s_builderObject);
+                Destroy(s_BuilderObject);
             }
             else
             {
-                DestroyImmediate(s_builderObject);
+                DestroyImmediate(s_BuilderObject);
             }
 #else
-            Destroy(s_builderObject);
+            Destroy(s_BuilderObject);
 #endif
-            s_builderObject = null;
+            s_BuilderObject = null;
         }
 
         /// <summary>
         ///     Extracted tick update for the builder; creating a limited number of items per tick.
         /// </summary>
-        private void Tick()
+        static void Tick()
         {
             int spawnsThisUpdate = 0;
 
-            for (int i = s_targetPoolsCount - 1; i >= 0; i--)
+            for (int i = s_TargetPoolsCount - 1; i >= 0; i--)
             {
-                if (s_targetPools[i] == null)
+                if (s_TargetPools[i] == null)
                 {
                     continue;
                 }
 
-                if (s_targetPools[i].HasMinimumPooledItems())
+                if (s_TargetPools[i].HasMinimumPooledItems())
                 {
-                    s_targetPools.RemoveAt(i);
-                    s_targetPoolsCount--;
+                    s_TargetPools.RemoveAt(i);
+                    s_TargetPoolsCount--;
                 }
                 else
                 {
                     // Build Item
-                    s_targetPools[i].CreateItem();
+                    s_TargetPools[i].CreateItem();
 
                     spawnsThisUpdate++;
                     if (spawnsThisUpdate > InstantiatesPerFrame)
