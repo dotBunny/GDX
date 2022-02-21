@@ -18,7 +18,7 @@ namespace GDX.Developer.Reports
             return m_Report.GetResult();
         }
 
-        public static void Assert(string identifier, bool condition, string failMessage = null, int duration = 0)
+        public static TestCase Assert(string identifier, bool condition, string failMessage = null, int duration = 0)
         {
             TestCase test = m_Report.AddDurationResult(identifier, duration, condition, failMessage);
             if (test.Result == NUnitReport.PassedString)
@@ -29,6 +29,7 @@ namespace GDX.Developer.Reports
             {
                 Debug.LogError($"[BVT] {test.Name}: {test.Result}, {test.Output}");    
             }
+            return test;
         }
 
         public static void Reset()
@@ -37,10 +38,11 @@ namespace GDX.Developer.Reports
             m_PanicMessages.Clear();
         }
         
-        public static void Skip(string identifier, string skipMessage)
+        public static TestCase Skip(string identifier, string skipMessage)
         {
             TestCase test = m_Report.AddSkippedTest(identifier, skipMessage);
             Debug.Log($"[BVT] {test.Name}: {test.Result}");
+            return test;
         }
         
         public static void Panic(string panicMessage)

@@ -1,4 +1,5 @@
 ﻿using System;
+using GDX.Developer.Reports.NUnit;
 using UnityEngine;
 
 namespace GDX.Developer.Reports.BuildVerification
@@ -15,7 +16,8 @@ namespace GDX.Developer.Reports.BuildVerification
             }
             catch(Exception ex)
             {
-                BVT.Assert(GetIdentifier(), false, ex.Message);
+                TestCase test = BVT.Assert(GetIdentifier(), false, ex.Message);
+                test.StackTrace = ex.StackTrace;
             }
         }
     }

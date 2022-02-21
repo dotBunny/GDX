@@ -21,8 +21,11 @@ namespace GDX.Developer.Reports.NUnit
         public string EndTime { get; set; }
         public float Duration { get; set; }
         public int Asserts { get; set; }
-        public Properties Properties { get; set; }
+        public string Message { get; set; }
         public string Output { get; set; }
+        public Properties Properties { get; set; }
+        
+        public string StackTrace { get; set; }
 
         public string GetCategory()
         {

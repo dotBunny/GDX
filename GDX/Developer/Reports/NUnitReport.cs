@@ -24,14 +24,14 @@ namespace GDX.Developer.Reports
             m_Results.TestSuite.FullName = fullName;
             m_Results.TestSuite.ClassName = className;
         }
-        public TestCase AddDurationResult(string name, float seconds, bool passed = true, string output = null, TestSuite testSuite = null)
+        public TestCase AddDurationResult(string name, float seconds, bool passed = true, string failMessage = null, TestSuite testSuite = null)
         {
             TestCase testCase = new TestCase
             {
                 Name = name,
                 Duration = seconds,
                 Result = passed ? PassedString : FailedString,
-                Output = output
+                Message = passed ? null : failMessage
             };
             if (testSuite != null)
             {
@@ -43,13 +43,13 @@ namespace GDX.Developer.Reports
             }
             return testCase;
         }
-        public TestCase AddSkippedTest(string name, string output = null, TestSuite testSuite = null)
+        public TestCase AddSkippedTest(string name, string skipMessage = null, TestSuite testSuite = null)
         {
             TestCase testCase = new TestCase
             {
                 Name = name,
                 Result = SkippedString,
-                Output = output
+                Message = skipMessage
             };
             if (testSuite != null)
             {
@@ -129,12 +129,33 @@ namespace GDX.Developer.Reports
             AddToGeneratorAttribute(generator, "asserts", testCase.Asserts);
             AddToGeneratorAttribute(generator, "output", testCase.Output);
 
-            if (testCase.Properties != null && testCase.Properties.Property.Count > 0)
+            if ((testCase.Properties != null && testCase.Properties.Property.Count > 0) ||
+                testCase.Output != null)
             {
                 generator.Append(">");
                 generator.NextLine();
                 generator.PushIndent();
-                AddToGenerator(generator, testCase.Properties);
+
+                if (testCase.Output != null)
+                {
+                    generator.AppendLine($"<output><![CDATA[{testCase.Output}]]></output>");
+                }
+                
+                if (testCase.Message != null)
+                {
+                    generator.AppendLine($"<message><![CDATA[{testCase.Output}]]></message>");
+                }
+                
+                if (testCase.StackTrace != null)
+                {
+                    generator.AppendLine($"<stack-trace><![CDATA[{testCase.Output}]]></stack-trace>");
+                }
+                
+                if (testCase.Properties != null && testCase.Properties.Property.Count > 0)
+                {
+                    AddToGenerator(generator, testCase.Properties);
+                }
+
                 generator.PopIndent();
                 generator.AppendLine("</test-case>");
             }
