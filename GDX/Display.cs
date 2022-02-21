@@ -16,6 +16,7 @@ namespace GDX
     // ReSharper disable once UnusedType.Global
     public static class Display
     {
+ #if !DOTS_RUNTIME        
         /// <summary>
         ///     <para>Returns the actual screen height being rendered on the current platform.</para>
         /// </summary>
@@ -25,11 +26,7 @@ namespace GDX
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetScreenHeight()
         {
-#if DOTS_RUNTIME
-            throw new UnsupportedRuntimeException();
-#else
             return Screen.currentResolution.height;
-#endif
         }
 
         /// <summary>
@@ -41,13 +38,9 @@ namespace GDX
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetScreenWidth()
         {
-#if DOTS_RUNTIME
-            throw new UnsupportedRuntimeException();
-#else
             return Screen.currentResolution.width;
-#endif
         }
-
+        
         /// <summary>
         ///     Does the current display device support HDR output?
         /// </summary>
@@ -57,9 +50,7 @@ namespace GDX
         // ReSharper disable once InconsistentNaming
         public static bool IsHDRSupported()
         {
-#if DOTS_RUNTIME
-            throw new UnsupportedRuntimeException();
-#elif UNITY_PS4
+#if UNITY_PS4
             return ((UnityEngine.PS4.Utility.GetVideoOutDeviceCapability(UnityEngine.PS4.Utility.videoOutPortHandle) &
                     UnityEngine.PS4.Utility.VideoOutDeviceCapability.BT2020_PQ) != 0);
 #else
@@ -76,9 +67,7 @@ namespace GDX
         // ReSharper disable once InconsistentNaming
         public static bool IsHDREnabled()
         {
-#if DOTS_RUNTIME
-            throw new UnsupportedRuntimeException();
-#elif UNITY_PS4
+#if UNITY_PS4
             UnityEngine.PS4.Utility.GetRequestedVideoOutMode(out videoMode)
             return ((videoMode.colorimetry == UnityEngine.PS4.Utility.VideoOutColorimetry.BT2020_PQ)||
                     (videoMode.colorimetry == UnityEngine.PS4.Utility.VideoOutColorimetry.RGB2020_PQ) ||
@@ -89,5 +78,7 @@ namespace GDX
             return SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.DefaultHDR);
 #endif
         }
+        
+#endif // !DOTS_RUNTIME       
     }
 }

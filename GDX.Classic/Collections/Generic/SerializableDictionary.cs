@@ -76,10 +76,12 @@ namespace GDX.Classic.Collections.Generic
             Type type = typeof(TKey);
 
             // While a Behaviour itself can be null, when its a MonoBehaviour we cannot.
+#if !DOTS_RUNTIME            
             if (type == typeof(MonoBehaviour))
             {
                 return false;
             }
+#endif
 
             if (!type.IsValueType)
             {

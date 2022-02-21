@@ -9,30 +9,26 @@ using UnityEngine;
 
 // ReSharper disable MemberCanBePrivate.Global
 
-namespace GDX.Classic.Jobs.ParallelFor
+namespace GDX.Jobs.ParallelFor
 {
-    /// <summary>
-    ///     Determines if the <see cref="Color32"/>s in the provided <see cref="Unity.Collections.NativeArray{T}" />s match each other in
-    ///     parallel.
-    /// </summary>
     [BurstCompile]
     // ReSharper disable once UnusedType.Global
-    public struct Color32MatchJob : IJobParallelFor
+    public struct ColorCompareJob : IJobParallelFor
     {
         /// <summary>
         ///     The left-hand side <see cref="Unity.Collections.NativeArray{T}" /> typed as <see cref="byte" />.
         /// </summary>
-        [ReadOnly] public NativeArray<Color32> A;
+        [ReadOnly] public NativeArray<Color> A;
 
         /// <summary>
         ///     The right-hand side <see cref="Unity.Collections.NativeArray{T}" /> typed as <see cref="byte" />.
         /// </summary>
-        [ReadOnly] public NativeArray<Color32> B;
+        [ReadOnly] public NativeArray<Color> B;
 
         /// <summary>
-        ///     Does the color match?
+        ///     The percent difference between the two values.
         /// </summary>
-        [WriteOnly] public NativeArray<bool> Match;
+        [WriteOnly] public NativeArray<float> Percentage;
 
         /// <summary>
         /// Executable work for the provided index.
@@ -40,16 +36,18 @@ namespace GDX.Classic.Jobs.ParallelFor
         /// <param name="index">The index of the Parallel for loop at which to perform work.</param>
         public void Execute(int index)
         {
-            if (A[index].r == B[index].r &&
-                A[index].g == B[index].g &&
-                A[index].b == B[index].b &&
-                A[index].a == B[index].a)
+            if (A[index] == B[index])
             {
-                Match[index] = true;
+                Percentage[index] = 1f;
             }
             else
             {
-                Match[index] = false;
+                float rDiff = A[index].r - B[index].r;
+                float gDiff = A[index].g - B[index].g;
+                float bDiff = A[index].b - B[index].b;
+                float aDiff = A[index].a - B[index].a;
+
+                Percentage[index] = 1f - ((rDiff + gDiff + bDiff + aDiff) / 4f);
             }
         }
     }

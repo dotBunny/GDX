@@ -10,12 +10,11 @@ using UnityEngine;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
 
-namespace GDX.Classic
+namespace GDX
 {
     /// <summary>
     ///     A collection of memory related helper utilities.
     /// </summary>
-    /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
     [VisualScriptingCompatible(8)]
     // ReSharper disable once UnusedType.Global
     public static class Memory
@@ -27,13 +26,10 @@ namespace GDX.Classic
         ///             <description>Mono Heap (Garbage Collection)</description>
         ///         </item>
         ///         <item>
-        ///             <description>Unity Resources</description>
+        ///             <description>Unity Resources (when not deployed on DOTS Runtime.</description>
         ///         </item>
         ///     </list>
         /// </summary>
-        /// <remarks>
-        ///     <para>Requires UnityEngine.CoreModule.dll to function correctly.</para>
-        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void CleanUp()
         {
@@ -41,15 +37,18 @@ namespace GDX.Classic
             GC.Collect();
 
             // Tell Unity to clean up any assets that it no longer wants to have loaded
+#if !DOTS_RUNTIME
             Resources.UnloadUnusedAssets();
+#endif
 
             // Fire off second pass collection
             GC.WaitForPendingFinalizers();
             GC.Collect();
         }
 
+#if !DOTS_RUNTIME
         /// <inheritdoc cref="CleanUp" />
-        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
+        /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async void CleanUpAsync()
         {
@@ -67,5 +66,6 @@ namespace GDX.Classic
             GC.WaitForPendingFinalizers();
             GC.Collect();
         }
+#endif // !DOTS_RUNTIME 
     }
 }

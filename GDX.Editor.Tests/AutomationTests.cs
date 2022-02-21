@@ -4,7 +4,7 @@
 
 using System.Collections;
 using System.IO;
-using GDX.Classic.Jobs.ParallelFor;
+using GDX.Jobs.ParallelFor;
 using GDX.Editor;
 using NUnit.Framework;
 using Unity.Collections;

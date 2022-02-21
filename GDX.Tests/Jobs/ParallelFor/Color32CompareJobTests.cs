@@ -3,13 +3,13 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using GDX.Classic.Jobs.ParallelFor;
+using GDX.Jobs.ParallelFor;
 using NUnit.Framework;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
 
-namespace Runtime.Classic.Jobs.ParallelFor
+namespace Runtime.Jobs.ParallelFor
 {
     public class Color32CompareJobTests
     {
