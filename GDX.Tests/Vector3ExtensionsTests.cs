@@ -5,6 +5,7 @@
 using System;
 using NUnit.Framework;
 using UnityEngine;
+using GDX;
 
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable

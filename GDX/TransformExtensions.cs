@@ -2,13 +2,13 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+#if !UNITY_DOTSRUNTIME
+
 using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
 
 // ReSharper disable UnusedMember.Global
-
-#if !UNITY_DOTSRUNTIME
 namespace GDX
 {
     /// <summary>
@@ -19,49 +19,44 @@ namespace GDX
     public static class TransformExtensions
     {
         /// <summary>
-        ///     Destroy child <see cref="Transform"/>.
+        ///     Destroy child <see cref="Transform" />.
         /// </summary>
-        /// <param name="targetTransform">The parent <see cref="Transform"/> to look at.</param>
-        /// <param name="deactivateBeforeDestroy">Should the <paramref name="targetTransform"/> children's <see cref="GameObject"/>s be deactivated before destroying? This can be used to immediately hide an object, that will be destroyed at the end of the frame.</param>
-        /// <param name="destroyInactive">Should inactive <see cref="GameObject"/> be destroyed as well?</param>
+        /// <param name="targetTransform">The parent <see cref="Transform" /> to look at.</param>
+        /// <param name="deactivateBeforeDestroy">
+        ///     Should the <paramref name="targetTransform" /> children's
+        ///     <see cref="GameObject" />s be deactivated before destroying? This can be used to immediately hide an object, that
+        ///     will be destroyed at the end of the frame.
+        /// </param>
+        /// <param name="destroyInactive">Should inactive <see cref="GameObject" /> be destroyed as well?</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void DestroyChildren(this Transform targetTransform, bool deactivateBeforeDestroy = true, bool destroyInactive = true)
+        public static void DestroyChildren(this Transform targetTransform, bool deactivateBeforeDestroy = true,
+            bool destroyInactive = true)
         {
-            int count = targetTransform.childCount;
-            for (int i = 0; i < count; i++)
+            var count = targetTransform.childCount;
+            for (var i = 0; i < count; i++)
             {
-                GameObject childObject = targetTransform.GetChild(i).gameObject;
-                if (!destroyInactive && !childObject.activeInHierarchy)
-                {
-                    continue;
-                }
+                var childObject = targetTransform.GetChild(i).gameObject;
+                if (!destroyInactive && !childObject.activeInHierarchy) continue;
 
-                if (deactivateBeforeDestroy)
-                {
-                    childObject.SetActive(false);
-                }
+                if (deactivateBeforeDestroy) childObject.SetActive(false);
 
                 Object.Destroy(childObject);
             }
         }
 
         /// <summary>
-        /// Get the number of immediate children active.
+        ///     Get the number of immediate children active.
         /// </summary>
         /// <param name="targetTransform">The transform to look at's children.</param>
         /// <returns>The number of active children transforms.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetActiveChildCount(this Transform targetTransform)
         {
-            int counter = 0;
-            int childCount = targetTransform.childCount;
-            for (int i = 0; i < childCount; i++)
-            {
+            var counter = 0;
+            var childCount = targetTransform.childCount;
+            for (var i = 0; i < childCount; i++)
                 if (targetTransform.GetChild(i).gameObject.activeSelf)
-                {
                     counter++;
-                }
-            }
 
             return counter;
         }
@@ -90,58 +85,44 @@ namespace GDX
             // Increase depth count
             currentDepth++;
 
-            if (maxLevelsOfRecursion >= 0 && currentDepth > maxLevelsOfRecursion)
-            {
-                return returnComponent;
-            }
+            if (maxLevelsOfRecursion >= 0 && currentDepth > maxLevelsOfRecursion) return returnComponent;
 
-            int cachedChildCount = targetTransform.childCount;
-            for (int i = 0; i < cachedChildCount; i++)
+            var cachedChildCount = targetTransform.childCount;
+            for (var i = 0; i < cachedChildCount; i++)
             {
-                Transform transformToCheck = targetTransform.GetChild(i);
+                var transformToCheck = targetTransform.GetChild(i);
 
                 // Don't include disabled transforms
                 if (!transformToCheck.gameObject.activeSelf &&
                     !includeInactive)
-                {
                     continue;
-                }
 
                 // Lets check the current transform for the component.
                 returnComponent = transformToCheck.GetComponent<T>();
-                if (returnComponent != null)
-                {
-                    return returnComponent;
-                }
+                if (returnComponent != null) return returnComponent;
 
                 // OK, time to deep dive.
-                if (maxLevelsOfRecursion >= 0 && currentDepth >= maxLevelsOfRecursion)
-                {
-                    continue;
-                }
+                if (maxLevelsOfRecursion >= 0 && currentDepth >= maxLevelsOfRecursion) continue;
 
                 returnComponent = GetFirstComponentInChildrenComplex<T>(transformToCheck, includeInactive, currentDepth,
                     maxLevelsOfRecursion);
-                if (returnComponent != null)
-                {
-                    return returnComponent;
-                }
+                if (returnComponent != null) return returnComponent;
             }
 
             return returnComponent;
         }
 
         /// <summary>
-        ///     Get an in scene path to the <paramref name="targetTransform"/>.
+        ///     Get an in scene path to the <paramref name="targetTransform" />.
         /// </summary>
-        /// <param name="targetTransform">The <see cref="Transform"/> which to derive a path from.</param>
-        /// <returns>A created path <see cref="System.String"/>.</returns>
+        /// <param name="targetTransform">The <see cref="Transform" /> which to derive a path from.</param>
+        /// <returns>A created path <see cref="System.String" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GetScenePath(this Transform targetTransform)
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            Transform originalTransform = targetTransform;
-            while ( targetTransform != null )
+            var stringBuilder = new StringBuilder();
+            var originalTransform = targetTransform;
+            while (targetTransform != null)
             {
                 stringBuilder.Insert(0, targetTransform.name);
                 stringBuilder.Insert(0, '/');
@@ -149,10 +130,8 @@ namespace GDX
             }
 #if UNITY_EDITOR
             if (originalTransform &&
-                UnityEditor.EditorUtility.IsPersistent(originalTransform) )
-            {
-                stringBuilder.Append( " [P]" );
-            }
+                UnityEditor.EditorUtility.IsPersistent(originalTransform))
+                stringBuilder.Append(" [P]");
 #endif
             return stringBuilder.ToString();
         }

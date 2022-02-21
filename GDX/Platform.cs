@@ -93,7 +93,6 @@ namespace GDX
         /// <summary>
         ///     Gets the current platforms hardware generation number?
         /// </summary>
-        /// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>
         /// <returns>Returns 0 for base hardware, 1 for updates.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetHardwareGeneration()
@@ -122,22 +121,21 @@ namespace GDX
         ///     Returns a runtime writable folder.
         /// </summary>
         /// <returns>The full path to a writable folder at runtime.</returns>
-        public static string GetOutputFolder()
+        public static string GetOutputFolder(string folderName = "GDX")
         {
-            if (s_OutputFolder == null)
-            {
+            if (s_OutputFolder != null) return s_OutputFolder;
+            
 #if UNITY_EDITOR
-                s_OutputFolder = Path.Combine(UnityEngine.Application.dataPath, "..", "GDX");
+            s_OutputFolder = Path.Combine(UnityEngine.Application.dataPath, "..", folderName);
 #elif UNITY_DOTSRUNTIME
-                s_OutputFolder = Path.Combine(Directory.GetCurrentDirectory(), "GDX");
+                s_OutputFolder = Path.Combine(Directory.GetCurrentDirectory(), folderName);
 #else
-                s_OutputFolder = UnityEngine.Application.persistentDataPath;
+                s_OutputFolder = Path.Combine(UnityEngine.Application.persistentDataPath, folderName);
 
                 // TODO: Add console safe folders for dev?
                 // Maybe throw exception on release builds?
 #endif
-                EnsureFolderHierarchyExists(s_OutputFolder);
-            }
+            EnsureFolderHierarchyExists(s_OutputFolder);
 
             return s_OutputFolder;
 

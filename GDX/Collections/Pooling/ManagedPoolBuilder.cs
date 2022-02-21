@@ -2,13 +2,13 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+#if !UNITY_DOTSRUNTIME
+
 using System.Collections.Generic;
 using UnityEngine;
-using GDX.Collections.Pooling;
 
 namespace GDX.Collections.Pooling
 {
-#if !UNITY_DOTSRUNTIME
     /// <summary>
     ///     A time-slicing builder behaviour for <see cref="IManagedPool" />.
     /// </summary>
@@ -157,5 +157,5 @@ namespace GDX.Collections.Pooling
             }
         }
     }
-#endif // !UNITY_DOTSRUNTIME  
 }
+#endif // !UNITY_DOTSRUNTIME

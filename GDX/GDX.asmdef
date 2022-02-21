@@ -14,7 +14,9 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "UNITY_2020_3_OR_NEWER"
+    ],
     "versionDefines": [
         {
             "name": "com.unity.addressables",

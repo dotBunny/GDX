@@ -2,6 +2,8 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+#if !UNITY_DOTSRUNTIME
+
 using System;
 using System.Collections.Generic;
 using UnityEngine.Profiling;
@@ -10,8 +12,12 @@ using UnityEngine.Profiling.Memory.Experimental;
 
 // ReSharper disable UnusedMember.Global
 
-namespace GDX.Classic.Developer
+namespace GDX.Developer
 {
+    /// <summary>
+    ///     A set of functionality useful for creating profiling data to reason about the performance of an application.
+    /// </summary>
+    /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
     // ReSharper disable once UnusedType.Global
     public class Profiling
     {
@@ -19,20 +25,34 @@ namespace GDX.Classic.Developer
         ///     The prefix to use with all capture files.
         /// </summary>
         private const string k_MemoryCaptureFilePrefix = "MemCap-";
-
+        /// <summary>
+        ///     The number of memory captures to keep in the output folder.
+        /// </summary>
         private const int k_MemoryCapturesToKeep = 10;
-
+        /// <summary>
+        ///     The number of profile captures to keep in the output folder.
+        /// </summary>
         private const int k_ProfilesToKeep = 10;
         /// <summary>
         ///     The prefix to use with all binary profile files.
         /// </summary>
         private const string k_ProfileFilePrefix = "Profile-";
 
+        /// <summary>
+        ///     The default flags (all) used when capturing memory.
+        /// </summary>
         private const CaptureFlags k_AllCaptureFlags = CaptureFlags.ManagedObjects | CaptureFlags.NativeAllocations | CaptureFlags.NativeObjects | CaptureFlags.NativeAllocationSites | CaptureFlags.NativeStackTraces;
 
+        /// <summary>
+        ///     Take a memory snapshot and save it to <see cref="Platform.GetOutputFolder"/>. 
+        /// </summary>
+        /// <param name="prefix">Override the default prefix <see cref="k_MemoryCaptureFilePrefix"/>.</param>
+        /// <param name="finishCallback">Optional callback action once the memory capture has been made.</param>
+        /// <param name="captureFlags">Override of the memory capture flags, defaults to <see cref="k_AllCaptureFlags"/>.</param>
+        /// <param name="manageCaptures">Should the number of captures found in the output folder be managed?</param>
         public static void TakeMemorySnapshot(string prefix = null, Action<string, bool> finishCallback = null, CaptureFlags captureFlags = k_AllCaptureFlags, bool manageCaptures = true)
         {
-            string outputFolder = GDX.Platform.GetOutputFolder();
+            string outputFolder = Platform.GetOutputFolder();
             if (manageCaptures)
             {
                 string[] files = Directory.GetFiles(outputFolder, prefix == null ? $"{k_MemoryCaptureFilePrefix}*" : $"{k_MemoryCaptureFilePrefix}{prefix}-*", SearchOption.TopDirectoryOnly);
@@ -46,7 +66,7 @@ namespace GDX.Classic.Developer
 
                     for (int i = 0; i < filesToRemove; i++)
                     {
-                        GDX.Platform.ForceDeleteFile(fileList[i]);
+                        Platform.ForceDeleteFile(fileList[i]);
                     }
                 }
             }
@@ -82,7 +102,7 @@ namespace GDX.Classic.Developer
 
                     for (int i = 0; i < filesToRemove; i++)
                     {
-                        GDX.Platform.ForceDeleteFile(fileList[i]);
+                        Platform.ForceDeleteFile(fileList[i]);
                     }
                 }
             }
@@ -105,3 +125,4 @@ namespace GDX.Classic.Developer
         }
     }
 }
+#endif // !UNITY_DOTSRUNTIME

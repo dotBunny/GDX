@@ -8,9 +8,9 @@ using Unity.Mathematics;
 
 // ReSharper disable UnusedMember.Global
 
+#if !UNITY_DOTSRUNTIME
 namespace GDX
 {
-#if !UNITY_DOTSRUNTIME      
     /// <summary>
     ///     <see cref="Vector3" /> Based Extension Methods
     /// </summary>
@@ -194,5 +194,5 @@ namespace GDX
             return true;
         }
     }
-#endif // !UNITY_DOTSRUNTIME    
 }
+#endif // !UNITY_DOTSRUNTIME

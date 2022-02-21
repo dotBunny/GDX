@@ -2,14 +2,14 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+#if !UNITY_DOTSRUNTIME
+
 using UnityEngine;
 using GDX.Collections.Pooling;
 
 // ReSharper disable UnusedMember.Global
-
 namespace GDX.Collections.Pooling
 {
-#if !UNITY_DOTSRUNTIME
     /// <summary>
     ///     An interface describing the functionality needed for an item to be understood by <see cref="GameObjectPool" />,
     ///     if callbacks are to be made.
@@ -67,5 +67,5 @@ namespace GDX.Collections.Pooling
         /// <param name="targetManagedPool">The parent <see cref="IManagedPool" />.</param>
         void SetParentPool(IManagedPool targetManagedPool);
     }
-#endif // !UNITY_DOTSRUNTIME  
 }
+#endif // !UNITY_DOTSRUNTIME

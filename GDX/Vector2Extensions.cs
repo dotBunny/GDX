@@ -2,13 +2,14 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+#if !UNITY_DOTSRUNTIME
+
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using Unity.Mathematics;
 
 namespace GDX
 {
-#if !UNITY_DOTSRUNTIME    
     /// <summary>
     ///     <see cref="Vector2" /> Based Extension Methods
     /// </summary>
@@ -147,5 +148,5 @@ namespace GDX
             return true;
         }
     }
-#endif // !UNITY_DOTSRUNTIME    
 }
+#endif // !UNITY_DOTSRUNTIME

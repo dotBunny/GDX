@@ -18,6 +18,7 @@
     ],
     "autoReferenced": false,
     "defineConstraints": [
+        "UNITY_2020_3_OR_NEWER",
         "UNITY_INCLUDE_TESTS"
     ],
     "versionDefines": [

@@ -4,11 +4,11 @@
 
 using UnityEditor;
 using UnityEngine;
-using GDX.Classic.Collections.Generic;
+using GDX.Collections.Generic;
 
 namespace GDX.Editor.PropertyDrawers
 {
-#if UNITY_2020_1_OR_NEWER
+#if !UNITY_DOTSRUNTIME
     /// <summary>
     ///     A <see cref="PropertyDrawer" /> for <see cref="SerializableDictionary{TKey,TValue}" />.
     /// </summary>
@@ -892,5 +892,5 @@ namespace GDX.Editor.PropertyDrawers
             }
         }
     }
-#endif // UNITY_2020_1_OR_NEWER
+#endif // !UNITY_DOTSRUNTIME
 }

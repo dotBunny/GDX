@@ -2,13 +2,14 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+#if !UNITY_DOTSRUNTIME
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace GDX.Collections.Generic
 {
-#if !UNITY_DOTSRUNTIME
     /// <summary>
     ///     A Unity serializable <see cref="Dictionary{TKey,TValue}" />.
     /// </summary>
@@ -24,6 +25,7 @@ namespace GDX.Collections.Generic
     /// </remarks>
     /// <typeparam name="TKey">The dictionary's key <see cref="System.Type" />.</typeparam>
     /// <typeparam name="TValue">The dictionary's value <see cref="System.Type" />.</typeparam>
+    /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
     [Serializable]
     [VisualScriptingCompatible(1)]
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
@@ -272,5 +274,5 @@ namespace GDX.Collections.Generic
 #endif
 #pragma warning restore 414
     }
-#endif // !UNITY_DOTSRUNTIME    
 }
+#endif // !UNITY_DOTSRUNTIME
