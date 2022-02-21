@@ -7,11 +7,13 @@ using UnityEngine;
 
 // ReSharper disable UnusedMember.Global
 
-namespace GDX.Classic
+#if !UNITY_DOTSRUNTIME   
+namespace GDX
 {
     /// <summary>
     ///     <see cref="UnityEngine.CapsuleCollider" /> Based Extension Methods
     /// </summary>
+    /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
     [VisualScriptingCompatible(2)]
     // ReSharper disable once UnusedType.Global
     public static class CapsuleColliderExtensions
@@ -64,3 +66,4 @@ namespace GDX.Classic
         }
     }
 }
+#endif // !UNITY_DOTSRUNTIME

@@ -7,12 +7,14 @@ using GDX.Collections.Pooling;
 
 // ReSharper disable UnusedMember.Global
 
-namespace GDX.Classic.Collections.Pooling
+namespace GDX.Collections.Pooling
 {
+#if !UNITY_DOTSRUNTIME
     /// <summary>
     ///     An interface describing the functionality needed for an item to be understood by <see cref="GameObjectPool" />,
     ///     if callbacks are to be made.
     /// </summary>
+    /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
     public interface IGameObjectPoolItem
     {
         GameObject GetGameObject();
@@ -65,4 +67,5 @@ namespace GDX.Classic.Collections.Pooling
         /// <param name="targetManagedPool">The parent <see cref="IManagedPool" />.</param>
         void SetParentPool(IManagedPool targetManagedPool);
     }
+#endif // !UNITY_DOTSRUNTIME  
 }

@@ -8,14 +8,13 @@ using UnityEngine;
 
 // ReSharper disable UnusedMember.Global
 
-namespace GDX.Classic
+#if !UNITY_DOTSRUNTIME
+namespace GDX
 {
     /// <summary>
     ///     <see cref="UnityEngine.Transform" /> Based Extension Methods
     /// </summary>
-    /// <remarks>
-    ///     Used for MonoBehaviour workflows.
-    /// </remarks>
+    /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
     [VisualScriptingCompatible(2)]
     public static class TransformExtensions
     {
@@ -159,3 +158,4 @@ namespace GDX.Classic
         }
     }
 }
+#endif // !UNITY_DOTSRUNTIME

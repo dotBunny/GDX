@@ -6,11 +6,13 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using Unity.Mathematics;
 
-namespace GDX.Classic
+namespace GDX
 {
+#if !UNITY_DOTSRUNTIME    
     /// <summary>
     ///     <see cref="Vector2" /> Based Extension Methods
     /// </summary>
+    /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
     [VisualScriptingCompatible(2)]
     public static class Vector2Extensions
     {
@@ -145,4 +147,5 @@ namespace GDX.Classic
             return true;
         }
     }
+#endif // !UNITY_DOTSRUNTIME    
 }

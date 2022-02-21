@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using GDX.Collections.Pooling;
 
-namespace GDX.Classic.Collections.Pooling
+namespace GDX.Collections.Pooling
 {
+#if !UNITY_DOTSRUNTIME
     /// <summary>
     ///     A time-slicing builder behaviour for <see cref="IManagedPool" />.
     /// </summary>
     /// <remarks>A demonstration of usage can be found in <see cref="GameObjectPool" />.</remarks>
+    /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
     // ReSharper disable once ClassNeverInstantiated.Global
     public class ManagedPoolBuilder : MonoBehaviour
     {
@@ -155,4 +157,5 @@ namespace GDX.Classic.Collections.Pooling
             }
         }
     }
+#endif // !UNITY_DOTSRUNTIME  
 }

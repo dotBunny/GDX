@@ -6,8 +6,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GDX.Classic.Collections.Generic
+namespace GDX.Collections.Generic
 {
+#if !UNITY_DOTSRUNTIME
     /// <summary>
     ///     A Unity serializable <see cref="Dictionary{TKey,TValue}" />.
     /// </summary>
@@ -76,12 +77,10 @@ namespace GDX.Classic.Collections.Generic
             Type type = typeof(TKey);
 
             // While a Behaviour itself can be null, when its a MonoBehaviour we cannot.
-#if !UNITY_DOTSRUNTIME            
             if (type == typeof(MonoBehaviour))
             {
                 return false;
             }
-#endif
 
             if (!type.IsValueType)
             {
@@ -273,4 +272,5 @@ namespace GDX.Classic.Collections.Generic
 #endif
 #pragma warning restore 414
     }
+#endif // !UNITY_DOTSRUNTIME    
 }

@@ -3,14 +3,13 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using GDX.Classic;
 using NUnit.Framework;
 using UnityEngine;
 
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable
 
-namespace Runtime.Classic
+namespace Runtime
 {
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="Vector3Extensions" /> class.

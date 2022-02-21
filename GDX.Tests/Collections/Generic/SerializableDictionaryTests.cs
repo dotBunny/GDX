@@ -2,14 +2,14 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Classic.Collections.Generic;
+using GDX.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable
 
-namespace Runtime.Classic.Collections.Generic
+namespace Runtime.Collections.Generic
 {
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="SerializableDictionary{TKey,TValue}" />.

@@ -4,14 +4,15 @@
 
 using System.Runtime.CompilerServices;
 using UnityEngine;
-using GDX.Collections.Pooling;
 
-namespace GDX.Classic.Collections.Pooling
+namespace GDX.Collections.Pooling
 {
+#if !UNITY_DOTSRUNTIME
     /// <summary>
     ///     <see cref="GameObject" /> based functionality extending the <see cref="ListManagedPool" /> to better support
     ///     <see cref="GameObject" /> patterns.
     /// </summary>
+    /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
     [VisualScriptingCompatible(1)]
     public static class GameObjectPool
     {
@@ -504,4 +505,5 @@ namespace GDX.Classic.Collections.Pooling
             ManagedPoolBuilder.RemoveManagedPool(pool);
         }
     }
+#endif // !UNITY_DOTSRUNTIME       
 }

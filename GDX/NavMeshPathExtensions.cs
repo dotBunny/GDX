@@ -9,13 +9,13 @@ using Unity.Mathematics;
 
 // ReSharper disable UnusedMember.Global
 
-#if GDX_AI
-
-namespace GDX.Classic
+#if GDX_AI && !UNITY_DOTSRUNTIME
+namespace GDX
 {
     /// <summary>
     ///     <see cref="UnityEngine.AI.NavMeshPath" /> Based Extension Methods
     /// </summary>
+    /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
     [VisualScriptingCompatible(2)]
     // ReSharper disable once UnusedType.Global
     public static class NavMeshPathExtensions
@@ -146,4 +146,4 @@ namespace GDX.Classic
     }
 }
 
-#endif // GDX_AI
+#endif // GDX_AI && !UNITY_DOTSRUNTIME

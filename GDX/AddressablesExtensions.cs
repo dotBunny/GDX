@@ -2,7 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-#if GDX_ADDRESSABLES
+#if GDX_ADDRESSABLES && !UNITY_DOTSRUNTIME
 
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -115,4 +115,4 @@ namespace GDX
         }
     }
 }
-#endif // GDX_ADDRESSABLES
+#endif // GDX_ADDRESSABLES && !UNITY_DOTSRUNTIME

@@ -7,11 +7,13 @@ using Unity.Mathematics;
 
 // ReSharper disable UnusedMember.Global
 
-namespace GDX.Classic
+#if !UNITY_DOTSRUNTIME
+namespace GDX
 {
     /// <summary>
     ///     <see cref="UnityEngine.Mesh" /> Based Extension Methods
     /// </summary>
+    /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
     [VisualScriptingCompatible(2)]
     // ReSharper disable once UnusedType.Global
     public static class MeshExtensions
@@ -42,3 +44,4 @@ namespace GDX.Classic
         }
     }
 }
+#endif // !UNITY_DOTSRUNTIME

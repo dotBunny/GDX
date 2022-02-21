@@ -8,11 +8,13 @@ using Unity.Mathematics;
 
 // ReSharper disable UnusedMember.Global
 
-namespace GDX.Classic
+namespace GDX
 {
+#if !UNITY_DOTSRUNTIME      
     /// <summary>
     ///     <see cref="Vector3" /> Based Extension Methods
     /// </summary>
+    /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
     [VisualScriptingCompatible(2)]
     public static class Vector3Extensions
     {
@@ -192,4 +194,5 @@ namespace GDX.Classic
             return true;
         }
     }
+#endif // !UNITY_DOTSRUNTIME    
 }

@@ -6,8 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 // ReSharper disable UnusedMember.Global
-
-namespace GDX.Classic
+namespace GDX
 {
     /// <summary>
     ///     Create a message box of information above the property in the inspector.
