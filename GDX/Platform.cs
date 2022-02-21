@@ -145,7 +145,7 @@ namespace GDX
             return SafeCharacterPool[random.NextInteger(0, CharacterPoolLengthExclusive)];
         }
         
-        public static string GetUniqueOutputFilePath(string folderName = null, string prefix = "GDX_", string extension = ".log")
+        public static string GetUniqueOutputFilePath(string prefix = "GDX_", string extension = ".log", string folderName = null)
         {
             string tempFolder = GetOutputFolder(folderName);
             StringBuilder tmpFileName = new StringBuilder(260);
