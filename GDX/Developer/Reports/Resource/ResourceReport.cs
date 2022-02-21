@@ -96,7 +96,7 @@ namespace GDX.Developer.Reports.Resource
 
         /// <summary>
         ///     Create a header with <paramref name="title" /> with repeated <paramref name="decorator" />s on the sides, filling
-        ///     out to <see cref="ResourceReport.ResourcesReportContext.CharacterWidth" />.
+        ///     out to <see cref="ResourceReportContext.CharacterWidth" />.
         /// </summary>
         /// <param name="context">Contextual information regarding the generation of the report.</param>
         /// <param name="title">The text to be treated as the title for the header.</param>

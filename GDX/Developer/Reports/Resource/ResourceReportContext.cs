@@ -6,6 +6,9 @@
 
 namespace GDX.Developer.Reports.Resource
 {
+    /// <summary>
+    ///     Context for generating a <see cref="ResourceReport"/> based report.
+    /// </summary>
     /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
     public sealed class ResourceReportContext
     {

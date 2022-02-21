@@ -109,7 +109,9 @@
             m_IndentLevel++;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Returns the built string content for the builder.
+        /// </summary>
         /// <remarks>Will automatically reduce the indentation level to 0.</remarks>
         public override string ToString()
         {

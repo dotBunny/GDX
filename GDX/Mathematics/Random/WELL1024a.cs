@@ -254,7 +254,9 @@ namespace GDX.Mathematics.Random
             public uint Count;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Disposes of the native allocations.
+        /// </summary>
         public void Dispose()
         {
             State.Dispose();

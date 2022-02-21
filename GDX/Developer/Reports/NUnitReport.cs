@@ -59,7 +59,9 @@ namespace GDX.Developer.Reports
             m_Results.TestSuite.Label = testSuiteLabel;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Builds and returns the NUnit formatted report.
+        /// </summary>
         /// <remarks>Can result in a UTF-16 based XML document.</remarks>
         public override string ToString()
         {
