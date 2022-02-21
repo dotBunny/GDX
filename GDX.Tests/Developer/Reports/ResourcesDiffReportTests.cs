@@ -1,10 +1,13 @@
-﻿using GDX.Developer.Reports;
+﻿// Copyright (c) 2020-2022 dotBunny Inc.
+// dotBunny licenses this file to you under the BSL-1.0 license.
+// See the LICENSE file in the project root for more information.
+
 using NUnit.Framework;
 
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable
 
-namespace Runtime.Developer.Reports
+namespace GDX.Developer.Reports
 {
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="ResourcesDiffReport"/> class.
@@ -12,7 +15,7 @@ namespace Runtime.Developer.Reports
     public class ResourcesDiffReportTests
     {
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Output_GetCommonAndAll_ReturnsReport()
         {
             ResourcesAuditReport lhs = ResourcesAuditReport.GetCommon();

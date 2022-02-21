@@ -8,7 +8,7 @@ using NUnit.Framework;
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable
 
-namespace Runtime.Classic.Developer.Reports
+namespace GDX.Classic.Developer.Reports
 {
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="ResourcesAuditReport"/> class.
@@ -16,7 +16,7 @@ namespace Runtime.Classic.Developer.Reports
     public class ResourcesAuditReportTests
     {
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Get_MockData_ReturnsObject()
         {
             ResourcesAuditReport state = ResourcesAuditReport.Get(new []
@@ -33,7 +33,7 @@ namespace Runtime.Classic.Developer.Reports
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Output_GetCommon_ReturnsReport()
         {
             string[] report = ResourcesAuditReport.GetCommon().Output();
@@ -44,7 +44,7 @@ namespace Runtime.Classic.Developer.Reports
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Output_GetAll_ReturnsReport()
         {
             string[] report = ResourcesAuditReport.GetAll().Output();

@@ -3,11 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using GDX;
 using NUnit.Framework;
-using Range = GDX.Mathematics.Range;
 
-namespace Runtime.Mathematics
+namespace GDX.Mathematics
 {
     /// <summary>
     ///     A collection of unit tests to validate functionality of the Range helper.

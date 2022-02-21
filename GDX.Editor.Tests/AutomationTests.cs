@@ -4,9 +4,7 @@
 
 using System.Collections;
 using System.IO;
-using GDX;
 using GDX.Jobs.ParallelFor;
-using GDX.Editor;
 using NUnit.Framework;
 using Unity.Collections;
 using Unity.Jobs;
@@ -14,12 +12,12 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace Editor
+namespace GDX.Editor
 {
     public class AutomationTests
     {
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void CaptureEditorWindow_SceneView_ReturnsTexture()
         {
             Texture2D texture = Automation.CaptureEditorWindow<SceneView>();

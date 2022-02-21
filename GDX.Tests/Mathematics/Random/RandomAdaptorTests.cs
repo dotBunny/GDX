@@ -2,15 +2,14 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Mathematics.Random;
 using NUnit.Framework;
 
-namespace Runtime.Mathematics.Random
+namespace GDX.Mathematics.Random
 {
     public class RandomAdaptorTests
     {
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RandomAdaptor_FromWELL1024a_Created()
         {
             WELL1024a mockWell = new WELL1024a(WELL1024aTests.MockSeed);
@@ -24,7 +23,7 @@ namespace Runtime.Mathematics.Random
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Next_MockData_DifferentValues()
         {
             WELL1024a mockWell = new WELL1024a(WELL1024aTests.MockSeed);
@@ -57,7 +56,7 @@ namespace Runtime.Mathematics.Random
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Next_MaxValue_ValuesInRange()
         {
             WELL1024a mockWell = new WELL1024a(WELL1024aTests.MockSeed);
@@ -77,7 +76,7 @@ namespace Runtime.Mathematics.Random
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Next_Range_ValuesInRange()
         {
             WELL1024a mockWell = new WELL1024a(WELL1024aTests.MockSeed);

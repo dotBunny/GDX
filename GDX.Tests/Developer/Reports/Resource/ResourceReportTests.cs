@@ -4,12 +4,9 @@
 
 using System.IO;
 using System.Text;
-using GDX;
-using GDX.Developer.Reports;
-using GDX.Developer.Reports.Resource;
 using NUnit.Framework;
 
-namespace Runtime.Developer.Reports.Resource
+namespace GDX.Developer.Reports.Resource
 {
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="ResourceReport"/> class.
@@ -17,7 +14,7 @@ namespace Runtime.Developer.Reports.Resource
     public class ResourceReportTests
     {
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void CreateDivider_MockData_CorrectLength()
         {
 
@@ -30,7 +27,7 @@ namespace Runtime.Developer.Reports.Resource
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void CreateHeader_MockData_CorrectLength()
         {
             ResourceReportContext context = new ResourceReportContext();
@@ -42,7 +39,7 @@ namespace Runtime.Developer.Reports.Resource
         }
         
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Output_MockData_StringBuilderSameAsStreamWriter()
         {
             ResourcesAuditReport report = ResourcesAuditReport.GetCommon();

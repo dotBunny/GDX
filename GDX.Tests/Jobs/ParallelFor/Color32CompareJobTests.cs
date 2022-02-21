@@ -3,18 +3,17 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using GDX.Jobs.ParallelFor;
 using NUnit.Framework;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
 
-namespace Runtime.Jobs.ParallelFor
+namespace GDX.Jobs.ParallelFor
 {
     public class Color32CompareJobTests
     {
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Compare_WhiteTexture_Same()
         {
             NativeArray<Color32> whiteData = Texture2D.whiteTexture.GetRawTextureData<Color32>();
@@ -47,7 +46,7 @@ namespace Runtime.Jobs.ParallelFor
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Compare_WhiteBlack_Different()
         {
             NativeArray<Color32> whiteData = Texture2D.whiteTexture.GetRawTextureData<Color32>();

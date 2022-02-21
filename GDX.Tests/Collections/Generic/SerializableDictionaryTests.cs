@@ -2,14 +2,13 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable
 
-namespace Runtime.Collections.Generic
+namespace GDX.Collections.Generic
 {
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="SerializableDictionary{TKey,TValue}" />.
@@ -17,7 +16,7 @@ namespace Runtime.Collections.Generic
     public class SerializableDictionaryTests
     {
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsSerializableType_SystemObject_ReturnsFalse()
         {
             SerializableDictionary<object, string> mockDictionary = new SerializableDictionary<object, string>();
@@ -28,7 +27,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void SaveSerializedData_MockData_ReturnsSerializedDataLength()
         {
             SerializableDictionary<int, string> mockDictionary =
@@ -42,7 +41,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsSerializableType_UnityObject_ReturnsTrue()
         {
             SerializableDictionary<Object, string> mockDictionary = new SerializableDictionary<Object, string>();
@@ -53,7 +52,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void OverwriteSerializedData_MockData_PopulatesDictionary()
         {
             SerializableDictionary<int, string> mockDictionary = new SerializableDictionary<int, string>();
@@ -66,7 +65,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void SaveSerializedData_NoData_ReturnsZeroSerializedDataLength()
         {
             SerializableDictionary<int, string> mockDictionary = new SerializableDictionary<int, string>();

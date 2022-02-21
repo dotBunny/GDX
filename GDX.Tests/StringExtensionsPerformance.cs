@@ -3,14 +3,13 @@
 // See the LICENSE file in the project root for more information.
 
 #if GDX_PERFORMANCETESTING
-using GDX;
 using NUnit.Framework;
 using Unity.PerformanceTesting;
 
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable
 
-namespace Runtime
+namespace GDX
 {
     public class StringExtensionsPerformance
     {

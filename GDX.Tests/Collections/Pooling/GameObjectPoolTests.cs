@@ -2,12 +2,10 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX;
-using GDX.Collections.Pooling;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace Runtime.Collections.Pooling
+namespace GDX.Collections.Pooling
 {
     public class GameObjectPoolTests
     {
@@ -39,7 +37,7 @@ namespace Runtime.Collections.Pooling
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void OnDestroyItemAction_MockData_DestroysGameObject()
         {
             ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObject,
@@ -53,7 +51,7 @@ namespace Runtime.Collections.Pooling
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void OnDestroyItemAction_MockData_DestroysInterface()
         {
             ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
@@ -67,7 +65,7 @@ namespace Runtime.Collections.Pooling
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Get_MockData_DontTrigger()
         {
             ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
@@ -83,7 +81,7 @@ namespace Runtime.Collections.Pooling
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Get_MockData_LocalPositionWorldLookAtParented()
         {
             ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
@@ -103,7 +101,7 @@ namespace Runtime.Collections.Pooling
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Get_MockData_LocalPositionLocalRotationParented()
         {
             ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
@@ -123,7 +121,7 @@ namespace Runtime.Collections.Pooling
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Get_MockData_ParentedWorldPositionStay()
         {
             GameObject movedObject = new GameObject { transform = { position = new Vector3(1, 0, 0) } };
@@ -143,7 +141,7 @@ namespace Runtime.Collections.Pooling
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Get_MockData_ParentedZeroLocalPosition()
         {
             GameObject movedObject = new GameObject { transform = { position = new Vector3(1, 0, 0) } };
@@ -163,7 +161,7 @@ namespace Runtime.Collections.Pooling
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Get_MockData_Trigger()
         {
             ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
@@ -179,7 +177,7 @@ namespace Runtime.Collections.Pooling
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Get_MockData_WorldPositionWorldLookAt()
         {
             ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
@@ -197,7 +195,7 @@ namespace Runtime.Collections.Pooling
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Get_MockData_WorldPositionWorldLookAtParented()
         {
             ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
@@ -217,7 +215,7 @@ namespace Runtime.Collections.Pooling
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Get_MockData_WorldPositionWorldRotation()
         {
             ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
@@ -235,7 +233,7 @@ namespace Runtime.Collections.Pooling
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Get_MockData_WorldPositionWorldRotationParented()
         {
             ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
@@ -256,7 +254,7 @@ namespace Runtime.Collections.Pooling
 
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetOrCreatePool_MockData_ReturnsPool()
         {
             IManagedPool pool = GameObjectPool.GetOrCreatePool(m_MockBaseObject, m_MockTransform);
@@ -267,7 +265,7 @@ namespace Runtime.Collections.Pooling
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TearDown_Pool_UnregistersPool()
         {
             IManagedPool pool = GameObjectPool.GetOrCreatePool(m_MockBaseObject, m_MockTransform);

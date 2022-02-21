@@ -2,13 +2,12 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Collections.Generic;
 using NUnit.Framework;
 
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable
 
-namespace Runtime.Collections.Generic
+namespace GDX.Collections.Generic
 {
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="Array2D{T}" />.
@@ -16,7 +15,7 @@ namespace Runtime.Collections.Generic
     public class Array2DTests
     {
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddColumns_MockData_ArrayResized()
         {
             Array2D<int> mockArray = new Array2D<int>(2, 3);
@@ -31,7 +30,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddRows_MockData_ArrayResized()
         {
             Array2D<int> mockArray = new Array2D<int>(2, 4);
@@ -46,7 +45,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetColumnIndex_MockData_ReturnsIndex()
         {
             Array2D<int> mockArray = new Array2D<int>(2, 4) {[1, 0] = 0, [1, 1] = 1, [1, 2] = 2, [1, 3] = 3};
@@ -59,7 +58,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetRowIndex_MockData_ReturnsIndex()
         {
             Array2D<int> mockArray = new Array2D<int>(2, 4) {[1, 0] = 0, [1, 1] = 1, [1, 2] = 2, [1, 3] = 3};
@@ -72,7 +71,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ReverseColumns_MockDataEven_ValuesReversed()
         {
             Array2D<int> mockArray = new Array2D<int>(2, 4) {[1, 0] = 0, [1, 1] = 1, [1, 2] = 2, [1, 3] = 3};
@@ -89,7 +88,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ReverseColumns_MockDataOdd_ValuesReversed()
         {
             Array2D<int> mockArray = new Array2D<int>(2, 5)
@@ -114,7 +113,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ReverseRows_MockDataEven_ValuesReversed()
         {
             Array2D<int> mockArray = new Array2D<int>(6, 2)
@@ -140,7 +139,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ReverseRows_MockDataOdd_ValuesReversed()
         {
             Array2D<int> mockArray = new Array2D<int>(5, 2)
@@ -164,7 +163,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RotateClockwise_MockDataOdd_ValuesRotated()
         {
             Array2D<int> mockArray = new Array2D<int>(5, 2)
@@ -190,7 +189,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RotateCounterClockwise_MockDataOdd_ValuesRotated()
         {
             Array2D<int> mockArray = new Array2D<int>(5, 2)
@@ -216,7 +215,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ToMultiDimensionalArray_MockData_MatchingValues()
         {
             Array2D<int> mockArray = new Array2D<int>(2, 2) {[0, 0] = 0, [1, 0] = 1};

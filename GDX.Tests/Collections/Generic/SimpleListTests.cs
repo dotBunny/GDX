@@ -3,13 +3,12 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using GDX.Collections.Generic;
 using NUnit.Framework;
 
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable
 
-namespace Runtime.Collections.Generic
+namespace GDX.Collections.Generic
 {
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="SimpleList{T}" />.
@@ -17,7 +16,7 @@ namespace Runtime.Collections.Generic
     public class SimpleListTests
     {
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Constructor_CreateWithCount()
         {
             SimpleList<int> mockList = new SimpleList<int>(4);
@@ -28,7 +27,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Constructor_CreateWithExisting_FillsList()
         {
             int[] mockArray = {0, 1, 2, 3};
@@ -41,7 +40,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Constructor_CreateWithExistingNoCount_FillsListNoCount()
         {
             int[] mockArray = {0, 1, 2, 3};
@@ -54,7 +53,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddUnchecked_MockData_ValueAdded()
         {
             SimpleList<int> mockList = new SimpleList<int>(2);
@@ -68,7 +67,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddUnchecked_MockDataOverflow_ThrowsException()
         {
             SimpleList<int> mockList = new SimpleList<int>(1);
@@ -79,7 +78,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddWithExpandCheck_MockData_ValueAdded()
         {
             SimpleList<int> mockList = new SimpleList<int>(1);
@@ -93,7 +92,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddWithExpandCheck_MockDataWithExpansion_ValueAdded()
         {
             SimpleList<int> mockList = new SimpleList<int>(1);
@@ -107,7 +106,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddExpandNoClear_MockDataWithExpansion_ValueAdded()
         {
             SimpleList<int> mockList = new SimpleList<int>(2);
@@ -140,7 +139,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddExpandClearOld_MockDataWithExpansion_ValueAdded()
         {
             SimpleList<int> mockList = new SimpleList<int>(1);
@@ -167,7 +166,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddExpandClearNew_MockDataWithExpansion_ValueAdded()
         {
             SimpleList<int> mockList = new SimpleList<int>(2);
@@ -200,7 +199,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddExpandClearBoth_MockDataWithExpansion_ValueAdded()
         {
             SimpleList<int> mockList = new SimpleList<int>(2);
@@ -233,7 +232,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Clear_MockData_DataCleared()
         {
             SimpleList<int> mockList = new SimpleList<int>(1);
@@ -249,7 +248,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Insert_MockDataAtEnd_ValueAdded()
         {
             SimpleList<int> mockList = new SimpleList<int>(3);
@@ -266,7 +265,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Insert_MockDataAtStart_ValueAdded()
         {
             SimpleList<int> mockList = new SimpleList<int>(3);
@@ -283,7 +282,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Insert_MockDataInMiddle_ValueAdded()
         {
             SimpleList<int> mockList = new SimpleList<int>(3);
@@ -300,7 +299,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveAt_MockDataAtEnd_ValueRemoved()
         {
             SimpleList<int> mockList = new SimpleList<int>(3);
@@ -317,7 +316,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveAt_MockDataAtStart_ValueRemoved()
         {
             SimpleList<int> mockList = new SimpleList<int>(3);
@@ -334,7 +333,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveAt_MockDataInMiddle_ValueRemoved()
         {
             SimpleList<int> mockList = new SimpleList<int>(3);
@@ -351,7 +350,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveFromBack_MockData_ValueRemoved()
         {
             SimpleList<int> mockList = new SimpleList<int>(3);
@@ -368,7 +367,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Reserve_MockData_ArrayExpanded()
         {
             SimpleList<int> mockList = new SimpleList<int>(3);
@@ -381,7 +380,7 @@ namespace Runtime.Collections.Generic
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Reverse_MockDataEven_ArrayReversed()
         {
             SimpleList<int> mockList = new SimpleList<int>(6);
@@ -407,7 +406,7 @@ namespace Runtime.Collections.Generic
 
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Reverse_MockDataOdd_ArrayReversed()
         {
             SimpleList<int> mockList = new SimpleList<int>(5);
@@ -429,7 +428,7 @@ namespace Runtime.Collections.Generic
             Assert.IsTrue(evaluate);
         }
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Reverse_MockDataOddLimited_ArrayReversed()
         {
             SimpleList<int> mockList = new SimpleList<int>(5);

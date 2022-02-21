@@ -2,13 +2,12 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Collections.Generic;
 using NUnit.Framework;
-using GDX;
+
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable UnusedVariable
 
-namespace Runtime.Collections.Generic
+namespace GDX.Collections.Generic
 {
     public class StringKeyDictionaryTests
     {
