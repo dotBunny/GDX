@@ -28,7 +28,7 @@ namespace GDX.Developer.Reports.NUnit
         public void Process(string passedResult = "Passed", string failedResult = "Failed",
             string inconclusiveResult = "Inconclusive", string skippedResult = "Skipped")
         {
-#if !DOTS_RUNTIME
+#if !UNITY_DOTSRUNTIME
             EngineVersion = UnityEngine.Application.unityVersion;
 #endif
 

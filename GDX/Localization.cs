@@ -143,11 +143,36 @@ namespace GDX
         ///     Get the <see cref="GDX.Localization.Language" /> equivalent of the <see cref="SystemLanguage" />.
         /// </summary>
         /// <returns>The appropriate <see cref="GDX.Localization.Language" />, or default.</returns>
-        /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
         public static Language GetSystemLanguage()
         {
-#if DOTS_RUNTIME
-            throw new UnsupportedRuntimeException();
+#if UNITY_DOTSRUNTIME
+            string cultureName = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+            if (cultureName.StartsWith("en"))
+            {
+                return Language.English;
+            }
+            if (cultureName.StartsWith("de"))
+            {
+                return Language.German;
+            }
+            if (cultureName.StartsWith("ru"))
+            {
+                return Language.Russian;
+            }
+            if (cultureName.StartsWith("pl"))
+            {
+                return Language.Polish;
+            }
+            if (cultureName.StartsWith("fr"))
+            {
+                return Language.French;
+            }
+            if (cultureName.StartsWith("es"))
+            {
+                return Language.Spanish;
+            }
+            
+            return Language.Default;
 #else
             SystemLanguage language = Application.systemLanguage;
             switch (language)

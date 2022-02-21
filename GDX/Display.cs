@@ -16,7 +16,7 @@ namespace GDX
     // ReSharper disable once UnusedType.Global
     public static class Display
     {
- #if !DOTS_RUNTIME        
+ #if !UNITY_DOTSRUNTIME        
         /// <summary>
         ///     <para>Returns the actual screen height being rendered on the current platform.</para>
         /// </summary>
@@ -79,6 +79,6 @@ namespace GDX
 #endif
         }
         
-#endif // !DOTS_RUNTIME       
+#endif // !UNITY_DOTSRUNTIME       
     }
 }

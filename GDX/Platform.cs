@@ -149,6 +149,7 @@ namespace GDX
             return SafeCharacterPool[random.NextInteger(0, CharacterPoolLengthExclusive)];
         }
 
+#if !UNITY_DOTSRUNTIME
         /// <summary>
         ///     Is the application focused?
         /// </summary>
@@ -160,9 +161,7 @@ namespace GDX
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsFocused()
         {
-#if DOTS_RUNTIME
-            throw new UnsupportedRuntimeException();
-#elif UNITY_XBOXONE && !UNITY_EDITOR
+#if UNITY_XBOXONE && !UNITY_EDITOR
             return !XboxOnePLM.AmConstrained();
 #elif UNITY_PS4 && !UNITY_EDITOR
             return true;
@@ -170,6 +169,7 @@ namespace GDX
             return Application.isFocused;
 #endif
         }
+#endif // !UNITY_DOTSRUNTIME 
 
         /// <summary>
         /// Is it safe to write to the indicated <paramref name="filePath"/>?
@@ -190,6 +190,7 @@ namespace GDX
             return true;
         }
         
+#if !UNITY_DOTSRUNTIME
         /// <summary>
         /// Is the application running in headless mode?.
         /// </summary>
@@ -199,11 +200,8 @@ namespace GDX
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsHeadless()
         {
-#if DOTS_RUNTIME
-            throw new UnsupportedRuntimeException();
-#else
             return SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null;
-#endif
         }
+#endif // !UNITY_DOTSRUNTIME   
     }
 }

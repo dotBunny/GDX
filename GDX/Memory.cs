@@ -37,7 +37,7 @@ namespace GDX
             GC.Collect();
 
             // Tell Unity to clean up any assets that it no longer wants to have loaded
-#if !DOTS_RUNTIME
+#if !UNITY_DOTSRUNTIME
             Resources.UnloadUnusedAssets();
 #endif
 
@@ -46,7 +46,7 @@ namespace GDX
             GC.Collect();
         }
 
-#if !DOTS_RUNTIME
+#if !UNITY_DOTSRUNTIME
         /// <inheritdoc cref="CleanUp" />
         /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -66,6 +66,6 @@ namespace GDX
             GC.WaitForPendingFinalizers();
             GC.Collect();
         }
-#endif // !DOTS_RUNTIME 
+#endif // !UNITY_DOTSRUNTIME 
     }
 }
