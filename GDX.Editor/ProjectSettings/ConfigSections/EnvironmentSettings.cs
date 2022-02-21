@@ -111,7 +111,7 @@ namespace GDX.Editor.ProjectSettings
             m_MaskDevelopment.choices = s_TraceChoices;
             m_MaskDevelopment.choicesMasks = s_TraceValues;
 #else
-            SetMaskFieldValues(_maskDevelopment);
+            SetMaskFieldValues(m_MaskDevelopment);
 #endif
             m_MaskDevelopment.value = (int)SettingsProvider.WorkingConfig.TraceDevelopmentLevels;
             m_MaskDevelopment.RegisterValueChangedCallback(evt =>
@@ -133,7 +133,7 @@ namespace GDX.Editor.ProjectSettings
             m_MaskDebug.choices = s_TraceChoices;
             m_MaskDebug.choicesMasks = s_TraceValues;
 #else
-            SetMaskFieldValues(_maskDebug);
+            SetMaskFieldValues(m_MaskDebug);
 #endif
             m_MaskDebug.value = (int)SettingsProvider.WorkingConfig.TraceDebugLevels;
             m_MaskDebug.RegisterValueChangedCallback(evt =>
@@ -155,7 +155,7 @@ namespace GDX.Editor.ProjectSettings
             m_MaskRelease.choices = s_TraceChoices;
             m_MaskRelease.choicesMasks = s_TraceValues;
 #else
-            SetMaskFieldValues(_maskRelease);
+            SetMaskFieldValues(m_MaskRelease);
 #endif
             m_MaskRelease.value = (int)SettingsProvider.WorkingConfig.TraceReleaseLevels;
             m_MaskRelease.RegisterValueChangedCallback(evt =>
@@ -181,12 +181,12 @@ namespace GDX.Editor.ProjectSettings
             PropertyInfo choiceMaskProperty = type.GetProperty("choicesMasks", BindingFlags.NonPublic | BindingFlags.Instance);
             if (choiceProperty != null)
             {
-                choiceProperty.SetValue(maskField, s_traceChoices, null);
+                choiceProperty.SetValue(maskField, s_TraceChoices, null);
             }
 
             if (choiceMaskProperty != null)
             {
-                choiceMaskProperty.SetValue(maskField, s_traceValues, null);
+                choiceMaskProperty.SetValue(maskField, s_TraceValues, null);
             }
         }
 #endif
