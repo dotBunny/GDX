@@ -5,7 +5,7 @@
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
-namespace GDX.Classic
+namespace GDX
 {
     /// <summary>
     ///     Make the field in the inspector disabled by toggling GUI.enabled before and after.

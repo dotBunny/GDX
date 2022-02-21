@@ -5,6 +5,7 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 using GDX.Mathematics.Random;
+using UnityEngine;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -149,6 +150,28 @@ namespace GDX
         }
 
         /// <summary>
+        ///     Is the application focused?
+        /// </summary>
+        /// <remarks>
+        ///     There are issues on some platforms with getting an accurate reading.
+        /// </remarks>
+        /// <returns>true/false if the application has focus.</returns>
+        /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsFocused()
+        {
+#if DOTS_RUNTIME
+            throw new UnsupportedRuntimeException();
+#elif UNITY_XBOXONE && !UNITY_EDITOR
+            return !XboxOnePLM.AmConstrained();
+#elif UNITY_PS4 && !UNITY_EDITOR
+            return true;
+#else
+            return Application.isFocused;
+#endif
+        }
+
+        /// <summary>
         /// Is it safe to write to the indicated <paramref name="filePath"/>?
         /// </summary>
         /// <param name="filePath">The file path to check if it can be written.</param>
@@ -165,6 +188,22 @@ namespace GDX
                 }
             }
             return true;
+        }
+        
+        /// <summary>
+        /// Is the application running in headless mode?.
+        /// </summary>
+        /// <remarks>Useful for detecting running a server.</remarks>
+        /// <returns>true/false if the application is without an initialized graphics device.</returns>
+        /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsHeadless()
+        {
+#if DOTS_RUNTIME
+            throw new UnsupportedRuntimeException();
+#else
+            return SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null;
+#endif
         }
     }
 }

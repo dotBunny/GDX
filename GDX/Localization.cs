@@ -3,7 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Globalization;
 using System.Runtime.CompilerServices;
+using UnityEngine;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedMember.Global
@@ -138,6 +140,37 @@ namespace GDX
         }
 
         /// <summary>
+        ///     Get the <see cref="GDX.Localization.Language" /> equivalent of the <see cref="SystemLanguage" />.
+        /// </summary>
+        /// <returns>The appropriate <see cref="GDX.Localization.Language" />, or default.</returns>
+        /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
+        public static Language GetSystemLanguage()
+        {
+#if DOTS_RUNTIME
+            throw new UnsupportedRuntimeException();
+#else
+            SystemLanguage language = Application.systemLanguage;
+            switch (language)
+            {
+                case SystemLanguage.German:
+                    return Language.German;
+                case SystemLanguage.Russian:
+                    return Language.Russian;
+                case SystemLanguage.Polish:
+                    return Language.Polish;
+                case SystemLanguage.French:
+                    return Language.French;
+                case SystemLanguage.Spanish:
+                    return Language.Spanish;
+                case SystemLanguage.English:
+                    return Language.English;
+                default:
+                    return Language.Default;
+            }
+#endif
+        }
+        
+        /// <summary>
         ///     Get the localized <see cref="System.DateTime" />.<see cref="System.DateTime.ToString(string)" /> for
         ///     <paramref name="targetLanguage" />.
         /// </summary>
@@ -162,6 +195,22 @@ namespace GDX
                     return LocalTimestampFormat;
                 default:
                     return LocalTimestampFormat;
+            }
+        }
+        
+        /// <summary>
+        ///     Sets the current threads culture to a defined setting in <see cref="GDXConfig" />.
+        /// </summary>
+        /// <remarks>
+        ///     Can be used to avoid issues with culture settings without a Gregorian Calendar. Configurable to automatically
+        ///     execute after assemblies are loaded.
+        /// </remarks>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+        public static void SetDefaultCulture()
+        {
+            if (Core.Config.LocalizationSetDefaultCulture && GetSystemLanguage() == Language.Default)
+            {
+                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(Core.Config.LocalizationDefaultCulture.GetIETF());
             }
         }
     }
