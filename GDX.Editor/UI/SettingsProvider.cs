@@ -210,7 +210,7 @@ namespace GDX.Editor.UI
                     int iterator = 0;
                     while (ConfigSections.MoveNext(ref iterator, out StringKeyEntry<IConfigSection> item))
                     {
-                        IConfigSection section = item.value;
+                        IConfigSection section = item.Value;
                         string sectionID = section.GetSectionID();
                         VisualElement sectionHeader = ConfigSectionsProvider.CreateAndBindSectionHeader(section);
 

@@ -149,8 +149,8 @@ namespace GDX.Editor.UI.ProjectSettings
             int iterator = 0;
             while (SettingsProvider.ConfigSections.MoveNext(ref iterator, out StringKeyEntry<IConfigSection> item))
             {
-                UpdateSectionHeader(item.key);
-                UpdateSectionContent(item.key);
+                UpdateSectionHeader(item.Key);
+                UpdateSectionContent(item.Key);
             }
         }
 

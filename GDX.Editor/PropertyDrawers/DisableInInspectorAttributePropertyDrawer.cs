@@ -30,7 +30,11 @@ namespace GDX.Editor.PropertyDrawers
             GUI.enabled = true;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Overrides the method to make a UIElements based GUI for the property.
+        /// </summary>
+        /// <param name="property">The SerializedProperty to make the custom GUI for.</param>
+        /// <returns>A disabled visual element.</returns>
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             VisualElement container = new VisualElement();
