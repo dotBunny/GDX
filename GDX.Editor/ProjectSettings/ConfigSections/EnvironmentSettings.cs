@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
-using GDX.Editor.UI.ProjectSettings;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 #if !GDX_MASKFIELD
@@ -58,10 +57,10 @@ namespace GDX.Editor.ProjectSettings
             m_RootElement = rootElement;
 
             m_ToggleEnsureSymbol = m_RootElement.Q<Toggle>("toggle-ensure-symbol");
-            m_ToggleEnsureSymbol.value = UI.SettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol;
+            m_ToggleEnsureSymbol.value = SettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol;
             m_ToggleEnsureSymbol.RegisterValueChangedCallback(evt =>
             {
-                UI.SettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol = evt.newValue;
+                SettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol = evt.newValue;
                 if (Core.Config.EnvironmentScriptingDefineSymbol != evt.newValue)
                 {
                     m_ToggleEnsureSymbol.AddToClassList(ConfigSectionsProvider.ChangedClass);
@@ -71,14 +70,14 @@ namespace GDX.Editor.ProjectSettings
                     m_ToggleEnsureSymbol.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
                 }
 
-                UI.SettingsProvider.CheckForChanges();
+                SettingsProvider.CheckForChanges();
             });
 
             m_ToggleDevelopmentConsole = m_RootElement.Q<Toggle>("toggle-console-development");
-            m_ToggleDevelopmentConsole.value = UI.SettingsProvider.WorkingConfig.TraceDevelopmentOutputToUnityConsole;
+            m_ToggleDevelopmentConsole.value = SettingsProvider.WorkingConfig.TraceDevelopmentOutputToUnityConsole;
             m_ToggleDevelopmentConsole.RegisterValueChangedCallback(evt =>
             {
-                UI.SettingsProvider.WorkingConfig.TraceDevelopmentOutputToUnityConsole = evt.newValue;
+                SettingsProvider.WorkingConfig.TraceDevelopmentOutputToUnityConsole = evt.newValue;
                 if (Core.Config.TraceDevelopmentOutputToUnityConsole != evt.newValue)
                 {
                     m_ToggleDevelopmentConsole.AddToClassList(ConfigSectionsProvider.ChangedClass);
@@ -87,13 +86,13 @@ namespace GDX.Editor.ProjectSettings
                 {
                     m_ToggleDevelopmentConsole.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
                 }
-                UI.SettingsProvider.CheckForChanges();
+                SettingsProvider.CheckForChanges();
             });
             m_ToggleDebugConsole = m_RootElement.Q<Toggle>("toggle-console-debug");
-            m_ToggleDebugConsole.value = UI.SettingsProvider.WorkingConfig.TraceDebugOutputToUnityConsole;
+            m_ToggleDebugConsole.value = SettingsProvider.WorkingConfig.TraceDebugOutputToUnityConsole;
             m_ToggleDebugConsole.RegisterValueChangedCallback(evt =>
             {
-                UI.SettingsProvider.WorkingConfig.TraceDebugOutputToUnityConsole = evt.newValue;
+                SettingsProvider.WorkingConfig.TraceDebugOutputToUnityConsole = evt.newValue;
                 if (Core.Config.TraceDebugOutputToUnityConsole != evt.newValue)
                 {
                     m_ToggleDebugConsole.AddToClassList(ConfigSectionsProvider.ChangedClass);
@@ -102,7 +101,7 @@ namespace GDX.Editor.ProjectSettings
                 {
                     m_ToggleDebugConsole.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
                 }
-                UI.SettingsProvider.CheckForChanges();
+                SettingsProvider.CheckForChanges();
             });
 
             m_MaskDevelopment = m_RootElement.Q<MaskField>("mask-development");
@@ -114,10 +113,10 @@ namespace GDX.Editor.ProjectSettings
 #else
             SetMaskFieldValues(_maskDevelopment);
 #endif
-            m_MaskDevelopment.value = (int)UI.SettingsProvider.WorkingConfig.TraceDevelopmentLevels;
+            m_MaskDevelopment.value = (int)SettingsProvider.WorkingConfig.TraceDevelopmentLevels;
             m_MaskDevelopment.RegisterValueChangedCallback(evt =>
             {
-                UI.SettingsProvider.WorkingConfig.TraceDevelopmentLevels = (Trace.TraceLevel)evt.newValue;
+                SettingsProvider.WorkingConfig.TraceDevelopmentLevels = (Trace.TraceLevel)evt.newValue;
                 if (Core.Config.TraceDevelopmentLevels != (Trace.TraceLevel)evt.newValue)
                 {
                     m_MaskDevelopment.AddToClassList(ConfigSectionsProvider.ChangedClass);
@@ -126,7 +125,7 @@ namespace GDX.Editor.ProjectSettings
                 {
                     m_MaskDevelopment.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
                 }
-                UI.SettingsProvider.CheckForChanges();
+                SettingsProvider.CheckForChanges();
             });
 
             m_MaskDebug = m_RootElement.Q<MaskField>("mask-debug");
@@ -136,10 +135,10 @@ namespace GDX.Editor.ProjectSettings
 #else
             SetMaskFieldValues(_maskDebug);
 #endif
-            m_MaskDebug.value = (int)UI.SettingsProvider.WorkingConfig.TraceDebugLevels;
+            m_MaskDebug.value = (int)SettingsProvider.WorkingConfig.TraceDebugLevels;
             m_MaskDebug.RegisterValueChangedCallback(evt =>
             {
-                UI.SettingsProvider.WorkingConfig.TraceDebugLevels = (Trace.TraceLevel)evt.newValue;
+                SettingsProvider.WorkingConfig.TraceDebugLevels = (Trace.TraceLevel)evt.newValue;
                 if (Core.Config.TraceDebugLevels != (Trace.TraceLevel)evt.newValue)
                 {
                     m_MaskDebug.AddToClassList(ConfigSectionsProvider.ChangedClass);
@@ -148,7 +147,7 @@ namespace GDX.Editor.ProjectSettings
                 {
                     m_MaskDebug.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
                 }
-                UI.SettingsProvider.CheckForChanges();
+                SettingsProvider.CheckForChanges();
             });
 
             m_MaskRelease = m_RootElement.Q<MaskField>("mask-release");
@@ -158,10 +157,10 @@ namespace GDX.Editor.ProjectSettings
 #else
             SetMaskFieldValues(_maskRelease);
 #endif
-            m_MaskRelease.value = (int)UI.SettingsProvider.WorkingConfig.TraceReleaseLevels;
+            m_MaskRelease.value = (int)SettingsProvider.WorkingConfig.TraceReleaseLevels;
             m_MaskRelease.RegisterValueChangedCallback(evt =>
             {
-                UI.SettingsProvider.WorkingConfig.TraceReleaseLevels = (Trace.TraceLevel)evt.newValue;
+                SettingsProvider.WorkingConfig.TraceReleaseLevels = (Trace.TraceLevel)evt.newValue;
                 if (Core.Config.TraceReleaseLevels != (Trace.TraceLevel)evt.newValue)
                 {
                     m_MaskRelease.AddToClassList(ConfigSectionsProvider.ChangedClass);
@@ -170,7 +169,7 @@ namespace GDX.Editor.ProjectSettings
                 {
                     m_MaskRelease.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
                 }
-                UI.SettingsProvider.CheckForChanges();
+                SettingsProvider.CheckForChanges();
             });
         }
 
@@ -232,27 +231,27 @@ namespace GDX.Editor.ProjectSettings
         {
             ConfigSectionsProvider.SetStructChangeCheck(m_ToggleEnsureSymbol,
                 Core.Config.EnvironmentScriptingDefineSymbol,
-                UI.SettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol);
+                SettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol);
 
             ConfigSectionsProvider.SetMaskChangeCheck(m_MaskDevelopment,
                 (int)Core.Config.TraceDevelopmentLevels,
-                (int)UI.SettingsProvider.WorkingConfig.TraceDevelopmentLevels);
+                (int)SettingsProvider.WorkingConfig.TraceDevelopmentLevels);
 
             ConfigSectionsProvider.SetStructChangeCheck(m_ToggleDevelopmentConsole,
                 Core.Config.TraceDevelopmentOutputToUnityConsole,
-                UI.SettingsProvider.WorkingConfig.TraceDevelopmentOutputToUnityConsole);
+                SettingsProvider.WorkingConfig.TraceDevelopmentOutputToUnityConsole);
 
             ConfigSectionsProvider.SetMaskChangeCheck(m_MaskDebug,
                 (int)Core.Config.TraceDebugLevels,
-                (int)UI.SettingsProvider.WorkingConfig.TraceDebugLevels);
+                (int)SettingsProvider.WorkingConfig.TraceDebugLevels);
 
             ConfigSectionsProvider.SetStructChangeCheck(m_ToggleDebugConsole,
                 Core.Config.TraceDebugOutputToUnityConsole,
-                UI.SettingsProvider.WorkingConfig.TraceDebugOutputToUnityConsole);
+                SettingsProvider.WorkingConfig.TraceDebugOutputToUnityConsole);
 
             ConfigSectionsProvider.SetMaskChangeCheck(m_MaskRelease,
                 (int)Core.Config.TraceReleaseLevels,
-                (int)UI.SettingsProvider.WorkingConfig.TraceReleaseLevels);
+                (int)SettingsProvider.WorkingConfig.TraceReleaseLevels);
         }
     }
 }

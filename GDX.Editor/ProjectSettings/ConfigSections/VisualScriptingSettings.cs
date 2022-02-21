@@ -8,12 +8,8 @@ using UnityEditor;
 using UnityEngine;
 #if GDX_VISUALSCRIPTING
 using Unity.VisualScripting;
-using UnityEngine.PlayerLoop;
-
 #endif
 
-using GDX.Editor;
-using GDX.Editor.UI;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor.ProjectSettings

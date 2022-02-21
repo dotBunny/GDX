@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Editor.UI.ProjectSettings;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor.ProjectSettings
@@ -24,10 +23,10 @@ namespace GDX.Editor.ProjectSettings
             m_RootElement = rootElement;
 
             m_TextArgumentPrefix = m_RootElement.Q<TextField>("text-argument-prefix");
-            m_TextArgumentPrefix.value = UI.SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix;
+            m_TextArgumentPrefix.value = SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix;
             m_TextArgumentPrefix.RegisterValueChangedCallback(evt =>
             {
-                UI.SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix = evt.newValue;
+                SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix = evt.newValue;
                 if (Core.Config.DeveloperCommandLineParserArgumentPrefix != evt.newValue)
                 {
                     m_TextArgumentPrefix.AddToClassList(ConfigSectionsProvider.ChangedClass);
@@ -37,15 +36,15 @@ namespace GDX.Editor.ProjectSettings
                     m_TextArgumentPrefix.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
                 }
 
-                UI.SettingsProvider.CheckForChanges();
+                SettingsProvider.CheckForChanges();
             });
 
 
             m_TextArgumentSplit = m_RootElement.Q<TextField>("text-argument-split");
-            m_TextArgumentSplit.value = UI.SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit;
+            m_TextArgumentSplit.value = SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit;
             m_TextArgumentSplit.RegisterValueChangedCallback(evt =>
             {
-                UI.SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit = evt.newValue;
+                SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit = evt.newValue;
                 if (Core.Config.DeveloperCommandLineParserArgumentSplit != evt.newValue)
                 {
                     m_TextArgumentSplit.AddToClassList(ConfigSectionsProvider.ChangedClass);
@@ -55,7 +54,7 @@ namespace GDX.Editor.ProjectSettings
                     m_TextArgumentSplit.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
                 }
 
-                UI.SettingsProvider.CheckForChanges();
+                SettingsProvider.CheckForChanges();
             });
 
         }
@@ -110,11 +109,11 @@ namespace GDX.Editor.ProjectSettings
         {
             ConfigSectionsProvider.SetClassChangeCheck(m_TextArgumentPrefix,
                 Core.Config.DeveloperCommandLineParserArgumentPrefix,
-                UI.SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix);
+                SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix);
 
             ConfigSectionsProvider.SetClassChangeCheck(m_TextArgumentSplit,
                 Core.Config.DeveloperCommandLineParserArgumentSplit,
-                UI.SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit);
+                SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit);
         }
     }
 }

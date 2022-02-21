@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Editor.UI.ProjectSettings;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor.ProjectSettings
@@ -27,7 +26,7 @@ namespace GDX.Editor.ProjectSettings
             m_TextOutputFolder.SetValueWithoutNotify(Core.Config.ConfigOutputPath);
             m_TextOutputFolder.RegisterValueChangedCallback(evt =>
             {
-                UI.SettingsProvider.WorkingConfig.ConfigOutputPath = evt.newValue;
+                SettingsProvider.WorkingConfig.ConfigOutputPath = evt.newValue;
                 if (Core.Config.ConfigOutputPath != evt.newValue)
                 {
                     m_TextOutputFolder.AddToClassList(ConfigSectionsProvider.ChangedClass);
@@ -37,7 +36,7 @@ namespace GDX.Editor.ProjectSettings
                     m_TextOutputFolder.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
                 }
 
-                UI.SettingsProvider.CheckForChanges();
+                SettingsProvider.CheckForChanges();
             });
         }
 
@@ -90,7 +89,7 @@ namespace GDX.Editor.ProjectSettings
         public void UpdateSectionContent()
         {
             ConfigSectionsProvider.SetClassChangeCheck(m_TextOutputFolder, Core.Config.ConfigOutputPath,
-                UI.SettingsProvider.WorkingConfig.ConfigOutputPath);
+                SettingsProvider.WorkingConfig.ConfigOutputPath);
         }
     }
 }

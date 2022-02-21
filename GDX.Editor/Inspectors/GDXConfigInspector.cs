@@ -4,10 +4,10 @@
 
 using UnityEditor;
 
-namespace GDX.Editor
+namespace GDX.Editor.Inspectors
 {
     /// <summary>
-    ///     A custom editor for the <see cref="GDXConfig" /> scriptable object.
+    ///     A custom inspector for the <see cref="GDXConfig" /> scriptable object.
     /// </summary>
     /// <remarks>
     ///     This just enforces editing through the project settings window only.
@@ -16,7 +16,7 @@ namespace GDX.Editor
     [CustomEditor(typeof(GDXConfig))]
     // ReSharper disable once InconsistentNaming
     // ReSharper disable once UnusedType.Global
-    public class GDXConfigEditor : UnityEditor.Editor
+    public class GDXConfigInspector : UnityEditor.Editor
     {
         /// <summary>
         ///     Message to display in the inspector if a <see cref="GDXConfig" /> is selected in the project.

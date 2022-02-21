@@ -7,7 +7,7 @@ using GDX.Collections.Generic;
 using UnityEditor;
 using UnityEngine.UIElements;
 
-namespace GDX.Editor.UI
+namespace GDX.Editor
 {
     public static class ResourcesProvider
     {

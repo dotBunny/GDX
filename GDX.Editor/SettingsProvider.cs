@@ -6,13 +6,12 @@ using System.Collections.Generic;
 using System.IO;
 using GDX.Collections.Generic;
 using GDX.Editor.ProjectSettings;
-using GDX.Editor.UI.ProjectSettings;
 using UnityEditor;
 using UnityEngine.UIElements;
 
 // ReSharper disable UnusedMember.Global
 
-namespace GDX.Editor.UI
+namespace GDX.Editor
 {
     /// <summary>
     ///     GDX Assembly Settings Provider

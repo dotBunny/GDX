@@ -9,7 +9,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GDX.Editor.UI.ProjectSettings
+namespace GDX.Editor.ProjectSettings
 {
     public static class ConfigSectionsProvider
     {

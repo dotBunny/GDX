@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Editor.UI.ProjectSettings;
 using UnityEngine.UIElements;
 
 #if !UNITY_2022_1_OR_NEWER
@@ -29,10 +28,10 @@ namespace GDX.Editor.ProjectSettings
             m_RootElement = rootElement;
 
             m_ToggleSetDefaultCulture = m_RootElement.Q<Toggle>("toggle-set-default-culture");
-            m_ToggleSetDefaultCulture.value = UI.SettingsProvider.WorkingConfig.LocalizationSetDefaultCulture;
+            m_ToggleSetDefaultCulture.value = SettingsProvider.WorkingConfig.LocalizationSetDefaultCulture;
             m_ToggleSetDefaultCulture.RegisterValueChangedCallback(evt =>
             {
-                UI.SettingsProvider.WorkingConfig.LocalizationSetDefaultCulture = evt.newValue;
+                SettingsProvider.WorkingConfig.LocalizationSetDefaultCulture = evt.newValue;
                 if (Core.Config.LocalizationSetDefaultCulture != evt.newValue)
                 {
                     m_ToggleSetDefaultCulture.AddToClassList(ConfigSectionsProvider.ChangedClass);
@@ -42,14 +41,14 @@ namespace GDX.Editor.ProjectSettings
                     m_ToggleSetDefaultCulture.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
                 }
 
-                UI.SettingsProvider.CheckForChanges();
+                SettingsProvider.CheckForChanges();
             });
 
             m_EnumDefaultCulture = m_RootElement.Q<EnumField>("enum-default-culture");
-            m_EnumDefaultCulture.value = UI.SettingsProvider.WorkingConfig.LocalizationDefaultCulture;
+            m_EnumDefaultCulture.value = SettingsProvider.WorkingConfig.LocalizationDefaultCulture;
             m_EnumDefaultCulture.RegisterValueChangedCallback(evt =>
             {
-                UI.SettingsProvider.WorkingConfig.LocalizationDefaultCulture = (Localization.Language)evt.newValue;
+                SettingsProvider.WorkingConfig.LocalizationDefaultCulture = (Localization.Language)evt.newValue;
                 if (Core.Config.LocalizationDefaultCulture != (Localization.Language)evt.newValue)
                 {
                     m_EnumDefaultCulture.AddToClassList(ConfigSectionsProvider.ChangedClass);
@@ -59,7 +58,7 @@ namespace GDX.Editor.ProjectSettings
                     m_EnumDefaultCulture.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
                 }
 
-                UI.SettingsProvider.CheckForChanges();
+                SettingsProvider.CheckForChanges();
             });
         }
 
@@ -113,10 +112,10 @@ namespace GDX.Editor.ProjectSettings
         {
             ConfigSectionsProvider.SetStructChangeCheck(m_ToggleSetDefaultCulture,
                 Core.Config.LocalizationSetDefaultCulture,
-                UI.SettingsProvider.WorkingConfig.LocalizationSetDefaultCulture);
+                SettingsProvider.WorkingConfig.LocalizationSetDefaultCulture);
             ConfigSectionsProvider.SetEnumChangeCheck(m_EnumDefaultCulture,
                 Core.Config.LocalizationDefaultCulture,
-                UI.SettingsProvider.WorkingConfig.LocalizationDefaultCulture);
+                SettingsProvider.WorkingConfig.LocalizationDefaultCulture);
         }
     }
 }
