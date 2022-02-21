@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.IO;
+using GDX;
 using GDX.Jobs.ParallelFor;
 using GDX.Editor;
 using NUnit.Framework;
@@ -30,7 +31,7 @@ namespace Editor
         [Category(GDX.Core.TestCategory)]
         public void CaptureEditorWindowToPNG_SceneView_OutputsImage()
         {
-            string outputPath = Automation.GetTempFilePath("CaptureEditorWindowToPNG_SceneView_OutputsImage-",".png");
+            string outputPath = Platform.GetUniqueOutputFilePath("GDX_Automation", "CaptureEditorWindowToPNG_SceneView_OutputsImage-",".png");
             bool execute = Automation.CaptureEditorWindowToPNG<SceneView>(outputPath);
             bool evaluate = execute && File.Exists(outputPath);
             Assert.IsTrue(evaluate);
@@ -51,18 +52,9 @@ namespace Editor
         public void CaptureFocusedEditorWindowToPNG_OutputsImage()
         {
             Automation.GetGameView().Focus();
-            string outputPath = Automation.GetTempFilePath("CaptureFocusedEditorWindowToPNG_OutputsImage-",".png");
+            string outputPath = Platform.GetUniqueOutputFilePath("GDX_Automation", "CaptureFocusedEditorWindowToPNG_OutputsImage-",".png");
             bool execute = Automation.CaptureFocusedEditorWindowToPNG(outputPath);
             bool evaluate = execute && File.Exists(outputPath);
-            Assert.IsTrue(evaluate);
-        }
-
-        [Test]
-        [Category(GDX.Core.TestCategory)]
-        public void GetTempFolder_EnsureExists_FolderExists()
-        {
-            string path = Automation.GetTempFolder();
-            bool evaluate = Directory.Exists(path);
             Assert.IsTrue(evaluate);
         }
 
@@ -98,8 +90,9 @@ namespace Editor
 
             NativeArray<Color32> screenshotDataA = screenshotA.GetRawTextureData<Color32>();
             NativeArray<Color32> screenshotDataB = screenshotB.GetRawTextureData<Color32>();
-            string outputPathA = Automation.GetTempFilePath("CaptureEditorWindow_SceneView_SameTextureA-",".png");
-            string outputPathB = Automation.GetTempFilePath("CaptureEditorWindow_SceneView_SameTextureB-",".png");
+            
+            string outputPathA = Platform.GetUniqueOutputFilePath("GDX_Automation", "CaptureEditorWindow_SceneView_SameTextureA-",".png");
+            string outputPathB = Platform.GetUniqueOutputFilePath("GDX_Automation", "CaptureEditorWindow_SceneView_SameTextureB-",".png");
             File.WriteAllBytes(outputPathA, screenshotA.EncodeToPNG());
             File.WriteAllBytes(outputPathB, screenshotB.EncodeToPNG());
 

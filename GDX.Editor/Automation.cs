@@ -5,8 +5,6 @@
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
-using GDX.Mathematics.Random;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -149,7 +147,7 @@ namespace GDX.Editor
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ClearTempFolder(bool deleteFolder = false)
         {
-            string path = GetTempFolder(false);
+            string path = Platform.GetOutputFolder("GDX_Automation");
             if (!Directory.Exists(path))
             {
                 return;
@@ -222,58 +220,6 @@ namespace GDX.Editor
         {
             System.Type gameView = System.Type.GetType("UnityEditor.GameView,UnityEditor");
             return gameView != null ? EditorWindow.GetWindow(gameView, false) : null;
-        }
-
-        /// <summary>
-        /// Gets and ensures the temporary GDX automation folder exists.
-        /// </summary>
-        /// <param name="ensureExists"></param>
-        /// <returns>The fully evaluated path to a temporary GDX folder</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string GetTempFolder(bool ensureExists = true)
-        {
-            string tempPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "GDX_Automation"));
-            if (ensureExists)
-            {
-                Platform.EnsureFolderHierarchyExists(tempPath);
-            }
-            return tempPath;
-        }
-
-        public static string GetTempFilePath(string prefix = "tmp", string extension = ".tmp", bool ensureFolderExists = true)
-        {
-            string tempFolder = GetTempFolder(ensureFolderExists);
-            StringBuilder tmpFileName = new StringBuilder(260);
-            tmpFileName.Append(prefix);
-            RandomWrapper random = new RandomWrapper(
-                System.DateTime.Now.Ticks.ToString().GetStableHashCode());
-
-            tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-            tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-            tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-            tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-            tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-
-            while (true)
-            {
-                tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-                string filePath = Path.Combine(tempFolder, $"{tmpFileName}{extension}");
-                if (!File.Exists(filePath))
-                {
-                    return filePath;
-                }
-
-                if (tmpFileName.Length > 260)
-                {
-                    tmpFileName.Clear();
-                    tmpFileName.Append(prefix);
-                    tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-                    tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-                    tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-                    tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-                    tmpFileName.Append(Platform.GetRandomSafeCharacter(random));
-                }
-            }
         }
 
         /// <summary>

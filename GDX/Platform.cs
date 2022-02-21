@@ -4,6 +4,7 @@
 
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text;
 using GDX.Mathematics.Random;
 using UnityEngine;
 
@@ -137,15 +138,49 @@ namespace GDX
             EnsureFolderHierarchyExists(s_OutputFolder);
 
             return s_OutputFolder;
-
-
         }
-
+        
         public static char GetRandomSafeCharacter(IRandomProvider random)
         {
             return SafeCharacterPool[random.NextInteger(0, CharacterPoolLengthExclusive)];
         }
+        
+        public static string GetUniqueOutputFilePath(string folderName = null, string prefix = "GDX_", string extension = ".log")
+        {
+            string tempFolder = GetOutputFolder(folderName);
+            StringBuilder tmpFileName = new StringBuilder(260);
+            tmpFileName.Append(prefix);
+            RandomWrapper random = new RandomWrapper(
+                System.DateTime.Now.Ticks.ToString().GetStableHashCode());
 
+            tmpFileName.Append(GetRandomSafeCharacter(random));
+            tmpFileName.Append(GetRandomSafeCharacter(random));
+            tmpFileName.Append(GetRandomSafeCharacter(random));
+            tmpFileName.Append(GetRandomSafeCharacter(random));
+            tmpFileName.Append(GetRandomSafeCharacter(random));
+
+            while (true)
+            {
+                tmpFileName.Append(GetRandomSafeCharacter(random));
+                string filePath = Path.Combine(tempFolder, $"{tmpFileName}{extension}");
+                if (!File.Exists(filePath))
+                {
+                    return filePath;
+                }
+
+                if (tmpFileName.Length > 260)
+                {
+                    tmpFileName.Clear();
+                    tmpFileName.Append(prefix);
+                    tmpFileName.Append(GetRandomSafeCharacter(random));
+                    tmpFileName.Append(GetRandomSafeCharacter(random));
+                    tmpFileName.Append(GetRandomSafeCharacter(random));
+                    tmpFileName.Append(GetRandomSafeCharacter(random));
+                    tmpFileName.Append(GetRandomSafeCharacter(random));
+                }
+            }
+        }
+        
 #if !UNITY_DOTSRUNTIME
         /// <summary>
         ///     Is the application focused?

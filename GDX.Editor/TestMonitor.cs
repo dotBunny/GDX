@@ -17,8 +17,8 @@ namespace GDX.Editor
         /// <inheritdoc />
         public void RunStarted(ITestAdaptor testsToRun)
         {
-
-            m_CachedTempFolder = Automation.GetTempFolder();
+            
+            m_CachedTempFolder = Platform.GetOutputFolder("GDX_Automation");
             if (Application.isBatchMode)
             {
                 Automation.StashWindowLayout();
