@@ -120,20 +120,19 @@ namespace GDX
         /// <summary>
         ///     Returns a runtime writable folder.
         /// </summary>
+        /// <param name="folderName">An optional additional folder under the provided path.</param>
         /// <returns>The full path to a writable folder at runtime.</returns>
-        public static string GetOutputFolder(string folderName = "GDX")
+        /// <remarks>Not all platforms support the additional folder option.</remarks>
+        public static string GetOutputFolder(string folderName = null)
         {
             if (s_OutputFolder != null) return s_OutputFolder;
             
 #if UNITY_EDITOR
-            s_OutputFolder = Path.Combine(UnityEngine.Application.dataPath, "..", folderName);
+            s_OutputFolder = folderName == null ? Path.Combine(Application.dataPath, "..") : Path.Combine(Application.dataPath, "..", folderName);
 #elif UNITY_DOTSRUNTIME
-                s_OutputFolder = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+            s_OutputFolder = folderName == null ? Directory.GetCurrentDirectory() : Path.Combine(Directory.GetCurrentDirectory(), folderName);
 #else
-                s_OutputFolder = Path.Combine(UnityEngine.Application.persistentDataPath, folderName);
-
-                // TODO: Add console safe folders for dev?
-                // Maybe throw exception on release builds?
+            s_OutputFolder = folderName == null ? Application.persistentDataPath : Path.Combine(Application.persistentDataPath, folderName);
 #endif
             EnsureFolderHierarchyExists(s_OutputFolder);
 
