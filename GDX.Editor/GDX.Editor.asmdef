@@ -20,6 +20,7 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [
+        "!UNITY_DOTSRUNTIME",
         "UNITY_2020_3_OR_NEWER"
     ],
     "versionDefines": [
