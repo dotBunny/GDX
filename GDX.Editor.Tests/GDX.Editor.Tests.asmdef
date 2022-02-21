@@ -4,7 +4,6 @@
   "references": [
     "Unity.PerformanceTesting",
     "GDX",
-    "GDX.Classic",
     "GDX.Editor",
     "UnityEngine.TestRunner",
     "UnityEditor.TestRunner"

@@ -3,7 +3,6 @@
     "rootNamespace": "GDX.Editor",
     "references": [
         "GDX",
-        "GDX.Classic",
         "Unity.ScriptableBuildPipeline",
         "Unity.ScriptableBuildPipeline.Editor",
         "Unity.VisualScripting.Core",
