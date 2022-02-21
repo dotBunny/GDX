@@ -15,7 +15,6 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [
-        "!DOTS_RUNTIME"
     ],
     "versionDefines": [
         {
