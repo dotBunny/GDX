@@ -18,19 +18,11 @@ namespace GDX.Developer.Reports
 
         private readonly TestRun m_Results = new TestRun();
 
-        public NUnitReport(string name = null, string fullName = null, string label = null, string className = null )
+        public NUnitReport(string name = null, string fullName = null, string className = null )
         {
             m_Results.TestSuite.Name = name;
             m_Results.TestSuite.FullName = fullName;
             m_Results.TestSuite.ClassName = className;
-            if (label == null && fullName != null)
-            {
-                m_Results.TestSuite.Label = fullName;
-            }
-            else
-            {
-                m_Results.TestSuite.Label = label;
-            }
         }
         public TestCase AddDurationResult(string name, float seconds, bool passed = true, string output = null, TestSuite testSuite = null)
         {
