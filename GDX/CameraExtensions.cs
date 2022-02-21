@@ -2,17 +2,23 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+#if !UNITY_DOTSRUNTIME
+
 using UnityEngine;
 
 // ReSharper disable UnusedMember.Global
-
-namespace GDX.Classic
+namespace GDX
 {
+    /// <summary>
+    ///     <see cref="UnityEngine.Camera" /> Based Extension Methods
+    /// </summary>
+    /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
+    [VisualScriptingCompatible(2)]
     // ReSharper disable once UnusedType.Global
-    public class Automation
+    public static class CameraExtensions
     {
         // ReSharper disable once MemberCanBePrivate.Global
-        public static Texture2D CaptureCamera(Camera targetCamera, int width = 1920, int height = 1080)
+        public static Texture2D Capture(this Camera targetCamera, int width = 1920, int height = 1080)
         {
             // Get a temporary render texture from the pool since its gonna be rapid.
             RenderTexture screenshotRenderTexture = RenderTexture.GetTemporary(width, height, 24);
@@ -38,9 +44,9 @@ namespace GDX.Classic
             return screenshotTexture;
         }
 
-        public static bool CaptureCameraToPNG(Camera targetCamera, string outputPath, int width = 1920, int height = 1080 )
+        public static bool CaptureToPNG(this Camera targetCamera, string outputPath, int width = 1920, int height = 1080 )
         {
-            Texture2D captureTexture = CaptureCamera(targetCamera, width, height);
+            Texture2D captureTexture = Capture(targetCamera, width, height);
             if (captureTexture == null)
             {
                 return false;
@@ -48,37 +54,6 @@ namespace GDX.Classic
             System.IO.File.WriteAllBytes(outputPath, captureTexture.EncodeToPNG());
             return true;
         }
-
-        // ReSharper disable once MemberCanBePrivate.Global
-        public static Texture2D CaptureCamera(Vector3 position, Quaternion rotation, int width = 1920, int height = 1080)
-        {
-            GameObject cameraObject = new GameObject {hideFlags = HideFlags.HideAndDontSave};
-            Camera captureCamera = cameraObject.AddComponent<Camera>();
-
-            // TODO: Add stack of stuff based on game content?
-
-            // Move and rotate the camera
-            Transform cameraTransform = captureCamera.gameObject.transform;
-            cameraTransform.position = position;
-            cameraTransform.rotation = rotation;
-
-            Texture2D captureTexture = CaptureCamera(captureCamera, width, height);
-
-            Object.DestroyImmediate(cameraObject);
-
-            return captureTexture;
-        }
-
-        public static bool CaptureCameraToPNG(Vector3 position, Quaternion rotation, string outputPath, int width = 1920, int height = 1080)
-        {
-            Texture2D captureTexture = CaptureCamera(position, rotation, width, height);
-            if (captureTexture == null)
-            {
-                return false;
-            }
-            System.IO.File.WriteAllBytes(outputPath, captureTexture.EncodeToPNG());
-            return true;
-        }
-
     }
 }
+#endif // !UNITY_DOTSRUNTIME
