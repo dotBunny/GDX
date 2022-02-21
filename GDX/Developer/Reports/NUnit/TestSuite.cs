@@ -35,6 +35,11 @@ namespace GDX.Developer.Reports.NUnit
 
         public void Process(string passedResult, string failedResult, string inconclusiveResult, string skippedResult)
         {
+            Passed = 0;
+            Failed = 0;
+            Inconclusive = 0;
+            Skipped = 0;
+
             foreach (TestCase t in TestCases)
             {
                 if (t.Result == passedResult)

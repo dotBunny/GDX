@@ -8,20 +8,30 @@ using GDX.Developer.Reports.NUnit;
 // ReSharper disable UnusedMember.Global
 
 namespace GDX.Developer.Reports
-{
+{   
     // ReSharper disable once UnusedType.Global
     public class NUnitReport
     {
+        public const string SkippedString = "Skipped";
         public const string FailedString = "Failed";
         public const string PassedString = "Passed";
 
         private readonly TestRun m_Results = new TestRun();
 
-        public NUnitReport(string suiteName = null)
+        public NUnitReport(string name = null, string fullName = null, string label = null, string className = null )
         {
-            m_Results.TestSuite.Name = suiteName;
+            m_Results.TestSuite.Name = name;
+            m_Results.TestSuite.FullName = fullName;
+            m_Results.TestSuite.ClassName = className;
+            if (label == null && fullName != null)
+            {
+                m_Results.TestSuite.Label = fullName;
+            }
+            else
+            {
+                m_Results.TestSuite.Label = label;
+            }
         }
-
         public TestCase AddDurationResult(string name, float seconds, bool passed = true, string output = null, TestSuite testSuite = null)
         {
             TestCase testCase = new TestCase
@@ -29,6 +39,24 @@ namespace GDX.Developer.Reports
                 Name = name,
                 Duration = seconds,
                 Result = passed ? PassedString : FailedString,
+                Output = output
+            };
+            if (testSuite != null)
+            {
+                testSuite.TestCases.Add(testCase);
+            }
+            else
+            {
+                m_Results.TestSuite.TestCases.Add(testCase);
+            }
+            return testCase;
+        }
+        public TestCase AddSkippedTest(string name, string output = null, TestSuite testSuite = null)
+        {
+            TestCase testCase = new TestCase
+            {
+                Name = name,
+                Result = SkippedString,
                 Output = output
             };
             if (testSuite != null)
@@ -52,13 +80,11 @@ namespace GDX.Developer.Reports
             return m_Results.TestSuite;
         }
 
-        public void Stage(int uniqueIdentifier = 0, string testSuiteLabel = "Test Suite", int panicMessages = 0)
+        public void Process()
         {
-            m_Results.Id = uniqueIdentifier;
             m_Results.Process();
-            m_Results.TestSuite.Label = testSuiteLabel;
         }
-
+        
         /// <summary>
         ///     Builds and returns the NUnit formatted report.
         /// </summary>
@@ -67,6 +93,7 @@ namespace GDX.Developer.Reports
         {
             // We need to make sure it is a UTF-8 xml serializer as most parsers wont know what to do with UTF-16
             TextGenerator generator = new TextGenerator();
+            m_Results.Process();
             AddToGenerator(generator, m_Results);
             return generator.ToString();
         }
