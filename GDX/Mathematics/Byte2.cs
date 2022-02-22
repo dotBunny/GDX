@@ -693,13 +693,13 @@ namespace GDX.Mathematics
         {
             unchecked
             {
-                const int p = 16777619;
+                const int k_P = 16777619;
                 int hash = (int)2166136261;
 
                 // ReSharper disable once NonReadonlyMemberInGetHashCode
-                hash = (hash ^ x) * p;
+                hash = (hash ^ x) * k_P;
                 // ReSharper disable once NonReadonlyMemberInGetHashCode
-                hash = (hash ^ y) * p;
+                hash = (hash ^ y) * k_P;
 
                 hash += hash << 13;
                 hash ^= hash >> 7;

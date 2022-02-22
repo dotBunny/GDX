@@ -29,7 +29,7 @@ namespace GDX
         ///     An empty instance of an <see cref="UnityEngine.AddressableAssets.AssetReference" /> to be used for comparison.
         /// </summary>
         // ReSharper disable once HeapView.ObjectAllocation.Evident
-        static readonly AssetReference s_emptyAssetReference = new AssetReference();
+        static readonly AssetReference s_EmptyAssetReference = new AssetReference();
 
         /// <summary>
         ///     <para>Can <paramref name="targetAssetReference" /> be instantiated at runtime?</para>
@@ -111,7 +111,7 @@ namespace GDX
         /// <returns>true/false</returns>
         public static bool IsEmpty(this AssetReference targetAssetReference)
         {
-            return targetAssetReference.AssetGUID == s_emptyAssetReference.AssetGUID;
+            return targetAssetReference.AssetGUID == s_EmptyAssetReference.AssetGUID;
         }
     }
 }

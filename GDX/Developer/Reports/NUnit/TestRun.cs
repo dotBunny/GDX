@@ -19,6 +19,7 @@ namespace GDX.Developer.Reports.NUnit
         public int Skipped { get; private set; }
         public int Asserts { get; private set; }
         public string EngineVersion { get; set; }
+        // ReSharper disable once InconsistentNaming
         public string CLRVersion { get; set; }
         public string StartTime { get; set; }
         public string EndTime { get; set; }
