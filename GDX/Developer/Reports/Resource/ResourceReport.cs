@@ -15,6 +15,11 @@ namespace GDX.Developer.Reports.Resource
     public abstract class ResourceReport
     {
         /// <summary>
+        ///     A <see cref="string" /> array used to represent the end of a line for splitting purposes.
+        /// </summary>
+        static readonly string[] s_NewLineSplit = {Environment.NewLine};
+
+        /// <summary>
         ///     Output the report format as an array of <see cref="string" />.
         /// </summary>
         /// <remarks>It is usually best to provide a <see cref="StringBuilder" /> or <see cref="StreamWriter" /> instead.</remarks>
@@ -24,7 +29,7 @@ namespace GDX.Developer.Reports.Resource
         {
             StringBuilder builder = new StringBuilder();
             return Output(builder, context)
-                ? builder.ToString().Split(NewLineSplit, StringSplitOptions.None)
+                ? builder.ToString().Split(s_NewLineSplit, StringSplitOptions.None)
                 : null;
         }
 
@@ -74,8 +79,8 @@ namespace GDX.Developer.Reports.Resource
         /// <param name="context">Contextual information regarding the generation of the report.</param>
         /// <returns>true/false if report was added to <paramref name="builder"/>.</returns>
         public abstract bool Output(StringBuilder builder, ResourceReportContext context = null);
-        
-        
+
+
         /// <summary>
         ///     Create a sized divider string for use in generating reports.
         /// </summary>
@@ -86,13 +91,6 @@ namespace GDX.Developer.Reports.Resource
         {
             return "".PadRight(context.CharacterWidth, divider);
         }
-        
-        /// <summary>
-        ///     A <see cref="string" /> array used to represent the end of a line for splitting purposes.
-        /// </summary>
-        public static readonly string[] NewLineSplit = {Environment.NewLine};
-
-    
 
         /// <summary>
         ///     Create a header with <paramref name="title" /> with repeated <paramref name="decorator" />s on the sides, filling

@@ -19,7 +19,7 @@ namespace GDX.Editor
     /// </summary>
     public static class Automation
     {
-        private static readonly object[] s_EmptyParametersArray = new object[] { };
+        static readonly object[] s_EmptyParametersArray = new object[] { };
 
         private static string LayoutStashPath()
         {

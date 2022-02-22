@@ -8,10 +8,11 @@ using GDX.Developer.Reports.NUnit;
 // ReSharper disable UnusedMember.Global
 
 namespace GDX.Developer.Reports
-{   
+{
     // ReSharper disable once UnusedType.Global
     public class NUnitReport
     {
+        // ReSharper disable once MemberCanBePrivate.Global
         public const string SkippedString = "Skipped";
         public const string FailedString = "Failed";
         public const string PassedString = "Passed";
@@ -76,7 +77,7 @@ namespace GDX.Developer.Reports
         {
             m_Results.Process();
         }
-        
+
         /// <summary>
         ///     Builds and returns the NUnit formatted report.
         /// </summary>
@@ -140,17 +141,17 @@ namespace GDX.Developer.Reports
                 {
                     generator.AppendLine($"<output><![CDATA[{testCase.Output}]]></output>");
                 }
-                
+
                 if (testCase.Message != null)
                 {
                     generator.AppendLine($"<message><![CDATA[{testCase.Output}]]></message>");
                 }
-                
+
                 if (testCase.StackTrace != null)
                 {
                     generator.AppendLine($"<stack-trace><![CDATA[{testCase.Output}]]></stack-trace>");
                 }
-                
+
                 if (testCase.Properties != null && testCase.Properties.Property.Count > 0)
                 {
                     AddToGenerator(generator, testCase.Properties);
@@ -161,7 +162,7 @@ namespace GDX.Developer.Reports
             }
             else
             {
-                generator.Append(" />");   
+                generator.Append(" />");
                 generator.NextLine();
             }
         }
@@ -175,14 +176,14 @@ namespace GDX.Developer.Reports
             AddToGeneratorAttribute(generator, "fullname", testSuite.FullName);
             AddToGeneratorAttribute(generator, "classname", testSuite.ClassName);
             AddToGeneratorAttribute(generator, "runstate", testSuite.RunState);
-            
+
             AddToGeneratorAttribute(generator, "testcasecount", testSuite.TestCaseCount);
             AddToGeneratorAttribute(generator, "result", testSuite.Result);
             AddToGeneratorAttribute(generator, "label", testSuite.Label);
             AddToGeneratorAttribute(generator, "start-time", testSuite.StartTime);
             AddToGeneratorAttribute(generator, "end-time", testSuite.EndTime);
             AddToGeneratorAttribute(generator, "duration", testSuite.Duration);
-            
+
             AddToGeneratorAttribute(generator, "total", testSuite.Total);
             AddToGeneratorAttribute(generator, "passed", testSuite.Passed);
             AddToGeneratorAttribute(generator, "failed", testSuite.Failed);
@@ -196,7 +197,7 @@ namespace GDX.Developer.Reports
             if (testSuite.Properties != null)
             {
                 AddToGenerator(generator, testSuite.Properties);
-                
+
             }
 
             foreach (TestCase t in testSuite.TestCases)
@@ -236,7 +237,7 @@ namespace GDX.Developer.Reports
             generator.PopIndent();
             generator.AppendLine("</test-run>");
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static void AddToGeneratorAttribute(TextGenerator generator, string key, string value)
         {

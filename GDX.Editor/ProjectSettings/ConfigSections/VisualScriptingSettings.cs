@@ -20,8 +20,6 @@ namespace GDX.Editor.ProjectSettings
     // ReSharper disable once UnusedType.Global
     internal class VisualScriptingSettings : IConfigSection
     {
-
-
         /// <summary>
         ///     Internal section identifier.
         /// </summary>
@@ -95,7 +93,7 @@ namespace GDX.Editor.ProjectSettings
                 AssemblyProvider.VisualScriptingUtilities, false));
         }
 
-        VisualElement CreateBindUpdateCategorySection(string sectionName, string sectionDescription, List<Type> sectionTypes, bool bottomBorder = true)
+        static VisualElement CreateBindUpdateCategorySection(string sectionName, string sectionDescription, List<Type> sectionTypes, bool bottomBorder = true)
         {
             VisualTreeAsset categoryAsset =
                 ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsVisualScriptingCategory");

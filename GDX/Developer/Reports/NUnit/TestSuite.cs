@@ -30,10 +30,11 @@ namespace GDX.Developer.Reports.NUnit
         public int Skipped { get; set; }
         public int Asserts { get; set; }
         public Properties Properties { get; set; }
-        public List<TestCase> TestCases { get; set; } = new List<TestCase>();
+
+        public readonly List<TestCase> TestCases = new List<TestCase>();
 
         // ReSharper disable once CollectionNeverUpdated.Global
-        public List<TestSuite> TestSuites { get; set;  }= new List<TestSuite>();
+        public readonly List<TestSuite> TestSuites = new List<TestSuite>();
 
         public void Process(string passedResult, string failedResult, string inconclusiveResult, string skippedResult)
         {

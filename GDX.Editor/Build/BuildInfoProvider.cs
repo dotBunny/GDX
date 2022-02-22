@@ -176,16 +176,16 @@ namespace GDX.Editor.Build
             asmDef.PushIndent();
             asmDef.AppendLine($"\"name\": \"{Core.Config.DeveloperBuildInfoNamespace}\",");
             asmDef.AppendLine($"\"rootNamespace\": \"{Core.Config.DeveloperBuildInfoNamespace}\",");
-            asmDef.AppendLine($"\"references\": [],");
-            asmDef.AppendLine($"\"includePlatforms\": [],");
-            asmDef.AppendLine($"\"excludePlatforms\": [],");
-            asmDef.AppendLine($"\"allowUnsafeCode\": [],");
-            asmDef.AppendLine($"\"overrideReferences\": [],");
-            asmDef.AppendLine($"\"precompiledReferences\": [],");
-            asmDef.AppendLine($"\"autoReferenced\": true,");
-            asmDef.AppendLine($"\"defineConstraints\": [],");
-            asmDef.AppendLine($"\"versionDefines\": [],");
-            asmDef.AppendLine($"\"noEngineReferences\": true");
+            asmDef.AppendLine("\"references\": [],");
+            asmDef.AppendLine("\"includePlatforms\": [],");
+            asmDef.AppendLine("\"excludePlatforms\": [],");
+            asmDef.AppendLine("\"allowUnsafeCode\": [],");
+            asmDef.AppendLine("\"overrideReferences\": [],");
+            asmDef.AppendLine("\"precompiledReferences\": [],");
+            asmDef.AppendLine("\"autoReferenced\": true,");
+            asmDef.AppendLine("\"defineConstraints\": [],");
+            asmDef.AppendLine("\"versionDefines\": [],");
+            asmDef.AppendLine("\"noEngineReferences\": true");
 
             File.WriteAllText(assemblyDefinition, asmDef.ToString());
             AssetDatabase.ImportAsset("Assets/" +

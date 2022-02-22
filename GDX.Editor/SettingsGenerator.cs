@@ -14,8 +14,8 @@ namespace GDX.Editor
             Developer.TextGenerator code = new Developer.TextGenerator("    ", "{", "}");
 
             // Start header
-            code.AppendLine($"// Generated file of difference from default config.");
-            code.AppendLine($"namespace GDX");
+            code.AppendLine("// Generated file of difference from default config.");
+            code.AppendLine("namespace GDX");
             code.PushIndent();
             code.AppendLine($"public class {Core.OverrideClass}");
             code.PushIndent();

@@ -4,6 +4,7 @@
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable ClassNeverInstantiated.Global
 
 namespace GDX.Developer.Reports.NUnit
 {

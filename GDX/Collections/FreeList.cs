@@ -32,6 +32,7 @@ namespace GDX.Collections
         /// <summary>
         ///     The total number of currently-allocated indices.
         /// </summary>
+        // ReSharper disable once NotAccessedField.Global
         public int Count;
 
         // ReSharper enable MemberCanBePrivate.Global
