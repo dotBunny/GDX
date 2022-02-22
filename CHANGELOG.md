@@ -21,26 +21,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Properly formatted the `CHANGELOG.md` thanks to a proper linter.
+- Properly formatted the `CHANGELOG.md` thanks to a proper linter, as well as tried to unify nomenclature used to describe changes.
 - The `GDX` namespace has been reorganized.
 - The package's project settings were rebuilt to use `UIElement`s instead of `IMGUI`.
-- `HalfLifeToSmoothingFactor` no longer defaults elapsed time to `Time.deltaTime`
+- `Smooth::HalfLifeToSmoothingFactor()` no longer defaults elapsed time to `Time.deltaTime`
 - The visual scripting module detects the package based installation available in `Unity 2021` and forward. If you wish to have support in `Unity 2020.3` via the Asset Store you will need to add a scripting define symbol of `GDX_VISUALSCRIPTING` to your project.
 - All internal `Dictionary<string, value>` have been replaced with `StringKeyDictionary<value>`
-- `BuildInfoProvider` now uses `TextGenerator` for codegen.
-- `Platform::GetOutputFolder` CHECK now returns a writable folder regardless of the platform
+- `BuildInfoProvider` now uses a `TextGenerator` for codegen.
+- `Platform::GetOutputFolder()` supports being overridden via command-line argument `GDX_OUTPUT_FOLDER`.
 
 ### Fixed  
 
-- `Platform::IsFocused` now returns the problem focus status on desktop platforms. 
+- `Platform::IsFocused()` now returns the proper focus state on desktop platforms.
 
 ### Removed
 
-- `Automation.GetTempFolder()` in favour of using `Platform.GetOutputFolder()`.
-- `Automation.GetTempFilePath()` in favour of using `Platform.GetUniqueOutputFilePath()`.
+- `Automation::GetTempFolder()` in favour of using `Platform::GetOutputFolder()`.
+- `Automation::GetTempFilePath()` in favour of using `Platform::GetUniqueOutputFilePath()`.
 - `NativeSimpleList` in favour of builtin collection `UnsafeList`.
 - `NativeSimpleQueue` in favour of builtin collection `UnsafeQueue`.
--  All "Requires UnityEngine.CoreModule.dll" remarks.
+- All "Requires UnityEngine.CoreModule.dll" remarks.
 
 ## [2.0.3] - 2021-12-01
 
@@ -50,12 +50,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - A `RandomWrapper` was created to allow for `System.Random` to be used with the `IRandomProvider` interface.
-- Cleaning method `StripNonAscii()` to `StringExtensions`.
-- Editor scoped `Automation` functionality, with supporting functionality builtin to provide reliable Unity editor testing.
-  - `CaptureEditorWindow<T>()`
-  - `CaptureEditorWindowToPNG<T>()`
-  - `CaptureFocusedEditorWindow()`
-  - `CaptureFocusedEditorWindowToPNG()` 
+- Cleaning method `StringExtensions::StripNonAscii()`.
+- Editor scoped functionality, with supporting functionality builtin to provide reliable Unity editor testing.
+  - `Automation::CaptureEditorWindow<T>()`
+  - `Automation::CaptureEditorWindowToPNG<T>()`
+  - `Automation::CaptureFocusedEditorWindow()`
+  - `Automation::CaptureFocusedEditorWindowToPNG()`
 - Numerous color comparison operation jobs.
   - `Jobs.ParallelFor.Color32CompareJob`
   - `Jobs.ParallelFor.Color32MatchJob`
@@ -64,7 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Now using a `NativeArray<uint>` to store state in the 'WELL1024a', now requires `Dispose()`.
+- Now using a `NativeArray<uint>` to store state in the 'WELL1024a', now requires the use of `Dispose()`.
 - Some `Platform` methods behaved like extensions when they should not have been.
 
 ### Fixed
@@ -79,7 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Infinitely sized `CoalesceStream` available for dealing with large data streams.
-- A few minor file permission operations (`EnsureFileWritable`, `ForceDeleteFile`, `IsFileWritable`, ) have been added to `Platform`.
+- A few (`Platform::EnsureFileWritable()`, `Platform::ForceDeleteFile()`, `Platform::IsFileWritable()`) file permission operations have been added.
 
 ### Fixed
 
@@ -88,7 +88,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.1] - 2021-11-02
 
 ***"Feature Branches"***
-> A lot of experimental work is being now done in _feature_ branches; this should speed up iteration time on releases.
+> A lot of experimental work is being now done in *feature* branches; this should speed up iteration time on releases.
 
 ### Added
 
@@ -102,7 +102,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Optimized referencing of `GDXConfig` in author time operations (now similar to runtime).
-- `IListExtensions.ContainsItem` now uses `Equals()` to resolve literals issues with strings.
+- `IListExtensions::ContainsItem()` now uses `Equals()` to resolve literals issues with strings.
 - Categories for Visual Scripting based entries are now correct.
 - Resolved issue with newer Package Manager based lock files having no tag identities.
 
@@ -116,7 +116,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New [FAQ](https://gdx.dotbunny.com/manual/faq.html) section of the website, addressing some of the more frequently asked questions.
 - `WELL1024a` implementation to replace removed `MersenneTwister` in GDX .
 - `IRandomProvider` and `RandomAdaptor` to allow for some interchange with existing usages; these are slow and should be used as a last resort.
-- `GetStableHashCode` for generating hashcode of strings identical to `GetHashCode`, without the virtual call.
+- `StringExtensions::GetStableHashCode()` for generating hashcode of strings identical to `GetHashCode()`, without the virtual call.
 - `TransientReference` provides a comparable non-garbage collection blocking reference type.
 - `Report` provides some of the common logic used by the newly added `ResourcesAudit` and `ResourcesDiff`. Think of this as an incredibly simple way to find resource memory leaks.
 
@@ -175,7 +175,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - UPM and GitHub installation methods utilizing the`dev` branch will have a "Force Update" action available to them in the **Project Settings**.
 - `PlatformExtensions` now has a `IsHeadless()` method for determining if the application is running without a graphics device initialized; aka a headless server.
-- `EnumExtensions` has a faster `HasFlags()` method for working with flags. 
+- `EnumExtensions` has a faster `HasFlags()` method for working with flags.
 - `PoolingSystem` now exists in the `GDX.Collections.Pooling` namespace, including a `GameObjectPool` system.
 - `Trace` static now available to funnel all `GDX` based logging through, with editor/build configurations available.
 
@@ -327,7 +327,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `StringExtensions.GetLowerCaseHashCode()` renamed to `StringExtensions.GetStableLowerCaseHashCode()`.
 - `StringExtensions.GetUpperCaseHashCode()` renamed to `StringExtensions.GetStableUpperCaseHashCode()`.
 - `ByteExtensions.GetValueHashCode()` renamed to `ByteExtensions.GetStableHashCode()`.
-- Better package installation type detection and handling of upgrades. 
+- Better package installation type detection and handling of upgrades.
   - This has cut down the possibilities of automatic upgrades, however efforts will continue to expand on this functionality.
 
 ## [1.2.1] - 2021-01-24
@@ -355,7 +355,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Separation of checking folders and files path structure, new `Platform.EnsureFileFolderHiearchyExists()` just for files.
 - The ability (by default) to encompass the `BuildInfo` output folder in an assembly definition.
 - An ability from **Project Settings** to output a default `BuildInfo` file.
-- `AssemblyInfo` to each assembly to support _internal_ access during unit testing.
+- `AssemblyInfo` to each assembly to support *internal* access during unit testing.
 - Applied `MethodImplOptions.AggressiveInlining` to many methods.
 - A bunch of split related functionality to `StringExtensions`.
   - `GetAfterFirst()`
@@ -367,7 +367,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `Midpoint()`
 - `StringExtensions`
   - `SplitCamelCase()` to help with formatting of internal data.
-  - `Encrypt()` and `Decrypt()` for all your string hiding needs. 
+  - `Encrypt()` and `Decrypt()` for all your string hiding needs.
 
 ### Changed
 
@@ -411,12 +411,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - 2021-01-17
 
 ***"Breaking Bad"***
-> We are breaking some rules! This should have been a _major release_ as we have altered method names to be consistent across the API.
+> We are breaking some rules! This should have been a *major release* as we have altered method names to be consistent across the API.
 
 ### Added
 
-- `GDX` assembly documentation contains _remarks_ where a function or class requires the presence of Unity's CoreModule to function correctly.
-- `GDXConfig` scriptable object self creates to store persistent project-wide configurations for both runtime and author-time, editable through **Project Settings**. 
+- `GDX` assembly documentation contains *remarks* where a function or class requires the presence of Unity's CoreModule to function correctly.
+- `GDXConfig` scriptable object self creates to store persistent project-wide configurations for both runtime and author-time, editable through **Project Settings**.
 - `InspectorLabelAttribute` (and supporting `Editor.InspectorLabelPropertyDrawer`) to facilitate a quick way of replacing a labels content in the inspector.
 - `IO.Compression.TarFile` support for decompressing tarballs.
 - `SemanticVersion` struct for assistance with versioning.
@@ -443,7 +443,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated the `README.md` header with logo and badges.
 - Added release names to `CHANGELOG.md` as well as removed namespace sub-lists, settling on having full names in description instead.
-- Altered arrangement of `LICENSE` with the hopes of appeasing the _GitHub_ overlords of license type detection.
+- Altered arrangement of `LICENSE` with the hopes of appeasing the *GitHub* overlords of license type detection.
 - `ArrayExtensions` to be more specific
   - Corrected documentation of `Clear()`
   - Class based operations `FirstIndexOfItem()` and `LastIndexOfItem()`
