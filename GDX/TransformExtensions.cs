@@ -32,10 +32,10 @@ namespace GDX
         public static void DestroyChildren(this Transform targetTransform, bool deactivateBeforeDestroy = true,
             bool destroyInactive = true)
         {
-            var count = targetTransform.childCount;
-            for (var i = 0; i < count; i++)
+            int count = targetTransform.childCount;
+            for (int i = 0; i < count; i++)
             {
-                var childObject = targetTransform.GetChild(i).gameObject;
+                GameObject childObject = targetTransform.GetChild(i).gameObject;
                 if (!destroyInactive && !childObject.activeInHierarchy) continue;
 
                 if (deactivateBeforeDestroy) childObject.SetActive(false);
@@ -52,9 +52,9 @@ namespace GDX
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetActiveChildCount(this Transform targetTransform)
         {
-            var counter = 0;
-            var childCount = targetTransform.childCount;
-            for (var i = 0; i < childCount; i++)
+            int counter = 0;
+            int childCount = targetTransform.childCount;
+            for (int i = 0; i < childCount; i++)
                 if (targetTransform.GetChild(i).gameObject.activeSelf)
                     counter++;
 
@@ -87,10 +87,10 @@ namespace GDX
 
             if (maxLevelsOfRecursion >= 0 && currentDepth > maxLevelsOfRecursion) return returnComponent;
 
-            var cachedChildCount = targetTransform.childCount;
-            for (var i = 0; i < cachedChildCount; i++)
+            int cachedChildCount = targetTransform.childCount;
+            for (int i = 0; i < cachedChildCount; i++)
             {
-                var transformToCheck = targetTransform.GetChild(i);
+                Transform transformToCheck = targetTransform.GetChild(i);
 
                 // Don't include disabled transforms
                 if (!transformToCheck.gameObject.activeSelf &&
@@ -120,8 +120,10 @@ namespace GDX
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GetScenePath(this Transform targetTransform)
         {
-            var stringBuilder = new StringBuilder();
-            var originalTransform = targetTransform;
+            StringBuilder stringBuilder = new StringBuilder();
+#if UNITY_EDITOR
+            Transform originalTransform = targetTransform;
+#endif
             while (targetTransform != null)
             {
                 stringBuilder.Insert(0, targetTransform.name);

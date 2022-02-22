@@ -4,7 +4,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using UnityEngine.Diagnostics;
 using Debug = System.Diagnostics.Debug;
 using Object = UnityEngine.Object;
 
@@ -97,10 +96,12 @@ namespace GDX
             string outputContent;
             if (traceObject is Exception traceException)
             {
+                // ReSharper disable once RedundantAssignment
                 outputContent = $"{traceException.Message}\n{traceException.StackTrace}\n{memberName}\n{sourceFilePath}:{sourceLineNumber.ToString()}";
             }
             else
             {
+                // ReSharper disable once RedundantAssignment
                 outputContent = $"{traceObject}\n{memberName}\n{sourceFilePath}:{sourceLineNumber.ToString()}";
             }
 
@@ -120,6 +121,7 @@ namespace GDX
             }
 #else
             // NO RELEASE CONSOLE OUTPUT
+            // ReSharper disable once RedundantJumpStatement
             return;
 #endif
 
@@ -146,7 +148,7 @@ namespace GDX
 
                 case TraceLevel.Fatal:
                     UnityEngine.Debug.LogError(traceObject, contextObject);
-                    Utils.ForceCrash(ForcedCrashCategory.FatalError);
+                    UnityEngine.Diagnostics.Utils.ForceCrash(UnityEngine.Diagnostics.ForcedCrashCategory.FatalError);
                     break;
 
                 // ReSharper disable RedundantCaseLabel

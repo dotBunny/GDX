@@ -188,7 +188,7 @@ namespace GDX.Collections.Generic
             LoadSerializedData();
 #if !UNITY_EDITOR
             // Make sure nothing is there holding a reference.
-            _padForSerializationKey = default;
+            m_PadForSerializationKey = default;
 #endif
         }
 
@@ -268,9 +268,11 @@ namespace GDX.Collections.Generic
 #else
         // We need to pad the size of the serialized data due to Unity checking the size of the serialized object.
         // This is a problem where "classic" Unity author-time data, is the same as runtime data.
-        [SerializeField] private bool _padForSerializationBoolA;
-        [SerializeField] private bool _padForSerializationBoolB;
-        [SerializeField] private TKey _padForSerializationKey;
+        // ReSharper disable NotAccessedField.Local
+        [SerializeField] bool m_PadForSerializationBoolA;
+        [SerializeField] bool m_PadForSerializationBoolB;
+        [SerializeField] TKey m_PadForSerializationKey;
+        // ReSharper restore NotAccessedField.Local
 #endif
 #pragma warning restore 414
     }

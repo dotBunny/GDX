@@ -101,6 +101,7 @@ namespace GDX.Editor
             return new UnityEditor.SettingsProvider("Project/GDX", SettingsScope.Project)
             {
                 label = "GDX",
+                // ReSharper disable once UnusedParameter.Local
                 activateHandler = (searchContext, rootElement) =>
                 {
                     // Add base style sheet
