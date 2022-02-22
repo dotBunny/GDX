@@ -15,24 +15,23 @@ namespace GDX.Editor.ProjectSettings
     {
         public const string SectionID = "GDX.Editor.UpdateProvider";
 
-        private VisualElement m_RootElement;
-        private VisualElement m_ElementLocalVersion;
-        private Label m_LabelLocalVersion;
-        private VisualElement m_ElementInstallationMethod;
-        private Label m_LabelInstallationMethod;
-        private VisualElement m_ElementSource;
-        private Label m_LabelSourceItem;
-        private Label m_LabelSourceData;
-        private VisualElement m_ElementRemoteVersion;
-        private Label m_LabelRemoteVersion;
-        private VisualElement m_ElementLastChecked;
-        private Label m_LabelLastChecked;
-        private Button m_ButtonManualUpgrade;
-        private Button m_ButtonChangeLog;
-        private Button m_ButtonUpdate;
-        private Button m_ButtonManualCheck;
-
-        private SliderInt m_SliderUpdateTime;
+        VisualElement m_RootElement;
+        VisualElement m_ElementLocalVersion;
+        Label m_LabelLocalVersion;
+        VisualElement m_ElementInstallationMethod;
+        Label m_LabelInstallationMethod;
+        VisualElement m_ElementSource;
+        Label m_LabelSourceItem;
+        Label m_LabelSourceData;
+        VisualElement m_ElementRemoteVersion;
+        Label m_LabelRemoteVersion;
+        VisualElement m_ElementLastChecked;
+        Label m_LabelLastChecked;
+        Button m_ButtonManualUpgrade;
+        Button m_ButtonChangeLog;
+        Button m_ButtonUpdate;
+        Button m_ButtonManualCheck;
+        SliderInt m_SliderUpdateTime;
 
         /// <summary>
         ///     The number of days between checks for updates.

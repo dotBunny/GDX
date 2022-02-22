@@ -147,7 +147,7 @@ namespace GDX.Developer.Reports.Resource.Objects
             }
 
             string sizeInfo =
-                $"{GDX.Localization.GetHumanReadableFileSize(MemoryUsage)} x {CopyCount.ToString()}".PadRight(
+                $"{Localization.GetHumanReadableFileSize(MemoryUsage)} x {CopyCount.ToString()}".PadRight(
                     context.ObjectSizeWidth);
             if (sizeInfo.Length > context.ObjectSizeWidth)
             {

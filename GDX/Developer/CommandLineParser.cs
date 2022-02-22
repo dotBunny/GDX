@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GDX.Collections.Generic;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable CollectionNeverQueried.Global
@@ -23,7 +24,7 @@ namespace GDX.Developer
         /// <summary>
         ///     The processed arguments found after parsing the arguments
         /// </summary>
-        public static readonly Dictionary<string, string> Arguments = new Dictionary<string, string>();
+        public static StringKeyDictionary<string> Arguments = new StringKeyDictionary<string>(5);
 
         /// <summary>
         ///     The processed flags found in the arguments.
@@ -73,7 +74,7 @@ namespace GDX.Developer
                     string value = argument.Substring(valueStart, valueEnd - valueStart);
 
                     // Value parameter
-                    Arguments.Add(key.ToUpper(), value);
+                    Arguments.AddSafe(key.ToUpper(), value);
                 }
                 else
                 {

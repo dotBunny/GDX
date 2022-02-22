@@ -5,7 +5,6 @@
 #if !UNITY_DOTSRUNTIME
 
 using UnityEngine;
-using GDX.Collections.Pooling;
 
 // ReSharper disable UnusedMember.Global
 namespace GDX.Collections.Pooling

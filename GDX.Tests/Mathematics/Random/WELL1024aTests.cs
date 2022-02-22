@@ -255,7 +255,7 @@ namespace GDX.Mathematics.Random
             bool evaluate = true;
             for (int i = 1; i < 64; i++)
             {
-                if (Math.Abs(nextValues[i - 1] - nextValues[i]) < GDX.Platform.DoubleTolerance)
+                if (Math.Abs(nextValues[i - 1] - nextValues[i]) < Platform.DoubleTolerance)
                 {
                     evaluate = false;
                     break;
@@ -273,7 +273,7 @@ namespace GDX.Mathematics.Random
             WELL1024a mockWell = new WELL1024a(MockSeed);
             double nextValue = mockWell.NextDouble();
 
-            bool evaluate = Math.Abs(nextValue - 0.89496001484803855d) < GDX.Platform.DoubleTolerance;
+            bool evaluate = Math.Abs(nextValue - 0.89496001484803855d) < Platform.DoubleTolerance;
 
             mockWell.Dispose();
             Assert.IsTrue(evaluate);
@@ -286,7 +286,7 @@ namespace GDX.Mathematics.Random
             WELL1024a mockWell = new WELL1024a(MockSeed);
             float nextValue = mockWell.NextSingle();
 
-            bool evaluate =  Math.Abs(nextValue - 0.894959986f) < GDX.Platform.DoubleTolerance;
+            bool evaluate =  Math.Abs(nextValue - 0.894959986f) < Platform.DoubleTolerance;
 
             mockWell.Dispose();
             Assert.IsTrue(evaluate, nextValue.ToString(CultureInfo.InvariantCulture));
@@ -307,7 +307,7 @@ namespace GDX.Mathematics.Random
             bool evaluate = true;
             for (int i = 1; i < 64; i++)
             {
-                if (Math.Abs(nextValues[i - 1] - nextValues[i]) < GDX.Platform.DoubleTolerance)
+                if (Math.Abs(nextValues[i - 1] - nextValues[i]) < Platform.DoubleTolerance)
                 {
                     evaluate = false;
                     break;

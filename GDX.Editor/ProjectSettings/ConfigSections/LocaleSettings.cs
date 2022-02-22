@@ -18,9 +18,9 @@ namespace GDX.Editor.ProjectSettings
     internal class LocaleSettings : IConfigSection
     {
         public const string SectionID = "GDX.Localization";
-        private VisualElement m_RootElement;
-        private Toggle m_ToggleSetDefaultCulture;
-        private EnumField m_EnumDefaultCulture;
+        VisualElement m_RootElement;
+        Toggle m_ToggleSetDefaultCulture;
+        EnumField m_EnumDefaultCulture;
 
         /// <inheritdoc />
         public void BindSectionContent(VisualElement rootElement)

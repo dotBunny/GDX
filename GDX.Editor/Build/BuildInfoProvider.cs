@@ -4,10 +4,10 @@
 
 using System;
 using System.IO;
-using System.Text;
 using GDX.Developer;
 using UnityEditor;
 using UnityEngine;
+using TextGenerator = GDX.Developer.TextGenerator;
 
 namespace GDX.Editor.Build
 {
@@ -26,106 +26,110 @@ namespace GDX.Editor.Build
         public static string GetContent(bool forceDefaults = false,
             string internalDescription = null)
         {
-            StringBuilder fileContent = new StringBuilder();
+            TextGenerator code = new TextGenerator("    ", "{", "}");
 
-            fileContent.Append("namespace ");
-            fileContent.Append(Core.Config.DeveloperBuildInfoNamespace);
-            fileContent.AppendLine();
-
-            fileContent.AppendLine("{");
-
-            fileContent.AppendLine("    /// <summary>");
-            fileContent.AppendLine(
-                "    ///     A collection of information providing further information as to the conditions present when the build was made.");
-            fileContent.AppendLine("    /// </summary>");
-            fileContent.AppendLine("    public static class BuildInfo");
-            fileContent.AppendLine("    {");
+            code.AppendLine($"namespace {Core.Config.DeveloperBuildInfoNamespace}");
+            code.PushIndent();
+            code.AppendLine("/// <summary>");
+            code.AppendLine("///     A collection of information providing further information as to the conditions present when the build was made.");
+            code.AppendLine("/// </summary>");
+            code.AppendLine("public static class BuildInfo");
+            code.PushIndent();
 
             // BuildNumber
-            fileContent.AppendLine("        /// <summary>");
-            fileContent.AppendLine("        ///     The builds numerically incremented version.");
-            fileContent.AppendLine("        /// </summary>");
-            fileContent.AppendLine("        /// <remarks>");
-            fileContent.AppendLine("        ///     This may not be a shared build number across all build tasks.");
-            fileContent.AppendLine("        /// </remarks>");
-            fileContent.Append("        public const int BuildNumber = ");
-            fileContent.Append(!forceDefaults &&
-                               CommandLineParser.Arguments.ContainsKey(Core.Config.DeveloperBuildInfoBuildNumberArgument)
+            code.AppendLine("/// <summary>");
+            code.AppendLine("///     The builds numerically incremented version.");
+            code.AppendLine("/// </summary>");
+            code.AppendLine("/// <remarks>");
+            code.AppendLine("///     This may not be a shared build number across all build tasks.");
+            code.AppendLine("/// </remarks>");
+            code.ApplyIndent();
+            code.Append("public const int BuildNumber = ");
+            code.Append(!forceDefaults &&
+                        CommandLineParser.Arguments.ContainsKey(Core.Config.DeveloperBuildInfoBuildNumberArgument)
                 ? CommandLineParser.Arguments[Core.Config.DeveloperBuildInfoBuildNumberArgument]
                 : "0");
-            fileContent.AppendLine(";");
+            code.Append(";");
+            code.NextLine();
 
             // Changelist
-            fileContent.AppendLine("        /// <summary>");
-            fileContent.AppendLine("        ///     The revision the workspace was at when the build was made.");
-            fileContent.AppendLine("        /// </summary>");
-            fileContent.Append("        public const int Changelist = ");
-            fileContent.Append(!forceDefaults &&
-                               CommandLineParser.Arguments.ContainsKey(Core.Config.DeveloperBuildInfoBuildChangelistArgument)
+            code.AppendLine("/// <summary>");
+            code.AppendLine("///     The revision the workspace was at when the build was made.");
+            code.AppendLine("/// </summary>");
+            code.ApplyIndent();
+            code.Append("public const int Changelist = ");
+            code.Append(!forceDefaults &&
+                        CommandLineParser.Arguments.ContainsKey(Core.Config.DeveloperBuildInfoBuildChangelistArgument)
                 ? CommandLineParser.Arguments[Core.Config.DeveloperBuildInfoBuildChangelistArgument]
                 : "0");
-            fileContent.AppendLine(";");
-
+            code.Append(";");
+            code.NextLine();
 
             // BuildTask
-            fileContent.AppendLine("        /// <summary>");
-            fileContent.AppendLine("        ///     The specific build task used to create the build.");
-            fileContent.AppendLine("        /// </summary>");
-            fileContent.Append("        public const string BuildTask = \"");
-            fileContent.Append(!forceDefaults &&
-                               CommandLineParser.Arguments.ContainsKey(Core.Config.DeveloperBuildInfoBuildTaskArgument)
+            code.AppendLine("/// <summary>");
+            code.AppendLine("///     The specific build task used to create the build.");
+            code.AppendLine("/// </summary>");
+            code.ApplyIndent();
+            code.Append("public const string BuildTask = \"");
+            code.Append(!forceDefaults &&
+                        CommandLineParser.Arguments.ContainsKey(Core.Config.DeveloperBuildInfoBuildTaskArgument)
                 ? CommandLineParser.Arguments[Core.Config.DeveloperBuildInfoBuildTaskArgument]
                 : "N/A");
-            fileContent.AppendLine("\";");
+            code.Append("\";");
+            code.NextLine();
 
             // Stream
-            fileContent.AppendLine("        /// <summary>");
-            fileContent.AppendLine("        ///     The version control stream which the build was built from.");
-            fileContent.AppendLine("        /// </summary>");
-            fileContent.Append("        public const string Stream = \"");
-            fileContent.Append(!forceDefaults &&
-                               CommandLineParser.Arguments.ContainsKey(Core.Config.DeveloperBuildInfoBuildStreamArgument)
+            code.AppendLine("/// <summary>");
+            code.AppendLine("///     The version control stream which the build was built from.");
+            code.AppendLine("/// </summary>");
+            code.ApplyIndent();
+            code.Append("public const string Stream = \"");
+            code.Append(!forceDefaults &&
+                        CommandLineParser.Arguments.ContainsKey(Core.Config.DeveloperBuildInfoBuildStreamArgument)
                 ? CommandLineParser.Arguments[Core.Config.DeveloperBuildInfoBuildStreamArgument]
                 : "N/A");
-            fileContent.AppendLine("\";");
+            code.Append("\";");
+            code.NextLine();
 
             // Build Description
-            fileContent.AppendLine("        /// <summary>");
-            fileContent.AppendLine("        ///     The passed in build description.");
-            fileContent.AppendLine("        /// </summary>");
-            fileContent.Append("        public const string Description = \"");
-            fileContent.Append(!forceDefaults &&
-                               CommandLineParser.Arguments.ContainsKey(
-                                   Core.Config.DeveloperBuildInfoBuildDescriptionArgument)
+            code.AppendLine("/// <summary>");
+            code.AppendLine("///     The passed in build description.");
+            code.AppendLine("/// </summary>");
+            code.ApplyIndent();
+            code.Append("public const string Description = \"");
+            code.Append(!forceDefaults &&
+                        CommandLineParser.Arguments.ContainsKey(
+                            Core.Config.DeveloperBuildInfoBuildDescriptionArgument)
                 ? CommandLineParser.Arguments[Core.Config.DeveloperBuildInfoBuildDescriptionArgument]
                 : "N/A");
-            fileContent.AppendLine("\";");
+            code.Append("\";");
+            code.NextLine();
 
             // Internal Description
-            fileContent.AppendLine("        /// <summary>");
-            fileContent.AppendLine("        ///     The internal description set through method invoke.");
-            fileContent.AppendLine("        /// </summary>");
-            fileContent.Append("        public const string InternalDescription = \"");
-            fileContent.Append(!forceDefaults && !string.IsNullOrEmpty(internalDescription)
+            code.AppendLine("/// <summary>");
+            code.AppendLine("///     The internal description set through method invoke.");
+            code.AppendLine("/// </summary>");
+            code.ApplyIndent();
+            code.Append("public const string InternalDescription = \"");
+            code.Append(!forceDefaults && !string.IsNullOrEmpty(internalDescription)
                 ? internalDescription
                 : "N/A");
-            fileContent.AppendLine("\";");
+            code.Append("\";");
+            code.NextLine();
 
             // Timestamp
-            fileContent.AppendLine("        /// <summary>");
-            fileContent.AppendLine("        ///     The date and time when the build was started.");
-            fileContent.AppendLine("        /// </summary>");
-            fileContent.Append("        public const string Timestamp = \"");
-            fileContent.Append(!forceDefaults
+            code.AppendLine("/// <summary>");
+            code.AppendLine("///     The date and time when the build was started.");
+            code.AppendLine("/// </summary>");
+            code.ApplyIndent();
+            code.Append("public const string Timestamp = \"");
+            code.Append(!forceDefaults
                 ? DateTime.Now.ToString(Localization.Language.Default.GetTimestampFormat())
                 : "N/A");
-            fileContent.AppendLine("\";");
+            code.Append("\";");
+            code.NextLine();
 
-            fileContent.AppendLine("\t}");
-
-            fileContent.AppendLine("}");
-
-            return fileContent.ToString();
+            return code.ToString();
         }
 
         /// <summary>
@@ -168,27 +172,22 @@ namespace GDX.Editor.Build
                 return;
             }
 
-            StringBuilder fileBuilder = new StringBuilder();
-            fileBuilder.AppendLine("{");
-            fileBuilder.Append("\t\"name\": \"");
-            fileBuilder.Append(Core.Config.DeveloperBuildInfoNamespace);
-            fileBuilder.AppendLine("\",");
-            fileBuilder.Append("\t\"rootNamespace\": \"");
-            fileBuilder.Append(Core.Config.DeveloperBuildInfoNamespace);
-            fileBuilder.AppendLine("\",");
-            fileBuilder.AppendLine("\t\"references\": [],");
-            fileBuilder.AppendLine("\t\"includePlatforms\": [],");
-            fileBuilder.AppendLine("\t\"excludePlatforms\": [],");
-            fileBuilder.AppendLine("\t\"allowUnsafeCode\": false,");
-            fileBuilder.AppendLine("\t\"overrideReferences\": false,");
-            fileBuilder.AppendLine("\t\"precompiledReferences\": [],");
-            fileBuilder.AppendLine("\t\"autoReferenced\": true,");
-            fileBuilder.AppendLine("\t\"defineConstraints\": [],");
-            fileBuilder.AppendLine("\t\"versionDefines\": [],");
-            fileBuilder.AppendLine("\t\"noEngineReferences\": true");
-            fileBuilder.AppendLine("}");
+            TextGenerator asmDef = new TextGenerator("\t", "{", "}");
+            asmDef.PushIndent();
+            asmDef.AppendLine($"\"name\": \"{Core.Config.DeveloperBuildInfoNamespace}\",");
+            asmDef.AppendLine($"\"rootNamespace\": \"{Core.Config.DeveloperBuildInfoNamespace}\",");
+            asmDef.AppendLine($"\"references\": [],");
+            asmDef.AppendLine($"\"includePlatforms\": [],");
+            asmDef.AppendLine($"\"excludePlatforms\": [],");
+            asmDef.AppendLine($"\"allowUnsafeCode\": [],");
+            asmDef.AppendLine($"\"overrideReferences\": [],");
+            asmDef.AppendLine($"\"precompiledReferences\": [],");
+            asmDef.AppendLine($"\"autoReferenced\": true,");
+            asmDef.AppendLine($"\"defineConstraints\": [],");
+            asmDef.AppendLine($"\"versionDefines\": [],");
+            asmDef.AppendLine($"\"noEngineReferences\": true");
 
-            File.WriteAllText(assemblyDefinition, fileBuilder.ToString());
+            File.WriteAllText(assemblyDefinition, asmDef.ToString());
             AssetDatabase.ImportAsset("Assets/" +
                                       Path.GetDirectoryName(Core.Config.DeveloperBuildInfoPath) + "/" +
                                       // ReSharper disable once StringLiteralTypo

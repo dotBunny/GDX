@@ -31,6 +31,8 @@ namespace GDX.Developer.Reports.NUnit
         public int Asserts { get; set; }
         public Properties Properties { get; set; }
         public List<TestCase> TestCases { get; set; } = new List<TestCase>();
+
+        // ReSharper disable once CollectionNeverUpdated.Global
         public List<TestSuite> TestSuites { get; set;  }= new List<TestSuite>();
 
         public void Process(string passedResult, string failedResult, string inconclusiveResult, string skippedResult)
@@ -45,7 +47,7 @@ namespace GDX.Developer.Reports.NUnit
                 if (t.Result == passedResult)
                 {
                     Passed++;
-                } 
+                }
                 else if (t.Result == failedResult)
                 {
                     Failed++;
@@ -60,7 +62,7 @@ namespace GDX.Developer.Reports.NUnit
                 }
             }
             TestCaseCount = Total;
-            
+
             // Update children
             foreach (TestSuite s in TestSuites)
             {

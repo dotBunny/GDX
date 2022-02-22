@@ -51,7 +51,7 @@ namespace GDX.Developer.Reports.Resource.Sections
         {
             builder.AppendLine(ResourceReport.CreateKeyValuePair(context, "Active Scene", ActiveScene));
             builder.AppendLine(ResourceReport.CreateKeyValuePair(context,"Platform", Platform.ToString()));
-            builder.AppendLine(ResourceReport.CreateKeyValuePair(context,"Created", Created.ToString(GDX.Localization.LocalTimestampFormat)));
+            builder.AppendLine(ResourceReport.CreateKeyValuePair(context,"Created", Created.ToString(Localization.LocalTimestampFormat)));
         }
     }
 }

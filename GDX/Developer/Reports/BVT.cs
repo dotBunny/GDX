@@ -27,7 +27,7 @@ namespace GDX.Developer.Reports
             }
             else
             {
-                Debug.LogError($"[BVT] {test.Name}: {test.Result}, {test.Output}");    
+                Debug.LogError($"[BVT] {test.Name}: {test.Result}, {test.Message}");    
             }
             return test;
         }

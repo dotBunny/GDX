@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 // ReSharper disable UnusedMember.Global
 
@@ -11,15 +12,23 @@ namespace GDX.Developer
 {
     public class WaitForMilliseconds
     {
-        private readonly Stopwatch m_Stopwatch = new Stopwatch();
-        private readonly float m_Duration;
+        readonly Stopwatch m_Stopwatch = new Stopwatch();
+        readonly int m_Duration;
 
-        public WaitForMilliseconds(float milliseconds)
+        public WaitForMilliseconds(int milliseconds)
         {
             m_Duration = milliseconds;
             m_Stopwatch.Restart();
         }
 
+        public async Task WaitAsync()
+        {
+            await Task.Run(() =>
+            {
+
+                Task.Delay(m_Duration).Wait();
+            });
+        }
         public bool Wait()
         {
             if (m_Stopwatch.ElapsedMilliseconds >= m_Duration)

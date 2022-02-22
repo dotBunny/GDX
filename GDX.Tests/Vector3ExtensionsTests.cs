@@ -75,7 +75,7 @@ namespace GDX
             float original = Mathf.Round(originalDistance * originalDistance);
             float optimized = Mathf.Round(a.DistanceSqr(b));
 
-            bool evaluate = Math.Abs(original - optimized) < GDX.Platform.FloatTolerance;
+            bool evaluate = Math.Abs(original - optimized) < Platform.FloatTolerance;
 
             Assert.IsTrue(evaluate);
         }

@@ -20,13 +20,13 @@ namespace GDX
         {
             unchecked
             {
-                const int p = 16777619;
+                const int k_P = 16777619;
                 int hash = (int)2166136261;
                 int length = targetBytes.Length;
 
                 for (int i = 0; i < length; i++)
                 {
-                    hash = (hash ^ targetBytes[i]) * p;
+                    hash = (hash ^ targetBytes[i]) * k_P;
                 }
 
                 hash += hash << 13;

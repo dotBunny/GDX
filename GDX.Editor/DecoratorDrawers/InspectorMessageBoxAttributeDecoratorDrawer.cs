@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Classic;
 using UnityEngine;
 using UnityEditor;
 
@@ -27,8 +26,9 @@ namespace GDX.Editor.DecoratorDrawers
         private GUIContent m_TargetMessage;
 
         /// <summary>
-        ///     A cached reference to the "helpbox" style.
+        ///     A cached reference to the "help box" style.
         /// </summary>
+        // ReSharper disable once StringLiteralTypo
         private static readonly GUIStyle s_CachedHelpBoxStyle = new GUIStyle("helpbox");
 
         /// <summary>

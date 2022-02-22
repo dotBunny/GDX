@@ -27,7 +27,7 @@ namespace GDX.Developer.Reports
     ///     Information is referenced to the target objects by a modified weak reference (<see cref="TransientReference" />),
     ///     thus this will not prevent garbage collection.
     /// </remarks>
-    /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception> 
+    /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
     public class ResourcesAuditReport : ResourceReport
     {
         public readonly ApplicationSection ApplicationContext = ApplicationSection.Get();
@@ -94,7 +94,7 @@ namespace GDX.Developer.Reports
                 builder.AppendLine(CreateHeader(context, knownObject.Key.ToString(), '-'));
                 builder.AppendLine(CreateKeyValuePair(context,"Count", count.ToString()));
                 builder.AppendLine(CreateKeyValuePair(context,"Total Size",
-                    GDX.Localization.GetHumanReadableFileSize(KnownUsage[knownObject.Key])));
+                    Localization.GetHumanReadableFileSize(KnownUsage[knownObject.Key])));
                 builder.AppendLine();
 
                 // Sort the known objects based on size as that's the most useful context to have them listed

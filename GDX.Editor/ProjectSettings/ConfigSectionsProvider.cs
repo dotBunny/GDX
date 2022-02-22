@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
 using GDX.Collections.Generic;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -13,17 +12,17 @@ namespace GDX.Editor.ProjectSettings
 {
     public static class ConfigSectionsProvider
     {
-        private const string k_ExpandedClass = "expanded";
-        public const string HiddenClass = "hidden";
-        private const string k_EnabledClass = "enabled";
-        private const string k_DisabledClass = "disabled";
         public const string ChangedClass = "changed";
+        public const string HiddenClass = "hidden";
+        const string k_DisabledClass = "disabled";
+        const string k_EnabledClass = "enabled";
+        const string k_ExpandedClass = "expanded";
 
-        private static readonly Dictionary<string, VisualElement> s_ConfigSectionContents =
-            new Dictionary<string, VisualElement>();
+        private static StringKeyDictionary<VisualElement> s_ConfigSectionContents =
+            new StringKeyDictionary<VisualElement>(SettingsProvider.SectionCount);
 
-        private static readonly Dictionary<string, VisualElement> s_ConfigSectionHeaders =
-            new Dictionary<string, VisualElement>();
+        private static StringKeyDictionary<VisualElement> s_ConfigSectionHeaders =
+            new StringKeyDictionary<VisualElement>(SettingsProvider.SectionCount);
 
         public static VisualElement CreateAndBindSectionHeader(IConfigSection section)
         {
@@ -98,7 +97,7 @@ namespace GDX.Editor.ProjectSettings
             }
 
             // Send back created instance
-            s_ConfigSectionHeaders.Add(sectionID, headerInstance);
+            s_ConfigSectionHeaders.AddUnchecked(sectionID, headerInstance);
             return headerInstance;
         }
 
@@ -118,7 +117,7 @@ namespace GDX.Editor.ProjectSettings
             section.BindSectionContent(sectionInstance);
 
             // Record the whole section
-            s_ConfigSectionContents.Add(sectionID, sectionInstance);
+            s_ConfigSectionContents.AddUnchecked(sectionID, sectionInstance);
 
             return sectionInstance;
         }

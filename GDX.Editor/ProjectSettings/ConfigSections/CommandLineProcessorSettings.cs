@@ -13,9 +13,9 @@ namespace GDX.Editor.ProjectSettings
     internal class CommandLineProcessorSettings : IConfigSection
     {
         public const string SectionID = "GDX.Developer.CommandLineParser";
-        private VisualElement m_RootElement;
-        private TextField m_TextArgumentPrefix;
-        private TextField m_TextArgumentSplit;
+        VisualElement m_RootElement;
+        TextField m_TextArgumentPrefix;
+        TextField m_TextArgumentSplit;
 
         /// <inheritdoc />
         public void BindSectionContent(VisualElement rootElement)

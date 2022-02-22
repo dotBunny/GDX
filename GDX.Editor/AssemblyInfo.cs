@@ -4,5 +4,4 @@
 
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("GDX.Classic.Editor")]
 [assembly: InternalsVisibleTo("GDX.Editor.Tests")]

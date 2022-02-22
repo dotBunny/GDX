@@ -35,7 +35,7 @@ namespace GDX.Developer.Reports.Resource
             }
         }
 
-        
+
         public string GetSizeOutput(ResourceReportContext context, bool fileSize = true, bool fullWidth = false)
         {
             if (Change == 0)
@@ -47,15 +47,15 @@ namespace GDX.Developer.Reports.Resource
             if (!fullWidth && context != null)
             {
                 return fileSize
-                    ? $"{GetBeforeAndAfterOutput().PadRight(context.KeyValuePairInfoWidth)} {ResourceReport.PositiveSign(Change)}{GDX.Localization.GetHumanReadableFileSize(Change).PadRight(12)} {OptionalPercentageOutput()}"
+                    ? $"{GetBeforeAndAfterOutput().PadRight(context.KeyValuePairInfoWidth)} {ResourceReport.PositiveSign(Change)}{Localization.GetHumanReadableFileSize(Change).PadRight(12)} {OptionalPercentageOutput()}"
                     : $"{GetBeforeAndAfterOutput().PadRight(context.KeyValuePairInfoWidth)} {ResourceReport.PositiveSign(Change)}{Change.ToString().PadRight(12)} {OptionalPercentageOutput()}";
             }
 
             if (fileSize)
             {
                 return LeftHandSide == 0
-                    ? $"{GetBeforeAndAfterOutput()} = {ResourceReport.PositiveSign(Change)}{GDX.Localization.GetHumanReadableFileSize(Change)}"
-                    : $"{GetBeforeAndAfterOutput()} = {ResourceReport.PositiveSign(Change)}{GDX.Localization.GetHumanReadableFileSize(Change),-12} {OptionalPercentageOutput()}";
+                    ? $"{GetBeforeAndAfterOutput()} = {ResourceReport.PositiveSign(Change)}{Localization.GetHumanReadableFileSize(Change)}"
+                    : $"{GetBeforeAndAfterOutput()} = {ResourceReport.PositiveSign(Change)}{Localization.GetHumanReadableFileSize(Change),-12} {OptionalPercentageOutput()}";
             }
 
             return LeftHandSide == 0

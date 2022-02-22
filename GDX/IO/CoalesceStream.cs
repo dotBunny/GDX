@@ -11,11 +11,9 @@ namespace GDX.IO
     // ReSharper disable once UnusedType.Global
     public class CoalesceStream : Stream
     {
-        private readonly List<byte[]> m_Blocks = new List<byte[]>();
-
-        private readonly long m_BlockSize = 65536;
-
-        private long m_LengthInternal;
+        readonly List<byte[]> m_Blocks = new List<byte[]>();
+        readonly long m_BlockSize = 65536;
+        long m_LengthInternal;
 
         public CoalesceStream()
         {

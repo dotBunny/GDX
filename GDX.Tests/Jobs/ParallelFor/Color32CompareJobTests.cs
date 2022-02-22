@@ -40,7 +40,7 @@ namespace GDX.Jobs.ParallelFor
             whiteData.Dispose();
             percentages.Dispose();
 
-            bool evaluate = (Math.Abs(average - 1) < GDX.Platform.FloatTolerance);
+            bool evaluate = (Math.Abs(average - 1) < Platform.FloatTolerance);
 
             Assert.IsTrue(evaluate, $"White texture similarity was {average}%.");
         }

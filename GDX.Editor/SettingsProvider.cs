@@ -24,6 +24,8 @@ namespace GDX.Editor
         /// </summary>
         public const string DocumentationUri = "https://gdx.dotbunny.com/";
 
+        public const int SectionCount = 7;
+
         /// <summary>
         ///     A cache of boolean values backed by <see cref="EditorPrefs" /> to assist with optimizing layout.
         /// </summary>
@@ -34,7 +36,7 @@ namespace GDX.Editor
         /// </summary>
         private static List<string> s_SearchKeywords;
 
-        public static StringKeyDictionary<IConfigSection> ConfigSections = new StringKeyDictionary<IConfigSection>(7);
+        public static StringKeyDictionary<IConfigSection> ConfigSections = new StringKeyDictionary<IConfigSection>(SectionCount);
 
         public static GDXConfig WorkingConfig;
 
@@ -57,6 +59,7 @@ namespace GDX.Editor
             // Initialize some things here instead of static initializers
             s_SearchKeywords ??= new List<string>(new[]
             {
+                // ReSharper disable once StringLiteralTypo
                 "gdx", "automatic", "package", "update", "buildinfo", "task", "stream", "changelist",
                 "cli", "argument", "environment", "trace", "symbol", "locale", "localization", "culture",
                 "visual", "scripting", "vs", "parser", "commandline", "build"
@@ -114,7 +117,7 @@ namespace GDX.Editor
                             rootElement.styleSheets.Add(ResourcesProvider.GetLightThemeStylesheet());
                         }
                     }
-                    
+
                     // Add any overrides
                     if (ResourcesProvider.GetStyleSheetOverride() != null)
                     {
@@ -142,7 +145,7 @@ namespace GDX.Editor
                     s_SaveButton.clicked += () =>
                     {
                         AssetDatabase.StartAssetEditing();
-                        
+
                         // Remove old file
                         string previousPath = Path.Combine(UnityEngine.Application.dataPath, Core.Config.ConfigOutputPath);
                         if (File.Exists(previousPath))
@@ -193,6 +196,7 @@ namespace GDX.Editor
                     };
 
                     VisualElement packageHolderElement = rootElement.Q<VisualElement>("gdx-project-settings-packages");
+                    // ReSharper disable once StringLiteralTypo
                     packageHolderElement.Add(GetPackageStatus("Addressables", Developer.Conditionals.HasAddressablesPackage));
                     packageHolderElement.Add(GetPackageStatus("Platforms", Developer.Conditionals.HasPlatformsPackage));
                     packageHolderElement.Add(GetPackageStatus("Visual Scripting", Developer.Conditionals.HasVisualScriptingPackage));

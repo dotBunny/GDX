@@ -18,15 +18,15 @@ namespace GDX.Editor.ProjectSettings
     internal class EnvironmentSettings : IConfigSection
     {
         public const string SectionID = "GDX.Environment";
-        private VisualElement m_RootElement;
-        private Toggle m_ToggleEnsureSymbol;
-        private Toggle m_ToggleDebugConsole;
-        private Toggle m_ToggleDevelopmentConsole;
-        private MaskField m_MaskDevelopment;
-        private MaskField m_MaskDebug;
-        private MaskField m_MaskRelease;
+        VisualElement m_RootElement;
+        Toggle m_ToggleEnsureSymbol;
+        Toggle m_ToggleDebugConsole;
+        Toggle m_ToggleDevelopmentConsole;
+        MaskField m_MaskDevelopment;
+        MaskField m_MaskDebug;
+        MaskField m_MaskRelease;
 
-        private static readonly List<string> s_TraceChoices = new List<string>()
+        static readonly List<string> s_TraceChoices = new List<string>()
         {
             "Info",
             "Log",
@@ -36,7 +36,7 @@ namespace GDX.Editor.ProjectSettings
             "Assertion",
             "Fatal"
         };
-        private static readonly List<int> s_TraceValues = new List<int>()
+        static readonly List<int> s_TraceValues = new List<int>()
         {
             0,
             1,

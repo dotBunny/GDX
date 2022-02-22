@@ -18,18 +18,18 @@ namespace GDX.Editor.ProjectSettings
     internal class BuildInfoSettings : IConfigSection
     {
         public const string SectionID = "GDX.Editor.Build.BuildInfoProvider";
-        private VisualElement m_RootElement;
-        private VisualElement m_Content;
-        private TextField m_TextOutputPath;
-        private TextField m_TextNamespace;
-        private Toggle m_ToggleAssemblyDefinition;
-        private TextField m_TextNumber;
-        private TextField m_TextDescription;
-        private TextField m_TextChangelist;
-        private TextField m_TextTask;
-        private TextField m_TextStream;
-        private Button m_ButtonCreate;
-        private VisualElement m_Notice;
+        VisualElement m_RootElement;
+        VisualElement m_Content;
+        TextField m_TextOutputPath;
+        TextField m_TextNamespace;
+        Toggle m_ToggleAssemblyDefinition;
+        TextField m_TextNumber;
+        TextField m_TextDescription;
+        TextField m_TextChangelist;
+        TextField m_TextTask;
+        TextField m_TextStream;
+        Button m_ButtonCreate;
+        VisualElement m_Notice;
 
         /// <summary>
         ///     Bind the Build Info content.

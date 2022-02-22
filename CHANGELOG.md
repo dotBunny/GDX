@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `HalfLifeToSmoothingFactor` no longer defaults elapsed time to `Time.deltaTime`
 
 - Visual Scripting in 2021 out of box
+
+- All internal `Dictionary<string, value>` have been replaced with `StringKeyDictionary<value>`
+- `BuildInfoProvider` now uses `TextGenerator` for codegen.
+
 ### Removed
 - NativeSimpleList - UnsafeList
 - NativeSimpleQueue  - UnsafeQueue

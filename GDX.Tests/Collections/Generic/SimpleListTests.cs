@@ -118,7 +118,7 @@ namespace GDX.Collections.Generic
             poolMaximums[1] = 1;
             poolMaximums[2] = 1;
 
-            GDX.Collections.Pooling.ArrayPool<int> pool = new GDX.Collections.Pooling.ArrayPool<int>(poolMinimums, poolMaximums);
+            Pooling.ArrayPool<int> pool = new GDX.Collections.Pooling.ArrayPool<int>(poolMinimums, poolMaximums);
             int[] replacementArrayOnExpand = pool.ArrayPools[2].Pool[0];
             replacementArrayOnExpand[3] = 5;
             mockList.AddExpandNoClear(2, pool);
@@ -151,7 +151,7 @@ namespace GDX.Collections.Generic
             poolMaximums[0] = 1;
             poolMaximums[1] = 1;
 
-            GDX.Collections.Pooling.ArrayPool<int> pool = new GDX.Collections.Pooling.ArrayPool<int>(poolMinimums, poolMaximums);
+            Pooling.ArrayPool<int> pool = new GDX.Collections.Pooling.ArrayPool<int>(poolMinimums, poolMaximums);
             mockList.AddExpandClearOld(2, pool);
             mockList.AddExpandClearOld(7, pool);
 
@@ -178,7 +178,7 @@ namespace GDX.Collections.Generic
             poolMaximums[1] = 1;
             poolMaximums[2] = 1;
 
-            GDX.Collections.Pooling.ArrayPool<int> pool = new GDX.Collections.Pooling.ArrayPool<int>(poolMinimums, poolMaximums);
+            Pooling.ArrayPool<int> pool = new GDX.Collections.Pooling.ArrayPool<int>(poolMinimums, poolMaximums);
             int[] replacementArrayOnExpand = pool.ArrayPools[2].Pool[0];
             replacementArrayOnExpand[3] = 5;
             mockList.AddExpandClearNew(2, pool);
@@ -211,7 +211,7 @@ namespace GDX.Collections.Generic
             poolMaximums[1] = 1;
             poolMaximums[2] = 1;
 
-            GDX.Collections.Pooling.ArrayPool<int> pool = new GDX.Collections.Pooling.ArrayPool<int>(poolMinimums, poolMaximums);
+            Pooling.ArrayPool<int> pool = new GDX.Collections.Pooling.ArrayPool<int>(poolMinimums, poolMaximums);
             int[] replacementArrayOnExpand = pool.ArrayPools[2].Pool[0];
             replacementArrayOnExpand[3] = 5;
             mockList.AddExpandClearBoth(2, pool);

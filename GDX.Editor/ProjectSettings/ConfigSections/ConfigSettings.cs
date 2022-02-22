@@ -13,8 +13,8 @@ namespace GDX.Editor.ProjectSettings
     internal class ConfigSettings : IConfigSection
     {
         public const string SectionID = "GDX.Config";
-        private VisualElement m_RootElement;
-        private TextField m_TextOutputFolder;
+        VisualElement m_RootElement;
+        TextField m_TextOutputFolder;
 
         /// <inheritdoc />
         public void BindSectionContent(VisualElement rootElement)
@@ -22,7 +22,7 @@ namespace GDX.Editor.ProjectSettings
             m_RootElement = rootElement;
 
             m_TextOutputFolder = m_RootElement.Q<TextField>("text-output-path");
-            
+
             m_TextOutputFolder.SetValueWithoutNotify(Core.Config.ConfigOutputPath);
             m_TextOutputFolder.RegisterValueChangedCallback(evt =>
             {

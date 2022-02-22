@@ -26,7 +26,7 @@ namespace GDX.Editor
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void CaptureEditorWindowToPNG_SceneView_OutputsImage()
         {
             string outputPath = Platform.GetUniqueOutputFilePath("CaptureEditorWindowToPNG_SceneView_OutputsImage-",".png","GDX_Automation");
@@ -36,7 +36,7 @@ namespace GDX.Editor
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void CaptureFocusedEditorWindow_ReturnsTexture()
         {
             Automation.GetGameView().Focus();
@@ -46,7 +46,7 @@ namespace GDX.Editor
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void CaptureFocusedEditorWindowToPNG_OutputsImage()
         {
             Automation.GetGameView().Focus();
@@ -57,7 +57,7 @@ namespace GDX.Editor
         }
 
         [Test]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetWindow_SceneView_NotNull()
         {
             EditorWindow sceneView = Automation.GetWindow<SceneView>();
@@ -71,24 +71,24 @@ namespace GDX.Editor
         }
 
         [UnityTest]
-        [Category(GDX.Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public IEnumerator CaptureEditorWindow_SceneView_SameTexture()
         {
             EditorWindow sceneViewA = Automation.GetWindow<SceneView>();
             sceneViewA.Focus();
-            yield return new GDX.Developer.WaitForMilliseconds(500).While();
+            yield return new Developer.WaitForMilliseconds(500).While();
             Texture2D screenshotA = Automation.CaptureEditorWindow(sceneViewA);
             sceneViewA.Close();
 
             EditorWindow sceneViewB = Automation.GetWindow<SceneView>();
             sceneViewB.Focus();
-            yield return new GDX.Developer.WaitForMilliseconds(500).While();
+            yield return new Developer.WaitForMilliseconds(500).While();
             Texture2D screenshotB = Automation.CaptureEditorWindow(sceneViewB);
             sceneViewB.Close();
 
             NativeArray<Color32> screenshotDataA = screenshotA.GetRawTextureData<Color32>();
             NativeArray<Color32> screenshotDataB = screenshotB.GetRawTextureData<Color32>();
-            
+
             string outputPathA = Platform.GetUniqueOutputFilePath("CaptureEditorWindow_SceneView_SameTextureA-",".png","GDX_Automation");
             string outputPathB = Platform.GetUniqueOutputFilePath("CaptureEditorWindow_SceneView_SameTextureB-",".png","GDX_Automation");
             File.WriteAllBytes(outputPathA, screenshotA.EncodeToPNG());
@@ -124,7 +124,7 @@ namespace GDX.Editor
             screenshotDataB.Dispose();
             percentages.Dispose();
 
-            Assert.IsTrue(average > GDX.Platform.ImageCompareTolerance, $"Similarity was {average}%.");
+            Assert.IsTrue(average > Platform.ImageCompareTolerance, $"Similarity was {average}%.");
         }
     }
 }

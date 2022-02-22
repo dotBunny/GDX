@@ -627,6 +627,7 @@ namespace GDX.Collections.Generic
                 entryAt.HashCode = 0;
             }
 
+            FreeListHead = 0;
             Count = 0;
         }
     }

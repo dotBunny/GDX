@@ -105,7 +105,7 @@ namespace GDX.Classic.Editor.Build.Legacy
             try
             {
                 string path = Path.Combine(Application.dataPath, Core.Config.DeveloperBuildInfoPath);
-                GDX.Platform.EnsureFileFolderHierarchyExists(path);
+                Platform.EnsureFileFolderHierarchyExists(path);
                 File.WriteAllText(path, GDX.Editor.Build.BuildInfoProvider.GetContent(false, "Legacy"));
 
                 GDX.Editor.Build.BuildInfoProvider.CheckForAssemblyDefinition();

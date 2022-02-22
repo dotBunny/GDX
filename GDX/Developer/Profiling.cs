@@ -44,7 +44,7 @@ namespace GDX.Developer
         private const CaptureFlags k_AllCaptureFlags = CaptureFlags.ManagedObjects | CaptureFlags.NativeAllocations | CaptureFlags.NativeObjects | CaptureFlags.NativeAllocationSites | CaptureFlags.NativeStackTraces;
 
         /// <summary>
-        ///     Take a memory snapshot and save it to <see cref="Platform.GetOutputFolder"/>. 
+        ///     Take a memory snapshot and save it to <see cref="Platform.GetOutputFolder"/>.
         /// </summary>
         /// <param name="prefix">Override the default prefix <see cref="k_MemoryCaptureFilePrefix"/>.</param>
         /// <param name="finishCallback">Optional callback action once the memory capture has been made.</param>
@@ -87,7 +87,7 @@ namespace GDX.Developer
             // Make sure it is off
             Profiler.enabled = false;
 
-            string outputFolder = GDX.Platform.GetOutputFolder();
+            string outputFolder = Platform.GetOutputFolder();
             if (manageProfiles)
             {
                 string[] files = Directory.GetFiles(outputFolder, prefix == null ? $"{k_ProfileFilePrefix}*" : $"{k_ProfileFilePrefix}{prefix}-*", SearchOption.TopDirectoryOnly);
@@ -107,7 +107,7 @@ namespace GDX.Developer
                 }
             }
 
-            string path = Path.Combine(outputFolder, prefix != null ? $"{k_ProfileFilePrefix}{prefix}-{GDX.Platform.FilenameTimestampFormat}.raw" : $"{k_ProfileFilePrefix}{GDX.Platform.FilenameTimestampFormat}.raw");
+            string path = Path.Combine(outputFolder, prefix != null ? $"{k_ProfileFilePrefix}{prefix}-{Platform.FilenameTimestampFormat}.raw" : $"{k_ProfileFilePrefix}{Platform.FilenameTimestampFormat}.raw");
             Trace.Output(Trace.TraceLevel.Info, $"[Profiling Started] {path}");
             Profiler.logFile = path;
             Profiler.enableBinaryLog = true;
