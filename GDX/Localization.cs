@@ -49,7 +49,7 @@ namespace GDX
         /// <summary>
         ///     An array of strings representative for file size formats.
         /// </summary>
-        private static readonly string[] s_ReadableByteSizes = { "B", "KB", "MB", "GB", "TB" };
+        static readonly string[] s_ReadableByteSizes = { "B", "KB", "MB", "GB", "TB" };
 
         /// <summary>
         ///     Creates a more human readable <see cref="string" /> of a byte size.

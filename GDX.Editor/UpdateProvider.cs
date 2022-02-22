@@ -20,17 +20,17 @@ namespace GDX.Editor
         /// <summary>
         ///     The key used by <see cref="EditorPrefs" /> to store the last time we checked for an update.
         /// </summary>
-        private const string k_LastCheckedKey = "GDX.UpdateProvider.LastChecked";
+        const string k_LastCheckedKey = "GDX.UpdateProvider.LastChecked";
 
         /// <summary>
         ///     The key used by <see cref="EditorPrefs" /> to store the last update version we notified the user about.
         /// </summary>
-        private const string k_LastNotifiedVersionKey = "GDX.UpdateProvider.LastNotifiedVersion";
+        const string k_LastNotifiedVersionKey = "GDX.UpdateProvider.LastNotifiedVersion";
 
         /// <summary>
         ///     The base URI for downloading the latest released tarball.
         /// </summary>
-        private const string k_GitHubLatestUri = "https://github.com/dotBunny/GDX/archive/v";
+        const string k_GitHubLatestUri = "https://github.com/dotBunny/GDX/archive/v";
 
         /// <summary>
         ///     A collection of information about the locally installed GDX package.
@@ -59,7 +59,7 @@ namespace GDX.Editor
         /// <summary>
         /// Execute delayed logic that won't interfere with a current import process.
         /// </summary>
-        private static void DelayCall()
+        static void DelayCall()
         {
             if (!Core.Config.UpdateProviderCheckForUpdates)
             {
@@ -230,7 +230,7 @@ namespace GDX.Editor
         /// <summary>
         ///     Set the last time that the package was checked for updates to right now.
         /// </summary>
-        private static void SetLastChecked()
+        static void SetLastChecked()
         {
             EditorPrefs.SetString(k_LastCheckedKey, DateTime.Now.ToString(CultureInfo.InvariantCulture));
         }
@@ -249,7 +249,7 @@ namespace GDX.Editor
         ///     Set the version of the package presented to update too.
         /// </summary>
         /// <param name="versionTag">The package version string.</param>
-        private static void SetLastNotifiedVersion(string versionTag)
+        static void SetLastNotifiedVersion(string versionTag)
         {
             EditorPrefs.SetString(k_LastNotifiedVersionKey, versionTag);
         }
@@ -259,7 +259,7 @@ namespace GDX.Editor
         ///     <see cref="PackageProvider.PackageDefinition" />.
         /// </summary>
         /// <returns>A <see cref="PackageProvider.PackageDefinition" /> instance.</returns>
-        private static PackageProvider.PackageDefinition GetMainPackageDefinition()
+        static PackageProvider.PackageDefinition GetMainPackageDefinition()
         {
             try
             {
@@ -293,7 +293,7 @@ namespace GDX.Editor
         /// <summary>
         ///     Upgrade the package, with the understanding that it is located in the Asset database.
         /// </summary>
-        private static void UpgradeAssetDatabase()
+        static void UpgradeAssetDatabase()
         {
             // Get a temporary file
             // TODO: This will need to be changed for newer .NET (System.IO.GetTempFileName())
@@ -362,7 +362,7 @@ namespace GDX.Editor
         /// <summary>
         ///     Upgrade the package, with the understanding that is a standard GitHub clone.
         /// </summary>
-        private static void UpgradeGitHub()
+        static void UpgradeGitHub()
         {
             // ReSharper disable once HeapView.ObjectAllocation.Evident
             Process process = new Process();
@@ -409,7 +409,7 @@ namespace GDX.Editor
         /// <summary>
         ///     Upgrade the package, with the understanding that it was added via UPM.
         /// </summary>
-        private static void UpgradeUnityPackageManager()
+        static void UpgradeUnityPackageManager()
         {
             // We're going to remove the entry from the lockfile triggering it to record an update
             string packageManifestLockFile =

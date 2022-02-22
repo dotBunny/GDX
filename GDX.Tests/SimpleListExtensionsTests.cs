@@ -16,7 +16,7 @@ namespace GDX
     /// </summary>
     public class SimpleListExtensionsTests
     {
-        private SimpleList<int> m_MockData;
+        SimpleList<int> m_MockData;
 
         [SetUp]
         public void Setup()

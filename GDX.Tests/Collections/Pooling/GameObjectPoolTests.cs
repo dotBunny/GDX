@@ -9,10 +9,10 @@ namespace GDX.Collections.Pooling
 {
     public class GameObjectPoolTests
     {
-        private GameObject m_MockBaseObject;
-        private GameObject m_MockBaseObjectWithInterface;
-        private Transform m_MockBaseObjectWithInterfaceTransform;
-        private Transform m_MockTransform;
+        GameObject m_MockBaseObject;
+        GameObject m_MockBaseObjectWithInterface;
+        Transform m_MockBaseObjectWithInterfaceTransform;
+        Transform m_MockTransform;
 
         [SetUp]
         public void Setup()
@@ -276,10 +276,10 @@ namespace GDX.Collections.Pooling
             Assert.IsFalse(ManagedPools.HasPool(cachePoolKey));
         }
 
-        private class GameObjectPoolItemTest : MonoBehaviour, IGameObjectPoolItem
+        class GameObjectPoolItemTest : MonoBehaviour, IGameObjectPoolItem
         {
             public bool TriggeredOnSpawn { get; private set; }
-            private IManagedPool m_ParentPool;
+            IManagedPool m_ParentPool;
 
             /// <inheritdoc />
             public GameObject GetGameObject()

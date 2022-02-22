@@ -36,22 +36,22 @@ namespace GDX.Collections.Pooling
         /// <summary>
         ///     A cached reference to the <see cref="GameObject" /> the builder created for itself.
         /// </summary>
-        private static GameObject s_BuilderObject;
+        static GameObject s_BuilderObject;
 
         /// <summary>
         ///     A <see cref="List{T}" /> of <see cref="IManagedPool" /> which are being built out.
         /// </summary>
-        private static readonly List<IManagedPool> s_TargetPools = new List<IManagedPool>();
+        static readonly List<IManagedPool> s_TargetPools = new List<IManagedPool>();
 
         /// <summary>
         ///     A cached numerical count of the number of <see cref="IManagedPool" /> contained in <see cref="s_TargetPools" />.
         /// </summary>
-        private static int s_TargetPoolsCount;
+        static int s_TargetPoolsCount;
 
         /// <summary>
         ///     Unity's LateUpdate event
         /// </summary>
-        private void LateUpdate()
+        void LateUpdate()
         {
             Tick();
 

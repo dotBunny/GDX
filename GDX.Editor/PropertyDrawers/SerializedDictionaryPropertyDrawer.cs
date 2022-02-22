@@ -25,53 +25,53 @@ namespace GDX.Editor.PropertyDrawers
     /// </remarks>
     [CustomPropertyDrawer(typeof(SerializableDictionary<,>))]
     // ReSharper disable once UnusedType.Global
-    internal class SerializableDictionaryPropertyDrawer : PropertyDrawer
+    class SerializableDictionaryPropertyDrawer : PropertyDrawer
     {
         /// <summary>
         ///     Cached ID of the <see cref="EditorGUI.PropertyField(UnityEngine.Rect,UnityEditor.SerializedProperty)" />, used to
         ///     determine if it has focus across updates.
         /// </summary>
-        private string m_AddKeyFieldID;
+        string m_AddKeyFieldID;
 
         /// <summary>
         ///     A cached version of the display name to use for the <see cref="PropertyDrawer" />.
         /// </summary>
-        private string m_DisplayName = "Serializable Dictionary";
+        string m_DisplayName = "Serializable Dictionary";
 
         /// <summary>
         ///     The cached calculated height of the entire content portion of the <see cref="PropertyDrawer" />.
         /// </summary>
-        private float m_HeightContent;
+        float m_HeightContent;
 
         /// <summary>
         ///     The cached calculated height of the elements in the content portion of the <see cref="PropertyDrawer" />.
         /// </summary>
-        private float m_HeightContentElements;
+        float m_HeightContentElements;
 
         /// <summary>
         ///     The cached calculated height of the footer for the content portion of the <see cref="PropertyDrawer" />.
         /// </summary>
-        private float m_HeightContentFooter;
+        float m_HeightContentFooter;
 
         /// <summary>
         ///     The cached calculated height of the header for the content portion of the <see cref="PropertyDrawer" />.
         /// </summary>
-        private float m_HeightContentHeader;
+        float m_HeightContentHeader;
 
         /// <summary>
         ///     The cached calculated height of the foldout portion of the <see cref="PropertyDrawer" />.
         /// </summary>
-        private float m_HeightFoldout;
+        float m_HeightFoldout;
 
         /// <summary>
         ///     The cached calculated height of the footer portion of the <see cref="PropertyDrawer" />.
         /// </summary>
-        private float m_HeightFooter;
+        float m_HeightFooter;
 
         /// <summary>
         ///     The cached calculated total height of the <see cref="PropertyDrawer" />.
         /// </summary>
-        private float m_HeightTotal;
+        float m_HeightTotal;
 
         /// <summary>
         ///     Does the key and value array counts match, and do they match the serialized length?
@@ -79,29 +79,29 @@ namespace GDX.Editor.PropertyDrawers
         /// <remarks>
         ///     Used as a bit of a checksum for the serialized data.
         /// </remarks>
-        private bool m_IsKeyValueCountValid = true;
+        bool m_IsKeyValueCountValid = true;
 
-        private SerializedProperty m_PropertyAddKey;
-        private SerializedProperty m_PropertyAddKeyValid;
-        private bool m_PropertyAddKeyValidCache;
-        private SerializedProperty m_PropertyCount;
-        private int m_PropertyCountCache = -1;
-        private SerializedProperty m_PropertyExpanded;
-        private bool m_PropertyExpandedCache;
-        private SerializedProperty m_PropertyIsSerializable;
-        private bool m_PropertyIsSerializableCache;
-        private SerializedProperty m_PropertyKeys;
-        private SerializedProperty m_PropertyValues;
+        SerializedProperty m_PropertyAddKey;
+        SerializedProperty m_PropertyAddKeyValid;
+        bool m_PropertyAddKeyValidCache;
+        SerializedProperty m_PropertyCount;
+        int m_PropertyCountCache = -1;
+        SerializedProperty m_PropertyExpanded;
+        bool m_PropertyExpandedCache;
+        SerializedProperty m_PropertyIsSerializable;
+        bool m_PropertyIsSerializableCache;
+        SerializedProperty m_PropertyKeys;
+        SerializedProperty m_PropertyValues;
 
         /// <summary>
         ///     The index of in the data arrays to be considered selected.
         /// </summary>
-        private int m_SelectedIndex = -1;
+        int m_SelectedIndex = -1;
 
         /// <summary>
         ///     The target object of the <see cref="PropertyDrawer" />.
         /// </summary>
-        private Object m_TargetObject;
+        Object m_TargetObject;
 
         /// <summary>
         ///     Provide an adjusted height for the entire element to be rendered.
@@ -216,7 +216,7 @@ namespace GDX.Editor.PropertyDrawers
         /// <summary>
         ///     Resets the Add Key serialized data to default, if it is not already defaulted.
         /// </summary>
-        private void ClearAddKeyReference()
+        void ClearAddKeyReference()
         {
             // If we already default, dont bother.
             if (!HasValue(m_PropertyAddKey))
@@ -232,7 +232,7 @@ namespace GDX.Editor.PropertyDrawers
         ///     Draw the content area, including elements.
         /// </summary>
         /// <param name="position">A <see cref="Rect" /> representing the space which the content area will be drawn.</param>
-        private void DrawContentArea(Rect position)
+        void DrawContentArea(Rect position)
         {
             // Paint the background
             if (Event.current.type == EventType.Repaint)
@@ -331,7 +331,7 @@ namespace GDX.Editor.PropertyDrawers
         ///     A <see cref="Rect" /> representing the space which the footer will be drawn, so that he the
         ///     buttons can draw offset of it.
         /// </param>
-        private void DrawFooterActions(Rect position)
+        void DrawFooterActions(Rect position)
         {
             float inputWidth = position.width / 2 - Styles.ActionButtonWidth - Styles.ActionButtonHorizontalPadding;
             Rect addBackgroundRect = new Rect(position.xMin + 10f, position.y,
@@ -428,7 +428,7 @@ namespace GDX.Editor.PropertyDrawers
         ///     Draw the foldout header for the <see cref="SerializableDictionary{TKey,TValue}" />.
         /// </summary>
         /// <param name="position">A <see cref="Rect" /> representing the space which the header will consume in its entirety.</param>
-        private void DrawFoldout(Rect position)
+        void DrawFoldout(Rect position)
         {
             // Generate a foldout GUI element representing the name of the dictionary
             bool newExpanded =
@@ -462,7 +462,7 @@ namespace GDX.Editor.PropertyDrawers
         /// <param name="position">A <see cref="Rect" /> representing where it should be drawn.</param>
         /// <param name="tooltip">The message to display when mousing over.</param>
         /// <param name="displayResetButton">Should a reset button be displayed?</param>
-        private void DrawErrorMessage(Rect position, string tooltip, bool displayResetButton = false)
+        void DrawErrorMessage(Rect position, string tooltip, bool displayResetButton = false)
         {
             Rect iconRect = new Rect(position.x - 16, position.y, 16, position.height);
             Content.IconError.tooltip = tooltip;
@@ -494,7 +494,7 @@ namespace GDX.Editor.PropertyDrawers
         ///     Should the value be reset to its default value. It holds the previous element in the array's
         ///     value due to how the value array was expanded.
         /// </param>
-        private void AddElement(bool defaultValue = true)
+        void AddElement(bool defaultValue = true)
         {
             if (m_PropertyCountCache == -1 || m_PropertyKeys == null || m_PropertyValues == null)
             {
@@ -525,7 +525,7 @@ namespace GDX.Editor.PropertyDrawers
         ///     Does the provided <see cref="SerializedProperty" /> contain a non <c>default</c> value.
         /// </summary>
         /// <param name="targetProperty">The target to evaluate.</param>
-        private static bool HasValue(SerializedProperty targetProperty)
+        static bool HasValue(SerializedProperty targetProperty)
         {
             switch (targetProperty.type)
             {
@@ -577,7 +577,7 @@ namespace GDX.Editor.PropertyDrawers
         ///     <see cref="SerializableDictionary{TKey,TValue}" /> picks up the change.
         /// </remarks>
         /// <param name="index">The index (really ordered serialized data) to remove.</param>
-        private void RemoveElementAt(int index)
+        void RemoveElementAt(int index)
         {
             if (index == -1)
             {
@@ -601,7 +601,7 @@ namespace GDX.Editor.PropertyDrawers
         /// <summary>
         ///     Reset the serialized data as if there were no entries in the dictionary.
         /// </summary>
-        private void ResetSerializedData()
+        void ResetSerializedData()
         {
             m_PropertyKeys.ClearArray();
             m_PropertyValues.ClearArray();
@@ -614,7 +614,7 @@ namespace GDX.Editor.PropertyDrawers
         ///     Clear the value of a provided <see cref="SerializedProperty" />, setting it to the <c>default</c>.
         /// </summary>
         /// <param name="targetProperty">The receiver of the value.</param>
-        private static void DefaultValue(SerializedProperty targetProperty)
+        static void DefaultValue(SerializedProperty targetProperty)
         {
             switch (targetProperty.type)
             {
@@ -682,7 +682,7 @@ namespace GDX.Editor.PropertyDrawers
         /// </summary>
         /// <param name="targetProperty">The receiver of the value.</param>
         /// <param name="sourceProperty">The originator of the value to be used.</param>
-        private static void ShallowCopy(SerializedProperty targetProperty, SerializedProperty sourceProperty)
+        static void ShallowCopy(SerializedProperty targetProperty, SerializedProperty sourceProperty)
         {
             switch (targetProperty.type)
             {
@@ -748,7 +748,7 @@ namespace GDX.Editor.PropertyDrawers
         /// <summary>
         ///     <see cref="PropertyDrawer" /> Fixed Content.
         /// </summary>
-        private static class Content
+        static class Content
         {
             /// <summary>
             ///     The prefix of the <see cref="string" /> identifier of the add field.
@@ -814,7 +814,7 @@ namespace GDX.Editor.PropertyDrawers
         /// <summary>
         ///     <see cref="PropertyDrawer" /> Styles.
         /// </summary>
-        private static class Styles
+        static class Styles
         {
             /// <summary>
             ///     The width of an individual button in the footer.

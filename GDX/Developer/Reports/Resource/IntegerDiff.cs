@@ -53,12 +53,12 @@ namespace GDX.Developer.Reports.Resource
                 $"{GetBeforeAndAfterOutput().PadRight(context.KeyValuePairInfoWidth)} {ResourceReport.PositiveSign(Change)}{Change.ToString(),-12} {OptionalPercentageOutput()}";
         }
 
-        private string GetBeforeAndAfterOutput()
+        string GetBeforeAndAfterOutput()
         {
             return $"{LeftHandSide.ToString()} => {RightHandSide.ToString()}";
         }
 
-        private string OptionalPercentageOutput()
+        string OptionalPercentageOutput()
         {
             if (LeftHandSide == 0)
             {

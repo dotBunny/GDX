@@ -304,7 +304,7 @@ namespace GDX.Collections.Generic
         ///     This is done because the arrays actual order may wrap around from the end of <see cref="Array" />, to the start.
         /// </remarks>
         /// <returns>An <see cref="ArraySegment{T}" /> representing the first part of the ordered data in <see cref="Array" />.</returns>
-        private ArraySegment<T> ArrayOne()
+        ArraySegment<T> ArrayOne()
         {
             if (Count == 0)
             {
@@ -324,7 +324,7 @@ namespace GDX.Collections.Generic
         ///     This is done because the arrays actual order may wrap around from the end of <see cref="Array" />, to the start.
         /// </remarks>
         /// <returns>An <see cref="ArraySegment{T}" /> representing the end part of the ordered data in <see cref="Array" />.</returns>
-        private ArraySegment<T> ArrayTwo()
+        ArraySegment<T> ArrayTwo()
         {
             if (Count == 0)
             {

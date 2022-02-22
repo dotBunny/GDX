@@ -277,7 +277,7 @@ namespace GDX.Editor
         ///     A <see cref="Tuple" /> containing the discovered <see cref="PackageProvider.InstallationType" /> and any
         ///     source tag.
         /// </returns>
-        private (InstallationType, string) GetInstallationType()
+        (InstallationType, string) GetInstallationType()
         {
             // NOTHING - If we dont have any sort of definition to work with, we really cant do anything, honest.
             if (Definition == null)

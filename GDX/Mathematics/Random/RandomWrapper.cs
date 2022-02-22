@@ -8,7 +8,7 @@ namespace GDX.Mathematics.Random
 {
     public class RandomWrapper : IRandomProvider
     {
-        private readonly System.Random m_Random;
+        readonly System.Random m_Random;
 
         public RandomWrapper()
         {

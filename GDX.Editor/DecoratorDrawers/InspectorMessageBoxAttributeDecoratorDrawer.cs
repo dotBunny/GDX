@@ -18,18 +18,18 @@ namespace GDX.Editor.DecoratorDrawers
         /// <summary>
         ///     Cached reference to the target <see cref="InspectorMessageBoxAttribute"/>.
         /// </summary>
-        private InspectorMessageBoxAttribute m_Target;
+        InspectorMessageBoxAttribute m_Target;
 
         /// <summary>
         ///     Cached GUIContent of text, strictly used by height calculations.
         /// </summary>
-        private GUIContent m_TargetMessage;
+        GUIContent m_TargetMessage;
 
         /// <summary>
         ///     A cached reference to the "help box" style.
         /// </summary>
         // ReSharper disable once StringLiteralTypo
-        private static readonly GUIStyle s_CachedHelpBoxStyle = new GUIStyle("helpbox");
+        static readonly GUIStyle s_CachedHelpBoxStyle = new GUIStyle("helpbox");
 
         /// <summary>
         ///     Returns the inspector height needed for this decorator.

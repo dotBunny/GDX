@@ -34,22 +34,22 @@ namespace GDX.Collections.Generic
         ///     Is the dictionary completely capable of being serialized by Unity?
         /// </summary>
         /// <remarks>This field is determined/cached in the constructor.</remarks>
-        [HideInInspector] [SerializeField] private bool isSerializable;
+        [HideInInspector] [SerializeField] bool isSerializable;
 
         /// <summary>
         ///     The length of the serialized data arrays.
         /// </summary>
-        [HideInInspector] [SerializeField] private int serializedLength = -1;
+        [HideInInspector] [SerializeField] int serializedLength = -1;
 
         /// <summary>
         ///     An array of all of the keys, in order, used to recreate the base <see cref="Dictionary{TKey,TValue}" />.
         /// </summary>
-        [HideInInspector] [SerializeField] private TKey[] serializedKeys;
+        [HideInInspector] [SerializeField] TKey[] serializedKeys;
 
         /// <summary>
         ///     An array of all of the values, in order, used to recreate the base <see cref="Dictionary{TKey,TValue}" />.
         /// </summary>
-        [HideInInspector] [SerializeField] private TValue[] serializedValues;
+        [HideInInspector] [SerializeField] TValue[] serializedValues;
 
         /// <summary>
         ///     Type constructor.
@@ -254,17 +254,17 @@ namespace GDX.Collections.Generic
         ///     Editor only data indicating if the property drawer is expanded.
         /// </summary>
         // ReSharper disable once NotAccessedField.Local
-        [HideInInspector] [SerializeField] private bool drawerExpanded;
+        [HideInInspector] [SerializeField] bool drawerExpanded;
 
         /// <summary>
         ///     Is the provided key a valid key (unique).
         /// </summary>
-        [HideInInspector] [SerializeField] private bool serializedAddKeyValid;
+        [HideInInspector] [SerializeField] bool serializedAddKeyValid;
 
         /// <summary>
         ///     Temporary placement for keys to be added.
         /// </summary>
-        [HideInInspector] [SerializeField] private TKey serializedAddKey;
+        [HideInInspector] [SerializeField] TKey serializedAddKey;
 #else
         // We need to pad the size of the serialized data due to Unity checking the size of the serialized object.
         // This is a problem where "classic" Unity author-time data, is the same as runtime data.

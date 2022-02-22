@@ -54,7 +54,7 @@ namespace GDX.IO
         public override long Length => m_LengthInternal;
         public sealed override long Position { get; set; }
 
-        private byte[] Block
+        byte[] Block
         {
             get
             {
@@ -67,9 +67,9 @@ namespace GDX.IO
             }
         }
 
-        private long BlockId => Position / m_BlockSize;
+        long BlockId => Position / m_BlockSize;
 
-        private long BlockOffset => Position % m_BlockSize;
+        long BlockOffset => Position % m_BlockSize;
 
 
         public override void Flush()
@@ -185,7 +185,7 @@ namespace GDX.IO
             Position++;
         }
 
-        private void EnsureCapacity(long intendedLength)
+        void EnsureCapacity(long intendedLength)
         {
             if (intendedLength > m_LengthInternal)
             {

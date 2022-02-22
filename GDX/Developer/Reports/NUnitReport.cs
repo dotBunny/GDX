@@ -17,7 +17,7 @@ namespace GDX.Developer.Reports
         public const string FailedString = "Failed";
         public const string PassedString = "Passed";
 
-        private readonly TestRun m_Results = new TestRun();
+        readonly TestRun m_Results = new TestRun();
 
         public NUnitReport(string name = null, string fullName = null, string className = null )
         {

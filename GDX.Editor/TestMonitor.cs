@@ -12,12 +12,11 @@ namespace GDX.Editor
 {
     internal class TestMonitor : ICallbacks
     {
-        private string m_CachedTempFolder;
+        string m_CachedTempFolder;
 
         /// <inheritdoc />
         public void RunStarted(ITestAdaptor testsToRun)
         {
-            
             m_CachedTempFolder = Platform.GetOutputFolder("GDX_Automation");
             if (Application.isBatchMode)
             {

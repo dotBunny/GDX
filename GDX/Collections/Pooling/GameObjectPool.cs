@@ -21,7 +21,7 @@ namespace GDX.Collections.Pooling
         ///     The <see cref="ListManagedPool" /> flags index used to determine if the object which is used to create new objects
         ///     has the <see cref="IGameObjectPoolItem" /> interface on a root component.
         /// </summary>
-        private const int k_HasInterfaceFlag = 5;
+        const int k_HasInterfaceFlag = 5;
 
         /// <summary>
         ///     Create a <see cref="GameObject" /> based <see cref="ListManagedPool" /> for the provided
@@ -406,7 +406,7 @@ namespace GDX.Collections.Pooling
         /// </summary>
         /// <param name="pool">The <see cref="ListManagedPool"/> to create an item for, and assign too.</param>
         /// <returns>The newly created item.</returns>
-        private static object CreateItem(ListManagedPool pool)
+        static object CreateItem(ListManagedPool pool)
         {
             GameObject spawnedObject =
                 Object.Instantiate((GameObject)pool.BaseObject, (Transform)pool.ContainerObject, true);
@@ -432,7 +432,7 @@ namespace GDX.Collections.Pooling
         ///     The subscribed action called when an item is requested to be destroyed..
         /// </summary>
         /// <param name="item">The item being destroyed.</param>
-        private static void OnDestroyItemAction(object item)
+        static void OnDestroyItemAction(object item)
         {
             if (item == null) return;
 
@@ -470,7 +470,7 @@ namespace GDX.Collections.Pooling
         /// </summary>
         /// <param name="pool">The <see cref="ListManagedPool"/> which the <paramref name="item"/> is being returned to.</param>
         /// <param name="item">The item being returned to the <paramref name="pool"/>.</param>
-        private static void OnReturnedToPoolAction(ListManagedPool pool, object item)
+        static void OnReturnedToPoolAction(ListManagedPool pool, object item)
         {
             if (!pool.Flags[k_HasInterfaceFlag])
             {
@@ -486,7 +486,7 @@ namespace GDX.Collections.Pooling
         /// </summary>
         /// <param name="pool">The <see cref="ListManagedPool"/> which has had the <paramref name="item"/> spawned from.</param>
         /// <param name="item">The spawned item.</param>
-        private static void OnSpawnedFromPoolAction(ListManagedPool pool, object item)
+        static void OnSpawnedFromPoolAction(ListManagedPool pool, object item)
         {
             if (!pool.Flags[k_HasInterfaceFlag])
             {
@@ -501,7 +501,7 @@ namespace GDX.Collections.Pooling
         ///     The subscribed action called when the <paramref name="pool"/> is asked to <see cref="IManagedPool.TearDown()"/> before items were returned to the pool.
         /// </summary>
         /// <param name="pool">The <see cref="ListManagedPool"/> being torn down.</param>
-        private static void OnTearDownAction(ListManagedPool pool)
+        static void OnTearDownAction(ListManagedPool pool)
         {
             ManagedPoolBuilder.RemoveManagedPool(pool);
         }

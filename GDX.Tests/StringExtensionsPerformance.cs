@@ -13,9 +13,9 @@ namespace GDX
 {
     public class StringExtensionsPerformance
     {
-        private const int k_WarmupCount = 10;
-        private const int k_MeasurementCount = 20;
-        private const int k_IterationsPerMeasurement = 100;
+        const int k_WarmupCount = 10;
+        const int k_MeasurementCount = 20;
+        const int k_IterationsPerMeasurement = 100;
 
         [Test]
         [Performance]

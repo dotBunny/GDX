@@ -15,8 +15,8 @@ namespace GDX
     /// </summary>
     public class StringExtensionsTests
     {
-        private byte[] m_PreviousEncryptionDefaultKey;
-        private byte[] m_PreviousEncryptionInitializationVector;
+        byte[] m_PreviousEncryptionDefaultKey;
+        byte[] m_PreviousEncryptionInitializationVector;
 
         [SetUp]
         public void Setup()

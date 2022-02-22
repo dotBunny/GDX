@@ -15,7 +15,7 @@ namespace GDX
         /// <summary>
         ///     An array of <see cref="System.Char" /> used to split versions.
         /// </summary>
-        private static readonly char[] s_VersionIndicators = {'.', ',', '_', 'f'};
+        static readonly char[] s_VersionIndicators = {'.', ',', '_', 'f'};
 
         // ReSharper disable MemberCanBePrivate.Global
 
@@ -237,7 +237,7 @@ namespace GDX
         ///     The results of checking the <see cref="SemanticVersion.Major" />/<see cref="SemanticVersion.Minor" />/
         ///     <see cref="SemanticVersion.Patch" /> for equality.
         /// </returns>
-        private bool Equals(SemanticVersion otherSemanticVersion)
+        bool Equals(SemanticVersion otherSemanticVersion)
         {
             return Major == otherSemanticVersion.Major &&
                    Minor == otherSemanticVersion.Minor &&

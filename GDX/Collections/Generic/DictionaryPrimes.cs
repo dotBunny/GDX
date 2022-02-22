@@ -5,8 +5,8 @@ namespace GDX.Collections.Generic
 
     public static class DictionaryPrimes
     {
-        private static int[] s_Primes;
-        private static int s_PrimesLength;
+        static int[] s_Primes;
+        static int s_PrimesLength;
 
         public static void SetDefaultPrimes()
         {

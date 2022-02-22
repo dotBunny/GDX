@@ -21,7 +21,7 @@ namespace GDX.Editor
     {
         static readonly object[] s_EmptyParametersArray = new object[] { };
 
-        private static string LayoutStashPath()
+        static string LayoutStashPath()
         {
             return Path.Combine(Application.dataPath, "..", "GDX.layout");
         }

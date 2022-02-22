@@ -9,7 +9,7 @@ namespace GDX.Developer.Reports
     public static class BVT
     {
         static NUnitReport m_Report = new NUnitReport("BVT", "Build Verification Test");
-        private static SimpleList<string> m_PanicMessages = new SimpleList<string>(2);
+        static SimpleList<string> m_PanicMessages = new SimpleList<string>(2);
 
         public static string OutputReport(string outputPath)
         {

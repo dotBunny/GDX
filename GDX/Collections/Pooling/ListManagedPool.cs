@@ -16,47 +16,47 @@ namespace GDX.Collections.Pooling
         ///     The <see cref="Flags" /> index used to determine if the <see cref="ListManagedPool" /> is able to create
         ///     more items as necessary.
         /// </summary>
-        private const int k_AllowCreateMoreFlag = 0;
+        const int k_AllowCreateMoreFlag = 0;
 
         /// <summary>
         ///     The <see cref="Flags" /> index used to if <see cref="TearDown" /> can be called by a manager.
         /// </summary>
-        private const int k_AllowManagedTeardownFlag = 1;
+        const int k_AllowManagedTeardownFlag = 1;
 
         /// <summary>
         ///     The <see cref="Flags" /> index used to determine if items should be reused when the pool is starved.
         /// </summary>
-        private const int k_AllowReuseFlag = 2;
+        const int k_AllowReuseFlag = 2;
 
         /// <summary>
         ///     The <see cref="Flags" /> index used to determine if the pool should create items during its constructor.
         /// </summary>
-        private const int k_PrewarmPoolFlag = 3;
+        const int k_PrewarmPoolFlag = 3;
 
         /// <summary>
         ///     A defined function to create items for the pool.
         /// </summary>
-        private readonly Func<ListManagedPool, object> m_CreateItemFunc;
+        readonly Func<ListManagedPool, object> m_CreateItemFunc;
 
         /// <summary>
         ///     The absolutely unique identifier for this pool.
         /// </summary>
-        private readonly uint m_Key;
+        readonly uint m_Key;
 
         /// <summary>
         ///     The Maximum number of objects to be managed by the pool.
         /// </summary>
-        private readonly int m_MaximumObjects;
+        readonly int m_MaximumObjects;
 
         /// <summary>
         ///     The minimum number of objects to be managed by the pool.
         /// </summary>
-        private readonly int m_MinimumObjects;
+        readonly int m_MinimumObjects;
 
         /// <summary>
         ///     A collection of items that are currently considered out of the pool, that have been spawned.
         /// </summary>
-        private readonly List<object> m_OutItems;
+        readonly List<object> m_OutItems;
 
         /// <summary>
         ///     A cached count of the number of items contained in <see cref="InItems" />.

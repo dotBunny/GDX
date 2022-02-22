@@ -12,7 +12,7 @@ namespace GDX.Mathematics.Random
     [VisualScriptingCompatible(4)]
     public class RandomAdaptor : System.Random
     {
-        private readonly IRandomProvider m_Provider;
+        readonly IRandomProvider m_Provider;
 
         /// <summary>
         ///     Create an adaptor object which behaves like <see cref="System.Random" />.

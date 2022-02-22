@@ -21,7 +21,7 @@ namespace GDX
         /// <typeparam name="T">The enumeration's type.</typeparam>
         /// <returns>true if the needles are found in the haystack, otherwise false.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static unsafe bool HasFlags<T>(T* haystack, T* needles) where T : unmanaged, Enum
+        static unsafe bool HasFlags<T>(T* haystack, T* needles) where T : unmanaged, Enum
         {
             byte* flags = (byte*)haystack;
             byte* query = (byte*)needles;

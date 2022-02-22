@@ -13,8 +13,8 @@ namespace GDX.Editor
     // ReSharper disable once UnusedType.Global
     public static class TestFramework
     {
-        private static TestRunnerApi s_TestRunner;
-        private static TestMonitor s_TestMonitor;
+        static TestRunnerApi s_TestRunner;
+        static TestMonitor s_TestMonitor;
 
         [InitializeOnLoadMethod]
         public static void Initialize()

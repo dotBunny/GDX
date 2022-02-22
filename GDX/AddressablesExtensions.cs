@@ -29,7 +29,7 @@ namespace GDX
         ///     An empty instance of an <see cref="UnityEngine.AddressableAssets.AssetReference" /> to be used for comparison.
         /// </summary>
         // ReSharper disable once HeapView.ObjectAllocation.Evident
-        private static readonly AssetReference s_emptyAssetReference = new AssetReference();
+        static readonly AssetReference s_emptyAssetReference = new AssetReference();
 
         /// <summary>
         ///     <para>Can <paramref name="targetAssetReference" /> be instantiated at runtime?</para>

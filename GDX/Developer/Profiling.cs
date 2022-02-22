@@ -24,24 +24,24 @@ namespace GDX.Developer
         /// <summary>
         ///     The prefix to use with all capture files.
         /// </summary>
-        private const string k_MemoryCaptureFilePrefix = "MemCap-";
+        const string k_MemoryCaptureFilePrefix = "MemCap-";
         /// <summary>
         ///     The number of memory captures to keep in the output folder.
         /// </summary>
-        private const int k_MemoryCapturesToKeep = 10;
+        const int k_MemoryCapturesToKeep = 10;
         /// <summary>
         ///     The number of profile captures to keep in the output folder.
         /// </summary>
-        private const int k_ProfilesToKeep = 10;
+        const int k_ProfilesToKeep = 10;
         /// <summary>
         ///     The prefix to use with all binary profile files.
         /// </summary>
-        private const string k_ProfileFilePrefix = "Profile-";
+        const string k_ProfileFilePrefix = "Profile-";
 
         /// <summary>
         ///     The default flags (all) used when capturing memory.
         /// </summary>
-        private const CaptureFlags k_AllCaptureFlags = CaptureFlags.ManagedObjects | CaptureFlags.NativeAllocations | CaptureFlags.NativeObjects | CaptureFlags.NativeAllocationSites | CaptureFlags.NativeStackTraces;
+        const CaptureFlags k_AllCaptureFlags = CaptureFlags.ManagedObjects | CaptureFlags.NativeAllocations | CaptureFlags.NativeObjects | CaptureFlags.NativeAllocationSites | CaptureFlags.NativeStackTraces;
 
         /// <summary>
         ///     Take a memory snapshot and save it to <see cref="Platform.GetOutputFolder"/>.

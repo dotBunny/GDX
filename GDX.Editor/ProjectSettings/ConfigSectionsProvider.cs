@@ -18,10 +18,10 @@ namespace GDX.Editor.ProjectSettings
         const string k_EnabledClass = "enabled";
         const string k_ExpandedClass = "expanded";
 
-        private static StringKeyDictionary<VisualElement> s_ConfigSectionContents =
+        static StringKeyDictionary<VisualElement> s_ConfigSectionContents =
             new StringKeyDictionary<VisualElement>(SettingsProvider.SectionCount);
 
-        private static StringKeyDictionary<VisualElement> s_ConfigSectionHeaders =
+        static StringKeyDictionary<VisualElement> s_ConfigSectionHeaders =
             new StringKeyDictionary<VisualElement>(SettingsProvider.SectionCount);
 
         public static VisualElement CreateAndBindSectionHeader(IConfigSection section)
@@ -128,7 +128,7 @@ namespace GDX.Editor.ProjectSettings
             s_ConfigSectionContents.Clear();
         }
 
-        private static void OnExpandSectionHeaderClicked(string sectionID)
+        static void OnExpandSectionHeaderClicked(string sectionID)
         {
             GUIUtility.hotControl = 0;
             IConfigSection section = SettingsProvider.ConfigSections[sectionID];
@@ -136,7 +136,7 @@ namespace GDX.Editor.ProjectSettings
             SettingsProvider.SetCachedEditorBoolean(sectionID, !setting);
         }
 
-        private static void OnToggleSectionHeaderClicked(VisualElement toggleElement, string sectionID, bool newValue)
+        static void OnToggleSectionHeaderClicked(VisualElement toggleElement, string sectionID, bool newValue)
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionID];
             section.SetToggleState(toggleElement, newValue);

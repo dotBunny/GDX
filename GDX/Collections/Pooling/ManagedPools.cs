@@ -24,14 +24,14 @@ namespace GDX.Collections.Pooling
         ///     This value resets on domain reload, and as such the keys should not be relied on through any sort of
         ///     serialization (including networking) or session based process.
         /// </remarks>
-        private static uint s_LastPoolKey;
+        static uint s_LastPoolKey;
 
         /// <summary>
         ///     An internal dictionary containing the <see cref="IManagedPool" />s, uniquely indexed by constant ticket-like
         ///     system.
         /// </summary>
         // ReSharper disable once HeapView.ObjectAllocation.Evident
-        private static readonly Dictionary<uint, IManagedPool> s_Pools = new Dictionary<uint, IManagedPool>();
+        static readonly Dictionary<uint, IManagedPool> s_Pools = new Dictionary<uint, IManagedPool>();
 
         /// <summary>
         ///     Get the next available pool key.

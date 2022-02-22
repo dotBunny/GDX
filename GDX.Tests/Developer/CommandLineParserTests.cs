@@ -14,7 +14,7 @@ namespace GDX.Developer
     /// </summary>
     public class CommandLineParserTests
     {
-        private string[] m_MockData;
+        string[] m_MockData;
 
         [SetUp]
         public void Setup()

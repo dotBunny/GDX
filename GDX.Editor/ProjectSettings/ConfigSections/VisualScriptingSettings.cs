@@ -184,7 +184,7 @@ namespace GDX.Editor.ProjectSettings
         ///     needs to be rebuilt afterwards.
         /// </summary>
         /// <param name="types">A collection of <see cref="Type"/>.</param>
-        private static void AddTypesToVisualScripting(List<Type> types)
+        static void AddTypesToVisualScripting(List<Type> types)
         {
 #if GDX_VISUALSCRIPTING
             foreach (Type type in types)
@@ -200,7 +200,7 @@ namespace GDX.Editor.ProjectSettings
         /// <summary>
         ///     Make sure GDX is added to the assemblies used by Visual Scripting.
         /// </summary>
-        private static void EnsureAssemblyReferenced()
+        static void EnsureAssemblyReferenced()
         {
 #if GDX_VISUALSCRIPTING
             if (BoltCore.Configuration.assemblyOptions.Contains("GDX"))
@@ -220,7 +220,7 @@ namespace GDX.Editor.ProjectSettings
         /// </summary>
         /// <param name="types">A collection of <see cref="Type"/>.</param>
         /// <returns>true/false if all the provided <see cref="Type"/> are in the configuration.</returns>
-        private static bool HasAllTypesInConfiguration(List<Type> types)
+        static bool HasAllTypesInConfiguration(List<Type> types)
         {
 #if !GDX_VISUALSCRIPTING
             return false;
@@ -241,7 +241,7 @@ namespace GDX.Editor.ProjectSettings
         ///     needs to be rebuilt afterwards.
         /// </summary>
         /// <param name="types">A collection of <see cref="Type"/>.</param>
-        private static void RemoveTypesFromVisualScripting(List<Type> types)
+        static void RemoveTypesFromVisualScripting(List<Type> types)
         {
 #if GDX_VISUALSCRIPTING
             foreach (Type type in types)

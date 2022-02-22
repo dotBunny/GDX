@@ -247,7 +247,7 @@ namespace GDX.Editor.ProjectSettings
             return "GDXProjectSettingsBuildInfo";
         }
 
-        private void CheckForDisabledContent()
+        void CheckForDisabledContent()
         {
             m_Content?.SetEnabled(GetToggleState());
             if (File.Exists(Path.Combine(Application.dataPath, Core.Config.DeveloperBuildInfoPath)))

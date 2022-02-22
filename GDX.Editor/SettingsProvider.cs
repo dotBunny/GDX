@@ -29,20 +29,20 @@ namespace GDX.Editor
         /// <summary>
         ///     A cache of boolean values backed by <see cref="EditorPrefs" /> to assist with optimizing layout.
         /// </summary>
-        private static StringKeyDictionary<bool> s_CachedEditorPreferences = new StringKeyDictionary<bool>(30);
+        static StringKeyDictionary<bool> s_CachedEditorPreferences = new StringKeyDictionary<bool>(30);
 
         /// <summary>
         ///     A list of keywords to flag when searching project settings.
         /// </summary>
-        private static List<string> s_SearchKeywords;
+        static List<string> s_SearchKeywords;
 
         public static StringKeyDictionary<IConfigSection> ConfigSections = new StringKeyDictionary<IConfigSection>(SectionCount);
 
         public static GDXConfig WorkingConfig;
 
-        private static VisualElement s_ChangesElement;
-        private static Button s_ClearButton;
-        private static Button s_SaveButton;
+        static VisualElement s_ChangesElement;
+        static Button s_ClearButton;
+        static Button s_SaveButton;
 
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace GDX.Editor
             };
         }
 
-        private static VisualElement GetPackageStatus(string package, bool status)
+        static VisualElement GetPackageStatus(string package, bool status)
         {
             VisualTreeAsset packageStatusAsset =
                 ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsPackageStatus");
