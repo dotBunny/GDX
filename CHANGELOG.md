@@ -4,23 +4,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.0.0] 
-***"Rip The Bandaid Off"***
-> As we began planning what this release might look like, we knew that it was going to break a lot of things. For years we have tried to support as many past versions of Unity as possible. Many new features become unlocked because of not having to support sunsetted versions.
-- Require mathematics, burst, collections
+## [3.0.0] - 2022-04-01
+***"Clean Slate"***
+> As we began planning what this release might look like, the decision was made to attempt to clear out a significant portion of our technical debt by sunsetting unsupported versions of Unity. We also took this opportunity to reevaluate and upgrade portions of the framework to better position it for future growth.
+
+### Added
+- Dependencies on `com.unity.mathematics`, `com.unity.burst`, `com.unity.jobs` and `com.unity.collections` packages.
+- Support for `com.unity.runtime.dots` (UNITY_DOTSRUNTIME) builds. Unsupported functionality will cause compilation errors during builds for immediate feedback on unsupported usage. Additionally, unsupported methods are flagged with an `UnsupportedRuntimeException` which is visible in [documentation](https://gdx.dotbunny.com/api) as well as IDE intelli-sense.
+- Support for `com.unity.entities` programming patterns.
+- `BVT` reporting structure for quick validation of builds, including a `TestBehaviour`.
+- `StringKeyDictionary` to optimize one of the most common use cases for dictionaries.
+- Unity editor non-pro (light) theme.
+
 ### Changed
-- Move to UIElements based editor UI !!!!!!!!! TODO
+- The `GDX` namespace has been reorganized.
+- The package's project settings were rebuilt to use `UIElement`s instead of `IMGUI`.
 - `HalfLifeToSmoothingFactor` no longer defaults elapsed time to `Time.deltaTime`
-
-- Visual Scripting in 2021 out of box
-
+- The visual scripting module detects the package based installation available in `Unity 2021` and forward. If you wish to have support in `Unity 2020.3` via the Asset Store you will need to add a scripting define symbol of `GDX_VISUALSCRIPTING` to your project.
 - All internal `Dictionary<string, value>` have been replaced with `StringKeyDictionary<value>`
 - `BuildInfoProvider` now uses `TextGenerator` for codegen.
+- `Platform::GetOutputFolder` CHECK now returns a writable folder regardless of the platform
+
+### Fixed  
+- `Platform::IsFocused` now returns the problem focus status on desktop platforms. 
 
 ### Removed
-- NativeSimpleList - UnsafeList
-- NativeSimpleQueue  - UnsafeQueue
-- `/// <remarks>Requires UnityEngine.CoreModule.dll to function correctly.</remarks>`
+- `NativeSimpleList` in favour of builtin collection `UnsafeList`.
+- `NativeSimpleQueue` in favour of builtin collection `UnsafeQueue`.
+-  All "Requires UnityEngine.CoreModule.dll" remarks.
 
 ## [2.0.3] - 2021-12-01
 ***"Automate This"***
