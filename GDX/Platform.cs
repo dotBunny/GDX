@@ -121,30 +121,68 @@ namespace GDX
         /// <summary>
         ///     Returns a runtime writable folder.
         /// </summary>
-        /// <param name="folderName">An optional additional folder under the provided path.</param>
+        /// <param name="folderName">An optional additional folder under the provided path that will be created if necessary.</param>
         /// <returns>The full path to a writable folder at runtime.</returns>
-        /// <remarks>Not all platforms support the additional folder option.</remarks>
+        /// <remarks>
+        ///     Depending on the platform, different routes are taken to finding a writable folder.
+        ///     <list type="table">
+        ///         <item>
+        ///             <term>Editor</term>
+        ///             <description>The project's root folder is used in this case.</description>
+        ///         </item>
+        ///         <item>
+        ///             <term>Standard Player</term>
+        ///             <description>Utilizes <see cref="Application.persistentDataPath" /> to find a suitable place.</description>
+        ///         </item>
+        ///         <item>
+        ///             <term>DOTS Runtime</term>
+        ///             <description>Uses <see cref="Directory.GetCurrentDirectory()"/>.</description>
+        ///         </item>
+        ///     </list>
+        ///     The path can be overridden by assigning GDX_OUTPUT_FOLDER in the launching arguments.
+        /// </remarks>
         public static string GetOutputFolder(string folderName = null)
         {
             if (s_OutputFolder != null) return s_OutputFolder;
-            
+
+            if (Developer.CommandLineParser.Arguments.ContainsKey("GDX_OUTPUT_FOLDER"))
+            {
+                s_OutputFolder = folderName == null
+                    ? Developer.CommandLineParser.Arguments["GDX_OUTPUT_FOLDER"]
+                    : Path.Combine(Developer.CommandLineParser.Arguments["GDX_OUTPUT_FOLDER"], folderName);
+            }
+            else
+            {
+
 #if UNITY_EDITOR
-            s_OutputFolder = folderName == null ? Path.Combine(Application.dataPath, "..") : Path.Combine(Application.dataPath, "..", folderName);
+                s_OutputFolder = folderName == null
+                    ? Path.Combine(Application.dataPath, "..")
+                    : Path.Combine(Application.dataPath, "..", folderName);
 #elif UNITY_DOTSRUNTIME
-            s_OutputFolder = folderName == null ? Directory.GetCurrentDirectory() : Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                s_OutputFolder = folderName == null
+                    ? Directory.GetCurrentDirectory()
+                    : Path.Combine(Directory.GetCurrentDirectory(), folderName);
 #else
-            s_OutputFolder = folderName == null ? Application.persistentDataPath : Path.Combine(Application.persistentDataPath, folderName);
+                s_OutputFolder = folderName == null
+                    ? Application.persistentDataPath
+                    : Path.Combine(Application.persistentDataPath, folderName);
 #endif
+            }
+
+            // Cleanup the folder pathing
+            s_OutputFolder = Path.GetFullPath(s_OutputFolder);
+
+            // Ensure that it is created
             EnsureFolderHierarchyExists(s_OutputFolder);
 
             return s_OutputFolder;
         }
-        
+
         public static char GetRandomSafeCharacter(IRandomProvider random)
         {
             return SafeCharacterPool[random.NextInteger(0, CharacterPoolLengthExclusive)];
         }
-        
+
         public static string GetUniqueOutputFilePath(string prefix = "GDX_", string extension = ".log", string folderName = null)
         {
             string tempFolder = GetOutputFolder(folderName);
@@ -180,7 +218,7 @@ namespace GDX
                 }
             }
         }
-        
+
 #if !UNITY_DOTSRUNTIME
         /// <summary>
         ///     Is the application focused?
@@ -201,7 +239,7 @@ namespace GDX
             return Application.isFocused;
 #endif
         }
-#endif // !UNITY_DOTSRUNTIME 
+#endif // !UNITY_DOTSRUNTIME
 
         /// <summary>
         /// Is it safe to write to the indicated <paramref name="filePath"/>?
@@ -221,7 +259,7 @@ namespace GDX
             }
             return true;
         }
-        
+
 #if !UNITY_DOTSRUNTIME
         /// <summary>
         /// Is the application running in headless mode?.
@@ -234,6 +272,6 @@ namespace GDX
         {
             return SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null;
         }
-#endif // !UNITY_DOTSRUNTIME   
+#endif // !UNITY_DOTSRUNTIME
     }
 }
