@@ -15,6 +15,6 @@ In the unlikely situation where `GDX` is found to contain a security vulnerabili
 
 ## Reporting a Vulnerability
 
-If you suspect a vulnerability caused by `GDX`, please contact [support@dotbunny.com](mailto:support@dotbunny.com) directly with as much detail as possible. We will follow up within 48 hours. 
+If you suspect a vulnerability caused by `GDX`, please contact [support@dotbunny.com](mailto:support@dotbunny.com) directly with as much detail as possible. We will follow up within 48 hours.
 
 If the suspected issue is proven to be a vulnerability, an anonymized security advisory notice will be [posted publicly](https://github.com/dotBunny/GDX/security/advisories?state=published) along with side updates to the package.
