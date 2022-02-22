@@ -160,7 +160,7 @@ namespace GDX.Editor.PropertyDrawers
             Rect foldoutRect = new Rect(position.x, position.y, position.width, m_HeightFoldout);
 
             // Editor only properties
-            m_PropertyIsSerializable = property.FindPropertyRelative("isSerializable");
+            m_PropertyIsSerializable = property.FindPropertyRelative("m_IsSerializable");
             m_PropertyIsSerializableCache = m_PropertyIsSerializable.boolValue;
             if (!m_PropertyIsSerializableCache)
             {
@@ -168,17 +168,17 @@ namespace GDX.Editor.PropertyDrawers
                 return;
             }
 
-            m_PropertyExpanded = property.FindPropertyRelative("drawerExpanded");
+            m_PropertyExpanded = property.FindPropertyRelative("m_DrawerExpanded");
             m_PropertyExpandedCache = m_PropertyExpanded.boolValue;
-            m_PropertyAddKey = property.FindPropertyRelative("serializedAddKey");
-            m_PropertyAddKeyValid = property.FindPropertyRelative("serializedAddKeyValid");
+            m_PropertyAddKey = property.FindPropertyRelative("m_SerializedAddKey");
+            m_PropertyAddKeyValid = property.FindPropertyRelative("m_SerializedAddKeyValid");
             m_PropertyAddKeyValidCache = m_PropertyAddKeyValid.boolValue;
 
             // Grab the properties that matter!
-            m_PropertyCount = property.FindPropertyRelative("serializedLength");
+            m_PropertyCount = property.FindPropertyRelative("m_SerializedLength");
             m_PropertyCountCache = m_PropertyCount.intValue;
-            m_PropertyKeys = property.FindPropertyRelative("serializedKeys");
-            m_PropertyValues = property.FindPropertyRelative("serializedValues");
+            m_PropertyKeys = property.FindPropertyRelative("m_SerializedKeys");
+            m_PropertyValues = property.FindPropertyRelative("m_SerializedValues");
 
             // Validate saved sizes
             m_IsKeyValueCountValid = m_PropertyCountCache == m_PropertyValues.arraySize &&

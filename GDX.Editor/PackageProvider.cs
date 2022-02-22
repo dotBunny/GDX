@@ -424,10 +424,12 @@ namespace GDX.Editor
         {
             // ReSharper disable NotAccessedField.Global
             // ReSharper disable UnusedMember.Global
+            // ReSharper disable InconsistentNaming
             public string version;
             public string unity;
             // ReSharper restore NotAccessedField.Global
             // ReSharper restore UnusedMember.Global
+            // ReSharper restore InconsistentNaming
         }
     }
 }

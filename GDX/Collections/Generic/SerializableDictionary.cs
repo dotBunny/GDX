@@ -34,22 +34,22 @@ namespace GDX.Collections.Generic
         ///     Is the dictionary completely capable of being serialized by Unity?
         /// </summary>
         /// <remarks>This field is determined/cached in the constructor.</remarks>
-        [HideInInspector] [SerializeField] bool isSerializable;
+        [HideInInspector] [SerializeField] bool m_IsSerializable;
 
         /// <summary>
         ///     The length of the serialized data arrays.
         /// </summary>
-        [HideInInspector] [SerializeField] int serializedLength = -1;
+        [HideInInspector] [SerializeField] int m_SerializedLength = -1;
 
         /// <summary>
         ///     An array of all of the keys, in order, used to recreate the base <see cref="Dictionary{TKey,TValue}" />.
         /// </summary>
-        [HideInInspector] [SerializeField] TKey[] serializedKeys;
+        [HideInInspector] [SerializeField] TKey[] m_SerializedKeys;
 
         /// <summary>
         ///     An array of all of the values, in order, used to recreate the base <see cref="Dictionary{TKey,TValue}" />.
         /// </summary>
-        [HideInInspector] [SerializeField] TValue[] serializedValues;
+        [HideInInspector] [SerializeField] TValue[] m_SerializedValues;
 
         /// <summary>
         ///     Type constructor.
@@ -57,7 +57,7 @@ namespace GDX.Collections.Generic
         public SerializableDictionary()
         {
 #if UNITY_EDITOR
-            isSerializable = IsSerializableType(typeof(TKey)) && IsSerializableType(typeof(TValue));
+            m_IsSerializable = IsSerializableType(typeof(TKey)) && IsSerializableType(typeof(TValue));
 #endif
         }
 
@@ -67,7 +67,7 @@ namespace GDX.Collections.Generic
         /// <returns>An integer value representing the count.</returns>
         public int GetSerializedDataLength()
         {
-            return serializedLength;
+            return m_SerializedLength;
         }
 
         /// <summary>
@@ -111,22 +111,22 @@ namespace GDX.Collections.Generic
             Clear();
 
             // If this is not serializable we need to do nothing
-            if (!isSerializable)
+            if (!m_IsSerializable)
             {
                 return;
             }
 
-            if (serializedLength <= 0)
+            if (m_SerializedLength <= 0)
             {
 #if UNITY_EDITOR
                 // Don't allow null keys for non-nullables
-                if (!IsNullableKey() && serializedAddKey == null)
+                if (!IsNullableKey() && m_SerializedAddKey == null)
                 {
-                    serializedAddKeyValid = false;
+                    m_SerializedAddKeyValid = false;
                 }
                 else
                 {
-                    serializedAddKeyValid = true;
+                    m_SerializedAddKeyValid = true;
                 }
 #endif
 
@@ -134,18 +134,18 @@ namespace GDX.Collections.Generic
             }
 
             // Iterate over all the serialized data and put it back into the dictionary as it once was, in order.
-            for (int i = 0; i < serializedLength; i++)
+            for (int i = 0; i < m_SerializedLength; i++)
             {
 #if UNITY_EDITOR
                 // If the key is already in the dataset what do we do?
-                if (ContainsKey(serializedKeys[i]))
+                if (ContainsKey(m_SerializedKeys[i]))
                 {
                     Trace.Output(Trace.TraceLevel.Error, "A duplicate key has been detected in the serialized dictionary, the item has been removed.\nYou can undo your last action to restore the previous state.");
                 }
                 else
                 {
 #endif
-                    Add(serializedKeys[i], serializedValues[i]);
+                    Add(m_SerializedKeys[i], m_SerializedValues[i]);
 #if UNITY_EDITOR
                 }
 #endif
@@ -154,16 +154,16 @@ namespace GDX.Collections.Generic
 #if UNITY_EDITOR
 
             // We need to check if the key is actually nullable
-            if (!IsNullableKey() && serializedAddKey == null)
+            if (!IsNullableKey() && m_SerializedAddKey == null)
             {
-                serializedAddKeyValid = false;
+                m_SerializedAddKeyValid = false;
             }
             else
             {
-                serializedAddKeyValid = !ContainsKey(serializedAddKey);
-                if (!serializedAddKeyValid)
+                m_SerializedAddKeyValid = !ContainsKey(m_SerializedAddKey);
+                if (!m_SerializedAddKeyValid)
                 {
-                    serializedAddKey = default;
+                    m_SerializedAddKey = default;
                 }
             }
 #endif
@@ -174,9 +174,9 @@ namespace GDX.Collections.Generic
                 return;
             }
 
-            serializedLength = -1;
-            serializedKeys = null;
-            serializedValues = null;
+            m_SerializedLength = -1;
+            m_SerializedKeys = null;
+            m_SerializedValues = null;
         }
 
         /// <summary>
@@ -214,9 +214,9 @@ namespace GDX.Collections.Generic
                 return;
             }
 
-            serializedKeys = keyArray;
-            serializedValues = valueArray;
-            serializedLength = keyArray.Length;
+            m_SerializedKeys = keyArray;
+            m_SerializedValues = valueArray;
+            m_SerializedLength = keyArray.Length;
         }
 
         /// <summary>
@@ -226,24 +226,24 @@ namespace GDX.Collections.Generic
         public void SaveSerializedData()
         {
             // If this is not serializable we need to do nothing
-            if (!isSerializable)
+            if (!m_IsSerializable)
             {
                 return;
             }
 
             // Stash our length for future usage
-            serializedLength = Count;
+            m_SerializedLength = Count;
 
             // Create our serialized data arrays
-            serializedKeys = new TKey[serializedLength];
-            serializedValues = new TValue[serializedLength];
+            m_SerializedKeys = new TKey[m_SerializedLength];
+            m_SerializedValues = new TValue[m_SerializedLength];
 
             // Stash our values
             int index = 0;
             foreach (KeyValuePair<TKey, TValue> pair in this)
             {
-                serializedKeys[index] = pair.Key;
-                serializedValues[index] = pair.Value;
+                m_SerializedKeys[index] = pair.Key;
+                m_SerializedValues[index] = pair.Value;
                 index++;
             }
         }
@@ -254,17 +254,17 @@ namespace GDX.Collections.Generic
         ///     Editor only data indicating if the property drawer is expanded.
         /// </summary>
         // ReSharper disable once NotAccessedField.Local
-        [HideInInspector] [SerializeField] bool drawerExpanded;
+        [HideInInspector] [SerializeField] bool m_DrawerExpanded;
 
         /// <summary>
         ///     Is the provided key a valid key (unique).
         /// </summary>
-        [HideInInspector] [SerializeField] bool serializedAddKeyValid;
+        [HideInInspector] [SerializeField] bool m_SerializedAddKeyValid;
 
         /// <summary>
         ///     Temporary placement for keys to be added.
         /// </summary>
-        [HideInInspector] [SerializeField] TKey serializedAddKey;
+        [HideInInspector] [SerializeField] TKey m_SerializedAddKey;
 #else
         // We need to pad the size of the serialized data due to Unity checking the size of the serialized object.
         // This is a problem where "classic" Unity author-time data, is the same as runtime data.

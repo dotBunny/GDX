@@ -24,12 +24,12 @@ namespace GDX.Mathematics
         /// <summary>
         ///     X <see cref="byte" />.
         /// </summary>
-        public byte x;
+        public byte X;
 
         /// <summary>
         ///     Y <see cref="byte" />.
         /// </summary>
-        public byte y;
+        public byte Y;
 
         /// <summary>
         ///     Create a <see cref="Byte2" /> from two <see cref="System.Int32" /> values.
@@ -39,8 +39,8 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Byte2(int x, int y)
         {
-            this.x = (byte)x;
-            this.y = (byte)y;
+            this.X = (byte)x;
+            this.Y = (byte)y;
         }
 
         /// <summary>
@@ -51,8 +51,8 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Byte2(byte x, byte y)
         {
-            this.x = x;
-            this.y = y;
+            this.X = x;
+            this.Y = y;
         }
 
         /// <summary>
@@ -62,19 +62,19 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Byte2(Byte2 xy)
         {
-            x = xy.x;
-            y = xy.y;
+            X = xy.X;
+            Y = xy.Y;
         }
 
         /// <summary>
         ///     Constructs a <see cref="Byte2" /> from a single <see cref="byte" /> value by assigning it to every component.
         /// </summary>
-        /// <param name="v">The value to copy to <see cref="x" /> and <see cref="y" />.</param>
+        /// <param name="v">The value to copy to <see cref="X" /> and <see cref="Y" />.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Byte2(byte v)
         {
-            x = v;
-            y = v;
+            X = v;
+            Y = v;
         }
 
         /// <summary>
@@ -85,8 +85,8 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Byte2(bool v)
         {
-            x = v ? (byte)255 : (byte)0;
-            y = v ? (byte)255 : (byte)0;
+            X = v ? (byte)255 : (byte)0;
+            Y = v ? (byte)255 : (byte)0;
         }
 
         /// <summary>
@@ -97,8 +97,8 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Byte2(float v)
         {
-            x = (byte)v;
-            y = (byte)v;
+            X = (byte)v;
+            Y = (byte)v;
         }
 
         /// <summary>
@@ -109,19 +109,19 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Byte2(double v)
         {
-            x = (byte)v;
-            y = (byte)v;
+            X = (byte)v;
+            Y = (byte)v;
         }
 
         /// <summary>
-        ///     Get a new <see cref="Byte2" /> created with <see cref="x" /> as both components.
+        ///     Get a new <see cref="Byte2" /> created with <see cref="X" /> as both components.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         // ReSharper disable once InconsistentNaming
         public Byte2 xx
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => new Byte2(x, x);
+            get => new Byte2(X, X);
         }
 
         /// <summary>
@@ -132,12 +132,12 @@ namespace GDX.Mathematics
         public Byte2 xy
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => new Byte2(x, y);
+            get => new Byte2(X, Y);
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set
             {
-                x = value.x;
-                y = value.y;
+                X = value.X;
+                Y = value.Y;
             }
         }
 
@@ -149,24 +149,24 @@ namespace GDX.Mathematics
         public Byte2 yx
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => new Byte2(y, x);
+            get => new Byte2(Y, X);
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set
             {
-                y = value.x;
-                x = value.y;
+                Y = value.X;
+                X = value.Y;
             }
         }
 
         /// <summary>
-        ///     Get a new <see cref="Byte2" /> created with <see cref="y" /> as both components.
+        ///     Get a new <see cref="Byte2" /> created with <see cref="Y" /> as both components.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         // ReSharper disable once InconsistentNaming
         public Byte2 yy
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => new Byte2(y, y);
+            get => new Byte2(Y, Y);
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace GDX.Mathematics
                     throw new ArgumentException("The index must be between[0...1]");
                 }
 #endif
-                fixed (byte* array = &x)
+                fixed (byte* array = &X)
                 {
                     array[index] = value;
                 }
@@ -212,7 +212,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Byte2 rhs)
         {
-            return x == rhs.x && y == rhs.y;
+            return X == rhs.X && Y == rhs.Y;
         }
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            return $"Byte2({x.ToString(format, formatProvider)}, {y.ToString(format, formatProvider)})";
+            return $"Byte2({X.ToString(format, formatProvider)}, {Y.ToString(format, formatProvider)})";
         }
 
         /// <summary>
@@ -300,7 +300,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator *(Byte2 lhs, Byte2 rhs)
         {
-            return new Byte2(lhs.x * rhs.x, lhs.y * rhs.y);
+            return new Byte2(lhs.X * rhs.X, lhs.Y * rhs.Y);
         }
 
         /// <summary>
@@ -315,7 +315,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator *(Byte2 lhs, byte rhs)
         {
-            return new Byte2(lhs.x * rhs, lhs.y * rhs);
+            return new Byte2(lhs.X * rhs, lhs.Y * rhs);
         }
 
         /// <summary>
@@ -330,7 +330,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator *(byte lhs, Byte2 rhs)
         {
-            return new Byte2(lhs * rhs.x, lhs * rhs.y);
+            return new Byte2(lhs * rhs.X, lhs * rhs.Y);
         }
 
         /// <summary>
@@ -342,7 +342,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator +(Byte2 lhs, Byte2 rhs)
         {
-            return new Byte2(lhs.x + rhs.x, lhs.y + rhs.y);
+            return new Byte2(lhs.X + rhs.X, lhs.Y + rhs.Y);
         }
 
         /// <summary>
@@ -357,7 +357,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator +(Byte2 lhs, byte rhs)
         {
-            return new Byte2(lhs.x + rhs, lhs.y + rhs);
+            return new Byte2(lhs.X + rhs, lhs.Y + rhs);
         }
 
         /// <summary>
@@ -372,7 +372,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator +(byte lhs, Byte2 rhs)
         {
-            return new Byte2(lhs + rhs.x, lhs + rhs.y);
+            return new Byte2(lhs + rhs.X, lhs + rhs.Y);
         }
 
         /// <summary>
@@ -384,7 +384,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator -(Byte2 lhs, Byte2 rhs)
         {
-            return new Byte2(lhs.x - rhs.x, lhs.y - rhs.y);
+            return new Byte2(lhs.X - rhs.X, lhs.Y - rhs.Y);
         }
 
         /// <summary>
@@ -399,7 +399,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator -(Byte2 lhs, byte rhs)
         {
-            return new Byte2(lhs.x - rhs, lhs.y - rhs);
+            return new Byte2(lhs.X - rhs, lhs.Y - rhs);
         }
 
         /// <summary>
@@ -414,7 +414,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator -(byte lhs, Byte2 rhs)
         {
-            return new Byte2(lhs - rhs.x, lhs - rhs.y);
+            return new Byte2(lhs - rhs.X, lhs - rhs.Y);
         }
 
         /// <summary>
@@ -426,7 +426,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator /(Byte2 lhs, Byte2 rhs)
         {
-            return new Byte2(lhs.x / rhs.x, lhs.y / rhs.y);
+            return new Byte2(lhs.X / rhs.X, lhs.Y / rhs.Y);
         }
 
         /// <summary>
@@ -441,7 +441,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator /(Byte2 lhs, byte rhs)
         {
-            return new Byte2(lhs.x / rhs, lhs.y / rhs);
+            return new Byte2(lhs.X / rhs, lhs.Y / rhs);
         }
 
         /// <summary>
@@ -456,7 +456,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator /(byte lhs, Byte2 rhs)
         {
-            return new Byte2(lhs / rhs.x, lhs / rhs.y);
+            return new Byte2(lhs / rhs.X, lhs / rhs.Y);
         }
 
         /// <summary>
@@ -468,7 +468,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator %(Byte2 lhs, Byte2 rhs)
         {
-            return new Byte2(lhs.x % rhs.x, lhs.y % rhs.y);
+            return new Byte2(lhs.X % rhs.X, lhs.Y % rhs.Y);
         }
 
         /// <summary>
@@ -483,7 +483,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator %(Byte2 lhs, byte rhs)
         {
-            return new Byte2(lhs.x % rhs, lhs.y % rhs);
+            return new Byte2(lhs.X % rhs, lhs.Y % rhs);
         }
 
         /// <summary>
@@ -498,7 +498,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator %(byte lhs, Byte2 rhs)
         {
-            return new Byte2(lhs % rhs.x, lhs % rhs.y);
+            return new Byte2(lhs % rhs.X, lhs % rhs.Y);
         }
 
         /// <summary>
@@ -509,7 +509,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator ++(Byte2 val)
         {
-            return new Byte2(++val.x, ++val.y);
+            return new Byte2(++val.X, ++val.Y);
         }
 
         /// <summary>
@@ -520,7 +520,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator --(Byte2 val)
         {
-            return new Byte2(--val.x, --val.y);
+            return new Byte2(--val.X, --val.Y);
         }
 
         /// <summary>
@@ -531,7 +531,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator -(Byte2 val)
         {
-            return new Byte2(-val.x, -val.y);
+            return new Byte2(-val.X, -val.Y);
         }
 
         /// <summary>
@@ -542,7 +542,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator +(Byte2 val)
         {
-            return new Byte2(+val.x, +val.y);
+            return new Byte2(+val.X, +val.Y);
         }
 
         /// <summary>
@@ -553,7 +553,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator ~(Byte2 val)
         {
-            return new Byte2(~val.x, ~val.y);
+            return new Byte2(~val.X, ~val.Y);
         }
 
         /// <summary>
@@ -565,7 +565,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator &(Byte2 lhs, Byte2 rhs)
         {
-            return new Byte2(lhs.x & rhs.x, lhs.y & rhs.y);
+            return new Byte2(lhs.X & rhs.X, lhs.Y & rhs.Y);
         }
 
         /// <summary>
@@ -580,7 +580,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator &(Byte2 lhs, byte rhs)
         {
-            return new Byte2(lhs.x & rhs, lhs.y & rhs);
+            return new Byte2(lhs.X & rhs, lhs.Y & rhs);
         }
 
         /// <summary>
@@ -595,7 +595,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator &(byte lhs, Byte2 rhs)
         {
-            return new Byte2(lhs & rhs.x, lhs & rhs.y);
+            return new Byte2(lhs & rhs.X, lhs & rhs.Y);
         }
 
         /// <summary>
@@ -607,7 +607,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator |(Byte2 lhs, Byte2 rhs)
         {
-            return new Byte2(lhs.x | rhs.x, lhs.y | rhs.y);
+            return new Byte2(lhs.X | rhs.X, lhs.Y | rhs.Y);
         }
 
         /// <summary>
@@ -622,7 +622,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator |(Byte2 lhs, byte rhs)
         {
-            return new Byte2(lhs.x | rhs, lhs.y | rhs);
+            return new Byte2(lhs.X | rhs, lhs.Y | rhs);
         }
 
         /// <summary>
@@ -637,7 +637,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator |(byte lhs, Byte2 rhs)
         {
-            return new Byte2(lhs | rhs.x, lhs | rhs.y);
+            return new Byte2(lhs | rhs.X, lhs | rhs.Y);
         }
 
         /// <summary>
@@ -649,7 +649,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator ^(Byte2 lhs, Byte2 rhs)
         {
-            return new Byte2(lhs.x ^ rhs.x, lhs.y ^ rhs.y);
+            return new Byte2(lhs.X ^ rhs.X, lhs.Y ^ rhs.Y);
         }
 
         /// <summary>
@@ -664,7 +664,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator ^(Byte2 lhs, byte rhs)
         {
-            return new Byte2(lhs.x ^ rhs, lhs.y ^ rhs);
+            return new Byte2(lhs.X ^ rhs, lhs.Y ^ rhs);
         }
 
         /// <summary>
@@ -679,7 +679,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte2 operator ^(byte lhs, Byte2 rhs)
         {
-            return new Byte2(lhs ^ rhs.x, lhs ^ rhs.y);
+            return new Byte2(lhs ^ rhs.X, lhs ^ rhs.Y);
         }
 
         /// <summary>
@@ -697,9 +697,9 @@ namespace GDX.Mathematics
                 int hash = (int)2166136261;
 
                 // ReSharper disable once NonReadonlyMemberInGetHashCode
-                hash = (hash ^ x) * k_P;
+                hash = (hash ^ X) * k_P;
                 // ReSharper disable once NonReadonlyMemberInGetHashCode
-                hash = (hash ^ y) * k_P;
+                hash = (hash ^ Y) * k_P;
 
                 hash += hash << 13;
                 hash ^= hash >> 7;
@@ -717,7 +717,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override string ToString()
         {
-            return $"Byte2({x.ToString()}, {y.ToString()})";
+            return $"Byte2({X.ToString()}, {Y.ToString()})";
         }
 
         /// <summary>
@@ -727,8 +727,8 @@ namespace GDX.Mathematics
         {
             public DebuggerProxy(Byte2 v)
             {
-                x = v.x;
-                y = v.y;
+                x = v.X;
+                y = v.Y;
             }
             // ReSharper disable MemberCanBePrivate.Global
             // ReSharper disable InconsistentNaming
@@ -753,8 +753,8 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Byte2(bool2 v)
         {
-            x = v.x ? (byte)255 : (byte)0;
-            y = v.y ? (byte)255 : (byte)0;
+            X = v.x ? (byte)255 : (byte)0;
+            Y = v.y ? (byte)255 : (byte)0;
         }
 
         /// <summary>
@@ -764,8 +764,8 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Byte2(float2 v)
         {
-            x = (byte)v.x;
-            y = (byte)v.y;
+            X = (byte)v.x;
+            Y = (byte)v.y;
         }
 
         /// <summary>
@@ -775,8 +775,8 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Byte2(double2 v)
         {
-            x = (byte)v.x;
-            y = (byte)v.y;
+            X = (byte)v.x;
+            Y = (byte)v.y;
         }
 
         /// <summary>
@@ -822,7 +822,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator <(Byte2 lhs, Byte2 rhs)
         {
-            return new bool2(lhs.x < rhs.x, lhs.y < rhs.y);
+            return new bool2(lhs.X < rhs.X, lhs.Y < rhs.Y);
         }
 
         /// <summary>
@@ -837,7 +837,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator <(Byte2 lhs, byte rhs)
         {
-            return new bool2(lhs.x < rhs, lhs.y < rhs);
+            return new bool2(lhs.X < rhs, lhs.Y < rhs);
         }
 
         /// <summary>
@@ -852,7 +852,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator <(byte lhs, Byte2 rhs)
         {
-            return new bool2(lhs < rhs.x, lhs < rhs.y);
+            return new bool2(lhs < rhs.X, lhs < rhs.Y);
         }
 
         /// <summary>
@@ -864,7 +864,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator <=(Byte2 lhs, Byte2 rhs)
         {
-            return new bool2(lhs.x <= rhs.x, lhs.y <= rhs.y);
+            return new bool2(lhs.X <= rhs.X, lhs.Y <= rhs.Y);
         }
 
         /// <summary>
@@ -880,7 +880,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator <=(Byte2 lhs, byte rhs)
         {
-            return new bool2(lhs.x <= rhs, lhs.y <= rhs);
+            return new bool2(lhs.X <= rhs, lhs.Y <= rhs);
         }
 
         /// <summary>
@@ -896,7 +896,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator <=(byte lhs, Byte2 rhs)
         {
-            return new bool2(lhs <= rhs.x, lhs <= rhs.y);
+            return new bool2(lhs <= rhs.X, lhs <= rhs.Y);
         }
 
         /// <summary>
@@ -908,7 +908,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator >(Byte2 lhs, Byte2 rhs)
         {
-            return new bool2(lhs.x > rhs.x, lhs.y > rhs.y);
+            return new bool2(lhs.X > rhs.X, lhs.Y > rhs.Y);
         }
 
         /// <summary>
@@ -923,7 +923,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator >(Byte2 lhs, byte rhs)
         {
-            return new bool2(lhs.x > rhs, lhs.y > rhs);
+            return new bool2(lhs.X > rhs, lhs.Y > rhs);
         }
 
         /// <summary>
@@ -938,7 +938,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator >(byte lhs, Byte2 rhs)
         {
-            return new bool2(lhs > rhs.x, lhs > rhs.y);
+            return new bool2(lhs > rhs.X, lhs > rhs.Y);
         }
 
 
@@ -955,7 +955,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator >=(Byte2 lhs, Byte2 rhs)
         {
-            return new bool2(lhs.x >= rhs.x, lhs.y >= rhs.y);
+            return new bool2(lhs.X >= rhs.X, lhs.Y >= rhs.Y);
         }
 
         /// <summary>
@@ -971,7 +971,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator >=(Byte2 lhs, byte rhs)
         {
-            return new bool2(lhs.x >= rhs, lhs.y >= rhs);
+            return new bool2(lhs.X >= rhs, lhs.Y >= rhs);
         }
 
         /// <summary>
@@ -987,7 +987,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator >=(byte lhs, Byte2 rhs)
         {
-            return new bool2(lhs >= rhs.x, lhs >= rhs.y);
+            return new bool2(lhs >= rhs.X, lhs >= rhs.Y);
         }
 
         /// <summary>
@@ -999,7 +999,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator ==(Byte2 lhs, Byte2 rhs)
         {
-            return new bool2(lhs.x == rhs.x, lhs.y == rhs.y);
+            return new bool2(lhs.X == rhs.X, lhs.Y == rhs.Y);
         }
 
         /// <summary>
@@ -1011,7 +1011,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator ==(Byte2 lhs, byte rhs)
         {
-            return new bool2(lhs.x == rhs, lhs.y == rhs);
+            return new bool2(lhs.X == rhs, lhs.Y == rhs);
         }
 
         /// <summary>
@@ -1023,7 +1023,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator ==(byte lhs, Byte2 rhs)
         {
-            return new bool2(lhs == rhs.x, lhs == rhs.y);
+            return new bool2(lhs == rhs.X, lhs == rhs.Y);
         }
 
         /// <summary>
@@ -1035,7 +1035,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator !=(Byte2 lhs, Byte2 rhs)
         {
-            return new bool2(lhs.x != rhs.x, lhs.y != rhs.y);
+            return new bool2(lhs.X != rhs.X, lhs.Y != rhs.Y);
         }
 
         /// <summary>
@@ -1047,7 +1047,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator !=(Byte2 lhs, byte rhs)
         {
-            return new bool2(lhs.x != rhs, lhs.y != rhs);
+            return new bool2(lhs.X != rhs, lhs.Y != rhs);
         }
 
         /// <summary>
@@ -1059,7 +1059,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool2 operator !=(byte lhs, Byte2 rhs)
         {
-            return new bool2(lhs != rhs.x, lhs != rhs.y);
+            return new bool2(lhs != rhs.X, lhs != rhs.Y);
         }
     }
 }
