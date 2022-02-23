@@ -85,7 +85,7 @@ namespace GDX
             switch (targetLanguage)
             {
                 case Language.English:
-                    return "en_US";
+                    return "en";
                 case Language.German:
                     return "de";
                 case Language.Spanish:
@@ -101,40 +101,7 @@ namespace GDX
                 case Language.Default:
                     return "DEFAULT";
                 default:
-                    return "en_US";
-            }
-        }
-
-        /// <summary>
-        ///     <para>Get the IETF language code for <paramref name="targetLanguage" />.</para>
-        /// </summary>
-        /// <remarks>Two additional non-compliant values may be returned DEV or DEFAULT.</remarks>
-        /// <param name="targetLanguage">The target <see cref="Language" />.</param>
-        /// <returns>The language code.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        // ReSharper disable once InconsistentNaming
-        public static string GetIETF(this Language targetLanguage)
-        {
-            switch (targetLanguage)
-            {
-                case Language.English:
-                    return "en-US";
-                case Language.German:
-                    return "de";
-                case Language.Spanish:
-                    return "es";
-                case Language.French:
-                    return "fr";
-                case Language.Polish:
-                    return "pl";
-                case Language.Russian:
-                    return "ru";
-                case Language.Development:
-                    return "DEV";
-                case Language.Default:
-                    return "DEFAULT";
-                default:
-                    return "en-US";
+                    return "en";
             }
         }
 
@@ -234,7 +201,7 @@ namespace GDX
         {
             if (Core.Config.LocalizationSetDefaultCulture && GetSystemLanguage() == Language.Default)
             {
-                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(Core.Config.LocalizationDefaultCulture.GetIETF());
+                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(Core.Config.LocalizationDefaultCulture.GetISO639_1());
             }
         }
     }
