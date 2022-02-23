@@ -66,34 +66,34 @@ namespace GDX.Editor
             });
 
             // Register settings
-            if (!ConfigSections.ContainsKey(AutomaticUpdatesSettings.SectionID))
+            if (!ConfigSections.ContainsKey(AutomaticUpdatesSettings.SectionKey))
             {
-                ConfigSections.AddUnchecked(AutomaticUpdatesSettings.SectionID, new AutomaticUpdatesSettings());
+                ConfigSections.AddUnchecked(AutomaticUpdatesSettings.SectionKey, new AutomaticUpdatesSettings());
             }
-            if (!ConfigSections.ContainsKey(ConfigSettings.SectionID))
+            if (!ConfigSections.ContainsKey(ConfigSettings.SectionKey))
             {
-                ConfigSections.AddUnchecked(ConfigSettings.SectionID, new ConfigSettings());
+                ConfigSections.AddUnchecked(ConfigSettings.SectionKey, new ConfigSettings());
             }
-            if (!ConfigSections.ContainsKey(BuildInfoSettings.SectionID))
+            if (!ConfigSections.ContainsKey(BuildInfoSettings.SectionKey))
             {
-                ConfigSections.AddUnchecked(BuildInfoSettings.SectionID, new BuildInfoSettings());
+                ConfigSections.AddUnchecked(BuildInfoSettings.SectionKey, new BuildInfoSettings());
             }
-            if (!ConfigSections.ContainsKey(CommandLineProcessorSettings.SectionID))
+            if (!ConfigSections.ContainsKey(CommandLineProcessorSettings.SectionKey))
             {
-                ConfigSections.AddUnchecked(CommandLineProcessorSettings.SectionID, new CommandLineProcessorSettings());
+                ConfigSections.AddUnchecked(CommandLineProcessorSettings.SectionKey, new CommandLineProcessorSettings());
             }
-            if (!ConfigSections.ContainsKey(EnvironmentSettings.SectionID))
+            if (!ConfigSections.ContainsKey(EnvironmentSettings.SectionKey))
             {
-                ConfigSections.AddUnchecked(EnvironmentSettings.SectionID, new EnvironmentSettings());
+                ConfigSections.AddUnchecked(EnvironmentSettings.SectionKey, new EnvironmentSettings());
             }
-            if (!ConfigSections.ContainsKey(LocaleSettings.SectionID))
+            if (!ConfigSections.ContainsKey(LocaleSettings.SectionKey))
             {
-                ConfigSections.AddUnchecked(LocaleSettings.SectionID, new LocaleSettings());
+                ConfigSections.AddUnchecked(LocaleSettings.SectionKey, new LocaleSettings());
             }
 #if GDX_VISUALSCRIPTING
-            if (!ConfigSections.ContainsKey(VisualScriptingSettings.SectionID))
+            if (!ConfigSections.ContainsKey(VisualScriptingSettings.SectionKey))
             {
-                ConfigSections.AddUnchecked(VisualScriptingSettings.SectionID, new VisualScriptingSettings());
+                ConfigSections.AddUnchecked(VisualScriptingSettings.SectionKey, new VisualScriptingSettings());
             }
 #endif
 
@@ -215,7 +215,7 @@ namespace GDX.Editor
                     while (ConfigSections.MoveNext(ref iterator, out StringKeyEntry<IConfigSection> item))
                     {
                         IConfigSection section = item.Value;
-                        string sectionID = section.GetSectionID();
+                        string sectionID = section.GetSectionKey();
                         VisualElement sectionHeader = ConfigSectionsProvider.CreateAndBindSectionHeader(section);
 
                         contentScrollView.contentContainer.Add(sectionHeader);

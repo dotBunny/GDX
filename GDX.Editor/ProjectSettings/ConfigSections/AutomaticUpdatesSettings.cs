@@ -13,7 +13,7 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     class AutomaticUpdatesSettings : IConfigSection
     {
-        public const string SectionID = "GDX.Editor.UpdateProvider";
+        public const string SectionKey = "GDX.Editor.UpdateProvider";
 
         VisualElement m_RootElement;
         VisualElement m_ElementLocalVersion;
@@ -163,9 +163,9 @@ namespace GDX.Editor.ProjectSettings
         {
             return "Automatic Package Updates";
         }
-        public string GetSectionID()
+        public string GetSectionKey()
         {
-            return SectionID;
+            return SectionKey;
         }
 
         public string GetSectionHelpLink()

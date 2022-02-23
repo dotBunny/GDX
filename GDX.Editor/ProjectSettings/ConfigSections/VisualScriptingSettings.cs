@@ -23,7 +23,7 @@ namespace GDX.Editor.ProjectSettings
         /// <summary>
         ///     Internal section identifier.
         /// </summary>
-        public const string SectionID = "GDX.VisualScripting";
+        public const string SectionKey = "GDX.VisualScripting";
 
         Button m_ButtonRegenerateUnits;
         Button m_ButtonInstallDocs;
@@ -266,9 +266,9 @@ namespace GDX.Editor.ProjectSettings
         {
             return "Visual Scripting";
         }
-        public string GetSectionID()
+        public string GetSectionKey()
         {
-            return SectionID;
+            return SectionKey;
         }
         public string GetSectionHelpLink()
         {

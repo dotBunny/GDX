@@ -26,10 +26,10 @@ namespace GDX.Editor.ProjectSettings
 
         public static VisualElement CreateAndBindSectionHeader(IConfigSection section)
         {
-            string sectionID = section.GetSectionID();
-            if (s_ConfigSectionHeaders.ContainsKey(sectionID))
+            string sectionKey = section.GetSectionKey();
+            if (s_ConfigSectionHeaders.ContainsKey(sectionKey))
             {
-                return s_ConfigSectionContents[sectionID];
+                return s_ConfigSectionContents[sectionKey];
             }
 
             VisualTreeAsset headerAsset =
@@ -43,9 +43,9 @@ namespace GDX.Editor.ProjectSettings
             {
                 expandButton.clicked += () =>
                 {
-                    OnExpandSectionHeaderClicked(sectionID);
-                    UpdateSectionHeader(sectionID);
-                    UpdateSectionContent(sectionID);
+                    OnExpandSectionHeaderClicked(sectionKey);
+                    UpdateSectionHeader(sectionKey);
+                    UpdateSectionContent(sectionKey);
                 };
             }
 
@@ -86,7 +86,7 @@ namespace GDX.Editor.ProjectSettings
                     enabledToggle.visible = true;
                     enabledToggle.RegisterValueChangedCallback(evt =>
                     {
-                        OnToggleSectionHeaderClicked(enabledToggle, sectionID, evt.newValue);
+                        OnToggleSectionHeaderClicked(enabledToggle, sectionKey, evt.newValue);
                     });
                 }
                 else
@@ -97,16 +97,16 @@ namespace GDX.Editor.ProjectSettings
             }
 
             // Send back created instance
-            s_ConfigSectionHeaders.AddUnchecked(sectionID, headerInstance);
+            s_ConfigSectionHeaders.AddUnchecked(sectionKey, headerInstance);
             return headerInstance;
         }
 
         public static VisualElement CreateAndBindSectionContent(IConfigSection section)
         {
-            string sectionID = section.GetSectionID();
-            if (s_ConfigSectionContents.ContainsKey(sectionID))
+            string sectionKey = section.GetSectionKey();
+            if (s_ConfigSectionContents.ContainsKey(sectionKey))
             {
-                return s_ConfigSectionContents[sectionID];
+                return s_ConfigSectionContents[sectionKey];
             }
 
             VisualTreeAsset sectionAsset =
@@ -117,7 +117,7 @@ namespace GDX.Editor.ProjectSettings
             section.BindSectionContent(sectionInstance);
 
             // Record the whole section
-            s_ConfigSectionContents.AddUnchecked(sectionID, sectionInstance);
+            s_ConfigSectionContents.AddUnchecked(sectionKey, sectionInstance);
 
             return sectionInstance;
         }
@@ -128,19 +128,19 @@ namespace GDX.Editor.ProjectSettings
             s_ConfigSectionContents.Clear();
         }
 
-        static void OnExpandSectionHeaderClicked(string sectionID)
+        static void OnExpandSectionHeaderClicked(string sectionKey)
         {
             GUIUtility.hotControl = 0;
-            IConfigSection section = SettingsProvider.ConfigSections[sectionID];
-            bool setting = SettingsProvider.GetCachedEditorBoolean(sectionID, section.GetDefaultVisibility());
-            SettingsProvider.SetCachedEditorBoolean(sectionID, !setting);
+            IConfigSection section = SettingsProvider.ConfigSections[sectionKey];
+            bool setting = SettingsProvider.GetCachedEditorBoolean(sectionKey, section.GetDefaultVisibility());
+            SettingsProvider.SetCachedEditorBoolean(sectionKey, !setting);
         }
 
-        static void OnToggleSectionHeaderClicked(VisualElement toggleElement, string sectionID, bool newValue)
+        static void OnToggleSectionHeaderClicked(VisualElement toggleElement, string sectionKey, bool newValue)
         {
-            IConfigSection section = SettingsProvider.ConfigSections[sectionID];
+            IConfigSection section = SettingsProvider.ConfigSections[sectionKey];
             section.SetToggleState(toggleElement, newValue);
-            UpdateSectionHeader(sectionID);
+            UpdateSectionHeader(sectionKey);
         }
 
         public static void UpdateAll()
@@ -153,12 +153,12 @@ namespace GDX.Editor.ProjectSettings
             }
         }
 
-        public static void UpdateSectionContent(string sectionID)
+        public static void UpdateSectionContent(string sectionKey)
         {
-            IConfigSection section = SettingsProvider.ConfigSections[sectionID];
-            VisualElement element = s_ConfigSectionContents[sectionID];
+            IConfigSection section = SettingsProvider.ConfigSections[sectionKey];
+            VisualElement element = s_ConfigSectionContents[sectionKey];
 
-            if (SettingsProvider.GetCachedEditorBoolean(sectionID, section.GetDefaultVisibility()))
+            if (SettingsProvider.GetCachedEditorBoolean(sectionKey, section.GetDefaultVisibility()))
             {
                 element.RemoveFromClassList(HiddenClass);
             }
@@ -170,10 +170,10 @@ namespace GDX.Editor.ProjectSettings
             section.UpdateSectionContent();
         }
 
-        public static void UpdateSectionHeader(string sectionID)
+        public static void UpdateSectionHeader(string sectionKey)
         {
-            IConfigSection section = SettingsProvider.ConfigSections[sectionID];
-            VisualElement sectionHeaderElement = s_ConfigSectionHeaders[sectionID];
+            IConfigSection section = SettingsProvider.ConfigSections[sectionKey];
+            VisualElement sectionHeaderElement = s_ConfigSectionHeaders[sectionKey];
 
             if (section.GetToggleSupport())
             {
@@ -194,7 +194,7 @@ namespace GDX.Editor.ProjectSettings
                 }
             }
 
-            if (SettingsProvider.GetCachedEditorBoolean(sectionID, section.GetDefaultVisibility()))
+            if (SettingsProvider.GetCachedEditorBoolean(sectionKey, section.GetDefaultVisibility()))
             {
                 sectionHeaderElement.AddToClassList(k_ExpandedClass);
             }

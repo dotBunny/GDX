@@ -17,7 +17,7 @@ namespace GDX.Editor.ProjectSettings
     // ReSharper disable once UnusedType.Global
     class EnvironmentSettings : IConfigSection
     {
-        public const string SectionID = "GDX.Environment";
+        public const string SectionKey = "GDX.Environment";
         VisualElement m_RootElement;
         Toggle m_ToggleEnsureSymbol;
         Toggle m_ToggleDebugConsole;
@@ -199,9 +199,9 @@ namespace GDX.Editor.ProjectSettings
         {
             return "Environment";
         }
-        public string GetSectionID()
+        public string GetSectionKey()
         {
-            return SectionID;
+            return SectionKey;
         }
         public string GetSectionHelpLink()
         {

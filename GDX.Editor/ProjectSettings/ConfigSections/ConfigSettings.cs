@@ -12,7 +12,7 @@ namespace GDX.Editor.ProjectSettings
     // ReSharper disable once UnusedType.Global
     class ConfigSettings : IConfigSection
     {
-        public const string SectionID = "GDX.Config";
+        public const string SectionKey = "GDX.Config";
         VisualElement m_RootElement;
         TextField m_TextOutputFolder;
 
@@ -55,9 +55,9 @@ namespace GDX.Editor.ProjectSettings
             return null;
         }
 
-        public string GetSectionID()
+        public string GetSectionKey()
         {
-            return SectionID;
+            return SectionKey;
         }
 
         public string GetTemplateName()

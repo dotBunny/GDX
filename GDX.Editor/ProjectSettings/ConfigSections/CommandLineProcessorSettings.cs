@@ -12,7 +12,7 @@ namespace GDX.Editor.ProjectSettings
     // ReSharper disable once UnusedType.Global
     class CommandLineProcessorSettings : IConfigSection
     {
-        public const string SectionID = "GDX.Developer.CommandLineParser";
+        public const string SectionKey = "GDX.Developer.CommandLineParser";
         VisualElement m_RootElement;
         TextField m_TextArgumentPrefix;
         TextField m_TextArgumentSplit;
@@ -74,9 +74,9 @@ namespace GDX.Editor.ProjectSettings
             return "api/GDX.Developer.CommandLineParser.html";
         }
 
-        public string GetSectionID()
+        public string GetSectionKey()
         {
-            return SectionID;
+            return SectionKey;
         }
 
         public string GetTemplateName()

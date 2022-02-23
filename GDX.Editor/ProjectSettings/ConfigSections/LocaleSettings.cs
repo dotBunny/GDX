@@ -17,7 +17,7 @@ namespace GDX.Editor.ProjectSettings
     // ReSharper disable once UnusedType.Global
     class LocaleSettings : IConfigSection
     {
-        public const string SectionID = "GDX.Localization";
+        public const string SectionKey = "GDX.Localization";
         VisualElement m_RootElement;
         Toggle m_ToggleSetDefaultCulture;
         EnumField m_EnumDefaultCulture;
@@ -77,9 +77,9 @@ namespace GDX.Editor.ProjectSettings
             return "api/GDX.Localization.html";
         }
 
-        public string GetSectionID()
+        public string GetSectionKey()
         {
-            return SectionID;
+            return SectionKey;
         }
 
         public string GetTemplateName()
