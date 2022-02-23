@@ -4,8 +4,6 @@
 
 using System;
 
-// ReSharper disable UnusedMember.Global
-
 namespace GDX.Collections
 {
     /// <summary>
@@ -14,11 +12,8 @@ namespace GDX.Collections
     ///     but neither the allocated indices nor the free indices can be reliably iterated without an external data structure.
     ///     This structure can be adapted to an arbitrary of external, parallel arrays.
     /// </summary>
-    // ReSharper disable once UnusedType.Global
     public struct FreeList
     {
-        // ReSharper disable MemberCanBePrivate.Global
-
         /// <summary>
         ///     Data storage for allocated indices as well as the in-place free-list.
         /// </summary>
@@ -32,10 +27,7 @@ namespace GDX.Collections
         /// <summary>
         ///     The total number of currently-allocated indices.
         /// </summary>
-        // ReSharper disable once NotAccessedField.Global
         public int Count;
-
-        // ReSharper enable MemberCanBePrivate.Global
 
         /// <summary>
         /// </summary>

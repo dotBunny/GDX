@@ -8,8 +8,6 @@ using System.Text;
 using GDX.Mathematics.Random;
 using UnityEngine;
 
-// ReSharper disable UnusedMember.Global, MemberCanBePrivate.Global
-
 namespace GDX
 {
     /// <summary>

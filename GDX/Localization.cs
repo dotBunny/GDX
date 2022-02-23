@@ -7,8 +7,6 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-// ReSharper disable MemberCanBePrivate.Global, UnusedMember.Global
-
 namespace GDX
 {
     /// <summary>
@@ -102,6 +100,38 @@ namespace GDX
                     return "DEFAULT";
                 default:
                     return "en";
+            }
+        }
+
+        /// <summary>
+        ///     <para>Get the IETF BCP 47 language code for <paramref name="targetLanguage" />.</para>
+        /// </summary>
+        /// <remarks>Two additional non-compliant values may be returned DEV or DEFAULT.</remarks>
+        /// <param name="targetLanguage">The target <see cref="Language" />.</param>
+        /// <returns>The language code.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GetIETF_BCP47(this Language targetLanguage)
+        {
+            switch (targetLanguage)
+            {
+                case Language.English:
+                    return "en-US";
+                case Language.German:
+                    return "de-DE";
+                case Language.Spanish:
+                    return "es-ES";
+                case Language.French:
+                    return "fr-FR";
+                case Language.Polish:
+                    return "pl-PL";
+                case Language.Russian:
+                    return "ru-RU";
+                case Language.Development:
+                    return "DEV";
+                case Language.Default:
+                    return "DEFAULT";
+                default:
+                    return "en-US";
             }
         }
 
@@ -201,7 +231,7 @@ namespace GDX
         {
             if (Core.Config.LocalizationSetDefaultCulture && GetSystemLanguage() == Language.Default)
             {
-                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(Core.Config.LocalizationDefaultCulture.GetISO639_1());
+                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(Core.Config.LocalizationDefaultCulture.GetIETF_BCP47());
             }
         }
     }

@@ -10,15 +10,12 @@ using Unity.Mathematics;
 
 #endif
 
-// ReSharper disable UnusedMember.Global, MemberCanBePrivate.Global
-
 namespace GDX.Collections.Generic
 {
     /// <summary>
     ///     A 3-Dimensional <see cref="NativeArray{T}" /> backed array.
     /// </summary>
     /// <typeparam name="T">Type of objects.</typeparam>
-    // ReSharper disable once UnusedType.Global
     public struct NativeUniformArray3D<T> : IDisposable where T : struct
     {
         /// <summary>

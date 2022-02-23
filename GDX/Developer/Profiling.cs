@@ -10,15 +10,12 @@ using UnityEngine.Profiling;
 using System.IO;
 using UnityEngine.Profiling.Memory.Experimental;
 
-// ReSharper disable UnusedMember.Global
-
 namespace GDX.Developer
 {
     /// <summary>
     ///     A set of functionality useful for creating profiling data to reason about the performance of an application.
     /// </summary>
     /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
-    // ReSharper disable once UnusedType.Global
     public class Profiling
     {
         /// <summary>

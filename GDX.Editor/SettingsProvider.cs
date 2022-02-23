@@ -9,8 +9,6 @@ using GDX.Editor.ProjectSettings;
 using UnityEditor;
 using UnityEngine.UIElements;
 
-// ReSharper disable UnusedMember.Global
-
 namespace GDX.Editor
 {
     /// <summary>
@@ -59,7 +57,6 @@ namespace GDX.Editor
             // Initialize some things here instead of static initializers
             s_SearchKeywords ??= new List<string>(new[]
             {
-                // ReSharper disable once StringLiteralTypo
                 "gdx", "automatic", "package", "update", "buildinfo", "task", "stream", "changelist",
                 "cli", "argument", "environment", "trace", "symbol", "locale", "localization", "culture",
                 "visual", "scripting", "vs", "parser", "commandline", "build"
@@ -97,11 +94,9 @@ namespace GDX.Editor
             }
 #endif
 
-            // ReSharper disable once HeapView.ObjectAllocation.Evident
             return new UnityEditor.SettingsProvider("Project/GDX", SettingsScope.Project)
             {
                 label = "GDX",
-                // ReSharper disable once UnusedParameter.Local
                 activateHandler = (searchContext, rootElement) =>
                 {
                     // Add base style sheet
@@ -197,7 +192,6 @@ namespace GDX.Editor
                     };
 
                     VisualElement packageHolderElement = rootElement.Q<VisualElement>("gdx-project-settings-packages");
-                    // ReSharper disable once StringLiteralTypo
                     packageHolderElement.Add(GetPackageStatus("Addressables", Developer.Conditionals.HasAddressablesPackage));
                     packageHolderElement.Add(GetPackageStatus("Platforms", Developer.Conditionals.HasPlatformsPackage));
                     packageHolderElement.Add(GetPackageStatus("Visual Scripting", Developer.Conditionals.HasVisualScriptingPackage));

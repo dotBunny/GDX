@@ -10,8 +10,6 @@ using UnityEditor;
 using UnityEngine;
 using Application = UnityEngine.Application;
 
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace GDX.Editor
 {
     /// <summary>
@@ -30,7 +28,6 @@ namespace GDX.Editor
         /// </summary>
         public enum InstallationType
         {
-            // ReSharper disable InconsistentNaming
             /// <summary>
             ///     Unable to determine how the package was installed.
             /// </summary>
@@ -86,7 +83,6 @@ namespace GDX.Editor
             ///     just a zip decompressed into a project.
             /// </summary>
             Assets = 20
-            // ReSharper restore InconsistentNaming
         }
 
         /// <summary>
@@ -126,7 +122,6 @@ namespace GDX.Editor
             EditorApplication.delayCall += DelayCall;
 
             // Find Local Definition
-            // ReSharper disable once StringLiteralTypo
             string[] editorAssemblyDefinition = AssetDatabase.FindAssets("GDX.Editor t:asmdef");
             if (editorAssemblyDefinition.Length > 0)
             {
@@ -335,7 +330,6 @@ namespace GDX.Editor
                 for (int i = 0; i < lockFileLength; i++)
                 {
                     string workingLine = lockFile[i].Trim();
-                    // ReSharper disable once StringLiteralTypo
                     if (workingLine.StartsWith("\"com.dotbunny.gdx\""))
                     {
                         insidePackage = true;
@@ -419,10 +413,8 @@ namespace GDX.Editor
         [Serializable]
         public class PackageDefinition
         {
-            // ReSharper disable NotAccessedField.Global, UnusedMember.Global, UnusedVariable, InconsistentNaming
             public string version;
             public string unity;
-            // ReSharper restore NotAccessedField.Global, UnusedMember.Global, UnusedVariable, InconsistentNaming
         }
     }
 }

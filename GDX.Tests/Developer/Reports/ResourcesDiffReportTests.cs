@@ -4,8 +4,6 @@
 
 using NUnit.Framework;
 
-// ReSharper disable HeapView.ObjectAllocation, UnusedVariable
-
 namespace GDX.Developer.Reports
 {
     /// <summary>

@@ -7,14 +7,13 @@ namespace GDX
     /// <summary>
     ///     Project-wide configuration configurable for runtime override.
     /// </summary>
-    // ReSharper disable once InconsistentNaming
     public class GDXConfig
     {
         /// <summary>
         ///     The asset database relative path of the GDX config override file.
         /// </summary>
         public string ConfigOutputPath = "Generated/GDXSettings.cs";
-        
+
         /// <summary>
         ///     Ensure that there is an assembly definition wrapping the generated content.
         /// </summary>

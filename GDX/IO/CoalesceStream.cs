@@ -8,7 +8,6 @@ using System.IO;
 
 namespace GDX.IO
 {
-    // ReSharper disable once UnusedType.Global
     public class CoalesceStream : Stream
     {
         readonly List<byte[]> m_Blocks = new List<byte[]>();

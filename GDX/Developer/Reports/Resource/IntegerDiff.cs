@@ -9,12 +9,10 @@ namespace GDX.Developer.Reports.Resource
     [HideFromDocFX]
     public readonly struct IntegerDiff
     {
-        // ReSharper disable MemberCanBePrivate.Global
         public readonly float Percentage;
         public readonly int Change;
         public readonly int LeftHandSide;
         public readonly int RightHandSide;
-        // ReSharper restore MemberCanBePrivate.Global
 
         public IntegerDiff(int lhs, int rhs)
         {
@@ -29,7 +27,6 @@ namespace GDX.Developer.Reports.Resource
             }
             else
             {
-                // ReSharper disable once PossibleLossOfFraction
                 Percentage = 100f * (Change / lhs);
             }
         }

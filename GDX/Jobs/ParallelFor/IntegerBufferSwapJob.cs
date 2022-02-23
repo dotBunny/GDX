@@ -6,8 +6,6 @@ using Unity.Collections;
 using Unity.Jobs;
 using Unity.Burst;
 
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace GDX.Jobs.ParallelFor
 {
     /// <summary>
@@ -21,7 +19,6 @@ namespace GDX.Jobs.ParallelFor
     ///     </para>
     /// </remarks>
     [BurstCompile]
-    // ReSharper disable once UnusedType.Global
     public struct IntegerBufferSwapJob : IJobParallelFor
     {
         /// <summary>

@@ -11,8 +11,6 @@ using GDX.Developer.Reports.Resource;
 using GDX.Developer.Reports.Resource.Objects;
 using GDX.Developer.Reports.Resource.Sections;
 
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace GDX.Developer.Reports
 {
     /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>

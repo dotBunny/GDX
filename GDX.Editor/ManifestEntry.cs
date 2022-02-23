@@ -5,8 +5,6 @@
 using System;
 using UnityEngine;
 
-// ReSharper disable InconsistentNaming, NotAccessedField.Global, UnusedMember.Global
-
 namespace GDX.Editor
 {
     /// <summary>

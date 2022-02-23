@@ -11,9 +11,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable UnusedMember.Global
-
 namespace GDX
 {
     /// <summary>
@@ -79,7 +76,6 @@ namespace GDX
         ///     You can change this at runtime during some sort of initialization pass to being something unique to your project,
         ///     but it is not absolutely necessary. This must be a multiple of 8 bytes.
         /// </remarks>
-        // ReSharper disable once FieldCanBeMadeReadOnly.Global
         public static byte[] EncryptionDefaultKey = Encoding.UTF8.GetBytes("Awesome!");
 
         /// <summary>
@@ -89,7 +85,6 @@ namespace GDX
         ///     You can change this at runtime during some sort of initialization pass to being something unique to your project,
         ///     but it is not absolutely necessary. This must be a multiple of 8 bytes.
         /// </remarks>
-        // ReSharper disable once FieldCanBeMadeReadOnly.Global
         public static byte[] EncryptionInitializationVector = Encoding.UTF8.GetBytes("dotBunny");
 
         /// <summary>

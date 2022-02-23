@@ -9,8 +9,6 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-// ReSharper disable IdentifierTypo, CommentTypo, MemberCanBePrivate.Global
-
 namespace GDX
 {
     /// <summary>
@@ -26,7 +24,6 @@ namespace GDX
         /// <summary>
         ///     An empty instance of an <see cref="UnityEngine.AddressableAssets.AssetReference" /> to be used for comparison.
         /// </summary>
-        // ReSharper disable once HeapView.ObjectAllocation.Evident
         static readonly AssetReference k_EmptyAssetReference = new AssetReference();
 
         /// <summary>

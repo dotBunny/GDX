@@ -5,8 +5,6 @@
 using System.Text;
 using NUnit.Framework;
 
-// ReSharper disable HeapView.ObjectAllocation.Evident
-
 namespace GDX
 {
     /// <summary>
@@ -56,7 +54,6 @@ namespace GDX
             byte[] mockData = null;
             byte[] differentData = StringExtensions.EncryptionInitializationVector;
 
-            // ReSharper disable once ExpressionIsAlwaysNull
             bool evaluate = mockData.IsSame(differentData);
 
             Assert.IsFalse(evaluate);
@@ -69,7 +66,6 @@ namespace GDX
             byte[] mockData = StringExtensions.EncryptionDefaultKey;
             byte[] differentData = null;
 
-            // ReSharper disable once ExpressionIsAlwaysNull
             bool evaluate = mockData.IsSame(differentData);
 
             Assert.IsFalse(evaluate);

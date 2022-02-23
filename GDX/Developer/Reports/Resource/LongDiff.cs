@@ -11,12 +11,10 @@ namespace GDX.Developer.Reports.Resource
     [HideFromDocFX]
     public readonly struct LongDiff
     {
-        // ReSharper disable MemberCanBePrivate.Global
         public readonly float Percentage;
         public readonly long Change;
         public readonly long LeftHandSide;
         public readonly long RightHandSide;
-        // ReSharper restore MemberCanBePrivate.Global
 
         public LongDiff(long lhs, long rhs)
         {
@@ -30,7 +28,6 @@ namespace GDX.Developer.Reports.Resource
             }
             else
             {
-                // ReSharper disable once PossibleLossOfFraction
                 Percentage = 100f * (Change / lhs);
             }
         }

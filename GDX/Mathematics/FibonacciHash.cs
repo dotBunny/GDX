@@ -4,11 +4,8 @@
 
 using System.Runtime.CompilerServices;
 
-// ReSharper disable UnusedMember.Global
-
 namespace GDX.Mathematics
 {
-    // ReSharper disable once UnusedType.Global
     public static class FibonacciHash
     {
         /// <summary>

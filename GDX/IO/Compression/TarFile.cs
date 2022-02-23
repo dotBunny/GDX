@@ -7,8 +7,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 
-// ReSharper disable once MemberCanBePrivate.Global
-
 namespace GDX.IO.Compression
 {
     /// <summary>
@@ -73,7 +71,6 @@ namespace GDX.IO.Compression
             byte[] readBuffer = new byte[k_ReadBufferSize];
             while (true)
             {
-                // ReSharper disable once MustUseReturnValue
                 sourceStream.Read(readBuffer, 0, k_ReadBufferSize);
                 string currentName = Encoding.ASCII.GetString(readBuffer).Trim('\0');
 
@@ -84,16 +81,14 @@ namespace GDX.IO.Compression
 
                 string destinationFilePath = Path.Combine(destinationDirectoryName, currentName);
                 sourceStream.Seek(24, SeekOrigin.Current);
-                // ReSharper disable once MustUseReturnValue
                 sourceStream.Read(readBuffer, 0, 12);
                 long fileSize = Convert.ToInt64(Encoding.UTF8.GetString(readBuffer, 0, 12).Trim('\0').Trim(), 8);
                 sourceStream.Seek(376L, SeekOrigin.Current);
 
                 // Do we need to make a directory?
                 string parentDirectory = Path.GetDirectoryName(destinationFilePath);
-                if (!Directory.Exists(parentDirectory))
+                if (parentDirectory != null && !Directory.Exists(parentDirectory))
                 {
-                    // ReSharper disable once AssignNullToNotNullAttribute
                     DirectoryInfo directoryInfo = Directory.CreateDirectory(parentDirectory);
                     directoryInfo.Attributes &= ~FileAttributes.ReadOnly;
                 }
@@ -107,7 +102,6 @@ namespace GDX.IO.Compression
                         File.Open(destinationFilePath, FileMode.OpenOrCreate, FileAccess.Write);
                     byte[] fileContentBuffer = new byte[fileSize];
                     int newFileContentBufferLength = fileContentBuffer.Length;
-                    // ReSharper disable once MustUseReturnValue
                     sourceStream.Read(fileContentBuffer, 0, newFileContentBufferLength);
                     newFileStream.Write(fileContentBuffer, 0, newFileContentBufferLength);
                 }

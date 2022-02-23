@@ -5,8 +5,6 @@
 using System.IO;
 using UnityEditor.VersionControl;
 
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace GDX.Editor
 {
     /// <summary>

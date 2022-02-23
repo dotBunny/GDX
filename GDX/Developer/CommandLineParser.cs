@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using GDX.Collections.Generic;
 
-// ReSharper disable MemberCanBePrivate.Global, CollectionNeverQueried.Global, HeapView.ObjectAllocation.Evident
-
 namespace GDX.Developer
 {
     /// <summary>

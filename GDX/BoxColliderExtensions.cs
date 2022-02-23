@@ -6,7 +6,6 @@
 
 using UnityEngine;
 
-// ReSharper disable UnusedMember.Global
 namespace GDX
 {
     /// <summary>
@@ -14,7 +13,6 @@ namespace GDX
     /// </summary>
     /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
     [VisualScriptingCompatible(2)]
-    // ReSharper disable once UnusedType.Global
     public static class BoxColliderExtensions
     {
         /// <summary>

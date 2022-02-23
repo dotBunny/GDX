@@ -5,19 +5,14 @@
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable UnusedMember.Global
-
 namespace GDX.Mathematics
 {
     /// <summary>
     ///     Some helpful interpolation functionality.
     /// </summary>
     [VisualScriptingCompatible(8)]
-    // ReSharper disable once UnusedType.Global
     public static class Smooth
     {
-        // ReSharper disable CommentTypo
         /// <summary>
         ///     Smooths between <paramref name="previousValue"/> and <paramref name="targetValue"/> based on time since the last sample and a given half-life.
         /// </summary>
@@ -33,7 +28,6 @@ namespace GDX.Mathematics
         ///     generated.
         /// </param>
         /// <returns>A smoothed value.</returns>
-        // ReSharper enable CommentType
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Exponential(float previousValue, float targetValue, float halfLife,
             float elapsedTime = float.NaN)

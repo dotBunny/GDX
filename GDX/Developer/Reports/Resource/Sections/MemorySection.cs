@@ -7,8 +7,6 @@
 using System.Text;
 using UnityEngine.Profiling;
 
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace GDX.Developer.Reports.Resource.Sections
 {
     /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>

@@ -6,8 +6,6 @@ using Unity.Collections;
 using Unity.Jobs;
 using Unity.Burst;
 
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace GDX.Jobs.ParallelFor
 {
     /// <summary>
@@ -15,7 +13,6 @@ namespace GDX.Jobs.ParallelFor
     ///     parallel.
     /// </summary>
     [BurstCompile]
-    // ReSharper disable once UnusedType.Global
     public struct IntegerBufferFillJob : IJobParallelFor
     {
         /// <summary>
@@ -28,7 +25,6 @@ namespace GDX.Jobs.ParallelFor
         ///     <para>The <see cref="System.Int32" /> value to fill the native array with.</para>
         /// </summary>
         /// <remarks>Read-only.</remarks>
-        // ReSharper disable once UnassignedField.Global
         [ReadOnly] public int FillValue;
 
         /// <summary>

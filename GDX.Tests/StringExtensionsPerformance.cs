@@ -6,8 +6,6 @@
 using NUnit.Framework;
 using Unity.PerformanceTesting;
 
-// ReSharper disable HeapView.ObjectAllocation, UnusedVariable
-
 namespace GDX
 {
     public class StringExtensionsPerformance

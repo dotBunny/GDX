@@ -39,7 +39,6 @@ namespace GDX
             int length = targetArray.Length;
             for (int i = 0; i < length; i++)
             {
-                // ReSharper disable once HeapView.PossibleBoxingAllocation
                 if (targetArray[i] == targetItem)
                 {
                     return i;
@@ -61,7 +60,6 @@ namespace GDX
             int length = targetArray.Length;
             for (int i = 0; i < length; i++)
             {
-                // ReSharper disable once HeapView.PossibleBoxingAllocation
                 if (targetArray[i].Equals(targetValue))
                 {
                     return i;
@@ -83,7 +81,6 @@ namespace GDX
             int length = targetArray.Length;
             for (int i = length - 1; i >= 0; i--)
             {
-                // ReSharper disable once HeapView.PossibleBoxingAllocation
                 if (targetArray[i] == targetItem)
                 {
                     return i;
@@ -105,7 +102,6 @@ namespace GDX
             int length = targetArray.Length;
             for (int i = length - 1; i >= 0; i--)
             {
-                // ReSharper disable once HeapView.PossibleBoxingAllocation
                 if (targetArray[i].Equals(targetValue))
                 {
                     return i;

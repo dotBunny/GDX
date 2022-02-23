@@ -13,7 +13,6 @@ namespace GDX.Editor.PropertyDrawers
     ///     The drawing component of the <see cref="DisableInInspectorAttribute" />.
     /// </summary>
     [CustomPropertyDrawer(typeof(DisableInInspectorAttribute))]
-    // ReSharper disable once UnusedType.Global
     public class DisableInInspectorAttributePropertyDrawer : PropertyDrawer
     {
         /// <summary>

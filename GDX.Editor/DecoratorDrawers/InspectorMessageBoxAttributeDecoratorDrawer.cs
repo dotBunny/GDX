@@ -12,7 +12,6 @@ namespace GDX.Editor.DecoratorDrawers
     /// </summary>
     [HideFromDocFX]
     [CustomPropertyDrawer(typeof(InspectorMessageBoxAttribute))]
-    // ReSharper disable once UnusedType.Global
     public class InspectorMessageBoxAttributeDecoratorDrawer : DecoratorDrawer
     {
         /// <summary>
@@ -28,7 +27,6 @@ namespace GDX.Editor.DecoratorDrawers
         /// <summary>
         ///     A cached reference to the "help box" style.
         /// </summary>
-        // ReSharper disable once StringLiteralTypo
         static readonly GUIStyle k_CachedHelpBoxStyle = new GUIStyle("helpbox");
 
         /// <summary>
@@ -37,12 +35,10 @@ namespace GDX.Editor.DecoratorDrawers
         /// <returns>The height in pixels.</returns>
         public override float GetHeight()
         {
-            // ReSharper disable once ConvertIfStatementToNullCoalescingAssignment
             if (m_Target == null)
             {
                 m_Target = (InspectorMessageBoxAttribute)attribute;
             }
-            // ReSharper disable once ConvertIfStatementToNullCoalescingAssignment
             if (m_TargetMessage == null)
             {
                 m_TargetMessage = new GUIContent(m_Target.Message);
@@ -56,11 +52,7 @@ namespace GDX.Editor.DecoratorDrawers
         /// <param name="position">Rectangle on the screen to use for the decorator.</param>
         public override void OnGUI(Rect position)
         {
-            // ReSharper disable once ConvertIfStatementToNullCoalescingAssignment
-            if (m_Target == null)
-            {
-                m_Target = (InspectorMessageBoxAttribute)attribute;
-            }
+            m_Target ??= (InspectorMessageBoxAttribute)attribute;
 
             switch (m_Target.MessageType)
             {

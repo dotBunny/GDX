@@ -7,8 +7,6 @@
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace GDX.Developer.Reports.Resource.Objects
 {
     /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>

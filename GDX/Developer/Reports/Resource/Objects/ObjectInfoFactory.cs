@@ -7,8 +7,6 @@
 using System;
 using UnityEngine;
 
-// ReSharper disable UnusedMember.Global
-
 namespace GDX.Developer.Reports.Resource.Objects
 {
     /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>

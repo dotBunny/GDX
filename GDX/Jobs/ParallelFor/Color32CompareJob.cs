@@ -7,8 +7,6 @@ using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
 
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace GDX.Jobs.ParallelFor
 {
     [BurstCompile]

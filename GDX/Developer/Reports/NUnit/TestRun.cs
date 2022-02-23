@@ -2,9 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-
 namespace GDX.Developer.Reports.NUnit
 {
     public class TestRun
@@ -19,7 +16,6 @@ namespace GDX.Developer.Reports.NUnit
         public int Skipped { get; private set; }
         public int Asserts { get; private set; }
         public string EngineVersion { get; set; }
-        // ReSharper disable once InconsistentNaming
         public string CLRVersion { get; set; }
         public string StartTime { get; set; }
         public string EndTime { get; set; }

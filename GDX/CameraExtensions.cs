@@ -6,7 +6,6 @@
 
 using UnityEngine;
 
-// ReSharper disable UnusedMember.Global
 namespace GDX
 {
     /// <summary>
@@ -14,10 +13,8 @@ namespace GDX
     /// </summary>
     /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
     [VisualScriptingCompatible(2)]
-    // ReSharper disable once UnusedType.Global
     public static class CameraExtensions
     {
-        // ReSharper disable once MemberCanBePrivate.Global
         public static Texture2D Capture(this Camera targetCamera, int width = 1920, int height = 1080)
         {
             // Get a temporary render texture from the pool since its gonna be rapid.

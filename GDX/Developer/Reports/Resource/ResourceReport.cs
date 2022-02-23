@@ -41,7 +41,6 @@ namespace GDX.Developer.Reports.Resource
         /// <param name="writer">A <see cref="StreamWriter"/> instance to use for output.</param>
         /// <param name="bufferSize">The write buffer size.</param>
         /// <returns>true/false if the report was successfully written to the provided <paramref name="writer" />.</returns>
-        // ReSharper disable once UnusedMethodReturnValue.Global
         public bool Output(StreamWriter writer, int bufferSize = 1024, ResourceReportContext context = null)
         {
             StringBuilder builder = new StringBuilder();

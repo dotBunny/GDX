@@ -7,11 +7,8 @@ using System.Runtime.CompilerServices;
 using Unity.Collections;
 using Unity.Mathematics;
 
-// ReSharper disable UnusedMember.Global
-
 namespace GDX.Mathematics.Random
 {
-    // ReSharper disable CommentTypo
     /// <summary>
     ///     Generates pseudorandom values based on the WELL1024a algorithm. You must <see cref="Dispose"/> manually.
     /// </summary>
@@ -22,9 +19,7 @@ namespace GDX.Mathematics.Random
     ///     <a href="http://www.iro.umontreal.ca/~lecuyer/myftp/papers/lfsr04.pdf">Francois Panneton and Pierre L`Ecuyer</a>,
     ///     accessed on 2021-04-23.
     /// </remarks>
-    // ReSharper restore CommentTypo
     [VisualScriptingCompatible(4)]
-    // ReSharper disable once InconsistentNaming
     public struct WELL1024a : IRandomProvider, IEquatable<WELL1024a>, IDisposable
     {
         /// <summary>

@@ -5,14 +5,10 @@
 using System.Runtime.CompilerServices;
 using GDX.Developer.Reports.NUnit;
 
-// ReSharper disable UnusedMember.Global
-
 namespace GDX.Developer.Reports
 {
-    // ReSharper disable once UnusedType.Global
     public class NUnitReport
     {
-        // ReSharper disable once MemberCanBePrivate.Global
         public const string SkippedString = "Skipped";
         public const string FailedString = "Failed";
         public const string PassedString = "Passed";

@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `BuildInfoProvider` now uses a `TextGenerator` for codegen.
 - `Platform::GetOutputFolder()` supports being overridden via command-line argument `GDX_OUTPUT_FOLDER`.
 - Internal members of `SerializableDictionary` have been renamed, `FormerlySerializedAs` attribute has been used to hopefully upgrade content.
+- `Localization::GetIETF()` was renamed for clarity to `Localization::GetIETF_BCP47()`, with further value definitions.
 
 ### Fixed  
 

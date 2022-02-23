@@ -5,8 +5,6 @@
 using NUnit.Framework;
 using UnityEngine;
 
-// ReSharper disable HeapView.ObjectAllocation, UnusedVariable
-
 namespace GDX
 {
     /// <summary>
@@ -121,7 +119,6 @@ namespace GDX
         {
             Vector2 mockData = new Vector2(5, 10);
 
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
             bool evaluate = (mockData.Slope() == 2);
 
             Assert.IsTrue(evaluate);

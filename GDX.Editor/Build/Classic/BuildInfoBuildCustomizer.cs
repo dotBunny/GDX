@@ -9,8 +9,6 @@ using System.IO;
 using GDX.Editor.Build;
 using UnityEngine;
 
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace GDX.Classic.Editor.Build
 {
     /// <summary>

@@ -17,8 +17,6 @@ namespace GDX
         /// </summary>
         static readonly char[] k_VersionIndicators = {'.', ',', '_', 'f'};
 
-        // ReSharper disable MemberCanBePrivate.Global
-
         /// <summary>
         ///     Major Version.
         /// </summary>
@@ -36,8 +34,6 @@ namespace GDX
         /// </summary>
         /// <remarks>Is incremented when you make backwards-compatible fixes.</remarks>
         public readonly int Patch;
-
-        // ReSharper restore MemberCanBePrivate.Global
 
         /// <summary>
         ///     Create a <see cref="SemanticVersion" /> based on a formatted <see cref="System.String" />.

@@ -5,19 +5,14 @@
 using System;
 using System.Runtime.CompilerServices;
 
-// ReSharper disable UnusedMember.Global
-
 namespace GDX.Collections
 {
     /// <summary>
     ///     An adapter collection for external data arrays that allows constant-time insertion, deletion, and lookup by
     ///     handle, as well as array-like iteration.
     /// </summary>
-    // ReSharper disable once UnusedType.Global
     public struct SparseSet
     {
-        // ReSharper disable MemberCanBePrivate.Global
-
         /// <summary>
         ///     Holds references to the sparse array for swapping indices.
         /// </summary>
@@ -40,8 +35,6 @@ namespace GDX.Collections
         ///     The first free (currently unused) index in the sparse array.
         /// </summary>
         public int FreeIndex;
-
-        // ReSharper enable MemberCanBePrivate.Global
 
         /// <summary>
         ///     Create a <see cref="SparseSet" /> with an <paramref name="initialCapacity" />.

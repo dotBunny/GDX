@@ -17,7 +17,6 @@ namespace GDX.Editor.ProjectSettings
     /// <summary>
     ///     Visual Scripting Settings
     /// </summary>
-    // ReSharper disable once UnusedType.Global
     class VisualScriptingSettings : IConfigSection
     {
         /// <summary>

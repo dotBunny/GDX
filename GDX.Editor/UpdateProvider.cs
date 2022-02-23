@@ -40,7 +40,6 @@ namespace GDX.Editor
         /// <summary>
         ///     If an update check has occured, this will be filled with its <see cref="PackageProvider.PackageDefinition" />.
         /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
         public static PackageProvider.PackageDefinition UpdatePackageDefinition;
 
         /// <summary>
@@ -49,7 +48,6 @@ namespace GDX.Editor
         static UpdateProvider()
         {
             // Create a copy of the local package provider
-            // ReSharper disable once HeapView.ObjectAllocation.Evident
             LocalPackage = new PackageProvider();
 
             EditorApplication.delayCall += DelayCall;
@@ -239,7 +237,6 @@ namespace GDX.Editor
         ///     Get the last version of the package which was presented to the user for update.
         /// </summary>
         /// <returns>A version string.</returns>
-        // ReSharper disable once MemberCanBePrivate.Global
         public static string GetLastNotifiedVersion()
         {
             return EditorPrefs.GetString(k_LastNotifiedVersionKey);
@@ -263,7 +260,6 @@ namespace GDX.Editor
         {
             try
             {
-                // ReSharper disable once HeapView.ObjectAllocation.Evident
                 using WebClient webClient = new WebClient();
 
                 // Get content of the package definition file
@@ -364,13 +360,11 @@ namespace GDX.Editor
         /// </summary>
         static void UpgradeGitHub()
         {
-            // ReSharper disable HeapView.ObjectAllocation.Evident
             Process process = new Process();
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 WindowStyle = ProcessWindowStyle.Normal, FileName = "git.exe"
             };
-            // ReSharper restore HeapView.ObjectAllocation.Evident
             process.StartInfo = startInfo;
 
             string targetPath = Path.GetDirectoryName(LocalPackage.PackageManifestPath);
@@ -427,7 +421,6 @@ namespace GDX.Editor
                 for (int i = 0; i < lockFileLength; i++)
                 {
                     // Identify the block
-                    // ReSharper disable once StringLiteralTypo
                     if (lockFileContents[i].Trim() == "\"com.dotbunny.gdx\": {")
                     {
                         depth++;

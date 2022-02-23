@@ -27,7 +27,7 @@
         int m_IndentLevel;
 
         /// <summary>
-        ///     Create a new <see cref="TextGenerator"/> with the 
+        ///     Create a new <see cref="TextGenerator"/> with the
         /// </summary>
         /// <param name="indentContent">
         ///     The characters used to indent the content when applicable. By default it will use a tab representation,
@@ -42,7 +42,7 @@
             m_IndentClose = indentClose;
             m_Builder = new System.Text.StringBuilder();
         }
-        
+
         /// <summary>
         ///     Apply the current level of indent to the current line being operated on.
         /// </summary>
@@ -85,8 +85,7 @@
         /// <summary>
         ///     Remove a level of indentation from the builder.
         /// </summary>
-        /// <param name="applyCloser">Should the closer be applied?</param>
-        public void PopIndent(bool applyCloser = true)
+        public void PopIndent()
         {
             if (m_IndentLevel <= 0) return;
             m_IndentLevel--;
@@ -94,7 +93,7 @@
             ApplyIndent();
             m_Builder.AppendLine(m_IndentClose);
         }
-        
+
         /// <summary>
         ///     Add a level of indentation to the builder.
         /// </summary>

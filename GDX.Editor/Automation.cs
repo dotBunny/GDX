@@ -10,8 +10,6 @@ using UnityEditorInternal;
 using UnityEngine;
 using Unity.CodeEditor;
 
-// ReSharper disable UnusedMember.Global
-
 namespace GDX.Editor
 {
     /// <summary>
@@ -111,7 +109,6 @@ namespace GDX.Editor
         /// <param name="outputPath">The absolute path for the image file.</param>
         /// <returns>true/false if the capture was successful.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        // ReSharper disable once MemberCanBePrivate.Global
         public static bool CaptureEditorWindowToPNG(EditorWindow window, string outputPath)
         {
             Texture2D texture = CaptureEditorWindow(window);

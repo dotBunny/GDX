@@ -4,8 +4,6 @@
 
 using GDX.Collections.Pooling;
 
-// ReSharper disable UnusedMember.Global
-
 namespace GDX.Collections.Generic
 {
     /// <summary>
@@ -32,7 +30,6 @@ namespace GDX.Collections.Generic
         /// <param name="capacity">An initial sizing for the <see cref="Array" />.</param>
         public SimpleList(int capacity)
         {
-            // ReSharper disable once HeapView.ObjectAllocation.Evident
             Array = new T[capacity];
             Count = 0;
         }
@@ -559,7 +556,6 @@ namespace GDX.Collections.Generic
         /// </summary>
         public void Reverse()
         {
-            // ReSharper disable once TooWideLocalVariableScope
             T temporaryStorage;
 
             int lastIndex = Count - 1;

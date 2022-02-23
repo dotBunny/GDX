@@ -9,7 +9,6 @@ namespace GDX.Editor.ProjectSettings
     /// <summary>
     ///    GDX Config Settings
     /// </summary>
-    // ReSharper disable once UnusedType.Global
     class ConfigSettings : IConfigSection
     {
         public const string SectionKey = "GDX.Config";

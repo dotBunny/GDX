@@ -12,15 +12,18 @@ namespace GDX.Developer.Reports.BuildVerification
 
         string m_StartTime;
         Stopwatch m_Timer;
-        
+
+        /// <summary>
+        ///     Unity's Start event.
+        /// </summary>
         void Start()
         {
             m_StartTime = DateTime.Now.ToString(Localization.UtcTimestampFormat);
             m_Timer = new Stopwatch();
             m_Timer.Restart();
-            
+
             TestCase testCase = RunTest();
-            
+
             m_Timer.Stop();
             testCase.Duration = (m_Timer.ElapsedMilliseconds / 1000f);
             testCase.EndTime = DateTime.Now.ToString(Localization.UtcTimestampFormat);

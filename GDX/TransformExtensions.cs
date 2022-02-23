@@ -8,7 +8,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
 
-// ReSharper disable UnusedMember.Global
 namespace GDX
 {
     /// <summary>

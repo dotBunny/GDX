@@ -7,15 +7,12 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using UnityEngine;
 
-// ReSharper disable UnusedMember.Global, MemberCanBePrivate.Global
-
 namespace GDX
 {
     /// <summary>
     ///     A collection of memory related helper utilities.
     /// </summary>
     [VisualScriptingCompatible(8)]
-    // ReSharper disable once UnusedType.Global
     public static class Memory
     {
         /// <summary>

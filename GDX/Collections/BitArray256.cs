@@ -5,8 +5,6 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-// ReSharper disable UnusedMember.Global
-
 namespace GDX.Collections
 {
     /// <summary>
@@ -22,12 +20,8 @@ namespace GDX.Collections
     ///     </code>
     /// </example>
     [StructLayout(LayoutKind.Sequential)]
-    // ReSharper disable once UnusedType.Global
     public struct BitArray256
     {
-        // ReSharper disable MemberCanBePrivate.Global
-        // ReSharper disable FieldCanBeMadeReadOnly.Global
-
         /// <summary>
         ///     First reserved <see cref="System.Int32" /> memory block.
         /// </summary>
@@ -75,9 +69,6 @@ namespace GDX.Collections
         /// </summary>
         /// <remarks>Indices 224-255</remarks>
         public int Bits7;
-
-        // ReSharper restore MemberCanBePrivate.Global
-        // ReSharper restore FieldCanBeMadeReadOnly.Global
 
         /// <summary>
         ///     Access bit in array.

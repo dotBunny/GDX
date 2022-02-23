@@ -5,7 +5,6 @@ using Debug = UnityEngine.Debug;
 
 namespace GDX.Developer.Reports
 {
-    // ReSharper disable once InconsistentNaming
     public static class BVT
     {
         static NUnitReport s_Report = new NUnitReport("BVT", "Build Verification Test");

@@ -14,7 +14,6 @@ namespace GDX.Editor.ProjectSettings
     /// <summary>
     ///     Environment Settings
     /// </summary>
-    // ReSharper disable once UnusedType.Global
     class EnvironmentSettings : IConfigSection
     {
         public const string SectionKey = "GDX.Environment";

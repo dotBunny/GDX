@@ -6,8 +6,6 @@ using System;
 using GDX.Collections.Generic;
 using NUnit.Framework;
 
-// ReSharper disable HeapView.ObjectAllocation.Evident
-
 namespace GDX
 {
     /// <summary>

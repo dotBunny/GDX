@@ -4,8 +4,6 @@
 
 using System.Runtime.CompilerServices;
 
-// ReSharper disable UnusedMember.Global, MemberCanBePrivate.Global
-
 namespace GDX.Collections.Generic
 {
     /// <summary>
@@ -135,7 +133,6 @@ namespace GDX.Collections.Generic
         /// </summary>
         public void ReverseColumns()
         {
-            // ReSharper disable once TooWideLocalVariableScope
             T temporaryStorage;
 
             int lastIndex = ColumnCount - 1;

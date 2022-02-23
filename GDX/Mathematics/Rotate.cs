@@ -6,18 +6,15 @@ using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
 
-// ReSharper disable UnusedMember.Global
-
 namespace GDX.Mathematics
 {
     /// <summary>
     /// A set of functionality to extend on Unity's rotation based methods.
     /// </summary>
     [VisualScriptingCompatible(8)]
-    // ReSharper disable once UnusedType.Global
     public static class Rotate
     {
-#if !UNITY_DOTSRUNTIME        
+#if !UNITY_DOTSRUNTIME
         /// <summary>
         /// Create a quaternion based on a rotation from <paramref name="targetQuaternion"/> to <paramref name="otherQuaternion"/>.
         /// </summary>

@@ -8,8 +8,6 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 
-// ReSharper disable UnusedMember.Global
-
 #pragma warning disable 0660, 0661
 
 namespace GDX.Mathematics
@@ -117,7 +115,6 @@ namespace GDX.Mathematics
         ///     Get a new <see cref="Byte2" /> created with <see cref="X" /> as both components.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        // ReSharper disable once InconsistentNaming
         public Byte2 xx
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -128,7 +125,6 @@ namespace GDX.Mathematics
         ///     Get a new <see cref="Byte2" /> created with identical components.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        // ReSharper disable once InconsistentNaming
         public Byte2 xy
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -145,7 +141,6 @@ namespace GDX.Mathematics
         ///     Get a new <see cref="Byte2" /> created with swapped components.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        // ReSharper disable once InconsistentNaming
         public Byte2 yx
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -162,7 +157,6 @@ namespace GDX.Mathematics
         ///     Get a new <see cref="Byte2" /> created with <see cref="Y" /> as both components.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        // ReSharper disable once InconsistentNaming
         public Byte2 yy
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -238,7 +232,6 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool Equals(object o)
         {
-            // ReSharper disable once PossibleNullReferenceException
             return Equals((Byte2)o);
         }
 
@@ -696,9 +689,7 @@ namespace GDX.Mathematics
                 const int k_P = 16777619;
                 int hash = (int)2166136261;
 
-                // ReSharper disable once NonReadonlyMemberInGetHashCode
                 hash = (hash ^ X) * k_P;
-                // ReSharper disable once NonReadonlyMemberInGetHashCode
                 hash = (hash ^ Y) * k_P;
 
                 hash += hash << 13;
@@ -727,23 +718,18 @@ namespace GDX.Mathematics
         {
             public DebuggerProxy(Byte2 v)
             {
-                x = v.X;
-                y = v.Y;
+                X = v.X;
+                Y = v.Y;
             }
-            // ReSharper disable MemberCanBePrivate.Global
-            // ReSharper disable InconsistentNaming
-
             /// <summary>
             ///     X <see cref="byte" />.
             /// </summary>
-            public byte x;
+            public byte X;
 
             /// <summary>
             ///     Y <see cref="byte" />.
             /// </summary>
-            public byte y;
-            // ReSharper restore InconsistentNaming
-            // ReSharper restore MemberCanBePrivate.Global
+            public byte Y;
         }
 
         /// <summary>

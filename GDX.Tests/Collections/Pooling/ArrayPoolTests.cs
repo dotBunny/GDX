@@ -5,8 +5,6 @@
 using GDX.Collections.Pooling;
 using NUnit.Framework;
 
-// ReSharper disable HeapView.ObjectAllocation, UnusedVariable
-
 namespace GDX.Collections.Generic
 {
     public class ArrayPoolTests

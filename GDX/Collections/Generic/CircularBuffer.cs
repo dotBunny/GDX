@@ -5,9 +5,6 @@
 using System;
 using System.Runtime.CompilerServices;
 
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable UnusedMember.Global
-
 namespace GDX.Collections.Generic
 {
     /// <summary>
@@ -15,7 +12,6 @@ namespace GDX.Collections.Generic
     /// </summary>
     /// <typeparam name="T">The type of <see cref="object" />s contained within.</typeparam>
     [VisualScriptingCompatible(1)]
-    // ReSharper disable once UnusedType.Global
     public struct CircularBuffer<T>
     {
         /// <summary>
@@ -50,7 +46,6 @@ namespace GDX.Collections.Generic
         ///     Create a <see cref="CircularBuffer{T}" /> with a <paramref name="capacity" />.
         /// </summary>
         /// <param name="capacity">The maximum number of items allowed in the <see cref="CircularBuffer{T}" /></param>
-        // ReSharper disable once HeapView.ObjectAllocation.Evident
         public CircularBuffer(int capacity)
         {
             if (capacity < 1)
@@ -95,7 +90,6 @@ namespace GDX.Collections.Generic
                 throw new ArgumentException("Too many items to fit circular buffer", nameof(targetItems));
             }
 
-            // ReSharper disable once HeapView.ObjectAllocation.Evident
             Array = new T[capacity];
             Capacity = capacity;
 
@@ -282,14 +276,11 @@ namespace GDX.Collections.Generic
         /// <returns>A copied version of the <see cref="Array" /> as an array.</returns>
         public T[] ToArray()
         {
-            // ReSharper disable once HeapView.ObjectAllocation.Evident
             T[] newArray = new T[Count];
             int newArrayOffset = 0;
-            // ReSharper disable once HeapView.ObjectAllocation.Evident
             ArraySegment<T>[] segments = { ArrayOne(), ArrayTwo() };
             foreach (ArraySegment<T> segment in segments)
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
                 System.Array.Copy(segment.Array, segment.Offset, newArray, newArrayOffset, segment.Count);
                 newArrayOffset += segment.Count;
             }
@@ -308,7 +299,6 @@ namespace GDX.Collections.Generic
         {
             if (Count == 0)
             {
-                // ReSharper disable once HeapView.ObjectAllocation.Evident
                 return new ArraySegment<T>(new T[0]);
             }
 
@@ -328,7 +318,6 @@ namespace GDX.Collections.Generic
         {
             if (Count == 0)
             {
-                // ReSharper disable once HeapView.ObjectAllocation.Evident
                 return new ArraySegment<T>(new T[0]);
             }
 

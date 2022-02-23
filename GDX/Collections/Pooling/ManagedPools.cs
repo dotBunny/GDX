@@ -5,8 +5,6 @@
 using System.Collections.Generic;
 using GDX.Collections.Generic;
 
-// ReSharper disable UnusedMember.Global
-
 namespace GDX.Collections.Pooling
 {
     /// <summary>
@@ -30,7 +28,6 @@ namespace GDX.Collections.Pooling
         ///     An internal dictionary containing the <see cref="IManagedPool" />s, uniquely indexed by constant ticket-like
         ///     system.
         /// </summary>
-        // ReSharper disable once HeapView.ObjectAllocation.Evident
         static readonly Dictionary<uint, IManagedPool> k_Pools = new Dictionary<uint, IManagedPool>();
 
         /// <summary>

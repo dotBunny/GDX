@@ -4,8 +4,6 @@
 
 using GDX.Mathematics;
 
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace GDX.Collections.Pooling
 {
     /// <summary>
@@ -14,9 +12,7 @@ namespace GDX.Collections.Pooling
     /// <typeparam name="T">The data type contained by pooled arrays.</typeparam>
     public struct ArrayPool<T>
     {
-        // ReSharper disable once FieldCanBeMadeReadOnly.Global
         public JaggedArrayWithCount<T>[] ArrayPools;
-        // ReSharper disable once FieldCanBeMadeReadOnly.Global
         public int[] MaxPoolCapacities;
 
         /// <summary>

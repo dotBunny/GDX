@@ -4,8 +4,6 @@
 
 using System.Runtime.CompilerServices;
 
-// ReSharper disable UnusedMember.Global
-
 namespace GDX.Collections
 {
     /// <summary>
@@ -20,14 +18,12 @@ namespace GDX.Collections
     ///         }
     ///     </code>
     /// </example>
-    // ReSharper disable once UnusedType.Global
     public struct BitArray64
     {
         /// <summary>
         ///     First reserved <see cref="long" /> memory block (64-bits).
         /// </summary>
         /// <remarks>Indices 0-63</remarks>
-        // ReSharper disable once MemberCanBePrivate.Global
         public long Bits0;
 
         /// <summary>

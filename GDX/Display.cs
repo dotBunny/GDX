@@ -5,18 +5,15 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-// ReSharper disable UnusedMember.Global
-
 namespace GDX
 {
     /// <summary>
     ///     A collection of display related helper utilities.
     /// </summary>
     [VisualScriptingCompatible(8)]
-    // ReSharper disable once UnusedType.Global
     public static class Display
     {
- #if !UNITY_DOTSRUNTIME        
+ #if !UNITY_DOTSRUNTIME
         /// <summary>
         ///     <para>Returns the actual screen height being rendered on the current platform.</para>
         /// </summary>
@@ -40,14 +37,13 @@ namespace GDX
         {
             return Screen.currentResolution.width;
         }
-        
+
         /// <summary>
         ///     Does the current display device support HDR output?
         /// </summary>
         /// <returns>true/false</returns>
         /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        // ReSharper disable once InconsistentNaming
         public static bool IsHDRSupported()
         {
 #if UNITY_PS4
@@ -64,7 +60,6 @@ namespace GDX
         /// <returns>true/false</returns>
         /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        // ReSharper disable once InconsistentNaming
         public static bool IsHDREnabled()
         {
 #if UNITY_PS4
@@ -78,7 +73,7 @@ namespace GDX
             return SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.DefaultHDR);
 #endif
         }
-        
-#endif // !UNITY_DOTSRUNTIME       
+
+#endif // !UNITY_DOTSRUNTIME
     }
 }

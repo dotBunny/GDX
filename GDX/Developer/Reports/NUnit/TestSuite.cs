@@ -4,9 +4,6 @@
 
 using System.Collections.Generic;
 
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-
 namespace GDX.Developer.Reports.NUnit
 {
     public class TestSuite
@@ -33,7 +30,6 @@ namespace GDX.Developer.Reports.NUnit
 
         public readonly List<TestCase> TestCases = new List<TestCase>();
 
-        // ReSharper disable once CollectionNeverUpdated.Global
         public readonly List<TestSuite> TestSuites = new List<TestSuite>();
 
         public void Process(string passedResult, string failedResult, string inconclusiveResult, string skippedResult)

@@ -4,11 +4,6 @@
 
 using System.Collections.Generic;
 
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-// ReSharper disable ClassNeverInstantiated.Global
-// ReSharper disable CollectionNeverUpdated.Global
-
 namespace GDX.Developer.Reports.NUnit
 {
     public class Properties

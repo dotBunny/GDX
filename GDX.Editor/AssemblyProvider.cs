@@ -6,22 +6,19 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-// ReSharper disable MemberCanBePrivate.Global
-
 namespace GDX.Editor
 {
     /// <summary>
     ///     A information warehouse about the GDX assemblies used in editor specific logic.
     /// </summary>
     [HideFromDocFX]
-    // ReSharper disable once ClassNeverInstantiated.Global
     public static class AssemblyProvider
     {
         /// <summary>
         ///     The assembly information been populated?
         /// </summary>
         public static bool IsPopulated;
-        
+
         /// <summary>
         ///     A reference to the main GDX assembly
         /// </summary>

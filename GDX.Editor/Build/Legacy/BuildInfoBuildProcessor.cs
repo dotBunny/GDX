@@ -64,7 +64,6 @@ namespace GDX.Classic.Editor.Build.Legacy
     ///         </item>
     ///     </list>
     /// </remarks>
-    // ReSharper disable once UnusedType.Global
     public class BuildInfoBuildProcessor :
 #if !GDX_PLATFORMS
         IPreprocessBuildWithReport,

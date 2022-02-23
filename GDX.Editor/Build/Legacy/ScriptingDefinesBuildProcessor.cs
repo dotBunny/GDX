@@ -12,7 +12,6 @@ namespace GDX.Classic.Editor.Build.Legacy
     ///     A process step for the legacy build pipeline in Unity which ensures, if enabled that the GDX scripting
     ///     define symbol is present for the target.
     /// </summary>
-    // ReSharper disable once UnusedType.Global
     public class ScriptingDefinesBuildProcessor  : IPreprocessBuildWithReport
     {
         /// <summary>
