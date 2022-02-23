@@ -2,8 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-// ReSharper disable CommentTypo
-// ReSharper disable IdentifierTypo
+// ReSharper disable CommentTypo, IdentifierTypo
 
 namespace GDX.Developer
 {

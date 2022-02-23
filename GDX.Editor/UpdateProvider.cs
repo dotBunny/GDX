@@ -364,13 +364,13 @@ namespace GDX.Editor
         /// </summary>
         static void UpgradeGitHub()
         {
-            // ReSharper disable once HeapView.ObjectAllocation.Evident
+            // ReSharper disable HeapView.ObjectAllocation.Evident
             Process process = new Process();
-            // ReSharper disable once HeapView.ObjectAllocation.Evident
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 WindowStyle = ProcessWindowStyle.Normal, FileName = "git.exe"
             };
+            // ReSharper restore HeapView.ObjectAllocation.Evident
             process.StartInfo = startInfo;
 
             string targetPath = Path.GetDirectoryName(LocalPackage.PackageManifestPath);

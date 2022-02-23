@@ -30,6 +30,7 @@ namespace GDX.Editor
         /// </summary>
         public enum InstallationType
         {
+            // ReSharper disable InconsistentNaming
             /// <summary>
             ///     Unable to determine how the package was installed.
             /// </summary>
@@ -38,31 +39,26 @@ namespace GDX.Editor
             /// <summary>
             ///     The package was installed via Unity's traditional UPM process.
             /// </summary>
-            // ReSharper disable once InconsistentNaming
             UPM = 1,
 
             /// <summary>
             ///     The package was installed via Unity's traditional UPM process, however with a branch specified.
             /// </summary>
-            // ReSharper disable once InconsistentNaming
             UPMBranch = 2,
 
             /// <summary>
             ///     The package was installed via Unity's traditional UPM process, however with a tag specified.
             /// </summary>
-            // ReSharper disable once InconsistentNaming
             UPMTag = 3,
 
             /// <summary>
             ///     The package was installed via Unity's traditional UPM process, however with a commit specified.
             /// </summary>
-            // ReSharper disable once InconsistentNaming
             UPMCommit = 4,
 
             /// <summary>
             ///     The package was installed via Unity's traditional UPM process, however with local file reference.
             /// </summary>
-            // ReSharper disable once InconsistentNaming
             UPMLocal = 5,
 
             /// <summary>
@@ -90,6 +86,7 @@ namespace GDX.Editor
             ///     just a zip decompressed into a project.
             /// </summary>
             Assets = 20
+            // ReSharper restore InconsistentNaming
         }
 
         /// <summary>
@@ -422,14 +419,10 @@ namespace GDX.Editor
         [Serializable]
         public class PackageDefinition
         {
-            // ReSharper disable NotAccessedField.Global
-            // ReSharper disable UnusedMember.Global
-            // ReSharper disable InconsistentNaming
+            // ReSharper disable NotAccessedField.Global, UnusedMember.Global, UnusedVariable, InconsistentNaming
             public string version;
             public string unity;
-            // ReSharper restore NotAccessedField.Global
-            // ReSharper restore UnusedMember.Global
-            // ReSharper restore InconsistentNaming
+            // ReSharper restore NotAccessedField.Global, UnusedMember.Global, UnusedVariable, InconsistentNaming
         }
     }
 }

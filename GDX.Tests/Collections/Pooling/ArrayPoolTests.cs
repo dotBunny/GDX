@@ -5,8 +5,7 @@
 using GDX.Collections.Pooling;
 using NUnit.Framework;
 
-// ReSharper disable HeapView.ObjectAllocation
-// ReSharper disable UnusedVariable
+// ReSharper disable HeapView.ObjectAllocation, UnusedVariable
 
 namespace GDX.Collections.Generic
 {

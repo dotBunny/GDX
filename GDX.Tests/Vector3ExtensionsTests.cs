@@ -6,8 +6,7 @@ using System;
 using NUnit.Framework;
 using UnityEngine;
 
-// ReSharper disable HeapView.ObjectAllocation
-// ReSharper disable UnusedVariable
+// ReSharper disable HeapView.ObjectAllocation, UnusedVariable
 
 namespace GDX
 {

@@ -7,8 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using UnityEngine;
 
-// ReSharper disable UnusedMember.Global
-// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global, MemberCanBePrivate.Global
 
 namespace GDX
 {
@@ -66,6 +65,6 @@ namespace GDX
             GC.WaitForPendingFinalizers();
             GC.Collect();
         }
-#endif // !UNITY_DOTSRUNTIME 
+#endif // !UNITY_DOTSRUNTIME
     }
 }

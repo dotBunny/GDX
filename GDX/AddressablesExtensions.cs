@@ -9,9 +9,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-// ReSharper disable IdentifierTypo
-// ReSharper disable CommentTypo
-// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable IdentifierTypo, CommentTypo, MemberCanBePrivate.Global
 
 namespace GDX
 {

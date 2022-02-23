@@ -4,8 +4,7 @@
 
 using System.Runtime.CompilerServices;
 
-// ReSharper disable UnusedMember.Global
-// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global, MemberCanBePrivate.Global
 
 namespace GDX.Collections.Generic
 {

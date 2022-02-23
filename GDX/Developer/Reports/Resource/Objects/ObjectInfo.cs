@@ -9,8 +9,7 @@ using System.Text;
 using UnityEngine.Profiling;
 using Object = UnityEngine.Object;
 
-// ReSharper disable UnusedMember.Global
-// ReSharper disable MemberCanBeProtected.Global
+// ReSharper disable UnusedMember.Global, MemberCanBeProtected.Global
 
 namespace GDX.Developer.Reports.Resource.Objects
 {

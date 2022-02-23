@@ -17,8 +17,7 @@ namespace GDX.Editor
             code.AppendLine("// Generated file of difference from default config.");
             code.AppendLine("namespace GDX");
             code.PushIndent();
-            code.AppendLine("// ReSharper disable once InconsistentNaming");
-            code.AppendLine("// ReSharper disable once ClassNeverInstantiated.Global");
+            code.AppendLine("// ReSharper disable once InconsistentNaming, ClassNeverInstantiated.Global");
             code.AppendLine($"public class {Core.OverrideClass}");
             code.PushIndent();
             code.AppendLine("[UnityEngine.Scripting.Preserve]");

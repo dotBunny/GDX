@@ -1,7 +1,6 @@
 namespace GDX.Collections.Generic
 {
-    // ReSharper disable UnusedMember.Global
-    // ReSharper disable MemberCanBePrivate.Global
+    // ReSharper disable UnusedMember.Global, MemberCanBePrivate.Global
 
     public static class DictionaryPrimes
     {

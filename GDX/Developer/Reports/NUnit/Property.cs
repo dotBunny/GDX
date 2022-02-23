@@ -2,9 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable MemberCanBePrivate.Global, UnusedAutoPropertyAccessor.Global, ClassNeverInstantiated.Global
 
 namespace GDX.Developer.Reports.NUnit
 {

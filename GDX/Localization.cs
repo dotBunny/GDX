@@ -7,8 +7,7 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global, UnusedMember.Global
 
 namespace GDX
 {

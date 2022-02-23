@@ -15,8 +15,7 @@ using UnityEngine;
 using UnityEngine.Profiling;
 using Object = UnityEngine.Object;
 
-// ReSharper disable UnusedMember.Global
-// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global, MemberCanBePrivate.Global
 
 namespace GDX.Developer.Reports
 {

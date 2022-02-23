@@ -6,8 +6,7 @@ using System;
 using System.Runtime.CompilerServices;
 using Unity.Collections;
 
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global, UnusedMember.Global
 
 namespace GDX.Collections.Generic
 {
