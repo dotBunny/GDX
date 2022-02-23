@@ -17,7 +17,7 @@ namespace GDX.Developer.Reports.Resource
         /// <summary>
         ///     A <see cref="string" /> array used to represent the end of a line for splitting purposes.
         /// </summary>
-        static readonly string[] s_NewLineSplit = {Environment.NewLine};
+        static readonly string[] k_NewLineSplit = {Environment.NewLine};
 
         /// <summary>
         ///     Output the report format as an array of <see cref="string" />.
@@ -29,7 +29,7 @@ namespace GDX.Developer.Reports.Resource
         {
             StringBuilder builder = new StringBuilder();
             return Output(builder, context)
-                ? builder.ToString().Split(s_NewLineSplit, StringSplitOptions.None)
+                ? builder.ToString().Split(k_NewLineSplit, StringSplitOptions.None)
                 : null;
         }
 

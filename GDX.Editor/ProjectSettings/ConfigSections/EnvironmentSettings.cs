@@ -26,7 +26,7 @@ namespace GDX.Editor.ProjectSettings
         MaskField m_MaskDebug;
         MaskField m_MaskRelease;
 
-        static readonly List<string> s_TraceChoices = new List<string>()
+        static readonly List<string> k_TraceChoices = new List<string>()
         {
             "Info",
             "Log",
@@ -36,7 +36,7 @@ namespace GDX.Editor.ProjectSettings
             "Assertion",
             "Fatal"
         };
-        static readonly List<int> s_TraceValues = new List<int>()
+        static readonly List<int> k_TraceValues = new List<int>()
         {
             0,
             1,
@@ -108,8 +108,8 @@ namespace GDX.Editor.ProjectSettings
 
 
 #if GDX_MASKFIELD
-            m_MaskDevelopment.choices = s_TraceChoices;
-            m_MaskDevelopment.choicesMasks = s_TraceValues;
+            m_MaskDevelopment.choices = k_TraceChoices;
+            m_MaskDevelopment.choicesMasks = k_TraceValues;
 #else
             SetMaskFieldValues(m_MaskDevelopment);
 #endif
@@ -130,8 +130,8 @@ namespace GDX.Editor.ProjectSettings
 
             m_MaskDebug = m_RootElement.Q<MaskField>("mask-debug");
 #if GDX_MASKFIELD
-            m_MaskDebug.choices = s_TraceChoices;
-            m_MaskDebug.choicesMasks = s_TraceValues;
+            m_MaskDebug.choices = k_TraceChoices;
+            m_MaskDebug.choicesMasks = k_TraceValues;
 #else
             SetMaskFieldValues(m_MaskDebug);
 #endif
@@ -152,8 +152,8 @@ namespace GDX.Editor.ProjectSettings
 
             m_MaskRelease = m_RootElement.Q<MaskField>("mask-release");
 #if GDX_MASKFIELD
-            m_MaskRelease.choices = s_TraceChoices;
-            m_MaskRelease.choicesMasks = s_TraceValues;
+            m_MaskRelease.choices = k_TraceChoices;
+            m_MaskRelease.choicesMasks = k_TraceValues;
 #else
             SetMaskFieldValues(m_MaskRelease);
 #endif

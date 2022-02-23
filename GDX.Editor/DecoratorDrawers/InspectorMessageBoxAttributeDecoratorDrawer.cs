@@ -29,7 +29,7 @@ namespace GDX.Editor.DecoratorDrawers
         ///     A cached reference to the "help box" style.
         /// </summary>
         // ReSharper disable once StringLiteralTypo
-        static readonly GUIStyle s_CachedHelpBoxStyle = new GUIStyle("helpbox");
+        static readonly GUIStyle k_CachedHelpBoxStyle = new GUIStyle("helpbox");
 
         /// <summary>
         ///     Returns the inspector height needed for this decorator.
@@ -47,7 +47,7 @@ namespace GDX.Editor.DecoratorDrawers
             {
                 m_TargetMessage = new GUIContent(m_Target.Message);
             }
-            return s_CachedHelpBoxStyle.CalcHeight(m_TargetMessage, EditorGUIUtility.currentViewWidth) + 4;
+            return k_CachedHelpBoxStyle.CalcHeight(m_TargetMessage, EditorGUIUtility.currentViewWidth) + 4;
         }
 
         /// <summary>

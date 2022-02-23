@@ -31,7 +31,7 @@ namespace GDX.Collections.Pooling
         ///     system.
         /// </summary>
         // ReSharper disable once HeapView.ObjectAllocation.Evident
-        static readonly Dictionary<uint, IManagedPool> s_Pools = new Dictionary<uint, IManagedPool>();
+        static readonly Dictionary<uint, IManagedPool> k_Pools = new Dictionary<uint, IManagedPool>();
 
         /// <summary>
         ///     Get the next available pool key.
@@ -51,7 +51,7 @@ namespace GDX.Collections.Pooling
         /// <returns>An <see cref="IManagedPool" /> identified by the provided <paramref name="key" />.</returns>
         public static IManagedPool GetPool(uint key)
         {
-            return s_Pools[key];
+            return k_Pools[key];
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace GDX.Collections.Pooling
         /// <returns>A type casted pool identified by the provided <paramref name="key" />.</returns>
         public static T GetPool<T>(uint key)
         {
-            return (T)s_Pools[key];
+            return (T)k_Pools[key];
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace GDX.Collections.Pooling
         /// <returns>An <see cref="IManagedPool" /> identified by the provided <paramref name="key" />, null if not found.</returns>
         public static IManagedPool GetPoolWithContainsCheck(uint key)
         {
-            return s_Pools.ContainsKey(key) ? s_Pools[key] : null;
+            return k_Pools.ContainsKey(key) ? k_Pools[key] : null;
         }
 
         /// <summary>
@@ -85,9 +85,9 @@ namespace GDX.Collections.Pooling
         /// <returns>A type casted pool identified by the provided <paramref name="key" />, null if not found.</returns>
         public static T GetPoolWithContainsCheck<T>(uint key) where T : class
         {
-            if (s_Pools.ContainsKey(key))
+            if (k_Pools.ContainsKey(key))
             {
-                return (T)s_Pools[key];
+                return (T)k_Pools[key];
             }
 
             return null;
@@ -100,7 +100,7 @@ namespace GDX.Collections.Pooling
         /// <returns>true if a pool is found registered with this system, false otherwise.</returns>
         public static bool HasPool(uint key)
         {
-            return s_Pools.ContainsKey(key);
+            return k_Pools.ContainsKey(key);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace GDX.Collections.Pooling
         /// <param name="shouldShrink">Should the pool be shrunk (destroying created items) to its original set minimum size?</param>
         public static void ReturnAll(bool shouldShrink = true)
         {
-            foreach (KeyValuePair<uint, IManagedPool> p in s_Pools)
+            foreach (KeyValuePair<uint, IManagedPool> p in k_Pools)
             {
                 p.Value.ReturnAll(shouldShrink);
             }
@@ -123,9 +123,9 @@ namespace GDX.Collections.Pooling
         {
             // Add to numerical index
             uint key = managedPool.GetKey();
-            if (!s_Pools.ContainsKey(key))
+            if (!k_Pools.ContainsKey(key))
             {
-                s_Pools.Add(key, managedPool);
+                k_Pools.Add(key, managedPool);
             }
             else
             {
@@ -148,12 +148,12 @@ namespace GDX.Collections.Pooling
         public static void TearDown(bool forceAll = false)
         {
             // Make removal buffer
-            SimpleList<uint> removeKeyBuffer = new SimpleList<uint>(s_Pools.Count);
+            SimpleList<uint> removeKeyBuffer = new SimpleList<uint>(k_Pools.Count);
 
             // Now we pay the cost, however its during a teardown so, its less bad.
-            int poolCount = s_Pools.Count;
+            int poolCount = k_Pools.Count;
 
-            foreach (KeyValuePair<uint, IManagedPool> pool in s_Pools)
+            foreach (KeyValuePair<uint, IManagedPool> pool in k_Pools)
             {
                 if (!pool.Value.IsAllowedManagedTearDown() && !forceAll)
                 {
@@ -168,7 +168,7 @@ namespace GDX.Collections.Pooling
             int removeCount = removeKeyBuffer.Count;
             for (int r = 0; r < removeCount; r++)
             {
-                s_Pools.Remove(removeKeyBuffer.Array[r]);
+                k_Pools.Remove(removeKeyBuffer.Array[r]);
             }
 
             Trace.Output(Trace.TraceLevel.Info,
@@ -184,7 +184,7 @@ namespace GDX.Collections.Pooling
         public static bool TryGetFirstPool(object baseObject, out IManagedPool pool)
         {
             pool = null;
-            foreach (KeyValuePair<uint, IManagedPool> kvp in s_Pools)
+            foreach (KeyValuePair<uint, IManagedPool> kvp in k_Pools)
             {
                 if (kvp.Value.GetBaseObject() != baseObject)
                 {
@@ -214,10 +214,10 @@ namespace GDX.Collections.Pooling
             uint key = managedPool.GetKey();
 
             // Checks key and the matching pool
-            if (s_Pools.ContainsKey(key) && s_Pools[key] == managedPool)
+            if (k_Pools.ContainsKey(key) && k_Pools[key] == managedPool)
             {
                 // Remove it from the registry
-                s_Pools.Remove(key);
+                k_Pools.Remove(key);
             }
         }
     }

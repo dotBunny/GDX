@@ -41,10 +41,10 @@ namespace GDX.Collections.Pooling
         /// <summary>
         ///     A <see cref="List{T}" /> of <see cref="IManagedPool" /> which are being built out.
         /// </summary>
-        static readonly List<IManagedPool> s_TargetPools = new List<IManagedPool>();
+        static readonly List<IManagedPool> k_TargetPools = new List<IManagedPool>();
 
         /// <summary>
-        ///     A cached numerical count of the number of <see cref="IManagedPool" /> contained in <see cref="s_TargetPools" />.
+        ///     A cached numerical count of the number of <see cref="IManagedPool" /> contained in <see cref="k_TargetPools" />.
         /// </summary>
         static int s_TargetPoolsCount;
 
@@ -72,12 +72,12 @@ namespace GDX.Collections.Pooling
         /// <param name="targetManagedPool">The <see cref="IManagedPool" /> to build out.</param>
         public static void AddManagedPool(IManagedPool targetManagedPool)
         {
-            if (s_TargetPools.Contains(targetManagedPool))
+            if (k_TargetPools.Contains(targetManagedPool))
             {
                 return;
             }
 
-            s_TargetPools.Add(targetManagedPool);
+            k_TargetPools.Add(targetManagedPool);
             s_TargetPoolsCount++;
 
             // We already have a builder, no need to make one.
@@ -96,12 +96,12 @@ namespace GDX.Collections.Pooling
         /// <param name="targetManagedPool">The <see cref="IManagedPool" /> to be removed.</param>
         public static void RemoveManagedPool(IManagedPool targetManagedPool)
         {
-            if (!s_TargetPools.Contains(targetManagedPool))
+            if (!k_TargetPools.Contains(targetManagedPool))
             {
                 return;
             }
 
-            s_TargetPools.Remove(targetManagedPool);
+            k_TargetPools.Remove(targetManagedPool);
             s_TargetPoolsCount--;
 
             // We still have pools, no sense destroying anything yet
@@ -133,20 +133,20 @@ namespace GDX.Collections.Pooling
 
             for (int i = s_TargetPoolsCount - 1; i >= 0; i--)
             {
-                if (s_TargetPools[i] == null)
+                if (k_TargetPools[i] == null)
                 {
                     continue;
                 }
 
-                if (s_TargetPools[i].HasMinimumPooledItems())
+                if (k_TargetPools[i].HasMinimumPooledItems())
                 {
-                    s_TargetPools.RemoveAt(i);
+                    k_TargetPools.RemoveAt(i);
                     s_TargetPoolsCount--;
                 }
                 else
                 {
                     // Build Item
-                    s_TargetPools[i].CreateItem();
+                    k_TargetPools[i].CreateItem();
 
                     spawnsThisUpdate++;
                     if (spawnsThisUpdate > InstantiatesPerFrame)

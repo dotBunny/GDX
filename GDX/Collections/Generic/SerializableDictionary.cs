@@ -31,6 +31,7 @@ namespace GDX.Collections.Generic
     [VisualScriptingCompatible(1)]
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
+        // ReSharper disable InconsistentNaming
         /// <summary>
         ///     Is the dictionary completely capable of being serialized by Unity?
         /// </summary>
@@ -55,6 +56,7 @@ namespace GDX.Collections.Generic
         /// </summary>
         [FormerlySerializedAs("serializedValues")]
         [HideInInspector] [SerializeField] TValue[] m_SerializedValues;
+        // ReSharper restore InconsistentNaming
 
         /// <summary>
         ///     Type constructor.
@@ -254,12 +256,14 @@ namespace GDX.Collections.Generic
         }
 
 #pragma warning disable 414
+        // ReSharper disable InconsistentNaming
 #if UNITY_EDITOR
         /// <summary>
         ///     Editor only data indicating if the property drawer is expanded.
         /// </summary>
         // ReSharper disable once NotAccessedField.Local
         [FormerlySerializedAs("drawerExpanded")]
+        // ReSharper disable once NotAccessedField.Local
         [HideInInspector] [SerializeField] bool m_DrawerExpanded;
 
         /// <summary>
@@ -282,6 +286,7 @@ namespace GDX.Collections.Generic
         [SerializeField] TKey m_PadForSerializationKey;
         // ReSharper restore NotAccessedField.Local
 #endif
+        // ReSharper restore InconsistentNaming
 #pragma warning restore 414
     }
 }

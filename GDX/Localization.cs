@@ -49,7 +49,7 @@ namespace GDX
         /// <summary>
         ///     An array of strings representative for file size formats.
         /// </summary>
-        static readonly string[] s_ReadableByteSizes = { "B", "KB", "MB", "GB", "TB" };
+        static readonly string[] k_ReadableByteSizes = { "B", "KB", "MB", "GB", "TB" };
 
         /// <summary>
         ///     Creates a more human readable <see cref="string" /> of a byte size.
@@ -71,7 +71,7 @@ namespace GDX
                 length /= 1024;
             }
 
-            return $"{length:0.##} {s_ReadableByteSizes[order]}";
+            return $"{length:0.##} {k_ReadableByteSizes[order]}";
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace GDX
             {
                 return Language.Spanish;
             }
-            
+
             return Language.Default;
 #else
             SystemLanguage language = Application.systemLanguage;
@@ -194,7 +194,7 @@ namespace GDX
             }
 #endif
         }
-        
+
         /// <summary>
         ///     Get the localized <see cref="System.DateTime" />.<see cref="System.DateTime.ToString(string)" /> for
         ///     <paramref name="targetLanguage" />.
@@ -222,7 +222,7 @@ namespace GDX
                     return LocalTimestampFormat;
             }
         }
-        
+
         /// <summary>
         ///     Sets the current threads culture to a defined setting in <see cref="GDXConfig" />.
         /// </summary>
