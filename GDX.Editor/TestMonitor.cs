@@ -10,7 +10,7 @@ using UnityEngine;
 // TODO: Make GDX_SAVE_TEST_OUTPUT and option to define
 namespace GDX.Editor
 {
-    internal class TestMonitor : ICallbacks
+    class TestMonitor : ICallbacks
     {
         string m_CachedTempFolder;
 

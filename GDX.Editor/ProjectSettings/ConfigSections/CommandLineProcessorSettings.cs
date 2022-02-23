@@ -10,7 +10,7 @@ namespace GDX.Editor.ProjectSettings
     ///     Command Line Processor Settings
     /// </summary>
     // ReSharper disable once UnusedType.Global
-    internal class CommandLineProcessorSettings : IConfigSection
+    class CommandLineProcessorSettings : IConfigSection
     {
         public const string SectionID = "GDX.Developer.CommandLineParser";
         VisualElement m_RootElement;

@@ -18,7 +18,7 @@ namespace GDX.Editor.ProjectSettings
     ///     Visual Scripting Settings
     /// </summary>
     // ReSharper disable once UnusedType.Global
-    internal class VisualScriptingSettings : IConfigSection
+    class VisualScriptingSettings : IConfigSection
     {
         /// <summary>
         ///     Internal section identifier.

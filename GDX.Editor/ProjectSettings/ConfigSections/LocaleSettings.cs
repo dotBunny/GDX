@@ -15,7 +15,7 @@ namespace GDX.Editor.ProjectSettings
     ///     Locale Settings
     /// </summary>
     // ReSharper disable once UnusedType.Global
-    internal class LocaleSettings : IConfigSection
+    class LocaleSettings : IConfigSection
     {
         public const string SectionID = "GDX.Localization";
         VisualElement m_RootElement;

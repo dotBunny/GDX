@@ -11,7 +11,7 @@ namespace GDX.Editor.ProjectSettings
     /// <summary>
     ///     Automatic Updates Settings
     /// </summary>
-    internal class AutomaticUpdatesSettings : IConfigSection
+    class AutomaticUpdatesSettings : IConfigSection
     {
         public const string SectionID = "GDX.Editor.UpdateProvider";
 

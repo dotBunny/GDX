@@ -15,7 +15,7 @@ namespace GDX.Editor.ProjectSettings
     ///     Build Info Settings
     /// </summary>
     // ReSharper disable once UnusedType.Global
-    internal class BuildInfoSettings : IConfigSection
+    class BuildInfoSettings : IConfigSection
     {
         public const string SectionID = "GDX.Editor.Build.BuildInfoProvider";
         VisualElement m_RootElement;
