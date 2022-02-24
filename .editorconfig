@@ -49,18 +49,15 @@ trim_trailing_whitespace = false
 [*.cs]
 indent_size = 4
 
-# IDE0055: Fix formatting
-dotnet_diagnostic.IDE0055.severity = warning
-
 # Sort using and Import directives with System.* appearing first
 dotnet_sort_system_directives_first = true
 dotnet_separate_import_directive_groups = false
 
 # Avoid "this." and "Me." if not necessary
-dotnet_style_qualification_for_field = false:refactoring
-dotnet_style_qualification_for_property = false:refactoring
-dotnet_style_qualification_for_method = false:refactoring
-dotnet_style_qualification_for_event = false:refactoring
+dotnet_style_qualification_for_field = false:warning
+dotnet_style_qualification_for_property = false:warning
+dotnet_style_qualification_for_method = false:warning
+dotnet_style_qualification_for_event = false:warning
 
 # Remove default modifiers
 dotnet_style_require_accessibility_modifiers = never:warning
@@ -75,9 +72,6 @@ dotnet_style_collection_initializer = true:suggestion
 dotnet_style_coalesce_expression = true:suggestion
 dotnet_style_null_propagation = true:suggestion
 dotnet_style_explicit_tuple_names = true:suggestion
-
-# Whitespace options
-dotnet_style_allow_multiple_blank_lines_experimental = false
 
 # Non-private static fields are PascalCase
 dotnet_naming_rule.non_private_static_fields_should_be_pascal_case.severity = warning
@@ -123,10 +117,8 @@ dotnet_naming_style.constant_style.required_prefix = k_
 dotnet_naming_rule.static_fields_should_be_camel_case.severity = warning
 dotnet_naming_rule.static_fields_should_be_camel_case.symbols = static_fields
 dotnet_naming_rule.static_fields_should_be_camel_case.style = static_field_style
-
 dotnet_naming_symbols.static_fields.applicable_kinds = field
 dotnet_naming_symbols.static_fields.required_modifiers = static
-
 dotnet_naming_style.static_field_style.capitalization = pascal_case
 dotnet_naming_style.static_field_style.required_prefix = s_
 
@@ -134,14 +126,11 @@ dotnet_naming_style.static_field_style.required_prefix = s_
 dotnet_naming_rule.private_static_readonly.severity = warning
 dotnet_naming_rule.private_static_readonly.symbols = private_static_readonly_fields
 dotnet_naming_rule.private_static_readonly.style = private_static_readonly_field_style
-
 dotnet_naming_symbols.private_static_readonly_fields.applicable_kinds = field
 dotnet_naming_symbols.private_static_readonly_fields.applicable_accessibilities = private
 dotnet_naming_symbols.private_static_readonly_fields.required_modifiers = static, readonly
-
 dotnet_naming_style.private_static_readonly_field_style.capitalization = pascal_case
 dotnet_naming_style.private_static_readonly_field_style.required_prefix = k_
-
 
 # Instance fields are camelCase and start with m_
 dotnet_naming_rule.instance_fields_should_be_camel_case.severity = warning
@@ -156,63 +145,35 @@ dotnet_naming_style.instance_field_style.required_prefix = m_
 dotnet_naming_rule.non_private_instance_fields_should_be_pascal_case.severity = warning
 dotnet_naming_rule.non_private_instance_fields_should_be_pascal_case.symbols = non_private_instance_field
 dotnet_naming_rule.non_private_instance_fields_should_be_pascal_case.style = non_private_instance_field_style
-
 dotnet_naming_symbols.non_private_instance_field.applicable_kinds = field
 dotnet_naming_symbols.non_private_instance_field.applicable_accessibilities = public
-
 dotnet_naming_style.non_private_instance_field_style.capitalization = pascal_case
 
 # Locals and parameters are camelCase
 dotnet_naming_rule.locals_should_be_camel_case.severity = warning
 dotnet_naming_rule.locals_should_be_camel_case.symbols = locals_and_parameters
 dotnet_naming_rule.locals_should_be_camel_case.style = camel_case_style
-
 dotnet_naming_symbols.locals_and_parameters.applicable_kinds = parameter, local
-
 dotnet_naming_style.camel_case_style.capitalization = camel_case
 
 # Local functions are PascalCase
 dotnet_naming_rule.local_functions_should_be_pascal_case.severity = warning
 dotnet_naming_rule.local_functions_should_be_pascal_case.symbols = local_functions
 dotnet_naming_rule.local_functions_should_be_pascal_case.style = local_function_style
-
 dotnet_naming_symbols.local_functions.applicable_kinds = local_function
-
 dotnet_naming_style.local_function_style.capitalization = pascal_case
 
 # By default, name items with PascalCase
 dotnet_naming_rule.members_should_be_pascal_case.severity = warning
 dotnet_naming_rule.members_should_be_pascal_case.symbols = all_members
 dotnet_naming_rule.members_should_be_pascal_case.style = pascal_case_style
-
 dotnet_naming_symbols.all_members.applicable_kinds = *
-
 dotnet_naming_style.pascal_case_style.capitalization = pascal_case
 
-# error RS2008: Enable analyzer release tracking for the analyzer project containing rule '{0}'
-dotnet_diagnostic.RS2008.severity = none
-
-# IDE0073: File header
-dotnet_diagnostic.IDE0073.severity = warning
 file_header_template = Copyright (c) 2020-2022 dotBunny Inc.\ndotBunny licenses this file to you under the BSL-1.0 license.\nSee the LICENSE file in the project root for more information.
 
-# IDE0035: Remove unreachable code
-dotnet_diagnostic.IDE0035.severity = warning
-
-# IDE0036: Order modifiers
-dotnet_diagnostic.IDE0036.severity = warning
-
-# IDE0043: Format string contains invalid placeholder
-dotnet_diagnostic.IDE0043.severity = warning
-
-# IDE0044: Make field readonly
-dotnet_diagnostic.IDE0044.severity = warning
-
-# RS0016: Only enable if API files are present
-dotnet_public_api_analyzer.require_api_files = true
-
 # CSharp code style settings:
-[*.cs]
+
 # Newline settings
 csharp_new_line_before_open_brace = all
 csharp_new_line_before_else = true
@@ -230,10 +191,6 @@ csharp_indent_case_contents_when_block = true
 csharp_indent_switch_labels = true
 csharp_indent_labels = flush_left
 
-# Whitespace options
-csharp_style_allow_embedded_statements_on_same_line_experimental = false
-csharp_style_allow_blank_lines_between_consecutive_braces_experimental = false
-csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = false
 # Dont prefer "var" everywhere
 csharp_style_var_for_built_in_types = false:warning
 csharp_style_var_when_type_is_apparent = false:warning
@@ -264,7 +221,7 @@ csharp_space_after_dot = false
 csharp_space_after_keywords_in_control_flow_statements = true
 csharp_space_after_semicolon_in_for_statement = true
 csharp_space_around_binary_operators = before_and_after
-csharp_space_around_declaration_statements = do_not_ignore
+csharp_space_around_declaration_statements = false
 csharp_space_before_colon_in_inheritance_clause = true
 csharp_space_before_comma = false
 csharp_space_before_dot = false
