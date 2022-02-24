@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -119,7 +120,7 @@ namespace GDX
         {
             Vector2 mockData = new Vector2(5, 10);
 
-            bool evaluate = (mockData.Slope() == 2);
+            bool evaluate = Math.Abs(mockData.Slope() - 2f) < Platform.FloatTolerance;
 
             Assert.IsTrue(evaluate);
         }

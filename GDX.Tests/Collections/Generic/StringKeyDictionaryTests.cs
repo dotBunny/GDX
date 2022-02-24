@@ -350,7 +350,7 @@ namespace GDX.Collections.Generic
                 }
             }
 
-            Assert.IsTrue(indexOfKey == -1);
+            Assert.IsTrue(removedFirstTime && indexOfKey == -1);
         }
 
         [Test]
@@ -364,9 +364,6 @@ namespace GDX.Collections.Generic
 
             bool removedFirstTime = dictionary.TryRemove(myKey);
             bool removedSecondTime = dictionary.TryRemove(myKey);
-
-            StringKeyEntry<string>[] entries = dictionary.Entries;
-            int arrayLength = entries.Length;
 
             Assert.IsTrue(removedFirstTime && !removedSecondTime);
         }

@@ -27,7 +27,7 @@ namespace GDX.Developer.Reports.Resource
             }
             else
             {
-                Percentage = 100f * (Change / lhs);
+                Percentage = 100f * ((float)Change / lhs);
             }
         }
 

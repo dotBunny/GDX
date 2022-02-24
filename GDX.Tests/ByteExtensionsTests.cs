@@ -51,10 +51,8 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void IsSame_NullLeftHandSide_ReturnsFalse()
         {
-            byte[] mockData = null;
-            byte[] differentData = StringExtensions.EncryptionInitializationVector;
-
-            bool evaluate = mockData.IsSame(differentData);
+            bool evaluate = ByteExtensions.IsSame(null,
+                StringExtensions.EncryptionInitializationVector);
 
             Assert.IsFalse(evaluate);
         }
@@ -63,10 +61,7 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void IsSame_NullRightHandSide_ReturnsFalse()
         {
-            byte[] mockData = StringExtensions.EncryptionDefaultKey;
-            byte[] differentData = null;
-
-            bool evaluate = mockData.IsSame(differentData);
+            bool evaluate = StringExtensions.EncryptionDefaultKey.IsSame(null);
 
             Assert.IsFalse(evaluate);
         }
