@@ -343,7 +343,7 @@ namespace GDX.Editor
                             {
                                 manifestContent.AppendLine("}");
                                 ManifestEntry manifestEntry = ManifestEntry.Get(manifestContent.ToString());
-                                return (manifestEntry.installationType, manifestEntry.tag);
+                                return manifestEntry == null ? (InstallationType.UPM, null) : (manifestEntry.installationType, manifestEntry.tag);
                             }
                         case true:
                             manifestContent.AppendLine(workingLine);

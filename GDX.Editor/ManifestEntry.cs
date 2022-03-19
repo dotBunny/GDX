@@ -26,8 +26,18 @@ namespace GDX.Editor
 
         public static ManifestEntry Get(string json)
         {
+            ManifestEntry returnObject = null;
 
-            ManifestEntry returnObject = JsonUtility.FromJson<ManifestEntry>(json);
+            // Catch badly formatted lines from exploding
+            try
+            {
+                returnObject = JsonUtility.FromJson<ManifestEntry>(json);
+            }
+            catch
+            {
+                return null;
+            }
+
             if (returnObject == null)
             {
                 return null;
