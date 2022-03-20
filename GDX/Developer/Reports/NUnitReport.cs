@@ -111,7 +111,7 @@ namespace GDX.Developer.Reports
         static void AddToGenerator(TextGenerator generator, TestCase testCase)
         {
             generator.ApplyIndent();
-            generator.Append($"<test-case");
+            generator.Append("<test-case");
             AddToGeneratorAttribute(generator, "id", testCase.Id);
             AddToGeneratorAttribute(generator, "name", testCase.Name);
             AddToGeneratorAttribute(generator, "fullname", testCase.FullName);
@@ -165,7 +165,7 @@ namespace GDX.Developer.Reports
         static void AddToGenerator(TextGenerator generator, TestSuite testSuite)
         {
             generator.ApplyIndent();
-            generator.Append($"<test-suite");
+            generator.Append("<test-suite");
             AddToGeneratorAttribute(generator, "type", testSuite.Type);
             AddToGeneratorAttribute(generator, "id", testSuite.Id);
             AddToGeneratorAttribute(generator, "name", testSuite.Name);
@@ -211,7 +211,7 @@ namespace GDX.Developer.Reports
         static void AddToGenerator(TextGenerator generator, TestRun testRun)
         {
             generator.ApplyIndent();
-            generator.Append($"<test-run");
+            generator.Append("<test-run");
             AddToGeneratorAttribute(generator, "id", testRun.Id);
             AddToGeneratorAttribute(generator, "testcasecount", testRun.TestCaseCount);
             AddToGeneratorAttribute(generator, "result", testRun.Result);
