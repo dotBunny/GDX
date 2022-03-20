@@ -232,7 +232,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override bool Equals(object o)
         {
-            return Equals((Byte2)o);
+            return o != null && Equals((Byte2)o);
         }
 
 
