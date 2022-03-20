@@ -325,29 +325,40 @@ namespace GDX.Editor
                 int lockFileLength = lockFile.Length;
 
                 // Loop through lockfile for the package to determine further information on how it has been added.
-                bool insidePackage = false;
+                int depth = -1;
                 StringBuilder manifestContent = new StringBuilder();
                 for (int i = 0; i < lockFileLength; i++)
                 {
                     string workingLine = lockFile[i].Trim();
+
                     if (workingLine.StartsWith("\"com.dotbunny.gdx\""))
                     {
-                        insidePackage = true;
                         manifestContent.AppendLine("{");
+                        depth = 1;
                         continue;
                     }
 
-                    switch (insidePackage)
+                    if (depth > 0)
                     {
-                        case true when workingLine.StartsWith("},"):
-                            {
-                                manifestContent.AppendLine("}");
-                                ManifestEntry manifestEntry = ManifestEntry.Get(manifestContent.ToString());
-                                return manifestEntry == null ? (UPM: InstallationType.PackageManager, null) : (manifestEntry.installationType, manifestEntry.tag);
-                            }
-                        case true:
-                            manifestContent.AppendLine(workingLine);
-                            break;
+                        if (workingLine.Contains("{"))
+                        {
+                            depth++;
+                        }
+                        if (workingLine.Contains("}"))
+                        {
+                            depth--;
+                        }
+                        manifestContent.AppendLine(workingLine);
+
+                        if (depth != 0)
+                        {
+                            continue;
+                        }
+
+                        string jsonContent = manifestContent.ToString().TrimEnd(',').Trim();
+                        ManifestEntry manifestEntry = ManifestEntry.Get(jsonContent);
+                        return manifestEntry == null ? (InstallationType.PackageManager, null) :
+                            (manifestEntry.installationType, manifestEntry.tag);
                     }
                 }
 

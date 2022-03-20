@@ -35,6 +35,7 @@ namespace GDX.Editor
             }
             catch
             {
+                Debug.LogWarning($"Badly formatted ManifestEntry.\n{json})");
                 return null;
             }
 
