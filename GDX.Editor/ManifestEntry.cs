@@ -26,7 +26,7 @@ namespace GDX.Editor
 
         public static ManifestEntry Get(string json)
         {
-            ManifestEntry returnObject = null;
+            ManifestEntry returnObject;
 
             // Catch badly formatted lines from exploding
             try
