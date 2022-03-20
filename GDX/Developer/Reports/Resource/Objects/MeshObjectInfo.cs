@@ -24,15 +24,15 @@ namespace GDX.Developer.Reports.Resource.Objects
         {
             return new MeshObjectInfo()
             {
-                CopyCount = this.CopyCount,
-                MemoryUsage = this.MemoryUsage,
-                Name = this.Name,
-                Reference = this.Reference,
-                TotalMemoryUsage = this.TotalMemoryUsage,
-                Type = this.Type,
-                IsReadable =  this.IsReadable,
-                SubMeshCount = this.SubMeshCount,
-                Triangles =  this.Triangles
+                CopyCount = CopyCount,
+                MemoryUsage = MemoryUsage,
+                Name = Name,
+                Reference = Reference,
+                TotalMemoryUsage = TotalMemoryUsage,
+                Type = Type,
+                IsReadable =  IsReadable,
+                SubMeshCount = SubMeshCount,
+                Triangles =  Triangles
             };
         }
 

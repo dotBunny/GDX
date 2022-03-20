@@ -24,14 +24,14 @@ namespace GDX.Developer.Reports.Resource.Objects
         {
             return new ShaderObjectInfo()
             {
-                CopyCount = this.CopyCount,
-                MemoryUsage = this.MemoryUsage,
-                Name = this.Name,
-                Reference = this.Reference,
-                TotalMemoryUsage = this.TotalMemoryUsage,
-                Type = this.Type,
-                IsSupported = this.IsSupported,
-                PassCount = this.PassCount
+                CopyCount = CopyCount,
+                MemoryUsage = MemoryUsage,
+                Name = Name,
+                Reference = Reference,
+                TotalMemoryUsage = TotalMemoryUsage,
+                Type = Type,
+                IsSupported = IsSupported,
+                PassCount = PassCount
             };
         }
 

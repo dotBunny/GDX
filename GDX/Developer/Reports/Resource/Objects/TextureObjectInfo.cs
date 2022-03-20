@@ -27,16 +27,16 @@ namespace GDX.Developer.Reports.Resource.Objects
         {
             return new TextureObjectInfo()
             {
-                CopyCount = this.CopyCount,
-                MemoryUsage = this.MemoryUsage,
-                Name = this.Name,
-                Reference = this.Reference,
-                TotalMemoryUsage = this.TotalMemoryUsage,
-                Type = this.Type,
-                Height = this.Height,
-                IsReadable = this.IsReadable,
-                Width = this.Width,
-                Format = this.Format
+                CopyCount = CopyCount,
+                MemoryUsage = MemoryUsage,
+                Name = Name,
+                Reference = Reference,
+                TotalMemoryUsage = TotalMemoryUsage,
+                Type = Type,
+                Height = Height,
+                IsReadable = IsReadable,
+                Width = Width,
+                Format = Format
             };
         }
 

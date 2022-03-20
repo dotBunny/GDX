@@ -37,8 +37,8 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Byte2(int x, int y)
         {
-            this.X = (byte)x;
-            this.Y = (byte)y;
+            X = (byte)x;
+            Y = (byte)y;
         }
 
         /// <summary>
@@ -49,8 +49,8 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Byte2(byte x, byte y)
         {
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
         }
 
         /// <summary>

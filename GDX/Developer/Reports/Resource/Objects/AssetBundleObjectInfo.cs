@@ -24,14 +24,14 @@ namespace GDX.Developer.Reports.Resource.Objects
         {
             return new AssetBundleObjectInfo()
             {
-                CopyCount = this.CopyCount,
-                MemoryUsage = this.MemoryUsage,
-                Name = this.Name,
-                Reference = this.Reference,
-                TotalMemoryUsage = this.TotalMemoryUsage,
-                Type = this.Type,
-                IsStreamedSceneAssetBundle =  this.IsStreamedSceneAssetBundle,
-                AssetCount = this.AssetCount
+                CopyCount = CopyCount,
+                MemoryUsage = MemoryUsage,
+                Name = Name,
+                Reference = Reference,
+                TotalMemoryUsage = TotalMemoryUsage,
+                Type = Type,
+                IsStreamedSceneAssetBundle =  IsStreamedSceneAssetBundle,
+                AssetCount = AssetCount
             };
         }
 
