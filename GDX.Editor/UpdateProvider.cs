@@ -122,9 +122,9 @@ namespace GDX.Editor
             switch (LocalPackage.InstallationMethod)
             {
                 // Currently this option doesnt function due to the IsUpgrade check, but its WIP
-                case PackageProvider.InstallationType.UPM:
-                case PackageProvider.InstallationType.UPMBranch:
-                case PackageProvider.InstallationType.UPMTag:
+                case PackageProvider.InstallationType.PackageManager:
+                case PackageProvider.InstallationType.PackageManagerBranch:
+                case PackageProvider.InstallationType.PackageManagerTag:
                     if (EditorUtility.DisplayDialog("GDX Update Available",
                         $"{messageStart}Would you like to have the package attempt to upgrade itself through UPM to the newest version automatically?",
                         "Yes", "No"))
@@ -211,9 +211,9 @@ namespace GDX.Editor
                 case PackageProvider.InstallationType.GitHub:
                 case PackageProvider.InstallationType.GitHubBranch:
                 case PackageProvider.InstallationType.GitHubTag:
-                case PackageProvider.InstallationType.UPM:
-                case PackageProvider.InstallationType.UPMBranch:
-                case PackageProvider.InstallationType.UPMTag:
+                case PackageProvider.InstallationType.PackageManager:
+                case PackageProvider.InstallationType.PackageManagerBranch:
+                case PackageProvider.InstallationType.PackageManagerTag:
                 case PackageProvider.InstallationType.Assets:
                     return true;
                 // case PackageProvider.InstallationType.Unknown:
@@ -265,7 +265,7 @@ namespace GDX.Editor
                 // Get content of the package definition file
                 string updateLocation = "main";
                 if (LocalPackage.InstallationMethod == PackageProvider.InstallationType.GitHubBranch ||
-                    LocalPackage.InstallationMethod == PackageProvider.InstallationType.UPMBranch)
+                    LocalPackage.InstallationMethod == PackageProvider.InstallationType.PackageManagerBranch)
                 {
                     updateLocation = LocalPackage.SourceTag;
                 }

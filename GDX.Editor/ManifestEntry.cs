@@ -49,7 +49,7 @@ namespace GDX.Editor
             {
                 if (tag.StartsWith("v"))
                 {
-                    returnObject.installationType = PackageProvider.InstallationType.UPMTag;
+                    returnObject.installationType = PackageProvider.InstallationType.PackageManagerTag;
                     returnObject.tag = tag;
                     return returnObject;
                 }
@@ -63,12 +63,12 @@ namespace GDX.Editor
                 }
 
                 // Left with assuming its a branch?
-                returnObject.installationType = PackageProvider.InstallationType.UPMBranch;
+                returnObject.installationType = PackageProvider.InstallationType.PackageManagerBranch;
                 returnObject.tag = tag;
                 return returnObject;
             }
 
-            returnObject.installationType = PackageProvider.InstallationType.UPM;
+            returnObject.installationType = PackageProvider.InstallationType.PackageManager;
             returnObject.tag = "main";
             return returnObject;
         }

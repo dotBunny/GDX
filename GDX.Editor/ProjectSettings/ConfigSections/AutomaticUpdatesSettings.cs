@@ -87,7 +87,7 @@ namespace GDX.Editor.ProjectSettings
 
                 switch (UpdateProvider.LocalPackage.InstallationMethod)
                 {
-                case PackageProvider.InstallationType.UPMBranch:
+                case PackageProvider.InstallationType.PackageManagerBranch:
                 case PackageProvider.InstallationType.GitHubBranch:
                 case PackageProvider.InstallationType.GitHub:
                     m_ElementSource.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
@@ -96,7 +96,7 @@ namespace GDX.Editor.ProjectSettings
                         ? UpdateProvider.LocalPackage.SourceTag
                         : "N/A";
                     break;
-                case PackageProvider.InstallationType.UPMTag:
+                case PackageProvider.InstallationType.PackageManagerTag:
                 case PackageProvider.InstallationType.GitHubTag:
                     m_ElementSource.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
                     m_LabelSourceItem.text = "Tag:";
@@ -104,7 +104,7 @@ namespace GDX.Editor.ProjectSettings
                         ? UpdateProvider.LocalPackage.SourceTag
                         : "N/A";
                     break;
-                case PackageProvider.InstallationType.UPMCommit:
+                case PackageProvider.InstallationType.PackageManagerCommit:
                 case PackageProvider.InstallationType.GitHubCommit:
                     m_ElementSource.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
                     m_LabelSourceItem.text = "Commit:";
@@ -235,7 +235,7 @@ namespace GDX.Editor.ProjectSettings
                 if ((UpdateProvider.LocalPackage.InstallationMethod ==
                      PackageProvider.InstallationType.GitHubBranch ||
                      UpdateProvider.LocalPackage.InstallationMethod ==
-                     PackageProvider.InstallationType.UPMBranch) &&
+                     PackageProvider.InstallationType.PackageManagerBranch) &&
                     UpdateProvider.LocalPackage.SourceTag == "dev")
                 {
                     m_ButtonManualUpgrade.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);

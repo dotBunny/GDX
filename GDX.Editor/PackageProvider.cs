@@ -36,27 +36,27 @@ namespace GDX.Editor
             /// <summary>
             ///     The package was installed via Unity's traditional UPM process.
             /// </summary>
-            UPM = 1,
+            PackageManager = 1,
 
             /// <summary>
             ///     The package was installed via Unity's traditional UPM process, however with a branch specified.
             /// </summary>
-            UPMBranch = 2,
+            PackageManagerBranch = 2,
 
             /// <summary>
             ///     The package was installed via Unity's traditional UPM process, however with a tag specified.
             /// </summary>
-            UPMTag = 3,
+            PackageManagerTag = 3,
 
             /// <summary>
             ///     The package was installed via Unity's traditional UPM process, however with a commit specified.
             /// </summary>
-            UPMCommit = 4,
+            PackageManagerCommit = 4,
 
             /// <summary>
             ///     The package was installed via Unity's traditional UPM process, however with local file reference.
             /// </summary>
-            UPMLocal = 5,
+            PackageManagerLocal = 5,
 
             /// <summary>
             ///     The package was cloned into a folder in the project from GitHub.
@@ -237,15 +237,15 @@ namespace GDX.Editor
         {
             switch (installationType)
             {
-                case InstallationType.UPM:
+                case InstallationType.PackageManager:
                     return "Unity Package Manager";
-                case InstallationType.UPMBranch:
+                case InstallationType.PackageManagerBranch:
                     return "Unity Package Manager (Branch)";
-                case InstallationType.UPMTag:
+                case InstallationType.PackageManagerTag:
                     return "Unity Package Manager (Tag)";
-                case InstallationType.UPMCommit:
+                case InstallationType.PackageManagerCommit:
                     return "Unity Package Manager (Commit)";
-                case InstallationType.UPMLocal:
+                case InstallationType.PackageManagerLocal:
                     return "Unity Package Manager (Local)";
                 case InstallationType.GitHub:
                     return "GitHub";
@@ -307,7 +307,7 @@ namespace GDX.Editor
                 // Local UPM reference
                 if (manifestLine.Contains("\"file:"))
                 {
-                    return (InstallationType.UPMLocal, null);
+                    return (InstallationType.PackageManagerLocal, null);
                 }
 
                 // Time to see whats in the lock file
@@ -318,7 +318,7 @@ namespace GDX.Editor
                 if (!File.Exists(packageManifestLockFilePath))
                 {
                     // No lock go bold!
-                    return (InstallationType.UPM, null);
+                    return (InstallationType.PackageManager, null);
                 }
 
                 string[] lockFile = File.ReadAllLines(packageManifestLockFilePath);
@@ -343,7 +343,7 @@ namespace GDX.Editor
                             {
                                 manifestContent.AppendLine("}");
                                 ManifestEntry manifestEntry = ManifestEntry.Get(manifestContent.ToString());
-                                return manifestEntry == null ? (InstallationType.UPM, null) : (manifestEntry.installationType, manifestEntry.tag);
+                                return manifestEntry == null ? (UPM: InstallationType.PackageManager, null) : (manifestEntry.installationType, manifestEntry.tag);
                             }
                         case true:
                             manifestContent.AppendLine(workingLine);
@@ -352,7 +352,7 @@ namespace GDX.Editor
                 }
 
                 // Well we at least can say it was UPM bound
-                return (InstallationType.UPM, null);
+                return (InstallationType.PackageManager, null);
             }
 
             // GITHUB - The package was added via some sort of GitHub cloning into the project.
