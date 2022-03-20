@@ -147,12 +147,11 @@ namespace GDX
                     UnityEngine.Debug.LogError(traceObject, contextObject);
                     UnityEngine.Diagnostics.Utils.ForceCrash(UnityEngine.Diagnostics.ForcedCrashCategory.FatalError);
                     break;
-
-                case TraceLevel.Info:
-                case TraceLevel.Log:
+                
                 default:
                     UnityEngine.Debug.Log(traceObject, contextObject);
                     break;
+
             }
 #endif
         }
