@@ -21,7 +21,7 @@ namespace GDX
         {
             Measure.Method(() =>
                 {
-                    int dummyValue = "HelloWorld!".ToLower().GetHashCode();
+                    int unused = "HelloWorld!".ToLower().GetHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -30,7 +30,7 @@ namespace GDX
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = "this is all lowercase".ToLower().GetHashCode();
+                    int unused = "this is all lowercase".ToLower().GetHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -39,7 +39,7 @@ namespace GDX
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = "THIS IS ALL UPPERCASE".ToLower().GetHashCode();
+                    int unused = "THIS IS ALL UPPERCASE".ToLower().GetHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -48,7 +48,7 @@ namespace GDX
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = "_tH\\is_I!is_M\"y_TEST_STR#$34343".ToLower().GetHashCode();
+                    int unused = "_tH\\is_I!is_M\"y_TEST_STR#$34343".ToLower().GetHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -64,7 +64,7 @@ namespace GDX
         {
             Measure.Method(() =>
                 {
-                    int dummyValue = "HelloWorld!".GetStableLowerCaseHashCode();
+                    int unused = "HelloWorld!".GetStableLowerCaseHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -73,7 +73,7 @@ namespace GDX
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = "this is all lowercase".GetStableLowerCaseHashCode();
+                    int unused = "this is all lowercase".GetStableLowerCaseHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -82,7 +82,7 @@ namespace GDX
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = "THIS IS ALL UPPERCASE".GetStableLowerCaseHashCode();
+                    int unused = "THIS IS ALL UPPERCASE".GetStableLowerCaseHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -91,7 +91,7 @@ namespace GDX
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetStableLowerCaseHashCode();
+                    int unused = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetStableLowerCaseHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -107,7 +107,7 @@ namespace GDX
         {
             Measure.Method(() =>
                 {
-                    int dummyValue = "HelloWorld!".ToUpper().GetHashCode();
+                    int unused = "HelloWorld!".ToUpper().GetHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -116,7 +116,7 @@ namespace GDX
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = "this is all lowercase".ToUpper().GetHashCode();
+                    int unused = "this is all lowercase".ToUpper().GetHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -125,7 +125,7 @@ namespace GDX
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = "THIS IS ALL UPPERCASE".ToUpper().GetHashCode();
+                    int unused = "THIS IS ALL UPPERCASE".ToUpper().GetHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -134,7 +134,7 @@ namespace GDX
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = "_tH\\is_I!is_M\"y_TEST_STR#$34343".ToUpper().GetHashCode();
+                    int unused = "_tH\\is_I!is_M\"y_TEST_STR#$34343".ToUpper().GetHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -150,7 +150,7 @@ namespace GDX
         {
             Measure.Method(() =>
                 {
-                    int.TryParse("10", out int value);
+                    int.TryParse("10", out int unused);
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -159,7 +159,7 @@ namespace GDX
                 .Run();
             Measure.Method(() =>
                 {
-                    int.TryParse("-12304912", out int value);
+                    int.TryParse("-12304912", out int unused);
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -200,7 +200,7 @@ namespace GDX
         {
             Measure.Method(() =>
                 {
-                    int dummyValue = "HelloWorld!".GetStableUpperCaseHashCode();
+                    int unused = "HelloWorld!".GetStableUpperCaseHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -209,7 +209,7 @@ namespace GDX
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = "this is all lowercase".GetStableUpperCaseHashCode();
+                    int unused = "this is all lowercase".GetStableUpperCaseHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -218,7 +218,7 @@ namespace GDX
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = "THIS IS ALL UPPERCASE".GetStableUpperCaseHashCode();
+                    int unused = "THIS IS ALL UPPERCASE".GetStableUpperCaseHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -227,7 +227,7 @@ namespace GDX
                 .Run();
             Measure.Method(() =>
                 {
-                    int dummyValue = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetStableUpperCaseHashCode();
+                    int unused = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetStableUpperCaseHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
