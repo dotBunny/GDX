@@ -39,7 +39,7 @@ namespace GDX.Developer.Reports.BuildVerification
             }
             catch (Exception e)
             {
-                TestCase testCase = BVT.Assert(GetIdentifier(), false, e.Message);
+                TestCase testCase = BuildVerificationReport.Assert(GetIdentifier(), false, e.Message);
                 testCase.StackTrace = e.StackTrace;
                 return testCase;
             }

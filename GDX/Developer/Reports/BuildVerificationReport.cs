@@ -5,7 +5,7 @@ using Debug = UnityEngine.Debug;
 
 namespace GDX.Developer.Reports
 {
-    public static class BVT
+    public static class BuildVerificationReport
     {
         static NUnitReport s_Report = new NUnitReport("BVT", "Build Verification Test");
         static SimpleList<string> s_PanicMessages = new SimpleList<string>(2);
