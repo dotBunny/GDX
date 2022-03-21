@@ -355,8 +355,9 @@ namespace GDX.Editor
                             continue;
                         }
 
-                        string jsonContent = manifestContent.ToString().TrimEnd(',').Trim();
-                        ManifestEntry manifestEntry = ManifestEntry.Get(jsonContent);
+                        ManifestEntry manifestEntry = ManifestEntry.Get(
+                            manifestContent.ToString().Trim().TrimEnd(',').Trim());
+
                         return manifestEntry == null ? (InstallationType.PackageManager, null) :
                             (manifestEntry.installationType, manifestEntry.tag);
                     }
