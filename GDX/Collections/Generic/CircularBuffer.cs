@@ -140,6 +140,7 @@ namespace GDX.Collections.Generic
                 Array[i] = default;
             }
 
+            Count = 0;
             StartIndex = 0;
             EndIndex = 0;
         }
@@ -277,53 +278,38 @@ namespace GDX.Collections.Generic
         public T[] ToArray()
         {
             T[] newArray = new T[Count];
-            int newArrayOffset = 0;
-            ArraySegment<T>[] segments = { ArrayOne(), ArrayTwo() };
-            foreach (ArraySegment<T> segment in segments)
+
+            // We dont need to fill anything as its empty.
+            if (Count <= 0)
             {
-                System.Array.Copy(segment.Array, segment.Offset, newArray, newArrayOffset, segment.Count);
-                newArrayOffset += segment.Count;
+                return newArray;
+            }
+
+            int length;
+
+            // First Part
+            if (StartIndex < EndIndex)
+            {
+                length = EndIndex - StartIndex;
+                System.Array.Copy(Array, StartIndex, newArray, 0, length);
+            }
+            else
+            {
+                length = Array.Length - StartIndex;
+                System.Array.Copy(Array, StartIndex, newArray, 0, length);
+            }
+
+            // Second Part
+            if (StartIndex > EndIndex)
+            {
+                System.Array.Copy(Array, EndIndex, newArray, length, 0);
+            }
+            else
+            {
+                System.Array.Copy(Array, 0, newArray, length, EndIndex);
             }
 
             return newArray;
-        }
-
-        /// <summary>
-        ///     Get the first array segment of the desired ordered array in the <see cref="Array" />.
-        /// </summary>
-        /// <remarks>
-        ///     This is done because the arrays actual order may wrap around from the end of <see cref="Array" />, to the start.
-        /// </remarks>
-        /// <returns>An <see cref="ArraySegment{T}" /> representing the first part of the ordered data in <see cref="Array" />.</returns>
-        ArraySegment<T> ArrayOne()
-        {
-            if (Count == 0)
-            {
-                return new ArraySegment<T>(new T[0]);
-            }
-
-            return StartIndex < EndIndex
-                ? new ArraySegment<T>(Array, StartIndex, EndIndex - StartIndex)
-                : new ArraySegment<T>(Array, StartIndex, Array.Length - StartIndex);
-        }
-
-        /// <summary>
-        ///     Get the second array segment of the desired ordered array in the <see cref="Array" />.
-        /// </summary>
-        /// <remarks>
-        ///     This is done because the arrays actual order may wrap around from the end of <see cref="Array" />, to the start.
-        /// </remarks>
-        /// <returns>An <see cref="ArraySegment{T}" /> representing the end part of the ordered data in <see cref="Array" />.</returns>
-        ArraySegment<T> ArrayTwo()
-        {
-            if (Count == 0)
-            {
-                return new ArraySegment<T>(new T[0]);
-            }
-
-            return StartIndex < EndIndex
-                ? new ArraySegment<T>(Array, EndIndex, 0)
-                : new ArraySegment<T>(Array, 0, EndIndex);
         }
     }
 }

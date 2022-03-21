@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dependencies on `com.unity.mathematics`, `com.unity.burst`, `com.unity.jobs` and `com.unity.collections` packages.
 - Support for `com.unity.runtime.dots` (UNITY_DOTSRUNTIME) builds. Unsupported functionality will cause compilation errors during builds for immediate feedback on unsupported usage. Additionally, unsupported methods are flagged with an `UnsupportedRuntimeException` which is visible in [documentation](https://gdx.dotbunny.com/api) as well as IDE intelli-sense.
 - Support for `com.unity.entities` programming patterns.
-- `BVT` reporting structure for quick validation of builds, including a `TestBehaviour`.
+- `BuildVerificationReport` structure for quick validation of builds, including a `TestBehaviour`.
 - `StringKeyDictionary` to optimize one of the most common use cases for dictionaries.
 - Unity editor non-pro (light) theme.
 
@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Platform::GetOutputFolder()` supports being overridden via command-line argument `GDX_OUTPUT_FOLDER`.
 - Internal members of `SerializableDictionary` have been renamed, `FormerlySerializedAs` attribute has been used to hopefully upgrade content.
 - `Localization::GetIETF()` was renamed for clarity to `Localization::GetIETF_BCP47()`, with further value definitions.
+- Optimized internals of `CircularBuffer` removing some garbage being made when using `ToArray()`.
 
 ### Fixed  
 
