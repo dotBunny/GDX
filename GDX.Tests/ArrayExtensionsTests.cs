@@ -33,9 +33,9 @@ namespace GDX
         public void ContainsItem_MockData_HasValue()
         {
 
-            string[] mockArray = { "hello", "jello", "baby" };
+            string[] mockArray = { "hello", "jello", "baby", "Init" };
 
-            bool evaluate = mockArray.ContainsItem("hello");
+            bool evaluate = mockArray.ContainsItem(Core.OverrideMethod);
 
             Assert.IsTrue(evaluate);
         }
