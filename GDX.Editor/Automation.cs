@@ -215,6 +215,10 @@ namespace GDX.Editor
         /// <returns>An reference to an instance of the GameView</returns>
         public static EditorWindow GetGameView()
         {
+            // We will cause an exception if there is no device, so return early.
+            if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null) return null;
+
+            // Use internal reflection
             System.Type gameView = System.Type.GetType("UnityEditor.GameView,UnityEditor");
             return gameView != null ? EditorWindow.GetWindow(gameView, false) : null;
         }
