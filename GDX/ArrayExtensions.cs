@@ -28,18 +28,64 @@ namespace GDX
         }
 
         /// <summary>
+        ///     <para>Does <paramref name="targetArray" /> contain <paramref name="targetItem" />?</para>
+        /// </summary>
+        /// <remarks>Ignores equality check and end up comparing object pointers.</remarks>
+        /// <param name="targetArray">The <see cref="System.Array" /> to look in.</param>
+        /// <param name="targetItem">The target item to look for.</param>
+        /// <typeparam name="T">The type of the <see cref="System.Array" />.</typeparam>
+        /// <returns>true/false</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ContainsItem<T>(this T[] targetArray, T targetItem) where T : class
+        {
+            object targetObject = targetItem;
+            int count = targetArray.Length;
+            for (int i = 0; i < count; i++)
+            {
+                if (targetArray[i] == targetObject)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        ///     <para>Does <paramref name="targetArray" /> contain <paramref name="targetValue" />?</para>
+        /// </summary>
+        /// <param name="targetArray">The <see cref="System.Array" /> to look in.</param>
+        /// <param name="targetValue">The target item to look for.</param>
+        /// <typeparam name="T">The type of the <see cref="System.Array" />.</typeparam>
+        /// <returns>true/false</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ContainsValue<T>(this T[] targetArray, T targetValue) where T : IEquatable<T>
+        {
+            int count = targetArray.Length;
+            for (int i = 0; i < count; i++)
+            {
+                if (targetArray[i].Equals(targetValue))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         ///     Find the first index of <paramref name="targetItem" /> in <paramref name="targetArray" />.
         /// </summary>
+        /// <remarks>Ignores equality check and end up comparing object pointers.</remarks>
         /// <param name="targetArray">The array which to look in.</param>
         /// <param name="targetItem">The object to be found.</param>
         /// <typeparam name="T">The type of the array.</typeparam>
         /// <returns>The index of <paramref name="targetItem" /> in <paramref name="targetArray" />, or -1 if not found.</returns>
         public static int FirstIndexOfItem<T>(this T[] targetArray, T targetItem) where T : class
         {
+            object targetObject = targetItem;
             int length = targetArray.Length;
             for (int i = 0; i < length; i++)
             {
-                if (targetArray[i] == targetItem)
+                if (targetArray[i] == targetObject)
                 {
                     return i;
                 }
@@ -72,16 +118,18 @@ namespace GDX
         /// <summary>
         ///     Find the last index of <paramref name="targetItem" /> in <paramref name="targetArray" />.
         /// </summary>
+        /// <remarks>Ignores equality check and end up comparing object pointers.</remarks>
         /// <param name="targetArray">The array which to look in.</param>
         /// <param name="targetItem">The object to be found.</param>
         /// <typeparam name="T">The type of the array.</typeparam>
         /// <returns>The index of <paramref name="targetItem" /> in <paramref name="targetArray" />, or -1 if not found.</returns>
         public static int LastIndexOfItem<T>(this T[] targetArray, T targetItem) where T : class
         {
+            object targetObject = targetItem;
             int length = targetArray.Length;
             for (int i = length - 1; i >= 0; i--)
             {
-                if (targetArray[i] == targetItem)
+                if (targetArray[i] == targetObject)
                 {
                     return i;
                 }

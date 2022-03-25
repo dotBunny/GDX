@@ -57,7 +57,7 @@ namespace GDX
         /// <summary>
         ///     <para>Does <paramref name="targetSimpleList" /> contain <paramref name="targetItem" />?</para>
         /// </summary>
-        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
+        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />, uses object pointers.</remarks>
         /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
         /// <param name="targetItem">The target class object to look for.</param>
         /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
@@ -67,10 +67,11 @@ namespace GDX
         {
             int length = targetSimpleList.Count;
             T[] array = targetSimpleList.Array;
+            object targetObject = targetItem;
 
             for (int i = 0; i < length; i++)
             {
-                if (array[i] == targetItem)
+                if (array[i] == targetObject)
                 {
                     return true;
                 }
@@ -82,7 +83,7 @@ namespace GDX
         /// <summary>
         ///     <para>Removes the first <paramref name="targetItem" /> from the provided <paramref name="targetSimpleList" />.</para>
         /// </summary>
-        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
+        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />, uses object pointers.</remarks>
         /// <param name="targetSimpleList">The target <see cref="SimpleList{T}" />.</param>
         /// <param name="targetItem">The target object to remove from the <paramref name="targetSimpleList" />.</param>
         /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
@@ -92,11 +93,12 @@ namespace GDX
         {
             int length = targetSimpleList.Count;
             T[] array = targetSimpleList.Array;
+            object targetObject = targetItem;
 
             for (int i = 0; i < length; i++)
             {
                 // Skip to next if its not what we are looking for
-                if (array[i] != targetItem)
+                if (array[i] != targetObject)
                 {
                     continue;
                 }
@@ -112,6 +114,8 @@ namespace GDX
         /// <summary>
         ///     <para>Removes all <paramref name="targetItem" /> from the provided <paramref name="targetSimpleList" />.</para>
         /// </summary>
+        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />, uses object pointers.</remarks>
+
         /// <param name="targetSimpleList">The target <see cref="SimpleList{T}" />.</param>
         /// <param name="targetItem">The item to remove from the <paramref name="targetSimpleList" />.</param>
         /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
@@ -121,11 +125,12 @@ namespace GDX
             int length = targetSimpleList.Count;
             T[] array = targetSimpleList.Array;
             bool removedItems = false;
+            object targetObject = targetItem;
 
             for (int i = length - 1; i >= 0; i--)
             {
                 // Skip to next if its not what we are looking for
-                if (array[i] != targetItem)
+                if (array[i] != targetObject)
                 {
                     continue;
                 }
@@ -141,7 +146,7 @@ namespace GDX
         /// <summary>
         ///     <para>Removes the last <paramref name="targetItem" /> from the provided <paramref name="targetSimpleList" />.</para>
         /// </summary>
-        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
+        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />, uses object pointers.</remarks>
         /// <param name="targetSimpleList">The target <see cref="SimpleList{T}" />.</param>
         /// <param name="targetItem">The target object to remove from the <paramref name="targetSimpleList" />.</param>
         /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
@@ -150,11 +155,12 @@ namespace GDX
         {
             int length = targetSimpleList.Count;
             T[] array = targetSimpleList.Array;
+            object targetObject = targetItem;
 
             for (int i = length - 1; i >= 0; i--)
             {
                 // Skip to next if its not what we are looking for
-                if (array[i] != targetItem)
+                if (array[i] != targetObject)
                 {
                     continue;
                 }

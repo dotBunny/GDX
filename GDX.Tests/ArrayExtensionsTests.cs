@@ -30,6 +30,51 @@ namespace GDX
 
         [Test]
         [Category(Core.TestCategory)]
+        public void ContainsItem_MockData_HasValue()
+        {
+
+            string[] mockArray = { "hello", "jello", "baby" };
+
+            bool evaluate = mockArray.ContainsItem("hello");
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void ContainsItem_MockData_NoValue()
+        {
+            string[] mockArray = { "hello", "jello", "baby" };
+
+            bool evaluate = mockArray.ContainsValue("bob");
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void ContainsValue_MockData_HasValue()
+        {
+            int[] mockArray = { 0, 1, 2, 3 };
+
+            bool evaluate = mockArray.ContainsValue(3);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void ContainsValue_MockData_NoValue()
+        {
+            int[] mockArray = { 0, 1, 2, 3 };
+
+            bool evaluate = mockArray.ContainsValue(5);
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
         public void FirstIndexOfItem_MockDataObject_ReturnsIndex()
         {
             object mockSearchObject = new object();

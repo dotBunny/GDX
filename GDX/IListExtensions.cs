@@ -36,7 +36,7 @@ namespace GDX
         /// <summary>
         ///     <para>Does <paramref name="targetList" /> contain <paramref name="targetItem" />?</para>
         /// </summary>
-        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
+        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />, uses object pointers.</remarks>
         /// <param name="targetList">The <see cref="System.Collections.Generic.IList{T}" /> to look in.</param>
         /// <param name="targetItem">The target object to look for.</param>
         /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.IList{T}" />.</typeparam>
@@ -44,10 +44,11 @@ namespace GDX
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool ContainsItem<T>(this IList<T> targetList, T targetItem) where T : class
         {
+            object targetObject = targetItem;
             int length = targetList.Count;
             for (int i = 0; i < length; i++)
             {
-                if (targetList[i].Equals(targetItem))
+                if (targetList[i] == targetObject)
                 {
                     return true;
                 }
@@ -59,7 +60,7 @@ namespace GDX
         /// <summary>
         ///     <para>Removes the first <paramref name="targetItem" /> from the provided <paramref name="targetList" />.</para>
         /// </summary>
-        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
+        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />, uses object pointers.</remarks>
         /// <param name="targetList">The target <see cref="System.Collections.Generic.IList{T}" />.</param>
         /// <param name="targetItem">The target object to remove from the <paramref name="targetList" />.</param>
         /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.IList{T}" />.</typeparam>
@@ -68,9 +69,10 @@ namespace GDX
         public static bool RemoveFirstItem<T>(this IList<T> targetList, T targetItem) where T : class
         {
             int length = targetList.Count;
+            object targetObject = targetItem;
             for (int i = 0; i < length; i++)
             {
-                if (targetList[i] != targetItem)
+                if (targetList[i] != targetObject)
                 {
                     continue;
                 }
@@ -85,7 +87,7 @@ namespace GDX
         /// <summary>
         ///     <para>Removes all <paramref name="targetItem" /> from the provided <paramref name="targetList" />.</para>
         /// </summary>
-        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
+        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />, uses object pointers.</remarks>
         /// <param name="targetList">The target <see cref="System.Collections.Generic.IList{T}" />.</param>
         /// <param name="targetItem">The target object to remove from the <paramref name="targetList" />.</param>
         /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.IList{T}" />.</typeparam>
@@ -94,10 +96,11 @@ namespace GDX
         public static bool RemoveItems<T>(this IList<T> targetList, T targetItem) where T : class
         {
             int length = targetList.Count;
+            object targetObject = targetItem;
             bool removedItem = false;
             for (int i = length - 1; i >= 0; i--)
             {
-                if (targetList[i] != targetItem)
+                if (targetList[i] != targetObject)
                 {
                     continue;
                 }
@@ -134,7 +137,7 @@ namespace GDX
         /// <summary>
         ///     <para>Removes the last <paramref name="targetItem" /> from the provided <paramref name="targetList" />.</para>
         /// </summary>
-        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
+        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />, uses object pointers.</remarks>
         /// <param name="targetList">The target <see cref="System.Collections.Generic.IList{T}" />.</param>
         /// <param name="targetItem">The target object to remove from the <paramref name="targetList" />.</param>
         /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.IList{T}" />.</typeparam>
@@ -143,9 +146,10 @@ namespace GDX
         public static bool RemoveLastItem<T>(this IList<T> targetList, T targetItem) where T : class
         {
             int length = targetList.Count;
+            object targetObject = targetItem;
             for (int i = length - 1; i >= 0; i--)
             {
-                if (targetList[i] != targetItem)
+                if (targetList[i] != targetObject)
                 {
                     continue;
                 }
