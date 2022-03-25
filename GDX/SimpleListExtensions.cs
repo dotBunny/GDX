@@ -80,6 +80,35 @@ namespace GDX
         }
 
         /// <summary>
+        ///     <para>Does <paramref name="targetSimpleList" /> contain <paramref name="targetItem" />?</para>
+        /// </summary>
+        /// <remarks>Ignores equality check and end up comparing object pointers.</remarks>
+        /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
+        /// <param name="targetItem">The target class object to look for.</param>
+        /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
+        /// <returns>true/false</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ContainsReference<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : class
+        {
+            int length = targetSimpleList.Count;
+            T[] array = targetSimpleList.Array;
+
+            for (int i = 0; i < length; i++)
+            {
+#pragma warning disable
+                // ReSharper disable All
+                if ((System.Object)array[i] == (System.Object)targetItem)
+                {
+                    return true;
+                }
+                // ReSharper restore All
+#pragma warning restore
+            }
+
+            return false;
+        }
+
+        /// <summary>
         ///     <para>Removes the first <paramref name="targetItem" /> from the provided <paramref name="targetSimpleList" />.</para>
         /// </summary>
         /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>

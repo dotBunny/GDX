@@ -78,7 +78,7 @@ namespace GDX
         ///     <para>Does <paramref name="targetArray" /> contain <paramref name="targetValue" />?</para>
         /// </summary>
         /// <param name="targetArray">The <see cref="System.Array" /> to look in.</param>
-        /// <param name="targetValue">The target item to look for.</param>
+        /// <param name="targetValue">The target value to look for.</param>
         /// <typeparam name="T">The type of the <see cref="System.Array" />.</typeparam>
         /// <returns>true/false</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -113,7 +113,6 @@ namespace GDX
                     return i;
                 }
             }
-
             return -1;
         }
 

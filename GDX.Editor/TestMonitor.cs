@@ -72,8 +72,8 @@ namespace GDX.Editor
                 return;
             }
 
-            bool validTest = result.Test.Categories.ContainsItem(Core.TestCategory) ||
-                             result.Test.Categories.ContainsItem(Core.PerformanceCategory);
+            bool validTest = result.Test.Categories.ContainsValue(Core.TestCategory) ||
+                             result.Test.Categories.ContainsValue(Core.PerformanceCategory);
 
             // If it is not a valid test we have nothing to do here
             if (!validTest) return;
