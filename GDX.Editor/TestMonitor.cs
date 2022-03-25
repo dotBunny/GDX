@@ -13,16 +13,25 @@ namespace GDX.Editor
     class TestMonitor : ICallbacks
     {
         string m_CachedTempFolder;
+        bool m_IsMonitoredTestRun;
 
         /// <inheritdoc />
         public void RunStarted(ITestAdaptor testsToRun)
         {
+            // We are only going to monitor GDX tests
+            m_IsMonitoredTestRun = (testsToRun.FullName == "GDX");
+            if (!m_IsMonitoredTestRun)
+            {
+                return;
+            }
+
             m_CachedTempFolder = Platform.GetOutputFolder("GDX_Automation");
             if (Application.isBatchMode)
             {
                 Automation.StashWindowLayout();
             }
 
+            // This will skip if theres no device to capture
             EditorWindow gameView = Automation.GetGameView();
             if (gameView != null)
             {
@@ -36,7 +45,8 @@ namespace GDX.Editor
         /// <inheritdoc />
         public void RunFinished(ITestResultAdaptor result)
         {
-            if (Application.isBatchMode)
+            // We only really want to do this for GDX tests
+            if (m_IsMonitoredTestRun && Application.isBatchMode)
             {
                 Automation.RestoreWindowLayout();
             }
@@ -50,6 +60,11 @@ namespace GDX.Editor
         /// <inheritdoc />
         public void TestFinished(ITestResultAdaptor result)
         {
+            if (!m_IsMonitoredTestRun)
+            {
+                return;
+            }
+
             // We dont want to do any processing during the parent suites currently, only after an actual test method
             // has been invoked/ran
             if (result.Test.IsSuite)
@@ -57,18 +72,10 @@ namespace GDX.Editor
                 return;
             }
 
-            int categoryCount = result.Test.Categories.Length;
-            bool validTest = false;
-            for (int i = 0; i < categoryCount; i++)
-            {
-                // TODO: We're only going to watch GDX tests atm, maybe in the future add an option
-                if (result.Test.Categories[i] == Core.TestCategory ||
-                    result.Test.Categories[i] == Core.PerformanceCategory)
-                {
-                    validTest = true;
-                    break;
-                }
-            }
+            bool validTest = result.Test.Categories.ContainsItem(Core.TestCategory) ||
+                             result.Test.Categories.ContainsItem(Core.PerformanceCategory);
+
+            // If it is not a valid test we have nothing to do here
             if (!validTest) return;
 
 #if GDX_SAVE_TEST_OUTPUT
