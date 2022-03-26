@@ -6,36 +6,27 @@ using System;
 using System.Reflection;
 using GDX.Collections.Generic;
 using GDX.Mathematics.Random;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace GDX
 {
     public static class Core
     {
-        /// <summary>
-        /// Core Destructor
-        /// </summary>
-        sealed class CoreSentinel
-        {
-            ~CoreSentinel()
-            {
-                // Dispose native arrays
-                Random.Dispose();
-            }
-        }
-
-        /// <summary>
-        /// Utilizes the <see cref="CoreSentinel"/> to ensure the static has a destructor of sorts.
-        /// </summary>
-#pragma warning disable IDE0052, IDE0090
-// ReSharper disable UnusedMember.Local, ArrangeObjectCreationWhenTypeEvident
-        static readonly CoreSentinel k_DisposeSentinel = new CoreSentinel();
-// ReSharper restore UnusedMember.Local, ArrangeObjectCreationWhenTypeEvident
-#pragma warning restore IDE0052, IDE0090
         public const string OverrideClass = "GDXSettings";
         public const string OverrideMethod = "Init";
-
-        public const string TestCategory = "GDX.Tests";
         public const string PerformanceCategory = "GDX.Performance";
+        public const string TestCategory = "GDX.Tests";
+
+        /// <summary>
+        ///     Utilizes the <see cref="CoreSentinel" /> to ensure the static has a destructor of sorts.
+        /// </summary>
+#pragma warning disable IDE0052, IDE0090
+        // ReSharper disable UnusedMember.Local, ArrangeObjectCreationWhenTypeEvident
+        static readonly CoreSentinel k_DisposeSentinel = new CoreSentinel();
+        // ReSharper restore UnusedMember.Local, ArrangeObjectCreationWhenTypeEvident
+#pragma warning restore IDE0052, IDE0090
         public static readonly GDXConfig Config;
         public static readonly long StartTicks;
         public static WELL1024a Random;
@@ -65,7 +56,10 @@ namespace GDX
         /// <remarks>Nothing in here can reference the Unity engine and must be thread-safe.</remarks>
         public static void Initialize()
         {
-            if (s_Initialized) return;
+            if (s_Initialized)
+            {
+                return;
+            }
 
             // The assemblies will change between editor time and compile time so we are going to unfortunately pay a
             // cost to iterate over them and try to find our settings class
@@ -77,10 +71,11 @@ namespace GDX
                     continue;
                 }
 
-                MethodInfo initMethod = overrideType.GetMethod(OverrideMethod, BindingFlags.Static|BindingFlags.Public);
+                MethodInfo initMethod =
+                    overrideType.GetMethod(OverrideMethod, BindingFlags.Static | BindingFlags.Public);
                 if (initMethod != null)
                 {
-                    initMethod.Invoke(null, new object[] {});
+                    initMethod.Invoke(null, new object[] { });
                 }
 
                 break;
@@ -98,15 +93,30 @@ namespace GDX
         ///     Main-thread initializer.
         /// </summary>
 #if UNITY_EDITOR
-        [UnityEditor.InitializeOnLoadMethod]
+        [InitializeOnLoadMethod]
 #else
         [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.AfterAssembliesLoaded)]
 #endif
         public static void InitializeOnMainThread()
         {
-            if (s_InitializedMainThread) return;
+            if (s_InitializedMainThread)
+            {
+                return;
+            }
 
             s_InitializedMainThread = true;
+        }
+
+        /// <summary>
+        ///     Core Destructor
+        /// </summary>
+        sealed class CoreSentinel
+        {
+            ~CoreSentinel()
+            {
+                // Dispose native arrays
+                Random.Dispose();
+            }
         }
     }
 }
