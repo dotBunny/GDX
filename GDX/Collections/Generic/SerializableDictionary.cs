@@ -16,7 +16,7 @@ namespace GDX.Collections.Generic
     /// </summary>
     /// <remarks>
     ///     <para>
-    ///         This will NOT work with <see cref="Object" /> based objects, use <see cref="UnityEngine.Object" /> if
+    ///         This will NOT work with <see cref="System.Object" /> based objects, use <see cref="UnityEngine.Object" /> if
     ///         you must. While .NET has solutions for creating custom serialization paths, Unity uses its own system to
     ///         serialize data into YAML structures. This also assumes that the types provided can be serialized by Unity.
     ///     </para>
