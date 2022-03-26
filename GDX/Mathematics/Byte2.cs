@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+// Copyright (c) 2020-2022 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -30,7 +30,7 @@ namespace GDX.Mathematics
         public byte Y;
 
         /// <summary>
-        ///     Create a <see cref="Byte2" /> from two <see cref="System.Int32" /> values.
+        ///     Create a <see cref="Byte2" /> from two <see cref="Int32" /> values.
         /// </summary>
         /// <param name="x">X value.</param>
         /// <param name="y">Y value.</param>
@@ -115,7 +115,8 @@ namespace GDX.Mathematics
         ///     Get a new <see cref="Byte2" /> created with <see cref="X" /> as both components.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public Byte2 xx
+        // ReSharper disable once InconsistentNaming
+        public Byte2 XX
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => new Byte2(X, X);
@@ -125,7 +126,8 @@ namespace GDX.Mathematics
         ///     Get a new <see cref="Byte2" /> created with identical components.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public Byte2 xy
+        // ReSharper disable once InconsistentNaming
+        public Byte2 XY
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => new Byte2(X, Y);
@@ -141,7 +143,8 @@ namespace GDX.Mathematics
         ///     Get a new <see cref="Byte2" /> created with swapped components.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public Byte2 yx
+        // ReSharper disable once InconsistentNaming
+        public Byte2 YX
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => new Byte2(Y, X);
@@ -157,7 +160,8 @@ namespace GDX.Mathematics
         ///     Get a new <see cref="Byte2" /> created with <see cref="Y" /> as both components.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public Byte2 yy
+        // ReSharper disable once InconsistentNaming
+        public Byte2 YY
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => new Byte2(Y, Y);
@@ -210,9 +214,9 @@ namespace GDX.Mathematics
         }
 
         /// <summary>
-        ///     Convert the <see cref="Byte2" /> to a <see cref="System.String" /> using the provided <paramref name="format" />.
+        ///     Convert the <see cref="Byte2" /> to a <see cref="String" /> using the provided <paramref name="format" />.
         /// </summary>
-        /// <param name="format">Specified format <see cref="System.String" />.</param>
+        /// <param name="format">Specified format <see cref="String" />.</param>
         /// <param name="formatProvider">Culture-specific format information.</param>
         /// <returns>
         ///     Returns a string representation of the <see cref="Byte2" /> using a specified format and culture-specific
@@ -703,7 +707,7 @@ namespace GDX.Mathematics
         }
 
         /// <summary>
-        ///     Returns a <see cref="System.String" /> representation of the <see cref="Byte2" />.
+        ///     Returns a <see cref="String" /> representation of the <see cref="Byte2" />.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override string ToString()

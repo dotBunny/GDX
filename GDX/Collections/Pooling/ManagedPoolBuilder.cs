@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+// Copyright (c) 2020-2022 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -48,6 +48,8 @@ namespace GDX.Collections.Pooling
         /// <summary>
         ///     Unity's LateUpdate event.
         /// </summary>
+#pragma warning disable IDE0051
+        // ReSharper disable UnusedMember.Local
         void LateUpdate()
         {
             Tick();
@@ -62,6 +64,8 @@ namespace GDX.Collections.Pooling
             s_BuilderObject = null;
             Destroy(gameObject);
         }
+        // ReSharper restore UnusedMember.Local
+#pragma warning restore IDE0051
 
         /// <summary>
         ///     Add an <see cref="IManagedPool" /> to the builder to be built out.

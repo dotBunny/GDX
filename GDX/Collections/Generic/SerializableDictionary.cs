@@ -16,7 +16,7 @@ namespace GDX.Collections.Generic
     /// </summary>
     /// <remarks>
     ///     <para>
-    ///         This will NOT work with <see cref="System.Object" /> based objects, use <see cref="UnityEngine.Object" /> if
+    ///         This will NOT work with <see cref="Object" /> based objects, use <see cref="UnityEngine.Object" /> if
     ///         you must. While .NET has solutions for creating custom serialization paths, Unity uses its own system to
     ///         serialize data into YAML structures. This also assumes that the types provided can be serialized by Unity.
     ///     </para>
@@ -253,7 +253,7 @@ namespace GDX.Collections.Generic
             }
         }
 
-#pragma warning disable 414
+#pragma warning disable CS0414
 #if UNITY_EDITOR
         /// <summary>
         ///     Editor only data indicating if the property drawer is expanded.
@@ -279,7 +279,7 @@ namespace GDX.Collections.Generic
         [SerializeField] bool m_PadForSerializationBoolB;
         [SerializeField] TKey m_PadForSerializationKey;
 #endif
-#pragma warning restore 414
+#pragma warning restore CS0414
     }
 }
 #endif // !UNITY_DOTSRUNTIME

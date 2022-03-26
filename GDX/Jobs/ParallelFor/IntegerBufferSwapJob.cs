@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+// Copyright (c) 2020-2022 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -9,7 +9,7 @@ using Unity.Burst;
 namespace GDX.Jobs.ParallelFor
 {
     /// <summary>
-    ///     Swaps a <see cref="Unity.Collections.NativeArray{T}" /> typed as <see cref="System.Int32" /> with a another
+    ///     Swaps a <see cref="NativeArray{T}" /> typed as <see cref="Int32" /> with a another
     ///     in parallel.
     /// </summary>
     /// <remarks>
@@ -22,12 +22,12 @@ namespace GDX.Jobs.ParallelFor
     public struct IntegerBufferSwapJob : IJobParallelFor
     {
         /// <summary>
-        ///     The left-hand side <see cref="Unity.Collections.NativeArray{T}" /> typed as <see cref="System.Int32" />.
+        ///     The left-hand side <see cref="NativeArray{T}" /> typed as <see cref="Int32" />.
         /// </summary>
         public NativeArray<int> A;
 
         /// <summary>
-        ///     The right-hand side <see cref="Unity.Collections.NativeArray{T}" /> typed as <see cref="System.Int32" />.
+        ///     The right-hand side <see cref="NativeArray{T}" /> typed as <see cref="Int32" />.
         /// </summary>
         public NativeArray<int> B;
 
