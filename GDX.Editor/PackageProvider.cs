@@ -359,7 +359,7 @@ namespace GDX.Editor
                             manifestContent.ToString().Trim().TrimEnd(',').Trim());
 
                         return manifestEntry == null ? (InstallationType.PackageManager, null) :
-                            (manifestEntry.installationType, manifestEntry.tag);
+                            (installationType: manifestEntry.InstallationType, tag: manifestEntry.Tag);
                     }
                 }
 

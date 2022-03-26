@@ -20,9 +20,9 @@ namespace GDX.Editor
         public string hash;
 
         [NonSerialized]
-        public PackageProvider.InstallationType installationType;
+        public PackageProvider.InstallationType InstallationType;
         [NonSerialized]
-        public string tag;
+        public string Tag;
 
         public static ManifestEntry Get(string json)
         {
@@ -50,27 +50,27 @@ namespace GDX.Editor
             {
                 if (tag.StartsWith("v"))
                 {
-                    returnObject.installationType = PackageProvider.InstallationType.PackageManagerTag;
-                    returnObject.tag = tag;
+                    returnObject.InstallationType = PackageProvider.InstallationType.PackageManagerTag;
+                    returnObject.Tag = tag;
                     return returnObject;
                 }
 
                 // Check for what we assume is a commit hash
                 if (tag.Length == 40 && tag.HasLowerCase() && !tag.HasUpperCase())
                 {
-                    returnObject.installationType = PackageProvider.InstallationType.GitHubCommit;
-                    returnObject.tag = tag;
+                    returnObject.InstallationType = PackageProvider.InstallationType.GitHubCommit;
+                    returnObject.Tag = tag;
                     return returnObject;
                 }
 
                 // Left with assuming its a branch?
-                returnObject.installationType = PackageProvider.InstallationType.PackageManagerBranch;
-                returnObject.tag = tag;
+                returnObject.InstallationType = PackageProvider.InstallationType.PackageManagerBranch;
+                returnObject.Tag = tag;
                 return returnObject;
             }
 
-            returnObject.installationType = PackageProvider.InstallationType.PackageManager;
-            returnObject.tag = "main";
+            returnObject.InstallationType = PackageProvider.InstallationType.PackageManager;
+            returnObject.Tag = "main";
             return returnObject;
         }
     }
