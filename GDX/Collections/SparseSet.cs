@@ -1518,7 +1518,7 @@ namespace GDX.Collections
 
             // Clear the dense  index, for debugging purposes
             DenseArray[newLength] = -1;
-            array0[newLength] = default(T0);
+            array0[newLength] = default;
 
             // Add the sparse index to the free list.
             SparseArray[sparseIndexToRemove] = FreeIndex;
@@ -1541,8 +1541,8 @@ namespace GDX.Collections
 
             // Clear the dense  index, for debugging purposes
             DenseArray[newLength] = -1;
-            array0[newLength] = default(T0);
-            array1[newLength] = default(T1);
+            array0[newLength] = default;
+            array1[newLength] = default;
 
             // Add the sparse index to the free list.
             SparseArray[sparseIndexToRemove] = FreeIndex;
@@ -1566,9 +1566,9 @@ namespace GDX.Collections
 
             // Clear the dense  index, for debugging purposes
             DenseArray[newLength] = -1;
-            array0[newLength] = default(T0);
-            array1[newLength] = default(T1);
-            array2[newLength] = default(T2);
+            array0[newLength] = default;
+            array1[newLength] = default;
+            array2[newLength] = default;
 
             // Add the sparse index to the free list.
             SparseArray[sparseIndexToRemove] = FreeIndex;
@@ -1594,10 +1594,10 @@ namespace GDX.Collections
 
             // Clear the dense  index, for debugging purposes
             DenseArray[newLength] = -1;
-            array0[newLength] = default(T0);
-            array1[newLength] = default(T1);
-            array2[newLength] = default(T2);
-            array3[newLength] = default(T3);
+            array0[newLength] = default;
+            array1[newLength] = default;
+            array2[newLength] = default;
+            array3[newLength] = default;
 
             // Add the sparse index to the free list.
             SparseArray[sparseIndexToRemove] = FreeIndex;
@@ -1624,11 +1624,11 @@ namespace GDX.Collections
 
             // Clear the dense  index, for debugging purposes
             DenseArray[newLength] = -1;
-            array0[newLength] = default(T0);
-            array1[newLength] = default(T1);
-            array2[newLength] = default(T2);
-            array3[newLength] = default(T3);
-            array4[newLength] = default(T4);
+            array0[newLength] = default;
+            array1[newLength] = default;
+            array2[newLength] = default;
+            array3[newLength] = default;
+            array4[newLength] = default;
 
             // Add the sparse index to the free list.
             SparseArray[sparseIndexToRemove] = FreeIndex;
@@ -1657,12 +1657,12 @@ namespace GDX.Collections
 
             // Clear the dense  index, for debugging purposes
             DenseArray[newLength] = -1;
-            array0[newLength] = default(T0);
-            array1[newLength] = default(T1);
-            array2[newLength] = default(T2);
-            array3[newLength] = default(T3);
-            array4[newLength] = default(T4);
-            array5[newLength] = default(T5);
+            array0[newLength] = default;
+            array1[newLength] = default;
+            array2[newLength] = default;
+            array3[newLength] = default;
+            array4[newLength] = default;
+            array5[newLength] = default;
 
             // Add the sparse index to the free list.
             SparseArray[sparseIndexToRemove] = FreeIndex;
@@ -1691,13 +1691,13 @@ namespace GDX.Collections
 
             // Clear the dense  index, for debugging purposes
             DenseArray[newLength] = -1;
-            array0[newLength] = default(T0);
-            array1[newLength] = default(T1);
-            array2[newLength] = default(T2);
-            array3[newLength] = default(T3);
-            array4[newLength] = default(T4);
-            array5[newLength] = default(T5);
-            array6[newLength] = default(T6);
+            array0[newLength] = default;
+            array1[newLength] = default;
+            array2[newLength] = default;
+            array3[newLength] = default;
+            array4[newLength] = default;
+            array5[newLength] = default;
+            array6[newLength] = default;
 
             // Add the sparse index to the free list.
             SparseArray[sparseIndexToRemove] = FreeIndex;
@@ -1727,14 +1727,14 @@ namespace GDX.Collections
 
             // Clear the dense  index, for debugging purposes
             DenseArray[newLength] = -1;
-            array0[newLength] = default(T0);
-            array1[newLength] = default(T1);
-            array2[newLength] = default(T2);
-            array3[newLength] = default(T3);
-            array4[newLength] = default(T4);
-            array5[newLength] = default(T5);
-            array6[newLength] = default(T6);
-            array7[newLength] = default(T7);
+            array0[newLength] = default;
+            array1[newLength] = default;
+            array2[newLength] = default;
+            array3[newLength] = default;
+            array4[newLength] = default;
+            array5[newLength] = default;
+            array6[newLength] = default;
+            array7[newLength] = default;
 
             // Add the sparse index to the free list.
             SparseArray[sparseIndexToRemove] = FreeIndex;

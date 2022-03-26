@@ -380,7 +380,7 @@ namespace GDX.Collections.Generic
                 int nextFreeIndex = FreeListHead;
 
                 currEntry.Key = null;
-                currEntry.Value = default(TValue);
+                currEntry.Value = default;
                 currEntry.HashCode = 0;
                 currEntry.Next = nextFreeIndex | (1 << 31);
                 Entries[indexOfKey] = currEntry;
@@ -535,7 +535,7 @@ namespace GDX.Collections.Generic
         /// <returns>Whether the iterator found an entry, finished iteration, or could not continue due to an invalid version.</returns>
         public IteratorState MoveNext(ref int iteratedIndexCount, int iteratorVersion, in int dictionaryVersion, out StringKeyEntry<TValue> entry)
         {
-            entry = default(StringKeyEntry<TValue>);
+            entry = default;
 
             if (iteratorVersion != dictionaryVersion)
             {
@@ -566,7 +566,7 @@ namespace GDX.Collections.Generic
         /// <returns>Whether or not the iterator found an entry</returns>
         public bool MoveNext(ref int iteratedIndexCount, out StringKeyEntry<TValue> entry)
         {
-            entry = default(StringKeyEntry<TValue>);
+            entry = default;
 
             while (iteratedIndexCount < Entries.Length)
             {
@@ -623,7 +623,7 @@ namespace GDX.Collections.Generic
                 ref StringKeyEntry<TValue> entryAt = ref Entries[i];
                 entryAt.Next = (1 << 31) | (i + 1);
                 entryAt.Key = null;
-                entryAt.Value = default(TValue);
+                entryAt.Value = default;
                 entryAt.HashCode = 0;
             }
 

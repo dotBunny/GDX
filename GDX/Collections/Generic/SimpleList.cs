@@ -411,7 +411,7 @@ namespace GDX.Collections.Generic
         {
             int newLength = Count - 1;
 
-            Array[index] = default(T);
+            Array[index] = default;
 
             if (index < Array.Length)
             {
@@ -430,7 +430,7 @@ namespace GDX.Collections.Generic
             int newLength = Count - 1;
             T[] array = Array;
             array[index] = array[newLength];
-            array[newLength] = default(T);
+            array[newLength] = default;
 
             Count = newLength;
         }
@@ -441,7 +441,7 @@ namespace GDX.Collections.Generic
         public void RemoveFromBack()
         {
             int newLength = Count - 1;
-            Array[newLength] = default(T);
+            Array[newLength] = default;
             Count = newLength;
         }
 
