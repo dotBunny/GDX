@@ -213,7 +213,7 @@ namespace GDX
         /// <summary>
         ///     Get the hash code of the <see cref="SemanticVersion" />.
         /// </summary>
-        /// <returns>A <see cref="System.Int32" /> value.</returns>
+        /// <returns>A <see cref="int" /> value.</returns>
         public override int GetHashCode()
         {
             unchecked

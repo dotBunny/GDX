@@ -28,7 +28,7 @@ namespace GDX.Mathematics
         public byte Y;
 
         /// <summary>
-        ///     Create a <see cref="Byte2" /> from two <see cref="Int32" /> values.
+        ///     Create a <see cref="Byte2" /> from two <see cref="int" /> values.
         /// </summary>
         /// <param name="x">X value.</param>
         /// <param name="y">Y value.</param>
@@ -212,9 +212,9 @@ namespace GDX.Mathematics
         }
 
         /// <summary>
-        ///     Convert the <see cref="Byte2" /> to a <see cref="String" /> using the provided <paramref name="format" />.
+        ///     Convert the <see cref="Byte2" /> to a <see cref="string" /> using the provided <paramref name="format" />.
         /// </summary>
-        /// <param name="format">Specified format <see cref="String" />.</param>
+        /// <param name="format">Specified format <see cref="string" />.</param>
         /// <param name="formatProvider">Culture-specific format information.</param>
         /// <returns>
         ///     Returns a string representation of the <see cref="Byte2" /> using a specified format and culture-specific
@@ -683,7 +683,7 @@ namespace GDX.Mathematics
         /// <remarks>
         ///     This loosely based on the Fowler–Noll–Vo (FNV) hash function.
         /// </remarks>
-        /// <returns>A <see cref="System.Int32" /> value.</returns>
+        /// <returns>A <see cref="int" /> value.</returns>
         public override int GetHashCode()
         {
             unchecked
@@ -705,7 +705,7 @@ namespace GDX.Mathematics
         }
 
         /// <summary>
-        ///     Returns a <see cref="String" /> representation of the <see cref="Byte2" />.
+        ///     Returns a <see cref="string" /> representation of the <see cref="Byte2" />.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override string ToString()

@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 namespace GDX
 {
     /// <summary>
-    ///     <see cref="System.String" /> Based Extension Methods
+    ///     <see cref="string" /> Based Extension Methods
     /// </summary>
     [VisualScriptingCompatible(2)]
     public static class StringExtensions
@@ -88,12 +88,12 @@ namespace GDX
         public static byte[] EncryptionInitializationVector = Encoding.UTF8.GetBytes("dotBunny");
 
         /// <summary>
-        ///     Decrypt an encrypted <see cref="String" /> created by <see cref="Encrypt" />.
+        ///     Decrypt an encrypted <see cref="string" /> created by <see cref="Encrypt" />.
         /// </summary>
         /// <remarks>This will have quite a few allocations.</remarks>
-        /// <param name="encryptedString">The encrypted <see cref="String" />.</param>
-        /// <param name="encryptionKey">The key used to encrypt the <see cref="String" />.</param>
-        /// <returns>The decrypted <see cref="String" />.</returns>
+        /// <param name="encryptedString">The encrypted <see cref="string" />.</param>
+        /// <param name="encryptionKey">The key used to encrypt the <see cref="string" />.</param>
+        /// <returns>The decrypted <see cref="string" />.</returns>
         public static string Decrypt(this string encryptedString, byte[] encryptionKey = null)
         {
             DESCryptoServiceProvider desProvider = new DESCryptoServiceProvider
@@ -110,15 +110,15 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Encrypt a <see cref="String" /> utilizing a <see cref="DESCryptoServiceProvider" />.
+        ///     Encrypt a <see cref="string" /> utilizing a <see cref="DESCryptoServiceProvider" />.
         /// </summary>
         /// <remarks>This will have quite a few allocations.</remarks>
-        /// <param name="decryptedString">The original <see cref="String" />.</param>
+        /// <param name="decryptedString">The original <see cref="string" />.</param>
         /// <param name="encryptionKey">
-        ///     The key to be used when encrypting the <see cref="String" />.  This must be a
+        ///     The key to be used when encrypting the <see cref="string" />.  This must be a
         ///     multiple of 8 bytes.
         /// </param>
-        /// <returns>The encrypted <see cref="System.String" />.</returns>
+        /// <returns>The encrypted <see cref="string" />.</returns>
         public static string Encrypt(this string decryptedString, byte[] encryptionKey = null)
         {
             DESCryptoServiceProvider desProvider = new DESCryptoServiceProvider
@@ -137,10 +137,10 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Get the <see cref="System.String" /> after the first identified <paramref name="splitString" /> in
+        ///     Get the <see cref="string" /> after the first identified <paramref name="splitString" /> in
         ///     <paramref name="targetString" />.
         /// </summary>
-        /// <param name="targetString">The target <see cref="System.String" /> to look in.</param>
+        /// <param name="targetString">The target <see cref="string" /> to look in.</param>
         /// <param name="splitString">The divider which the <paramref name="targetString" /> should be split on.</param>
         /// <param name="comparison">Specifies the culture, case, and sort rules to be used.</param>
         /// <returns>
@@ -155,10 +155,10 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Get the <see cref="System.String" /> after the last identified <paramref name="splitString" /> in
+        ///     Get the <see cref="string" /> after the last identified <paramref name="splitString" /> in
         ///     <paramref name="targetString" />.
         /// </summary>
-        /// <param name="targetString">The target <see cref="System.String" /> to look in.</param>
+        /// <param name="targetString">The target <see cref="string" /> to look in.</param>
         /// <param name="splitString">The divider which the <paramref name="targetString" /> should be split on.</param>
         /// <param name="comparison">Specifies the culture, case, and sort rules to be used.</param>
         /// <returns>
@@ -173,10 +173,10 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Get the <see cref="System.String" /> before the first identified <paramref name="splitString" /> in
+        ///     Get the <see cref="string" /> before the first identified <paramref name="splitString" /> in
         ///     <paramref name="targetString" />.
         /// </summary>
-        /// <param name="targetString">The target <see cref="System.String" /> to look in.</param>
+        /// <param name="targetString">The target <see cref="string" /> to look in.</param>
         /// <param name="splitString">The divider which the <paramref name="targetString" /> should be split on.</param>
         /// <param name="comparison">Specifies the culture, case, and sort rules to be used.</param>
         /// <returns>The content before the <paramref name="splitString" />, or <c>null</c> if none is found.</returns>
@@ -189,10 +189,10 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Get the <see cref="System.String" /> before the last identified <paramref name="splitString" /> in
+        ///     Get the <see cref="string" /> before the last identified <paramref name="splitString" /> in
         ///     <paramref name="targetString" />.
         /// </summary>
-        /// <param name="targetString">The target <see cref="System.String" /> to look in.</param>
+        /// <param name="targetString">The target <see cref="string" /> to look in.</param>
         /// <param name="splitString">The divider which the <paramref name="targetString" /> should be split on.</param>
         /// <param name="comparison">Specifies the culture, case, and sort rules to be used.</param>
         /// <returns>The content before the <paramref name="splitString" />, or <c>null</c> if none is found.</returns>
@@ -211,11 +211,11 @@ namespace GDX
         /// </summary>
         /// <remarks>
         ///     This loosely based on the Fowler–Noll–Vo (FNV) hash function. It's value will be identical
-        ///     to the value produced natively by processing a <see cref="String" /> with
-        ///     <see cref="String.GetHashCode()" />, but with no allocations and no virtual calls.
+        ///     to the value produced natively by processing a <see cref="string" /> with
+        ///     <see cref="string.GetHashCode()" />, but with no allocations and no virtual calls.
         /// </remarks>
-        /// <param name="targetString">The target <see cref="System.String" />.</param>
-        /// <returns>A <see cref="System.Int32" /> value.</returns>
+        /// <param name="targetString">The target <see cref="string" />.</param>
+        /// <returns>A <see cref="int" /> value.</returns>
         [SecuritySafeCritical]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
         public static unsafe int GetStableHashCode(this string targetString)
@@ -252,17 +252,17 @@ namespace GDX
         /// <summary>
         ///     <para>
         ///         Get the stable hash code value of <paramref name="targetString" /> (converted to an uppercase
-        ///         <see cref="System.String" />).
+        ///         <see cref="string" />).
         ///     </para>
         /// </summary>
         /// <remarks>
         ///     This loosely based on the Fowler–Noll–Vo (FNV) hash function. It's value will be identical
-        ///     to the value produced natively by processing a <see cref="String" /> with
-        ///     <see cref="String.ToLower()" />.<see cref="String.GetHashCode()" />, but with no
+        ///     to the value produced natively by processing a <see cref="string" /> with
+        ///     <see cref="string.ToLower()" />.<see cref="string.GetHashCode()" />, but with no
         ///     allocations.
         /// </remarks>
-        /// <param name="targetString">The target <see cref="String" />.</param>
-        /// <returns>A <see cref="Int32" /> value.</returns>
+        /// <param name="targetString">The target <see cref="string" />.</param>
+        /// <returns>A <see cref="int" /> value.</returns>
         [SecuritySafeCritical]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
         public static unsafe int GetStableLowerCaseHashCode(this string targetString)
@@ -311,17 +311,17 @@ namespace GDX
         /// <summary>
         ///     <para>
         ///         Get the stable hash code value of <paramref name="targetString" /> (converted to an uppercase
-        ///         <see cref="System.String" />).
+        ///         <see cref="string" />).
         ///     </para>
         /// </summary>
         /// <remarks>
         ///     This loosely based on the Fowler–Noll–Vo (FNV) hash function. It's value will be identical
-        ///     to the value produced natively by processing a <see cref="System.String" /> with
-        ///     <see cref="System.String.ToUpper()" />.<see cref="System.String.GetHashCode()" />, but with no
+        ///     to the value produced natively by processing a <see cref="string" /> with
+        ///     <see cref="string.ToUpper()" />.<see cref="string.GetHashCode()" />, but with no
         ///     allocations.
         /// </remarks>
-        /// <param name="targetString">The target <see cref="System.String" />.</param>
-        /// <returns>A <see cref="System.Int32" /> value.</returns>
+        /// <param name="targetString">The target <see cref="string" />.</param>
+        /// <returns>A <see cref="int" /> value.</returns>
         [SecuritySafeCritical]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
         public static unsafe int GetStableUpperCaseHashCode(this string targetString)
@@ -370,7 +370,7 @@ namespace GDX
         /// <summary>
         ///     Determine if there are any lowercase letters in the provided <paramref name="targetString" />.
         /// </summary>
-        /// <param name="targetString">The target <see cref="System.String" />.</param>
+        /// <param name="targetString">The target <see cref="string" />.</param>
         /// <returns>true/false if lowercase letters were found.</returns>
         [SecuritySafeCritical]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
@@ -399,7 +399,7 @@ namespace GDX
         /// <summary>
         ///     Determine if there are any uppercase letters in the provided <paramref name="targetString" />.
         /// </summary>
-        /// <param name="targetString">The target <see cref="System.String" />.</param>
+        /// <param name="targetString">The target <see cref="string" />.</param>
         /// <returns>true/false if uppercase letters were found.</returns>
         [SecuritySafeCritical]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
@@ -428,7 +428,7 @@ namespace GDX
         /// <summary>
         ///     Determine if the <paramref name="targetString" /> represents a boolean value arrangement.
         /// </summary>
-        /// <param name="targetString">The target <see cref="System.String" />.</param>
+        /// <param name="targetString">The target <see cref="string" />.</param>
         /// <returns>true/false if the <paramref name="targetString" /> can be evaluated as a boolean value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBooleanValue(this string targetString)
@@ -465,7 +465,7 @@ namespace GDX
         ///         }
         ///     </code>
         /// </example>
-        /// <param name="targetString">The target <see cref="System.String" />.</param>
+        /// <param name="targetString">The target <see cref="string" />.</param>
         /// <returns>true/false if the <paramref name="targetString" /> can be evaluated as a positive boolean value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsBooleanPositiveValue(this string targetString)
@@ -484,15 +484,15 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Determine if the <paramref name="targetString" /> is an <see cref="Int32" /> value.
+        ///     Determine if the <paramref name="targetString" /> is an <see cref="int" /> value.
         /// </summary>
         /// <remarks>
         ///     This method is meant for when you do not actually need the value returned, merely an evaluation if
-        ///     the provided <paramref name="targetString" /> is an <see cref="Int32" />. This does not qualify
+        ///     the provided <paramref name="targetString" /> is an <see cref="int" />. This does not qualify
         ///     <see cref="float" /> values positively.
         /// </remarks>
-        /// <param name="targetString">The target <see cref="System.String" />.</param>
-        /// <returns>true/false if it contains an <see cref="Int32" />.</returns>
+        /// <param name="targetString">The target <see cref="string" />.</param>
+        /// <returns>true/false if it contains an <see cref="int" />.</returns>
         [SecuritySafeCritical]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
         public static unsafe bool IsIntegerValue(this string targetString)
@@ -551,7 +551,7 @@ namespace GDX
         ///         </item>
         ///     </list>
         /// </remarks>
-        /// <param name="targetString">The target <see cref="System.String" />.</param>
+        /// <param name="targetString">The target <see cref="string" />.</param>
         /// <returns>true/false if the <paramref name="targetString" /> qualifies as a numeric value.</returns>
         [SecuritySafeCritical]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
@@ -629,9 +629,9 @@ namespace GDX
         /// <summary>
         ///     Create a new string, splitting an existing string up based on camel case formatting.
         /// </summary>
-        /// <param name="targetString">The target <see cref="System.String" />.</param>
-        /// <param name="divider">The <see cref="System.String" /> to put in between the split <see cref="System.String" />.</param>
-        /// <returns>A new <see cref="System.String" />.</returns>
+        /// <param name="targetString">The target <see cref="string" />.</param>
+        /// <param name="divider">The <see cref="string" /> to put in between the split <see cref="string" />.</param>
+        /// <returns>A new <see cref="string" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string SplitCamelCase(this string targetString, string divider = " ")
         {

@@ -11,6 +11,8 @@ using UnityEngine.Serialization;
 
 namespace GDX.Collections.Generic
 {
+
+#pragma warning disable IDE0049
     /// <summary>
     ///     A Unity serializable <see cref="Dictionary{TKey,TValue}" />.
     /// </summary>
@@ -24,10 +26,11 @@ namespace GDX.Collections.Generic
     ///         The process of serializing and deserializing this dictionary should not be considered performant.
     ///     </para>
     /// </remarks>
-    /// <typeparam name="TKey">The dictionary's key <see cref="System.Type" />.</typeparam>
-    /// <typeparam name="TValue">The dictionary's value <see cref="System.Type" />.</typeparam>
+    /// <typeparam name="TKey">The dictionary's key <see cref="Type" />.</typeparam>
+    /// <typeparam name="TValue">The dictionary's value <see cref="Type" />.</typeparam>
     /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
     [Serializable]
+#pragma warning restore IDE0049
     [VisualScriptingCompatible(1)]
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
