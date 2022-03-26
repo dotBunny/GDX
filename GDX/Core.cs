@@ -11,6 +11,18 @@ namespace GDX
 {
     public static class Core
     {
+        sealed class CoreSentinel
+        {
+            ~CoreSentinel()
+            {
+                Random.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Used to make sure that the static class does actually have some teardown.
+        /// </summary>
+        static readonly CoreSentinel k_DisposeSentinel = new CoreSentinel();
         public const string OverrideClass = "GDXSettings";
         public const string OverrideMethod = "Init";
 
@@ -88,5 +100,7 @@ namespace GDX
 
             s_InitializedMainThread = true;
         }
+
+
     }
 }
