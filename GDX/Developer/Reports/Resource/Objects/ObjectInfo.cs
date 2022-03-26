@@ -108,7 +108,7 @@ namespace GDX.Developer.Reports.Resource.Objects
         /// <returns>1 if larger, otherwise 0.</returns>
         public int CompareTo(object obj)
         {
-            if (obj is not ObjectInfo info)
+            if (!(obj is ObjectInfo info))
             {
                 return 0;
             }
