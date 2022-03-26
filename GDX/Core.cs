@@ -11,18 +11,26 @@ namespace GDX
 {
     public static class Core
     {
+        /// <summary>
+        /// Core Destructor
+        /// </summary>
         sealed class CoreSentinel
         {
             ~CoreSentinel()
             {
+                // Dispose native arrays
                 Random.Dispose();
             }
         }
 
         /// <summary>
-        /// Used to make sure that the static class does actually have some teardown.
+        /// Utilizes the <see cref="CoreSentinel"/> to ensure the static has a destructor of sorts.
         /// </summary>
+#pragma warning disable IDE0052, IDE0090
+// ReSharper disable UnusedMember.Local, ArrangeObjectCreationWhenTypeEvident
         static readonly CoreSentinel k_DisposeSentinel = new CoreSentinel();
+// ReSharper restore UnusedMember.Local, ArrangeObjectCreationWhenTypeEvident
+#pragma warning restore IDE0052, IDE0090
         public const string OverrideClass = "GDXSettings";
         public const string OverrideMethod = "Init";
 
