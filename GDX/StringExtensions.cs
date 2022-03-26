@@ -88,12 +88,12 @@ namespace GDX
         public static byte[] EncryptionInitializationVector = Encoding.UTF8.GetBytes("dotBunny");
 
         /// <summary>
-        ///     Decrypt an encrypted <see cref="System.String" /> created by <see cref="Encrypt" />.
+        ///     Decrypt an encrypted <see cref="String" /> created by <see cref="Encrypt" />.
         /// </summary>
         /// <remarks>This will have quite a few allocations.</remarks>
-        /// <param name="encryptedString">The encrypted <see cref="System.String" />.</param>
-        /// <param name="encryptionKey">The key used to encrypt the <see cref="System.String" />.</param>
-        /// <returns>The decrypted <see cref="System.String" />.</returns>
+        /// <param name="encryptedString">The encrypted <see cref="String" />.</param>
+        /// <param name="encryptionKey">The key used to encrypt the <see cref="String" />.</param>
+        /// <returns>The decrypted <see cref="String" />.</returns>
         public static string Decrypt(this string encryptedString, byte[] encryptionKey = null)
         {
             DESCryptoServiceProvider desProvider = new DESCryptoServiceProvider
@@ -103,33 +103,19 @@ namespace GDX
                 Key = (encryptionKey != null && encryptionKey.Length > 0) ? encryptionKey : EncryptionDefaultKey,
                 IV = EncryptionInitializationVector
             };
-#if UNITY_2020_2_OR_NEWER
             using MemoryStream stream = new MemoryStream(Convert.FromBase64String(encryptedString));
             using CryptoStream cs = new CryptoStream(stream, desProvider.CreateDecryptor(), CryptoStreamMode.Read);
             using StreamReader sr = new StreamReader(cs, Encoding.UTF8);
-#else
-            using (MemoryStream stream = new MemoryStream(Convert.FromBase64String(encryptedString)))
-            {
-                using (CryptoStream cs = new CryptoStream(stream, desProvider.CreateDecryptor(), CryptoStreamMode.Read))
-                {
-                    using (StreamReader sr = new StreamReader(cs, Encoding.UTF8))
-                    {
-#endif
             return sr.ReadToEnd();
-#if !UNITY_2020_2_OR_NEWER
-                    }
-                }
-            }
-#endif
         }
 
         /// <summary>
-        ///     Encrypt a <see cref="System.String" /> utilizing a <see cref="DESCryptoServiceProvider" />.
+        ///     Encrypt a <see cref="String" /> utilizing a <see cref="DESCryptoServiceProvider" />.
         /// </summary>
         /// <remarks>This will have quite a few allocations.</remarks>
-        /// <param name="decryptedString">The original <see cref="System.String" />.</param>
+        /// <param name="decryptedString">The original <see cref="String" />.</param>
         /// <param name="encryptionKey">
-        ///     The key to be used when encrypting the <see cref="System.String" />.  This must be a
+        ///     The key to be used when encrypting the <see cref="String" />.  This must be a
         ///     multiple of 8 bytes.
         /// </param>
         /// <returns>The encrypted <see cref="System.String" />.</returns>
@@ -142,24 +128,12 @@ namespace GDX
                 Key = (encryptionKey != null && encryptionKey.Length > 0) ? encryptionKey : EncryptionDefaultKey,
                 IV = EncryptionInitializationVector
             };
-#if UNITY_2020_2_OR_NEWER
             using MemoryStream stream = new MemoryStream();
             using CryptoStream cs = new CryptoStream(stream, desProvider.CreateEncryptor(), CryptoStreamMode.Write);
-#else
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (CryptoStream cs = new CryptoStream(stream, desProvider.CreateEncryptor(),
-                    CryptoStreamMode.Write))
-                {
-#endif
             byte[] data = Encoding.Default.GetBytes(decryptedString);
             cs.Write(data, 0, data.Length);
             cs.FlushFinalBlock();
             return Convert.ToBase64String(stream.ToArray());
-#if !UNITY_2020_2_OR_NEWER
-                }
-            }
-#endif
         }
 
         /// <summary>
@@ -237,8 +211,8 @@ namespace GDX
         /// </summary>
         /// <remarks>
         ///     This loosely based on the Fowler–Noll–Vo (FNV) hash function. It's value will be identical
-        ///     to the value produced natively by processing a <see cref="System.String" /> with
-        ///     <see cref="System.String.GetHashCode()" />, but with no allocations and no virtual calls.
+        ///     to the value produced natively by processing a <see cref="String" /> with
+        ///     <see cref="String.GetHashCode()" />, but with no allocations and no virtual calls.
         /// </remarks>
         /// <param name="targetString">The target <see cref="System.String" />.</param>
         /// <returns>A <see cref="System.Int32" /> value.</returns>
@@ -283,12 +257,12 @@ namespace GDX
         /// </summary>
         /// <remarks>
         ///     This loosely based on the Fowler–Noll–Vo (FNV) hash function. It's value will be identical
-        ///     to the value produced natively by processing a <see cref="System.String" /> with
-        ///     <see cref="System.String.ToLower()" />.<see cref="System.String.GetHashCode()" />, but with no
+        ///     to the value produced natively by processing a <see cref="String" /> with
+        ///     <see cref="String.ToLower()" />.<see cref="String.GetHashCode()" />, but with no
         ///     allocations.
         /// </remarks>
-        /// <param name="targetString">The target <see cref="System.String" />.</param>
-        /// <returns>A <see cref="System.Int32" /> value.</returns>
+        /// <param name="targetString">The target <see cref="String" />.</param>
+        /// <returns>A <see cref="Int32" /> value.</returns>
         [SecuritySafeCritical]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
         public static unsafe int GetStableLowerCaseHashCode(this string targetString)

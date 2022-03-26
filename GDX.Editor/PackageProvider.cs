@@ -194,11 +194,7 @@ namespace GDX.Editor
                     continue;
                 }
 
-#if UNITY_2020_1_OR_NEWER
                 PlayerSettings.GetScriptingDefineSymbolsForGroup(group, out string[] defines);
-#else
-                string[] defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(group).Split(';');
-#endif
                 int location = defines.FirstIndexOfItem("GDX");
 
                 // Found
@@ -212,19 +208,7 @@ namespace GDX.Editor
                 string[] newDefines = new string[oldLength + 1];
                 Array.Copy(defines, newDefines, oldLength);
                 newDefines[oldLength] = "GDX";
-
-
-#if UNITY_2020_2_OR_NEWER
                 PlayerSettings.SetScriptingDefineSymbolsForGroup(group, newDefines);
-#else
-                System.Text.StringBuilder output = new System.Text.StringBuilder();
-                foreach (string s in newDefines)
-                {
-                    output.Append(s);
-                    output.Append(";");
-                }
-                PlayerSettings.SetScriptingDefineSymbolsForGroup(group,output.ToString().TrimEnd(new[] {';'}));
-#endif
             }
         }
 
@@ -257,7 +241,6 @@ namespace GDX.Editor
                     return "GitHub (Commit)";
                 case InstallationType.Assets:
                     return "Asset Database";
-                case InstallationType.Unknown:
                 default:
                     return "Unknown";
             }
