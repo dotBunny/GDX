@@ -100,7 +100,5 @@ namespace GDX
 
             s_InitializedMainThread = true;
         }
-
-
     }
 }
