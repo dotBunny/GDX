@@ -9,7 +9,7 @@ namespace GDX.Mathematics
     [StructLayout(LayoutKind.Explicit)]
     public struct LongDoubleConversionUnion
     {
-        [FieldOffset(0)] public long longValue;
-        [FieldOffset(0)] public double doubleValue;
+        [FieldOffset(0)] public long LongValue;
+        [FieldOffset(0)] public double DoubleValue;
     }
 }

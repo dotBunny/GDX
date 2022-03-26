@@ -27,7 +27,9 @@ namespace GDX.Editor
         /// <remarks>
         ///     Used to accomodate version specific styling.
         /// </remarks>
+#pragma warning disable IDE0051
         static StyleSheet s_StylesheetOverride;
+#pragma warning restore IDE0051
 
         /// <summary>
         ///     A cached pathing to where our UXML are stored.

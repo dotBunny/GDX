@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+// Copyright (c) 2020-2022 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -13,11 +13,15 @@ namespace GDX.Editor
     [Serializable]
     public class ManifestEntry
     {
+#pragma warning disable IDE1006
+        // ReSharper disable InconsistentNaming
         public string version;
         public int depth;
         public string source;
         public string[] dependencies;
         public string hash;
+        // ReSharper restore InconsistentNaming
+#pragma warning restore IDE1006
 
         [NonSerialized]
         public PackageProvider.InstallationType InstallationType;

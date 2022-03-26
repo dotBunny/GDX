@@ -65,10 +65,10 @@ namespace GDX.Collections.Pooling
             int nextPowerOfTwo = requestedSize + 1;
 
             LongDoubleConversionUnion u;
-            u.doubleValue = 0.0;
-            u.longValue = 0x4330000000000000L + nextPowerOfTwo;
-            u.doubleValue -= 4503599627370496.0;
-            int index = (int)(u.longValue >> 52) - 0x3FF;
+            u.DoubleValue = 0.0;
+            u.LongValue = 0x4330000000000000L + nextPowerOfTwo;
+            u.DoubleValue -= 4503599627370496.0;
+            int index = (int)(u.LongValue >> 52) - 0x3FF;
 
             JaggedArrayWithCount<T> arrayPool = ArrayPools[index];
 
@@ -100,10 +100,10 @@ namespace GDX.Collections.Pooling
                 unchecked((uint)array.Length); // Counting on people to be cool and not pass in a non-power-of-two here.
 
             LongDoubleConversionUnion u;
-            u.doubleValue = 0.0;
-            u.longValue = 0x4330000000000000L + length;
-            u.doubleValue -= 4503599627370496.0;
-            int index = (int)(u.longValue >> 52) - 0x3FF;
+            u.DoubleValue = 0.0;
+            u.LongValue = 0x4330000000000000L + length;
+            u.DoubleValue -= 4503599627370496.0;
+            int index = (int)(u.LongValue >> 52) - 0x3FF;
 
             JaggedArrayWithCount<T> arrayPool = ArrayPools[index];
             int maxPoolCapacity = MaxPoolCapacities[index];

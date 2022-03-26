@@ -18,10 +18,10 @@ namespace GDX.Mathematics
         public static byte GetRightShiftFromPow2Length(int pow2Length)
         {
             LongDoubleConversionUnion u;
-            u.doubleValue = 0.0;
-            u.longValue = 0x4330000000000000L + pow2Length;
-            u.doubleValue -= 4503599627370496.0;
-            int index = (int)(u.longValue >> 52) - 0x3FF;
+            u.DoubleValue = 0.0;
+            u.LongValue = 0x4330000000000000L + pow2Length;
+            u.DoubleValue -= 4503599627370496.0;
+            int index = (int)(u.LongValue >> 52) - 0x3FF;
 
             return (byte)(32 - index);
         }
@@ -50,10 +50,10 @@ namespace GDX.Mathematics
         public static int GetIndexFromHash(int hash, int pow2Length)
         {
             LongDoubleConversionUnion u;
-            u.doubleValue = 0.0;
-            u.longValue = 0x4330000000000000L + pow2Length;
-            u.doubleValue -= 4503599627370496.0;
-            int index = (int)(u.longValue >> 52) - 0x3FF;
+            u.DoubleValue = 0.0;
+            u.LongValue = 0x4330000000000000L + pow2Length;
+            u.DoubleValue -= 4503599627370496.0;
+            int index = (int)(u.LongValue >> 52) - 0x3FF;
 
             int shift = 32 - index;
 

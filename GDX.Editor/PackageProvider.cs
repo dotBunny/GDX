@@ -425,8 +425,12 @@ namespace GDX.Editor
         [Serializable]
         public class PackageDefinition
         {
+#pragma warning disable IDE1006
+            // ReSharper disable InconsistentNaming
             public string version;
             public string unity;
+            // ReSharper restore InconsistentNaming
+#pragma warning restore IDE1006
         }
     }
 }
