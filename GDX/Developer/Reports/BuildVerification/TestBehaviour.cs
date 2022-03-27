@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using GDX.Developer.Reports.NUnit;
 using UnityEngine;
@@ -16,6 +16,8 @@ namespace GDX.Developer.Reports.BuildVerification
         /// <summary>
         ///     Unity's Start event.
         /// </summary>
+#pragma warning disable IDE0051
+        // ReSharper disable UnusedMember.Local        
         void Start()
         {
             m_StartTime = DateTime.Now.ToString(Localization.UtcTimestampFormat);
@@ -29,6 +31,8 @@ namespace GDX.Developer.Reports.BuildVerification
             testCase.EndTime = DateTime.Now.ToString(Localization.UtcTimestampFormat);
             testCase.StartTime = m_StartTime;
         }
+        // ReSharper restore UnusedMember.Local
+#pragma warning restore IDE0051
 
         TestCase RunTest()
         {

@@ -54,7 +54,7 @@ Below is a list and explanation of some of the markup used in `GDX`.
 | Pragma | Resharper | Description|
 |:--|:--|---|
 | [IDE1006](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide1006) | InconsistentNaming | Naming rule violation. |
-| [IDE0051](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0052) |a  | Remove unused private member. |
+| [IDE0051](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0052) | ?  | Remove unused private member. |
 | [IDE0052](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0052) | UnusedMember.Local | Remove unread private member. |
 | [IDE0090](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0090) | ArrangeObjectCreationWhenTypeEvident | Simplify new expression. |
 
@@ -62,5 +62,5 @@ Below is a list and explanation of some of the markup used in `GDX`.
 
 - Embedded in the project is an [EditorConfig](https://editorconfig.org/), which should standardize much of the formatting.
   - It is based on the .NET Roslyn repositories `.editorconfig`.
-  - Don't use C# 9 new format
+  - Don't use anything that would break Unity 2020.3 (hybrid C# 8)
   - Warns of non-explicit type definitions everywhere (we're not going to use var to promote better readability).
