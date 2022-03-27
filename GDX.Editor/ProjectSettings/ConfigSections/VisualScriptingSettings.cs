@@ -23,6 +23,7 @@ namespace GDX.Editor.ProjectSettings
         ///     Internal section identifier.
         /// </summary>
         public const string SectionKey = "GDX.VisualScripting";
+        static readonly string[] k_Keywords = { "vs", "visual scripting" };
 
         Button m_ButtonRegenerateUnits;
         Button m_ButtonInstallDocs;
@@ -261,6 +262,12 @@ namespace GDX.Editor.ProjectSettings
         {
             return 0;
         }
+
+        public string[] GetSearchKeywords()
+        {
+            return k_Keywords;
+        }
+
         public string GetSectionHeaderLabel()
         {
             return "Visual Scripting";

@@ -17,7 +17,7 @@ namespace GDX
         ///     Add an item to a <see cref="System.Collections.Generic.IList{T}" />, but only if it is not already contained.
         /// </summary>
         /// <param name="targetList">The <see cref="System.Collections.Generic.IList{T}" /> to add too.</param>
-        /// <param name="targetItem">The target object to add..</param>
+        /// <param name="targetItem">The target object to add.</param>
         /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.IList{T}" />.</typeparam>
         /// <returns>true/false if this operation was able to add the item.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -31,6 +31,23 @@ namespace GDX
             targetList.Add(targetItem);
             return true;
 
+        }
+
+        /// <summary>
+        ///     Add a range of items to a <see cref="System.Collections.Generic.IList{T}" />, checking if each item is
+        ///     unique prior to adding.
+        /// </summary>
+        /// <param name="targetList">The <see cref="System.Collections.Generic.IList{T}" /> to add too.</param>
+        /// <param name="targetItems">The array of items to add.</param>
+        /// <typeparam name="T">The type of the <see cref="System.Collections.Generic.IList{T}" />.</typeparam>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void AddUniqueRange<T>(this IList<T> targetList, T[] targetItems) where T : class
+        {
+            int itemCount = targetItems.Length;
+            for (int i = 0; i < itemCount; i++)
+            {
+                targetList.AddUniqueItem(targetItems[i]);
+            }
         }
 
         /// <summary>

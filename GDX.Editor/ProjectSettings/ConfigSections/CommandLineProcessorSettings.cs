@@ -12,6 +12,7 @@ namespace GDX.Editor.ProjectSettings
     class CommandLineProcessorSettings : IConfigSection
     {
         public const string SectionKey = "GDX.Developer.CommandLineParser";
+        static readonly string[] k_Keywords = { "cli", "arguments", "argument" };
         VisualElement m_RootElement;
         TextField m_TextArgumentPrefix;
         TextField m_TextArgumentSplit;
@@ -81,6 +82,11 @@ namespace GDX.Editor.ProjectSettings
         public string GetTemplateName()
         {
             return "GDXProjectSettingsCommandLineProcessor";
+        }
+
+        public string[] GetSearchKeywords()
+        {
+            return k_Keywords;
         }
 
         public bool GetToggleSupport()

@@ -13,7 +13,7 @@ namespace GDX
     public readonly struct SemanticVersion
     {
         /// <summary>
-        ///     An array of <see cref="Char" /> used to split versions.
+        ///     An array of <see cref="char" /> used to split versions.
         /// </summary>
         static readonly char[] k_VersionIndicators = {'.', ',', '_', 'f'};
 
@@ -36,7 +36,7 @@ namespace GDX
         public readonly int Patch;
 
         /// <summary>
-        ///     Create a <see cref="SemanticVersion" /> based on a formatted <see cref="String" />.
+        ///     Create a <see cref="SemanticVersion" /> based on a formatted <see cref="string" />.
         /// </summary>
         /// <param name="version">A formatted version semantic version string (2020.1.0).</param>
         public SemanticVersion(string version)

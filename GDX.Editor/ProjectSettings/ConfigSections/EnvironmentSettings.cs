@@ -17,6 +17,7 @@ namespace GDX.Editor.ProjectSettings
     class EnvironmentSettings : IConfigSection
     {
         public const string SectionKey = "GDX.Environment";
+        static readonly string[] k_Keywords = { "environment", "debug", "culture", "define", "symbol", "trace" };
         VisualElement m_RootElement;
         Toggle m_ToggleEnsureSymbol;
         Toggle m_ToggleDebugConsole;
@@ -45,6 +46,11 @@ namespace GDX.Editor.ProjectSettings
             16,
             32
         };
+
+        public string[] GetSearchKeywords()
+        {
+            return k_Keywords;
+        }
 
         public string GetTemplateName()
         {

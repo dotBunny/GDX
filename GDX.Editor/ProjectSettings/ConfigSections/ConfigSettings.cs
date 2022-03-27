@@ -12,6 +12,7 @@ namespace GDX.Editor.ProjectSettings
     class ConfigSettings : IConfigSection
     {
         public const string SectionKey = "GDX.Config";
+        static readonly string[] k_Keywords = { "config" };
         VisualElement m_RootElement;
         TextField m_TextOutputFolder;
 
@@ -52,6 +53,11 @@ namespace GDX.Editor.ProjectSettings
         public string GetSectionHelpLink()
         {
             return null;
+        }
+
+        public string[] GetSearchKeywords()
+        {
+            return k_Keywords;
         }
 
         public string GetSectionKey()

@@ -7,6 +7,7 @@ using System.IO;
 using GDX.Collections.Generic;
 using GDX.Editor.ProjectSettings;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor
@@ -32,7 +33,7 @@ namespace GDX.Editor
         /// <summary>
         ///     A list of keywords to flag when searching project settings.
         /// </summary>
-        static List<string> s_SearchKeywords;
+        static string[] s_SearchKeywords;
 
         public static StringKeyDictionary<IConfigSection> ConfigSections = new StringKeyDictionary<IConfigSection>(SectionCount);
 
@@ -41,6 +42,8 @@ namespace GDX.Editor
         static VisualElement s_ChangesElement;
         static Button s_ClearButton;
         static Button s_SaveButton;
+        static string s_CurrentSearchContext;
+        static string s_LastKnownSearchContext;
 
 
         /// <summary>
@@ -55,44 +58,48 @@ namespace GDX.Editor
             WorkingConfig ??= new GDXConfig(Core.Config);
 
             // Initialize some things here instead of static initializers
-            s_SearchKeywords ??= new List<string>(new[]
-            {
-                "gdx", "automatic", "package", "update", "buildinfo", "task", "stream", "changelist",
-                "cli", "argument", "environment", "trace", "symbol", "locale", "localization", "culture",
-                "visual", "scripting", "vs", "parser", "commandline", "build"
-            });
+            List<string> keywords = new List<string>(8);
 
             // Register settings
             if (!ConfigSections.ContainsKey(AutomaticUpdatesSettings.SectionKey))
             {
                 ConfigSections.AddUnchecked(AutomaticUpdatesSettings.SectionKey, new AutomaticUpdatesSettings());
+                keywords.AddUniqueRange(ConfigSections[AutomaticUpdatesSettings.SectionKey].GetSearchKeywords());
             }
             if (!ConfigSections.ContainsKey(ConfigSettings.SectionKey))
             {
                 ConfigSections.AddUnchecked(ConfigSettings.SectionKey, new ConfigSettings());
+                keywords.AddUniqueRange(ConfigSections[ConfigSettings.SectionKey].GetSearchKeywords());
             }
             if (!ConfigSections.ContainsKey(BuildInfoSettings.SectionKey))
             {
                 ConfigSections.AddUnchecked(BuildInfoSettings.SectionKey, new BuildInfoSettings());
+                keywords.AddUniqueRange(ConfigSections[BuildInfoSettings.SectionKey].GetSearchKeywords());
             }
             if (!ConfigSections.ContainsKey(CommandLineProcessorSettings.SectionKey))
             {
                 ConfigSections.AddUnchecked(CommandLineProcessorSettings.SectionKey, new CommandLineProcessorSettings());
+                keywords.AddUniqueRange(ConfigSections[CommandLineProcessorSettings.SectionKey].GetSearchKeywords());
             }
             if (!ConfigSections.ContainsKey(EnvironmentSettings.SectionKey))
             {
                 ConfigSections.AddUnchecked(EnvironmentSettings.SectionKey, new EnvironmentSettings());
+                keywords.AddUniqueRange(ConfigSections[EnvironmentSettings.SectionKey].GetSearchKeywords());
+
             }
             if (!ConfigSections.ContainsKey(LocaleSettings.SectionKey))
             {
                 ConfigSections.AddUnchecked(LocaleSettings.SectionKey, new LocaleSettings());
+                keywords.AddUniqueRange(ConfigSections[LocaleSettings.SectionKey].GetSearchKeywords());
             }
 #if GDX_VISUALSCRIPTING
             if (!ConfigSections.ContainsKey(VisualScriptingSettings.SectionKey))
             {
                 ConfigSections.AddUnchecked(VisualScriptingSettings.SectionKey, new VisualScriptingSettings());
+                keywords.AddUniqueRange(ConfigSections[VisualScriptingSettings.SectionKey].GetSearchKeywords());
             }
 #endif
+            s_SearchKeywords = keywords.ToArray();
 
             return new UnityEditor.SettingsProvider("Project/GDX", SettingsScope.Project)
             {
@@ -143,17 +150,18 @@ namespace GDX.Editor
                         AssetDatabase.StartAssetEditing();
 
                         // Remove old file
-                        string previousPath = Path.Combine(UnityEngine.Application.dataPath, Core.Config.ConfigOutputPath);
+                        string previousPath =
+                            Path.Combine(Application.dataPath, Core.Config.ConfigOutputPath);
                         if (File.Exists(previousPath))
                         {
-                            AssetDatabase.DeleteAsset(Path.Combine("Assets",  Core.Config.ConfigOutputPath));
+                            AssetDatabase.DeleteAsset(Path.Combine("Assets", Core.Config.ConfigOutputPath));
                         }
 
                         GDXConfig baseConfig = new GDXConfig();
                         if (!baseConfig.Compare(WorkingConfig))
                         {
                             // Generate new file
-                            string codePath = Path.Combine(UnityEngine.Application.dataPath,
+                            string codePath = Path.Combine(Application.dataPath,
                                 WorkingConfig.ConfigOutputPath);
 
                             // Ensure folder structure is present
@@ -178,23 +186,25 @@ namespace GDX.Editor
                     Button buttonRepository = rootElement.Q<Button>("button-repository");
                     buttonRepository.clicked += () =>
                     {
-                        UnityEngine.Application.OpenURL("https://github.com/dotBunny/GDX/");
+                        Application.OpenURL("https://github.com/dotBunny/GDX/");
                     };
                     Button buttonDocumentation = rootElement.Q<Button>("button-documentation");
                     buttonDocumentation.clicked += () =>
                     {
-                        UnityEngine.Application.OpenURL("https://gdx.dotbunny.com/");
+                        Application.OpenURL("https://gdx.dotbunny.com/");
                     };
                     Button buttonIssue = rootElement.Q<Button>("button-issue");
                     buttonIssue.clicked += () =>
                     {
-                        UnityEngine.Application.OpenURL("https://github.com/dotBunny/GDX/issues");
+                        Application.OpenURL("https://github.com/dotBunny/GDX/issues");
                     };
 
                     VisualElement packageHolderElement = rootElement.Q<VisualElement>("gdx-project-settings-packages");
-                    packageHolderElement.Add(GetPackageStatus("Addressables", Developer.Conditionals.HasAddressablesPackage));
+                    packageHolderElement.Add(GetPackageStatus("Addressables",
+                        Developer.Conditionals.HasAddressablesPackage));
                     packageHolderElement.Add(GetPackageStatus("Platforms", Developer.Conditionals.HasPlatformsPackage));
-                    packageHolderElement.Add(GetPackageStatus("Visual Scripting", Developer.Conditionals.HasVisualScriptingPackage));
+                    packageHolderElement.Add(GetPackageStatus("Visual Scripting",
+                        Developer.Conditionals.HasVisualScriptingPackage));
 
                     // Build some useful references
                     ScrollView contentScrollView = rootElement.Q<ScrollView>("gdx-project-settings-content");
@@ -210,20 +220,56 @@ namespace GDX.Editor
                     {
                         IConfigSection section = item.Value;
                         string sectionID = section.GetSectionKey();
+
                         VisualElement sectionHeader = ConfigSectionsProvider.CreateAndBindSectionHeader(section);
 
                         contentScrollView.contentContainer.Add(sectionHeader);
-                        ConfigSectionsProvider.UpdateSectionHeader(sectionID);
+                        ConfigSectionsProvider.UpdateSectionHeader(sectionID, searchContext);
 
-                        VisualElement sectionContentBase = ConfigSectionsProvider.CreateAndBindSectionContent(section);
+                        VisualElement sectionContentBase =
+                            ConfigSectionsProvider.CreateAndBindSectionContent(section);
 
                         contentScrollView.contentContainer.Add(sectionContentBase);
-                        ConfigSectionsProvider.UpdateSectionContent(sectionID);
+                        ConfigSectionsProvider.UpdateSectionContent(sectionID, searchContext);
                     }
                 },
-                keywords = s_SearchKeywords
+                keywords = s_SearchKeywords,
+                hasSearchInterestHandler = (searchString) =>
+                {
+                    s_CurrentSearchContext = searchString;
+                    return s_SearchKeywords.PartialMatch(searchString);
+                },
+                inspectorUpdateHandler = ( ) =>
+                {
+                    // when a search sting is changed it forces the window to repaint
+                    // TODO: Need to do something when search term is removed?
+
+                  //  Debug.Log($"SEARCH: {GetSearchString()}");
+
+                    if (s_LastKnownSearchContext != s_CurrentSearchContext)
+                    {
+
+                        //Debug.Log($"CHANGE {s_LastKnownSearchContext} vs {s_CurrentSearchContext}");
+                        int iterator = 0;
+                        while (ConfigSections.MoveNext(ref iterator, out StringKeyEntry<IConfigSection> item))
+                        {
+                            IConfigSection section = item.Value;
+                            string sectionID = section.GetSectionKey();
+
+                            ConfigSectionsProvider.UpdateSectionHeader(sectionID, s_LastKnownSearchContext);
+                            ConfigSectionsProvider.UpdateSectionContent(sectionID, s_LastKnownSearchContext);
+                        }
+                        s_LastKnownSearchContext = s_CurrentSearchContext;
+                    }
+                }
             };
         }
+
+        // static string GetSearchString()
+        // {
+        //     EditorWindow window = SettingsService.OpenProjectSettings();
+        //     return window.GetFieldValue<string>("m_SearchText");
+        // }
 
         static VisualElement GetPackageStatus(string package, bool status)
         {

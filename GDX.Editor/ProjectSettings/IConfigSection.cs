@@ -20,5 +20,6 @@ namespace GDX.Editor.ProjectSettings
         void UpdateSectionContent();
 
         string GetTemplateName();
+        string[] GetSearchKeywords();
     }
 }

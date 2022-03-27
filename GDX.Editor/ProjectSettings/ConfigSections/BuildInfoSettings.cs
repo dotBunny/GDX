@@ -17,6 +17,7 @@ namespace GDX.Editor.ProjectSettings
     class BuildInfoSettings : IConfigSection
     {
         public const string SectionKey = "GDX.Editor.Build.BuildInfoProvider";
+        static readonly string[] k_Keywords = { "build", "buildinfo", "changelist", "stream" };
         VisualElement m_RootElement;
         VisualElement m_Content;
         TextField m_TextOutputPath;
@@ -234,6 +235,11 @@ namespace GDX.Editor.ProjectSettings
 
             CheckForDisabledContent();
             SettingsProvider.CheckForChanges();
+        }
+
+        public string[] GetSearchKeywords()
+        {
+            return k_Keywords;
         }
 
         public string GetToggleTooltip()

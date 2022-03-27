@@ -14,6 +14,7 @@ namespace GDX.Editor.ProjectSettings
     class AutomaticUpdatesSettings : IConfigSection
     {
         public const string SectionKey = "GDX.Editor.UpdateProvider";
+        static readonly string[] k_Keywords = { "git", "upm", "automatic", "updates", "package" };
 
         VisualElement m_RootElement;
         VisualElement m_ElementLocalVersion;
@@ -195,6 +196,11 @@ namespace GDX.Editor.ProjectSettings
                 toggleElement.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
             }
             SettingsProvider.CheckForChanges();
+        }
+
+        public string[] GetSearchKeywords()
+        {
+            return k_Keywords;
         }
 
         public string GetToggleTooltip()

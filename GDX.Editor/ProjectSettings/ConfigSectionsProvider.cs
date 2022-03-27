@@ -153,10 +153,17 @@ namespace GDX.Editor.ProjectSettings
             }
         }
 
-        public static void UpdateSectionContent(string sectionKey)
+        public static void UpdateSectionContent(string sectionKey, string searchContext = null)
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionKey];
             VisualElement element = s_ConfigSectionContents[sectionKey];
+
+            if (!string.IsNullOrEmpty(searchContext) && !section.GetSearchKeywords().PartialMatch(searchContext))
+            {
+                element.AddToClassList(HiddenClass);
+                return;
+            }
+
 
             if (SettingsProvider.GetCachedEditorBoolean(sectionKey, section.GetDefaultVisibility()))
             {
@@ -170,7 +177,7 @@ namespace GDX.Editor.ProjectSettings
             section.UpdateSectionContent();
         }
 
-        public static void UpdateSectionHeader(string sectionKey)
+        public static void UpdateSectionHeader(string sectionKey, string searchContext = null)
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionKey];
             VisualElement sectionHeaderElement = s_ConfigSectionHeaders[sectionKey];

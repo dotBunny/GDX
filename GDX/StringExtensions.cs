@@ -627,6 +627,27 @@ namespace GDX
         }
 
         /// <summary>
+        ///
+        /// </summary>
+        /// <param name="haystack"></param>
+        /// <param name="needle"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool PartialMatch(this string[] haystack, string needle)
+        {
+            int count = haystack.Length;
+            for (int i = 0; i < count; i++)
+            {
+                if (haystack[i].Contains(needle))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         ///     Create a new string, splitting an existing string up based on camel case formatting.
         /// </summary>
         /// <param name="targetString">The target <see cref="string" />.</param>
