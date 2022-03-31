@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
 using GDX.Collections.Generic;
 
 namespace GDX.Collections.Pooling
