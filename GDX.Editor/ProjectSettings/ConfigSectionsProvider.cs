@@ -177,9 +177,11 @@ namespace GDX.Editor.ProjectSettings
             section.UpdateSectionContent();
         }
 
-        public static void UpdateSectionHeader(string sectionKey, string searchContext = null)
+        public static void UpdateSectionHeader(string sectionKey)
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionKey];
+
+            //if (!s_ConfigSectionHeaders.ContainsKey(sectionKey)) return;
             VisualElement sectionHeaderElement = s_ConfigSectionHeaders[sectionKey];
 
             if (section.GetToggleSupport())

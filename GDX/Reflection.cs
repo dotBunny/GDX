@@ -11,7 +11,7 @@ namespace GDX
     // TODO: Maybe
     public static class Reflection
     {
-        public static T GetFieldValue<T>(this object obj, string name) {
+        public static T GetFieldValue<T>(object obj, string name) {
             FieldInfo field = obj.GetType().GetField(name,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             // if (field == null)

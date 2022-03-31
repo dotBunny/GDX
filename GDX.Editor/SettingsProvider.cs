@@ -42,9 +42,7 @@ namespace GDX.Editor
         static VisualElement s_ChangesElement;
         static Button s_ClearButton;
         static Button s_SaveButton;
-        static string s_CurrentSearchContext;
-        static string s_LastKnownSearchContext;
-
+        static string s_LastKnownSearchString;
 
         /// <summary>
         ///     Get <see cref="UnityEditor.SettingsProvider" /> for GDX assembly.
@@ -224,7 +222,7 @@ namespace GDX.Editor
                         VisualElement sectionHeader = ConfigSectionsProvider.CreateAndBindSectionHeader(section);
 
                         contentScrollView.contentContainer.Add(sectionHeader);
-                        ConfigSectionsProvider.UpdateSectionHeader(sectionID, searchContext);
+                        ConfigSectionsProvider.UpdateSectionHeader(sectionID);
 
                         VisualElement sectionContentBase =
                             ConfigSectionsProvider.CreateAndBindSectionContent(section);
@@ -236,40 +234,32 @@ namespace GDX.Editor
                 keywords = s_SearchKeywords,
                 hasSearchInterestHandler = (searchString) =>
                 {
-                    s_CurrentSearchContext = searchString;
+                    UpdateForSearch(searchString);
                     return s_SearchKeywords.PartialMatch(searchString);
-                },
-                inspectorUpdateHandler = ( ) =>
-                {
-                    // when a search sting is changed it forces the window to repaint
-                    // TODO: Need to do something when search term is removed?
-
-                  //  Debug.Log($"SEARCH: {GetSearchString()}");
-
-                    if (s_LastKnownSearchContext != s_CurrentSearchContext)
-                    {
-
-                        //Debug.Log($"CHANGE {s_LastKnownSearchContext} vs {s_CurrentSearchContext}");
-                        int iterator = 0;
-                        while (ConfigSections.MoveNext(ref iterator, out StringKeyEntry<IConfigSection> item))
-                        {
-                            IConfigSection section = item.Value;
-                            string sectionID = section.GetSectionKey();
-
-                            ConfigSectionsProvider.UpdateSectionHeader(sectionID, s_LastKnownSearchContext);
-                            ConfigSectionsProvider.UpdateSectionContent(sectionID, s_LastKnownSearchContext);
-                        }
-                        s_LastKnownSearchContext = s_CurrentSearchContext;
-                    }
                 }
             };
         }
 
-        // static string GetSearchString()
-        // {
-        //     EditorWindow window = SettingsService.OpenProjectSettings();
-        //     return window.GetFieldValue<string>("m_SearchText");
-        // }
+        static void UpdateForSearch(string searchContext)
+        {
+            if (s_LastKnownSearchString == searchContext)
+                return;
+
+            int iterator = 0;
+            while (ConfigSections.MoveNext(ref iterator, out StringKeyEntry<IConfigSection> item))
+            {
+                ConfigSectionsProvider.UpdateSectionContent(item.Value.GetSectionKey(), searchContext);
+            }
+
+            s_LastKnownSearchString = searchContext;
+        }
+
+        static string GetSearchString()
+        {
+
+            EditorWindow window = SettingsService.OpenProjectSettings();
+            return Reflection.GetFieldValue<string>(window, "m_SearchText");
+        }
 
         static VisualElement GetPackageStatus(string package, bool status)
         {
