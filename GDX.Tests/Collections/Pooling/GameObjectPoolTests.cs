@@ -40,7 +40,7 @@ namespace GDX.Collections.Pooling
         [Category(Core.TestCategory)]
         public void OnDestroyItemAction_MockData_DestroysGameObject()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObject,
+            SimpleListManagedPool pool = (SimpleListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObject,
                 m_MockTransform);
             GameObject gameObject = GameObjectPool.Get(pool, false);
             pool.TearDown();
@@ -54,7 +54,7 @@ namespace GDX.Collections.Pooling
         [Category(Core.TestCategory)]
         public void OnDestroyItemAction_MockData_DestroysInterface()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
+            SimpleListManagedPool pool = (SimpleListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
                 m_MockBaseObjectWithInterfaceTransform);
             GameObject gameObject = GameObjectPool.Get(pool, false);
             pool.TearDown();
@@ -68,7 +68,7 @@ namespace GDX.Collections.Pooling
         [Category(Core.TestCategory)]
         public void Get_MockData_DontTrigger()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
+            SimpleListManagedPool pool = (SimpleListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
                 m_MockBaseObjectWithInterfaceTransform);
 
             GameObject gameObject = GameObjectPool.Get(pool, false);
@@ -84,7 +84,7 @@ namespace GDX.Collections.Pooling
         [Category(Core.TestCategory)]
         public void Get_MockData_LocalPositionWorldLookAtParented()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
+            SimpleListManagedPool pool = (SimpleListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
                 m_MockBaseObjectWithInterfaceTransform);
 
             GameObject gameObject = GameObjectPool.Get(pool, m_MockTransform, new Vector3(3f,0f,0f), Vector3.zero);
@@ -104,7 +104,7 @@ namespace GDX.Collections.Pooling
         [Category(Core.TestCategory)]
         public void Get_MockData_LocalPositionLocalRotationParented()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
+            SimpleListManagedPool pool = (SimpleListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
                 m_MockBaseObjectWithInterfaceTransform);
 
             GameObject gameObject = GameObjectPool.Get(pool, m_MockTransform, new Vector3(3f,0f,0f), new Quaternion(0,90,0,0));
@@ -127,7 +127,7 @@ namespace GDX.Collections.Pooling
             GameObject movedObject = new GameObject { transform = { position = new Vector3(1, 0, 0) } };
             GameObject movedTransform = new GameObject { transform = { position = new Vector3(10, 0, 0) } };
 
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(movedObject, movedTransform.transform);
+            SimpleListManagedPool pool = (SimpleListManagedPool)GameObjectPool.GetOrCreatePool(movedObject, movedTransform.transform);
 
             GameObject gameObject = GameObjectPool.Get(pool, m_MockTransform, true);
 
@@ -147,7 +147,7 @@ namespace GDX.Collections.Pooling
             GameObject movedObject = new GameObject { transform = { position = new Vector3(1, 0, 0) } };
             GameObject movedTransform = new GameObject { transform = { position = new Vector3(10, 0, 0) } };
 
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(movedObject, movedTransform.transform);
+            SimpleListManagedPool pool = (SimpleListManagedPool)GameObjectPool.GetOrCreatePool(movedObject, movedTransform.transform);
 
             GameObject gameObject = GameObjectPool.Get(pool, m_MockTransform);
 
@@ -164,7 +164,7 @@ namespace GDX.Collections.Pooling
         [Category(Core.TestCategory)]
         public void Get_MockData_Trigger()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
+            SimpleListManagedPool pool = (SimpleListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
                 m_MockBaseObjectWithInterfaceTransform);
 
             GameObject gameObject = GameObjectPool.Get(pool);
@@ -180,7 +180,7 @@ namespace GDX.Collections.Pooling
         [Category(Core.TestCategory)]
         public void Get_MockData_WorldPositionWorldLookAt()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
+            SimpleListManagedPool pool = (SimpleListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
                 m_MockBaseObjectWithInterfaceTransform);
 
             GameObject gameObject = GameObjectPool.Get(pool, new Vector3(2, 6, 10), new Vector3(0, 0, 0));
@@ -198,7 +198,7 @@ namespace GDX.Collections.Pooling
         [Category(Core.TestCategory)]
         public void Get_MockData_WorldPositionWorldLookAtParented()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
+            SimpleListManagedPool pool = (SimpleListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
                 m_MockBaseObjectWithInterfaceTransform);
 
             GameObject gameObject = GameObjectPool.Get(pool, new Vector3(2, 6, 10), new Vector3(0, 0, 0),
@@ -218,7 +218,7 @@ namespace GDX.Collections.Pooling
         [Category(Core.TestCategory)]
         public void Get_MockData_WorldPositionWorldRotation()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
+            SimpleListManagedPool pool = (SimpleListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
                 m_MockBaseObjectWithInterfaceTransform);
             Quaternion mockRotation = new Quaternion(90f, 90f, 45f, 1f);
 
@@ -236,7 +236,7 @@ namespace GDX.Collections.Pooling
         [Category(Core.TestCategory)]
         public void Get_MockData_WorldPositionWorldRotationParented()
         {
-            ListManagedPool pool = (ListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
+            SimpleListManagedPool pool = (SimpleListManagedPool)GameObjectPool.GetOrCreatePool(m_MockBaseObjectWithInterface,
                 m_MockBaseObjectWithInterfaceTransform);
             Quaternion mockRotation = new Quaternion(90f, 90f, 45f, 1f);
 
