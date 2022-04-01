@@ -18,6 +18,7 @@ namespace GDX.Editor
     [HideFromDocFX]
     public static class SettingsProvider
     {
+        public const string SearchClass = "search";
         /// <summary>
         ///     The public URI of the package's documentation.
         /// </summary>
@@ -41,6 +42,7 @@ namespace GDX.Editor
         public static string SearchString;
 
         static VisualElement s_ChangesElement;
+        static VisualElement s_RootElement;
         static Button s_ClearButton;
         static Button s_SaveButton;
 
@@ -106,6 +108,8 @@ namespace GDX.Editor
                 label = "GDX",
                 activateHandler = (searchContext, rootElement) =>
                 {
+                    s_RootElement = rootElement;
+
                     // Add base style sheet
                     if (ResourcesProvider.GetStyleSheet() != null)
                     {
@@ -241,28 +245,35 @@ namespace GDX.Editor
                     {
                         s_ProjectSettingsWindow = SettingsService.OpenProjectSettings();
                     }
-                    if (s_ProjectSettingsWindow != null)
+                    if (s_ProjectSettingsWindow == null)
                     {
-                        UpdateForSearch(Reflection.GetFieldValue<string>(
-                            s_ProjectSettingsWindow, "UnityEditor.SettingsWindow", "m_SearchText"));
+                        return;
+                    }
+
+                    string searchContext = Reflection.GetFieldValue<string>(
+                        s_ProjectSettingsWindow, "UnityEditor.SettingsWindow", "m_SearchText");
+
+                    if (SearchString == searchContext)
+                        return;
+
+                    if (string.IsNullOrEmpty(searchContext))
+                    {
+                        s_RootElement.RemoveFromClassList(SearchClass);
+                    }
+                    else
+                    {
+                        s_RootElement.AddToClassList(SearchClass);
+                    }
+
+                    SearchString = searchContext;
+                    int iterator = 0;
+                    while (ConfigSections.MoveNext(ref iterator, out StringKeyEntry<IConfigSection> item))
+                    {
+                        ConfigSectionsProvider.UpdateSectionContent(item.Value.GetSectionKey());
                     }
                 }
             };
         }
-
-        static void UpdateForSearch(string searchContext)
-        {
-            if (SearchString == searchContext)
-                return;
-
-            SearchString = searchContext;
-            int iterator = 0;
-            while (ConfigSections.MoveNext(ref iterator, out StringKeyEntry<IConfigSection> item))
-            {
-                ConfigSectionsProvider.UpdateSectionContent(item.Value.GetSectionKey());
-            }
-        }
-
 
         static VisualElement GetPackageStatus(string package, bool status)
         {
@@ -297,6 +308,12 @@ namespace GDX.Editor
             }
 
             return s_CachedEditorPreferences[id];
+        }
+
+        public static bool IsSearching()
+        {
+            if (s_RootElement == null) return false;
+            return s_RootElement.ClassListContains(SearchClass);
         }
 
         /// <summary>

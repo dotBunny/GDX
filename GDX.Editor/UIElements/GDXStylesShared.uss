@@ -349,3 +349,12 @@ Button.gdx-button {
 .changed {
     -unity-font-style: bold-and-italic;
 }
+
+.search #gdx-project-settings-info {
+    display: none;
+}
+
+.search .gdx-project-settings-section-header #button-expand {
+    margin-top: 5px;
+    background-image: resource('d_Search Icon');
+}
