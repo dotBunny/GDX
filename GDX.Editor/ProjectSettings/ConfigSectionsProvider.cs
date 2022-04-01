@@ -138,6 +138,9 @@ namespace GDX.Editor.ProjectSettings
 
         static void OnToggleSectionHeaderClicked(VisualElement toggleElement, string sectionKey, bool newValue)
         {
+            // Do not toggle during search mode
+            if (SettingsProvider.IsSearching()) return;
+
             IConfigSection section = SettingsProvider.ConfigSections[sectionKey];
             section.SetToggleState(toggleElement, newValue);
             UpdateSectionContent(sectionKey);
@@ -165,24 +168,33 @@ namespace GDX.Editor.ProjectSettings
             }
 
             VisualElement element = s_ConfigSectionContents[sectionKey];
-            string searchContext = SettingsProvider.SearchString;
 
-            if (!string.IsNullOrEmpty(searchContext) && !section.GetSearchKeywords().PartialMatch(searchContext))
+            if (SettingsProvider.IsSearching())
             {
-                element.AddToClassList(HiddenClass);
-                return;
-            }
+                // If we arent actually matched to the query
+                if (!section.GetSearchKeywords().PartialMatch(SettingsProvider.SearchString))
+                {
+                    element.AddToClassList(HiddenClass);
+                    return;
+                }
 
-
-            if (SettingsProvider.GetCachedEditorBoolean(sectionKey, section.GetDefaultVisibility()))
-            {
+                // Ok so we do fall into it, so lets remove the hidden class
                 element.RemoveFromClassList(HiddenClass);
             }
             else
             {
-                element.AddToClassList(HiddenClass);
+                // Default visible/hidden behaviour
+                if (SettingsProvider.GetCachedEditorBoolean(sectionKey, section.GetDefaultVisibility()))
+                {
+                    element.RemoveFromClassList(HiddenClass);
+                }
+                else
+                {
+                    element.AddToClassList(HiddenClass);
+                }
             }
 
+            // Update the actual content
             section.UpdateSectionContent();
         }
 
@@ -190,8 +202,29 @@ namespace GDX.Editor.ProjectSettings
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionKey];
 
-            //if (!s_ConfigSectionHeaders.ContainsKey(sectionKey)) return;
+            // This can happen due to the order of how events fire.
+            if (!s_ConfigSectionContents.ContainsKey(sectionKey))
+            {
+                return;
+            }
+
             VisualElement sectionHeaderElement = s_ConfigSectionHeaders[sectionKey];
+
+            if (SettingsProvider.IsSearching())
+            {
+                if (!section.GetSearchKeywords().PartialMatch(SettingsProvider.SearchString))
+                {
+                    sectionHeaderElement.AddToClassList(HiddenClass);
+                }
+                else if(sectionHeaderElement.ClassListContains(HiddenClass))
+                {
+                    sectionHeaderElement.RemoveFromClassList(HiddenClass);
+                }
+            }
+            else if (sectionHeaderElement.ClassListContains(HiddenClass))
+            {
+                sectionHeaderElement.RemoveFromClassList(HiddenClass);
+            }
 
             if (section.GetToggleSupport())
             {

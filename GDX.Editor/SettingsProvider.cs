@@ -26,6 +26,11 @@ namespace GDX.Editor
 
         public const int SectionCount = 7;
 
+        public static StringKeyDictionary<IConfigSection> ConfigSections = new StringKeyDictionary<IConfigSection>(SectionCount);
+
+        public static GDXConfig WorkingConfig;
+        public static string SearchString;
+
         /// <summary>
         ///     A cache of boolean values backed by <see cref="EditorPrefs" /> to assist with optimizing layout.
         /// </summary>
@@ -36,10 +41,6 @@ namespace GDX.Editor
         /// </summary>
         static string[] s_SearchKeywords;
 
-        public static StringKeyDictionary<IConfigSection> ConfigSections = new StringKeyDictionary<IConfigSection>(SectionCount);
-
-        public static GDXConfig WorkingConfig;
-        public static string SearchString;
 
         static VisualElement s_ChangesElement;
         static VisualElement s_RootElement;
@@ -264,13 +265,10 @@ namespace GDX.Editor
                     {
                         s_RootElement.AddToClassList(SearchClass);
                     }
-
                     SearchString = searchContext;
-                    int iterator = 0;
-                    while (ConfigSections.MoveNext(ref iterator, out StringKeyEntry<IConfigSection> item))
-                    {
-                        ConfigSectionsProvider.UpdateSectionContent(item.Value.GetSectionKey());
-                    }
+                    ConfigSectionsProvider.UpdateAll();
+
+                    // TODO: Need to tell content areas to expand, without ruining their states
                 }
             };
         }

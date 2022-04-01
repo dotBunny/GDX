@@ -358,3 +358,6 @@ Button.gdx-button {
     margin-top: 5px;
     background-image: resource('d_Search Icon');
 }
+.search .gdx-project-settings-section-header #button-expand:hover {
+    -unity-background-image-tint-color: white;
+}
