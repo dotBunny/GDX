@@ -63,23 +63,7 @@ namespace GDX
 
             // The assemblies will change between editor time and compile time so we are going to unfortunately pay a
             // cost to iterate over them and try to find our settings class
-            foreach (Assembly targetAssembly in Platform.GetLoadedAssemblies())
-            {
-                Type overrideType = targetAssembly.GetType($"GDX.{OverrideClass}");
-                if (overrideType == null)
-                {
-                    continue;
-                }
-
-                MethodInfo initMethod =
-                    overrideType.GetMethod(OverrideMethod, BindingFlags.Static | BindingFlags.Public);
-                if (initMethod != null)
-                {
-                    initMethod.Invoke(null, new object[] { });
-                }
-
-                break;
-            }
+            Reflection.InvokeStaticMethod($"GDX.{OverrideClass}", OverrideMethod);
 
             // Initialize a random provider
             Random = new WELL1024a((uint)StartTicks);

@@ -109,12 +109,6 @@ namespace GDX
 #endif
         }
 
-        public static System.Reflection.Assembly[] GetLoadedAssemblies()
-        {
-            //TODO: We might need to shim this based on platform compilation, investigate
-            return System.AppDomain.CurrentDomain.GetAssemblies();
-        }
-
         /// <summary>
         ///     Returns a runtime writable folder.
         /// </summary>

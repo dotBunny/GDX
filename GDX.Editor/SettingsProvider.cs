@@ -38,11 +38,12 @@ namespace GDX.Editor
         public static StringKeyDictionary<IConfigSection> ConfigSections = new StringKeyDictionary<IConfigSection>(SectionCount);
 
         public static GDXConfig WorkingConfig;
+        public static string SearchString;
 
         static VisualElement s_ChangesElement;
         static Button s_ClearButton;
         static Button s_SaveButton;
-        static string s_LastKnownSearchString;
+
         static EditorWindow s_ProjectSettingsWindow;
 
         /// <summary>
@@ -229,7 +230,7 @@ namespace GDX.Editor
                             ConfigSectionsProvider.CreateAndBindSectionContent(section);
 
                         contentScrollView.contentContainer.Add(sectionContentBase);
-                        ConfigSectionsProvider.UpdateSectionContent(sectionID, searchContext);
+                        ConfigSectionsProvider.UpdateSectionContent(sectionID);
                     }
                 },
                 keywords = s_SearchKeywords,
@@ -240,24 +241,26 @@ namespace GDX.Editor
                     {
                         s_ProjectSettingsWindow = SettingsService.OpenProjectSettings();
                     }
-                    UpdateForSearch(Reflection.GetFieldValue<string>(
-                        s_ProjectSettingsWindow, "UnityEditor.SettingsWindow", "m_SearchText"));
+                    if (s_ProjectSettingsWindow != null)
+                    {
+                        UpdateForSearch(Reflection.GetFieldValue<string>(
+                            s_ProjectSettingsWindow, "UnityEditor.SettingsWindow", "m_SearchText"));
+                    }
                 }
             };
         }
 
         static void UpdateForSearch(string searchContext)
         {
-            if (s_LastKnownSearchString == searchContext)
+            if (SearchString == searchContext)
                 return;
 
+            SearchString = searchContext;
             int iterator = 0;
             while (ConfigSections.MoveNext(ref iterator, out StringKeyEntry<IConfigSection> item))
             {
-                ConfigSectionsProvider.UpdateSectionContent(item.Value.GetSectionKey(), searchContext);
+                ConfigSectionsProvider.UpdateSectionContent(item.Value.GetSectionKey());
             }
-
-            s_LastKnownSearchString = searchContext;
         }
 
 

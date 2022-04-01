@@ -13,6 +13,10 @@ namespace GDX
     /// <remarks>Torn about the existence of this utility class, yet alone the conditions dictating it.</remarks>
     public static class Reflection
     {
+        public const BindingFlags PrivateFieldFlags = BindingFlags.Instance | BindingFlags.NonPublic;
+        public const BindingFlags PrivateStaticFlags = BindingFlags.Static | BindingFlags.NonPublic;
+        public const BindingFlags PublicStaticFlags = BindingFlags.Static | BindingFlags.Public;
+
         /// <summary>
         ///     Access the field value of a specific <see cref="targetObject"/>, which may not be normally accessible.
         /// </summary>
@@ -23,11 +27,13 @@ namespace GDX
         /// <param name="flags">The field's access flags.</param>
         /// <typeparam name="T">The type of data being read from the field.</typeparam>
         /// <returns>The field's value.</returns>
-        public static T GetFieldValue<T>(object targetObject, string type, string name, BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance)
+        public static T GetFieldValue<T>(object targetObject, string type, string name, BindingFlags flags = PrivateFieldFlags)
         {
-            foreach (Assembly targetAssembly in Platform.GetLoadedAssemblies())
+            Assembly[] loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+            int loadedAssembliesCount = loadedAssemblies.Length;
+            for (int i = 0; i < loadedAssembliesCount; i++)
             {
-                Type targetType = targetAssembly.GetType(type);
+                Type targetType = loadedAssemblies[i].GetType(type);
                 if (targetType == null)
                 {
                     continue;
@@ -36,6 +42,37 @@ namespace GDX
                 return (T)field?.GetValue(targetObject);
             }
             return default;
+        }
+
+        /// <summary>
+        ///     Invokes a known static method.
+        /// </summary>
+        /// <param name="type">The explicit type of the static class.</param>
+        /// <param name="method">The name of the method to invoke.</param>
+        /// <param name="parameters">Any parameters that should be passed to the method?</param>
+        /// <param name="flags">The <see cref="method"/>s' access flags.</param>
+        /// <returns>An <see cref="object"/> of the return value. This can be null.</returns>
+        public static object InvokeStaticMethod(string type, string method, object[] parameters = null,
+            BindingFlags flags = PublicStaticFlags)
+        {
+            Assembly[] loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+            int loadedAssembliesCount = loadedAssemblies.Length;
+            for (int i = 0; i < loadedAssembliesCount; i++)
+            {
+                Type targetType = loadedAssemblies[i].GetType(type);
+                if (targetType == null)
+                {
+                    continue;
+                }
+                MethodInfo targetMethod = targetType.GetMethod(method, flags);
+
+                if (targetMethod != null)
+                {
+                    return targetMethod.Invoke(null, parameters ?? new object[] { });
+                }
+                break;
+            }
+            return null;
         }
     }
 }

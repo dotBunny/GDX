@@ -140,6 +140,7 @@ namespace GDX.Editor.ProjectSettings
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionKey];
             section.SetToggleState(toggleElement, newValue);
+            UpdateSectionContent(sectionKey);
             UpdateSectionHeader(sectionKey);
         }
 
@@ -153,7 +154,7 @@ namespace GDX.Editor.ProjectSettings
             }
         }
 
-        public static void UpdateSectionContent(string sectionKey, string searchContext = null)
+        public static void UpdateSectionContent(string sectionKey)
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionKey];
 
@@ -164,6 +165,7 @@ namespace GDX.Editor.ProjectSettings
             }
 
             VisualElement element = s_ConfigSectionContents[sectionKey];
+            string searchContext = SettingsProvider.SearchString;
 
             if (!string.IsNullOrEmpty(searchContext) && !section.GetSearchKeywords().PartialMatch(searchContext))
             {
