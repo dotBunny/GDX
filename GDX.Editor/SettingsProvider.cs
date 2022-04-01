@@ -43,6 +43,7 @@ namespace GDX.Editor
         static Button s_ClearButton;
         static Button s_SaveButton;
         static string s_LastKnownSearchString;
+        static EditorWindow s_ProjectSettingsWindow;
 
         /// <summary>
         ///     Get <see cref="UnityEditor.SettingsProvider" /> for GDX assembly.
@@ -232,10 +233,15 @@ namespace GDX.Editor
                     }
                 },
                 keywords = s_SearchKeywords,
-                hasSearchInterestHandler = (searchString) =>
+                hasSearchInterestHandler = (searchString) => s_SearchKeywords.PartialMatch(searchString),
+                inspectorUpdateHandler = () =>
                 {
-                    UpdateForSearch(searchString);
-                    return s_SearchKeywords.PartialMatch(searchString);
+                    if (s_ProjectSettingsWindow == null)
+                    {
+                        s_ProjectSettingsWindow = SettingsService.OpenProjectSettings();
+                    }
+                    UpdateForSearch(Reflection.GetFieldValue<string>(
+                        s_ProjectSettingsWindow, "UnityEditor.SettingsWindow", "m_SearchText"));
                 }
             };
         }
@@ -254,12 +260,6 @@ namespace GDX.Editor
             s_LastKnownSearchString = searchContext;
         }
 
-        static string GetSearchString()
-        {
-
-            EditorWindow window = SettingsService.OpenProjectSettings();
-            return Reflection.GetFieldValue<string>(window, "m_SearchText");
-        }
 
         static VisualElement GetPackageStatus(string package, bool status)
         {

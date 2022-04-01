@@ -156,6 +156,13 @@ namespace GDX.Editor.ProjectSettings
         public static void UpdateSectionContent(string sectionKey, string searchContext = null)
         {
             IConfigSection section = SettingsProvider.ConfigSections[sectionKey];
+
+            // This can happen due to the order of how events fire.
+            if (!s_ConfigSectionContents.ContainsKey(sectionKey))
+            {
+                return;
+            }
+
             VisualElement element = s_ConfigSectionContents[sectionKey];
 
             if (!string.IsNullOrEmpty(searchContext) && !section.GetSearchKeywords().PartialMatch(searchContext))
