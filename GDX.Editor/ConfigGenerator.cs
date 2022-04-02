@@ -12,7 +12,6 @@ namespace GDX.Editor
         const string k_CoreConfigPath = "GDX.Config";
         public static string Build(TransientConfig rhs)
         {
-            TransientConfig lhs = new TransientConfig(true);
             Developer.TextGenerator code = new Developer.TextGenerator("    ", "{", "}");
 
             // Start header
@@ -28,54 +27,54 @@ namespace GDX.Editor
             code.PushIndent();
 
             AddToGenerator(code, "ConfigOutputPath",
-                lhs.ConfigOutputPath, rhs.ConfigOutputPath);
+                ConfigDefaults.ConfigOutputPath, rhs.ConfigOutputPath);
             AddToGenerator(code, "UpdateProviderCheckForUpdates",
-                lhs.UpdateProviderCheckForUpdates, rhs.UpdateProviderCheckForUpdates);
+                ConfigDefaults.UpdateProviderCheckForUpdates, rhs.UpdateProviderCheckForUpdates);
             AddToGenerator(code, "DeveloperCommandLineParserArgumentPrefix",
-                lhs.DeveloperCommandLineParserArgumentPrefix, rhs.DeveloperCommandLineParserArgumentPrefix);
+                ConfigDefaults.DeveloperCommandLineParserArgumentPrefix, rhs.DeveloperCommandLineParserArgumentPrefix);
             AddToGenerator(code, "DeveloperCommandLineParserArgumentSplit",
-                lhs.DeveloperCommandLineParserArgumentSplit, rhs.DeveloperCommandLineParserArgumentSplit);
+                ConfigDefaults.DeveloperCommandLineParserArgumentSplit, rhs.DeveloperCommandLineParserArgumentSplit);
             AddToGenerator(code, "DeveloperBuildInfoAssemblyDefinition",
-                lhs.DeveloperBuildInfoAssemblyDefinition, rhs.DeveloperBuildInfoAssemblyDefinition);
+                ConfigDefaults.DeveloperBuildInfoAssemblyDefinition, rhs.DeveloperBuildInfoAssemblyDefinition);
             AddToGenerator(code, "DeveloperBuildInfoEnabled",
-                lhs.DeveloperBuildInfoEnabled, rhs.DeveloperBuildInfoEnabled);
+                ConfigDefaults.DeveloperBuildInfoEnabled, rhs.DeveloperBuildInfoEnabled);
             AddToGenerator(code, "DeveloperBuildInfoPath",
-                lhs.DeveloperBuildInfoPath, rhs.DeveloperBuildInfoPath);
+                ConfigDefaults.DeveloperBuildInfoPath, rhs.DeveloperBuildInfoPath);
             AddToGenerator(code, "DeveloperBuildInfoNamespace",
-                lhs.DeveloperBuildInfoNamespace, rhs.DeveloperBuildInfoNamespace);
+                ConfigDefaults.DeveloperBuildInfoNamespace, rhs.DeveloperBuildInfoNamespace);
             AddToGenerator(code, "DeveloperBuildInfoBuildNumberArgument",
-                lhs.DeveloperBuildInfoBuildNumberArgument, rhs.DeveloperBuildInfoBuildNumberArgument);
+                ConfigDefaults.DeveloperBuildInfoBuildNumberArgument, rhs.DeveloperBuildInfoBuildNumberArgument);
             AddToGenerator(code, "DeveloperBuildInfoBuildDescriptionArgument",
-                lhs.DeveloperBuildInfoBuildDescriptionArgument, rhs.DeveloperBuildInfoBuildDescriptionArgument);
+                ConfigDefaults.DeveloperBuildInfoBuildDescriptionArgument, rhs.DeveloperBuildInfoBuildDescriptionArgument);
             AddToGenerator(code, "DeveloperBuildInfoBuildChangelistArgument",
-                lhs.DeveloperBuildInfoBuildChangelistArgument, rhs.DeveloperBuildInfoBuildChangelistArgument);
+                ConfigDefaults.DeveloperBuildInfoBuildChangelistArgument, rhs.DeveloperBuildInfoBuildChangelistArgument);
             AddToGenerator(code, "DeveloperBuildInfoBuildTaskArgument",
-                lhs.DeveloperBuildInfoBuildTaskArgument, rhs.DeveloperBuildInfoBuildTaskArgument);
+                ConfigDefaults.DeveloperBuildInfoBuildTaskArgument, rhs.DeveloperBuildInfoBuildTaskArgument);
             AddToGenerator(code, "DeveloperBuildInfoBuildStreamArgument",
-                lhs.DeveloperBuildInfoBuildStreamArgument, rhs.DeveloperBuildInfoBuildStreamArgument);
+                ConfigDefaults.DeveloperBuildInfoBuildStreamArgument, rhs.DeveloperBuildInfoBuildStreamArgument);
             AddToGenerator(code, "EnvironmentScriptingDefineSymbol",
-                lhs.EnvironmentScriptingDefineSymbol, rhs.EnvironmentScriptingDefineSymbol);
+                ConfigDefaults.EnvironmentScriptingDefineSymbol, rhs.EnvironmentScriptingDefineSymbol);
 
             AddToGenerator(code, "PlatformAutomationFolder",
-                lhs.PlatformAutomationFolder, rhs.PlatformAutomationFolder);
+                ConfigDefaults.PlatformAutomationFolder, rhs.PlatformAutomationFolder);
             AddToGenerator(code, "PlatformCacheFolder",
-                lhs.PlatformCacheFolder, rhs.PlatformCacheFolder);
+                ConfigDefaults.PlatformCacheFolder, rhs.PlatformCacheFolder);
 
             AddToGenerator(code, "TraceDevelopmentLevels",
-                lhs.TraceDevelopmentLevels, rhs.TraceDevelopmentLevels);
+                ConfigDefaults.TraceDevelopmentLevels, rhs.TraceDevelopmentLevels);
             AddToGenerator(code, "TraceDebugLevels",
-                lhs.TraceDebugLevels, rhs.TraceDebugLevels);
+                ConfigDefaults.TraceDebugLevels, rhs.TraceDebugLevels);
             AddToGenerator(code, "TraceReleaseLevels",
-                lhs.TraceReleaseLevels, rhs.TraceReleaseLevels);
+                ConfigDefaults.TraceReleaseLevels, rhs.TraceReleaseLevels);
 
             AddToGenerator(code, "TraceDevelopmentOutputToUnityConsole",
-                lhs.TraceDevelopmentOutputToUnityConsole, rhs.TraceDevelopmentOutputToUnityConsole);
+                ConfigDefaults.TraceDevelopmentOutputToUnityConsole, rhs.TraceDevelopmentOutputToUnityConsole);
             AddToGenerator(code, "TraceDebugOutputToUnityConsole",
-                lhs.TraceDebugOutputToUnityConsole, rhs.TraceDebugOutputToUnityConsole);
+                ConfigDefaults.TraceDebugOutputToUnityConsole, rhs.TraceDebugOutputToUnityConsole);
             AddToGenerator(code, "LocalizationSetDefaultCulture",
-                lhs.LocalizationSetDefaultCulture, rhs.LocalizationSetDefaultCulture);
+                ConfigDefaults.LocalizationSetDefaultCulture, rhs.LocalizationSetDefaultCulture);
             AddToGenerator(code, "LocalizationDefaultCulture",
-                lhs.LocalizationDefaultCulture, rhs.LocalizationDefaultCulture);
+                ConfigDefaults.LocalizationDefaultCulture, rhs.LocalizationDefaultCulture);
 
             return code.ToString();
         }
