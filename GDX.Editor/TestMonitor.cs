@@ -25,7 +25,7 @@ namespace GDX.Editor
                 return;
             }
 
-            m_CachedTempFolder = Platform.GetOutputFolder(GDXConfig.PlatformAutomationFolder);
+            m_CachedTempFolder = Platform.GetOutputFolder(Config.PlatformAutomationFolder);
             if (Application.isBatchMode)
             {
                 Automation.StashWindowLayout();

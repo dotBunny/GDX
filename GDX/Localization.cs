@@ -220,7 +220,7 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Sets the current threads culture to a defined setting in <see cref="GDXConfig" />.
+        ///     Sets the current threads culture to a defined setting in <see cref="Config" />.
         /// </summary>
         /// <remarks>
         ///     Can be used to avoid issues with culture settings without a Gregorian Calendar. Configurable to automatically
@@ -228,9 +228,9 @@ namespace GDX
         /// </remarks>
         public static void SetDefaultCulture()
         {
-            if (GDXConfig.LocalizationSetDefaultCulture && GetSystemLanguage() == Language.Default)
+            if (Config.LocalizationSetDefaultCulture && GetSystemLanguage() == Language.Default)
             {
-                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(GDXConfig.LocalizationDefaultCulture.GetIETF_BCP47());
+                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(Config.LocalizationDefaultCulture.GetIETF_BCP47());
             }
         }
     }

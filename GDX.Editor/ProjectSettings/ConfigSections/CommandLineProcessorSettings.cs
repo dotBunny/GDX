@@ -23,11 +23,11 @@ namespace GDX.Editor.ProjectSettings
             m_RootElement = rootElement;
 
             m_TextArgumentPrefix = m_RootElement.Q<TextField>("text-argument-prefix");
-            m_TextArgumentPrefix.value = SettingsProvider.WorkingTransientConfig.DeveloperCommandLineParserArgumentPrefix;
+            m_TextArgumentPrefix.value = SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix;
             m_TextArgumentPrefix.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.DeveloperCommandLineParserArgumentPrefix = evt.newValue;
-                if (GDXConfig.DeveloperCommandLineParserArgumentPrefix != evt.newValue)
+                SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix = evt.newValue;
+                if (Config.DeveloperCommandLineParserArgumentPrefix != evt.newValue)
                 {
                     m_TextArgumentPrefix.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -41,11 +41,11 @@ namespace GDX.Editor.ProjectSettings
 
 
             m_TextArgumentSplit = m_RootElement.Q<TextField>("text-argument-split");
-            m_TextArgumentSplit.value = SettingsProvider.WorkingTransientConfig.DeveloperCommandLineParserArgumentSplit;
+            m_TextArgumentSplit.value = SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit;
             m_TextArgumentSplit.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.DeveloperCommandLineParserArgumentSplit = evt.newValue;
-                if (GDXConfig.DeveloperCommandLineParserArgumentSplit != evt.newValue)
+                SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit = evt.newValue;
+                if (Config.DeveloperCommandLineParserArgumentSplit != evt.newValue)
                 {
                     m_TextArgumentSplit.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -113,12 +113,12 @@ namespace GDX.Editor.ProjectSettings
         public void UpdateSectionContent()
         {
             ConfigSectionsProvider.SetClassChangeCheck(m_TextArgumentPrefix,
-                GDXConfig.DeveloperCommandLineParserArgumentPrefix,
-                SettingsProvider.WorkingTransientConfig.DeveloperCommandLineParserArgumentPrefix);
+                Config.DeveloperCommandLineParserArgumentPrefix,
+                SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix);
 
             ConfigSectionsProvider.SetClassChangeCheck(m_TextArgumentSplit,
-                GDXConfig.DeveloperCommandLineParserArgumentSplit,
-                SettingsProvider.WorkingTransientConfig.DeveloperCommandLineParserArgumentSplit);
+                Config.DeveloperCommandLineParserArgumentSplit,
+                SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace GDX.Classic.Editor.Build.Legacy
     ///     <para>
     ///         During the build process a <c>BuildInfo</c> file will be generated containing information passed in
     ///         through commandline arguments (parsed by <see cref="GDX.Developer.CommandLineParser" />). These arguments and
-    ///         their formats are configurable via the <see cref="GDXConfig" />.
+    ///         their formats are configurable via the <see cref="Config" />.
     ///     </para>
     /// </summary>
     /// <remarks>
@@ -82,7 +82,7 @@ namespace GDX.Classic.Editor.Build.Legacy
         /// <param name="report">Build process reported information.</param>
         public void OnPostprocessBuild(BuildReport report)
         {
-            if (!GDXConfig.DeveloperBuildInfoEnabled)
+            if (!Config.DeveloperBuildInfoEnabled)
             {
                 return;
             }
@@ -96,14 +96,14 @@ namespace GDX.Classic.Editor.Build.Legacy
         /// <param name="report">Build process reported information.</param>
         public void OnPreprocessBuild(BuildReport report)
         {
-            if (!GDXConfig.DeveloperBuildInfoEnabled)
+            if (!Config.DeveloperBuildInfoEnabled)
             {
                 return;
             }
 
             try
             {
-                string path = Path.Combine(Application.dataPath, GDXConfig.DeveloperBuildInfoPath);
+                string path = Path.Combine(Application.dataPath, Config.DeveloperBuildInfoPath);
                 Platform.EnsureFileFolderHierarchyExists(path);
                 File.WriteAllText(path, GDX.Editor.Build.BuildInfoProvider.GetContent(false, "Legacy"));
 

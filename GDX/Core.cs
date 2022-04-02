@@ -14,7 +14,7 @@ namespace GDX
 {
     public static class Core
     {
-        public const string OverrideClass = "GDXSettings";
+        public const string OverrideClass = "CustomConfig";
         public const string OverrideMethod = "Init";
         public const string PerformanceCategory = "GDX.Performance";
         public const string TestCategory = "GDX.Tests";

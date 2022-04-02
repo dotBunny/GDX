@@ -76,17 +76,17 @@ namespace GDX
             [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            if (!GDXConfig.TraceDevelopmentLevels.HasFlags(level))
+            if (!Config.TraceDevelopmentLevels.HasFlags(level))
             {
                 return;
             }
 #elif DEBUG
-            if (!GDXConfig.traceDebugLevels.HasFlags(level))
+            if (!Config.traceDebugLevels.HasFlags(level))
             {
                 return;
             }
 #else
-            if (!GDXConfig.TraceReleaseLevels.HasFlags(level))
+            if (!Config.TraceReleaseLevels.HasFlags(level))
             {
                 return;
             }
@@ -108,12 +108,12 @@ namespace GDX
 
             // Is outputting to the Unity console enabled?
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            if (!GDXConfig.TraceDevelopmentOutputToUnityConsole)
+            if (!Config.TraceDevelopmentOutputToUnityConsole)
             {
                 return;
             }
 #elif DEBUG
-            if (!GDXConfig.traceDebugOutputToUnityConsole)
+            if (!Config.traceDebugOutputToUnityConsole)
             {
                 return;
             }

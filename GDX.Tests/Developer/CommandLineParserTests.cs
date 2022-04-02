@@ -18,8 +18,8 @@ namespace GDX.Developer
         {
             m_MockData = new[]
             {
-                $"{GDXConfig.DeveloperCommandLineParserArgumentPrefix}KEY{GDXConfig.DeveloperCommandLineParserArgumentSplit}Value",
-                "job", $"{GDXConfig.DeveloperCommandLineParserArgumentPrefix}SOMETHING"
+                $"{Config.DeveloperCommandLineParserArgumentPrefix}KEY{Config.DeveloperCommandLineParserArgumentSplit}Value",
+                "job", $"{Config.DeveloperCommandLineParserArgumentPrefix}SOMETHING"
             };
         }
 

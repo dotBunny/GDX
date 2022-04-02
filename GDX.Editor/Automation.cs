@@ -21,7 +21,7 @@ namespace GDX.Editor
 
         static string LayoutStashPath()
         {
-            return Path.Combine(Application.dataPath, "..", "GDX.layout");
+            return Path.Combine(Application.dataPath, "..", Config.PlatformAutomationFolder, "GDX.layout");
         }
         /// <summary>
         /// Capture a <see cref="Texture2D"/> of the designated <see cref="EditorWindow"/>.
@@ -144,7 +144,7 @@ namespace GDX.Editor
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ClearTempFolder(bool deleteFolder = false)
         {
-            string path = Platform.GetOutputFolder(GDXConfig.PlatformAutomationFolder);
+            string path = Platform.GetOutputFolder(Config.PlatformAutomationFolder);
             if (!Directory.Exists(path))
             {
                 return;

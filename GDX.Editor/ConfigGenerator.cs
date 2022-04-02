@@ -2,20 +2,23 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace GDX.Editor
 {
-    public static class SettingsGenerator
+    public static class ConfigGenerator
     {
-        const string k_CoreConfigPath = "GDXConfig";
+        const string k_CoreConfigPath = "GDX.Config";
         public static string Build(TransientConfig rhs)
         {
+            TransientConfig lhs = new TransientConfig(true);
             Developer.TextGenerator code = new Developer.TextGenerator("    ", "{", "}");
 
             // Start header
             code.AppendLine("// Generated file of difference from default config.");
             code.AppendLine("// ReSharper disable All");
+            code.AppendLine("#pragma warning disable");
             code.AppendLine("namespace GDX");
             code.PushIndent();
             code.AppendLine($"public class {Core.OverrideClass}");
@@ -25,57 +28,56 @@ namespace GDX.Editor
             code.PushIndent();
 
             AddToGenerator(code, "ConfigOutputPath",
-                GDXConfig.ConfigOutputPath, rhs.ConfigOutputPath);
+                lhs.ConfigOutputPath, rhs.ConfigOutputPath);
             AddToGenerator(code, "UpdateProviderCheckForUpdates",
-                GDXConfig.UpdateProviderCheckForUpdates, rhs.UpdateProviderCheckForUpdates);
+                lhs.UpdateProviderCheckForUpdates, rhs.UpdateProviderCheckForUpdates);
             AddToGenerator(code, "DeveloperCommandLineParserArgumentPrefix",
-                GDXConfig.DeveloperCommandLineParserArgumentPrefix, rhs.DeveloperCommandLineParserArgumentPrefix);
+                lhs.DeveloperCommandLineParserArgumentPrefix, rhs.DeveloperCommandLineParserArgumentPrefix);
             AddToGenerator(code, "DeveloperCommandLineParserArgumentSplit",
-                GDXConfig.DeveloperCommandLineParserArgumentSplit, rhs.DeveloperCommandLineParserArgumentSplit);
+                lhs.DeveloperCommandLineParserArgumentSplit, rhs.DeveloperCommandLineParserArgumentSplit);
             AddToGenerator(code, "DeveloperBuildInfoAssemblyDefinition",
-                GDXConfig.DeveloperBuildInfoAssemblyDefinition, rhs.DeveloperBuildInfoAssemblyDefinition);
+                lhs.DeveloperBuildInfoAssemblyDefinition, rhs.DeveloperBuildInfoAssemblyDefinition);
             AddToGenerator(code, "DeveloperBuildInfoEnabled",
-                GDXConfig.DeveloperBuildInfoEnabled, rhs.DeveloperBuildInfoEnabled);
+                lhs.DeveloperBuildInfoEnabled, rhs.DeveloperBuildInfoEnabled);
             AddToGenerator(code, "DeveloperBuildInfoPath",
-                GDXConfig.DeveloperBuildInfoPath, rhs.DeveloperBuildInfoPath);
+                lhs.DeveloperBuildInfoPath, rhs.DeveloperBuildInfoPath);
             AddToGenerator(code, "DeveloperBuildInfoNamespace",
-                GDXConfig.DeveloperBuildInfoNamespace, rhs.DeveloperBuildInfoNamespace);
+                lhs.DeveloperBuildInfoNamespace, rhs.DeveloperBuildInfoNamespace);
             AddToGenerator(code, "DeveloperBuildInfoBuildNumberArgument",
-                GDXConfig.DeveloperBuildInfoBuildNumberArgument, rhs.DeveloperBuildInfoBuildNumberArgument);
+                lhs.DeveloperBuildInfoBuildNumberArgument, rhs.DeveloperBuildInfoBuildNumberArgument);
             AddToGenerator(code, "DeveloperBuildInfoBuildDescriptionArgument",
-                GDXConfig.DeveloperBuildInfoBuildDescriptionArgument, rhs.DeveloperBuildInfoBuildDescriptionArgument);
+                lhs.DeveloperBuildInfoBuildDescriptionArgument, rhs.DeveloperBuildInfoBuildDescriptionArgument);
             AddToGenerator(code, "DeveloperBuildInfoBuildChangelistArgument",
-                GDXConfig.DeveloperBuildInfoBuildChangelistArgument, rhs.DeveloperBuildInfoBuildChangelistArgument);
+                lhs.DeveloperBuildInfoBuildChangelistArgument, rhs.DeveloperBuildInfoBuildChangelistArgument);
             AddToGenerator(code, "DeveloperBuildInfoBuildTaskArgument",
-                GDXConfig.DeveloperBuildInfoBuildTaskArgument, rhs.DeveloperBuildInfoBuildTaskArgument);
+                lhs.DeveloperBuildInfoBuildTaskArgument, rhs.DeveloperBuildInfoBuildTaskArgument);
             AddToGenerator(code, "DeveloperBuildInfoBuildStreamArgument",
-                GDXConfig.DeveloperBuildInfoBuildStreamArgument, rhs.DeveloperBuildInfoBuildStreamArgument);
+                lhs.DeveloperBuildInfoBuildStreamArgument, rhs.DeveloperBuildInfoBuildStreamArgument);
             AddToGenerator(code, "EnvironmentScriptingDefineSymbol",
-                GDXConfig.EnvironmentScriptingDefineSymbol, rhs.EnvironmentScriptingDefineSymbol);
+                lhs.EnvironmentScriptingDefineSymbol, rhs.EnvironmentScriptingDefineSymbol);
 
             AddToGenerator(code, "PlatformAutomationFolder",
-                GDXConfig.PlatformAutomationFolder, rhs.PlatformAutomationFolder);
+                lhs.PlatformAutomationFolder, rhs.PlatformAutomationFolder);
             AddToGenerator(code, "PlatformCacheFolder",
-                GDXConfig.PlatformCacheFolder, rhs.PlatformCacheFolder);
+                lhs.PlatformCacheFolder, rhs.PlatformCacheFolder);
 
             AddToGenerator(code, "TraceDevelopmentLevels",
-                GDXConfig.TraceDevelopmentLevels, rhs.TraceDevelopmentLevels);
+                lhs.TraceDevelopmentLevels, rhs.TraceDevelopmentLevels);
             AddToGenerator(code, "TraceDebugLevels",
-                GDXConfig.TraceDebugLevels, rhs.TraceDebugLevels);
+                lhs.TraceDebugLevels, rhs.TraceDebugLevels);
             AddToGenerator(code, "TraceReleaseLevels",
-                GDXConfig.TraceReleaseLevels, rhs.TraceReleaseLevels);
+                lhs.TraceReleaseLevels, rhs.TraceReleaseLevels);
 
             AddToGenerator(code, "TraceDevelopmentOutputToUnityConsole",
-                GDXConfig.TraceDevelopmentOutputToUnityConsole, rhs.TraceDevelopmentOutputToUnityConsole);
+                lhs.TraceDevelopmentOutputToUnityConsole, rhs.TraceDevelopmentOutputToUnityConsole);
             AddToGenerator(code, "TraceDebugOutputToUnityConsole",
-                GDXConfig.TraceDebugOutputToUnityConsole, rhs.TraceDebugOutputToUnityConsole);
+                lhs.TraceDebugOutputToUnityConsole, rhs.TraceDebugOutputToUnityConsole);
             AddToGenerator(code, "LocalizationSetDefaultCulture",
-                GDXConfig.LocalizationSetDefaultCulture, rhs.LocalizationSetDefaultCulture);
+                lhs.LocalizationSetDefaultCulture, rhs.LocalizationSetDefaultCulture);
             AddToGenerator(code, "LocalizationDefaultCulture",
-                GDXConfig.LocalizationDefaultCulture, rhs.LocalizationDefaultCulture);
+                lhs.LocalizationDefaultCulture, rhs.LocalizationDefaultCulture);
 
             return code.ToString();
-
         }
 
         static void AddToGenerator(Developer.TextGenerator code, string member, bool lhs, bool rhs)

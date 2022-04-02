@@ -62,11 +62,11 @@ namespace GDX.Editor.ProjectSettings
             m_RootElement = rootElement;
 
             m_ToggleEnsureSymbol = m_RootElement.Q<Toggle>("toggle-ensure-symbol");
-            m_ToggleEnsureSymbol.value = SettingsProvider.WorkingTransientConfig.EnvironmentScriptingDefineSymbol;
+            m_ToggleEnsureSymbol.value = SettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol;
             m_ToggleEnsureSymbol.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.EnvironmentScriptingDefineSymbol = evt.newValue;
-                if (GDXConfig.EnvironmentScriptingDefineSymbol != evt.newValue)
+                SettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol = evt.newValue;
+                if (Config.EnvironmentScriptingDefineSymbol != evt.newValue)
                 {
                     m_ToggleEnsureSymbol.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -79,11 +79,11 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_ToggleDevelopmentConsole = m_RootElement.Q<Toggle>("toggle-console-development");
-            m_ToggleDevelopmentConsole.value = SettingsProvider.WorkingTransientConfig.TraceDevelopmentOutputToUnityConsole;
+            m_ToggleDevelopmentConsole.value = SettingsProvider.WorkingConfig.TraceDevelopmentOutputToUnityConsole;
             m_ToggleDevelopmentConsole.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.TraceDevelopmentOutputToUnityConsole = evt.newValue;
-                if (GDXConfig.TraceDevelopmentOutputToUnityConsole != evt.newValue)
+                SettingsProvider.WorkingConfig.TraceDevelopmentOutputToUnityConsole = evt.newValue;
+                if (Config.TraceDevelopmentOutputToUnityConsole != evt.newValue)
                 {
                     m_ToggleDevelopmentConsole.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -94,11 +94,11 @@ namespace GDX.Editor.ProjectSettings
                 SettingsProvider.CheckForChanges();
             });
             m_ToggleDebugConsole = m_RootElement.Q<Toggle>("toggle-console-debug");
-            m_ToggleDebugConsole.value = SettingsProvider.WorkingTransientConfig.TraceDebugOutputToUnityConsole;
+            m_ToggleDebugConsole.value = SettingsProvider.WorkingConfig.TraceDebugOutputToUnityConsole;
             m_ToggleDebugConsole.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.TraceDebugOutputToUnityConsole = evt.newValue;
-                if (GDXConfig.TraceDebugOutputToUnityConsole != evt.newValue)
+                SettingsProvider.WorkingConfig.TraceDebugOutputToUnityConsole = evt.newValue;
+                if (Config.TraceDebugOutputToUnityConsole != evt.newValue)
                 {
                     m_ToggleDebugConsole.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -118,11 +118,11 @@ namespace GDX.Editor.ProjectSettings
 #else
             SetMaskFieldValues(m_MaskDevelopment);
 #endif
-            m_MaskDevelopment.value = (int)SettingsProvider.WorkingTransientConfig.TraceDevelopmentLevels;
+            m_MaskDevelopment.value = (int)SettingsProvider.WorkingConfig.TraceDevelopmentLevels;
             m_MaskDevelopment.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.TraceDevelopmentLevels = (Trace.TraceLevel)evt.newValue;
-                if (GDXConfig.TraceDevelopmentLevels != (Trace.TraceLevel)evt.newValue)
+                SettingsProvider.WorkingConfig.TraceDevelopmentLevels = (Trace.TraceLevel)evt.newValue;
+                if (Config.TraceDevelopmentLevels != (Trace.TraceLevel)evt.newValue)
                 {
                     m_MaskDevelopment.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -140,11 +140,11 @@ namespace GDX.Editor.ProjectSettings
 #else
             SetMaskFieldValues(m_MaskDebug);
 #endif
-            m_MaskDebug.value = (int)SettingsProvider.WorkingTransientConfig.TraceDebugLevels;
+            m_MaskDebug.value = (int)SettingsProvider.WorkingConfig.TraceDebugLevels;
             m_MaskDebug.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.TraceDebugLevels = (Trace.TraceLevel)evt.newValue;
-                if (GDXConfig.TraceDebugLevels != (Trace.TraceLevel)evt.newValue)
+                SettingsProvider.WorkingConfig.TraceDebugLevels = (Trace.TraceLevel)evt.newValue;
+                if (Config.TraceDebugLevels != (Trace.TraceLevel)evt.newValue)
                 {
                     m_MaskDebug.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -162,11 +162,11 @@ namespace GDX.Editor.ProjectSettings
 #else
             SetMaskFieldValues(m_MaskRelease);
 #endif
-            m_MaskRelease.value = (int)SettingsProvider.WorkingTransientConfig.TraceReleaseLevels;
+            m_MaskRelease.value = (int)SettingsProvider.WorkingConfig.TraceReleaseLevels;
             m_MaskRelease.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.TraceReleaseLevels = (Trace.TraceLevel)evt.newValue;
-                if (GDXConfig.TraceReleaseLevels != (Trace.TraceLevel)evt.newValue)
+                SettingsProvider.WorkingConfig.TraceReleaseLevels = (Trace.TraceLevel)evt.newValue;
+                if (Config.TraceReleaseLevels != (Trace.TraceLevel)evt.newValue)
                 {
                     m_MaskRelease.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -235,28 +235,28 @@ namespace GDX.Editor.ProjectSettings
         public void UpdateSectionContent()
         {
             ConfigSectionsProvider.SetStructChangeCheck(m_ToggleEnsureSymbol,
-                GDXConfig.EnvironmentScriptingDefineSymbol,
-                SettingsProvider.WorkingTransientConfig.EnvironmentScriptingDefineSymbol);
+                Config.EnvironmentScriptingDefineSymbol,
+                SettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol);
 
             ConfigSectionsProvider.SetMaskChangeCheck(m_MaskDevelopment,
-                (int)GDXConfig.TraceDevelopmentLevels,
-                (int)SettingsProvider.WorkingTransientConfig.TraceDevelopmentLevels);
+                (int)Config.TraceDevelopmentLevels,
+                (int)SettingsProvider.WorkingConfig.TraceDevelopmentLevels);
 
             ConfigSectionsProvider.SetStructChangeCheck(m_ToggleDevelopmentConsole,
-                GDXConfig.TraceDevelopmentOutputToUnityConsole,
-                SettingsProvider.WorkingTransientConfig.TraceDevelopmentOutputToUnityConsole);
+                Config.TraceDevelopmentOutputToUnityConsole,
+                SettingsProvider.WorkingConfig.TraceDevelopmentOutputToUnityConsole);
 
             ConfigSectionsProvider.SetMaskChangeCheck(m_MaskDebug,
-                (int)GDXConfig.TraceDebugLevels,
-                (int)SettingsProvider.WorkingTransientConfig.TraceDebugLevels);
+                (int)Config.TraceDebugLevels,
+                (int)SettingsProvider.WorkingConfig.TraceDebugLevels);
 
             ConfigSectionsProvider.SetStructChangeCheck(m_ToggleDebugConsole,
-                GDXConfig.TraceDebugOutputToUnityConsole,
-                SettingsProvider.WorkingTransientConfig.TraceDebugOutputToUnityConsole);
+                Config.TraceDebugOutputToUnityConsole,
+                SettingsProvider.WorkingConfig.TraceDebugOutputToUnityConsole);
 
             ConfigSectionsProvider.SetMaskChangeCheck(m_MaskRelease,
-                (int)GDXConfig.TraceReleaseLevels,
-                (int)SettingsProvider.WorkingTransientConfig.TraceReleaseLevels);
+                (int)Config.TraceReleaseLevels,
+                (int)SettingsProvider.WorkingConfig.TraceReleaseLevels);
         }
     }
 }

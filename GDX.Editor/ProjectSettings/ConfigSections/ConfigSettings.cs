@@ -23,11 +23,11 @@ namespace GDX.Editor.ProjectSettings
 
             m_TextOutputFolder = m_RootElement.Q<TextField>("text-output-path");
 
-            m_TextOutputFolder.SetValueWithoutNotify(GDXConfig.ConfigOutputPath);
+            m_TextOutputFolder.SetValueWithoutNotify(Config.ConfigOutputPath);
             m_TextOutputFolder.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.ConfigOutputPath = evt.newValue;
-                if (GDXConfig.ConfigOutputPath != evt.newValue)
+                SettingsProvider.WorkingConfig.ConfigOutputPath = evt.newValue;
+                if (Config.ConfigOutputPath != evt.newValue)
                 {
                     m_TextOutputFolder.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -93,8 +93,8 @@ namespace GDX.Editor.ProjectSettings
         /// <inheritdoc />
         public void UpdateSectionContent()
         {
-            ConfigSectionsProvider.SetClassChangeCheck(m_TextOutputFolder, GDXConfig.ConfigOutputPath,
-                SettingsProvider.WorkingTransientConfig.ConfigOutputPath);
+            ConfigSectionsProvider.SetClassChangeCheck(m_TextOutputFolder, Config.ConfigOutputPath,
+                SettingsProvider.WorkingConfig.ConfigOutputPath);
         }
     }
 }

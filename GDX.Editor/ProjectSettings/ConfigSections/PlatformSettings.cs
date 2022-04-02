@@ -23,11 +23,11 @@ namespace GDX.Editor.ProjectSettings
             m_RootElement = rootElement;
 
             m_TextAutomationFolder = m_RootElement.Q<TextField>("text-automation-folder");
-            m_TextAutomationFolder.SetValueWithoutNotify(GDXConfig.PlatformAutomationFolder);
+            m_TextAutomationFolder.SetValueWithoutNotify(Config.PlatformAutomationFolder);
             m_TextAutomationFolder.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.PlatformAutomationFolder = evt.newValue;
-                if (GDXConfig.PlatformAutomationFolder != evt.newValue)
+                SettingsProvider.WorkingConfig.PlatformAutomationFolder = evt.newValue;
+                if (Config.PlatformAutomationFolder != evt.newValue)
                 {
                     m_TextAutomationFolder.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -40,11 +40,11 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_TextCacheFolder = m_RootElement.Q<TextField>("text-cache-folder");
-            m_TextCacheFolder.SetValueWithoutNotify(GDXConfig.PlatformCacheFolder);
+            m_TextCacheFolder.SetValueWithoutNotify(Config.PlatformCacheFolder);
             m_TextCacheFolder.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.PlatformCacheFolder = evt.newValue;
-                if (GDXConfig.PlatformCacheFolder != evt.newValue)
+                SettingsProvider.WorkingConfig.PlatformCacheFolder = evt.newValue;
+                if (Config.PlatformCacheFolder != evt.newValue)
                 {
                     m_TextCacheFolder.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -110,10 +110,10 @@ namespace GDX.Editor.ProjectSettings
         /// <inheritdoc />
         public void UpdateSectionContent()
         {
-            ConfigSectionsProvider.SetClassChangeCheck(m_TextAutomationFolder, GDXConfig.PlatformAutomationFolder,
-                SettingsProvider.WorkingTransientConfig.PlatformAutomationFolder);
-            ConfigSectionsProvider.SetClassChangeCheck(m_TextCacheFolder, GDXConfig.PlatformCacheFolder,
-                SettingsProvider.WorkingTransientConfig.PlatformCacheFolder);
+            ConfigSectionsProvider.SetClassChangeCheck(m_TextAutomationFolder, Config.PlatformAutomationFolder,
+                SettingsProvider.WorkingConfig.PlatformAutomationFolder);
+            ConfigSectionsProvider.SetClassChangeCheck(m_TextCacheFolder, Config.PlatformCacheFolder,
+                SettingsProvider.WorkingConfig.PlatformCacheFolder);
         }
     }
 }

@@ -48,17 +48,17 @@ namespace GDX.Editor.ProjectSettings
                 m_ButtonCreate.clicked += () =>
                 {
                     Build.BuildInfoProvider.WriteDefaultFile();
-                    AssetDatabase.ImportAsset("Assets/" + GDXConfig.DeveloperBuildInfoPath);
+                    AssetDatabase.ImportAsset("Assets/" + Config.DeveloperBuildInfoPath);
                 };
             }
 
 
             m_TextOutputPath = m_RootElement.Q<TextField>("text-output-path");
-            m_TextOutputPath.value = SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoPath;
+            m_TextOutputPath.value = SettingsProvider.WorkingConfig.DeveloperBuildInfoPath;
             m_TextOutputPath.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoPath = evt.newValue;
-                if (GDXConfig.DeveloperCommandLineParserArgumentPrefix != evt.newValue)
+                SettingsProvider.WorkingConfig.DeveloperBuildInfoPath = evt.newValue;
+                if (Config.DeveloperCommandLineParserArgumentPrefix != evt.newValue)
                 {
                     m_TextOutputPath.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -72,11 +72,11 @@ namespace GDX.Editor.ProjectSettings
 
 
             m_TextNamespace = m_RootElement.Q<TextField>("text-namespace");
-            m_TextNamespace.value = SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoNamespace;
+            m_TextNamespace.value = SettingsProvider.WorkingConfig.DeveloperBuildInfoNamespace;
             m_TextNamespace.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoNamespace = evt.newValue;
-                if (GDXConfig.DeveloperBuildInfoNamespace != evt.newValue)
+                SettingsProvider.WorkingConfig.DeveloperBuildInfoNamespace = evt.newValue;
+                if (Config.DeveloperBuildInfoNamespace != evt.newValue)
                 {
                     m_TextNamespace.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -89,11 +89,11 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_ToggleAssemblyDefinition = m_RootElement.Q<Toggle>("toggle-assembly-definition");
-            m_ToggleAssemblyDefinition.value = SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoAssemblyDefinition;
+            m_ToggleAssemblyDefinition.value = SettingsProvider.WorkingConfig.DeveloperBuildInfoAssemblyDefinition;
             m_ToggleAssemblyDefinition.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoAssemblyDefinition = evt.newValue;
-                if (GDXConfig.DeveloperBuildInfoAssemblyDefinition != evt.newValue)
+                SettingsProvider.WorkingConfig.DeveloperBuildInfoAssemblyDefinition = evt.newValue;
+                if (Config.DeveloperBuildInfoAssemblyDefinition != evt.newValue)
                 {
                     m_ToggleAssemblyDefinition.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -107,11 +107,11 @@ namespace GDX.Editor.ProjectSettings
 
 
             m_TextNumber = m_RootElement.Q<TextField>("text-number");
-            m_TextNumber.value = SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoBuildNumberArgument;
+            m_TextNumber.value = SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildNumberArgument;
             m_TextNumber.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoBuildNumberArgument = evt.newValue;
-                if (GDXConfig.DeveloperBuildInfoBuildNumberArgument != evt.newValue)
+                SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildNumberArgument = evt.newValue;
+                if (Config.DeveloperBuildInfoBuildNumberArgument != evt.newValue)
                 {
                     m_TextNumber.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -124,11 +124,11 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_TextDescription = m_RootElement.Q<TextField>("text-description");
-            m_TextDescription.value = SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoBuildDescriptionArgument;
+            m_TextDescription.value = SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildDescriptionArgument;
             m_TextDescription.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoBuildDescriptionArgument = evt.newValue;
-                if (GDXConfig.DeveloperBuildInfoBuildDescriptionArgument != evt.newValue)
+                SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildDescriptionArgument = evt.newValue;
+                if (Config.DeveloperBuildInfoBuildDescriptionArgument != evt.newValue)
                 {
                     m_TextDescription.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -141,11 +141,11 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_TextChangelist = m_RootElement.Q<TextField>("text-changelist");
-            m_TextChangelist.value = SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoBuildChangelistArgument;
+            m_TextChangelist.value = SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildChangelistArgument;
             m_TextChangelist.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoBuildChangelistArgument = evt.newValue;
-                if (GDXConfig.DeveloperBuildInfoBuildChangelistArgument != evt.newValue)
+                SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildChangelistArgument = evt.newValue;
+                if (Config.DeveloperBuildInfoBuildChangelistArgument != evt.newValue)
                 {
                     m_TextChangelist.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -158,11 +158,11 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_TextTask = m_RootElement.Q<TextField>("text-task");
-            m_TextTask.value = SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoBuildTaskArgument;
+            m_TextTask.value = SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildTaskArgument;
             m_TextTask.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoBuildTaskArgument = evt.newValue;
-                if (GDXConfig.DeveloperBuildInfoBuildTaskArgument != evt.newValue)
+                SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildTaskArgument = evt.newValue;
+                if (Config.DeveloperBuildInfoBuildTaskArgument != evt.newValue)
                 {
                     m_TextTask.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -175,11 +175,11 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_TextStream = m_RootElement.Q<TextField>("text-stream");
-            m_TextStream.value = SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoBuildStreamArgument;
+            m_TextStream.value = SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildStreamArgument;
             m_TextStream.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoBuildStreamArgument = evt.newValue;
-                if (GDXConfig.DeveloperBuildInfoBuildStreamArgument != evt.newValue)
+                SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildStreamArgument = evt.newValue;
+                if (Config.DeveloperBuildInfoBuildStreamArgument != evt.newValue)
                 {
                     m_TextStream.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -218,13 +218,13 @@ namespace GDX.Editor.ProjectSettings
         }
         public bool GetToggleState()
         {
-            return SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoEnabled;
+            return SettingsProvider.WorkingConfig.DeveloperBuildInfoEnabled;
         }
 
         public void SetToggleState(VisualElement toggleElement, bool newState)
         {
-            SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoEnabled = newState;
-            if (GDXConfig.DeveloperBuildInfoEnabled != newState)
+            SettingsProvider.WorkingConfig.DeveloperBuildInfoEnabled = newState;
+            if (Config.DeveloperBuildInfoEnabled != newState)
             {
                 toggleElement.AddToClassList(ConfigSectionsProvider.ChangedClass);
             }
@@ -255,7 +255,7 @@ namespace GDX.Editor.ProjectSettings
         void CheckForDisabledContent()
         {
             m_Content?.SetEnabled(GetToggleState());
-            if (File.Exists(Path.Combine(Application.dataPath, GDXConfig.DeveloperBuildInfoPath)))
+            if (File.Exists(Path.Combine(Application.dataPath, Config.DeveloperBuildInfoPath)))
             {
                 m_Notice.AddToClassList(ConfigSectionsProvider.HiddenClass);
             }
@@ -268,36 +268,36 @@ namespace GDX.Editor.ProjectSettings
         public void UpdateSectionContent()
         {
             ConfigSectionsProvider.SetClassChangeCheck(m_TextOutputPath,
-                GDXConfig.DeveloperBuildInfoPath,
-                SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoPath);
+                Config.DeveloperBuildInfoPath,
+                SettingsProvider.WorkingConfig.DeveloperBuildInfoPath);
 
             ConfigSectionsProvider.SetClassChangeCheck(m_TextNamespace,
-                GDXConfig.DeveloperBuildInfoNamespace,
-                SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoNamespace);
+                Config.DeveloperBuildInfoNamespace,
+                SettingsProvider.WorkingConfig.DeveloperBuildInfoNamespace);
 
             ConfigSectionsProvider.SetStructChangeCheck(m_ToggleAssemblyDefinition,
-                GDXConfig.DeveloperBuildInfoAssemblyDefinition,
-                SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoAssemblyDefinition);
+                Config.DeveloperBuildInfoAssemblyDefinition,
+                SettingsProvider.WorkingConfig.DeveloperBuildInfoAssemblyDefinition);
 
             ConfigSectionsProvider.SetClassChangeCheck(m_TextNumber,
-                GDXConfig.DeveloperBuildInfoBuildNumberArgument,
-                SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoBuildNumberArgument);
+                Config.DeveloperBuildInfoBuildNumberArgument,
+                SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildNumberArgument);
 
             ConfigSectionsProvider.SetClassChangeCheck(m_TextDescription,
-                GDXConfig.DeveloperBuildInfoBuildDescriptionArgument,
-                SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoBuildDescriptionArgument);
+                Config.DeveloperBuildInfoBuildDescriptionArgument,
+                SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildDescriptionArgument);
 
             ConfigSectionsProvider.SetClassChangeCheck(m_TextChangelist,
-                GDXConfig.DeveloperBuildInfoBuildChangelistArgument,
-                SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoBuildChangelistArgument);
+                Config.DeveloperBuildInfoBuildChangelistArgument,
+                SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildChangelistArgument);
 
             ConfigSectionsProvider.SetClassChangeCheck(m_TextTask,
-                GDXConfig.DeveloperBuildInfoBuildTaskArgument,
-                SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoBuildTaskArgument);
+                Config.DeveloperBuildInfoBuildTaskArgument,
+                SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildTaskArgument);
 
             ConfigSectionsProvider.SetClassChangeCheck(m_TextStream,
-                GDXConfig.DeveloperBuildInfoBuildStreamArgument,
-                SettingsProvider.WorkingTransientConfig.DeveloperBuildInfoBuildStreamArgument);
+                Config.DeveloperBuildInfoBuildStreamArgument,
+                SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildStreamArgument);
         }
     }
 }

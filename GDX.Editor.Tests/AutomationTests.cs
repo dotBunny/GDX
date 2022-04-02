@@ -29,7 +29,7 @@ namespace GDX.Editor
         [Category(Core.TestCategory)]
         public void CaptureEditorWindowToPNG_SceneView_OutputsImage()
         {
-            string outputPath = Platform.GetUniqueOutputFilePath("CaptureEditorWindowToPNG_SceneView_OutputsImage-",".png", GDXConfig.PlatformAutomationFolder);
+            string outputPath = Platform.GetUniqueOutputFilePath("CaptureEditorWindowToPNG_SceneView_OutputsImage-",".png", Config.PlatformAutomationFolder);
             bool execute = Automation.CaptureEditorWindowToPNG<SceneView>(outputPath);
             bool evaluate = execute && File.Exists(outputPath);
             Assert.IsTrue(evaluate);
@@ -50,7 +50,7 @@ namespace GDX.Editor
         public void CaptureFocusedEditorWindowToPNG_OutputsImage()
         {
             Automation.GetGameView().Focus();
-            string outputPath = Platform.GetUniqueOutputFilePath("CaptureFocusedEditorWindowToPNG_OutputsImage-",".png", GDXConfig.PlatformAutomationFolder);
+            string outputPath = Platform.GetUniqueOutputFilePath("CaptureFocusedEditorWindowToPNG_OutputsImage-",".png", Config.PlatformAutomationFolder);
             bool execute = Automation.CaptureFocusedEditorWindowToPNG(outputPath);
             bool evaluate = execute && File.Exists(outputPath);
             Assert.IsTrue(evaluate);
@@ -89,8 +89,8 @@ namespace GDX.Editor
             NativeArray<Color32> screenshotDataA = screenshotA.GetRawTextureData<Color32>();
             NativeArray<Color32> screenshotDataB = screenshotB.GetRawTextureData<Color32>();
 
-            string outputPathA = Platform.GetUniqueOutputFilePath("CaptureEditorWindow_SceneView_SameTextureA-",".png", GDXConfig.PlatformAutomationFolder);
-            string outputPathB = Platform.GetUniqueOutputFilePath("CaptureEditorWindow_SceneView_SameTextureB-",".png", GDXConfig.PlatformAutomationFolder);
+            string outputPathA = Platform.GetUniqueOutputFilePath("CaptureEditorWindow_SceneView_SameTextureA-",".png", Config.PlatformAutomationFolder);
+            string outputPathB = Platform.GetUniqueOutputFilePath("CaptureEditorWindow_SceneView_SameTextureB-",".png", Config.PlatformAutomationFolder);
             File.WriteAllBytes(outputPathA, screenshotA.EncodeToPNG());
             File.WriteAllBytes(outputPathB, screenshotB.EncodeToPNG());
 
