@@ -134,39 +134,40 @@ namespace GDX
         /// </remarks>
         public static string GetOutputFolder(string folderName = null)
         {
-            if (s_OutputFolder != null) return s_OutputFolder;
-
-            if (Developer.CommandLineParser.Arguments.ContainsKey("GDX_OUTPUT_FOLDER"))
+            if (s_OutputFolder != null && string.IsNullOrEmpty(folderName)) return s_OutputFolder;
+            if (s_OutputFolder == null)
             {
-                s_OutputFolder = folderName == null
-                    ? Developer.CommandLineParser.Arguments["GDX_OUTPUT_FOLDER"]
-                    : Path.Combine(Developer.CommandLineParser.Arguments["GDX_OUTPUT_FOLDER"], folderName);
-            }
-            else
-            {
+                if (Developer.CommandLineParser.Arguments.ContainsKey("GDX_OUTPUT_FOLDER"))
+                {
+                    s_OutputFolder = Developer.CommandLineParser.Arguments["GDX_OUTPUT_FOLDER"];
+                }
+                else
+                {
 
 #if UNITY_EDITOR
-                s_OutputFolder = folderName == null
-                    ? Path.Combine(Application.dataPath, "..")
-                    : Path.Combine(Application.dataPath, "..", folderName);
+                    s_OutputFolder = Path.Combine(Application.dataPath, "..");
 #elif UNITY_DOTSRUNTIME
-                s_OutputFolder = folderName == null
-                    ? Directory.GetCurrentDirectory()
-                    : Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                    s_OutputFolder = Directory.GetCurrentDirectory();
 #else
-                s_OutputFolder = folderName == null
-                    ? Application.persistentDataPath
-                    : Path.Combine(Application.persistentDataPath, folderName);
+                    s_OutputFolder = Application.persistentDataPath;
 #endif
+                }
+
+                // Cleanup the folder pathing
+                s_OutputFolder = Path.GetFullPath(s_OutputFolder);
+
+                // Ensure that it is created
+                EnsureFolderHierarchyExists(s_OutputFolder);
             }
 
-            // Cleanup the folder pathing
-            s_OutputFolder = Path.GetFullPath(s_OutputFolder);
+            if (string.IsNullOrEmpty(folderName))
+            {
+                return s_OutputFolder;
+            }
 
-            // Ensure that it is created
-            EnsureFolderHierarchyExists(s_OutputFolder);
-
-            return s_OutputFolder;
+            string fullPath = Path.Combine(s_OutputFolder, folderName);
+            EnsureFolderHierarchyExists(fullPath);
+            return fullPath;
         }
 
         public static char GetRandomSafeCharacter(IRandomProvider random)
