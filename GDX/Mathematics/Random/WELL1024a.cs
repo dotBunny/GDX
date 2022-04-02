@@ -6,7 +6,7 @@ using System;
 using System.Runtime.CompilerServices;
 using Unity.Collections;
 using Unity.Mathematics;
-
+using Unity.Collections.LowLevel.Unsafe;
 namespace GDX.Mathematics.Random
 {
     /// <summary>
@@ -20,28 +20,28 @@ namespace GDX.Mathematics.Random
     ///     accessed on 2021-04-23.
     /// </remarks>
     [VisualScriptingCompatible(4)]
-    public struct WELL1024a : IRandomProvider, IEquatable<WELL1024a>, IDisposable
+    public unsafe struct WELL1024a : IRandomProvider, IEquatable<WELL1024a>, IDisposable
     {
-        /// <summary>
-        ///     A copy of the original seed used to initialize the <see cref="WELL1024a" />.
-        /// </summary>
-        public readonly uint OriginalSeed;
-
         /// <summary>
         ///     The state array of the well.
         /// </summary>
         public NativeArray<uint> State;
 
         /// <summary>
-        ///     The current index of use for the well array.
+        ///     A copy of the original seed used to initialize the <see cref="WELL1024a" />.
         /// </summary>
-        /// <remarks>CAUTION! Changing this will alter the understanding of the data.</remarks>
-        public int Index;
+        public readonly uint OriginalSeed;
 
         /// <summary>
         ///     The number of times that this well has been sampled.
         /// </summary>
         public uint SampleCount;
+
+        /// <summary>
+        ///     The current index of use for the well array.
+        /// </summary>
+        /// <remarks>CAUTION! Changing this will alter the understanding of the data.</remarks>
+        public byte Index;
 
         /// <summary>
         ///     Creates a new pseudorandom number generator with the given <paramref name="seed" />.
@@ -59,10 +59,11 @@ namespace GDX.Mathematics.Random
             Index = 0;
             SampleCount = 0;
             State = new NativeArray<uint>(32, Allocator.Persistent);
-            State[0] = OriginalSeed & 4294967295u;
+            uint* ptr = (uint*)State.GetUnsafePtr();
+            ptr[0] = OriginalSeed & 4294967295u;
             for (int i = 1; i < 32; ++i)
             {
-                State[i] = (69069u * State[i - 1]) & 4294967295u;
+                ptr[i] = (69069u * ptr[i - 1]) & 4294967295u;
             }
         }
 
@@ -78,10 +79,11 @@ namespace GDX.Mathematics.Random
             Index = 0;
             SampleCount = 0;
             State = new NativeArray<uint>(32, Allocator.Persistent);
-            State[0] = OriginalSeed & 4294967295u;
+            uint* ptr = (uint*)State.GetUnsafePtr();
+            ptr[0] = OriginalSeed & 4294967295u;
             for (int i = 1; i < 32; ++i)
             {
-                State[i] = (69069u * State[i - 1]) & 4294967295u;
+                ptr[i] = (69069u * ptr[i - 1]) & 4294967295u;
             }
         }
 
@@ -112,10 +114,11 @@ namespace GDX.Mathematics.Random
             Index = 0;
             SampleCount = 0;
             State = new NativeArray<uint>(32, Allocator.Persistent);
-            State[0] = OriginalSeed & 4294967295u;
+            uint* ptr = (uint*)State.GetUnsafePtr();
+            ptr[0] = OriginalSeed & 4294967295u;
             for (int i = 1; i < 32; ++i)
             {
-                State[i] = (69069u * State[i - 1]) & 4294967295u;
+                ptr[i] = (69069u * ptr[i - 1]) & 4294967295u;
             }
         }
 
@@ -126,12 +129,14 @@ namespace GDX.Mathematics.Random
         public WELL1024a(WellState restoreState)
         {
             OriginalSeed = restoreState.Seed;
-            Index = restoreState.Index;
+            Index = (byte)restoreState.Index;
             // Create new native array
             State = new NativeArray<uint>(32, Allocator.Persistent);
+            uint* ptr = (uint*)State.GetUnsafePtr();
+            uint* restoreStatePtr = (uint*)restoreState.State.GetUnsafePtr();
             for (int i = 0; i < 32; i++)
             {
-                State[i] = restoreState.State[i];
+                ptr[i] = restoreStatePtr[i];
             }
             SampleCount = restoreState.Count;
         }
@@ -208,18 +213,19 @@ namespace GDX.Mathematics.Random
         {
             SampleCount++;
 
-            uint a = State[(int)((Index + 3u) & 31u)];
-            uint z1 = State[Index] ^ a ^ (a >> 8);
-            uint b = State[(int)((Index + 24u) & 31u)];
-            uint c = State[(int)((Index + 10u) & 31u)];
+            uint* ptr = (uint*)State.GetUnsafePtr();
+            uint a = ptr[(int)((Index + 3u) & 31u)];
+            uint z1 = ptr[Index] ^ a ^ (a >> 8);
+            uint b = ptr[(int)((Index + 24u) & 31u)];
+            uint c = ptr[(int)((Index + 10u) & 31u)];
             uint z2 = b ^ (b << 19) ^ c ^ (c << 14);
 
-            State[Index] = z1 ^ z2;
-            uint d = State[(int)((Index + 31u) & 31u)];
-            State[(int)((Index + 31u) & 31u)] = d ^ (d << 11) ^ z1 ^ (z1 << 7) ^ z2 ^ (z2 << 13);
-            Index = (int)((Index + 31u) & 31u);
+            ptr[Index] = z1 ^ z2;
+            uint d = ptr[(int)((Index + 31u) & 31u)];
+            ptr[(int)((Index + 31u) & 31u)] = d ^ (d << 11) ^ z1 ^ (z1 << 7) ^ z2 ^ (z2 << 13);
+            Index = (byte)((Index + 31u) & 31u);
 
-            return State[Index] * 2.32830643653869628906e-10d;
+            return ptr[Index & 31u] * 2.32830643653869628906e-10d;
         }
 
         /// <summary>
@@ -229,24 +235,24 @@ namespace GDX.Mathematics.Random
         public struct WellState
         {
             /// <summary>
-            ///     The seed used to originally create the <see cref="WELL1024a" />.
-            /// </summary>
-            public uint Seed;
-
-            /// <summary>
-            ///     The internal state index.
-            /// </summary>
-            public int Index;
-
-            /// <summary>
             ///     The internal state array.
             /// </summary>
             public NativeArray<uint> State;
 
             /// <summary>
+            ///     The seed used to originally create the <see cref="WELL1024a" />.
+            /// </summary>
+            public uint Seed;
+
+            /// <summary>
             ///     The internal sample count.
             /// </summary>
             public uint Count;
+
+            /// <summary>
+            ///     The internal state index.
+            /// </summary>
+            public byte Index;
         }
 
         /// <summary>
