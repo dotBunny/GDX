@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Properly formatted the `CHANGELOG.md` thanks to a proper linter, as well as tried to unify nomenclature used to describe changes.
 - The `GDX` namespace has been reorganized.
 - Conform naming conventions to Unity standard.
+- `GDXConfig` has been simplified to `Config`, with member variables being statically accessible.
 - The package's project settings were rebuilt to use `UIElement`s instead of `IMGUI`.
 - `Smooth::HalfLifeToSmoothingFactor()` no longer defaults elapsed time to `Time.deltaTime`
 - The visual scripting module detects the package based installation available in `Unity 2021` and forward. If you wish to have support in `Unity 2020.3` via the Asset Store you will need to add a scripting define symbol of `GDX_VISUALSCRIPTING` to your project.
@@ -45,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Automation::GetTempFilePath()` in favour of using `Platform::GetUniqueOutputFilePath()`.
 - `NativeSimpleList` in favour of builtin collection `UnsafeList`.
 - `NativeSimpleQueue` in favour of builtin collection `UnsafeQueue`.
+- `GDXConfigInspector` no longer needed as the serialized config model has been replaced.
 - All "Requires UnityEngine.CoreModule.dll" remarks.
 
 ## [2.0.3] - 2021-12-01
