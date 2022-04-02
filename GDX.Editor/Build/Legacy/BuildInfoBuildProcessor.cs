@@ -82,7 +82,7 @@ namespace GDX.Classic.Editor.Build.Legacy
         /// <param name="report">Build process reported information.</param>
         public void OnPostprocessBuild(BuildReport report)
         {
-            if (!Core.Config.DeveloperBuildInfoEnabled)
+            if (!GDXConfig.DeveloperBuildInfoEnabled)
             {
                 return;
             }
@@ -96,14 +96,14 @@ namespace GDX.Classic.Editor.Build.Legacy
         /// <param name="report">Build process reported information.</param>
         public void OnPreprocessBuild(BuildReport report)
         {
-            if (!Core.Config.DeveloperBuildInfoEnabled)
+            if (!GDXConfig.DeveloperBuildInfoEnabled)
             {
                 return;
             }
 
             try
             {
-                string path = Path.Combine(Application.dataPath, Core.Config.DeveloperBuildInfoPath);
+                string path = Path.Combine(Application.dataPath, GDXConfig.DeveloperBuildInfoPath);
                 Platform.EnsureFileFolderHierarchyExists(path);
                 File.WriteAllText(path, GDX.Editor.Build.BuildInfoProvider.GetContent(false, "Legacy"));
 

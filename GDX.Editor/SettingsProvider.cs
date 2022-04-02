@@ -24,11 +24,11 @@ namespace GDX.Editor
         /// </summary>
         public const string DocumentationUri = "https://gdx.dotbunny.com/";
 
-        public const int SectionCount = 7;
+        public const int SectionCount = 8;
 
         public static StringKeyDictionary<IConfigSection> ConfigSections = new StringKeyDictionary<IConfigSection>(SectionCount);
 
-        public static GDXConfig WorkingConfig;
+        public static TransientConfig WorkingTransientConfig;
         public static string SearchString;
 
         /// <summary>
@@ -58,10 +58,10 @@ namespace GDX.Editor
         {
             // Create our working copy of the config - we do this to catch if theres an override that happens
             // during domain reload callbacks
-            WorkingConfig ??= new GDXConfig(Core.Config);
+            WorkingTransientConfig ??= new TransientConfig();
 
             // Initialize some things here instead of static initializers
-            List<string> keywords = new List<string>(8);
+            List<string> keywords = new List<string>(100);
 
             // Register settings
             if (!ConfigSections.ContainsKey(AutomaticUpdatesSettings.SectionKey))
@@ -89,6 +89,11 @@ namespace GDX.Editor
                 ConfigSections.AddUnchecked(EnvironmentSettings.SectionKey, new EnvironmentSettings());
                 keywords.AddUniqueRange(ConfigSections[EnvironmentSettings.SectionKey].GetSearchKeywords());
 
+            }
+            if (!ConfigSections.ContainsKey(PlatformSettings.SectionKey))
+            {
+                ConfigSections.AddUnchecked(PlatformSettings.SectionKey, new PlatformSettings());
+                keywords.AddUniqueRange(ConfigSections[PlatformSettings.SectionKey].GetSearchKeywords());
             }
             if (!ConfigSections.ContainsKey(LocaleSettings.SectionKey))
             {
@@ -144,7 +149,7 @@ namespace GDX.Editor
                     s_ClearButton = s_ChangesElement.Q<Button>("button-clear-changes");
                     s_ClearButton.clicked += () =>
                     {
-                        WorkingConfig = new GDXConfig(Core.Config);
+                        WorkingTransientConfig = new TransientConfig();
                         ConfigSectionsProvider.UpdateAll();
                         CheckForChanges();
                     };
@@ -156,27 +161,26 @@ namespace GDX.Editor
 
                         // Remove old file
                         string previousPath =
-                            Path.Combine(Application.dataPath, Core.Config.ConfigOutputPath);
+                            Path.Combine(Application.dataPath, GDXConfig.ConfigOutputPath);
                         if (File.Exists(previousPath))
                         {
-                            AssetDatabase.DeleteAsset(Path.Combine("Assets", Core.Config.ConfigOutputPath));
+                            AssetDatabase.DeleteAsset(Path.Combine("Assets", GDXConfig.ConfigOutputPath));
                         }
 
-                        GDXConfig baseConfig = new GDXConfig();
-                        if (!baseConfig.Compare(WorkingConfig))
+                        if (!WorkingTransientConfig.HasChanges())
                         {
                             // Generate new file
                             string codePath = Path.Combine(Application.dataPath,
-                                WorkingConfig.ConfigOutputPath);
+                                WorkingTransientConfig.ConfigOutputPath);
 
                             // Ensure folder structure is present
                             Platform.EnsureFileFolderHierarchyExists(codePath);
 
                             // Write file
-                            File.WriteAllText(codePath, SettingsGenerator.Build(baseConfig, WorkingConfig));
+                            File.WriteAllText(codePath, SettingsGenerator.Build(WorkingTransientConfig));
 
                             string projectRelative =
-                                Path.Combine("Assets", WorkingConfig.ConfigOutputPath);
+                                Path.Combine("Assets", WorkingTransientConfig.ConfigOutputPath);
 
                             AssetDatabase.StopAssetEditing();
                             AssetDatabase.ImportAsset(projectRelative);
@@ -340,7 +344,7 @@ namespace GDX.Editor
 
         public static void CheckForChanges()
         {
-            if (!Core.Config.Compare(WorkingConfig))
+            if (!WorkingTransientConfig.HasChanges())
             {
                 s_ChangesElement.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
             }

@@ -28,7 +28,7 @@ namespace GDX.Editor.Build
         {
             TextGenerator code = new TextGenerator("    ", "{", "}");
 
-            code.AppendLine($"namespace {Core.Config.DeveloperBuildInfoNamespace}");
+            code.AppendLine($"namespace {GDXConfig.DeveloperBuildInfoNamespace}");
             code.PushIndent();
             code.AppendLine("/// <summary>");
             code.AppendLine("///     A collection of information providing further information as to the conditions present when the build was made.");
@@ -46,8 +46,8 @@ namespace GDX.Editor.Build
             code.ApplyIndent();
             code.Append("public const int BuildNumber = ");
             code.Append(!forceDefaults &&
-                        CommandLineParser.Arguments.ContainsKey(Core.Config.DeveloperBuildInfoBuildNumberArgument)
-                ? CommandLineParser.Arguments[Core.Config.DeveloperBuildInfoBuildNumberArgument]
+                        CommandLineParser.Arguments.ContainsKey(GDXConfig.DeveloperBuildInfoBuildNumberArgument)
+                ? CommandLineParser.Arguments[GDXConfig.DeveloperBuildInfoBuildNumberArgument]
                 : "0");
             code.Append(";");
             code.NextLine();
@@ -59,8 +59,8 @@ namespace GDX.Editor.Build
             code.ApplyIndent();
             code.Append("public const int Changelist = ");
             code.Append(!forceDefaults &&
-                        CommandLineParser.Arguments.ContainsKey(Core.Config.DeveloperBuildInfoBuildChangelistArgument)
-                ? CommandLineParser.Arguments[Core.Config.DeveloperBuildInfoBuildChangelistArgument]
+                        CommandLineParser.Arguments.ContainsKey(GDXConfig.DeveloperBuildInfoBuildChangelistArgument)
+                ? CommandLineParser.Arguments[GDXConfig.DeveloperBuildInfoBuildChangelistArgument]
                 : "0");
             code.Append(";");
             code.NextLine();
@@ -72,8 +72,8 @@ namespace GDX.Editor.Build
             code.ApplyIndent();
             code.Append("public const string BuildTask = \"");
             code.Append(!forceDefaults &&
-                        CommandLineParser.Arguments.ContainsKey(Core.Config.DeveloperBuildInfoBuildTaskArgument)
-                ? CommandLineParser.Arguments[Core.Config.DeveloperBuildInfoBuildTaskArgument]
+                        CommandLineParser.Arguments.ContainsKey(GDXConfig.DeveloperBuildInfoBuildTaskArgument)
+                ? CommandLineParser.Arguments[GDXConfig.DeveloperBuildInfoBuildTaskArgument]
                 : "N/A");
             code.Append("\";");
             code.NextLine();
@@ -85,8 +85,8 @@ namespace GDX.Editor.Build
             code.ApplyIndent();
             code.Append("public const string Stream = \"");
             code.Append(!forceDefaults &&
-                        CommandLineParser.Arguments.ContainsKey(Core.Config.DeveloperBuildInfoBuildStreamArgument)
-                ? CommandLineParser.Arguments[Core.Config.DeveloperBuildInfoBuildStreamArgument]
+                        CommandLineParser.Arguments.ContainsKey(GDXConfig.DeveloperBuildInfoBuildStreamArgument)
+                ? CommandLineParser.Arguments[GDXConfig.DeveloperBuildInfoBuildStreamArgument]
                 : "N/A");
             code.Append("\";");
             code.NextLine();
@@ -99,8 +99,8 @@ namespace GDX.Editor.Build
             code.Append("public const string Description = \"");
             code.Append(!forceDefaults &&
                         CommandLineParser.Arguments.ContainsKey(
-                            Core.Config.DeveloperBuildInfoBuildDescriptionArgument)
-                ? CommandLineParser.Arguments[Core.Config.DeveloperBuildInfoBuildDescriptionArgument]
+                            GDXConfig.DeveloperBuildInfoBuildDescriptionArgument)
+                ? CommandLineParser.Arguments[GDXConfig.DeveloperBuildInfoBuildDescriptionArgument]
                 : "N/A");
             code.Append("\";");
             code.NextLine();
@@ -140,7 +140,7 @@ namespace GDX.Editor.Build
 
             try
             {
-                string path = Path.Combine(Application.dataPath, Core.Config.DeveloperBuildInfoPath);
+                string path = Path.Combine(Application.dataPath, GDXConfig.DeveloperBuildInfoPath);
                 Platform.EnsureFileFolderHierarchyExists(path);
                 File.WriteAllText(path, GetContent(true));
 
@@ -157,15 +157,15 @@ namespace GDX.Editor.Build
         /// </summary>
         public static void CheckForAssemblyDefinition()
         {
-            if (Core.Config.DeveloperBuildInfoAssemblyDefinition)
+            if (GDXConfig.DeveloperBuildInfoAssemblyDefinition)
             {
                 return;
             }
 
             string assemblyDefinition = Path.Combine(
-                Path.GetDirectoryName(Path.Combine(Application.dataPath, Core.Config.DeveloperBuildInfoPath)) ??
+                Path.GetDirectoryName(Path.Combine(Application.dataPath, GDXConfig.DeveloperBuildInfoPath)) ??
                 string.Empty,
-                Core.Config.DeveloperBuildInfoNamespace + ".asmdef");
+                GDXConfig.DeveloperBuildInfoNamespace + ".asmdef");
 
             if (File.Exists(assemblyDefinition))
             {
@@ -174,8 +174,8 @@ namespace GDX.Editor.Build
 
             TextGenerator asmDef = new TextGenerator("\t", "{", "}");
             asmDef.PushIndent();
-            asmDef.AppendLine($"\"name\": \"{Core.Config.DeveloperBuildInfoNamespace}\",");
-            asmDef.AppendLine($"\"rootNamespace\": \"{Core.Config.DeveloperBuildInfoNamespace}\",");
+            asmDef.AppendLine($"\"name\": \"{GDXConfig.DeveloperBuildInfoNamespace}\",");
+            asmDef.AppendLine($"\"rootNamespace\": \"{GDXConfig.DeveloperBuildInfoNamespace}\",");
             asmDef.AppendLine("\"references\": [],");
             asmDef.AppendLine("\"includePlatforms\": [],");
             asmDef.AppendLine("\"excludePlatforms\": [],");
@@ -189,8 +189,8 @@ namespace GDX.Editor.Build
 
             File.WriteAllText(assemblyDefinition, asmDef.ToString());
             AssetDatabase.ImportAsset("Assets/" +
-                                      Path.GetDirectoryName(Core.Config.DeveloperBuildInfoPath) + "/" +
-                                      Core.Config.DeveloperBuildInfoNamespace + ".asmdef");
+                                      Path.GetDirectoryName(GDXConfig.DeveloperBuildInfoPath) + "/" +
+                                      GDXConfig.DeveloperBuildInfoNamespace + ".asmdef");
         }
     }
 }

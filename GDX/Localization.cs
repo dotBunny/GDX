@@ -226,12 +226,11 @@ namespace GDX
         ///     Can be used to avoid issues with culture settings without a Gregorian Calendar. Configurable to automatically
         ///     execute after assemblies are loaded.
         /// </remarks>
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
         public static void SetDefaultCulture()
         {
-            if (Core.Config.LocalizationSetDefaultCulture && GetSystemLanguage() == Language.Default)
+            if (GDXConfig.LocalizationSetDefaultCulture && GetSystemLanguage() == Language.Default)
             {
-                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(Core.Config.LocalizationDefaultCulture.GetIETF_BCP47());
+                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(GDXConfig.LocalizationDefaultCulture.GetIETF_BCP47());
             }
         }
     }

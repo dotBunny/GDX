@@ -27,7 +27,6 @@ namespace GDX
         static readonly CoreSentinel k_DisposeSentinel = new CoreSentinel();
         // ReSharper restore UnusedMember.Local, ArrangeObjectCreationWhenTypeEvident
 #pragma warning restore IDE0052, IDE0090
-        public static readonly GDXConfig Config;
         public static readonly long StartTicks;
         public static WELL1024a Random;
 
@@ -42,9 +41,6 @@ namespace GDX
         {
             // Record initialization time.
             StartTicks = DateTime.Now.Ticks;
-
-            // Create new config
-            Config = new GDXConfig();
 
             // Immediately execute the proper initialization process
             Initialize();
@@ -87,6 +83,8 @@ namespace GDX
             {
                 return;
             }
+
+            Localization.SetDefaultCulture();
 
             s_InitializedMainThread = true;
         }

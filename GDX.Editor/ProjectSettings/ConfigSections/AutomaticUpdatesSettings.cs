@@ -181,13 +181,13 @@ namespace GDX.Editor.ProjectSettings
 
         public bool GetToggleState()
         {
-            return SettingsProvider.WorkingConfig.UpdateProviderCheckForUpdates;
+            return SettingsProvider.WorkingTransientConfig.UpdateProviderCheckForUpdates;
         }
 
         public void SetToggleState(VisualElement toggleElement, bool newState)
         {
-            SettingsProvider.WorkingConfig.UpdateProviderCheckForUpdates = newState;
-            if (Core.Config.UpdateProviderCheckForUpdates != newState)
+            SettingsProvider.WorkingTransientConfig.UpdateProviderCheckForUpdates = newState;
+            if (GDXConfig.UpdateProviderCheckForUpdates != newState)
             {
                 toggleElement.AddToClassList(ConfigSectionsProvider.ChangedClass);
             }

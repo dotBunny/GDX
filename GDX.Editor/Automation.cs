@@ -144,7 +144,7 @@ namespace GDX.Editor
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ClearTempFolder(bool deleteFolder = false)
         {
-            string path = Platform.GetOutputFolder("GDX_Automation");
+            string path = Platform.GetOutputFolder(GDXConfig.PlatformAutomationFolder);
             if (!Directory.Exists(path))
             {
                 return;

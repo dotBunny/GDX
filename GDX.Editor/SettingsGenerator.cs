@@ -8,8 +8,8 @@ namespace GDX.Editor
 {
     public static class SettingsGenerator
     {
-        const string k_CoreConfigPath = "Core.Config";
-        public static string Build(GDXConfig lhs, GDXConfig rhs)
+        const string k_CoreConfigPath = "GDXConfig";
+        public static string Build(TransientConfig rhs)
         {
             Developer.TextGenerator code = new Developer.TextGenerator("    ", "{", "}");
 
@@ -25,49 +25,54 @@ namespace GDX.Editor
             code.PushIndent();
 
             AddToGenerator(code, "ConfigOutputPath",
-                lhs.ConfigOutputPath, rhs.ConfigOutputPath);
+                GDXConfig.ConfigOutputPath, rhs.ConfigOutputPath);
             AddToGenerator(code, "UpdateProviderCheckForUpdates",
-                lhs.UpdateProviderCheckForUpdates, rhs.UpdateProviderCheckForUpdates);
+                GDXConfig.UpdateProviderCheckForUpdates, rhs.UpdateProviderCheckForUpdates);
             AddToGenerator(code, "DeveloperCommandLineParserArgumentPrefix",
-                lhs.DeveloperCommandLineParserArgumentPrefix, rhs.DeveloperCommandLineParserArgumentPrefix);
+                GDXConfig.DeveloperCommandLineParserArgumentPrefix, rhs.DeveloperCommandLineParserArgumentPrefix);
             AddToGenerator(code, "DeveloperCommandLineParserArgumentSplit",
-                lhs.DeveloperCommandLineParserArgumentSplit, rhs.DeveloperCommandLineParserArgumentSplit);
+                GDXConfig.DeveloperCommandLineParserArgumentSplit, rhs.DeveloperCommandLineParserArgumentSplit);
             AddToGenerator(code, "DeveloperBuildInfoAssemblyDefinition",
-                lhs.DeveloperBuildInfoAssemblyDefinition, rhs.DeveloperBuildInfoAssemblyDefinition);
+                GDXConfig.DeveloperBuildInfoAssemblyDefinition, rhs.DeveloperBuildInfoAssemblyDefinition);
             AddToGenerator(code, "DeveloperBuildInfoEnabled",
-                lhs.DeveloperBuildInfoEnabled, rhs.DeveloperBuildInfoEnabled);
+                GDXConfig.DeveloperBuildInfoEnabled, rhs.DeveloperBuildInfoEnabled);
             AddToGenerator(code, "DeveloperBuildInfoPath",
-                lhs.DeveloperBuildInfoPath, rhs.DeveloperBuildInfoPath);
+                GDXConfig.DeveloperBuildInfoPath, rhs.DeveloperBuildInfoPath);
             AddToGenerator(code, "DeveloperBuildInfoNamespace",
-                lhs.DeveloperBuildInfoNamespace, rhs.DeveloperBuildInfoNamespace);
+                GDXConfig.DeveloperBuildInfoNamespace, rhs.DeveloperBuildInfoNamespace);
             AddToGenerator(code, "DeveloperBuildInfoBuildNumberArgument",
-                lhs.DeveloperBuildInfoBuildNumberArgument, rhs.DeveloperBuildInfoBuildNumberArgument);
+                GDXConfig.DeveloperBuildInfoBuildNumberArgument, rhs.DeveloperBuildInfoBuildNumberArgument);
             AddToGenerator(code, "DeveloperBuildInfoBuildDescriptionArgument",
-                lhs.DeveloperBuildInfoBuildDescriptionArgument, rhs.DeveloperBuildInfoBuildDescriptionArgument);
+                GDXConfig.DeveloperBuildInfoBuildDescriptionArgument, rhs.DeveloperBuildInfoBuildDescriptionArgument);
             AddToGenerator(code, "DeveloperBuildInfoBuildChangelistArgument",
-                lhs.DeveloperBuildInfoBuildChangelistArgument, rhs.DeveloperBuildInfoBuildChangelistArgument);
+                GDXConfig.DeveloperBuildInfoBuildChangelistArgument, rhs.DeveloperBuildInfoBuildChangelistArgument);
             AddToGenerator(code, "DeveloperBuildInfoBuildTaskArgument",
-                lhs.DeveloperBuildInfoBuildTaskArgument, rhs.DeveloperBuildInfoBuildTaskArgument);
+                GDXConfig.DeveloperBuildInfoBuildTaskArgument, rhs.DeveloperBuildInfoBuildTaskArgument);
             AddToGenerator(code, "DeveloperBuildInfoBuildStreamArgument",
-                lhs.DeveloperBuildInfoBuildStreamArgument, rhs.DeveloperBuildInfoBuildStreamArgument);
+                GDXConfig.DeveloperBuildInfoBuildStreamArgument, rhs.DeveloperBuildInfoBuildStreamArgument);
             AddToGenerator(code, "EnvironmentScriptingDefineSymbol",
-                lhs.EnvironmentScriptingDefineSymbol, rhs.EnvironmentScriptingDefineSymbol);
+                GDXConfig.EnvironmentScriptingDefineSymbol, rhs.EnvironmentScriptingDefineSymbol);
+
+            AddToGenerator(code, "PlatformAutomationFolder",
+                GDXConfig.PlatformAutomationFolder, rhs.PlatformAutomationFolder);
+            AddToGenerator(code, "PlatformCacheFolder",
+                GDXConfig.PlatformCacheFolder, rhs.PlatformCacheFolder);
 
             AddToGenerator(code, "TraceDevelopmentLevels",
-                lhs.TraceDevelopmentLevels, rhs.TraceDevelopmentLevels);
+                GDXConfig.TraceDevelopmentLevels, rhs.TraceDevelopmentLevels);
             AddToGenerator(code, "TraceDebugLevels",
-                lhs.TraceDebugLevels, rhs.TraceDebugLevels);
+                GDXConfig.TraceDebugLevels, rhs.TraceDebugLevels);
             AddToGenerator(code, "TraceReleaseLevels",
-                lhs.TraceReleaseLevels, rhs.TraceReleaseLevels);
+                GDXConfig.TraceReleaseLevels, rhs.TraceReleaseLevels);
 
             AddToGenerator(code, "TraceDevelopmentOutputToUnityConsole",
-                lhs.TraceDevelopmentOutputToUnityConsole, rhs.TraceDevelopmentOutputToUnityConsole);
+                GDXConfig.TraceDevelopmentOutputToUnityConsole, rhs.TraceDevelopmentOutputToUnityConsole);
             AddToGenerator(code, "TraceDebugOutputToUnityConsole",
-                lhs.TraceDebugOutputToUnityConsole, rhs.TraceDebugOutputToUnityConsole);
+                GDXConfig.TraceDebugOutputToUnityConsole, rhs.TraceDebugOutputToUnityConsole);
             AddToGenerator(code, "LocalizationSetDefaultCulture",
-                lhs.LocalizationSetDefaultCulture, rhs.LocalizationSetDefaultCulture);
+                GDXConfig.LocalizationSetDefaultCulture, rhs.LocalizationSetDefaultCulture);
             AddToGenerator(code, "LocalizationDefaultCulture",
-                lhs.LocalizationDefaultCulture, rhs.LocalizationDefaultCulture);
+                GDXConfig.LocalizationDefaultCulture, rhs.LocalizationDefaultCulture);
 
             return code.ToString();
 

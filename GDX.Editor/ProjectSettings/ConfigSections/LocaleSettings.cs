@@ -28,11 +28,11 @@ namespace GDX.Editor.ProjectSettings
             m_RootElement = rootElement;
 
             m_ToggleSetDefaultCulture = m_RootElement.Q<Toggle>("toggle-set-default-culture");
-            m_ToggleSetDefaultCulture.value = SettingsProvider.WorkingConfig.LocalizationSetDefaultCulture;
+            m_ToggleSetDefaultCulture.value = SettingsProvider.WorkingTransientConfig.LocalizationSetDefaultCulture;
             m_ToggleSetDefaultCulture.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingConfig.LocalizationSetDefaultCulture = evt.newValue;
-                if (Core.Config.LocalizationSetDefaultCulture != evt.newValue)
+                SettingsProvider.WorkingTransientConfig.LocalizationSetDefaultCulture = evt.newValue;
+                if (GDXConfig.LocalizationSetDefaultCulture != evt.newValue)
                 {
                     m_ToggleSetDefaultCulture.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -45,11 +45,11 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_EnumDefaultCulture = m_RootElement.Q<EnumField>("enum-default-culture");
-            m_EnumDefaultCulture.value = SettingsProvider.WorkingConfig.LocalizationDefaultCulture;
+            m_EnumDefaultCulture.value = SettingsProvider.WorkingTransientConfig.LocalizationDefaultCulture;
             m_EnumDefaultCulture.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingConfig.LocalizationDefaultCulture = (Localization.Language)evt.newValue;
-                if (Core.Config.LocalizationDefaultCulture != (Localization.Language)evt.newValue)
+                SettingsProvider.WorkingTransientConfig.LocalizationDefaultCulture = (Localization.Language)evt.newValue;
+                if (GDXConfig.LocalizationDefaultCulture != (Localization.Language)evt.newValue)
                 {
                     m_EnumDefaultCulture.AddToClassList(ConfigSectionsProvider.ChangedClass);
                 }
@@ -116,11 +116,11 @@ namespace GDX.Editor.ProjectSettings
         public void UpdateSectionContent()
         {
             ConfigSectionsProvider.SetStructChangeCheck(m_ToggleSetDefaultCulture,
-                Core.Config.LocalizationSetDefaultCulture,
-                SettingsProvider.WorkingConfig.LocalizationSetDefaultCulture);
+                GDXConfig.LocalizationSetDefaultCulture,
+                SettingsProvider.WorkingTransientConfig.LocalizationSetDefaultCulture);
             ConfigSectionsProvider.SetEnumChangeCheck(m_EnumDefaultCulture,
-                Core.Config.LocalizationDefaultCulture,
-                SettingsProvider.WorkingConfig.LocalizationDefaultCulture);
+                GDXConfig.LocalizationDefaultCulture,
+                SettingsProvider.WorkingTransientConfig.LocalizationDefaultCulture);
         }
     }
 }
