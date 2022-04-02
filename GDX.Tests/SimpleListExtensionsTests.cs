@@ -102,6 +102,77 @@ namespace GDX
 
         [Test]
         [Category(Core.TestCategory)]
+        public void AddWithExpandCheckUniqueReference_NonUniqueString_ReturnsFalse()
+        {
+            SimpleList<string> mockData = new SimpleList<string>(3);
+
+            string string1 = "test1";
+            string string2 = "test2";
+            string string3 = "test3";
+            mockData.AddWithExpandCheckUniqueReference(string1);
+            mockData.AddWithExpandCheckUniqueReference(string2);
+            mockData.AddWithExpandCheckUniqueReference(string3);
+
+            bool evaluate = mockData.AddWithExpandCheckUniqueReference(string1);
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void AddWithExpandCheckUniqueReference_UniqueString_ReturnsTrue()
+        {
+            SimpleList<string> mockData = new SimpleList<string>(3);
+
+            mockData.AddWithExpandCheckUniqueReference("test1");
+            mockData.AddWithExpandCheckUniqueReference("test2");
+            mockData.AddWithExpandCheckUniqueReference("test3");
+
+            bool evaluate = mockData.AddWithExpandCheckUniqueReference("test4");
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void AddUncheckedUniqueReference_NonUniqueString_ReturnsFalse()
+        {
+            SimpleList<string> listOfStrings = new SimpleList<string>(3);
+
+            string string1 = "test1";
+            string string2 = "test2";
+            listOfStrings.AddUncheckedUniqueReference(string1);
+            listOfStrings.AddUncheckedUniqueReference(string2);
+
+            bool evaluate = listOfStrings.AddUncheckedUniqueReference(string2);
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void AddUncheckedUniqueReference_UniqueStringWithRoom_NoException()
+        {
+            SimpleList<string> listOfStrings = new SimpleList<string>(3);
+            listOfStrings.AddUncheckedUniqueReference("test1");
+            listOfStrings.AddUncheckedUniqueReference("test2");
+
+            Assert.DoesNotThrow(() => { listOfStrings.AddUncheckedUniqueReference("test3"); });
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void AddUncheckedUniqueReference_UniqueStringWithNoRoom_ThrowsException()
+        {
+            SimpleList<string> listOfStrings = new SimpleList<string>(2);
+            listOfStrings.AddUncheckedUniqueReference("test1");
+            listOfStrings.AddUncheckedUniqueReference("test2");
+
+            Assert.Throws<IndexOutOfRangeException>(() => { listOfStrings.AddUncheckedUniqueReference("test3"); });
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
         public void ContainsItem_String_ReturnsTrue()
         {
             const string k_SearchItem = "Hello";
@@ -117,7 +188,7 @@ namespace GDX
 
         [Test]
         [Category(Core.TestCategory)]
-        public void ContainsItem_CircularBuffer_ReturnsTrue()
+        public void ContainsItem_Object_ReturnsTrue()
         {
             object searchItem = new object();
             SimpleList<object> listItems = new SimpleList<object>(5);
@@ -130,6 +201,40 @@ namespace GDX
             listItems.AddUnchecked(new object());
 
             bool evaluate = listItems.ContainsItem(searchItem);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void ContainsReference_String_ReturnsTrue()
+        {
+            const string k_SearchItem = "Hello";
+            SimpleList<string> listOfStrings = new SimpleList<string>(3);
+            listOfStrings.AddUnchecked(k_SearchItem);
+            listOfStrings.AddUnchecked("World");
+            listOfStrings.AddUnchecked("!");
+
+            bool evaluate = listOfStrings.ContainsReference(k_SearchItem);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void ContainsReference_Object_ReturnsTrue()
+        {
+            object searchItem = new object();
+            SimpleList<object> listItems = new SimpleList<object>(5);
+
+            // Build test rig
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(searchItem);
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(new object());
+
+            bool evaluate = listItems.ContainsReference(searchItem);
 
             Assert.IsTrue(evaluate);
         }
@@ -179,6 +284,49 @@ namespace GDX
 
         [Test]
         [Category(Core.TestCategory)]
+        public void RemoveFirstReference_MockData_RemovedItem()
+        {
+            object searchItem = new object();
+            SimpleList<object> listItems = new SimpleList<object>(6);
+
+            // Build test rig
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(searchItem);
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(searchItem);
+            listItems.AddUnchecked(new object());
+
+            listItems.RemoveFirstReference(searchItem);
+
+            bool evaluate = listItems.Array[1] != searchItem &&
+                            listItems.ContainsReference(searchItem);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void RemoveFirstReference_MockData_NoItemReturnsFalse()
+        {
+            object searchItem = new object();
+            SimpleList<object> listItems = new SimpleList<object>(6);
+
+            // Build test rig
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(searchItem);
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(searchItem);
+            listItems.AddUnchecked(new object());
+
+            bool evaluate = listItems.RemoveFirstReference(new object());
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
         public void RemoveItems_MockData_RemovedItems()
         {
             object searchItem = new object();
@@ -195,6 +343,28 @@ namespace GDX
             listItems.RemoveItems(searchItem);
 
             bool evaluate = listItems.ContainsItem(searchItem);
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void RemoveReferences_MockData_RemovedItems()
+        {
+            object searchItem = new object();
+            SimpleList<object> listItems = new SimpleList<object>(6);
+
+            // Build test rig
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(searchItem);
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(searchItem);
+            listItems.AddUnchecked(new object());
+
+            listItems.RemoveReferences(searchItem);
+
+            bool evaluate = listItems.ContainsReference(searchItem);
 
             Assert.IsFalse(evaluate);
         }
@@ -238,6 +408,49 @@ namespace GDX
             listItems.AddUnchecked(new object());
 
             bool evaluate = listItems.RemoveLastItem(new object());
+
+            Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void RemoveLastReference_MockData_RemovedItem()
+        {
+            object searchItem = new object();
+            SimpleList<object> listItems = new SimpleList<object>(6);
+
+            // Build test rig
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(searchItem);
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(searchItem);
+            listItems.AddUnchecked(new object());
+
+            listItems.RemoveLastReference(searchItem);
+
+            bool evaluate = listItems.Array[4] != searchItem &&
+                            listItems.ContainsReference(searchItem);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void RemoveLastReference_MockData_NoItemReturnsFalse()
+        {
+            object searchItem = new object();
+            SimpleList<object> listItems = new SimpleList<object>(6);
+
+            // Build test rig
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(searchItem);
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(new object());
+            listItems.AddUnchecked(searchItem);
+            listItems.AddUnchecked(new object());
+
+            bool evaluate = listItems.RemoveLastReference(new object());
 
             Assert.IsFalse(evaluate);
         }
