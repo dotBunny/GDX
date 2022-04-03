@@ -15,16 +15,38 @@ namespace GDX.Editor.ProjectSettings
             "the", "is", "a"
         };
 
-        static readonly Dictionary<string, SimpleList<VisualElement>> k_KeywordMap =
-            new Dictionary<string, SimpleList<VisualElement>>(100);
+        static SimpleList<string> s_Keywords = new SimpleList<string>(100);
+        static StringKeyDictionary<SimpleList<VisualElement>> s_KeywordMap =
+            new StringKeyDictionary<SimpleList<VisualElement>>(100);
 
         static readonly Dictionary<IConfigSection, SimpleList<VisualElement>> k_SectionElementMap =
             new Dictionary<IConfigSection, SimpleList<VisualElement>>(SettingsProvider.SectionCount);
 
         public static void Reset()
         {
-            k_KeywordMap.Clear();
+            s_Keywords.Clear();
+            s_KeywordMap.Clear();
             k_SectionElementMap.Clear();
+        }
+        public static VisualElement[] Query(string searchContext)
+        {
+            SimpleList<VisualElement> results = new SimpleList<VisualElement>(10);
+            int count = s_Keywords.Count;
+            for (int i = 0; i < count; i++)
+            {
+                string keyword = s_Keywords.Array[i];
+                if (!keyword.Contains(searchContext))
+                {
+                    continue;
+                }
+
+                int elementCount = s_KeywordMap[keyword].Count;
+                for (int j = 0; j < elementCount; j++)
+                {
+                    results.AddWithExpandCheck(s_KeywordMap[keyword].Array[i]);
+                }
+            }
+            return results.Array;
         }
         public static void RegisterElement<T>(IConfigSection parent, VisualElement element, string[] additionalKeywords = null)
         {
@@ -76,14 +98,13 @@ namespace GDX.Editor.ProjectSettings
             for (int i = 0; i < validWordsCount; i++)
             {
                 string word = validWords.Array[i];
-                if (k_KeywordMap.ContainsKey(word))
+
+                if (!s_Keywords.ContainsItem(word))
                 {
-                    k_KeywordMap[word].AddWithExpandCheck(element);
+                    s_Keywords.AddWithExpandCheck(word);
+                    s_KeywordMap.AddWithExpandCheck(word, new SimpleList<VisualElement>(20));
                 }
-                else
-                {
-                    k_KeywordMap.Add(word, new SimpleList<VisualElement>(20));
-                }
+                s_KeywordMap[word].AddWithExpandCheck(element);
             }
 
             // Register element to a section
