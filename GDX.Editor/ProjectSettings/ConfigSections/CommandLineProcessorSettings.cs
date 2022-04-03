@@ -24,39 +24,39 @@ namespace GDX.Editor.ProjectSettings
 
             m_TextArgumentPrefix = m_RootElement.Q<TextField>("text-argument-prefix");
             SearchProvider.RegisterElement<TextField>(this, m_TextArgumentPrefix);
-            m_TextArgumentPrefix.value = SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix;
+            m_TextArgumentPrefix.value = ProjectSettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix;
             m_TextArgumentPrefix.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix = evt.newValue;
+                ProjectSettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix = evt.newValue;
                 if (Config.DeveloperCommandLineParserArgumentPrefix != evt.newValue)
                 {
-                    m_TextArgumentPrefix.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                    m_TextArgumentPrefix.AddToClassList(ResourcesProvider.ChangedClass);
                 }
                 else
                 {
-                    m_TextArgumentPrefix.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                    m_TextArgumentPrefix.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
 
-                SettingsProvider.CheckForChanges();
+                ProjectSettingsProvider.CheckForChanges();
             });
 
 
             m_TextArgumentSplit = m_RootElement.Q<TextField>("text-argument-split");
             SearchProvider.RegisterElement<TextField>(this, m_TextArgumentSplit);
-            m_TextArgumentSplit.value = SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit;
+            m_TextArgumentSplit.value = ProjectSettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit;
             m_TextArgumentSplit.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit = evt.newValue;
+                ProjectSettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit = evt.newValue;
                 if (Config.DeveloperCommandLineParserArgumentSplit != evt.newValue)
                 {
-                    m_TextArgumentSplit.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                    m_TextArgumentSplit.AddToClassList(ResourcesProvider.ChangedClass);
                 }
                 else
                 {
-                    m_TextArgumentSplit.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                    m_TextArgumentSplit.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
 
-                SettingsProvider.CheckForChanges();
+                ProjectSettingsProvider.CheckForChanges();
             });
 
         }
@@ -116,11 +116,11 @@ namespace GDX.Editor.ProjectSettings
         {
             ConfigSectionsProvider.SetClassChangeCheck(m_TextArgumentPrefix,
                 Config.DeveloperCommandLineParserArgumentPrefix,
-                SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix);
+                ProjectSettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix);
 
             ConfigSectionsProvider.SetClassChangeCheck(m_TextArgumentSplit,
                 Config.DeveloperCommandLineParserArgumentSplit,
-                SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit);
+                ProjectSettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit);
         }
     }
 }

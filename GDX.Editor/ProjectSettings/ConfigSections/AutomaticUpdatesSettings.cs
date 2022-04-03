@@ -91,7 +91,7 @@ namespace GDX.Editor.ProjectSettings
                 case PackageProvider.InstallationType.PackageManagerBranch:
                 case PackageProvider.InstallationType.GitHubBranch:
                 case PackageProvider.InstallationType.GitHub:
-                    m_ElementSource.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                    m_ElementSource.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_LabelSourceItem.text = "Branch:";
                     m_LabelSourceData.text = !string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
                         ? UpdateProvider.LocalPackage.SourceTag
@@ -99,7 +99,7 @@ namespace GDX.Editor.ProjectSettings
                     break;
                 case PackageProvider.InstallationType.PackageManagerTag:
                 case PackageProvider.InstallationType.GitHubTag:
-                    m_ElementSource.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                    m_ElementSource.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_LabelSourceItem.text = "Tag:";
                     m_LabelSourceData.text = !string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
                         ? UpdateProvider.LocalPackage.SourceTag
@@ -107,14 +107,14 @@ namespace GDX.Editor.ProjectSettings
                     break;
                 case PackageProvider.InstallationType.PackageManagerCommit:
                 case PackageProvider.InstallationType.GitHubCommit:
-                    m_ElementSource.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                    m_ElementSource.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_LabelSourceItem.text = "Commit:";
                     m_LabelSourceData.text = !string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
                         ? UpdateProvider.LocalPackage.SourceTag
                         : "N/A";
                     break;
                 default:
-                    m_ElementSource.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                    m_ElementSource.AddToClassList(ResourcesProvider.HiddenClass);
                     break;
                 }
             }
@@ -128,12 +128,12 @@ namespace GDX.Editor.ProjectSettings
 
             if (UpdateProvider.UpdatePackageDefinition != null)
             {
-                m_ElementRemoteVersion.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                m_ElementRemoteVersion.RemoveFromClassList(ResourcesProvider.HiddenClass);
                 m_LabelRemoteVersion.text = UpdateProvider.UpdatePackageDefinition.version;
             }
             else
             {
-                m_ElementRemoteVersion.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                m_ElementRemoteVersion.AddToClassList(ResourcesProvider.HiddenClass);
                 m_LabelRemoteVersion.text = "N/A";
                 m_LabelLastChecked.text = "N/A";
             }
@@ -181,21 +181,21 @@ namespace GDX.Editor.ProjectSettings
 
         public bool GetToggleState()
         {
-            return SettingsProvider.WorkingConfig.UpdateProviderCheckForUpdates;
+            return ProjectSettingsProvider.WorkingConfig.UpdateProviderCheckForUpdates;
         }
 
         public void SetToggleState(VisualElement toggleElement, bool newState)
         {
-            SettingsProvider.WorkingConfig.UpdateProviderCheckForUpdates = newState;
+            ProjectSettingsProvider.WorkingConfig.UpdateProviderCheckForUpdates = newState;
             if (Config.UpdateProviderCheckForUpdates != newState)
             {
-                toggleElement.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                toggleElement.AddToClassList(ResourcesProvider.ChangedClass);
             }
             else
             {
-                toggleElement.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                toggleElement.RemoveFromClassList(ResourcesProvider.ChangedClass);
             }
-            SettingsProvider.CheckForChanges();
+            ProjectSettingsProvider.CheckForChanges();
         }
 
         public string[] GetSearchKeywords()
@@ -217,26 +217,26 @@ namespace GDX.Editor.ProjectSettings
         {
             if (UpdateProvider.HasUpdate(UpdateProvider.UpdatePackageDefinition))
             {
-                m_ButtonManualCheck.AddToClassList(ConfigSectionsProvider.HiddenClass);
-                m_ButtonManualUpgrade.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                m_ButtonManualCheck.AddToClassList(ResourcesProvider.HiddenClass);
+                m_ButtonManualUpgrade.AddToClassList(ResourcesProvider.HiddenClass);
 
-                m_ButtonChangeLog.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                m_ButtonChangeLog.RemoveFromClassList(ResourcesProvider.HiddenClass);
 
                 if (UpdateProvider.IsUpgradable())
                 {
-                    m_ButtonUpdate.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                    m_ButtonUpdate.RemoveFromClassList(ResourcesProvider.HiddenClass);
                 }
                 else
                 {
-                    m_ButtonUpdate.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                    m_ButtonUpdate.AddToClassList(ResourcesProvider.HiddenClass);
                 }
             }
             else
             {
-                m_ButtonChangeLog.AddToClassList(ConfigSectionsProvider.HiddenClass);
-                m_ButtonUpdate.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                m_ButtonChangeLog.AddToClassList(ResourcesProvider.HiddenClass);
+                m_ButtonUpdate.AddToClassList(ResourcesProvider.HiddenClass);
 
-                m_ButtonManualCheck.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                m_ButtonManualCheck.RemoveFromClassList(ResourcesProvider.HiddenClass);
 
                 if ((UpdateProvider.LocalPackage.InstallationMethod ==
                      PackageProvider.InstallationType.GitHubBranch ||
@@ -244,11 +244,11 @@ namespace GDX.Editor.ProjectSettings
                      PackageProvider.InstallationType.PackageManagerBranch) &&
                     UpdateProvider.LocalPackage.SourceTag == "dev")
                 {
-                    m_ButtonManualUpgrade.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                    m_ButtonManualUpgrade.RemoveFromClassList(ResourcesProvider.HiddenClass);
                 }
                 else
                 {
-                    m_ButtonManualUpgrade.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                    m_ButtonManualUpgrade.AddToClassList(ResourcesProvider.HiddenClass);
                 }
 
             }

@@ -27,17 +27,17 @@ namespace GDX.Editor.ProjectSettings
             m_TextOutputFolder.SetValueWithoutNotify(Config.ConfigOutputPath);
             m_TextOutputFolder.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingConfig.ConfigOutputPath = evt.newValue;
+                ProjectSettingsProvider.WorkingConfig.ConfigOutputPath = evt.newValue;
                 if (Config.ConfigOutputPath != evt.newValue)
                 {
-                    m_TextOutputFolder.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                    m_TextOutputFolder.AddToClassList(ResourcesProvider.ChangedClass);
                 }
                 else
                 {
-                    m_TextOutputFolder.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                    m_TextOutputFolder.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
 
-                SettingsProvider.CheckForChanges();
+                ProjectSettingsProvider.CheckForChanges();
             });
         }
 
@@ -95,7 +95,7 @@ namespace GDX.Editor.ProjectSettings
         public void UpdateSectionContent()
         {
             ConfigSectionsProvider.SetClassChangeCheck(m_TextOutputFolder, Config.ConfigOutputPath,
-                SettingsProvider.WorkingConfig.ConfigOutputPath);
+                ProjectSettingsProvider.WorkingConfig.ConfigOutputPath);
         }
     }
 }

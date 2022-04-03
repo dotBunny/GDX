@@ -11,6 +11,13 @@ namespace GDX.Editor
 {
     public static class ResourcesProvider
     {
+        public const string ChangedClass = "changed";
+        public const string HiddenClass = "hidden";
+        public const string DisabledClass = "disabled";
+        public const string EnabledClass = "enabled";
+        public const string ExpandedClass = "expanded";
+        public const string SearchClass = "search";
+
         /// <summary>
         ///     A collection of queried <see cref="VisualTreeAsset" /> assets keyed by their search.
         /// </summary>
@@ -20,7 +27,7 @@ namespace GDX.Editor
         ///     The cached reference to the global stylesheet.
         /// </summary>
         static StyleSheet s_Stylesheet;
-        
+
         /// <summary>
         ///     The cached reference to the override stylesheet.
         /// </summary>
@@ -35,7 +42,7 @@ namespace GDX.Editor
         ///     A cached pathing to where our UXML are stored.
         /// </summary>
         static string s_FoundAssetFolder;
-        
+
         /// <summary>
         ///     The cached reference to the light theme stylesheet.
         /// </summary>

@@ -27,17 +27,17 @@ namespace GDX.Editor.ProjectSettings
             m_TextAutomationFolder.SetValueWithoutNotify(Config.PlatformAutomationFolder);
             m_TextAutomationFolder.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingConfig.PlatformAutomationFolder = evt.newValue;
+                ProjectSettingsProvider.WorkingConfig.PlatformAutomationFolder = evt.newValue;
                 if (Config.PlatformAutomationFolder != evt.newValue)
                 {
-                    m_TextAutomationFolder.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                    m_TextAutomationFolder.AddToClassList(ResourcesProvider.ChangedClass);
                 }
                 else
                 {
-                    m_TextAutomationFolder.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                    m_TextAutomationFolder.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
 
-                SettingsProvider.CheckForChanges();
+                ProjectSettingsProvider.CheckForChanges();
             });
 
             m_TextCacheFolder = m_RootElement.Q<TextField>("text-cache-folder");
@@ -45,17 +45,17 @@ namespace GDX.Editor.ProjectSettings
             m_TextCacheFolder.SetValueWithoutNotify(Config.PlatformCacheFolder);
             m_TextCacheFolder.RegisterValueChangedCallback(evt =>
             {
-                SettingsProvider.WorkingConfig.PlatformCacheFolder = evt.newValue;
+                ProjectSettingsProvider.WorkingConfig.PlatformCacheFolder = evt.newValue;
                 if (Config.PlatformCacheFolder != evt.newValue)
                 {
-                    m_TextCacheFolder.AddToClassList(ConfigSectionsProvider.ChangedClass);
+                    m_TextCacheFolder.AddToClassList(ResourcesProvider.ChangedClass);
                 }
                 else
                 {
-                    m_TextCacheFolder.RemoveFromClassList(ConfigSectionsProvider.ChangedClass);
+                    m_TextCacheFolder.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
 
-                SettingsProvider.CheckForChanges();
+                ProjectSettingsProvider.CheckForChanges();
             });
         }
 
@@ -113,9 +113,9 @@ namespace GDX.Editor.ProjectSettings
         public void UpdateSectionContent()
         {
             ConfigSectionsProvider.SetClassChangeCheck(m_TextAutomationFolder, Config.PlatformAutomationFolder,
-                SettingsProvider.WorkingConfig.PlatformAutomationFolder);
+                ProjectSettingsProvider.WorkingConfig.PlatformAutomationFolder);
             ConfigSectionsProvider.SetClassChangeCheck(m_TextCacheFolder, Config.PlatformCacheFolder,
-                SettingsProvider.WorkingConfig.PlatformCacheFolder);
+                ProjectSettingsProvider.WorkingConfig.PlatformCacheFolder);
         }
     }
 }

@@ -16,12 +16,17 @@ namespace GDX.Editor.ProjectSettings
         };
 
         static SimpleList<string> s_Keywords = new SimpleList<string>(100);
+
         static StringKeyDictionary<SimpleList<VisualElement>> s_KeywordMap =
             new StringKeyDictionary<SimpleList<VisualElement>>(100);
 
         static readonly Dictionary<IConfigSection, SimpleList<VisualElement>> k_SectionElementMap =
-            new Dictionary<IConfigSection, SimpleList<VisualElement>>(SettingsProvider.SectionCount);
+            new Dictionary<IConfigSection, SimpleList<VisualElement>>(ProjectSettingsProvider.SectionCount);
 
+        public static string[] GetKeywords()
+        {
+            return s_Keywords.Array;
+        }
         public static void Reset()
         {
             s_Keywords.Clear();

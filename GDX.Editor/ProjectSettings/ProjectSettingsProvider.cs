@@ -17,9 +17,9 @@ namespace GDX.Editor
     ///     GDX Assembly Settings Provider
     /// </summary>
     [HideFromDocFX]
-    public static class SettingsProvider
+    public static class ProjectSettingsProvider
     {
-        public const string SearchClass = "search";
+
         /// <summary>
         ///     The public URI of the package's documentation.
         /// </summary>
@@ -45,6 +45,7 @@ namespace GDX.Editor
 
         static VisualElement s_ChangesElement;
         static VisualElement s_RootElement;
+        static VisualElement s_HolderElement;
         static Button s_ClearButton;
         static Button s_SaveButton;
 
@@ -109,6 +110,11 @@ namespace GDX.Editor
             }
 #endif
             s_SearchKeywords = keywords.ToArray();
+
+            // Prebuild Content
+            SearchProvider.Reset();
+
+
 
             return new UnityEditor.SettingsProvider("Project/GDX", SettingsScope.Project)
             {
@@ -265,16 +271,14 @@ namespace GDX.Editor
 
                     if (string.IsNullOrEmpty(searchContext))
                     {
-                        s_RootElement.RemoveFromClassList(SearchClass);
+                        s_RootElement.RemoveFromClassList(ResourcesProvider.SearchClass);
                     }
                     else
                     {
-                        s_RootElement.AddToClassList(SearchClass);
+                        s_RootElement.AddToClassList(ResourcesProvider.SearchClass);
                     }
                     SearchString = searchContext;
                     ConfigSectionsProvider.UpdateAll();
-
-                    // TODO: Need to tell content areas to expand, without ruining their states
                 }
             };
         }
@@ -317,7 +321,7 @@ namespace GDX.Editor
         public static bool IsSearching()
         {
             if (s_RootElement == null) return false;
-            return s_RootElement.ClassListContains(SearchClass);
+            return s_RootElement.ClassListContains(ResourcesProvider.SearchClass);
         }
 
         /// <summary>
@@ -348,11 +352,11 @@ namespace GDX.Editor
         {
             if (!WorkingConfig.HasChanges())
             {
-                s_ChangesElement.RemoveFromClassList(ConfigSectionsProvider.HiddenClass);
+                s_ChangesElement.RemoveFromClassList(ResourcesProvider.HiddenClass);
             }
             else
             {
-                s_ChangesElement.AddToClassList(ConfigSectionsProvider.HiddenClass);
+                s_ChangesElement.AddToClassList(ResourcesProvider.HiddenClass);
             }
         }
 

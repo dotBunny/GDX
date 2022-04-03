@@ -12,17 +12,16 @@ namespace GDX.Editor.ProjectSettings
 {
     public static class ConfigSectionsProvider
     {
-        public const string ChangedClass = "changed";
-        public const string HiddenClass = "hidden";
-        const string k_DisabledClass = "disabled";
-        const string k_EnabledClass = "enabled";
-        const string k_ExpandedClass = "expanded";
-
         static StringKeyDictionary<VisualElement> s_ConfigSectionContents =
-            new StringKeyDictionary<VisualElement>(SettingsProvider.SectionCount);
+            new StringKeyDictionary<VisualElement>(ProjectSettingsProvider.SectionCount);
 
         static StringKeyDictionary<VisualElement> s_ConfigSectionHeaders =
-            new StringKeyDictionary<VisualElement>(SettingsProvider.SectionCount);
+            new StringKeyDictionary<VisualElement>(ProjectSettingsProvider.SectionCount);
+
+        // public static VisualElement Build()
+        // {
+        //
+        // }
 
         public static VisualElement CreateAndBindSectionHeader(IConfigSection section)
         {
@@ -62,7 +61,7 @@ namespace GDX.Editor.ProjectSettings
             {
                 if (section.GetSectionHelpLink() != null)
                 {
-                    string helpLink = $"{SettingsProvider.DocumentationUri}{section.GetSectionHelpLink()}";
+                    string helpLink = $"{ProjectSettingsProvider.DocumentationUri}{section.GetSectionHelpLink()}";
                     helpButton.clicked += () =>
                     {
                         GUIUtility.hotControl = 0;
@@ -131,17 +130,17 @@ namespace GDX.Editor.ProjectSettings
         static void OnExpandSectionHeaderClicked(string sectionKey)
         {
             GUIUtility.hotControl = 0;
-            IConfigSection section = SettingsProvider.ConfigSections[sectionKey];
-            bool setting = SettingsProvider.GetCachedEditorBoolean(sectionKey, section.GetDefaultVisibility());
-            SettingsProvider.SetCachedEditorBoolean(sectionKey, !setting);
+            IConfigSection section = ProjectSettingsProvider.ConfigSections[sectionKey];
+            bool setting = ProjectSettingsProvider.GetCachedEditorBoolean(sectionKey, section.GetDefaultVisibility());
+            ProjectSettingsProvider.SetCachedEditorBoolean(sectionKey, !setting);
         }
 
         static void OnToggleSectionHeaderClicked(VisualElement toggleElement, string sectionKey, bool newValue)
         {
             // Do not toggle during search mode
-            if (SettingsProvider.IsSearching()) return;
+            if (ProjectSettingsProvider.IsSearching()) return;
 
-            IConfigSection section = SettingsProvider.ConfigSections[sectionKey];
+            IConfigSection section = ProjectSettingsProvider.ConfigSections[sectionKey];
             section.SetToggleState(toggleElement, newValue);
             UpdateSectionContent(sectionKey);
             UpdateSectionHeader(sectionKey);
@@ -150,7 +149,7 @@ namespace GDX.Editor.ProjectSettings
         public static void UpdateAll()
         {
             int iterator = 0;
-            while (SettingsProvider.ConfigSections.MoveNext(ref iterator, out StringKeyEntry<IConfigSection> item))
+            while (ProjectSettingsProvider.ConfigSections.MoveNext(ref iterator, out StringKeyEntry<IConfigSection> item))
             {
                 UpdateSectionHeader(item.Key);
                 UpdateSectionContent(item.Key);
@@ -159,7 +158,7 @@ namespace GDX.Editor.ProjectSettings
 
         public static void UpdateSectionContent(string sectionKey)
         {
-            IConfigSection section = SettingsProvider.ConfigSections[sectionKey];
+            IConfigSection section = ProjectSettingsProvider.ConfigSections[sectionKey];
 
             // This can happen due to the order of how events fire.
             if (!s_ConfigSectionContents.ContainsKey(sectionKey))
@@ -169,28 +168,28 @@ namespace GDX.Editor.ProjectSettings
 
             VisualElement element = s_ConfigSectionContents[sectionKey];
 
-            if (SettingsProvider.IsSearching())
+            if (ProjectSettingsProvider.IsSearching())
             {
                 // If we arent actually matched to the query
-                if (!section.GetSearchKeywords().PartialMatch(SettingsProvider.SearchString))
+                if (!section.GetSearchKeywords().PartialMatch(ProjectSettingsProvider.SearchString))
                 {
-                    element.AddToClassList(HiddenClass);
+                    element.AddToClassList(ResourcesProvider.HiddenClass);
                     return;
                 }
 
                 // Ok so we do fall into it, so lets remove the hidden class
-                element.RemoveFromClassList(HiddenClass);
+                element.RemoveFromClassList(ResourcesProvider.HiddenClass);
             }
             else
             {
                 // Default visible/hidden behaviour
-                if (SettingsProvider.GetCachedEditorBoolean(sectionKey, section.GetDefaultVisibility()))
+                if (ProjectSettingsProvider.GetCachedEditorBoolean(sectionKey, section.GetDefaultVisibility()))
                 {
-                    element.RemoveFromClassList(HiddenClass);
+                    element.RemoveFromClassList(ResourcesProvider.HiddenClass);
                 }
                 else
                 {
-                    element.AddToClassList(HiddenClass);
+                    element.AddToClassList(ResourcesProvider.HiddenClass);
                 }
             }
 
@@ -200,7 +199,7 @@ namespace GDX.Editor.ProjectSettings
 
         public static void UpdateSectionHeader(string sectionKey)
         {
-            IConfigSection section = SettingsProvider.ConfigSections[sectionKey];
+            IConfigSection section = ProjectSettingsProvider.ConfigSections[sectionKey];
 
             // This can happen due to the order of how events fire.
             if (!s_ConfigSectionContents.ContainsKey(sectionKey))
@@ -210,20 +209,20 @@ namespace GDX.Editor.ProjectSettings
 
             VisualElement sectionHeaderElement = s_ConfigSectionHeaders[sectionKey];
 
-            if (SettingsProvider.IsSearching())
+            if (ProjectSettingsProvider.IsSearching())
             {
-                if (!section.GetSearchKeywords().PartialMatch(SettingsProvider.SearchString))
+                if (!section.GetSearchKeywords().PartialMatch(ProjectSettingsProvider.SearchString))
                 {
-                    sectionHeaderElement.AddToClassList(HiddenClass);
+                    sectionHeaderElement.AddToClassList(ResourcesProvider.HiddenClass);
                 }
-                else if(sectionHeaderElement.ClassListContains(HiddenClass))
+                else if(sectionHeaderElement.ClassListContains(ResourcesProvider.HiddenClass))
                 {
-                    sectionHeaderElement.RemoveFromClassList(HiddenClass);
+                    sectionHeaderElement.RemoveFromClassList(ResourcesProvider.HiddenClass);
                 }
             }
-            else if (sectionHeaderElement.ClassListContains(HiddenClass))
+            else if (sectionHeaderElement.ClassListContains(ResourcesProvider.HiddenClass))
             {
-                sectionHeaderElement.RemoveFromClassList(HiddenClass);
+                sectionHeaderElement.RemoveFromClassList(ResourcesProvider.HiddenClass);
             }
 
             if (section.GetToggleSupport())
@@ -235,23 +234,23 @@ namespace GDX.Editor.ProjectSettings
                 bool toggleState = section.GetToggleState();
                 if (toggleState)
                 {
-                    sectionHeaderElement.RemoveFromClassList(k_DisabledClass);
-                    sectionHeaderElement.AddToClassList(k_EnabledClass);
+                    sectionHeaderElement.RemoveFromClassList(ResourcesProvider.DisabledClass);
+                    sectionHeaderElement.AddToClassList(ResourcesProvider.EnabledClass);
                 }
                 else
                 {
-                    sectionHeaderElement.RemoveFromClassList(k_EnabledClass);
-                    sectionHeaderElement.AddToClassList(k_DisabledClass);
+                    sectionHeaderElement.RemoveFromClassList(ResourcesProvider.EnabledClass);
+                    sectionHeaderElement.AddToClassList(ResourcesProvider.DisabledClass);
                 }
             }
 
-            if (SettingsProvider.GetCachedEditorBoolean(sectionKey, section.GetDefaultVisibility()))
+            if (ProjectSettingsProvider.GetCachedEditorBoolean(sectionKey, section.GetDefaultVisibility()))
             {
-                sectionHeaderElement.AddToClassList(k_ExpandedClass);
+                sectionHeaderElement.AddToClassList(ResourcesProvider.ExpandedClass);
             }
             else
             {
-                sectionHeaderElement.RemoveFromClassList(k_ExpandedClass);
+                sectionHeaderElement.RemoveFromClassList(ResourcesProvider.ExpandedClass);
             }
         }
 
@@ -263,11 +262,11 @@ namespace GDX.Editor.ProjectSettings
 
             if (lhs != rhs)
             {
-                element.AddToClassList(ChangedClass);
+                element.AddToClassList(ResourcesProvider.ChangedClass);
             }
             else
             {
-                element.RemoveFromClassList(ChangedClass);
+                element.RemoveFromClassList(ResourcesProvider.ChangedClass);
             }
         }
 
@@ -278,11 +277,11 @@ namespace GDX.Editor.ProjectSettings
 
             if (!lhs.Equals(rhs))
             {
-                element.AddToClassList(ChangedClass);
+                element.AddToClassList(ResourcesProvider.ChangedClass);
             }
             else
             {
-                element.RemoveFromClassList(ChangedClass);
+                element.RemoveFromClassList(ResourcesProvider.ChangedClass);
             }
         }
         public static void SetEnumChangeCheck<T>(EnumField element, T lhs, T rhs) where T : Enum
@@ -290,11 +289,11 @@ namespace GDX.Editor.ProjectSettings
             element.SetValueWithoutNotify(rhs);
             if (lhs.ToString() != rhs.ToString())
             {
-                element.AddToClassList(ChangedClass);
+                element.AddToClassList(ResourcesProvider.ChangedClass);
             }
             else
             {
-                element.RemoveFromClassList(ChangedClass);
+                element.RemoveFromClassList(ResourcesProvider.ChangedClass);
             }
         }
 
@@ -303,11 +302,11 @@ namespace GDX.Editor.ProjectSettings
             element.SetValueWithoutNotify(rhs);
             if (lhs != rhs)
             {
-                element.AddToClassList(ChangedClass);
+                element.AddToClassList(ResourcesProvider.ChangedClass);
             }
             else
             {
-                element.RemoveFromClassList(ChangedClass);
+                element.RemoveFromClassList(ResourcesProvider.ChangedClass);
             }
         }
 
