@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
-using System.Web.UI.WebControls;
 using GDX.Collections.Generic;
 using GDX.Editor.ProjectSettings;
 using UnityEditor;
@@ -15,7 +13,6 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
-using Debug = UnityEngine.Debug;
 using Label = UnityEngine.UIElements.Label;
 
 namespace GDX.Editor
