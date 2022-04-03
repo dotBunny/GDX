@@ -54,6 +54,7 @@ namespace GDX.Editor.ProjectSettings
 
 
             m_TextOutputPath = m_RootElement.Q<TextField>("text-output-path");
+            SearchProvider.RegisterElement<TextField>(this, m_TextOutputPath);
             m_TextOutputPath.value = SettingsProvider.WorkingConfig.DeveloperBuildInfoPath;
             m_TextOutputPath.RegisterValueChangedCallback(evt =>
             {
@@ -72,6 +73,7 @@ namespace GDX.Editor.ProjectSettings
 
 
             m_TextNamespace = m_RootElement.Q<TextField>("text-namespace");
+            SearchProvider.RegisterElement<TextField>(this, m_TextNamespace);
             m_TextNamespace.value = SettingsProvider.WorkingConfig.DeveloperBuildInfoNamespace;
             m_TextNamespace.RegisterValueChangedCallback(evt =>
             {
@@ -89,6 +91,7 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_ToggleAssemblyDefinition = m_RootElement.Q<Toggle>("toggle-assembly-definition");
+            SearchProvider.RegisterElement<Toggle>(this, m_ToggleAssemblyDefinition);
             m_ToggleAssemblyDefinition.value = SettingsProvider.WorkingConfig.DeveloperBuildInfoAssemblyDefinition;
             m_ToggleAssemblyDefinition.RegisterValueChangedCallback(evt =>
             {
@@ -107,6 +110,7 @@ namespace GDX.Editor.ProjectSettings
 
 
             m_TextNumber = m_RootElement.Q<TextField>("text-number");
+            SearchProvider.RegisterElement<TextField>(this, m_TextNumber);
             m_TextNumber.value = SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildNumberArgument;
             m_TextNumber.RegisterValueChangedCallback(evt =>
             {
@@ -124,6 +128,7 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_TextDescription = m_RootElement.Q<TextField>("text-description");
+            SearchProvider.RegisterElement<TextField>(this, m_TextDescription);
             m_TextDescription.value = SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildDescriptionArgument;
             m_TextDescription.RegisterValueChangedCallback(evt =>
             {
@@ -141,6 +146,7 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_TextChangelist = m_RootElement.Q<TextField>("text-changelist");
+            SearchProvider.RegisterElement<TextField>(this, m_TextChangelist);
             m_TextChangelist.value = SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildChangelistArgument;
             m_TextChangelist.RegisterValueChangedCallback(evt =>
             {
@@ -158,6 +164,7 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_TextTask = m_RootElement.Q<TextField>("text-task");
+            SearchProvider.RegisterElement<TextField>(this, m_TextTask);
             m_TextTask.value = SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildTaskArgument;
             m_TextTask.RegisterValueChangedCallback(evt =>
             {
@@ -175,6 +182,7 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_TextStream = m_RootElement.Q<TextField>("text-stream");
+            SearchProvider.RegisterElement<TextField>(this, m_TextStream);
             m_TextStream.value = SettingsProvider.WorkingConfig.DeveloperBuildInfoBuildStreamArgument;
             m_TextStream.RegisterValueChangedCallback(evt =>
             {

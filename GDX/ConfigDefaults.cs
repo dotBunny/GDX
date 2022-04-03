@@ -4,9 +4,12 @@
 
 namespace GDX
 {
+    /// <summary>
+    ///     The default values used by <see cref="Config" />.
+    /// </summary>
     public static class ConfigDefaults
     {
-/// <summary>
+            /// <summary>
             ///     The asset database relative path of the GDX config override file.
             /// </summary>
             public const string ConfigOutputPath = "Generated/GDX.generated.cs";

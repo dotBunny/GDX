@@ -8,6 +8,7 @@ using GDX.Collections.Generic;
 using GDX.Editor.ProjectSettings;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Profiling;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor
@@ -115,6 +116,7 @@ namespace GDX.Editor
                 activateHandler = (searchContext, rootElement) =>
                 {
                     s_RootElement = rootElement;
+                    SearchProvider.Reset();
 
                     // Add base style sheet
                     if (ResourcesProvider.GetStyleSheet() != null)

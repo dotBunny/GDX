@@ -44,6 +44,7 @@ namespace GDX.Editor.ProjectSettings
 
             // Bind Top
             m_ButtonRegenerateUnits = m_RootElement.Q<Button>("button-regenerate-units");
+            SearchProvider.RegisterElement<Button>(this, m_ButtonRegenerateUnits);
             m_ButtonRegenerateUnits.clicked += () =>
             {
                 BoltCore.Configuration.Save();

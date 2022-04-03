@@ -23,6 +23,7 @@ namespace GDX.Editor.ProjectSettings
             m_RootElement = rootElement;
 
             m_TextArgumentPrefix = m_RootElement.Q<TextField>("text-argument-prefix");
+            SearchProvider.RegisterElement<TextField>(this, m_TextArgumentPrefix);
             m_TextArgumentPrefix.value = SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix;
             m_TextArgumentPrefix.RegisterValueChangedCallback(evt =>
             {
@@ -41,6 +42,7 @@ namespace GDX.Editor.ProjectSettings
 
 
             m_TextArgumentSplit = m_RootElement.Q<TextField>("text-argument-split");
+            SearchProvider.RegisterElement<TextField>(this, m_TextArgumentSplit);
             m_TextArgumentSplit.value = SettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit;
             m_TextArgumentSplit.RegisterValueChangedCallback(evt =>
             {

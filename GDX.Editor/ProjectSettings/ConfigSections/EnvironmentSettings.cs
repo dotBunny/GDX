@@ -4,7 +4,9 @@
 
 using System.Collections.Generic;
 using UnityEditor.UIElements;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
+using Toggle = UnityEngine.UIElements.Toggle;
 #if !GDX_MASKFIELD
 using System.Reflection;
 #endif
@@ -62,6 +64,7 @@ namespace GDX.Editor.ProjectSettings
             m_RootElement = rootElement;
 
             m_ToggleEnsureSymbol = m_RootElement.Q<Toggle>("toggle-ensure-symbol");
+            SearchProvider.RegisterElement<Toggle>(this, m_ToggleEnsureSymbol);
             m_ToggleEnsureSymbol.value = SettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol;
             m_ToggleEnsureSymbol.RegisterValueChangedCallback(evt =>
             {
@@ -79,6 +82,7 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_ToggleDevelopmentConsole = m_RootElement.Q<Toggle>("toggle-console-development");
+            SearchProvider.RegisterElement<Toggle>(this, m_ToggleDevelopmentConsole);
             m_ToggleDevelopmentConsole.value = SettingsProvider.WorkingConfig.TraceDevelopmentOutputToUnityConsole;
             m_ToggleDevelopmentConsole.RegisterValueChangedCallback(evt =>
             {
@@ -94,6 +98,7 @@ namespace GDX.Editor.ProjectSettings
                 SettingsProvider.CheckForChanges();
             });
             m_ToggleDebugConsole = m_RootElement.Q<Toggle>("toggle-console-debug");
+            SearchProvider.RegisterElement<Toggle>(this, m_ToggleDebugConsole);
             m_ToggleDebugConsole.value = SettingsProvider.WorkingConfig.TraceDebugOutputToUnityConsole;
             m_ToggleDebugConsole.RegisterValueChangedCallback(evt =>
             {
@@ -110,6 +115,7 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_MaskDevelopment = m_RootElement.Q<MaskField>("mask-development");
+            SearchProvider.RegisterElement<MaskField>(this, m_MaskDevelopment);
 
 
 #if GDX_MASKFIELD
@@ -134,6 +140,7 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_MaskDebug = m_RootElement.Q<MaskField>("mask-debug");
+            SearchProvider.RegisterElement<MaskField>(this, m_MaskDebug);
 #if GDX_MASKFIELD
             m_MaskDebug.choices = k_TraceChoices;
             m_MaskDebug.choicesMasks = k_TraceValues;
@@ -156,6 +163,7 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_MaskRelease = m_RootElement.Q<MaskField>("mask-release");
+            SearchProvider.RegisterElement<MaskField>(this, m_MaskRelease);
 #if GDX_MASKFIELD
             m_MaskRelease.choices = k_TraceChoices;
             m_MaskRelease.choicesMasks = k_TraceValues;

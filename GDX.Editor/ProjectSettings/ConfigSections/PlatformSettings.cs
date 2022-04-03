@@ -23,6 +23,7 @@ namespace GDX.Editor.ProjectSettings
             m_RootElement = rootElement;
 
             m_TextAutomationFolder = m_RootElement.Q<TextField>("text-automation-folder");
+            SearchProvider.RegisterElement<TextField>(this, m_TextAutomationFolder);
             m_TextAutomationFolder.SetValueWithoutNotify(Config.PlatformAutomationFolder);
             m_TextAutomationFolder.RegisterValueChangedCallback(evt =>
             {
@@ -40,6 +41,7 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_TextCacheFolder = m_RootElement.Q<TextField>("text-cache-folder");
+            SearchProvider.RegisterElement<TextField>(this, m_TextCacheFolder);
             m_TextCacheFolder.SetValueWithoutNotify(Config.PlatformCacheFolder);
             m_TextCacheFolder.RegisterValueChangedCallback(evt =>
             {

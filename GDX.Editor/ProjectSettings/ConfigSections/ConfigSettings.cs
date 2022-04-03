@@ -22,6 +22,7 @@ namespace GDX.Editor.ProjectSettings
             m_RootElement = rootElement;
 
             m_TextOutputFolder = m_RootElement.Q<TextField>("text-output-path");
+            SearchProvider.RegisterElement<TextField>(this, m_TextOutputFolder);
 
             m_TextOutputFolder.SetValueWithoutNotify(Config.ConfigOutputPath);
             m_TextOutputFolder.RegisterValueChangedCallback(evt =>

@@ -28,6 +28,7 @@ namespace GDX.Editor.ProjectSettings
             m_RootElement = rootElement;
 
             m_ToggleSetDefaultCulture = m_RootElement.Q<Toggle>("toggle-set-default-culture");
+            SearchProvider.RegisterElement<Toggle>(this, m_ToggleSetDefaultCulture);
             m_ToggleSetDefaultCulture.value = SettingsProvider.WorkingConfig.LocalizationSetDefaultCulture;
             m_ToggleSetDefaultCulture.RegisterValueChangedCallback(evt =>
             {
@@ -45,6 +46,7 @@ namespace GDX.Editor.ProjectSettings
             });
 
             m_EnumDefaultCulture = m_RootElement.Q<EnumField>("enum-default-culture");
+            SearchProvider.RegisterElement<EnumField>(this, m_EnumDefaultCulture);
             m_EnumDefaultCulture.value = SettingsProvider.WorkingConfig.LocalizationDefaultCulture;
             m_EnumDefaultCulture.RegisterValueChangedCallback(evt =>
             {
