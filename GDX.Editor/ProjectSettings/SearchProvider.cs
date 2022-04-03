@@ -56,7 +56,7 @@ namespace GDX.Editor.ProjectSettings
             // Parse element
             if (element is BaseField<T> field)
             {
-                string[] labelWords = field.labelElement.text.Split(" ");
+                string[] labelWords = field.labelElement.text.Split(' ');
                 int labelWordsCount = labelWords.Length;
                 for (int i = 0; i < labelWordsCount; i++)
                 {
@@ -67,7 +67,7 @@ namespace GDX.Editor.ProjectSettings
                     }
                 }
 
-                string[] tooltipWords = field.labelElement.tooltip.Split(" ");
+                string[] tooltipWords = field.labelElement.tooltip.Split(' ');
                 int tooltipWordsCount = tooltipWords.Length;
                 for (int i = 0; i < tooltipWordsCount; i++)
                 {
