@@ -11,6 +11,7 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     class PlatformSettings : IConfigSection
     {
+        public const int SectionIndex = 5;
         public const string SectionKey = "GDX.Platform";
         static readonly string[] k_Keywords = { "platform", "automation", "cache" };
         VisualElement m_RootElement;
@@ -23,7 +24,7 @@ namespace GDX.Editor.ProjectSettings
             m_RootElement = rootElement;
 
             m_TextAutomationFolder = m_RootElement.Q<TextField>("text-automation-folder");
-            SearchProvider.RegisterElement<TextField>(this, m_TextAutomationFolder);
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_TextAutomationFolder);
             m_TextAutomationFolder.SetValueWithoutNotify(Config.PlatformAutomationFolder);
             m_TextAutomationFolder.RegisterValueChangedCallback(evt =>
             {
@@ -37,11 +38,11 @@ namespace GDX.Editor.ProjectSettings
                     m_TextAutomationFolder.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
 
-                ProjectSettingsProvider.CheckForChanges();
+                ProjectSettingsProvider.UpdateForChanges();
             });
 
             m_TextCacheFolder = m_RootElement.Q<TextField>("text-cache-folder");
-            SearchProvider.RegisterElement<TextField>(this, m_TextCacheFolder);
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_TextCacheFolder);
             m_TextCacheFolder.SetValueWithoutNotify(Config.PlatformCacheFolder);
             m_TextCacheFolder.RegisterValueChangedCallback(evt =>
             {
@@ -55,7 +56,7 @@ namespace GDX.Editor.ProjectSettings
                     m_TextCacheFolder.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
 
-                ProjectSettingsProvider.CheckForChanges();
+                ProjectSettingsProvider.UpdateForChanges();
             });
         }
 
@@ -77,6 +78,11 @@ namespace GDX.Editor.ProjectSettings
         public string[] GetSearchKeywords()
         {
             return k_Keywords;
+        }
+
+        public int GetSectionIndex()
+        {
+            return SectionIndex;
         }
 
         public string GetSectionKey()
@@ -112,9 +118,9 @@ namespace GDX.Editor.ProjectSettings
         /// <inheritdoc />
         public void UpdateSectionContent()
         {
-            ConfigSectionsProvider.SetClassChangeCheck(m_TextAutomationFolder, Config.PlatformAutomationFolder,
+            ProjectSettingsProvider.SetClassChangeCheck(m_TextAutomationFolder, Config.PlatformAutomationFolder,
                 ProjectSettingsProvider.WorkingConfig.PlatformAutomationFolder);
-            ConfigSectionsProvider.SetClassChangeCheck(m_TextCacheFolder, Config.PlatformCacheFolder,
+            ProjectSettingsProvider.SetClassChangeCheck(m_TextCacheFolder, Config.PlatformCacheFolder,
                 ProjectSettingsProvider.WorkingConfig.PlatformCacheFolder);
         }
     }

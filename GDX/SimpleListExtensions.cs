@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Runtime.CompilerServices;
 using GDX.Collections.Generic;
 
@@ -77,6 +78,31 @@ namespace GDX
         }
 
         /// <summary>
+        ///     Add an item to the <see cref="SimpleList{T}" /> with checking the internal size (expanding as necessary),
+        ///     making sure that the item is not already contained in the <see cref="SimpleList{T}" />.
+        /// </summary>
+        /// <param name="targetSimpleList">The target <see cref="SimpleList{T}" /> to add to.</param>
+        /// <param name="targetItem">The target class object to add.</param>
+        /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
+        /// <returns>true/false if the operation was able to add the item successfully.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool AddWithExpandCheckUniqueValue<T>(ref this SimpleList<T> targetSimpleList, T targetItem)
+            where T : IEquatable<T>
+        {
+            int count = targetSimpleList.Count;
+            for (int i = 0; i < count; i++)
+            {
+                if (targetSimpleList.Array[i].Equals(targetItem))
+                {
+                    return false;
+                }
+            }
+
+            targetSimpleList.AddWithExpandCheck(targetItem);
+            return true;
+        }
+
+        /// <summary>
         ///     Add an object reference to the <see cref="SimpleList{T}" /> with checking the internal size (expanding as necessary),
         ///     making sure that the reference is not already contained in the <see cref="SimpleList{T}" />.
         ///     Does not prevent addition of different objects for which Equals returns true.
@@ -115,6 +141,31 @@ namespace GDX
             for (int i = 0; i < length; i++)
             {
                 if (array[i] == targetItem)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     <para>Does <paramref name="targetSimpleList" /> contain <paramref name="targetItem" />?</para>
+        /// </summary>
+        /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
+        /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
+        /// <param name="targetItem">The target class object to look for.</param>
+        /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
+        /// <returns>true/false</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ContainsValue<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : IEquatable<T>
+        {
+            int length = targetSimpleList.Count;
+            T[] array = targetSimpleList.Array;
+
+            for (int i = 0; i < length; i++)
+            {
+                if (array[i].Equals(targetItem))
                 {
                     return true;
                 }

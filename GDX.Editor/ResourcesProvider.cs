@@ -17,6 +17,7 @@ namespace GDX.Editor
         public const string EnabledClass = "enabled";
         public const string ExpandedClass = "expanded";
         public const string SearchClass = "search";
+        public const string SearchHighlightClass = "search-item";
 
         /// <summary>
         ///     A collection of queried <see cref="VisualTreeAsset" /> assets keyed by their search.

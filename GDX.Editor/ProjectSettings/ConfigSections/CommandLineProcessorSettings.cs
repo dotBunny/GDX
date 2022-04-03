@@ -11,6 +11,7 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     class CommandLineProcessorSettings : IConfigSection
     {
+        public const int SectionIndex = 3;
         public const string SectionKey = "GDX.Developer.CommandLineParser";
         static readonly string[] k_Keywords = { "cli", "arguments", "argument" };
         VisualElement m_RootElement;
@@ -23,7 +24,7 @@ namespace GDX.Editor.ProjectSettings
             m_RootElement = rootElement;
 
             m_TextArgumentPrefix = m_RootElement.Q<TextField>("text-argument-prefix");
-            SearchProvider.RegisterElement<TextField>(this, m_TextArgumentPrefix);
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_TextArgumentPrefix);
             m_TextArgumentPrefix.value = ProjectSettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix;
             m_TextArgumentPrefix.RegisterValueChangedCallback(evt =>
             {
@@ -37,12 +38,12 @@ namespace GDX.Editor.ProjectSettings
                     m_TextArgumentPrefix.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
 
-                ProjectSettingsProvider.CheckForChanges();
+                ProjectSettingsProvider.UpdateForChanges();
             });
 
 
             m_TextArgumentSplit = m_RootElement.Q<TextField>("text-argument-split");
-            SearchProvider.RegisterElement<TextField>(this, m_TextArgumentSplit);
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_TextArgumentSplit);
             m_TextArgumentSplit.value = ProjectSettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit;
             m_TextArgumentSplit.RegisterValueChangedCallback(evt =>
             {
@@ -56,7 +57,7 @@ namespace GDX.Editor.ProjectSettings
                     m_TextArgumentSplit.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
 
-                ProjectSettingsProvider.CheckForChanges();
+                ProjectSettingsProvider.UpdateForChanges();
             });
 
         }
@@ -74,6 +75,11 @@ namespace GDX.Editor.ProjectSettings
         public string GetSectionHelpLink()
         {
             return "api/GDX.Developer.CommandLineParser.html";
+        }
+
+        public int GetSectionIndex()
+        {
+            return SectionIndex;
         }
 
         public string GetSectionKey()
@@ -114,11 +120,11 @@ namespace GDX.Editor.ProjectSettings
         /// <inheritdoc />
         public void UpdateSectionContent()
         {
-            ConfigSectionsProvider.SetClassChangeCheck(m_TextArgumentPrefix,
+            ProjectSettingsProvider.SetClassChangeCheck(m_TextArgumentPrefix,
                 Config.DeveloperCommandLineParserArgumentPrefix,
                 ProjectSettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentPrefix);
 
-            ConfigSectionsProvider.SetClassChangeCheck(m_TextArgumentSplit,
+            ProjectSettingsProvider.SetClassChangeCheck(m_TextArgumentSplit,
                 Config.DeveloperCommandLineParserArgumentSplit,
                 ProjectSettingsProvider.WorkingConfig.DeveloperCommandLineParserArgumentSplit);
         }

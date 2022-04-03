@@ -2,35 +2,52 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Text;
+using System.Web.UI.WebControls;
 using GDX.Collections.Generic;
 using GDX.Editor.ProjectSettings;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.Profiling;
 using UnityEngine.UIElements;
+using Button = UnityEngine.UIElements.Button;
+using Debug = UnityEngine.Debug;
+using Label = UnityEngine.UIElements.Label;
 
 namespace GDX.Editor
 {
     /// <summary>
-    ///     GDX Assembly Settings Provider
+    ///     A settings provider scoped to the project which is backed by the <see cref="Config"/>.
     /// </summary>
+    /// <remarks>
+    ///     This operates under the assumption that there can only ever be one Project Settings window.
+    /// </remarks>
     [HideFromDocFX]
     public static class ProjectSettingsProvider
     {
-
         /// <summary>
         ///     The public URI of the package's documentation.
         /// </summary>
-        public const string DocumentationUri = "https://gdx.dotbunny.com/";
+        const string k_DocumentationUri = "https://gdx.dotbunny.com/";
 
-        public const int SectionCount = 8;
+        /// <summary>
+        ///     The expected number of sections to be available in the project settings.
+        /// </summary>
+        const int k_SectionCount = 8;
 
-        public static StringKeyDictionary<IConfigSection> ConfigSections = new StringKeyDictionary<IConfigSection>(SectionCount);
-
-        public static TransientConfig WorkingConfig;
+        /// <summary>
+        ///     The currently known search string of the Project Settings window.
+        /// </summary>
         public static string SearchString;
+
+        /// <summary>
+        ///     The unsaved working copy of the <see cref="Config"/> which the project settings operates on.
+        /// </summary>
+        public static TransientConfig WorkingConfig;
 
         /// <summary>
         ///     A cache of boolean values backed by <see cref="EditorPrefs" /> to assist with optimizing layout.
@@ -38,249 +55,401 @@ namespace GDX.Editor
         static StringKeyDictionary<bool> s_CachedEditorPreferences = new StringKeyDictionary<bool>(30);
 
         /// <summary>
+        ///   A mapping of section's content <see cref="VisualElement"/> to <see cref="IConfigSection"/> by its index.
+        /// </summary>
+        static readonly VisualElement[] k_ConfigSectionContents = new VisualElement[k_SectionCount];
+
+        /// <summary>
+        ///   A mapping of section's header <see cref="VisualElement"/> to <see cref="IConfigSection"/> by its index.
+        /// </summary>
+        static readonly VisualElement[] k_ConfigSectionHeaders = new VisualElement[k_SectionCount];
+
+        /// <summary>
+        ///     A mapping of the actual <see cref="IConfigSection"/> by its index.
+        /// </summary>
+        static readonly IConfigSection[] k_ConfigSections = new IConfigSection[k_SectionCount];
+
+        /// <summary>
+        ///     A list of keywords to exclude from the parsed keywords, these are just common words which are not
+        ///     relevant when it comes to searching.
+        /// </summary>
+        static readonly int[] k_SearchKeywordExclusions = new int[]
+        {
+            "the".GetStableHashCode(),
+            "for".GetStableHashCode(),
+            "and".GetStableHashCode(),
+            "can".GetStableHashCode(),
+            "its".GetStableHashCode(),
+            "not".GetStableHashCode(),
+            "all".GetStableHashCode(),
+            "like".GetStableHashCode(),
+            "that".GetStableHashCode(),
+            "then".GetStableHashCode(),
+            "with".GetStableHashCode()
+        };
+
+        /// <summary>
         ///     A list of keywords to flag when searching project settings.
         /// </summary>
-        static string[] s_SearchKeywords;
+        static SimpleList<string> s_SearchKeywords = new SimpleList<string>(150);
+
+        static SimpleList<int> s_SearchKeywordsHashes = new SimpleList<int>(150);
+
+        /// <summary>
+        ///     A map of search keywords to individual <see cref="VisualElement"/>s which should be highlighted.
+        /// </summary>
+        static Dictionary<int, SimpleList<VisualElement>> s_SearchKeywordMap =
+            new Dictionary<int, SimpleList<VisualElement>>(150);
+
+        /// <summary>
+        ///     A map of <see cref="VisualElement"/>s that have been processed for keyword search, to their
+        ///     <see cref="IConfigSection"/> by section index.
+        /// </summary>
+        static readonly SimpleList<VisualElement>[] k_SearchSectionElementMap = new SimpleList<VisualElement>[k_SectionCount]
+        {
+            new SimpleList<VisualElement>(10),
+            new SimpleList<VisualElement>(10),
+            new SimpleList<VisualElement>(10),
+            new SimpleList<VisualElement>(10),
+            new SimpleList<VisualElement>(10),
+            new SimpleList<VisualElement>(10),
+            new SimpleList<VisualElement>(10),
+            new SimpleList<VisualElement>(10)
+        };
 
 
         static VisualElement s_ChangesElement;
         static VisualElement s_RootElement;
         static VisualElement s_HolderElement;
+
+        static VisualElement[] s_PreviousQueriedElements;
+        static VisualElement[] s_LastQueriedElements;
         static Button s_ClearButton;
         static Button s_SaveButton;
-
         static EditorWindow s_ProjectSettingsWindow;
 
+        static void CacheSectionContent(int sectionIndex)
+        {
+            // We already have something made, we don't want to redo the work
+            if (k_ConfigSectionContents[sectionIndex] != null)
+            {
+                return;
+            }
+
+            IConfigSection section = k_ConfigSections[sectionIndex];
+
+            VisualTreeAsset sectionAsset =
+                ResourcesProvider.GetVisualTreeAsset(section.GetTemplateName());
+
+            VisualElement sectionInstance = sectionAsset.Instantiate()[0];
+
+            section.BindSectionContent(sectionInstance);
+
+            // Record the whole section
+            k_ConfigSectionContents[sectionIndex] = sectionInstance;
+        }
+        static void CacheSectionHeader(int sectionIndex)
+        {
+            if (k_ConfigSectionHeaders[sectionIndex] != null)
+            {
+                return;
+            }
+            IConfigSection section = k_ConfigSections[sectionIndex];
+
+            VisualTreeAsset headerAsset =
+                ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsSectionHeader");
+
+            VisualElement headerInstance = headerAsset.Instantiate()[0];
+
+            // Expansion
+            Button expandButton = headerInstance.Q<Button>("button-expand");
+            if (expandButton != null)
+            {
+                expandButton.clicked += () =>
+                {
+                    OnExpandSectionHeaderClicked(sectionIndex);
+                    UpdateSectionHeader(sectionIndex);
+                    UpdateSectionContent(sectionIndex);
+                };
+            }
+
+            // Label
+            Label nameLabel = headerInstance.Q<Label>("label-name");
+            if (nameLabel != null)
+            {
+                nameLabel.text = section.GetSectionHeaderLabel();
+            }
+
+            // Help Button
+            Button helpButton = headerInstance.Q<Button>("button-help");
+            if (helpButton != null)
+            {
+                if (section.GetSectionHelpLink() != null)
+                {
+                    string helpLink = $"{ProjectSettingsProvider.k_DocumentationUri}{section.GetSectionHelpLink()}";
+                    helpButton.clicked += () =>
+                    {
+                        GUIUtility.hotControl = 0;
+                        Application.OpenURL(helpLink);
+                    };
+                    helpButton.visible = true;
+                }
+                else
+                {
+                    helpButton.visible = false;
+                }
+            }
+
+            // Toggle
+            Toggle enabledToggle = headerInstance.Q<Toggle>("toggle-enabled");
+            if (enabledToggle != null)
+            {
+                if (section.GetToggleSupport())
+                {
+                    enabledToggle.tooltip = section.GetToggleTooltip();
+                    enabledToggle.visible = true;
+                    enabledToggle.RegisterValueChangedCallback(evt =>
+                    {
+                        OnToggleSectionHeaderClicked(enabledToggle, sectionIndex, evt.newValue);
+                    });
+                }
+                else
+                {
+                    enabledToggle.visible = false;
+                    enabledToggle.tooltip = null;
+                }
+            }
+
+            // Send back created instance
+            k_ConfigSectionHeaders[sectionIndex] = headerInstance;
+        }
+
         /// <summary>
-        ///     Get <see cref="UnityEditor.SettingsProvider" /> for GDX assembly.
+        ///     Get the <see cref="UnityEditor.SettingsProvider" /> for GDX.
         /// </summary>
         /// <returns>A provider for project settings.</returns>
         [SettingsProvider]
-        public static UnityEditor.SettingsProvider Get()
+        public static SettingsProvider Get()
         {
-            // Create our working copy of the config - we do this to catch if theres an override that happens
-            // during domain reload callbacks
-            WorkingConfig ??= new TransientConfig();
+            // We have this wrapped because if a failure occurs in the creation it will silently fail.
+            try
+            {
+                Initialize();
 
-            // Initialize some things here instead of static initializers
-            List<string> keywords = new List<string>(100);
-
-            // Register settings
-            if (!ConfigSections.ContainsKey(AutomaticUpdatesSettings.SectionKey))
-            {
-                ConfigSections.AddUnchecked(AutomaticUpdatesSettings.SectionKey, new AutomaticUpdatesSettings());
-                keywords.AddUniqueRange(ConfigSections[AutomaticUpdatesSettings.SectionKey].GetSearchKeywords());
-            }
-            if (!ConfigSections.ContainsKey(ConfigSettings.SectionKey))
-            {
-                ConfigSections.AddUnchecked(ConfigSettings.SectionKey, new ConfigSettings());
-                keywords.AddUniqueRange(ConfigSections[ConfigSettings.SectionKey].GetSearchKeywords());
-            }
-            if (!ConfigSections.ContainsKey(BuildInfoSettings.SectionKey))
-            {
-                ConfigSections.AddUnchecked(BuildInfoSettings.SectionKey, new BuildInfoSettings());
-                keywords.AddUniqueRange(ConfigSections[BuildInfoSettings.SectionKey].GetSearchKeywords());
-            }
-            if (!ConfigSections.ContainsKey(CommandLineProcessorSettings.SectionKey))
-            {
-                ConfigSections.AddUnchecked(CommandLineProcessorSettings.SectionKey, new CommandLineProcessorSettings());
-                keywords.AddUniqueRange(ConfigSections[CommandLineProcessorSettings.SectionKey].GetSearchKeywords());
-            }
-            if (!ConfigSections.ContainsKey(EnvironmentSettings.SectionKey))
-            {
-                ConfigSections.AddUnchecked(EnvironmentSettings.SectionKey, new EnvironmentSettings());
-                keywords.AddUniqueRange(ConfigSections[EnvironmentSettings.SectionKey].GetSearchKeywords());
-
-            }
-            if (!ConfigSections.ContainsKey(PlatformSettings.SectionKey))
-            {
-                ConfigSections.AddUnchecked(PlatformSettings.SectionKey, new PlatformSettings());
-                keywords.AddUniqueRange(ConfigSections[PlatformSettings.SectionKey].GetSearchKeywords());
-            }
-            if (!ConfigSections.ContainsKey(LocaleSettings.SectionKey))
-            {
-                ConfigSections.AddUnchecked(LocaleSettings.SectionKey, new LocaleSettings());
-                keywords.AddUniqueRange(ConfigSections[LocaleSettings.SectionKey].GetSearchKeywords());
-            }
-#if GDX_VISUALSCRIPTING
-            if (!ConfigSections.ContainsKey(VisualScriptingSettings.SectionKey))
-            {
-                ConfigSections.AddUnchecked(VisualScriptingSettings.SectionKey, new VisualScriptingSettings());
-                keywords.AddUniqueRange(ConfigSections[VisualScriptingSettings.SectionKey].GetSearchKeywords());
-            }
-#endif
-            s_SearchKeywords = keywords.ToArray();
-
-            // Prebuild Content
-            SearchProvider.Reset();
-
-
-
-            return new UnityEditor.SettingsProvider("Project/GDX", SettingsScope.Project)
-            {
-                label = "GDX",
-                activateHandler = (searchContext, rootElement) =>
+                // StringBuilder keywords = new StringBuilder();
+                // keywords.AppendLine($"KEYWORDS: {s_SearchKeywords.Count}");
+                // for (int i = 0; i < s_SearchKeywords.Count; i++)
+                // {
+                //     keywords.AppendLine($"{s_SearchKeywords.Array[i]}");
+                // }
+                // Debug.Log(keywords.ToString());
+                return new SettingsProvider("Project/GDX", SettingsScope.Project)
                 {
-                    s_RootElement = rootElement;
-                    SearchProvider.Reset();
-
-                    // Add base style sheet
-                    if (ResourcesProvider.GetStyleSheet() != null)
+                    label = "GDX",
+                    activateHandler = (searchContext, rootElement) =>
                     {
-                        rootElement.styleSheets.Add(ResourcesProvider.GetStyleSheet());
-                    }
+                        s_RootElement = rootElement;
 
-                    // Add a light mode style sheet if we have to
-                    if (!EditorGUIUtility.isProSkin)
-                    {
-                        if (ResourcesProvider.GetLightThemeStylesheet() != null)
+                        // Add base style sheet
+                        if (ResourcesProvider.GetStyleSheet() != null)
                         {
-                            rootElement.styleSheets.Add(ResourcesProvider.GetLightThemeStylesheet());
-                        }
-                    }
-
-                    // Add any overrides
-                    if (ResourcesProvider.GetStyleSheetOverride() != null)
-                    {
-                        rootElement.styleSheets.Add(ResourcesProvider.GetStyleSheetOverride());
-                    }
-
-                    // Get our base element
-                    ResourcesProvider.GetVisualTreeAsset("GDXProjectSettings").CloneTree(rootElement);
-
-                    // Early handle of theme
-                    ResourcesProvider.CheckTheme(rootElement);
-
-                    s_ChangesElement = rootElement.Q<VisualElement>("gdx-config-changes");
-
-                    // Handle state buttons
-                    s_ClearButton = s_ChangesElement.Q<Button>("button-clear-changes");
-                    s_ClearButton.clicked += () =>
-                    {
-                        WorkingConfig = new TransientConfig();
-                        ConfigSectionsProvider.UpdateAll();
-                        CheckForChanges();
-                    };
-
-                    s_SaveButton = s_ChangesElement.Q<Button>("button-save-changes");
-                    s_SaveButton.clicked += () =>
-                    {
-                        AssetDatabase.StartAssetEditing();
-
-                        // Remove old file
-                        string previousPath =
-                            Path.Combine(Application.dataPath, Config.ConfigOutputPath);
-                        if (File.Exists(previousPath))
-                        {
-                            AssetDatabase.DeleteAsset(Path.Combine("Assets", Config.ConfigOutputPath));
+                            rootElement.styleSheets.Add(ResourcesProvider.GetStyleSheet());
                         }
 
-                        if (!WorkingConfig.HasChanges())
+                        // Add a light mode style sheet if we have to
+                        if (!EditorGUIUtility.isProSkin)
                         {
-                            // Generate new file
-                            string codePath = Path.Combine(Application.dataPath,
-                                WorkingConfig.ConfigOutputPath);
+                            if (ResourcesProvider.GetLightThemeStylesheet() != null)
+                            {
+                                rootElement.styleSheets.Add(ResourcesProvider.GetLightThemeStylesheet());
+                            }
+                        }
 
-                            // Ensure folder structure is present
-                            Platform.EnsureFileFolderHierarchyExists(codePath);
+                        // Add any overrides
+                        if (ResourcesProvider.GetStyleSheetOverride() != null)
+                        {
+                            rootElement.styleSheets.Add(ResourcesProvider.GetStyleSheetOverride());
+                        }
 
-                            // Write file
-                            File.WriteAllText(codePath, ConfigGenerator.Build(WorkingConfig));
+                        // Get our base element
+                        ResourcesProvider.GetVisualTreeAsset("GDXProjectSettings").CloneTree(rootElement);
 
-                            string projectRelative =
-                                Path.Combine("Assets", WorkingConfig.ConfigOutputPath);
+                        // Early handle of theme
+                        ResourcesProvider.CheckTheme(rootElement);
 
-                            AssetDatabase.StopAssetEditing();
-                            AssetDatabase.ImportAsset(projectRelative);
+                        s_ChangesElement = rootElement.Q<VisualElement>("gdx-config-changes");
+
+                        // Handle state buttons
+                        s_ClearButton = s_ChangesElement.Q<Button>("button-clear-changes");
+                        s_ClearButton.clicked += () =>
+                        {
+                            WorkingConfig = new TransientConfig();
+                            UpdateAllSections();
+                            UpdateForChanges();
+                        };
+
+                        s_SaveButton = s_ChangesElement.Q<Button>("button-save-changes");
+                        s_SaveButton.clicked += () =>
+                        {
+                            AssetDatabase.StartAssetEditing();
+
+                            // Remove old file
+                            string previousPath =
+                                Path.Combine(Application.dataPath, Config.ConfigOutputPath);
+                            if (File.Exists(previousPath))
+                            {
+                                AssetDatabase.DeleteAsset(Path.Combine("Assets", Config.ConfigOutputPath));
+                            }
+
+                            if (!WorkingConfig.HasChanges())
+                            {
+                                // Generate new file
+                                string codePath = Path.Combine(Application.dataPath,
+                                    WorkingConfig.ConfigOutputPath);
+
+                                // Ensure folder structure is present
+                                Platform.EnsureFileFolderHierarchyExists(codePath);
+
+                                // Write file
+                                File.WriteAllText(codePath, ConfigGenerator.Build(WorkingConfig));
+
+                                string projectRelative =
+                                    Path.Combine("Assets", WorkingConfig.ConfigOutputPath);
+
+                                AssetDatabase.StopAssetEditing();
+                                AssetDatabase.ImportAsset(projectRelative);
+                            }
+                            else
+                            {
+                                AssetDatabase.StopAssetEditing();
+                            }
+                        };
+
+                        // Handle Links
+                        Button buttonRepository = rootElement.Q<Button>("button-repository");
+                        buttonRepository.clicked += () =>
+                        {
+                            Application.OpenURL("https://github.com/dotBunny/GDX/");
+                        };
+                        Button buttonDocumentation = rootElement.Q<Button>("button-documentation");
+                        buttonDocumentation.clicked += () =>
+                        {
+                            Application.OpenURL("https://gdx.dotbunny.com/");
+                        };
+                        Button buttonIssue = rootElement.Q<Button>("button-issue");
+                        buttonIssue.clicked += () =>
+                        {
+                            Application.OpenURL("https://github.com/dotBunny/GDX/issues");
+                        };
+
+                        VisualElement packageHolderElement =
+                            rootElement.Q<VisualElement>("gdx-project-settings-packages");
+                        packageHolderElement.Add(GetPackageStatus("Addressables",
+                            Developer.Conditionals.HasAddressablesPackage));
+                        packageHolderElement.Add(GetPackageStatus("Platforms",
+                            Developer.Conditionals.HasPlatformsPackage));
+                        packageHolderElement.Add(GetPackageStatus("Visual Scripting",
+                            Developer.Conditionals.HasVisualScriptingPackage));
+
+                        // Build some useful references
+                        ScrollView contentScrollView = rootElement.Q<ScrollView>("gdx-project-settings-content");
+
+                        // Update first state
+                        UpdateForChanges();
+
+                        // Create ordered list of sections
+                        for (int i = 0; i < k_SectionCount; i++)
+                        {
+                            IConfigSection section = k_ConfigSections[i];
+                            if (section == null) continue;
+
+                            contentScrollView.contentContainer.Add(k_ConfigSectionHeaders[i]);
+                            UpdateSectionHeader(i);
+
+                            contentScrollView.contentContainer.Add(k_ConfigSectionContents[i]);
+                            UpdateSectionContent(i);
+                        }
+                    },
+                    //keywords = s_SearchKeywords.Array,
+                    hasSearchInterestHandler = (searchString) => s_SearchKeywords.PartialMatch(searchString),
+                    inspectorUpdateHandler = () =>
+                    {
+                        if (s_ProjectSettingsWindow == null)
+                        {
+                            s_ProjectSettingsWindow = SettingsService.OpenProjectSettings();
+                        }
+
+                        if (s_ProjectSettingsWindow == null)
+                        {
+                            return;
+                        }
+
+                        string searchContext = Reflection.GetFieldValue<string>(
+                            s_ProjectSettingsWindow, "UnityEditor.SettingsWindow", "m_SearchText");
+
+                        if (SearchString == searchContext)
+                            return;
+
+                        if (string.IsNullOrEmpty(searchContext))
+                        {
+                            s_RootElement.RemoveFromClassList(ResourcesProvider.SearchClass);
                         }
                         else
                         {
-                            AssetDatabase.StopAssetEditing();
+                            s_RootElement.AddToClassList(ResourcesProvider.SearchClass);
                         }
-                    };
 
-                    // Handle Links
-                    Button buttonRepository = rootElement.Q<Button>("button-repository");
-                    buttonRepository.clicked += () =>
-                    {
-                        Application.OpenURL("https://github.com/dotBunny/GDX/");
-                    };
-                    Button buttonDocumentation = rootElement.Q<Button>("button-documentation");
-                    buttonDocumentation.clicked += () =>
-                    {
-                        Application.OpenURL("https://gdx.dotbunny.com/");
-                    };
-                    Button buttonIssue = rootElement.Q<Button>("button-issue");
-                    buttonIssue.clicked += () =>
-                    {
-                        Application.OpenURL("https://github.com/dotBunny/GDX/issues");
-                    };
+                        SearchString = searchContext;
 
-                    VisualElement packageHolderElement = rootElement.Q<VisualElement>("gdx-project-settings-packages");
-                    packageHolderElement.Add(GetPackageStatus("Addressables",
-                        Developer.Conditionals.HasAddressablesPackage));
-                    packageHolderElement.Add(GetPackageStatus("Platforms", Developer.Conditionals.HasPlatformsPackage));
-                    packageHolderElement.Add(GetPackageStatus("Visual Scripting",
-                        Developer.Conditionals.HasVisualScriptingPackage));
-
-                    // Build some useful references
-                    ScrollView contentScrollView = rootElement.Q<ScrollView>("gdx-project-settings-content");
-
-                    // Update first state
-                    CheckForChanges();
-
-                    ConfigSectionsProvider.ClearSectionCache();
-
-                    // Create ordered list of sections
-                    int iterator = 0;
-                    while (ConfigSections.MoveNext(ref iterator, out StringKeyEntry<IConfigSection> item))
-                    {
-                        IConfigSection section = item.Value;
-                        string sectionID = section.GetSectionKey();
-
-                        VisualElement sectionHeader = ConfigSectionsProvider.CreateAndBindSectionHeader(section);
-
-                        contentScrollView.contentContainer.Add(sectionHeader);
-                        ConfigSectionsProvider.UpdateSectionHeader(sectionID);
-
-                        VisualElement sectionContentBase =
-                            ConfigSectionsProvider.CreateAndBindSectionContent(section);
-
-                        contentScrollView.contentContainer.Add(sectionContentBase);
-                        ConfigSectionsProvider.UpdateSectionContent(sectionID);
+                        UpdateForSearch();
+                        UpdateAllSections();
                     }
-                },
-                keywords = s_SearchKeywords,
-                hasSearchInterestHandler = (searchString) => s_SearchKeywords.PartialMatch(searchString),
-                inspectorUpdateHandler = () =>
+                };
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Debugger.Break();
+                throw;
+            }
+        }
+
+        /// <summary>
+        ///     Get a cached value or fill it from <see cref="EditorPrefs" />.
+        /// </summary>
+        /// <param name="id">Identifier for the <see cref="bool" /> value.</param>
+        /// <param name="defaultValue">If no value is found, what should be used.</param>
+        /// <returns></returns>
+        static bool GetCachedEditorBoolean(string id, bool defaultValue = true)
+        {
+            if (s_CachedEditorPreferences.IndexOf(id) == -1)
+            {
+                s_CachedEditorPreferences[id] = EditorPrefs.GetBool(id, defaultValue);
+            }
+
+            return s_CachedEditorPreferences[id];
+        }
+
+        static VisualElement[] GetElementsForQuery(string searchContext)
+        {
+            SimpleList<VisualElement> results = new SimpleList<VisualElement>(10);
+            int count = s_SearchKeywords.Count;
+            for (int i = 0; i < count; i++)
+            {
+                string keyword = s_SearchKeywords.Array[i];
+                if (!keyword.Contains(searchContext))
                 {
-                    if (s_ProjectSettingsWindow == null)
-                    {
-                        s_ProjectSettingsWindow = SettingsService.OpenProjectSettings();
-                    }
-                    if (s_ProjectSettingsWindow == null)
-                    {
-                        return;
-                    }
-
-                    string searchContext = Reflection.GetFieldValue<string>(
-                        s_ProjectSettingsWindow, "UnityEditor.SettingsWindow", "m_SearchText");
-
-                    if (SearchString == searchContext)
-                        return;
-
-                    if (string.IsNullOrEmpty(searchContext))
-                    {
-                        s_RootElement.RemoveFromClassList(ResourcesProvider.SearchClass);
-                    }
-                    else
-                    {
-                        s_RootElement.AddToClassList(ResourcesProvider.SearchClass);
-                    }
-                    SearchString = searchContext;
-                    ConfigSectionsProvider.UpdateAll();
+                    continue;
                 }
-            };
+
+                int hash = s_SearchKeywordsHashes.Array[i];
+                int elementCount = s_SearchKeywordMap[hash].Count;
+                for (int j = 0; j < elementCount; j++)
+                {
+                    results.AddWithExpandCheck(s_SearchKeywordMap[hash].Array[i]);
+                }
+            }
+            return results.Array;
         }
 
         static VisualElement GetPackageStatus(string package, bool status)
@@ -302,26 +471,155 @@ namespace GDX.Editor
             return newInstance;
         }
 
-        /// <summary>
-        ///     Get a cached value or fill it from <see cref="EditorPrefs" />.
-        /// </summary>
-        /// <param name="id">Identifier for the <see cref="bool" /> value.</param>
-        /// <param name="defaultValue">If no value is found, what should be used.</param>
-        /// <returns></returns>
-        public static bool GetCachedEditorBoolean(string id, bool defaultValue = true)
+        public static void Reset()
         {
-            if (s_CachedEditorPreferences.IndexOf(id) == -1)
-            {
-                s_CachedEditorPreferences[id] = EditorPrefs.GetBool(id, defaultValue);
-            }
+            WorkingConfig = null;
 
-            return s_CachedEditorPreferences[id];
+            // Register settings - if necessary
+            for (int i = 0; i < k_SectionCount; i++)
+            {
+                k_ConfigSections[i] = null;
+                k_ConfigSectionContents[i] = null;
+                k_ConfigSectionHeaders[i] = null;
+                k_SearchSectionElementMap[i] = new SimpleList<VisualElement>(10);
+            }
+            s_SearchKeywords.Clear();
+            s_SearchKeywordsHashes.Clear();
+            s_SearchKeywordMap.Clear();
         }
 
-        public static bool IsSearching()
+        static void Initialize()
         {
-            if (s_RootElement == null) return false;
-            return s_RootElement.ClassListContains(ResourcesProvider.SearchClass);
+            // Create our working copy of the config - we do this to catch if theres an override that happens
+            // during domain reload callbacks.
+            WorkingConfig = new TransientConfig();
+
+            // Register settings - if necessary
+            k_ConfigSections[AutomaticUpdatesSettings.SectionIndex] ??= new AutomaticUpdatesSettings();
+            k_ConfigSections[ConfigSettings.SectionIndex] ??= new ConfigSettings();
+            k_ConfigSections[BuildInfoSettings.SectionIndex] ??= new BuildInfoSettings();
+            k_ConfigSections[CommandLineProcessorSettings.SectionIndex] ??= new CommandLineProcessorSettings();
+            k_ConfigSections[EnvironmentSettings.SectionIndex] ??= new EnvironmentSettings();
+            k_ConfigSections[PlatformSettings.SectionIndex] ??= new PlatformSettings();
+            k_ConfigSections[LocaleSettings.SectionIndex] = new LocaleSettings();
+#if GDX_VISUALSCRIPTING
+            k_ConfigSections[VisualScriptingSettings.SectionIndex] ??= new VisualScriptingSettings();
+#endif
+
+
+            // Prewarm Section Elements
+            for (int i = 0; i < k_SectionCount; i++)
+            {
+                // Check for non built, just skip
+                if (k_ConfigSections[i] == null) continue;
+
+                CacheSectionHeader(i);
+                CacheSectionContent(i);
+            }
+        }
+
+        static bool IsSearching()
+        {
+            return s_RootElement != null && s_RootElement.ClassListContains(ResourcesProvider.SearchClass);
+        }
+
+        static void OnExpandSectionHeaderClicked(int sectionIndex)
+        {
+            GUIUtility.hotControl = 0;
+            IConfigSection section = k_ConfigSections[sectionIndex];
+            string sectionKey = section.GetSectionKey();
+            bool setting = GetCachedEditorBoolean(sectionKey, section.GetDefaultVisibility());
+            SetCachedEditorBoolean(sectionKey, !setting);
+        }
+
+        static void OnToggleSectionHeaderClicked(VisualElement toggleElement, int sectionIndex, bool newValue)
+        {
+            // Do not toggle during search mode
+            if (IsSearching()) return;
+
+            IConfigSection section = k_ConfigSections[sectionIndex];
+            section.SetToggleState(toggleElement, newValue);
+
+            UpdateSectionContent(sectionIndex);
+            UpdateSectionHeader(sectionIndex);
+        }
+
+
+        static void FindValidWords(ref SimpleList<string> validWords, string content)
+        {
+            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(content);
+            for (int i = 0; i < splitString.Count; i++)
+            {
+                if (splitString.GetSegmentLength(i) < 3)
+                {
+                    continue;
+                }
+
+                // Check for exclusions
+                if (k_SearchKeywordExclusions.ContainsValue(splitString.GetSegmentHashCode(i)))
+                {
+                    continue;
+                }
+
+                validWords.AddWithExpandCheckUniqueValue(splitString.GetSegment(i));
+            }
+        }
+
+         public static void RegisterElementForSearch(int sectionIndex, VisualElement element, string[] additionalKeywords = null)
+        {
+            // Create our working list
+            SimpleList<string> validWords = new SimpleList<string>(25);
+
+            switch (element)
+            {
+                case TextField textField:
+                    FindValidWords(ref validWords, textField.label);
+                    FindValidWords(ref validWords, textField.tooltip);
+                    break;
+                case EnumField enumField:
+                    FindValidWords(ref validWords, enumField.label);
+                    FindValidWords(ref validWords, enumField.tooltip);
+                    break;
+                case Toggle toggleField:
+                    FindValidWords(ref validWords, toggleField.label);
+                    FindValidWords(ref validWords, toggleField.tooltip);
+                    break;
+                case MaskField maskField:
+                    FindValidWords(ref validWords, maskField.label);
+                    FindValidWords(ref validWords, maskField.tooltip);
+                    break;
+                case Slider sliderField:
+                    FindValidWords(ref validWords, sliderField.label);
+                    FindValidWords(ref validWords, sliderField.tooltip);
+                    break;
+            }
+
+            // TODO: add aditional support
+            // // Passed in words
+            // if (additionalKeywords != null)
+            // {
+            //     FindValidWords(ref validWords, additionalKeywords);
+            // }
+
+            // Build Map
+            int validWordsCount = validWords.Count;
+            for (int i = 0; i < validWordsCount; i++)
+            {
+                string word = validWords.Array[i];
+                int hash = word.GetStableHashCode();
+                if (!s_SearchKeywordsHashes.ContainsValue(hash))
+                {
+                    s_SearchKeywords.AddWithExpandCheck(word);
+                    s_SearchKeywordsHashes.AddWithExpandCheck(hash);
+
+                    // TODO: index against hash
+                    s_SearchKeywordMap.Add(hash, new SimpleList<VisualElement>(20));
+                }
+                s_SearchKeywordMap[hash].AddWithExpandCheck(element);
+            }
+
+            // Register element to a section
+            k_SearchSectionElementMap[sectionIndex].AddWithExpandCheckUniqueItem(element);
         }
 
         /// <summary>
@@ -329,7 +627,7 @@ namespace GDX.Editor
         /// </summary>
         /// <param name="id">Identifier for the <see cref="bool" /> value.</param>
         /// <param name="setValue">The desired value to set.</param>
-        public static void SetCachedEditorBoolean(string id, bool setValue)
+        static void SetCachedEditorBoolean(string id, bool setValue)
         {
             if (!s_CachedEditorPreferences.ContainsKey(id))
             {
@@ -348,7 +646,77 @@ namespace GDX.Editor
             }
         }
 
-        public static void CheckForChanges()
+        public static void SetClassChangeCheck<T1, T2>(T1 element, T2 lhs, T2 rhs)
+            where T1 : BaseField<T2> where T2 : class
+        {
+            if (element == null) return;
+            element.SetValueWithoutNotify(rhs);
+
+            if (lhs != rhs)
+            {
+                element.AddToClassList(ResourcesProvider.ChangedClass);
+            }
+            else
+            {
+                element.RemoveFromClassList(ResourcesProvider.ChangedClass);
+            }
+        }
+
+        public static void SetEnumChangeCheck<T>(EnumField element, T lhs, T rhs) where T : Enum
+        {
+            if (element == null) return;
+            element.SetValueWithoutNotify(rhs);
+            if (lhs.ToString() != rhs.ToString())
+            {
+                element.AddToClassList(ResourcesProvider.ChangedClass);
+            }
+            else
+            {
+                element.RemoveFromClassList(ResourcesProvider.ChangedClass);
+            }
+        }
+
+        public static void SetMaskChangeCheck(MaskField element, int lhs, int rhs)
+        {
+            if (element == null) return;
+            element.SetValueWithoutNotify(rhs);
+            if (lhs != rhs)
+            {
+                element.AddToClassList(ResourcesProvider.ChangedClass);
+            }
+            else
+            {
+                element.RemoveFromClassList(ResourcesProvider.ChangedClass);
+            }
+        }
+
+        public static void SetStructChangeCheck<T1, T2>(T1 element, T2 lhs, T2 rhs)
+            where T1 : BaseField<T2> where T2 : struct
+        {
+            if (element == null) return;
+            element.SetValueWithoutNotify(rhs);
+
+            if (!lhs.Equals(rhs))
+            {
+                element.AddToClassList(ResourcesProvider.ChangedClass);
+            }
+            else
+            {
+                element.RemoveFromClassList(ResourcesProvider.ChangedClass);
+            }
+        }
+
+        static void UpdateAllSections()
+        {
+            for (int i = 0; i < k_SectionCount; i++)
+            {
+                if (k_ConfigSections[i] == null) continue;
+                UpdateSectionHeader(i);
+                UpdateSectionContent(i);
+            }
+        }
+
+        public static void UpdateForChanges()
         {
             if (!WorkingConfig.HasChanges())
             {
@@ -360,5 +728,137 @@ namespace GDX.Editor
             }
         }
 
+        static void UpdateForSearch()
+        {
+            if (IsSearching())
+            {
+                s_LastQueriedElements = GetElementsForQuery(SearchString);
+                if (s_LastQueriedElements == null || s_LastQueriedElements.Length <= 0)
+                {
+                    return;
+                }
+
+                // Iterate through each section, showing if it has found elements
+                for (int i = 0; i < k_SectionCount; i++)
+                {
+                    int count = k_SearchSectionElementMap[i].Count;
+                    bool found = false;
+                    for (int j = 0; j < count; j++)
+                    {
+                        VisualElement element = k_SearchSectionElementMap[i].Array[j];
+                        if (s_LastQueriedElements.ContainsReference(element))
+                        {
+                            found = true;
+                            element.AddToClassList(ResourcesProvider.SearchHighlightClass);
+                        }
+                        else
+                        {
+                            element.RemoveFromClassList(ResourcesProvider.SearchHighlightClass);
+                        }
+                    }
+
+                    if (found)
+                    {
+                        k_ConfigSectionHeaders[i].RemoveFromClassList(ResourcesProvider.HiddenClass);
+                    }
+                    else
+                    {
+                        k_ConfigSectionHeaders[i].AddToClassList(ResourcesProvider.HiddenClass);
+                    }
+                }
+            }
+            else
+            {
+                if (s_LastQueriedElements == null)
+                {
+                    return;
+                }
+
+                int count = s_LastQueriedElements.Length;
+                for (int i = 0; i < count; i++)
+                {
+                    if (s_LastQueriedElements[i] == null) continue;
+                    s_LastQueriedElements[i].RemoveFromClassList(ResourcesProvider.SearchHighlightClass);
+                }
+                s_LastQueriedElements = null;
+            }
+        }
+
+        static void UpdateSectionContent(int sectionIndex)
+        {
+            // This can happen due to the order of how events fire.
+            if (k_ConfigSectionContents[sectionIndex] == null)
+            {
+                return;
+            }
+
+            IConfigSection section = k_ConfigSections[sectionIndex];
+            string sectionKey = section.GetSectionKey();
+
+            VisualElement element = k_ConfigSectionContents[sectionIndex];
+
+            if (!IsSearching())
+            {
+                // Default visible/hidden behaviour
+                if (GetCachedEditorBoolean(sectionKey, section.GetDefaultVisibility()))
+                {
+                    element.RemoveFromClassList(ResourcesProvider.HiddenClass);
+                }
+                else
+                {
+                    element.AddToClassList(ResourcesProvider.HiddenClass);
+                }
+            }
+
+            // Update the actual content
+            section.UpdateSectionContent();
+        }
+
+        static void UpdateSectionHeader(int sectionIndex)
+        {
+
+            // This can happen due to the order of how events fire.
+            if (k_ConfigSectionContents[sectionIndex] == null)
+            {
+                return;
+            }
+
+            IConfigSection section = k_ConfigSections[sectionIndex];
+
+            VisualElement sectionHeaderElement = k_ConfigSectionHeaders[sectionIndex];
+
+            if (!IsSearching() && sectionHeaderElement.ClassListContains(ResourcesProvider.HiddenClass))
+            {
+                sectionHeaderElement.RemoveFromClassList(ResourcesProvider.HiddenClass);
+            }
+
+            if (section.GetToggleSupport())
+            {
+                // Do this here
+                Toggle enabledToggle = sectionHeaderElement.Q<Toggle>("toggle-enabled");
+                enabledToggle.value = section.GetToggleState();
+
+                bool toggleState = section.GetToggleState();
+                if (toggleState)
+                {
+                    sectionHeaderElement.RemoveFromClassList(ResourcesProvider.DisabledClass);
+                    sectionHeaderElement.AddToClassList(ResourcesProvider.EnabledClass);
+                }
+                else
+                {
+                    sectionHeaderElement.RemoveFromClassList(ResourcesProvider.EnabledClass);
+                    sectionHeaderElement.AddToClassList(ResourcesProvider.DisabledClass);
+                }
+            }
+
+            if (GetCachedEditorBoolean(section.GetSectionKey(), section.GetDefaultVisibility()))
+            {
+                sectionHeaderElement.AddToClassList(ResourcesProvider.ExpandedClass);
+            }
+            else
+            {
+                sectionHeaderElement.RemoveFromClassList(ResourcesProvider.ExpandedClass);
+            }
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace GDX.Editor.ProjectSettings
     public interface IConfigSection
     {
         bool GetDefaultVisibility();
+        int GetSectionIndex();
         string GetSectionKey();
         string GetSectionHeaderLabel();
         string GetSectionHelpLink();

@@ -361,3 +361,7 @@ Button.gdx-button {
 .search .gdx-project-settings-section-header #button-expand:hover {
     -unity-background-image-tint-color: white;
 }
+
+.search .search-item {
+    background-color: var(--color-secondary);
+}

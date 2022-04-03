@@ -13,6 +13,7 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     class AutomaticUpdatesSettings : IConfigSection
     {
+        public const int SectionIndex = 0;
         public const string SectionKey = "GDX.Editor.UpdateProvider";
         static readonly string[] k_Keywords = { "git", "upm", "automatic", "updates", "package" };
 
@@ -164,10 +165,18 @@ namespace GDX.Editor.ProjectSettings
         {
             return "Automatic Package Updates";
         }
+
+        public int GetSectionIndex()
+        {
+            return SectionIndex;
+        }
+
         public string GetSectionKey()
         {
             return SectionKey;
         }
+
+
 
         public string GetSectionHelpLink()
         {
@@ -195,7 +204,7 @@ namespace GDX.Editor.ProjectSettings
             {
                 toggleElement.RemoveFromClassList(ResourcesProvider.ChangedClass);
             }
-            ProjectSettingsProvider.CheckForChanges();
+            ProjectSettingsProvider.UpdateForChanges();
         }
 
         public string[] GetSearchKeywords()

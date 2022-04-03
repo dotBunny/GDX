@@ -18,6 +18,7 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     class EnvironmentSettings : IConfigSection
     {
+        public const int SectionIndex = 4;
         public const string SectionKey = "GDX.Environment";
         static readonly string[] k_Keywords = { "environment", "debug", "culture", "define", "symbol", "trace" };
         VisualElement m_RootElement;
@@ -64,7 +65,7 @@ namespace GDX.Editor.ProjectSettings
             m_RootElement = rootElement;
 
             m_ToggleEnsureSymbol = m_RootElement.Q<Toggle>("toggle-ensure-symbol");
-            SearchProvider.RegisterElement<Toggle>(this, m_ToggleEnsureSymbol);
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_ToggleEnsureSymbol);
             m_ToggleEnsureSymbol.value = ProjectSettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol;
             m_ToggleEnsureSymbol.RegisterValueChangedCallback(evt =>
             {
@@ -78,11 +79,11 @@ namespace GDX.Editor.ProjectSettings
                     m_ToggleEnsureSymbol.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
 
-                ProjectSettingsProvider.CheckForChanges();
+                ProjectSettingsProvider.UpdateForChanges();
             });
 
             m_ToggleDevelopmentConsole = m_RootElement.Q<Toggle>("toggle-console-development");
-            SearchProvider.RegisterElement<Toggle>(this, m_ToggleDevelopmentConsole);
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_ToggleDevelopmentConsole);
             m_ToggleDevelopmentConsole.value = ProjectSettingsProvider.WorkingConfig.TraceDevelopmentOutputToUnityConsole;
             m_ToggleDevelopmentConsole.RegisterValueChangedCallback(evt =>
             {
@@ -95,10 +96,10 @@ namespace GDX.Editor.ProjectSettings
                 {
                     m_ToggleDevelopmentConsole.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
-                ProjectSettingsProvider.CheckForChanges();
+                ProjectSettingsProvider.UpdateForChanges();
             });
             m_ToggleDebugConsole = m_RootElement.Q<Toggle>("toggle-console-debug");
-            SearchProvider.RegisterElement<Toggle>(this, m_ToggleDebugConsole);
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_ToggleDebugConsole);
             m_ToggleDebugConsole.value = ProjectSettingsProvider.WorkingConfig.TraceDebugOutputToUnityConsole;
             m_ToggleDebugConsole.RegisterValueChangedCallback(evt =>
             {
@@ -111,11 +112,11 @@ namespace GDX.Editor.ProjectSettings
                 {
                     m_ToggleDebugConsole.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
-                ProjectSettingsProvider.CheckForChanges();
+                ProjectSettingsProvider.UpdateForChanges();
             });
 
             m_MaskDevelopment = m_RootElement.Q<MaskField>("mask-development");
-            SearchProvider.RegisterElement<MaskField>(this, m_MaskDevelopment);
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_MaskDevelopment);
 
 
 #if GDX_MASKFIELD
@@ -136,11 +137,11 @@ namespace GDX.Editor.ProjectSettings
                 {
                     m_MaskDevelopment.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
-                ProjectSettingsProvider.CheckForChanges();
+                ProjectSettingsProvider.UpdateForChanges();
             });
 
             m_MaskDebug = m_RootElement.Q<MaskField>("mask-debug");
-            SearchProvider.RegisterElement<MaskField>(this, m_MaskDebug);
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_MaskDebug);
 #if GDX_MASKFIELD
             m_MaskDebug.choices = k_TraceChoices;
             m_MaskDebug.choicesMasks = k_TraceValues;
@@ -159,11 +160,11 @@ namespace GDX.Editor.ProjectSettings
                 {
                     m_MaskDebug.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
-                ProjectSettingsProvider.CheckForChanges();
+                ProjectSettingsProvider.UpdateForChanges();
             });
 
             m_MaskRelease = m_RootElement.Q<MaskField>("mask-release");
-            SearchProvider.RegisterElement<MaskField>(this, m_MaskRelease);
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_MaskRelease);
 #if GDX_MASKFIELD
             m_MaskRelease.choices = k_TraceChoices;
             m_MaskRelease.choicesMasks = k_TraceValues;
@@ -182,7 +183,7 @@ namespace GDX.Editor.ProjectSettings
                 {
                     m_MaskRelease.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
-                ProjectSettingsProvider.CheckForChanges();
+                ProjectSettingsProvider.UpdateForChanges();
             });
         }
 
@@ -212,6 +213,12 @@ namespace GDX.Editor.ProjectSettings
         {
             return "Environment";
         }
+
+        public int GetSectionIndex()
+        {
+            return SectionIndex;
+        }
+
         public string GetSectionKey()
         {
             return SectionKey;
@@ -242,27 +249,27 @@ namespace GDX.Editor.ProjectSettings
 
         public void UpdateSectionContent()
         {
-            ConfigSectionsProvider.SetStructChangeCheck(m_ToggleEnsureSymbol,
+            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleEnsureSymbol,
                 Config.EnvironmentScriptingDefineSymbol,
                 ProjectSettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol);
 
-            ConfigSectionsProvider.SetMaskChangeCheck(m_MaskDevelopment,
+            ProjectSettingsProvider.SetMaskChangeCheck(m_MaskDevelopment,
                 (int)Config.TraceDevelopmentLevels,
                 (int)ProjectSettingsProvider.WorkingConfig.TraceDevelopmentLevels);
 
-            ConfigSectionsProvider.SetStructChangeCheck(m_ToggleDevelopmentConsole,
+            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleDevelopmentConsole,
                 Config.TraceDevelopmentOutputToUnityConsole,
                 ProjectSettingsProvider.WorkingConfig.TraceDevelopmentOutputToUnityConsole);
 
-            ConfigSectionsProvider.SetMaskChangeCheck(m_MaskDebug,
+            ProjectSettingsProvider.SetMaskChangeCheck(m_MaskDebug,
                 (int)Config.TraceDebugLevels,
                 (int)ProjectSettingsProvider.WorkingConfig.TraceDebugLevels);
 
-            ConfigSectionsProvider.SetStructChangeCheck(m_ToggleDebugConsole,
+            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleDebugConsole,
                 Config.TraceDebugOutputToUnityConsole,
                 ProjectSettingsProvider.WorkingConfig.TraceDebugOutputToUnityConsole);
 
-            ConfigSectionsProvider.SetMaskChangeCheck(m_MaskRelease,
+            ProjectSettingsProvider.SetMaskChangeCheck(m_MaskRelease,
                 (int)Config.TraceReleaseLevels,
                 (int)ProjectSettingsProvider.WorkingConfig.TraceReleaseLevels);
         }

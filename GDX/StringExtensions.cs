@@ -10,6 +10,8 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using GDX.Collections.Generic;
+using Unity.Mathematics;
 
 namespace GDX
 {
@@ -626,19 +628,33 @@ namespace GDX
             return counter;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="haystack"></param>
-        /// <param name="needle"></param>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool PartialMatch(this string[] haystack, string needle)
         {
+            if (haystack == null) return false;
+
             int count = haystack.Length;
             for (int i = 0; i < count; i++)
             {
                 if (haystack[i].Contains(needle))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool PartialMatch(this SimpleList<string> haystack, string needle)
+        {
+            if (haystack.Count == 0) return false;
+
+            int count = haystack.Count;
+            for (int i = 0; i < count; i++)
+            {
+                if (haystack.Array[i].Contains(needle))
                 {
                     return true;
                 }

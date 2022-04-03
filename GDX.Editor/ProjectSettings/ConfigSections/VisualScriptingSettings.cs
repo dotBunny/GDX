@@ -19,6 +19,7 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     class VisualScriptingSettings : IConfigSection
     {
+        public const int SectionIndex = 7;
         /// <summary>
         ///     Internal section identifier.
         /// </summary>
@@ -44,7 +45,7 @@ namespace GDX.Editor.ProjectSettings
 
             // Bind Top
             m_ButtonRegenerateUnits = m_RootElement.Q<Button>("button-regenerate-units");
-            SearchProvider.RegisterElement<Button>(this, m_ButtonRegenerateUnits);
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_ButtonRegenerateUnits);
             m_ButtonRegenerateUnits.clicked += () =>
             {
                 BoltCore.Configuration.Save();
@@ -273,6 +274,11 @@ namespace GDX.Editor.ProjectSettings
         {
             return "Visual Scripting";
         }
+        public int GetSectionIndex()
+        {
+            return SectionIndex;
+        }
+
         public string GetSectionKey()
         {
             return SectionKey;

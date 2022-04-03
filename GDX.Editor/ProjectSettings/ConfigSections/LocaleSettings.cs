@@ -16,6 +16,7 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     class LocaleSettings : IConfigSection
     {
+        public const int SectionIndex = 6;
         public const string SectionKey = "GDX.Localization";
         static readonly string[] k_Keywords = { "locale", "loc", "localization" };
         VisualElement m_RootElement;
@@ -28,7 +29,7 @@ namespace GDX.Editor.ProjectSettings
             m_RootElement = rootElement;
 
             m_ToggleSetDefaultCulture = m_RootElement.Q<Toggle>("toggle-set-default-culture");
-            SearchProvider.RegisterElement<Toggle>(this, m_ToggleSetDefaultCulture);
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_ToggleSetDefaultCulture);
             m_ToggleSetDefaultCulture.value = ProjectSettingsProvider.WorkingConfig.LocalizationSetDefaultCulture;
             m_ToggleSetDefaultCulture.RegisterValueChangedCallback(evt =>
             {
@@ -42,11 +43,11 @@ namespace GDX.Editor.ProjectSettings
                     m_ToggleSetDefaultCulture.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
 
-                ProjectSettingsProvider.CheckForChanges();
+                ProjectSettingsProvider.UpdateForChanges();
             });
 
             m_EnumDefaultCulture = m_RootElement.Q<EnumField>("enum-default-culture");
-            SearchProvider.RegisterElement<EnumField>(this, m_EnumDefaultCulture);
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_EnumDefaultCulture);
             m_EnumDefaultCulture.value = ProjectSettingsProvider.WorkingConfig.LocalizationDefaultCulture;
             m_EnumDefaultCulture.RegisterValueChangedCallback(evt =>
             {
@@ -60,7 +61,7 @@ namespace GDX.Editor.ProjectSettings
                     m_EnumDefaultCulture.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
 
-                ProjectSettingsProvider.CheckForChanges();
+                ProjectSettingsProvider.UpdateForChanges();
             });
         }
 
@@ -82,6 +83,11 @@ namespace GDX.Editor.ProjectSettings
         public string GetSectionHelpLink()
         {
             return "api/GDX.Localization.html";
+        }
+
+        public int GetSectionIndex()
+        {
+            return SectionIndex;
         }
 
         public string GetSectionKey()
@@ -117,10 +123,10 @@ namespace GDX.Editor.ProjectSettings
         /// <inheritdoc />
         public void UpdateSectionContent()
         {
-            ConfigSectionsProvider.SetStructChangeCheck(m_ToggleSetDefaultCulture,
+            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleSetDefaultCulture,
                 Config.LocalizationSetDefaultCulture,
                 ProjectSettingsProvider.WorkingConfig.LocalizationSetDefaultCulture);
-            ConfigSectionsProvider.SetEnumChangeCheck(m_EnumDefaultCulture,
+            ProjectSettingsProvider.SetEnumChangeCheck(m_EnumDefaultCulture,
                 Config.LocalizationDefaultCulture,
                 ProjectSettingsProvider.WorkingConfig.LocalizationDefaultCulture);
         }

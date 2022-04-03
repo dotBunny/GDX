@@ -11,6 +11,7 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     class ConfigSettings : IConfigSection
     {
+        public const int SectionIndex = 1;
         public const string SectionKey = "GDX.Config";
         static readonly string[] k_Keywords = { "config" };
         VisualElement m_RootElement;
@@ -22,7 +23,7 @@ namespace GDX.Editor.ProjectSettings
             m_RootElement = rootElement;
 
             m_TextOutputFolder = m_RootElement.Q<TextField>("text-output-path");
-            SearchProvider.RegisterElement<TextField>(this, m_TextOutputFolder);
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_TextOutputFolder);
 
             m_TextOutputFolder.SetValueWithoutNotify(Config.ConfigOutputPath);
             m_TextOutputFolder.RegisterValueChangedCallback(evt =>
@@ -37,7 +38,7 @@ namespace GDX.Editor.ProjectSettings
                     m_TextOutputFolder.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
 
-                ProjectSettingsProvider.CheckForChanges();
+                ProjectSettingsProvider.UpdateForChanges();
             });
         }
 
@@ -59,6 +60,11 @@ namespace GDX.Editor.ProjectSettings
         public string[] GetSearchKeywords()
         {
             return k_Keywords;
+        }
+
+        public int GetSectionIndex()
+        {
+            return SectionIndex;
         }
 
         public string GetSectionKey()
@@ -94,7 +100,7 @@ namespace GDX.Editor.ProjectSettings
         /// <inheritdoc />
         public void UpdateSectionContent()
         {
-            ConfigSectionsProvider.SetClassChangeCheck(m_TextOutputFolder, Config.ConfigOutputPath,
+            ProjectSettingsProvider.SetClassChangeCheck(m_TextOutputFolder, Config.ConfigOutputPath,
                 ProjectSettingsProvider.WorkingConfig.ConfigOutputPath);
         }
     }
