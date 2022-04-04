@@ -544,7 +544,7 @@ namespace GDX.Editor
 
         static void FindValidWords(ref SimpleList<string> validWords, string content)
         {
-            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(content);
+            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLower(content);
             for (int i = 0; i < splitString.Count; i++)
             {
                 if (splitString.GetSegmentLength(i) < 3)
@@ -553,16 +553,16 @@ namespace GDX.Editor
                 }
 
                 // Check for exclusions
-                if (k_SearchKeywordExclusions.ContainsValue(splitString.GetSegmentHashCode(i)))
+                if (k_SearchKeywordExclusions.ContainsValue(splitString.GetHashCode(i)))
                 {
                     continue;
                 }
 
-                validWords.AddWithExpandCheckUniqueValue(splitString.GetSegment(i));
+                validWords.AddWithExpandCheckUniqueValue(splitString.AsString(i));
             }
         }
 
-         public static void RegisterElementForSearch(int sectionIndex, VisualElement element, string[] additionalKeywords = null)
+         public static void RegisterElementForSearch(int sectionIndex, VisualElement element, string additionalDescription = null)
         {
             // Create our working list
             SimpleList<string> validWords = new SimpleList<string>(25);
@@ -591,12 +591,11 @@ namespace GDX.Editor
                     break;
             }
 
-            // TODO: add aditional support
-            // // Passed in words
-            // if (additionalKeywords != null)
-            // {
-            //     FindValidWords(ref validWords, additionalKeywords);
-            // }
+            // Passed in words
+            if (additionalDescription != null)
+            {
+                FindValidWords(ref validWords, additionalDescription);
+            }
 
             // Build Map
             int validWordsCount = validWords.Count;

@@ -17,12 +17,12 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void GetSegment_MockData_Matches()
         {
-            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
-            bool evaluate = splitString.GetSegment(0) == "hello" &&
-                            splitString.GetSegment(1) == "my" &&
-                            splitString.GetSegment(3) == "game" &&
-                            splitString.GetSegment(2) == "favorite" &&
-                            splitString.GetSegment(7) == "g";
+            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLower(m_TestContent);
+            bool evaluate = splitString.AsString(0) == "hello" &&
+                            splitString.AsString(1) == "my" &&
+                            splitString.AsString(3) == "game" &&
+                            splitString.AsString(2) == "favorite" &&
+                            splitString.AsString(7) == "g";
             Assert.IsTrue(evaluate);
         }
 
@@ -30,14 +30,14 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void SplitOnNonAlphaNumericToLowerHashed_MockData_ValidHashCodes()
         {
-            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
+            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLower(m_TestContent);
 
 
-            bool evaluate = "Hello".GetStableLowerCaseHashCode() == splitString.GetSegmentHashCode(0) &&
-                            "favorite".GetStableLowerCaseHashCode() == splitString.GetSegmentHashCode(2) &&
-                            "G".GetStableLowerCaseHashCode() == splitString.GetSegmentHashCode(7);
+            bool evaluate = "Hello".GetStableLowerCaseHashCode() == splitString.GetHashCode(0) &&
+                            "favorite".GetStableLowerCaseHashCode() == splitString.GetHashCode(2) &&
+                            "G".GetStableLowerCaseHashCode() == splitString.GetHashCode(7);
 
-            Assert.IsTrue(evaluate, $"{"Hello".GetStableLowerCaseHashCode()} == {splitString.GetSegmentHashCode(0)}");
+            Assert.IsTrue(evaluate, $"{"Hello".GetStableLowerCaseHashCode()} == {splitString.GetHashCode(0)}");
         }
     }
 }

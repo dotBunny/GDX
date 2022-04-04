@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Runtime.ConstrainedExecution;
 using System.Security;
 using Unity.Mathematics;
@@ -10,45 +11,65 @@ namespace GDX
 {
     public struct SegmentedString
     {
-        public char[] Characters;
+        public int Count;
+        char[] m_Characters;
 
         /// <summary>
         /// x: Start Index
         /// y: Length
         /// z: Stable Hash Code
         /// </summary>
-        public int3[] Definitions;
-        public int Count;
+        int3[] m_Segments;
 
-        public string GetSegment(int index)
+
+        public string AsString()
         {
-            return new string(Characters, Definitions[index].x, Definitions[index].y);
+            return new string(m_Characters);
         }
-        public int GetSegmentHashCode(int index)
+
+        public string AsString(int segmentIndex)
         {
-            return Definitions[index].z;
+            return new string(m_Characters, m_Segments[segmentIndex].x, m_Segments[segmentIndex].y);
         }
-        public int GetSegmentStartIndex(int index)
+
+        public char[] AsCharArray()
         {
-            return Definitions[index].x;
+            return m_Characters;
         }
-        public int GetSegmentLength(int index)
+
+        public char[] AsCharArray(int segmentIndex)
         {
-            return Definitions[index].y;
+            char[] returnArray = new char[m_Segments[segmentIndex].y];
+            Array.Copy(m_Characters, m_Segments[segmentIndex].x,
+                returnArray, 0, m_Segments[segmentIndex].y);
+            return returnArray;
+        }
+
+        public int GetHashCode(int segmentIndex)
+        {
+            return m_Segments[segmentIndex].z;
+        }
+        public int GetOffset(int segmentIndex)
+        {
+            return m_Segments[segmentIndex].x;
+        }
+        public int GetSegmentLength(int segmentIndex)
+        {
+            return m_Segments[segmentIndex].y;
         }
 
         [SecuritySafeCritical]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-        public static SegmentedString SplitOnNonAlphaNumericToLowerHashed(string targetString)
+        public static SegmentedString SplitOnNonAlphaNumericToLower(string targetString)
         {
             SegmentedString returnValue = new SegmentedString
             {
                 // Copy to a new character array that we will maintain
-                Characters = targetString.ToCharArray()
+                m_Characters = targetString.ToCharArray()
             };
 
-            int charactersLength = returnValue.Characters.Length;
-            returnValue.Definitions = new int3[charactersLength];
+            int charactersLength = returnValue.m_Characters.Length;
+            returnValue.m_Segments = new int3[charactersLength];
 
             int hash1 = 5381;
             int hash2 = hash1;
@@ -59,7 +80,7 @@ namespace GDX
             for (int i = 0; i < charactersLength; i++)
             {
                 // Convert our character to its ascii value
-                c = returnValue.Characters[i];
+                c = returnValue.m_Characters[i];
 
                 // Check character value and shift it if necessary (32)
                 if (c >= StringExtensions.AsciiUpperCaseStart && c <= StringExtensions.AsciiUpperCaseEnd)
@@ -67,7 +88,7 @@ namespace GDX
                     c ^= StringExtensions.AsciiCaseShift;
 
                     // Update value
-                    returnValue.Characters[i] = (char)c;
+                    returnValue.m_Characters[i] = (char)c;
                 }
 
                 // Check our first character
@@ -84,7 +105,7 @@ namespace GDX
                     useAlternateHash = false;
 
                     // Mark start spot
-                    returnValue.Definitions[returnValue.Count].x = i;
+                    returnValue.m_Segments[returnValue.Count].x = i;
 
                     isInsideSegment = true;
                 }
@@ -108,8 +129,8 @@ namespace GDX
                 {
                     // Close out this iteration of a segment
                     isInsideSegment = false;
-                    returnValue.Definitions[returnValue.Count].y = i - returnValue.Definitions[returnValue.Count].x;
-                    returnValue.Definitions[returnValue.Count].z = hash1 + hash2 * 1566083941;
+                    returnValue.m_Segments[returnValue.Count].y = i - returnValue.m_Segments[returnValue.Count].x;
+                    returnValue.m_Segments[returnValue.Count].z = hash1 + hash2 * 1566083941;
                     returnValue.Count++;
                 }
             }
@@ -117,8 +138,8 @@ namespace GDX
             // Finish segment if we didnt before
             if (isInsideSegment)
             {
-                returnValue.Definitions[returnValue.Count].y = charactersLength - returnValue.Definitions[returnValue.Count].x;
-                returnValue.Definitions[returnValue.Count].z = hash1 + hash2 * 1566083941;
+                returnValue.m_Segments[returnValue.Count].y = charactersLength - returnValue.m_Segments[returnValue.Count].x;
+                returnValue.m_Segments[returnValue.Count].z = hash1 + hash2 * 1566083941;
                 returnValue.Count++;
             }
             return returnValue;
