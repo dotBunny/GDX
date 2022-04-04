@@ -17,7 +17,7 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void GetSegment_MockData_Matches()
         {
-            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLower(m_TestContent);
+            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
             bool evaluate = splitString.AsString(0) == "hello" &&
                             splitString.AsString(1) == "my" &&
                             splitString.AsString(3) == "game" &&
@@ -30,7 +30,7 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void SplitOnNonAlphaNumericToLowerHashed_MockData_ValidHashCodes()
         {
-            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLower(m_TestContent);
+            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
 
 
             bool evaluate = "Hello".GetStableLowerCaseHashCode() == splitString.GetHashCode(0) &&

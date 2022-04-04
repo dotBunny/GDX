@@ -544,8 +544,9 @@ namespace GDX.Editor
 
         static void FindValidWords(ref SimpleList<string> validWords, string content)
         {
-            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLower(content);
-            for (int i = 0; i < splitString.Count; i++)
+            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(content);
+            int count = splitString.GetCount();
+            for (int i = 0; i < count; i++)
             {
                 if (splitString.GetSegmentLength(i) < 3)
                 {

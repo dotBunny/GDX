@@ -11,16 +11,15 @@ namespace GDX
 {
     public struct SegmentedString
     {
-        public int Count;
         char[] m_Characters;
-
         /// <summary>
         /// x: Start Index
         /// y: Length
         /// z: Stable Hash Code
         /// </summary>
         int3[] m_Segments;
-
+        int m_Count;
+        int m_HashCode;
 
         public string AsString()
         {
@@ -45,6 +44,17 @@ namespace GDX
             return returnArray;
         }
 
+        public int GetCount()
+        {
+            return m_Count;
+        }
+
+
+        public override int GetHashCode()
+        {
+            return m_HashCode;
+        }
+
         public int GetHashCode(int segmentIndex)
         {
             return m_Segments[segmentIndex].z;
@@ -58,8 +68,6 @@ namespace GDX
             return m_Segments[segmentIndex].y;
         }
 
-        [SecuritySafeCritical]
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
         public static SegmentedString SplitOnNonAlphaNumericToLower(string targetString)
         {
             SegmentedString returnValue = new SegmentedString
@@ -71,9 +79,6 @@ namespace GDX
             int charactersLength = returnValue.m_Characters.Length;
             returnValue.m_Segments = new int3[charactersLength];
 
-            int hash1 = 5381;
-            int hash2 = hash1;
-            bool useAlternateHash = false;
             bool isInsideSegment = false;
 
             int c;
@@ -99,13 +104,94 @@ namespace GDX
                 // If we are valid, but not in a segment
                 if (isValid && !isInsideSegment)
                 {
-                    // Reset hashes
-                    hash1 = 5381;
-                    hash2 = hash1;
+                    // Mark start spot
+                    returnValue.m_Segments[returnValue.m_Count].x = i;
+
+                    isInsideSegment = true;
+                }
+
+                if (!isValid && isInsideSegment)
+                {
+                    // Close out this iteration of a segment
+                    isInsideSegment = false;
+                    returnValue.m_Segments[returnValue.m_Count].y = i - returnValue.m_Segments[returnValue.m_Count].x;
+                    returnValue.m_Count++;
+                }
+            }
+
+            // Finish segment if we didnt before
+            if (isInsideSegment)
+            {
+                returnValue.m_Segments[returnValue.m_Count].y = charactersLength - returnValue.m_Segments[returnValue.m_Count].x;
+                returnValue.m_Count++;
+            }
+
+            return returnValue;
+        }
+
+        public static SegmentedString SplitOnNonAlphaNumericToLowerHashed(string targetString)
+        {
+            SegmentedString returnValue = new SegmentedString
+            {
+                // Copy to a new character array that we will maintain
+                m_Characters = targetString.ToCharArray()
+            };
+
+            int charactersLength = returnValue.m_Characters.Length;
+            returnValue.m_Segments = new int3[charactersLength];
+
+            int segmentHashA = 5381;
+            int segmentHashB = segmentHashA;
+            int hashA = 5381;
+            int hashB = hashA;
+            bool useAlternateHash = false;
+            bool useAlternateSegmentHash = false;
+            bool isInsideSegment = false;
+
+            int c;
+            for (int i = 0; i < charactersLength; i++)
+            {
+                // Convert our character to its ascii value
+                c = returnValue.m_Characters[i];
+
+                // Check character value and shift it if necessary (32)
+                if (c >= StringExtensions.AsciiUpperCaseStart && c <= StringExtensions.AsciiUpperCaseEnd)
+                {
+                    c ^= StringExtensions.AsciiCaseShift;
+
+                    // Update value
+                    returnValue.m_Characters[i] = (char)c;
+                }
+
+
+                // Hash character for overall hashing
+                // Flopping hash
+                if (!useAlternateHash)
+                {
+                    hashA = ((hashA << 5) + hashA) ^ c;
+                    useAlternateHash = true;
+                }
+                else
+                {
+                    hashB = ((hashB << 5) + hashB) ^ c;
                     useAlternateHash = false;
+                }
+
+                // Check our first character
+                bool isValid =
+                    (c >= StringExtensions.AsciiLowerCaseStart && c <= StringExtensions.AsciiLowerCaseEnd) ||
+                    (c >= StringExtensions.AsciiNumberStart && c <= StringExtensions.AsciiNumberEnd);
+
+                // If we are valid, but not in a segment
+                if (isValid && !isInsideSegment)
+                {
+                    // Reset hashes
+                    segmentHashA = 5381;
+                    segmentHashB = segmentHashA;
+                    useAlternateSegmentHash = false;
 
                     // Mark start spot
-                    returnValue.m_Segments[returnValue.Count].x = i;
+                    returnValue.m_Segments[returnValue.m_Count].x = i;
 
                     isInsideSegment = true;
                 }
@@ -113,15 +199,15 @@ namespace GDX
                 if (isValid)
                 {
                     // Flopping hash
-                    if (!useAlternateHash)
+                    if (!useAlternateSegmentHash)
                     {
-                        hash1 = ((hash1 << 5) + hash1) ^ c;
-                        useAlternateHash = true;
+                        segmentHashA = ((segmentHashA << 5) + segmentHashA) ^ c;
+                        useAlternateSegmentHash = true;
                     }
                     else
                     {
-                        hash2 = ((hash2 << 5) + hash2) ^ c;
-                        useAlternateHash = false;
+                        segmentHashB = ((segmentHashB << 5) + segmentHashB) ^ c;
+                        useAlternateSegmentHash = false;
                     }
                 }
 
@@ -129,19 +215,23 @@ namespace GDX
                 {
                     // Close out this iteration of a segment
                     isInsideSegment = false;
-                    returnValue.m_Segments[returnValue.Count].y = i - returnValue.m_Segments[returnValue.Count].x;
-                    returnValue.m_Segments[returnValue.Count].z = hash1 + hash2 * 1566083941;
-                    returnValue.Count++;
+                    returnValue.m_Segments[returnValue.m_Count].y = i - returnValue.m_Segments[returnValue.m_Count].x;
+                    returnValue.m_Segments[returnValue.m_Count].z = segmentHashA + segmentHashB * 1566083941;
+                    returnValue.m_Count++;
                 }
             }
 
             // Finish segment if we didnt before
             if (isInsideSegment)
             {
-                returnValue.m_Segments[returnValue.Count].y = charactersLength - returnValue.m_Segments[returnValue.Count].x;
-                returnValue.m_Segments[returnValue.Count].z = hash1 + hash2 * 1566083941;
-                returnValue.Count++;
+                returnValue.m_Segments[returnValue.m_Count].y = charactersLength - returnValue.m_Segments[returnValue.m_Count].x;
+                returnValue.m_Segments[returnValue.m_Count].z = segmentHashA + segmentHashB * 1566083941;
+                returnValue.m_Count++;
             }
+
+            // Save final hash
+            returnValue.m_HashCode = hashA + hashB * 1566083941;
+
             return returnValue;
         }
     }

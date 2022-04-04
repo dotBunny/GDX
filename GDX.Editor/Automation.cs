@@ -167,6 +167,61 @@ namespace GDX.Editor
         }
 
         /// <summary>
+        ///     Stop an existing profile, this is most often used to end a command line profile of the Editor startup.
+        /// </summary>
+        /// <remarks>
+        ///     <para>The editor needs to be started with profiling arguments:</para>
+        ///     <list type="table">
+        ///         <listheader>
+        ///             <term>Argument</term>
+        ///             <description>Description</description>
+        ///         </listheader>
+        ///         <item>
+        ///             <term>-profiler-enabled</term>
+        ///             <description>Enable profile at start.</description>
+        ///         </item>
+        ///         <item>
+        ///             <term>-profiler-log-file [path/to/file.raw]</term>
+        ///             <description>The absolute path to where the profiling data should be stored.</description>
+        ///         </item>
+        ///         <item>
+        ///             <term>-profiler-maxusedmemory [bytesize]</term>
+        ///             <description>The maximum amount of memory for the profiler to use.</description>
+        ///         </item>
+        ///         <item>
+        ///             <term>-deepprofiling</term>
+        ///             <description>Should a deep profile be done?</description>
+        ///         </item>
+        ///         <item>
+        ///             <term>-executeMethod GDX.Editor.Automation.FinishProfile</term>
+        ///             <description>Executes this method to stop the profiling.</description>
+        ///         </item>
+        ///     </list>
+        /// </remarks>
+        public static void FinishProfile()
+        {
+            // We often use this method to profile different parts of the editor during startup, so we have this little
+            // helper at the end to make sure to close of the profiling session.
+            if (!UnityEngine.Profiling.Profiler.enabled)
+            {
+                Trace.Output(Trace.TraceLevel.Warning, "Unity was not profiling.");
+                return;
+            }
+
+            UnityEngine.Profiling.Profiler.enabled = false;
+            if (UnityEngine.Profiling.Profiler.logFile != null)
+            {
+                Trace.Output(Trace.TraceLevel.Info,
+                    $"Profile stopped: {UnityEngine.Profiling.Profiler.logFile}");
+            }
+
+            if (Application.isBatchMode)
+            {
+                Application.Quit(0);
+            }
+        }
+
+        /// <summary>
         /// Generate the project's solution and associated project files.
         /// </summary>
         public static void GenerateProjectFiles()
