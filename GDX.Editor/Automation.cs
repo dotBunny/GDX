@@ -170,14 +170,17 @@ namespace GDX.Editor
         ///     Stop an existing profile, this is most often used to end a command line profile of the Editor startup.
         /// </summary>
         /// <remarks>
-        ///     <para>The editor needs to be started with profiling arguments:</para>
+        ///     <para>
+        ///         The editor needs to be started with profiling arguments; more info can be found on
+        ///         https://docs.unity3d.com/Manual/EditorCommandLineArguments.html.
+        ///     </para>
         ///     <list type="table">
         ///         <listheader>
         ///             <term>Argument</term>
         ///             <description>Description</description>
         ///         </listheader>
         ///         <item>
-        ///             <term>-profiler-enabled</term>
+        ///             <term>-profiler-enable</term>
         ///             <description>Enable profile at start.</description>
         ///         </item>
         ///         <item>
@@ -205,14 +208,15 @@ namespace GDX.Editor
             if (!UnityEngine.Profiling.Profiler.enabled)
             {
                 Trace.Output(Trace.TraceLevel.Warning, "Unity was not profiling.");
-                return;
             }
-
-            UnityEngine.Profiling.Profiler.enabled = false;
-            if (UnityEngine.Profiling.Profiler.logFile != null)
+            else
             {
-                Trace.Output(Trace.TraceLevel.Info,
-                    $"Profile stopped: {UnityEngine.Profiling.Profiler.logFile}");
+                UnityEngine.Profiling.Profiler.enabled = false;
+                if (UnityEngine.Profiling.Profiler.logFile != null)
+                {
+                    Trace.Output(Trace.TraceLevel.Info,
+                        $"Profile stopped: {UnityEngine.Profiling.Profiler.logFile}");
+                }
             }
 
             if (Application.isBatchMode)
