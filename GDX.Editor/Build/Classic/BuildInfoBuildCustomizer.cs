@@ -18,7 +18,7 @@ namespace GDX.Classic.Editor.Build
     ///     <para>
     ///         During the build process a <c>BuildInfo</c> file will be generated containing information passed in
     ///         through commandline arguments (parsed by <see cref="GDX.Developer.CommandLineParser" />). These arguments and
-    ///         their formats are configurable via the <see cref="GDXConfig" />.
+    ///         their formats are configurable via the <see cref="Config" />.
     ///     </para>
     /// </summary>
     /// <remarks>
@@ -89,7 +89,7 @@ namespace GDX.Classic.Editor.Build
         /// </summary>
         public override void OnBeforeBuild()
         {
-            if (!GDXConfig.DeveloperBuildInfoEnabled)
+            if (!Config.DeveloperBuildInfoEnabled)
             {
                 return;
             }
@@ -99,7 +99,7 @@ namespace GDX.Classic.Editor.Build
 
             try
             {
-                string path = Path.Combine(Application.dataPath, GDXConfig.DeveloperBuildInfoPath);
+                string path = Path.Combine(Application.dataPath, Config.DeveloperBuildInfoPath);
                 GDX.Platform.EnsureFileFolderHierarchyExists(path);
                 File.WriteAllText(path, BuildInfoProvider.GetContent(false, Context.BuildConfigurationName));
 
