@@ -3,33 +3,54 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Runtime.ConstrainedExecution;
-using System.Security;
 using Unity.Mathematics;
 
 namespace GDX
 {
+    /// <summary>
+    ///     A segmented collection of <see cref="char"/>.
+    /// </summary>
     public struct SegmentedString
     {
-        char[] m_Characters;
         /// <summary>
-        /// x: Start Index
-        /// y: Length
-        /// z: Stable Hash Code
+        ///     The array of characters.
         /// </summary>
+        char[] m_Characters;
+
+        /// <summary>
+        ///     Datastore of word segment information.
+        /// </summary>
+        /// <remarks>
+        ///     <list type="table">
+        ///         <listheader>
+        ///             <term>Axis</term>
+        ///             <description>Typical Usage</description>
+        ///         </listheader>
+        ///         <item>
+        ///             <term>x</term>
+        ///             <description>The start offset in <see cref="m_Characters"/> of a word.</description>
+        ///         </item>
+        ///         <item>
+        ///             <term>y</term>
+        ///             <description>The length of the word.</description>
+        ///         </item>
+        ///         <item>
+        ///             <term>z</term>
+        ///             <description>The calculated <see cref="StringExtensions.GetStableHashCode"/> for the word.</description>
+        ///         </item>
+        ///     </list>
+        /// </remarks>
         int3[] m_Segments;
+
+        /// <summary>
+        ///     The number of words.
+        /// </summary>
         int m_Count;
+
+        /// <summary>
+        ///     The calculated <see cref="StringExtensions.GetStableHashCode"/> for the entirety of <see cref="m_Characters"/>.
+        /// </summary>
         int m_HashCode;
-
-        public string AsString()
-        {
-            return new string(m_Characters);
-        }
-
-        public string AsString(int segmentIndex)
-        {
-            return new string(m_Characters, m_Segments[segmentIndex].x, m_Segments[segmentIndex].y);
-        }
 
         public char[] AsCharArray()
         {
@@ -43,6 +64,17 @@ namespace GDX
                 returnArray, 0, m_Segments[segmentIndex].y);
             return returnArray;
         }
+
+        public string AsString()
+        {
+            return new string(m_Characters);
+        }
+
+        public string AsString(int segmentIndex)
+        {
+            return new string(m_Characters, m_Segments[segmentIndex].x, m_Segments[segmentIndex].y);
+        }
+
 
         public int GetCount()
         {
@@ -59,10 +91,12 @@ namespace GDX
         {
             return m_Segments[segmentIndex].z;
         }
+
         public int GetOffset(int segmentIndex)
         {
             return m_Segments[segmentIndex].x;
         }
+
         public int GetSegmentLength(int segmentIndex)
         {
             return m_Segments[segmentIndex].y;
@@ -122,7 +156,8 @@ namespace GDX
             // Finish segment if we didnt before
             if (isInsideSegment)
             {
-                returnValue.m_Segments[returnValue.m_Count].y = charactersLength - returnValue.m_Segments[returnValue.m_Count].x;
+                returnValue.m_Segments[returnValue.m_Count].y =
+                    charactersLength - returnValue.m_Segments[returnValue.m_Count].x;
                 returnValue.m_Count++;
             }
 
@@ -224,7 +259,8 @@ namespace GDX
             // Finish segment if we didnt before
             if (isInsideSegment)
             {
-                returnValue.m_Segments[returnValue.m_Count].y = charactersLength - returnValue.m_Segments[returnValue.m_Count].x;
+                returnValue.m_Segments[returnValue.m_Count].y =
+                    charactersLength - returnValue.m_Segments[returnValue.m_Count].x;
                 returnValue.m_Segments[returnValue.m_Count].z = segmentHashA + segmentHashB * 1566083941;
                 returnValue.m_Count++;
             }
