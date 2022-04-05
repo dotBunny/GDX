@@ -548,7 +548,7 @@ namespace GDX.Editor
         }
 
          public static void RegisterElementForSearch(int sectionIndex, VisualElement element, string additionalDescription = null)
-        {
+         {
             // Create our working list
             SimpleList<string> validWords = new SimpleList<string>(25);
 

@@ -101,9 +101,12 @@ namespace GDX.Editor.ProjectSettings
                 ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsVisualScriptingCategory");
             VisualElement categoryInstance = categoryAsset.Instantiate()[0];
 
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, categoryInstance, sectionDescription);
+
             Label labelCategory = categoryInstance.Q<Label>("label-category");
             labelCategory.text = sectionName;
             Label labelDescription  = categoryInstance.Q<Label>("label-description");
+
             labelDescription.text = sectionDescription;
             VisualElement elementTypeContainer = categoryInstance.Q<VisualElement>("type-container");
 
