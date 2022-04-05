@@ -459,6 +459,35 @@ namespace GDX.Collections.Generic
             return false;
         }
 
+        /// <summary>
+        /// Attempts to get the value for the given key; returns true if key was found, false otherwise.
+        /// </summary>
+        /// <param name="key">The key to retrieve.</param>
+        /// <returns>True if the entry was found; false otherwise.</returns>
+        public bool TryGetValue(string key, out TValue value)
+        {
+            if (key == null) throw new ArgumentNullException();
+
+            int hashCode = key.GetStableHashCode() & 0x7FFFFFFF;
+            int bucketIndex = hashCode % Buckets.Length;
+            int nextKeyIndex = Buckets[bucketIndex];
+            
+            while (nextKeyIndex != -1)
+            {
+                ref StringKeyEntry<TValue> currEntry = ref Entries[nextKeyIndex];
+                nextKeyIndex = currEntry.Next;
+
+                if (currEntry.Key == key)
+                {
+                    value = currEntry.Value;
+                    return true;
+                }
+            }
+
+            value = default;
+            return false;
+        }
+
         public TValue this[string key]
         {
             get
