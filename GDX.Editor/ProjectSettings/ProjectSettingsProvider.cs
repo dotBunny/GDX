@@ -381,12 +381,16 @@ namespace GDX.Editor
                     if (string.IsNullOrEmpty(searchContext))
                     {
                         s_RootElement.RemoveFromClassList(ResourcesProvider.SearchClass);
+                        for (int i = 0; i < k_SectionCount; i++)
+                        {
+                            k_ConfigSectionHeaders[i].RemoveFromClassList(ResourcesProvider.HiddenClass);
+                            k_ConfigSectionContents[i].RemoveFromClassList(ResourcesProvider.HiddenClass);
+                        }
                     }
                     else
                     {
                         s_RootElement.AddToClassList(ResourcesProvider.SearchClass);
                     }
-
                     SearchString = searchContext;
 
                     UpdateForSearch();
@@ -710,12 +714,15 @@ namespace GDX.Editor
         {
             // Reset Previous Highlights
             int existingCount = s_SearchContentResults.Count;
-            for (int i = 0; i < existingCount; i++)
+            if (existingCount > 0)
             {
-                if (s_SearchContentResults.Array[i] == null) continue;
-                s_SearchContentResults.Array[i].RemoveFromClassList(ResourcesProvider.SearchHighlightClass);
+                for (int i = 0; i < existingCount; i++)
+                {
+                    if (s_SearchContentResults.Array[i] == null) continue;
+                    s_SearchContentResults.Array[i].RemoveFromClassList(ResourcesProvider.SearchHighlightClass);
+                }
+                s_SearchContentResults.Clear();
             }
-            s_SearchContentResults.Clear();
 
             if (IsSearching())
             {
