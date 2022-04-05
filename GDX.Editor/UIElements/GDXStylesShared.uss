@@ -362,8 +362,18 @@ Button.gdx-button {
     -unity-background-image-tint-color: white;
 }
 
-.search .search-item Label {
+
+#gdx-project-settings-content .unity-base-field {
+    margin-left: 5px;
+}
+#gdx-project-settings-content .search-item {
+    margin-left: 0px;
     border-left-width: 2px;
-    padding-left: 5px;
+    padding-left: 3px;
     border-left-color: var(--color-primary);
+}
+#gdx-trace-table Toggle.search-item {
+    margin-left: 5px;
+    border-left-width: 0;
+    padding-left: 0;
 }

@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for `com.unity.entities` programming patterns.
 - `BuildVerificationReport` structure for quick validation of builds, including a `TestBehaviour`.
 - `StringKeyDictionary` to optimize one of the most common use cases for dictionaries.
+- `SegmentedString` to support string search patterns.
 - Unity editor non-pro (light) theme.
 
 ### Changed
@@ -25,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `GDX` namespace has been reorganized.
 - Conform naming conventions to Unity standard.
 - `GDXConfig` has been simplified to `Config`, with member variables being statically accessible.
-- The package's project settings were rebuilt to use `UIElement`s instead of `IMGUI`.
+- Package's project settings were rebuilt to use `UIElement`s instead of `IMGUI` with added searchability.
 - `Smooth::HalfLifeToSmoothingFactor()` no longer defaults elapsed time to `Time.deltaTime`
 - The visual scripting module detects the package based installation available in `Unity 2021` and forward. If you wish to have support in `Unity 2020.3` via the Asset Store you will need to add a scripting define symbol of `GDX_VISUALSCRIPTING` to your project.
 - All internal `Dictionary<string, value>` have been replaced with `StringKeyDictionary<value>`
@@ -47,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `NativeSimpleList` in favour of builtin collection `UnsafeList`.
 - `NativeSimpleQueue` in favour of builtin collection `UnsafeQueue`.
 - `GDXConfigInspector` no longer needed as the serialized config model has been replaced.
-- All "Requires UnityEngine.CoreModule.dll" remarks.
+- All "Requires UnityEngine.CoreModule.dll" remarks removed.
 
 ## [2.0.3] - 2021-12-01
 
