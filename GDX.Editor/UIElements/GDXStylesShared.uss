@@ -130,6 +130,11 @@ Button.gdx-link:hover {
     margin-right: 2px;
 }
 
+.gdx-icon-button Button
+{
+    -unity-background-scale-mode: scale-to-fit;
+}
+
 Button.gdx-button {
     height: 25px;
     border-radius: 3px;
@@ -311,11 +316,16 @@ Button.gdx-button {
 
 #gdx-visual-scripting-category #label-category {
     -unity-font-style: bold;
+    width: 120px;
 }
 
 #gdx-visual-scripting-category #label-description {
     white-space: normal;
     margin-bottom: 5px;
+}
+#gdx-visual-scripting-category .content {
+    flex-grow: 1;
+    flex-shrink: 1;
 }
 #gdx-visual-scripting-category #type-container {
     align-items: flex-start;
@@ -324,6 +334,15 @@ Button.gdx-button {
 
 #gdx-visual-scripting-category .toggle-category-container {
     width: 30px;
+    padding-left: 5px;
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+#gdx-visual-scripting-category .gdx-icon-button {
+    width: 20px;
+    align-items: flex-start;
+
 }
 
 #gdx-visual-scripting-category.gdx-visual-scripting-divider {
@@ -365,6 +384,9 @@ Button.gdx-button {
 
 #gdx-project-settings-content .unity-base-field {
     margin-left: 5px;
+}
+#gdx-project-settings-content Scroller .unity-base-field {
+    margin-left: 0;
 }
 #gdx-project-settings-content .search-item {
     margin-left: 0px;
