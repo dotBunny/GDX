@@ -362,6 +362,8 @@ Button.gdx-button {
     -unity-background-image-tint-color: white;
 }
 
-.search .search-item {
-    background-color: var(--color-secondary);
+.search .search-item Label {
+    border-left-width: 2px;
+    padding-left: 5px;
+    border-left-color: var(--color-primary);
 }

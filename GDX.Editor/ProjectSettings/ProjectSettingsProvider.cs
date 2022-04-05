@@ -4,9 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Text;
 using GDX.Collections.Generic;
 using GDX.Editor.ProjectSettings;
 using UnityEditor;
@@ -14,7 +12,6 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
-using Debug = UnityEngine.Debug;
 using Label = UnityEngine.UIElements.Label;
 
 namespace GDX.Editor
@@ -41,7 +38,7 @@ namespace GDX.Editor
         /// <summary>
         ///     The currently known search string of the Project Settings window.
         /// </summary>
-        public static string SearchString;
+        static string s_SearchString;
 
         /// <summary>
         ///     The unsaved working copy of the <see cref="Config"/> which the project settings operates on.
@@ -97,7 +94,7 @@ namespace GDX.Editor
         /// <summary>
         ///     A map of search keywords to individual <see cref="VisualElement"/>s which should be highlighted.
         /// </summary>
-        static Dictionary<int, List<VisualElement>> s_SearchKeywordMap =
+        static readonly Dictionary<int, List<VisualElement>> k_SearchKeywordMap =
             new Dictionary<int, List<VisualElement>>(150);
 
         static SimpleList<VisualElement> s_SearchContentResults = new SimpleList<VisualElement>(10);
@@ -106,7 +103,7 @@ namespace GDX.Editor
         ///     A map of <see cref="VisualElement"/>s that have been processed for keyword search, to their
         ///     <see cref="IConfigSection"/> by section index.
         /// </summary>
-        static readonly SimpleList<VisualElement>[] k_SearchSectionElementMap = new SimpleList<VisualElement>[k_SectionCount]
+        static readonly SimpleList<VisualElement>[] k_SearchSectionElementMap = new SimpleList<VisualElement>[]
         {
             new SimpleList<VisualElement>(10),
             new SimpleList<VisualElement>(10),
@@ -375,7 +372,7 @@ namespace GDX.Editor
                     string searchContext = Reflection.GetFieldValue<string>(
                         s_ProjectSettingsWindow, "UnityEditor.SettingsWindow", "m_SearchText");
 
-                    if (SearchString == searchContext)
+                    if (s_SearchString == searchContext)
                         return;
 
                     if (string.IsNullOrEmpty(searchContext))
@@ -391,7 +388,7 @@ namespace GDX.Editor
                     {
                         s_RootElement.AddToClassList(ResourcesProvider.SearchClass);
                     }
-                    SearchString = searchContext;
+                    s_SearchString = searchContext;
 
                     UpdateForSearch();
                     UpdateAllSections();
@@ -428,10 +425,10 @@ namespace GDX.Editor
                 }
 
                 int hash = s_SearchKeywordsHashes.Array[i];
-                int elementCount = s_SearchKeywordMap[hash].Count;
+                int elementCount = k_SearchKeywordMap[hash].Count;
                 for (int j = 0; j < elementCount; j++)
                 {
-                    s_SearchContentResults.AddWithExpandCheckUniqueItem(s_SearchKeywordMap[hash][j]);
+                    s_SearchContentResults.AddWithExpandCheckUniqueItem(k_SearchKeywordMap[hash][j]);
                 }
             }
         }
@@ -469,7 +466,7 @@ namespace GDX.Editor
             }
             s_SearchKeywords.Clear();
             s_SearchKeywordsHashes.Clear();
-            s_SearchKeywordMap.Clear();
+            k_SearchKeywordMap.Clear();
         }
 
         static void Initialize()
@@ -504,7 +501,7 @@ namespace GDX.Editor
 
         static bool IsSearching()
         {
-            return !string.IsNullOrEmpty(SearchString);
+            return !string.IsNullOrEmpty(s_SearchString);
         }
 
         static void OnExpandSectionHeaderClicked(int sectionIndex)
@@ -595,9 +592,9 @@ namespace GDX.Editor
                 {
                     s_SearchKeywords.AddWithExpandCheck(word);
                     s_SearchKeywordsHashes.AddWithExpandCheck(hash);
-                    s_SearchKeywordMap.Add(hash, new List<VisualElement>(10));
+                    k_SearchKeywordMap.Add(hash, new List<VisualElement>(10));
                 }
-                s_SearchKeywordMap[hash].Add(element);
+                k_SearchKeywordMap[hash].Add(element);
             }
 
             // Register element to a section
@@ -721,52 +718,52 @@ namespace GDX.Editor
                     if (s_SearchContentResults.Array[i] == null) continue;
                     s_SearchContentResults.Array[i].RemoveFromClassList(ResourcesProvider.SearchHighlightClass);
                 }
+
                 s_SearchContentResults.Clear();
             }
 
-            if (IsSearching())
-            {
-                QueryElements(SearchString);
-                StringBuilder results = new StringBuilder();
-                for (int i = 0; i < s_SearchContentResults.Count; i++)
-                {
-                    results.Append(s_SearchContentResults.Array[0]);
-                    results.Append(",");
-                }
-                if (s_SearchContentResults.Count == 0)
-                {
-                    return;
-                }
+            if (!IsSearching()) return;
 
-                // Iterate through each section, showing if it has found elements
+            QueryElements(s_SearchString);
+            if (s_SearchContentResults.Count == 0)
+            {
                 for (int i = 0; i < k_SectionCount; i++)
                 {
-                    int count = k_SearchSectionElementMap[i].Count;
-                    bool found = false;
-                    for (int j = 0; j < count; j++)
-                    {
-                        VisualElement element = k_SearchSectionElementMap[i].Array[j];
-                        if (s_SearchContentResults.ContainsReference(element))
-                        {
-                            found = true;
-                            element.AddToClassList(ResourcesProvider.SearchHighlightClass);
-                        }
-                        else
-                        {
-                            element.RemoveFromClassList(ResourcesProvider.SearchHighlightClass);
-                        }
-                    }
+                    k_ConfigSectionHeaders[i].AddToClassList(ResourcesProvider.HiddenClass);
+                    k_ConfigSectionContents[i].AddToClassList(ResourcesProvider.HiddenClass);
+                }
 
-                    if (found)
+                return;
+            }
+
+            // Iterate through each section, showing if it has found elements
+            for (int i = 0; i < k_SectionCount; i++)
+            {
+                int count = k_SearchSectionElementMap[i].Count;
+                bool found = false;
+                for (int j = 0; j < count; j++)
+                {
+                    VisualElement element = k_SearchSectionElementMap[i].Array[j];
+                    if (s_SearchContentResults.ContainsReference(element))
                     {
-                        k_ConfigSectionHeaders[i].RemoveFromClassList(ResourcesProvider.HiddenClass);
-                        k_ConfigSectionContents[i].RemoveFromClassList(ResourcesProvider.HiddenClass);
+                        found = true;
+                        element.AddToClassList(ResourcesProvider.SearchHighlightClass);
                     }
                     else
                     {
-                        k_ConfigSectionHeaders[i].AddToClassList(ResourcesProvider.HiddenClass);
-                        k_ConfigSectionContents[i].AddToClassList(ResourcesProvider.HiddenClass);
+                        element.RemoveFromClassList(ResourcesProvider.SearchHighlightClass);
                     }
+                }
+
+                if (found)
+                {
+                    k_ConfigSectionHeaders[i].RemoveFromClassList(ResourcesProvider.HiddenClass);
+                    k_ConfigSectionContents[i].RemoveFromClassList(ResourcesProvider.HiddenClass);
+                }
+                else
+                {
+                    k_ConfigSectionHeaders[i].AddToClassList(ResourcesProvider.HiddenClass);
+                    k_ConfigSectionContents[i].AddToClassList(ResourcesProvider.HiddenClass);
                 }
             }
         }
