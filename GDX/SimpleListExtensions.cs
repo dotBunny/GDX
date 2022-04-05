@@ -11,6 +11,11 @@ namespace GDX
     /// <summary>
     ///     <see cref="GDX.Collections.Generic.SimpleList{T}" /> Based Extension Methods
     /// </summary>
+    /// <remarks>
+    ///     Methods found in this extensions class are less performant then the included methods in
+    ///     <see cref="GDX.Collections.Generic.SimpleList{T}" />. They are seperated out to clearly delineate this
+    ///     performance regression.
+    /// </remarks>
     public static class SimpleListExtensions
     {
         /// <summary>

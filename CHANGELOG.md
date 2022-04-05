@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Localization::GetIETF()` was renamed for clarity to `Localization::GetIETF_BCP47()`, with further value definitions.
 - Optimized internals of `CircularBuffer` removing some garbage being made when using `ToArray()`.
 - `ListManagedPool` rebuilt as `SimpleListManagedPool` for all `object` based pooling needs.
+- Flagged `DisableInInspectorAttributePropertyDrawer` to only use UIElements version with `UNITY_2022_2_OR_NEWER`.
 
 ### Fixed  
 
