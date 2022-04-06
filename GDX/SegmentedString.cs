@@ -52,6 +52,10 @@ namespace GDX
         /// </summary>
         int m_HashCode;
 
+        /// <summary>
+        ///     Get the <see cref="m_Characters"/> array.
+        /// </summary>
+        /// <returns>A <see cref="char"/> array.</returns>
         public char[] AsCharArray()
         {
             return m_Characters;
