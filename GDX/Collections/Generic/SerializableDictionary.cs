@@ -119,25 +119,8 @@ namespace GDX.Collections.Generic
             Clear();
 
             // If this is not serializable we need to do nothing
-            if (!m_IsSerializable)
+            if (!m_IsSerializable || m_SerializedLength <= 0)
             {
-                return;
-            }
-
-            if (m_SerializedLength <= 0)
-            {
-#if UNITY_EDITOR
-                // Don't allow null keys for non-nullables
-                if (!IsNullableKey() && m_SerializedAddKey == null)
-                {
-                    m_SerializedAddKeyValid = false;
-                }
-                else
-                {
-                    m_SerializedAddKeyValid = true;
-                }
-#endif
-
                 return;
             }
 
@@ -159,23 +142,6 @@ namespace GDX.Collections.Generic
 #endif
             }
 
-#if UNITY_EDITOR
-
-            // We need to check if the key is actually nullable
-            if (!IsNullableKey() && m_SerializedAddKey == null)
-            {
-                m_SerializedAddKeyValid = false;
-            }
-            else
-            {
-                m_SerializedAddKeyValid = !ContainsKey(m_SerializedAddKey);
-                if (!m_SerializedAddKeyValid)
-                {
-                    m_SerializedAddKey = default;
-                }
-            }
-#endif
-
             // Remove any data cached so that references are not held.
             if (!clearAfterLoad)
             {
@@ -194,10 +160,6 @@ namespace GDX.Collections.Generic
         public void OnAfterDeserialize()
         {
             LoadSerializedData();
-#if !UNITY_EDITOR
-            // Make sure nothing is there holding a reference.
-            m_PadForSerializationKey = default;
-#endif
         }
 
         /// <summary>
@@ -255,34 +217,6 @@ namespace GDX.Collections.Generic
                 index++;
             }
         }
-
-#pragma warning disable CS0414
-#if UNITY_EDITOR
-        /// <summary>
-        ///     Editor only data indicating if the property drawer is expanded.
-        /// </summary>
-        [FormerlySerializedAs("drawerExpanded")]
-        [HideInInspector] [SerializeField] bool m_DrawerExpanded;
-
-        /// <summary>
-        ///     Is the provided key a valid key (unique).
-        /// </summary>
-        [FormerlySerializedAs("serializedAddKeyValid")]
-        [HideInInspector] [SerializeField] bool m_SerializedAddKeyValid;
-
-        /// <summary>
-        ///     Temporary placement for keys to be added.
-        /// </summary>
-        [FormerlySerializedAs("serializedAddKey")]
-        [HideInInspector] [SerializeField] TKey m_SerializedAddKey;
-#else
-        // We need to pad the size of the serialized data due to Unity checking the size of the serialized object.
-        // This is a problem where "classic" Unity author-time data, is the same as runtime data.
-        [SerializeField] bool m_PadForSerializationBoolA;
-        [SerializeField] bool m_PadForSerializationBoolB;
-        [SerializeField] TKey m_PadForSerializationKey;
-#endif
-#pragma warning restore CS0414
     }
 }
 #endif // !UNITY_DOTSRUNTIME
