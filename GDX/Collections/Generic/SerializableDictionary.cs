@@ -79,33 +79,11 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Is the dictionaries key nullable?
-        /// </summary>
-        /// <returns>true/false if nullable.</returns>
-        public bool IsNullableKey()
-        {
-            Type type = typeof(TKey);
-
-            // While a Behaviour itself can be null, when its a MonoBehaviour we cannot.
-            if (type == typeof(MonoBehaviour))
-            {
-                return false;
-            }
-
-            if (!type.IsValueType)
-            {
-                return true;
-            }
-
-            return Nullable.GetUnderlyingType(type) != null;
-        }
-
-        /// <summary>
         ///     Is the <paramref name="type" /> capable of being serialized by the
         ///     <see cref="SerializableDictionary{TKey,TValue}" />, utilizing Unity's own serialization system?
         /// </summary>
         /// <returns>true/false if the type is valid.</returns>
-        public bool IsSerializableType(Type type)
+        public static bool IsSerializableType(Type type)
         {
             return type != typeof(object);
         }

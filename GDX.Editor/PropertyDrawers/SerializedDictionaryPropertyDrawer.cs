@@ -2,11 +2,15 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Codice.CM.Common;
 using UnityEditor;
 using UnityEngine;
 using GDX.Collections.Generic;
+using Unity.VisualScripting;
+using Object = UnityEngine.Object;
 
 namespace GDX.Editor.PropertyDrawers
 {
@@ -28,9 +32,10 @@ namespace GDX.Editor.PropertyDrawers
     [CustomPropertyDrawer(typeof(SerializableDictionary<,>))]
     class SerializableDictionaryPropertyDrawer : PropertyDrawer
     {
-        public Object m_AddKey;
+        public object m_AddKey;
+        public bool m_IsExpanded;
         public bool m_ValidKey;
-        public bool m_Expanded;
+
 
         /// <summary>
         ///
@@ -42,14 +47,12 @@ namespace GDX.Editor.PropertyDrawers
         /// </remarks>
         /// <param name="targetObject"></param>
         /// <returns></returns>
-        bool IsValidKey(object targetObject)
+        bool IsValidObjectKey(object targetObject)
         {
             object instanceObject = SerializedProperties.GetValue(m_TargetObject, m_TargetProperty.name);
             IDictionary instanceDictionary = (IDictionary)instanceObject;
-            bool doesNotContain = !instanceDictionary.Contains(targetObject);
-
-            // TODO Null checks?
-            return doesNotContain;
+            if (instanceDictionary == null) return false;
+            return !instanceDictionary.Contains(targetObject);
         }
 
         /// <summary>
@@ -106,18 +109,15 @@ namespace GDX.Editor.PropertyDrawers
         /// </remarks>
         bool m_IsKeyValueCountValid = true;
 
-        bool m_IsNullableType = false;
-
-        //SerializedProperty m_PropertyAddKey;
         SerializedProperty m_PropertyCount;
         int m_PropertyCountCache = -1;
         SerializedProperty m_PropertyIsSerializable;
         bool m_PropertyIsSerializableCache;
         SerializedProperty m_PropertyKeys;
         SerializedProperty m_PropertyValues;
-
-        System.Type m_KeyType;
-        System.Type m_ValueType;
+        Type m_KeyType = typeof(object);
+        Type m_ValueType = typeof(object);
+        bool m_KeyTypeNullable;
 
         /// <summary>
         ///     The index of in the data arrays to be considered selected.
@@ -128,8 +128,21 @@ namespace GDX.Editor.PropertyDrawers
         ///     The target object of the <see cref="PropertyDrawer" />.
         /// </summary>
         Object m_TargetObject;
-
+        SerializedObject m_SerializedObjectClone;
+        SerializedProperty m_SerializedKeysClone;
         SerializedProperty m_TargetProperty;
+
+
+        ~SerializableDictionaryPropertyDrawer()
+        {
+            m_TargetObject = null;
+            m_SerializedObjectClone.Dispose();
+            m_TargetProperty.Dispose();
+            m_PropertyKeys.Dispose();
+            m_PropertyValues.Dispose();
+            m_PropertyIsSerializable.Dispose();
+            m_PropertyCount.Dispose();
+        }
 
         /// <summary>
         ///     Provide an adjusted height for the entire element to be rendered.
@@ -144,7 +157,7 @@ namespace GDX.Editor.PropertyDrawers
             m_HeightFoldout = EditorGUIUtility.singleLineHeight;
 
             // Early out if the property drawer is not expanded, or we dont have any data
-            if (!m_Expanded || !m_PropertyIsSerializableCache)
+            if (!m_IsExpanded || !m_PropertyIsSerializableCache)
             {
                 m_HeightTotal = m_HeightFoldout;
                 return m_HeightTotal;
@@ -183,11 +196,18 @@ namespace GDX.Editor.PropertyDrawers
             m_DisplayName = property.displayName;
             m_AddKeyFieldID = Content.AddKeyFieldIDPrefix + m_DisplayName.GetStableHashCode();
             m_TargetProperty = property;
+            m_IsExpanded = property.isExpanded;
+
             m_TargetObject = property.serializedObject.targetObject;
-            m_KeyType = fieldInfo.FieldType.BaseType.GenericTypeArguments[0];
-            m_ValueType = fieldInfo.FieldType.BaseType.GenericTypeArguments[1];
+            if (fieldInfo.FieldType.BaseType != null)
+            {
+                m_KeyType = fieldInfo.FieldType.BaseType.GenericTypeArguments[0];
+                m_ValueType = fieldInfo.FieldType.BaseType.GenericTypeArguments[1];
+                m_KeyTypeNullable = (m_KeyType.IsReferenceType() || Nullable.GetUnderlyingType(m_KeyType) != null);
+            }
 
-
+            // Create default item
+            m_AddKey ??= m_KeyType.Default();
 
             // Build our top level position
             Rect foldoutRect = new Rect(position.x, position.y, position.width, m_HeightFoldout);
@@ -221,7 +241,7 @@ namespace GDX.Editor.PropertyDrawers
             DrawFoldout(foldoutRect);
 
             // If the foldout is expanded, draw the actual content
-            if (m_Expanded)
+            if (m_IsExpanded)
             {
                 Rect contentRect = new Rect(position.x, foldoutRect.yMax + Styles.ContentAreaTopMargin, position.width,
                     m_HeightContent);
@@ -378,18 +398,50 @@ namespace GDX.Editor.PropertyDrawers
             // Draw the input before the button so it overlaps it
             GUI.SetNextControlName(m_AddKeyFieldID);
 
-            // Add Key
-            Object beforeObject = m_AddKey;
-            m_AddKey = EditorGUI.ObjectField(inputRect, m_AddKey, m_KeyType, true);
-            if (beforeObject != m_AddKey)
+            if (m_KeyTypeNullable)
             {
-                m_ValidKey = IsValidKey(m_AddKey);
-                if (!m_ValidKey && m_AddKey != default)
+                // Add Key Object Route - Efficient-ish
+                object beforeObject = m_AddKey;
+                m_AddKey = EditorGUI.ObjectField(inputRect, (Object)m_AddKey, m_KeyType, true);
+                if (beforeObject != m_AddKey)
                 {
-                    m_AddKey = default;
+                    m_ValidKey = IsValidObjectKey(m_AddKey);
+                    if (!m_ValidKey)
+                    {
+                        m_AddKey = m_KeyType.Default();
+                    }
                 }
             }
+            else
+            {
+                // We're going clone the serialized object so that we can do some fun stuff, but we need to remember
+                // never to apply the changes to this particular object.
 
+
+                // TODO Dont think we need to copy but for now this is how were gonna make sure were not doing bad
+                m_SerializedObjectClone ??= new SerializedObject(m_TargetObject);
+                m_SerializedKeysClone ??= m_SerializedObjectClone.FindProperty(m_TargetProperty.propertyPath)
+                    .FindPropertyRelative("m_SerializedKeys");
+
+                // Expand our array if necessary
+                if (m_SerializedKeysClone.arraySize == 0)
+                {
+                    m_SerializedKeysClone.arraySize = 1;
+                }
+
+                SerializedProperties.SetValue(m_SerializedKeysClone, "data", m_AddKey, 0);
+
+                SerializedProperty fakeKey = m_SerializedKeysClone.GetArrayElementAtIndex(0);
+                EditorGUI.PropertyField(inputRect, fakeKey, GUIContent.none);
+                object newValue = SerializedProperties.GetValue(m_SerializedKeysClone, "data", 0);
+                if (m_AddKey != newValue)
+                {
+                    // TODO: Validate?
+                    m_AddKey = newValue;
+                    m_ValidKey = true;
+                }
+                fakeKey.Dispose();
+            }
 
             GUI.enabled = m_ValidKey;
             if (GUI.Button(addRect, Content.IconPlus, Styles.FooterButton))
@@ -455,10 +507,11 @@ namespace GDX.Editor.PropertyDrawers
         {
             // Generate a foldout GUI element representing the name of the dictionary
             bool newExpanded =
-                EditorGUI.Foldout(position, m_Expanded, m_DisplayName, true, EditorStyles.foldout);
-            if (newExpanded != m_Expanded)
+                EditorGUI.Foldout(position, m_IsExpanded, m_DisplayName, true, EditorStyles.foldout);
+            if (newExpanded != m_IsExpanded)
             {
-                m_Expanded = newExpanded;
+                m_IsExpanded = newExpanded;
+                m_TargetProperty.isExpanded = newExpanded;
 
                 // If we're collapsing the foldout, make sure there is no key cached
                 if (!newExpanded)
@@ -523,71 +576,23 @@ namespace GDX.Editor.PropertyDrawers
 
             // Add new key element, and fill with predetermined good key
             m_PropertyKeys.arraySize++;
-
-            SerializedProperty addedKey = m_PropertyKeys.GetArrayElementAtIndex(m_PropertyCountCache);
-            SerializedObject tempObject = new SerializedObject(m_AddKey);
-            ShallowCopy(addedKey,  tempObject.GetIterator());
+            SerializedProperties.SetValue(m_PropertyKeys, "data", m_AddKey, m_PropertyCountCache);
+            // We do this to force serialization
+            m_PropertyKeys.isExpanded = true;
 
             // Add new value element, and optionally default its value
             m_PropertyValues.arraySize++;
             if (defaultValue)
             {
-                SerializedProperty addedValue = m_PropertyValues.GetArrayElementAtIndex(m_PropertyCountCache);
-                SetDefaultValue(addedValue);
+                SerializedProperties.SetValue(m_PropertyValues, "data", m_ValueType.Default(), m_PropertyCountCache);
             }
+            // We do this to force serialization
+            m_PropertyValues.isExpanded = true;
 
             // Increase Size
             m_PropertyCountCache++;
             m_PropertyCount.intValue = m_PropertyCountCache;
-            m_AddKey = null;
-        }
-
-        /// <summary>
-        ///     Does the provided <see cref="SerializedProperty" /> contain a non <c>default</c> value.
-        /// </summary>
-        /// <param name="targetProperty">The target to evaluate.</param>
-        static bool HasValue(SerializedProperty targetProperty)
-        {
-            switch (targetProperty.type)
-            {
-                case "int":
-                    return targetProperty.intValue != 0;
-                case "bool":
-                    return targetProperty.boolValue;
-                case "bounds":
-                    return targetProperty.boundsValue != default;
-                case "color":
-                    return targetProperty.colorValue != default;
-                case "double":
-                    return targetProperty.doubleValue != 0;
-                case "float":
-                    return targetProperty.floatValue != 0;
-                case "long":
-                    return targetProperty.longValue != 0;
-                case "quaternion":
-                    return targetProperty.quaternionValue != default;
-                case "rect":
-                    return targetProperty.rectValue != default;
-                case "string":
-                    return targetProperty.stringValue != default;
-                case "vector2":
-                    return targetProperty.vector2Value != default;
-                case "vector3":
-                    return targetProperty.vector3Value != default;
-                case "vector4":
-                    return targetProperty.vector4Value != default;
-                case "animationCurve":
-                    return targetProperty.animationCurveValue.keys.Length > 0;
-                case "boundsInt":
-                    return targetProperty.boundsIntValue != default;
-                case "enum":
-                    return targetProperty.enumValueIndex != default;
-                case "exposedReference":
-                    return targetProperty.exposedReferenceValue != default;
-                default:
-                    return targetProperty.objectReferenceValue != default ||
-                           targetProperty.objectReferenceInstanceIDValue != default;
-            }
+            m_AddKey = m_KeyType.Default();
         }
 
         /// <summary>
@@ -629,141 +634,6 @@ namespace GDX.Editor.PropertyDrawers
             m_PropertyCount.intValue = 0;
             m_PropertyCountCache = 0;
             m_SelectedIndex = -1;
-        }
-
-        /// <summary>
-        ///     Clear the value of a provided <see cref="SerializedProperty" />, setting it to the <c>default</c>.
-        /// </summary>
-        /// <param name="targetProperty">The receiver of the value.</param>
-        static void SetDefaultValue(SerializedProperty targetProperty)
-        {
-            switch (targetProperty.type)
-            {
-                case "int":
-                    targetProperty.intValue = default;
-                    break;
-                case "bool":
-                    targetProperty.boolValue = default;
-                    break;
-                case "bounds":
-                    targetProperty.boundsValue = default;
-                    break;
-                case "color":
-                    targetProperty.colorValue = default;
-                    break;
-                case "double":
-                    targetProperty.doubleValue = default;
-                    break;
-                case "float":
-                    targetProperty.floatValue = default;
-                    break;
-                case "long":
-                    targetProperty.longValue = default;
-                    break;
-                case "quaternion":
-                    targetProperty.quaternionValue = default;
-                    break;
-                case "rect":
-                    targetProperty.rectValue = default;
-                    break;
-                case "string":
-                    targetProperty.stringValue = default;
-                    break;
-                case "vector2":
-                    targetProperty.vector2Value = default;
-                    break;
-                case "vector3":
-                    targetProperty.vector3Value = default;
-                    break;
-                case "vector4":
-                    targetProperty.vector4Value = default;
-                    break;
-                case "animationCurve":
-                    targetProperty.animationCurveValue = default;
-                    break;
-                case "boundsInt":
-                    targetProperty.boundsIntValue = default;
-                    break;
-                case "enum":
-                    targetProperty.enumValueIndex = default;
-                    break;
-                case "exposedReference":
-                    targetProperty.exposedReferenceValue = default;
-                    break;
-                default:
-                    // This covers the whole "PPtr<$NAME> outcome, could probably handle differently.
-                    targetProperty.objectReferenceValue = default;
-                    targetProperty.objectReferenceInstanceIDValue = default;
-                    break;
-            }
-        }
-
-        /// <summary>
-        ///     A single level copy of value from the <paramref name="sourceProperty" /> to the <paramref name="targetProperty" />.
-        /// </summary>
-        /// <param name="targetProperty">The receiver of the value.</param>
-        /// <param name="sourceProperty">The originator of the value to be used.</param>
-        static void ShallowCopy(SerializedProperty targetProperty, SerializedProperty sourceProperty)
-        {
-            switch (targetProperty.type)
-            {
-                case "int":
-                    targetProperty.intValue = sourceProperty.intValue;
-                    break;
-                case "bool":
-                    targetProperty.boolValue = sourceProperty.boolValue;
-                    break;
-                case "bounds":
-                    targetProperty.boundsValue = sourceProperty.boundsValue;
-                    break;
-                case "color":
-                    targetProperty.colorValue = sourceProperty.colorValue;
-                    break;
-                case "double":
-                    targetProperty.doubleValue = sourceProperty.doubleValue;
-                    break;
-                case "float":
-                    targetProperty.floatValue = sourceProperty.floatValue;
-                    break;
-                case "long":
-                    targetProperty.longValue = sourceProperty.longValue;
-                    break;
-                case "quaternion":
-                    targetProperty.quaternionValue = sourceProperty.quaternionValue;
-                    break;
-                case "rect":
-                    targetProperty.rectValue = sourceProperty.rectValue;
-                    break;
-                case "string":
-                    targetProperty.stringValue = sourceProperty.stringValue;
-                    break;
-                case "vector2":
-                    targetProperty.vector2Value = sourceProperty.vector2Value;
-                    break;
-                case "vector3":
-                    targetProperty.vector3Value = sourceProperty.vector3Value;
-                    break;
-                case "vector4":
-                    targetProperty.vector4Value = sourceProperty.vector4Value;
-                    break;
-                case "animationCurve":
-                    targetProperty.animationCurveValue = sourceProperty.animationCurveValue;
-                    break;
-                case "boundsInt":
-                    targetProperty.boundsIntValue = sourceProperty.boundsIntValue;
-                    break;
-                case "enum":
-                    targetProperty.enumValueIndex = sourceProperty.enumValueIndex;
-                    break;
-                case "exposedReference":
-                    targetProperty.exposedReferenceValue = sourceProperty.exposedReferenceValue;
-                    break;
-                default:
-                    // This covers the whole "PPtr<$NAME> outcome, could probably handle differently.
-                    targetProperty.objectReferenceValue = sourceProperty.objectReferenceValue;
-                    targetProperty.objectReferenceInstanceIDValue = sourceProperty.objectReferenceInstanceIDValue;
-                    break;
-            }
         }
 
         /// <summary>

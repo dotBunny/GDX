@@ -16,6 +16,8 @@ namespace GDX
         public const BindingFlags PrivateFieldFlags = BindingFlags.Instance | BindingFlags.NonPublic;
         public const BindingFlags PrivateStaticFlags = BindingFlags.Static | BindingFlags.NonPublic;
         public const BindingFlags PublicStaticFlags = BindingFlags.Static | BindingFlags.Public;
+        public const BindingFlags SerializationFlags =
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
         /// <summary>
         ///     Access the field value of a specific <see cref="targetObject"/>, which may not be normally accessible.
@@ -42,6 +44,25 @@ namespace GDX
                 return (T)field?.GetValue(targetObject);
             }
             return default;
+        }
+
+        public static FieldInfo GetFieldUnambiguous(this Type type, string name, BindingFlags flags = SerializationFlags)
+        {
+           flags |= BindingFlags.DeclaredOnly;
+
+            while (type != null)
+            {
+                FieldInfo field = type.GetField(name, flags);
+
+                if (field != null)
+                {
+                    return field;
+                }
+
+                type = type.BaseType;
+            }
+
+            return null;
         }
 
         /// <summary>

@@ -1,66 +1,79 @@
 ﻿// Copyright (c) 2020-2022 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
-using UnityEngine;
 using System.Collections;
-using UnityEditor;
-using System.Linq;
 using System;
 using System.Reflection;
+using UnityEditor;
 
 namespace GDX.Editor
 {
     public static class SerializedProperties
     {
-
-        public static object GetParent(SerializedProperty prop)
-        {
-            var path = prop.propertyPath.Replace(".Array.data[", "[");
-            object obj = prop.serializedObject.targetObject;
-            var elements = path.Split('.');
-            foreach (var element in elements.Take(elements.Length - 1))
-            {
-                if (element.Contains("["))
-                {
-                    var elementName = element.Substring(0, element.IndexOf("["));
-                    var index = Convert.ToInt32(element.Substring(element.IndexOf("[")).Replace("[", "")
-                        .Replace("]", ""));
-                    obj = GetValue(obj, elementName, index);
-                }
-                else
-                {
-                    obj = GetValue(obj, element);
-                }
-            }
-
-            return obj;
-        }
-
         public static object GetValue(object source, string name)
         {
             if (source == null)
                 return null;
-            var type = source.GetType();
-            var f = type.GetField(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            if (f == null)
+            Type type = source.GetType();
+            FieldInfo f = type.GetField(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            if (f != null)
             {
-                var p = type.GetProperty(name,
-                    BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-                if (p == null)
-                    return null;
-                return p.GetValue(source, null);
+                return f.GetValue(source);
             }
 
-            return f.GetValue(source);
+            PropertyInfo p = type.GetProperty(name,
+                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            return p == null ? null : p.GetValue(source, null);
         }
 
         public static object GetValue(object source, string name, int index)
         {
-            var enumerable = GetValue(source, name) as IEnumerable;
-            var enm = enumerable.GetEnumerator();
+            IEnumerable enumerable = GetValue(source, name) as IEnumerable;
+            if (enumerable == null)
+            {
+                return null;
+            }
+
+            IEnumerator enm = enumerable.GetEnumerator();
             while (index-- >= 0)
                 enm.MoveNext();
             return enm.Current;
+        }
+
+        public static void SetValue(object source, string name, object value)
+        {
+            object abstractObject = GetValue(source, name);
+
+            if (abstractObject == null)
+            {
+                return;
+            }
+
+            FieldInfo field = abstractObject.GetType().GetFieldUnambiguous(name);
+            field.SetValue(abstractObject, value);
+        }
+
+        public static void SetValue(object source, string name, object value, int index)
+        {
+            IEnumerable enumerable = GetValue(source, name) as IEnumerable;
+            if (enumerable == null)
+            {
+                return;
+            }
+
+            IEnumerator enm = enumerable.GetEnumerator();
+            while (index-- >= 0)
+                enm.MoveNext();
+
+            object abstractObject = enm.Current;
+            if (abstractObject == null)
+            {
+                return;
+            }
+
+            FieldInfo field = abstractObject.GetType().GetFieldUnambiguous(name,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            field.SetValue(abstractObject, value);
         }
     }
 }

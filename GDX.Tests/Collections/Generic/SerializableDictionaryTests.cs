@@ -16,9 +16,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void IsSerializableType_SystemObject_ReturnsFalse()
         {
-            SerializableDictionary<object, string> mockDictionary = new SerializableDictionary<object, string>();
-
-            bool evaluate = mockDictionary.IsSerializableType(typeof(object));
+            bool evaluate = SerializableDictionary<object, string>.IsSerializableType(typeof(object));
 
             Assert.IsFalse(evaluate);
         }
@@ -41,9 +39,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void IsSerializableType_UnityObject_ReturnsTrue()
         {
-            SerializableDictionary<Object, string> mockDictionary = new SerializableDictionary<Object, string>();
-
-            bool evaluate = mockDictionary.IsSerializableType(typeof(Object));
+            bool evaluate = SerializableDictionary<Object, string>.IsSerializableType(typeof(Object));
 
             Assert.IsTrue(evaluate);
         }
