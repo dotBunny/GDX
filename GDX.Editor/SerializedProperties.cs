@@ -75,10 +75,12 @@ namespace GDX.Editor
                     return property.rectIntValue;
                 case SerializedPropertyType.BoundsInt:
                     return property.boundsIntValue;
+#if UNITY_2021_1_OR_NEWER
                 case SerializedPropertyType.ManagedReference:
                     return property.managedReferenceValue;
                 case SerializedPropertyType.Hash128:
                     return property.hash128Value;
+#endif
                 default:
                     return null;
             }
@@ -149,12 +151,14 @@ namespace GDX.Editor
                 case SerializedPropertyType.BoundsInt:
                     property.boundsIntValue = (BoundsInt)value;
                     break;
+#if UNITY_2021_1_OR_NEWER
                 case SerializedPropertyType.ManagedReference:
                     property.managedReferenceValue = value;
                     break;
                 case SerializedPropertyType.Hash128:
                     property.hash128Value = (Hash128)value;
                     break;
+#endif
             }
 #endif
         }
