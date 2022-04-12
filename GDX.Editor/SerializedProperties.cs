@@ -44,10 +44,9 @@ namespace GDX.Editor
                 case SerializedPropertyType.LayerMask:
                     return property.intValue;
                 case SerializedPropertyType.Boolean:
-                    return property.boxedValue;
+                    return property.boolValue;
                 case SerializedPropertyType.Float:
-                    return property.numericType == SerializedPropertyNumericType.Double ?
-                        property.doubleValue : property.floatValue;
+                    return property.floatValue;
                 case SerializedPropertyType.String:
                     return property.stringValue;
                 case SerializedPropertyType.Color:
@@ -62,14 +61,10 @@ namespace GDX.Editor
                     return property.vector4Value;
                 case SerializedPropertyType.Rect:
                     return property.rectValue;
-                case SerializedPropertyType.Character:
-                    return property.uintValue;
                 case SerializedPropertyType.AnimationCurve:
                     return property.animationCurveValue;
                 case SerializedPropertyType.Bounds:
                     return property.boundsValue;
-                case SerializedPropertyType.Gradient:
-                    return property.gradientValue;
                 case SerializedPropertyType.Quaternion:
                     return property.quaternionValue;
                 case SerializedPropertyType.Vector2Int:
@@ -84,9 +79,6 @@ namespace GDX.Editor
                     return property.managedReferenceValue;
                 case SerializedPropertyType.Hash128:
                     return property.hash128Value;
-                case SerializedPropertyType.Generic:
-                case SerializedPropertyType.FixedBufferSize:
-                case SerializedPropertyType.ExposedReference:
                 default:
                     return null;
             }
@@ -108,14 +100,7 @@ namespace GDX.Editor
                     property.boolValue = (bool)value;
                     break;
                 case SerializedPropertyType.Float:
-                    if (property.numericType == SerializedPropertyNumericType.Double)
-                    {
-                        property.doubleValue = Convert.ToDouble(value);
-                    }
-                    else
-                    {
-                        property.floatValue = Convert.ToSingle(value);
-                    }
+                    property.floatValue = (float)value;
                     break;
                 case SerializedPropertyType.String:
                     property.stringValue = (string)value;
@@ -143,17 +128,11 @@ namespace GDX.Editor
                 case SerializedPropertyType.Rect:
                     property.rectValue = (Rect)value;
                     break;
-                case SerializedPropertyType.Character:
-                    property.uintValue = Convert.ToUInt16(value);
-                    break;
                 case SerializedPropertyType.AnimationCurve:
                     property.animationCurveValue = (AnimationCurve)value;
                     break;
                 case SerializedPropertyType.Bounds:
                     property.boundsValue = (Bounds)value;
-                    break;
-                case SerializedPropertyType.Gradient:
-                    property.gradientValue = (Gradient)value;
                     break;
                 case SerializedPropertyType.Quaternion:
                     property.quaternionValue = (Quaternion)value;
@@ -175,12 +154,6 @@ namespace GDX.Editor
                     break;
                 case SerializedPropertyType.Hash128:
                     property.hash128Value = (Hash128)value;
-                    break;
-                case SerializedPropertyType.Generic:
-                case SerializedPropertyType.FixedBufferSize:
-                case SerializedPropertyType.ExposedReference:
-                default:
-                    // NOT SUPPORTED
                     break;
             }
 #endif
