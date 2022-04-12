@@ -65,6 +65,14 @@ namespace GDX
             return null;
         }
 
+        public static object GetDefault(this Type type)
+        {
+            if (!type.IsValueType)
+            {
+                return null;
+            }
+            return default;
+        }
         /// <summary>
         ///     Invokes a known static method.
         /// </summary>

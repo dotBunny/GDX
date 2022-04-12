@@ -31,6 +31,67 @@ namespace GDX.Editor
             return p == null ? null : p.GetValue(source, null);
         }
 
+        public static object GetValue(this SerializedProperty property)
+        {
+#if UNITY_2022_1_OR_NEWER
+            return property.boxedValue;
+#else
+            switch (property.propertyType)
+            {
+                case SerializedPropertyType.Integer:
+                case SerializedPropertyType.ArraySize:
+                case SerializedPropertyType.Enum:
+                case SerializedPropertyType.LayerMask:
+                    return property.intValue;
+                case SerializedPropertyType.Boolean:
+                    return property.boxedValue;
+                case SerializedPropertyType.Float:
+                    return property.numericType == SerializedPropertyNumericType.Double ?
+                        property.doubleValue : property.floatValue;
+                case SerializedPropertyType.String:
+                    return property.stringValue;
+                case SerializedPropertyType.Color:
+                    return property.colorValue;
+                case SerializedPropertyType.ObjectReference:
+                    return property.objectReferenceValue;
+                case SerializedPropertyType.Vector2:
+                    return property.vector2Value;
+                case SerializedPropertyType.Vector3:
+                    return property.vector3Value;
+                case SerializedPropertyType.Vector4:
+                    return property.vector4Value;
+                case SerializedPropertyType.Rect:
+                    return property.rectValue;
+                case SerializedPropertyType.Character:
+                    return property.uintValue;
+                case SerializedPropertyType.AnimationCurve:
+                    return property.animationCurveValue;
+                case SerializedPropertyType.Bounds:
+                    return property.boundsValue;
+                case SerializedPropertyType.Gradient:
+                    return property.gradientValue;
+                case SerializedPropertyType.Quaternion:
+                    return property.quaternionValue;
+                case SerializedPropertyType.Vector2Int:
+                    return property.vector2IntValue;
+                case SerializedPropertyType.Vector3Int:
+                    return property.vector3IntValue;
+                case SerializedPropertyType.RectInt:
+                    return property.rectIntValue;
+                case SerializedPropertyType.BoundsInt:
+                    return property.boundsIntValue;
+                case SerializedPropertyType.ManagedReference:
+                    return property.managedReferenceValue;
+                case SerializedPropertyType.Hash128:
+                    return property.hash128Value;
+                case SerializedPropertyType.Generic:
+                case SerializedPropertyType.FixedBufferSize:
+                case SerializedPropertyType.ExposedReference:
+                default:
+                    return null;
+            }
+#endif
+        }
         public static void SetValue(this SerializedProperty property, object value)
         {
 #if UNITY_2022_1_OR_NEWER

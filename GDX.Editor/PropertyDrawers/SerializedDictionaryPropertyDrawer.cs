@@ -4,12 +4,9 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Codice.CM.Common;
 using UnityEditor;
 using UnityEngine;
 using GDX.Collections.Generic;
-using Unity.VisualScripting;
 using Object = UnityEngine.Object;
 
 namespace GDX.Editor.PropertyDrawers
@@ -203,11 +200,11 @@ namespace GDX.Editor.PropertyDrawers
             {
                 m_KeyType = fieldInfo.FieldType.BaseType.GenericTypeArguments[0];
                 m_ValueType = fieldInfo.FieldType.BaseType.GenericTypeArguments[1];
-                m_KeyTypeNullable = (m_KeyType.IsReferenceType() || Nullable.GetUnderlyingType(m_KeyType) != null);
+                m_KeyTypeNullable = (!m_KeyType.IsValueType || Nullable.GetUnderlyingType(m_KeyType) != null);
             }
 
             // Create default item
-            m_AddKey ??= m_KeyType.Default();
+            m_AddKey ??= m_KeyType.GetDefault();
 
             // Build our top level position
             Rect foldoutRect = new Rect(position.x, position.y, position.width, m_HeightFoldout);
@@ -408,7 +405,7 @@ namespace GDX.Editor.PropertyDrawers
                     m_ValidKey = IsValidObjectKey(m_AddKey);
                     if (!m_ValidKey)
                     {
-                        m_AddKey = m_KeyType.Default();
+                        m_AddKey = m_KeyType.GetDefault();
                     }
                 }
             }
@@ -437,10 +434,11 @@ namespace GDX.Editor.PropertyDrawers
 
                 SerializedProperty fakeKey = m_SerializedKeysClone.GetArrayElementAtIndex(0);
                 EditorGUI.PropertyField(inputRect, fakeKey, GUIContent.none);
-                if (m_AddKey != fakeKey.boxedValue)
+                object newObject = fakeKey.GetValue();
+                if (m_AddKey != newObject)
                 {
                     // TODO: Validate?
-                    m_AddKey = fakeKey.boxedValue;
+                    m_AddKey = newObject;
                     m_ValidKey = true;
                 }
                 else
@@ -586,16 +584,14 @@ namespace GDX.Editor.PropertyDrawers
             // This issue is Array.data doesnt exist, its
             //GameObjectToInteger.m_SerializedKeys.Array.data[0]
             SerializedProperty newKeyProperty = m_PropertyKeys.GetArrayElementAtIndex(m_PropertyCountCache);
-            newKeyProperty.boxedValue = m_AddKey;
-            //newKeyProperty.SetValue(m_AddKey);
+            newKeyProperty.SetValue(m_AddKey);
 
             // Add new value element, and optionally default its value
             m_PropertyValues.arraySize++;
             if (defaultValue)
             {
                 SerializedProperty newValueProperty = m_PropertyValues.GetArrayElementAtIndex(m_PropertyCountCache);
-                newValueProperty.boxedValue = m_ValueType.Default();
-                //newValueProperty.SetValue(m_ValueType.Default());
+                newValueProperty.SetValue(m_ValueType.GetDefault());
             }
             // We do this to force serialization
             m_PropertyValues.isExpanded = true;
@@ -603,7 +599,7 @@ namespace GDX.Editor.PropertyDrawers
             // Increase Size
             m_PropertyCountCache++;
             m_PropertyCount.intValue = m_PropertyCountCache;
-            m_AddKey = m_KeyType.Default();
+            m_AddKey = m_KeyType.GetDefault();
         }
 
         /// <summary>
