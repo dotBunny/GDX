@@ -417,7 +417,7 @@ namespace GDX.Editor.PropertyDrawers
                 // We're going clone the serialized object so that we can do some fun stuff, but we need to remember
                 // never to apply the changes to this particular object.
 
-                
+
                 // TODO Dont think we need to copy but for now this is how were gonna make sure were not doing bad
                 m_SerializedObjectClone ??= new SerializedObject(m_TargetObject);
                 //m_TargetProperty.Copy();

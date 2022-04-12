@@ -33,89 +33,96 @@ namespace GDX.Editor
 
         public static void SetValue(this SerializedProperty property, object value)
         {
+#if UNITY_2022_1_OR_NEWER
             property.boxedValue = value;
-
-            // switch (property.propertyType)
-            // {
-            //     case SerializedPropertyType.Generic:
-            //         break;
-            //     case SerializedPropertyType.Integer:
-            //         property.intValue = (int)value;
-            //         break;
-            //     case SerializedPropertyType.Boolean:
-            //         property.boolValue = (bool)value;
-            //         break;
-            //     case SerializedPropertyType.Float:
-            //         property.floatValue = (float)value;
-            //         break;
-            //     case SerializedPropertyType.String:
-            //         property.stringValue = (string)value;
-            //         break;
-            //     case SerializedPropertyType.Color:
-            //         property.colorValue = (Color)value;
-            //         break;
-            //     case SerializedPropertyType.ObjectReference:
-            //         UnityEngine.Object unityObject = (UnityEngine.Object)value;
-            //         property.objectReferenceValue = unityObject;
-            //         property.objectReferenceInstanceIDValue = unityObject.GetInstanceID();
-            //         break;
-            //     case SerializedPropertyType.LayerMask:
-            //         break;
-            //     case SerializedPropertyType.Enum:
-            //         break;
-            //     case SerializedPropertyType.Vector2:
-            //         property.vector2Value = (Vector2)value;
-            //         break;
-            //     case SerializedPropertyType.Vector3:
-            //         property.vector3Value = (Vector3)value;
-            //         break;
-            //     case SerializedPropertyType.Vector4:
-            //         property.vector4Value = (Vector4)value;
-            //         break;
-            //     case SerializedPropertyType.Rect:
-            //         property.rectValue = (Rect)value;
-            //         break;
-            //     case SerializedPropertyType.ArraySize:
-            //         break;
-            //     case SerializedPropertyType.Character:
-            //         break;
-            //     case SerializedPropertyType.AnimationCurve:
-            //         property.animationCurveValue = (AnimationCurve)value;
-            //         break;
-            //     case SerializedPropertyType.Bounds:
-            //         property.boundsValue = (Bounds)value;
-            //         break;
-            //     case SerializedPropertyType.Gradient:
-            //         break;
-            //     case SerializedPropertyType.Quaternion:
-            //         property.quaternionValue = (Quaternion)value;
-            //         break;
-            //     case SerializedPropertyType.ExposedReference:
-            //         break;
-            //     case SerializedPropertyType.FixedBufferSize:
-            //         break;
-            //     case SerializedPropertyType.Vector2Int:
-            //         property.vector2IntValue = (Vector2Int)value;
-            //         break;
-            //     case SerializedPropertyType.Vector3Int:
-            //         property.vector3IntValue = (Vector3Int)value;
-            //         break;
-            //     case SerializedPropertyType.RectInt:
-            //         property.rectIntValue = (RectInt)value;
-            //         break;
-            //     case SerializedPropertyType.BoundsInt:
-            //         property.boundsIntValue = (BoundsInt)value;
-            //         break;
-            //     case SerializedPropertyType.ManagedReference:
-            //
-            //         break;
-            //     case SerializedPropertyType.Hash128:
-            //         property.hash128Value = (Hash128)value;
-            //         break;
-            //     default:
-            //         throw new ArgumentOutOfRangeException();
-            // }
+#else
+            switch (property.propertyType)
+            {
+                case SerializedPropertyType.Integer:
+                case SerializedPropertyType.ArraySize:
+                case SerializedPropertyType.Enum:
+                    property.intValue = (int)value;
+                    break;
+                case SerializedPropertyType.Boolean:
+                    property.boolValue = (bool)value;
+                    break;
+                case SerializedPropertyType.Float:
+                    if (property.numericType == SerializedPropertyNumericType.Double)
+                    {
+                        property.doubleValue = Convert.ToDouble(value);
+                    }
+                    else
+                    {
+                        property.floatValue = Convert.ToSingle(value);
+                    }
+                    break;
+                case SerializedPropertyType.String:
+                    property.stringValue = (string)value;
+                    break;
+                case SerializedPropertyType.Color:
+                    property.colorValue = (Color)value;
+                    break;
+                case SerializedPropertyType.ObjectReference:
+                    UnityEngine.Object unityObject = (UnityEngine.Object)value;
+                    property.objectReferenceValue = unityObject;
+                    property.objectReferenceInstanceIDValue = unityObject.GetInstanceID();
+                    break;
+                case SerializedPropertyType.LayerMask:
+                    property.intValue = ((LayerMask)value).value;
+                    break;
+                case SerializedPropertyType.Vector2:
+                    property.vector2Value = (Vector2)value;
+                    break;
+                case SerializedPropertyType.Vector3:
+                    property.vector3Value = (Vector3)value;
+                    break;
+                case SerializedPropertyType.Vector4:
+                    property.vector4Value = (Vector4)value;
+                    break;
+                case SerializedPropertyType.Rect:
+                    property.rectValue = (Rect)value;
+                    break;
+                case SerializedPropertyType.Character:
+                    property.uintValue = Convert.ToUInt16(value);
+                    break;
+                case SerializedPropertyType.AnimationCurve:
+                    property.animationCurveValue = (AnimationCurve)value;
+                    break;
+                case SerializedPropertyType.Bounds:
+                    property.boundsValue = (Bounds)value;
+                    break;
+                case SerializedPropertyType.Gradient:
+                    property.gradientValue = (Gradient)value;
+                    break;
+                case SerializedPropertyType.Quaternion:
+                    property.quaternionValue = (Quaternion)value;
+                    break;
+                case SerializedPropertyType.Vector2Int:
+                    property.vector2IntValue = (Vector2Int)value;
+                    break;
+                case SerializedPropertyType.Vector3Int:
+                    property.vector3IntValue = (Vector3Int)value;
+                    break;
+                case SerializedPropertyType.RectInt:
+                    property.rectIntValue = (RectInt)value;
+                    break;
+                case SerializedPropertyType.BoundsInt:
+                    property.boundsIntValue = (BoundsInt)value;
+                    break;
+                case SerializedPropertyType.ManagedReference:
+                    property.managedReferenceValue = value;
+                    break;
+                case SerializedPropertyType.Hash128:
+                    property.hash128Value = (Hash128)value;
+                    break;
+                case SerializedPropertyType.Generic:
+                case SerializedPropertyType.FixedBufferSize:
+                case SerializedPropertyType.ExposedReference:
+                default:
+                    // NOT SUPPORTED
+                    break;
+            }
+#endif
         }
-
     }
 }
