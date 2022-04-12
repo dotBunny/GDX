@@ -136,7 +136,7 @@ namespace GDX.Editor.PropertyDrawers
         ~SerializableDictionaryPropertyDrawer()
         {
             m_TargetObject = null;
-            m_SerializedObjectClone.Dispose();
+            m_SerializedObjectClone?.Dispose();
             m_TargetProperty.Dispose();
             m_PropertyKeys.Dispose();
             m_PropertyValues.Dispose();
@@ -417,10 +417,13 @@ namespace GDX.Editor.PropertyDrawers
                 // We're going clone the serialized object so that we can do some fun stuff, but we need to remember
                 // never to apply the changes to this particular object.
 
-
+                
                 // TODO Dont think we need to copy but for now this is how were gonna make sure were not doing bad
                 m_SerializedObjectClone ??= new SerializedObject(m_TargetObject);
-                m_SerializedKeysClone ??= m_SerializedObjectClone.FindProperty(m_TargetProperty.propertyPath)
+                //m_TargetProperty.Copy();
+                m_SerializedKeysClone ??=
+
+                    m_SerializedObjectClone.FindProperty(m_TargetProperty.propertyPath)
                     .FindPropertyRelative("m_SerializedKeys");
 
                 // Expand our array if necessary
@@ -429,16 +432,20 @@ namespace GDX.Editor.PropertyDrawers
                     m_SerializedKeysClone.arraySize = 1;
                 }
 
-                SerializedProperties.SetValue(m_SerializedKeysClone, "data", m_AddKey, 0);
+
+                //SerializedProperties.SetValue(m_SerializedKeysClone, "data", m_AddKey, 0);
 
                 SerializedProperty fakeKey = m_SerializedKeysClone.GetArrayElementAtIndex(0);
                 EditorGUI.PropertyField(inputRect, fakeKey, GUIContent.none);
-                object newValue = SerializedProperties.GetValue(m_SerializedKeysClone, "data", 0);
-                if (m_AddKey != newValue)
+                if (m_AddKey != fakeKey.boxedValue)
                 {
                     // TODO: Validate?
-                    m_AddKey = newValue;
+                    m_AddKey = fakeKey.boxedValue;
                     m_ValidKey = true;
+                }
+                else
+                {
+                    m_ValidKey = false;
                 }
                 fakeKey.Dispose();
             }
@@ -574,17 +581,21 @@ namespace GDX.Editor.PropertyDrawers
                 return;
             }
 
-            // Add new key element, and fill with predetermined good key
             m_PropertyKeys.arraySize++;
-            SerializedProperties.SetValue(m_PropertyKeys, "data", m_AddKey, m_PropertyCountCache);
-            // We do this to force serialization
-            m_PropertyKeys.isExpanded = true;
+
+            // This issue is Array.data doesnt exist, its
+            //GameObjectToInteger.m_SerializedKeys.Array.data[0]
+            SerializedProperty newKeyProperty = m_PropertyKeys.GetArrayElementAtIndex(m_PropertyCountCache);
+            newKeyProperty.boxedValue = m_AddKey;
+            //newKeyProperty.SetValue(m_AddKey);
 
             // Add new value element, and optionally default its value
             m_PropertyValues.arraySize++;
             if (defaultValue)
             {
-                SerializedProperties.SetValue(m_PropertyValues, "data", m_ValueType.Default(), m_PropertyCountCache);
+                SerializedProperty newValueProperty = m_PropertyValues.GetArrayElementAtIndex(m_PropertyCountCache);
+                newValueProperty.boxedValue = m_ValueType.Default();
+                //newValueProperty.SetValue(m_ValueType.Default());
             }
             // We do this to force serialization
             m_PropertyValues.isExpanded = true;
