@@ -49,7 +49,7 @@ namespace GDX
         ///     Static initializer
         /// </summary>
         /// <remarks>Nothing in here can reference the Unity engine and must be thread-safe.</remarks>
-        public static void Initialize()
+        static void Initialize()
         {
             if (s_Initialized)
             {

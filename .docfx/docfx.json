@@ -4,7 +4,7 @@
       "force": false,
       "src": [
         {
-          "src": "../../..",
+          "src": "../../Projects/GDX_Development",
           "files": [
             "GDX.csproj",
             "GDX.Editor.csproj"
