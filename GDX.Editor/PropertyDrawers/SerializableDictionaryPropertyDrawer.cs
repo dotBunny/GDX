@@ -29,34 +29,24 @@ namespace GDX.Editor.PropertyDrawers
     [CustomPropertyDrawer(typeof(SerializableDictionary<,>))]
     class SerializableDictionaryPropertyDrawer : PropertyDrawer
     {
-        public object m_AddKey;
-        public bool m_IsExpanded;
-        public bool m_ValidKey;
-
-
         /// <summary>
-        ///
+        ///     A reference to an <see cref="object"/> which represents the value to be added as a key.
         /// </summary>
         /// <remarks>
-        ///     At a certain point (we noticed in 2020.3.33f1), Unity switched to caring about the names of fields
-        ///     that were being serialized. So our old method of switching out field data at build time and padding the
-        ///     required space was invalidated.
+        ///     This can be a proper object, or a boxed value.
         /// </remarks>
-        /// <param name="targetObject"></param>
-        /// <returns></returns>
-        bool IsValidObjectKey(object targetObject)
-        {
-            object instanceObject = SerializedProperties.GetValue(m_TargetObject, m_TargetProperty.name);
-            IDictionary instanceDictionary = (IDictionary)instanceObject;
-            if (instanceDictionary == null) return false;
-            return !instanceDictionary.Contains(targetObject);
-        }
+        object m_AddKey;
 
         /// <summary>
         ///     Cached ID of the <see cref="EditorGUI.PropertyField(UnityEngine.Rect,UnityEditor.SerializedProperty)" />, used to
         ///     determine if it has focus across updates.
         /// </summary>
         string m_AddKeyFieldID;
+
+        /// <summary>
+        ///     A cached value of the base properties isExpanded flag.
+        /// </summary>
+        bool m_CachedExpandedStatus;
 
         /// <summary>
         ///     A cached version of the display name to use for the <see cref="PropertyDrawer" />.
@@ -99,6 +89,11 @@ namespace GDX.Editor.PropertyDrawers
         float m_HeightTotal;
 
         /// <summary>
+        ///     Is the <see cref="m_AddKey"/> a valid key to add to the target <see cref="SerializableDictionary{TKey,TValue}"/>
+        /// </summary>
+        bool m_IsAddKeyValid;
+
+        /// <summary>
         ///     Does the key and value array counts match, and do they match the serialized length?
         /// </summary>
         /// <remarks>
@@ -115,6 +110,7 @@ namespace GDX.Editor.PropertyDrawers
         Type m_KeyType = typeof(object);
         Type m_ValueType = typeof(object);
         bool m_KeyTypeNullable;
+        bool m_IsKeyValueType;
 
         /// <summary>
         ///     The index of in the data arrays to be considered selected.
@@ -129,7 +125,9 @@ namespace GDX.Editor.PropertyDrawers
         SerializedProperty m_SerializedKeysClone;
         SerializedProperty m_TargetProperty;
 
-
+        /// <summary>
+        ///     Clean up our allocations.
+        /// </summary>
         ~SerializableDictionaryPropertyDrawer()
         {
             m_TargetObject = null;
@@ -154,7 +152,7 @@ namespace GDX.Editor.PropertyDrawers
             m_HeightFoldout = EditorGUIUtility.singleLineHeight;
 
             // Early out if the property drawer is not expanded, or we dont have any data
-            if (!m_IsExpanded || !m_PropertyIsSerializableCache)
+            if (!m_CachedExpandedStatus || !m_PropertyIsSerializableCache)
             {
                 m_HeightTotal = m_HeightFoldout;
                 return m_HeightTotal;
@@ -193,7 +191,7 @@ namespace GDX.Editor.PropertyDrawers
             m_DisplayName = property.displayName;
             m_AddKeyFieldID = Content.AddKeyFieldIDPrefix + m_DisplayName.GetStableHashCode();
             m_TargetProperty = property;
-            m_IsExpanded = property.isExpanded;
+            m_CachedExpandedStatus = property.isExpanded;
 
             m_TargetObject = property.serializedObject.targetObject;
             if (fieldInfo.FieldType.BaseType != null)
@@ -201,6 +199,7 @@ namespace GDX.Editor.PropertyDrawers
                 m_KeyType = fieldInfo.FieldType.BaseType.GenericTypeArguments[0];
                 m_ValueType = fieldInfo.FieldType.BaseType.GenericTypeArguments[1];
                 m_KeyTypeNullable = (!m_KeyType.IsValueType || Nullable.GetUnderlyingType(m_KeyType) != null);
+                m_IsKeyValueType = m_KeyType.IsValueType;
             }
 
             // Create default item
@@ -225,8 +224,10 @@ namespace GDX.Editor.PropertyDrawers
             m_PropertyValues = property.FindPropertyRelative("m_SerializedValues");
 
             // Validate saved sizes
-            m_IsKeyValueCountValid = m_PropertyCountCache == m_PropertyValues.arraySize &&
-                                    m_PropertyCountCache == m_PropertyKeys.arraySize;
+            m_IsKeyValueCountValid = m_PropertyValues != null &&
+                                     m_PropertyCountCache == m_PropertyValues.arraySize &&
+                                     m_PropertyKeys != null &&
+                                     m_PropertyCountCache == m_PropertyKeys.arraySize;
 
             if (!m_IsKeyValueCountValid)
             {
@@ -238,7 +239,7 @@ namespace GDX.Editor.PropertyDrawers
             DrawFoldout(foldoutRect);
 
             // If the foldout is expanded, draw the actual content
-            if (m_IsExpanded)
+            if (m_CachedExpandedStatus)
             {
                 Rect contentRect = new Rect(position.x, foldoutRect.yMax + Styles.ContentAreaTopMargin, position.width,
                     m_HeightContent);
@@ -255,6 +256,47 @@ namespace GDX.Editor.PropertyDrawers
 
             // Anything we changed property wise we should save
             property.serializedObject.ApplyModifiedProperties();
+        }
+
+        /// <summary>
+        ///     Add an element to the targeted <see cref="SerializableDictionary{TKey,TValue}" /> using the provided key.
+        /// </summary>
+        /// <remarks>
+        ///     This alters the underlying backing serialized data, after this change, the actual
+        ///     <see cref="SerializableDictionary{TKey,TValue}" /> picks up the change.
+        /// </remarks>
+        /// <param name="defaultValue">
+        ///     Should the value be reset to its default value. It holds the previous element in the array's
+        ///     value due to how the value array was expanded.
+        /// </param>
+        void AddElement(bool defaultValue = true)
+        {
+            if (m_PropertyCountCache == -1 || m_PropertyKeys == null || m_PropertyValues == null)
+            {
+                return;
+            }
+
+            m_PropertyKeys.arraySize++;
+
+            // This issue is Array.data doesnt exist, its
+            //GameObjectToInteger.m_SerializedKeys.Array.data[0]
+            SerializedProperty newKeyProperty = m_PropertyKeys.GetArrayElementAtIndex(m_PropertyCountCache);
+            newKeyProperty.SetValue(m_AddKey);
+
+            // Add new value element, and optionally default its value
+            m_PropertyValues.arraySize++;
+            if (defaultValue)
+            {
+                SerializedProperty newValueProperty = m_PropertyValues.GetArrayElementAtIndex(m_PropertyCountCache);
+                newValueProperty.SetValue(m_ValueType.GetDefault());
+            }
+            // We do this to force serialization
+            m_PropertyValues.isExpanded = true;
+
+            // Increase Size
+            m_PropertyCountCache++;
+            m_PropertyCount.intValue = m_PropertyCountCache;
+            m_AddKey = m_KeyType.GetDefault();
         }
 
         /// <summary>
@@ -381,7 +423,7 @@ namespace GDX.Editor.PropertyDrawers
             }
 
             // Hitting enter while the add key field is selected
-            if (m_ValidKey &&
+            if (m_IsAddKeyValid &&
                 Event.current.type == EventType.KeyDown &&
                 (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter ||
                  Event.current.character == '\n') &&
@@ -390,20 +432,21 @@ namespace GDX.Editor.PropertyDrawers
                 Event.current.Use();
                 GUIUtility.hotControl = 0;
                 AddElement();
+                m_IsAddKeyValid = IsValidKey(m_AddKey);
             }
 
             // Draw the input before the button so it overlaps it
             GUI.SetNextControlName(m_AddKeyFieldID);
 
-            if (m_KeyTypeNullable)
+            if (!m_IsKeyValueType && m_KeyType != typeof(string))
             {
                 // Add Key Object Route - Efficient-ish
                 object beforeObject = m_AddKey;
                 m_AddKey = EditorGUI.ObjectField(inputRect, (Object)m_AddKey, m_KeyType, true);
                 if (beforeObject != m_AddKey)
                 {
-                    m_ValidKey = IsValidObjectKey(m_AddKey);
-                    if (!m_ValidKey)
+                    m_IsAddKeyValid = IsValidKey(m_AddKey);
+                    if (!m_IsAddKeyValid)
                     {
                         m_AddKey = m_KeyType.GetDefault();
                     }
@@ -428,32 +471,32 @@ namespace GDX.Editor.PropertyDrawers
                 {
                     m_SerializedKeysClone.arraySize = 1;
                 }
-
-
-                //SerializedProperties.SetValue(m_SerializedKeysClone, "data", m_AddKey, 0);
-
                 SerializedProperty fakeKey = m_SerializedKeysClone.GetArrayElementAtIndex(0);
                 EditorGUI.PropertyField(inputRect, fakeKey, GUIContent.none);
                 object newObject = fakeKey.GetValue();
                 if (m_AddKey != newObject)
                 {
-                    // TODO: Validate?
                     m_AddKey = newObject;
-                    m_ValidKey = true;
+                    m_IsAddKeyValid = IsValidKey(m_AddKey);
+                    if (!m_IsAddKeyValid)
+                    {
+                        m_AddKey = m_KeyType.GetDefault();
+                    }
                 }
                 else
                 {
-                    m_ValidKey = false;
+                    m_IsAddKeyValid = false;
                 }
                 fakeKey.Dispose();
             }
 
-            GUI.enabled = m_ValidKey;
+            GUI.enabled = m_IsAddKeyValid;
             if (GUI.Button(addRect, Content.IconPlus, Styles.FooterButton))
             {
                 // Remove control focus
                 GUIUtility.hotControl = 0;
                 AddElement();
+                m_IsAddKeyValid = IsValidKey(m_AddKey);
             }
 
             GUI.enabled = true;
@@ -485,6 +528,7 @@ namespace GDX.Editor.PropertyDrawers
                 // Remove control focus
                 GUIUtility.hotControl = 0;
                 RemoveElementAt(m_SelectedIndex);
+                m_IsAddKeyValid = IsValidKey(m_AddKey);
 
                 // Keep next item selected.
                 m_SelectedIndex--;
@@ -512,10 +556,10 @@ namespace GDX.Editor.PropertyDrawers
         {
             // Generate a foldout GUI element representing the name of the dictionary
             bool newExpanded =
-                EditorGUI.Foldout(position, m_IsExpanded, m_DisplayName, true, EditorStyles.foldout);
-            if (newExpanded != m_IsExpanded)
+                EditorGUI.Foldout(position, m_CachedExpandedStatus, m_DisplayName, true, EditorStyles.foldout);
+            if (newExpanded != m_CachedExpandedStatus)
             {
-                m_IsExpanded = newExpanded;
+                m_CachedExpandedStatus = newExpanded;
                 m_TargetProperty.isExpanded = newExpanded;
 
                 // If we're collapsing the foldout, make sure there is no key cached
@@ -560,46 +604,24 @@ namespace GDX.Editor.PropertyDrawers
             }
         }
 
-
         /// <summary>
-        ///     Add an element to the targeted <see cref="SerializableDictionary{TKey,TValue}" /> using the provided key.
+        ///
         /// </summary>
         /// <remarks>
-        ///     This alters the underlying backing serialized data, after this change, the actual
-        ///     <see cref="SerializableDictionary{TKey,TValue}" /> picks up the change.
+        ///     At a certain point (we noticed in 2020.3.33f1), Unity switched to caring about the names of fields
+        ///     that were being serialized. So our old method of switching out field data at build time and padding the
+        ///     required space was invalidated.
         /// </remarks>
-        /// <param name="defaultValue">
-        ///     Should the value be reset to its default value. It holds the previous element in the array's
-        ///     value due to how the value array was expanded.
-        /// </param>
-        void AddElement(bool defaultValue = true)
+        /// <param name="targetObject"></param>
+        /// <returns></returns>
+        bool IsValidKey(object targetObject)
         {
-            if (m_PropertyCountCache == -1 || m_PropertyKeys == null || m_PropertyValues == null)
-            {
-                return;
-            }
+            if (targetObject == null) return false;
 
-            m_PropertyKeys.arraySize++;
-
-            // This issue is Array.data doesnt exist, its
-            //GameObjectToInteger.m_SerializedKeys.Array.data[0]
-            SerializedProperty newKeyProperty = m_PropertyKeys.GetArrayElementAtIndex(m_PropertyCountCache);
-            newKeyProperty.SetValue(m_AddKey);
-
-            // Add new value element, and optionally default its value
-            m_PropertyValues.arraySize++;
-            if (defaultValue)
-            {
-                SerializedProperty newValueProperty = m_PropertyValues.GetArrayElementAtIndex(m_PropertyCountCache);
-                newValueProperty.SetValue(m_ValueType.GetDefault());
-            }
-            // We do this to force serialization
-            m_PropertyValues.isExpanded = true;
-
-            // Increase Size
-            m_PropertyCountCache++;
-            m_PropertyCount.intValue = m_PropertyCountCache;
-            m_AddKey = m_KeyType.GetDefault();
+            object instanceObject = SerializedProperties.GetValue(m_TargetObject, m_TargetProperty.name);
+            IDictionary instanceDictionary = (IDictionary)instanceObject;
+            if (instanceDictionary == null ) return false;
+            return !instanceDictionary.Contains(targetObject);
         }
 
         /// <summary>
@@ -636,8 +658,8 @@ namespace GDX.Editor.PropertyDrawers
         /// </summary>
         void ResetSerializedData()
         {
-            m_PropertyKeys.ClearArray();
-            m_PropertyValues.ClearArray();
+            m_PropertyKeys?.ClearArray();
+            m_PropertyValues?.ClearArray();
             m_PropertyCount.intValue = 0;
             m_PropertyCountCache = 0;
             m_SelectedIndex = -1;
