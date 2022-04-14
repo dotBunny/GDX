@@ -12,6 +12,11 @@ namespace GDX.Developer.Reports
 
         public static string OutputReport(string outputPath)
         {
+            if (s_PanicMessages.Count > 0)
+            {
+                s_Report.SetForceFail();
+            }
+
             Platform.ForceDeleteFile(outputPath);
             File.WriteAllText(outputPath, s_Report.ToString());
             return s_Report.GetResult();

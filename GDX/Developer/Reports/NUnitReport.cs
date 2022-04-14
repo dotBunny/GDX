@@ -13,7 +13,9 @@ namespace GDX.Developer.Reports
         public const string FailedString = "Failed";
         public const string PassedString = "Passed";
 
+
         readonly TestRun m_Results = new TestRun();
+        bool m_ForceFail = false;
 
         public NUnitReport(string name = null, string fullName = null, string className = null )
         {
@@ -59,8 +61,22 @@ namespace GDX.Developer.Reports
             return testCase;
         }
 
+        public void SetForceFail()
+        {
+            m_ForceFail = true;
+        }
+
+        public int GetResultCount()
+        {
+            return m_Results.TestCaseCount;
+        }
+
         public string GetResult()
         {
+            if (m_ForceFail)
+            {
+                return FailedString;
+            }
             return m_Results.Result;
         }
 

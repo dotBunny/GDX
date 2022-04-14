@@ -18,13 +18,15 @@ namespace GDX.Editor
         /// <param name="folderPath">The absolute path to the target folder.</param>
         public static void CheckoutFolder(string folderPath)
         {
-            // Handle VCS
-            if (Provider.enabled && Provider.isActive)
+            // Dont handle VCS!
+            if (!Provider.enabled || !Provider.isActive)
             {
-                AssetList checkoutAssets = GetAssetListFromFolder(folderPath);
-                Task checkoutTask = Provider.Checkout(checkoutAssets, CheckoutMode.Both);
-                checkoutTask.Wait();
+                return;
             }
+
+            AssetList checkoutAssets = GetAssetListFromFolder(folderPath);
+            Task checkoutTask = Provider.Checkout(checkoutAssets, CheckoutMode.Both);
+            checkoutTask.Wait();
         }
 
         /// <summary>

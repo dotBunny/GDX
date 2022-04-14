@@ -40,7 +40,7 @@ namespace GDX.Developer.Reports.NUnit
             Total = Passed + Failed + Inconclusive + Skipped;
 
             Asserts = TestSuite.Asserts;
-            Result = Failed > 0 ? failedResult : passedResult;
+            Result = Failed > 0 || Total <= 0 ? failedResult : passedResult;
         }
     }
 }

@@ -7,6 +7,7 @@ namespace GDX.Editor
     /// <summary>
     ///     A configuration that is operated on when in Project Settings.
     /// </summary>
+    /// <remarks>A non-static copy of <see cref="GDX.Config"/>.</remarks>
     public class TransientConfig
     {
         /// <summary>

@@ -19,6 +19,17 @@ namespace GDX
         public const string TestCategory = "GDX.Tests";
 
         /// <summary>
+        ///     A pseudorandom number generated seeded with <see cref="StartTicks"/>.
+        /// </summary>
+        /// <remarks>Useful for generic randomness where determinism is not required.</remarks>
+        public static WELL1024a Random;
+
+        /// <summary>
+        ///     The point in tick based time when the core was initialized.
+        /// </summary>
+        public static readonly long StartTicks;
+
+        /// <summary>
         ///     Utilizes the <see cref="CoreSentinel" /> to ensure the static has a destructor of sorts.
         /// </summary>
 #pragma warning disable IDE0052, IDE0090
@@ -26,10 +37,15 @@ namespace GDX
         static readonly CoreSentinel k_DisposeSentinel = new CoreSentinel();
         // ReSharper restore UnusedMember.Local, ArrangeObjectCreationWhenTypeEvident
 #pragma warning restore IDE0052, IDE0090
-        public static readonly long StartTicks;
-        public static WELL1024a Random;
 
+        /// <summary>
+        ///     Has the <see cref="Core"/> been initialized?
+        /// </summary>
         static bool s_Initialized;
+
+        /// <summary>
+        ///     Has the <see cref="Core"/> main thread initialization happened?
+        /// </summary>
         static bool s_InitializedMainThread;
 
         /// <summary>
