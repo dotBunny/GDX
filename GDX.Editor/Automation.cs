@@ -20,19 +20,10 @@ namespace GDX.Editor
     {
         static readonly object[] k_EmptyParametersArray = new object[] { };
 
-        public static void Crash(ForcedCrashCategory crash = ForcedCrashCategory.FatalError)
-        {
-            Utils.ForceCrash(crash);
-        }
-
-
-
         static string LayoutStashPath()
         {
             return Path.Combine(Application.dataPath, "..", Config.PlatformAutomationFolder, "GDX.layout");
         }
-
-
 
         /// <summary>
         /// Capture a <see cref="Texture2D"/> of the designated <see cref="EditorWindow"/>.

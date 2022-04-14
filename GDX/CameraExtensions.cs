@@ -15,10 +15,19 @@ namespace GDX
     [VisualScriptingCompatible(2)]
     public static class CameraExtensions
     {
-        public static Texture2D Capture(this Camera targetCamera, int width = 1920, int height = 1080)
+        /// <summary>
+        ///     Forces a <see cref="Camera"/> to render it's view into a texture.
+        /// </summary>
+        /// <param name="targetCamera">The target <see cref="Camera"/> to use.</param>
+        /// <param name="width">The desired width of the rendered texture.</param>
+        /// <param name="height">The desired height of the rendered texture.</param>
+        /// <param name="depthBuffer">The desired depth of the rendered texture.</param>
+        /// <remarks>This behaves differently then using <see cref="ScreenCapture"/>.</remarks>
+        /// <returns>The rendered view.</returns>
+        public static Texture2D RenderToTexture(this Camera targetCamera, int width = 1920, int height = 1080, int depthBuffer = 24)
         {
             // Get a temporary render texture from the pool since its gonna be rapid.
-            RenderTexture screenshotRenderTexture = RenderTexture.GetTemporary(width, height, 24);
+            RenderTexture screenshotRenderTexture = RenderTexture.GetTemporary(width, height, depthBuffer);
 
             // Cache a few previous things to restore after we are done
             RenderTexture previousTargetTexture = targetCamera.targetTexture;
@@ -41,9 +50,18 @@ namespace GDX
             return screenshotTexture;
         }
 
-        public static bool CaptureToPNG(this Camera targetCamera, string outputPath, int width = 1920, int height = 1080 )
+        /// <summary>
+        ///     Forces a <see cref="Camera"/> through <see cref="RenderToTexture"/> encoding to PNG.
+        /// </summary>
+        /// <param name="targetCamera">The target <see cref="Camera"/> to use.</param>
+        /// <param name="width">The desired width of the rendered texture.</param>
+        /// <param name="height">The desired height of the rendered texture.</param>
+        /// <param name="depthBuffer">The desired depth of the rendered texture.</param>
+        /// <returns>true/false if the capture was successful.</returns>
+        /// <remarks>This does not indicate if the writing of the PNG was successful.</remarks>
+        public static bool RenderToPNG(this Camera targetCamera, string outputPath, int width = 1920, int height = 1080, int depthBuffer = 24 )
         {
-            Texture2D captureTexture = Capture(targetCamera, width, height);
+            Texture2D captureTexture = RenderToTexture(targetCamera, width, height, depthBuffer);
             if (captureTexture == null)
             {
                 return false;
