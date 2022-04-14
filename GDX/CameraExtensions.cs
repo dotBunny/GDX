@@ -54,6 +54,7 @@ namespace GDX
         ///     Forces a <see cref="Camera"/> through <see cref="RenderToTexture"/> encoding to PNG.
         /// </summary>
         /// <param name="targetCamera">The target <see cref="Camera"/> to use.</param>
+        /// <param name="outputPath">The full path to output the PNG bytes.</param>
         /// <param name="width">The desired width of the rendered texture.</param>
         /// <param name="height">The desired height of the rendered texture.</param>
         /// <param name="depthBuffer">The desired depth of the rendered texture.</param>
