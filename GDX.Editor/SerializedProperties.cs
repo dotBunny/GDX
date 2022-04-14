@@ -11,25 +11,11 @@ namespace GDX.Editor
 {
     public static class SerializedProperties
     {
+        public const BindingFlags SerializationFieldFlags =
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
-        // Works, pass in the object, and the field name
-        // wont do arrays?
-
-        public static object GetValue(object source, string name)
-        {
-            if (source == null)
-                return null;
-            Type type = source.GetType();
-            FieldInfo f = type.GetField(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            if (f != null)
-            {
-                return f.GetValue(source);
-            }
-
-            PropertyInfo p = type.GetProperty(name,
-                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-            return p == null ? null : p.GetValue(source, null);
-        }
+        public const BindingFlags SerializationPropertyFlags = BindingFlags.NonPublic | BindingFlags.Public |
+                                                               BindingFlags.Instance | BindingFlags.IgnoreCase;
 
         public static object GetValue(this SerializedProperty property)
         {

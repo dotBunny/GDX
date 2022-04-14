@@ -14,10 +14,8 @@ namespace GDX
     public static class Reflection
     {
         public const BindingFlags PrivateFieldFlags = BindingFlags.Instance | BindingFlags.NonPublic;
-        public const BindingFlags PrivateStaticFlags = BindingFlags.Static | BindingFlags.NonPublic;
         public const BindingFlags PublicStaticFlags = BindingFlags.Static | BindingFlags.Public;
-        public const BindingFlags SerializationFlags =
-            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
 
         /// <summary>
         ///     Access the field value of a specific <see cref="targetObject"/>, which may not be normally accessible.
@@ -46,23 +44,20 @@ namespace GDX
             return default;
         }
 
-        public static FieldInfo GetFieldUnambiguous(this Type type, string name, BindingFlags flags = SerializationFlags)
+        public static object GetFieldOrPropertyValue(object source, string name,
+            BindingFlags fieldFlags = PrivateFieldFlags, BindingFlags propertyFlags = PrivateFieldFlags)
         {
-           flags |= BindingFlags.DeclaredOnly;
-
-            while (type != null)
+            if (source == null)
+                return null;
+            Type type = source.GetType();
+            FieldInfo f = type.GetField(name, fieldFlags);
+            if (f != null)
             {
-                FieldInfo field = type.GetField(name, flags);
-
-                if (field != null)
-                {
-                    return field;
-                }
-
-                type = type.BaseType;
+                return f.GetValue(source);
             }
 
-            return null;
+            PropertyInfo p = type.GetProperty(name,propertyFlags);
+            return p == null ? null : p.GetValue(source, null);
         }
 
         public static object GetDefault(this Type type)

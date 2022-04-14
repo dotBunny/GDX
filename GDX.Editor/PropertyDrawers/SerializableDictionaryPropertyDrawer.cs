@@ -110,7 +110,6 @@ namespace GDX.Editor.PropertyDrawers
         Type m_KeyType = typeof(object);
         Type m_ValueType = typeof(object);
         bool m_KeyTypeNullable;
-        bool m_IsKeyValueType;
 
         /// <summary>
         ///     The index of in the data arrays to be considered selected.
@@ -121,6 +120,7 @@ namespace GDX.Editor.PropertyDrawers
         ///     The target object of the <see cref="PropertyDrawer" />.
         /// </summary>
         Object m_TargetObject;
+
         SerializedObject m_SerializedObjectClone;
         SerializedProperty m_SerializedKeysClone;
         SerializedProperty m_TargetProperty;
@@ -199,7 +199,6 @@ namespace GDX.Editor.PropertyDrawers
                 m_KeyType = fieldInfo.FieldType.BaseType.GenericTypeArguments[0];
                 m_ValueType = fieldInfo.FieldType.BaseType.GenericTypeArguments[1];
                 m_KeyTypeNullable = (!m_KeyType.IsValueType || Nullable.GetUnderlyingType(m_KeyType) != null);
-                m_IsKeyValueType = m_KeyType.IsValueType;
             }
 
             // Create default item
@@ -438,7 +437,7 @@ namespace GDX.Editor.PropertyDrawers
             // Draw the input before the button so it overlaps it
             GUI.SetNextControlName(m_AddKeyFieldID);
 
-            if (!m_IsKeyValueType && m_KeyType != typeof(string))
+            if (m_KeyTypeNullable && m_KeyType != typeof(string) && m_KeyTypeNullable)
             {
                 // Add Key Object Route - Efficient-ish
                 object beforeObject = m_AddKey;
@@ -454,15 +453,8 @@ namespace GDX.Editor.PropertyDrawers
             }
             else
             {
-                // We're going clone the serialized object so that we can do some fun stuff, but we need to remember
-                // never to apply the changes to this particular object.
-
-
-                // TODO Dont think we need to copy but for now this is how were gonna make sure were not doing bad
                 m_SerializedObjectClone ??= new SerializedObject(m_TargetObject);
-                //m_TargetProperty.Copy();
                 m_SerializedKeysClone ??=
-
                     m_SerializedObjectClone.FindProperty(m_TargetProperty.propertyPath)
                     .FindPropertyRelative("m_SerializedKeys");
 
@@ -618,7 +610,8 @@ namespace GDX.Editor.PropertyDrawers
         {
             if (targetObject == null) return false;
 
-            object instanceObject = SerializedProperties.GetValue(m_TargetObject, m_TargetProperty.name);
+            object instanceObject = Reflection.GetFieldOrPropertyValue(m_TargetObject, m_TargetProperty.name,
+            SerializedProperties.SerializationFieldFlags, SerializedProperties.SerializationPropertyFlags);
             IDictionary instanceDictionary = (IDictionary)instanceObject;
             if (instanceDictionary == null ) return false;
             return !instanceDictionary.Contains(targetObject);
