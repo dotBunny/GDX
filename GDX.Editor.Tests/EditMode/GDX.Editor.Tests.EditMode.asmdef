@@ -1,9 +1,10 @@
 {
-    "name": "GDX.Tests",
-    "rootNamespace": "GDX",
+    "name": "GDX.Editor.Tests.EditMode",
+    "rootNamespace": "GDX.Editor",
     "references": [
         "Unity.PerformanceTesting",
         "GDX",
+        "GDX.Editor",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],
@@ -19,7 +20,6 @@
     "autoReferenced": false,
     "defineConstraints": [
         "!UNITY_DOTSRUNTIME",
-        "UNITY_2020_3_OR_NEWER",
         "UNITY_INCLUDE_TESTS"
     ],
     "versionDefines": [
