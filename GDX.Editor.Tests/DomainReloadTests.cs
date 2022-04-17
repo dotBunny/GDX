@@ -6,6 +6,7 @@ using System.Collections;
 using System.IO;
 using System.Text;
 using NUnit.Framework;
+using Unity.Collections;
 using UnityEditor;
 using UnityEngine.TestTools;
 using Application = UnityEngine.Application;
@@ -17,6 +18,7 @@ namespace GDX.Editor
     /// </summary>
     public class DomainReloadTests
     {
+        const string LeakDetectionModeKey = "GDX_DomainReloadTests_LeakDetectionMode";
         static string GetFilePath()
         {
             return Path.Combine(UnityEngine.Application.dataPath, "DomainReloadTest.cs");
@@ -60,10 +62,34 @@ namespace GDX.Editor
             return code.ToString();
         }
 
+        [UnitySetUp]
+        public IEnumerator Setup()
+        {
+            EditorPrefs.SetInt(LeakDetectionModeKey, (int)NativeLeakDetection.Mode);
+            string filePath = GetFilePath();
+            Platform.ForceDeleteFile(filePath);
+            Platform.ForceDeleteFile($"{filePath}.meta");
+            yield return null;
+        }
+
         [UnityTest]
         [Category(Core.TestCategory)]
-        public IEnumerator Recompile_NoUnexpectedMessages()
+        public IEnumerator Recompile_NoLeakDetection_NoUnexpectedMessages()
         {
+            NativeLeakDetection.Mode = NativeLeakDetectionMode.Disabled;
+            File.WriteAllText(GetFilePath(),GetFileContent());
+            AssetDatabase.ImportAsset(GetFilePath().Replace(Application.dataPath + "\\", "Assets/"));
+            yield return new RecompileScripts();
+
+            // Any warning or error will fail this
+            LogAssert.NoUnexpectedReceived();
+        }
+
+        [UnityTest]
+        [Category(Core.TestCategory)]
+        public IEnumerator Recompile_JobsLeakDetection_NoUnexpectedMessages()
+        {
+            NativeLeakDetection.Mode = NativeLeakDetectionMode.Enabled;
             File.WriteAllText(GetFilePath(),GetFileContent());
             AssetDatabase.ImportAsset(GetFilePath().Replace(Application.dataPath + "\\", "Assets/"));
             yield return new RecompileScripts();
@@ -75,6 +101,7 @@ namespace GDX.Editor
         [UnityTearDown]
         public IEnumerator TearDown()
         {
+            NativeLeakDetection.Mode = (NativeLeakDetectionMode)EditorPrefs.GetInt(LeakDetectionModeKey);
             string filePath = GetFilePath();
             Platform.ForceDeleteFile(filePath);
             Platform.ForceDeleteFile($"{filePath}.meta");
