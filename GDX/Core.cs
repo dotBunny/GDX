@@ -30,15 +30,6 @@ namespace GDX
         public static readonly long StartTicks;
 
         /// <summary>
-        ///     Utilizes the <see cref="CoreSentinel" /> to ensure the static has a destructor of sorts.
-        /// </summary>
-#pragma warning disable IDE0052, IDE0090
-        // ReSharper disable UnusedMember.Local, ArrangeObjectCreationWhenTypeEvident
-        static readonly CoreSentinel k_DisposeSentinel = new CoreSentinel();
-        // ReSharper restore UnusedMember.Local, ArrangeObjectCreationWhenTypeEvident
-#pragma warning restore IDE0052, IDE0090
-
-        /// <summary>
         ///     Has the <see cref="Core"/> been initialized?
         /// </summary>
         static bool s_Initialized;
@@ -81,6 +72,14 @@ namespace GDX
 
             DictionaryPrimes.SetDefaultPrimes();
 
+            // Create unload disposal
+            AppDomain.CurrentDomain.DomainUnload += (_, __) =>
+            {
+                if (s_Initialized)
+                {
+                    Random.Dispose();
+                }
+            };
             s_Initialized = true;
         }
 
@@ -102,18 +101,6 @@ namespace GDX
             Localization.SetDefaultCulture();
 
             s_InitializedMainThread = true;
-        }
-
-        /// <summary>
-        ///     Core Destructor
-        /// </summary>
-        sealed class CoreSentinel
-        {
-            ~CoreSentinel()
-            {
-                // Dispose native arrays
-                Random.Dispose();
-            }
         }
     }
 }
