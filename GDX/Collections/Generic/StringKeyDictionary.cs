@@ -471,7 +471,7 @@ namespace GDX.Collections.Generic
             int hashCode = key.GetStableHashCode() & 0x7FFFFFFF;
             int bucketIndex = hashCode % Buckets.Length;
             int nextKeyIndex = Buckets[bucketIndex];
-            
+
             while (nextKeyIndex != -1)
             {
                 ref StringKeyEntry<TValue> currEntry = ref Entries[nextKeyIndex];
@@ -488,6 +488,12 @@ namespace GDX.Collections.Generic
             return false;
         }
 
+        /// <summary>
+        ///     Directly access a value by key.
+        /// </summary>
+        /// <param name="key">The target key to look for a value identified by.</param>
+        /// <exception cref="ArgumentNullException">Thrown when a null <paramref name="key"/> is provided to lookup.</exception>
+        /// <exception cref="System.Collections.Generic.KeyNotFoundException">Thrown when the <paramref name="key"/> is not found in the <see cref="StringKeyDictionary{TValue}"/>.</exception>
         public TValue this[string key]
         {
             get
@@ -660,7 +666,7 @@ namespace GDX.Collections.Generic
             Count = 0;
         }
     }
-
+    
     [Serializable]
     public struct StringKeyEntry<T>
     {
