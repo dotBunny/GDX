@@ -18,11 +18,11 @@ namespace GDX
 
 
         /// <summary>
-        ///     Access the field value of a specific <see cref="targetObject"/>, which may not be normally accessible.
+        ///     Access the field value of a specific <paramref name="targetObject"/>, which may not be normally accessible.
         /// </summary>
         /// <remarks></remarks>
         /// <param name="targetObject">The instanced object which will have it's field value read.</param>
-        /// <param name="type">The explicit type of the <see cref="targetObject"/>.</param>
+        /// <param name="type">The explicit type of the <paramref name="targetObject"/>.</param>
         /// <param name="name">The field's name to read.</param>
         /// <param name="flags">The field's access flags.</param>
         /// <typeparam name="T">The type of data being read from the field.</typeparam>
@@ -74,7 +74,7 @@ namespace GDX
         /// <param name="type">The explicit type of the static class.</param>
         /// <param name="method">The name of the method to invoke.</param>
         /// <param name="parameters">Any parameters that should be passed to the method?</param>
-        /// <param name="flags">The <see cref="method"/>s' access flags.</param>
+        /// <param name="flags">The <paramref name="method"/>'s access flags.</param>
         /// <returns>An <see cref="object"/> of the return value. This can be null.</returns>
         public static object InvokeStaticMethod(string type, string method, object[] parameters = null,
             BindingFlags flags = PublicStaticFlags)

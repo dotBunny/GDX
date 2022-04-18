@@ -9,7 +9,7 @@ using System.IO;
 using GDX.Editor.Build;
 using UnityEngine;
 
-namespace GDX.Classic.Editor.Build
+namespace GDX.Editor.Build.Classic
 {
     /// <summary>
     ///     <para>

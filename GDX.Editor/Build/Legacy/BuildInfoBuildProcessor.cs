@@ -8,7 +8,7 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
-namespace GDX.Classic.Editor.Build.Legacy
+namespace GDX.Editor.Build.Legacy
 {
     /// <summary>
     ///     <para>

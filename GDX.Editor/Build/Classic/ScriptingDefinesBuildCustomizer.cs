@@ -4,7 +4,7 @@
 
 #if GDX_PLATFORMS
 
-namespace GDX.Classic.Editor.Build
+namespace GDX.Editor.Build.Classic
 {
 
     /// <summary>
