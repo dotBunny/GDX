@@ -55,7 +55,7 @@ It is possible for the repository to be cloned into a sub-folder in your project
 git clone https://github.com/dotBunny/GDX.git
 ```
 
-This method is how typical development is done on `GDX`.
+This method is how typical development is done on `GDX`, however in the `dev` branch.
 
 ## Project Settings
 
@@ -71,7 +71,7 @@ A section header's background can inform you of the status of the feature. A gre
 
 ### Persitent Storage
 
-Project-specific configuration values are stored in `.\Generated\GDX.generated.cs` (configurable) using an override pattern which automagically updates the [Config](xref:GDX.Config) when the [Core](xref:GDX.Core) statically initializes.
+Project-specific configuration values are stored in `.\Generated\GDX.generated.cs` (configurable) using an override pattern which _automagically_ updates the [Config](xref:GDX.Config) when the [Core](xref:GDX.Core) statically initializes.
 
 > [!NOTE]
 > This process works with `DOTS_RUNTIME` builds, however there is an additional need to call `GDX.Core.InitializeOnMainThread()` for thread specific initialization.

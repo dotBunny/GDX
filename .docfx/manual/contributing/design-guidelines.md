@@ -64,3 +64,13 @@ Below is a list and explanation of some of the markup used in `GDX`.
   - It is based on the .NET Roslyn repositories `.editorconfig`.
   - Don't use anything that would break Unity 2020.3 (hybrid C# 8)
   - Warns of non-explicit type definitions everywhere (we're not going to use var to promote better readability).
+
+## Naming Convensions
+
+Just like every developer in history, the hardest part of our jobs is naming conventions. There are some basic conventions taht we try to use which make naming ever so slightly easier.
+
+| Suffix | Description |
+| --- | :-- |
+| Extensions | A reserved name for base classes in GDX which build upon a concenpt. TBD |
+| Generator | Something which produces consumable content. This varies in degree from things like file content to UI panels. These are meant to be single time usages ?|
+| Provider | TBD |
