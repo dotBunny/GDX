@@ -4,12 +4,12 @@ svg#logo
     padding-top: 10%;
 }
 
-article[data-uid="features"] td 
+article[data-uid="features"] td
 {
     padding: 10px !important;
 }
 
-article[data-uid="features"] td:first-child 
+article[data-uid="features"] td:first-child
 {
     width: 20%;
 }
@@ -30,7 +30,47 @@ a[title="Kanban Board"]:after
     content:"\e066"
 }
 
-.toc .nav > li > span.expand-stub + a
+
+.toc .nav > li > a[type=namespace]
 {
     font-weight: bold !important;
+}
+
+.toc .nav > li > a[type=class]::before,
+.toc .nav > li > a[type=enum]::before,
+.toc .nav > li > a[type=struct]::before,
+.toc .nav > li > a[type=interface]::before
+{
+    margin-right: 5px;
+    line-height: 22px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 5px;
+    color: white;
+    padding-top: 0px;
+    padding-bottom: 2px;
+    font-size: 10px;
+    top: -1px;
+    position: relative;
+}
+
+.toc .nav > li > a[type=class]::before
+{
+    background-color: #a0b6e7;
+    content:"c";
+}
+.toc .nav > li > a[type=enum]::before
+{
+    background-color: #9cdcf2;
+    content:"e";
+}
+.toc .nav > li > a[type=struct]::before
+{
+    background-color: #828ead;
+    content:"s";
+}
+.toc .nav > li > a[type=interface]::before
+{
+    background-color: #CCD7E3;
+    content:"i";
 }
