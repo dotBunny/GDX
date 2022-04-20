@@ -5,10 +5,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using Unity.Collections;
-#if GDX_MATHEMATICS
 using Unity.Mathematics;
-
-#endif
 
 namespace GDX.Collections.Generic
 {
@@ -64,7 +61,6 @@ namespace GDX.Collections.Generic
         }
 
 
-#if GDX_MATHEMATICS
         /// <summary>
         ///     Access a specific location in the voxel.
         /// </summary>
@@ -77,7 +73,7 @@ namespace GDX.Collections.Generic
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set => Array[index.z * Stride * Stride + index.y * Stride + index.x] = value;
         }
-#endif
+
 
         /// <summary>
         ///     Properly dispose of the <see cref="NativeUniformArray3D{T}" />.
@@ -93,7 +89,7 @@ namespace GDX.Collections.Generic
             Array = default;
         }
 
-#if GDX_MATHEMATICS
+
         /// <summary>
         ///     Get the 3-Dimensional index of a flat array index.
         /// </summary>
@@ -101,10 +97,9 @@ namespace GDX.Collections.Generic
         /// <returns>A 3-Dimensional voxel index.</returns>
         public int3 GetFromIndex(int idx)
         {
-            int z = idx / _strideSquared;
-            idx -= z * _strideSquared;
+            int z = idx / Stride * Stride;
+            idx -= z * Stride * Stride;
             return new int3(idx % Stride, idx / Stride, z);
         }
-#endif
     }
 }

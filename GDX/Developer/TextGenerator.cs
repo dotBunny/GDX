@@ -1,4 +1,6 @@
-﻿namespace GDX.Developer
+﻿using System.Collections;
+
+namespace GDX.Developer
 {
     /// <summary>
     ///     A formatted text generator useful for creating text based files with some semblance of organization.
@@ -72,6 +74,19 @@
         {
             ApplyIndent();
             m_Builder.AppendLine(content);
+        }
+
+        /// <summary>
+        ///     Append an <see cref="IEnumerable"/> set of content as individual lines with proper indentation.
+        /// </summary>
+        /// <param name="content">The content to be added.</param>
+        public void AppendLineRange(IEnumerable content)
+        {
+            foreach (string s in content)
+            {
+                ApplyIndent();
+                m_Builder.AppendLine(s);
+            }
         }
 
         /// <summary>
