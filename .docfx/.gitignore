@@ -11,5 +11,6 @@
 /**/security.md
 /**/manual/contributing/code-of-conduct.md
 /**/templates/gdx/partials/footer.tmpl.partial
-reports
+/**/reports/**
+!/**/reports/index.md
 _site

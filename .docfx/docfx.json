@@ -32,6 +32,7 @@
       },
       {
         "files": [
+          "reports/index.md",
           "manual/**.md",
           "manual/**/toc.yml",
           "toc.yml",
@@ -42,6 +43,10 @@
     "resource": [
       {
         "files": [
+          "reports/portability/**",
+          "reports/duplicates/**",
+          "reports/coverage/**",
+          "reports/inspection/**",
           "images/**",
           "logo.svg",
           "favicon.ico",
