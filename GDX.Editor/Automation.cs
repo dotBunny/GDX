@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -10,6 +11,8 @@ using UnityEditorInternal;
 using UnityEngine;
 using Unity.CodeEditor;
 using UnityEngine.Diagnostics;
+using UnityEngine.WSA;
+using Application = UnityEngine.Application;
 
 namespace GDX.Editor
 {
@@ -249,7 +252,8 @@ namespace GDX.Editor
                     "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Professional\\Common7\\IDE\\devenv.exe",
                     "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\Common7\\IDE\\devenv.exe",
                     "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\Common7\\IDE\\devenv.exe",
-                    "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Enterprise\\Common7\\IDE\\devenv.exe"
+                    "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Enterprise\\Common7\\IDE\\devenv.exe",
+                    $"C:\\Users\\{Environment.UserName}\\AppData\\Local\\Programs\\Microsoft VS Code"
                 };
 
                 foreach (string path in paths)
@@ -258,13 +262,28 @@ namespace GDX.Editor
                     {
                         continue;
                     }
+                    CodeEditor.SetExternalScriptEditor(path);
+                    break;
+                }
+#elif UNITY_EDITOR_OSX
+                string[] paths = {
+                    "/Applications/Visual Studio.app",
+                    "/Applications/Visual Studio Code.app",
+                    "/Applications/MonoDevelop.app"
+                };
 
+                foreach (string path in paths)
+                {
+                    if (!Directory.Exists(path))
+                    {
+                        continue;
+                    }
                     CodeEditor.SetExternalScriptEditor(path);
                     break;
                 }
 #else
-                CodeEditor.SetExternalScriptEditor("/Applications/MonoDevelop.app");
-#endif // UNITY_EDITOR_WIN
+                // Linux Support?
+#endif
             }
 
             CodeEditor.CurrentEditor.SyncAll();

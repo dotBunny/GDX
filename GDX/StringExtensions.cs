@@ -90,6 +90,46 @@ namespace GDX
         public static byte[] EncryptionInitializationVector = Encoding.UTF8.GetBytes("dotBunny");
 
         /// <summary>
+        ///     Concatenate an array of strings into one unified string.
+        /// </summary>
+        /// <param name="pieces">An array of strings</param>
+        /// <param name="delimiter">An optional string which to use between <paramref name="pieces"/> when combining.</param>
+        /// <param name="trailingDelimiter">Should a trailing <paramref name="delimiter"/> be appended?</param>
+        /// <returns>A concatenated <see cref="string"/>.</returns>
+        public static string Concatenate(this string[] pieces, string delimiter = null, bool trailingDelimiter = false)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            int count = pieces.Length;
+            bool hasDelimiter = delimiter != null;
+            int tail = count - 1;
+
+            if (trailingDelimiter)
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    builder.Append(pieces[i]);
+                    if (hasDelimiter)
+                    {
+                        builder.Append(delimiter);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    builder.Append(pieces[i]);
+                    if (hasDelimiter && i != tail)
+                    {
+                        builder.Append(delimiter);
+                    }
+                }
+            }
+            return builder.ToString();
+        }
+
+        /// <summary>
         ///     Decrypt an encrypted <see cref="string" /> created by <see cref="Encrypt" />.
         /// </summary>
         /// <remarks>This will have quite a few allocations.</remarks>
@@ -628,6 +668,12 @@ namespace GDX
             return counter;
         }
 
+        /// <summary>
+        ///     Does the <paramref name="haystack"/> partially contain the <paramref name="needle"/>?
+        /// </summary>
+        /// <param name="haystack">An array of <see cref="string"/>s.</param>
+        /// <param name="needle">The <see cref="string"/> that is being looked for.</param>
+        /// <returns>true/false if found.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool PartialMatch(this string[] haystack, string needle)
         {
@@ -645,7 +691,12 @@ namespace GDX
             return false;
         }
 
-
+        /// <summary>
+        ///     Does the <paramref name="haystack"/> partially contain the <paramref name="needle"/>?
+        /// </summary>
+        /// <param name="haystack">A <see cref="SimpleList{T}"/> of <see cref="string"/>s.</param>
+        /// <param name="needle">The <see cref="string"/> that is being looked for.</param>
+        /// <returns>true/false if found.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool PartialMatch(this SimpleList<string> haystack, string needle)
         {
@@ -675,6 +726,11 @@ namespace GDX
             return Regex.Replace(targetString, "([A-Z])", $"{divider}$1", RegexOptions.None).Trim();
         }
 
+        /// <summary>
+        ///     Remove non ASCII characters from a <see cref="string"/>.
+        /// </summary>
+        /// <param name="targetString">The <see cref="string"/> to be cleaned.</param>
+        /// <returns>A <see cref="string"/> without ASCII characters.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string StripNonAscii(this string targetString)
         {
