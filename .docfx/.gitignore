@@ -13,4 +13,5 @@
 /**/templates/gdx/partials/footer.tmpl.partial
 /**/reports/**
 !/**/reports/index.md
+!/**/reports/toc.yml
 _site

@@ -32,9 +32,10 @@
       },
       {
         "files": [
-          "reports/index.md",
           "manual/**.md",
           "manual/**/toc.yml",
+          "reports/**/*.md",
+          "reports/**/*.yml",
           "toc.yml",
           "*.md"
         ]
