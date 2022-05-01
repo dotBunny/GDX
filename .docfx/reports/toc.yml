@@ -1,8 +1,10 @@
+- name: Overview
+  href: overview.md
+- name: Coverage
+  href: coverage/Report/index.html
+- name: Inspection
+  href: inspection/inspection.xml
+- name: Duplication
+  href: duplicates/duplicates.xml
 - name: Portability
   href: portability/index.html
-- name: Code Coverage
-  href: coverage/Report/index.html
-- name: Code Inspection
-  href: inspection/inspection.xml
-- name: Code Duplication
-  href: duplicates/duplicates.xml

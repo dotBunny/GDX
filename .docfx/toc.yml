@@ -6,7 +6,7 @@
 - name: Changelog
   href: changelog.md
 - name: Reports
-  href: reports/index.md
+  href: reports/
 - name: License
   href: license.md
 - name: Issues

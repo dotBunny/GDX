@@ -12,6 +12,7 @@
 /**/manual/contributing/code-of-conduct.md
 /**/templates/gdx/partials/footer.tmpl.partial
 /**/reports/**
+!/**/reports/overview.md
 !/**/reports/index.md
 !/**/reports/toc.yml
 _site
