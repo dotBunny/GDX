@@ -5,8 +5,6 @@
   homepage: api/gdx.yml
 - name: Changelog
   href: changelog.md
-- name: Reports
-  href: reports/
 - name: License
   href: license.md
 - name: Issues

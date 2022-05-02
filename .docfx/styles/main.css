@@ -16,7 +16,11 @@ article[data-uid="features"] td:first-child
 
 a[title="Issues"]:after,
 a[title="Discussions"]:after,
-a[title="Kanban Board"]:after
+a[title="Kanban Board"]:after,
+a[title="Coverage"]:after,
+a[title="Inspection"]:after,
+a[title="Duplication"]:after,
+a[title="Portability"]:after
 {
     padding-left: 5px;
     position:relative;

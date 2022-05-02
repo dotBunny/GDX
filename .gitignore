@@ -75,6 +75,4 @@ crashlytics-build.properties
 /.docfx/**/templates/gdx/partials/footer.tmpl.partial
 /.docfx/**/reports/**
 !/.docfx/**/reports/index.md
-!/.docfx/**/reports/overview.md
-!/.docfx/**/reports/toc.yml
 /.docfx/**_site

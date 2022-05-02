@@ -1,4 +1,4 @@
-# Overview
+# Automation
 
 ## Automated Tests
 
@@ -16,7 +16,6 @@ Are we duplicating code?
 ## [Inspection](/reports/inspection/inspection.xml)
 
 Static code analysis of numerous resharper-esque corrections.
-
 
 ## [Portability](/reports/portability/index.html)
 

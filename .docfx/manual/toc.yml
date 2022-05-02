@@ -20,6 +20,8 @@
       href: contributing\documentation.md
     - name: Agile Board
       href: https://dotbunny.myjetbrains.com/youtrack/agiles/99-15/current
+- name: Automation
+  href: automation.md
 - name: Security Policy
   href: security.md
 - name: FAQ
