@@ -380,8 +380,8 @@ namespace GDX.Editor
                         s_RootElement.RemoveFromClassList(ResourcesProvider.SearchClass);
                         for (int i = 0; i < k_SectionCount; i++)
                         {
-                            k_ConfigSectionHeaders[i].RemoveFromClassList(ResourcesProvider.HiddenClass);
-                            k_ConfigSectionContents[i].RemoveFromClassList(ResourcesProvider.HiddenClass);
+                            k_ConfigSectionHeaders[i]?.RemoveFromClassList(ResourcesProvider.HiddenClass);
+                            k_ConfigSectionContents[i]?.RemoveFromClassList(ResourcesProvider.HiddenClass);
                         }
                     }
                     else
