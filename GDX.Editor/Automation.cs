@@ -83,7 +83,7 @@ namespace GDX.Editor
         {
             if (window == null)
             {
-                Trace.Output(Trace.TraceLevel.Warning, $"Unable to find window of {window.GetType()} type.");
+                Trace.Output(Trace.TraceLevel.Warning, $"No window was passed to be captured.");
                 return null;
             }
 
@@ -307,11 +307,29 @@ namespace GDX.Editor
         public static EditorWindow GetGameView()
         {
             // We will cause an exception if there is no device, so return early.
-            if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null) return null;
+            if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
+            {
+                Trace.Output(Trace.TraceLevel.Warning,"No graphics device, unable to acquire GameView.");
+                return null;
+            }
 
-            // Use internal reflection
-            System.Type gameView = System.Type.GetType("UnityEditor.GameView,UnityEditor");
-            return gameView != null ? EditorWindow.GetWindow(gameView, false) : null;
+            EditorWindow returnWindow = null;
+
+            // Use internal reflection for first try
+            Type gameView = Type.GetType("UnityEditor.GameView,UnityEditor");
+            if (gameView != null)
+            {
+                returnWindow = EditorWindow.GetWindow(gameView, false);
+            }
+
+            // Second try
+            if (returnWindow == null)
+            {
+                returnWindow = (EditorWindow)Reflection.InvokeStaticMethod("UnityEditor.PlayModeView", "GetRenderingView", null,
+                    Reflection.InternalStaticFlags);
+            }
+
+            return returnWindow;
         }
 
         /// <summary>

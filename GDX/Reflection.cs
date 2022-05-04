@@ -14,6 +14,7 @@ namespace GDX
     public static class Reflection
     {
         public const BindingFlags PrivateFieldFlags = BindingFlags.Instance | BindingFlags.NonPublic;
+        public const BindingFlags InternalStaticFlags = BindingFlags.Static | BindingFlags.NonPublic;
         public const BindingFlags PublicStaticFlags = BindingFlags.Static | BindingFlags.Public;
 
 

@@ -39,10 +39,17 @@ namespace GDX.Editor
         [Category(Core.TestCategory)]
         public void CaptureFocusedEditorWindow_ReturnsTexture()
         {
-            Automation.GetGameView().Focus();
-            Texture2D texture = Automation.CaptureFocusedEditorWindow();
-            bool evaluate = (texture != null);
-            Assert.IsTrue(evaluate);
+            Texture2D targetTexture = null;
+            EditorWindow gameView = Automation.GetGameView();
+
+            if (gameView != null)
+            {
+                gameView.Focus();
+                targetTexture = Automation.CaptureFocusedEditorWindow();
+            }
+
+            Assert.IsTrue(gameView != null, "Unable to acquire GameView.");
+            Assert.IsTrue(targetTexture != null, "Returned texture is null.");
         }
 
         [Test]
