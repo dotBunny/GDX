@@ -83,15 +83,24 @@ namespace GDX.Editor
         {
             if (window == null)
             {
+                Trace.Output(Trace.TraceLevel.Warning, $"Unable to find window of {window.GetType()} type.");
                 return null;
             }
 
             // Bring to front
-            window.Show();
+            window.Show(true);
+
 
             Rect windowRect = window.position;
             int width = (int)windowRect.width;
             int height = (int)windowRect.height;
+
+            if (width == 0 || height == 0)
+            {
+                Trace.Output(Trace.TraceLevel.Error, $"The acquired window has a size of {width}x{height}.");
+                return null;
+            }
+
             Color[] screenPixels = InternalEditorUtility.ReadScreenPixel(windowRect.min, width, height);
             Texture2D texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
             texture.SetPixels(screenPixels);
@@ -242,6 +251,8 @@ namespace GDX.Editor
             // We haven't actually opened up Unity on this machine, so no editor has been set
             if (string.IsNullOrEmpty(CodeEditor.CurrentEditorInstallation))
             {
+                Trace.Output(Trace.TraceLevel.Info, "Setting CodeEditor.CurrentEditorInstallation ...");
+
 #if UNITY_EDITOR_WIN
                 string[] paths = {
                     "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe",

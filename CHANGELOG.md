@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `ListManagedPool` rebuilt as `SimpleListManagedPool` for all `object` based pooling needs.
 - Flagged `DisableInInspectorAttributePropertyDrawer` to only use UIElements version with `UNITY_2022_2_OR_NEWER`.
 - `GenerateProjectFiles` now has more macOS options.
+- The Camera extension method `CaptureToPNG()` has been renamed `RenderToPNG()` to reflect better its actual actions.
 
 ### Fixed  
 
