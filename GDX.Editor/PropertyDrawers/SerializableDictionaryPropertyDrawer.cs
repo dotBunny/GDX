@@ -277,8 +277,7 @@ namespace GDX.Editor.PropertyDrawers
 
             m_PropertyKeys.arraySize++;
 
-            // This issue is Array.data doesnt exist, its
-            //GameObjectToInteger.m_SerializedKeys.Array.data[0]
+            // This issue is Array.data doesnt exist, its GameObjectToInteger.m_SerializedKeys.Array.data[0]
             SerializedProperty newKeyProperty = m_PropertyKeys.GetArrayElementAtIndex(m_PropertyCountCache);
             newKeyProperty.SetValue(m_AddKey);
 
@@ -803,5 +802,5 @@ namespace GDX.Editor.PropertyDrawers
             }
         }
     }
-#endif // !UNITY_DOTSRUNTIME
+#endif
 }

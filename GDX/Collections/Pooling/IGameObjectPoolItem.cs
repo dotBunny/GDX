@@ -66,4 +66,4 @@ namespace GDX.Collections.Pooling
         void SetParentPool(IManagedPool targetManagedPool);
     }
 }
-#endif // !UNITY_DOTSRUNTIME
+#endif

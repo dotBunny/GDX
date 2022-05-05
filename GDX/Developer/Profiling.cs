@@ -122,4 +122,4 @@ namespace GDX.Developer
         }
     }
 }
-#endif // !UNITY_DOTSRUNTIME
+#endif

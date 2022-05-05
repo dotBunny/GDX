@@ -36,4 +36,4 @@ namespace GDX
         }
     }
 }
-#endif // !UNITY_DOTSRUNTIME
+#endif

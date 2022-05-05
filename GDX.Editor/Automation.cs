@@ -21,8 +21,6 @@ namespace GDX.Editor
     /// </summary>
     public static class Automation
     {
-        static readonly object[] k_EmptyParametersArray = new object[] { };
-
         static string LayoutStashPath()
         {
             return Path.Combine(Application.dataPath, "..", Config.PlatformAutomationFolder, "GDX.layout");
@@ -307,7 +305,7 @@ namespace GDX.Editor
         public static EditorWindow GetGameView()
         {
             // We will cause an exception if there is no device, so return early.
-            if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
+            if (Platform.IsHeadless())
             {
                 Trace.Output(Trace.TraceLevel.Warning,"No graphics device, unable to acquire GameView.");
                 return null;
@@ -370,7 +368,7 @@ namespace GDX.Editor
                 // a fail yet from testing.
                 if (repaintMethod != null)
                 {
-                    repaintMethod.Invoke(window, k_EmptyParametersArray);
+                    repaintMethod.Invoke(window, Core.EmptyObjectArray);
                 }
             }
             return window;

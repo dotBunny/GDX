@@ -19,6 +19,12 @@ namespace GDX
         public const string TestCategory = "GDX.Tests";
 
         /// <summary>
+        ///     An empty <see cref="object"/> array useful when things require it.
+        /// </summary>
+        // ReSharper disable once RedundantArrayCreationExpression, HeapView.ObjectAllocation.Evident
+        public static readonly object[] EmptyObjectArray = new object[] { };
+
+        /// <summary>
         ///     A pseudorandom number generated seeded with <see cref="StartTicks"/>.
         /// </summary>
         /// <remarks>Useful for generic randomness where determinism is not required.</remarks>
@@ -73,7 +79,11 @@ namespace GDX
             DictionaryPrimes.SetDefaultPrimes();
 
             // Create unload disposal
+#if UNITY_2021_1_OR_NEWER // Discarding parameters is not available in 2020.3 C# version
+            AppDomain.CurrentDomain.DomainUnload += (_, _) =>
+#else
             AppDomain.CurrentDomain.DomainUnload += (_, __) =>
+#endif
             {
                 if (s_Initialized)
                 {

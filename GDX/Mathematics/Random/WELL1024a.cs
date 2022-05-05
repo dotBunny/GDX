@@ -20,6 +20,7 @@ namespace GDX.Mathematics.Random
     ///     accessed on 2021-04-23.
     /// </remarks>
     [VisualScriptingCompatible(4)]
+    // ReSharper disable once InconsistentNaming
     public unsafe struct WELL1024a : IRandomProvider, IEquatable<WELL1024a>, IDisposable
     {
         /// <summary>

@@ -62,6 +62,6 @@ namespace GDX
             GC.WaitForPendingFinalizers();
             GC.Collect();
         }
-#endif // !UNITY_DOTSRUNTIME
+#endif
     }
 }

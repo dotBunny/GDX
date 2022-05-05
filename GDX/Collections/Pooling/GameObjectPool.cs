@@ -506,4 +506,4 @@ namespace GDX.Collections.Pooling
         }
     }
 }
-#endif // !UNITY_DOTSRUNTIME
+#endif

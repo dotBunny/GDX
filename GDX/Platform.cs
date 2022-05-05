@@ -137,7 +137,8 @@ namespace GDX
             if (s_OutputFolder != null && string.IsNullOrEmpty(folderName)) return s_OutputFolder;
             if (s_OutputFolder == null)
             {
-                s_OutputFolder = Developer.CommandLineParser.Arguments.ContainsKey("GDX_OUTPUT_FOLDER") ? Developer.CommandLineParser.Arguments["GDX_OUTPUT_FOLDER"] :
+                s_OutputFolder = Developer.CommandLineParser.Arguments.ContainsKey("GDX_OUTPUT_FOLDER") ?
+                    Developer.CommandLineParser.Arguments["GDX_OUTPUT_FOLDER"] :
 #if UNITY_EDITOR
                     Path.Combine(Application.dataPath, "..");
 #elif UNITY_DOTSRUNTIME
@@ -226,7 +227,7 @@ namespace GDX
             return Application.isFocused;
 #endif
         }
-#endif // !UNITY_DOTSRUNTIME
+#endif
 
         /// <summary>
         /// Is it safe to write to the indicated <paramref name="filePath"/>?
@@ -259,6 +260,6 @@ namespace GDX
         {
             return SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null;
         }
-#endif // !UNITY_DOTSRUNTIME
+#endif
     }
 }

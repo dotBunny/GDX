@@ -8,6 +8,23 @@ indent_style = space
 insert_final_newline = false
 trim_trailing_whitespace = true
 
+# Resharper Stuff unsupported features for Unity 2020
+# https://www.jetbrains.com/help/resharper/EditorConfig_Index.html
+
+# Don't use range indexers
+resharper_replace_substring_with_range_indexer_highlighting=none
+resharper_replace_slice_with_range_indexer_highlighting=none
+# Don't use patterning
+resharper_merge_and_pattern_highlighting=none
+resharper_merge_into_pattern_highlighting=none
+# Stop promoting = new ()
+resharper_redundant_variable_type_specification_highlighting=none
+resharper_arrange_object_creation_when_type_evident_highlighting=none
+resharper_arrange_object_creation_when_type_not_evident_highlighting=none
+# Stop LINQ suggestions
+resharper_foreach_can_be_converted_to_query_using_another_get_enumerator_highlighting=none
+resharper_foreach_can_be_partly_converted_to_query_using_another_get_enumerator_highlighting=none
+
 # Visual Studio Solution files (why!! TAB why!!)
 [*.sln]
 indent_style = tab
@@ -249,20 +266,3 @@ csharp_style_prefer_switch_expression = false
 csharp_style_implicit_object_creation_when_type_is_apparent = false
 csharp_style_prefer_not_pattern = false
 csharp_style_prefer_range_operator = false
-
-# Resharper Stuff unsupported features for Unity 2020
-# https://www.jetbrains.com/help/resharper/EditorConfig_Index.html
-[*]
-# Don't use range indexers
-resharper_replace_substring_with_range_indexer_highlighting=none
-resharper_replace_slice_with_range_indexer_highlighting=none
-# Don't use patterning
-resharper_merge_and_pattern_highlighting=none
-resharper_merge_into_pattern_highlighting=none
-# Stop promoting = new ()
-resharper_redundant_variable_type_specification_highlighting=none
-resharper_arrange_object_creation_when_type_evident_highlighting=none
-resharper_arrange_object_creation_when_type_not_evident_highlighting=none
-# Stop LINQ suggestions
-resharper_foreach_can_be_converted_to_query_using_another_get_enumerator_highlighting=none
-resharper_foreach_can_be_partly_converted_to_query_using_another_get_enumerator_highlighting=none

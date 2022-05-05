@@ -93,7 +93,7 @@ namespace GDX
 
                 if (targetMethod != null)
                 {
-                    return targetMethod.Invoke(null, parameters ?? new object[] { });
+                    return targetMethod.Invoke(null, parameters ?? Core.EmptyObjectArray);
                 }
                 break;
             }

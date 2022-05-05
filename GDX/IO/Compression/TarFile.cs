@@ -69,9 +69,10 @@ namespace GDX.IO.Compression
             const int k_ReadBufferSize = 100;
             const int k_ContentOffset = 512;
             byte[] readBuffer = new byte[k_ReadBufferSize];
+            int readByteCount;
             while (true)
             {
-                sourceStream.Read(readBuffer, 0, k_ReadBufferSize);
+                readByteCount = sourceStream.Read(readBuffer, 0, k_ReadBufferSize);
                 string currentName = Encoding.ASCII.GetString(readBuffer).Trim('\0');
 
                 if (string.IsNullOrWhiteSpace(currentName))
@@ -81,7 +82,13 @@ namespace GDX.IO.Compression
 
                 string destinationFilePath = Path.Combine(destinationDirectoryName, currentName);
                 sourceStream.Seek(24, SeekOrigin.Current);
-                sourceStream.Read(readBuffer, 0, 12);
+                readByteCount = sourceStream.Read(readBuffer, 0, 12);
+                if (readByteCount != 12)
+                {
+                    Trace.Output(Trace.TraceLevel.Error,
+                        $"Unable to read filesize from header. {readByteCount} read, expected 12.");
+                    break;
+                }
                 long fileSize = Convert.ToInt64(Encoding.UTF8.GetString(readBuffer, 0, 12).Trim('\0').Trim(), 8);
                 sourceStream.Seek(376L, SeekOrigin.Current);
 

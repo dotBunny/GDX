@@ -138,4 +138,5 @@ namespace GDX
         }
     }
 }
+// ReSharper disable once CommentTypo
 #endif // !UNITY_DOTSRUNTIME
