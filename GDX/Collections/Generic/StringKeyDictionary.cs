@@ -463,6 +463,7 @@ namespace GDX.Collections.Generic
         /// Attempts to get the value for the given key; returns true if key was found, false otherwise.
         /// </summary>
         /// <param name="key">The key to retrieve.</param>
+        /// <param name="value">The value of the entry found.</param>
         /// <returns>True if the entry was found; false otherwise.</returns>
         public bool TryGetValue(string key, out TValue value)
         {
@@ -666,7 +667,7 @@ namespace GDX.Collections.Generic
             Count = 0;
         }
     }
-    
+
     [Serializable]
     public struct StringKeyEntry<T>
     {

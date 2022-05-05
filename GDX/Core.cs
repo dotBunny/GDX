@@ -73,7 +73,7 @@ namespace GDX
             DictionaryPrimes.SetDefaultPrimes();
 
             // Create unload disposal
-            AppDomain.CurrentDomain.DomainUnload += (_, __) =>
+            AppDomain.CurrentDomain.DomainUnload += (_, _) =>
             {
                 if (s_Initialized)
                 {

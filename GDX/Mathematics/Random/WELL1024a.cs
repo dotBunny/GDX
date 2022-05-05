@@ -129,7 +129,7 @@ namespace GDX.Mathematics.Random
         public WELL1024a(WellState restoreState)
         {
             OriginalSeed = restoreState.Seed;
-            Index = (byte)restoreState.Index;
+            Index = restoreState.Index;
             // Create new native array
             State = new NativeArray<uint>(32, Allocator.Persistent);
             uint* ptr = (uint*)State.GetUnsafePtr();

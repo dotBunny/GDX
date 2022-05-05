@@ -15,7 +15,7 @@ namespace GDX.Developer.Reports
 
 
         readonly TestRun m_Results = new TestRun();
-        bool m_ForceFail = false;
+        bool m_ForceFail;
 
         public NUnitReport(string name = null, string fullName = null, string className = null )
         {

@@ -11,7 +11,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using GDX.Collections.Generic;
-using Unity.Mathematics;
 
 namespace GDX
 {

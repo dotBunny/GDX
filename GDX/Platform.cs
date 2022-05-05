@@ -137,21 +137,14 @@ namespace GDX
             if (s_OutputFolder != null && string.IsNullOrEmpty(folderName)) return s_OutputFolder;
             if (s_OutputFolder == null)
             {
-                if (Developer.CommandLineParser.Arguments.ContainsKey("GDX_OUTPUT_FOLDER"))
-                {
-                    s_OutputFolder = Developer.CommandLineParser.Arguments["GDX_OUTPUT_FOLDER"];
-                }
-                else
-                {
-
+                s_OutputFolder = Developer.CommandLineParser.Arguments.ContainsKey("GDX_OUTPUT_FOLDER") ? Developer.CommandLineParser.Arguments["GDX_OUTPUT_FOLDER"] :
 #if UNITY_EDITOR
-                    s_OutputFolder = Path.Combine(Application.dataPath, "..");
+                    Path.Combine(Application.dataPath, "..");
 #elif UNITY_DOTSRUNTIME
-                    s_OutputFolder = Directory.GetCurrentDirectory();
+                    Directory.GetCurrentDirectory();
 #else
-                    s_OutputFolder = Application.persistentDataPath;
+                    Application.persistentDataPath;
 #endif
-                }
 
                 // Cleanup the folder pathing
                 s_OutputFolder = Path.GetFullPath(s_OutputFolder);
@@ -198,16 +191,18 @@ namespace GDX
                     return filePath;
                 }
 
-                if (tmpFileName.Length > 260)
+                if (tmpFileName.Length <= 260)
                 {
-                    tmpFileName.Clear();
-                    tmpFileName.Append(prefix);
-                    tmpFileName.Append(GetRandomSafeCharacter(random));
-                    tmpFileName.Append(GetRandomSafeCharacter(random));
-                    tmpFileName.Append(GetRandomSafeCharacter(random));
-                    tmpFileName.Append(GetRandomSafeCharacter(random));
-                    tmpFileName.Append(GetRandomSafeCharacter(random));
+                    continue;
                 }
+
+                tmpFileName.Clear();
+                tmpFileName.Append(prefix);
+                tmpFileName.Append(GetRandomSafeCharacter(random));
+                tmpFileName.Append(GetRandomSafeCharacter(random));
+                tmpFileName.Append(GetRandomSafeCharacter(random));
+                tmpFileName.Append(GetRandomSafeCharacter(random));
+                tmpFileName.Append(GetRandomSafeCharacter(random));
             }
         }
 
