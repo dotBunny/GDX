@@ -79,17 +79,16 @@ namespace GDX
             DictionaryPrimes.SetDefaultPrimes();
 
             // Create unload disposal
-#if UNITY_2021_1_OR_NEWER // Discarding parameters is not available in 2020.3 C# version
-            AppDomain.CurrentDomain.DomainUnload += (_, _) =>
-#else
-            AppDomain.CurrentDomain.DomainUnload += (_, __) =>
-#endif
+
+            // ReSharper disable UnusedParameter.Local
+            AppDomain.CurrentDomain.DomainUnload += (sender, args) =>
             {
                 if (s_Initialized)
                 {
                     Random.Dispose();
                 }
             };
+            // ReSharper restore UnusedParameter.Local
             s_Initialized = true;
         }
 
