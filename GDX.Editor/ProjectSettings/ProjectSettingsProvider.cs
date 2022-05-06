@@ -231,7 +231,12 @@ namespace GDX.Editor
             return new("Project/GDX", SettingsScope.Project)
             {
                 label = "GDX",
+                // ReSharper disable once UnusedParameter.Local
+#if UNITY_2022_2_OR_NEWER
                 activateHandler = (_, rootElement) =>
+#else
+                activateHandler = (searchContext, rootElement) =>
+#endif
                 {
                     s_RootElement = rootElement;
 
@@ -356,7 +361,11 @@ namespace GDX.Editor
                     }
                 },
                 //keywords = s_SearchKeywords.Array,
+#if UNITY_2022_2_OR_NEWER
+                hasSearchInterestHandler = (searchString) => s_SearchKeywords.PartialMatch(searchString),
+#else
                 hasSearchInterestHandler = searchString => s_SearchKeywords.PartialMatch(searchString),
+#endif
                 inspectorUpdateHandler = () =>
                 {
                     if (s_ProjectSettingsWindow == null)
