@@ -13,3 +13,9 @@ _Garbage in, garbage out_ — Branching inside methods to handle scenarios that 
 
 > [!NOTE]
 > There are some scenarios where exceptions are thrown to match existing expected behaviours.
+
+## Why doesn't GDX have <_insert feature here_>?
+
+Let us reverse that question. Why haven't **you** added that feature to `GDX`?
+
+In all honesty, we are a relatively small team of dedicated developers who have actual games/engines to make. Things get added ad-hoc as we find the time or need for them. We are always open to contributions and would encourage everyone to help their fellow game developer.

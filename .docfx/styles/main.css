@@ -89,3 +89,10 @@ a[title="Portability"]:after
     content:"i";
 }
 
+h1 > span.type {
+    text-transform: lowercase;
+    font-weight: bold;
+    font-size: medium;
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+    color: rgb(86,156,214);
+}
