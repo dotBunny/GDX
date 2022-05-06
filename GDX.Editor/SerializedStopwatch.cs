@@ -14,10 +14,12 @@ namespace GDX.Editor
     public class SerializedStopwatch : ISerializationCallbackReceiver
     {
         [SerializeField]
+        // ReSharper disable once InconsistentNaming
         double m_SerializationTick;
         double m_SerializationSpan;
 
         [SerializeField]
+        // ReSharper disable once InconsistentNaming
         double m_StartTick;
 
         /// <summary>

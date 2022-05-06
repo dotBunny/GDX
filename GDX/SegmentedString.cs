@@ -119,11 +119,10 @@ namespace GDX
 
             bool isInsideSegment = false;
 
-            int c;
             for (int i = 0; i < charactersLength; i++)
             {
                 // Convert our character to its ascii value
-                c = returnValue.m_Characters[i];
+                int c = returnValue.m_Characters[i];
 
                 // Check character value and shift it if necessary (32)
                 if (c >= StringExtensions.AsciiUpperCaseStart && c <= StringExtensions.AsciiUpperCaseEnd)
@@ -187,11 +186,10 @@ namespace GDX
             bool useAlternateSegmentHash = false;
             bool isInsideSegment = false;
 
-            int c;
             for (int i = 0; i < charactersLength; i++)
             {
                 // Convert our character to its ascii value
-                c = returnValue.m_Characters[i];
+                int c = returnValue.m_Characters[i];
 
                 // Check character value and shift it if necessary (32)
                 if (c >= StringExtensions.AsciiUpperCaseStart && c <= StringExtensions.AsciiUpperCaseEnd)

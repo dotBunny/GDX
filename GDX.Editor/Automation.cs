@@ -10,8 +10,6 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 using Unity.CodeEditor;
-using UnityEngine.Diagnostics;
-using UnityEngine.WSA;
 using Application = UnityEngine.Application;
 
 namespace GDX.Editor
@@ -95,7 +93,7 @@ namespace GDX.Editor
 
             if (width == 0 || height == 0)
             {
-                Trace.Output(Trace.TraceLevel.Error, $"The acquired window has a size of {width}x{height}.");
+                Trace.Output(Trace.TraceLevel.Error, $"The acquired window has a size of {width.ToString()}x{height.ToString()}.");
                 return null;
             }
 
@@ -386,7 +384,7 @@ namespace GDX.Editor
 
         public static void StashWindowLayout()
         {
-            System.Type windowLayout = System.Type.GetType("UnityEditor.WindowLayout,UnityEditor");
+            Type windowLayout = Type.GetType("UnityEditor.WindowLayout,UnityEditor");
             if (windowLayout != null)
             {
                 MethodInfo saveMethod = windowLayout.GetMethod("SaveWindowLayout",BindingFlags.Public | BindingFlags.Static);
@@ -402,7 +400,7 @@ namespace GDX.Editor
             string path = LayoutStashPath();
             if (File.Exists(path))
             {
-                System.Type windowLayout = System.Type.GetType("UnityEditor.WindowLayout,UnityEditor");
+                Type windowLayout = Type.GetType("UnityEditor.WindowLayout,UnityEditor");
                 if (windowLayout != null)
                 {
                     MethodInfo loadMethod = windowLayout.GetMethod("LoadWindowLayout", new[] {typeof(string), typeof(bool), typeof(bool), typeof(bool)});

@@ -35,14 +35,8 @@ namespace GDX.Editor.DecoratorDrawers
         /// <returns>The height in pixels.</returns>
         public override float GetHeight()
         {
-            if (m_Target == null)
-            {
-                m_Target = (InspectorMessageBoxAttribute)attribute;
-            }
-            if (m_TargetMessage == null)
-            {
-                m_TargetMessage = new GUIContent(m_Target.Message);
-            }
+            m_Target ??= (InspectorMessageBoxAttribute)attribute;
+            m_TargetMessage ??= new GUIContent(m_Target.Message);
             return k_CachedHelpBoxStyle.CalcHeight(m_TargetMessage, EditorGUIUtility.currentViewWidth) + 4;
         }
 

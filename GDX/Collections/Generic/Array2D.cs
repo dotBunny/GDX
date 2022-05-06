@@ -133,6 +133,7 @@ namespace GDX.Collections.Generic
         /// </summary>
         public void ReverseColumns()
         {
+            // ReSharper disable once TooWideLocalVariableScope
             T temporaryStorage;
 
             int lastIndex = ColumnCount - 1;

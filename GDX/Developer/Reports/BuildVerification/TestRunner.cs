@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Diagnostics;
+using System.Globalization;
 using System.Threading.Tasks;
 using GDX.Collections.Generic;
 using UnityEngine.SceneManagement;
@@ -58,7 +59,7 @@ namespace GDX.Developer.Reports.BuildVerification
                 }
                 else
                 {
-                    Trace.Output(Trace.TraceLevel.Warning, $"[BVT] Test run timed out after {s_Timer.ElapsedMilliseconds/1000f} seconds.");
+                    Trace.Output(Trace.TraceLevel.Warning, $"[BVT] Test run timed out after {(s_Timer.ElapsedMilliseconds/1000f).ToString(CultureInfo.CurrentCulture)} seconds.");
                     for (int i = 0; i < s_KnownTest.Count; i++)
                     {
                         BuildVerificationReport.Assert(s_KnownTest.Array[i].GetIdentifier(), false, "Test timed out.");

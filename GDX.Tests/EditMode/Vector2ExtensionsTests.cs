@@ -109,7 +109,7 @@ namespace GDX
         {
             Vector2 mockData = new Vector2(0, 10);
 
-            bool evaluate = (mockData.Slope() == 0);
+            bool evaluate = mockData.Slope() == 0;
 
             Assert.IsTrue(evaluate);
         }

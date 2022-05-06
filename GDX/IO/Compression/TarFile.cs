@@ -69,10 +69,10 @@ namespace GDX.IO.Compression
             const int k_ReadBufferSize = 100;
             const int k_ContentOffset = 512;
             byte[] readBuffer = new byte[k_ReadBufferSize];
-            int readByteCount;
             while (true)
             {
-                readByteCount = sourceStream.Read(readBuffer, 0, k_ReadBufferSize);
+                // ReSharper disable once MustUseReturnValue
+                sourceStream.Read(readBuffer, 0, k_ReadBufferSize);
                 string currentName = Encoding.ASCII.GetString(readBuffer).Trim('\0');
 
                 if (string.IsNullOrWhiteSpace(currentName))
@@ -82,11 +82,11 @@ namespace GDX.IO.Compression
 
                 string destinationFilePath = Path.Combine(destinationDirectoryName, currentName);
                 sourceStream.Seek(24, SeekOrigin.Current);
-                readByteCount = sourceStream.Read(readBuffer, 0, 12);
+                int readByteCount = sourceStream.Read(readBuffer, 0, 12);
                 if (readByteCount != 12)
                 {
                     Trace.Output(Trace.TraceLevel.Error,
-                        $"Unable to read filesize from header. {readByteCount} read, expected 12.");
+                        $"Unable to read filesize from header. {readByteCount.ToString()} read, expected 12.");
                     break;
                 }
                 long fileSize = Convert.ToInt64(Encoding.UTF8.GetString(readBuffer, 0, 12).Trim('\0').Trim(), 8);
@@ -109,7 +109,12 @@ namespace GDX.IO.Compression
                         File.Open(destinationFilePath, FileMode.OpenOrCreate, FileAccess.Write);
                     byte[] fileContentBuffer = new byte[fileSize];
                     int newFileContentBufferLength = fileContentBuffer.Length;
-                    sourceStream.Read(fileContentBuffer, 0, newFileContentBufferLength);
+                    readByteCount = sourceStream.Read(fileContentBuffer, 0, newFileContentBufferLength);
+                    if (readByteCount != newFileContentBufferLength)
+                    {
+                        Trace.Output(Trace.TraceLevel.Warning,
+                            $"Read file size of {readByteCount.ToString()} does not match the expected {newFileContentBufferLength.ToString()} byte size.");
+                    }
                     newFileStream.Write(fileContentBuffer, 0, newFileContentBufferLength);
                 }
 

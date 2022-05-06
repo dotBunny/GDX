@@ -51,7 +51,7 @@ namespace GDX.Developer.Reports.Resource
 
             int contentLength = builder.Length;
             char[] content = new char[bufferSize];
-            int leftOvers = (contentLength % bufferSize);
+            int leftOvers = contentLength % bufferSize;
             int writeCount = (contentLength - leftOvers) / bufferSize;
 
             // Fixed sized writes

@@ -4,7 +4,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using Debug = System.Diagnostics.Debug;
 using Object = UnityEngine.Object;
 
 namespace GDX
@@ -93,18 +92,15 @@ namespace GDX
 #endif
 
             // Build output content
-            string outputContent;
             if (traceObject is Exception traceException)
             {
-                outputContent = $"{traceException.Message}\n{traceException.StackTrace}\n{memberName}\n{sourceFilePath}:{sourceLineNumber.ToString()}";
+                Console.WriteLine(
+                    $"{traceException.Message}\n{traceException.StackTrace}\n{memberName}\n{sourceFilePath}:{sourceLineNumber.ToString()}");
             }
             else
             {
-                outputContent = $"{traceObject}\n{memberName}\n{sourceFilePath}:{sourceLineNumber.ToString()}";
+                Console.WriteLine($"{traceObject}\n{memberName}\n{sourceFilePath}:{sourceLineNumber.ToString()}");
             }
-
-            // This will output to anything internally registered for tracing (IDE consoles for example)
-            Debug.WriteLine(outputContent);
 
             // Is outputting to the Unity console enabled?
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -117,11 +113,7 @@ namespace GDX
             {
                 return;
             }
-#else
-            // NO RELEASE CONSOLE OUTPUT
-            return;
 #endif
-
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD || DEBUG
             // Figure out what path to take based on the level
@@ -148,6 +140,8 @@ namespace GDX
                     UnityEngine.Diagnostics.Utils.ForceCrash(UnityEngine.Diagnostics.ForcedCrashCategory.FatalError);
                     break;
 
+                case TraceLevel.Info:
+                case TraceLevel.Log:
                 default:
                     UnityEngine.Debug.Log(traceObject, contextObject);
                     break;

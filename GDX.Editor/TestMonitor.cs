@@ -19,7 +19,7 @@ namespace GDX.Editor
         public void RunStarted(ITestAdaptor testsToRun)
         {
             // We are only going to monitor GDX tests
-            m_IsMonitoredTestRun = (testsToRun.FullName == "GDX");
+            m_IsMonitoredTestRun = testsToRun.FullName == "GDX";
             if (!m_IsMonitoredTestRun)
             {
                 return;

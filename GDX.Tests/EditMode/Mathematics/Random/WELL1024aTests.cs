@@ -8,6 +8,7 @@ using NUnit.Framework;
 
 namespace GDX.Mathematics.Random
 {
+    // ReSharper disable once InconsistentNaming
     public class WELL1024aTests
     {
         public const string MockSeed = "TestSeed";

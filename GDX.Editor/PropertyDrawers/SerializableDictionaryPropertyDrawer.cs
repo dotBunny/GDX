@@ -198,7 +198,7 @@ namespace GDX.Editor.PropertyDrawers
             {
                 m_KeyType = fieldInfo.FieldType.BaseType.GenericTypeArguments[0];
                 m_ValueType = fieldInfo.FieldType.BaseType.GenericTypeArguments[1];
-                m_KeyTypeNullable = (!m_KeyType.IsValueType || Nullable.GetUnderlyingType(m_KeyType) != null);
+                m_KeyTypeNullable = !m_KeyType.IsValueType || Nullable.GetUnderlyingType(m_KeyType) != null;
             }
 
             // Create default item

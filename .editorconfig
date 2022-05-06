@@ -7,6 +7,7 @@ charset = utf-8
 indent_style = space
 insert_final_newline = false
 trim_trailing_whitespace = true
+spelling_wordlist=wordlist.dic
 
 # Resharper Stuff unsupported features for Unity 2020
 # https://www.jetbrains.com/help/resharper/EditorConfig_Index.html
@@ -17,13 +18,22 @@ resharper_replace_slice_with_range_indexer_highlighting=none
 # Don't use patterning
 resharper_merge_and_pattern_highlighting=none
 resharper_merge_into_pattern_highlighting=none
+resharper_merge_into_logical_pattern_highlighting=none
+# Dont promote 'is not'
+resharper_double_negation_in_pattern_highlighting=none
+
 # Stop promoting = new ()
 resharper_redundant_variable_type_specification_highlighting=none
 resharper_arrange_object_creation_when_type_evident_highlighting=none
 resharper_arrange_object_creation_when_type_not_evident_highlighting=none
 # Stop LINQ suggestions
+resharper_loop_can_be_converted_to_query_highlighting=none
+resharper_loop_can_be_partly_converted_to_query_highlighting=none
 resharper_foreach_can_be_converted_to_query_using_another_get_enumerator_highlighting=none
 resharper_foreach_can_be_partly_converted_to_query_using_another_get_enumerator_highlighting=none
+
+# Avoid Simplified string interpolation
+resharper_simplify_string_interpolation_highlighting=none
 
 # Visual Studio Solution files (why!! TAB why!!)
 [*.sln]

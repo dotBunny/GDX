@@ -22,8 +22,8 @@ namespace GDX
             Array2D<float> mockArray = new Array2D<float>(2, 2) {[1, 0] = 0f, [1, 1] = 1f};
             Array2D<float> scaledArray = mockArray.Scale(scaleFactor);
 
-            bool evaluate = scaledArray.RowCount == (mockArray.RowCount * scaleFactor) &&
-                            scaledArray.ColumnCount == (mockArray.ColumnCount * scaleFactor) &&
+            bool evaluate = scaledArray.RowCount == mockArray.RowCount * scaleFactor &&
+                            scaledArray.ColumnCount == mockArray.ColumnCount * scaleFactor &&
                             Math.Abs(scaledArray.Array[15] - 0.5625f) < Platform.FloatTolerance &&
                             Math.Abs(scaledArray.Array[10] - 0.25f) < Platform.FloatTolerance &&
                             Math.Abs(scaledArray.Array[6] - 0.125f) < Platform.FloatTolerance;

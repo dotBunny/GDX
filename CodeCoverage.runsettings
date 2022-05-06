@@ -9,26 +9,20 @@
               <Include>
                 <ModulePath>GDX.dll</ModulePath>
                 <ModulePath>GDX.Editor.dll</ModulePath>
-              </Include>            
+              </Include>
               <Exclude>
-                <ModulePath>GDX.Tests.EditMode.dll</ModulePath>   
+                <ModulePath>GDX.Tests.EditMode.dll</ModulePath>
                 <ModulePath>GDX.Tests.PlayMode.dll</ModulePath>
               </Exclude>
-            </ModulePaths>            
+            </ModulePaths>
             <Attributes>
-              <Exclude>  
-                <Attribute>^*Attribute$</Attribute>              
-                <!-- <Attribute>^System\.Diagnostics\.DebuggerHiddenAttribute$</Attribute>
-                <Attribute>^System\.Diagnostics\.DebuggerNonUserCodeAttribute$</Attribute>
-                <Attribute>^System\.CodeDom\.Compiler\.GeneratedCodeAttribute$</Attribute>
-                <Attribute>^System\.Diagnostics\.CodeAnalysis\.ExcludeFromCodeCoverageAttribute$</Attribute> -->
+              <Exclude>
+                <Attribute>^*Attribute$</Attribute>
               </Exclude>
             </Attributes>
             <Functions>
               <Exclude>
                 <Function>^GDX\.*Extensions\.cctor$</Function>
-                <Function>^GDX\.GDXConfig\..ctor$</Function>
-                <Function>^GDX\.GDXConfig\..cctor$</Function>
                 <Function>^GDX\.Developer\.CommandLineParser\..cctor$</Function>
               </Exclude>
             </Functions>
@@ -37,4 +31,4 @@
       </DataCollector>
     </DataCollectors>
   </DataCollectionRunSettings>
-</RunSettings>            
+</RunSettings>

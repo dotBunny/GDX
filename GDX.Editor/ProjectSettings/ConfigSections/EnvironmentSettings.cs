@@ -4,10 +4,10 @@
 
 using System.Collections.Generic;
 using UnityEditor.UIElements;
-using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Toggle = UnityEngine.UIElements.Toggle;
 #if !GDX_MASKFIELD
+using UnityEngine.UI;
 using System.Reflection;
 #endif
 

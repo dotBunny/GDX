@@ -42,12 +42,12 @@ namespace GDX.Jobs.ParallelFor
             }
             else
             {
-                float rDiff = 1f - Mathf.Abs((A[index].r / 255) - (B[index].r / 255));
-                float gDiff = 1f - Mathf.Abs((A[index].g / 255) - (B[index].g / 255));
-                float bDiff = 1f - Mathf.Abs((A[index].b / 255) - (B[index].b / 255));
-                float aDiff = 1f - Mathf.Abs((A[index].a / 255) - (B[index].a / 255));
+                float rDiff = 1f - Mathf.Abs(A[index].r / 255 - B[index].r / 255);
+                float gDiff = 1f - Mathf.Abs(A[index].g / 255 - B[index].g / 255);
+                float bDiff = 1f - Mathf.Abs(A[index].b / 255 - B[index].b / 255);
+                float aDiff = 1f - Mathf.Abs(A[index].a / 255 - B[index].a / 255);
 
-                Percentage[index] = ((rDiff + gDiff + bDiff + aDiff) / 4f);
+                Percentage[index] = (rDiff + gDiff + bDiff + aDiff) / 4f;
             }
         }
     }

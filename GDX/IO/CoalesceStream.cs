@@ -11,7 +11,7 @@ namespace GDX.IO
     public class CoalesceStream : Stream
     {
         readonly List<byte[]> m_Blocks = new List<byte[]>();
-        readonly long m_BlockSize = 65536;
+        const long k_BlockSize = 65536;
         long m_LengthInternal;
 
         public CoalesceStream()
@@ -31,7 +31,7 @@ namespace GDX.IO
             Position = length;
             while (m_Blocks.Count <= BlockId)
             {
-                m_Blocks.Add(new byte[m_BlockSize]);
+                m_Blocks.Add(new byte[k_BlockSize]);
             }
             Position = 0;
         }
@@ -42,7 +42,7 @@ namespace GDX.IO
             Position = length;
             while (m_Blocks.Count <= BlockId)
             {
-                m_Blocks.Add(new byte[m_BlockSize]);
+                m_Blocks.Add(new byte[k_BlockSize]);
             }
             Position = 0;
         }
@@ -59,16 +59,16 @@ namespace GDX.IO
             {
                 while (m_Blocks.Count <= BlockId)
                 {
-                    m_Blocks.Add(new byte[m_BlockSize]);
+                    m_Blocks.Add(new byte[k_BlockSize]);
                 }
 
                 return m_Blocks[(int)BlockId];
             }
         }
 
-        long BlockId => Position / m_BlockSize;
+        long BlockId => Position / k_BlockSize;
 
-        long BlockOffset => Position % m_BlockSize;
+        long BlockOffset => Position % k_BlockSize;
 
 
         public override void Flush()
@@ -104,7 +104,7 @@ namespace GDX.IO
             int read = 0;
             do
             {
-                long copySize = Math.Min(readCount, m_BlockSize - BlockOffset);
+                long copySize = Math.Min(readCount, k_BlockSize - BlockOffset);
                 Buffer.BlockCopy(Block, (int)BlockOffset, buffer, offset, (int)copySize);
                 readCount -= copySize;
                 offset += (int)copySize;
@@ -123,11 +123,13 @@ namespace GDX.IO
                 case SeekOrigin.Begin:
                     Position = offset;
                     break;
-                case SeekOrigin.Current:
-                    Position += offset;
-                    break;
+
                 case SeekOrigin.End:
                     Position = Length - offset;
+                    break;
+                case SeekOrigin.Current:
+                default:
+                    Position += offset;
                     break;
             }
 
@@ -146,7 +148,7 @@ namespace GDX.IO
             {
                 do
                 {
-                    int copySize = Math.Min(count, (int)(m_BlockSize - BlockOffset));
+                    int copySize = Math.Min(count, (int)(k_BlockSize - BlockOffset));
 
                     EnsureCapacity(Position + copySize);
 

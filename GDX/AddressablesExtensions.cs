@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
+// ReSharper disable CommentTypo, IdentifierTypo
 namespace GDX
 {
     /// <summary>

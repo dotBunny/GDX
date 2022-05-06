@@ -163,7 +163,7 @@ namespace GDX
             {
                 new object(),
                 new object(),
-                new object(),
+                new object()
             };
 
             bool evaluate = listItems.RemoveLastItem(searchItem);

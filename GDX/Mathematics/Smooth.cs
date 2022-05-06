@@ -13,8 +13,10 @@ namespace GDX.Mathematics
     [VisualScriptingCompatible(8)]
     public static class Smooth
     {
+        // ReSharper disable CommentTypo
         /// <summary>
-        ///     Smooths between <paramref name="previousValue"/> and <paramref name="targetValue"/> based on time since the last sample and a given half-life.
+        ///     Smooths between <paramref name="previousValue"/> and <paramref name="targetValue"/> based on time since
+        ///     the last sample and a given half-life.
         /// </summary>
         /// <remarks>Assumes wibbly wobbly, timey wimey.</remarks>
         /// <param name="previousValue">Ideally, the previous output value.</param>
@@ -28,6 +30,7 @@ namespace GDX.Mathematics
         ///     generated.
         /// </param>
         /// <returns>A smoothed value.</returns>
+        // ReSharper restore CommentTypo
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Exponential(float previousValue, float targetValue, float halfLife,
             float elapsedTime = float.NaN)
@@ -41,7 +44,7 @@ namespace GDX.Mathematics
         ///     Takes a <paramref name="halfLife" /> value, and outputs a factor based on <paramref name="elapsedTime" />.
         /// </summary>
         /// <remarks>Not providing a value for <paramref name="elapsedTime" /> will result in using <c>Time.deltaTime</c>.</remarks>
-        /// <param name="halfLife">The desired halflife.</param>
+        /// <param name="halfLife">The desired half-life.</param>
         /// <param name="elapsedTime">The time since the last sample.</param>
         /// <returns>The coefficient value applied to the weight(t) of a lerp.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

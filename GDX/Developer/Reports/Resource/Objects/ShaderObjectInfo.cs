@@ -47,7 +47,7 @@ namespace GDX.Developer.Reports.Resource.Objects
         /// <inheritdoc />
         public override string GetDetailedInformation(int maximumWidth)
         {
-            return $"Passes:{PassCount}";
+            return $"Passes:{PassCount.ToString()}";
         }
     }
 }

@@ -59,7 +59,7 @@ namespace GDX.Collections.Generic
             uint newSize = 2U * unchecked((uint)oldSize);
 
             const int k_MaxPrime = int.MaxValue;
-            newSize = (newSize > k_MaxPrime) ? k_MaxPrime : newSize;
+            newSize = newSize > k_MaxPrime ? k_MaxPrime : newSize;
 
             for (int i = 0; i < s_PrimesLength; i++)
             {

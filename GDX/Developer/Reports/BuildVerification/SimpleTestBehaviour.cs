@@ -45,7 +45,7 @@ namespace GDX.Developer.Reports.BuildVerification
             TestCase testCase = RunTest();
 
             m_Timer.Stop();
-            testCase.Duration = (m_Timer.ElapsedMilliseconds / 1000f);
+            testCase.Duration = m_Timer.ElapsedMilliseconds / 1000f;
             testCase.EndTime = DateTime.Now.ToString(Localization.UtcTimestampFormat);
             testCase.StartTime = m_StartTime;
 

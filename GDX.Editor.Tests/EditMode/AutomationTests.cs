@@ -21,7 +21,7 @@ namespace GDX.Editor
         public void CaptureEditorWindow_SceneView_ReturnsTexture()
         {
             Texture2D texture = Automation.CaptureEditorWindow<SceneView>();
-            bool evaluate = (texture != null);
+            bool evaluate = texture != null;
             Assert.IsTrue(evaluate);
         }
 
@@ -68,7 +68,7 @@ namespace GDX.Editor
         public void GetWindow_SceneView_NotNull()
         {
             EditorWindow sceneView = Automation.GetWindow<SceneView>();
-            bool evaluate = (sceneView != null);
+            bool evaluate = sceneView != null;
             if (sceneView != null)
             {
                 sceneView.Close();

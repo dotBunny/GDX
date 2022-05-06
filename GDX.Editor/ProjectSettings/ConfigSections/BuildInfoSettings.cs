@@ -18,7 +18,7 @@ namespace GDX.Editor.ProjectSettings
     {
         public const int SectionIndex = 2;
         public const string SectionKey = "GDX.Editor.Build.BuildInfoProvider";
-        static readonly string[] k_Keywords = { "build", "buildinfo", "changelist", "stream" };
+        static readonly string[] k_Keywords = { "build", "info", "changelist", "stream" };
         VisualElement m_RootElement;
         VisualElement m_Content;
         TextField m_TextOutputPath;

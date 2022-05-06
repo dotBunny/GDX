@@ -670,18 +670,16 @@ namespace GDX.Collections.Generic
 
             Assert.IsTrue(foundCount == 1 && foundFirst != foundSecond && iteratorState == IteratorState.InvalidVersion);
         }
-                
+
         [Test]
         [Category(Core.TestCategory)]
         public void TryGetValue()
         {
-            StringKeyDictionary<int> dictionary = new StringKeyDictionary<int>(16);
+            StringKeyDictionary<int> dictionary = new StringKeyDictionary<int>(16) { ["foo"] = 42 };
 
-            dictionary["foo"] = 42;
+            bool foundFoo = dictionary.TryGetValue("foo", out int fooValue);
+            bool foundBar = dictionary.TryGetValue("bar", out int barValue);
 
-            var foundFoo = dictionary.TryGetValue("foo", out var fooValue);
-            var foundBar = dictionary.TryGetValue("bar", out var barValue);
-            
             Assert.IsTrue(foundFoo);
             Assert.IsTrue(!foundBar);
 

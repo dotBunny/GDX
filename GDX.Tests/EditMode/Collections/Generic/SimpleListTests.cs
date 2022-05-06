@@ -58,7 +58,7 @@ namespace GDX.Collections.Generic
             mockList.AddUnchecked(2);
             mockList.AddUnchecked(7);
 
-            bool evaluate = (mockList.Array[0] == 2 && mockList.Array[1] == 7);
+            bool evaluate = mockList.Array[0] == 2 && mockList.Array[1] == 7;
 
             Assert.IsTrue(evaluate);
         }
@@ -83,7 +83,7 @@ namespace GDX.Collections.Generic
             mockList.AddWithExpandCheck(2);
             mockList.AddWithExpandCheck(7);
 
-            bool evaluate = (mockList.Array[0] == 2 && mockList.Array[1] == 7);
+            bool evaluate = mockList.Array[0] == 2 && mockList.Array[1] == 7;
 
             Assert.IsTrue(evaluate);
         }
@@ -97,7 +97,7 @@ namespace GDX.Collections.Generic
             mockList.AddWithExpandCheck(2);
             mockList.AddWithExpandCheck(7, 10);
 
-            bool evaluate = (mockList.Array[0] == 2 && mockList.Array[1] == 7 && mockList.Array.Length == 11);
+            bool evaluate = mockList.Array[0] == 2 && mockList.Array[1] == 7 && mockList.Array.Length == 11;
 
             Assert.IsTrue(evaluate);
         }
@@ -239,7 +239,7 @@ namespace GDX.Collections.Generic
 
             mockList.Clear();
 
-            bool evaluate = (mockList.Array[1] == 0);
+            bool evaluate = mockList.Array[1] == 0;
 
             Assert.IsTrue(evaluate);
         }
@@ -256,7 +256,7 @@ namespace GDX.Collections.Generic
 
             mockList.Insert(4, 2);
 
-            bool evaluate = (mockList.Array[2] == 4);
+            bool evaluate = mockList.Array[2] == 4;
 
             Assert.IsTrue(evaluate);
         }
@@ -273,7 +273,7 @@ namespace GDX.Collections.Generic
 
             mockList.Insert(4, 0);
 
-            bool evaluate = (mockList.Array[0] == 4);
+            bool evaluate = mockList.Array[0] == 4;
 
             Assert.IsTrue(evaluate);
         }
@@ -290,7 +290,7 @@ namespace GDX.Collections.Generic
 
             mockList.Insert(4, 1);
 
-            bool evaluate = (mockList.Array[1] == 4);
+            bool evaluate = mockList.Array[1] == 4;
 
             Assert.IsTrue(evaluate);
         }
@@ -307,7 +307,7 @@ namespace GDX.Collections.Generic
 
             mockList.RemoveAt(2);
 
-            bool evaluate = (mockList.Count == 2 && mockList.Array[1] == 1);
+            bool evaluate = mockList.Count == 2 && mockList.Array[1] == 1;
 
             Assert.IsTrue(evaluate);
         }
@@ -324,7 +324,7 @@ namespace GDX.Collections.Generic
 
             mockList.RemoveAt(0);
 
-            bool evaluate = (mockList.Count == 2 && mockList.Array[0] == 1);
+            bool evaluate = mockList.Count == 2 && mockList.Array[0] == 1;
 
             Assert.IsTrue(evaluate);
         }
@@ -341,7 +341,7 @@ namespace GDX.Collections.Generic
 
             mockList.RemoveAt(1);
 
-            bool evaluate = (mockList.Count == 2 && mockList.Array[1] == 2);
+            bool evaluate = mockList.Count == 2 && mockList.Array[1] == 2;
 
             Assert.IsTrue(evaluate);
         }
@@ -358,7 +358,7 @@ namespace GDX.Collections.Generic
 
             mockList.RemoveFromBack();
 
-            bool evaluate = (mockList.Count == 2 && mockList.Array[1] == 1);
+            bool evaluate = mockList.Count == 2 && mockList.Array[1] == 1;
 
             Assert.IsTrue(evaluate);
         }
@@ -371,7 +371,7 @@ namespace GDX.Collections.Generic
 
             mockList.Reserve(10);
 
-            bool evaluate = (mockList.Array.Length == 10);
+            bool evaluate = mockList.Array.Length == 10;
 
             Assert.IsTrue(evaluate);
         }

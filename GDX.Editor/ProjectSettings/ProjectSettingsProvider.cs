@@ -182,7 +182,7 @@ namespace GDX.Editor
             {
                 if (section.GetSectionHelpLink() != null)
                 {
-                    string helpLink = $"{ProjectSettingsProvider.k_DocumentationUri}{section.GetSectionHelpLink()}";
+                    string helpLink = $"{k_DocumentationUri}{section.GetSectionHelpLink()}";
                     helpButton.clicked += () =>
                     {
                         GUIUtility.hotControl = 0;
@@ -228,10 +228,10 @@ namespace GDX.Editor
         public static SettingsProvider Get()
         {
             Initialize();
-            return new SettingsProvider("Project/GDX", SettingsScope.Project)
+            return new("Project/GDX", SettingsScope.Project)
             {
                 label = "GDX",
-                activateHandler = (searchContext, rootElement) =>
+                activateHandler = (_, rootElement) =>
                 {
                     s_RootElement = rootElement;
 
@@ -356,7 +356,7 @@ namespace GDX.Editor
                     }
                 },
                 //keywords = s_SearchKeywords.Array,
-                hasSearchInterestHandler = (searchString) => s_SearchKeywords.PartialMatch(searchString),
+                hasSearchInterestHandler = searchString => s_SearchKeywords.PartialMatch(searchString),
                 inspectorUpdateHandler = () =>
                 {
                     if (s_ProjectSettingsWindow == null)

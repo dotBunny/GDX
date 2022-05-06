@@ -18,10 +18,10 @@ namespace GDX.Editor
     /// </summary>
     public class DomainReloadTests
     {
-        const string LeakDetectionModeKey = "GDX_DomainReloadTests_LeakDetectionMode";
+        const string k_LeakDetectionModeKey = "GDX_DomainReloadTests_LeakDetectionMode";
         static string GetFilePath()
         {
-            return Path.Combine(UnityEngine.Application.dataPath, "DomainReloadTest.cs");
+            return Path.Combine(Application.dataPath, "DomainReloadTest.cs");
         }
 
         static string GetRandomCode()
@@ -65,7 +65,7 @@ namespace GDX.Editor
         [UnitySetUp]
         public IEnumerator Setup()
         {
-            EditorPrefs.SetInt(LeakDetectionModeKey, (int)NativeLeakDetection.Mode);
+            EditorPrefs.SetInt(k_LeakDetectionModeKey, (int)NativeLeakDetection.Mode);
             string filePath = GetFilePath();
             Platform.ForceDeleteFile(filePath);
             Platform.ForceDeleteFile($"{filePath}.meta");
@@ -101,7 +101,7 @@ namespace GDX.Editor
         [UnityTearDown]
         public IEnumerator TearDown()
         {
-            NativeLeakDetection.Mode = (NativeLeakDetectionMode)EditorPrefs.GetInt(LeakDetectionModeKey);
+            NativeLeakDetection.Mode = (NativeLeakDetectionMode)EditorPrefs.GetInt(k_LeakDetectionModeKey);
             string filePath = GetFilePath();
             Platform.ForceDeleteFile(filePath);
             Platform.ForceDeleteFile($"{filePath}.meta");

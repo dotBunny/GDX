@@ -19,7 +19,7 @@ namespace GDX
         {
             byte[] testArray = Encoding.UTF8.GetBytes("Hello World");
 
-            bool evaluate = (testArray.GetStableHashCode() == 1349791181);
+            bool evaluate = testArray.GetStableHashCode() == 1349791181;
 
             Assert.IsTrue(evaluate);
         }

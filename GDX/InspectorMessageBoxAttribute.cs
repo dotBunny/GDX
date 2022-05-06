@@ -36,6 +36,7 @@ namespace GDX
         /// </summary>
         public readonly MessageBoxType MessageType;
 #endif
+        // ReSharper disable UnusedParameter.Local
         public InspectorMessageBoxAttribute(string message, MessageBoxType messageType = MessageBoxType.Info)
         {
 #if UNITY_EDITOR
@@ -43,6 +44,6 @@ namespace GDX
             MessageType = messageType;
 #endif
         }
-
+        // ReSharper enable UnusedParameter.Local
     }
 }

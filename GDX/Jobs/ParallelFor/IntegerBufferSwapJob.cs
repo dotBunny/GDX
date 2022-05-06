@@ -37,9 +37,7 @@ namespace GDX.Jobs.ParallelFor
         /// <param name="index">The index of the Parallel for loop at which to perform work.</param>
         public void Execute(int index)
         {
-            int temp = A[index];
-            A[index] = B[index];
-            B[index] = temp;
+            (A[index], B[index]) = (B[index], A[index]);
         }
     }
 }

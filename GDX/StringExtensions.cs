@@ -141,7 +141,7 @@ namespace GDX
             {
                 Mode = CipherMode.ECB,
                 Padding = PaddingMode.PKCS7,
-                Key = (encryptionKey != null && encryptionKey.Length > 0) ? encryptionKey : EncryptionDefaultKey,
+                Key = encryptionKey != null && encryptionKey.Length > 0 ? encryptionKey : EncryptionDefaultKey,
                 IV = EncryptionInitializationVector
             };
             using MemoryStream stream = new MemoryStream(Convert.FromBase64String(encryptedString));
@@ -166,7 +166,7 @@ namespace GDX
             {
                 Mode = CipherMode.ECB,
                 Padding = PaddingMode.PKCS7,
-                Key = (encryptionKey != null && encryptionKey.Length > 0) ? encryptionKey : EncryptionDefaultKey,
+                Key = encryptionKey != null && encryptionKey.Length > 0 ? encryptionKey : EncryptionDefaultKey,
                 IV = EncryptionInitializationVector
             };
             using MemoryStream stream = new MemoryStream();

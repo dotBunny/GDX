@@ -3,9 +3,11 @@
 // See the LICENSE file in the project root for more information.
 
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
+#if UNITY_2022_2_OR_NEWER
+using UnityEditor.UIElements;
 using UnityEngine.UIElements;
+#endif
 
 namespace GDX.Editor.PropertyDrawers
 {

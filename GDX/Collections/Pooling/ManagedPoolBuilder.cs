@@ -52,6 +52,7 @@ namespace GDX.Collections.Pooling
         // ReSharper disable UnusedMember.Local
         void LateUpdate()
         {
+            // ReSharper disable once Unity.PerformanceCriticalCodeInvocation
             Tick();
 
             // Do we have work to be done?
@@ -147,6 +148,7 @@ namespace GDX.Collections.Pooling
                 else
                 {
                     // Build Item
+                    // ReSharper disable once Unity.PerformanceCriticalCodeInvocation
                     k_TargetPools[i].CreateItem();
 
                     spawnsThisUpdate++;
