@@ -228,7 +228,7 @@ namespace GDX.Editor
         public static SettingsProvider Get()
         {
             Initialize();
-            return new("Project/GDX", SettingsScope.Project)
+            return new SettingsProvider("Project/GDX", SettingsScope.Project)
             {
                 label = "GDX",
                 // ReSharper disable once UnusedParameter.Local
