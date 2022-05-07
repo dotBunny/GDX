@@ -15,12 +15,7 @@ article[data-uid="features"] td:first-child
 }
 
 a[title="Issues"]:after,
-a[title="Discussions"]:after,
-a[title="Kanban Board"]:after,
-a[title="Coverage"]:after,
-a[title="Inspection"]:after,
-a[title="Duplication"]:after,
-a[title="Portability"]:after
+a[title="Agile Board"]:after
 {
     padding-left: 5px;
     position:relative;
@@ -34,11 +29,10 @@ a[title="Portability"]:after
     content:"\e066"
 }
 
-
 .toc .nav > li > a[type=class],
 .toc .nav > li > a[type=enum],
 .toc .nav > li > a[type=struct],
-.toc .nav > li > a[type=interface]
+.toc .nav > li > a[type=interface],
 .toc .nav > li > a[type=namespace]
 {
     display: flex;

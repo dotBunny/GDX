@@ -21,7 +21,7 @@ The simplest and most straight forward method is to use Unity's built in workflo
 3. In the presented text field, enter: `https://github.com/dotBunny/GDX.git`
 4. After entering the URL, click **Add**.
 
-#### UPM: Package Manifest ###
+#### UPM: Package Manifest
 
 The above workflow provides a user interface for your project's `manifest.json` file. Alternatively,  you can enter the necessary line into that file manually by opening `Packages/manifest.json` in a text editor and adding the dependency your self:
 

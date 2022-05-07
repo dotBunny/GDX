@@ -1,22 +1,32 @@
 # Automation
 
+Every commit to the [`dev`](https://github.com/dotBunny/GDX/tree/dev) branch runs through a barrage of automated testing to validate the expected behaviour and quality of the code being written inside of a private TeamCity installation. The results of all of the ran tests / build configurations are published as they complete back to GitHub and are viewable via the little indicator next to a commit.
+
 ## Automated Tests
 
-Every commit triggers an assortment of automated tests that validate the GDX package. You can see the status of those tests registered against every commit in the **dev** branch on [GitHub](https://github.com/dotBunny/GDX/tree/dev). It starts with a simple "can we generate project files". This tests if any API usage is invalid across different package arrangements and Unity versions. If those are successful, each version will respectively trigger a subsequent set of unit tests (powered by UTR) further validating expected outcomes of direct API calls. Finally, assuming all of the above has passed successfully, a version will trigger a build that will then be ran to evaluate our Build Verification Tests.
+All test that run inside of TeamCity are named in a very descriptive manner, GDX-`Test`-`UnityVersion`-`Variant`.
 
-## [Coverage](/reports/coverage/Report/index.html)
+### GDX-GenerateProject
 
-How much of the codebase is covered by unit tests.
-[![Code Coverage](/reports/coverage/Report/badge_linecoverage.svg)](/reports/coverage/Report/index.html)
+The first set of automated tests triggered are used to ensure that any API usage does not cause any compilation issues against the different versions of Unity supported. They additionally also try different inclusions of packages to ensure the `#ifdef` are exercised; this is the empty/packages variant definition. The run ends with the generation of the projects solution files via [`GDX.Editor.Automation.GenerateProjectFiles`](xref:GDX.Editor.Automation.GenerateProjectFiles) which are stored as artifacts for future use.
 
-## [Duplication](/reports/duplicates/duplicates.xml)
+### GDX-EditMode
 
-Are we duplicating code?
+Next, assuming the previous test in the series has been successful, an associated *GDX-EditMode* test will run. These perform author-time unit testing (powered by UTR) validating expected outcomes from direct API usage calls.
 
-## [Inspection](/reports/inspection/inspection.xml)
+### GDX-BVT
 
-Static code analysis of numerous resharper-esque corrections.
+Finally, assuming the previous test in the series has been successful, multiple builds will be made to run build verification tests. Currently Windows and macOS are covered at this point, with both Mono and IL2CPP backends being exercised. This works out to 8 builds per supported Unity version.
 
-## [Portability](/reports/portability/index.html)
+## Documentation
 
-A quick series of tests to identify what versions of .NET is required for GDX to function fully.
+In parallel to all of the automated testing, documentation is generated for the [`dev`](https://github.com/dotBunny/GDX/tree/dev) and gets posted to [https://gdx-dev.dotbunny.com/](https://gdx-dev.dotbunny.com/). Additionally, when a commit is made to the [`main`](https://github.com/dotBunny/GDX/tree/main) branch, documentation is likewise generated and posted to [https://gdx.dotbunny.com/](https://gdx.dotbunny.com/).
+
+Some of the generated content which is more for developer reference can be found below.
+
+Artifact | Description
+:--- | :---
+[Code Coverage](/reports/coverage/Report/index.html "Code Coverage") | How much of the codebase is covered by unit testing? This is what drives the badge on the front page.
+[Inspection](/reports/inspection/inspection.xml "Inspection") | The results from static analysis of the codebase, including violations of its predetermined style guide.
+[Duplication](/reports/duplicates/duplicates.xml "Duplication") | How much duplication of code is there? This one is tricky as we don't shy away from writing boilerplate code to enable performance.
+[Portability](/reports/portability/index.html "Portability") | A quick series of tests to identify what versions of .NET is required for GDX to function fully.
