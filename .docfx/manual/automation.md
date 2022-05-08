@@ -2,6 +2,8 @@
 
 Every commit to the [`dev`](https://github.com/dotBunny/GDX/tree/dev) branch runs through a barrage of automated testing to validate the expected behaviour and quality of the code being written inside of a private TeamCity installation. The results of all of the ran tests / build configurations are published as they complete back to GitHub and are viewable via the little indicator next to a commit.
 
+![GitHub Status](/images/manual/automation/github-status.png)
+
 ## Automated Tests
 
 All test that run inside of TeamCity are named in a very descriptive manner, GDX-`Test`-`UnityVersion`-`Variant`.
