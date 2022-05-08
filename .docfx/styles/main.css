@@ -90,3 +90,28 @@ h1 > span.type {
     font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
     color: rgb(86,156,214);
 }
+
+div#branch {
+    line-height: 0px;
+    height: 0px;
+}
+
+div#branch-select {
+    float: right;
+    position: relative;
+    top: 10px;
+}
+
+div#branch-select select {
+    width: 108px;
+}
+
+form#search
+{
+    padding-right: 0px;
+}
+
+.collapsed > form#search
+{
+    padding-right: 15px;
+}
