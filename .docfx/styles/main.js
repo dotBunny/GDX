@@ -1,3 +1,4 @@
+// Sometimes you have to use the right tool for the right job.
 $( document ).ready(function() {
 
     var pathname = window.location.pathname;
@@ -18,17 +19,19 @@ $( document ).ready(function() {
         $("#environment").val("main")
     }
 
+    // Setup change event for branch selection
     $("#environment").change(() => {
-            switch ($("#environment").val()) {
-                case "localhost":
-                    window.url = "http://localhost:8080".concat(pathname);
-                    break;
-                case "main":
-                    window.url = "http://gdx.dotbunny.com".concat(pathname);
-                    break;
-                case "dev":
-                    window.url = "http://gdx-dev.dotbunny.com".concat(pathname);
-                    break;
-            }
-        });
+        switch ( $("#environment").val()) {
+
+            case "localhost":
+                window.location.href = "http://localhost:8080".concat(pathname);
+                break;
+            case "main":
+                window.location.href = "http://gdx.dotbunny.com".concat(pathname);
+                break;
+            case "dev":
+                window.location.href = "http://gdx-dev.dotbunny.com".concat(pathname);
+                break;
+        }
+    });
 });
