@@ -6,6 +6,7 @@
 [![OpenUPM](https://img.shields.io/npm/v/com.dotbunny.gdx?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.dotbunny.gdx/)
 [![Discord Server](https://img.shields.io/discord/582190573897908224.svg?label=discord&logo=discord&color=informational)](https://discord.gg/EcceFGAuJs)
 [![License: BSL-1.0](https://img.shields.io/badge/License-BSL-blue.svg)](https://github.com/dotBunny/GDX/blob/main/LICENSE)
+[![Code Coverage](https://gdx.dotbunny.com/reports/coverage/Report/badge_linecoverage.svg)](/reports/coverage/Report/index.html)
 
 A battle-tested library of game-ready high-performance C# code.
 
