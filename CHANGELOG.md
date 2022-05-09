@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `StringKeyDictionary` to optimize one of the most common use cases for dictionaries.
 - `SegmentedString` to support string search patterns.
 - Unity editor non-pro (light) theme.
-- Additional information around naming conventions and [design guidelines](https://gdx.dotbunny.com/manual/contributing/design-guidelines.html) to documentation.
+- Additional information around [coding standards](https://gdx.dotbunny.com/manual/contributing/coding-standard.html) to documentation.
 
 ### Changed
 

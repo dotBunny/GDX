@@ -1,17 +1,22 @@
-# Design Guidelines
+# Coding Standard
 
 There is a general effort to follow the [Framework Design Guidelines](https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/) set forth by the .NET team. While we **do not** always precisely adhere to them, they serve as a guiding principle. [.NET Coding Conventions](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions) is also a good point of reference from a conventions standpoint.
 
-## Coding Style
+We operate with a few pillars when we think about code:
 
-There are some basic pillars we have when thinking about `GDX` code:
+> **Expose everything** — We dot not want anyone to ever find themself wishing something we had made was marked public not private.
+>
+> **Garbage in, garbage out.** — A developer should do their own data guarding to prevent exceptions.
+>
+> **Structs over classes** — It's easier to think about data optimizations this way.
 
-- Expose backing data, indices, etc.
-- Don't throw exceptions; garbage in, garbage out.
-- Always prefer to use structs over classes.
-- Order alphabetically where appropritate.
+Embedded in the project is an [EditorConfig](https://editorconfig.org/), which significantly helps with some of the style guidelines as well as includes some carvouts for use with `ReSharper` based inspection.
 
-### Naming Convensions
+## Code Organization
+
+Code should be laid out with the future reader in mind. Public facing elements should be before private; we tend to alphabetically organize individual sections.
+
+## Naming Convensions
 
 Just like every developer in history, the hardest part of our jobs is naming conventions. There are some basic conventions that we make use of that make naming ever so slightly easier.
 
@@ -21,16 +26,7 @@ Extensions | A reserved name for base classes in GDX which build upon a concept.
 Generator | Something which produces consumable content. This varies in degree from things like file content to UI panels.
 Provider | These are almost like service wrappers, where we use the word service lightly.
 
-### EditorConfig Support
-
-Embedded in the project is an [EditorConfig](https://editorconfig.org/), which should standardize much of the formatting.
-
-- It is based on the .NET Roslyn repositories `.editorconfig`.
-- Don't use anything that would break Unity 2020.3 (hybrid C# 8)
-- Warns of non-explicit type definitions everywhere (we're not going to use var to promote better readability).
-- Includes some additioanl inspection rules for use with `ReSharper` based inspection.
-
-## Unit Tests
+## Unit Testing
 
 We are trying to get as much coverage in tests as possible on the package to try and mitigate regressions. Please have a read of [Unit Testing Best Practices](https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices).
 
