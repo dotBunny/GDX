@@ -1481,6 +1481,7 @@
             Attempts to get the value for the given key; returns true if key was found, false otherwise.
             </summary>
             <param name="key">The key to retrieve.</param>
+            <param name="value">The value of the entry found.</param>
             <returns>True if the entry was found; false otherwise.</returns>
         </member>
         <member name="P:GDX.Collections.Generic.StringKeyDictionary`1.Item(System.String)">
@@ -3314,7 +3315,8 @@
         </member>
         <member name="M:GDX.Mathematics.Smooth.Exponential(System.Single,System.Single,System.Single,System.Single)">
             <summary>
-                Smooths between previousValue and targetValue based on time since the last sample and a given half-life.
+                Smooths between previousValue and targetValue based on time since
+                the last sample and a given half-life.
             </summary>
             <remarks>Assumes wibbly wobbly, timey wimey.</remarks>
             <param name="previousValue">Ideally, the previous output value.</param>
@@ -3334,7 +3336,7 @@
                 Takes a halfLife value, and outputs a factor based on elapsedTime.
             </summary>
             <remarks>Not providing a value for elapsedTime will result in using <c>Time.deltaTime</c>.</remarks>
-            <param name="halfLife">The desired halflife.</param>
+            <param name="halfLife">The desired half-life.</param>
             <param name="elapsedTime">The time since the last sample.</param>
             <returns>The coefficient value applied to the weight(t) of a lerp.</returns>
         </member>
@@ -6390,6 +6392,11 @@
                 infinite recursion.
             </param>
             <returns>The first found UnityEngine.Component.</returns>
+        </member>
+        <member name="F:GDX.Core.EmptyObjectArray">
+            <summary>
+                An empty System.Object array useful when things require it.
+            </summary>
         </member>
         <member name="F:GDX.Core.Random">
             <summary>

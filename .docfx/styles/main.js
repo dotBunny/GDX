@@ -1,10 +1,10 @@
-// Sometimes you have to use the right tool for the right job.
+// Sometimes you have to use the right tool for the job.
 $( document ).ready(function() {
 
     var pathname = window.location.pathname;
     var origin   = window.location.origin;
 
-    // Select current branch
+    // Select our current branch based on the origin
     if(origin.includes("localhost:8080"))
     {
         $("#environment").append('<optgroup label="Environment"><option value="localhost">localhost</option></optgroup>');
