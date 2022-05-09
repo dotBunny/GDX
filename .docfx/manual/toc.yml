@@ -14,8 +14,8 @@
   items:
     - name: Code Of Conduct
       href: contributing\code-of-conduct.md
-    - name: Design Guidelines
-      href: contributing\design-guidelines.md
+    - name: Coding Standard
+      href: contributing\coding-standard.md
     - name: Documentation
       href: contributing\documentation.md
     - name: Agile Board

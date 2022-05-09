@@ -5,6 +5,10 @@
 
 A pretty ambitious goal; that should set the tone for what we are aiming to do when it comes to documentation.
 
+## Development Workspace
+
+For internal development we have created a [bootstrapped workspace](https://github.com/dotBunny/GDX.Bootstrap) which downloads a set of projects and will clone different repositories into specific locations. This is used by some of our core developers as well as our CI/CD.
+
 ## Local Generation
 
 The documentation is statically generated using the [DocFx](https://dotnet.github.io/docfx/) project file located at `.docfx/docfx.json` with the help of an additional tool [Dox](https://github.com/dotBunny/GDX.Dox).

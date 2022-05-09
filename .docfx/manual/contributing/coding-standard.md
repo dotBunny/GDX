@@ -10,7 +10,7 @@ We operate with a few pillars when we think about code:
 >
 > **Structs over classes** — It's easier to think about data optimizations this way.
 
-Embedded in the project is an [EditorConfig](https://editorconfig.org/), which significantly helps with some of the style guidelines as well as includes some carvouts for use with `ReSharper` based inspection.
+Embedded in the project is an [EditorConfig](https://editorconfig.org/), which significantly helps with some of the style guidelines as well as includes some carv-outs for use with `ReSharper` based inspection.
 
 ## Code Organization
 
@@ -61,19 +61,19 @@ Here is a collection of linked `pragma` to `ReSharper` representations that appe
 
 #### Compiler Warnings
 
-|Code|Description|Level|
-|:--|---|:--|
-| [CS0168](https://docs.microsoft.com/en-us/dotnet/csharp/misc/cs0168) |The variable 'var' is declared but never used. | 3 |
-| [CS0169](https://docs.microsoft.com/en-us/dotnet/csharp/misc/cs0169) | The private field 'class member' is never used. | 3 |
-| [CS0414](https://docs.microsoft.com/en-us/dotnet/csharp/misc/cs0414) | The private field 'field' is assigned but its value is never used. | 3 |
-| [CS0429](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-messages/cs0429) | Unreachable expression code detected. | 4 |
-| [CS0649](https://docs.microsoft.com/en-us/dotnet/csharp/misc/cs0649) | Field 'field' is never assigned to, and will always have its default value 'value'. | 4 |
+Code | Resharper | Description
+:--|:--|---
+[CS0168](https://docs.microsoft.com/en-us/dotnet/csharp/misc/cs0168) | ? | The variable 'var' is declared but never used.
+[CS0169](https://docs.microsoft.com/en-us/dotnet/csharp/misc/cs0169) | ? |  The private field 'class member' is never used.
+[CS0414](https://docs.microsoft.com/en-us/dotnet/csharp/misc/cs0414) | ? |  The private field 'field' is assigned but its value is never used.
+[CS0429](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-messages/cs0429) | ? |  Unreachable expression code detected.
+[CS0649](https://docs.microsoft.com/en-us/dotnet/csharp/misc/cs0649) | ? |  Field 'field' is never assigned to, and will always have its default value 'value'.
 
 #### Code Style
 
 | Pragma | Resharper | Description|
 |:--|:--|---|
-| [IDE1006](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide1006) | InconsistentNaming | Naming rule violation. |
-| [IDE0051](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0052) | ?  | Remove unused private member. |
-| [IDE0052](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0052) | UnusedMember.Local | Remove unread private member. |
-| [IDE0090](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0090) | ArrangeObjectCreationWhenTypeEvident | Simplify new expression. |
+| [IDE1006](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide1006) | InconsistentNaming | Naming rule violation.
+| [IDE0051](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0052) | ?  | Remove unused private member.
+| [IDE0052](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0052) | UnusedMember.Local | Remove unread private member.
+| [IDE0090](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0090) | ArrangeObjectCreationWhenTypeEvident | Simplify new expression.
