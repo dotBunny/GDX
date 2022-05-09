@@ -9,7 +9,6 @@ namespace GDX
     /// <summary>
     ///     Project-wide configuration configurable for runtime override.
     /// </summary>
-    // ReSharper disable once InconsistentNaming
     public static class Config
     {
         /// <summary>

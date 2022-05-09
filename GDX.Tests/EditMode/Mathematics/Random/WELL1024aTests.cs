@@ -8,6 +8,7 @@ using NUnit.Framework;
 
 namespace GDX.Mathematics.Random
 {
+#pragma warning disable once IDE1006
     // ReSharper disable once InconsistentNaming
     public class WELL1024aTests
     {

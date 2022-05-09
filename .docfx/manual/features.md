@@ -2,13 +2,15 @@
 uid: features
 ---
 # Features
+
 This is an overview of *some of* the notable features contained within the `GDX` package. For a more thorough list of functionality make sure to explore the [API documentation](/api/index.html) directly.
 
 ## Extensions
+
 A set of functionality, aggressively  inlined where appropriate to augment workflows with existing or provided types and collections.
 
 > [!NOTE]
-> There are some extensions based on `GDX` types which are not listed below, but are included in the package.	
+> There are some extensions based on `GDX` types which are not listed below, but are included in the package.
 
 Feature | Description
 :--- | :---
@@ -26,9 +28,9 @@ Feature | Description
 [Transform](xref:GDX.TransformExtensions) | Some useful functionality when it comes to working with `Transform`.
 [Vector2](xref:GDX.Vector2Extensions) | Additional functionality for common calculations done with `Vector2`. For example, determining approximately if two `Vector2` are the same efficiently, or finding the midpoint between two `Vector2`. This automatically switches to using `com.unity.mathematics` functionality if available.
 [Vector3](xref:GDX.Vector3Extensions) | Additional functionality for common calculations done with `Vector3`. For example, determining approximately if two `Vector3` are the same efficiently, or finding the midpoint between two `Vector3`. This automatically switches to using `com.unity.mathematics` functionality if available.
- 
 
 ## Types & Collections
+
 An extensive group of `struct` and `class` designed with performance-sensitive environments in mind. Useful to avoid reinventing the wheel over and over again!
 
 > [!WARNING]
@@ -43,6 +45,7 @@ Bit Arrays | A selection of sized [8](xref:GDX.Collections.BitArray8), [16](xref
 [Sparse Set](xref:GDX.Collections.NativeSparseSet) | An adapter collection for external data arrays that allows constant-time insertion, deletion, and lookup by handle, as well as array-like iteration. | `struct`
 
 ### Generics
+
 Feature | Description | Type
 :--- | :--- | ---
 [Circular Buffer](xref:GDX.Collections.Generic.CircularBuffer`1) | A sized buffer which loops back over itself as elements are filled. | `class`
@@ -51,6 +54,7 @@ Feature | Description | Type
 [SerializableDictionary](xref:GDX.Collections.Generic.SerializableDictionary`2) | A dictionary that can be serialized by Unity into its native YAML format. Usage of the editor side property drawer **requires Unity 2020.1+**. | `class`
 
 ## Utilities
+
 Everyone loves static utility classes, and naturally `GDX` has a bunch of them to help fill out some commonly used functionality.
 
 Feature | Description
@@ -61,8 +65,8 @@ Feature | Description
 [Platform](xref:GDX.Platform) | A bunch of Hardware and I/O related methods.
 [Smooth](xref:GDX.Mathematics.Smooth) | Some fancy smoothing functions.
 
-
 ## Developer Tools
+
 The missing or upgraded development process functionality.
 
 Feature | Description
@@ -71,6 +75,7 @@ Feature | Description
 [Command Line Parser](xref:GDX.Developer.CommandLineParser) | A configurable command line parameter parsing system which can be queried at runtime (and in special cases during editor automation) for flags and key-value-pair data.
 
 ## Miscellaneous
+
 A few other notable inclusions which have been found useful.
 
 Feature | Description

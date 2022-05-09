@@ -15,8 +15,8 @@ namespace GDX.Editor
 
             // Start header
             code.AppendLine("// Generated file of difference from default config.");
-            code.AppendLine("// ReSharper disable All");
             code.AppendLine("#pragma warning disable");
+            code.AppendLine("// ReSharper disable All");
             code.AppendLine("namespace GDX");
             code.PushIndent();
             code.AppendLine($"public class {Core.OverrideClass}");

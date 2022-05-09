@@ -13,14 +13,17 @@ namespace GDX.Editor
     [Serializable]
     public class SerializedStopwatch : ISerializationCallbackReceiver
     {
+#pragma warning disable IDE1006
+        // ReSharper disable InconsistentNaming
         [SerializeField]
-        // ReSharper disable once InconsistentNaming
         double m_SerializationTick;
         double m_SerializationSpan;
 
         [SerializeField]
-        // ReSharper disable once InconsistentNaming
         double m_StartTick;
+        // ReSharper restore InconsistentNaming
+#pragma warning restore IDE1006
+
 
         /// <summary>
         /// Get the starting point for the stopwatch.

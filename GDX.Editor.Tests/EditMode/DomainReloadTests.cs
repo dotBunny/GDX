@@ -48,8 +48,8 @@ namespace GDX.Editor
 
             Developer.TextGenerator code = new Developer.TextGenerator("    ", "{", "}");
             code.AppendLine("// Generated domain reload test file.");
-            code.AppendLine("// ReSharper disable All");
             code.AppendLine("#pragma warning disable");
+            code.AppendLine("// ReSharper disable All");
             code.AppendLine($"namespace DomainReloadTest_{randomCode}");
             code.PushIndent();
             code.AppendLine($"public class Test_{randomCode}");
