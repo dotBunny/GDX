@@ -97,7 +97,7 @@ namespace GDX.Editor
                     property.colorValue = (Color)value;
                     break;
                 case SerializedPropertyType.ObjectReference:
-                    UnityEngine.Object unityObject = (UnityEngine.Object)value;
+                    Object unityObject = (Object)value;
                     property.objectReferenceValue = unityObject;
                     property.objectReferenceInstanceIDValue = unityObject.GetInstanceID();
                     break;

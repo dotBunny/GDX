@@ -35,6 +35,9 @@ resharper_foreach_can_be_partly_converted_to_query_using_another_get_enumerator_
 # Avoid Simplified string interpolation
 resharper_simplify_string_interpolation_highlighting=none
 
+# Depending on where GDX is added it can throw namespace issues
+resharper_check_namespace_highlighting=none
+
 # Visual Studio Solution files (why!! TAB why!!)
 [*.sln]
 indent_style = tab
