@@ -79,7 +79,7 @@ namespace GDX.Editor
         {
             if (window == null)
             {
-                Trace.Output(Trace.TraceLevel.Warning, $"No window was passed to be captured.");
+                Trace.Output(Trace.TraceLevel.Warning, "No window was passed to be captured.");
                 return null;
             }
 
@@ -175,7 +175,7 @@ namespace GDX.Editor
                 Directory.Delete(path);
             }
         }
-
+        // ReSharper disable CommentTypo
         /// <summary>
         ///     Stop an existing profile, this is most often used to end a command line profile of the Editor startup.
         /// </summary>
@@ -211,6 +211,7 @@ namespace GDX.Editor
         ///         </item>
         ///     </list>
         /// </remarks>
+        // ReSharper restore CommentTypo
         public static void FinishProfile()
         {
             // We often use this method to profile different parts of the editor during startup, so we have this little

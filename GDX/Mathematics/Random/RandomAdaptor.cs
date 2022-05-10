@@ -4,11 +4,13 @@
 
 namespace GDX.Mathematics.Random
 {
+    // ReSharper disable CommentTypo
     /// <summary>
     ///     Adapter to utilize a <see cref="IRandomProvider" /> with <see cref="System.Random" /> based systems, wrapping the
     ///     provider in a class object with expected overrides.
     /// </summary>
     /// <remarks>This will create IL <c>callvert</c> operation codes! Try not to use this.</remarks>
+    // ReSharper restore CommentTypo
     [VisualScriptingCompatible(4)]
     public class RandomAdaptor : System.Random
     {

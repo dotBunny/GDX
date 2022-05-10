@@ -421,6 +421,7 @@ namespace GDX.Editor
                 for (int i = 0; i < lockFileLength; i++)
                 {
                     // Identify the block
+                    // ReSharper disable once StringLiteralTypo
                     if (lockFileContents[i].Trim() == "\"com.dotbunny.gdx\": {")
                     {
                         depth++;

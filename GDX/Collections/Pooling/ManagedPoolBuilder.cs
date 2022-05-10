@@ -52,7 +52,7 @@ namespace GDX.Collections.Pooling
         // ReSharper disable UnusedMember.Local
         void LateUpdate()
         {
-            // ReSharper disable once Unity.PerformanceCriticalCodeInvocation
+            // ReSharper disable once Unity.PerformanceCriticalCodeInvocation, Unity.ExpensiveCode
             Tick();
 
             // Do we have work to be done?

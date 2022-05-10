@@ -27,6 +27,7 @@ namespace GDX.Editor.DecoratorDrawers
         /// <summary>
         ///     A cached reference to the "help box" style.
         /// </summary>
+        // ReSharper disable once StringLiteralTypo
         static readonly GUIStyle k_CachedHelpBoxStyle = new GUIStyle("helpbox");
 
         /// <summary>

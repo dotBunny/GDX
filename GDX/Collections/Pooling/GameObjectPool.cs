@@ -413,7 +413,7 @@ namespace GDX.Collections.Pooling
             if (pool.Flags[k_HasInterfaceFlag])
             {
                 // The old swap for the interface instead of the GameObject
-                // ReSharper disable once Unity.PerformanceCriticalCodeInvocation
+                // ReSharper disable once Unity.PerformanceCriticalCodeInvocation, Unity.ExpensiveCode
                 IGameObjectPoolItem item = spawnedObject.GetComponent<IGameObjectPoolItem>();
                 item.SetParentPool(pool);
                 item.OnReturnedToPool();

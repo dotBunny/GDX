@@ -122,6 +122,7 @@ namespace GDX.Editor
             EditorApplication.delayCall += DelayCall;
 
             // Find Local Definition
+            // ReSharper disable once StringLiteralTypo
             string[] editorAssemblyDefinition = AssetDatabase.FindAssets("GDX.Editor t:asmdef");
             if (editorAssemblyDefinition.Length > 0)
             {
@@ -315,6 +316,7 @@ namespace GDX.Editor
                 {
                     string workingLine = lockFile[i].Trim();
 
+                    // ReSharper disable once StringLiteralTypo
                     if (workingLine.StartsWith("\"com.dotbunny.gdx\""))
                     {
                         manifestContent.AppendLine("{");

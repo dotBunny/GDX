@@ -39,11 +39,13 @@ We strive to not add to the problem of noise in code inspection. We try our best
 We also understand that scenarios come up where the naming conventions need a little bit of breathing room. The following appears throughout the codebase to temporarily resolve warnings which should be muted in that case.
 
 ````csharp
-#pragma warning disable once IDE1006
-    // ReSharper disable once InconsistentNaming
+#pragma warning disable IDE1006
+        // ReSharper disable once InconsistentNaming
+        public string CLRVersion { get; set; }
+#pragma warning restore IDE1006
 ````
 
-This is not an isolated instance, and more complex scenarios exist.
+This is not an isolated instance, and more complex scenarios exist where multiple exclusions are needed.
 
 ```csharp
 #pragma warning disable IDE0052, IDE0090
@@ -71,9 +73,14 @@ Code | Resharper | Description
 
 #### Code Style
 
-| Pragma | Resharper | Description|
+Pragma | Resharper | Description|
 |:--|:--|---|
-| [IDE1006](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide1006) | InconsistentNaming | Naming rule violation.
-| [IDE0051](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0052) | ?  | Remove unused private member.
-| [IDE0052](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0052) | UnusedMember.Local | Remove unread private member.
-| [IDE0090](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0090) | ArrangeObjectCreationWhenTypeEvident | Simplify new expression.
+[IDE1006](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide1006) | InconsistentNaming | Naming rule violation.
+[IDE0051](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0052) | ?  | Remove unused private member.
+[IDE0052](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0052) | UnusedMember.Local | Remove unread private member.
+[IDE0090](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0090) | ArrangeObjectCreationWhenTypeEvident | Simplify new expression.
+? | StringLiteralTypo | Ignore typos in a string.
+? | CommentTypo | Ignore typos in a comment.
+? | Unity.ExpensiveCode | Ignore alerting about a specific Unity method being expensive.
+? | Unity.PerformanceCriticalCodeInvocation | Ignore performance critical path notifications.
+

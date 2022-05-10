@@ -55,7 +55,7 @@ namespace GDX.Editor
             code.AppendLine($"public class Test_{randomCode}");
             code.PushIndent();
             code.AppendLine("[UnityEngine.Scripting.Preserve]");
-            code.AppendLine($"public void Init()");
+            code.AppendLine("public void Init()");
             code.PushIndent();
             code.AppendLine("UnityEngine.Debug.Log(\"Domain Reload Test\");");
 

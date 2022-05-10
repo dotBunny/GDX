@@ -190,6 +190,7 @@ namespace GDX.Editor.Build
             File.WriteAllText(assemblyDefinition, asmDef.ToString());
             AssetDatabase.ImportAsset("Assets/" +
                                       Path.GetDirectoryName(Config.DeveloperBuildInfoPath) + "/" +
+                                      // ReSharper disable once StringLiteralTypo
                                       Config.DeveloperBuildInfoNamespace + ".asmdef");
         }
     }

@@ -8,9 +8,10 @@ using NUnit.Framework;
 
 namespace GDX.Mathematics.Random
 {
-#pragma warning disable once IDE1006
+#pragma warning disable IDE1006
     // ReSharper disable once InconsistentNaming
     public class WELL1024aTests
+#pragma warning restore IDE1006
     {
         public const string MockSeed = "TestSeed";
 

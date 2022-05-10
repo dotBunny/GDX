@@ -113,9 +113,10 @@ namespace GDX.Mathematics
         ///     Get a new <see cref="Byte2" /> created with <see cref="X" /> as both components.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-#pragma warning disable once IDE1006
+#pragma warning disable IDE1006
         // ReSharper disable once InconsistentNaming
         public Byte2 XX
+#pragma warning restore IDE1006
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => new Byte2(X, X);
@@ -125,9 +126,10 @@ namespace GDX.Mathematics
         ///     Get a new <see cref="Byte2" /> created with identical components.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-#pragma warning disable once IDE1006
+#pragma warning disable IDE1006
         // ReSharper disable once InconsistentNaming
         public Byte2 XY
+#pragma warning restore IDE1006
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => new Byte2(X, Y);
@@ -143,9 +145,10 @@ namespace GDX.Mathematics
         ///     Get a new <see cref="Byte2" /> created with swapped components.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-#pragma warning disable once IDE1006
+#pragma warning disable IDE1006
         // ReSharper disable once InconsistentNaming
         public Byte2 YX
+#pragma warning restore IDE1006
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => new Byte2(Y, X);
@@ -161,9 +164,10 @@ namespace GDX.Mathematics
         ///     Get a new <see cref="Byte2" /> created with <see cref="Y" /> as both components.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-#pragma warning disable once IDE1006
+#pragma warning disable IDE1006
         // ReSharper disable once InconsistentNaming
         public Byte2 YY
+#pragma warning restore IDE1006
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => new Byte2(Y, Y);

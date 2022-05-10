@@ -66,7 +66,9 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void ContainsItem_StringArray_FindsItem()
         {
+            // ReSharper disable StringLiteralTypo
             string[] mockObject = new string[] {"Hello", "Jello", "Mello", "Tello", "Dello"};
+            // ReSharper restore StringLiteralTypo
             bool evaluate = mockObject.ContainsItem("Jello");
 
             Assert.IsTrue(evaluate);

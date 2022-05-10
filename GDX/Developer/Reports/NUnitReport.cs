@@ -128,6 +128,7 @@ namespace GDX.Developer.Reports
         {
             generator.ApplyIndent();
             generator.Append("<test-case");
+            // ReSharper disable StringLiteralTypo
             AddToGeneratorAttribute(generator, "id", testCase.Id);
             AddToGeneratorAttribute(generator, "name", testCase.Name);
             AddToGeneratorAttribute(generator, "fullname", testCase.FullName);
@@ -141,6 +142,7 @@ namespace GDX.Developer.Reports
             AddToGeneratorAttribute(generator, "duration", testCase.Duration);
             AddToGeneratorAttribute(generator, "asserts", testCase.Asserts);
             AddToGeneratorAttribute(generator, "output", testCase.Output);
+            // ReSharper restore StringLiteralTypo
 
             if ((testCase.Properties != null && testCase.Properties.Property.Count > 0) ||
                 testCase.Output != null)
@@ -182,6 +184,7 @@ namespace GDX.Developer.Reports
         {
             generator.ApplyIndent();
             generator.Append("<test-suite");
+            // ReSharper disable StringLiteralTypo
             AddToGeneratorAttribute(generator, "type", testSuite.Type);
             AddToGeneratorAttribute(generator, "id", testSuite.Id);
             AddToGeneratorAttribute(generator, "name", testSuite.Name);
@@ -202,6 +205,7 @@ namespace GDX.Developer.Reports
             AddToGeneratorAttribute(generator, "inconclusive", testSuite.Inconclusive);
             AddToGeneratorAttribute(generator, "skipped", testSuite.Skipped);
             AddToGeneratorAttribute(generator, "asserts", testSuite.Asserts);
+            // ReSharper restore StringLiteralTypo
 
             generator.Append(">");
             generator.NextLine();
@@ -229,6 +233,7 @@ namespace GDX.Developer.Reports
             generator.ApplyIndent();
             generator.Append("<test-run");
             AddToGeneratorAttribute(generator, "id", testRun.Id);
+            // ReSharper disable once StringLiteralTypo
             AddToGeneratorAttribute(generator, "testcasecount", testRun.TestCaseCount);
             AddToGeneratorAttribute(generator, "result", testRun.Result);
             AddToGeneratorAttribute(generator, "total", testRun.Total);

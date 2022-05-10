@@ -705,6 +705,7 @@ namespace GDX.Editor.PropertyDrawers
             ///     A key-frame indicator, attempting to relay the concept of a key.
             /// </summary>
             public static readonly GUIContent IconKey =
+                // ReSharper disable once StringLiteralTypo
                 EditorGUIUtility.IconContent("animationkeyframe", "Key");
 
             /// <summary>
@@ -718,6 +719,7 @@ namespace GDX.Editor.PropertyDrawers
             ///     An animation dope sheet value indicator.
             /// </summary>
             public static readonly GUIContent IconValue =
+                // ReSharper disable once StringLiteralTypo
                 EditorGUIUtility.IconContent("animationanimated", "Value");
         }
 

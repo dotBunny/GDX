@@ -171,7 +171,7 @@ namespace GDX.Collections.Pooling
         /// <inheritdoc />
         public void CreateItem()
         {
-            // ReSharper disable once Unity.PerformanceCriticalCodeInvocation
+            // ReSharper disable once Unity.PerformanceCriticalCodeInvocation, Unity.ExpensiveCode
             m_CreateItemFunc(this);
         }
 

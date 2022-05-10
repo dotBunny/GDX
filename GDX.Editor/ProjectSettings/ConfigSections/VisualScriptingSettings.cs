@@ -4,9 +4,9 @@
 
 using System;
 using System.Collections.Generic;
+#if GDX_VISUALSCRIPTING
 using UnityEditor;
 using UnityEngine;
-#if GDX_VISUALSCRIPTING
 using Unity.VisualScripting;
 #endif
 

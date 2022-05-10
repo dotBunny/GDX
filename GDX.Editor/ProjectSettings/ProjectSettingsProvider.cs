@@ -334,6 +334,7 @@ namespace GDX.Editor
 
                     VisualElement packageHolderElement =
                         rootElement.Q<VisualElement>("gdx-project-settings-packages");
+                    // ReSharper disable once StringLiteralTypo
                     packageHolderElement.Add(GetPackageStatus("Addressables",
                         Developer.Conditionals.HasAddressablesPackage));
                     packageHolderElement.Add(GetPackageStatus("Platforms",

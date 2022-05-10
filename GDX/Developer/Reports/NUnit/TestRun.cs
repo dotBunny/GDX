@@ -16,9 +16,10 @@ namespace GDX.Developer.Reports.NUnit
         public int Skipped { get; private set; }
         public int Asserts { get; private set; }
         public string EngineVersion { get; set; }
-#pragma warning disable once IDE1006
+#pragma warning disable IDE1006
         // ReSharper disable once InconsistentNaming
         public string CLRVersion { get; set; }
+#pragma warning restore IDE1006
         public string StartTime { get; set; }
         public string EndTime { get; set; }
         public float Duration { get; set; }
