@@ -55,7 +55,10 @@ namespace GDX.Editor
         /// <typeparam name="T">The type of <see cref="EditorWindow"/> to be captured.</typeparam>
         /// <returns>true/false if the capture was successful.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#pragma warning disable IDE1006
+        // ReSharper disable once InconsistentNaming
         public static bool CaptureEditorWindowToPNG<T>(string outputPath, bool shouldCloseWindow = true) where T : EditorWindow
+#pragma warning restore IDE1006
         {
             bool result = false;
             T window = GetWindow<T>();
@@ -119,7 +122,10 @@ namespace GDX.Editor
         /// <param name="outputPath">The absolute path for the image file.</param>
         /// <returns>true/false if the capture was successful.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#pragma warning disable IDE1006
+        // ReSharper disable once InconsistentNaming
         public static bool CaptureEditorWindowToPNG(EditorWindow window, string outputPath)
+#pragma warning restore IDE1006
         {
             Texture2D texture = CaptureEditorWindow(window);
             if (texture == null)
@@ -136,7 +142,10 @@ namespace GDX.Editor
         /// <param name="outputPath">The absolute path for the image file.</param>
         /// <returns>true/false if the capture was successful.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#pragma warning disable IDE1006
+        // ReSharper disable once InconsistentNaming
         public static bool CaptureFocusedEditorWindowToPNG(string outputPath)
+#pragma warning restore IDE1006
         {
             Texture2D texture = CaptureFocusedEditorWindow();
             if (texture == null)

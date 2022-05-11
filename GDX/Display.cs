@@ -44,7 +44,10 @@ namespace GDX
         /// <returns>true/false</returns>
         /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#pragma warning disable IDE1006
+        // ReSharper disable once InconsistentNaming
         public static bool IsHDRSupported()
+#pragma warning restore IDE1006
         {
 #if UNITY_PS4
             return ((UnityEngine.PS4.Utility.GetVideoOutDeviceCapability(UnityEngine.PS4.Utility.videoOutPortHandle) &
@@ -60,7 +63,10 @@ namespace GDX
         /// <returns>true/false</returns>
         /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#pragma warning disable IDE1006
+        // ReSharper disable once InconsistentNaming
         public static bool IsHDREnabled()
+#pragma warning restore IDE1006
         {
 #if UNITY_PS4
             UnityEngine.PS4.Utility.GetRequestedVideoOutMode(out videoMode)

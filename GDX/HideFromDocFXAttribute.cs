@@ -22,7 +22,10 @@ namespace GDX
     /// </example>
     [HideFromDocFX]
     [ExcludeFromCodeCoverage]
+#pragma warning disable IDE1006
+    // ReSharper disable once InconsistentNaming
     public sealed class HideFromDocFXAttribute : Attribute
+#pragma warning restore IDE1006
     {
     }
 }

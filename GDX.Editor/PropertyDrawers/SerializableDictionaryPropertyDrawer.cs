@@ -41,7 +41,7 @@ namespace GDX.Editor.PropertyDrawers
         ///     Cached ID of the <see cref="EditorGUI.PropertyField(UnityEngine.Rect,UnityEditor.SerializedProperty)" />, used to
         ///     determine if it has focus across updates.
         /// </summary>
-        string m_AddKeyFieldID;
+        string m_AddKeyFieldIdentifier;
 
         /// <summary>
         ///     A cached value of the base properties isExpanded flag.
@@ -189,7 +189,7 @@ namespace GDX.Editor.PropertyDrawers
         {
             // Safe to cache!
             m_DisplayName = property.displayName;
-            m_AddKeyFieldID = Content.AddKeyFieldIDPrefix + m_DisplayName.GetStableHashCode();
+            m_AddKeyFieldIdentifier = Content.AddKeyFieldIdentifierPrefix + m_DisplayName.GetStableHashCode();
             m_TargetProperty = property;
             m_CachedExpandedStatus = property.isExpanded;
 
@@ -425,7 +425,7 @@ namespace GDX.Editor.PropertyDrawers
                 Event.current.type == EventType.KeyDown &&
                 (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter ||
                  Event.current.character == '\n') &&
-                GUI.GetNameOfFocusedControl() == m_AddKeyFieldID)
+                GUI.GetNameOfFocusedControl() == m_AddKeyFieldIdentifier)
             {
                 Event.current.Use();
                 GUIUtility.hotControl = 0;
@@ -434,7 +434,7 @@ namespace GDX.Editor.PropertyDrawers
             }
 
             // Draw the input before the button so it overlaps it
-            GUI.SetNextControlName(m_AddKeyFieldID);
+            GUI.SetNextControlName(m_AddKeyFieldIdentifier);
 
             if (m_KeyTypeNullable && m_KeyType != typeof(string) && m_KeyTypeNullable)
             {
@@ -665,7 +665,7 @@ namespace GDX.Editor.PropertyDrawers
             /// <summary>
             ///     The prefix of the <see cref="string" /> identifier of the add field.
             /// </summary>
-            public const string AddKeyFieldIDPrefix = "SD_KeyToAdd_";
+            public const string AddKeyFieldIdentifierPrefix = "SD_KeyToAdd_";
 
             /// <summary>
             ///     Message relayed when bad serialized data is detected.

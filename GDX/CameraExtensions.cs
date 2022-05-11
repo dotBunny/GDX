@@ -60,7 +60,10 @@ namespace GDX
         /// <param name="depthBuffer">The desired depth of the rendered texture.</param>
         /// <returns>true/false if the capture was successful.</returns>
         /// <remarks>This does not indicate if the writing of the PNG was successful.</remarks>
+#pragma warning disable IDE1006
+        // ReSharper disable once InconsistentNaming
         public static bool RenderToPNG(this Camera targetCamera, string outputPath, int width = 1920, int height = 1080, int depthBuffer = 24 )
+#pragma warning restore IDE1006
         {
             Texture2D captureTexture = RenderToTexture(targetCamera, width, height, depthBuffer);
             if (captureTexture == null)
