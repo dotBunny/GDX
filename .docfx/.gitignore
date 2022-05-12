@@ -12,5 +12,6 @@
 /**/manual/contributing/code-of-conduct.md
 /**/templates/gdx/partials/footer.tmpl.partial
 /**/reports/**
-!/**/reports/index.md
+!/**/reports/toc.yml
+!/**/reports/inspection.md
 _site

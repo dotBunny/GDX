@@ -29,6 +29,5 @@ Some of the generated content which is more for developer reference can be found
 Artifact | Description
 :--- | :---
 [Code Coverage](/reports/coverage/Report/index.html "Code Coverage") | How much of the codebase is covered by unit testing? This is what drives the badge on the front page.
-[Inspection](/reports/inspection/inspection.xml "Inspection") | The results from static analysis of the codebase, including violations of its predetermined style guide.
-[Duplication](/reports/duplicates/duplicates.xml "Duplication") | How much duplication of code is there? This one is tricky as we don't shy away from writing boilerplate code to enable performance.
-[Portability](/reports/portability/index.html "Portability") | A quick series of tests to identify what versions of .NET is required for GDX to function fully.
+[Inspection](/reports/inspection.html "Inspection") | The results from static analysis of the codebase, including violations of its predetermined style guide.
+[Portability](/reports/portability.html "Portability") | A quick series of tests to identify what versions of .NET is required for GDX to function fully.

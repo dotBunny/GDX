@@ -28,4 +28,4 @@ GDX_COLLECTIONS | com.unity.collections | _n/a_ | `1.2.3`
 
 ## Portability
 
-[Automation](/manual/automation.html) continually checks the portability of the code used in `GDX` to ensure the compatibility across various platforms generating a [report](/reports/portability/index.html).
+[Automation](/manual/automation.html) continually checks the portability of the code used in `GDX` to ensure the compatibility across various platforms generating a [report](/reports/portability.html).
