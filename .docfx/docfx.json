@@ -46,6 +46,7 @@
         "files": [
           "reports/coverage/**",
           "reports/**.dgml",
+          "reports/**.xml",
           "images/**",
           "logo.svg",
           "favicon.ico",
