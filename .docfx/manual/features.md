@@ -34,7 +34,7 @@ Feature | Description
 An extensive group of `struct` and `class` designed with performance-sensitive environments in mind. Useful to avoid reinventing the wheel over and over again!
 
 > [!WARNING]
-> It's important to note that many of the structures backing data, indices, counts, etc., are publicly accessible. This is meant for advanced usage, change at runtime at your own risk. 
+> It's important to note that many of the structures backing data, indices, counts, etc., are publicly accessible. This is meant for advanced usage, change at runtime at your own risk.
 
 Feature | Description | Type
 :--- | :--- | ---
