@@ -20,7 +20,7 @@ GDX_ADDRESSABLES | com.unity.addressables | _n/a_ | `1.16.16`
 GDX_BURST | com.unity.burst | _n/a_ | `1.6.4`
 GDX_MATHEMATICS | com.unity.mathematics | _n/a_ | `1.2.5`
 GDX_PLATFORMS | com.unity.platforms | _n/a_ |`0.11.0-preview.17`
-GDX_VISUALSCRIPTING | com.unity.visual-scripting | 2021.1 |`1.52`
+GDX_VISUALSCRIPTING | com.unity.visual-scripting | 2021.1 |`1.5.2`
 GDX_COLLECTIONS | com.unity.collections | _n/a_ | `1.2.3`
 
 > [!NOTE]

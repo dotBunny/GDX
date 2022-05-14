@@ -3,7 +3,7 @@ uid: features
 ---
 # Features
 
-This is an overview of *some of* the notable features contained within the `GDX` package. For a more thorough list of functionality make sure to explore the [API documentation](/api/index.html) directly.
+This is an overview of *some of* the notable features contained within the `GDX` package. For a more thorough list of functionality make sure to explore the [API documentation](/api/GDX.html) directly.
 
 ## Extensions
 
