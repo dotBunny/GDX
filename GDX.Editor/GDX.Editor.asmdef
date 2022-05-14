@@ -32,7 +32,7 @@
         },
         {
             "name": "com.unity.visualscripting",
-            "expression": "1.52",
+            "expression": "1.5.2",
             "define": "GDX_VISUALSCRIPTING"
         },
         {
