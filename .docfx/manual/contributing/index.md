@@ -4,9 +4,9 @@ Thank you for your interest in contributing to GDX! :heart:
 
 > While the `GDX` package has Unity employees amongst its contributors, it is **not officially supported by Unity**, and it is not on Unity's roadmap.
 
-## [Code of Conduct](/manual/contributing/code-of-conduct.html)
+## [Automation](/manual/contributing/automation.html)
 
-GitHub generated a nice and concise code of conduct agreement for the project. Let us be very explicit: **don't be an asshole**. Good and bad days happen, but the goal is to move forward together.
+An overview of the automation that is ran in TeamCity against all commits to `GDX`.
 
 ## [Coding Standard](/manual/contributing/coding-standard.html)
 

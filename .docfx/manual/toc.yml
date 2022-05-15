@@ -1,28 +1,32 @@
 - name: Getting Started
-  href: getting-started.md
+  href: getting-started\index.md
+  items:
+    - name: Visual Scripting
+      href: getting-started\visual-scripting.md
 - name: Features
-  href: features.md
+  href: features\index.md
   items:
   - name: Serializable Dictionary
     href: features\serializable-dictionary.md
-  - name: Visual Scripting
-    href: features\visual-scripting.md
 - name: Requirements
   href: requirements.md
 - name: Contributing
-  href: contributing.md
+  href: contributing\index.md
   items:
-    - name: Code Of Conduct
-      href: contributing\code-of-conduct.md
     - name: Coding Standard
       href: contributing\coding-standard.md
+    - name: Automation
+      href: contributing\automation.md
     - name: Documentation
       href: contributing\documentation.md
     - name: Agile Board
       href: https://dotbunny.myjetbrains.com/youtrack/agiles/99-15/current
-- name: Automation
-  href: automation.md
-- name: Security Policy
-  href: security.md
+- name: Policies
+  href: policy\index.md
+  items:
+    - name: Code Of Conduct
+      href: contributing\code-of-conduct.md
+    - name: Security
+      href: security.md
 - name: FAQ
   href: faq.md
