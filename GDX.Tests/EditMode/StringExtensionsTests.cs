@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Text;
+using GDX.Collections.Generic;
 using NUnit.Framework;
 
 namespace GDX
@@ -356,7 +357,7 @@ namespace GDX
 
         [Test]
         [Category(Core.TestCategory)]
-        public void PartialMatch_Simple_Found()
+        public void PartialMatch_StringArray_Found()
         {
             string[] preString = new[] { "one", "two", "three" };
             Assert.IsTrue(preString.PartialMatch("re"));
@@ -364,9 +365,25 @@ namespace GDX
 
         [Test]
         [Category(Core.TestCategory)]
-        public void PartialMatch_Simple_NotFound()
+        public void PartialMatch_StringArray_NotFound()
         {
             string[] preString = new[] { "one", "two", "three" };
+            Assert.IsFalse(preString.PartialMatch("happy"));
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void PartialMatch_SimpleList_Found()
+        {
+            SimpleList<string> preString = new SimpleList<string>(new[] { "one", "two", "three" });
+            Assert.IsTrue(preString.PartialMatch("re"));
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void PartialMatch_SimpleList_NotFound()
+        {
+            SimpleList<string> preString = new SimpleList<string>(new[] { "one", "two", "three" });
             Assert.IsFalse(preString.PartialMatch("happy"));
         }
     }
