@@ -342,7 +342,6 @@ namespace GDX.Editor
                     Reflection.InternalStaticFlags);
             }
 
-            EditorUtility.FocusProjectWindow();
             if (returnWindow == null)
             {
                 Trace.Output(Trace.TraceLevel.Error, "Unable to get editor window for Game View");

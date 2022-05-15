@@ -39,8 +39,18 @@ namespace GDX.Editor
         [Category(Core.TestCategory)]
         public void CaptureFocusedEditorWindow_ReturnsTexture()
         {
-            EditorUtility.FocusProjectWindow();
-            Texture2D targetTexture = Automation.CaptureFocusedEditorWindow();
+            EditorApplication.ExecuteMenuItem("Window/General/Game");
+
+            Texture2D targetTexture = null;
+            EditorWindow gameView = Automation.GetGameView();
+
+            Assert.IsTrue(gameView != null, "Expected game view reference.");
+
+            gameView.Focus();
+            Assert.IsTrue(gameView.hasFocus, "Game view doesn't think it has focus.");
+
+            Assert.IsTrue(EditorWindow.focusedWindow == gameView, "Expected game view to be focused.");
+            targetTexture = Automation.CaptureFocusedEditorWindow();
 
             Assert.IsTrue(targetTexture != null, "Returned texture is null.");
         }
@@ -49,7 +59,16 @@ namespace GDX.Editor
         [Category(Core.TestCategory)]
         public void CaptureFocusedEditorWindowToPNG_OutputsImage()
         {
-            EditorUtility.FocusProjectWindow();
+            EditorApplication.ExecuteMenuItem("Window/General/Game");
+
+            EditorWindow gameView = Automation.GetGameView();
+            Assert.IsTrue(gameView != null, "Expected game view reference.");
+
+            gameView.Focus();
+            Assert.IsTrue(gameView.hasFocus, "Game view doesn't think it has focus.");
+
+            Assert.IsTrue(EditorWindow.focusedWindow != null, "Expected game view to be focused.");
+
             string outputPath = Platform.GetUniqueOutputFilePath("CaptureFocusedEditorWindowToPNG_OutputsImage-",
                 ".png", Config.PlatformAutomationFolder);
 
