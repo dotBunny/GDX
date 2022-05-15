@@ -337,10 +337,37 @@ namespace GDX
             Assert.IsTrue(evaluate);
         }
 
+        [Test]
+        [Category(Core.TestCategory)]
+        public void Concatenate_Simple_NoSuffix()
+        {
+            string[] preString = new[] { "one", "two", "three" };
+            string concat = preString.Concatenate(",");
+            Assert.IsTrue(concat == "one,two,three", $"Unexpected results: {concat}");
+        }
+        [Test]
+        [Category(Core.TestCategory)]
+        public void Concatenate_Simple_Suffix()
+        {
+            string[] preString = new[] { "one", "two", "three" };
+            string concat = preString.Concatenate(",", true);
+            Assert.IsTrue(concat == "one,two,three,", $"Unexpected results: {concat}");
+        }
 
+        [Test]
+        [Category(Core.TestCategory)]
+        public void PartialMatch_Simple_Found()
+        {
+            string[] preString = new[] { "one", "two", "three" };
+            Assert.IsTrue(preString.PartialMatch("re"));
+        }
 
-
-
-
+        [Test]
+        [Category(Core.TestCategory)]
+        public void PartialMatch_Simple_NotFound()
+        {
+            string[] preString = new[] { "one", "two", "three" };
+            Assert.IsFalse(preString.PartialMatch("happy"));
+        }
     }
 }
