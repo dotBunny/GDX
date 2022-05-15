@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace GDX
 {
@@ -10,6 +11,7 @@ namespace GDX
     ///     Indicate that the tagged <see langword="class" /> should be considered for use with Visual Scripting.
     /// </summary>
     [HideFromDocFX]
+    [ExcludeFromCodeCoverage]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
     public sealed class VisualScriptingCompatibleAttribute : Attribute
     {
