@@ -2,6 +2,10 @@ using System;
 
 namespace GDX.Collections.Generic
 {
+    /// <summary>
+    ///     An optimized <see cref="System.Collections.Generic.Dictionary{T,T}" />-like data structure with a
+    ///     <see cref="string"/> key requirement.
+    /// </summary>
     [Serializable]
     public struct StringKeyDictionary<TValue>
     {

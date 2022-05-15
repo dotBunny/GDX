@@ -7,7 +7,7 @@ using GDX.Collections.Pooling;
 namespace GDX.Collections.Generic
 {
     /// <summary>
-    ///     A <see cref="System.Collections.Generic.List{T}" />-like data structure.
+    ///     An optimized <see cref="System.Collections.Generic.List{T}" />-like data structure.
     /// </summary>
     /// <typeparam name="T">The type of the <see cref="object" />s contained within.</typeparam>
     [VisualScriptingCompatible(1)]

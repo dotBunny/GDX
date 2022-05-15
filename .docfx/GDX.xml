@@ -1133,7 +1133,7 @@
         </member>
         <member name="T:GDX.Collections.Generic.SimpleList`1">
             <summary>
-                A System.Collections.Generic.List`1-like data structure.
+                An optimized System.Collections.Generic.List`1-like data structure.
             </summary>
             <typeparam name="T">The type of the System.Objects contained within.</typeparam>
         </member>
@@ -1392,6 +1392,12 @@
             </summary>
             <param name="idx">A flat array index.</param>
             <returns>A 3-Dimensional voxel index.</returns>
+        </member>
+        <member name="T:GDX.Collections.Generic.StringKeyDictionary`1">
+            <summary>
+                An optimized System.Collections.Generic.Dictionary`2-like data structure with a
+                System.String key requirement.
+            </summary>
         </member>
         <member name="M:GDX.Collections.Generic.StringKeyDictionary`1.#ctor(System.Int32)">
             <summary>
