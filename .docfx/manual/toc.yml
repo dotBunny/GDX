@@ -20,7 +20,7 @@
     - name: Documentation
       href: contributing\documentation.md
     - name: Agile Board
-      href: https://dotbunny.myjetbrains.com/youtrack/agiles/99-15/current
+      href: https://dotbunny.youtrack.cloud/youtrack/agiles/99-15/current
 - name: Policies
   href: policy\index.md
   items:
