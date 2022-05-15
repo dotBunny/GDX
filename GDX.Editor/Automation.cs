@@ -147,6 +147,13 @@ namespace GDX.Editor
         public static bool CaptureFocusedEditorWindowToPNG(string outputPath)
 #pragma warning restore IDE1006
         {
+            if (EditorWindow.focusedWindow == null)
+            {
+                Trace.Output(Trace.TraceLevel.Info, "No editor window is focused.");
+                return false;
+            }
+
+
             Texture2D texture = CaptureFocusedEditorWindow();
             if (texture == null)
             {

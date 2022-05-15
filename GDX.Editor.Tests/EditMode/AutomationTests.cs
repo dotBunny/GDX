@@ -45,6 +45,8 @@ namespace GDX.Editor
             if (gameView != null)
             {
                 gameView.Focus();
+                Assert.IsTrue(gameView.hasFocus, "Game view doesn't think it has focus.");
+                Assert.IsTrue(EditorWindow.focusedWindow == gameView, "Expected game view to be focused.");
                 targetTexture = Automation.CaptureFocusedEditorWindow();
             }
 
@@ -56,11 +58,18 @@ namespace GDX.Editor
         [Category(Core.TestCategory)]
         public void CaptureFocusedEditorWindowToPNG_OutputsImage()
         {
-            Automation.GetGameView().Focus();
-            string outputPath = Platform.GetUniqueOutputFilePath("CaptureFocusedEditorWindowToPNG_OutputsImage-",".png", Config.PlatformAutomationFolder);
-            bool execute = Automation.CaptureFocusedEditorWindowToPNG(outputPath);
-            bool evaluate = execute && File.Exists(outputPath);
-            Assert.IsTrue(evaluate);
+            EditorWindow gameView = Automation.GetGameView();
+            Assert.IsTrue(gameView != null, "Expected game view reference.");
+
+            gameView.Focus();
+            Assert.IsTrue(gameView.hasFocus, "Game view doesn't think it has focus.");
+            Assert.IsTrue(EditorWindow.focusedWindow != null, "Expected game view to be focused.");
+
+            string outputPath = Platform.GetUniqueOutputFilePath("CaptureFocusedEditorWindowToPNG_OutputsImage-",
+                ".png", Config.PlatformAutomationFolder);
+
+            Assert.IsTrue(Automation.CaptureFocusedEditorWindowToPNG(outputPath) && File.Exists(outputPath),
+                "Expected capture / file existed.");
         }
 
         [Test]
