@@ -13,8 +13,17 @@ namespace GDX
     /// <remarks>Torn about the existence of this utility class, yet alone the conditions dictating it.</remarks>
     public static class Reflection
     {
+        /// <summary>
+        ///     <see cref="BindingFlags"/> for a private field.
+        /// </summary>
         public const BindingFlags PrivateFieldFlags = BindingFlags.Instance | BindingFlags.NonPublic;
+        /// <summary>
+        ///     <see cref="BindingFlags"/> for an internal static.
+        /// </summary>
         public const BindingFlags InternalStaticFlags = BindingFlags.Static | BindingFlags.NonPublic;
+        /// <summary>
+        ///     <see cref="BindingFlags"/> for a public static.
+        /// </summary>
         public const BindingFlags PublicStaticFlags = BindingFlags.Static | BindingFlags.Public;
 
         /// <summary>
@@ -124,13 +133,12 @@ namespace GDX
                 {
                     continue;
                 }
-                MethodInfo targetMethod = targetType.GetMethod(method, flags);
 
+                MethodInfo targetMethod = targetType.GetMethod(method, flags);
                 if (targetMethod != null)
                 {
                     return targetMethod.Invoke(null, parameters ?? Core.EmptyObjectArray);
                 }
-                break;
             }
             return null;
         }
