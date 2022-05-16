@@ -17,6 +17,19 @@ namespace GDX
         public const BindingFlags InternalStaticFlags = BindingFlags.Static | BindingFlags.NonPublic;
         public const BindingFlags PublicStaticFlags = BindingFlags.Static | BindingFlags.Public;
 
+        /// <summary>
+        ///     Returns the default value for a given type.
+        /// </summary>
+        /// <param name="type">A qualified type.</param>
+        /// <returns>The default value.</returns>
+        public static object GetDefault(this Type type)
+        {
+            if (type.IsClass || !type.IsValueType)
+            {
+                return null;
+            }
+            return Activator.CreateInstance(type);
+        }
 
         /// <summary>
         ///     Access the field value of a specific <paramref name="targetObject"/>, which may not be normally accessible.
@@ -45,30 +58,52 @@ namespace GDX
             return default;
         }
 
-        public static object GetFieldOrPropertyValue(object source, string name,
+        /// <summary>
+        ///     Access the field or property value of a specific <paramref name="targetObject"/>, which may not be
+        ///     normally accessible.
+        /// </summary>
+        /// <remarks>Useful for when you really do not know the <see cref="System.Type"/>.</remarks>
+        /// <param name="targetObject">The instanced object which will have it's field or property value read.</param>
+        /// <param name="name">The field or property's name to read.</param>
+        /// <param name="fieldFlags">The field's access flags.</param>
+        /// <param name="propertyFlags">The property's access flags.</param>
+        /// <returns>The field/property value.</returns>
+        public static object GetFieldOrPropertyValue(object targetObject, string name,
             BindingFlags fieldFlags = PrivateFieldFlags, BindingFlags propertyFlags = PrivateFieldFlags)
         {
-            if (source == null)
+            if (targetObject == null)
                 return null;
-            Type type = source.GetType();
+            Type type = targetObject.GetType();
             FieldInfo f = type.GetField(name, fieldFlags);
             if (f != null)
             {
-                return f.GetValue(source);
+                return f.GetValue(targetObject);
             }
 
             PropertyInfo p = type.GetProperty(name,propertyFlags);
-            return p == null ? null : p.GetValue(source, null);
+            return p == null ? null : p.GetValue(targetObject, null);
         }
 
-        public static object GetDefault(this Type type)
+        /// <summary>
+        ///     Returns a qualified type..
+        /// </summary>
+        /// <param name="type">The full name of a type.</param>
+        /// <returns>A <see cref="System.Type"/> if found.</returns>
+        public static Type GetType(string type)
         {
-            if (!type.IsValueType)
+            Assembly[] loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+            int loadedAssembliesCount = loadedAssemblies.Length;
+            for (int i = 0; i < loadedAssembliesCount; i++)
             {
-                return null;
+                Type targetType = loadedAssemblies[i].GetType(type);
+                if (targetType != null)
+                {
+                    return targetType;
+                }
             }
-            return default;
+            return null;
         }
+
         /// <summary>
         ///     Invokes a known static method.
         /// </summary>
