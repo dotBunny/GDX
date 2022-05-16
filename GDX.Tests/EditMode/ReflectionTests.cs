@@ -17,7 +17,7 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void GetDefault_Nullable_ReturnsNull()
         {
-            Assert.IsTrue(typeof(UnityEditor.EditorWindow).GetDefault() == null, "A null value was expected.");
+            Assert.IsTrue(typeof(EditorWindow).GetDefault() == null, "A null value was expected.");
         }
 
         [Test]
@@ -47,7 +47,17 @@ namespace GDX
 
         [Test]
         [Category(Core.TestCategory)]
-        public void GetFieldOrPropertyValue_ProjectBrowser_ReturnsStartGridSize()
+        public void GetFieldOrPropertyValue_NoTarget_ReturnsNull()
+        {
+            object missedObject = Reflection.GetFieldOrPropertyValue(
+                null, "UnityEditor.ProjectBrowser");
+
+            Assert.IsTrue(missedObject == null, "Expected null value when no target.");
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void GetFieldOrPropertyValue_ProjectBrowserField_ReturnsStartGridSize()
         {
             System.Type projectBrowser = Reflection.GetType("UnityEditor.ProjectBrowser");
             Assert.IsTrue(projectBrowser != null, "Expected to be able to find UnityEditor.ProjectBrowser type");
@@ -59,6 +69,22 @@ namespace GDX
                 projectBrowserWindow, "m_StartGridSize");
 
             Assert.IsTrue(gridSize != null, "Expected non-null value for m_StartGridSize");
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void GetFieldOrPropertyValue_ProjectBrowserProperty_ReturnsIsLocked()
+        {
+            System.Type projectBrowser = Reflection.GetType("UnityEditor.ProjectBrowser");
+            Assert.IsTrue(projectBrowser != null, "Expected to be able to find UnityEditor.ProjectBrowser type");
+
+            EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
+            Assert.IsTrue(projectBrowserWindow != null, "Expected reference to ProjectBrowser");
+
+            object toggle = Reflection.GetFieldOrPropertyValue(
+                projectBrowserWindow, "isLocked");
+
+            Assert.IsTrue(toggle != null, "Expected non-null value for isLocked");
         }
 
         [Test]
