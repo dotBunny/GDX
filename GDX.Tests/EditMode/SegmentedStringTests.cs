@@ -37,7 +37,8 @@ namespace GDX
                             "favorite".GetStableLowerCaseHashCode() == splitString.GetHashCode(2) &&
                             "G".GetStableLowerCaseHashCode() == splitString.GetHashCode(7);
 
-            Assert.IsTrue(evaluate, $"{"Hello".GetStableLowerCaseHashCode()} == {splitString.GetHashCode(0)}");
+            Assert.IsTrue(evaluate,
+                $"{"Hello".GetStableLowerCaseHashCode().ToString()} == {splitString.GetHashCode(0).ToString()}");
         }
     }
 }

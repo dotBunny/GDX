@@ -123,7 +123,7 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void InvokeStaticMethod_ProjectBrowser_ReturnsListOfBrowsers()
         {
-            object response = Reflection.InvokeStaticMethod($"UnityEditor.ProjectBrowser", "GetAllProjectBrowsers");
+            object response = Reflection.InvokeStaticMethod("UnityEditor.ProjectBrowser", "GetAllProjectBrowsers");
             Assert.IsTrue(response != null);
         }
 
@@ -131,7 +131,7 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void InvokeStaticMethod_BadType_ReturnsNull()
         {
-            object response = Reflection.InvokeStaticMethod($"UnityEditor.ProjectBrowserBad", "GetAllProjectBrowsersBad");
+            object response = Reflection.InvokeStaticMethod("UnityEditor.ProjectBrowserBad", "GetAllProjectBrowsersBad");
             Assert.IsTrue(response == null);
         }
     }

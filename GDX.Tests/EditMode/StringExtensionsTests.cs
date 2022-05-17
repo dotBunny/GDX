@@ -373,6 +373,13 @@ namespace GDX
 
         [Test]
         [Category(Core.TestCategory)]
+        public void PartialMatch_NullStringArray_NotFound()
+        {
+            Assert.IsFalse(StringExtensions.PartialMatch(null, "happy"));
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
         public void PartialMatch_SimpleList_Found()
         {
             SimpleList<string> preString = new SimpleList<string>(new[] { "one", "two", "three" }) { Count = 3 };
@@ -384,6 +391,14 @@ namespace GDX
         public void PartialMatch_SimpleList_NotFound()
         {
             SimpleList<string> preString = new SimpleList<string>(new[] { "one", "two", "three" }) { Count = 3 };
+            Assert.IsFalse(preString.PartialMatch("happy"));
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void PartialMatch_EmptySimpleList_NotFound()
+        {
+            SimpleList<string> preString = new SimpleList<string>();
             Assert.IsFalse(preString.PartialMatch("happy"));
         }
     }
