@@ -129,6 +129,15 @@ namespace GDX
 
         [Test]
         [Category(Core.TestCategory)]
+        [Category(Core.TestCategory)]
+        public void InvokeStaticMethod_BadMethod_ReturnsNull()
+        {
+            object response = Reflection.InvokeStaticMethod("UnityEditor.ProjectBrowser", "GetAllProjectBrowsersBad");
+            Assert.IsTrue(response == null);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
         public void InvokeStaticMethod_BadType_ReturnsNull()
         {
             object response = Reflection.InvokeStaticMethod("UnityEditor.ProjectBrowserBad", "GetAllProjectBrowsersBad");

@@ -13,7 +13,7 @@ namespace GDX
     public struct SegmentedString
     {
         /// <summary>
-        ///     The array of characters.
+        ///     The intial array of characters.
         /// </summary>
         char[] m_Characters;
 

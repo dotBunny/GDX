@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using GDX.Collections.Generic;
 using GDX.Mathematics.Random;
 #if UNITY_EDITOR
@@ -44,6 +45,7 @@ namespace GDX
         ///     Static constructor.
         /// </summary>
         /// <remarks>Nothing in here can reference the Unity engine and must be thread-safe.</remarks>
+        [ExcludeFromCodeCoverage]
         static Core()
         {
             // Record initialization time.
@@ -57,8 +59,6 @@ namespace GDX
             Random = new WELL1024a((uint)StartTicks);
 
             DictionaryPrimes.SetDefaultPrimes();
-
-            // Create unload disposal
 
             // ReSharper disable UnusedParameter.Local
             AppDomain.CurrentDomain.DomainUnload += (sender, args) =>

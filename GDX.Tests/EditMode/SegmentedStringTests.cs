@@ -15,6 +15,66 @@ namespace GDX
 
         [Test]
         [Category(Core.TestCategory)]
+        public void AsCharArray_MockData_ReturnsAll()
+        {
+            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
+            char[] data = splitString.AsCharArray();
+            Assert.IsTrue(data != null && data.Length == 39);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void AsCharArray_MockDataSpecific_ReturnsTarget()
+        {
+            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
+            Assert.IsTrue(splitString.AsCharArray(0)[2] == 'l');
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void AsString_MockData_ReturnsLowered()
+        {
+            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
+            string data = splitString.AsString();
+            Assert.IsTrue(data != null && data == m_TestContent.ToLower());
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void GetCount_MockData_Correct()
+        {
+            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLower(m_TestContent);
+            Assert.IsTrue(splitString.GetCount() == 8);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void GetHashCode_MockData_Correct()
+        {
+            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
+            int hash = splitString.GetHashCode();
+            Assert.IsTrue(hash == -316307395, $"Expected -316307395, but found {hash.ToString()}.");
+        }
+        [Test]
+        [Category(Core.TestCategory)]
+        public void GetOffset_MockData_Valid()
+        {
+            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
+            int offset = splitString.GetOffset(1);
+            Assert.IsTrue(offset ==6, $"Expected 6, but found {offset.ToString()}.");
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void GetSegmentLength_MockData_CorrectCount()
+        {
+            SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
+            int length = splitString.GetSegmentLength(1);
+            Assert.IsTrue(length ==2, $"Expected 2, but found {length.ToString()}.");
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
         public void GetSegment_MockData_Matches()
         {
             SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
