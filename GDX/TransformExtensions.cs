@@ -27,19 +27,27 @@ namespace GDX
         ///     will be destroyed at the end of the frame.
         /// </param>
         /// <param name="destroyInactive">Should inactive <see cref="GameObject" /> be destroyed as well?</param>
+        /// <param name="immediateMode">Should the destroy be done immediately? This is useful for author time calls.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void DestroyChildren(this Transform targetTransform, bool deactivateBeforeDestroy = true,
-            bool destroyInactive = true)
+            bool destroyInactive = true, bool immediateMode = false)
         {
             int count = targetTransform.childCount;
-            for (int i = 0; i < count; i++)
+            for (int i = count - 1; i >= 0; i--)
             {
                 GameObject childObject = targetTransform.GetChild(i).gameObject;
                 if (!destroyInactive && !childObject.activeInHierarchy) continue;
 
                 if (deactivateBeforeDestroy) childObject.SetActive(false);
 
-                Object.Destroy(childObject);
+                if (immediateMode)
+                {
+                    Object.DestroyImmediate(childObject);
+                }
+                else
+                {
+                    Object.Destroy(childObject);
+                }
             }
         }
 

@@ -40,10 +40,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Flagged `DisableInInspectorAttributePropertyDrawer` to only use UIElements version with `UNITY_2022_2_OR_NEWER`.
 - `GenerateProjectFiles` now has more macOS options.
 - The Camera extension method `CaptureToPNG()` has been renamed `RenderToPNG()` to reflect better its actual actions.
+- `TransformExtensions::DestroyChildren()` now has an immediate mode to remove children at author time.
 
 ### Fixed  
 
 - `Platform::IsFocused()` now returns the proper focus state on desktop platforms.
+- `TransformExtensions::DestroyChildren()` no longer has issues with child counts.
 
 ### Removed
 

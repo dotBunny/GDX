@@ -8,7 +8,6 @@ namespace GDX
 {
     /// <summary>
     ///     A collection of unit tests to validate functionality of arrays.
-    ///     class.
     /// </summary>
     public class ArrayExtensionsTests
     {

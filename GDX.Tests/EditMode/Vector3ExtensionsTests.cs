@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Globalization;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -77,6 +78,24 @@ namespace GDX
             Assert.IsTrue(evaluate);
         }
 
+        [Test]
+        [Category(Core.TestCategory)]
+        public void DistanceToRay_MockData_ReturnsAccurate()
+        {
+            Ray ray = new Ray(Vector3.one, Vector3.up);
+            float distance = Vector3.zero.DistanceToRay(ray);
+            Assert.IsTrue(Mathf.Approximately(distance, 1.414214f),
+                $"Expected a distance of 1.414214f, but was {distance.ToString(CultureInfo.InvariantCulture)}");
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void HorizontalDistance_MockData_ReturnsAccurate()
+        {
+            float distance = Vector3.zero.HorizontalDistance(Vector3.one);
+            Assert.IsTrue(Mathf.Approximately(distance, 1.414214f),
+                $"Expected a distance of 1f, but was {distance.ToString(CultureInfo.InvariantCulture)}");
+        }
 
         [Test]
         [Category(Core.TestCategory)]
