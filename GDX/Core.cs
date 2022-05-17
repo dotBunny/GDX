@@ -36,11 +36,6 @@ namespace GDX
         public static readonly long StartTicks;
 
         /// <summary>
-        ///     Has the <see cref="Core"/> been initialized?
-        /// </summary>
-        static bool s_Initialized;
-
-        /// <summary>
         ///     Has the <see cref="Core"/> main thread initialization happened?
         /// </summary>
         static bool s_InitializedMainThread;
@@ -53,21 +48,6 @@ namespace GDX
         {
             // Record initialization time.
             StartTicks = DateTime.Now.Ticks;
-
-            // Immediately execute the proper initialization process
-            Initialize();
-        }
-
-        /// <summary>
-        ///     Static initializer
-        /// </summary>
-        /// <remarks>Nothing in here can reference the Unity engine and must be thread-safe.</remarks>
-        static void Initialize()
-        {
-            if (s_Initialized)
-            {
-                return;
-            }
 
             // The assemblies will change between editor time and compile time so we are going to unfortunately pay a
             // cost to iterate over them and try to find our settings class
@@ -83,13 +63,9 @@ namespace GDX
             // ReSharper disable UnusedParameter.Local
             AppDomain.CurrentDomain.DomainUnload += (sender, args) =>
             {
-                if (s_Initialized)
-                {
-                    Random.Dispose();
-                }
+                Random.Dispose();
             };
             // ReSharper restore UnusedParameter.Local
-            s_Initialized = true;
         }
 
         /// <summary>

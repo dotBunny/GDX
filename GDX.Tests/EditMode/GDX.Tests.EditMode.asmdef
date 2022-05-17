@@ -2,10 +2,10 @@
     "name": "GDX.Tests.EditMode",
     "rootNamespace": "GDX",
     "references": [
-        "Unity.PerformanceTesting",
         "GDX",
         "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner"
+        "UnityEditor.TestRunner",
+        "Unity.PerformanceTesting"
     ],
     "includePlatforms": [
         "Editor"

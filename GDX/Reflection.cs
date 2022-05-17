@@ -129,15 +129,16 @@ namespace GDX
             for (int i = 0; i < loadedAssembliesCount; i++)
             {
                 Type targetType = loadedAssemblies[i].GetType(type);
-                if (targetType == null)
-                {
-                    continue;
-                }
 
-                MethodInfo targetMethod = targetType.GetMethod(method, flags);
-                if (targetMethod != null)
+                // For code coverage purposes were not going to invert this!
+                // ReSharper disable once InvertIf
+                if (targetType != null)
                 {
-                    return targetMethod.Invoke(null, parameters ?? Core.EmptyObjectArray);
+                    MethodInfo targetMethod = targetType.GetMethod(method, flags);
+                    if (targetMethod != null)
+                    {
+                        return targetMethod.Invoke(null, parameters ?? Core.EmptyObjectArray);
+                    }
                 }
             }
             return null;

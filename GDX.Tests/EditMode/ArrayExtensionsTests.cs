@@ -45,10 +45,37 @@ namespace GDX
         {
             string[] mockArray = { "hello", "jello", "baby" };
 
-            bool evaluate = mockArray.ContainsValue("bob");
+            bool evaluate = mockArray.ContainsItem("bob");
 
             Assert.IsFalse(evaluate);
         }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void ContainsReference_MockData_HasReference()
+        {
+            string checkObject = "object";
+
+            string[] mockArray = { "hello", "jello", "baby", checkObject };
+
+            bool evaluate = mockArray.ContainsReference(checkObject);
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void ContainsReference_MockData_NoReference()
+        {
+            string checkObject = "object";
+
+            string[] mockArray = { "hello", "jello", "baby" };
+
+            bool evaluate = mockArray.ContainsReference(checkObject);
+
+            Assert.IsFalse(evaluate);
+        }
+
 
         [Test]
         [Category(Core.TestCategory)]
