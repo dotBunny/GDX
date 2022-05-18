@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using NUnit.Framework;
 
 namespace GDX.Mathematics.Random
@@ -90,6 +91,45 @@ namespace GDX.Mathematics.Random
             bool evaluate = a >= 0 && a <= 10 &&
                             b >= 0 && b <= 10 &&
                             c >= 0 && c <= 10;
+            mockWell.Dispose();
+            Assert.IsTrue(evaluate);
+        }
+
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void NextDouble_MockData_DifferentValues()
+        {
+            WELL1024a mockWell = new WELL1024a(WELL1024aTests.MockSeed);
+
+            RandomAdaptor random1 = new RandomAdaptor(mockWell);
+
+            double a = random1.NextDouble();
+            double b = random1.NextDouble();
+
+            mockWell.Dispose();
+            Assert.IsTrue(Math.Abs(a - b) > Platform.FloatTolerance);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void NextDouble_ProvideBytes_FillsBuffer()
+        {
+            WELL1024a mockWell = new WELL1024a(WELL1024aTests.MockSeed);
+            RandomAdaptor random1 = new RandomAdaptor(mockWell);
+
+            byte[] buffer = new byte[10];
+            random1.NextBytes(buffer);
+
+            bool evaluate = false;
+            foreach (byte b in buffer)
+            {
+                if (b != 0)
+                {
+                    evaluate = true;
+                    break;
+                }
+            }
             mockWell.Dispose();
             Assert.IsTrue(evaluate);
         }

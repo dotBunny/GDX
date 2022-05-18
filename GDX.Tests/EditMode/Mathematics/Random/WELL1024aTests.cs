@@ -107,6 +107,27 @@ namespace GDX.Mathematics.Random
 
         [Test]
         [Category(Core.TestCategory)]
+        public void Equals_ByReference_ReturnsTrue()
+        {
+            Assert.IsTrue(Core.Random.Equals(ref Core.Random));
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void Equals_Reference_ReturnsTrue()
+        {
+            Assert.IsTrue(Core.Random.Equals(Core.Random));
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void Equals_Object_ReturnsTrue()
+        {
+            Assert.IsTrue(Core.Random.Equals((object)Core.Random));
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
         public void NextBoolean_ZeroChance_ReturnsFalse()
         {
             WELL1024a mockWell = new WELL1024a(MockSeed);
@@ -333,6 +354,33 @@ namespace GDX.Mathematics.Random
             mockWell.Dispose();
             Assert.IsTrue(evaluate);
         }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void NextUnsignedIntegerExclusive_Simple_ReturnsDeterministicValue()
+        {
+            WELL1024a mockWell = new WELL1024a(MockSeed);
+            uint nextValue = mockWell.NextUnsignedIntegerExclusive();
+
+            bool evaluate = nextValue == 3843823993;
+
+            mockWell.Dispose();
+            Assert.IsTrue(evaluate, $"Expected 3843823993, but got {nextValue.ToString()}");
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void NextUnsignedIntegerExclusive_Limited_ReturnsDeterministicValue()
+        {
+            WELL1024a mockWell = new WELL1024a(MockSeed);
+            uint nextValue = mockWell.NextUnsignedIntegerExclusive(1, 2);
+
+            bool evaluate = nextValue == 1;
+
+            mockWell.Dispose();
+            Assert.IsTrue(evaluate);
+        }
+
 
         [Test]
         [Category(Core.TestCategory)]
