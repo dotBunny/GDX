@@ -25,55 +25,48 @@ namespace GDX.Editor
             code.AppendLine($"public static void {Core.OverrideMethod}()");
             code.PushIndent();
 
-            AddToGenerator(code, "ConfigOutputPath",
-                ConfigDefaults.ConfigOutputPath, rhs.ConfigOutputPath);
-            AddToGenerator(code, "UpdateProviderCheckForUpdates",
-                ConfigDefaults.UpdateProviderCheckForUpdates, rhs.UpdateProviderCheckForUpdates);
-            AddToGenerator(code, "DeveloperCommandLineParserArgumentPrefix",
-                ConfigDefaults.DeveloperCommandLineParserArgumentPrefix, rhs.DeveloperCommandLineParserArgumentPrefix);
-            AddToGenerator(code, "DeveloperCommandLineParserArgumentSplit",
-                ConfigDefaults.DeveloperCommandLineParserArgumentSplit, rhs.DeveloperCommandLineParserArgumentSplit);
+            AddToGenerator(code, "ConfigOutputPath", Config.k_ConfigOutputPathDefault, rhs.ConfigOutputPath);
             AddToGenerator(code, "DeveloperBuildInfoAssemblyDefinition",
-                ConfigDefaults.DeveloperBuildInfoAssemblyDefinition, rhs.DeveloperBuildInfoAssemblyDefinition);
-            AddToGenerator(code, "DeveloperBuildInfoEnabled",
-                ConfigDefaults.DeveloperBuildInfoEnabled, rhs.DeveloperBuildInfoEnabled);
-            AddToGenerator(code, "DeveloperBuildInfoPath",
-                ConfigDefaults.DeveloperBuildInfoPath, rhs.DeveloperBuildInfoPath);
-            AddToGenerator(code, "DeveloperBuildInfoNamespace",
-                ConfigDefaults.DeveloperBuildInfoNamespace, rhs.DeveloperBuildInfoNamespace);
-            AddToGenerator(code, "DeveloperBuildInfoBuildNumberArgument",
-                ConfigDefaults.DeveloperBuildInfoBuildNumberArgument, rhs.DeveloperBuildInfoBuildNumberArgument);
-            AddToGenerator(code, "DeveloperBuildInfoBuildDescriptionArgument",
-                ConfigDefaults.DeveloperBuildInfoBuildDescriptionArgument, rhs.DeveloperBuildInfoBuildDescriptionArgument);
+                Config.k_DeveloperBuildInfoAssemblyDefinitionDefault, rhs.DeveloperBuildInfoAssemblyDefinition);
             AddToGenerator(code, "DeveloperBuildInfoBuildChangelistArgument",
-                ConfigDefaults.DeveloperBuildInfoBuildChangelistArgument, rhs.DeveloperBuildInfoBuildChangelistArgument);
-            AddToGenerator(code, "DeveloperBuildInfoBuildTaskArgument",
-                ConfigDefaults.DeveloperBuildInfoBuildTaskArgument, rhs.DeveloperBuildInfoBuildTaskArgument);
+                Config.k_DeveloperBuildInfoBuildChangelistArgumentDefault, rhs.DeveloperBuildInfoBuildChangelistArgument);
+            AddToGenerator(code, "DeveloperBuildInfoBuildDescriptionArgument",
+                Config.k_DeveloperBuildInfoBuildDescriptionArgumentDefault, rhs.DeveloperBuildInfoBuildDescriptionArgument);
+            AddToGenerator(code, "DeveloperBuildInfoBuildNumberArgument",
+                Config.k_DeveloperBuildInfoBuildNumberArgumentDefault, rhs.DeveloperBuildInfoBuildNumberArgument);
             AddToGenerator(code, "DeveloperBuildInfoBuildStreamArgument",
-                ConfigDefaults.DeveloperBuildInfoBuildStreamArgument, rhs.DeveloperBuildInfoBuildStreamArgument);
+                Config.k_DeveloperBuildInfoBuildStreamArgumentDefault, rhs.DeveloperBuildInfoBuildStreamArgument);
+            AddToGenerator(code, "DeveloperBuildInfoBuildTaskArgument",
+                Config.k_DeveloperBuildInfoBuildTaskArgumentDefault, rhs.DeveloperBuildInfoBuildTaskArgument);
+            AddToGenerator(code, "DeveloperBuildInfoEnabled",
+                Config.k_DeveloperBuildInfoEnabledDefault, rhs.DeveloperBuildInfoEnabled);
+            AddToGenerator(code, "DeveloperBuildInfoNamespace",
+                Config.k_DeveloperBuildInfoNamespaceDefault, rhs.DeveloperBuildInfoNamespace);
+            AddToGenerator(code, "DeveloperBuildInfoPath",
+                Config.k_DeveloperBuildInfoPathDefault, rhs.DeveloperBuildInfoPath);
+            AddToGenerator(code, "DeveloperCommandLineParserArgumentPrefix",
+                Config.k_DeveloperCommandLineParserArgumentPrefixDefault, rhs.DeveloperCommandLineParserArgumentPrefix);
+            AddToGenerator(code, "DeveloperCommandLineParserArgumentSplit",
+                Config.k_DeveloperCommandLineParserArgumentSplitDefault, rhs.DeveloperCommandLineParserArgumentSplit);
             AddToGenerator(code, "EnvironmentScriptingDefineSymbol",
-                ConfigDefaults.EnvironmentScriptingDefineSymbol, rhs.EnvironmentScriptingDefineSymbol);
-
-            AddToGenerator(code, "PlatformAutomationFolder",
-                ConfigDefaults.PlatformAutomationFolder, rhs.PlatformAutomationFolder);
-            AddToGenerator(code, "PlatformCacheFolder",
-                ConfigDefaults.PlatformCacheFolder, rhs.PlatformCacheFolder);
-
-            AddToGenerator(code, "TraceDevelopmentLevels",
-                ConfigDefaults.TraceDevelopmentLevels, rhs.TraceDevelopmentLevels);
-            AddToGenerator(code, "TraceDebugLevels",
-                ConfigDefaults.TraceDebugLevels, rhs.TraceDebugLevels);
-            AddToGenerator(code, "TraceReleaseLevels",
-                ConfigDefaults.TraceReleaseLevels, rhs.TraceReleaseLevels);
-
-            AddToGenerator(code, "TraceDevelopmentOutputToUnityConsole",
-                ConfigDefaults.TraceDevelopmentOutputToUnityConsole, rhs.TraceDevelopmentOutputToUnityConsole);
-            AddToGenerator(code, "TraceDebugOutputToUnityConsole",
-                ConfigDefaults.TraceDebugOutputToUnityConsole, rhs.TraceDebugOutputToUnityConsole);
-            AddToGenerator(code, "LocalizationSetDefaultCulture",
-                ConfigDefaults.LocalizationSetDefaultCulture, rhs.LocalizationSetDefaultCulture);
+                Config.k_EnvironmentScriptingDefineSymbolDefault, rhs.EnvironmentScriptingDefineSymbol);
             AddToGenerator(code, "LocalizationDefaultCulture",
-                ConfigDefaults.LocalizationDefaultCulture, rhs.LocalizationDefaultCulture);
+                Config.k_LocalizationDefaultCultureDefault, rhs.LocalizationDefaultCulture);
+            AddToGenerator(code, "LocalizationSetDefaultCulture",
+                Config.k_LocalizationSetDefaultCultureDefault, rhs.LocalizationSetDefaultCulture);
+            AddToGenerator(code, "PlatformAutomationFolder",
+                Config.k_PlatformAutomationFolderDefault, rhs.PlatformAutomationFolder);
+            AddToGenerator(code, "PlatformCacheFolder", Config.k_PlatformCacheFolderDefault, rhs.PlatformCacheFolder);
+            AddToGenerator(code, "TraceDebugLevels", Config.k_TraceDebugLevelsDefault, rhs.TraceDebugLevels);
+            AddToGenerator(code, "TraceDebugOutputToUnityConsole",
+                Config.k_TraceDebugOutputToUnityConsoleDefault, rhs.TraceDebugOutputToUnityConsole);
+            AddToGenerator(code, "TraceDevelopmentLevels",
+                Config.k_TraceDevelopmentLevelsDefault, rhs.TraceDevelopmentLevels);
+            AddToGenerator(code, "TraceDevelopmentOutputToUnityConsole",
+                Config.k_TraceDevelopmentOutputToUnityConsoleDefault, rhs.TraceDevelopmentOutputToUnityConsole);
+            AddToGenerator(code, "TraceReleaseLevels", Config.k_TraceReleaseLevelsDefault, rhs.TraceReleaseLevels);
+            AddToGenerator(code, "UpdateProviderCheckForUpdates",
+                Config.k_UpdateProviderCheckForUpdatesDefault, rhs.UpdateProviderCheckForUpdates);
 
             return code.ToString();
         }
