@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `GenerateProjectFiles` now has more macOS options.
 - The Camera extension method `CaptureToPNG()` has been renamed `RenderToPNG()` to reflect better its actual actions.
 - `TransformExtensions::DestroyChildren()` now has an immediate mode to remove children at author time.
+- Moved `SemanticVersion` into the `GDX.Developer` namespace.
 
 ### Fixed  
 

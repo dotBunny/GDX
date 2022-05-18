@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using GDX.Developer;
 using GDX.IO.Compression;
 using UnityEditor;
 using UnityEngine;

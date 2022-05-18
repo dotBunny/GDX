@@ -4,7 +4,7 @@
 
 using System.Runtime.CompilerServices;
 
-namespace GDX
+namespace GDX.Developer
 {
     /// <summary>
     ///     A Semantic Versioning structure.
