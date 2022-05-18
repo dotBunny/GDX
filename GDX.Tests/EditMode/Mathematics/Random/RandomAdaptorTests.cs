@@ -113,7 +113,7 @@ namespace GDX.Mathematics.Random
 
         [Test]
         [Category(Core.TestCategory)]
-        public void NextDouble_ProvideBytes_FillsBuffer()
+        public void NextBytes_MockData_FillsBuffer()
         {
             WELL1024a mockWell = new WELL1024a(WELL1024aTests.MockSeed);
             RandomAdaptor random1 = new RandomAdaptor(mockWell);
