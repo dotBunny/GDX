@@ -30,7 +30,21 @@ Provider | These are almost like service wrappers, where we use the word service
 
 We are trying to get as much coverage in tests as possible on the package to try and mitigate regressions. Please have a read of [Unit Testing Best Practices](https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices).
 
-> Arrange, Act, Assert
+The anatomy of a test looks a little like:
+
+```csharp
+public void MethodName_TestDetails_ExpectedOutcome()
+{
+    // ARRANGE: Build up the necessary environment to correctly test.
+    // ...
+    
+    // ACT: Do the work that you want to test.
+    // ...
+
+    // ASSERT: Identify the exepected outcomes
+    // ...
+}
+````
 
 ## Static Analysis
 
