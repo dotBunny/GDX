@@ -339,7 +339,7 @@ namespace GDX.Editor
             if (returnWindow == null)
             {
                 returnWindow = (EditorWindow)Reflection.InvokeStaticMethod("UnityEditor.PlayModeView", "GetRenderingView", null,
-                    Reflection.InternalStaticFlags);
+                    Reflection.PrivateStaticFlags);
             }
 
             if (returnWindow == null)

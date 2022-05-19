@@ -2,6 +2,8 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+using System.Reflection;
 using System.Text;
 
 namespace GDX.Editor
@@ -25,48 +27,86 @@ namespace GDX.Editor
             code.AppendLine($"public static void {Core.OverrideMethod}()");
             code.PushIndent();
 
-            AddToGenerator(code, "ConfigOutputPath", Config.k_ConfigOutputPathDefault, rhs.ConfigOutputPath);
+            Type config = Reflection.GetType("GDX.Config");
+
+            // Cache the field list so that we can quickly grab parts
+            FieldInfo[] configFields = config.GetFields();
+
+            OriginalValueAttribute.GetValue<string>(configFields[2]);
+
+            // The below indexes correspond to the field order of GDX.Config, if any changes happen there
+            // for order, these need to be updated. Opted to use reflection in this spot because it has
+            // very little performance impact and it avoided having to add another assembly visible tag.
+
+            AddToGenerator(code, "ConfigOutputPath",
+                OriginalValueAttribute.GetValue<string>(configFields[0]),
+                rhs.ConfigOutputPath);
             AddToGenerator(code, "DeveloperBuildInfoAssemblyDefinition",
-                Config.k_DeveloperBuildInfoAssemblyDefinitionDefault, rhs.DeveloperBuildInfoAssemblyDefinition);
+                OriginalValueAttribute.GetValue<bool>(configFields[1]),
+                rhs.DeveloperBuildInfoAssemblyDefinition);
             AddToGenerator(code, "DeveloperBuildInfoBuildChangelistArgument",
-                Config.k_DeveloperBuildInfoBuildChangelistArgumentDefault, rhs.DeveloperBuildInfoBuildChangelistArgument);
+                OriginalValueAttribute.GetValue<string>(configFields[2]),
+                rhs.DeveloperBuildInfoBuildChangelistArgument);
             AddToGenerator(code, "DeveloperBuildInfoBuildDescriptionArgument",
-                Config.k_DeveloperBuildInfoBuildDescriptionArgumentDefault, rhs.DeveloperBuildInfoBuildDescriptionArgument);
+                OriginalValueAttribute.GetValue<string>(configFields[3]),
+                rhs.DeveloperBuildInfoBuildDescriptionArgument);
             AddToGenerator(code, "DeveloperBuildInfoBuildNumberArgument",
-                Config.k_DeveloperBuildInfoBuildNumberArgumentDefault, rhs.DeveloperBuildInfoBuildNumberArgument);
+                OriginalValueAttribute.GetValue<string>(configFields[4]),
+                rhs.DeveloperBuildInfoBuildNumberArgument);
             AddToGenerator(code, "DeveloperBuildInfoBuildStreamArgument",
-                Config.k_DeveloperBuildInfoBuildStreamArgumentDefault, rhs.DeveloperBuildInfoBuildStreamArgument);
+                OriginalValueAttribute.GetValue<string>(configFields[5]),
+                rhs.DeveloperBuildInfoBuildStreamArgument);
             AddToGenerator(code, "DeveloperBuildInfoBuildTaskArgument",
-                Config.k_DeveloperBuildInfoBuildTaskArgumentDefault, rhs.DeveloperBuildInfoBuildTaskArgument);
+                OriginalValueAttribute.GetValue<string>(configFields[6]),
+                rhs.DeveloperBuildInfoBuildTaskArgument);
             AddToGenerator(code, "DeveloperBuildInfoEnabled",
-                Config.k_DeveloperBuildInfoEnabledDefault, rhs.DeveloperBuildInfoEnabled);
+                OriginalValueAttribute.GetValue<bool>(configFields[7]),
+                rhs.DeveloperBuildInfoEnabled);
             AddToGenerator(code, "DeveloperBuildInfoNamespace",
-                Config.k_DeveloperBuildInfoNamespaceDefault, rhs.DeveloperBuildInfoNamespace);
+                OriginalValueAttribute.GetValue<string>(configFields[8]),
+                rhs.DeveloperBuildInfoNamespace);
             AddToGenerator(code, "DeveloperBuildInfoPath",
-                Config.k_DeveloperBuildInfoPathDefault, rhs.DeveloperBuildInfoPath);
+                OriginalValueAttribute.GetValue<string>(configFields[9]),
+                rhs.DeveloperBuildInfoPath);
             AddToGenerator(code, "DeveloperCommandLineParserArgumentPrefix",
-                Config.k_DeveloperCommandLineParserArgumentPrefixDefault, rhs.DeveloperCommandLineParserArgumentPrefix);
+                OriginalValueAttribute.GetValue<string>(configFields[10]),
+                rhs.DeveloperCommandLineParserArgumentPrefix);
             AddToGenerator(code, "DeveloperCommandLineParserArgumentSplit",
-                Config.k_DeveloperCommandLineParserArgumentSplitDefault, rhs.DeveloperCommandLineParserArgumentSplit);
+                OriginalValueAttribute.GetValue<string>(configFields[11]),
+                rhs.DeveloperCommandLineParserArgumentSplit);
             AddToGenerator(code, "EnvironmentScriptingDefineSymbol",
-                Config.k_EnvironmentScriptingDefineSymbolDefault, rhs.EnvironmentScriptingDefineSymbol);
+                OriginalValueAttribute.GetValue<bool>(configFields[12]),
+                rhs.EnvironmentScriptingDefineSymbol);
             AddToGenerator(code, "LocalizationDefaultCulture",
-                Config.k_LocalizationDefaultCultureDefault, rhs.LocalizationDefaultCulture);
+                OriginalValueAttribute.GetValue<Localization.Language>(configFields[13]),
+                rhs.LocalizationDefaultCulture);
             AddToGenerator(code, "LocalizationSetDefaultCulture",
-                Config.k_LocalizationSetDefaultCultureDefault, rhs.LocalizationSetDefaultCulture);
+                OriginalValueAttribute.GetValue<bool>(configFields[14]),
+                rhs.LocalizationSetDefaultCulture);
             AddToGenerator(code, "PlatformAutomationFolder",
-                Config.k_PlatformAutomationFolderDefault, rhs.PlatformAutomationFolder);
-            AddToGenerator(code, "PlatformCacheFolder", Config.k_PlatformCacheFolderDefault, rhs.PlatformCacheFolder);
-            AddToGenerator(code, "TraceDebugLevels", Config.k_TraceDebugLevelsDefault, rhs.TraceDebugLevels);
+                OriginalValueAttribute.GetValue<string>(configFields[15]),
+                rhs.PlatformAutomationFolder);
+            AddToGenerator(code, "PlatformCacheFolder",
+                OriginalValueAttribute.GetValue<string>(configFields[16]),
+                rhs.PlatformCacheFolder);
+            AddToGenerator(code, "TraceDebugLevels",
+                OriginalValueAttribute.GetValue<Trace.TraceLevel>(configFields[17]),
+                rhs.TraceDebugLevels);
             AddToGenerator(code, "TraceDebugOutputToUnityConsole",
-                Config.k_TraceDebugOutputToUnityConsoleDefault, rhs.TraceDebugOutputToUnityConsole);
+                OriginalValueAttribute.GetValue<bool>(configFields[18]),
+                rhs.TraceDebugOutputToUnityConsole);
             AddToGenerator(code, "TraceDevelopmentLevels",
-                Config.k_TraceDevelopmentLevelsDefault, rhs.TraceDevelopmentLevels);
+                OriginalValueAttribute.GetValue<Trace.TraceLevel>(configFields[19]),
+                rhs.TraceDevelopmentLevels);
             AddToGenerator(code, "TraceDevelopmentOutputToUnityConsole",
-                Config.k_TraceDevelopmentOutputToUnityConsoleDefault, rhs.TraceDevelopmentOutputToUnityConsole);
-            AddToGenerator(code, "TraceReleaseLevels", Config.k_TraceReleaseLevelsDefault, rhs.TraceReleaseLevels);
+                OriginalValueAttribute.GetValue<bool>(configFields[20]),
+                rhs.TraceDevelopmentOutputToUnityConsole);
+            AddToGenerator(code, "TraceReleaseLevels",
+                OriginalValueAttribute.GetValue<Trace.TraceLevel>(configFields[21]),
+                rhs.TraceReleaseLevels);
             AddToGenerator(code, "UpdateProviderCheckForUpdates",
-                Config.k_UpdateProviderCheckForUpdatesDefault, rhs.UpdateProviderCheckForUpdates);
+                OriginalValueAttribute.GetValue<bool>(configFields[22]),
+                rhs.UpdateProviderCheckForUpdates);
 
             return code.ToString();
         }

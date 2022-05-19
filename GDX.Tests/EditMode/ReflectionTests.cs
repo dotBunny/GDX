@@ -40,7 +40,7 @@ namespace GDX
             Assert.IsTrue(projectBrowserWindow != null, "Expected reference to ProjectBrowser.");
 
             string searchContext = Reflection.GetFieldValue<string>(
-                projectBrowserWindow, "UnityEditor.ProjectBrowser", "m_SearchFieldText");
+                projectBrowserWindow, projectBrowser, "m_SearchFieldText");
 
             Assert.IsTrue(searchContext != null, "Expected non-null value for m_SearchFieldText.");
         }
@@ -56,7 +56,7 @@ namespace GDX
             Assert.IsTrue(projectBrowserWindow != null, "Expected reference to ProjectBrowser.");
 
             string searchContext = Reflection.GetFieldValue<string>(
-                projectBrowserWindow, "UnityEditor.ProjectBrowserBad", "m_SearchFieldTextBad");
+                projectBrowserWindow, null, "m_SearchFieldTextBad");
 
             Assert.IsTrue(searchContext == null, "Expected default value for non existing type.");
         }
@@ -142,6 +142,106 @@ namespace GDX
         {
             object response = Reflection.InvokeStaticMethod("UnityEditor.ProjectBrowserBad", "GetAllProjectBrowsersBad");
             Assert.IsTrue(response == null);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void SetFieldValue_ProjectBrowser_SetSearchFieldText()
+        {
+            System.Type projectBrowser = Reflection.GetType("UnityEditor.ProjectBrowser");
+            Assert.IsTrue(projectBrowser != null, "Expected to be able to find UnityEditor.ProjectBrowser type.");
+
+            EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
+            Assert.IsTrue(projectBrowserWindow != null, "Expected reference to ProjectBrowser.");
+
+            Assert.IsTrue(Reflection.SetFieldValue(
+                projectBrowserWindow, projectBrowser, "m_SearchFieldText", "test"));
+
+            Assert.IsTrue(Reflection.GetFieldValue<string>(
+                projectBrowserWindow, projectBrowser, "m_SearchFieldText") == "test");
+
+            Assert.IsTrue(Reflection.SetFieldValue(
+                projectBrowserWindow, projectBrowser, "m_SearchFieldText", string.Empty));
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void SetFieldValue_NoType_ReturnsFalse()
+        {
+            System.Type projectBrowser = Reflection.GetType("UnityEditor.ProjectBrowser");
+            Assert.IsTrue(projectBrowser != null, "Expected to be able to find UnityEditor.ProjectBrowser type.");
+
+            EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
+            Assert.IsTrue(projectBrowserWindow != null, "Expected reference to ProjectBrowser.");
+
+            Assert.IsFalse(Reflection.SetFieldValue(projectBrowserWindow,
+                null, "m_SearchFieldTextBad", "test"),
+                "Expected default value for non existing type.");
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void SetFieldOrPropertyValue_ProjectBrowser_SetIsLocked()
+        {
+            System.Type projectBrowser = Reflection.GetType("UnityEditor.ProjectBrowser");
+            Assert.IsTrue(projectBrowser != null, "Expected to be able to find UnityEditor.ProjectBrowser type.");
+
+            EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
+            Assert.IsTrue(projectBrowserWindow != null, "Expected reference to ProjectBrowser.");
+
+            bool previous = (bool)Reflection.GetFieldOrPropertyValue(projectBrowserWindow, "isLocked");
+
+            Assert.IsTrue(Reflection.SetFieldOrPropertyValue(
+                projectBrowserWindow, "isLocked", !previous));
+
+            bool newValue = (bool)Reflection.GetFieldOrPropertyValue(projectBrowserWindow, "isLocked");
+            Assert.IsTrue(newValue == !previous);
+
+            Assert.IsTrue(Reflection.SetFieldOrPropertyValue(
+                projectBrowserWindow, "isLocked", previous));
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void SetFieldOrPropertyValue_ProjectBrowser_SetSearchFieldText()
+        {
+            System.Type projectBrowser = Reflection.GetType("UnityEditor.ProjectBrowser");
+            Assert.IsTrue(projectBrowser != null, "Expected to be able to find UnityEditor.ProjectBrowser type.");
+
+            EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
+            Assert.IsTrue(projectBrowserWindow != null, "Expected reference to ProjectBrowser.");
+
+            Assert.IsTrue(Reflection.SetFieldOrPropertyValue(
+                projectBrowserWindow, "m_SearchFieldText", "test"));
+
+            Assert.IsTrue(Reflection.GetFieldValue<string>(
+                projectBrowserWindow, projectBrowser, "m_SearchFieldText") == "test");
+
+            Assert.IsTrue(Reflection.SetFieldOrPropertyValue(
+                projectBrowserWindow, "m_SearchFieldText", string.Empty));
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void SetFieldOrPropertyValue_NoType_ReturnsFalse()
+        {
+            System.Type projectBrowser = Reflection.GetType("UnityEditor.ProjectBrowser");
+            Assert.IsTrue(projectBrowser != null, "Expected to be able to find UnityEditor.ProjectBrowser type.");
+
+            EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
+            Assert.IsTrue(projectBrowserWindow != null, "Expected reference to ProjectBrowser.");
+
+            Assert.IsFalse(Reflection.SetFieldOrPropertyValue(projectBrowserWindow,
+                "m_SearchFieldTextBad", "test"),
+                "Expected default value for non existing type.");
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void SetFieldOrPropertyValue_NoTarget_ReturnsFalse()
+        {
+            Assert.IsFalse(Reflection.SetFieldOrPropertyValue(null, "m_SearchFieldTextBad", "test"),
+                "Expected false value when no target.");
         }
     }
 }

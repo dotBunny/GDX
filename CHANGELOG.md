@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `BuildVerificationReport` structure for quick validation of builds, including a `TestBehaviour`.
 - `StringKeyDictionary` to optimize one of the most common use cases for dictionaries.
 - `SegmentedString` to support string search patterns.
+- `OriginalValueAttribute` to support a default value-like pattern.
 - Unity editor non-pro (light) theme.
 - Additional information around [coding standards](https://gdx.dotbunny.com/manual/contributing/coding-standard.html) to documentation.
 

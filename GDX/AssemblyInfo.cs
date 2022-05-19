@@ -4,6 +4,5 @@
 
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("GDX.Editor")]
 [assembly: InternalsVisibleTo("GDX.Tests.EditMode")]
 [assembly: InternalsVisibleTo("GDX.Tests.PlayMode")]

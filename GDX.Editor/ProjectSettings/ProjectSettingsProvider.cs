@@ -380,7 +380,7 @@ namespace GDX.Editor
                     }
 
                     string searchContext = Reflection.GetFieldValue<string>(
-                        s_ProjectSettingsWindow, "UnityEditor.SettingsWindow", "m_SearchText");
+                        s_ProjectSettingsWindow, Reflection.GetType("UnityEditor.SettingsWindow"), "m_SearchText");
 
                     if (s_SearchString == searchContext)
                         return;
