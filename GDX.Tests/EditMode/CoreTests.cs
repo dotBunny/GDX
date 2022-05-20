@@ -38,8 +38,9 @@ namespace GDX
             Reflection.SetFieldValue(null, core, "s_InitializedMainThread", false,
                 Reflection.PrivateStaticFlags);
 
-            Assert.IsFalse(Reflection.TryGetFieldValue(null, core, "s_InitializedMainThread",
-                out bool _, Reflection.PrivateStaticFlags));
+            Assert.IsTrue(Reflection.TryGetFieldValue(null, core, "s_InitializedMainThread",
+                out bool returnValue, Reflection.PrivateStaticFlags));
+            Assert.IsFalse(returnValue);
 
             Core.InitializeOnMainThread();
         }
