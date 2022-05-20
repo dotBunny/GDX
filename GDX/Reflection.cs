@@ -41,73 +41,6 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Access the field value of a specific <paramref name="targetObject"/>, which may not be normally accessible.
-        /// </summary>
-        /// <remarks></remarks>
-        /// <param name="targetObject">The instanced object which will have it's field value read; use a null value if this is a static field.</param>
-        /// <param name="type">The qualified type of the <paramref name="targetObject"/>.</param>
-        /// <param name="name">The field's name to read.</param>
-        /// <param name="flags">The field's access flags.</param>
-        /// <typeparam name="T">The type of data being read from the field.</typeparam>
-        /// <returns>The field's value.</returns>
-        public static T GetFieldValue<T>(object targetObject, Type type, string name, BindingFlags flags = PrivateFieldFlags)
-        {
-            if (type == null)
-            {
-                return default;
-            }
-            FieldInfo field = type.GetField(name, flags);
-            return (T)field?.GetValue(targetObject);
-        }
-
-        /// <summary>
-        ///     Access the field or property value of a specific <paramref name="targetObject"/>, which may not be
-        ///     normally accessible.
-        /// </summary>
-        /// <remarks>Useful for when you really do not know the <see cref="System.Type"/>.</remarks>
-        /// <param name="targetObject">The instanced object which will have it's field or property value read.</param>
-        /// <param name="name">The field or property's name to read.</param>
-        /// <param name="fieldFlags">The field's access flags.</param>
-        /// <param name="propertyFlags">The property's access flags.</param>
-        /// <returns>The field/property value.</returns>
-        public static object GetFieldOrPropertyValue(object targetObject, string name,
-            BindingFlags fieldFlags = PrivateFieldFlags, BindingFlags propertyFlags = PrivateFieldFlags)
-        {
-            if (targetObject == null)
-                return null;
-
-            Type type = targetObject.GetType();
-            FieldInfo f = type.GetField(name, fieldFlags);
-            if (f != null)
-            {
-                return f.GetValue(targetObject);
-            }
-
-            PropertyInfo p = type.GetProperty(name,propertyFlags);
-            return p == null ? null : p.GetValue(targetObject, null);
-        }
-
-        /// <summary>
-        ///     Access the field value of a specific <paramref name="targetObject"/>, which may not be normally accessible.
-        /// </summary>
-        /// <remarks></remarks>
-        /// <param name="targetObject">The instanced object which will have it's field value read; use a null value if this is a static property.</param>
-        /// <param name="type">The explicit type of the <paramref name="targetObject"/>.</param>
-        /// <param name="name">The field's name to read.</param>
-        /// <param name="flags">The field's access flags.</param>
-        /// <typeparam name="T">The type of data being read from the field.</typeparam>
-        /// <returns>The field's value.</returns>
-        public static T GetPropertyValue<T>(object targetObject, Type type, string name, BindingFlags flags = PrivateFieldFlags)
-        {
-            if (type == null)
-            {
-                return default;
-            }
-            PropertyInfo propertyInfo = type.GetProperty(name, flags);
-            return (T)propertyInfo?.GetValue(targetObject);
-        }
-
-        /// <summary>
         ///     Returns a qualified type..
         /// </summary>
         /// <param name="type">The full name of a type.</param>
@@ -209,13 +142,13 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Set the field value of a specific <paramref name="targetObject"/>, which may not be normally accessible.
+        ///     Set the property value of a specific <paramref name="targetObject"/>, which may not be normally accessible.
         /// </summary>
-        /// <param name="targetObject">The instanced object which will have it's field value set; use a null value if this is a static property.</param>
+        /// <param name="targetObject">The instanced object which will have it's property value set; use a null value if this is a static property.</param>
         /// <param name="type">The type of the <paramref name="targetObject"/>.</param>
-        /// <param name="name">The field's name to set.</param>
-        /// <param name="value">The value to set the field to.</param>
-        /// <param name="flags">The field's access flags.</param>
+        /// <param name="name">The property's name to set.</param>
+        /// <param name="value">The value to set the property to.</param>
+        /// <param name="flags">The property's access flags.</param>
         /// <returns>true/false if the value was set.</returns>
         public static bool SetPropertyValue(object targetObject, Type type, string name, object value,
             BindingFlags flags = PrivateFieldFlags)
@@ -230,6 +163,101 @@ namespace GDX
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        ///     Try to access the field value of a specific <paramref name="targetObject"/>, which may not be normally accessible.
+        /// </summary>
+        /// <remarks></remarks>
+        /// <param name="targetObject">The instanced object which will have it's field value read; use a null value if this is a static field.</param>
+        /// <param name="type">The qualified type of the <paramref name="targetObject"/>.</param>
+        /// <param name="name">The field's name to read.</param>
+        /// <param name="returnValue">The returned value from the field, the default value if the field was unable to be read.</param>
+        /// <param name="flags">The field's access flags.</param>
+        /// <typeparam name="T">The type of data being read from the field.</typeparam>
+        /// <returns>true/false if the process was successful.</returns>
+        public static bool TryGetFieldValue<T>(object targetObject, Type type, string name, out T returnValue, BindingFlags flags = PrivateFieldFlags)
+        {
+            if (type == null)
+            {
+                returnValue = default;
+                return false;
+            }
+            FieldInfo fieldInfo = type.GetField(name, flags);
+            if (fieldInfo == null)
+            {
+                returnValue = default;
+                return false;
+            }
+            returnValue = (T)fieldInfo.GetValue(targetObject);
+            return true;
+        }
+
+        /// <summary>
+        ///     Try to access the field or property value of a specific <paramref name="targetObject"/>, which may not
+        ///     be normally accessible.
+        /// </summary>
+        /// <remarks>Useful for when you really do not know the <see cref="System.Type"/>.</remarks>
+        /// <param name="targetObject">The instanced object which will have it's field or property value read.</param>
+        /// <param name="name">The field or property's name to read.</param>
+        /// <param name="returnValue">The returned value from the field or property, the default value if the property was unable to be read.</param>
+        /// <param name="fieldFlags">The field's access flags.</param>
+        /// <param name="propertyFlags">The property's access flags.</param>
+        /// <returns>true/false if a value was found.</returns>
+        public static bool TryGetFieldOrPropertyValue(object targetObject, string name, out object returnValue,
+            BindingFlags fieldFlags = PrivateFieldFlags, BindingFlags propertyFlags = PrivateFieldFlags)
+        {
+            if (targetObject == null)
+            {
+                returnValue = null;
+                return false;
+            }
+
+            Type type = targetObject.GetType();
+            FieldInfo f = type.GetField(name, fieldFlags);
+            if (f != null)
+            {
+                returnValue = f.GetValue(targetObject);
+                return true;
+            }
+
+            PropertyInfo p = type.GetProperty(name,propertyFlags);
+            if (p != null)
+            {
+                returnValue = p.GetValue(targetObject);
+                return true;
+            }
+
+            returnValue = default;
+            return false;
+        }
+
+        /// <summary>
+        ///     Try to get a property value from <paramref name="targetObject"/>, which may not be normally accessible.
+        /// </summary>
+        /// <param name="targetObject">The instanced object which will have it's property value read; use a null value if this is a static property.</param>
+        /// <param name="type">The explicit type of the <paramref name="targetObject"/>.</param>
+        /// <param name="name">The property's name to read.</param>
+        /// <param name="returnValue">The returned value from the property, the default value if the property was unable to be read.</param>
+        /// <param name="flags">The property's access flags.</param>
+        /// <typeparam name="T">The type of data being read from the property.</typeparam>
+        /// <returns>true/false if the process was successful.</returns>
+        public static bool TryGetPropertyValue<T>(object targetObject, Type type, string name, out T returnValue, BindingFlags flags = PrivateFieldFlags)
+        {
+            if (type == null)
+            {
+                returnValue = default;
+                return false;
+            }
+            PropertyInfo propertyInfo = type.GetProperty(name, flags);
+            if (propertyInfo == null)
+            {
+                returnValue = default;
+                return false;
+            }
+
+            returnValue = (T)propertyInfo.GetValue(targetObject);
+            return true;
         }
     }
 }

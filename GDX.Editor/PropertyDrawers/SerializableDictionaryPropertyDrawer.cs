@@ -609,8 +609,11 @@ namespace GDX.Editor.PropertyDrawers
         {
             if (targetObject == null) return false;
 
-            object instanceObject = Reflection.GetFieldOrPropertyValue(m_TargetObject, m_TargetProperty.name,
-            SerializedProperties.SerializationFieldFlags, SerializedProperties.SerializationPropertyFlags);
+            bool isFound = Reflection.TryGetFieldOrPropertyValue(m_TargetObject, m_TargetProperty.name,
+                out object instanceObject, SerializedProperties.SerializationFieldFlags,
+                SerializedProperties.SerializationPropertyFlags);
+            if (!isFound) return false;
+
             IDictionary instanceDictionary = (IDictionary)instanceObject;
             if (instanceDictionary == null ) return false;
             return !instanceDictionary.Contains(targetObject);
