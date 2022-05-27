@@ -171,7 +171,22 @@ namespace GDX
 
             Assert.IsFalse(Reflection.SetFieldValue(projectBrowserWindow,
                     null, "m_SearchFieldTextBad", "test"),
-                "Expected default value for non existing type.");
+                "Expected false for non existing type.");
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void SetFieldValue_BadField_ReturnsFalse()
+        {
+            System.Type projectBrowser = Reflection.GetType("UnityEditor.ProjectBrowser");
+            Assert.IsTrue(projectBrowser != null, "Expected to be able to find UnityEditor.ProjectBrowser type.");
+
+            EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
+            Assert.IsTrue(projectBrowserWindow != null, "Expected reference to ProjectBrowser.");
+
+            Assert.IsFalse(Reflection.SetFieldValue(projectBrowserWindow,
+                    projectBrowser, "m_SearchFieldTextBad", "test"),
+                "Expected false for non existing field.");
         }
 
         [Test]
