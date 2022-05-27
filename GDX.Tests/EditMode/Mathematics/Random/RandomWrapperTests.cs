@@ -9,11 +9,13 @@ namespace GDX.Mathematics.Random
 {
     public class RandomWrapperTests
     {
+        const int k_MockSeed = 42;
+
         [Test]
         [Category(Core.TestCategory)]
         public void RandomWrapper_NoSeed_Created()
         {
-            RandomWrapper wrapper = new RandomWrapper();
+            RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
             Assert.IsTrue(wrapper != null);
         }
 
@@ -21,7 +23,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void RandomWrapper_WithSeed_Created()
         {
-            RandomWrapper wrapper = new RandomWrapper(2);
+            RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
             Assert.IsTrue(wrapper != null);
         }
 
@@ -45,7 +47,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextBytes_MockData_FillsBuffer()
         {
-            RandomWrapper random1 = new RandomWrapper();
+            RandomWrapper random1 = new RandomWrapper(k_MockSeed);
 
             byte[] buffer = new byte[10];
             random1.NextBytes(buffer);
@@ -66,7 +68,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextDouble_MockData_InRange()
         {
-            RandomWrapper wrapper = new RandomWrapper();
+            RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
             double value = wrapper.NextDouble(2, 4);
             Assert.IsTrue(value >= 2 && value <= 4, $"Result was {value.ToString(CultureInfo.InvariantCulture)}");
         }
@@ -75,7 +77,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextInteger_MockData_InRange()
         {
-            RandomWrapper wrapper = new RandomWrapper();
+            RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
             int value = wrapper.NextInteger(2, 4);
             Assert.IsTrue(value >= 2 && value <= 4, $"Result was {value.ToString()}");
         }
@@ -84,7 +86,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextIntegerExclusive_MockData_InRange()
         {
-            RandomWrapper wrapper = new RandomWrapper();
+            RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
             int value = wrapper.NextIntegerExclusive(2, 4);
             Assert.IsTrue(value >= 2 && value < 4, $"Result was {value.ToString()}");
         }
@@ -93,7 +95,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextSingle_MockData_InRange()
         {
-            RandomWrapper wrapper = new RandomWrapper();
+            RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
             float value = wrapper.NextSingle(2, 4);
             Assert.IsTrue(value >= 2 && value < 4, $"Result was {value.ToString(CultureInfo.InvariantCulture)}");
         }
@@ -102,7 +104,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextUnsignedInteger_MockData_InRange()
         {
-            RandomWrapper wrapper = new RandomWrapper();
+            RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
             uint value = wrapper.NextUnsignedInteger(2, 4);
             Assert.IsTrue(value >= 2 && value <= 4, $"Result was {value.ToString()}");
         }
@@ -111,7 +113,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextUnsignedIntegerExclusive_MockData_InRange()
         {
-            RandomWrapper wrapper = new RandomWrapper();
+            RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
             uint value = wrapper.NextUnsignedIntegerExclusive(2, 4);
             Assert.IsTrue(value > 2 && value < 4, $"Result was {value.ToString()}");
         }
