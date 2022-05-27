@@ -229,17 +229,9 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void TryGetFieldOrPropertyValue_NoTarget_ReturnsDefault()
         {
-            System.Type projectBrowser = Reflection.GetType("UnityEditor.ProjectBrowser");
-            Assert.IsTrue(projectBrowser != null, "Expected to be able to find UnityEditor.ProjectBrowser type.");
-
-            EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
-            Assert.IsTrue(projectBrowserWindow != null, "Expected reference to ProjectBrowser");
-
             Assert.IsFalse(Reflection.TryGetFieldOrPropertyValue(
                 null, "UnityEditor.ProjectBrowser", out object missedObject));
-            Assert.IsNull(missedObject, "Expected null returned object.");
-
-            Assert.IsTrue(missedObject == null, "Expected null value when no target.");
+            Assert.IsNull(missedObject, "Expected null returned object with no target.");
         }
 
         [Test]
@@ -254,9 +246,7 @@ namespace GDX
 
             Assert.IsFalse(Reflection.TryGetFieldOrPropertyValue(
                 projectBrowserWindow, "UnityEditor.ProjectBrowserBad", out object missedObject));
-            Assert.IsNull(missedObject, "Expected null returned object.");
-
-            Assert.IsTrue(missedObject == null, "Expected null value when no target.");
+            Assert.IsNull(missedObject, "Expected null returned object with a bad field or property.");
         }
 
         [Test]
