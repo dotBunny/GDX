@@ -79,7 +79,8 @@ namespace GDX.Developer
         public void CompareTo_WeakReference_ReturnsOne()
         {
             TextGenerator mockGenerator = new TextGenerator();
-            WeakReference<TextGenerator> weakReference = new WeakReference<TextGenerator>(mockGenerator);
+
+            WeakReference weakReference = new WeakReference(mockGenerator);
             TransientReference mockReference = new TransientReference(mockGenerator, true);
             Assert.IsTrue(mockReference.CompareTo(weakReference) == 1);
         }
