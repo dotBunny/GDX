@@ -5,7 +5,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace GDX
+namespace GDX.Developer
 {
     /// <summary>
     ///     A comparable weak reference to an object which will not prevent garbage collection. It will positively

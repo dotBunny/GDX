@@ -344,7 +344,7 @@ namespace GDX
         {
             string[] preString = new[] { "one", "two", "three" };
             string concat = preString.Concatenate(",");
-            Assert.IsTrue(concat == "one,two,three", $"Unexpected results: {concat}");
+            Assert.IsTrue(concat == "one,two,three");
         }
         [Test]
         [Category(Core.TestCategory)]
@@ -352,7 +352,7 @@ namespace GDX
         {
             string[] preString = new[] { "one", "two", "three" };
             string concat = preString.Concatenate(",", true);
-            Assert.IsTrue(concat == "one,two,three,", $"Unexpected results: {concat}");
+            Assert.IsTrue(concat == "one,two,three,");
         }
 
         [Test]

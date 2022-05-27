@@ -349,10 +349,8 @@ namespace GDX.Mathematics.Random
             WELL1024a mockWell = new WELL1024a(MockSeed);
             uint nextValue = mockWell.NextUnsignedInteger();
 
-            bool evaluate = nextValue == 3843823994;
-
             mockWell.Dispose();
-            Assert.IsTrue(evaluate);
+            Assert.IsTrue(nextValue == 3843823994);
         }
 
         [Test]
@@ -362,10 +360,8 @@ namespace GDX.Mathematics.Random
             WELL1024a mockWell = new WELL1024a(MockSeed);
             uint nextValue = mockWell.NextUnsignedIntegerExclusive();
 
-            bool evaluate = nextValue == 3843823993;
-
             mockWell.Dispose();
-            Assert.IsTrue(evaluate, $"Expected 3843823993, but got {nextValue.ToString()}");
+            Assert.IsTrue(nextValue == 3843823993);
         }
 
         [Test]
@@ -375,10 +371,9 @@ namespace GDX.Mathematics.Random
             WELL1024a mockWell = new WELL1024a(MockSeed);
             uint nextValue = mockWell.NextUnsignedIntegerExclusive(1, 2);
 
-            bool evaluate = nextValue == 1;
 
             mockWell.Dispose();
-            Assert.IsTrue(evaluate);
+            Assert.IsTrue(nextValue == 1);
         }
 
 

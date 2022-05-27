@@ -64,8 +64,7 @@ namespace GDX
         {
             m_BaseTransform.DestroyChildren(true, true, true);
             int count = m_BaseTransform.childCount;
-            Assert.IsTrue(count == 0,
-                $"Expected no children, but found {count.ToString()}");
+            Assert.IsTrue(count == 0);
         }
 
         [Test]
@@ -74,15 +73,14 @@ namespace GDX
         {
             m_BaseTransform.DestroyChildren(false, false, true);
             int count = m_BaseTransform.childCount;
-            Assert.IsTrue(count == 1,
-                $"Expected one child transform, but found {count.ToString()}");
+            Assert.IsTrue(count == 1);
         }
 
         [Test]
         [Category(Core.TestCategory)]
         public void GetActiveChildrenCount_MockData_AccurateCount()
         {
-            Assert.IsTrue(m_BaseTransform.GetActiveChildCount() == 2, "Expected only two active children.");
+            Assert.IsTrue(m_BaseTransform.GetActiveChildCount() == 2);
         }
 
         [Test]
@@ -90,16 +88,14 @@ namespace GDX
         public void GetFirstComponentInChildrenComplex_MockData_FirstTransform()
         {
             Transform t = m_BaseTransform.GetFirstComponentInChildrenComplex<Transform>(true, 0, 1);
-            Assert.IsTrue(t != null, "Expected to find a transform.");
+            Assert.IsTrue(t != null);
         }
 
         [Test]
         [Category(Core.TestCategory)]
         public void GetScenePath_MockData_RootPath()
         {
-            string scenePath = m_BaseTransform.GetScenePath();
-            string expectedPath = "/TransformExtensionsTestObject";
-            Assert.IsTrue(scenePath == expectedPath, $"Expected scene path of {expectedPath}, but got {scenePath}." );
+            Assert.IsTrue(m_BaseTransform.GetScenePath() == "/TransformExtensionsTestObject");
         }
     }
 }

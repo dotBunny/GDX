@@ -84,8 +84,7 @@ namespace GDX
         {
             Ray ray = new Ray(Vector3.one, Vector3.up);
             float distance = Vector3.zero.DistanceToRay(ray);
-            Assert.IsTrue(Mathf.Approximately(distance, 1.414214f),
-                $"Expected a distance of 1.414214f, but was {distance.ToString(CultureInfo.InvariantCulture)}");
+            Assert.IsTrue(Mathf.Approximately(distance, 1.414214f));
         }
 
         [Test]
@@ -93,8 +92,7 @@ namespace GDX
         public void HorizontalDistance_MockData_ReturnsAccurate()
         {
             float distance = Vector3.zero.HorizontalDistance(Vector3.one);
-            Assert.IsTrue(Mathf.Approximately(distance, 1.414214f),
-                $"Expected a distance of 1f, but was {distance.ToString(CultureInfo.InvariantCulture)}");
+            Assert.IsTrue(Mathf.Approximately(distance, 1.414214f));
         }
 
         [Test]

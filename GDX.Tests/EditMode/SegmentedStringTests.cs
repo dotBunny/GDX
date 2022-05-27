@@ -52,16 +52,14 @@ namespace GDX
         public void GetHashCode_MockData_Correct()
         {
             SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
-            int hash = splitString.GetHashCode();
-            Assert.IsTrue(hash == -316307395, $"Expected -316307395, but found {hash.ToString()}.");
+            Assert.IsTrue(splitString.GetHashCode() == -316307395);
         }
         [Test]
         [Category(Core.TestCategory)]
         public void GetOffset_MockData_Valid()
         {
             SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
-            int offset = splitString.GetOffset(1);
-            Assert.IsTrue(offset ==6, $"Expected 6, but found {offset.ToString()}.");
+            Assert.IsTrue(splitString.GetOffset(1) == 6);
         }
 
         [Test]
@@ -69,8 +67,7 @@ namespace GDX
         public void GetSegmentLength_MockData_CorrectCount()
         {
             SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
-            int length = splitString.GetSegmentLength(1);
-            Assert.IsTrue(length ==2, $"Expected 2, but found {length.ToString()}.");
+            Assert.IsTrue(splitString.GetSegmentLength(1) == 2);
         }
 
         [Test]
@@ -78,12 +75,12 @@ namespace GDX
         public void GetSegment_MockData_Matches()
         {
             SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
-            bool evaluate = splitString.AsString(0) == "hello" &&
-                            splitString.AsString(1) == "my" &&
-                            splitString.AsString(3) == "game" &&
-                            splitString.AsString(2) == "favorite" &&
-                            splitString.AsString(7) == "g";
-            Assert.IsTrue(evaluate);
+
+            Assert.IsTrue(splitString.AsString(0) == "hello");
+            Assert.IsTrue(splitString.AsString(1) == "my");
+            Assert.IsTrue(splitString.AsString(3) == "game");
+            Assert.IsTrue(splitString.AsString(2) == "favorite");
+            Assert.IsTrue(splitString.AsString(7) == "g");
         }
 
         [Test]
@@ -92,13 +89,9 @@ namespace GDX
         {
             SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
 
-
-            bool evaluate = "Hello".GetStableLowerCaseHashCode() == splitString.GetHashCode(0) &&
-                            "favorite".GetStableLowerCaseHashCode() == splitString.GetHashCode(2) &&
-                            "G".GetStableLowerCaseHashCode() == splitString.GetHashCode(7);
-
-            Assert.IsTrue(evaluate,
-                $"{"Hello".GetStableLowerCaseHashCode().ToString()} == {splitString.GetHashCode(0).ToString()}");
+            Assert.IsTrue("Hello".GetStableLowerCaseHashCode() == splitString.GetHashCode(0));
+            Assert.IsTrue("favorite".GetStableLowerCaseHashCode() == splitString.GetHashCode(2));
+            Assert.IsTrue("G".GetStableLowerCaseHashCode() == splitString.GetHashCode(7));
         }
     }
 }

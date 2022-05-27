@@ -105,7 +105,7 @@ namespace GDX.Developer
         {
             SemanticVersion version = new SemanticVersion("2020.3.1");
             int hashcode = version.GetHashCode();
-            Assert.IsTrue(hashcode == 318371370, $"Expected 318371370, got {hashcode.ToString()}");
+            Assert.IsTrue(hashcode == 318371370);
         }
 
         [Test]
