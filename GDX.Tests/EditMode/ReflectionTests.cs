@@ -236,6 +236,23 @@ namespace GDX
             Assert.IsTrue(projectBrowserWindow != null, "Expected reference to ProjectBrowser");
 
             Assert.IsFalse(Reflection.TryGetFieldOrPropertyValue(
+                null, "UnityEditor.ProjectBrowser", out object missedObject));
+            Assert.IsNull(missedObject, "Expected null returned object.");
+
+            Assert.IsTrue(missedObject == null, "Expected null value when no target.");
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void TryGetFieldOrPropertyValue_NoField_ReturnsDefault()
+        {
+            System.Type projectBrowser = Reflection.GetType("UnityEditor.ProjectBrowser");
+            Assert.IsTrue(projectBrowser != null, "Expected to be able to find UnityEditor.ProjectBrowser type.");
+
+            EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
+            Assert.IsTrue(projectBrowserWindow != null, "Expected reference to ProjectBrowser");
+
+            Assert.IsFalse(Reflection.TryGetFieldOrPropertyValue(
                 projectBrowserWindow, "UnityEditor.ProjectBrowserBad", out object missedObject));
             Assert.IsNull(missedObject, "Expected null returned object.");
 
