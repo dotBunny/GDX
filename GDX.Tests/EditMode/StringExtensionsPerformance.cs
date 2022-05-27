@@ -48,7 +48,7 @@ namespace GDX
                 .Run();
             Measure.Method(() =>
                 {
-                    int unused = "_tH\\is_I!is_M\"y_TEST_STR#$34343".ToLower().GetHashCode();
+                    int unused = TestLiterals.Complex.ToLower().GetHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -91,7 +91,7 @@ namespace GDX
                 .Run();
             Measure.Method(() =>
                 {
-                    int unused = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetStableLowerCaseHashCode();
+                    int unused = TestLiterals.Complex.GetStableLowerCaseHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -134,7 +134,7 @@ namespace GDX
                 .Run();
             Measure.Method(() =>
                 {
-                    int unused = "_tH\\is_I!is_M\"y_TEST_STR#$34343".ToUpper().GetHashCode();
+                    int unused = TestLiterals.Complex.ToUpper().GetHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -227,7 +227,7 @@ namespace GDX
                 .Run();
             Measure.Method(() =>
                 {
-                    int unused = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetStableUpperCaseHashCode();
+                    int unused = TestLiterals.Complex.GetStableUpperCaseHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)

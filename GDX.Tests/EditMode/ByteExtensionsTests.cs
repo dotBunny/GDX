@@ -17,7 +17,7 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void GetStableHashCode_MockData_ReturnsValidCode()
         {
-            byte[] testArray = Encoding.UTF8.GetBytes("Hello World");
+            byte[] testArray = Encoding.UTF8.GetBytes(TestLiterals.HelloWorld);
 
             bool evaluate = testArray.GetStableHashCode() == 1349791181;
 

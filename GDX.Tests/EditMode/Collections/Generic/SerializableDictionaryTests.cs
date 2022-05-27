@@ -26,7 +26,7 @@ namespace GDX.Collections.Generic
         public void SaveSerializedData_MockData_ReturnsSerializedDataLength()
         {
             SerializableDictionary<int, string> mockDictionary =
-                new SerializableDictionary<int, string> {{1, "one"}, {2, "two"}};
+                new SerializableDictionary<int, string> {{1, TestLiterals.Foo}, {2, TestLiterals.Bar}};
 
             mockDictionary.SaveSerializedData();
 
@@ -49,10 +49,10 @@ namespace GDX.Collections.Generic
         public void OverwriteSerializedData_MockData_PopulatesDictionary()
         {
             SerializableDictionary<int, string> mockDictionary = new SerializableDictionary<int, string>();
-            mockDictionary.OverwriteSerializedData(new[] {1, 2}, new [] {"one", "two"});
+            mockDictionary.OverwriteSerializedData(new[] {1, 2}, new [] { TestLiterals.Foo, TestLiterals.Bar});
             mockDictionary.LoadSerializedData();
 
-            bool evaluate = mockDictionary.Count == 2 && mockDictionary[2] == "two";
+            bool evaluate = mockDictionary.Count == 2 && mockDictionary[2] == TestLiterals.Bar;
 
             Assert.IsTrue(evaluate);
         }

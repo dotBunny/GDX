@@ -12,16 +12,19 @@ namespace GDX
     /// </summary>
     public class CoreTests
     {
+        const string k_CoreFullName = "GDX.Core";
+        const string k_CoreFieldName = "s_InitializedMainThread";
+
         [Test]
         [Category(Core.TestCategory)]
         public void InitializeOnMainThread_AlreadyInitialized_EarlyOut()
         {
-            Type core = Reflection.GetType("GDX.Core");
+            Type core = Reflection.GetType(k_CoreFullName);
             Assert.IsNotNull(core);
 
-            Reflection.SetFieldValue(null, core, "s_InitializedMainThread", true,
+            Reflection.SetFieldValue(null, core, k_CoreFieldName, true,
                 Reflection.PrivateStaticFlags);
-            Assert.IsTrue(Reflection.TryGetFieldValue(null, core, "s_InitializedMainThread",
+            Assert.IsTrue(Reflection.TryGetFieldValue(null, core, k_CoreFieldName,
                 out bool _, Reflection.PrivateStaticFlags));
 
 
@@ -32,13 +35,13 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void InitializeOnMainThread_NotAlreadyInitialized_Executes()
         {
-            Type core = Reflection.GetType("GDX.Core");
+            Type core = Reflection.GetType(k_CoreFullName);
             Assert.IsNotNull(core);
 
-            Reflection.SetFieldValue(null, core, "s_InitializedMainThread", false,
+            Reflection.SetFieldValue(null, core, k_CoreFieldName, false,
                 Reflection.PrivateStaticFlags);
 
-            Assert.IsTrue(Reflection.TryGetFieldValue(null, core, "s_InitializedMainThread",
+            Assert.IsTrue(Reflection.TryGetFieldValue(null, core, k_CoreFieldName,
                 out bool returnValue, Reflection.PrivateStaticFlags));
             Assert.IsFalse(returnValue);
 

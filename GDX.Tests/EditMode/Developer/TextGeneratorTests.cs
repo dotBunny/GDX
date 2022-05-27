@@ -17,11 +17,11 @@ namespace GDX.Developer
         public void AppendLineRange_MockData_AddsContent()
         {
             TextGenerator mockGenerator = new TextGenerator();
-            string[] mockData = new[] { "Hello", "Jello" };
+            string[] mockData = new[] { TestLiterals.Foo, TestLiterals.Bar };
             mockGenerator.AppendLineRange(mockData);
             string output = mockGenerator.ToString();
 
-            Assert.IsTrue(output == $"Hello{Environment.NewLine}Jello");
+            Assert.IsTrue(output == $"{TestLiterals.Foo}{Environment.NewLine}{TestLiterals.Bar}");
         }
     }
 }

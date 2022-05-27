@@ -37,7 +37,7 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void GetAfterFirst_MockData_ReturnsString()
         {
-            string result = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetAfterFirst("_M");
+            string result = TestLiterals.Complex.GetAfterFirst("_M");
 
             bool evaluate = result == "\"y_TEST_STR#$34343";
 
@@ -48,7 +48,7 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void GetAfterLast_MockData_ReturnsString()
         {
-            string result = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetAfterLast("_");
+            string result = TestLiterals.Complex.GetAfterLast("_");
 
             bool evaluate = result == "STR#$34343";
 
@@ -59,9 +59,9 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void GetBeforeFirst_MockData_ReturnsEmptyString()
         {
-            string result = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetBeforeFirst("_");
+            string result = TestLiterals.Complex.GetBeforeFirst("_");
 
-            bool evaluate = result == "";
+            bool evaluate = result == string.Empty;
 
             Assert.IsTrue(evaluate);
         }
@@ -70,7 +70,7 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void GetBeforeLast_MockData_ReturnsString()
         {
-            string result = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetBeforeLast("_");
+            string result = TestLiterals.Complex.GetBeforeLast("_");
 
             bool evaluate = result == "_tH\\is_I!is_M\"y_TEST";
 
@@ -254,13 +254,12 @@ namespace GDX
         public void Encrypt_Decrypt_IsEqual()
         {
             const string k_SimpleString = "HelloWorld!";
-            const string k_ComplexString = "_tH\\is_I!is_M\"y_TEST_STR#$34343";
 
             string encryptedSimple = k_SimpleString.Encrypt();
-            string encryptedComplex = k_ComplexString.Encrypt();
+            string encryptedComplex = TestLiterals.Complex.Encrypt();
 
             bool evaluate = encryptedSimple.Decrypt() == k_SimpleString &&
-                            encryptedComplex.Decrypt() == k_ComplexString;
+                            encryptedComplex.Decrypt() == TestLiterals.Complex;
 
             Assert.IsTrue(evaluate);
         }
@@ -284,8 +283,8 @@ namespace GDX
             int newLowerCaseHash = "this is all lowercase".GetStableLowerCaseHashCode();
             int oldUpperCaseHash = "THIS IS ALL UPPERCASE".ToLower().GetStableHashCode();
             int newUpperCaseHash = "THIS IS ALL UPPERCASE".GetStableLowerCaseHashCode();
-            int oldComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".ToLower().GetStableHashCode();
-            int newComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetStableLowerCaseHashCode();
+            int oldComplexHash = TestLiterals.Complex.ToLower().GetStableHashCode();
+            int newComplexHash = TestLiterals.Complex.GetStableLowerCaseHashCode();
 
             bool evaluate = oldSimpleHash == newSimpleHash &&
                             oldComplexHash == newComplexHash &&
@@ -299,8 +298,8 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void GetStableUpperCaseHashCode_ToUpperGetStableHashCode_IsEqual()
         {
-            int oldComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".ToUpper().GetStableHashCode();
-            int newComplexHash = "_tH\\is_I!is_M\"y_TEST_STR#$34343".GetStableUpperCaseHashCode();
+            int oldComplexHash = TestLiterals.Complex.ToUpper().GetStableHashCode();
+            int newComplexHash = TestLiterals.Complex.GetStableUpperCaseHashCode();
             int oldLowerCaseHash = "this is all lowercase".ToUpper().GetStableHashCode();
             int newLowerCaseHash = "this is all lowercase".GetStableUpperCaseHashCode();
             int oldSimpleHash = "HelloWorld!".ToUpper().GetStableHashCode();

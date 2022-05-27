@@ -21,15 +21,15 @@ namespace GDX
         [SetUp]
         public void Setup()
         {
-            m_BaseTransform = new GameObject("TransformExtensionsTestObject").transform;
+            m_BaseTransform = new GameObject(TestLiterals.Foo).transform;
 
-            m_ChildOne = new GameObject("ChildOne");
+            m_ChildOne = new GameObject();
             m_ChildOne.transform.SetParent(m_BaseTransform, false);
 
-            m_ChildTwo = new GameObject("ChildTwo");
+            m_ChildTwo = new GameObject();
             m_ChildTwo.transform.SetParent(m_BaseTransform, false);
 
-            m_ChildThree = new GameObject("ChildThree");
+            m_ChildThree = new GameObject();
             m_ChildThree.transform.SetParent(m_BaseTransform, false);
             m_ChildThree.SetActive(false);
         }
@@ -95,7 +95,7 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void GetScenePath_MockData_RootPath()
         {
-            Assert.IsTrue(m_BaseTransform.GetScenePath() == "/TransformExtensionsTestObject");
+            Assert.IsTrue(m_BaseTransform.GetScenePath() == $"/{TestLiterals.Foo}");
         }
     }
 }

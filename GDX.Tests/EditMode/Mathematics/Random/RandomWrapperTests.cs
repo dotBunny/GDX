@@ -70,7 +70,7 @@ namespace GDX.Mathematics.Random
         {
             RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
             double value = wrapper.NextDouble(2, 4);
-            Assert.IsTrue(value >= 2 && value <= 4, $"Result was {value.ToString(CultureInfo.InvariantCulture)}");
+            Assert.IsTrue(value >= 2 && value <= 4);
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace GDX.Mathematics.Random
         {
             RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
             int value = wrapper.NextInteger(2, 4);
-            Assert.IsTrue(value >= 2 && value <= 4, $"Result was {value.ToString()}");
+            Assert.IsTrue(value >= 2 && value <= 4);
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace GDX.Mathematics.Random
         {
             RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
             int value = wrapper.NextIntegerExclusive(2, 4);
-            Assert.IsTrue(value >= 2 && value < 4, $"Result was {value.ToString()}");
+            Assert.IsTrue(value >= 2 && value < 4);
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace GDX.Mathematics.Random
         {
             RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
             float value = wrapper.NextSingle(2, 4);
-            Assert.IsTrue(value >= 2 && value < 4, $"Result was {value.ToString(CultureInfo.InvariantCulture)}");
+            Assert.IsTrue(value >= 2 && value < 4);
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace GDX.Mathematics.Random
         {
             RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
             uint value = wrapper.NextUnsignedInteger(2, 4);
-            Assert.IsTrue(value >= 2 && value <= 4, $"Result was {value.ToString()}");
+            Assert.IsTrue(value >= 2 && value <= 4);
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace GDX.Mathematics.Random
         {
             RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
             uint value = wrapper.NextUnsignedIntegerExclusive(2, 4);
-            Assert.IsTrue(value > 2 && value < 4, $"Result was {value.ToString()}");
+            Assert.IsTrue(value > 2 && value < 4);
         }
     }
 }

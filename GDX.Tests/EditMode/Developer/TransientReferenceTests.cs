@@ -20,7 +20,7 @@ namespace GDX.Developer
 
             TextGenerator mockGenerator = new TextGenerator();
             TransientReference mockReference = new TransientReference(mockGenerator);
-            Assert.IsTrue(mockReference != null, "Expect created reference.");
+            Assert.IsTrue(mockReference != null);
         }
 
         [Test]
@@ -30,7 +30,7 @@ namespace GDX.Developer
 
             TextGenerator mockGenerator = new TextGenerator();
             TransientReference mockReference = new TransientReference(mockGenerator, true);
-            Assert.IsTrue(mockReference != null, "Expect created reference.");
+            Assert.IsTrue(mockReference != null);
         }
 
 //         [Test]

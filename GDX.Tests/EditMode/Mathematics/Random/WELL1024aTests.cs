@@ -13,8 +13,6 @@ namespace GDX.Mathematics.Random
     public class WELL1024aTests
 #pragma warning restore IDE1006
     {
-        public const string MockSeed = "TestSeed";
-
         [Test]
         [Category(Core.TestCategory)]
         public void WELL1024a_FromInteger_StrippedSeed()
@@ -32,8 +30,8 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void WELL1024a_FromString_NonAndForcedDifferent()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed, false);
-            WELL1024a mockWellUpper = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed, false);
+            WELL1024a mockWellUpper = new WELL1024a(TestLiterals.TestSeed);
 
             bool evaluate = mockWell.OriginalSeed != mockWellUpper.OriginalSeed;
 
@@ -75,7 +73,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void WELL1024a_FromRestoreState_Matched()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
             mockWell.Sample();
             mockWell.Sample();
             mockWell.Sample();
@@ -130,7 +128,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextBoolean_ZeroChance_ReturnsFalse()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
 
             bool evaluate = mockWell.NextBoolean(0f);
 
@@ -143,7 +141,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextBoolean_PerfectChance_ReturnsTrue()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
 
             bool evaluate = mockWell.NextBoolean(1f);
 
@@ -156,7 +154,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextBoolean_Simple_ReturnsDeterministicValue()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
 
             bool evaluate = mockWell.NextBoolean();
 
@@ -168,7 +166,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextInteger_Simple_ReturnsDeterministicValue()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
             int nextValue = mockWell.NextInteger();
 
             bool evaluate = nextValue == 1921911996;
@@ -181,7 +179,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextInteger_SameRange_ReturnsSameValue()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
             int nextValue = mockWell.NextInteger(1, 1);
 
             bool evaluate = nextValue == 1;
@@ -194,7 +192,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextInteger_ZeroValues_ReturnsZeroValue()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
             int nextValue = mockWell.NextInteger(0, 0);
 
             bool evaluate = nextValue == 0;
@@ -207,7 +205,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextInteger_MinMaxValue_ReturnsDeterministicValue()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
             int nextValue = mockWell.NextInteger(11, 22);
 
             bool evaluate = nextValue >= 11 && nextValue <= 22;
@@ -220,7 +218,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextInteger_Multiple_ReturnsDifferentValues()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
 
             int[] nextValues = new int[64];
             for (int i = 0; i < 64; i++)
@@ -246,7 +244,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextBytes_Simple_FillsBuffer()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
             byte[] buffer = new byte[10];
             mockWell.NextBytes(buffer);
 
@@ -268,7 +266,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextDouble_Multiple_ReturnsDifferentValues()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
 
             double[] nextValues = new double[64];
             for (int i = 0; i < 64; i++)
@@ -294,7 +292,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextDouble_Simple_ReturnsDeterministicValue()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
             double nextValue = mockWell.NextDouble();
 
             bool evaluate = Math.Abs(nextValue - 0.89496001484803855d) < Platform.DoubleTolerance;
@@ -307,7 +305,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextSingle_Simple_ReturnsDeterministicValue()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
             float nextValue = mockWell.NextSingle();
 
             bool evaluate =  Math.Abs(nextValue - 0.894959986f) < Platform.DoubleTolerance;
@@ -320,7 +318,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextSingle_Multiple_ReturnsDifferentValues()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
 
             float[] nextValues = new float[64];
             for (int i = 0; i < 64; i++)
@@ -346,7 +344,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextUnsignedInteger_Simple_ReturnsDeterministicValue()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
             uint nextValue = mockWell.NextUnsignedInteger();
 
             mockWell.Dispose();
@@ -357,7 +355,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextUnsignedIntegerExclusive_Simple_ReturnsDeterministicValue()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
             uint nextValue = mockWell.NextUnsignedIntegerExclusive();
 
             mockWell.Dispose();
@@ -368,7 +366,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextUnsignedIntegerExclusive_Limited_ReturnsDeterministicValue()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
             uint nextValue = mockWell.NextUnsignedIntegerExclusive(1, 2);
 
 
@@ -381,7 +379,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void NextUnsignedInteger_Multiple_ReturnsDifferentValues()
         {
-            WELL1024a mockWell = new WELL1024a(MockSeed);
+            WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
 
             uint[] nextValues = new uint[64];
             for (int i = 0; i < 64; i++)
