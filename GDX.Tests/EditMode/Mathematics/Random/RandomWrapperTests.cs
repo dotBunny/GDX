@@ -15,7 +15,7 @@ namespace GDX.Mathematics.Random
         [Category(Core.TestCategory)]
         public void RandomWrapper_NoSeed_Created()
         {
-            RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
+            RandomWrapper wrapper = new RandomWrapper();
             Assert.IsTrue(wrapper != null);
         }
 
