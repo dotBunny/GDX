@@ -16,6 +16,11 @@ namespace GDX
     public static class Localization
     {
         /// <summary>
+        ///     An array of strings representative for file size formats.
+        /// </summary>
+        public static readonly string[] ByteSizes = { "B", "KB", "MB", "GB", "TB" };
+
+        /// <summary>
         ///     A list of supported languages.
         /// </summary>
         /// <remarks>
@@ -44,11 +49,6 @@ namespace GDX
         public const string LocalTimestampFormat = "yyyy-MM-dd HH\\:mm\\:ss";
 
         /// <summary>
-        ///     An array of strings representative for file size formats.
-        /// </summary>
-        static readonly string[] k_ReadableByteSizes = { "B", "KB", "MB", "GB", "TB" };
-
-        /// <summary>
         ///     Creates a more human readable <see cref="string" /> of a byte size.
         /// </summary>
         /// <example>
@@ -68,7 +68,7 @@ namespace GDX
                 length /= 1024;
             }
 
-            return $"{length:0.##} {k_ReadableByteSizes[order]}";
+            return $"{length:0.##} {ByteSizes[order]}";
         }
 
         /// <summary>

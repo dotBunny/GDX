@@ -12,7 +12,7 @@ namespace GDX.Editor
     public class PackageProviderTests
     {
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Get_DefaultPackage_NotNull()
         {
             PackageProvider localPackage = new PackageProvider();

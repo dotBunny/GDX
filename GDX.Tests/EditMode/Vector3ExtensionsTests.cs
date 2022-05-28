@@ -15,7 +15,7 @@ namespace GDX
     public class Vector3ExtensionsTests
     {
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Approximately_FiveMillionths_ReturnsFalse()
         {
             Vector3 a = new Vector3(1.000005f, 1, 1);
@@ -27,7 +27,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Approximately_One_ReturnsTrue()
         {
             Vector3 a = new Vector3(1, 1, 1);
@@ -39,7 +39,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Approximately_OneMillionth_ReturnsTrue()
         {
             Vector3 a = new Vector3(1.000001f, 1, 1);
@@ -51,7 +51,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Approximately_Zero_ReturnsTrue()
         {
             Vector3 a = new Vector3(0, 0, 0);
@@ -63,7 +63,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void DistanceSqr_MockData_ReturnsSame()
         {
             Vector3 a = new Vector3(0,20.5f, 16.5f);
@@ -79,7 +79,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void DistanceToRay_MockData_ReturnsAccurate()
         {
             Ray ray = new Ray(Vector3.one, Vector3.up);
@@ -88,7 +88,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void HorizontalDistance_MockData_ReturnsAccurate()
         {
             float distance = Vector3.zero.HorizontalDistance(Vector3.one);
@@ -96,7 +96,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Midpoint_ZeroAndOne_ReturnsHalf()
         {
             Vector3 a = new Vector3(0, 0, 0);
@@ -108,7 +108,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NearestIndex_MockData_ReturnsClosest()
         {
             Vector3 target = Vector3.one;
@@ -124,7 +124,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NearestIndex_NullInput_ReturnsNegativeOne()
         {
             Vector3 a = Vector3.down;
@@ -135,7 +135,7 @@ namespace GDX
         }
 
          [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void TryParseVector3_NoSplit_ReturnsVector2Zero()
         {
             bool parse = "123".TryParseVector3(out Vector3 parsedLocation);
@@ -146,7 +146,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void TryParseVector3_NoSecondSplit_ReturnsFalse()
         {
             bool parse = "2, 22".TryParseVector3(out Vector3 parsedLocation);
@@ -157,7 +157,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void TryParseVector3_CharFirstSplit_ReturnsFalse()
         {
             bool parse = "c, 2, 2".TryParseVector3(out Vector3 parsedLocation);
@@ -168,7 +168,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void TryParseVector3_CharSecondSplit_ReturnsFalse()
         {
             bool parse = "2, c, 2".TryParseVector3(out Vector3 parsedLocation);
@@ -179,7 +179,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void TryParseVector3_CharThirdSplit_ReturnsFalse()
         {
             bool parse = "2, 2, c".TryParseVector3(out Vector3 parsedLocation);
@@ -191,7 +191,7 @@ namespace GDX
 
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void TryParseVector3_NoSpaces_ReturnsVector3()
         {
             bool parse = "3,2,1".TryParseVector3(out Vector3 parsedLocation);
@@ -202,7 +202,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void TryParseVector3_SpacedValues_ReturnsVector3()
         {
             bool parse = "3, 2, 1".TryParseVector3(out Vector3 parsedLocation);

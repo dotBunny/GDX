@@ -30,7 +30,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void ProcessArguments_MockData_ContainsFlag()
         {
             CommandLineParser.ProcessArguments(m_MockData);
@@ -41,7 +41,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void ProcessArguments_MockData_HasValue()
         {
             CommandLineParser.ProcessArguments(m_MockData);

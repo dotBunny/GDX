@@ -36,158 +36,140 @@ namespace GDX
 
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AddWithExpandCheckUniqueItem_NonUniqueString_ReturnsFalse()
         {
             SimpleList<string> mockData = new SimpleList<string>(3);
 
-            mockData.AddWithExpandCheckUniqueItem("test1");
-            mockData.AddWithExpandCheckUniqueItem("test2");
-            mockData.AddWithExpandCheckUniqueItem("test3");
+            mockData.AddWithExpandCheckUniqueItem(TestLiterals.Foo);
+            mockData.AddWithExpandCheckUniqueItem(TestLiterals.Bar);
+            mockData.AddWithExpandCheckUniqueItem(TestLiterals.TestSeed);
 
-            bool evaluate = mockData.AddWithExpandCheckUniqueItem("test1");
-
-            Assert.IsFalse(evaluate);
+            Assert.IsFalse(mockData.AddWithExpandCheckUniqueItem(TestLiterals.Foo));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AddWithExpandCheckUniqueItem_UniqueString_ReturnsTrue()
         {
             SimpleList<string> mockData = new SimpleList<string>(3);
 
-            mockData.AddWithExpandCheckUniqueItem("test1");
-            mockData.AddWithExpandCheckUniqueItem("test2");
-            mockData.AddWithExpandCheckUniqueItem("test3");
+            mockData.AddWithExpandCheckUniqueItem(TestLiterals.Foo);
+            mockData.AddWithExpandCheckUniqueItem(TestLiterals.Bar);
+            mockData.AddWithExpandCheckUniqueItem(TestLiterals.TestSeed);
 
-            bool evaluate = mockData.AddWithExpandCheckUniqueItem("test4");
-
-            Assert.IsTrue(evaluate);
+            Assert.IsTrue(mockData.AddWithExpandCheckUniqueItem(TestLiterals.HelloWorld));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AddUncheckedUniqueItem_NonUniqueString_ReturnsFalse()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(3);
-            listOfStrings.AddUncheckedUniqueItem("test1");
-            listOfStrings.AddUncheckedUniqueItem("test2");
+            listOfStrings.AddUncheckedUniqueItem(TestLiterals.Foo);
+            listOfStrings.AddUncheckedUniqueItem(TestLiterals.Bar);
 
-            bool evaluate = listOfStrings.AddUncheckedUniqueItem("test2");
-
-            Assert.IsFalse(evaluate);
+            Assert.IsFalse(listOfStrings.AddUncheckedUniqueItem(TestLiterals.Bar));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AddUncheckedUniqueItem_UniqueStringWithRoom_NoException()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(3);
-            listOfStrings.AddUncheckedUniqueItem("test1");
-            listOfStrings.AddUncheckedUniqueItem("test2");
+            listOfStrings.AddUncheckedUniqueItem(TestLiterals.Foo);
+            listOfStrings.AddUncheckedUniqueItem(TestLiterals.Bar);
 
-            Assert.DoesNotThrow(() => { listOfStrings.AddUncheckedUniqueItem("test3"); });
+            Assert.DoesNotThrow(() => { listOfStrings.AddUncheckedUniqueItem(TestLiterals.HelloWorld); });
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AddUncheckedUniqueItem_UniqueStringWithNoRoom_ThrowsException()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(2);
-            listOfStrings.AddUncheckedUniqueItem("test1");
-            listOfStrings.AddUncheckedUniqueItem("test2");
+            listOfStrings.AddUncheckedUniqueItem(TestLiterals.Foo);
+            listOfStrings.AddUncheckedUniqueItem(TestLiterals.Bar);
 
-            Assert.Throws<IndexOutOfRangeException>(() => { listOfStrings.AddUncheckedUniqueItem("test3"); });
+            Assert.Throws<IndexOutOfRangeException>(() => { listOfStrings.AddUncheckedUniqueItem(TestLiterals.HelloWorld); });
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AddWithExpandCheckUniqueReference_NonUniqueString_ReturnsFalse()
         {
             SimpleList<string> mockData = new SimpleList<string>(3);
 
-            string string1 = "test1";
-            string string2 = "test2";
-            string string3 = "test3";
-            mockData.AddWithExpandCheckUniqueReference(string1);
-            mockData.AddWithExpandCheckUniqueReference(string2);
-            mockData.AddWithExpandCheckUniqueReference(string3);
+            mockData.AddWithExpandCheckUniqueReference(TestLiterals.Foo);
+            mockData.AddWithExpandCheckUniqueReference(TestLiterals.Bar);
+            mockData.AddWithExpandCheckUniqueReference(TestLiterals.HelloWorld);
 
-            bool evaluate = mockData.AddWithExpandCheckUniqueReference(string1);
-
-            Assert.IsFalse(evaluate);
+            Assert.IsFalse(mockData.AddWithExpandCheckUniqueReference(TestLiterals.Foo));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AddWithExpandCheckUniqueReference_UniqueString_ReturnsTrue()
         {
             SimpleList<string> mockData = new SimpleList<string>(3);
 
-            mockData.AddWithExpandCheckUniqueReference("test1");
-            mockData.AddWithExpandCheckUniqueReference("test2");
-            mockData.AddWithExpandCheckUniqueReference("test3");
+            mockData.AddWithExpandCheckUniqueReference(TestLiterals.Foo);
+            mockData.AddWithExpandCheckUniqueReference(TestLiterals.Bar);
+            mockData.AddWithExpandCheckUniqueReference(TestLiterals.HelloWorld);
 
-            bool evaluate = mockData.AddWithExpandCheckUniqueReference("test4");
-
-            Assert.IsTrue(evaluate);
+            Assert.IsTrue(mockData.AddWithExpandCheckUniqueReference(TestLiterals.TestSeed));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AddUncheckedUniqueReference_NonUniqueString_ReturnsFalse()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(3);
 
-            string string1 = "test1";
-            string string2 = "test2";
-            listOfStrings.AddUncheckedUniqueReference(string1);
-            listOfStrings.AddUncheckedUniqueReference(string2);
+            listOfStrings.AddUncheckedUniqueReference(TestLiterals.Foo);
+            listOfStrings.AddUncheckedUniqueReference(TestLiterals.Bar);
 
-            bool evaluate = listOfStrings.AddUncheckedUniqueReference(string2);
-
-            Assert.IsFalse(evaluate);
+            Assert.IsFalse(listOfStrings.AddUncheckedUniqueReference(TestLiterals.Bar));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AddUncheckedUniqueReference_UniqueStringWithRoom_NoException()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(3);
-            listOfStrings.AddUncheckedUniqueReference("test1");
-            listOfStrings.AddUncheckedUniqueReference("test2");
+            listOfStrings.AddUncheckedUniqueReference(TestLiterals.Foo);
+            listOfStrings.AddUncheckedUniqueReference(TestLiterals.Bar);
 
-            Assert.DoesNotThrow(() => { listOfStrings.AddUncheckedUniqueReference("test3"); });
+            Assert.DoesNotThrow(() => { listOfStrings.AddUncheckedUniqueReference(TestLiterals.HelloWorld); });
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AddUncheckedUniqueReference_UniqueStringWithNoRoom_ThrowsException()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(2);
-            listOfStrings.AddUncheckedUniqueReference("test1");
-            listOfStrings.AddUncheckedUniqueReference("test2");
+            listOfStrings.AddUncheckedUniqueReference(TestLiterals.Foo);
+            listOfStrings.AddUncheckedUniqueReference(TestLiterals.Bar);
 
-            Assert.Throws<IndexOutOfRangeException>(() => { listOfStrings.AddUncheckedUniqueReference("test3"); });
+            Assert.Throws<IndexOutOfRangeException>(() => { listOfStrings.AddUncheckedUniqueReference(TestLiterals.HelloWorld); });
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void ContainsItem_String_ReturnsTrue()
         {
-            const string k_SearchItem = "Hello";
             SimpleList<string> listOfStrings = new SimpleList<string>(3);
-            listOfStrings.AddUnchecked(k_SearchItem);
-            listOfStrings.AddUnchecked("World");
-            listOfStrings.AddUnchecked("!");
+            listOfStrings.AddUnchecked(TestLiterals.Foo);
+            listOfStrings.AddUnchecked(TestLiterals.Bar);
+            listOfStrings.AddUnchecked(TestLiterals.HelloWorld);
 
-            bool evaluate = listOfStrings.ContainsItem(k_SearchItem);
+            bool evaluate = listOfStrings.ContainsItem(TestLiterals.Foo);
 
             Assert.IsTrue(evaluate);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void ContainsItem_Object_ReturnsTrue()
         {
             object searchItem = new object();
@@ -206,22 +188,21 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void ContainsReference_String_ReturnsTrue()
         {
-            const string k_SearchItem = "Hello";
             SimpleList<string> listOfStrings = new SimpleList<string>(3);
-            listOfStrings.AddUnchecked(k_SearchItem);
-            listOfStrings.AddUnchecked("World");
-            listOfStrings.AddUnchecked("!");
+            listOfStrings.AddUnchecked(TestLiterals.Foo);
+            listOfStrings.AddUnchecked(TestLiterals.Bar);
+            listOfStrings.AddUnchecked(TestLiterals.TestSeed);
 
-            bool evaluate = listOfStrings.ContainsReference(k_SearchItem);
+            bool evaluate = listOfStrings.ContainsReference(TestLiterals.Foo);
 
             Assert.IsTrue(evaluate);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void ContainsReference_Object_ReturnsTrue()
         {
             object searchItem = new object();
@@ -240,7 +221,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void RemoveFirstItem_MockData_RemovedItem()
         {
             object searchItem = new object();
@@ -263,7 +244,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void RemoveFirstItem_MockData_NoItemReturnsFalse()
         {
             object searchItem = new object();
@@ -283,7 +264,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void RemoveFirstReference_MockData_RemovedItem()
         {
             object searchItem = new object();
@@ -306,7 +287,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void RemoveFirstReference_MockData_NoItemReturnsFalse()
         {
             object searchItem = new object();
@@ -326,7 +307,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void RemoveItems_MockData_RemovedItems()
         {
             object searchItem = new object();
@@ -348,7 +329,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void RemoveReferences_MockData_RemovedItems()
         {
             object searchItem = new object();
@@ -370,7 +351,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void RemoveLastItem_MockData_RemovedItem()
         {
             object searchItem = new object();
@@ -393,7 +374,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void RemoveLastItem_MockData_NoItemReturnsFalse()
         {
             object searchItem = new object();
@@ -413,7 +394,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void RemoveLastReference_MockData_RemovedItem()
         {
             object searchItem = new object();
@@ -436,7 +417,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void RemoveLastReference_MockData_NoItemReturnsFalse()
         {
             object searchItem = new object();

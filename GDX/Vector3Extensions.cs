@@ -150,14 +150,14 @@ namespace GDX
         public static bool TryParseVector3(this string targetString, out Vector3 outputVector3)
         {
             // Find split points
-            int firstSplit = targetString.IndexOf(',', 0);
+            int firstSplit = targetString.IndexOf(Literals.Comma, 0);
             if (firstSplit == -1)
             {
                 outputVector3 = Vector3.zero;
                 return false;
             }
 
-            int secondSplit = targetString.IndexOf(',', firstSplit + 1);
+            int secondSplit = targetString.IndexOf(Literals.Comma, firstSplit + 1);
             if (secondSplit == -1)
             {
                 outputVector3 = Vector3.zero;

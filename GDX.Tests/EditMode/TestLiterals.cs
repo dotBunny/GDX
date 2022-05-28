@@ -6,14 +6,17 @@ namespace GDX
 {
     public static class TestLiterals
     {
+        public const char A = 'A';
+        public const string BadData = "!!!BadData!!!";
         public const string Bar = "bar";
-        public const string Complex = "_tH\\is_I!is_M\"y_TEST_STR#$34343";
+        public const string Complex = "Complex";
         public const string Foo = "foo";
-
         public const string HelloWorld = "Hello World";
-
+        public const string LowerCase = "LowerCase";
+        public const string Off = "off";
+        public const string Simple = "Simple";
         public const string TestSeed = "TestSeed";
-
-        public const char CaptialA = 'A';
+        public const string True = "true";
+        public const string UpperCase = "UpperCase";
     }
 }

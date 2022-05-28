@@ -12,7 +12,7 @@ namespace GDX.Developer
     public class SemanticVersionTests
     {
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SemanticVersion_NoVersion_Origin()
         {
             SemanticVersion version = new SemanticVersion();
@@ -22,7 +22,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SemanticVersion_FromString_FourPartsParse()
         {
             SemanticVersion version = new SemanticVersion("2020.3.2.1");
@@ -32,7 +32,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SemanticVersion_FromString_ThreePartsParse()
         {
             SemanticVersion version = new SemanticVersion("2020.3.2.1");
@@ -42,7 +42,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SemanticVersion_FromString_TwoPartsParse()
         {
             SemanticVersion version = new SemanticVersion("2020.3");
@@ -52,7 +52,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SemanticVersion_FromString_OnePartParse()
         {
             SemanticVersion version = new SemanticVersion("2020");
@@ -62,7 +62,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SemanticVersion_UnityVersion_ThreePartsParse()
         {
             SemanticVersion version = new SemanticVersion("2020.3.1f1");
@@ -72,7 +72,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SemanticVersion_FromString_TooManyParts()
         {
             SemanticVersion version = new SemanticVersion("2020.1.1.1.1.1.1.1");
@@ -82,7 +82,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Equality_MockData_Matches()
         {
             SemanticVersion versionA = new SemanticVersion("2020.3.1");
@@ -91,7 +91,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Equals_MockData_Matches()
         {
             SemanticVersion versionA = new SemanticVersion("2020.3.1");
@@ -100,7 +100,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetHashCode_MockData_Valid()
         {
             SemanticVersion version = new SemanticVersion("2020.3.1");
@@ -109,7 +109,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GreaterThanOrEqualTo_MockData_Evaluate()
         {
             SemanticVersion majorA = new SemanticVersion("2022.0.0");
@@ -138,7 +138,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GreaterThan_MockData_Evaluate()
         {
             SemanticVersion majorA = new SemanticVersion("2022.0.0");
@@ -155,7 +155,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Inequality_MockData_DoesNotMatch()
         {
             SemanticVersion versionA = new SemanticVersion("2020.3.1");
@@ -164,7 +164,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void LessThanOrEqualTo_MockData_Evaluate()
         {
             SemanticVersion majorA = new SemanticVersion("2022.0.0");
@@ -193,7 +193,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void LessThan_MockData_Evaluate()
         {
             SemanticVersion majorA = new SemanticVersion("2021.0.0");

@@ -14,7 +14,7 @@ namespace GDX
     public class ListExtensionsTests
     {
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AddUniqueItem_UniqueItem_ReturnsTrue()
         {
             object searchValue = new object();
@@ -29,7 +29,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AddUniqueItem_NonUniqueItem_ReturnsFalse()
         {
             object searchValue = new object();
@@ -44,7 +44,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void ContainsItem_MockData_FindsItem()
         {
             object mockObject = new object();
@@ -63,19 +63,17 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void ContainsItem_StringArray_FindsItem()
         {
-            // ReSharper disable StringLiteralTypo
-            string[] mockObject = new string[] {"Hello", "Jello", "Mello", "Tello", "Dello"};
-            // ReSharper restore StringLiteralTypo
-            bool evaluate = mockObject.ContainsItem("Jello");
+            string[] mockObject = new string[] {TestLiterals.Foo, TestLiterals.Bar, TestLiterals.TestSeed};
+            bool evaluate = mockObject.ContainsItem(TestLiterals.Bar);
 
             Assert.IsTrue(evaluate);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void RemoveFirstItem_MockData_RemovedItem()
         {
             object searchItem = new object();
@@ -97,7 +95,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void RemoveFirstItem_BadMockData_ReturnsFalse()
         {
             object searchItem = new object();
@@ -117,7 +115,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void RemoveItemSwap_MockData_RemovedItem()
         {
             object searchItem = new object();
@@ -134,7 +132,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void RemoveLastItem_MockData_RemovedItems()
         {
             object searchItem = new object();
@@ -157,7 +155,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void RemoveLastItem_BadMockData_ReturnsFalse()
         {
             object searchItem = new object();
@@ -174,7 +172,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void RemoveItems_MockData_RemovedItems()
         {
             object searchItem = new object();
@@ -195,7 +193,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Shuffle_MockData_HasDifferences()
         {
             List<int> mockData = new List<int>

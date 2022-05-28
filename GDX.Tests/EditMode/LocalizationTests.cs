@@ -13,36 +13,24 @@ namespace GDX
     public class LocalizationTests
     {
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetHumanReadableFileSize_100_ReturnsValidString()
         {
-            string mockString = Localization.GetHumanReadableFileSize(100);
-
-            bool evaluate = mockString == "100 B";
-
-            Assert.IsTrue(evaluate, mockString);
+            Assert.IsTrue(Localization.GetHumanReadableFileSize(100) == $"100 {Localization.ByteSizes[0]}");
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetHumanReadableFileSize_1024_ReturnsValidString()
         {
-            string mockString = Localization.GetHumanReadableFileSize(1024);
-
-            bool evaluate = mockString == "1 KB";
-
-            Assert.IsTrue(evaluate, mockString);
+            Assert.IsTrue(Localization.GetHumanReadableFileSize(1024) == $"1 {Localization.ByteSizes[1]}");
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetHumanReadableFileSize_1048576_ReturnsValidString()
         {
-            string mockString = Localization.GetHumanReadableFileSize(1048576);
-
-            bool evaluate = mockString == "1 MB";
-
-            Assert.IsTrue(evaluate, mockString);
+            Assert.IsTrue(Localization.GetHumanReadableFileSize(1048576) == $"1 {Localization.ByteSizes[2]}");
         }
     }
 }

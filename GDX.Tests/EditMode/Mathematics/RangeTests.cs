@@ -14,7 +14,7 @@ namespace GDX.Mathematics
     {
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetDouble_Bottom_Inclusive()
         {
             double data = Range.GetDouble(0, 0, 9);
@@ -23,7 +23,7 @@ namespace GDX.Mathematics
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetDouble_Top_Inclusive()
         {
             double data = Range.GetDouble(1, 0, 9);
@@ -32,7 +32,7 @@ namespace GDX.Mathematics
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetDouble_Middle_Inclusive()
         {
             double data = Range.GetDouble(0.5d, 0, 9);
@@ -41,7 +41,7 @@ namespace GDX.Mathematics
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetInteger_Bottom_Inclusive()
         {
             int data = Range.GetInteger(0, -1, 9);
@@ -50,7 +50,7 @@ namespace GDX.Mathematics
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetInteger_Top_Inclusive()
         {
             int data = Range.GetInteger(1, 0, 9);
@@ -59,7 +59,7 @@ namespace GDX.Mathematics
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetInteger_Middle_Inclusive()
         {
             int data = Range.GetInteger(0.5f, 0, 9);
@@ -69,7 +69,7 @@ namespace GDX.Mathematics
 
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetSingle_Bottom_Inclusive()
         {
             float data = Range.GetSingle(0, 0, 9);
@@ -78,7 +78,7 @@ namespace GDX.Mathematics
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetSingle_Top_Inclusive()
         {
             float data = Range.GetSingle(1, 0, 9);
@@ -87,7 +87,7 @@ namespace GDX.Mathematics
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetSingle_Middle_Inclusive()
         {
             float data = Range.GetSingle(0.5f, 0, 9);
@@ -96,7 +96,7 @@ namespace GDX.Mathematics
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetUnsignedInteger_Bottom_Inclusive()
         {
             uint data = Range.GetUnsignedInteger(0, 0, 9);
@@ -105,7 +105,7 @@ namespace GDX.Mathematics
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetUnsignedInteger_Top_Inclusive()
         {
             uint data = Range.GetUnsignedInteger(1, 0, 9);
@@ -114,7 +114,7 @@ namespace GDX.Mathematics
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetUnsignedInteger_Middle_Inclusive()
         {
             uint data = Range.GetUnsignedInteger(0.5f, 0, 9);

@@ -15,7 +15,7 @@ namespace GDX.Editor.Build
         ///     Check if the default content is returned when asked for.
         /// </summary>
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetContent_ForceDefaults_ReturnsDefaultContent()
         {
             string generateContent = BuildInfoProvider.GetContent(true);

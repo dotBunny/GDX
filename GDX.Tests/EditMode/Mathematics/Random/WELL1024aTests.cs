@@ -14,7 +14,7 @@ namespace GDX.Mathematics.Random
 #pragma warning restore IDE1006
     {
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void WELL1024a_FromInteger_StrippedSeed()
         {
             WELL1024a mockWell = new WELL1024a(-999);
@@ -27,7 +27,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void WELL1024a_FromString_NonAndForcedDifferent()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed, false);
@@ -42,7 +42,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void WELL1024a_FromStringUppercase_SameOriginalSeed()
         {
             WELL1024a mockWell = new WELL1024a("BOB", false);
@@ -57,7 +57,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void WELL1024a_FromUnsignedInteger_MatchedSeed()
         {
             WELL1024a mockWell = new WELL1024a(999u);
@@ -70,7 +70,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void WELL1024a_FromRestoreState_Matched()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -104,28 +104,28 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Equals_ByReference_ReturnsTrue()
         {
             Assert.IsTrue(Core.Random.Equals(ref Core.Random));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Equals_Reference_ReturnsTrue()
         {
             Assert.IsTrue(Core.Random.Equals(Core.Random));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Equals_Object_ReturnsTrue()
         {
             Assert.IsTrue(Core.Random.Equals((object)Core.Random));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextBoolean_ZeroChance_ReturnsFalse()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -138,7 +138,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextBoolean_PerfectChance_ReturnsTrue()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -151,7 +151,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextBoolean_Simple_ReturnsDeterministicValue()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -163,7 +163,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextInteger_Simple_ReturnsDeterministicValue()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -176,7 +176,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextInteger_SameRange_ReturnsSameValue()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -189,7 +189,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextInteger_ZeroValues_ReturnsZeroValue()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -202,7 +202,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextInteger_MinMaxValue_ReturnsDeterministicValue()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -215,7 +215,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextInteger_Multiple_ReturnsDifferentValues()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -241,7 +241,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextBytes_Simple_FillsBuffer()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -263,7 +263,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextDouble_Multiple_ReturnsDifferentValues()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -289,7 +289,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextDouble_Simple_ReturnsDeterministicValue()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -302,7 +302,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextSingle_Simple_ReturnsDeterministicValue()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -315,7 +315,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextSingle_Multiple_ReturnsDifferentValues()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -341,7 +341,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextUnsignedInteger_Simple_ReturnsDeterministicValue()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -352,7 +352,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextUnsignedIntegerExclusive_Simple_ReturnsDeterministicValue()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -363,7 +363,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextUnsignedIntegerExclusive_Limited_ReturnsDeterministicValue()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -376,7 +376,7 @@ namespace GDX.Mathematics.Random
 
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextUnsignedInteger_Multiple_ReturnsDifferentValues()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);

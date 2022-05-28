@@ -13,7 +13,7 @@ namespace GDX.Collections.Generic
     public class SerializableDictionaryTests
     {
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void IsSerializableType_SystemObject_ReturnsFalse()
         {
             bool evaluate = SerializableDictionary<object, string>.IsSerializableType(typeof(object));
@@ -22,7 +22,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SaveSerializedData_MockData_ReturnsSerializedDataLength()
         {
             SerializableDictionary<int, string> mockDictionary =
@@ -36,7 +36,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void IsSerializableType_UnityObject_ReturnsTrue()
         {
             bool evaluate = SerializableDictionary<Object, string>.IsSerializableType(typeof(Object));
@@ -45,7 +45,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void OverwriteSerializedData_MockData_PopulatesDictionary()
         {
             SerializableDictionary<int, string> mockDictionary = new SerializableDictionary<int, string>();
@@ -58,7 +58,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SaveSerializedData_NoData_ReturnsZeroSerializedDataLength()
         {
             SerializableDictionary<int, string> mockDictionary = new SerializableDictionary<int, string>();

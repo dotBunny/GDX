@@ -12,7 +12,7 @@ namespace GDX.Collections.Generic
     public class CircularBufferTests
     {
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Add_MockData_Normal()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -30,7 +30,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Add_MockData_Wrapped()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -49,7 +49,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Clear_MockData_Empty()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -66,7 +66,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Get_MockData_First()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -80,7 +80,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Get_MockData_Last()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -94,7 +94,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Get_MockData_Wrapped()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -111,7 +111,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetBack_MockData_Valid()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -127,7 +127,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetFront_MockData_Valid()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -144,7 +144,7 @@ namespace GDX.Collections.Generic
 
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void IsEmpty_MockData_Empty()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -153,7 +153,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void IsEmpty_MockData_ClearedEmpty()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -170,7 +170,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void IsEmpty_MockData_NotEmpty()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -185,7 +185,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void IsFull_MockData_Full()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -199,7 +199,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void IsFull_MockData_NotFull()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -212,7 +212,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void PopBack_MockData_GetValue()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -229,7 +229,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void PopFront_MockData_GetValue()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -246,7 +246,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void PushBack_MockData_InjectedValue()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -263,7 +263,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void PushFront_MockData_InjectedValue()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -280,7 +280,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Set_MockData_First()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -295,7 +295,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Set_MockData_Last()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -310,7 +310,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Set_MockData_Wrapped()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -327,7 +327,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void ToArray_MockData_NonWrapped()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);
@@ -346,7 +346,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void ToArray_MockData_Wrapped()
         {
             CircularBuffer<int> mockData = new CircularBuffer<int>(4);

@@ -10,7 +10,7 @@ namespace GDX.Mathematics.Random
     public class RandomAdaptorTests
     {
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void RandomAdaptor_FromWELL1024a_Created()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -24,7 +24,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Next_MockData_DifferentValues()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -57,7 +57,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Next_MaxValue_ValuesInRange()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -77,7 +77,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Next_Range_ValuesInRange()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -97,7 +97,7 @@ namespace GDX.Mathematics.Random
 
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextDouble_MockData_DifferentValues()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);
@@ -112,7 +112,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void NextBytes_MockData_FillsBuffer()
         {
             WELL1024a mockWell = new WELL1024a(TestLiterals.TestSeed);

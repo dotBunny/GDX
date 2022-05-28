@@ -16,223 +16,173 @@ namespace GDX
 
         [Test]
         [Performance]
-        [Category(Core.PerformanceCategory)]
+        [Category(Literals.PerformanceCategory)]
         public void ToLower_GetHashCode()
         {
             Measure.Method(() =>
                 {
-                    int unused = "HelloWorld!".ToLower().GetHashCode();
+                    int unused = TestLiterals.HelloWorld.ToLower().GetHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
                 .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("Simple")
+                .SampleGroup(TestLiterals.Simple)
                 .Run();
             Measure.Method(() =>
                 {
-                    int unused = "this is all lowercase".ToLower().GetHashCode();
+                    int unused = StringExtensionsTests.AllLowerCase.ToLower().GetHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
                 .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("LowerCase")
+                .SampleGroup(TestLiterals.LowerCase)
                 .Run();
             Measure.Method(() =>
                 {
-                    int unused = "THIS IS ALL UPPERCASE".ToLower().GetHashCode();
+                    int unused = StringExtensionsTests.AllUpperCase.ToLower().GetHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
                 .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("UpperCase")
+                .SampleGroup(TestLiterals.UpperCase)
                 .Run();
             Measure.Method(() =>
                 {
-                    int unused = TestLiterals.Complex.ToLower().GetHashCode();
+                    int unused = StringExtensionsTests.Complex.ToLower().GetHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
                 .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("Complex")
+                .SampleGroup(TestLiterals.Complex)
                 .Run();
         }
 
         [Test]
         [Performance]
-        [Category(Core.PerformanceCategory)]
+        [Category(Literals.PerformanceCategory)]
         public void GetStableLowerCaseHashCode()
         {
             Measure.Method(() =>
                 {
-                    int unused = "HelloWorld!".GetStableLowerCaseHashCode();
+                    int unused = TestLiterals.HelloWorld.GetStableLowerCaseHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
                 .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("Simple")
+                .SampleGroup(TestLiterals.Simple)
                 .Run();
             Measure.Method(() =>
                 {
-                    int unused = "this is all lowercase".GetStableLowerCaseHashCode();
+                    int unused = StringExtensionsTests.AllLowerCase.GetStableLowerCaseHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
                 .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("LowerCase")
+                .SampleGroup(TestLiterals.LowerCase)
                 .Run();
             Measure.Method(() =>
                 {
-                    int unused = "THIS IS ALL UPPERCASE".GetStableLowerCaseHashCode();
+                    int unused = StringExtensionsTests.AllUpperCase.GetStableLowerCaseHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
                 .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("UpperCase")
+                .SampleGroup(TestLiterals.UpperCase)
                 .Run();
             Measure.Method(() =>
                 {
-                    int unused = TestLiterals.Complex.GetStableLowerCaseHashCode();
+                    int unused = StringExtensionsTests.Complex.GetStableLowerCaseHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
                 .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("Complex")
+                .SampleGroup(TestLiterals.Complex)
                 .Run();
         }
 
         [Test]
         [Performance]
-        [Category(Core.PerformanceCategory)]
+        [Category(Literals.PerformanceCategory)]
         public void ToUpper_GetHashCode()
         {
             Measure.Method(() =>
                 {
-                    int unused = "HelloWorld!".ToUpper().GetHashCode();
+                    int unused = TestLiterals.HelloWorld.ToUpper().GetHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
                 .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("Simple")
+                .SampleGroup(TestLiterals.Simple)
                 .Run();
             Measure.Method(() =>
                 {
-                    int unused = "this is all lowercase".ToUpper().GetHashCode();
+                    int unused = StringExtensionsTests.AllLowerCase.ToUpper().GetHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
                 .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("LowerCase")
+                .SampleGroup(TestLiterals.LowerCase)
                 .Run();
             Measure.Method(() =>
                 {
-                    int unused = "THIS IS ALL UPPERCASE".ToUpper().GetHashCode();
+                    int unused = StringExtensionsTests.AllUpperCase.ToUpper().GetHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
                 .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("UpperCase")
+                .SampleGroup(TestLiterals.UpperCase)
                 .Run();
             Measure.Method(() =>
                 {
-                    int unused = TestLiterals.Complex.ToUpper().GetHashCode();
+                    int unused = StringExtensionsTests.Complex.ToUpper().GetHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
                 .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("Complex")
+                .SampleGroup(TestLiterals.Complex)
                 .Run();
         }
 
         [Test]
         [Performance]
-        [Category(Core.PerformanceCategory)]
-        public void IntTryParse()
-        {
-            Measure.Method(() =>
-                {
-                    int.TryParse("10", out int unused);
-                })
-                .WarmupCount(k_WarmupCount)
-                .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("Simple")
-                .Run();
-            Measure.Method(() =>
-                {
-                    int.TryParse("-12304912", out int unused);
-                })
-                .WarmupCount(k_WarmupCount)
-                .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("Complex")
-                .Run();
-        }
-
-        [Test]
-        [Performance]
-        [Category(Core.PerformanceCategory)]
-        public void IsIntegerValue()
-        {
-            Measure.Method(() =>
-                {
-                    "10".IsIntegerValue();
-                })
-                .WarmupCount(k_WarmupCount)
-                .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("Simple")
-                .Run();
-            Measure.Method(() =>
-                {
-                    "-12304912".IsIntegerValue();
-                })
-                .WarmupCount(k_WarmupCount)
-                .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("Complex")
-                .Run();
-        }
-
-        [Test]
-        [Performance]
-        [Category(Core.PerformanceCategory)]
+        [Category(Literals.PerformanceCategory)]
         public void GetStableUpperCaseHashCode()
         {
             Measure.Method(() =>
                 {
-                    int unused = "HelloWorld!".GetStableUpperCaseHashCode();
+                    int unused = TestLiterals.HelloWorld.GetStableUpperCaseHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
                 .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("Simple")
+                .SampleGroup(TestLiterals.Simple)
                 .Run();
             Measure.Method(() =>
                 {
-                    int unused = "this is all lowercase".GetStableUpperCaseHashCode();
+                    int unused = StringExtensionsTests.AllLowerCase.GetStableUpperCaseHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
                 .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("LowerCase")
+                .SampleGroup(TestLiterals.LowerCase)
                 .Run();
             Measure.Method(() =>
                 {
-                    int unused = "THIS IS ALL UPPERCASE".GetStableUpperCaseHashCode();
+                    int unused = StringExtensionsTests.AllUpperCase.GetStableUpperCaseHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
                 .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("UpperCase")
+                .SampleGroup(TestLiterals.UpperCase)
                 .Run();
             Measure.Method(() =>
                 {
-                    int unused = TestLiterals.Complex.GetStableUpperCaseHashCode();
+                    int unused = StringExtensionsTests.Complex.GetStableUpperCaseHashCode();
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
                 .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup("Complex")
+                .SampleGroup(TestLiterals.Complex)
                 .Run();
         }
     }

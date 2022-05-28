@@ -13,7 +13,7 @@ namespace GDX.Classic.Developer.Reports
     public class ResourcesAuditReportTests
     {
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Get_MockData_ReturnsObject()
         {
             ResourcesAuditReport state = ResourcesAuditReport.Get(new []
@@ -30,7 +30,7 @@ namespace GDX.Classic.Developer.Reports
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Output_GetCommon_ReturnsReport()
         {
             string[] report = ResourcesAuditReport.GetCommon().Output();
@@ -41,7 +41,7 @@ namespace GDX.Classic.Developer.Reports
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Output_GetAll_ReturnsReport()
         {
             string[] report = ResourcesAuditReport.GetAll().Output();

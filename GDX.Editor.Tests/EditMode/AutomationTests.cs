@@ -17,7 +17,7 @@ namespace GDX.Editor
     public class AutomationTests
     {
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void CaptureEditorWindow_SceneView_ReturnsTexture()
         {
             Texture2D texture = Automation.CaptureEditorWindow<SceneView>();
@@ -26,7 +26,7 @@ namespace GDX.Editor
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void CaptureEditorWindowToPNG_SceneView_OutputsImage()
         {
             string outputPath = Platform.GetUniqueOutputFilePath("CaptureEditorWindowToPNG_SceneView_OutputsImage-",".png", Config.PlatformAutomationFolder);
@@ -36,7 +36,7 @@ namespace GDX.Editor
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void CaptureFocusedEditorWindow_ReturnsTexture()
         {
             EditorApplication.ExecuteMenuItem("Window/General/Game");
@@ -56,7 +56,7 @@ namespace GDX.Editor
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void CaptureFocusedEditorWindowToPNG_OutputsImage()
         {
             EditorApplication.ExecuteMenuItem("Window/General/Game");
@@ -77,7 +77,7 @@ namespace GDX.Editor
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetWindow_SceneView_NotNull()
         {
             EditorWindow sceneView = Automation.GetWindow<SceneView>();
@@ -91,7 +91,7 @@ namespace GDX.Editor
         }
 
         [UnityTest]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public IEnumerator CaptureEditorWindow_SceneView_SameTexture()
         {
             EditorWindow sceneViewA = Automation.GetWindow<SceneView>();

@@ -13,7 +13,7 @@ namespace GDX.Developer
     public class TextGeneratorTests
     {
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AppendLineRange_MockData_AddsContent()
         {
             TextGenerator mockGenerator = new TextGenerator();

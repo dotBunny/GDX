@@ -12,11 +12,11 @@ namespace GDX
     /// </summary>
     public class CoreTests
     {
-        const string k_CoreFullName = "GDX.Core";
         const string k_CoreFieldName = "s_InitializedMainThread";
+        const string k_CoreFullName = "GDX.Core";
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void InitializeOnMainThread_AlreadyInitialized_EarlyOut()
         {
             Type core = Reflection.GetType(k_CoreFullName);
@@ -32,7 +32,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void InitializeOnMainThread_NotAlreadyInitialized_Executes()
         {
             Type core = Reflection.GetType(k_CoreFullName);

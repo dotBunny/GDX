@@ -16,8 +16,6 @@ namespace GDX
     {
         public const string OverrideClass = "CustomConfig";
         public const string OverrideMethod = "Init";
-        public const string PerformanceCategory = "GDX.Performance";
-        public const string TestCategory = "GDX.Tests";
 
         /// <summary>
         ///     An empty <see cref="object"/> array useful when things require it.

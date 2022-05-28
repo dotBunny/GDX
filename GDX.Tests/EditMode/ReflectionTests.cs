@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using NUnit.Framework;
 using UnityEditor;
 
@@ -13,25 +14,21 @@ namespace GDX
     /// </summary>
     public class ReflectionTests
     {
-        const string k_TypeFullName = "UnityEditor.ProjectBrowser";
-        const string k_TypeFullNameBad = "UnityEditor.ProjectBrowserBad";
-        const string k_MethodName = "GetAllProjectBrowsers";
-        const string k_MethodNameBad = "GetAllProjectBrowsersBad";
-        const string k_FieldName = "m_SearchFieldText";
-        const string k_FieldNameBad = "m_SearchFieldTextBad";
-        const string k_PropertyName = "isLocked";
-        const string k_PropertyNameBad = "isLockedBad";
-        const string k_GridFieldName = "m_StartGridSize";
+        const string k_ProjectBrowserFieldName = "m_SearchFieldText";
+        const string k_ProjectBrowserFieldNameAlternative = "m_StartGridSize";
+        const string k_ProjectBrowserFullName = "UnityEditor.ProjectBrowser";
+        const string k_ProjectBrowserMethodName = "GetAllProjectBrowsers";
+        const string k_ProjectBrowserPropertyName = "isLocked";
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetDefault_Nullable_ReturnsNull()
         {
             Assert.IsTrue(typeof(EditorWindow).GetDefault() == null);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetDefault_NonNullable_ReturnsValue()
         {
             object defaultBoxedValue = typeof(int).GetDefault();
@@ -40,358 +37,357 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetType_QualifiedType_ReturnsType()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetType_BadType_ReturnsNull()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullNameBad);
+            Type projectBrowser = Reflection.GetType(TestLiterals.BadData);
             Assert.IsTrue(projectBrowser == null);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void InvokeStaticMethod_ProjectBrowser_ReturnsListOfBrowsers()
         {
-            object response = Reflection.InvokeStaticMethod(k_TypeFullName, k_MethodName);
+            object response = Reflection.InvokeStaticMethod(k_ProjectBrowserFullName, k_ProjectBrowserMethodName);
             Assert.IsTrue(response != null);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void InvokeStaticMethod_BadMethod_ReturnsNull()
         {
-            object response = Reflection.InvokeStaticMethod(k_TypeFullName, k_MethodNameBad);
+            object response = Reflection.InvokeStaticMethod(k_ProjectBrowserFullName, TestLiterals.BadData);
             Assert.IsTrue(response == null);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void InvokeStaticMethod_BadType_ReturnsNull()
         {
-            object response = Reflection.InvokeStaticMethod(k_TypeFullNameBad, k_MethodNameBad);
+            object response = Reflection.InvokeStaticMethod(TestLiterals.BadData, TestLiterals.BadData);
             Assert.IsTrue(response == null);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SetFieldOrPropertyValue_ProjectBrowser_SetIsLocked()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
 
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
-            Assert.IsTrue(Reflection.TryGetFieldOrPropertyValue(projectBrowserWindow, k_PropertyName, out object previous));
+            Assert.IsTrue(Reflection.TryGetFieldOrPropertyValue(projectBrowserWindow, k_ProjectBrowserPropertyName, out object previous));
 
             Assert.IsTrue(Reflection.SetFieldOrPropertyValue(
-                projectBrowserWindow, k_PropertyName, !(bool)previous));
+                projectBrowserWindow, k_ProjectBrowserPropertyName, !(bool)previous));
 
-            Assert.IsTrue(Reflection.TryGetFieldOrPropertyValue(projectBrowserWindow, k_PropertyName, out object newValue));
+            Assert.IsTrue(Reflection.TryGetFieldOrPropertyValue(projectBrowserWindow, k_ProjectBrowserPropertyName, out object newValue));
             Assert.IsTrue((bool)newValue == !(bool)previous);
 
             Assert.IsTrue(Reflection.SetFieldOrPropertyValue(
-                projectBrowserWindow, k_PropertyName, previous));
+                projectBrowserWindow, k_ProjectBrowserPropertyName, previous));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SetFieldOrPropertyValue_ProjectBrowser_SetSearchFieldText()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
 
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
             Assert.IsTrue(Reflection.SetFieldOrPropertyValue(
-                projectBrowserWindow, k_FieldName, TestLiterals.Foo));
+                projectBrowserWindow, k_ProjectBrowserFieldName, TestLiterals.Foo));
 
             Reflection.TryGetFieldValue(
-                projectBrowserWindow, projectBrowser, k_FieldName, out string tempValue);
+                projectBrowserWindow, projectBrowser, k_ProjectBrowserFieldName, out string tempValue);
             Assert.IsTrue(tempValue == TestLiterals.Foo);
 
             Assert.IsTrue(Reflection.SetFieldOrPropertyValue(
-                projectBrowserWindow, k_FieldName, string.Empty));
+                projectBrowserWindow, k_ProjectBrowserFieldName, string.Empty));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SetFieldOrPropertyValue_NoType_ReturnsFalse()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
 
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
-            Assert.IsFalse(Reflection.SetFieldOrPropertyValue(projectBrowserWindow,
-                k_FieldNameBad, TestLiterals.Foo));
+            Assert.IsFalse(Reflection.SetFieldOrPropertyValue(projectBrowserWindow, TestLiterals.BadData, TestLiterals.Foo));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SetFieldOrPropertyValue_NoTarget_ReturnsFalse()
         {
-            Assert.IsFalse(Reflection.SetFieldOrPropertyValue(null, k_FieldNameBad, TestLiterals.Foo));
+            Assert.IsFalse(Reflection.SetFieldOrPropertyValue(null, TestLiterals.BadData, TestLiterals.Foo));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SetFieldValue_ProjectBrowser_SetSearchFieldText()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
 
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
             Assert.IsTrue(Reflection.SetFieldValue(
-                projectBrowserWindow, projectBrowser, k_FieldName, TestLiterals.Foo));
+                projectBrowserWindow, projectBrowser, k_ProjectBrowserFieldName, TestLiterals.Foo));
 
             Assert.IsTrue(Reflection.TryGetFieldValue(
-                projectBrowserWindow, projectBrowser, k_FieldName, out string query));
+                projectBrowserWindow, projectBrowser, k_ProjectBrowserFieldName, out string query));
             Assert.IsTrue(query == TestLiterals.Foo);
 
             Assert.IsTrue(Reflection.SetFieldValue(
-                projectBrowserWindow, projectBrowser, k_FieldName, string.Empty));
+                projectBrowserWindow, projectBrowser, k_ProjectBrowserFieldName, string.Empty));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SetFieldValue_NoType_ReturnsFalse()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
 
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
-            Assert.IsFalse(Reflection.SetFieldValue(projectBrowserWindow, null, k_FieldNameBad,
+            Assert.IsFalse(Reflection.SetFieldValue(projectBrowserWindow, null, TestLiterals.BadData,
                 TestLiterals.Foo));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SetFieldValue_BadField_ReturnsFalse()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
 
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
             Assert.IsFalse(Reflection.SetFieldValue(projectBrowserWindow,
-                    projectBrowser, k_FieldNameBad, TestLiterals.Foo));
+                    projectBrowser, TestLiterals.BadData, TestLiterals.Foo));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SetPropertyValue_QualifiedProperty_IsSet()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
             Assert.IsTrue(
-                Reflection.TryGetPropertyValue(projectBrowserWindow, projectBrowser, k_PropertyName, out bool previousValue));
+                Reflection.TryGetPropertyValue(projectBrowserWindow, projectBrowser, k_ProjectBrowserPropertyName, out bool previousValue));
 
             Assert.IsTrue(
-                Reflection.SetPropertyValue(projectBrowserWindow, projectBrowser, k_PropertyName, !previousValue));
+                Reflection.SetPropertyValue(projectBrowserWindow, projectBrowser, k_ProjectBrowserPropertyName, !previousValue));
 
-            Reflection.TryGetPropertyValue(projectBrowserWindow, projectBrowser, k_PropertyName, out bool newValue);
+            Reflection.TryGetPropertyValue(projectBrowserWindow, projectBrowser, k_ProjectBrowserPropertyName, out bool newValue);
             Assert.IsTrue(!previousValue == newValue);
 
-            Reflection.SetPropertyValue(projectBrowserWindow, projectBrowser, k_PropertyName, previousValue);
+            Reflection.SetPropertyValue(projectBrowserWindow, projectBrowser, k_ProjectBrowserPropertyName, previousValue);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SetPropertyValue_NoType_IsFalse()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
             Assert.IsFalse(
-                Reflection.SetPropertyValue(projectBrowserWindow, null, k_PropertyName, false));
+                Reflection.SetPropertyValue(projectBrowserWindow, null, k_ProjectBrowserPropertyName, false));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SetPropertyValue_InvalidName_IsFalse()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
             Assert.IsFalse(
-                Reflection.SetPropertyValue(projectBrowserWindow, projectBrowser, k_PropertyNameBad, false));
+                Reflection.SetPropertyValue(projectBrowserWindow, projectBrowser, TestLiterals.TestSeed, false));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void TryGetFieldOrPropertyValue_NoTarget_ReturnsDefault()
         {
             Assert.IsFalse(Reflection.TryGetFieldOrPropertyValue(
-                null, k_TypeFullName, out object missedObject));
+                null, k_ProjectBrowserFullName, out object missedObject));
             Assert.IsNull(missedObject);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void TryGetFieldOrPropertyValue_NoField_ReturnsDefault()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
 
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
             Assert.IsFalse(Reflection.TryGetFieldOrPropertyValue(
-                projectBrowserWindow, k_TypeFullNameBad, out object missedObject));
+                projectBrowserWindow, TestLiterals.BadData, out object missedObject));
             Assert.IsNull(missedObject);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void TryGetFieldOrPropertyValue_BadField_ReturnsStartGridSize()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
 
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
             Assert.IsTrue(Reflection.TryGetFieldOrPropertyValue(
-                projectBrowserWindow, k_GridFieldName, out object gridSize));
+                projectBrowserWindow, k_ProjectBrowserFieldNameAlternative, out object gridSize));
 
             Assert.IsTrue(gridSize != null);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void TryGetFieldOrPropertyValue_ProjectBrowserField_ReturnsStartGridSize()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
 
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
             Assert.IsTrue(Reflection.TryGetFieldOrPropertyValue(
-                projectBrowserWindow, k_GridFieldName, out object gridSize));
+                projectBrowserWindow, k_ProjectBrowserFieldNameAlternative, out object gridSize));
 
             Assert.IsTrue(gridSize != null);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void TryGetFieldOrPropertyValue_ProjectBrowserProperty_ReturnsIsLocked()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
 
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
-            Assert.IsTrue(Reflection.TryGetFieldOrPropertyValue(projectBrowserWindow, k_PropertyName,
+            Assert.IsTrue(Reflection.TryGetFieldOrPropertyValue(projectBrowserWindow, k_ProjectBrowserPropertyName,
                 out object toggle));
 
             Assert.IsTrue(toggle != null);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void TryGetFieldValue_ProjectBrowser_ReturnsTrueGetFieldText()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
 
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
-            Assert.IsTrue(Reflection.TryGetFieldValue(projectBrowserWindow, projectBrowser, k_FieldName,
+            Assert.IsTrue(Reflection.TryGetFieldValue(projectBrowserWindow, projectBrowser, k_ProjectBrowserFieldName,
                 out string query));
 
             Assert.IsTrue(query != null);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void TryGetFieldValue_NoType_ReturnsDefault()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
 
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
             Assert.IsFalse(Reflection.TryGetFieldValue(
-                projectBrowserWindow, null, k_FieldNameBad, out string returnValue));
+                projectBrowserWindow, null, TestLiterals.BadData, out string returnValue));
             Assert.IsNull(returnValue);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void TryGetFieldValue_BadField_ReturnsDefault()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
 
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
             Assert.IsFalse(Reflection.TryGetFieldValue(
-                projectBrowserWindow, projectBrowser, k_FieldNameBad, out string returnValue));
+                projectBrowserWindow, projectBrowser, TestLiterals.BadData, out string returnValue));
             Assert.IsNull(returnValue);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void TryGetPropertyValue_QualifiedProperty_IsTrue()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
-            Assert.IsTrue(Reflection.TryGetPropertyValue(projectBrowserWindow, projectBrowser, k_PropertyName, out bool _));
+            Assert.IsTrue(Reflection.TryGetPropertyValue(projectBrowserWindow, projectBrowser, k_ProjectBrowserPropertyName, out bool _));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void TryGetPropertyValue_NoType_IsFalse()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
-            Assert.IsFalse(Reflection.TryGetPropertyValue(projectBrowserWindow, null, k_PropertyName, out bool _));
+            Assert.IsFalse(Reflection.TryGetPropertyValue(projectBrowserWindow, null, k_ProjectBrowserPropertyName, out bool _));
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void TryGetPropertyValue_InvalidName_IsFalse()
         {
-            System.Type projectBrowser = Reflection.GetType(k_TypeFullName);
+            Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
             Assert.IsTrue(projectBrowser != null);
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
-            Assert.IsFalse(Reflection.TryGetPropertyValue(projectBrowserWindow, projectBrowser, k_PropertyNameBad, out bool _));
+            Assert.IsFalse(Reflection.TryGetPropertyValue(projectBrowserWindow, projectBrowser, TestLiterals.BadData, out bool _));
         }
     }
 }

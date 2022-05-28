@@ -15,7 +15,7 @@ namespace GDX
     public class Array2DExtensionsTests
     {
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Scale_MockFloatData_ScaledData()
         {
             int scaleFactor = 2;

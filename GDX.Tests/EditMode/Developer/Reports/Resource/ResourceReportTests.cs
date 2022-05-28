@@ -14,7 +14,7 @@ namespace GDX.Developer.Reports.Resource
     public class ResourceReportTests
     {
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void CreateDivider_MockData_CorrectLength()
         {
 
@@ -27,7 +27,7 @@ namespace GDX.Developer.Reports.Resource
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void CreateHeader_MockData_CorrectLength()
         {
             ResourceReportContext context = new ResourceReportContext();
@@ -39,7 +39,7 @@ namespace GDX.Developer.Reports.Resource
         }
         
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Output_MockData_StringBuilderSameAsStreamWriter()
         {
             ResourcesAuditReport report = ResourcesAuditReport.GetCommon();

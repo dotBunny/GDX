@@ -59,7 +59,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void DestroyChildren_RemoveAll_NoChildren()
         {
             m_BaseTransform.DestroyChildren(true, true, true);
@@ -68,7 +68,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void DestroyChildren_RemoveActiveOnly_OneChildRemaining()
         {
             m_BaseTransform.DestroyChildren(false, false, true);
@@ -77,14 +77,14 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetActiveChildrenCount_MockData_AccurateCount()
         {
             Assert.IsTrue(m_BaseTransform.GetActiveChildCount() == 2);
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetFirstComponentInChildrenComplex_MockData_FirstTransform()
         {
             Transform t = m_BaseTransform.GetFirstComponentInChildrenComplex<Transform>(true, 0, 1);
@@ -92,7 +92,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetScenePath_MockData_RootPath()
         {
             Assert.IsTrue(m_BaseTransform.GetScenePath() == $"/{TestLiterals.Foo}");

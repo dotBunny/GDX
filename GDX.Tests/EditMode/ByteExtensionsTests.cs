@@ -14,7 +14,7 @@ namespace GDX
     public class ByteExtensionsTests
     {
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetStableHashCode_MockData_ReturnsValidCode()
         {
             byte[] testArray = Encoding.UTF8.GetBytes(TestLiterals.HelloWorld);
@@ -25,7 +25,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void IsSame_SameData_ReturnsTrue()
         {
             byte[] mockData = StringExtensions.EncryptionDefaultKey;
@@ -36,7 +36,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void IsSame_DifferentData_ReturnsFalse()
         {
             byte[] mockData = StringExtensions.EncryptionDefaultKey;
@@ -48,7 +48,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void IsSame_NullLeftHandSide_ReturnsFalse()
         {
             bool evaluate = ByteExtensions.IsSame(null,
@@ -58,7 +58,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void IsSame_NullRightHandSide_ReturnsFalse()
         {
             bool evaluate = StringExtensions.EncryptionDefaultKey.IsSame(null);
@@ -67,7 +67,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void IsSame_DifferentLengths_ReturnsFalse()
         {
             byte[] mockData = StringExtensions.EncryptionDefaultKey;

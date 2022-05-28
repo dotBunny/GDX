@@ -10,7 +10,7 @@ namespace GDX.Collections.Generic
 	public class FreeListTests
     {
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void FreeList_CreateWithCount()
         {
             FreeList mockList = new FreeList(4);
@@ -21,7 +21,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AddUnchecked_MockData_ValueAdded()
         {
             FreeList mockList = new FreeList(2);
@@ -35,7 +35,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AddUnchecked_MockDataOverflow_ThrowsException()
         {
             FreeList mockList = new FreeList(1);
@@ -46,7 +46,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AddWithExpandCheck_MockData_ValueAdded()
         {
             FreeList mockList = new FreeList(1);
@@ -60,7 +60,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AddWithExpandCheck_MockDataWithExpansion_ValueAdded()
         {
             FreeList mockList = new FreeList(1);
@@ -74,7 +74,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void Clear_MockData_DataCleared()
         {
             FreeList mockList = new FreeList(1);
@@ -90,7 +90,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void RemoveAt_MockData_ValueRemoved()
         {
             FreeList mockList = new FreeList(3);
@@ -107,7 +107,7 @@ namespace GDX.Collections.Generic
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetAndRemoveAt_MockData_ValueRemoved()
         {
             FreeList mockList = new FreeList(3);
@@ -118,9 +118,11 @@ namespace GDX.Collections.Generic
 
             int valueStored = mockList.GetAndRemoveAt(1);
 
-            bool evaluate = (mockList.Count == 2 && mockList.Indices[1] == 3 && mockList.CurrentFreeIndex == 1 && mockList.Indices[2] == 9 && valueStored == 8);
-
-            Assert.IsTrue(evaluate);
+            Assert.IsTrue(mockList.Count == 2);
+            Assert.IsTrue(mockList.Indices[1] == 3);
+            Assert.IsTrue(mockList.CurrentFreeIndex == 1);
+            Assert.IsTrue(mockList.Indices[2] == 9);
+            Assert.IsTrue(valueStored == 8);
         }
     }
 }

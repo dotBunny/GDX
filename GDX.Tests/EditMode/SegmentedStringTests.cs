@@ -14,7 +14,7 @@ namespace GDX
         readonly string m_TestContent = "Hello my; favorite .game is NOT happy G";
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AsCharArray_MockData_ReturnsAll()
         {
             SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
@@ -23,7 +23,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AsCharArray_MockDataSpecific_ReturnsTarget()
         {
             SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
@@ -31,7 +31,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void AsString_MockData_ReturnsLowered()
         {
             SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
@@ -40,7 +40,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetCount_MockData_Correct()
         {
             SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLower(m_TestContent);
@@ -48,14 +48,14 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetHashCode_MockData_Correct()
         {
             SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
             Assert.IsTrue(splitString.GetHashCode() == -316307395);
         }
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetOffset_MockData_Valid()
         {
             SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
@@ -63,7 +63,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetSegmentLength_MockData_CorrectCount()
         {
             SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
@@ -71,7 +71,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void GetSegment_MockData_Matches()
         {
             SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
@@ -84,7 +84,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Core.TestCategory)]
+        [Category(Literals.TestCategory)]
         public void SplitOnNonAlphaNumericToLowerHashed_MockData_ValidHashCodes()
         {
             SegmentedString splitString = SegmentedString.SplitOnNonAlphaNumericToLowerHashed(m_TestContent);
