@@ -11,7 +11,7 @@ namespace GDX
     {
         public const string Bar = "bar";
         public const string Foo = "foo";
-        public const string HelloWorld = "HelloWorld";
+        public const string HelloWorld = "Hello World";
         public const string Seed = "TestSeed";
     }
 }
