@@ -13,7 +13,7 @@ namespace GDX.Jobs.ParallelFor
     public class Color32CompareJobTests
     {
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Compare_WhiteTexture_Same()
         {
             NativeArray<Color32> whiteData = Texture2D.whiteTexture.GetRawTextureData<Color32>();
@@ -44,7 +44,7 @@ namespace GDX.Jobs.ParallelFor
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Compare_WhiteBlack_Different()
         {
             NativeArray<Color32> whiteData = Texture2D.whiteTexture.GetRawTextureData<Color32>();

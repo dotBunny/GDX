@@ -14,7 +14,7 @@ namespace GDX
     public class Vector2ExtensionsTests
     {
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Approximately_FiveMillionths_ReturnsFalse()
         {
             Vector2 a = new Vector2(1.000005f, 1);
@@ -26,7 +26,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Approximately_One_ReturnsTrue()
         {
             Vector2 a = new Vector2(1, 1);
@@ -38,7 +38,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Approximately_OneMillionth_ReturnsTrue()
         {
             Vector2 a = new Vector2(1.000001f, 1);
@@ -50,7 +50,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Approximately_Zero_ReturnsTrue()
         {
             Vector2 a = new Vector2(0, 0);
@@ -62,7 +62,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Midpoint_ZeroAndOne_ReturnsHalf()
         {
             Vector2 a = new Vector2(0, 0);
@@ -75,7 +75,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void NearestIndex_MockData_ReturnsClosest()
         {
             Vector2 target = Vector2.one;
@@ -93,7 +93,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void NearestIndex_NullInput_ReturnsNegativeOne()
         {
             Vector2 a = Vector2.down;
@@ -104,7 +104,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Slope_ZeroXValue_ReturnsZero()
         {
             Vector2 mockData = new Vector2(0, 10);
@@ -115,7 +115,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Slope_MockData_ReturnsSlope()
         {
             Vector2 mockData = new Vector2(5, 10);
@@ -126,7 +126,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TryParseVector2_NoSplit_ReturnsFalse()
         {
             bool parse = "12".TryParseVector2(out Vector2 parsedLocation);
@@ -137,7 +137,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TryParseVector2_NoSpaces_ReturnsVector2()
         {
             bool parse = "1.5,2".TryParseVector2(out Vector2 parsedLocation);
@@ -148,7 +148,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TryParseVector2_SpacedValues_ReturnsVector2()
         {
             bool parse = "1, 2".TryParseVector2(out Vector2 parsedLocation);
@@ -159,7 +159,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TryParseVector2_CharFirstSplit_ReturnsFalse()
         {
             bool parse = "c, 2".TryParseVector2(out Vector2 parsedLocation);
@@ -170,7 +170,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TryParseVector2_CharSecondSplit_ReturnsFalse()
         {
             bool parse = "1, c".TryParseVector2(out Vector2 parsedLocation);

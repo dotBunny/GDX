@@ -14,7 +14,7 @@ namespace GDX.Developer
     public class TransientReferenceTests
     {
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TransientReference_ObjectBased_CreatedReference()
         {
 
@@ -24,7 +24,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TransientReference_ObjectBasedResurrection_CreatedReference()
         {
 
@@ -43,7 +43,7 @@ namespace GDX.Developer
 //         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void CompareTo_DuplicateTransientReference_ReturnsOne()
         {
             TextGenerator mockGenerator = new TextGenerator();
@@ -54,7 +54,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void CompareTo_BadTransientReference_ReturnsZero()
         {
             TextGenerator mockGenerator = new TextGenerator();
@@ -66,7 +66,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void CompareTo_OriginalObject_ReturnsOne()
         {
             TextGenerator mockGenerator = new TextGenerator();
@@ -75,7 +75,7 @@ namespace GDX.Developer
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void CompareTo_WeakReference_ReturnsOne()
         {
             TextGenerator mockGenerator = new TextGenerator();

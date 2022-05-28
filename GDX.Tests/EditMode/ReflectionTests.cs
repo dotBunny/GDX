@@ -14,6 +14,7 @@ namespace GDX
     /// </summary>
     public class ReflectionTests
     {
+        const string k_BadName = "_BadName";
         const string k_ProjectBrowserFieldName = "m_SearchFieldText";
         const string k_ProjectBrowserFieldNameAlternative = "m_StartGridSize";
         const string k_ProjectBrowserFullName = "UnityEditor.ProjectBrowser";
@@ -21,14 +22,14 @@ namespace GDX
         const string k_ProjectBrowserPropertyName = "isLocked";
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetDefault_Nullable_ReturnsNull()
         {
             Assert.IsTrue(typeof(EditorWindow).GetDefault() == null);
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetDefault_NonNullable_ReturnsValue()
         {
             object defaultBoxedValue = typeof(int).GetDefault();
@@ -37,7 +38,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetType_QualifiedType_ReturnsType()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -45,15 +46,15 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetType_BadType_ReturnsNull()
         {
-            Type projectBrowser = Reflection.GetType(TestLiterals.BadData);
+            Type projectBrowser = Reflection.GetType(k_BadName);
             Assert.IsTrue(projectBrowser == null);
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void InvokeStaticMethod_ProjectBrowser_ReturnsListOfBrowsers()
         {
             object response = Reflection.InvokeStaticMethod(k_ProjectBrowserFullName, k_ProjectBrowserMethodName);
@@ -61,24 +62,24 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
+        [Category(Core.TestCategory)]
         public void InvokeStaticMethod_BadMethod_ReturnsNull()
         {
-            object response = Reflection.InvokeStaticMethod(k_ProjectBrowserFullName, TestLiterals.BadData);
+            object response = Reflection.InvokeStaticMethod(k_ProjectBrowserFullName, k_BadName);
             Assert.IsTrue(response == null);
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void InvokeStaticMethod_BadType_ReturnsNull()
         {
-            object response = Reflection.InvokeStaticMethod(TestLiterals.BadData, TestLiterals.BadData);
+            object response = Reflection.InvokeStaticMethod(k_BadName, k_BadName);
             Assert.IsTrue(response == null);
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void SetFieldOrPropertyValue_ProjectBrowser_SetIsLocked()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -100,7 +101,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void SetFieldOrPropertyValue_ProjectBrowser_SetSearchFieldText()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -121,7 +122,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void SetFieldOrPropertyValue_NoType_ReturnsFalse()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -130,18 +131,18 @@ namespace GDX
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
-            Assert.IsFalse(Reflection.SetFieldOrPropertyValue(projectBrowserWindow, TestLiterals.BadData, TestLiterals.Foo));
+            Assert.IsFalse(Reflection.SetFieldOrPropertyValue(projectBrowserWindow, k_BadName, TestLiterals.Foo));
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void SetFieldOrPropertyValue_NoTarget_ReturnsFalse()
         {
-            Assert.IsFalse(Reflection.SetFieldOrPropertyValue(null, TestLiterals.BadData, TestLiterals.Foo));
+            Assert.IsFalse(Reflection.SetFieldOrPropertyValue(null, k_BadName, TestLiterals.Foo));
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void SetFieldValue_ProjectBrowser_SetSearchFieldText()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -162,7 +163,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void SetFieldValue_NoType_ReturnsFalse()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -171,12 +172,12 @@ namespace GDX
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
-            Assert.IsFalse(Reflection.SetFieldValue(projectBrowserWindow, null, TestLiterals.BadData,
+            Assert.IsFalse(Reflection.SetFieldValue(projectBrowserWindow, null, k_BadName,
                 TestLiterals.Foo));
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void SetFieldValue_BadField_ReturnsFalse()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -186,11 +187,11 @@ namespace GDX
             Assert.IsTrue(projectBrowserWindow != null);
 
             Assert.IsFalse(Reflection.SetFieldValue(projectBrowserWindow,
-                    projectBrowser, TestLiterals.BadData, TestLiterals.Foo));
+                    projectBrowser, k_BadName, TestLiterals.Foo));
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void SetPropertyValue_QualifiedProperty_IsSet()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -211,7 +212,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void SetPropertyValue_NoType_IsFalse()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -224,7 +225,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void SetPropertyValue_InvalidName_IsFalse()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -233,11 +234,11 @@ namespace GDX
             Assert.IsTrue(projectBrowserWindow != null);
 
             Assert.IsFalse(
-                Reflection.SetPropertyValue(projectBrowserWindow, projectBrowser, TestLiterals.TestSeed, false));
+                Reflection.SetPropertyValue(projectBrowserWindow, projectBrowser, TestLiterals.Seed, false));
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TryGetFieldOrPropertyValue_NoTarget_ReturnsDefault()
         {
             Assert.IsFalse(Reflection.TryGetFieldOrPropertyValue(
@@ -246,7 +247,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TryGetFieldOrPropertyValue_NoField_ReturnsDefault()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -256,12 +257,12 @@ namespace GDX
             Assert.IsTrue(projectBrowserWindow != null);
 
             Assert.IsFalse(Reflection.TryGetFieldOrPropertyValue(
-                projectBrowserWindow, TestLiterals.BadData, out object missedObject));
+                projectBrowserWindow, k_BadName, out object missedObject));
             Assert.IsNull(missedObject);
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TryGetFieldOrPropertyValue_BadField_ReturnsStartGridSize()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -277,7 +278,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TryGetFieldOrPropertyValue_ProjectBrowserField_ReturnsStartGridSize()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -293,7 +294,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TryGetFieldOrPropertyValue_ProjectBrowserProperty_ReturnsIsLocked()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -309,7 +310,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TryGetFieldValue_ProjectBrowser_ReturnsTrueGetFieldText()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -325,7 +326,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TryGetFieldValue_NoType_ReturnsDefault()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -335,12 +336,12 @@ namespace GDX
             Assert.IsTrue(projectBrowserWindow != null);
 
             Assert.IsFalse(Reflection.TryGetFieldValue(
-                projectBrowserWindow, null, TestLiterals.BadData, out string returnValue));
+                projectBrowserWindow, null, k_BadName, out string returnValue));
             Assert.IsNull(returnValue);
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TryGetFieldValue_BadField_ReturnsDefault()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -350,12 +351,12 @@ namespace GDX
             Assert.IsTrue(projectBrowserWindow != null);
 
             Assert.IsFalse(Reflection.TryGetFieldValue(
-                projectBrowserWindow, projectBrowser, TestLiterals.BadData, out string returnValue));
+                projectBrowserWindow, projectBrowser, k_BadName, out string returnValue));
             Assert.IsNull(returnValue);
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TryGetPropertyValue_QualifiedProperty_IsTrue()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -367,7 +368,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TryGetPropertyValue_NoType_IsFalse()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -379,7 +380,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void TryGetPropertyValue_InvalidName_IsFalse()
         {
             Type projectBrowser = Reflection.GetType(k_ProjectBrowserFullName);
@@ -387,7 +388,7 @@ namespace GDX
             EditorWindow projectBrowserWindow = EditorWindow.GetWindow(projectBrowser);
             Assert.IsTrue(projectBrowserWindow != null);
 
-            Assert.IsFalse(Reflection.TryGetPropertyValue(projectBrowserWindow, projectBrowser, TestLiterals.BadData, out bool _));
+            Assert.IsFalse(Reflection.TryGetPropertyValue(projectBrowserWindow, projectBrowser, k_BadName, out bool _));
         }
     }
 }

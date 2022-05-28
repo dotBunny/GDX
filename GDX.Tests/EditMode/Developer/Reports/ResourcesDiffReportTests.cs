@@ -12,7 +12,7 @@ namespace GDX.Developer.Reports
     public class ResourcesDiffReportTests
     {
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Output_GetCommonAndAll_ReturnsReport()
         {
             ResourcesAuditReport lhs = ResourcesAuditReport.GetCommon();

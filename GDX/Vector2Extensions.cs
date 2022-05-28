@@ -119,7 +119,7 @@ namespace GDX
         public static bool TryParseVector2(this string targetString, out Vector2 outputVector2)
         {
             // Find split points
-            int splitIndex = targetString.IndexOf(Literals.Comma, 0);
+            int splitIndex = targetString.IndexOf(',', 0);
             if (splitIndex == -1)
             {
                 outputVector2 = Vector2.zero;

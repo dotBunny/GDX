@@ -14,9 +14,14 @@ namespace GDX
         const int k_MeasurementCount = 20;
         const int k_IterationsPerMeasurement = 100;
 
+        static readonly SampleGroup k_ComplexSample = new SampleGroup("Complex");
+        static readonly SampleGroup k_SimpleSample = new SampleGroup("Simple");
+        static readonly SampleGroup k_UpperCaseSample = new SampleGroup("UpperCase");
+        static readonly SampleGroup k_LowerCaseSample = new SampleGroup("LowerCase");
+
         [Test]
         [Performance]
-        [Category(Literals.PerformanceCategory)]
+        [Category(Core.PerformanceCategory)]
         public void ToLower_GetHashCode()
         {
             Measure.Method(() =>
@@ -25,8 +30,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup(TestLiterals.Simple)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_SimpleSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -34,8 +38,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup(TestLiterals.LowerCase)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_LowerCaseSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -43,8 +46,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup(TestLiterals.UpperCase)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_UpperCaseSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -52,14 +54,13 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup(TestLiterals.Complex)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_ComplexSample)
                 .Run();
         }
 
         [Test]
         [Performance]
-        [Category(Literals.PerformanceCategory)]
+        [Category(Core.PerformanceCategory)]
         public void GetStableLowerCaseHashCode()
         {
             Measure.Method(() =>
@@ -68,8 +69,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup(TestLiterals.Simple)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_SimpleSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -77,8 +77,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup(TestLiterals.LowerCase)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_LowerCaseSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -86,8 +85,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup(TestLiterals.UpperCase)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_UpperCaseSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -95,14 +93,13 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup(TestLiterals.Complex)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_ComplexSample)
                 .Run();
         }
 
         [Test]
         [Performance]
-        [Category(Literals.PerformanceCategory)]
+        [Category(Core.PerformanceCategory)]
         public void ToUpper_GetHashCode()
         {
             Measure.Method(() =>
@@ -111,8 +108,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup(TestLiterals.Simple)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_SimpleSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -120,8 +116,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup(TestLiterals.LowerCase)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_LowerCaseSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -129,8 +124,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup(TestLiterals.UpperCase)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_UpperCaseSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -138,14 +132,13 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup(TestLiterals.Complex)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_ComplexSample)
                 .Run();
         }
 
         [Test]
         [Performance]
-        [Category(Literals.PerformanceCategory)]
+        [Category(Core.PerformanceCategory)]
         public void GetStableUpperCaseHashCode()
         {
             Measure.Method(() =>
@@ -154,8 +147,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup(TestLiterals.Simple)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_SimpleSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -163,8 +155,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup(TestLiterals.LowerCase)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_LowerCaseSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -172,8 +163,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup(TestLiterals.UpperCase)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_UpperCaseSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -181,8 +171,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement)
-                .SampleGroup(TestLiterals.Complex)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_ComplexSample)
                 .Run();
         }
     }

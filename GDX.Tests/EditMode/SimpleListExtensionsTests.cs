@@ -36,33 +36,33 @@ namespace GDX
 
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddWithExpandCheckUniqueItem_NonUniqueString_ReturnsFalse()
         {
             SimpleList<string> mockData = new SimpleList<string>(3);
 
             mockData.AddWithExpandCheckUniqueItem(TestLiterals.Foo);
             mockData.AddWithExpandCheckUniqueItem(TestLiterals.Bar);
-            mockData.AddWithExpandCheckUniqueItem(TestLiterals.TestSeed);
+            mockData.AddWithExpandCheckUniqueItem(TestLiterals.Seed);
 
             Assert.IsFalse(mockData.AddWithExpandCheckUniqueItem(TestLiterals.Foo));
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddWithExpandCheckUniqueItem_UniqueString_ReturnsTrue()
         {
             SimpleList<string> mockData = new SimpleList<string>(3);
 
             mockData.AddWithExpandCheckUniqueItem(TestLiterals.Foo);
             mockData.AddWithExpandCheckUniqueItem(TestLiterals.Bar);
-            mockData.AddWithExpandCheckUniqueItem(TestLiterals.TestSeed);
+            mockData.AddWithExpandCheckUniqueItem(TestLiterals.Seed);
 
             Assert.IsTrue(mockData.AddWithExpandCheckUniqueItem(TestLiterals.HelloWorld));
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddUncheckedUniqueItem_NonUniqueString_ReturnsFalse()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(3);
@@ -73,7 +73,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddUncheckedUniqueItem_UniqueStringWithRoom_NoException()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(3);
@@ -84,7 +84,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddUncheckedUniqueItem_UniqueStringWithNoRoom_ThrowsException()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(2);
@@ -95,7 +95,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddWithExpandCheckUniqueReference_NonUniqueString_ReturnsFalse()
         {
             SimpleList<string> mockData = new SimpleList<string>(3);
@@ -108,7 +108,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddWithExpandCheckUniqueReference_UniqueString_ReturnsTrue()
         {
             SimpleList<string> mockData = new SimpleList<string>(3);
@@ -117,11 +117,11 @@ namespace GDX
             mockData.AddWithExpandCheckUniqueReference(TestLiterals.Bar);
             mockData.AddWithExpandCheckUniqueReference(TestLiterals.HelloWorld);
 
-            Assert.IsTrue(mockData.AddWithExpandCheckUniqueReference(TestLiterals.TestSeed));
+            Assert.IsTrue(mockData.AddWithExpandCheckUniqueReference(TestLiterals.Seed));
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddUncheckedUniqueReference_NonUniqueString_ReturnsFalse()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(3);
@@ -133,7 +133,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddUncheckedUniqueReference_UniqueStringWithRoom_NoException()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(3);
@@ -144,7 +144,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void AddUncheckedUniqueReference_UniqueStringWithNoRoom_ThrowsException()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(2);
@@ -155,7 +155,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ContainsItem_String_ReturnsTrue()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(3);
@@ -169,7 +169,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ContainsItem_Object_ReturnsTrue()
         {
             object searchItem = new object();
@@ -188,13 +188,13 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ContainsReference_String_ReturnsTrue()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(3);
             listOfStrings.AddUnchecked(TestLiterals.Foo);
             listOfStrings.AddUnchecked(TestLiterals.Bar);
-            listOfStrings.AddUnchecked(TestLiterals.TestSeed);
+            listOfStrings.AddUnchecked(TestLiterals.Seed);
 
             bool evaluate = listOfStrings.ContainsReference(TestLiterals.Foo);
 
@@ -202,7 +202,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ContainsReference_Object_ReturnsTrue()
         {
             object searchItem = new object();
@@ -221,7 +221,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveFirstItem_MockData_RemovedItem()
         {
             object searchItem = new object();
@@ -244,7 +244,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveFirstItem_MockData_NoItemReturnsFalse()
         {
             object searchItem = new object();
@@ -264,7 +264,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveFirstReference_MockData_RemovedItem()
         {
             object searchItem = new object();
@@ -287,7 +287,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveFirstReference_MockData_NoItemReturnsFalse()
         {
             object searchItem = new object();
@@ -307,7 +307,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveItems_MockData_RemovedItems()
         {
             object searchItem = new object();
@@ -329,7 +329,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveReferences_MockData_RemovedItems()
         {
             object searchItem = new object();
@@ -351,7 +351,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveLastItem_MockData_RemovedItem()
         {
             object searchItem = new object();
@@ -374,7 +374,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveLastItem_MockData_NoItemReturnsFalse()
         {
             object searchItem = new object();
@@ -394,7 +394,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveLastReference_MockData_RemovedItem()
         {
             object searchItem = new object();
@@ -417,7 +417,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RemoveLastReference_MockData_NoItemReturnsFalse()
         {
             object searchItem = new object();

@@ -23,13 +23,13 @@ namespace GDX
         {
             m_BaseTransform = new GameObject(TestLiterals.Foo).transform;
 
-            m_ChildOne = new GameObject();
+            m_ChildOne = new GameObject(TestLiterals.Foo);
             m_ChildOne.transform.SetParent(m_BaseTransform, false);
 
-            m_ChildTwo = new GameObject();
+            m_ChildTwo = new GameObject(TestLiterals.Bar);
             m_ChildTwo.transform.SetParent(m_BaseTransform, false);
 
-            m_ChildThree = new GameObject();
+            m_ChildThree = new GameObject(TestLiterals.HelloWorld);
             m_ChildThree.transform.SetParent(m_BaseTransform, false);
             m_ChildThree.SetActive(false);
         }
@@ -59,7 +59,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void DestroyChildren_RemoveAll_NoChildren()
         {
             m_BaseTransform.DestroyChildren(true, true, true);
@@ -68,7 +68,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void DestroyChildren_RemoveActiveOnly_OneChildRemaining()
         {
             m_BaseTransform.DestroyChildren(false, false, true);
@@ -77,14 +77,14 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetActiveChildrenCount_MockData_AccurateCount()
         {
             Assert.IsTrue(m_BaseTransform.GetActiveChildCount() == 2);
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetFirstComponentInChildrenComplex_MockData_FirstTransform()
         {
             Transform t = m_BaseTransform.GetFirstComponentInChildrenComplex<Transform>(true, 0, 1);
@@ -92,7 +92,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetScenePath_MockData_RootPath()
         {
             Assert.IsTrue(m_BaseTransform.GetScenePath() == $"/{TestLiterals.Foo}");

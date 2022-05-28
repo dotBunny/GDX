@@ -73,7 +73,7 @@ namespace GDX.Editor
         }
 
         [UnityTest]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public IEnumerator Recompile_NoLeakDetection_NoUnexpectedMessages()
         {
             NativeLeakDetection.Mode = NativeLeakDetectionMode.Disabled;
@@ -86,7 +86,7 @@ namespace GDX.Editor
         }
 
         [UnityTest]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public IEnumerator Recompile_JobsLeakDetection_NoUnexpectedMessages()
         {
             NativeLeakDetection.Mode = NativeLeakDetectionMode.Enabled;

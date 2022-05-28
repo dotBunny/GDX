@@ -16,7 +16,7 @@ namespace GDX
         const string k_CoreFullName = "GDX.Core";
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void InitializeOnMainThread_AlreadyInitialized_EarlyOut()
         {
             Type core = Reflection.GetType(k_CoreFullName);
@@ -32,7 +32,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void InitializeOnMainThread_NotAlreadyInitialized_Executes()
         {
             Type core = Reflection.GetType(k_CoreFullName);

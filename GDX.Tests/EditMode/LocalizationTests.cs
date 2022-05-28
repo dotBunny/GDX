@@ -13,21 +13,21 @@ namespace GDX
     public class LocalizationTests
     {
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetHumanReadableFileSize_100_ReturnsValidString()
         {
             Assert.IsTrue(Localization.GetHumanReadableFileSize(100) == $"100 {Localization.ByteSizes[0]}");
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetHumanReadableFileSize_1024_ReturnsValidString()
         {
             Assert.IsTrue(Localization.GetHumanReadableFileSize(1024) == $"1 {Localization.ByteSizes[1]}");
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetHumanReadableFileSize_1048576_ReturnsValidString()
         {
             Assert.IsTrue(Localization.GetHumanReadableFileSize(1048576) == $"1 {Localization.ByteSizes[2]}");

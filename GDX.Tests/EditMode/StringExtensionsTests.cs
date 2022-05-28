@@ -38,7 +38,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetAfterFirst_MockData_ReturnsString()
         {
             string result = StringExtensions.GetAfterFirst(Complex, "_M");
@@ -49,7 +49,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetAfterLast_MockData_ReturnsString()
         {
             string result = StringExtensions.GetAfterLast(Complex, "_");
@@ -60,7 +60,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetBeforeFirst_MockData_ReturnsEmptyString()
         {
             string result = StringExtensions.GetBeforeFirst(Complex, "_");
@@ -71,7 +71,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetBeforeLast_MockData_ReturnsString()
         {
             string result = StringExtensions.GetBeforeLast(Complex, "_");
@@ -82,53 +82,53 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void HasUpperCase_LowerCaseString_ReturnsFalse()
         {
             Assert.IsFalse(StringExtensions.HasUpperCase(AllLowerCase));
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void HasLowerCase_UpperCaseString_ReturnsFalse()
         {
             Assert.IsFalse(StringExtensions.HasLowerCase(AllUpperCase));
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void HasUpperCase_MixedCaseString_ReturnsTrue()
         {
             Assert.IsTrue(TestLiterals.HelloWorld.HasUpperCase());
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void HasLowerCase_MixedCaseString_ReturnsTrue()
         {
             Assert.IsTrue(TestLiterals.HelloWorld.HasLowerCase());
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsBooleanPositiveValue_TrueString_ReturnsTrue()
         {
-            bool evaluate = TestLiterals.True.IsBooleanPositiveValue();
+            bool evaluate = "True".IsBooleanPositiveValue();
 
             Assert.IsTrue(evaluate);
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsBooleanValue_OffString_ReturnsTrue()
         {
-            bool evaluate = TestLiterals.Off.IsBooleanValue();
+            bool evaluate = "off".IsBooleanValue();
 
             Assert.IsTrue(evaluate);
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsBooleanValue_BadString_ReturnsFalse()
         {
             bool evaluate = "off2".IsBooleanValue();
@@ -137,7 +137,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsBooleanPositiveValue_BadString_ReturnsFalse()
         {
             bool evaluate = "true2".IsBooleanPositiveValue();
@@ -146,7 +146,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsIntegerValue_NullNumber_ReturnsFalse()
         {
             bool evaluate = string.Empty.IsIntegerValue();
@@ -154,7 +154,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsIntegerValue_PositiveNumber_ReturnsTrue()
         {
             bool evaluate = "1".IsIntegerValue();
@@ -162,7 +162,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsIntegerValue_NegativeNumber_ReturnsTrue()
         {
             bool evaluate = "-100222".IsIntegerValue();
@@ -171,7 +171,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsIntegerValue_BadString_ReturnsFalse()
         {
             bool evaluate = "bob".IsIntegerValue();
@@ -180,7 +180,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsIntegerValue_MixedString_ReturnsFalse()
         {
             bool evaluate = "-100bob222".IsIntegerValue();
@@ -189,7 +189,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsNumericValue_PositiveNumber_ReturnsTrue()
         {
             bool evaluate = "1".IsNumeric();
@@ -198,7 +198,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsNumericValue_NullNumber_ReturnsFalse()
         {
             bool evaluate = string.Empty.IsNumeric();
@@ -206,7 +206,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsNumericValue_Characters_ReturnsFalse()
         {
             bool evaluate = "c111".IsNumeric();
@@ -214,7 +214,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsNumericValue_NegativeNumber_ReturnsTrue()
         {
             bool evaluate = "-100.12123".IsNumeric();
@@ -223,7 +223,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void IsNumericValue_TwoDecimals_ReturnsFalse()
         {
             bool evaluate = "-100..12123".IsNumeric();
@@ -232,7 +232,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void SplitCamelCase_CamelCase_ReturnsString()
         {
             bool evaluate = "SomethingSomethingDarkSide".SplitCamelCase() == "Something Something Dark Side";
@@ -241,7 +241,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void SplitCamelCase_camelCase_ReturnsString()
         {
             bool evaluate = "somethingSomethingDarkSide".SplitCamelCase() == "something Something Dark Side";
@@ -250,7 +250,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Encrypt_Decrypt_IsEqual()
         {
             string encryptedSimple = TestLiterals.HelloWorld.Encrypt();
@@ -263,14 +263,14 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Encrypt_MockData_ReturnsString()
         {
             Assert.IsTrue(TestLiterals.HelloWorld.Encrypt() != TestLiterals.HelloWorld);
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetStableLowerCaseHashCode_ToLowerGetStableHashCode_IsEqual()
         {
             int oldSimpleHash = TestLiterals.HelloWorld.ToLower().GetStableHashCode();
@@ -291,7 +291,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void GetStableUpperCaseHashCode_ToUpperGetStableHashCode_IsEqual()
         {
             int oldComplexHash = StringExtensions.GetStableHashCode(Complex.ToUpper());
@@ -312,7 +312,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void CountOccurence_TwoMockData_ReturnsTwo()
         {
             string mockData = "this is a, count of sorts,";
@@ -323,7 +323,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void CountOccurence_ZeroMockData_ReturnsTwo()
         {
             string mockData = "this is a, count of sorts,";
@@ -334,7 +334,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Concatenate_Simple_NoSuffix()
         {
             string[] preString = new[] { "one", "two", "three" };
@@ -342,7 +342,7 @@ namespace GDX
             Assert.IsTrue(concat == "one,two,three");
         }
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Concatenate_Simple_Suffix()
         {
             string[] preString = new[] { "one", "two", "three" };
@@ -351,7 +351,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void PartialMatch_StringArray_Found()
         {
             string[] preString = new[] { "one", "two", "three" };
@@ -359,7 +359,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void PartialMatch_StringArray_NotFound()
         {
             string[] preString = new[] { "one", "two", "three" };
@@ -367,14 +367,14 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void PartialMatch_NullStringArray_NotFound()
         {
             Assert.IsFalse(StringExtensions.PartialMatch(null, "happy"));
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void PartialMatch_SimpleList_Found()
         {
             SimpleList<string> preString = new SimpleList<string>(new[] { "one", "two", "three" }) { Count = 3 };
@@ -382,7 +382,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void PartialMatch_SimpleList_NotFound()
         {
             SimpleList<string> preString = new SimpleList<string>(new[] { "one", "two", "three" }) { Count = 3 };
@@ -390,7 +390,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void PartialMatch_EmptySimpleList_NotFound()
         {
             SimpleList<string> preString = new SimpleList<string>();

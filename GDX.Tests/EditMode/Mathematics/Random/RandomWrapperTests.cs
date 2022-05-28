@@ -12,7 +12,7 @@ namespace GDX.Mathematics.Random
         const int k_MockSeed = 42;
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RandomWrapper_NoSeed_Created()
         {
             RandomWrapper wrapper = new RandomWrapper();
@@ -20,7 +20,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void RandomWrapper_WithSeed_Created()
         {
             RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
@@ -28,7 +28,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void NextBoolean_FixedSeed_ReturnsTrue()
         {
             RandomWrapper wrapper = new RandomWrapper(212121);
@@ -36,7 +36,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void NextBoolean_FixedSeed_ReturnsFalse()
         {
             RandomWrapper wrapper = new RandomWrapper(4);
@@ -44,7 +44,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void NextBytes_MockData_FillsBuffer()
         {
             RandomWrapper random1 = new RandomWrapper(k_MockSeed);
@@ -65,7 +65,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void NextDouble_MockData_InRange()
         {
             RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
@@ -74,7 +74,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void NextInteger_MockData_InRange()
         {
             RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
@@ -83,7 +83,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void NextIntegerExclusive_MockData_InRange()
         {
             RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
@@ -92,7 +92,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void NextSingle_MockData_InRange()
         {
             RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
@@ -101,7 +101,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void NextUnsignedInteger_MockData_InRange()
         {
             RandomWrapper wrapper = new RandomWrapper(k_MockSeed);
@@ -110,7 +110,7 @@ namespace GDX.Mathematics.Random
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void NextUnsignedIntegerExclusive_MockData_InRange()
         {
             RandomWrapper wrapper = new RandomWrapper(k_MockSeed);

@@ -12,7 +12,7 @@ namespace GDX
     public class ArrayExtensionsTests
     {
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void Clear_MockData_HasDefaultValues()
         {
             int[] mockArray = { 0, 1, 2, 3 };
@@ -28,11 +28,11 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ContainsItem_MockData_HasValue()
         {
 
-            string[] mockArray = { TestLiterals.Foo, TestLiterals.TestSeed, TestLiterals.Bar, Core.OverrideMethod};
+            string[] mockArray = { TestLiterals.Foo, TestLiterals.Seed, TestLiterals.Bar, Core.OverrideMethod};
 
             bool evaluate = mockArray.ContainsItem(Core.OverrideMethod);
 
@@ -40,18 +40,18 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ContainsItem_MockData_NoValue()
         {
             string[] mockArray = { TestLiterals.Foo, TestLiterals.Bar, Core.OverrideMethod};
 
-            bool evaluate = mockArray.ContainsItem(TestLiterals.TestSeed);
+            bool evaluate = mockArray.ContainsItem(TestLiterals.Seed);
 
             Assert.IsFalse(evaluate);
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ContainsReference_MockData_HasReference()
         {
             string[] mockArray = { TestLiterals.Foo, TestLiterals.Bar, Core.OverrideMethod};
@@ -62,19 +62,19 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ContainsReference_MockData_NoReference()
         {
             string[] mockArray = { TestLiterals.Foo, TestLiterals.Bar, Core.OverrideMethod};
 
-            bool evaluate = mockArray.ContainsReference(TestLiterals.TestSeed);
+            bool evaluate = mockArray.ContainsReference(TestLiterals.Seed);
 
             Assert.IsFalse(evaluate);
         }
 
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ContainsValue_MockData_HasValue()
         {
             int[] mockArray = { 0, 1, 2, 3 };
@@ -85,7 +85,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void ContainsValue_MockData_NoValue()
         {
             int[] mockArray = { 0, 1, 2, 3 };
@@ -96,7 +96,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void FirstIndexOfItem_MockDataObject_ReturnsIndex()
         {
             object mockSearchObject = new object();
@@ -112,7 +112,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void FirstIndexOfItem_NoMockDataObject_ReturnsIndex()
         {
             object mockSearchObject = new object();
@@ -129,7 +129,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void FirstIndexOfValue_MockDataValue_ReturnsIndex()
         {
             int[] mockArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2 };
@@ -140,7 +140,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void FirstIndexOfValue_NoMockDataValue_ReturnsNegativeOne()
         {
             int[] mockArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2 };
@@ -151,7 +151,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void LastIndexOfItem_MockDataObject_ReturnsIndex()
         {
             object mockSearchObject = new object();
@@ -167,7 +167,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void LastIndexOfItem_NoMockDataObject_ReturnsNegativeOne()
         {
             object mockSearchBuffer = new object();
@@ -184,7 +184,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void LastIndexOfValue_MockDataValue_ReturnsIndex()
         {
             int[] mockArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2 };
@@ -195,7 +195,7 @@ namespace GDX
         }
 
         [Test]
-        [Category(Literals.TestCategory)]
+        [Category(Core.TestCategory)]
         public void LastIndexOfValue_NoMockDataValue_ReturnsNegativeOne()
         {
             int[] mockArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2 };
