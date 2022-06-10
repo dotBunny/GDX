@@ -55,13 +55,34 @@ namespace GDX.Collections
         }
 
         /// <summary>
+        ///     Create a <see cref="SparseSet" /> with an <paramref name="initialCapacity" />.
+        /// </summary>
+        /// <param name="initialCapacity">The initial capacity of the sparse and dense int arrays.</param>
+        /// <param name="versionArray">Array containing version numbers to check sparse references against.</param>
+        public SparseSet(int initialCapacity, out ulong[] versionArray)
+        {
+            DenseArray = new int[initialCapacity];
+            SparseArray = new int[initialCapacity];
+            Count = 0;
+            FreeIndex = 0;
+
+            for (int i = 0; i < initialCapacity; i++)
+            {
+                DenseArray[i] = -1;
+                SparseArray[i] = i + 1;
+            }
+
+            versionArray = new ulong[initialCapacity];
+        }
+
+        /// <summary>
         ///     Adds a sparse/dense index pair to the set and expands the arrays if necessary.
         /// </summary>
         /// <param name="expandBy">How many indices to expand by.</param>
         /// <param name="sparseIndex">The sparse index allocated.</param>
         /// <param name="denseIndex">The dense index allocated.</param>
         /// <returns>True if the index pool expanded.</returns>
-        public bool AddWithExpandCheck(int expandBy, out int sparseIndex, out int denseIndex)
+        public bool AllocEntryExpandIfNeeded(int expandBy, out int sparseIndex, out int denseIndex)
         {
             int indexToClaim = FreeIndex;
             int currentCapacity = SparseArray.Length;
@@ -102,12 +123,65 @@ namespace GDX.Collections
         }
 
         /// <summary>
+        ///     Adds a sparse/dense index pair to the set and expands the arrays if necessary.
+        /// </summary>
+        /// <param name="expandBy">How many indices to expand by.</param>
+        /// <param name="sparseIndex">The sparse index allocated.</param>
+        /// <param name="denseIndex">The dense index allocated.</param>
+        /// <returns>True if the index pool expanded.</returns>
+        public bool AllocEntryExpandIfNeeded(int expandBy, out int sparseIndex, out int denseIndex, ref ulong[] versionArray, out ulong version)
+        {
+            int indexToClaim = FreeIndex;
+            int currentCapacity = SparseArray.Length;
+            bool needsExpansion = false;
+
+            if (indexToClaim >= currentCapacity)
+            {
+                // We're out of space, the last free index points to nothing. Allocate more indices.
+                needsExpansion = true;
+
+                int newCapacity = currentCapacity + expandBy;
+
+                int[] newSparseArray = new int[newCapacity];
+                Array.Copy(SparseArray, 0, newSparseArray, 0, currentCapacity);
+                SparseArray = newSparseArray;
+
+                int[] newDenseArray = new int[newCapacity];
+                Array.Copy(DenseArray, 0, newDenseArray, 0, currentCapacity);
+                DenseArray = newDenseArray;
+
+                ulong[] newVersionArray = new ulong[newCapacity];
+                Array.Copy(versionArray, 0, newVersionArray, 0, currentCapacity);
+                versionArray = newVersionArray;
+
+                for (int i = currentCapacity; i < newCapacity; i++)
+                {
+                    SparseArray[i] = i + 1; // Build the free list chain.
+                    DenseArray[i] = -1; // Set new dense indices as unclaimed.
+                }
+            }
+
+            int nextFreeIndex = SparseArray[indexToClaim];
+            DenseArray[Count] = indexToClaim; // Point the next dense id at our newly claimed sparse index.
+            SparseArray[indexToClaim] = Count; // Point our newly claimed sparse index at the dense index.
+            denseIndex = Count;
+
+            version = versionArray[indexToClaim];
+
+            ++Count;
+            FreeIndex = nextFreeIndex; // Set the free list head for next time.
+
+            sparseIndex = indexToClaim;
+            return needsExpansion;
+        }
+
+        /// <summary>
         ///     Adds a sparse/dense index pair to the set without checking if the set needs to expand.
         /// </summary>
         /// <param name="sparseIndex">The sparse index allocated.</param>
         /// <param name="denseIndex">The dense index allocated.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddUnchecked(out int sparseIndex, out int denseIndex)
+        public void AllocEntryNoExpand(out int sparseIndex, out int denseIndex)
         {
             int indexToClaim = FreeIndex;
             int nextFreeIndex = SparseArray[indexToClaim];
@@ -116,6 +190,29 @@ namespace GDX.Collections
 
             sparseIndex = indexToClaim;
             denseIndex = Count;
+            ++Count;
+            FreeIndex = nextFreeIndex; // Set the free list head for next time.
+        }
+
+        /// <summary>
+        ///     Adds a sparse/dense index pair to the set without checking if the set needs to expand.
+        /// </summary>
+        /// <param name="sparseIndex">The sparse index allocated.</param>
+        /// <param name="denseIndex">The dense index allocated.</param>
+        /// <param name="versionArray">The array containing the version number to check against.</param>
+        /// <param name="version">Enables detection of use-after-free errors when using the sparse index as a reference.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AllocEntryNoExpand(out int sparseIndex, out int denseIndex, ulong[] versionArray, out ulong version)
+        {
+            int indexToClaim = FreeIndex;
+            int nextFreeIndex = SparseArray[indexToClaim];
+            DenseArray[Count] = indexToClaim; // Point the next dense id at our newly claimed sparse index.
+            SparseArray[indexToClaim] = Count; // Point our newly claimed sparse index at the dense index.
+
+            version = versionArray[indexToClaim];
+            sparseIndex = indexToClaim;
+            denseIndex = Count;
+            
             ++Count;
             FreeIndex = nextFreeIndex; // Set the free list head for next time.
         }
