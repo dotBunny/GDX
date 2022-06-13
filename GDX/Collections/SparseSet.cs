@@ -63,6 +63,7 @@ namespace GDX.Collections
         {
             DenseArray = new int[initialCapacity];
             SparseArray = new int[initialCapacity];
+            versionArray = new ulong[initialCapacity];
             Count = 0;
             FreeIndex = 0;
 
@@ -70,9 +71,8 @@ namespace GDX.Collections
             {
                 DenseArray[i] = -1;
                 SparseArray[i] = i + 1;
+                versionArray[i] = 1;
             }
-
-            versionArray = new ulong[initialCapacity];
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace GDX.Collections
         /// <param name="sparseIndex">The sparse index allocated.</param>
         /// <param name="denseIndex">The dense index allocated.</param>
         /// <returns>True if the index pool expanded.</returns>
-        public bool AllocEntryExpandIfNeeded(int expandBy, out int sparseIndex, out int denseIndex)
+        public bool AddWithExpandCheck(int expandBy, out int sparseIndex, out int denseIndex)
         {
             int indexToClaim = FreeIndex;
             int currentCapacity = SparseArray.Length;
@@ -129,7 +129,7 @@ namespace GDX.Collections
         /// <param name="sparseIndex">The sparse index allocated.</param>
         /// <param name="denseIndex">The dense index allocated.</param>
         /// <returns>True if the index pool expanded.</returns>
-        public bool AllocEntryExpandIfNeeded(int expandBy, out int sparseIndex, out int denseIndex, ref ulong[] versionArray, out ulong version)
+        public bool AddWithExpandCheck(int expandBy, out int sparseIndex, out int denseIndex, ref ulong[] versionArray, out ulong version)
         {
             int indexToClaim = FreeIndex;
             int currentCapacity = SparseArray.Length;
@@ -158,6 +158,7 @@ namespace GDX.Collections
                 {
                     SparseArray[i] = i + 1; // Build the free list chain.
                     DenseArray[i] = -1; // Set new dense indices as unclaimed.
+                    newVersionArray[i] = 1;
                 }
             }
 
@@ -181,7 +182,7 @@ namespace GDX.Collections
         /// <param name="sparseIndex">The sparse index allocated.</param>
         /// <param name="denseIndex">The dense index allocated.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AllocEntryNoExpand(out int sparseIndex, out int denseIndex)
+        public void AddUnchecked(out int sparseIndex, out int denseIndex)
         {
             int indexToClaim = FreeIndex;
             int nextFreeIndex = SparseArray[indexToClaim];
@@ -202,7 +203,7 @@ namespace GDX.Collections
         /// <param name="versionArray">The array containing the version number to check against.</param>
         /// <param name="version">Enables detection of use-after-free errors when using the sparse index as a reference.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AllocEntryNoExpand(out int sparseIndex, out int denseIndex, ulong[] versionArray, out ulong version)
+        public void AddUnchecked(out int sparseIndex, out int denseIndex, ulong[] versionArray, out ulong version)
         {
             int indexToClaim = FreeIndex;
             int nextFreeIndex = SparseArray[indexToClaim];
@@ -305,12 +306,20 @@ namespace GDX.Collections
         }
 
         /// <summary>
-        ///     Returns true if the element was successfully removed.
-        ///     WARNING: Will not protect against accidentally removing twice if the index in question was recycled between Remove
-        ///     calls.
+        ///     Frees the allocated entry corresponding to the sparse index.
+        ///     WARNING: Will not protect against accidentally removing twice if the index in question was recycled between Free calls.
+        /// <param name="sparseIndexToRemove">The sparse index corresponding to the entry to remove.</param>
+        /// <param name="dataIndexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
+        /// <param name="dataIndexToSwapFrom">
+        ///     Set the data array value at this index to default after swapping with the data array
+        ///     value at dataIndexToSwapTo.
+        /// </param>
         /// </summary>
-        public bool RemoveWithNullValueCheck(ref int sparseIndexToRemove)
+        /// <returns>True if the entry was valid and thus removed.</returns>
+        public bool RemoveWithBoundsCheck(ref int sparseIndexToRemove, out int dataIndexToSwapFrom, out int dataIndexToSwapTo)
         {
+            dataIndexToSwapFrom = -1;
+            dataIndexToSwapTo = -1;
             bool didRemove = false;
             if (sparseIndexToRemove >= 0 && sparseIndexToRemove < SparseArray.Length)
             {
@@ -328,6 +337,9 @@ namespace GDX.Collections
                         // Swap the entry being removed with the last entry.
                         SparseArray[sparseIndexBeingSwapped] = denseIndexToRemove;
                         DenseArray[denseIndexToRemove] = sparseIndexBeingSwapped;
+
+                        dataIndexToSwapFrom = newLength;
+                        dataIndexToSwapTo = denseIndexToRemove;
 
                         // Clear the dense index, for debugging purposes
                         DenseArray[newLength] = -1;
@@ -347,8 +359,8 @@ namespace GDX.Collections
         }
 
         /// <summary>
-        ///     Removes the associated sparse/dense index pair from active use.
-        ///     calls.
+        ///     Frees the allocated entry corresponding to the sparse index.
+        ///     Indicates which dense indices were swapped as a result of freeing the entry.
         /// </summary>
         /// <param name="sparseIndexToRemove">The sparse index to remove.</param>
         /// <param name="version">
@@ -356,10 +368,69 @@ namespace GDX.Collections
         ///     indices that have been removed and reused.
         /// </param>
         /// <param name="versionArray">The array where version numbers to check against are stored.</param>
-        /// <returns>True if the element was successfully removed.</returns>
-        public bool RemoveWithBoundsAndVersionChecks(ref int sparseIndexToRemove, ulong version,
-            ref ulong[] versionArray)
+        /// <param name="dataIndexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
+        /// <param name="dataIndexToSwapFrom">
+        ///     Set the data array value at this index to default after swapping with the data array
+        ///     value at dataIndexToSwapTo.
+        /// </param>
+        /// <returns>Whether or not the remove attempt succeeded.</returns>
+        public bool RemoveWithVersionCheck(int sparseIndexToRemove, ulong version, ulong[] versionArray,
+            out int dataIndexToSwapFrom, out int dataIndexToSwapTo)
         {
+            int denseIndexToRemove = SparseArray[sparseIndexToRemove];
+            ulong versionAtSparseIndex = versionArray[sparseIndexToRemove];
+
+            dataIndexToSwapFrom = -1;
+            dataIndexToSwapTo = -1;
+
+            bool succeeded = versionAtSparseIndex == version;
+
+            if (succeeded)
+            {
+                int newLength = Count - 1;
+                int sparseIndexBeingSwapped = DenseArray[newLength];
+
+                // Swap the entry being removed with the last entry.
+                SparseArray[sparseIndexBeingSwapped] = denseIndexToRemove;
+                DenseArray[denseIndexToRemove] = sparseIndexBeingSwapped;
+
+                // Clear the dense  index, for debugging purposes
+                DenseArray[newLength] = -1;
+
+                // Add the sparse index to the free list.
+                SparseArray[sparseIndexToRemove] = FreeIndex;
+                versionArray[sparseIndexToRemove] = versionArray[sparseIndexToRemove] + 1;
+                FreeIndex = sparseIndexToRemove;
+
+                Count = newLength;
+
+                dataIndexToSwapTo = denseIndexToRemove;
+                dataIndexToSwapFrom = newLength;
+            }
+
+            return succeeded;
+        }
+
+        /// <summary>
+        ///     Frees the allocated entry corresponding to the sparse index.
+        /// </summary>
+        /// <param name="sparseIndexToRemove">The sparse index corresponding to the entry to remove.</param>
+        /// <param name="version">
+        ///     The version number of the int used to access the sparse index. Used to guard against erroneously accessing
+        ///     freed indices currently in use with an outdated reference.
+        /// </param>
+        /// <param name="dataIndexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
+        /// <param name="dataIndexToSwapFrom">
+        ///     Set the data array value at this index to default after swapping with the data array
+        ///     value at dataIndexToSwapTo.
+        /// </param>
+        /// <param name="versionArray">The array where version numbers to check against are stored.</param>
+        /// <returns>True if the entry was valid and thus removed.</returns>
+        public bool RemoveWithBoundsAndVersionChecks(ref int sparseIndexToRemove, ulong version,
+            ulong[] versionArray, out int dataIndexToSwapFrom, out int dataIndexToSwapTo)
+        {
+            dataIndexToSwapFrom = -1;
+            dataIndexToSwapTo = -1;
             bool didRemove = false;
             if (sparseIndexToRemove >= 0 && sparseIndexToRemove < SparseArray.Length)
             {
@@ -375,11 +446,13 @@ namespace GDX.Collections
                     if (denseIndexToRemove < Count && sparseIndexAtDenseIndex == sparseIndexToRemove)
                     {
                         didRemove = true;
-                        ++sparseIndexVersion;
-                        versionArray[sparseIndexToRemove] = sparseIndexVersion;
+                        versionArray[sparseIndexToRemove] = sparseIndexVersion + 1;
                         // Swap the entry being removed with the last entry.
                         SparseArray[sparseIndexBeingSwapped] = denseIndexToRemove;
                         DenseArray[denseIndexToRemove] = sparseIndexBeingSwapped;
+
+                        dataIndexToSwapFrom = newLength;
+                        dataIndexToSwapTo = denseIndexToRemove;
 
                         // Clear the dense index, for debugging purposes
                         DenseArray[newLength] = -1;
@@ -424,33 +497,6 @@ namespace GDX.Collections
         }
 
         /// <summary>
-        ///     Removes the associated sparse/dense index pair from active use and increments the version.
-        /// </summary>
-        /// <param name="sparseIndexToRemove">The sparse index to remove.</param>
-        /// <param name="versionArray">The array where version numbers to check against are stored.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void RemoveUnchecked(int sparseIndexToRemove, ulong[] versionArray)
-        {
-            int denseIndexToRemove = SparseArray[sparseIndexToRemove];
-            int newLength = Count - 1;
-            int sparseIndexBeingSwapped = DenseArray[newLength];
-
-            // Swap the entry being removed with the last entry.
-            SparseArray[sparseIndexBeingSwapped] = denseIndexToRemove;
-            DenseArray[denseIndexToRemove] = sparseIndexBeingSwapped;
-
-            // Clear the dense  index, for debugging purposes
-            DenseArray[newLength] = -1;
-
-            // Add the sparse index to the free list.
-            SparseArray[sparseIndexToRemove] = FreeIndex;
-            versionArray[sparseIndexToRemove] = versionArray[sparseIndexToRemove] + 1;
-            FreeIndex = sparseIndexToRemove;
-
-            Count = newLength;
-        }
-
-        /// <summary>
         ///     Removes the associated sparse/dense index pair from active use.
         ///     Out parameters used to manage parallel data arrays.
         /// </summary>
@@ -461,7 +507,7 @@ namespace GDX.Collections
         ///     value at indexToSwapTo.
         /// </param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void RemoveUnchecked(int sparseIndexToRemove, out int indexToSwapTo, out int indexToSwapFrom)
+        public void RemoveUnchecked(int sparseIndexToRemove, out int indexToSwapFrom, out int indexToSwapTo)
         {
             int denseIndexToRemove = SparseArray[sparseIndexToRemove];
             int newLength = Count - 1;
@@ -496,8 +542,7 @@ namespace GDX.Collections
         ///     value at indexToSwapTo.
         /// </param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void RemoveUnchecked(int sparseIndexToRemove, ulong[] versionArray, out int indexToSwapTo,
-            out int indexToSwapFrom)
+        public void RemoveUnchecked(int sparseIndexToRemove, ulong[] versionArray, out int indexToSwapFrom, out int indexToSwapTo)
         {
             int denseIndexToRemove = SparseArray[sparseIndexToRemove];
             int newLength = Count - 1;
@@ -636,95 +681,6 @@ namespace GDX.Collections
         }
 
         /// <summary>
-        ///     Attempts to remove the associated sparse/dense index pair from active use and increments the version if successful.
-        ///     Out parameters used to manage parallel data arrays.
-        /// </summary>
-        /// <param name="sparseIndexToRemove">The sparse index to remove.</param>
-        /// <param name="version">
-        ///     The version number of the int used to access the sparse index. Used to guard against accessing
-        ///     indices that have been removed and reused.
-        /// </param>
-        /// <param name="versionArray">The array where version numbers to check against are stored.</param>
-        /// <param name="indexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
-        /// <param name="indexToSwapFrom">
-        ///     Set the data array value at this index to default after swapping with the data array
-        ///     value at indexToSwapTo.
-        /// </param>
-        /// <returns>Whether or not the remove attempt succeeded.</returns>
-        public bool TryRemoveWithVersionCheck(int sparseIndexToRemove, ulong version, ulong[] versionArray,
-            out int indexToSwapTo, out int indexToSwapFrom)
-        {
-            int denseIndexToRemove = SparseArray[sparseIndexToRemove];
-            ulong versionAtSparseIndex = versionArray[sparseIndexToRemove];
-
-            indexToSwapFrom = -1;
-            indexToSwapTo = -1;
-
-            bool succeeded = versionAtSparseIndex == version;
-
-            if (succeeded)
-            {
-                int newLength = Count - 1;
-                int sparseIndexBeingSwapped = DenseArray[newLength];
-
-                // Swap the entry being removed with the last entry.
-                SparseArray[sparseIndexBeingSwapped] = denseIndexToRemove;
-                DenseArray[denseIndexToRemove] = sparseIndexBeingSwapped;
-
-                // Clear the dense  index, for debugging purposes
-                DenseArray[newLength] = -1;
-
-                // Add the sparse index to the free list.
-                SparseArray[sparseIndexToRemove] = FreeIndex;
-                versionArray[sparseIndexToRemove] = versionArray[sparseIndexToRemove] + 1;
-                FreeIndex = sparseIndexToRemove;
-
-                Count = newLength;
-
-                indexToSwapTo = denseIndexToRemove;
-                indexToSwapFrom = newLength;
-            }
-
-            return succeeded;
-        }
-
-        /// <summary>
-        ///     Attempts to remove the associated sparse/dense index pair from active use and increments the version if successful.
-        /// </summary>
-        /// <param name="denseIndexToRemove">The dense index associated with the sparse index to remove.</param>
-        /// <param name="version">The array where version numbers to check against are stored.</param>
-        /// <param name="versionArray">The array where version numbers to check against are stored.</param>
-        /// <returns>Whether or not the remove attempt succeeded.</returns>
-        public bool TryRemoveFromDenseIndexWithVersionCheck(int denseIndexToRemove, ulong version, ulong[] versionArray)
-        {
-            int sparseIndexToRemove = DenseArray[denseIndexToRemove];
-            int newLength = Count - 1;
-            int sparseIndexBeingSwapped = DenseArray[newLength];
-
-            ulong versionAtSparseIndex = versionArray[sparseIndexToRemove];
-
-            bool succeeded = version == versionAtSparseIndex;
-            if (succeeded)
-            {
-                // Swap the entry being removed with the last entry.
-                SparseArray[sparseIndexBeingSwapped] = denseIndexToRemove;
-                DenseArray[denseIndexToRemove] = sparseIndexBeingSwapped;
-
-                // Clear the dense  index, for debugging purposes
-                DenseArray[newLength] = -1;
-
-                // Add the sparse index to the free list.
-                SparseArray[sparseIndexToRemove] = FreeIndex;
-                versionArray[sparseIndexToRemove] = versionArray[sparseIndexToRemove] + 1;
-                FreeIndex = sparseIndexToRemove;
-
-                Count = newLength;
-            }
-
-            return succeeded;
-        }
-
-        /// <summary>
         ///     Clear the dense and sparse arrays.
         /// </summary>
         public void Clear()
@@ -752,7 +708,27 @@ namespace GDX.Collections
             {
                 DenseArray[i] = -1;
                 SparseArray[i] = i + 1;
-                versionArray[i] = 0;
+                versionArray[i] = versionArray[i] + 1;
+            }
+
+            FreeIndex = 0;
+            Count = 0;
+        }
+
+        /// <summary>
+        ///     Clear the dense and sparse arrays and reset the version array.
+        ///     Note: Only clear the version array if you are sure there are no outstanding dependencies on version numbers.
+        /// </summary>
+        /// ///
+        /// <param name="versionArray">Array containing version numbers to check against.</param>
+        public void ClearWithVersionArrayReset(ulong[] versionArray)
+        {
+            int capacity = SparseArray.Length;
+            for (int i = 0; i < capacity; i++)
+            {
+                DenseArray[i] = -1;
+                SparseArray[i] = i + 1;
+                versionArray[i] = 1;
             }
 
             FreeIndex = 0;
@@ -809,6 +785,7 @@ namespace GDX.Collections
             {
                 DenseArray[i] = -1; // Set new dense indices as unclaimed.
                 SparseArray[i] = i + 1; // Build the free list chain.
+                versionArray[i] = 1;
             }
         }
 
@@ -860,6 +837,7 @@ namespace GDX.Collections
                 {
                     DenseArray[i] = -1; // Set new dense indices as unclaimed.
                     SparseArray[i] = i + 1; // Build the free list chain.
+                    versionArray[i] = 1;
                 }
             }
         }
