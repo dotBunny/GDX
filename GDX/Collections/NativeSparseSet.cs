@@ -835,45 +835,6 @@ namespace GDX.Collections
             }
         }
 
-        /// <summary>
-        ///     Reallocate the dense and sparse arrays with additional capacity.
-        /// </summary>
-        /// <param name="extraCapacity">How many indices to expand the dense and sparse arrays by.</param>
-        /// <param name="versionArray">Array containing version numbers to check against.</param>
-        /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
-        /// <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
-        public void Expand(int extraCapacity, ref NativeArray<ulong> versionArray, Allocator allocator,
-            NativeArrayOptions nativeArrayOptions)
-        {
-            int currentCapacity = SparseArray.Length;
-            int newCapacity = currentCapacity + extraCapacity;
-
-            NativeArray<int> newSparseArray = new NativeArray<int>(newCapacity, allocator, nativeArrayOptions);
-            NativeSlice<int> newSparseArraySlice = new NativeSlice<int>(newSparseArray, 0, currentCapacity);
-            newSparseArraySlice.CopyFrom(SparseArray);
-            SparseArray.Dispose();
-            SparseArray = newSparseArray;
-
-            NativeArray<int> newDenseArray = new NativeArray<int>(newCapacity, allocator, nativeArrayOptions);
-            NativeSlice<int> newDenseArraySlice = new NativeSlice<int>(newDenseArray, 0, currentCapacity);
-            newDenseArraySlice.CopyFrom(DenseArray);
-            DenseArray.Dispose();
-            DenseArray = newDenseArray;
-
-            NativeArray<ulong> newVersionArray = new NativeArray<ulong>(newCapacity, allocator, nativeArrayOptions);
-            NativeSlice<ulong> newVersionArraySlice = new NativeSlice<ulong>(newVersionArray, 0, currentCapacity);
-            newVersionArraySlice.CopyFrom(versionArray);
-            versionArray.Dispose();
-            versionArray = newVersionArray;
-
-            for (int i = currentCapacity; i < newCapacity; i++)
-            {
-                DenseArray[i] = -1; // Set new dense indices as unclaimed.
-                SparseArray[i] = i + 1; // Build the free list chain.
-                versionArray[i] = 1;
-            }
-        }
-
         public void Reserve(int numberToReserve, Allocator allocator, NativeArrayOptions nativeArrayOptions)
         {
             int currentCapacity = SparseArray.Length;
@@ -902,7 +863,7 @@ namespace GDX.Collections
             }
         }
 
-        public void Reserve(int numberToReserve, ref NativeArray<ulong> versionArray, Allocator allocator, NativeArrayOptions nativeArrayOptions)
+        public void Reserve(int numberToReserve, Allocator allocator, NativeArrayOptions nativeArrayOptions, ref NativeArray<ulong> versionArray)
         {
             int currentCapacity = SparseArray.Length;
             int currentCount = Count;
