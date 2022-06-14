@@ -307,7 +307,7 @@ namespace GDX.Collections
 
         /// <summary>
         ///     Frees the allocated entry corresponding to the sparse index.
-        ///     WARNING: Will not protect against accidentally removing twice if the index in question was recycled between Free calls.
+        ///     WARNING: Will not protect against accidentally removing twice if the index in question was recycled between Remove calls.
         /// <param name="sparseIndexToRemove">The sparse index corresponding to the entry to remove.</param>
         /// <param name="dataIndexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
         /// <param name="dataIndexToSwapFrom">
@@ -359,8 +359,8 @@ namespace GDX.Collections
         }
 
         /// <summary>
-        ///     Frees the allocated entry corresponding to the sparse index.
-        ///     Indicates which dense indices were swapped as a result of freeing the entry.
+        ///     Removes the allocated entry corresponding to the sparse index.
+        ///     Indicates which dense indices were swapped as a result of removing the entry.
         /// </summary>
         /// <param name="sparseIndexToRemove">The sparse index to remove.</param>
         /// <param name="version">
@@ -412,7 +412,7 @@ namespace GDX.Collections
         }
 
         /// <summary>
-        ///     Frees the allocated entry corresponding to the sparse index.
+        ///     Removes the allocated entry corresponding to the sparse index.
         /// </summary>
         /// <param name="sparseIndexToRemove">The sparse index corresponding to the entry to remove.</param>
         /// <param name="version">

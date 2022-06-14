@@ -4,6 +4,7 @@
 
 using System.Runtime.CompilerServices;
 using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 
 namespace GDX.Collections
 {
@@ -57,6 +58,28 @@ namespace GDX.Collections
         }
 
         /// <summary>
+        ///     Create a <see cref="NativeSparseSet" /> with an <paramref name="initialCapacity" />.
+        /// </summary>
+        /// <param name="initialCapacity">The initial capacity of the sparse and dense int arrays.</param>
+        /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
+        /// <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
+        public NativeSparseSet(int initialCapacity, Allocator allocator, NativeArrayOptions nativeArrayOptions, out NativeArray<ulong> versionArray)
+        {
+            DenseArray = new NativeArray<int>(initialCapacity, allocator, nativeArrayOptions);
+            SparseArray = new NativeArray<int>(initialCapacity, allocator, nativeArrayOptions);
+            versionArray = new NativeArray<ulong>(initialCapacity, allocator, nativeArrayOptions);
+            Count = 0;
+            FreeIndex = 0;
+
+            for (int i = 0; i < initialCapacity; i++)
+            {
+                DenseArray[i] = -1;
+                SparseArray[i] = i + 1;
+                versionArray[i] = 1;
+            }
+        }
+
+        /// <summary>
         ///     Adds a sparse/dense index pair to the set and expands the arrays if necessary.
         /// </summary>
         /// <param name="expandBy">How many indices to expand by.</param>
@@ -82,17 +105,80 @@ namespace GDX.Collections
                 NativeArray<int> newSparseArray = new NativeArray<int>(newCapacity, allocator, nativeArrayOptions);
                 NativeSlice<int> newSparseArraySlice = new NativeSlice<int>(newSparseArray, 0, currentCapacity);
                 newSparseArraySlice.CopyFrom(SparseArray);
+                SparseArray.Dispose();
                 SparseArray = newSparseArray;
 
                 NativeArray<int> newDenseArray = new NativeArray<int>(newCapacity, allocator, nativeArrayOptions);
                 NativeSlice<int> newDenseArraySlice = new NativeSlice<int>(newDenseArray, 0, currentCapacity);
                 newDenseArraySlice.CopyFrom(DenseArray);
+                DenseArray.Dispose();
                 DenseArray = newDenseArray;
 
                 for (int i = currentCapacity; i < newCapacity; i++)
                 {
                     SparseArray[i] = i + 1; // Build the free list chain.
                     DenseArray[i] = -1; // Set new dense indices as unclaimed.
+                }
+            }
+
+            int nextFreeIndex = SparseArray[indexToClaim];
+            DenseArray[Count] = indexToClaim; // Point the next dense id at our newly claimed sparse index.
+            SparseArray[indexToClaim] = Count; // Point our newly claimed sparse index at the dense index.
+            denseIndex = Count;
+
+            ++Count;
+            FreeIndex = nextFreeIndex; // Set the free list head for next time.
+
+            sparseIndex = indexToClaim;
+            return needsExpansion;
+        }
+
+        /// <summary>
+        ///     Adds a sparse/dense index pair to the set and expands the arrays if necessary.
+        /// </summary>
+        /// <param name="expandBy">How many indices to expand by.</param>
+        /// <param name="sparseIndex">The sparse index allocated.</param>
+        /// <param name="denseIndex">The dense index allocated.</param>
+        /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
+        /// <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
+        /// <returns>True if the index pool expanded.</returns>
+        public bool AddWithExpandCheck(int expandBy, out int sparseIndex, out int denseIndex, Allocator allocator,
+            NativeArrayOptions nativeArrayOptions, ref NativeArray<ulong> versionArray)
+        {
+            int indexToClaim = FreeIndex;
+            int currentCapacity = SparseArray.Length;
+            bool needsExpansion = false;
+
+            if (indexToClaim >= currentCapacity)
+            {
+                // We're out of space, the last free index points to nothing. Allocate more indices.
+                needsExpansion = true;
+
+                int newCapacity = currentCapacity + expandBy;
+
+                NativeArray<int> newSparseArray = new NativeArray<int>(newCapacity, allocator, nativeArrayOptions);
+                NativeSlice<int> newSparseArraySlice = new NativeSlice<int>(newSparseArray, 0, currentCapacity);
+                newSparseArraySlice.CopyFrom(SparseArray);
+                SparseArray.Dispose();
+                SparseArray = newSparseArray;
+
+                NativeArray<int> newDenseArray = new NativeArray<int>(newCapacity, allocator, nativeArrayOptions);
+                NativeSlice<int> newDenseArraySlice = new NativeSlice<int>(newDenseArray, 0, currentCapacity);
+                newDenseArraySlice.CopyFrom(DenseArray);
+                DenseArray.Dispose();
+                DenseArray = newDenseArray;
+
+                NativeArray<ulong> newVersionArray = new NativeArray<ulong>(newCapacity, allocator, nativeArrayOptions);
+                NativeSlice<ulong> newVersionArraySlice = new NativeSlice<ulong>(newVersionArray, 0, currentCapacity);
+                newVersionArraySlice.CopyFrom(versionArray);
+                versionArray.Dispose();
+                versionArray = newVersionArray;
+
+                for (int i = currentCapacity; i < newCapacity; i++)
+                {
+                    SparseArray[i] = i + 1; // Build the free list chain.
+                    DenseArray[i] = -1; // Set new dense indices as unclaimed.
+                    versionArray[i] = 1;
                 }
             }
 
@@ -123,6 +209,29 @@ namespace GDX.Collections
 
             sparseIndex = indexToClaim;
             denseIndex = Count;
+            ++Count;
+            FreeIndex = nextFreeIndex; // Set the free list head for next time.
+        }
+
+        /// <summary>
+        ///     Adds a sparse/dense index pair to the set without checking if the set needs to expand.
+        /// </summary>
+        /// <param name="sparseIndex">The sparse index allocated.</param>
+        /// <param name="denseIndex">The dense index allocated.</param>
+        /// <param name="versionArray">The array containing the version number to check against.</param>
+        /// <param name="version">Enables detection of use-after-free errors when using the sparse index as a reference.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddUnchecked(out int sparseIndex, out int denseIndex, NativeArray<ulong> versionArray, out ulong version)
+        {
+            int indexToClaim = FreeIndex;
+            int nextFreeIndex = SparseArray[indexToClaim];
+            DenseArray[Count] = indexToClaim; // Point the next dense id at our newly claimed sparse index.
+            SparseArray[indexToClaim] = Count; // Point our newly claimed sparse index at the dense index.
+
+            version = versionArray[indexToClaim];
+            sparseIndex = indexToClaim;
+            denseIndex = Count;
+
             ++Count;
             FreeIndex = nextFreeIndex; // Set the free list head for next time.
         }
@@ -217,11 +326,12 @@ namespace GDX.Collections
 
         /// <summary>
         ///     Returns true if the element was successfully removed.
-        ///     WARNING: Will not protect against accidentally removing twice if the index in question was recycled between Remove
-        ///     calls.
+        ///     WARNING: Will not protect against accidentally removing twice if the index in question was recycled between Free calls.
         /// </summary>
-        public bool RemoveWithNullValueCheck(ref int sparseIndexToRemove)
+        public bool RemoveWithBoundsCheck(ref int sparseIndexToRemove, out int dataIndexToSwapFrom, out int dataIndexToSwapTo)
         {
+            dataIndexToSwapFrom = -1;
+            dataIndexToSwapTo = -1;
             bool didRemove = false;
             if (sparseIndexToRemove >= 0 && sparseIndexToRemove < SparseArray.Length)
             {
@@ -239,6 +349,9 @@ namespace GDX.Collections
                         // Swap the entry being removed with the last entry.
                         SparseArray[sparseIndexBeingSwapped] = denseIndexToRemove;
                         DenseArray[denseIndexToRemove] = sparseIndexBeingSwapped;
+
+                        dataIndexToSwapFrom = newLength;
+                        dataIndexToSwapTo = denseIndexToRemove;
 
                         // Clear the dense index, for debugging purposes
                         DenseArray[newLength] = -1;
@@ -269,8 +382,10 @@ namespace GDX.Collections
         /// <param name="versionArray">The array where version numbers to check against are stored.</param>
         /// <returns>True if the element was successfully removed.</returns>
         public bool RemoveWithBoundsAndVersionChecks(ref int sparseIndexToRemove, ulong version,
-            NativeArray<ulong> versionArray)
+            NativeArray<ulong> versionArray, out int indexToSwapFrom, out int indexToSwapTo)
         {
+            indexToSwapFrom = -1;
+            indexToSwapTo = -1;
             bool didRemove = false;
             if (sparseIndexToRemove >= 0 && sparseIndexToRemove < SparseArray.Length)
             {
@@ -286,11 +401,13 @@ namespace GDX.Collections
                     if (denseIndexToRemove < Count && sparseIndexAtDenseIndex == sparseIndexToRemove)
                     {
                         didRemove = true;
-                        ++sparseIndexVersion;
-                        versionArray[sparseIndexToRemove] = sparseIndexVersion;
+                        versionArray[sparseIndexToRemove] = sparseIndexVersion + 1;
                         // Swap the entry being removed with the last entry.
                         SparseArray[sparseIndexBeingSwapped] = denseIndexToRemove;
                         DenseArray[denseIndexToRemove] = sparseIndexBeingSwapped;
+
+                        indexToSwapFrom = newLength;
+                        indexToSwapTo = denseIndexToRemove;
 
                         // Clear the dense index, for debugging purposes
                         DenseArray[newLength] = -1;
@@ -372,7 +489,7 @@ namespace GDX.Collections
         ///     value at indexToSwapTo.
         /// </param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void RemoveUnchecked(int sparseIndexToRemove, out int indexToSwapTo, out int indexToSwapFrom)
+        public void RemoveUnchecked(int sparseIndexToRemove, out int indexToSwapFrom, out int indexToSwapTo)
         {
             int denseIndexToRemove = SparseArray[sparseIndexToRemove];
             int newLength = Count - 1;
@@ -407,8 +524,7 @@ namespace GDX.Collections
         ///     value at indexToSwapTo.
         /// </param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void RemoveUnchecked(int sparseIndexToRemove, NativeArray<ulong> versionArray, out int indexToSwapTo,
-            out int indexToSwapFrom)
+        public void RemoveUnchecked(int sparseIndexToRemove, NativeArray<ulong> versionArray, out int indexToSwapFrom, out int indexToSwapTo)
         {
             int denseIndexToRemove = SparseArray[sparseIndexToRemove];
             int newLength = Count - 1;
@@ -461,7 +577,7 @@ namespace GDX.Collections
         /// </summary>
         /// <param name="denseIndexToRemove">The dense index associated with the sparse index to remove.</param>
         /// <param name="versionArray">The array where version numbers to check against are stored.</param>
-        public void RemoveUncheckedFromDenseIndex(int denseIndexToRemove, ulong[] versionArray)
+        public void RemoveUncheckedFromDenseIndex(int denseIndexToRemove, NativeArray<ulong> versionArray)
         {
             int sparseIndexToRemove = DenseArray[denseIndexToRemove];
             int newLength = Count - 1;
@@ -523,8 +639,7 @@ namespace GDX.Collections
         ///     Set the data array value at this index to default after swapping with the data array
         ///     value at denseIndexToRemove.
         /// </param>
-        public void RemoveUncheckedFromDenseIndex(int denseIndexToRemove, NativeArray<ulong> versionArray,
-            out int indexToSwapFrom)
+        public void RemoveUncheckedFromDenseIndex(int denseIndexToRemove, NativeArray<ulong> versionArray, out int indexToSwapFrom)
         {
             int sparseIndexToRemove = DenseArray[denseIndexToRemove];
             int newLength = Count - 1;
@@ -562,9 +677,9 @@ namespace GDX.Collections
         ///     Set the data array value at this index to default after swapping with the data array
         ///     value at indexToSwapTo.
         /// </param>
-        /// <returns>Whether or not the remove attempt succeeded.</returns>
-        public bool TryRemoveWithVersionCheck(int sparseIndexToRemove, ulong version, NativeArray<ulong> versionArray,
-            out int indexToSwapTo, out int indexToSwapFrom)
+        /// <returns>True if the entry was valid and thus removed.</returns>
+        public bool RemoveWithVersionCheck(int sparseIndexToRemove, ulong version, NativeArray<ulong> versionArray,
+            out int indexToSwapFrom, out int indexToSwapTo)
         {
             int denseIndexToRemove = SparseArray[sparseIndexToRemove];
             ulong versionAtSparseIndex = versionArray[sparseIndexToRemove];
@@ -601,43 +716,6 @@ namespace GDX.Collections
         }
 
         /// <summary>
-        ///     Attempts to remove the associated sparse/dense index pair from active use and increments the version if successful.
-        /// </summary>
-        /// <param name="denseIndexToRemove">The dense index associated with the sparse index to remove.</param>
-        /// <param name="version">The array where version numbers to check against are stored.</param>
-        /// <param name="versionArray">The array where version numbers to check against are stored.</param>
-        /// <returns>Whether or not the remove attempt succeeded.</returns>
-        public bool TryRemoveFromDenseIndexWithVersionCheck(int denseIndexToRemove, ulong version,
-            NativeArray<ulong> versionArray)
-        {
-            int sparseIndexToRemove = DenseArray[denseIndexToRemove];
-            int newLength = Count - 1;
-            int sparseIndexBeingSwapped = DenseArray[newLength];
-
-            ulong versionAtSparseIndex = versionArray[sparseIndexToRemove];
-
-            bool succeeded = version == versionAtSparseIndex;
-            if (succeeded)
-            {
-                // Swap the entry being removed with the last entry.
-                SparseArray[sparseIndexBeingSwapped] = denseIndexToRemove;
-                DenseArray[denseIndexToRemove] = sparseIndexBeingSwapped;
-
-                // Clear the dense  index, for debugging purposes
-                DenseArray[newLength] = -1;
-
-                // Add the sparse index to the free list.
-                SparseArray[sparseIndexToRemove] = FreeIndex;
-                versionArray[sparseIndexToRemove] = versionArray[sparseIndexToRemove] + 1;
-                FreeIndex = sparseIndexToRemove;
-
-                Count = newLength;
-            }
-
-            return succeeded;
-        }
-
-        /// <summary>
         ///     Clear the dense and sparse arrays.
         /// </summary>
         public void Clear()
@@ -664,7 +742,27 @@ namespace GDX.Collections
             {
                 DenseArray[i] = -1;
                 SparseArray[i] = i + 1;
-                versionArray[i] = 0;
+                versionArray[i] = versionArray[i] + 1;
+            }
+
+            FreeIndex = 0;
+            Count = 0;
+        }
+
+        /// <summary>
+        ///     Clear the dense and sparse arrays and reset the version array.
+        ///     Note: Only clear the version array if you are sure there are no outstanding dependencies on version numbers.
+        /// </summary>
+        /// ///
+        /// <param name="versionArray">Array containing version numbers to check against.</param>
+        public void ClearWithVersionArrayReset(NativeArray<ulong> versionArray)
+        {
+            int capacity = SparseArray.Length;
+            for (int i = 0; i < capacity; i++)
+            {
+                DenseArray[i] = -1;
+                SparseArray[i] = i + 1;
+                versionArray[i] = 1;
             }
 
             FreeIndex = 0;
@@ -685,17 +783,55 @@ namespace GDX.Collections
             NativeArray<int> newSparseArray = new NativeArray<int>(newCapacity, allocator, nativeArrayOptions);
             NativeSlice<int> newSparseArraySlice = new NativeSlice<int>(newSparseArray, 0, currentCapacity);
             newSparseArraySlice.CopyFrom(SparseArray);
+            SparseArray.Dispose();
             SparseArray = newSparseArray;
 
             NativeArray<int> newDenseArray = new NativeArray<int>(newCapacity, allocator, nativeArrayOptions);
             NativeSlice<int> newDenseArraySlice = new NativeSlice<int>(newDenseArray, 0, currentCapacity);
             newDenseArraySlice.CopyFrom(DenseArray);
+            DenseArray.Dispose();
             DenseArray = newDenseArray;
 
             for (int i = currentCapacity; i < newCapacity; i++)
             {
                 DenseArray[i] = -1; // Set new dense indices as unclaimed.
                 SparseArray[i] = i + 1; // Build the free list chain.
+            }
+        }
+
+        /// <summary>
+        ///     Reallocate the dense and sparse arrays with additional capacity.
+        /// </summary>
+        /// <param name="extraCapacity">How many indices to expand the dense and sparse arrays by.</param>
+        /// <param name="versionArray">Array containing version numbers to check against.</param>
+        public void Expand(int extraCapacity, Allocator allocator, NativeArrayOptions nativeArrayOptions, ref NativeArray<ulong> versionArray)
+        {
+            int currentCapacity = SparseArray.Length;
+            int newCapacity = currentCapacity + extraCapacity;
+
+            NativeArray<int> newSparseArray = new NativeArray<int>(newCapacity, allocator, nativeArrayOptions);
+            NativeSlice<int> newSparseArraySlice = new NativeSlice<int>(newSparseArray, 0, currentCapacity);
+            newSparseArraySlice.CopyFrom(SparseArray);
+            SparseArray.Dispose();
+            SparseArray = newSparseArray;
+
+            NativeArray<int> newDenseArray = new NativeArray<int>(newCapacity, allocator, nativeArrayOptions);
+            NativeSlice<int> newDenseArraySlice = new NativeSlice<int>(newDenseArray, 0, currentCapacity);
+            newDenseArraySlice.CopyFrom(DenseArray);
+            DenseArray.Dispose();
+            DenseArray = newDenseArray;
+
+            NativeArray<ulong> newVersionArray = new NativeArray<ulong>(newCapacity, allocator, nativeArrayOptions);
+            NativeSlice<ulong> newVersionArraySlice = new NativeSlice<ulong>(newVersionArray, 0, currentCapacity);
+            newVersionArraySlice.CopyFrom(versionArray);
+            versionArray.Dispose();
+            versionArray = newVersionArray;
+
+            for (int i = currentCapacity; i < newCapacity; i++)
+            {
+                DenseArray[i] = -1; // Set new dense indices as unclaimed.
+                SparseArray[i] = i + 1; // Build the free list chain.
+                versionArray[i] = 1;
             }
         }
 
@@ -715,22 +851,26 @@ namespace GDX.Collections
             NativeArray<int> newSparseArray = new NativeArray<int>(newCapacity, allocator, nativeArrayOptions);
             NativeSlice<int> newSparseArraySlice = new NativeSlice<int>(newSparseArray, 0, currentCapacity);
             newSparseArraySlice.CopyFrom(SparseArray);
+            SparseArray.Dispose();
             SparseArray = newSparseArray;
 
             NativeArray<int> newDenseArray = new NativeArray<int>(newCapacity, allocator, nativeArrayOptions);
             NativeSlice<int> newDenseArraySlice = new NativeSlice<int>(newDenseArray, 0, currentCapacity);
             newDenseArraySlice.CopyFrom(DenseArray);
+            DenseArray.Dispose();
             DenseArray = newDenseArray;
 
             NativeArray<ulong> newVersionArray = new NativeArray<ulong>(newCapacity, allocator, nativeArrayOptions);
             NativeSlice<ulong> newVersionArraySlice = new NativeSlice<ulong>(newVersionArray, 0, currentCapacity);
             newVersionArraySlice.CopyFrom(versionArray);
+            versionArray.Dispose();
             versionArray = newVersionArray;
 
             for (int i = currentCapacity; i < newCapacity; i++)
             {
                 DenseArray[i] = -1; // Set new dense indices as unclaimed.
                 SparseArray[i] = i + 1; // Build the free list chain.
+                versionArray[i] = 1;
             }
         }
 
@@ -738,21 +878,23 @@ namespace GDX.Collections
         {
             int currentCapacity = SparseArray.Length;
             int currentCount = Count;
-            int newCount = currentCount + numberToReserve;
+            int newCapacity = currentCount + numberToReserve;
 
-            if (newCount > currentCapacity)
+            if (newCapacity > currentCapacity)
             {
-                NativeArray<int> newSparseArray = new NativeArray<int>(newCount, allocator, nativeArrayOptions);
+                NativeArray<int> newSparseArray = new NativeArray<int>(newCapacity, allocator, nativeArrayOptions);
                 NativeSlice<int> newSparseArraySlice = new NativeSlice<int>(newSparseArray, 0, currentCapacity);
                 newSparseArraySlice.CopyFrom(SparseArray);
+                SparseArray.Dispose();
                 SparseArray = newSparseArray;
 
-                NativeArray<int> newDenseArray = new NativeArray<int>(newCount, allocator, nativeArrayOptions);
+                NativeArray<int> newDenseArray = new NativeArray<int>(newCapacity, allocator, nativeArrayOptions);
                 NativeSlice<int> newDenseArraySlice = new NativeSlice<int>(newDenseArray, 0, currentCapacity);
                 newDenseArraySlice.CopyFrom(DenseArray);
+                DenseArray.Dispose();
                 DenseArray = newDenseArray;
 
-                for (int i = currentCapacity; i < newCount; i++)
+                for (int i = currentCapacity; i < newCapacity; i++)
                 {
                     DenseArray[i] = -1; // Set new dense indices as unclaimed.
                     SparseArray[i] = i + 1; // Build the free list chain.
@@ -764,29 +906,33 @@ namespace GDX.Collections
         {
             int currentCapacity = SparseArray.Length;
             int currentCount = Count;
-            int newCount = currentCount + numberToReserve;
+            int newCapacity = currentCount + numberToReserve;
 
-            if (newCount > currentCapacity)
+            if (newCapacity > currentCapacity)
             {
-                NativeArray<int> newSparseArray = new NativeArray<int>(newCount, allocator, nativeArrayOptions);
+                NativeArray<int> newSparseArray = new NativeArray<int>(newCapacity, allocator, nativeArrayOptions);
                 NativeSlice<int> newSparseArraySlice = new NativeSlice<int>(newSparseArray, 0, currentCapacity);
                 newSparseArraySlice.CopyFrom(SparseArray);
+                SparseArray.Dispose();
                 SparseArray = newSparseArray;
 
-                NativeArray<int> newDenseArray = new NativeArray<int>(newCount, allocator, nativeArrayOptions);
+                NativeArray<int> newDenseArray = new NativeArray<int>(newCapacity, allocator, nativeArrayOptions);
                 NativeSlice<int> newDenseArraySlice = new NativeSlice<int>(newDenseArray, 0, currentCapacity);
                 newDenseArraySlice.CopyFrom(DenseArray);
+                DenseArray.Dispose();
                 DenseArray = newDenseArray;
 
-                NativeArray<ulong> newVersionArray = new NativeArray<ulong>(newCount, allocator, nativeArrayOptions);
+                NativeArray<ulong> newVersionArray = new NativeArray<ulong>(newCapacity, allocator, nativeArrayOptions);
                 NativeSlice<ulong> newVersionArraySlice = new NativeSlice<ulong>(newVersionArray, 0, currentCapacity);
                 newVersionArraySlice.CopyFrom(versionArray);
+                versionArray.Dispose();
                 versionArray = newVersionArray;
 
-                for (int i = currentCapacity; i < newCount; i++)
+                for (int i = currentCapacity; i < newCapacity; i++)
                 {
                     DenseArray[i] = -1; // Set new dense indices as unclaimed.
                     SparseArray[i] = i + 1; // Build the free list chain.
+                    versionArray[i] = 1;
                 }
             }
         }
