@@ -44,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `TransformExtensions::DestroyChildren()` now has an immediate mode to remove children at author time.
 - Moved `SemanticVersion` into the `GDX.Developer` namespace.
 - Moved `TransientReference` into the `GDX.Developer` namespace.
+- `Byte2` accessor throws `IndexOutOfRangeException` when using `ENABLE_UNITY_COLLECTIONS_CHECKS`.
 
 ### Fixed  
 

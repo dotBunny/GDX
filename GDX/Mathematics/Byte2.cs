@@ -177,7 +177,7 @@ namespace GDX.Mathematics
         ///     Get the <see cref="byte" /> at the provided <paramref name="index" />.
         /// </summary>
         /// <param name="index">Returns the byte element at a specified index.</param>
-        /// <exception cref="ArgumentException">Out of range check.</exception>
+        /// <exception cref="IndexOutOfRangeException">Out of range check.</exception>
         public unsafe byte this[int index]
         {
             get
@@ -185,7 +185,7 @@ namespace GDX.Mathematics
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
                 if ((uint)index >= 2)
                 {
-                    throw new ArgumentException("The index must be between[0...1]");
+                    throw new IndexOutOfRangeException("The index must be between[0...1]");
                 }
 #endif
                 fixed (Byte2* array = &this)
@@ -198,7 +198,7 @@ namespace GDX.Mathematics
 #if ENABLE_UNITY_COLLECTIONS_CHECKS
                 if ((uint)index >= 2)
                 {
-                    throw new ArgumentException("The index must be between[0...1]");
+                    throw new IndexOutOfRangeException("The index must be between[0...1]");
                 }
 #endif
                 fixed (byte* array = &X)
@@ -231,7 +231,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            return $"Byte2({X.ToString(format, formatProvider)}, {Y.ToString(format, formatProvider)})";
+            return $"Byte2({X.ToString(format, formatProvider)},{Y.ToString(format, formatProvider)})";
         }
 
         /// <summary>
