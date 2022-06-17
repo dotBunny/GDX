@@ -6,6 +6,7 @@ using System;
 using System.Globalization;
 using System.Text;
 using NUnit.Framework;
+using Unity.Mathematics;
 
 namespace GDX.Mathematics
 {
@@ -69,6 +70,14 @@ namespace GDX.Mathematics
 
         [Test]
         [Category(Core.TestCategory)]
+        public void Constructor_CreateFromBool2()
+        {
+            Byte2 test = new Byte2(new bool2(true, false));
+            Assert.IsTrue(test.X == 255 && test.Y == 0);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
         public void Constructor_CreateFromFloat()
         {
             Byte2 test = new Byte2(1f);
@@ -77,10 +86,26 @@ namespace GDX.Mathematics
 
         [Test]
         [Category(Core.TestCategory)]
+        public void Constructor_CreateFromFloat2()
+        {
+            Byte2 test = new Byte2(new float2(2f,3f));
+            Assert.IsTrue(test.X == 2 && test.Y == 3);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
         public void Constructor_CreateFromDouble()
         {
             Byte2 test = new Byte2(1d);
             Assert.IsTrue(test.X == 1 && test.Y == 1);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void Constructor_CreateFromDouble2()
+        {
+            Byte2 test = new Byte2(new double2(1d, 2d));
+            Assert.IsTrue(test.X == 1 && test.Y == 2);
         }
 
         [Test]
@@ -193,7 +218,15 @@ namespace GDX.Mathematics
         public void ToString_Output_ByteIntegerValues()
         {
             Byte2 test = new Byte2('a', 'b');
-            Localization.SetDefaultCulture();
+            string evaluate = test.ToString();
+            Assert.IsTrue(evaluate == "Byte2(97,98)");
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void ToString_Format_ByteIntegerValues()
+        {
+            Byte2 test = new Byte2('a', 'b');
             string evaluate = test.ToString("", new CultureInfo(Localization.Language.English.GetIETF_BCP47()));
             Assert.IsTrue(evaluate == "Byte2(97,98)");
         }
