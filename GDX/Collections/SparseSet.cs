@@ -128,6 +128,8 @@ namespace GDX.Collections
         /// <param name="expandBy">How many indices to expand by.</param>
         /// <param name="sparseIndex">The sparse index allocated.</param>
         /// <param name="denseIndex">The dense index allocated.</param>
+        /// <param name="versionArray">The array containing the version number to check against.</param>
+        /// <param name="version">Enables detection of use-after-free errors when using the sparse index as a reference.</param>
         /// <returns>True if the index pool expanded.</returns>
         public bool AddWithExpandCheck(int expandBy, out int sparseIndex, out int denseIndex, ref ulong[] versionArray, out ulong version)
         {

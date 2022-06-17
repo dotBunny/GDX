@@ -63,6 +63,7 @@ namespace GDX.Collections
         /// <param name="initialCapacity">The initial capacity of the sparse and dense int arrays.</param>
         /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
         /// <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
+        /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
         public NativeSparseSet(int initialCapacity, Allocator allocator, NativeArrayOptions nativeArrayOptions, out NativeArray<ulong> versionArray)
         {
             DenseArray = new NativeArray<int>(initialCapacity, allocator, nativeArrayOptions);
@@ -141,6 +142,7 @@ namespace GDX.Collections
         /// <param name="denseIndex">The dense index allocated.</param>
         /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
         /// <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
+        /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
         /// <returns>True if the index pool expanded.</returns>
         public bool AddWithExpandCheck(int expandBy, out int sparseIndex, out int denseIndex, Allocator allocator,
             NativeArrayOptions nativeArrayOptions, ref NativeArray<ulong> versionArray)
@@ -325,9 +327,15 @@ namespace GDX.Collections
         }
 
         /// <summary>
-        ///     Returns true if the element was successfully removed.
-        ///     WARNING: Will not protect against accidentally removing twice if the index in question was recycled between Free calls.
+        ///     Removes the entry corresponding to the sparse index if the entry is within bounds and currently in use.
         /// </summary>
+        /// <param name="sparseIndexToRemove">The sparse index corresponding to the entry to remove. Cleared to -1 in this operation.</param>
+        /// <param name="indexToSwapFrom">
+        ///     Set the data array value at this index to default after swapping with the data array
+        ///     value at indexToSwapTo.
+        /// </param>
+        /// <param name="indexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
+        /// <returns>True if the index reference was valid, and thus removed.</returns>
         public bool RemoveWithBoundsCheck(ref int sparseIndexToRemove, out int dataIndexToSwapFrom, out int dataIndexToSwapTo)
         {
             dataIndexToSwapFrom = -1;
@@ -379,7 +387,12 @@ namespace GDX.Collections
         ///     The version number of the int used to access the sparse index. Used to guard against accessing
         ///     indices that have been removed and reused.
         /// </param>
-        /// <param name="versionArray">The array where version numbers to check against are stored.</param>
+        /// <param name="versionArray">The array containing the version number to check against.</param>
+        /// <param name="indexToSwapFrom">
+        ///     Set the data array value at this index to default after swapping with the data array
+        ///     value at indexToSwapTo.
+        /// </param>
+        /// <param name="indexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
         /// <returns>True if the element was successfully removed.</returns>
         public bool RemoveWithBoundsAndVersionChecks(ref int sparseIndexToRemove, ulong version,
             NativeArray<ulong> versionArray, out int indexToSwapFrom, out int indexToSwapTo)
@@ -455,7 +468,7 @@ namespace GDX.Collections
         ///     Removes the associated sparse/dense index pair from active use and increments the version.
         /// </summary>
         /// <param name="sparseIndexToRemove">The sparse index to remove.</param>
-        /// <param name="versionArray">The array where version numbers to check against are stored.</param>
+        /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void RemoveUnchecked(int sparseIndexToRemove, NativeArray<ulong> versionArray)
         {
@@ -517,7 +530,7 @@ namespace GDX.Collections
         ///     Out parameters used to manage parallel data arrays.
         /// </summary>
         /// <param name="sparseIndexToRemove">The sparse index to remove.</param>
-        /// <param name="versionArray">The array where version numbers to check against are stored.</param>
+        /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
         /// <param name="indexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
         /// <param name="indexToSwapFrom">
         ///     Set the data array value at this index to default after swapping with the data array
@@ -576,7 +589,7 @@ namespace GDX.Collections
         ///     Removes the associated sparse/dense index pair from active use.
         /// </summary>
         /// <param name="denseIndexToRemove">The dense index associated with the sparse index to remove.</param>
-        /// <param name="versionArray">The array where version numbers to check against are stored.</param>
+        /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
         public void RemoveUncheckedFromDenseIndex(int denseIndexToRemove, NativeArray<ulong> versionArray)
         {
             int sparseIndexToRemove = DenseArray[denseIndexToRemove];
@@ -634,7 +647,7 @@ namespace GDX.Collections
         ///     Out parameter used to manage parallel data arrays.
         /// </summary>
         /// <param name="denseIndexToRemove">The sparse index to remove.</param>
-        /// <param name="versionArray">The array where version numbers to check against are stored.</param>
+        /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
         /// <param name="indexToSwapFrom">
         ///     Set the data array value at this index to default after swapping with the data array
         ///     value at denseIndexToRemove.
@@ -671,7 +684,7 @@ namespace GDX.Collections
         ///     The version number of the int used to access the sparse index. Used to guard against accessing
         ///     indices that have been removed and reused.
         /// </param>
-        /// <param name="versionArray">The array where version numbers to check against are stored.</param>
+        /// <param name="versionArray">The array containing the version number to check against.</param>
         /// <param name="indexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
         /// <param name="indexToSwapFrom">
         ///     Set the data array value at this index to default after swapping with the data array
@@ -734,7 +747,7 @@ namespace GDX.Collections
         /// <summary>
         ///     Clear the dense and sparse arrays.
         /// </summary>
-        /// <param name="versionArray">Array containing version numbers to check against.</param>
+        /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
         public void Clear(NativeArray<ulong> versionArray)
         {
             int capacity = SparseArray.Length;
@@ -754,7 +767,7 @@ namespace GDX.Collections
         ///     Note: Only clear the version array if you are sure there are no outstanding dependencies on version numbers.
         /// </summary>
         /// ///
-        /// <param name="versionArray">Array containing version numbers to check against.</param>
+        /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
         public void ClearWithVersionArrayReset(NativeArray<ulong> versionArray)
         {
             int capacity = SparseArray.Length;
@@ -803,7 +816,7 @@ namespace GDX.Collections
         ///     Reallocate the dense and sparse arrays with additional capacity.
         /// </summary>
         /// <param name="extraCapacity">How many indices to expand the dense and sparse arrays by.</param>
-        /// <param name="versionArray">Array containing version numbers to check against.</param>
+        /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
         public void Expand(int extraCapacity, Allocator allocator, NativeArrayOptions nativeArrayOptions, ref NativeArray<ulong> versionArray)
         {
             int currentCapacity = SparseArray.Length;
@@ -835,6 +848,12 @@ namespace GDX.Collections
             }
         }
 
+        /// <summary>
+        /// Reallocate the dense and sparse arrays with additional capacity if there are not at least <paramref name="numberToReserve"/> unused entries.
+        /// </summary>
+        /// <param name="numberToReserve">The number of unused entries to ensure capacity for.</param>
+        /// <param name="allocator">The allocator to use on expansion.</param>
+        /// <param name="nativeArrayOptions">Whether or not to use uninitialized memory.</param>
         public void Reserve(int numberToReserve, Allocator allocator, NativeArrayOptions nativeArrayOptions)
         {
             int currentCapacity = SparseArray.Length;
@@ -863,6 +882,13 @@ namespace GDX.Collections
             }
         }
 
+        /// <summary>
+        /// Reallocate the dense and sparse arrays with additional capacity if there are not at least <paramref name="numberToReserve"/> unused entries.
+        /// </summary>
+        /// <param name="numberToReserve">The number of unused entries to ensure capacity for.</param>
+        /// <param name="allocator">The allocator to use on expansion.</param>
+        /// <param name="nativeArrayOptions">Whether or not to use uninitialized memory.</param>
+        /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
         public void Reserve(int numberToReserve, Allocator allocator, NativeArrayOptions nativeArrayOptions, ref NativeArray<ulong> versionArray)
         {
             int currentCapacity = SparseArray.Length;
