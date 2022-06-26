@@ -230,6 +230,132 @@ namespace GDX.Collections.Generic
 
         [Test]
         [Category(Core.TestCategory)]
+        public void InsertExpandNoClear_MockDataWithExpansion_ValueAdded()
+        {
+            SimpleList<int> mockList = new SimpleList<int>(2);
+            int[] initialBackingArray = mockList.Array;
+            int[] poolMinimums = new int[32];
+            int[] poolMaximums = new int[32];
+            poolMinimums[1] = 0;
+            poolMinimums[2] = 1;
+            poolMaximums[1] = 1;
+            poolMaximums[2] = 1;
+
+            Pooling.ArrayPool<int> pool = new Pooling.ArrayPool<int>(poolMinimums, poolMaximums);
+            int[] replacementArrayOnExpand = pool.ArrayPools[2].Pool[0];
+            replacementArrayOnExpand[3] = 5;
+            mockList.AddExpandNoClear(2, pool);
+            mockList.AddExpandNoClear(7, pool);
+            mockList.InsertExpandNoClear(1, 3, pool);
+
+            bool evaluate = mockList.Array.Length == 4 &&
+                            mockList.Array[0] == 2 &&
+                            mockList.Array[1] == 3 &&
+                            mockList.Array[2] == 7 &&
+                            mockList.Array[3] == 5 &&
+                            initialBackingArray[0] == 2 &&
+                            initialBackingArray[1] == 7 &&
+                            pool.ArrayPools[1].Count == 1 &&
+                            pool.ArrayPools[2].Count == 0;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void InsertExpandClearOld_MockDataWithExpansion_ValueAdded()
+        {
+            SimpleList<int> mockList = new SimpleList<int>(1);
+            int[] initialBackingArray = mockList.Array;
+            int[] poolMinimums = new int[32];
+            int[] poolMaximums = new int[32];
+            poolMinimums[0] = 0;
+            poolMinimums[1] = 1;
+            poolMaximums[0] = 1;
+            poolMaximums[1] = 1;
+
+            Pooling.ArrayPool<int> pool = new Pooling.ArrayPool<int>(poolMinimums, poolMaximums);
+            mockList.AddExpandClearOld(2, pool);
+            mockList.InsertExpandClearOld(0, 7, pool);
+
+            bool evaluate = mockList.Array.Length == 2 &&
+                            mockList.Array[0] == 7 &&
+                            mockList.Array[1] == 2 &&
+                            initialBackingArray[0] == 0 &&
+                            pool.ArrayPools[0].Count == 1 &&
+                            pool.ArrayPools[1].Count == 0;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void InsertExpandClearNew_MockDataWithExpansion_ValueAdded()
+        {
+            SimpleList<int> mockList = new SimpleList<int>(2);
+            int[] initialBackingArray = mockList.Array;
+            int[] poolMinimums = new int[32];
+            int[] poolMaximums = new int[32];
+            poolMinimums[1] = 0;
+            poolMinimums[2] = 1;
+            poolMaximums[1] = 1;
+            poolMaximums[2] = 1;
+
+            Pooling.ArrayPool<int> pool = new Pooling.ArrayPool<int>(poolMinimums, poolMaximums);
+            int[] replacementArrayOnExpand = pool.ArrayPools[2].Pool[0];
+            replacementArrayOnExpand[3] = 5;
+            mockList.AddExpandClearNew(2, pool);
+            mockList.AddExpandClearNew(7, pool);
+            mockList.InsertExpandClearNew(1, 3, pool);
+
+            bool evaluate = mockList.Array.Length == 4 &&
+                            mockList.Array[0] == 2 &&
+                            mockList.Array[1] == 3 &&
+                            mockList.Array[2] == 7 &&
+                            mockList.Array[3] == 0 &&
+                            initialBackingArray[0] == 2 &&
+                            initialBackingArray[1] == 7 &&
+                            pool.ArrayPools[1].Count == 1 &&
+                            pool.ArrayPools[2].Count == 0;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void InsertExpandClearBoth_MockDataWithExpansion_ValueAdded()
+        {
+            SimpleList<int> mockList = new SimpleList<int>(2);
+            int[] initialBackingArray = mockList.Array;
+            int[] poolMinimums = new int[32];
+            int[] poolMaximums = new int[32];
+            poolMinimums[1] = 0;
+            poolMinimums[2] = 1;
+            poolMaximums[1] = 1;
+            poolMaximums[2] = 1;
+
+            Pooling.ArrayPool<int> pool = new Pooling.ArrayPool<int>(poolMinimums, poolMaximums);
+            int[] replacementArrayOnExpand = pool.ArrayPools[2].Pool[0];
+            replacementArrayOnExpand[3] = 5;
+            mockList.AddExpandClearBoth(2, pool);
+            mockList.AddExpandClearBoth(7, pool);
+            mockList.InsertExpandClearBoth(1, 3, pool);
+
+            bool evaluate = mockList.Array.Length == 4 &&
+                            mockList.Array[0] == 2 &&
+                            mockList.Array[1] == 3 &&
+                            mockList.Array[2] == 7 &&
+                            mockList.Array[3] == 0 &&
+                            initialBackingArray[0] == 0 &&
+                            initialBackingArray[1] == 0 &&
+                            pool.ArrayPools[1].Count == 1 &&
+                            pool.ArrayPools[2].Count == 0;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
         public void Clear_MockData_DataCleared()
         {
             SimpleList<int> mockList = new SimpleList<int>(1);
