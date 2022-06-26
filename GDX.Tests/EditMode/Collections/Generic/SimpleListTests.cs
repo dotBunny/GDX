@@ -474,6 +474,57 @@ namespace GDX.Collections.Generic
 
         [Test]
         [Category(Core.TestCategory)]
+        public void InsertWithExpandCheck_MockDataAtEndAndCustomCount_ValueAdded()
+        {
+            SimpleList<int> mockList = new SimpleList<int>(3);
+
+            mockList.AddUnchecked(0);
+            mockList.AddUnchecked(1);
+            mockList.AddUnchecked(2);
+
+            mockList.InsertWithExpandCheck(2, 4, 5);
+
+            bool evaluate = mockList.Array[2] == 4 && mockList.Array.Length == 8;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void InsertWithExpandCheck_MockDataAtStartAndCustomCount_ValueAdded()
+        {
+            SimpleList<int> mockList = new SimpleList<int>(3);
+
+            mockList.AddUnchecked(0);
+            mockList.AddUnchecked(1);
+            mockList.AddUnchecked(2);
+
+            mockList.InsertWithExpandCheck(0, 4, 5);
+
+            bool evaluate = mockList.Array[0] == 4 && mockList.Array.Length == 8;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void InsertWithExpandCheck_MockDataInMiddleAndCustomCount_ValueAdded()
+        {
+            SimpleList<int> mockList = new SimpleList<int>(3);
+
+            mockList.AddUnchecked(0);
+            mockList.AddUnchecked(1);
+            mockList.AddUnchecked(2);
+
+            mockList.InsertWithExpandCheck(1, 4, 5);
+
+            bool evaluate = mockList.Array[1] == 4 && mockList.Array.Length == 8;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
         public void RemoveAt_MockDataAtEnd_ValueRemoved()
         {
             SimpleList<int> mockList = new SimpleList<int>(3);
