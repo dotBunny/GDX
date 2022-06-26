@@ -5,6 +5,8 @@
 using System.Runtime.CompilerServices;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using System.Runtime.InteropServices;
+using Unity.Jobs.LowLevel.Unsafe;
 
 namespace GDX.Collections
 {
@@ -12,7 +14,7 @@ namespace GDX.Collections
     ///     An adapter collection for external data arrays that allows constant-time insertion, deletion, and lookup by
     ///     handle, as well as array-like iteration.
     /// </summary>
-    public struct NativeSparseSet
+    public struct NativeArraySparseSet
     {
         /// <summary>
         ///     Holds references to the sparse array for swapping indices.
@@ -38,12 +40,12 @@ namespace GDX.Collections
         public int FreeIndex;
 
         /// <summary>
-        ///     Create a <see cref="NativeSparseSet" /> with an <paramref name="initialCapacity" />.
+        ///     Create a <see cref="NativeArraySparseSet" /> with an <paramref name="initialCapacity" />.
         /// </summary>
         /// <param name="initialCapacity">The initial capacity of the sparse and dense int arrays.</param>
         /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
         /// <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
-        public NativeSparseSet(int initialCapacity, Allocator allocator, NativeArrayOptions nativeArrayOptions)
+        public NativeArraySparseSet(int initialCapacity, Allocator allocator, NativeArrayOptions nativeArrayOptions)
         {
             DenseArray = new NativeArray<int>(initialCapacity, allocator, nativeArrayOptions);
             SparseArray = new NativeArray<int>(initialCapacity, allocator, nativeArrayOptions);
@@ -58,13 +60,13 @@ namespace GDX.Collections
         }
 
         /// <summary>
-        ///     Create a <see cref="NativeSparseSet" /> with an <paramref name="initialCapacity" />.
+        ///     Create a <see cref="NativeArraySparseSet" /> with an <paramref name="initialCapacity" />.
         /// </summary>
         /// <param name="initialCapacity">The initial capacity of the sparse and dense int arrays.</param>
         /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
         /// <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
         /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
-        public NativeSparseSet(int initialCapacity, Allocator allocator, NativeArrayOptions nativeArrayOptions, out NativeArray<ulong> versionArray)
+        public NativeArraySparseSet(int initialCapacity, Allocator allocator, NativeArrayOptions nativeArrayOptions, out NativeArray<ulong> versionArray)
         {
             DenseArray = new NativeArray<int>(initialCapacity, allocator, nativeArrayOptions);
             SparseArray = new NativeArray<int>(initialCapacity, allocator, nativeArrayOptions);
