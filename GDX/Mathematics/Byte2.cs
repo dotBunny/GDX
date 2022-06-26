@@ -110,6 +110,39 @@ namespace GDX.Mathematics
         }
 
         /// <summary>
+        ///     Constructs a <see cref="Byte2" /> from a <see cref="Unity.Mathematics.bool2" /> by conversion.
+        /// </summary>
+        /// <param name="v">The value to transcribe.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Byte2(bool2 v)
+        {
+            X = v.x ? (byte)255 : (byte)0;
+            Y = v.y ? (byte)255 : (byte)0;
+        }
+
+        /// <summary>
+        ///     Constructs a <see cref="Byte2" /> from a <see cref="Unity.Mathematics.float2" /> by conversion.
+        /// </summary>
+        /// <param name="v">The value to transcribe.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Byte2(float2 v)
+        {
+            X = (byte)v.x;
+            Y = (byte)v.y;
+        }
+
+        /// <summary>
+        ///     Constructs a <see cref="Byte2" /> from a <see cref="Unity.Mathematics.double2" /> by conversion.
+        /// </summary>
+        /// <param name="v">The value to transcribe.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Byte2(double2 v)
+        {
+            X = (byte)v.x;
+            Y = (byte)v.y;
+        }
+
+        /// <summary>
         ///     Get a new <see cref="Byte2" /> created with <see cref="X" /> as both components.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -718,7 +751,7 @@ namespace GDX.Mathematics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override string ToString()
         {
-            return $"Byte2({X.ToString()}, {Y.ToString()})";
+            return $"Byte2({X.ToString()},{Y.ToString()})";
         }
 
         /// <summary>
@@ -740,39 +773,6 @@ namespace GDX.Mathematics
             ///     Y <see cref="byte" />.
             /// </summary>
             public byte Y;
-        }
-
-        /// <summary>
-        ///     Constructs a <see cref="Byte2" /> from a <see cref="Unity.Mathematics.bool2" /> by conversion.
-        /// </summary>
-        /// <param name="v">The value to transcribe.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Byte2(bool2 v)
-        {
-            X = v.x ? (byte)255 : (byte)0;
-            Y = v.y ? (byte)255 : (byte)0;
-        }
-
-        /// <summary>
-        ///     Constructs a <see cref="Byte2" /> from a <see cref="Unity.Mathematics.float2" /> by conversion.
-        /// </summary>
-        /// <param name="v">The value to transcribe.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Byte2(float2 v)
-        {
-            X = (byte)v.x;
-            Y = (byte)v.y;
-        }
-
-        /// <summary>
-        ///     Constructs a <see cref="Byte2" /> from a <see cref="Unity.Mathematics.double2" /> by conversion.
-        /// </summary>
-        /// <param name="v">The value to transcribe.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Byte2(double2 v)
-        {
-            X = (byte)v.x;
-            Y = (byte)v.y;
         }
 
         /// <summary>
