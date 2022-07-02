@@ -61,9 +61,12 @@ namespace GDX.Collections.Generic
             const int k_MaxPrime = int.MaxValue;
             newSize = newSize > k_MaxPrime ? k_MaxPrime : newSize;
 
-            for (int i = 0; i < s_PrimesLength; i++)
+            int primesLength = s_PrimesLength;
+            int[] primes = s_Primes;
+
+            for (int i = 0; i < primesLength; i++)
             {
-                int prime = s_Primes[i];
+                int prime = primes[i];
                 if (prime >= newSize) return prime;
             }
 
