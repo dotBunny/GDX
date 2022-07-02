@@ -8,15 +8,13 @@ namespace GDX.Collections.Generic
 {
     public class IntKeyDictionaryTests
     {
-        const string k_CollidingKey0 = "942";
-        const string k_CollidingKey1 = "9331582";
-
         [Test]
         [Category(Core.TestCategory)]
         public void Constructor_RequestZeroMinimum_PrimeCapacity()
         {
             IntKeyDictionary<string> dictionary = new IntKeyDictionary<string>(0);
 
+            bool areArraysInitialized = dictionary.Buckets != null && dictionary.Entries != null && dictionary.FreeListHead == 0 && dictionary.Count == 0;
             Assert.IsTrue(dictionary.Count == 0 && dictionary.Entries.Length == DictionaryPrimes.GetPrimeAtIndex(0));
         }
 
@@ -579,10 +577,7 @@ namespace GDX.Collections.Generic
                 }
             }
 
-            int stableHashCode0 = k_CollidingKey0.GetStableHashCode();
-            int stableHashCode1 = k_CollidingKey1.GetStableHashCode();
-
-            Assert.IsTrue(allegedIndex0 == realIndex0 && allegedIndex1 == realIndex1 && allegedIndex0 != allegedIndex1 && nextIndex == allegedIndex0 && stableHashCode0 == stableHashCode1);
+            Assert.IsTrue(allegedIndex0 == realIndex0 && allegedIndex1 == realIndex1 && allegedIndex0 != allegedIndex1 && nextIndex == allegedIndex0);
         }
 
         [Test]
@@ -599,10 +594,7 @@ namespace GDX.Collections.Generic
 
             int allegedIndex1After = dictionary.IndexOf(8 + dictionary.Entries.Length);
 
-            int stableHashCode0 = k_CollidingKey0.GetStableHashCode();
-            int stableHashCode1 = k_CollidingKey1.GetStableHashCode();
-
-            Assert.IsTrue(allegedIndex1 == allegedIndex1After && allegedIndex1After != -1 && stableHashCode0 == stableHashCode1);
+            Assert.IsTrue(allegedIndex1 == allegedIndex1After && allegedIndex1After != -1);
         }
 
         [Test]
