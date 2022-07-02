@@ -138,6 +138,27 @@ namespace GDX.Collections.Generic
 
         [Test]
         [Category(Core.TestCategory)]
+        public void ExpandWhenFull_CheckExpanded()
+        {
+            IntKeyDictionary<string> dictionary = new IntKeyDictionary<string>(16);
+
+            int addedKey = 0;
+            int initialCapacity = dictionary.Entries.Length;
+            for (int i = 0; i < initialCapacity; i++)
+            {
+                dictionary.AddWithExpandCheck(addedKey, TestLiterals.Bar);
+                addedKey++;
+            }
+
+            dictionary.ExpandWhenFull();
+
+            int expandedCapacity = dictionary.Entries.Length;
+
+            Assert.IsTrue(expandedCapacity > initialCapacity);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
         public void AddSafe_CheckExpanded()
         {
             IntKeyDictionary<string> dictionary = new IntKeyDictionary<string>(16);
@@ -219,6 +240,45 @@ namespace GDX.Collections.Generic
 
         [Test]
         [Category(Core.TestCategory)]
+        public void AddWithIndexer_CheckEntriesExist()
+        {
+            IntKeyDictionary<string> dictionary = new IntKeyDictionary<string>(16);
+
+            int addedKey = 0;
+            int initialCapacity = dictionary.Entries.Length;
+
+            int[] keys = new int[initialCapacity];
+
+            for (int i = 0; i < initialCapacity; i++)
+            {
+                keys[i] = addedKey;
+                addedKey++;
+            }
+
+            for (int i = 0; i < initialCapacity; i++)
+            {
+                dictionary[keys[i]] = TestLiterals.Bar;
+            }
+
+            dictionary[addedKey + 1] = TestLiterals.Bar;
+
+            bool allEntriesAreThere = true;
+            for (int i = 0; i < initialCapacity; i++)
+            {
+                if (!dictionary.ContainsKey(keys[i]))
+                {
+                    allEntriesAreThere = false;
+                    break;
+                }
+            }
+
+            bool finalEntryIsThere = dictionary.ContainsKey(addedKey + 1);
+
+            Assert.IsTrue(allEntriesAreThere && finalEntryIsThere);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
         public void AddWithIndexer_CheckEntriesMaintainConnection()
         {
             IntKeyDictionary<string> dictionary = new IntKeyDictionary<string>(16);
@@ -282,6 +342,33 @@ namespace GDX.Collections.Generic
 
         [Test]
         [Category(Core.TestCategory)]
+        public void TryModify_CheckActuallyModified()
+        {
+            IntKeyDictionary<string> dictionary = new IntKeyDictionary<string>(16);
+            dictionary.AddSafe(0, TestLiterals.Bar);
+
+            bool claimsToHaveModified = dictionary.TryModifyValue(0, TestLiterals.Seed);
+
+            bool evaluate = dictionary[0] == TestLiterals.Seed && claimsToHaveModified;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void TryModify_CheckNotModified()
+        {
+            IntKeyDictionary<string> dictionary = new IntKeyDictionary<string>(16);
+
+            bool claimsToHaveModified = dictionary.TryModifyValue(0, TestLiterals.Seed);
+
+            bool evaluate = !dictionary.ContainsKey(0) && !claimsToHaveModified;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
         public void TryRemove_CheckActuallyRemoved()
         {
             IntKeyDictionary<string> dictionary = new IntKeyDictionary<string>(16);
@@ -308,7 +395,7 @@ namespace GDX.Collections.Generic
 
         [Test]
         [Category(Core.TestCategory)]
-        public void TryRemoveTwice_CheckCorrectReturnValues()
+        public void TryRemove_Twice_CheckCorrectReturnValues()
         {
             IntKeyDictionary<string> dictionary = new IntKeyDictionary<string>(16);
 
@@ -316,6 +403,50 @@ namespace GDX.Collections.Generic
 
             bool removedFirstTime = dictionary.TryRemove(0);
             bool removedSecondTime = dictionary.TryRemove(0);
+
+            Assert.IsTrue(removedFirstTime && !removedSecondTime);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void TryRemoveNoValueClear_CheckActuallyRemoved()
+        {
+            IntKeyDictionary<string> dictionary = new IntKeyDictionary<string>(16);
+            dictionary.AddSafe(0, TestLiterals.Bar);
+
+            int indexOf = dictionary.IndexOf(0);
+
+            bool removedFirstTime = dictionary.TryRemoveNoValueClear(0);
+
+            IntKeyEntry<string>[] entries = dictionary.Entries;
+            int arrayLength = entries.Length;
+
+            int indexOfKey = -1;
+            for (int i = 0; i < arrayLength; i++)
+            {
+                IntKeyEntry<string> entry = entries[i];
+                if (entry.Key == 0 && entry.Next >= 0)
+                {
+                    indexOfKey = i;
+                    break;
+                }
+            }
+
+            bool isValueStillThere = dictionary.Entries[indexOf].Value == TestLiterals.Bar;
+
+            Assert.IsTrue(removedFirstTime && indexOfKey == -1 && isValueStillThere);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void TryRemoveNoValueClear_Twice_CheckCorrectReturnValues()
+        {
+            IntKeyDictionary<string> dictionary = new IntKeyDictionary<string>(16);
+
+            dictionary.AddSafe(0, TestLiterals.Bar);
+
+            bool removedFirstTime = dictionary.TryRemoveNoValueClear(0);
+            bool removedSecondTime = dictionary.TryRemoveNoValueClear(0);
 
             Assert.IsTrue(removedFirstTime && !removedSecondTime);
         }
@@ -495,7 +626,6 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void MoveNext_FindAllEntries()
         {
-
             IntKeyDictionary<string> dictionary = new IntKeyDictionary<string>(16);
 
             dictionary.AddUnchecked(0, TestLiterals.Bar);
@@ -508,6 +638,37 @@ namespace GDX.Collections.Generic
 
             while (dictionary.MoveNext(ref currentIndex, out IntKeyEntry<string> currentEntry))
             {
+                if (currentEntry.Key == 0)
+                {
+                    foundFirst = true;
+                }
+                else if (currentEntry.Key == 1)
+                {
+                    foundSecond = true;
+                }
+                ++foundCount;
+            }
+
+            Assert.IsTrue(foundCount == 2 && foundFirst && foundSecond);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void MoveNext_NoVersionOrOutValue_FindAllEntries()
+        {
+            IntKeyDictionary<string> dictionary = new IntKeyDictionary<string>(16);
+
+            dictionary.AddUnchecked(0, TestLiterals.Bar);
+            dictionary.AddUnchecked(1, TestLiterals.Bar);
+
+            int foundCount = 0;
+            bool foundFirst = false;
+            bool foundSecond = false;
+            int currentIndex = 0;
+
+            while (dictionary.MoveNext(ref currentIndex))
+            {
+                IntKeyEntry<string> currentEntry = dictionary.Entries[currentIndex];
                 if (currentEntry.Key == 0)
                 {
                     foundFirst = true;
@@ -604,6 +765,49 @@ namespace GDX.Collections.Generic
 
             Assert.IsTrue(fooValue == 42);
             Assert.IsTrue(barValue == 0);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void Clear_CheckCleared()
+        {
+            IntKeyDictionary<string> dictionary = new IntKeyDictionary<string>(16);
+
+            int addedKey = 0;
+            int initialCapacity = dictionary.Entries.Length;
+
+            int[] keys = new int[initialCapacity];
+
+            for (int i = 0; i < initialCapacity; i++)
+            {
+                keys[i] = addedKey;
+                addedKey++;
+            }
+
+            for (int i = 0; i < initialCapacity; i++)
+            {
+                dictionary.AddSafe(keys[i], TestLiterals.Bar);
+            }
+
+            dictionary.AddSafe(addedKey + 1, TestLiterals.Bar);
+
+            dictionary.Clear();
+
+            bool isClear = dictionary.Count == 0;
+
+            int capacity = dictionary.Entries.Length;
+
+            for (int i = 0; i < capacity; i++)
+            {
+                ref IntKeyEntry<string> entry = ref dictionary.Entries[i];
+
+                if (entry.Value != default || entry.Next != ((1 << 31) | (i + 1)))
+                {
+                    isClear = false;
+                }
+            }
+
+            Assert.IsTrue(isClear);
         }
     }
 }
