@@ -99,7 +99,7 @@ namespace GDX.Collections.Generic
         {
             UnsafeSparseSet mockList = new UnsafeSparseSet(1, Allocator.Temp, out ulong* versionArray);
             int initialLength = mockList.Length;
-            bool expandedFirstTime = mockList.AddWithExpandCheck(5, out int sparseIndex0, out int denseIndex0);
+            bool expandedFirstTime = mockList.AddWithExpandCheck(5, out int sparseIndex0, out int denseIndex0, ref versionArray);
 
             int tryCount = 0;
             bool expanded = false;
@@ -107,12 +107,12 @@ namespace GDX.Collections.Generic
             int denseIndex1 = 0;
             while (!expanded && tryCount < 1000)
             {
-                expanded = mockList.AddWithExpandCheck(5, out sparseIndex1, out denseIndex1);
+                expanded = mockList.AddWithExpandCheck(5, out sparseIndex1, out denseIndex1, ref versionArray);
             }
 
             bool evaluate = mockList.SparseArray[sparseIndex0] == denseIndex0 && mockList.DenseArray[denseIndex0] == sparseIndex0
                 && mockList.SparseArray[sparseIndex1] == denseIndex1 && mockList.DenseArray[denseIndex1] == sparseIndex1
-                && expandedFirstTime == false && expanded == true && mockList.Length >= initialLength + 5;
+                && expandedFirstTime == false && expanded == true && mockList.Length >= initialLength + 5 && versionArray[mockList.Length - 1] == 1;
 
             Assert.IsTrue(evaluate);
         }
@@ -521,9 +521,37 @@ namespace GDX.Collections.Generic
             UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp, out ulong* versionArray);
             int initialLength = mockList.Length;
             mockList.AddUnchecked(out int sparseIndex, out int denseIndex, versionArray, out ulong version);
-            mockList.Expand(3, ref versionArray);
+            mockList.Reserve(initialLength + 3, ref versionArray);
 
             bool evaluate = mockList.Length >= initialLength + 3;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void Dispose_MockDataWithVersionArray_Disposed()
+        {
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp, out ulong* versionArray);
+            mockList.DisposeVersionArray(ref versionArray);
+            mockList.Dispose();
+
+            bool evaluate = mockList.Data == null && versionArray == null;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void DenseAndSparseAccess_MockData_ArraysArePlacedCorrectly()
+        {
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp);
+
+            int length = mockList.Length;
+            int* sparse = mockList.SparseArray;
+            int* dense = mockList.DenseArray;
+
+            bool evaluate = dense == sparse + length;
 
             Assert.IsTrue(evaluate);
         }

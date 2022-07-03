@@ -746,8 +746,7 @@ namespace GDX.Collections
         ///     value at indexToSwapTo.
         /// </param>
         /// <returns>True if the entry was valid and thus removed.</returns>
-        public bool RemoveWithVersionCheck(int sparseIndexToRemove, ulong version, ulong* versionArray,
-            out int indexToSwapFrom, out int indexToSwapTo)
+        public bool RemoveWithVersionCheck(int sparseIndexToRemove, ulong version, ulong* versionArray, out int indexToSwapFrom, out int indexToSwapTo)
         {
             int denseIndexToRemove = SparseArray[sparseIndexToRemove];
             ulong versionAtSparseIndex = versionArray[sparseIndexToRemove];
@@ -1029,13 +1028,19 @@ namespace GDX.Collections
         {
             if (Data != null)
             {
-                Allocator.Free(Data, sizeof(int), JobsUtility.CacheLineSize, Length);
+                Allocator.Free(Data, sizeof(int), JobsUtility.CacheLineSize, Length * 2);
                 Data = null;
                 Length = 0;
                 Count = 0;
                 FreeIndex = 0;
                 Allocator = default;
             }
+        }
+
+        public void DisposeVersionArray(ref ulong* versionArray)
+        {
+            Allocator.Free(versionArray, sizeof(ulong), JobsUtility.CacheLineSize, Length);
+            versionArray = null;
         }
     }
 }

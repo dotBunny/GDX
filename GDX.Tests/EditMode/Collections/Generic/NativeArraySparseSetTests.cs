@@ -113,12 +113,13 @@ namespace GDX.Collections.Generic
         {
             NativeArraySparseSet mockList = new NativeArraySparseSet(1, Allocator.Temp, out NativeArray<ulong> versionArray);
 
-            bool expandedFirstTime = mockList.AddWithExpandCheck(5, out int sparseIndex0, out int denseIndex0, Allocator.Temp);
-            bool expandedSecondTime = mockList.AddWithExpandCheck(5, out int sparseIndex1, out int denseIndex1, Allocator.Temp);
+            bool expandedFirstTime = mockList.AddWithExpandCheck(5, out int sparseIndex0, out int denseIndex0, Allocator.Temp, ref versionArray);
+            bool expandedSecondTime = mockList.AddWithExpandCheck(5, out int sparseIndex1, out int denseIndex1, Allocator.Temp, ref versionArray);
 
             bool evaluate = mockList.SparseArray[sparseIndex0] == denseIndex0 && mockList.DenseArray[denseIndex0] == sparseIndex0
                 && mockList.SparseArray[sparseIndex1] == denseIndex1 && mockList.DenseArray[denseIndex1] == sparseIndex1
-                && expandedFirstTime == false && expandedSecondTime == true && mockList.SparseArray.Length == 6 && mockList.DenseArray.Length == 6;
+                && expandedFirstTime == false && expandedSecondTime == true && mockList.SparseArray.Length == 6 && mockList.DenseArray.Length == 6
+                && versionArray.Length == 6;
 
             Assert.IsTrue(evaluate);
         }
@@ -515,9 +516,9 @@ namespace GDX.Collections.Generic
         {
             NativeArraySparseSet mockList = new NativeArraySparseSet(3, Allocator.Temp, out NativeArray<ulong> versionArray);
             mockList.AddUnchecked(out int sparseIndex, out int denseIndex, versionArray, out ulong version);
-            mockList.Expand(3, Allocator.Temp, ref versionArray);
+            mockList.Reserve(3, Allocator.Temp, ref versionArray);
 
-            bool evaluate = mockList.SparseArray.Length == 6 && mockList.DenseArray.Length == 6 && versionArray.Length == 6;
+            bool evaluate = mockList.SparseArray.Length == 4 && mockList.DenseArray.Length == 4 && versionArray.Length == 4;
 
             Assert.IsTrue(evaluate);
         }
