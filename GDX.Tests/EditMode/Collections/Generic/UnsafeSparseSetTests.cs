@@ -8,15 +8,15 @@ using Unity.Collections;
 
 namespace GDX.Collections.Generic
 {
-    public class NativeSparseSetTests
+    public unsafe class UnsafeSparseSetTests
     {
         [Test]
         [Category(Core.TestCategory)]
         public void Constructor_CreateWithCount()
         {
-            NativeSparseSet mockList = new NativeSparseSet(4, Allocator.Temp, NativeArrayOptions.ClearMemory);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(4, Allocator.Temp);
 
-            bool evaluate = mockList.Count == 0 && mockList.SparseArray.Length == 4 && mockList.DenseArray.Length == 4;
+            bool evaluate = mockList.Count == 0 && mockList.Length >= 4;
 
             Assert.IsTrue(evaluate);
         }
@@ -25,10 +25,10 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void Constructor_CreateWithCountAndVersionArray()
         {
-            NativeArray<ulong> versionArray;
-            NativeSparseSet mockList = new NativeSparseSet(4, Allocator.Temp, NativeArrayOptions.ClearMemory, out versionArray);
+            ulong* versionArray;
+            UnsafeSparseSet mockList = new UnsafeSparseSet(4, Allocator.Temp, out versionArray);
 
-            bool evaluate = mockList.Count == 0 && mockList.SparseArray.Length == 4 && mockList.DenseArray.Length == 4 && versionArray.Length == 4;
+            bool evaluate = mockList.Count == 0 && mockList.Length >= 4;
 
             Assert.IsTrue(evaluate);
         }
@@ -37,7 +37,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void AddUnchecked_MockData_IndicesReserved()
         {
-            NativeSparseSet mockList = new NativeSparseSet(2, Allocator.Temp, NativeArrayOptions.ClearMemory);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(2, Allocator.Temp);
 
             int sparseIndex0, sparseIndex1, denseIndex0, denseIndex1;
             mockList.AddUnchecked(out sparseIndex0, out denseIndex0);
@@ -53,8 +53,8 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void AddUnchecked_MockDataWithVersionArray__IndicesReserved()
         {
-            NativeArray<ulong> versionArray;
-            NativeSparseSet mockList = new NativeSparseSet(2, Allocator.Temp, NativeArrayOptions.ClearMemory, out versionArray);
+            ulong* versionArray;
+            UnsafeSparseSet mockList = new UnsafeSparseSet(2, Allocator.Temp, out versionArray);
             versionArray[0] = 17;
             versionArray[1] = 5;
 
@@ -71,38 +71,24 @@ namespace GDX.Collections.Generic
 
         [Test]
         [Category(Core.TestCategory)]
-        public void AddUnchecked_MockDataOverflow_ThrowsException()
-        {
-            NativeSparseSet mockList = new NativeSparseSet(1, Allocator.Temp, NativeArrayOptions.ClearMemory);
-
-            mockList.AddUnchecked(out int sparseIndex, out int denseIndex);
-
-            Assert.Throws<IndexOutOfRangeException>(() => { mockList.AddUnchecked(out sparseIndex, out denseIndex); });
-        }
-
-        [Test]
-        [Category(Core.TestCategory)]
-        public void AddUnchecked_MockDataAndVersionArrayOverflow_ThrowsException()
-        {
-            NativeSparseSet mockList = new NativeSparseSet(1, Allocator.Temp, NativeArrayOptions.ClearMemory, out NativeArray<ulong> versionArray);
-
-            mockList.AddUnchecked(out int sparseIndex, out int denseIndex, versionArray, out ulong version);
-
-            Assert.Throws<IndexOutOfRangeException>(() => { mockList.AddUnchecked(out sparseIndex, out denseIndex, versionArray, out version); });
-        }
-
-        [Test]
-        [Category(Core.TestCategory)]
         public void AddWithExpandCheck_MockData_Expanded()
         {
-            NativeSparseSet mockList = new NativeSparseSet(1, Allocator.Temp, NativeArrayOptions.ClearMemory);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(1, Allocator.Temp);
+            int initialLength = mockList.Length;
+            bool expandedFirstTime = mockList.AddWithExpandCheck(5, out int sparseIndex0, out int denseIndex0);
 
-            bool expandedFirstTime = mockList.AddWithExpandCheck(5, out int sparseIndex0, out int denseIndex0, Allocator.Temp, NativeArrayOptions.ClearMemory);
-            bool expandedSecondTime = mockList.AddWithExpandCheck(5, out int sparseIndex1, out int denseIndex1, Allocator.Temp, NativeArrayOptions.ClearMemory);
+            int tryCount = 0;
+            bool expanded = false;
+            int sparseIndex1 = 0;
+            int denseIndex1 = 0;
+            while (!expanded && tryCount < 1000)
+            {
+                expanded = mockList.AddWithExpandCheck(5, out sparseIndex1, out denseIndex1);
+            }
 
             bool evaluate = mockList.SparseArray[sparseIndex0] == denseIndex0 && mockList.DenseArray[denseIndex0] == sparseIndex0
                 && mockList.SparseArray[sparseIndex1] == denseIndex1 && mockList.DenseArray[denseIndex1] == sparseIndex1
-                && expandedFirstTime == false && expandedSecondTime == true && mockList.SparseArray.Length == 6 && mockList.DenseArray.Length == 6;
+                && expandedFirstTime == false && expanded == true && mockList.Length >= initialLength + 5;
 
             Assert.IsTrue(evaluate);
         }
@@ -111,14 +97,22 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void AddWithExpandCheck_MockDataWithVersionArray_Expanded()
         {
-            NativeSparseSet mockList = new NativeSparseSet(1, Allocator.Temp, NativeArrayOptions.ClearMemory, out NativeArray<ulong> versionArray);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(1, Allocator.Temp, out ulong* versionArray);
+            int initialLength = mockList.Length;
+            bool expandedFirstTime = mockList.AddWithExpandCheck(5, out int sparseIndex0, out int denseIndex0, ref versionArray);
 
-            bool expandedFirstTime = mockList.AddWithExpandCheck(5, out int sparseIndex0, out int denseIndex0, Allocator.Temp, NativeArrayOptions.ClearMemory);
-            bool expandedSecondTime = mockList.AddWithExpandCheck(5, out int sparseIndex1, out int denseIndex1, Allocator.Temp, NativeArrayOptions.ClearMemory);
+            int tryCount = 0;
+            bool expanded = false;
+            int sparseIndex1 = 0;
+            int denseIndex1 = 0;
+            while (!expanded && tryCount < 1000)
+            {
+                expanded = mockList.AddWithExpandCheck(5, out sparseIndex1, out denseIndex1, ref versionArray);
+            }
 
             bool evaluate = mockList.SparseArray[sparseIndex0] == denseIndex0 && mockList.DenseArray[denseIndex0] == sparseIndex0
                 && mockList.SparseArray[sparseIndex1] == denseIndex1 && mockList.DenseArray[denseIndex1] == sparseIndex1
-                && expandedFirstTime == false && expandedSecondTime == true && mockList.SparseArray.Length == 6 && mockList.DenseArray.Length == 6;
+                && expandedFirstTime == false && expanded == true && mockList.Length >= initialLength + 5 && versionArray[mockList.Length - 1] == 1;
 
             Assert.IsTrue(evaluate);
         }
@@ -127,14 +121,22 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void AddUnchecked_MockDataWithVersionArray_Expanded()
         {
-            NativeSparseSet mockList = new NativeSparseSet(1, Allocator.Temp, NativeArrayOptions.ClearMemory, out NativeArray<ulong> versionArray);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(1, Allocator.Temp, out ulong* versionArray);
+            int initialLength = mockList.Length;
+            bool expandedFirstTime = mockList.AddWithExpandCheck(5, out int sparseIndex0, out int denseIndex0);
+            bool expanded = false;
+            int tryCount = 0;
 
-            bool expandedFirstTime = mockList.AddWithExpandCheck(5, out int sparseIndex0, out int denseIndex0, Allocator.Temp, NativeArrayOptions.ClearMemory);
-            bool expandedSecondTime = mockList.AddWithExpandCheck(5, out int sparseIndex1, out int denseIndex1, Allocator.Temp, NativeArrayOptions.ClearMemory);
+            int sparseIndex1 = 0;
+            int denseIndex1 = 0;
+            while (!expanded && tryCount < 1000)
+            {
+                expanded = mockList.AddWithExpandCheck(5, out sparseIndex1, out denseIndex1);
+            }
 
             bool evaluate = mockList.SparseArray[sparseIndex0] == denseIndex0 && mockList.DenseArray[denseIndex0] == sparseIndex0
                 && mockList.SparseArray[sparseIndex1] == denseIndex1 && mockList.DenseArray[denseIndex1] == sparseIndex1
-                && expandedFirstTime == false && expandedSecondTime == true && mockList.SparseArray.Length == 6 && mockList.DenseArray.Length == 6;
+                && expandedFirstTime == false && expanded == true && mockList.Length >= initialLength + 5;
 
             Assert.IsTrue(evaluate);
         }
@@ -143,7 +145,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void GetDenseIndexUnchecked_MockData_CorrectIndex()
         {
-            NativeSparseSet mockList = new NativeSparseSet(1, Allocator.Temp, NativeArrayOptions.ClearMemory);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(1, Allocator.Temp);
 
             mockList.AddUnchecked(out int sparseIndex, out int denseIndex);
 
@@ -158,7 +160,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void GetDenseIndexWithBoundsCheck_MockData_CorrectIndexAndHandlesInvalidIndex()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp);
 
             mockList.AddUnchecked(out int sparseIndex0, out int denseIndex0);
             mockList.AddUnchecked(out int sparseIndex1, out int denseIndex1);
@@ -178,7 +180,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void GetDenseIndexWithVersionCheck_MockData_CorrectIndexAndHandlesVersion()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory, out NativeArray<ulong> versionArray);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp, out ulong* versionArray);
 
             mockList.AddUnchecked(out int sparseIndex0, out int denseIndex0, versionArray, out ulong version0);
 
@@ -205,7 +207,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void GetDenseIndexWithBoundsAndVersionCheck_MockData_CorrectIndexAndHandlesInvalidIndex()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory, out NativeArray<ulong> versionArray);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp, out ulong* versionArray);
 
             mockList.AddUnchecked(out int sparseIndex0, out int denseIndex0, versionArray, out ulong version0);
 
@@ -237,7 +239,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void RemoveWithBoundsCheck_MockData_ValidIndexRemovedInvalidIndicesNotRemoved()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp);
             mockList.AddUnchecked(out int sparseIndex0, out int denseIndex0);
             mockList.AddUnchecked(out int sparseIndex1, out int denseIndex1);
 
@@ -265,7 +267,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void RemoveWithVersionCheck_MockData_ValidIndexRemovedInvalidIndicesNotRemoved()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory, out NativeArray<ulong> versionArray);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp, out ulong* versionArray);
             mockList.AddUnchecked(out int sparseIndex0, out int denseIndex0, versionArray, out ulong version0);
             mockList.AddUnchecked(out int sparseIndex1, out int denseIndex1, versionArray, out ulong version1);
 
@@ -286,7 +288,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void RemoveWithBoundsAndVersionChecks_MockData_ValidIndexRemovedInvalidIndicesNotRemoved()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory, out NativeArray<ulong> versionArray);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp, out ulong* versionArray);
             mockList.AddUnchecked(out int sparseIndex0, out int denseIndex0, versionArray, out ulong version0);
             mockList.AddUnchecked(out int sparseIndex1, out int denseIndex1, versionArray, out ulong version1);
 
@@ -320,7 +322,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void RemoveUnchecked_MockDataWithIndicesAndVersionArray_ValidIndexRemoved()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory, out NativeArray<ulong> versionArray);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp, out ulong* versionArray);
             mockList.AddUnchecked(out int sparseIndex0, out int denseIndex0, versionArray, out ulong version0);
             mockList.AddUnchecked(out int sparseIndex1, out int denseIndex1, versionArray, out ulong version1);
 
@@ -337,7 +339,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void RemoveUnchecked_MockDataWithIndices_ValidIndexRemoved()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp);
             mockList.AddUnchecked(out int sparseIndex0, out int denseIndex0);
             mockList.AddUnchecked(out int sparseIndex1, out int denseIndex1);
 
@@ -354,7 +356,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void RemoveUnchecked_MockData_ValidIndexRemoved()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp);
             mockList.AddUnchecked(out int sparseIndex0, out int denseIndex0);
             mockList.AddUnchecked(out int sparseIndex1, out int denseIndex1);
 
@@ -371,7 +373,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void RemoveUncheckedFromDenseIndex_MockData_ValidIndexRemoved()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp);
             mockList.AddUnchecked(out int sparseIndex0, out int denseIndex0);
             mockList.AddUnchecked(out int sparseIndex1, out int denseIndex1);
 
@@ -386,7 +388,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void RemoveUncheckedFromDenseIndex_MockDataWithSwapIndex_ValidIndexRemoved()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp);
             mockList.AddUnchecked(out int sparseIndex0, out int denseIndex0);
             mockList.AddUnchecked(out int sparseIndex1, out int denseIndex1);
 
@@ -401,7 +403,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void RemoveUncheckedFromDenseIndex_MockDataWithVersionArray_ValidIndexRemoved()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory, out NativeArray<ulong> versionArray);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp, out ulong* versionArray);
             mockList.AddUnchecked(out int sparseIndex0, out int denseIndex0, versionArray, out ulong version0);
             mockList.AddUnchecked(out int sparseIndex1, out int denseIndex1, versionArray, out ulong version1);
 
@@ -416,7 +418,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void RemoveUncheckedFromDenseIndex_MockDataWithVersionArrayAndSwapIndex_ValidIndexRemoved()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory, out NativeArray<ulong> versionArray);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp, out ulong* versionArray);
             mockList.AddUnchecked(out int sparseIndex0, out int denseIndex0, versionArray, out ulong version0);
             mockList.AddUnchecked(out int sparseIndex1, out int denseIndex1, versionArray, out ulong version1);
 
@@ -431,7 +433,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void Clear_MockData_ArraysCleared()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp);
             mockList.AddUnchecked(out int sparseIndex0, out int denseIndex0);
             mockList.AddUnchecked(out int sparseIndex1, out int denseIndex1);
 
@@ -446,7 +448,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void Clear_MockDataWithVersionArray_ArraysCleared()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory, out NativeArray<ulong> versionArray);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp, out ulong* versionArray);
             mockList.AddUnchecked(out int sparseIndex0, out int denseIndex0, versionArray, out ulong version0);
             mockList.AddUnchecked(out int sparseIndex1, out int denseIndex1, versionArray, out ulong version1);
 
@@ -461,7 +463,7 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void ClearWithVersionReset_MockData_ArraysClearedAndVersionReset()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory, out NativeArray<ulong> versionArray);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp, out ulong* versionArray);
             mockList.AddUnchecked(out int sparseIndex0, out int denseIndex0, versionArray, out ulong version0);
             mockList.AddUnchecked(out int sparseIndex1, out int denseIndex1, versionArray, out ulong version1);
 
@@ -476,10 +478,11 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void Expand_MockData_Expanded()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory);
-            mockList.Expand(3, Allocator.Temp, NativeArrayOptions.ClearMemory);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp);
+            int initialCapacity = mockList.Length;
+            mockList.Expand(3);
 
-            bool evaluate = mockList.SparseArray.Length == 6;
+            bool evaluate = mockList.Length > initialCapacity + 3;
 
             Assert.IsTrue(evaluate);
         }
@@ -488,10 +491,11 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void Expand_MockDataWithVersionArray_Expanded()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory, out NativeArray<ulong> versionArray);
-            mockList.Expand(3, Allocator.Temp, NativeArrayOptions.ClearMemory, ref versionArray);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp, out ulong* versionArray);
+            int initialCapacity = mockList.Length;
+            mockList.Expand(3, ref versionArray);
 
-            bool evaluate = mockList.SparseArray.Length == 6 && mockList.DenseArray.Length == 6 && versionArray.Length == 6;
+            bool evaluate = mockList.Length > initialCapacity + 3;
 
             Assert.IsTrue(evaluate);
         }
@@ -500,11 +504,12 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void Reserve_MockData_Expanded()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp);
+            int initialLength = mockList.Length;
             mockList.AddUnchecked(out int sparseIndex, out int denseIndex);
-            mockList.Reserve(3, Allocator.Temp, NativeArrayOptions.ClearMemory);
+            mockList.Reserve(initialLength + 3);
 
-            bool evaluate = mockList.SparseArray.Length == 4 && mockList.DenseArray.Length == 4;
+            bool evaluate = mockList.Length >= initialLength + 3;
 
             Assert.IsTrue(evaluate);
         }
@@ -513,11 +518,40 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void Reserve_MockDataWithVersionArray_Expanded()
         {
-            NativeSparseSet mockList = new NativeSparseSet(3, Allocator.Temp, NativeArrayOptions.ClearMemory, out NativeArray<ulong> versionArray);
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp, out ulong* versionArray);
+            int initialLength = mockList.Length;
             mockList.AddUnchecked(out int sparseIndex, out int denseIndex, versionArray, out ulong version);
-            mockList.Expand(3, Allocator.Temp, NativeArrayOptions.ClearMemory, ref versionArray);
+            mockList.Reserve(initialLength + 3, ref versionArray);
 
-            bool evaluate = mockList.SparseArray.Length == 6 && mockList.DenseArray.Length == 6 && versionArray.Length == 6;
+            bool evaluate = mockList.Length >= initialLength + 3;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void Dispose_MockDataWithVersionArray_Disposed()
+        {
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp, out ulong* versionArray);
+            mockList.DisposeVersionArray(ref versionArray);
+            mockList.Dispose();
+
+            bool evaluate = mockList.Data == null && versionArray == null;
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void DenseAndSparseAccess_MockData_ArraysArePlacedCorrectly()
+        {
+            UnsafeSparseSet mockList = new UnsafeSparseSet(3, Allocator.Temp);
+
+            int length = mockList.Length;
+            int* sparse = mockList.SparseArray;
+            int* dense = mockList.DenseArray;
+
+            bool evaluate = dense == sparse + length;
 
             Assert.IsTrue(evaluate);
         }

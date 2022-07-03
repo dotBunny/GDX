@@ -222,7 +222,7 @@ namespace GDX.Collections.Generic
         /// </summary>
         /// <param name="item">A typed <see cref="object" /> to insert.</param>
         /// <param name="index">The index in <see cref="Array" /> to add the <paramref name="item" /> at.</param>
-        public void InsertUnchecked(T item, int index)
+        public void InsertUnchecked(int index, T item)
         {
             System.Array.Copy(Array, index, Array, index + 1, Count - index);
             Array[index] = item;
@@ -234,7 +234,7 @@ namespace GDX.Collections.Generic
         /// </summary>
         /// <param name="item">A typed <see cref="object" /> to insert.</param>
         /// <param name="index">The index in <see cref="Array" /> to add the <paramref name="item" /> at.</param>
-        public void InsertWithExpandCheck(T item, int index)
+        public void InsertWithExpandCheck(int index, T item)
         {
             int arrayLength = Array.Length;
             if (Count >= arrayLength)
@@ -254,7 +254,7 @@ namespace GDX.Collections.Generic
         /// <param name="item">A typed <see cref="object" /> to insert.</param>
         /// <param name="index">The index in <see cref="Array" /> to add the <paramref name="item" /> at.</param>
         /// <param name="howMuchToExpand">The number of elements to add at the end of the array when expanding.</param>
-        public void InsertWithExpandCheck(T item, int index, int howMuchToExpand)
+        public void InsertWithExpandCheck(int index, T item, int howMuchToExpand)
         {
             int arrayLength = Array.Length;
             if (Count >= arrayLength)
@@ -274,7 +274,7 @@ namespace GDX.Collections.Generic
         /// <param name="item">A typed <see cref="object" /> to insert.</param>
         /// <param name="index">The index in <see cref="Array" /> to add the <paramref name="item" /> at.</param>
         /// <param name="pool">Pool to allocate the array from if resizing.</param>
-        public void InsertExpandNoClear(T item, int index, ArrayPool<T> pool)
+        public void InsertExpandNoClear(int index, T item, ArrayPool<T> pool)
         {
             T[] array = Array;
             int count = Count;
@@ -302,7 +302,7 @@ namespace GDX.Collections.Generic
         /// <param name="item">A typed <see cref="object" /> to insert.</param>
         /// <param name="index">The index in <see cref="Array" /> to add the <paramref name="item" /> at.</param>
         /// <param name="pool">Pool to allocate the array from if resizing.</param>
-        public void InsertExpandClearOld(T item, int index, ArrayPool<T> pool)
+        public void InsertExpandClearOld(int index, T item, ArrayPool<T> pool)
         {
             T[] array = Array;
             int count = Count;
@@ -331,7 +331,7 @@ namespace GDX.Collections.Generic
         /// <param name="item">A typed <see cref="object" /> to insert.</param>
         /// <param name="index">The index in <see cref="Array" /> to add the <paramref name="item" /> at.</param>
         /// <param name="pool">Pool to allocate the array from if resizing.</param>
-        public void InsertExpandClearNew(T item, int index, ArrayPool<T> pool)
+        public void InsertExpandClearNew(int index, T item, ArrayPool<T> pool)
         {
             T[] array = Array;
             int count = Count;
@@ -360,7 +360,7 @@ namespace GDX.Collections.Generic
         /// <param name="item">A typed <see cref="object" /> to insert.</param>
         /// <param name="index">The index in <see cref="Array" /> to add the <paramref name="item" /> at.</param>
         /// <param name="pool">Pool to allocate the array from if resizing.</param>
-        public void InsertExpandClearBoth(T item, int index, ArrayPool<T> pool)
+        public void InsertExpandClearBoth(int index, T item, ArrayPool<T> pool)
         {
             T[] array = Array;
             int count = Count;
@@ -382,25 +382,6 @@ namespace GDX.Collections.Generic
             array[index] = item;
             ++count;
             Count = count;
-        }
-
-        /// <summary>
-        ///     Insert an item into the <see cref="SimpleList{T}" />, checking if <see cref="Array" /> needs to be resized.
-        /// </summary>
-        /// <param name="item">A typed <see cref="object" /> to insert.</param>
-        /// <param name="index">The index in <see cref="Array" /> to add the <paramref name="item" /> at.</param>
-        public void Insert(T item, int index)
-        {
-            int arrayLength = Array.Length;
-            if (Count >= arrayLength)
-            {
-                arrayLength = arrayLength == 0 ? 1 : arrayLength;
-                System.Array.Resize(ref Array, arrayLength * 2);
-            }
-
-            System.Array.Copy(Array, index, Array, index + 1, Count - index);
-            Array[index] = item;
-            ++Count;
         }
 
         /// <summary>

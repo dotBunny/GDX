@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `OriginalValueAttribute` to support a default value-like pattern.
 - Unity editor non-pro (light) theme.
 - Additional information around [coding standards](https://gdx.dotbunny.com/manual/contributing/coding-standard.html) to documentation.
+- `UniformArray3D` counter part to `NativeUniformArray3D`
 
 ### Changed
 
@@ -50,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `Platform::IsFocused()` now returns the proper focus state on desktop platforms.
 - `TransformExtensions::DestroyChildren()` no longer has issues with child counts.
+- `NativeUniformArray3D::GetFromIndex()` provides the correct index now.
 - `NUnitReport.GetResultCount()` now reflects accurate count post `NUnitReport.Process()`.
 
 ### Removed

@@ -121,8 +121,6 @@ namespace GDX.Collections.Generic
             for (int i = 0; i < initialCapacity; i++)
             {
                 dictionary.AddWithExpandCheck(keys[i], TestLiterals.Bar);
-                addedKey += val;
-                val++;
             }
 
             dictionary.AddWithExpandCheck(TestLiterals.Bar, TestLiterals.Bar);
