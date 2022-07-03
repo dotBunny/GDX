@@ -4,6 +4,8 @@
 
 using System.Runtime.CompilerServices;
 using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
+using Unity.Jobs.LowLevel.Unsafe;
 
 namespace GDX.Collections
 {
@@ -11,12 +13,19 @@ namespace GDX.Collections
     ///     An adapter collection for external data arrays that allows constant-time insertion, deletion, and lookup by
     ///     handle, as well as array-like iteration.
     /// </summary>
-    public struct NativeArraySparseSet : System.IDisposable
+    public unsafe struct UnsafeSparseSet : System.IDisposable
     {
+        public const int MinimumCapacity = JobsUtility.CacheLineSize / (sizeof(int) * 2);
+
+        public void* Data;
         /// <summary>
         ///     Holds references to the sparse array for swapping indices.
         /// </summary>
-        public NativeArray<int> DenseArray;
+        public int* DenseArray
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => (int*)Data + Length;
+        }
 
         /// <summary>
         ///     Holds references to dense array indices.
@@ -24,7 +33,11 @@ namespace GDX.Collections
         /// <remarks>
         ///     Its own indices are claimed and freed via a free-list.
         /// </remarks>
-        public NativeArray<int> SparseArray;
+        public int* SparseArray
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => (int*)Data;
+        }
 
         /// <summary>
         ///     How many indices are being used currently?
@@ -37,16 +50,33 @@ namespace GDX.Collections
         public int FreeIndex;
 
         /// <summary>
+        ///     The current capacity of both the sparse and dense arrays.
+        /// </summary>
+        public int Length;
+
+        public AllocatorManager.AllocatorHandle Allocator;
+
+        /// <summary>
         ///     Create a <see cref="NativeArraySparseSet" /> with an <paramref name="initialCapacity" />.
         /// </summary>
         /// <param name="initialCapacity">The initial capacity of the sparse and dense int arrays.</param>
-        /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
-        public NativeArraySparseSet(int initialCapacity, Allocator allocator)
+        /// <param name="allocator">The <see cref="AllocatorManager.AllocatorHandle" /> type to use.</param>
+        public UnsafeSparseSet(int initialCapacity, AllocatorManager.AllocatorHandle allocator)
         {
-            DenseArray = new NativeArray<int>(initialCapacity, allocator, NativeArrayOptions.UninitializedMemory);
-            SparseArray = new NativeArray<int>(initialCapacity, allocator, NativeArrayOptions.UninitializedMemory);
+            initialCapacity = initialCapacity > MinimumCapacity ? initialCapacity : MinimumCapacity;
+            --initialCapacity;
+            initialCapacity |= initialCapacity >> 1;
+            initialCapacity |= initialCapacity >> 2;
+            initialCapacity |= initialCapacity >> 4;
+            initialCapacity |= initialCapacity >> 8;
+            initialCapacity |= initialCapacity >> 16;
+            ++initialCapacity;
+
+            Data = allocator.Allocate(sizeof(int), JobsUtility.CacheLineSize, initialCapacity * 2);
             Count = 0;
             FreeIndex = 0;
+            Length = initialCapacity;
+            Allocator = allocator;
 
             for (int i = 0; i < initialCapacity; i++)
             {
@@ -61,13 +91,23 @@ namespace GDX.Collections
         /// <param name="initialCapacity">The initial capacity of the sparse and dense int arrays.</param>
         /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
         /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
-        public NativeArraySparseSet(int initialCapacity, Allocator allocator, out NativeArray<ulong> versionArray)
+        public UnsafeSparseSet(int initialCapacity, AllocatorManager.AllocatorHandle allocator, out ulong* versionArray)
         {
-            DenseArray = new NativeArray<int>(initialCapacity, allocator, NativeArrayOptions.UninitializedMemory);
-            SparseArray = new NativeArray<int>(initialCapacity, allocator, NativeArrayOptions.UninitializedMemory);
-            versionArray = new NativeArray<ulong>(initialCapacity, allocator, NativeArrayOptions.UninitializedMemory);
+            initialCapacity = initialCapacity > MinimumCapacity ? initialCapacity : MinimumCapacity;
+            --initialCapacity;
+            initialCapacity |= initialCapacity >> 1;
+            initialCapacity |= initialCapacity >> 2;
+            initialCapacity |= initialCapacity >> 4;
+            initialCapacity |= initialCapacity >> 8;
+            initialCapacity |= initialCapacity >> 16;
+            ++initialCapacity;
+
+            Data = allocator.Allocate(sizeof(int), JobsUtility.CacheLineSize, initialCapacity * 2);
             Count = 0;
             FreeIndex = 0;
+            Length = initialCapacity;
+            Allocator = allocator;
+            versionArray = (ulong*)allocator.Allocate(sizeof(ulong), JobsUtility.CacheLineSize, initialCapacity);
 
             for (int i = 0; i < initialCapacity; i++)
             {
@@ -83,12 +123,11 @@ namespace GDX.Collections
         /// <param name="expandBy">How many indices to expand by.</param>
         /// <param name="sparseIndex">The sparse index allocated.</param>
         /// <param name="denseIndex">The dense index allocated.</param>
-        /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
         /// <returns>True if the index pool expanded.</returns>
-        public bool AddWithExpandCheck(int expandBy, out int sparseIndex, out int denseIndex, Allocator allocator)
+        public bool AddWithExpandCheck(int expandBy, out int sparseIndex, out int denseIndex)
         {
             int indexToClaim = FreeIndex;
-            int currentCapacity = SparseArray.Length;
+            int currentCapacity = Length;
             bool needsExpansion = false;
 
             if (indexToClaim >= currentCapacity)
@@ -98,23 +137,35 @@ namespace GDX.Collections
 
                 int newCapacity = currentCapacity + expandBy;
 
-                NativeArray<int> newSparseArray = new NativeArray<int>(newCapacity, allocator, NativeArrayOptions.UninitializedMemory);
-                NativeSlice<int> newSparseArraySlice = new NativeSlice<int>(newSparseArray, 0, currentCapacity);
-                newSparseArraySlice.CopyFrom(SparseArray);
-                SparseArray.Dispose();
-                SparseArray = newSparseArray;
+                newCapacity = newCapacity > MinimumCapacity ? newCapacity : MinimumCapacity;
+                --newCapacity;
+                newCapacity |= newCapacity >> 1;
+                newCapacity |= newCapacity >> 2;
+                newCapacity |= newCapacity >> 4;
+                newCapacity |= newCapacity >> 8;
+                newCapacity |= newCapacity >> 16;
+                ++newCapacity;
 
-                NativeArray<int> newDenseArray = new NativeArray<int>(newCapacity, allocator, NativeArrayOptions.UninitializedMemory);
-                NativeSlice<int> newDenseArraySlice = new NativeSlice<int>(newDenseArray, 0, currentCapacity);
-                newDenseArraySlice.CopyFrom(DenseArray);
-                DenseArray.Dispose();
-                DenseArray = newDenseArray;
+                void* newData = Allocator.Allocate(sizeof(int), JobsUtility.CacheLineSize, newCapacity * 2);
 
+                UnsafeUtility.MemCpy(newData, Data, sizeof(int) * currentCapacity);
+                int* newSparseArray = (int*)newData;
                 for (int i = currentCapacity; i < newCapacity; i++)
                 {
-                    SparseArray[i] = i + 1; // Build the free list chain.
-                    DenseArray[i] = -1; // Set new dense indices as unclaimed.
+                    newSparseArray[i] = i + 1;
                 }
+
+                int* newDenseArray = newSparseArray + newCapacity;
+                UnsafeUtility.MemCpy(newDenseArray, DenseArray, sizeof(int) * currentCapacity);
+                for (int i = currentCapacity; i < newCapacity; i++)
+                {
+                    newDenseArray[i] = -1;
+                }
+
+                Allocator.Free(Data, sizeof(int), JobsUtility.CacheLineSize, currentCapacity * 2);
+
+                Data = newData;
+                Length = newCapacity;
             }
 
             int nextFreeIndex = SparseArray[indexToClaim];
@@ -135,13 +186,12 @@ namespace GDX.Collections
         /// <param name="expandBy">How many indices to expand by.</param>
         /// <param name="sparseIndex">The sparse index allocated.</param>
         /// <param name="denseIndex">The dense index allocated.</param>
-        /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
         /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
         /// <returns>True if the index pool expanded.</returns>
-        public bool AddWithExpandCheck(int expandBy, out int sparseIndex, out int denseIndex, Allocator allocator, ref NativeArray<ulong> versionArray)
+        public bool AddWithExpandCheck(int expandBy, out int sparseIndex, out int denseIndex, ref ulong* versionArray)
         {
             int indexToClaim = FreeIndex;
-            int currentCapacity = SparseArray.Length;
+            int currentCapacity = Length;
             bool needsExpansion = false;
 
             if (indexToClaim >= currentCapacity)
@@ -151,30 +201,44 @@ namespace GDX.Collections
 
                 int newCapacity = currentCapacity + expandBy;
 
-                NativeArray<int> newSparseArray = new NativeArray<int>(newCapacity, allocator, NativeArrayOptions.UninitializedMemory);
-                NativeSlice<int> newSparseArraySlice = new NativeSlice<int>(newSparseArray, 0, currentCapacity);
-                newSparseArraySlice.CopyFrom(SparseArray);
-                SparseArray.Dispose();
-                SparseArray = newSparseArray;
+                newCapacity = newCapacity > MinimumCapacity ? newCapacity : MinimumCapacity;
+                --newCapacity;
+                newCapacity |= newCapacity >> 1;
+                newCapacity |= newCapacity >> 2;
+                newCapacity |= newCapacity >> 4;
+                newCapacity |= newCapacity >> 8;
+                newCapacity |= newCapacity >> 16;
+                ++newCapacity;
 
-                NativeArray<int> newDenseArray = new NativeArray<int>(newCapacity, allocator, NativeArrayOptions.UninitializedMemory);
-                NativeSlice<int> newDenseArraySlice = new NativeSlice<int>(newDenseArray, 0, currentCapacity);
-                newDenseArraySlice.CopyFrom(DenseArray);
-                DenseArray.Dispose();
-                DenseArray = newDenseArray;
+                void* newData = Allocator.Allocate(sizeof(int), JobsUtility.CacheLineSize, newCapacity * 2);
 
-                NativeArray<ulong> newVersionArray = new NativeArray<ulong>(newCapacity, allocator, NativeArrayOptions.UninitializedMemory);
-                NativeSlice<ulong> newVersionArraySlice = new NativeSlice<ulong>(newVersionArray, 0, currentCapacity);
-                newVersionArraySlice.CopyFrom(versionArray);
-                versionArray.Dispose();
-                versionArray = newVersionArray;
-
+                UnsafeUtility.MemCpy(newData, Data, sizeof(int) * currentCapacity);
+                int* newSparseArray = (int*)newData;
                 for (int i = currentCapacity; i < newCapacity; i++)
                 {
-                    SparseArray[i] = i + 1; // Build the free list chain.
-                    DenseArray[i] = -1; // Set new dense indices as unclaimed.
-                    versionArray[i] = 1;
+                    newSparseArray[i] = i + 1;
                 }
+
+                int* newDenseArray = newSparseArray + newCapacity;
+                UnsafeUtility.MemCpy(newDenseArray, DenseArray, sizeof(int) * currentCapacity);
+                for (int i = currentCapacity; i < newCapacity; i++)
+                {
+                    newDenseArray[i] = -1;
+                }
+
+                ulong* newVersionArray = (ulong*)Allocator.Allocate(sizeof(ulong), JobsUtility.CacheLineSize, currentCapacity);
+                UnsafeUtility.MemCpy(newVersionArray, versionArray, sizeof(ulong) * currentCapacity);
+                for (int i = currentCapacity; i < newCapacity; i++)
+                {
+                    newVersionArray[i] = 1;
+                }
+
+                Allocator.Free(Data, sizeof(int), JobsUtility.CacheLineSize, currentCapacity * 2);
+                Allocator.Free(versionArray, sizeof(ulong), JobsUtility.CacheLineSize, currentCapacity);
+                versionArray = newVersionArray;
+
+                Data = newData;
+                Length = newCapacity;
             }
 
             int nextFreeIndex = SparseArray[indexToClaim];
@@ -216,7 +280,7 @@ namespace GDX.Collections
         /// <param name="versionArray">The array containing the version number to check against.</param>
         /// <param name="version">Enables detection of use-after-free errors when using the sparse index as a reference.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddUnchecked(out int sparseIndex, out int denseIndex, NativeArray<ulong> versionArray, out ulong version)
+        public void AddUnchecked(out int sparseIndex, out int denseIndex, ulong* versionArray, out ulong version)
         {
             int indexToClaim = FreeIndex;
             int nextFreeIndex = SparseArray[indexToClaim];
@@ -250,7 +314,7 @@ namespace GDX.Collections
         /// <returns>The dense index pointed to by the current sparse index, or -1 if invalid.</returns>
         public int GetDenseIndexWithBoundsCheck(int sparseIndex)
         {
-            if (sparseIndex >= 0 && sparseIndex < SparseArray.Length)
+            if (sparseIndex >= 0 && sparseIndex < Length)
             {
                 int denseIndex = SparseArray[sparseIndex];
 
@@ -276,7 +340,7 @@ namespace GDX.Collections
         /// <param name="version">The version number associated with the sparse index.</param>
         /// <param name="versionArray">The array containing the version number to check against.</param>
         /// <returns>The dense index pointed to by the current sparse index, or -1 if invalid.</returns>
-        public int GetDenseIndexWithVersionCheck(int sparseIndex, ulong version, NativeArray<ulong> versionArray)
+        public int GetDenseIndexWithVersionCheck(int sparseIndex, ulong version, ulong* versionArray)
         {
             int denseIndex = SparseArray[sparseIndex];
             ulong versionAtSparseIndex = versionArray[sparseIndex];
@@ -297,10 +361,9 @@ namespace GDX.Collections
         /// <param name="version">The version number associated with the sparse index.</param>
         /// <param name="versionArray">The array containing the version number to check against.</param>
         /// <returns>The dense index pointed to by the current sparse index, or -1 if invalid.</returns>
-        public int GetDenseIndexWithBoundsAndVersionCheck(int sparseIndex, ulong version,
-            NativeArray<ulong> versionArray)
+        public int GetDenseIndexWithBoundsAndVersionCheck(int sparseIndex, ulong version, ulong* versionArray)
         {
-            if (sparseIndex >= 0 && sparseIndex < SparseArray.Length)
+            if (sparseIndex >= 0 && sparseIndex < Length)
             {
                 int denseIndex = SparseArray[sparseIndex];
                 ulong versionAtSparseIndex = versionArray[sparseIndex];
@@ -334,7 +397,7 @@ namespace GDX.Collections
             dataIndexToSwapFrom = -1;
             dataIndexToSwapTo = -1;
             bool didRemove = false;
-            if (sparseIndexToRemove >= 0 && sparseIndexToRemove < SparseArray.Length)
+            if (sparseIndexToRemove >= 0 && sparseIndexToRemove < Length)
             {
                 int denseIndexToRemove = SparseArray[sparseIndexToRemove];
 
@@ -387,13 +450,12 @@ namespace GDX.Collections
         /// </param>
         /// <param name="indexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
         /// <returns>True if the element was successfully removed.</returns>
-        public bool RemoveWithBoundsAndVersionChecks(ref int sparseIndexToRemove, ulong version,
-            NativeArray<ulong> versionArray, out int indexToSwapFrom, out int indexToSwapTo)
+        public bool RemoveWithBoundsAndVersionChecks(ref int sparseIndexToRemove, ulong version, ulong* versionArray, out int indexToSwapFrom, out int indexToSwapTo)
         {
             indexToSwapFrom = -1;
             indexToSwapTo = -1;
             bool didRemove = false;
-            if (sparseIndexToRemove >= 0 && sparseIndexToRemove < SparseArray.Length)
+            if (sparseIndexToRemove >= 0 && sparseIndexToRemove < Length)
             {
                 ulong sparseIndexVersion = versionArray[sparseIndexToRemove];
                 int denseIndexToRemove = SparseArray[sparseIndexToRemove];
@@ -463,7 +525,7 @@ namespace GDX.Collections
         /// <param name="sparseIndexToRemove">The sparse index to remove.</param>
         /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void RemoveUnchecked(int sparseIndexToRemove, NativeArray<ulong> versionArray)
+        public void RemoveUnchecked(int sparseIndexToRemove, ulong* versionArray)
         {
             int denseIndexToRemove = SparseArray[sparseIndexToRemove];
             int newLength = Count - 1;
@@ -530,7 +592,7 @@ namespace GDX.Collections
         ///     value at indexToSwapTo.
         /// </param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void RemoveUnchecked(int sparseIndexToRemove, NativeArray<ulong> versionArray, out int indexToSwapFrom, out int indexToSwapTo)
+        public void RemoveUnchecked(int sparseIndexToRemove, ulong* versionArray, out int indexToSwapFrom, out int indexToSwapTo)
         {
             int denseIndexToRemove = SparseArray[sparseIndexToRemove];
             int newLength = Count - 1;
@@ -583,7 +645,7 @@ namespace GDX.Collections
         /// </summary>
         /// <param name="denseIndexToRemove">The dense index associated with the sparse index to remove.</param>
         /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
-        public void RemoveUncheckedFromDenseIndex(int denseIndexToRemove, NativeArray<ulong> versionArray)
+        public void RemoveUncheckedFromDenseIndex(int denseIndexToRemove, ulong* versionArray)
         {
             int sparseIndexToRemove = DenseArray[denseIndexToRemove];
             int newLength = Count - 1;
@@ -645,7 +707,7 @@ namespace GDX.Collections
         ///     Set the data array value at this index to default after swapping with the data array
         ///     value at denseIndexToRemove.
         /// </param>
-        public void RemoveUncheckedFromDenseIndex(int denseIndexToRemove, NativeArray<ulong> versionArray, out int indexToSwapFrom)
+        public void RemoveUncheckedFromDenseIndex(int denseIndexToRemove, ulong* versionArray, out int indexToSwapFrom)
         {
             int sparseIndexToRemove = DenseArray[denseIndexToRemove];
             int newLength = Count - 1;
@@ -684,7 +746,7 @@ namespace GDX.Collections
         ///     value at indexToSwapTo.
         /// </param>
         /// <returns>True if the entry was valid and thus removed.</returns>
-        public bool RemoveWithVersionCheck(int sparseIndexToRemove, ulong version, NativeArray<ulong> versionArray,
+        public bool RemoveWithVersionCheck(int sparseIndexToRemove, ulong version, ulong* versionArray,
             out int indexToSwapFrom, out int indexToSwapTo)
         {
             int denseIndexToRemove = SparseArray[sparseIndexToRemove];
@@ -726,7 +788,7 @@ namespace GDX.Collections
         /// </summary>
         public void Clear()
         {
-            int capacity = SparseArray.Length;
+            int capacity = Length;
             for (int i = 0; i < capacity; i++)
             {
                 DenseArray[i] = -1;
@@ -741,9 +803,9 @@ namespace GDX.Collections
         ///     Clear the dense and sparse arrays.
         /// </summary>
         /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
-        public void Clear(NativeArray<ulong> versionArray)
+        public void Clear(ulong* versionArray)
         {
-            int capacity = SparseArray.Length;
+            int capacity = Length;
             for (int i = 0; i < capacity; i++)
             {
                 DenseArray[i] = -1;
@@ -761,9 +823,9 @@ namespace GDX.Collections
         /// </summary>
         /// ///
         /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
-        public void ClearWithVersionArrayReset(NativeArray<ulong> versionArray)
+        public void ClearWithVersionArrayReset(ulong* versionArray)
         {
-            int capacity = SparseArray.Length;
+            int capacity = Length;
             for (int i = 0; i < capacity; i++)
             {
                 DenseArray[i] = -1;
@@ -779,29 +841,40 @@ namespace GDX.Collections
         ///     Reallocate the dense and sparse arrays with additional capacity.
         /// </summary>
         /// <param name="extraCapacity">How many indices to expand the dense and sparse arrays by.</param>
-        /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
-        public void Expand(int extraCapacity, Allocator allocator)
+        public void Expand(int extraCapacity)
         {
-            int currentCapacity = SparseArray.Length;
+            int currentCapacity = Length;
             int newCapacity = currentCapacity + extraCapacity;
 
-            NativeArray<int> newSparseArray = new NativeArray<int>(newCapacity, allocator, NativeArrayOptions.UninitializedMemory);
-            NativeSlice<int> newSparseArraySlice = new NativeSlice<int>(newSparseArray, 0, currentCapacity);
-            newSparseArraySlice.CopyFrom(SparseArray);
-            SparseArray.Dispose();
-            SparseArray = newSparseArray;
+            newCapacity = newCapacity > MinimumCapacity ? newCapacity : MinimumCapacity;
+            --newCapacity;
+            newCapacity |= newCapacity >> 1;
+            newCapacity |= newCapacity >> 2;
+            newCapacity |= newCapacity >> 4;
+            newCapacity |= newCapacity >> 8;
+            newCapacity |= newCapacity >> 16;
+            ++newCapacity;
 
-            NativeArray<int> newDenseArray = new NativeArray<int>(newCapacity, allocator, NativeArrayOptions.UninitializedMemory);
-            NativeSlice<int> newDenseArraySlice = new NativeSlice<int>(newDenseArray, 0, currentCapacity);
-            newDenseArraySlice.CopyFrom(DenseArray);
-            DenseArray.Dispose();
-            DenseArray = newDenseArray;
+            void* newData = Allocator.Allocate(sizeof(int), JobsUtility.CacheLineSize, newCapacity * 2);
 
+            UnsafeUtility.MemCpy(newData, Data, sizeof(int) * currentCapacity);
+            int* newSparseArray = (int*)newData;
             for (int i = currentCapacity; i < newCapacity; i++)
             {
-                DenseArray[i] = -1; // Set new dense indices as unclaimed.
-                SparseArray[i] = i + 1; // Build the free list chain.
+                newSparseArray[i] = i + 1;
             }
+
+            int* newDenseArray = newSparseArray + newCapacity;
+            UnsafeUtility.MemCpy(newDenseArray, DenseArray, sizeof(int) * currentCapacity);
+            for (int i = currentCapacity; i < newCapacity; i++)
+            {
+                newDenseArray[i] = -1;
+            }
+
+            Allocator.Free(Data, sizeof(int), JobsUtility.CacheLineSize, currentCapacity * 2);
+
+            Data = newData;
+            Length = newCapacity;
         }
 
         /// <summary>
@@ -809,67 +882,92 @@ namespace GDX.Collections
         /// </summary>
         /// <param name="extraCapacity">How many indices to expand the dense and sparse arrays by.</param>
         /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
-        public void Expand(int extraCapacity, Allocator allocator, ref NativeArray<ulong> versionArray)
+        public void Expand(int extraCapacity, ref ulong* versionArray)
         {
-            int currentCapacity = SparseArray.Length;
+            int currentCapacity = Length;
             int newCapacity = currentCapacity + extraCapacity;
 
-            NativeArray<int> newSparseArray = new NativeArray<int>(newCapacity, allocator, NativeArrayOptions.UninitializedMemory);
-            NativeSlice<int> newSparseArraySlice = new NativeSlice<int>(newSparseArray, 0, currentCapacity);
-            newSparseArraySlice.CopyFrom(SparseArray);
-            SparseArray.Dispose();
-            SparseArray = newSparseArray;
+            newCapacity = newCapacity > MinimumCapacity ? newCapacity : MinimumCapacity;
+            --newCapacity;
+            newCapacity |= newCapacity >> 1;
+            newCapacity |= newCapacity >> 2;
+            newCapacity |= newCapacity >> 4;
+            newCapacity |= newCapacity >> 8;
+            newCapacity |= newCapacity >> 16;
+            ++newCapacity;
 
-            NativeArray<int> newDenseArray = new NativeArray<int>(newCapacity, allocator, NativeArrayOptions.UninitializedMemory);
-            NativeSlice<int> newDenseArraySlice = new NativeSlice<int>(newDenseArray, 0, currentCapacity);
-            newDenseArraySlice.CopyFrom(DenseArray);
-            DenseArray.Dispose();
-            DenseArray = newDenseArray;
+            void* newData = Allocator.Allocate(sizeof(int), JobsUtility.CacheLineSize, newCapacity * 2);
 
-            NativeArray<ulong> newVersionArray = new NativeArray<ulong>(newCapacity, allocator, NativeArrayOptions.UninitializedMemory);
-            NativeSlice<ulong> newVersionArraySlice = new NativeSlice<ulong>(newVersionArray, 0, currentCapacity);
-            newVersionArraySlice.CopyFrom(versionArray);
-            versionArray.Dispose();
-            versionArray = newVersionArray;
-
+            UnsafeUtility.MemCpy(newData, Data, sizeof(int) * currentCapacity);
+            int* newSparseArray = (int*)newData;
             for (int i = currentCapacity; i < newCapacity; i++)
             {
-                DenseArray[i] = -1; // Set new dense indices as unclaimed.
-                SparseArray[i] = i + 1; // Build the free list chain.
-                versionArray[i] = 1;
+                newSparseArray[i] = i + 1;
             }
+
+            int* newDenseArray = newSparseArray + newCapacity;
+            UnsafeUtility.MemCpy(newDenseArray, DenseArray, sizeof(int) * currentCapacity);
+            for (int i = currentCapacity; i < newCapacity; i++)
+            {
+                newDenseArray[i] = -1;
+            }
+
+            ulong* newVersionArray = (ulong*)Allocator.Allocate(sizeof(ulong), JobsUtility.CacheLineSize, currentCapacity);
+            UnsafeUtility.MemCpy(newVersionArray, versionArray, sizeof(ulong) * currentCapacity);
+            for (int i = currentCapacity; i < newCapacity; i++)
+            {
+                newVersionArray[i] = 1;
+            }
+
+            Allocator.Free(Data, sizeof(int), JobsUtility.CacheLineSize, currentCapacity * 2);
+            Allocator.Free(versionArray, sizeof(ulong), JobsUtility.CacheLineSize, currentCapacity);
+            versionArray = newVersionArray;
+
+            Data = newData;
+            Length = newCapacity;
         }
 
         /// <summary>
         /// Reallocate the dense and sparse arrays with additional capacity if there are not at least <paramref name="numberToReserve"/> unused entries.
         /// </summary>
         /// <param name="numberToReserve">The number of unused entries to ensure capacity for.</param>
-        /// <param name="allocator">The allocator to use on expansion.</param>
-        public void Reserve(int numberToReserve, Allocator allocator)
+        public void Reserve(int numberToReserve)
         {
-            int currentCapacity = SparseArray.Length;
+            int currentCapacity = Length;
             int currentCount = Count;
             int newCapacity = currentCount + numberToReserve;
 
             if (newCapacity > currentCapacity)
             {
-                NativeArray<int> newSparseArray = new NativeArray<int>(newCapacity, allocator, NativeArrayOptions.UninitializedMemory);
-                NativeSlice<int> newSparseArraySlice = new NativeSlice<int>(newSparseArray, 0, currentCapacity);
-                newSparseArraySlice.CopyFrom(SparseArray);
-                SparseArray.Dispose();
-                SparseArray = newSparseArray;
+                newCapacity = newCapacity > MinimumCapacity ? newCapacity : MinimumCapacity;
+                --newCapacity;
+                newCapacity |= newCapacity >> 1;
+                newCapacity |= newCapacity >> 2;
+                newCapacity |= newCapacity >> 4;
+                newCapacity |= newCapacity >> 8;
+                newCapacity |= newCapacity >> 16;
+                ++newCapacity;
 
-                NativeArray<int> newDenseArray = new NativeArray<int>(newCapacity, allocator, NativeArrayOptions.UninitializedMemory);
-                NativeSlice<int> newDenseArraySlice = new NativeSlice<int>(newDenseArray, 0, currentCapacity);
-                newDenseArraySlice.CopyFrom(DenseArray);
-                DenseArray.Dispose();
-                DenseArray = newDenseArray;
+                void* newData = Allocator.Allocate(sizeof(int), JobsUtility.CacheLineSize, newCapacity * 2);
 
+                UnsafeUtility.MemCpy(newData, Data, sizeof(int) * currentCapacity);
+                int* newSparseArray = (int*)newData;
                 for (int i = currentCapacity; i < newCapacity; i++)
                 {
-                    DenseArray[i] = -1; // Set new dense indices as unclaimed.
-                    SparseArray[i] = i + 1; // Build the free list chain.
+                    newSparseArray[i] = i + 1;
                 }
+
+                int* newDenseArray = newSparseArray + newCapacity;
+                UnsafeUtility.MemCpy(newDenseArray, DenseArray, sizeof(int) * currentCapacity);
+                for (int i = currentCapacity; i < newCapacity; i++)
+                {
+                    newDenseArray[i] = -1;
+                }
+
+                Allocator.Free(Data, sizeof(int), JobsUtility.CacheLineSize, currentCapacity * 2);
+
+                Data = newData;
+                Length = newCapacity;
             }
         }
 
@@ -877,54 +975,67 @@ namespace GDX.Collections
         /// Reallocate the dense and sparse arrays with additional capacity if there are not at least <paramref name="numberToReserve"/> unused entries.
         /// </summary>
         /// <param name="numberToReserve">The number of unused entries to ensure capacity for.</param>
-        /// <param name="allocator">The allocator to use on expansion.</param>
         /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
-        public void Reserve(int numberToReserve, Allocator allocator, ref NativeArray<ulong> versionArray)
+        public void Reserve(int numberToReserve,  ref ulong* versionArray)
         {
-            int currentCapacity = SparseArray.Length;
+            int currentCapacity = Length;
             int currentCount = Count;
             int newCapacity = currentCount + numberToReserve;
 
             if (newCapacity > currentCapacity)
             {
-                NativeArray<int> newSparseArray = new NativeArray<int>(newCapacity, allocator, NativeArrayOptions.UninitializedMemory);
-                NativeSlice<int> newSparseArraySlice = new NativeSlice<int>(newSparseArray, 0, currentCapacity);
-                newSparseArraySlice.CopyFrom(SparseArray);
-                SparseArray.Dispose();
-                SparseArray = newSparseArray;
+                newCapacity = newCapacity > MinimumCapacity ? newCapacity : MinimumCapacity;
+                --newCapacity;
+                newCapacity |= newCapacity >> 1;
+                newCapacity |= newCapacity >> 2;
+                newCapacity |= newCapacity >> 4;
+                newCapacity |= newCapacity >> 8;
+                newCapacity |= newCapacity >> 16;
+                ++newCapacity;
 
-                NativeArray<int> newDenseArray = new NativeArray<int>(newCapacity, allocator, NativeArrayOptions.UninitializedMemory);
-                NativeSlice<int> newDenseArraySlice = new NativeSlice<int>(newDenseArray, 0, currentCapacity);
-                newDenseArraySlice.CopyFrom(DenseArray);
-                DenseArray.Dispose();
-                DenseArray = newDenseArray;
+                void* newData = Allocator.Allocate(sizeof(int), JobsUtility.CacheLineSize, newCapacity * 2);
 
-                NativeArray<ulong> newVersionArray = new NativeArray<ulong>(newCapacity, allocator, NativeArrayOptions.UninitializedMemory);
-                NativeSlice<ulong> newVersionArraySlice = new NativeSlice<ulong>(newVersionArray, 0, currentCapacity);
-                newVersionArraySlice.CopyFrom(versionArray);
-                versionArray.Dispose();
+                UnsafeUtility.MemCpy(newData, Data, sizeof(int) * currentCapacity);
+                int* newSparseArray = (int*)newData;
+                for (int i = currentCapacity; i < newCapacity; i++)
+                {
+                    newSparseArray[i] = i + 1;
+                }
+
+                int* newDenseArray = newSparseArray + newCapacity;
+                UnsafeUtility.MemCpy(newDenseArray, DenseArray, sizeof(int) * currentCapacity);
+                for (int i = currentCapacity; i < newCapacity; i++)
+                {
+                    newDenseArray[i] = -1;
+                }
+
+                ulong* newVersionArray = (ulong*)Allocator.Allocate(sizeof(ulong), JobsUtility.CacheLineSize, currentCapacity);
+                UnsafeUtility.MemCpy(newVersionArray, versionArray, sizeof(ulong) * currentCapacity);
+                for (int i = currentCapacity; i < newCapacity; i++)
+                {
+                    newVersionArray[i] = 1;
+                }
+
+                Allocator.Free(Data, sizeof(int), JobsUtility.CacheLineSize, currentCapacity * 2);
+                Allocator.Free(versionArray, sizeof(ulong), JobsUtility.CacheLineSize, currentCapacity);
                 versionArray = newVersionArray;
 
-                for (int i = currentCapacity; i < newCapacity; i++)
-                {
-                    DenseArray[i] = -1; // Set new dense indices as unclaimed.
-                    SparseArray[i] = i + 1; // Build the free list chain.
-                    versionArray[i] = 1;
-                }
+                Data = newData;
+                Length = newCapacity;
             }
         }
 
         public void Dispose()
         {
-            if (SparseArray.IsCreated)
-                SparseArray.Dispose();
-            SparseArray = default;
-            if (DenseArray.IsCreated)
-                DenseArray.Dispose();
-            DenseArray = default;
-            Count = 0;
-            FreeIndex = 0;
-
+            if (Data != null)
+            {
+                Allocator.Free(Data, sizeof(int), JobsUtility.CacheLineSize, Length);
+                Data = null;
+                Length = 0;
+                Count = 0;
+                FreeIndex = 0;
+                Allocator = default;
+            }
         }
     }
 }
