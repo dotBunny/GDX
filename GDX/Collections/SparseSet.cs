@@ -215,7 +215,7 @@ namespace GDX.Collections
             version = versionArray[indexToClaim];
             sparseIndex = indexToClaim;
             denseIndex = Count;
-            
+
             ++Count;
             FreeIndex = nextFreeIndex; // Set the free list head for next time.
         }
@@ -612,7 +612,7 @@ namespace GDX.Collections
 
             // Add the sparse index to the free list.
             SparseArray[sparseIndexToRemove] = FreeIndex;
-            versionArray[sparseIndexToRemove] = versionArray[sparseIndexToRemove] + 1;
+            versionArray[sparseIndexToRemove] += 1;
             FreeIndex = sparseIndexToRemove;
 
             Count = newLength;

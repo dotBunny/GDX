@@ -14,7 +14,7 @@ namespace GDX.Collections.Generic
         {
             IntKeyDictionary<string> dictionary = new IntKeyDictionary<string>(0);
 
-            bool areArraysInitialized = dictionary.Buckets != null && dictionary.Entries != null && dictionary.FreeListHead == 0 && dictionary.Count == 0;
+            Assert.IsTrue(dictionary.Buckets != null && dictionary.Entries != null && dictionary.FreeListHead == 0 && dictionary.Count == 0);
             Assert.IsTrue(dictionary.Count == 0 && dictionary.Entries.Length == DictionaryPrimes.GetPrimeAtIndex(0));
         }
 

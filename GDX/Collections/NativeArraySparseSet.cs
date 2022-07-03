@@ -323,11 +323,11 @@ namespace GDX.Collections
         ///     Removes the entry corresponding to the sparse index if the entry is within bounds and currently in use.
         /// </summary>
         /// <param name="sparseIndexToRemove">The sparse index corresponding to the entry to remove. Cleared to -1 in this operation.</param>
-        /// <param name="indexToSwapFrom">
+        /// <param name="dataIndexToSwapFrom">
         ///     Set the data array value at this index to default after swapping with the data array
         ///     value at indexToSwapTo.
         /// </param>
-        /// <param name="indexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
+        /// <param name="dataIndexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
         /// <returns>True if the index reference was valid, and thus removed.</returns>
         public bool RemoveWithBoundsCheck(ref int sparseIndexToRemove, out int dataIndexToSwapFrom, out int dataIndexToSwapTo)
         {
@@ -478,7 +478,7 @@ namespace GDX.Collections
 
             // Add the sparse index to the free list.
             SparseArray[sparseIndexToRemove] = FreeIndex;
-            versionArray[sparseIndexToRemove] = versionArray[sparseIndexToRemove] + 1;
+            versionArray[sparseIndexToRemove] += 1;
             FreeIndex = sparseIndexToRemove;
 
             Count = newLength;
@@ -545,7 +545,7 @@ namespace GDX.Collections
 
             // Add the sparse index to the free list.
             SparseArray[sparseIndexToRemove] = FreeIndex;
-            versionArray[sparseIndexToRemove] = versionArray[sparseIndexToRemove] + 1;
+            versionArray[sparseIndexToRemove] += 1;
             FreeIndex = sparseIndexToRemove;
 
             Count = newLength;
@@ -598,7 +598,7 @@ namespace GDX.Collections
 
             // Add the sparse index to the free list.
             SparseArray[sparseIndexToRemove] = FreeIndex;
-            versionArray[sparseIndexToRemove] = versionArray[sparseIndexToRemove] + 1;
+            versionArray[sparseIndexToRemove] += 1;
             FreeIndex = sparseIndexToRemove;
 
             Count = newLength;
@@ -660,7 +660,7 @@ namespace GDX.Collections
 
             // Add the sparse index to the free list.
             SparseArray[sparseIndexToRemove] = FreeIndex;
-            versionArray[sparseIndexToRemove] = versionArray[sparseIndexToRemove] + 1;
+            versionArray[sparseIndexToRemove] += 1;
             FreeIndex = sparseIndexToRemove;
 
             Count = newLength;
@@ -709,7 +709,7 @@ namespace GDX.Collections
 
                 // Add the sparse index to the free list.
                 SparseArray[sparseIndexToRemove] = FreeIndex;
-                versionArray[sparseIndexToRemove] = versionArray[sparseIndexToRemove] + 1;
+                versionArray[sparseIndexToRemove] += 1;
                 FreeIndex = sparseIndexToRemove;
 
                 Count = newLength;
@@ -748,7 +748,7 @@ namespace GDX.Collections
             {
                 DenseArray[i] = -1;
                 SparseArray[i] = i + 1;
-                versionArray[i] = versionArray[i] + 1;
+                versionArray[i] += 1;
             }
 
             FreeIndex = 0;
@@ -808,6 +808,7 @@ namespace GDX.Collections
         ///     Reallocate the dense and sparse arrays with additional capacity.
         /// </summary>
         /// <param name="extraCapacity">How many indices to expand the dense and sparse arrays by.</param>
+        /// <param name="allocator">Which Unity memory allocator to use with the backing array.</param>
         /// <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
         public void Expand(int extraCapacity, Allocator allocator, ref NativeArray<ulong> versionArray)
         {
