@@ -250,8 +250,8 @@ namespace GDX.Developer.Reports
 
 
             StringBuilder expectedOutputBuilder = new StringBuilder();
-            expectedOutputBuilder.AppendLine($"<test-run testcasecount=\"1\" result=\"Passed\" total=\"1\" passed=\"1\" failed=\"0\" skipped=\"0\" engine-version=\"{UnityEngine.Application.unityVersion}\">");
-            expectedOutputBuilder.AppendLine("\t<test-suite name=\"foo\" fullname=\"Hello World\" classname=\"bar\" testcasecount=\"1\" total=\"1\" passed=\"1\" failed=\"0\" skipped=\"0\">");
+            expectedOutputBuilder.AppendLine($"<test-run testcasecount=\"1\" result=\"Passed\" total=\"1\" passed=\"1\" engine-version=\"{UnityEngine.Application.unityVersion}\">");
+            expectedOutputBuilder.AppendLine("\t<test-suite name=\"foo\" fullname=\"Hello World\" classname=\"bar\" testcasecount=\"1\" total=\"1\" passed=\"1\">");
             expectedOutputBuilder.AppendLine("\t\t<test-case name=\"Hello World\" result=\"Passed\" duration=\"41\" />");
             expectedOutputBuilder.AppendLine("\t</test-suite>");
             expectedOutputBuilder.AppendLine("</test-run>");
