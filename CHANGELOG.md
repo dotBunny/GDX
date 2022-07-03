@@ -50,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `Platform::IsFocused()` now returns the proper focus state on desktop platforms.
 - `TransformExtensions::DestroyChildren()` no longer has issues with child counts.
+- `NUnitReport.GetResultCount()` now reflects accurate count post `NUnitReport.Process()`.
 
 ### Removed
 

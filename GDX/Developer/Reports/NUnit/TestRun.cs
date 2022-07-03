@@ -41,6 +41,8 @@ namespace GDX.Developer.Reports.NUnit
             Skipped = TestSuite.Skipped;
             Total = Passed + Failed + Inconclusive + Skipped;
 
+            TestCaseCount = TestSuite.TestCaseCount;
+
             Asserts = TestSuite.Asserts;
             Result = Failed > 0 || Total <= 0 ? failedResult : passedResult;
         }
