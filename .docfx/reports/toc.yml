@@ -1,0 +1,6 @@
+- name: Code Coverage
+  href: coverage/Report/index.html
+- name: Inspection
+  href: inspection.md
+- name: Portability
+  href: /reports/portability.html

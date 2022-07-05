@@ -4,19 +4,18 @@ svg#logo
     padding-top: 10%;
 }
 
-article[data-uid="features"] td 
+article[data-uid="features"] td
 {
     padding: 10px !important;
 }
 
-article[data-uid="features"] td:first-child 
+article[data-uid="features"] td:first-child
 {
     width: 20%;
 }
 
 a[title="Issues"]:after,
-a[title="Discussions"]:after,
-a[title="Kanban Board"]:after
+a[title="Agile Board"]:after
 {
     padding-left: 5px;
     position:relative;
@@ -30,7 +29,89 @@ a[title="Kanban Board"]:after
     content:"\e066"
 }
 
-.toc .nav > li > span.expand-stub + a
+.toc .nav > li > a[type=class],
+.toc .nav > li > a[type=enum],
+.toc .nav > li > a[type=struct],
+.toc .nav > li > a[type=interface],
+.toc .nav > li > a[type=namespace]
+{
+    display: flex;
+}
+
+.toc .nav > li > a[type=namespace]
 {
     font-weight: bold !important;
+}
+
+.toc .nav > li > a[type=class]::before,
+.toc .nav > li > a[type=enum]::before,
+.toc .nav > li > a[type=struct]::before,
+.toc .nav > li > a[type=interface]::before
+{
+    margin-right: 5px;
+    padding-left: 4px;
+    padding-right: 4px;
+    border-radius: 15px;
+    color: white;
+    font-family: monospace;
+    height: fit-content;
+    width: fit-content;
+    text-transform: capitalize;
+    vertical-align: middle;
+    display: inline-block;
+    margin-bottom: 2px;
+}
+
+.toc .nav > li > a[type=class]::before
+{
+    background-color: #a0b6e7;
+    content:"c";
+}
+.toc .nav > li > a[type=enum]::before
+{
+    background-color: #9cdcf2;
+    content:"e";
+}
+.toc .nav > li > a[type=struct]::before
+{
+    background-color: #828ead;
+    content:"s";
+}
+.toc .nav > li > a[type=interface]::before
+{
+    background-color: #CCD7E3;
+    content:"i";
+}
+
+h1 > span.type {
+    text-transform: lowercase;
+    font-weight: bold;
+    font-size: medium;
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+    color: rgb(86,156,214);
+}
+
+div#branch {
+    line-height: 0px;
+    height: 0px;
+}
+
+div#branch-select {
+    float: right;
+    position: relative;
+    top: 10px;
+}
+
+div#branch-select select {
+    width: 108px;
+}
+
+form#search
+{
+    padding-right: 0px;
+}
+
+.collapsed > form#search
+{
+    padding-right: 15px;
 }

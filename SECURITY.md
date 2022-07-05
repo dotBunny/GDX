@@ -6,14 +6,15 @@ In the unlikely situation where `GDX` is found to contain a security vulnerabili
 
 | Version | Supported          |
 | ------- | ------------------ |
+| `3.0.x`   | :white_check_mark: |
 | `2.0.x`   | :white_check_mark: |
-| `1.3.x`   | :white_check_mark: |
+| `1.3.x`   | :x:                |
 | `1.2.x`   | :x:                |
 | `1.1.x`   | :x:                |
 | `1.0.x`   | :x:                |
 
 ## Reporting a Vulnerability
 
-If you suspect a vulnerability caused by `GDX`, please contact [support@dotbunny.com](mailto:support@dotbunny.com) directly with as much detail as possible. We will follow up within 48 hours. 
+If you suspect a vulnerability caused by `GDX`, please contact [support@dotbunny.com](mailto:support@dotbunny.com) directly with as much detail as possible. We will follow up within 48 hours.
 
 If the suspected issue is proven to be a vulnerability, an anonymized security advisory notice will be [posted publicly](https://github.com/dotBunny/GDX/security/advisories?state=published) along with side updates to the package.

@@ -1,0 +1,19 @@
+{{!Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See LICENSE file in the project root for full license information.}}
+
+<div class="subnav navbar navbar-default">
+  <div id="branch" class="container">
+    <div id="branch-select">
+      <select name="environment" id="environment">
+        <optgroup label="Branch">
+          <option value="main">main</option>
+          <option value="dev">dev</option>
+        </optgroup>
+      </select>
+    </div>
+  </div>
+  <div class="container hide-when-search" id="breadcrumb">
+    <ul class="breadcrumb">
+      <li>{{_tocTitle}}</li>
+    </ul>
+  </div>
+</div>

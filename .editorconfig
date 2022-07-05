@@ -1,13 +1,42 @@
-# GDX EditorConfig (modified Roslyn)
+# GDX EditorConfig (modified Roslyn w/ Unity specifics)
 root = true
 
 # Don't use tabs for indentation.
 [*]
-indent_style = space
 charset = utf-8
 indent_style = space
 insert_final_newline = false
 trim_trailing_whitespace = true
+spelling_wordlist=wordlist.dic
+
+# Resharper Stuff unsupported features for Unity 2020
+# https://www.jetbrains.com/help/resharper/EditorConfig_Index.html
+
+# Don't use range indexers
+resharper_replace_substring_with_range_indexer_highlighting=none
+resharper_replace_slice_with_range_indexer_highlighting=none
+# Don't use patterning
+resharper_merge_and_pattern_highlighting=none
+resharper_merge_into_pattern_highlighting=none
+resharper_merge_into_logical_pattern_highlighting=none
+# Dont promote 'is not'
+resharper_double_negation_in_pattern_highlighting=none
+
+# Stop promoting = new ()
+resharper_redundant_variable_type_specification_highlighting=none
+resharper_arrange_object_creation_when_type_evident_highlighting=none
+resharper_arrange_object_creation_when_type_not_evident_highlighting=none
+# Stop LINQ suggestions
+resharper_loop_can_be_converted_to_query_highlighting=none
+resharper_loop_can_be_partly_converted_to_query_highlighting=none
+resharper_foreach_can_be_converted_to_query_using_another_get_enumerator_highlighting=none
+resharper_foreach_can_be_partly_converted_to_query_using_another_get_enumerator_highlighting=none
+
+# Avoid Simplified string interpolation
+resharper_simplify_string_interpolation_highlighting=none
+
+# Depending on where GDX is added it can throw namespace issues
+resharper_check_namespace_highlighting=none
 
 # Visual Studio Solution files (why!! TAB why!!)
 [*.sln]
@@ -50,17 +79,18 @@ trim_trailing_whitespace = false
 [*.cs]
 indent_size = 4
 
-# IDE0055: Fix formatting
-dotnet_diagnostic.IDE0055.severity = warning
-
 # Sort using and Import directives with System.* appearing first
 dotnet_sort_system_directives_first = true
 dotnet_separate_import_directive_groups = false
+
 # Avoid "this." and "Me." if not necessary
-dotnet_style_qualification_for_field = false:refactoring
-dotnet_style_qualification_for_property = false:refactoring
-dotnet_style_qualification_for_method = false:refactoring
-dotnet_style_qualification_for_event = false:refactoring
+dotnet_style_qualification_for_field = false:warning
+dotnet_style_qualification_for_property = false:warning
+dotnet_style_qualification_for_method = false:warning
+dotnet_style_qualification_for_event = false:warning
+
+# Remove default modifiers
+dotnet_style_require_accessibility_modifiers = never:warning
 
 # Use language keywords instead of framework type names for type references
 dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
@@ -74,7 +104,7 @@ dotnet_style_null_propagation = true:suggestion
 dotnet_style_explicit_tuple_names = true:suggestion
 
 # Non-private static fields are PascalCase
-dotnet_naming_rule.non_private_static_fields_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.non_private_static_fields_should_be_pascal_case.severity = warning
 dotnet_naming_rule.non_private_static_fields_should_be_pascal_case.symbols = non_private_static_fields
 dotnet_naming_rule.non_private_static_fields_should_be_pascal_case.style = non_private_static_field_style
 
@@ -85,7 +115,7 @@ dotnet_naming_symbols.non_private_static_fields.required_modifiers = static
 dotnet_naming_style.non_private_static_field_style.capitalization = pascal_case
 
 # Non-private readonly fields are PascalCase
-dotnet_naming_rule.non_private_readonly_fields_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.non_private_readonly_fields_should_be_pascal_case.severity = warning
 dotnet_naming_rule.non_private_readonly_fields_should_be_pascal_case.symbols = non_private_readonly_fields
 dotnet_naming_rule.non_private_readonly_fields_should_be_pascal_case.style = non_private_readonly_field_style
 
@@ -95,88 +125,85 @@ dotnet_naming_symbols.non_private_readonly_fields.required_modifiers = readonly
 
 dotnet_naming_style.non_private_readonly_field_style.capitalization = pascal_case
 
-# Constants are PascalCase
-dotnet_naming_rule.constants_should_be_pascal_case.severity = suggestion
+# Non-private constants are PascalCase
+dotnet_naming_rule.non_private_constants_should_be_pascal_case.severity = warning
+dotnet_naming_rule.non_private_constants_should_be_pascal_case.symbols = non_private_constants
+dotnet_naming_rule.non_private_constants_should_be_pascal_case.style = non_private_constant_style
+dotnet_naming_symbols.non_private_constants.applicable_kinds = field
+dotnet_naming_symbols.non_private_constants.applicable_accessibilities = public
+dotnet_naming_symbols.non_private_constants.required_modifiers = const
+dotnet_naming_style.non_private_constant_style.capitalization = pascal_case
+
+# Constants are PascalCase and start with k_
+dotnet_naming_rule.constants_should_be_pascal_case.severity = warning
 dotnet_naming_rule.constants_should_be_pascal_case.symbols = constants
 dotnet_naming_rule.constants_should_be_pascal_case.style = constant_style
-
 dotnet_naming_symbols.constants.applicable_kinds = field, local
 dotnet_naming_symbols.constants.required_modifiers = const
-
 dotnet_naming_style.constant_style.capitalization = pascal_case
+dotnet_naming_style.constant_style.required_prefix = k_
 
 # Static fields are camelCase and start with s_
-dotnet_naming_rule.static_fields_should_be_camel_case.severity = suggestion
+dotnet_naming_rule.static_fields_should_be_camel_case.severity = warning
 dotnet_naming_rule.static_fields_should_be_camel_case.symbols = static_fields
 dotnet_naming_rule.static_fields_should_be_camel_case.style = static_field_style
-
 dotnet_naming_symbols.static_fields.applicable_kinds = field
 dotnet_naming_symbols.static_fields.required_modifiers = static
-
-dotnet_naming_style.static_field_style.capitalization = camel_case
+dotnet_naming_style.static_field_style.capitalization = pascal_case
 dotnet_naming_style.static_field_style.required_prefix = s_
 
-# Instance fields are camelCase and start with _
-dotnet_naming_rule.instance_fields_should_be_camel_case.severity = suggestion
+# Private Static Readonly (k_PascalCase)
+dotnet_naming_rule.private_static_readonly.severity = warning
+dotnet_naming_rule.private_static_readonly.symbols = private_static_readonly_fields
+dotnet_naming_rule.private_static_readonly.style = private_static_readonly_field_style
+dotnet_naming_symbols.private_static_readonly_fields.applicable_kinds = field
+dotnet_naming_symbols.private_static_readonly_fields.applicable_accessibilities = private
+dotnet_naming_symbols.private_static_readonly_fields.required_modifiers = static, readonly
+dotnet_naming_style.private_static_readonly_field_style.capitalization = pascal_case
+dotnet_naming_style.private_static_readonly_field_style.required_prefix = k_
+
+# Instance fields are camelCase and start with m_
+dotnet_naming_rule.instance_fields_should_be_camel_case.severity = warning
 dotnet_naming_rule.instance_fields_should_be_camel_case.symbols = instance_fields
 dotnet_naming_rule.instance_fields_should_be_camel_case.style = instance_field_style
-
 dotnet_naming_symbols.instance_fields.applicable_kinds = field
+dotnet_naming_symbols.instance_fields.applicable_accessibilities = private, protected, internal, protected_internal, private_protected
+dotnet_naming_style.instance_field_style.capitalization = pascal_case
+dotnet_naming_style.instance_field_style.required_prefix = m_
 
-dotnet_naming_style.instance_field_style.capitalization = camel_case
-dotnet_naming_style.instance_field_style.required_prefix = _
+# Non-private instance fields are Pascal Case
+dotnet_naming_rule.non_private_instance_fields_should_be_pascal_case.severity = warning
+dotnet_naming_rule.non_private_instance_fields_should_be_pascal_case.symbols = non_private_instance_field
+dotnet_naming_rule.non_private_instance_fields_should_be_pascal_case.style = non_private_instance_field_style
+dotnet_naming_symbols.non_private_instance_field.applicable_kinds = field
+dotnet_naming_symbols.non_private_instance_field.applicable_accessibilities = public
+dotnet_naming_style.non_private_instance_field_style.capitalization = pascal_case
 
 # Locals and parameters are camelCase
-dotnet_naming_rule.locals_should_be_camel_case.severity = suggestion
+dotnet_naming_rule.locals_should_be_camel_case.severity = warning
 dotnet_naming_rule.locals_should_be_camel_case.symbols = locals_and_parameters
 dotnet_naming_rule.locals_should_be_camel_case.style = camel_case_style
-
 dotnet_naming_symbols.locals_and_parameters.applicable_kinds = parameter, local
-
 dotnet_naming_style.camel_case_style.capitalization = camel_case
 
 # Local functions are PascalCase
-dotnet_naming_rule.local_functions_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.local_functions_should_be_pascal_case.severity = warning
 dotnet_naming_rule.local_functions_should_be_pascal_case.symbols = local_functions
 dotnet_naming_rule.local_functions_should_be_pascal_case.style = local_function_style
-
 dotnet_naming_symbols.local_functions.applicable_kinds = local_function
-
 dotnet_naming_style.local_function_style.capitalization = pascal_case
 
 # By default, name items with PascalCase
-dotnet_naming_rule.members_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.members_should_be_pascal_case.severity = warning
 dotnet_naming_rule.members_should_be_pascal_case.symbols = all_members
 dotnet_naming_rule.members_should_be_pascal_case.style = pascal_case_style
-
 dotnet_naming_symbols.all_members.applicable_kinds = *
-
 dotnet_naming_style.pascal_case_style.capitalization = pascal_case
 
-# error RS2008: Enable analyzer release tracking for the analyzer project containing rule '{0}'
-dotnet_diagnostic.RS2008.severity = none
-
-# IDE0073: File header
-dotnet_diagnostic.IDE0073.severity = warning
-file_header_template = Copyright (c) 2020-2021 dotBunny Inc.\ndotBunny licenses this file to you under the BSL-1.0 license.\nSee the LICENSE file in the project root for more information.
-
-# IDE0035: Remove unreachable code
-dotnet_diagnostic.IDE0035.severity = warning
-
-# IDE0036: Order modifiers
-dotnet_diagnostic.IDE0036.severity = warning
-
-# IDE0043: Format string contains invalid placeholder
-dotnet_diagnostic.IDE0043.severity = warning
-
-# IDE0044: Make field readonly
-dotnet_diagnostic.IDE0044.severity = warning
-
-# RS0016: Only enable if API files are present
-dotnet_public_api_analyzer.require_api_files = true
+file_header_template = Copyright (c) 2020-2022 dotBunny Inc.\ndotBunny licenses this file to you under the BSL-1.0 license.\nSee the LICENSE file in the project root for more information.
 
 # CSharp code style settings:
-[*.cs]
+
 # Newline settings
 csharp_new_line_before_open_brace = all
 csharp_new_line_before_else = true
@@ -224,7 +251,7 @@ csharp_space_after_dot = false
 csharp_space_after_keywords_in_control_flow_statements = true
 csharp_space_after_semicolon_in_for_statement = true
 csharp_space_around_binary_operators = before_and_after
-csharp_space_around_declaration_statements = do_not_ignore
+csharp_space_around_declaration_statements = false
 csharp_space_before_colon_in_inheritance_clause = true
 csharp_space_before_comma = false
 csharp_space_before_dot = false
@@ -244,3 +271,11 @@ csharp_space_between_square_brackets = false
 csharp_prefer_braces = true:silent
 csharp_preserve_single_line_blocks = true
 csharp_preserve_single_line_statements = true
+
+# Style Choices
+csharp_style_prefer_switch_expression = false
+
+# Unsupported features with Unity 2020
+csharp_style_implicit_object_creation_when_type_is_apparent = false
+csharp_style_prefer_not_pattern = false
+csharp_style_prefer_range_operator = false

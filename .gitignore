@@ -61,3 +61,18 @@ crashlytics-build.properties
 # Ignore LICENSE meta file so GitHub will detect the right license, but causes problems with Unity
 # LICENSE.meta
 
+
+# DoxFX Customization
+/.docfx/**/DROP/
+/.docfx/**/TEMP/
+/.docfx/**/packages/
+/.docfx/**/bin/
+/.docfx/**/obj/
+/.docfx/**/changelog.md
+/.docfx/**/license.md
+/.docfx/**/security.md
+/.docfx/**/manual/contributing/code-of-conduct.md
+/.docfx/**/templates/gdx/partials/footer.tmpl.partial
+/.docfx/**/reports/**
+!/.docfx/**/reports/index.md
+/.docfx/**_site

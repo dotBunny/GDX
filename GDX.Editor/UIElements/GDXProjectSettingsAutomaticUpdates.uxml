@@ -1,0 +1,36 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="GDXStylesShared.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStyles" />
+    <ui:VisualElement name="gdx-automatic-updates" class="gdx-project-settings-section-content">
+        <ui:VisualElement name="gdx-version-info" class="gdx-groupbox" style="flex-direction: row; flex-grow: 1;">
+            <ui:VisualElement style="flex-grow: 1;">
+                <ui:VisualElement name="gdx-automatic-update-local-version" style="flex-direction: row;" class="lp">
+                    <ui:Label text="Local Version:" display-tooltip-when-elided="true" name="label-item" />
+                    <ui:Label display-tooltip-when-elided="true" name="label-data" />
+                </ui:VisualElement>
+                <ui:VisualElement name="gdx-automatic-update-installation-method" style="flex-direction: row;" class="lp">
+                    <ui:Label text="Installation Method:" display-tooltip-when-elided="true" name="label-item" />
+                    <ui:Label display-tooltip-when-elided="true" name="label-data" />
+                </ui:VisualElement>
+                <ui:VisualElement name="gdx-automatic-update-source" style="flex-direction: row;" class="lp">
+                    <ui:Label text="Source Branch:" display-tooltip-when-elided="true" name="label-item" />
+                    <ui:Label display-tooltip-when-elided="true" name="label-data" />
+                </ui:VisualElement>
+                <ui:VisualElement name="gdx-automatic-update-remote-version" style="flex-direction: row;" class="lp">
+                    <ui:Label text="Remote Version:" display-tooltip-when-elided="true" name="label-item" />
+                    <ui:Label display-tooltip-when-elided="true" name="label-data" />
+                </ui:VisualElement>
+                <ui:VisualElement name="gdx-automatic-update-last-checked" style="flex-direction: row;">
+                    <ui:Label text="Last Checked:" display-tooltip-when-elided="true" name="label-item" />
+                    <ui:Label display-tooltip-when-elided="true" name="label-data" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement style="align-items: flex-start;">
+                <ui:Button name="button-manual-upgrade" text="Force Upgrade" display-tooltip-when-elided="true" class="gdx-button"/>
+                <ui:Button name="button-changelog" text="Changelog" display-tooltip-when-elided="true" class="gdx-button" />
+                <ui:Button name="button-update" text="Update" display-tooltip-when-elided="true" class="gdx-button" />
+                <ui:Button name="button-manual-check" text="Manual Check" display-tooltip-when-elided="true" class="gdx-button" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:SliderInt picking-mode="Ignore" label="Update Timer (Days)" value="7" high-value="31" low-value="1" show-input-field="true" name="gdx-slider-update-time" tooltip="After how many days should updates be checked for?" />
+    </ui:VisualElement>
+</ui:UXML>

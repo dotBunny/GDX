@@ -1,0 +1,40 @@
+{
+    "name": "GDX.Tests.EditMode",
+    "rootNamespace": "GDX",
+    "references": [
+        "GDX",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.PerformanceTesting",
+        "Unity.Mathematics",
+        "Unity.Collections"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "!UNITY_DOTSRUNTIME",
+        "UNITY_2020_3_OR_NEWER",
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.unity.test-framework",
+            "expression": "1.1.0",
+            "define": "GDX_TESTFRAMEWORK"
+        },
+        {
+            "name": "com.unity.test-framework.performance",
+            "expression": "2.0.0",
+            "define": "GDX_PERFORMANCETESTING"
+        }
+    ],
+    "noEngineReferences": false
+}
