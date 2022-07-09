@@ -10,10 +10,10 @@ using Unity.Mathematics;
 namespace GDX.Collections.Generic
 {
     /// <summary>
-    ///     A uniform 3-Dimensional <see cref="NativeArray{T}" /> backed array.
+    ///     A 3-Dimensional <see cref="NativeArray{T}" /> backed array.
     /// </summary>
     /// <typeparam name="T">Type of objects.</typeparam>
-    public struct NativeUniformArray3D<T> : IDisposable where T : struct
+    public struct NativeArray3D<T> : IDisposable where T : struct
     {
         /// <summary>
         ///     The backing <see cref="NativeArray{T}" />.
@@ -28,26 +28,38 @@ namespace GDX.Collections.Generic
         /// <summary>
         ///     The stride of each dimensional segment in <see cref="Array" />.
         /// </summary>
-        public readonly int Stride;
+        public readonly int Width;
 
         /// <summary>
-        ///     Stores a cached copy of the stride squared.
+        ///     The stride of each dimensional segment in <see cref="Array" />.
         /// </summary>
-        public readonly int StrideSquared;
+        public readonly int Height;
+
+
+        private readonly int BackStride;
 
         /// <summary>
-        ///     Create a <see cref="NativeUniformArray3D{T}" /> with a uniform dimensional length.
+        ///     The stride of each dimensional segment in <see cref="Array" />.
+        /// </summary>
+        public readonly int Depth;
+
+        /// <summary>
+        ///     Create a <see cref="NativeArray3D{T}" /> with a uniform dimensional length.
         /// </summary>
         /// <remarks></remarks>
-        /// <param name="stride">X length, Y length and Z length will all be set to this value.</param>
+        /// <param name="width">X-axis length.</param>
+        /// <param name="height">Y-axis length.</param>
+        /// <param name="depth">Z-axis length.</param>
         /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
         /// <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
-        public NativeUniformArray3D(int stride, Allocator allocator, NativeArrayOptions nativeArrayOptions)
+        public NativeArray3D(int width, int height, int depth, Allocator allocator, NativeArrayOptions nativeArrayOptions)
         {
-            Stride = stride;
-            StrideSquared = stride * stride;
-            Length = StrideSquared * stride;
+            Width = width;
+            Height = height;
+            Depth = depth;
+            BackStride = Width * Depth;
 
+            Length = width * height * depth;
             Array = new NativeArray<T>(Length, allocator, nativeArrayOptions);
         }
 
@@ -60,12 +72,13 @@ namespace GDX.Collections.Generic
         public T this[int x, int y, int z]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => Array[z * StrideSquared + y * Stride + x];
+            get => Array[z * BackStride + y * Width + x];
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            set => Array[z * StrideSquared + y * Stride + x] = value;
+            set => Array[z * BackStride + y * Width + x] = value;
         }
 
+       // Flat[x + WIDTH * (y + DEPTH * z)] = Original[x, y, z]
 
         /// <summary>
         ///     Access a specific location in the voxel.
@@ -74,10 +87,10 @@ namespace GDX.Collections.Generic
         public T this[int3 index]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => Array[index.z * StrideSquared + index.y * Stride + index.x];
+            get => Array[index.z * (BackStride) + index.y * Width + index.x];
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            set => Array[index.z * StrideSquared + index.y * Stride + index.x] = value;
+            set => Array[index.z * BackStride + index.y * Width + index.x] = value;
         }
 
 
@@ -102,9 +115,9 @@ namespace GDX.Collections.Generic
         /// <returns>A 3-Dimensional voxel index.</returns>
         public int3 GetFromIndex(int index)
         {
-            int x = index % Stride;
-            int y =  (index - x)/Stride % Stride;
-            int z = (index - x - Stride * y) / StrideSquared;
+            int x = index % Width;
+            int y =  (index - x)/Width % Width;
+            int z = (index - x - Width * y) / BackStride;
             return new int3(x, y, z);
         }
     }
