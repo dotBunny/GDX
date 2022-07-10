@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - New `Array3D` and `NativeArray3D` flattened 3D arrays.
 
+### Changes
+
+- `BitArray8`, `BitArray16`, `BitArray32`, `BitArray64` have been marked `Serializable`.
+
 ## [3.0.0] - 2022-07-05
 
 ***"Clean Slate"***

@@ -120,5 +120,10 @@ namespace GDX.Collections.Generic
 
             return new int3(x, y, z);
         }
+
+        public int GetFromIndex(int3 index)
+        {
+            return index.x + Width * (index.y + Height * index.z);
+        }
     }
 }

@@ -4,7 +4,6 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using Unity.Collections;
 using Unity.Mathematics;
 
 namespace GDX.Collections.Generic
@@ -110,6 +109,11 @@ namespace GDX.Collections.Generic
             int z = index / (DepthLength);
 
             return new int3(x, y, z);
+        }
+
+        public int GetFromIndex(int3 index)
+        {
+            return index.x + Width * (index.y + Height * index.z);
         }
     }
 }
