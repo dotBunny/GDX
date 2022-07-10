@@ -4,8 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [3.0.1] - ?
 
-## [3.0.0] - 2022-05-19
+***"More Testing"***
+> We continue to strive for better coverage in testing as well as flushing out some functionality that we are using in other projects.
+
+### Added
+
+- New `Array3D` and `NativeArray3D` flattened 3D arrays.
+
+## [3.0.0] - 2022-07-05
 
 ***"Clean Slate"***
 > As we began planning what this release might look like, the decision was made to attempt to clear out a significant portion of our technical debt by sunsetting unsupported versions of Unity. We also took this opportunity to reevaluate and upgrade portions of the framework to better position it for future growth.

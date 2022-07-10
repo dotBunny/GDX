@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Runtime.CompilerServices;
 
 namespace GDX.Collections.Generic
@@ -12,7 +13,7 @@ namespace GDX.Collections.Generic
     /// <remarks>Mimics multi-dimensional array format.</remarks>
     /// <typeparam name="T">Type of objects.</typeparam>
     [VisualScriptingCompatible(1)]
-    public struct Array2D<T>
+    public struct Array2D<T> : IDisposable
     {
         /// <summary>
         ///     The backing flat array.
@@ -67,6 +68,14 @@ namespace GDX.Collections.Generic
             get => Array[x * ColumnCount + y];
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set => Array[x * ColumnCount + y] = value;
+        }
+
+        /// <summary>
+        ///     Properly dispose of the <see cref="Array2D{T}" />.
+        /// </summary>
+        public void Dispose()
+        {
+            Array = default;
         }
 
         /// <summary>
