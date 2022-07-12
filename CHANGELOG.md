@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `BitArray8`, `BitArray16`, `BitArray32`, `BitArray64` have been marked `Serializable`.
 
+### Fixed
+
+- `IntKeyDictionary.Clear()` now properly sets bucket values.
+
 ## [3.0.0] - 2022-07-05
 
 ***"Clean Slate"***
