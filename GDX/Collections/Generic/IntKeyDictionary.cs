@@ -624,7 +624,7 @@ namespace GDX.Collections.Generic
 
             for (int i = 0; i < length; i++)
             {
-                Buckets[i] = -1;
+                Buckets[i] = int.MaxValue;
             }
 
             for (int i = 0; i < length; i++)

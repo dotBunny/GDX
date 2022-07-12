@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Runtime.CompilerServices;
 
 namespace GDX.Collections
@@ -18,6 +19,7 @@ namespace GDX.Collections
     ///         }
     ///     </code>
     /// </example>
+    [Serializable]
     public struct BitArray64
     {
         /// <summary>

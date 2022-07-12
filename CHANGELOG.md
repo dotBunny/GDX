@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.1] - 2022-07-12
+
+***"3D Arrays"***
+> A few additions with a bug fix that emerged.
+
+### Added
+
+- New `Array3D` and `NativeArray3D` flattened 3D arrays.
+
+### Changes
+
+- `BitArray8`, `BitArray16`, `BitArray32`, `BitArray64` have been marked `Serializable`.
+
+### Fixed
+
+- `IntKeyDictionary.Clear()` now properly sets bucket values.
+
 ## [3.0.0] - 2022-07-05
 
 ***"Clean Slate"***
@@ -16,9 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for `com.unity.runtime.dots` (UNITY_DOTSRUNTIME) builds. Unsupported functionality will cause compilation errors during builds for immediate feedback on unsupported usage. Additionally, unsupported methods are flagged with an `UnsupportedRuntimeException` which is visible in [documentation](https://gdx.dotbunny.com/api) as well as IDE intelli-sense.
 - Support for `com.unity.entities` programming patterns.
 - `BuildVerificationReport` structure for quick validation of builds, including a `TestBehaviour`.
-- `StringKeyDictionary`, a serializable Dictionary with a string key, to optimize one of the most common use cases for dictionaries.
-- `IntKeyDictionary`, a serializable Dictionary with an int key, to optimize one of the most common use cases for dictionaries.
-- `UnsafeSparseSet`, a native-memory SparseSet with better allocation and expansion performance and better performance outside of Burst compiled code.
+- `StringKeyDictionary` to optimize one of the most common use cases for dictionaries.
 - `SegmentedString` to support string search patterns.
 - `OriginalValueAttribute` to support a default value-like pattern.
 - Unity editor non-pro (light) theme.
@@ -48,8 +63,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved `SemanticVersion` into the `GDX.Developer` namespace.
 - Moved `TransientReference` into the `GDX.Developer` namespace.
 - `Byte2` accessor throws `IndexOutOfRangeException` when using `ENABLE_UNITY_COLLECTIONS_CHECKS`.
-- `NativeSparseSet` has had its name changed to `NativeArraySparseSet` in order to make way for a better-optimized `NativeSparseSet` in development.
-- `SparseSet` and `NativeArraySparseSet` have had their `Remove` calls modified: the parameter order of `indexToSwapFrom` and `indexToSwapTo` has been swapped to conform to the C# standard.
 
 ### Fixed  
 

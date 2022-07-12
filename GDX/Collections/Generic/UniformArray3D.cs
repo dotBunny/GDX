@@ -9,7 +9,7 @@ using Unity.Mathematics;
 namespace GDX.Collections.Generic
 {
     /// <summary>
-    ///     A 3-Dimensional array.
+    ///     A uniform three-dimensional array.
     /// </summary>
     /// <typeparam name="T">Type of objects.</typeparam>
     public struct UniformArray3D<T> : IDisposable
@@ -68,7 +68,7 @@ namespace GDX.Collections.Generic
         /// <summary>
         ///     Access a specific location in the voxel.
         /// </summary>
-        /// <param name="index">A 3-Dimensional index.</param>
+        /// <param name="index">A three-dimensional index.</param>
         public T this[int3 index]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -79,19 +79,18 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Properly dispose of the <see cref="NativeUniformArray3D{T}" />.
+        ///     Properly dispose of the <see cref="UniformArray3D{T}" />.
         /// </summary>
         public void Dispose()
         {
             Array = default;
         }
 
-
         /// <summary>
-        ///     Get the 3-Dimensional index of a flat array index.
+        ///     Get the three-dimensional index of a flat array index.
         /// </summary>
         /// <param name="index">A flat array index.</param>
-        /// <returns>A 3-Dimensional voxel index.</returns>
+        /// <returns>A three-dimensional voxel index.</returns>
         public int3 GetFromIndex(int index)
         {
             int x = index % Stride;
@@ -101,12 +100,12 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Get the 3-Dimensional index of a flat array index.
+        ///     Get the three-dimensional index of a flat array index.
         /// </summary>
         /// <param name="index">A flat array index.</param>
         /// <param name="stride">The predetermined length of an axis.</param>
         /// <param name="strideSquared">The squared value of <paramref name="stride"/>.</param>
-        /// <returns>A 3-Dimensional voxel index.</returns>
+        /// <returns>A three-dimensional voxel index.</returns>
         public static int3 GetFromIndex(int index, int stride, int strideSquared)
         {
             int x = index % stride;
