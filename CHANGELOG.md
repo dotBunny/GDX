@@ -4,10 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-## [3.0.1] - ?
 
-***"More Testing"***
-> We continue to strive for better coverage in testing as well as flushing out some functionality that we are using in other projects.
+## [3.0.1] - 2022-07-12
+
+***"3D Arrays"***
+> A few additions with a bug fix that emerged.
 
 ### Added
 
