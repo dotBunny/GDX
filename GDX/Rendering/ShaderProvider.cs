@@ -4,7 +4,7 @@
 
 using UnityEngine;
 
-namespace GDX
+namespace GDX.Rendering
 {
     /// <summary>
     ///     A provider of GDX built-in shader references and properties.

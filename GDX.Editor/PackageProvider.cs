@@ -181,7 +181,7 @@ namespace GDX.Editor
             SerializedObject serializedObject = new SerializedObject(graphicsSettings);
             SerializedProperty alreadyIncludedShaders = serializedObject.FindProperty("m_AlwaysIncludedShaders");
 
-            Shader[] gdxShaders = ShaderProvider.GetProvidedShaders();
+            Shader[] gdxShaders = Rendering.ShaderProvider.GetProvidedShaders();
             int gdxShaderCount = gdxShaders.Length;
             int alreadyCount = alreadyIncludedShaders.arraySize;
 
