@@ -110,6 +110,13 @@ namespace GDX
         const bool k_EnvironmentScriptingDefineSymbolDefault = false;
 
         /// <summary>
+        ///     Should GDX make sure that it's shaders are always included in builds.
+        /// </summary>
+        [OriginalValue(k_EnvironmentAlwaysIncludeShadersDefault)]
+        public static bool EnvironmentAlwaysIncludeShaders = k_EnvironmentAlwaysIncludeShadersDefault;
+        const bool k_EnvironmentAlwaysIncludeShadersDefault = true;
+
+        /// <summary>
         ///     The language to set the default thread culture too.
         /// </summary>
         [OriginalValue(k_LocalizationDefaultCultureDefault)]

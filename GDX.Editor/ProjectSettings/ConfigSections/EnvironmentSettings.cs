@@ -23,6 +23,7 @@ namespace GDX.Editor.ProjectSettings
         static readonly string[] k_Keywords = { "environment", "debug", "culture", "define", "symbol", "trace" };
         VisualElement m_RootElement;
         Toggle m_ToggleEnsureSymbol;
+        Toggle m_ToggleEnsureShaders;
         Toggle m_ToggleDebugConsole;
         Toggle m_ToggleDevelopmentConsole;
         MaskField m_MaskDevelopment;
@@ -77,6 +78,24 @@ namespace GDX.Editor.ProjectSettings
                 else
                 {
                     m_ToggleEnsureSymbol.RemoveFromClassList(ResourcesProvider.ChangedClass);
+                }
+
+                ProjectSettingsProvider.UpdateForChanges();
+            });
+
+            m_ToggleEnsureShaders = m_RootElement.Q<Toggle>("toggle-ensure-shaders");
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_ToggleEnsureShaders);
+            m_ToggleEnsureShaders.value = ProjectSettingsProvider.WorkingConfig.EnvironmentAlwaysIncludeShaders;
+            m_ToggleEnsureShaders.RegisterValueChangedCallback(evt =>
+            {
+                ProjectSettingsProvider.WorkingConfig.EnvironmentAlwaysIncludeShaders = evt.newValue;
+                if (Config.EnvironmentAlwaysIncludeShaders != evt.newValue)
+                {
+                    m_ToggleEnsureShaders.AddToClassList(ResourcesProvider.ChangedClass);
+                }
+                else
+                {
+                    m_ToggleEnsureShaders.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
 
                 ProjectSettingsProvider.UpdateForChanges();

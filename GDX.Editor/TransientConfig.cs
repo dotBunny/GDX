@@ -76,6 +76,11 @@ namespace GDX.Editor
         public bool EnvironmentScriptingDefineSymbol;
 
         /// <summary>
+        ///     Should GDX make sure that it's shaders are always included in builds.
+        /// </summary>
+        public bool EnvironmentAlwaysIncludeShaders;
+
+        /// <summary>
         ///     The language to set the default thread culture too.
         /// </summary>
         public Localization.Language LocalizationDefaultCulture;
@@ -140,6 +145,7 @@ namespace GDX.Editor
             DeveloperCommandLineParserArgumentPrefix = Config.DeveloperCommandLineParserArgumentPrefix;
             DeveloperCommandLineParserArgumentSplit = Config.DeveloperCommandLineParserArgumentSplit;
             EnvironmentScriptingDefineSymbol = Config.EnvironmentScriptingDefineSymbol;
+            EnvironmentAlwaysIncludeShaders = Config.EnvironmentAlwaysIncludeShaders;
             LocalizationDefaultCulture = Config.LocalizationDefaultCulture;
             LocalizationSetDefaultCulture = Config.LocalizationSetDefaultCulture;
             PlatformAutomationFolder = Config.PlatformAutomationFolder;
@@ -167,6 +173,7 @@ namespace GDX.Editor
                    DeveloperBuildInfoBuildTaskArgument == Config.DeveloperBuildInfoBuildTaskArgument &&
                    DeveloperBuildInfoBuildStreamArgument == Config.DeveloperBuildInfoBuildStreamArgument &&
                    EnvironmentScriptingDefineSymbol == Config.EnvironmentScriptingDefineSymbol &&
+                   EnvironmentAlwaysIncludeShaders == Config.EnvironmentAlwaysIncludeShaders &&
                    TraceDevelopmentLevels == Config.TraceDevelopmentLevels &&
                    TraceDebugLevels == Config.TraceDebugLevels &&
                    TraceReleaseLevels == Config.TraceReleaseLevels &&

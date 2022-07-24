@@ -77,35 +77,38 @@ namespace GDX.Editor
             AddToGenerator(code, "EnvironmentScriptingDefineSymbol",
                 OriginalValueAttribute.GetValue<bool>(configFields[12]),
                 rhs.EnvironmentScriptingDefineSymbol);
+            AddToGenerator(code, "EnvironmentAlwaysIncludeShaders",
+                OriginalValueAttribute.GetValue<bool>(configFields[13]),
+                rhs.EnvironmentAlwaysIncludeShaders);
             AddToGenerator(code, "LocalizationDefaultCulture",
-                OriginalValueAttribute.GetValue<Localization.Language>(configFields[13]),
+                OriginalValueAttribute.GetValue<Localization.Language>(configFields[14]),
                 rhs.LocalizationDefaultCulture);
             AddToGenerator(code, "LocalizationSetDefaultCulture",
-                OriginalValueAttribute.GetValue<bool>(configFields[14]),
+                OriginalValueAttribute.GetValue<bool>(configFields[15]),
                 rhs.LocalizationSetDefaultCulture);
             AddToGenerator(code, "PlatformAutomationFolder",
-                OriginalValueAttribute.GetValue<string>(configFields[15]),
+                OriginalValueAttribute.GetValue<string>(configFields[16]),
                 rhs.PlatformAutomationFolder);
             AddToGenerator(code, "PlatformCacheFolder",
-                OriginalValueAttribute.GetValue<string>(configFields[16]),
+                OriginalValueAttribute.GetValue<string>(configFields[17]),
                 rhs.PlatformCacheFolder);
             AddToGenerator(code, "TraceDebugLevels",
-                OriginalValueAttribute.GetValue<Trace.TraceLevel>(configFields[17]),
+                OriginalValueAttribute.GetValue<Trace.TraceLevel>(configFields[18]),
                 rhs.TraceDebugLevels);
             AddToGenerator(code, "TraceDebugOutputToUnityConsole",
-                OriginalValueAttribute.GetValue<bool>(configFields[18]),
+                OriginalValueAttribute.GetValue<bool>(configFields[19]),
                 rhs.TraceDebugOutputToUnityConsole);
             AddToGenerator(code, "TraceDevelopmentLevels",
-                OriginalValueAttribute.GetValue<Trace.TraceLevel>(configFields[19]),
+                OriginalValueAttribute.GetValue<Trace.TraceLevel>(configFields[20]),
                 rhs.TraceDevelopmentLevels);
             AddToGenerator(code, "TraceDevelopmentOutputToUnityConsole",
-                OriginalValueAttribute.GetValue<bool>(configFields[20]),
+                OriginalValueAttribute.GetValue<bool>(configFields[21]),
                 rhs.TraceDevelopmentOutputToUnityConsole);
             AddToGenerator(code, "TraceReleaseLevels",
-                OriginalValueAttribute.GetValue<Trace.TraceLevel>(configFields[21]),
+                OriginalValueAttribute.GetValue<Trace.TraceLevel>(configFields[22]),
                 rhs.TraceReleaseLevels);
             AddToGenerator(code, "UpdateProviderCheckForUpdates",
-                OriginalValueAttribute.GetValue<bool>(configFields[22]),
+                OriginalValueAttribute.GetValue<bool>(configFields[23]),
                 rhs.UpdateProviderCheckForUpdates);
 
             return code.ToString();

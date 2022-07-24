@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Application = UnityEngine.Application;
 
 namespace GDX.Editor
@@ -164,6 +165,57 @@ namespace GDX.Editor
             (InstallationType installationType, string sourceTag) = GetInstallationType();
             InstallationMethod = installationType;
             SourceTag = sourceTag;
+        }
+
+        /// <summary>
+        ///     Ensure that the GDX based shaders are always included in builds.
+        /// </summary>
+        /// <remarks>
+        ///     Useful to ensure that the default materials used by the <see cref="DrawCommandBuffer" /> are added to
+        ///     the build.
+        /// </remarks>
+        public static void EnsureAlwaysIncludeShaders()
+        {
+            GraphicsSettings graphicsSettings =
+                AssetDatabase.LoadAssetAtPath<GraphicsSettings>("ProjectSettings/GraphicsSettings.asset");
+            SerializedObject serializedObject = new SerializedObject(graphicsSettings);
+            SerializedProperty alreadyIncludedShaders = serializedObject.FindProperty("m_AlwaysIncludedShaders");
+
+            Shader[] gdxShaders = ShaderProvider.GetProvidedShaders();
+            int gdxShaderCount = gdxShaders.Length;
+            int alreadyCount = alreadyIncludedShaders.arraySize;
+
+            bool altered = false;
+
+            // Loop through all GDX shaders
+            for (int i = 0; i < gdxShaderCount; i++)
+            {
+                bool foundShader = false;
+                for (int j = 0; j < alreadyCount; j++)
+                {
+                    SerializedProperty element = alreadyIncludedShaders.GetArrayElementAtIndex(i);
+                    if (gdxShaders[i] == element.objectReferenceValue)
+                    {
+                        foundShader = true;
+                        break;
+                    }
+                }
+
+                if (!foundShader)
+                {
+                    alreadyIncludedShaders.InsertArrayElementAtIndex(alreadyCount);
+                    SerializedProperty newElement = alreadyIncludedShaders.GetArrayElementAtIndex(alreadyCount);
+                    newElement.objectReferenceValue = gdxShaders[i];
+                    alreadyCount++;
+                    altered = true;
+                }
+            }
+
+            if (altered)
+            {
+                serializedObject.ApplyModifiedProperties();
+                AssetDatabase.SaveAssets();
+            }
         }
 
         /// <summary>
@@ -402,6 +454,11 @@ namespace GDX.Editor
             if (Config.EnvironmentScriptingDefineSymbol)
             {
                 EnsureScriptingDefineSymbol();
+            }
+
+            if (Config.EnvironmentAlwaysIncludeShaders)
+            {
+                EnsureAlwaysIncludeShaders();
             }
         }
 
