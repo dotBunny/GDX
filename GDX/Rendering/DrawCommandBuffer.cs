@@ -21,13 +21,38 @@ namespace GDX.Rendering
         /// </remarks>
         const int k_DefaultMaximumVerticesPerMesh = 512;
 
+        /// <summary>
+        ///     The ordered segment index pairs used to describe a cube.
+        /// </summary>
+        /// <remarks>
+        ///     This effectively wraps the left side, then the right, then connects the two sides.
+        /// </remarks>
         public static int[] CubeSegmentIndices =
         {
             0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7
         };
 
+        /// <summary>
+        ///     A dictionary of known buffers and their ID.
+        /// </summary>
         static IntKeyDictionary<DrawCommandBuffer> s_Buffers = new IntKeyDictionary<DrawCommandBuffer>(10);
+
+        /// <summary>
+        ///     The base instance of the default dotted line material.
+        /// </summary>
+        /// <remarks>
+        ///     This will be cloned when a new color value is provided and not found by
+        ///     <see cref="GetDottedLineMaterialByColor"/>.
+        /// </remarks>
         static Material s_DottedLineMaterial;
+
+        /// <summary>
+        ///     The base instance of the default line material.
+        /// </summary>
+        /// <remarks>
+        ///     This will be cloned when a new color value is provided and not found by
+        ///     <see cref="GetSolidLineMaterialByColor" />.
+        /// </remarks>
         static Material s_LineMaterial;
 
         /// <summary>
@@ -39,7 +64,9 @@ namespace GDX.Rendering
         ///         calls to maximize reuse and limiting allocations.
         ///     </para>
         ///     <para>
-        ///         A common pattern is to use the the <see cref="GameObject"/>'s InstanceID or an Entity Number to create a unique indexer.
+        ///         A common pattern is to use the the <see cref="GameObject"/>'s InstanceID or an Entity Number to
+        ///         create a unique indexer. Collisions can occur if you are not careful about how you index your
+        ///         <see cref="DrawCommandBuffer"/>.
         ///     </para>
         /// </remarks>
         public readonly int Key;
@@ -50,13 +77,19 @@ namespace GDX.Rendering
         IntKeyDictionary<int> m_DottedLineMaterials;
         IntKeyDictionary<int> m_LineMaterials;
         SimpleList<Material> m_Materials;
+
+
+        // TODO: removing by index will adjust the index of others ;/
+        // we should move this to a sparse set
         SimpleList<Mesh> m_Meshes;
         SimpleList<int> m_MeshMaterialIndex;
+
         IntKeyDictionary<int> m_WorkingIndex;
         IntKeyDictionary<SimpleList<Vector3>> m_WorkingPoints;
         IntKeyDictionary<SimpleList<int>> m_WorkingSegments;
 
-        public DrawCommandBuffer(int key, int initialMaterialCount = 5, int verticesPerMesh = k_DefaultMaximumVerticesPerMesh)
+        public DrawCommandBuffer(int key, int initialMaterialCount = 5,
+            int verticesPerMesh = k_DefaultMaximumVerticesPerMesh)
         {
             Key = key;
             MaximumVerticesPerMesh = verticesPerMesh;
@@ -90,7 +123,8 @@ namespace GDX.Rendering
             private set;
         }
 
-        public static DrawCommandBuffer GetInstance(int key, int initialColorCount = 5, int verticesPerMesh = k_DefaultMaximumVerticesPerMesh)
+        public static DrawCommandBuffer GetInstance(int key, int initialColorCount = 5,
+            int verticesPerMesh = k_DefaultMaximumVerticesPerMesh)
         {
             if (s_Buffers.ContainsKey(key))
             {
@@ -127,6 +161,38 @@ namespace GDX.Rendering
             }
         }
 
+
+        public void Converge()
+        {
+            if (Finalized) return;
+
+            //  Finalize each material we have something in process for
+            int materialCount = m_Materials.Count;
+            for (int i = 0; i < materialCount; i++)
+            {
+                int materialHashCode = m_Materials.Array[i].GetHashCode();
+                SimpleList<Vector3> pointList = m_WorkingPoints[materialHashCode];
+                SimpleList<int> segmentList = m_WorkingSegments[materialHashCode];
+                if (pointList.Count > 0)
+                {
+                    DrawMesh(GetMaterialByHashCode(materialHashCode), ref pointList.Array, ref segmentList.Array);
+                }
+            }
+
+            // Clear our working memory
+            m_WorkingPoints.Clear();
+            m_WorkingSegments.Clear();
+
+            // Record our command buffer
+            int meshCount = m_Meshes.Count;
+            for (int i = 0; i < meshCount; i++)
+            {
+                int materialIndex = m_MeshMaterialIndex.Array[i];
+                m_CommandBuffer.DrawMesh(m_Meshes.Array[i], Matrix4x4.identity, m_Materials.Array[materialIndex]);
+            }
+
+            Finalized = true;
+        }
 
         public int DrawDottedCube(Color color, Vector3 center, Vector3 size)
         {
@@ -172,7 +238,7 @@ namespace GDX.Rendering
             ref Vector3[] vertices, int verticesStartIndex, int verticesLength,
             ref int[] segments, int segmentsStartIndex, int segmentsLength)
         {
-            return DrawLine(GetWireLineMaterialByColor(color), ref vertices, verticesStartIndex, verticesLength,
+            return DrawLine(GetSolidLineMaterialByColor(color), ref vertices, verticesStartIndex, verticesLength,
                 ref segments, segmentsStartIndex, segmentsLength);
         }
 
@@ -180,7 +246,6 @@ namespace GDX.Rendering
             ref Vector3[] vertices, int verticesStartIndex, int verticesLength,
             ref int[] segments, int segmentsStartIndex, int segmentsLength)
         {
-
             if (Finalized)
             {
                 Debug.LogWarning("Finalized. You must invalidate the batch before adding anything.");
@@ -245,6 +310,7 @@ namespace GDX.Rendering
             {
                 return 0;
             }
+
             return m_Meshes.Count - 1;
         }
 
@@ -289,7 +355,59 @@ namespace GDX.Rendering
             return DrawLine(color, ref points, ref CubeSegmentIndices);
         }
 
+        /// <summary>
+        ///     Execute the <see cref="DrawCommandBuffer"/>, rendering its outputs to the screen.
+        /// </summary>
+        /// <remarks>
+        ///     This will finalize the command buffer, converging all data into meshes, etc. In order to change the
+        ///     buffer, you will need to
+        /// </remarks>
+        public void Execute()
+        {
+            if (!Finalized)
+            {
+                Converge();
+            }
 
+            Graphics.ExecuteCommandBuffer(m_CommandBuffer);
+        }
+
+        /// <summary>
+        ///     Invalidates a specific mesh and forces the buffer to be refilled.
+        /// </summary>
+        /// <param name="meshID"></param>
+        public void InvalidateMesh(int meshID)
+        {
+            // TODO: need to hand change over to sparseset
+            m_Meshes.RemoveAt(meshID);
+            m_MeshMaterialIndex.RemoveAt(meshID);
+            Finalized = false;
+        }
+
+        /// <summary>
+        ///     Resets the <see cref="DrawCommandBuffer"/>, as if it were newly created. However all fields are already
+        ///     allocating their previous sizes.
+        /// </summary>
+        public void Reset()
+        {
+            m_WorkingPoints.Clear();
+            m_WorkingSegments.Clear();
+
+            m_Meshes.Clear();
+            m_Materials.Clear();
+            m_MeshMaterialIndex.Clear();
+            m_LineMaterials.Clear();
+            m_DottedLineMaterials.Clear();
+            m_CommandBuffer.Clear();
+
+            Finalized = false;
+        }
+
+        /// <summary>
+        ///     Gets the cached dotted line material, or creates one for the given <paramref name="color"/>.
+        /// </summary>
+        /// <param name="color">A defined draw color.</param>
+        /// <returns>The qualified dotted line material of the color.</returns>
         Material GetDottedLineMaterialByColor(Color color)
         {
             int requestedHashCode = color.GetHashCode();
@@ -306,6 +424,12 @@ namespace GDX.Rendering
             return newMaterial;
         }
 
+        /// <summary>
+        ///     Gets a material from the internal cache based on its <see cref="Material.GetHashCode"/>.
+        /// </summary>
+        /// <remarks>A warning will be thrown in the editor if the material is not found.</remarks>
+        /// <param name="hashCode">The integer based hash code of the material.</param>
+        /// <returns>The material if found, otherwise a default material will be returned.</returns>
         Material GetMaterialByHashCode(int hashCode)
         {
             int count = m_Materials.Count;
@@ -313,14 +437,20 @@ namespace GDX.Rendering
             {
                 if (m_Materials.Array[i].GetHashCode() == hashCode) return m_Materials.Array[i];
             }
-
-            Debug.LogWarning("A set of lines have been added to the MergedDraw where the Material hash code that was provided has not previously been used/registered. Using the default line material instead.");
-
+#if UNITY_EDITOR
+            Debug.LogWarning(
+                "A set of lines have been added to the MergedDraw where the Material hash code that was provided has not previously been used/registered. Using the default line material instead.");
+#endif
             // Ensure default material
             GetMaterialIndex(s_LineMaterial);
             return s_LineMaterial;
         }
 
+        /// <summary>
+        ///     Gets the index of a material in the internal cache, or adds it and returns the new index.
+        /// </summary>
+        /// <param name="material">The material index to find.</param>
+        /// <returns>The index of the given material in the internal cache.</returns>
         int GetMaterialIndex(Material material)
         {
             int count = m_Materials.Count;
@@ -333,7 +463,12 @@ namespace GDX.Rendering
             return m_Materials.Count - 1;
         }
 
-        Material GetWireLineMaterialByColor(Color color)
+        /// <summary>
+        ///     Gets the cached solid line material, or creates one for the given <paramref name="color"/>.
+        /// </summary>
+        /// <param name="color">A defined draw color.</param>
+        /// <returns>The qualified line material of the color.</returns>
+        Material GetSolidLineMaterialByColor(Color color)
         {
             int requestedHashCode = color.GetHashCode();
             if (m_LineMaterials.ContainsKey(requestedHashCode))
@@ -347,60 +482,6 @@ namespace GDX.Rendering
             m_Materials.AddWithExpandCheck(newMaterial);
             m_LineMaterials.AddWithExpandCheck(requestedHashCode, m_Materials.Count - 1);
             return newMaterial;
-        }
-
-        public void Reset()
-        {
-            m_WorkingPoints.Clear();
-            m_WorkingSegments.Clear();
-            m_Meshes.Clear();
-            m_Materials.Clear();
-            m_MeshMaterialIndex.Clear();
-            m_LineMaterials.Clear();
-            m_DottedLineMaterials.Clear();
-            m_CommandBuffer.Clear();
-            Finalized = false;
-        }
-
-        public void Execute()
-        {
-            if (!Finalized)
-            {
-                Converge();
-            }
-            Graphics.ExecuteCommandBuffer(m_CommandBuffer);
-        }
-
-        public void Converge()
-        {
-            if (Finalized) return;
-
-            //  Finalize each material we have something in process for
-            int materialCount = m_Materials.Count;
-            for (int i = 0; i < materialCount; i++)
-            {
-                int materialHashCode = m_Materials.Array[i].GetHashCode();
-                SimpleList<Vector3> pointList = m_WorkingPoints[materialHashCode];
-                SimpleList<int> segmentList = m_WorkingSegments[materialHashCode];
-                if (pointList.Count > 0)
-                {
-                    DrawMesh(GetMaterialByHashCode(materialHashCode), ref pointList.Array, ref segmentList.Array);
-                }
-            }
-
-            // Clear our working memory
-            m_WorkingPoints.Clear();
-            m_WorkingSegments.Clear();
-
-            // Record our command buffer
-            int meshCount = m_Meshes.Count;
-            for (int i = 0; i < meshCount; i++)
-            {
-                int materialIndex = m_MeshMaterialIndex.Array[i];
-                m_CommandBuffer.DrawMesh(m_Meshes.Array[i], Matrix4x4.identity, m_Materials.Array[materialIndex]);
-            }
-
-            Finalized = true;
         }
     }
 }
