@@ -193,7 +193,7 @@ namespace GDX.Editor
                 bool foundShader = false;
                 for (int j = 0; j < alreadyCount; j++)
                 {
-                    SerializedProperty element = alreadyIncludedShaders.GetArrayElementAtIndex(i);
+                    SerializedProperty element = alreadyIncludedShaders.GetArrayElementAtIndex(j);
                     if (gdxShaders[i] == element.objectReferenceValue)
                     {
                         foundShader = true;
