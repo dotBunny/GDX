@@ -71,6 +71,8 @@ namespace GDX.Rendering
         /// </remarks>
         public readonly int Key;
 
+        public readonly bool Managed;
+
         readonly CommandBuffer m_CommandBuffer;
 
         public readonly int MaximumVerticesPerMesh;
@@ -89,9 +91,13 @@ namespace GDX.Rendering
         IntKeyDictionary<SimpleList<int>> m_WorkingSegments;
 
         public DrawCommandBuffer(int key, int initialMaterialCount = 5,
-            int verticesPerMesh = k_DefaultMaximumVerticesPerMesh)
+            int verticesPerMesh = k_DefaultMaximumVerticesPerMesh, bool managed = false)
         {
             Key = key;
+            Managed = managed;
+
+            // TODO: Do we wanna add to manager here?
+
             MaximumVerticesPerMesh = verticesPerMesh;
 
             m_Materials = new SimpleList<Material>(initialMaterialCount);
@@ -117,12 +123,33 @@ namespace GDX.Rendering
             }
         }
 
+        ~DrawCommandBuffer()
+        {
+            if (Managed)
+            {
+                RemoveInstance(Key);
+            }
+        }
+
         public bool Finalized
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Get an instance of <see cref="DrawCommandBuffer"/> based on the provided <paramref name="key"/>.
+        /// </summary>
+        /// <param name="key">
+        ///     A value based key used to reference a <see cref="DrawCommandBuffer"/> in a
+        ///     <see cref="IntKeyDictionary{TValue}"/>.
+        /// </param>
+        /// <param name="initialColorCount">Initial number of internal materials to allocate (x2).</param>
+        /// <param name="verticesPerMesh">The number of vertices to split batched meshes on.</param>
+        /// <returns>
+        ///     A newly created <see cref="DrawCommandBuffer"/> if the provided key is not found, or the previously
+        ///     created <see cref="DrawCommandBuffer"/> identified by the <paramref name="key"/>.
+        /// </returns>
         public static DrawCommandBuffer GetInstance(int key, int initialColorCount = 5,
             int verticesPerMesh = k_DefaultMaximumVerticesPerMesh)
         {
@@ -131,11 +158,18 @@ namespace GDX.Rendering
                 return s_Buffers[key];
             }
 
-            DrawCommandBuffer newBatch = new DrawCommandBuffer(key, initialColorCount, verticesPerMesh);
-            s_Buffers.AddWithExpandCheck(key, newBatch);
-            return newBatch;
+            DrawCommandBuffer newBuffer = new DrawCommandBuffer(key, initialColorCount, verticesPerMesh, true);
+            s_Buffers.AddWithExpandCheck(key, newBuffer);
+            return newBuffer;
         }
 
+        /// <summary>
+        ///     Returns if the provided key has a <see cref="DrawCommandBuffer"/> referenced.
+        /// </summary>
+        /// <param name="key">
+        ///     The key used to reference the <see cref="DrawCommandBuffer"/>.
+        /// </param>
+        /// <returns>true/false if the key has a <see cref="DrawCommandBuffer"/> associated with it.</returns>
         public static bool HasInstance(int key)
         {
             return s_Buffers.ContainsKey(key);
@@ -144,11 +178,6 @@ namespace GDX.Rendering
         public static void RemoveInstance(int key)
         {
             s_Buffers.TryRemove(key);
-        }
-
-        public static void RemoveInstance(DrawCommandBuffer batch)
-        {
-            RemoveInstance(batch.Key);
         }
 
         public static void AppendSegmentsToArray(ref int[] segmentArray, ref int[] segmentsToAdd,
