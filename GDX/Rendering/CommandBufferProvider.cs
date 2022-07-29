@@ -20,7 +20,7 @@ namespace GDX.Rendering
         /// Get an instance of <see cref="DrawCommandBuffer"/> based on the provided <paramref name="key"/>.
         /// </summary>
         /// <example>
-        ///     By checking the Finalized property we can skip over the expensive building step.
+        ///     By checking the <see cref="DrawCommandBuffer.Finalized"/> property we can skip over the expensive building step.
         ///     <code>
         ///         DrawCommandBuffer buffer = CommandBufferProvider.GetDrawCommandBuffer(gameObjet.GetInstanceID());
         ///         if (!buffer.Finalized)
