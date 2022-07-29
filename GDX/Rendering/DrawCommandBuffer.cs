@@ -6,6 +6,8 @@ using GDX.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
+// TODO: Need to build out system to use m_WorkingIndices to approximate the index based on the color? ie, figure out a
+// next mesh index based on it?
 namespace GDX.Rendering
 {
     /// <summary>
@@ -17,7 +19,8 @@ namespace GDX.Rendering
         ///     The default maximum number of vertices per mesh when dynamically creating meshes.
         /// </summary>
         /// <remarks>
-        ///     When using <see cref="DrawMesh"/> this value is ignored.
+        ///     When using a mesh is manually added via
+        ///     <see cref="DrawMesh(UnityEngine.Material,UnityEngine.Mesh,bool)"/> this value is ignored.
         /// </remarks>
         public const int DefaultMaximumVerticesPerMesh = 512;
 
@@ -55,8 +58,9 @@ namespace GDX.Rendering
         /// </summary>
         /// <remarks>
         ///     <para>
-        ///         This is useful when using the <see cref="GetInstance" /> and <see cref="RemoveInstance(int)"/>
-        ///         calls to maximize reuse and limiting allocations.
+        ///         This is useful for identifying the <see cref="DrawCommandBuffer" /> in different contexts; its
+        ///         specific use is meant for being able to recall a <see cref="DrawCommandBuffer" /> from the
+        ///         <see cref="CommandBufferProvider" />.
         ///     </para>
         ///     <para>
         ///         A common pattern is to use the the <see cref="GameObject"/>'s InstanceID or an Entity Number to
@@ -66,40 +70,99 @@ namespace GDX.Rendering
         /// </remarks>
         public readonly int Key;
 
+        /// <summary>
+        ///     The actual allocated <see cref="CommandBuffer"/> used by the <see cref="DrawCommandBuffer"/>.
+        /// </summary>
         readonly CommandBuffer m_CommandBuffer;
 
-        public readonly int MaximumVerticesPerMesh;
+        /// <summary>
+        ///     The established maximum number of vertices per mesh for this particular <see cref="DrawCommandBuffer"/>.
+        /// </summary>
+        /// <remarks>
+        ///     Once this is set in the constructor it cannot be changed. Arbitrary mesh adds are not effected by this
+        /// </remarks>
+        readonly int m_MaximumVerticesPerMesh;
+
+        /// <summary>
+        ///     An indexed dictionary of all dotted line materials, referenced by the hashcode of the color.
+        /// </summary>
         IntKeyDictionary<int> m_DottedLineMaterials;
+
+        /// <summary>
+        ///     The current incremental index to use when adding draw commands.
+        /// </summary>
+        /// <remarks>
+        ///     This is used to provide a stable index in an extremely simple form. While it will eventually roll over,
+        ///     at that threshold you should be considering if multiple <see cref="DrawCommandBuffer"/> may be more
+        ///     optimal.
+        /// </remarks>
+        int m_DrawCommandIndex;
+
+        /// <summary>
+        ///     An indexed dictionary of all of the draw commands to use with the buffer.
+        /// </summary>
+        /// <remarks>
+        ///     This includes the mesh and an index of the material to use with that mesh when drawing. As items are
+        ///     added, the <see cref="m_DrawCommandIndex"/> is incremented to simulate a stable ID.
+        /// </remarks>
+        IntKeyDictionary<DrawCommand> m_DrawCommands;
+
+        /// <summary>
+        ///     An indexed dictionary of all line materials, referenced by the hashcode of the color.
+        /// </summary>
         IntKeyDictionary<int> m_LineMaterials;
+
+        /// <summary>
+        ///     An ever expanding list of materials used with the <see cref="DrawCommandBuffer"/>.
+        /// </summary>
+        /// <remarks>
+        ///     Both <see cref="m_DottedLineMaterials"/> and <see cref="m_LineMaterials"/> store indexes of
+        ///     <see cref="Material"/>s inside of this list.
+        /// </remarks>
         SimpleList<Material> m_Materials;
 
+        /// <summary>
+        ///     A storage of working expected indices of meshes to be created in the future.
+        /// </summary>
+        IntKeyDictionary<int> m_WorkingIndices;
 
-        // TODO: removing by index will adjust the index of others ;/
-        // we should move this to a sparse set
-        SimpleList<Mesh> m_Meshes;
-        SimpleList<int> m_MeshMaterialIndex;
-
-        IntKeyDictionary<int> m_WorkingIndex;
+        /// <summary>
+        ///     A storage of working vertices information indexed based on the hashcode of the material it is meant to
+        ///     be drawn with.
+        /// </summary>
         IntKeyDictionary<SimpleList<Vector3>> m_WorkingPoints;
+
+        /// <summary>
+        ///     A storage of working segment indices pairs indexed based on the hashcode of the material it is meant to
+        ///     be drawn with.
+        /// </summary>
         IntKeyDictionary<SimpleList<int>> m_WorkingSegments;
 
+        /// <summary>
+        ///     Create a <see cref="DrawCommandBuffer"/>.
+        /// </summary>
+        /// <param name="key">The internally cached key associated with this buffer.</param>
+        /// <param name="initialMaterialCount">
+        ///     An initial allocation of the expected number of materials that will be used.
+        /// </param>
+        /// <param name="verticesPerMesh">The number of vertices to ingest before a mesh is split.</param>
         public DrawCommandBuffer(int key, int initialMaterialCount = 5,
-            int verticesPerMesh = DefaultMaximumVerticesPerMesh, bool managed = false)
+            int verticesPerMesh = DefaultMaximumVerticesPerMesh)
         {
             Key = key;
 
-            // TODO: Do we wanna add to manager here?
-
-            MaximumVerticesPerMesh = verticesPerMesh;
+            m_MaximumVerticesPerMesh = verticesPerMesh;
 
             m_Materials = new SimpleList<Material>(initialMaterialCount);
             m_LineMaterials = new IntKeyDictionary<int>(initialMaterialCount);
             m_DottedLineMaterials = new IntKeyDictionary<int>(initialMaterialCount);
-            m_Meshes = new SimpleList<Mesh>(2);
-            m_MeshMaterialIndex = new SimpleList<int>(2);
 
             m_WorkingPoints = new IntKeyDictionary<SimpleList<Vector3>>(initialMaterialCount);
             m_WorkingSegments = new IntKeyDictionary<SimpleList<int>>(initialMaterialCount);
+            m_WorkingIndices = new IntKeyDictionary<int>(initialMaterialCount);
+
+            m_DrawCommands = new IntKeyDictionary<DrawCommand>(2);
+            m_DrawCommandIndex = 0;
 
             m_CommandBuffer = new CommandBuffer();
 
@@ -115,22 +178,33 @@ namespace GDX.Rendering
             }
         }
 
+        /// <summary>
+        ///     Has the <see cref="DrawCommandBuffer"/> been converged?
+        /// </summary>
+        /// <remarks>
+        ///     A finalized <see cref="DrawCommandBuffer"/> has had its command buffer filled with the fixed draw calls
+        ///     based on the meshes/materials outlined. If a mesh is invalidated by <see cref="InvalidateMesh"/>, the
+        ///     <see cref="DrawCommandBuffer"/> will become not finalized and will re-converge itself next
+        ///     <see cref="Execute"/>.
+        /// </remarks>
         public bool Finalized
         {
             get;
             private set;
         }
 
-        public static void AppendSegmentsToArray(ref int[] segmentArray, ref int[] segmentsToAdd,
-            int segmentArrayStartIndex, int segmentToAddOffset)
+        /// <summary>
+        ///     Ensure that we dispose associated resources.
+        /// </summary>
+        ~DrawCommandBuffer()
         {
-            int segmentsToAddCount = segmentsToAdd.Length;
-            for (int i = 0; i < segmentsToAddCount; i++)
-            {
-                segmentArray[segmentArrayStartIndex + i] = segmentsToAdd[i] + segmentToAddOffset;
-            }
+            m_CommandBuffer.Dispose();
         }
 
+        /// <summary>
+        ///     Converges all working vertices/material additions into finalized mesh forms and fills the command
+        ///     buffer with the appropriate data.
+        /// </summary>
         public void Converge()
         {
             if (Finalized) return;
@@ -153,13 +227,13 @@ namespace GDX.Rendering
             m_WorkingSegments.Clear();
 
             // Record our command buffer
-            int meshCount = m_Meshes.Count;
-            for (int i = 0; i < meshCount; i++)
+            int currentIndex = 0;
+            while (m_DrawCommands.MoveNext(ref currentIndex))
             {
-                int materialIndex = m_MeshMaterialIndex.Array[i];
-                m_CommandBuffer.DrawMesh(m_Meshes.Array[i], Matrix4x4.identity, m_Materials.Array[materialIndex]);
+                IntKeyEntry<DrawCommand> currentEntry = m_DrawCommands.Entries[currentIndex];
+                m_CommandBuffer.DrawMesh(currentEntry.Value.ImmutableMesh, Matrix4x4.identity,
+                    m_Materials.Array[currentEntry.Value.MaterialIndex]);
             }
-
             Finalized = true;
         }
 
@@ -238,7 +312,7 @@ namespace GDX.Rendering
             SimpleList<Vector3> pointList = m_WorkingPoints[materialHashCode];
 
             // Check for mesh conversion
-            if (pointList.Array.Length + verticesLength >= MaximumVerticesPerMesh)
+            if (pointList.Array.Length + verticesLength >= m_MaximumVerticesPerMesh)
             {
                 // Create mesh!
                 SimpleList<int> segmentList = m_WorkingSegments[materialHashCode];
@@ -275,12 +349,18 @@ namespace GDX.Rendering
                 m_WorkingSegments[materialHashCode] = segmentList;
             }
 
-            if (m_Meshes.Count == 0)
-            {
-                return 0;
-            }
+            // It will eventually become this index
+            return m_DrawCommandIndex;
+        }
 
-            return m_Meshes.Count - 1;
+        public int DrawMesh(Material material, Mesh mesh, bool shouldOptimizeMesh = true)
+        {
+            m_DrawCommands.AddWithExpandCheck(m_DrawCommandIndex,
+                new DrawCommand(mesh, GetMaterialIndex(material)));
+            m_DrawCommandIndex++;
+
+            // Return mesh index
+            return m_DrawCommandIndex - 1;
         }
 
         public int DrawMesh(Material material, ref Vector3[] vertices, ref int[] segments,
@@ -299,11 +379,12 @@ namespace GDX.Rendering
             }
 #endif
 
-            m_Meshes.AddWithExpandCheck(batchMesh);
-            m_MeshMaterialIndex.AddWithExpandCheck(GetMaterialIndex(material));
-
+            m_DrawCommands.AddWithExpandCheck(m_DrawCommandIndex,
+                new DrawCommand(batchMesh, GetMaterialIndex(material)));
+            m_DrawCommandIndex++;
+            // TODO: This whole index thing is wrong
             // Return mesh index
-            return m_Meshes.Count - 1;
+            return m_DrawCommandIndex - 1;
         }
 
         public int DrawWireCube(Color color, Vector3 center, Vector3 size)
@@ -347,10 +428,10 @@ namespace GDX.Rendering
         /// <param name="meshID"></param>
         public void InvalidateMesh(int meshID)
         {
-            // TODO: need to hand change over to sparseset
-            m_Meshes.RemoveAt(meshID);
-            m_MeshMaterialIndex.RemoveAt(meshID);
-            Finalized = false;
+            if (m_DrawCommands.TryRemove(meshID))
+            {
+                Finalized = false;
+            }
         }
 
         /// <summary>
@@ -361,10 +442,11 @@ namespace GDX.Rendering
         {
             m_WorkingPoints.Clear();
             m_WorkingSegments.Clear();
+            m_WorkingIndices.Clear();
 
-            m_Meshes.Clear();
+            m_DrawCommands.Clear();
+            m_DrawCommandIndex = 0;
             m_Materials.Clear();
-            m_MeshMaterialIndex.Clear();
             m_LineMaterials.Clear();
             m_DottedLineMaterials.Clear();
             m_CommandBuffer.Clear();
@@ -451,6 +533,21 @@ namespace GDX.Rendering
             m_Materials.AddWithExpandCheck(newMaterial);
             m_LineMaterials.AddWithExpandCheck(requestedHashCode, m_Materials.Count - 1);
             return newMaterial;
+        }
+
+        /// <summary>
+        ///     A structure describing a finalized mesh/material and its draw operation.
+        /// </summary>
+        struct DrawCommand
+        {
+            public readonly int MaterialIndex;
+            public readonly Mesh ImmutableMesh;
+
+            public DrawCommand(Mesh mesh, int materialIndex)
+            {
+                MaterialIndex = materialIndex;
+                ImmutableMesh = mesh;
+            }
         }
     }
 }

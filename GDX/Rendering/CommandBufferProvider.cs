@@ -6,6 +6,9 @@ using GDX.Collections.Generic;
 
 namespace GDX.Rendering
 {
+    /// <summary>
+    ///     A provider of GDX specific command buffers, indexed for reuse.
+    /// </summary>
     public static class CommandBufferProvider
     {
         /// <summary>
@@ -34,7 +37,7 @@ namespace GDX.Rendering
                 return s_DrawCommandBuffers[key];
             }
 
-            DrawCommandBuffer newBuffer = new DrawCommandBuffer(key, initialColorCount, verticesPerMesh, true);
+            DrawCommandBuffer newBuffer = new DrawCommandBuffer(key, initialColorCount, verticesPerMesh);
             s_DrawCommandBuffers.AddWithExpandCheck(key, newBuffer);
             return newBuffer;
         }
