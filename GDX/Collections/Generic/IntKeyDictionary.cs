@@ -594,9 +594,18 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        /// Iterates the dictionary.
-        /// NOTE: if you suspect the dictionary might be modified while iterating, this will not catch the error -- use the other overload instead.
+        ///     Iterates the dictionary.
         /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         If you use <paramref name="iteratedIndexCount"/> during iteration, you need to decrement it by 1 to
+        ///         properly access the current iterations index.
+        ///     </para>
+        ///     <para>
+        ///         If you suspect the dictionary might be modified while iterating, this will not catch the error.
+        ///         You must use the other overload instead.
+        ///     </para>
+        /// </remarks>
         /// <param name="iteratedIndexCount">The number of indices iterated so far - pass in 0 at the start of iteration.</param>
         /// <returns>Whether or not the iterator found an entry</returns>
         public bool MoveNext(ref int iteratedIndexCount)

@@ -230,12 +230,7 @@ namespace GDX.Rendering
             int currentIndex = 0;
             while (m_DrawCommands.MoveNext(ref currentIndex))
             {
-                IntKeyEntry<DrawCommand> currentEntry = m_DrawCommands.Entries[currentIndex];
-                if (currentEntry.Value.ImmutableMesh == null)
-                {
-                    Debug.Log($"Null mesh at index: {currentIndex} with mat: {currentEntry.Value.MaterialIndex}");
-                    continue;
-                }
+                IntKeyEntry<DrawCommand> currentEntry = m_DrawCommands.Entries[currentIndex - 1];
                 m_CommandBuffer.DrawMesh(currentEntry.Value.ImmutableMesh, Matrix4x4.identity,
                     m_Materials.Array[currentEntry.Value.MaterialIndex]);
             }
