@@ -231,6 +231,11 @@ namespace GDX.Rendering
             while (m_DrawCommands.MoveNext(ref currentIndex))
             {
                 IntKeyEntry<DrawCommand> currentEntry = m_DrawCommands.Entries[currentIndex];
+                if (currentEntry.Value.ImmutableMesh == null)
+                {
+                    Debug.Log($"Null mesh at index: {currentIndex} with mat: {currentEntry.Value.MaterialIndex}");
+                    continue;
+                }
                 m_CommandBuffer.DrawMesh(currentEntry.Value.ImmutableMesh, Matrix4x4.identity,
                     m_Materials.Array[currentEntry.Value.MaterialIndex]);
             }
@@ -367,12 +372,13 @@ namespace GDX.Rendering
             MeshTopology topology = MeshTopology.Lines, bool shouldOptimizeMesh = true)
         {
             Mesh batchMesh = new Mesh();
-
             batchMesh.indexFormat = IndexFormat.UInt32;
             batchMesh.SetVertices(vertices);
             batchMesh.SetIndices(segments, topology, 0);
 
+
 #if UNITY_EDITOR
+            batchMesh.name = $"Mesh_{material.name}_{m_DrawCommandIndex}";
             if (shouldOptimizeMesh)
             {
                 UnityEditor.MeshUtility.Optimize(batchMesh);
