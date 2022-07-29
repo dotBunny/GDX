@@ -232,7 +232,7 @@ namespace GDX.Rendering
             {
                 IntKeyEntry<DrawCommand> currentEntry = m_DrawCommands.Entries[currentIndex - 1];
                 m_CommandBuffer.DrawMesh(currentEntry.Value.ImmutableMesh, Matrix4x4.identity,
-                    m_Materials.Array[currentEntry.Value.MaterialIndex]);
+                    currentEntry.Value.ImmutableMaterial);
             }
             Finalized = true;
         }
@@ -416,7 +416,7 @@ namespace GDX.Rendering
         public int DrawMesh(Material material, Mesh mesh)
         {
             m_DrawCommands.AddWithExpandCheck(m_DrawCommandIndex,
-                new DrawCommand(mesh, GetMaterialIndex(material)));
+                new DrawCommand(mesh, material));
             m_DrawCommandIndex++;
 
             // Return mesh index
@@ -443,7 +443,7 @@ namespace GDX.Rendering
 #endif
 
             m_DrawCommands.AddWithExpandCheck(m_DrawCommandIndex,
-                new DrawCommand(batchMesh, GetMaterialIndex(material)));
+                new DrawCommand(batchMesh, material));
             m_DrawCommandIndex++;
             // TODO: This whole index thing is wrong
             // Return mesh index
@@ -618,12 +618,12 @@ namespace GDX.Rendering
         /// </summary>
         struct DrawCommand
         {
-            public readonly int MaterialIndex;
+            public readonly Material ImmutableMaterial;
             public readonly Mesh ImmutableMesh;
 
-            public DrawCommand(Mesh mesh, int materialIndex)
+            public DrawCommand(Mesh mesh, Material material)
             {
-                MaterialIndex = materialIndex;
+                ImmutableMaterial = material;
                 ImmutableMesh = mesh;
             }
         }
