@@ -6,8 +6,6 @@ using GDX.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-// TODO: Need to build out system to use m_WorkingIndices to approximate the index based on the color? ie, figure out a
-// next mesh index based on it?
 namespace GDX.Rendering
 {
     /// <summary>
@@ -84,26 +82,26 @@ namespace GDX.Rendering
         readonly int m_MaximumVerticesPerMesh;
 
         /// <summary>
-        ///     An indexed dictionary of all dotted line materials, referenced by the hashcode of the color.
-        /// </summary>
-        IntKeyDictionary<int> m_DottedLineMaterials;
-
-        /// <summary>
-        ///     The current incremental index to use when adding draw commands.
+        ///     The current incremental token used when associating draw commands.
         /// </summary>
         /// <remarks>
         ///     This is used to provide a stable index in an extremely simple form. While it will eventually roll over,
         ///     at that threshold you should be considering if multiple <see cref="DrawCommandBuffer"/> may be more
         ///     optimal.
         /// </remarks>
-        int m_DrawCommandIndex;
+        int m_CurrentToken;
+
+        /// <summary>
+        ///     An indexed dictionary of all dotted line materials, referenced by the hashcode of the color.
+        /// </summary>
+        IntKeyDictionary<int> m_DottedLineMaterials;
 
         /// <summary>
         ///     An indexed dictionary of all of the draw commands to use with the buffer.
         /// </summary>
         /// <remarks>
         ///     This includes the mesh and an index of the material to use with that mesh when drawing. As items are
-        ///     added, the <see cref="m_DrawCommandIndex"/> is incremented to simulate a stable ID.
+        ///     added, the <see cref="m_CurrentToken"/> is incremented to simulate a stable ID.
         /// </remarks>
         IntKeyDictionary<DrawCommand> m_DrawCommands;
 
@@ -122,11 +120,6 @@ namespace GDX.Rendering
         SimpleList<Material> m_Materials;
 
         /// <summary>
-        ///     A storage of working expected indices of meshes to be created in the future.
-        /// </summary>
-        IntKeyDictionary<int> m_WorkingIndices;
-
-        /// <summary>
         ///     A storage of working vertices information indexed based on the hashcode of the material it is meant to
         ///     be drawn with.
         /// </summary>
@@ -137,6 +130,11 @@ namespace GDX.Rendering
         ///     be drawn with.
         /// </summary>
         IntKeyDictionary<SimpleList<int>> m_WorkingSegments;
+
+        /// <summary>
+        ///     A storage of working expected tokens of meshes to be created in the future.
+        /// </summary>
+        IntKeyDictionary<int> m_WorkingTokens;
 
         /// <summary>
         ///     Create a <see cref="DrawCommandBuffer"/>.
@@ -159,10 +157,10 @@ namespace GDX.Rendering
 
             m_WorkingPoints = new IntKeyDictionary<SimpleList<Vector3>>(initialMaterialCount);
             m_WorkingSegments = new IntKeyDictionary<SimpleList<int>>(initialMaterialCount);
-            m_WorkingIndices = new IntKeyDictionary<int>(initialMaterialCount);
+            m_WorkingTokens = new IntKeyDictionary<int>(initialMaterialCount);
 
             m_DrawCommands = new IntKeyDictionary<DrawCommand>(2);
-            m_DrawCommandIndex = 0;
+            m_CurrentToken = 0;
 
             m_CommandBuffer = new CommandBuffer();
 
@@ -216,9 +214,11 @@ namespace GDX.Rendering
                 int materialHashCode = m_Materials.Array[i].GetHashCode();
                 SimpleList<Vector3> pointList = m_WorkingPoints[materialHashCode];
                 SimpleList<int> segmentList = m_WorkingSegments[materialHashCode];
+                int token = m_WorkingTokens[materialHashCode];
                 if (pointList.Count > 0)
                 {
-                    DrawMesh(GetMaterialByHashCode(materialHashCode), ref pointList.Array, ref segmentList.Array);
+                    DrawMesh(GetMaterialByHashCode(materialHashCode), ref pointList.Array, ref segmentList.Array,
+                        MeshTopology.Lines, token);
                 }
             }
 
@@ -246,20 +246,8 @@ namespace GDX.Rendering
         /// <returns>The created cube's invalidation token.</returns>
         public int DrawDottedCube(Color color, Vector3 center, Vector3 size)
         {
-            Vector3 half = size / 2f;
-            Vector3[] points =
-            {
-                new Vector3(center.x - half.x, center.y - half.y, center.z - half.z), // Front Bottom Left (0)
-                new Vector3(center.x - half.x, center.y - half.y, center.z + half.z), // Back Bottom Left (1)
-                new Vector3(center.x - half.x, center.y + half.y, center.z + half.z), // Back Top Left (2)
-                new Vector3(center.x - half.x, center.y + half.y, center.z - half.z), // Front Top Left (3)
-                new Vector3(center.x + half.x, center.y - half.y, center.z - half.z), // Front Bottom Right (4)
-                new Vector3(center.x + half.x, center.y - half.y, center.z + half.z), // Back Bottom Right (5)
-                new Vector3(center.x + half.x, center.y + half.y, center.z + half.z), // Back Top Right (6)
-                new Vector3(center.x + half.x, center.y + half.y, center.z - half.z), // Front Top Right (7)
-            };
-
-            return DrawDottedLines(color, ref points, ref CubeSegmentIndices);
+            Vector3[] vertices = GetCubeVertices(center, size);
+            return DrawDottedLines(color, ref vertices, ref CubeSegmentIndices);
         }
 
         /// <summary>
@@ -360,10 +348,12 @@ namespace GDX.Rendering
             {
                 m_WorkingPoints.AddWithExpandCheck(materialHashCode, new SimpleList<Vector3>(verticesLength));
                 m_WorkingSegments.AddWithExpandCheck(materialHashCode, new SimpleList<int>(segmentsLength));
+                m_WorkingTokens.AddWithExpandCheck(materialHashCode, ReserveToken());
             }
 
             // Get data storage
             SimpleList<Vector3> pointList = m_WorkingPoints[materialHashCode];
+            int token = m_WorkingTokens[materialHashCode];
 
             // Check for mesh conversion
             if (pointList.Array.Length + verticesLength >= m_MaximumVerticesPerMesh)
@@ -403,8 +393,7 @@ namespace GDX.Rendering
                 m_WorkingSegments[materialHashCode] = segmentList;
             }
 
-            // It will eventually become this index
-            return m_DrawCommandIndex;
+            return token;
         }
 
         /// <summary>
@@ -415,12 +404,10 @@ namespace GDX.Rendering
         /// <returns>The mesh's invalidation token.</returns>
         public int DrawMesh(Material material, Mesh mesh)
         {
-            m_DrawCommands.AddWithExpandCheck(m_DrawCommandIndex,
+            int token = ReserveToken();
+            m_DrawCommands.AddWithExpandCheck(token,
                 new DrawCommand(mesh, GetMaterialIndex(material)));
-            m_DrawCommandIndex++;
-
-            // Return mesh index
-            return m_DrawCommandIndex - 1;
+            return token;
         }
 
         /// <summary>
@@ -430,24 +417,27 @@ namespace GDX.Rendering
         /// <param name="vertices">The vertices of the created mesh.</param>
         /// <param name="segments">The segment pairs based on <paramref name="vertices"/>.</param>
         /// <param name="topology">The <see cref="MeshTopology"/> mode to use when drawing the created mesh.</param>
+        /// <param name="token">Force a specific token for the mesh. Don't use this.</param>
         /// <returns>The created mesh's invalidation token.</returns>
         public int DrawMesh(Material material, ref Vector3[] vertices, ref int[] segments,
-            MeshTopology topology = MeshTopology.Lines)
+            MeshTopology topology = MeshTopology.Lines, int token = -1)
         {
+
             Mesh batchMesh = new Mesh();
             batchMesh.indexFormat = IndexFormat.UInt32;
             batchMesh.SetVertices(vertices);
             batchMesh.SetIndices(segments, topology, 0);
 #if UNITY_EDITOR
-            batchMesh.name = $"Mesh_{material.name}_{m_DrawCommandIndex}";
+            batchMesh.name = $"Mesh_{material.name}_{m_CurrentToken}";
 #endif
+            if (token == -1)
+            {
+                token = ReserveToken();
+            }
 
-            m_DrawCommands.AddWithExpandCheck(m_DrawCommandIndex,
+            m_DrawCommands.AddWithExpandCheck(token,
                 new DrawCommand(batchMesh, GetMaterialIndex(material)));
-            m_DrawCommandIndex++;
-            // TODO: This whole index thing is wrong
-            // Return mesh index
-            return m_DrawCommandIndex - 1;
+            return token;
         }
 
         /// <summary>
@@ -459,28 +449,8 @@ namespace GDX.Rendering
         /// <returns>The created cube's invalidation token.</returns>
         public int DrawWireCube(Color color, Vector3 center, Vector3 size)
         {
-            Vector3 half = size / 2f;
-
-            float centerMinusHalfX = center.x - half.x;
-            float centerMinusHalfY = center.y - half.y;
-            float centerMinusHalfZ = center.z - half.z;
-            float centerPlusHalfX = center.x + half.x;
-            float centerPlusHalfY = center.y + half.y;
-            float centerPlusHalfZ = center.z + half.z;
-
-            Vector3[] points =
-            {
-                new Vector3(centerMinusHalfX, centerMinusHalfY, centerMinusHalfZ), // Front Bottom Left (0)
-                new Vector3(centerMinusHalfX, centerMinusHalfY, centerPlusHalfZ), // Back Bottom Left (1)
-                new Vector3(centerMinusHalfX, centerPlusHalfY, centerPlusHalfZ), // Back Top Left (2)
-                new Vector3(centerMinusHalfX, centerPlusHalfY, centerMinusHalfZ), // Front Top Left (3)
-                new Vector3(centerPlusHalfX, centerMinusHalfY, centerMinusHalfZ), // Front Bottom Right (4)
-                new Vector3(centerPlusHalfX, centerMinusHalfY, centerPlusHalfZ), // Back Bottom Right (5)
-                new Vector3(centerPlusHalfX, centerPlusHalfY, centerPlusHalfZ), // Back Top Right (6)
-                new Vector3(centerPlusHalfX, centerPlusHalfY, centerMinusHalfZ), // Front Top Right (7)
-            };
-
-            return DrawLines(color, ref points, ref CubeSegmentIndices);
+            Vector3[] vertices = GetCubeVertices(center, size);
+            return DrawLines(color, ref vertices, ref CubeSegmentIndices);
         }
 
         /// <summary>
@@ -520,16 +490,53 @@ namespace GDX.Rendering
         {
             m_WorkingPoints.Clear();
             m_WorkingSegments.Clear();
-            m_WorkingIndices.Clear();
+            m_WorkingTokens.Clear();
 
+            m_CurrentToken = 0;
             m_DrawCommands.Clear();
-            m_DrawCommandIndex = 0;
+
             m_Materials.Clear();
             m_LineMaterials.Clear();
             m_DottedLineMaterials.Clear();
+
             m_CommandBuffer.Clear();
 
             Finalized = false;
+        }
+
+        /// <summary>
+        ///     Get the vertices that make up a cube.
+        /// </summary>
+        /// <remarks>
+        ///     Ordered based on <see cref="CubeSegmentIndices"/>.
+        /// </remarks>
+        /// <param name="center">The world space center location of the cube.</param>
+        /// <param name="size">The size of the cube.</param>
+        /// <returns>An array of ordered vertices.</returns>
+        static Vector3[] GetCubeVertices(Vector3 center, Vector3 size)
+        {
+            Vector3 half = size / 2f;
+
+            float centerMinusHalfX = center.x - half.x;
+            float centerMinusHalfY = center.y - half.y;
+            float centerMinusHalfZ = center.z - half.z;
+            float centerPlusHalfX = center.x + half.x;
+            float centerPlusHalfY = center.y + half.y;
+            float centerPlusHalfZ = center.z + half.z;
+
+            Vector3[] points =
+            {
+                new Vector3(centerMinusHalfX, centerMinusHalfY, centerMinusHalfZ), // Front Bottom Left (0)
+                new Vector3(centerMinusHalfX, centerMinusHalfY, centerPlusHalfZ), // Back Bottom Left (1)
+                new Vector3(centerMinusHalfX, centerPlusHalfY, centerPlusHalfZ), // Back Top Left (2)
+                new Vector3(centerMinusHalfX, centerPlusHalfY, centerMinusHalfZ), // Front Top Left (3)
+                new Vector3(centerPlusHalfX, centerMinusHalfY, centerMinusHalfZ), // Front Bottom Right (4)
+                new Vector3(centerPlusHalfX, centerMinusHalfY, centerPlusHalfZ), // Back Bottom Right (5)
+                new Vector3(centerPlusHalfX, centerPlusHalfY, centerPlusHalfZ), // Back Top Right (6)
+                new Vector3(centerPlusHalfX, centerPlusHalfY, centerMinusHalfZ), // Front Top Right (7)
+            };
+
+            return points;
         }
 
         /// <summary>
@@ -611,6 +618,13 @@ namespace GDX.Rendering
             m_Materials.AddWithExpandCheck(newMaterial);
             m_LineMaterials.AddWithExpandCheck(requestedHashCode, m_Materials.Count - 1);
             return newMaterial;
+        }
+
+        int ReserveToken()
+        {
+            int returnValue = m_CurrentToken;
+            m_CurrentToken++;
+            return returnValue;
         }
 
         /// <summary>
