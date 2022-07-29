@@ -183,7 +183,7 @@ namespace GDX.Rendering
         /// </summary>
         /// <remarks>
         ///     A finalized <see cref="DrawCommandBuffer"/> has had its command buffer filled with the fixed draw calls
-        ///     based on the meshes/materials outlined. If a mesh is invalidated by <see cref="InvalidateMesh"/>, the
+        ///     based on the meshes/materials outlined. If a mesh is invalidated by <see cref="Invalidate"/>, the
         ///     <see cref="DrawCommandBuffer"/> will become not finalized and will re-converge itself next
         ///     <see cref="Execute"/>.
         /// </remarks>
@@ -237,6 +237,13 @@ namespace GDX.Rendering
             Finalized = true;
         }
 
+        /// <summary>
+        ///     Draw a dotted line cube of a specific color to the buffer.
+        /// </summary>
+        /// <param name="color">The color which to draw the dotted line cube with.</param>
+        /// <param name="center">The center world position of the cube.</param>
+        /// <param name="size">The unit size of the cube</param>
+        /// <returns>The created cube's invalidation token.</returns>
         public int DrawDottedCube(Color color, Vector3 center, Vector3 size)
         {
             Vector3 half = size / 2f;
@@ -252,40 +259,87 @@ namespace GDX.Rendering
                 new Vector3(center.x + half.x, center.y + half.y, center.z - half.z), // Front Top Right (7)
             };
 
-            return DrawDottedLine(color, ref points, ref CubeSegmentIndices);
+            return DrawDottedLines(color, ref points, ref CubeSegmentIndices);
         }
 
-        public int DrawDottedLine(Color color, ref Vector3[] vertices, ref int[] segments)
+        /// <summary>
+        ///     Draw dotted lines of a specific color as defined to the buffer.
+        /// </summary>
+        /// <param name="color">The color which to draw the dotted lines with.</param>
+        /// <param name="vertices">The vertices of the dotted lines.</param>
+        /// <param name="segments">The segment pairs based on <paramref name="vertices"/>.</param>
+        /// <returns>The dotted lines' invalidation token.</returns>
+        public int DrawDottedLines(Color color, ref Vector3[] vertices, ref int[] segments)
         {
-            return DrawDottedLine(color,
+            return DrawDottedLines(color,
                 ref vertices, 0, vertices.Length,
                 ref segments, 0, segments.Length);
         }
 
-        public int DrawDottedLine(Color color,
+        /// <summary>
+        ///     Draw dotted lines of a specific color as defined to the buffer.
+        /// </summary>
+        /// <param name="color">The color which to draw the dotted lines with.</param>
+        /// <param name="vertices">The vertices of the dotted lines.</param>
+        /// <param name="verticesStartIndex">The index to start at in the <paramref name="vertices"/> array.</param>
+        /// <param name="verticesLength">The number of elements in the <paramref name="vertices"/> array to use.</param>
+        /// <param name="segments">The segment pairs based on <paramref name="vertices"/>.</param>
+        /// <param name="segmentsStartIndex">The index to start at in the <paramref name="segments"/> array.</param>
+        /// <param name="segmentsLength">The number of elements in the <paramref name="segments"/> array to use.</param>
+        /// <returns>The dotted lines' invalidation token.</returns>
+        public int DrawDottedLines(Color color,
             ref Vector3[] vertices, int verticesStartIndex, int verticesLength,
             ref int[] segments, int segmentsStartIndex, int segmentsLength)
         {
-            return DrawLine(GetDottedLineMaterialByColor(color), ref vertices, verticesStartIndex, verticesLength,
+            return DrawLines(GetDottedLineMaterialByColor(color), ref vertices, verticesStartIndex, verticesLength,
                 ref segments, segmentsStartIndex, segmentsLength);
         }
 
-        public int DrawLine(Color color, ref Vector3[] vertices, ref int[] segments)
+        /// <summary>
+        ///     Draw lines of a specific color as defined to the buffer.
+        /// </summary>
+        /// <param name="color">The color which to draw the lines with.</param>
+        /// <param name="vertices">The vertices of the lines.</param>
+        /// <param name="segments">The segment pairs based on <paramref name="vertices"/>.</param>
+        /// <returns>The lines' invalidation token.</returns>
+        public int DrawLines(Color color, ref Vector3[] vertices, ref int[] segments)
         {
-            return DrawLine(color,
+            return DrawLines(color,
                 ref vertices, 0, vertices.Length,
                 ref segments, 0, segments.Length);
         }
 
-        public int DrawLine(Color color,
+        /// <summary>
+        ///     Draw lines of a specific color as defined to the buffer.
+        /// </summary>
+        /// <param name="color">The color which to draw the lines with.</param>
+        /// <param name="vertices">The vertices of the lines.</param>
+        /// <param name="verticesStartIndex">The index to start at in the <paramref name="vertices"/> array.</param>
+        /// <param name="verticesLength">The number of elements in the <paramref name="vertices"/> array to use.</param>
+        /// <param name="segments">The segment pairs based on <paramref name="vertices"/>.</param>
+        /// <param name="segmentsStartIndex">The index to start at in the <paramref name="segments"/> array.</param>
+        /// <param name="segmentsLength">The number of elements in the <paramref name="segments"/> array to use.</param>
+        /// <returns>The lines' invalidation token.</returns>
+        public int DrawLines(Color color,
             ref Vector3[] vertices, int verticesStartIndex, int verticesLength,
             ref int[] segments, int segmentsStartIndex, int segmentsLength)
         {
-            return DrawLine(GetSolidLineMaterialByColor(color), ref vertices, verticesStartIndex, verticesLength,
+            return DrawLines(GetSolidLineMaterialByColor(color), ref vertices, verticesStartIndex, verticesLength,
                 ref segments, segmentsStartIndex, segmentsLength);
         }
 
-        public int DrawLine(Material material,
+        /// <summary>
+        ///     Draw lines with a specific material to the buffer.
+        /// </summary>
+        /// <param name="material">The material which to draw the lines with.</param>
+        /// <param name="vertices">The vertices of the lines.</param>
+        /// <param name="verticesStartIndex">The index to start at in the <paramref name="vertices"/> array.</param>
+        /// <param name="verticesLength">The number of elements in the <paramref name="vertices"/> array to use.</param>
+        /// <param name="segments">The segment pairs based on <paramref name="vertices"/>.</param>
+        /// <param name="segmentsStartIndex">The index to start at in the <paramref name="segments"/> array.</param>
+        /// <param name="segmentsLength">The number of elements in the <paramref name="segments"/> array to use.</param>
+        /// <returns>The lines' invalidation token.</returns>
+        public int DrawLines(Material material,
             ref Vector3[] vertices, int verticesStartIndex, int verticesLength,
             ref int[] segments, int segmentsStartIndex, int segmentsLength)
         {
@@ -353,7 +407,13 @@ namespace GDX.Rendering
             return m_DrawCommandIndex;
         }
 
-        public int DrawMesh(Material material, Mesh mesh, bool shouldOptimizeMesh = true)
+        /// <summary>
+        ///     Draw a given mesh to the buffer.
+        /// </summary>
+        /// <param name="material">The material to use when drawing the mesh.</param>
+        /// <param name="mesh">The mesh to draw to the buffer.</param>
+        /// <returns>The mesh's invalidation token.</returns>
+        public int DrawMesh(Material material, Mesh mesh)
         {
             m_DrawCommands.AddWithExpandCheck(m_DrawCommandIndex,
                 new DrawCommand(mesh, GetMaterialIndex(material)));
@@ -363,21 +423,23 @@ namespace GDX.Rendering
             return m_DrawCommandIndex - 1;
         }
 
+        /// <summary>
+        ///     Draw a given mesh (as defined) to the buffer.
+        /// </summary>
+        /// <param name="material">The material to use when drawing the created mesh.</param>
+        /// <param name="vertices">The vertices of the created mesh.</param>
+        /// <param name="segments">The segment pairs based on <paramref name="vertices"/>.</param>
+        /// <param name="topology">The <see cref="MeshTopology"/> mode to use when drawing the created mesh.</param>
+        /// <returns>The created mesh's invalidation token.</returns>
         public int DrawMesh(Material material, ref Vector3[] vertices, ref int[] segments,
-            MeshTopology topology = MeshTopology.Lines, bool shouldOptimizeMesh = true)
+            MeshTopology topology = MeshTopology.Lines)
         {
             Mesh batchMesh = new Mesh();
             batchMesh.indexFormat = IndexFormat.UInt32;
             batchMesh.SetVertices(vertices);
             batchMesh.SetIndices(segments, topology, 0);
-
-
 #if UNITY_EDITOR
             batchMesh.name = $"Mesh_{material.name}_{m_DrawCommandIndex}";
-            if (shouldOptimizeMesh)
-            {
-                UnityEditor.MeshUtility.Optimize(batchMesh);
-            }
 #endif
 
             m_DrawCommands.AddWithExpandCheck(m_DrawCommandIndex,
@@ -388,22 +450,37 @@ namespace GDX.Rendering
             return m_DrawCommandIndex - 1;
         }
 
+        /// <summary>
+        ///     Draw a wireframe cube of a specific color to the buffer.
+        /// </summary>
+        /// <param name="color">The color which to draw the wire cube with.</param>
+        /// <param name="center">The center world position of the cube.</param>
+        /// <param name="size">The unit size of the cube</param>
+        /// <returns>The created cube's invalidation token.</returns>
         public int DrawWireCube(Color color, Vector3 center, Vector3 size)
         {
             Vector3 half = size / 2f;
+
+            float centerMinusHalfX = center.x - half.x;
+            float centerMinusHalfY = center.y - half.y;
+            float centerMinusHalfZ = center.z - half.z;
+            float centerPlusHalfX = center.x + half.x;
+            float centerPlusHalfY = center.y + half.y;
+            float centerPlusHalfZ = center.z + half.z;
+
             Vector3[] points =
             {
-                new Vector3(center.x - half.x, center.y - half.y, center.z - half.z), // Front Bottom Left (0)
-                new Vector3(center.x - half.x, center.y - half.y, center.z + half.z), // Back Bottom Left (1)
-                new Vector3(center.x - half.x, center.y + half.y, center.z + half.z), // Back Top Left (2)
-                new Vector3(center.x - half.x, center.y + half.y, center.z - half.z), // Front Top Left (3)
-                new Vector3(center.x + half.x, center.y - half.y, center.z - half.z), // Front Bottom Right (4)
-                new Vector3(center.x + half.x, center.y - half.y, center.z + half.z), // Back Bottom Right (5)
-                new Vector3(center.x + half.x, center.y + half.y, center.z + half.z), // Back Top Right (6)
-                new Vector3(center.x + half.x, center.y + half.y, center.z - half.z), // Front Top Right (7)
+                new Vector3(centerMinusHalfX, centerMinusHalfY, centerMinusHalfZ), // Front Bottom Left (0)
+                new Vector3(centerMinusHalfX, centerMinusHalfY, centerPlusHalfZ), // Back Bottom Left (1)
+                new Vector3(centerMinusHalfX, centerPlusHalfY, centerPlusHalfZ), // Back Top Left (2)
+                new Vector3(centerMinusHalfX, centerPlusHalfY, centerMinusHalfZ), // Front Top Left (3)
+                new Vector3(centerPlusHalfX, centerMinusHalfY, centerMinusHalfZ), // Front Bottom Right (4)
+                new Vector3(centerPlusHalfX, centerMinusHalfY, centerPlusHalfZ), // Back Bottom Right (5)
+                new Vector3(centerPlusHalfX, centerPlusHalfY, centerPlusHalfZ), // Back Top Right (6)
+                new Vector3(centerPlusHalfX, centerPlusHalfY, centerMinusHalfZ), // Front Top Right (7)
             };
 
-            return DrawLine(color, ref points, ref CubeSegmentIndices);
+            return DrawLines(color, ref points, ref CubeSegmentIndices);
         }
 
         /// <summary>
@@ -424,12 +501,12 @@ namespace GDX.Rendering
         }
 
         /// <summary>
-        ///     Invalidates a specific mesh and forces the buffer to be refilled.
+        ///     Invalidates a <see cref="DrawCommand"/> based on the provided token, forcing the buffer to be refilled.
         /// </summary>
-        /// <param name="meshID"></param>
-        public void InvalidateMesh(int meshID)
+        /// <param name="token">The token of the draw commands to invalidate.</param>
+        public void Invalidate(int token)
         {
-            if (m_DrawCommands.TryRemove(meshID))
+            if (m_DrawCommands.TryRemove(token))
             {
                 Finalized = false;
             }
