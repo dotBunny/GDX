@@ -6,7 +6,7 @@ Shader "GDX/UnlitColor"
     Properties
     {
         _Color ("Main Color", Color) = (1,1,1,1)
-        //[Enum(UnityEngine.Rendering.CompareFunction)] _HandleZTest ("_HandleZTest", Int) = 8
+        [Enum(UnityEngine.Rendering.CompareFunction)] _HandleZTest ("_HandleZTest", Int) = 8
     }
     SubShader
     {
@@ -16,6 +16,7 @@ Shader "GDX/UnlitColor"
         Cull Off
         ZWrite Off
         //ZTest [_HandleZTest]
+        ZTest [_HandleZTest]
         Pass
         {
             CGPROGRAM

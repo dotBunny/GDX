@@ -18,7 +18,7 @@ namespace GDX.Rendering
         /// </summary>
         /// <remarks>
         ///     When using a mesh is manually added via
-        ///     <see cref="DrawMesh(UnityEngine.Material,UnityEngine.Mesh,bool)"/> this value is ignored.
+        ///     <see cref="DrawMesh(UnityEngine.Material,UnityEngine.Mesh)"/> this value is ignored.
         /// </remarks>
         public const int DefaultMaximumVerticesPerMesh = 512;
 
@@ -50,6 +50,14 @@ namespace GDX.Rendering
         ///     <see cref="GetSolidLineMaterialByColor" />.
         /// </remarks>
         static Material s_LineMaterial;
+
+        /// <summary>
+        ///     The ordered segment index pairs used to describe a line.
+        /// </summary>
+        static int[] s_LineSegmentIndices =
+        {
+            0, 1
+        };
 
         /// <summary>
         /// The associated <see cref="int"/> key with the <see cref="DrawCommandBuffer"/>.
@@ -196,7 +204,7 @@ namespace GDX.Rendering
         /// </summary>
         ~DrawCommandBuffer()
         {
-            m_CommandBuffer.Dispose();
+            m_CommandBuffer?.Dispose();
         }
 
         /// <summary>
@@ -251,6 +259,24 @@ namespace GDX.Rendering
         }
 
         /// <summary>
+        ///     Draw a dotted line of a specific color as defined to the buffer.
+        /// </summary>
+        /// <remarks>
+        ///     If multiple lines are being drawn it is much more performant to use
+        ///     <see cref="DrawDottedLines(UnityEngine.Color,ref UnityEngine.Vector3[],ref int[])"/>.
+        /// </remarks>
+        /// <param name="color">The color which to draw the dotted line with.</param>
+        /// <param name="startPoint">The start of the line in world space.</param>
+        /// <param name="endPoint">The end of the line in world space.</param>
+        /// <returns>The dotted line's invalidation token.</returns>
+        public int DrawDottedLine(Color color, Vector3 startPoint, Vector3 endPoint)
+        {
+            Vector3[] points = new Vector3[] { startPoint, endPoint };
+            return DrawDottedLines(color, ref points, 0, 2,
+                ref s_LineSegmentIndices, 0, 2);
+        }
+
+        /// <summary>
         ///     Draw dotted lines of a specific color as defined to the buffer.
         /// </summary>
         /// <param name="color">The color which to draw the dotted lines with.</param>
@@ -281,6 +307,24 @@ namespace GDX.Rendering
         {
             return DrawLines(GetDottedLineMaterialByColor(color), ref vertices, verticesStartIndex, verticesLength,
                 ref segments, segmentsStartIndex, segmentsLength);
+        }
+
+        /// <summary>
+        ///     Draw a line of a specific color as defined to the buffer.
+        /// </summary>
+        /// <remarks>
+        ///     If multiple lines are being drawn it is much more performant to use
+        ///     <see cref="DrawLines(UnityEngine.Color,ref UnityEngine.Vector3[],ref int[])"/>.
+        /// </remarks>
+        /// <param name="color">The color which to draw the line with.</param>
+        /// <param name="startPoint">The start of the line in world space.</param>
+        /// <param name="endPoint">The end of the line in world space.</param>
+        /// <returns>The line's invalidation token.</returns>
+        public int DrawLine(Color color, Vector3 startPoint, Vector3 endPoint)
+        {
+            Vector3[] points = new Vector3[] { startPoint, endPoint };
+            return DrawLines(color, ref points, 0, 2,
+                ref s_LineSegmentIndices, 0, 2);
         }
 
         /// <summary>
@@ -333,7 +377,9 @@ namespace GDX.Rendering
         {
             if (Finalized)
             {
+#if UNITY_EDITOR
                 Debug.LogWarning("Finalized. You must invalidate the batch before adding anything.");
+#endif
                 return -1;
             }
 
@@ -468,6 +514,16 @@ namespace GDX.Rendering
             }
 
             Graphics.ExecuteCommandBuffer(m_CommandBuffer);
+        }
+
+        /// <summary>
+        /// Is the given <paramref name="token"/> present in the draw commands buffer.
+        /// </summary>
+        /// <param name="token">The token of the draw commands to check for.</param>
+        /// <returns>Returns <b>true</b> if the token is found in the existing draw commands.</returns>
+        public bool HasToken(int token)
+        {
+            return m_DrawCommands.ContainsKey(token);
         }
 
         /// <summary>
