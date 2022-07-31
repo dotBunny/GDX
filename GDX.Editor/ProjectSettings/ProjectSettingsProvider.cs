@@ -46,11 +46,6 @@ namespace GDX.Editor
         public static TransientConfig WorkingConfig;
 
         /// <summary>
-        ///     A cache of boolean values backed by <see cref="EditorPrefs" /> to assist with optimizing layout.
-        /// </summary>
-        static StringKeyDictionary<bool> s_CachedEditorPreferences = new StringKeyDictionary<bool>(30);
-
-        /// <summary>
         ///   A mapping of section's content <see cref="VisualElement"/> to <see cref="IConfigSection"/> by its index.
         /// </summary>
         static readonly VisualElement[] k_ConfigSectionContents = new VisualElement[k_SectionCount];
@@ -407,22 +402,6 @@ namespace GDX.Editor
             };
         }
 
-        /// <summary>
-        ///     Get a cached value or fill it from <see cref="EditorPrefs" />.
-        /// </summary>
-        /// <param name="id">Identifier for the <see cref="bool" /> value.</param>
-        /// <param name="defaultValue">If no value is found, what should be used.</param>
-        /// <returns></returns>
-        static bool GetCachedEditorBoolean(string id, bool defaultValue = true)
-        {
-            if (s_CachedEditorPreferences.IndexOf(id) == -1)
-            {
-                s_CachedEditorPreferences[id] = EditorPrefs.GetBool(id, defaultValue);
-            }
-
-            return s_CachedEditorPreferences[id];
-        }
-
         static void QueryElements(string searchContext)
         {
             s_SearchContentResults.Clear();
@@ -520,8 +499,8 @@ namespace GDX.Editor
             GUIUtility.hotControl = 0;
             IConfigSection section = k_ConfigSections[sectionIndex];
             string sectionKey = section.GetSectionKey();
-            bool setting = GetCachedEditorBoolean(sectionKey, section.GetDefaultVisibility());
-            SetCachedEditorBoolean(sectionKey, !setting);
+            bool setting = EditorPrefsCache.GetBoolean(sectionKey, section.GetDefaultVisibility());
+            EditorPrefsCache.SetBoolean(sectionKey, !setting);
         }
 
         static void OnToggleSectionHeaderClicked(VisualElement toggleElement, int sectionIndex, bool newValue)
@@ -612,31 +591,7 @@ namespace GDX.Editor
             k_SearchSectionElementMap[sectionIndex].AddWithExpandCheckUniqueItem(element);
         }
 
-        /// <summary>
-        ///     Sets the cached value (and <see cref="EditorPrefs" />) for the <paramref name="id" />.
-        /// </summary>
-        /// <param name="id">Identifier for the <see cref="bool" /> value.</param>
-        /// <param name="setValue">The desired value to set.</param>
-        static void SetCachedEditorBoolean(string id, bool setValue)
-        {
-            if (!s_CachedEditorPreferences.ContainsKey(id))
-            {
-                s_CachedEditorPreferences[id] = setValue;
-                EditorPrefs.SetBool(id, setValue);
-            }
-            else
-            {
-                if (s_CachedEditorPreferences[id] == setValue)
-                {
-                    return;
-                }
-
-                s_CachedEditorPreferences[id] = setValue;
-                EditorPrefs.SetBool(id, setValue);
-            }
-        }
-
-        public static void SetClassChangeCheck<T1, T2>(T1 element, T2 lhs, T2 rhs)
+         public static void SetClassChangeCheck<T1, T2>(T1 element, T2 lhs, T2 rhs)
             where T1 : BaseField<T2> where T2 : class
         {
             if (element == null) return;
@@ -795,7 +750,7 @@ namespace GDX.Editor
             if (!IsSearching())
             {
                 // Default visible/hidden behaviour
-                if (GetCachedEditorBoolean(sectionKey, section.GetDefaultVisibility()))
+                if (EditorPrefsCache.GetBoolean(sectionKey, section.GetDefaultVisibility()))
                 {
                     element.RemoveFromClassList(ResourcesProvider.HiddenClass);
                 }
@@ -840,7 +795,7 @@ namespace GDX.Editor
                 }
             }
 
-            if (GetCachedEditorBoolean(section.GetSectionKey(), section.GetDefaultVisibility()))
+            if (EditorPrefsCache.GetBoolean(section.GetSectionKey(), section.GetDefaultVisibility()))
             {
                 sectionHeaderElement.AddToClassList(ResourcesProvider.ExpandedClass);
             }

@@ -534,6 +534,7 @@ namespace GDX.Rendering
         {
             if (m_DrawCommands.TryRemove(token))
             {
+                m_CommandBuffer.Clear();
                 Finalized = false;
             }
         }
