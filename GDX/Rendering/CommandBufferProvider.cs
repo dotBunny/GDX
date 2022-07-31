@@ -19,6 +19,18 @@ namespace GDX.Rendering
         /// <summary>
         /// Get an instance of <see cref="DrawCommandBuffer"/> based on the provided <paramref name="key"/>.
         /// </summary>
+        /// <example>
+        ///     By checking the <see cref="DrawCommandBuffer.Finalized"/> property we can skip over the expensive building step.
+        ///     <code>
+        ///         DrawCommandBuffer buffer = CommandBufferProvider.GetDrawCommandBuffer(gameObjet.GetInstanceID());
+        ///         if (!buffer.Finalized)
+        ///         {
+        ///             /// Draw lots of stuff ...
+        ///             buffer.DrawWireCube(Color.white, worldPosition, size);
+        ///         }
+        ///         buffer.Execute();
+        ///     </code>
+        /// </example>
         /// <param name="key">
         ///     A value based key used to reference a <see cref="DrawCommandBuffer"/> in a
         ///     <see cref="IntKeyDictionary{TValue}"/>.
