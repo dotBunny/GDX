@@ -220,6 +220,13 @@ namespace GDX.Rendering
             for (int i = 0; i < materialCount; i++)
             {
                 int materialHashCode = m_Materials.Array[i].GetHashCode();
+
+                // We've finalized and have just invalidated, dont want to go through this
+                if (!m_WorkingPoints.ContainsKey(materialHashCode))
+                {
+                    continue;
+                }
+
                 SimpleList<Vector3> pointList = m_WorkingPoints[materialHashCode];
                 SimpleList<int> segmentList = m_WorkingSegments[materialHashCode];
                 int token = m_WorkingTokens[materialHashCode];
@@ -537,6 +544,16 @@ namespace GDX.Rendering
                 m_CommandBuffer.Clear();
                 Finalized = false;
             }
+        }
+
+        /// <summary>
+        ///     Invalidates the entire <see cref="DrawCommandBuffer"/>.
+        /// </summary>
+        public void InvalidateAll()
+        {
+            m_DrawCommands.Clear();
+            m_CommandBuffer.Clear();
+            Finalized = false;
         }
 
         /// <summary>
