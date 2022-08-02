@@ -524,6 +524,15 @@ namespace GDX.Rendering
         }
 
         /// <summary>
+        ///     Get the internal command buffer being used by this <see cref="DrawCommandBuffer"/>.
+        /// </summary>
+        /// <returns>A <see cref="CommandBuffer"/>.</returns>
+        public CommandBuffer GetBuffer()
+        {
+            return m_CommandBuffer;
+        }
+
+        /// <summary>
         /// Is the given <paramref name="token"/> present in the draw commands buffer.
         /// </summary>
         /// <param name="token">The token of the draw commands to check for.</param>
