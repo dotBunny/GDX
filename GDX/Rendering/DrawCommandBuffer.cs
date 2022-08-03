@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.Collections.Generic;
+using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -16,10 +17,6 @@ namespace GDX.Rendering
         /// <summary>
         ///     The default maximum number of vertices per mesh when dynamically creating meshes.
         /// </summary>
-        /// <remarks>
-        ///     When using a mesh is manually added via
-        ///     <see cref="DrawMesh(UnityEngine.Material,UnityEngine.Mesh)"/> this value is ignored.
-        /// </remarks>
         public const int DefaultMaximumVerticesPerMesh = 512;
 
         /// <summary>
@@ -232,8 +229,7 @@ namespace GDX.Rendering
                 int token = m_WorkingTokens[materialHashCode];
                 if (pointList.Count > 0)
                 {
-                    DrawMesh(GetMaterialByHashCode(materialHashCode), ref pointList.Array, ref segmentList.Array,
-                        MeshTopology.Lines, token);
+                    AddLineDrawCommand(GetMaterialByHashCode(materialHashCode), ref pointList.Array, ref segmentList.Array, token);
                 }
             }
 
@@ -413,7 +409,7 @@ namespace GDX.Rendering
             {
                 // Create mesh!
                 SimpleList<int> segmentList = m_WorkingSegments[materialHashCode];
-                DrawMesh(material, ref pointList.Array, ref segmentList.Array);
+                AddLineDrawCommand(material, ref pointList.Array, ref segmentList.Array);
 
                 // Reset storage
                 pointList.Clear();
@@ -449,48 +445,41 @@ namespace GDX.Rendering
             return token;
         }
 
-        /// <summary>
-        ///     Draw a given mesh to the buffer.
-        /// </summary>
-        /// <param name="material">The material to use when drawing the mesh.</param>
-        /// <param name="mesh">The mesh to draw to the buffer.</param>
-        /// <returns>The mesh's invalidation token.</returns>
-        public int DrawMesh(Material material, Mesh mesh)
+        public int DrawRenderer(MeshRenderer renderer, MeshFilter filter)
         {
-            int token = ReserveToken();
-            m_DrawCommands.AddWithExpandCheck(token,
-                new DrawCommand(mesh, GetMaterialIndex(material)));
-            return token;
+            Matrix4x4 matrix = renderer.localToWorldMatrix;
+            return DrawMesh(renderer.sharedMaterial, filter.sharedMesh, ref matrix);
         }
 
-        /// <summary>
-        ///     Draw a given mesh (as defined) to the buffer.
-        /// </summary>
-        /// <param name="material">The material to use when drawing the created mesh.</param>
-        /// <param name="vertices">The vertices of the created mesh.</param>
-        /// <param name="segments">The segment pairs based on <paramref name="vertices"/>.</param>
-        /// <param name="topology">The <see cref="MeshTopology"/> mode to use when drawing the created mesh.</param>
-        /// <param name="token">Force a specific token for the mesh. Don't use this.</param>
-        /// <returns>The created mesh's invalidation token.</returns>
-        public int DrawMesh(Material material, ref Vector3[] vertices, ref int[] segments,
-            MeshTopology topology = MeshTopology.Lines, int token = -1)
+        public int DrawMesh(Material material, Mesh mesh, ref Matrix4x4 localToWorldMatrix)
         {
-
-            Mesh batchMesh = new Mesh();
-            batchMesh.indexFormat = IndexFormat.UInt32;
-            batchMesh.SetVertices(vertices);
-            batchMesh.SetIndices(segments, topology, 0);
-#if UNITY_EDITOR
-            batchMesh.name = $"Mesh_{material.name}_{m_CurrentToken}";
-#endif
-            if (token == -1)
+            int vertCount = mesh.vertices.Length;
+            Vector3[] vertices = new Vector3[vertCount];
+            for (int i = 0; i < vertCount; i++)
             {
-                token = ReserveToken();
+                vertices[i] = localToWorldMatrix.MultiplyPoint3x4(mesh.vertices[i]);
             }
 
-            m_DrawCommands.AddWithExpandCheck(token,
-                new DrawCommand(batchMesh, GetMaterialIndex(material)));
-            return token;
+            int[] indices = mesh.GetIndices(0);
+
+            int normalsCount = mesh.normals.Length;
+            Vector3[] normals = new Vector3[normalsCount];
+            for (int i = 0; i < normalsCount; i++)
+            {
+                normals[i] = localToWorldMatrix.MultiplyPoint3x4(mesh.normals[i]);
+            }
+            //Vector3[] normals = mesh.normals;
+            int tangentsCount = mesh.tangents.Length;
+            Vector4[] tangents = new Vector4[tangentsCount];
+            for (int i = 0; i < tangentsCount; i++)
+            {
+                tangents[i] = localToWorldMatrix.MultiplyPoint3x4(mesh.tangents[i]);
+            }
+
+            Vector2[] uv0 = mesh.uv;
+
+
+            return AddMeshDrawCommand(material, ref vertices, ref indices, ref normals, ref tangents, ref uv0);
         }
 
         /// <summary>
@@ -621,6 +610,66 @@ namespace GDX.Rendering
 
             return points;
         }
+
+        /// <summary>
+        ///     Builds a line based mesh from the given <paramref name="vertices"/> and adds it to the draw buffer.
+        /// </summary>
+        /// <param name="material">The material to use when drawing the created mesh.</param>
+        /// <param name="vertices">The vertices of the created mesh.</param>
+        /// <param name="segments">The segment pairs based on <paramref name="vertices"/>.</param>
+        /// <param name="token">Force a specific token for the mesh. Don't use this.</param>
+        /// <returns>The created mesh's invalidation token.</returns>
+        int AddLineDrawCommand(Material material, ref Vector3[] vertices, ref int[] segments, int token = -1)
+        {
+            Mesh batchMesh = new Mesh();
+            batchMesh.indexFormat = IndexFormat.UInt32;
+            batchMesh.SetVertices(vertices);
+            batchMesh.SetIndices(segments, MeshTopology.Lines, 0);
+
+            if (token == -1)
+            {
+                token = ReserveToken();
+            }
+
+#if UNITY_EDITOR
+            batchMesh.name = $"P_Line_Mesh_{material.name}_{token}";
+#endif
+
+
+            m_DrawCommands.AddWithExpandCheck(token,
+                new DrawCommand(batchMesh, GetMaterialIndex(material)));
+            return token;
+        }
+
+        int AddMeshDrawCommand(Material material, ref Vector3[] vertices,
+            ref int[] segments, ref Vector3[] normals, ref Vector4[] tangents, ref Vector2[] uv0, int token = -1)
+        {
+            Mesh batchMesh = new Mesh();
+            batchMesh.indexFormat = IndexFormat.UInt32;
+            batchMesh.SetVertices(vertices);
+            batchMesh.SetIndices(segments, MeshTopology.Triangles, 0);
+            batchMesh.SetNormals(normals);
+            batchMesh.SetTangents(tangents);
+            batchMesh.SetUVs(0, uv0);
+            return AddMeshDrawCommand(material, batchMesh, token);
+        }
+
+        int AddMeshDrawCommand(Material material, Mesh mesh, int token = -1)
+        {
+            if (token == -1)
+            {
+                token = ReserveToken();
+            }
+
+#if UNITY_EDITOR
+            mesh.name = $"P_Mesh_{material.name}_{token}";
+#endif
+
+            m_DrawCommands.AddWithExpandCheck(token,
+                new DrawCommand(mesh, GetMaterialIndex(material)));
+            return token;
+        }
+
 
         /// <summary>
         ///     Gets the cached dotted line material, or creates one for the given <paramref name="color"/>.
