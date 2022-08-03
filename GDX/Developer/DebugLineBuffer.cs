@@ -3,19 +3,24 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.Collections.Generic;
-using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace GDX.Rendering
+namespace GDX.Developer
 {
+    // TODO: Add Lifetime? - puts them in volatile?
+
     /// <summary>
     /// An optimized method for drawing static procedural content.
     /// </summary>
-    public class DrawCommandBuffer
+    /// <remarks>
+    ///     This still suffers from multiple SetPass calls associated with the <see cref="CommandBuffer"/>.
+    ///     It should be possible in the future to using GraphicsBuffers/BatchRenderGroup once that API stabilizes.
+    /// </remarks>
+    public class DebugLineBuffer
     {
         /// <summary>
-        ///     The default maximum number of vertices per mesh when dynamically creating meshes.
+        ///     The default maximum number of vertices per meshReference when dynamically creating meshes.
         /// </summary>
         public const int DefaultMaximumVerticesPerMesh = 512;
 
@@ -57,32 +62,32 @@ namespace GDX.Rendering
         };
 
         /// <summary>
-        /// The associated <see cref="int"/> key with the <see cref="DrawCommandBuffer"/>.
+        /// The associated <see cref="int"/> key with the <see cref="DebugLineBuffer"/>.
         /// </summary>
         /// <remarks>
         ///     <para>
-        ///         This is useful for identifying the <see cref="DrawCommandBuffer" /> in different contexts; its
-        ///         specific use is meant for being able to recall a <see cref="DrawCommandBuffer" /> from the
-        ///         <see cref="CommandBufferProvider" />.
+        ///         This is useful for identifying the <see cref="DebugLineBuffer" /> in different contexts; its
+        ///         specific use is meant for being able to recall a <see cref="DebugLineBuffer" /> from the
+        ///         <see cref="DebugDraw" />.
         ///     </para>
         ///     <para>
         ///         A common pattern is to use the the <see cref="GameObject"/>'s InstanceID or an Entity Number to
         ///         create a unique indexer. Collisions can occur if you are not careful about how you index your
-        ///         <see cref="DrawCommandBuffer"/>.
+        ///         <see cref="DebugLineBuffer"/>.
         ///     </para>
         /// </remarks>
         public readonly int Key;
 
         /// <summary>
-        ///     The actual allocated <see cref="CommandBuffer"/> used by the <see cref="DrawCommandBuffer"/>.
+        ///     The actual allocated <see cref="CommandBuffer"/> used by the <see cref="DebugLineBuffer"/>.
         /// </summary>
         readonly CommandBuffer m_CommandBuffer;
 
         /// <summary>
-        ///     The established maximum number of vertices per mesh for this particular <see cref="DrawCommandBuffer"/>.
+        ///     The established maximum number of vertices per meshReference for this particular <see cref="DebugLineBuffer"/>.
         /// </summary>
         /// <remarks>
-        ///     Once this is set in the constructor it cannot be changed. Arbitrary mesh adds are not effected by this
+        ///     Once this is set in the constructor it cannot be changed. Arbitrary meshReference adds are not effected by this
         /// </remarks>
         readonly int m_MaximumVerticesPerMesh;
 
@@ -91,7 +96,7 @@ namespace GDX.Rendering
         /// </summary>
         /// <remarks>
         ///     This is used to provide a stable index in an extremely simple form. While it will eventually roll over,
-        ///     at that threshold you should be considering if multiple <see cref="DrawCommandBuffer"/> may be more
+        ///     at that threshold you should be considering if multiple <see cref="DebugLineBuffer"/> may be more
         ///     optimal.
         /// </remarks>
         int m_CurrentToken;
@@ -105,7 +110,7 @@ namespace GDX.Rendering
         ///     An indexed dictionary of all of the draw commands to use with the buffer.
         /// </summary>
         /// <remarks>
-        ///     This includes the mesh and an index of the material to use with that mesh when drawing. As items are
+        ///     This includes the meshReference and an index of the material to use with that meshReference when drawing. As items are
         ///     added, the <see cref="m_CurrentToken"/> is incremented to simulate a stable ID.
         /// </remarks>
         IntKeyDictionary<DrawCommand> m_DrawCommands;
@@ -116,7 +121,7 @@ namespace GDX.Rendering
         IntKeyDictionary<int> m_LineMaterials;
 
         /// <summary>
-        ///     An ever expanding list of materials used with the <see cref="DrawCommandBuffer"/>.
+        ///     An ever expanding list of materials used with the <see cref="DebugLineBuffer"/>.
         /// </summary>
         /// <remarks>
         ///     Both <see cref="m_DottedLineMaterials"/> and <see cref="m_LineMaterials"/> store indexes of
@@ -142,14 +147,14 @@ namespace GDX.Rendering
         IntKeyDictionary<int> m_WorkingTokens;
 
         /// <summary>
-        ///     Create a <see cref="DrawCommandBuffer"/>.
+        ///     Create a <see cref="DebugLineBuffer"/>.
         /// </summary>
         /// <param name="key">The internally cached key associated with this buffer.</param>
         /// <param name="initialMaterialCount">
         ///     An initial allocation of the expected number of materials that will be used.
         /// </param>
-        /// <param name="verticesPerMesh">The number of vertices to ingest before a mesh is split.</param>
-        public DrawCommandBuffer(int key, int initialMaterialCount = 5,
+        /// <param name="verticesPerMesh">The number of vertices to ingest before a meshReference is split.</param>
+        public DebugLineBuffer(int key, int initialMaterialCount = 5,
             int verticesPerMesh = DefaultMaximumVerticesPerMesh)
         {
             Key = key;
@@ -172,22 +177,22 @@ namespace GDX.Rendering
             // Make sure our statics have their desired default materials atm
             if (s_LineMaterial == null)
             {
-                s_LineMaterial = new Material(ShaderProvider.UnlitColor);
+                s_LineMaterial = new Material(Rendering.ShaderProvider.UnlitColor);
             }
 
             if (s_DottedLineMaterial == null)
             {
-                s_DottedLineMaterial = new Material(ShaderProvider.DottedLine);
+                s_DottedLineMaterial = new Material(Rendering.ShaderProvider.DottedLine);
             }
         }
 
         /// <summary>
-        ///     Has the <see cref="DrawCommandBuffer"/> been converged?
+        ///     Has the <see cref="DebugLineBuffer"/> been converged?
         /// </summary>
         /// <remarks>
-        ///     A finalized <see cref="DrawCommandBuffer"/> has had its command buffer filled with the fixed draw calls
-        ///     based on the meshes/materials outlined. If a mesh is invalidated by <see cref="Invalidate"/>, the
-        ///     <see cref="DrawCommandBuffer"/> will become not finalized and will re-converge itself next
+        ///     A finalized <see cref="DebugLineBuffer"/> has had its command buffer filled with the fixed draw calls
+        ///     based on the meshes/materials outlined. If a meshReference is invalidated by <see cref="Invalidate"/>, the
+        ///     <see cref="DebugLineBuffer"/> will become not finalized and will re-converge itself next
         ///     <see cref="Execute"/>.
         /// </remarks>
         public bool Finalized
@@ -199,13 +204,13 @@ namespace GDX.Rendering
         /// <summary>
         ///     Ensure that we dispose associated resources.
         /// </summary>
-        ~DrawCommandBuffer()
+        ~DebugLineBuffer()
         {
             m_CommandBuffer?.Dispose();
         }
 
         /// <summary>
-        ///     Converges all working vertices/material additions into finalized mesh forms and fills the command
+        ///     Converges all working vertices/material additions into finalized meshReference forms and fills the command
         ///     buffer with the appropriate data.
         /// </summary>
         public void Converge()
@@ -242,8 +247,8 @@ namespace GDX.Rendering
             while (m_DrawCommands.MoveNext(ref currentIndex))
             {
                 IntKeyEntry<DrawCommand> currentEntry = m_DrawCommands.Entries[currentIndex - 1];
-                m_CommandBuffer.DrawMesh(currentEntry.Value.ImmutableMesh, Matrix4x4.identity,
-                    m_Materials.Array[currentEntry.Value.MaterialIndex]);
+                m_CommandBuffer.DrawMesh(currentEntry.Value.MeshReference, Matrix4x4.identity,
+                    currentEntry.Value.MaterialReference);
             }
             Finalized = true;
         }
@@ -404,10 +409,10 @@ namespace GDX.Rendering
             SimpleList<Vector3> pointList = m_WorkingPoints[materialHashCode];
             int token = m_WorkingTokens[materialHashCode];
 
-            // Check for mesh conversion
+            // Check for meshReference conversion
             if (pointList.Array.Length + verticesLength >= m_MaximumVerticesPerMesh)
             {
-                // Create mesh!
+                // Create meshReference!
                 SimpleList<int> segmentList = m_WorkingSegments[materialHashCode];
                 AddLineDrawCommand(material, ref pointList.Array, ref segmentList.Array);
 
@@ -468,7 +473,7 @@ namespace GDX.Rendering
             {
                 normals[i] = localToWorldMatrix.MultiplyPoint3x4(mesh.normals[i]);
             }
-            //Vector3[] normals = mesh.normals;
+            //Vector3[] normals = meshReference.normals;
             int tangentsCount = mesh.tangents.Length;
             Vector4[] tangents = new Vector4[tangentsCount];
             for (int i = 0; i < tangentsCount; i++)
@@ -496,7 +501,7 @@ namespace GDX.Rendering
         }
 
         /// <summary>
-        ///     Execute the <see cref="DrawCommandBuffer"/>, rendering its outputs to the screen.
+        ///     Execute the <see cref="DebugLineBuffer"/>, rendering its outputs to the screen.
         /// </summary>
         /// <remarks>
         ///     This will finalize the command buffer, converging all data into meshes, etc. In order to change the
@@ -513,7 +518,7 @@ namespace GDX.Rendering
         }
 
         /// <summary>
-        ///     Get the internal command buffer being used by this <see cref="DrawCommandBuffer"/>.
+        ///     Get the internal command buffer being used by this <see cref="DebugLineBuffer"/>.
         /// </summary>
         /// <returns>A <see cref="CommandBuffer"/>.</returns>
         public CommandBuffer GetBuffer()
@@ -545,7 +550,7 @@ namespace GDX.Rendering
         }
 
         /// <summary>
-        ///     Invalidates the entire <see cref="DrawCommandBuffer"/>.
+        ///     Invalidates the entire <see cref="DebugLineBuffer"/>.
         /// </summary>
         public void InvalidateAll()
         {
@@ -555,7 +560,7 @@ namespace GDX.Rendering
         }
 
         /// <summary>
-        ///     Resets the <see cref="DrawCommandBuffer"/>, as if it were newly created. However all fields are already
+        ///     Resets the <see cref="DebugLineBuffer"/>, as if it were newly created. However all fields are already
         ///     allocating their previous sizes.
         /// </summary>
         public void Reset()
@@ -612,17 +617,16 @@ namespace GDX.Rendering
         }
 
         /// <summary>
-        ///     Builds a line based mesh from the given <paramref name="vertices"/> and adds it to the draw buffer.
+        ///     Builds a line based meshReference from the given <paramref name="vertices"/> and adds it to the draw buffer.
         /// </summary>
-        /// <param name="material">The material to use when drawing the created mesh.</param>
-        /// <param name="vertices">The vertices of the created mesh.</param>
+        /// <param name="material">The material to use when drawing the created meshReference.</param>
+        /// <param name="vertices">The vertices of the created meshReference.</param>
         /// <param name="segments">The segment pairs based on <paramref name="vertices"/>.</param>
-        /// <param name="token">Force a specific token for the mesh. Don't use this.</param>
-        /// <returns>The created mesh's invalidation token.</returns>
+        /// <param name="token">Force a specific token for the meshReference. Don't use this.</param>
+        /// <returns>The created meshReference's invalidation token.</returns>
         int AddLineDrawCommand(Material material, ref Vector3[] vertices, ref int[] segments, int token = -1)
         {
-            Mesh batchMesh = new Mesh();
-            batchMesh.indexFormat = IndexFormat.UInt32;
+            Mesh batchMesh = new Mesh { indexFormat = IndexFormat.UInt32 };
             batchMesh.SetVertices(vertices);
             batchMesh.SetIndices(segments, MeshTopology.Lines, 0);
 
@@ -634,18 +638,14 @@ namespace GDX.Rendering
 #if UNITY_EDITOR
             batchMesh.name = $"P_Line_Mesh_{material.name}_{token}";
 #endif
-
-
-            m_DrawCommands.AddWithExpandCheck(token,
-                new DrawCommand(batchMesh, GetMaterialIndex(material)));
+            m_DrawCommands.AddWithExpandCheck(token, new DrawCommand(batchMesh, material));
             return token;
         }
 
         int AddMeshDrawCommand(Material material, ref Vector3[] vertices,
             ref int[] segments, ref Vector3[] normals, ref Vector4[] tangents, ref Vector2[] uv0, int token = -1)
         {
-            Mesh batchMesh = new Mesh();
-            batchMesh.indexFormat = IndexFormat.UInt32;
+            Mesh batchMesh = new Mesh { indexFormat = IndexFormat.UInt32 };
             batchMesh.SetVertices(vertices);
             batchMesh.SetIndices(segments, MeshTopology.Triangles, 0);
             batchMesh.SetNormals(normals);
@@ -666,7 +666,7 @@ namespace GDX.Rendering
 #endif
 
             m_DrawCommands.AddWithExpandCheck(token,
-                new DrawCommand(mesh, GetMaterialIndex(material)));
+                new DrawCommand(mesh, material));
             return token;
         }
 
@@ -685,7 +685,7 @@ namespace GDX.Rendering
             }
 
             Material newMaterial = new Material(s_DottedLineMaterial);
-            newMaterial.SetColor(ShaderProvider.ColorPropertyID, color);
+            newMaterial.SetColor(Rendering.ShaderProvider.ColorPropertyID, color);
 
             m_Materials.AddWithExpandCheck(newMaterial);
             m_DottedLineMaterials.AddWithExpandCheck(requestedHashCode, m_Materials.Count - 1);
@@ -710,25 +710,8 @@ namespace GDX.Rendering
                 "A set of lines have been added to the MergedDraw where the Material hash code that was provided has not previously been used/registered. Using the default line material instead.");
 #endif
             // Ensure default material
-            GetMaterialIndex(s_LineMaterial);
+            m_Materials.AddWithExpandCheck(s_LineMaterial);
             return s_LineMaterial;
-        }
-
-        /// <summary>
-        ///     Gets the index of a material in the internal cache, or adds it and returns the new index.
-        /// </summary>
-        /// <param name="material">The material index to find.</param>
-        /// <returns>The index of the given material in the internal cache.</returns>
-        int GetMaterialIndex(Material material)
-        {
-            int count = m_Materials.Count;
-            for (int i = 0; i < count; i++)
-            {
-                if (m_Materials.Array[i] == material) return i;
-            }
-
-            m_Materials.AddWithExpandCheck(material);
-            return m_Materials.Count - 1;
         }
 
         /// <summary>
@@ -745,7 +728,7 @@ namespace GDX.Rendering
             }
 
             Material newMaterial = new Material(s_LineMaterial);
-            newMaterial.SetColor(ShaderProvider.ColorPropertyID, color);
+            newMaterial.SetColor(Rendering.ShaderProvider.ColorPropertyID, color);
 
             m_Materials.AddWithExpandCheck(newMaterial);
             m_LineMaterials.AddWithExpandCheck(requestedHashCode, m_Materials.Count - 1);
@@ -760,17 +743,17 @@ namespace GDX.Rendering
         }
 
         /// <summary>
-        ///     A structure describing a finalized mesh/material and its draw operation.
+        ///     A structure describing a finalized meshReference/material and its draw operation.
         /// </summary>
         struct DrawCommand
         {
-            public readonly int MaterialIndex;
-            public readonly Mesh ImmutableMesh;
+            public readonly Material MaterialReference;
+            public readonly Mesh MeshReference;
 
-            public DrawCommand(Mesh mesh, int materialIndex)
+            public DrawCommand(Mesh meshReference, Material materialReference)
             {
-                MaterialIndex = materialIndex;
-                ImmutableMesh = mesh;
+                MaterialReference = materialReference;
+                MeshReference = meshReference;
             }
         }
     }

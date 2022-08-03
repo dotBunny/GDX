@@ -7,16 +7,16 @@ using NUnit.Framework;
 namespace GDX.Rendering
 {
     /// <summary>
-    ///     A collection of unit tests to validate functionality of the <see cref="CommandBufferProvider" />
+    ///     A collection of unit tests to validate functionality of the <see cref="DebugDraw" />
     ///     class.
     /// </summary>
-    public class CommandBufferProviderTests
+    public class DebugDrawTests
     {
         [Test]
         [Category(Core.TestCategory)]
         public void GetDrawCommandBuffer_New_ReturnsInstance()
         {
-            DrawCommandBuffer buffer = CommandBufferProvider.GetDrawCommandBuffer(0);
+            DebugLineBuffer buffer = DebugDraw.GetLineBuffer(0);
             Assert.IsNotNull(buffer);
         }
 
@@ -24,8 +24,8 @@ namespace GDX.Rendering
         [Category(Core.TestCategory)]
         public void GetDrawCommandBuffer_ByID_ReturnsInstance()
         {
-            DrawCommandBuffer bufferA = CommandBufferProvider.GetDrawCommandBuffer(0);
-            DrawCommandBuffer bufferB = CommandBufferProvider.GetDrawCommandBuffer(0);
+            DebugLineBuffer bufferA = DebugDraw.GetLineBuffer(0);
+            DebugLineBuffer bufferB = DebugDraw.GetLineBuffer(0);
 
             Assert.IsTrue(bufferA.Key == bufferB.Key);
             Assert.IsTrue(bufferA == bufferB);
@@ -35,18 +35,18 @@ namespace GDX.Rendering
         [Category(Core.TestCategory)]
         public void HasDrawCommandBuffer_ByID_Valid()
         {
-            CommandBufferProvider.GetDrawCommandBuffer(0);
-            Assert.IsTrue(CommandBufferProvider.HasDrawCommandBuffer(0));
-            CommandBufferProvider.RemoveDrawCommandBuffer(0);
+            DebugDraw.GetLineBuffer(0);
+            Assert.IsTrue(DebugDraw.HasLineBuffer(0));
+            DebugDraw.RemoveLineBuffer(0);
         }
 
         [Test]
         [Category(Core.TestCategory)]
         public void RemoveDrawCommandBuffer_ByID_RemovesInstance()
         {
-            CommandBufferProvider.GetDrawCommandBuffer(0);
-            CommandBufferProvider.RemoveDrawCommandBuffer(0);
-            Assert.IsFalse(CommandBufferProvider.HasDrawCommandBuffer(0));
+            DebugDraw.GetLineBuffer(0);
+            DebugDraw.RemoveLineBuffer(0);
+            Assert.IsFalse(DebugDraw.HasLineBuffer(0));
         }
     }
 }

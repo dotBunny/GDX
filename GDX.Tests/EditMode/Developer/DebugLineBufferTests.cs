@@ -7,10 +7,10 @@ using NUnit.Framework;
 namespace GDX.Rendering
 {
     /// <summary>
-    ///     A collection of unit tests to validate functionality of the <see cref="DrawCommandBuffer" />
+    ///     A collection of unit tests to validate functionality of the <see cref="DebugLineBuffer" />
     ///     class.
     /// </summary>
-    public class DrawCommandBufferTests
+    public class DebugLineBufferTests
     {
     }
 }
