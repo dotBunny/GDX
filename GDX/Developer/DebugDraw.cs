@@ -12,17 +12,17 @@ namespace GDX.Developer
     public static class DebugDraw
     {
         /// <summary>
-        ///     A dictionary of known <see cref="DebugLineBuffer"/> and their ID.
+        ///     A dictionary of known <see cref="DebugDrawBuffer"/> and their ID.
         /// </summary>
-        static IntKeyDictionary<DebugLineBuffer> s_LineBuffers = new IntKeyDictionary<DebugLineBuffer>(10);
+        static IntKeyDictionary<DebugDrawBuffer> s_Buffers = new IntKeyDictionary<DebugDrawBuffer>(10);
 
         /// <summary>
-        /// Get an instance of <see cref="DebugLineBuffer"/> based on the provided <paramref name="key"/>.
+        /// Get an instance of <see cref="DebugDrawBuffer"/> based on the provided <paramref name="key"/>.
         /// </summary>
         /// <example>
-        ///     By checking the <see cref="DebugLineBuffer.Finalized"/> property we can skip over the expensive building step.
+        ///     By checking the <see cref="DebugDrawBuffer.Finalized"/> property we can skip over the expensive building step.
         ///     <code>
-        ///         DebugLineBuffer buffer = DebugDraw.GetLineBuffer(gameObjet.GetInstanceID());
+        ///         DebugDrawBuffer buffer = DebugDraw.GetBuffer(gameObjet.GetInstanceID());
         ///         if (!buffer.Finalized)
         ///         {
         ///             /// Draw lots of stuff ...
@@ -32,49 +32,49 @@ namespace GDX.Developer
         ///     </code>
         /// </example>
         /// <param name="key">
-        ///     A value based key used to reference a <see cref="DebugLineBuffer"/> in a
+        ///     A value based key used to reference a <see cref="DebugDrawBuffer"/> in a
         ///     <see cref="IntKeyDictionary{TValue}"/>.
         /// </param>
         /// <param name="initialColorCount">Initial number of internal materials to allocate (x2).</param>
         /// <param name="verticesPerMesh">The number of vertices to split batched meshes on.</param>
         /// <returns>
-        ///     A newly created <see cref="DebugLineBuffer"/> if the provided key is not found, or the previously
-        ///     created <see cref="DebugLineBuffer"/> identified by the <paramref name="key"/>.
+        ///     A newly created <see cref="DebugDrawBuffer"/> if the provided key is not found, or the previously
+        ///     created <see cref="DebugDrawBuffer"/> identified by the <paramref name="key"/>.
         /// </returns>
-        public static DebugLineBuffer GetLineBuffer(int key, int initialColorCount = 5,
-            int verticesPerMesh = DebugLineBuffer.DefaultMaximumVerticesPerMesh)
+        public static DebugDrawBuffer GetBuffer(int key, int initialColorCount = 5,
+            int verticesPerMesh = DebugDrawBuffer.DefaultMaximumVerticesPerMesh)
         {
-            if (s_LineBuffers.ContainsKey(key))
+            if (s_Buffers.ContainsKey(key))
             {
-                return s_LineBuffers[key];
+                return s_Buffers[key];
             }
 
-            DebugLineBuffer newBuffer = new DebugLineBuffer(key, initialColorCount, verticesPerMesh);
-            s_LineBuffers.AddWithExpandCheck(key, newBuffer);
+            DebugDrawBuffer newBuffer = new DebugDrawBuffer(key, initialColorCount, verticesPerMesh);
+            s_Buffers.AddWithExpandCheck(key, newBuffer);
             return newBuffer;
         }
 
         /// <summary>
-        ///     Returns if the provided key has a <see cref="DebugLineBuffer"/> referenced.
+        ///     Returns if the provided key has a <see cref="DebugDrawBuffer"/> referenced.
         /// </summary>
         /// <param name="key">
-        ///     The key used to reference the <see cref="DebugLineBuffer"/>.
+        ///     The key used to reference the <see cref="DebugDrawBuffer"/>.
         /// </param>
-        /// <returns>true/false if the key has a <see cref="DebugLineBuffer"/> associated with it.</returns>
-        public static bool HasLineBuffer(int key)
+        /// <returns>true/false if the key has a <see cref="DebugDrawBuffer"/> associated with it.</returns>
+        public static bool HasBuffer(int key)
         {
-            return s_LineBuffers.ContainsKey(key);
+            return s_Buffers.ContainsKey(key);
         }
 
         /// <summary>
-        ///     Dereference the indicated <see cref="DebugLineBuffer"/> from the provider.
+        ///     Dereference the indicated <see cref="DebugDrawBuffer"/> from the provider.
         /// </summary>
         /// <param name="key">
-        ///     The key used to reference the <see cref="DebugLineBuffer"/>.
+        ///     The key used to reference the <see cref="DebugDrawBuffer"/>.
         /// </param>
-        public static void RemoveLineBuffer(int key)
+        public static void RemoveBuffer(int key)
         {
-            s_LineBuffers.TryRemove(key);
+            s_Buffers.TryRemove(key);
         }
     }
 }

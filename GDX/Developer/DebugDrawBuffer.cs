@@ -18,7 +18,7 @@ namespace GDX.Developer
     ///     This still suffers from multiple SetPass calls associated with the <see cref="CommandBuffer"/>.
     ///     It should be possible in the future to using GraphicsBuffers/BatchRenderGroup once that API stabilizes.
     /// </remarks>
-    public class DebugLineBuffer
+    public class DebugDrawBuffer
     {
         /// <summary>
         ///     The default maximum number of vertices per meshReference when dynamically creating meshes.
@@ -63,29 +63,29 @@ namespace GDX.Developer
         };
 
         /// <summary>
-        /// The associated <see cref="int"/> key with the <see cref="DebugLineBuffer"/>.
+        /// The associated <see cref="int"/> key with the <see cref="DebugDrawBuffer"/>.
         /// </summary>
         /// <remarks>
         ///     <para>
-        ///         This is useful for identifying the <see cref="DebugLineBuffer" /> in different contexts; its
-        ///         specific use is meant for being able to recall a <see cref="DebugLineBuffer" /> from the
+        ///         This is useful for identifying the <see cref="DebugDrawBuffer" /> in different contexts; its
+        ///         specific use is meant for being able to recall a <see cref="DebugDrawBuffer" /> from the
         ///         <see cref="DebugDraw" />.
         ///     </para>
         ///     <para>
         ///         A common pattern is to use the the <see cref="GameObject"/>'s InstanceID or an Entity Number to
         ///         create a unique indexer. Collisions can occur if you are not careful about how you index your
-        ///         <see cref="DebugLineBuffer"/>.
+        ///         <see cref="DebugDrawBuffer"/>.
         ///     </para>
         /// </remarks>
         public readonly int Key;
 
         /// <summary>
-        ///     The actual allocated <see cref="CommandBuffer"/> used by the <see cref="DebugLineBuffer"/>.
+        ///     The actual allocated <see cref="CommandBuffer"/> used by the <see cref="DebugDrawBuffer"/>.
         /// </summary>
         readonly CommandBuffer m_CommandBuffer;
 
         /// <summary>
-        ///     The established maximum number of vertices per meshReference for this particular <see cref="DebugLineBuffer"/>.
+        ///     The established maximum number of vertices per meshReference for this particular <see cref="DebugDrawBuffer"/>.
         /// </summary>
         /// <remarks>
         ///     Once this is set in the constructor it cannot be changed. Arbitrary meshReference adds are not effected by this
@@ -97,7 +97,7 @@ namespace GDX.Developer
         /// </summary>
         /// <remarks>
         ///     This is used to provide a stable index in an extremely simple form. While it will eventually roll over,
-        ///     at that threshold you should be considering if multiple <see cref="DebugLineBuffer"/> may be more
+        ///     at that threshold you should be considering if multiple <see cref="DebugDrawBuffer"/> may be more
         ///     optimal.
         /// </remarks>
         int m_CurrentToken;
@@ -122,7 +122,7 @@ namespace GDX.Developer
         IntKeyDictionary<int> m_LineMaterials;
 
         /// <summary>
-        ///     An ever expanding list of materials used with the <see cref="DebugLineBuffer"/>.
+        ///     An ever expanding list of materials used with the <see cref="DebugDrawBuffer"/>.
         /// </summary>
         /// <remarks>
         ///     Both <see cref="m_DottedLineMaterials"/> and <see cref="m_LineMaterials"/> store indexes of
@@ -148,14 +148,14 @@ namespace GDX.Developer
         IntKeyDictionary<int> m_WorkingTokens;
 
         /// <summary>
-        ///     Create a <see cref="DebugLineBuffer"/>.
+        ///     Create a <see cref="DebugDrawBuffer"/>.
         /// </summary>
         /// <param name="key">The internally cached key associated with this buffer.</param>
         /// <param name="initialMaterialCount">
         ///     An initial allocation of the expected number of materials that will be used.
         /// </param>
         /// <param name="verticesPerMesh">The number of vertices to ingest before a meshReference is split.</param>
-        public DebugLineBuffer(int key, int initialMaterialCount = 5,
+        public DebugDrawBuffer(int key, int initialMaterialCount = 5,
             int verticesPerMesh = DefaultMaximumVerticesPerMesh)
         {
             Key = key;
@@ -188,12 +188,12 @@ namespace GDX.Developer
         }
 
         /// <summary>
-        ///     Has the <see cref="DebugLineBuffer"/> been converged?
+        ///     Has the <see cref="DebugDrawBuffer"/> been converged?
         /// </summary>
         /// <remarks>
-        ///     A finalized <see cref="DebugLineBuffer"/> has had its command buffer filled with the fixed draw calls
+        ///     A finalized <see cref="DebugDrawBuffer"/> has had its command buffer filled with the fixed draw calls
         ///     based on the meshes/materials outlined. If a meshReference is invalidated by <see cref="Invalidate"/>, the
-        ///     <see cref="DebugLineBuffer"/> will become not finalized and will re-converge itself next
+        ///     <see cref="DebugDrawBuffer"/> will become not finalized and will re-converge itself next
         ///     <see cref="Execute"/>.
         /// </remarks>
         public bool Finalized
@@ -205,7 +205,7 @@ namespace GDX.Developer
         /// <summary>
         ///     Ensure that we dispose associated resources.
         /// </summary>
-        ~DebugLineBuffer()
+        ~DebugDrawBuffer()
         {
             m_CommandBuffer?.Dispose();
         }
@@ -374,7 +374,7 @@ namespace GDX.Developer
         /// <summary>
         ///     Draw lines with a specific material to the buffer.
         /// </summary>
-        /// <param name="material">An <b>unlit</b> material which to draw the lines with. </param>
+        /// <param name="material">A <em>potentially</em> unlit material to draw the lines with. This will only be drawin</param>
         /// <param name="vertices">The vertices of the lines.</param>
         /// <param name="verticesStartIndex">The index to start at in the <paramref name="vertices"/> array.</param>
         /// <param name="verticesLength">The number of elements in the <paramref name="vertices"/> array to use.</param>
@@ -487,7 +487,7 @@ namespace GDX.Developer
         }
 
         /// <summary>
-        ///     Execute the <see cref="DebugLineBuffer"/>, rendering its outputs to the screen.
+        ///     Execute the <see cref="DebugDrawBuffer"/>, rendering its outputs to the screen.
         /// </summary>
         /// <remarks>
         ///     This will finalize the command buffer, converging all data into meshes, etc. In order to change the
@@ -504,7 +504,7 @@ namespace GDX.Developer
         }
 
         /// <summary>
-        ///     Get the internal command buffer being used by this <see cref="DebugLineBuffer"/>.
+        ///     Get the internal command buffer being used by this <see cref="DebugDrawBuffer"/>.
         /// </summary>
         /// <returns>A <see cref="CommandBuffer"/>.</returns>
         public CommandBuffer GetBuffer()
@@ -535,7 +535,7 @@ namespace GDX.Developer
         }
 
         /// <summary>
-        ///     Invalidates the entire <see cref="DebugLineBuffer"/>.
+        ///     Invalidates the entire <see cref="DebugDrawBuffer"/>.
         /// </summary>
         public void InvalidateAll()
         {
@@ -592,7 +592,7 @@ namespace GDX.Developer
         }
 
         /// <summary>
-        ///     Resets the <see cref="DebugLineBuffer"/>, as if it were newly created. However all fields are already
+        ///     Resets the <see cref="DebugDrawBuffer"/>, as if it were newly created. However all fields are already
         ///     allocating their previous sizes.
         /// </summary>
         public void Reset()
