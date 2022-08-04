@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -241,14 +242,16 @@ namespace GDX.Developer
             // Clear our working memory
             m_WorkingPoints.Clear();
             m_WorkingSegments.Clear();
+            m_CommandBuffer.Clear();
 
             // Record our command buffer
             int currentIndex = 0;
             while (m_DrawCommands.MoveNext(ref currentIndex))
             {
-                IntKeyEntry<DrawCommand> currentEntry = m_DrawCommands.Entries[currentIndex - 1];
-                m_CommandBuffer.DrawMesh(currentEntry.Value.MeshReference, Matrix4x4.identity,
-                    currentEntry.Value.MaterialReference);
+                DrawCommand command = m_DrawCommands.Entries[currentIndex - 1].Value;
+
+                m_CommandBuffer.DrawMesh(command.MeshReference, command.Matrix,
+                    command.MaterialReference,0, 0);
             }
             Finalized = true;
         }
@@ -371,7 +374,7 @@ namespace GDX.Developer
         /// <summary>
         ///     Draw lines with a specific material to the buffer.
         /// </summary>
-        /// <param name="material">The material which to draw the lines with.</param>
+        /// <param name="material">An <b>unlit</b> material which to draw the lines with. </param>
         /// <param name="vertices">The vertices of the lines.</param>
         /// <param name="verticesStartIndex">The index to start at in the <paramref name="vertices"/> array.</param>
         /// <param name="verticesLength">The number of elements in the <paramref name="vertices"/> array to use.</param>
@@ -414,11 +417,15 @@ namespace GDX.Developer
             {
                 // Create meshReference!
                 SimpleList<int> segmentList = m_WorkingSegments[materialHashCode];
-                AddLineDrawCommand(material, ref pointList.Array, ref segmentList.Array);
+                AddLineDrawCommand(material, ref pointList.Array, ref segmentList.Array, token);
 
                 // Reset storage
                 pointList.Clear();
-                m_WorkingSegments[materialHashCode] = new SimpleList<int>(pointList.Array.Length);
+                m_WorkingSegments[materialHashCode] = new SimpleList<int>(segmentList.Array.Length);
+
+                // increment token
+                token = ReserveToken();
+                m_WorkingTokens[materialHashCode] = token;
             }
 
             int verticesBaseIndex = pointList.Count;
@@ -452,39 +459,18 @@ namespace GDX.Developer
 
         public int DrawRenderer(MeshRenderer renderer, MeshFilter filter)
         {
+
             Matrix4x4 matrix = renderer.localToWorldMatrix;
             return DrawMesh(renderer.sharedMaterial, filter.sharedMesh, ref matrix);
         }
 
-        public int DrawMesh(Material material, Mesh mesh, ref Matrix4x4 localToWorldMatrix)
+        public int DrawMesh(Material material, Mesh mesh, ref Matrix4x4 matrix)
         {
-            int vertCount = mesh.vertices.Length;
-            Vector3[] vertices = new Vector3[vertCount];
-            for (int i = 0; i < vertCount; i++)
-            {
-                vertices[i] = localToWorldMatrix.MultiplyPoint3x4(mesh.vertices[i]);
-            }
-
-            int[] indices = mesh.GetIndices(0);
-
-            int normalsCount = mesh.normals.Length;
-            Vector3[] normals = new Vector3[normalsCount];
-            for (int i = 0; i < normalsCount; i++)
-            {
-                normals[i] = localToWorldMatrix.MultiplyPoint3x4(mesh.normals[i]);
-            }
-            //Vector3[] normals = meshReference.normals;
-            int tangentsCount = mesh.tangents.Length;
-            Vector4[] tangents = new Vector4[tangentsCount];
-            for (int i = 0; i < tangentsCount; i++)
-            {
-                tangents[i] = localToWorldMatrix.MultiplyPoint3x4(mesh.tangents[i]);
-            }
-
+            Vector3[] vertices = mesh.vertices;
+            int[] triangles = mesh.GetTriangles(0);
             Vector2[] uv0 = mesh.uv;
 
-
-            return AddMeshDrawCommand(material, ref vertices, ref indices, ref normals, ref tangents, ref uv0);
+            return AddMeshDrawCommand(material, ref vertices, ref triangles, ref uv0, ref matrix);
         }
 
         /// <summary>
@@ -544,7 +530,6 @@ namespace GDX.Developer
         {
             if (m_DrawCommands.TryRemove(token))
             {
-                m_CommandBuffer.Clear();
                 Finalized = false;
             }
         }
@@ -555,8 +540,55 @@ namespace GDX.Developer
         public void InvalidateAll()
         {
             m_DrawCommands.Clear();
-            m_CommandBuffer.Clear();
             Finalized = false;
+        }
+
+        /// <summary>
+        ///     Move to the next batch for a given dotted line color.
+        /// </summary>
+        /// <param name="color">The color which the dotted line is drawn as.</param>
+        public void NextDottedLineBatch(Color color)
+        {
+            NextLineBatch(GetDottedLineMaterialByColor(color));
+        }
+
+        /// <summary>
+        ///     Move to the next batch for a given line color.
+        /// </summary>
+        /// <param name="color">The color which the line is drawn as.</param>
+        public void NextLineBatch(Color color)
+        {
+            NextLineBatch((GetSolidLineMaterialByColor(color)));
+        }
+
+        /// <summary>
+        ///     Move to the next batch for a given material.
+        /// </summary>
+        /// <param name="material">The material used by a batch.</param>
+        public void NextLineBatch(Material material)
+        {
+            int materialHashCode = material.GetHashCode();
+
+            if (!m_WorkingPoints.ContainsKey(materialHashCode))
+            {
+                return;
+            }
+
+            // Get data storage
+            SimpleList<Vector3> pointList = m_WorkingPoints[materialHashCode];
+            int token = m_WorkingTokens[materialHashCode];
+
+            if(pointList.Array.Length > 0)
+            {
+                // Create meshReference!
+                SimpleList<int> segmentList = m_WorkingSegments[materialHashCode];
+                AddLineDrawCommand(material, ref pointList.Array, ref segmentList.Array, token);
+
+                // Reset storage
+                m_WorkingSegments[materialHashCode] = new SimpleList<int>(segmentList.Array.Length);
+                m_WorkingPoints[materialHashCode] = new SimpleList<Vector3>(pointList.Array.Length);
+                m_WorkingTokens[materialHashCode] = ReserveToken();
+            }
         }
 
         /// <summary>
@@ -642,19 +674,20 @@ namespace GDX.Developer
             return token;
         }
 
-        int AddMeshDrawCommand(Material material, ref Vector3[] vertices,
-            ref int[] segments, ref Vector3[] normals, ref Vector4[] tangents, ref Vector2[] uv0, int token = -1)
+        int AddMeshDrawCommand(Material material, ref Vector3[] vertices, ref int[] triangles, ref Vector2[] uv0, ref Matrix4x4 matrix, int token = -1)
         {
             Mesh batchMesh = new Mesh { indexFormat = IndexFormat.UInt32 };
+
             batchMesh.SetVertices(vertices);
-            batchMesh.SetIndices(segments, MeshTopology.Triangles, 0);
-            batchMesh.SetNormals(normals);
-            batchMesh.SetTangents(tangents);
+            batchMesh.SetTriangles(triangles, 0);
             batchMesh.SetUVs(0, uv0);
-            return AddMeshDrawCommand(material, batchMesh, token);
+            batchMesh.RecalculateNormals();
+            batchMesh.RecalculateTangents();
+
+            return AddMeshDrawCommand(material, batchMesh, ref matrix, token);
         }
 
-        int AddMeshDrawCommand(Material material, Mesh mesh, int token = -1)
+        int AddMeshDrawCommand(Material material, Mesh mesh, ref Matrix4x4 matrix, int token = -1)
         {
             if (token == -1)
             {
@@ -665,8 +698,7 @@ namespace GDX.Developer
             mesh.name = $"P_Mesh_{material.name}_{token}";
 #endif
 
-            m_DrawCommands.AddWithExpandCheck(token,
-                new DrawCommand(mesh, material));
+            m_DrawCommands.AddWithExpandCheck(token, new DrawCommand(mesh, material, ref matrix));
             return token;
         }
 
@@ -747,11 +779,19 @@ namespace GDX.Developer
         /// </summary>
         struct DrawCommand
         {
-            public readonly Material MaterialReference;
             public readonly Mesh MeshReference;
+            public readonly Matrix4x4 Matrix;
+            public readonly Material MaterialReference;
 
             public DrawCommand(Mesh meshReference, Material materialReference)
             {
+                Matrix = Matrix4x4.identity;
+                MaterialReference = materialReference;
+                MeshReference = meshReference;
+            }
+            public DrawCommand(Mesh meshReference, Material materialReference, ref Matrix4x4 matrix)
+            {
+                Matrix = matrix;
                 MaterialReference = materialReference;
                 MeshReference = meshReference;
             }
