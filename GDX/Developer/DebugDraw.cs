@@ -12,13 +12,22 @@ namespace GDX.Developer
     public static class DebugDraw
     {
         /// <summary>
+        ///     The internal <see cref="DebugDrawBuffer"/> used by <see cref="DebugDraw"/>.
+        /// </summary>
+        static DebugDrawBuffer s_Buffer = new DebugDrawBuffer(0, 5, 512);
+
+        /// <summary>
         ///     A dictionary of known <see cref="DebugDrawBuffer"/> and their ID.
         /// </summary>
         static IntKeyDictionary<DebugDrawBuffer> s_Buffers = new IntKeyDictionary<DebugDrawBuffer>(10);
 
         /// <summary>
-        /// Get an instance of <see cref="DebugDrawBuffer"/> based on the provided <paramref name="key"/>.
+        ///     Get an instance of <see cref="DebugDrawBuffer"/> based on the provided <paramref name="key"/>.
         /// </summary>
+        /// <remarks>
+        ///     You must be sure to run <see cref="DebugDrawBuffer.Execute()"/> manually or some other way of outputting
+        ///     the buffer.
+        /// </remarks>
         /// <example>
         ///     By checking the <see cref="DebugDrawBuffer.Finalized"/> property we can skip over the expensive building step.
         ///     <code>
@@ -75,6 +84,11 @@ namespace GDX.Developer
         public static void RemoveBuffer(int key)
         {
             s_Buffers.TryRemove(key);
+        }
+
+        static void Tick()
+        {
+
         }
     }
 }
