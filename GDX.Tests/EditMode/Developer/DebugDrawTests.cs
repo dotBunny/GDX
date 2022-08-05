@@ -14,18 +14,18 @@ namespace GDX.Developer
     {
         [Test]
         [Category(Core.TestCategory)]
-        public void GetBuffer_New_ReturnsInstance()
+        public void GetUnmanagedBuffer_New_ReturnsInstance()
         {
-            DebugDrawBuffer buffer = DebugDraw.GetBuffer(0);
+            DebugDrawBuffer buffer = DebugDraw.GetUnmanagedBuffer(0);
             Assert.IsNotNull(buffer);
         }
 
         [Test]
         [Category(Core.TestCategory)]
-        public void GetBuffer_ByID_ReturnsInstance()
+        public void GetUnmanagedBuffer_ByID_ReturnsInstance()
         {
-            DebugDrawBuffer bufferA = DebugDraw.GetBuffer(0);
-            DebugDrawBuffer bufferB = DebugDraw.GetBuffer(0);
+            DebugDrawBuffer bufferA = DebugDraw.GetUnmanagedBuffer(0);
+            DebugDrawBuffer bufferB = DebugDraw.GetUnmanagedBuffer(0);
 
             Assert.IsTrue(bufferA.Key == bufferB.Key);
             Assert.IsTrue(bufferA == bufferB);
@@ -33,20 +33,20 @@ namespace GDX.Developer
 
         [Test]
         [Category(Core.TestCategory)]
-        public void HasBuffer_ByID_Valid()
+        public void HasUnmanagedBuffer_ByID_Valid()
         {
-            DebugDraw.GetBuffer(0);
-            Assert.IsTrue(DebugDraw.HasBuffer(0));
-            DebugDraw.RemoveBuffer(0);
+            DebugDraw.GetUnmanagedBuffer(0);
+            Assert.IsTrue(DebugDraw.HasUnmanagedBuffer(0));
+            DebugDraw.RemoveUnmanagedBuffer(0);
         }
 
         [Test]
         [Category(Core.TestCategory)]
-        public void RemoveBuffer_ByID_RemovesInstance()
+        public void RemoveUnmanagedBuffer_ByID_RemovesInstance()
         {
-            DebugDraw.GetBuffer(0);
-            DebugDraw.RemoveBuffer(0);
-            Assert.IsFalse(DebugDraw.HasBuffer(0));
+            DebugDraw.GetUnmanagedBuffer(0);
+            DebugDraw.RemoveUnmanagedBuffer(0);
+            Assert.IsFalse(DebugDraw.HasUnmanagedBuffer(0));
         }
     }
 }
