@@ -12,17 +12,22 @@ namespace GDX.Developer
     public static class DebugDraw
     {
         /// <summary>
-        ///     A dictionary of known <see cref="DebugDrawBuffer"/> and their ID.
+        ///     A dictionary of known <see cref="DebugDrawBuffer"/> and their ID which are automatically executed.
         /// </summary>
-        static IntKeyDictionary<DebugDrawBuffer> s_Buffers = new IntKeyDictionary<DebugDrawBuffer>(10);
+        static IntKeyDictionary<DebugDrawBuffer> s_ManagedBuffers = new IntKeyDictionary<DebugDrawBuffer>(10);
 
         /// <summary>
-        /// Get an instance of <see cref="DebugDrawBuffer"/> based on the provided <paramref name="key"/>.
+        ///     A dictionary of known <see cref="DebugDrawBuffer"/> and their ID which are not automatically executed.
+        /// </summary>
+        static IntKeyDictionary<DebugDrawBuffer> s_UnmanagedBuffers = new IntKeyDictionary<DebugDrawBuffer>(10);
+
+        /// <summary>
+        /// Get an instance of <see cref="DebugDrawBuffer"/> based on the provided <paramref name="key"/> that is not managed.
         /// </summary>
         /// <example>
         ///     By checking the <see cref="DebugDrawBuffer.Finalized"/> property we can skip over the expensive building step.
         ///     <code>
-        ///         DebugDrawBuffer buffer = DebugDraw.GetBuffer(gameObjet.GetInstanceID());
+        ///         DebugDrawBuffer buffer = DebugDraw.GetUnmanagedBuffer(gameObjet.GetInstanceID());
         ///         if (!buffer.Finalized)
         ///         {
         ///             /// Draw lots of stuff ...
@@ -41,40 +46,40 @@ namespace GDX.Developer
         ///     A newly created <see cref="DebugDrawBuffer"/> if the provided key is not found, or the previously
         ///     created <see cref="DebugDrawBuffer"/> identified by the <paramref name="key"/>.
         /// </returns>
-        public static DebugDrawBuffer GetBuffer(int key, int initialColorCount = 5,
+        public static DebugDrawBuffer GetUnmanagedBuffer(int key, int initialColorCount = 5,
             int verticesPerMesh = DebugDrawBuffer.DefaultMaximumVerticesPerMesh)
         {
-            if (s_Buffers.ContainsKey(key))
+            if (s_UnmanagedBuffers.ContainsKey(key))
             {
-                return s_Buffers[key];
+                return s_UnmanagedBuffers[key];
             }
 
             DebugDrawBuffer newBuffer = new DebugDrawBuffer(key, initialColorCount, verticesPerMesh);
-            s_Buffers.AddWithExpandCheck(key, newBuffer);
+            s_UnmanagedBuffers.AddWithExpandCheck(key, newBuffer);
             return newBuffer;
         }
 
         /// <summary>
-        ///     Returns if the provided key has a <see cref="DebugDrawBuffer"/> referenced.
+        ///     Returns if the provided key has an unmanaged <see cref="DebugDrawBuffer"/> referenced.
         /// </summary>
         /// <param name="key">
         ///     The key used to reference the <see cref="DebugDrawBuffer"/>.
         /// </param>
         /// <returns>true/false if the key has a <see cref="DebugDrawBuffer"/> associated with it.</returns>
-        public static bool HasBuffer(int key)
+        public static bool HasUnmanagedBuffer(int key)
         {
-            return s_Buffers.ContainsKey(key);
+            return s_UnmanagedBuffers.ContainsKey(key);
         }
 
         /// <summary>
-        ///     Dereference the indicated <see cref="DebugDrawBuffer"/> from the provider.
+        ///     Dereference the indicated unmanaged <see cref="DebugDrawBuffer"/> from the provider.
         /// </summary>
         /// <param name="key">
         ///     The key used to reference the <see cref="DebugDrawBuffer"/>.
         /// </param>
-        public static void RemoveBuffer(int key)
+        public static void RemoveUnmanagedBuffer(int key)
         {
-            s_Buffers.TryRemove(key);
+            s_UnmanagedBuffers.TryRemove(key);
         }
     }
 }

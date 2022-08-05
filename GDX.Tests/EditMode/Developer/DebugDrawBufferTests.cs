@@ -4,7 +4,7 @@
 
 using NUnit.Framework;
 
-namespace GDX.Rendering
+namespace GDX.Developer
 {
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="DebugDrawBuffer" />
