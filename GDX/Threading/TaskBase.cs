@@ -56,7 +56,7 @@ namespace GDX.Threading
         /// <summary>
         ///     The <see cref="TaskBase"/>'s descriptive bits.
         /// </summary>
-        internal BitArray16 m_Bits;
+        protected BitArray16 m_Bits;
 
         /// <summary>
         ///     A quick set of bits used to describe tasks that should be blocked when
@@ -64,12 +64,12 @@ namespace GDX.Threading
         ///     <see cref="TaskBase"/> will have its <see cref="m_Bits"/> checked for positives that match.
         /// </summary>
         /// <remarks>If any of them are the sam</remarks>
-        internal BitArray16 m_BlockingBits;
+        protected BitArray16 m_BlockingBits;
 
         /// <summary>
         ///     The <see cref="TaskBase"/>'s blocking modes for other tasks.
         /// </summary>
-        internal BlockingModeFlags m_BlockingModes = BlockingModeFlags.None;
+        protected BlockingModeFlags m_BlockingModes = BlockingModeFlags.None;
 
         /// <summary>
         ///     Did an exception occur while executing this <see cref="TaskBase"/>?
@@ -89,18 +89,18 @@ namespace GDX.Threading
         /// <summary>
         ///     Should the task report information to the <see cref="TaskScheduler"/> log.
         /// </summary>
-        internal bool m_IsLogging = true;
+        protected bool m_IsLogging = true;
 
         /// <summary>
         ///     The user-friendly name of the task, used by different feedback systems.
         /// </summary>
         /// <remarks>It's important to set this in inherited constructors.</remarks>
-        internal string m_Name = k_DefaultName;
+        protected string m_Name = k_DefaultName;
 
         /// <summary>
         ///     Any messaging related to the task; most often used to store exception messages.
         /// </summary>
-        internal string m_StatusMessage;
+        protected string m_StatusMessage;
 
         /// <summary>
         ///     The core logic to be defined for a task.

@@ -24,6 +24,7 @@ namespace GDX.Threading
         static SimpleList<string> s_Log = new SimpleList<string>(20);
 
         public static Action<bool> OnBlockUserInput;
+
         static bool s_BlockInput;
 
         static int s_TasksBusyCount;
@@ -199,6 +200,27 @@ namespace GDX.Threading
         public static string GetTaskStatus()
         {
             return s_TasksBusyCount > 0 ? $"{s_TasksBusyCount} Running / {s_TasksWaitingCount} Waiting" : null;
+        }
+
+        public static void ClearLog()
+        {
+            lock (k_LogLock)
+            {
+                s_Log.Clear();
+            }
+        }
+        public static string[] GetLog()
+        {
+            lock (k_LogLock)
+            {
+                int count = s_Log.Count;
+                string[] returnValue = new string[count];
+                for (int i = 0; i < count; i++)
+                {
+                    returnValue[i] = s_Log.Array[i];
+                }
+                return returnValue;
+            }
         }
     }
 }
