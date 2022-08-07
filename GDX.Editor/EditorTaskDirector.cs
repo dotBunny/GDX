@@ -6,7 +6,7 @@ using UnityEditor;
 
 namespace GDX.Editor
 {
-    public static class EditorTaskScheduler
+    public static class EditorTaskDirector
     {
         // TODO: maybe we have a gdx config for this too?
         // TODO: Disable when we go into playmode?
@@ -29,7 +29,7 @@ namespace GDX.Editor
                 return;
             }
             s_NextUpdate = EditorApplication.timeSinceStartup + s_TickRate;
-            Threading.TaskScheduler.Tick();
+            Threading.TaskDirector.Tick();
 
             // TODO: get all the details and update the background worker here
         }

@@ -6,10 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using GDX.Collections.Generic;
+using UnityEngine;
 
 namespace GDX.Threading
 {
-    public static class TaskScheduler
+    public static class TaskDirector
     {
         // TODO: Bit field ignore
         static readonly object k_LogLock = new object();
@@ -56,11 +57,11 @@ namespace GDX.Threading
         {
             if (task.IsDone())
             {
-                AddBusyTask(task);
+                RemoveBusyTask(task);
             }
             else if (task.IsExecuting())
             {
-                RemoveBusyTask(task);
+                AddBusyTask(task);
             }
         }
 
@@ -72,63 +73,6 @@ namespace GDX.Threading
             }
         }
 
-        static void AddBusyTask(TaskBase task)
-        {
-            lock (k_StatusChangeLock)
-            {
-                if (!k_TasksBusy.Contains(task))
-                {
-                    if (task.IsBlockingAllTasks())
-                    {
-                        s_BlockAllTasksCount++;
-                    }
-
-                    // Add to the count of tasks that block input so we can update based off it
-                    if (task.IsBlockingUserInterface())
-                    {
-                        s_BlockInputCount++;
-                    }
-
-                    if (task.IsBlockingSameName())
-                    {
-                        k_BlockedNames.Add(task.GetName());
-                    }
-
-                    k_TasksBusy.Add(task);
-                    s_TasksBusyCount++;
-                }
-            }
-        }
-
-        static void RemoveBusyTask(TaskBase task)
-        {
-            lock (k_StatusChangeLock)
-            {
-                if (k_TasksBusy.Contains(task))
-                {
-                    k_TasksBusy.Remove(task);
-                    s_TasksBusyCount--;
-
-                    // Add to list of tasks so that the next tick the main thread will call their completion callbacks.
-                    k_TasksFinished.Add(task);
-
-                    if (task.IsBlockingAllTasks())
-                    {
-                        s_BlockAllTasksCount--;
-                    }
-
-                    if (task.IsBlockingUserInterface())
-                    {
-                        s_BlockInputCount--;
-                    }
-
-                    if (task.IsBlockingSameName())
-                    {
-                        k_BlockedNames.Remove(task.GetName());
-                    }
-                }
-            }
-        }
 
         public static void Tick()
         {
@@ -222,5 +166,64 @@ namespace GDX.Threading
                 return returnValue;
             }
         }
+
+        static void AddBusyTask(TaskBase task)
+        {
+            lock (k_StatusChangeLock)
+            {
+                if (!k_TasksBusy.Contains(task))
+                {
+                    if (task.IsBlockingAllTasks())
+                    {
+                        s_BlockAllTasksCount++;
+                    }
+
+                    // Add to the count of tasks that block input so we can update based off it
+                    if (task.IsBlockingUserInterface())
+                    {
+                        s_BlockInputCount++;
+                    }
+
+                    if (task.IsBlockingSameName())
+                    {
+                        k_BlockedNames.Add(task.GetName());
+                    }
+
+                    k_TasksBusy.Add(task);
+                    s_TasksBusyCount++;
+                }
+            }
+        }
+
+        static void RemoveBusyTask(TaskBase task)
+        {
+            lock (k_StatusChangeLock)
+            {
+                if (k_TasksBusy.Contains(task))
+                {
+                    k_TasksBusy.Remove(task);
+                    s_TasksBusyCount--;
+
+                    // Add to list of tasks so that the next tick the main thread will call their completion callbacks.
+                    k_TasksFinished.Add(task);
+
+                    if (task.IsBlockingAllTasks())
+                    {
+                        s_BlockAllTasksCount--;
+                    }
+
+                    if (task.IsBlockingUserInterface())
+                    {
+                        s_BlockInputCount--;
+                    }
+
+                    if (task.IsBlockingSameName())
+                    {
+                        k_BlockedNames.Remove(task.GetName());
+                    }
+                }
+            }
+        }
+
     }
 }

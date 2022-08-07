@@ -7,7 +7,7 @@ namespace GDX.Threading
     // TODO: Dependency chains
 
     /// <summary>
-    ///     The base of a task used by <see cref="TaskScheduler"/>.
+    ///     The base of a task used by <see cref="TaskDirector"/>.
     /// </summary>
     public abstract class TaskBase
     {
@@ -46,7 +46,7 @@ namespace GDX.Threading
 
         /// <summary>
         ///     An event that is triggered once the <see cref="TaskBase"/> has finished, during the next tick of the
-        ///     <see cref="TaskScheduler"/>.
+        ///     <see cref="TaskDirector"/>.
         /// </summary>
         /// <remarks>
         ///     This is a safe way to do work which requires being executed on the main thread.
@@ -87,7 +87,7 @@ namespace GDX.Threading
         bool m_IsExecuting;
 
         /// <summary>
-        ///     Should the task report information to the <see cref="TaskScheduler"/> log.
+        ///     Should the task report information to the <see cref="TaskDirector"/> log.
         /// </summary>
         protected bool m_IsLogging = true;
 
@@ -108,11 +108,11 @@ namespace GDX.Threading
         public abstract void DoWork();
 
         /// <summary>
-        ///     Enqueue the current <see cref="TaskBase"/> with the <see cref="TaskScheduler"/> for execution.
+        ///     Enqueue the current <see cref="TaskBase"/> with the <see cref="TaskDirector"/> for execution.
         /// </summary>
         public void Enqueue()
         {
-            TaskScheduler.QueueTask(this);
+            TaskDirector.QueueTask(this);
         }
 
         /// <summary>
@@ -128,13 +128,13 @@ namespace GDX.Threading
             m_Stopwatch.Start();
 
             // Update task
-            TaskScheduler.UpdateTask(this);
+            TaskDirector.UpdateTask(this);
 
             try
             {
                 if (m_IsLogging)
                 {
-                    TaskScheduler.AddLog($"Starting {m_Name}");
+                    TaskDirector.AddLog($"Starting {m_Name}");
                 }
 
                 DoWork();
@@ -143,13 +143,13 @@ namespace GDX.Threading
             {
                 m_ExceptionOccured = true;
                 m_StatusMessage = e.Message;
-                TaskScheduler.AddLog(m_StatusMessage);
+                TaskDirector.AddLog(m_StatusMessage);
             }
             finally
             {
                 m_IsDone = true;
                 m_IsExecuting = false;
-                TaskScheduler.UpdateTask(this);
+                TaskDirector.UpdateTask(this);
 
                 Completed?.Invoke(this);
 
@@ -157,7 +157,7 @@ namespace GDX.Threading
 
                 if (m_IsLogging)
                 {
-                    TaskScheduler.AddLog($"{m_Name} finished in {m_Stopwatch.ElapsedMilliseconds}ms.");
+                    TaskDirector.AddLog($"{m_Name} finished in {m_Stopwatch.ElapsedMilliseconds}ms.");
                 }
             }
         }
@@ -286,7 +286,7 @@ namespace GDX.Threading
         ///     user interface?
         /// </summary>
         /// <remarks>
-        ///     This directly relates to the <see cref="TaskScheduler.OnBlockUserInput"/>, altering the count used
+        ///     This directly relates to the <see cref="TaskDirector.OnBlockUserInput"/>, altering the count used
         ///     to trigger that particular event.
         /// </remarks>
         /// <returns><b>true</b> if this task should prevent user input, otherwise <b>false</b>.</returns>
