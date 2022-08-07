@@ -11,10 +11,10 @@ namespace GDX.Developer
     /// </summary>
     public static class DebugDraw
     {
-        /// <summary>
-        ///     A dictionary of known <see cref="DebugDrawBuffer"/> and their ID which are automatically executed.
-        /// </summary>
-        static IntKeyDictionary<DebugDrawBuffer> s_ManagedBuffers = new IntKeyDictionary<DebugDrawBuffer>(10);
+        // /// <summary>
+        // ///     A dictionary of known <see cref="DebugDrawBuffer"/> and their ID which are automatically executed.
+        // /// </summary>
+        // static IntKeyDictionary<DebugDrawBuffer> s_ManagedBuffers = new IntKeyDictionary<DebugDrawBuffer>(10);
 
         /// <summary>
         ///     A dictionary of known <see cref="DebugDrawBuffer"/> and their ID which are not automatically executed.
@@ -81,5 +81,15 @@ namespace GDX.Developer
         {
             s_UnmanagedBuffers.TryRemove(key);
         }
+
+        // public static void Render()
+        // {
+        //     int currentIndex = 0;
+        //     while (s_ManagedBuffers.MoveNext(ref currentIndex))
+        //     {
+        //         DebugDrawBuffer buffer = s_ManagedBuffers.Entries[currentIndex - 1].Value;
+        //         buffer.Execute();
+        //     }
+        // }
     }
 }

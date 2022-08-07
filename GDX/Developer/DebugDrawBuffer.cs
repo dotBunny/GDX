@@ -486,6 +486,44 @@ namespace GDX.Developer
             return DrawLines(color, ref vertices, ref CubeSegmentIndices);
         }
 
+        public int DrawWireCapsule(Color color, Vector3 bottom, Vector3 top, float radius, Vector3 direction)
+        {
+            Vector3[] vertices = new Vector3[8];
+            int[] segments = new int[16];
+
+            Vector3 xRadius = new Vector3(radius, 0, 0);
+            Vector3 zRadius = new Vector3(0, 0, radius);
+
+            vertices[0] = bottom - xRadius;
+            vertices[1] = bottom + xRadius;
+            segments[0] = 0;
+            segments[1] = 1;
+            vertices[2] = top + xRadius;
+            segments[2] = 1;
+            segments[3] = 2;
+            vertices[3] = top - xRadius;
+            segments[4] = 2;
+            segments[5] = 3;
+            segments[6] = 3;
+            segments[7] = 0;
+
+            vertices[4] = bottom - zRadius;
+            vertices[5] = bottom + zRadius;
+            segments[8] = 4;
+            segments[9] = 5;
+            vertices[6] = top + zRadius;
+            segments[10] = 5;
+            segments[11] = 6;
+            vertices[7] = top - zRadius;
+            segments[12] = 6;
+            segments[13] = 7;
+            segments[14] = 7;
+            segments[15] = 4;
+
+
+            return DrawLines(color, ref vertices, ref segments);
+        }
+
         /// <summary>
         ///     Execute the <see cref="DebugDrawBuffer"/>, rendering its outputs to the screen.
         /// </summary>
@@ -520,6 +558,11 @@ namespace GDX.Developer
         public bool HasToken(int token)
         {
             return m_DrawCommands.ContainsKey(token);
+        }
+
+        public void Unlock()
+        {
+            Finalized = false;
         }
 
         /// <summary>
