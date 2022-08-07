@@ -11,8 +11,7 @@ namespace GDX.Threading
 {
     public static class TaskScheduler
     {
-        // TODO: Log to progress worker?
-        // TODO: build better messaging to worker?
+        // TODO: Bit field ignore
         static readonly object k_LogLock = new();
         static readonly object k_StatusChangeLock = new();
         static readonly List<TaskBase> k_TasksBusy = new();
