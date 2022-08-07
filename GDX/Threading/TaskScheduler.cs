@@ -12,16 +12,16 @@ namespace GDX.Threading
     public static class TaskScheduler
     {
         // TODO: Bit field ignore
-        static readonly object k_LogLock = new();
-        static readonly object k_StatusChangeLock = new();
-        static readonly List<TaskBase> k_TasksBusy = new();
-        static readonly List<TaskBase> k_TasksFinished = new();
-        static readonly List<TaskBase> k_TasksProcessed = new();
-        static readonly List<TaskBase> k_TasksWaiting = new();
+        static readonly object k_LogLock = new object();
+        static readonly object k_StatusChangeLock = new object();
+        static readonly List<TaskBase> k_TasksBusy = new List<TaskBase>();
+        static readonly List<TaskBase> k_TasksFinished = new List<TaskBase>();
+        static readonly List<TaskBase> k_TasksProcessed = new List<TaskBase>();
+        static readonly List<TaskBase> k_TasksWaiting = new List<TaskBase>();
 
-        static readonly List<string> k_BlockedNames = new();
+        static readonly List<string> k_BlockedNames = new List<string>();
 
-        static SimpleList<string> s_Log;
+        static SimpleList<string> s_Log = new SimpleList<string>(20);
 
         public static Action<bool> OnBlockUserInput;
         static bool s_BlockInput;
