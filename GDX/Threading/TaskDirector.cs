@@ -146,6 +146,16 @@ namespace GDX.Threading
             return s_TasksBusyCount > 0 ? $"{s_TasksBusyCount} Running / {s_TasksWaitingCount} Waiting" : null;
         }
 
+        public static int GetBusyCount()
+        {
+            return s_TasksBusyCount;
+        }
+
+        public static int GetWaitingCount()
+        {
+            return s_TasksWaitingCount;
+        }
+
         public static void ClearLog()
         {
             lock (k_LogLock)
