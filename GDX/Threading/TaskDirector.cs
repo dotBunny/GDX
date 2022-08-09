@@ -13,6 +13,7 @@ namespace GDX.Threading
     public static class TaskDirector
     {
         // TODO: Bit field ignore
+        // TODO: Make log easier to access? << FIRST
         static readonly object k_LogLock = new object();
         static readonly object k_StatusChangeLock = new object();
         static readonly List<TaskBase> k_TasksBusy = new List<TaskBase>();
@@ -74,6 +75,7 @@ namespace GDX.Threading
         }
 
 
+        // tick on main thread????
         public static void Tick()
         {
             // We are blocked by a running task from adding anything else.
@@ -123,9 +125,6 @@ namespace GDX.Threading
                         k_TasksProcessed.Clear();
                     }
                 }
-                //
-                // // Update background worker status?
-                // s_TasksBusyCount = k_TasksBusy.Count;
             }
 
             // Invoke notification to anything subscribed to block input
