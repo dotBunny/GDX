@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - New toggle added to Project Settings -> GDX -> Environment, ensuring that shaders included are always included in a build
 
+### Fixed
+
+- `StringKeyDictionary` and `IntKeyDictionary` can now be initialized with capacities as static fields.
+
 ## [3.0.1] - 2022-07-12
 
 ***"3D Arrays"***

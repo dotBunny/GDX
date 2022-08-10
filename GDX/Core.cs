@@ -59,7 +59,7 @@ namespace GDX
             // Initialize a random provider
             Random = new WELL1024a((uint)StartTicks);
 
-            DictionaryPrimes.SetDefaultPrimes();
+            //DictionaryPrimes.SetDefaultPrimes();
 
             // ReSharper disable UnusedParameter.Local
             AppDomain.CurrentDomain.DomainUnload += (sender, args) =>
