@@ -232,6 +232,12 @@ namespace GDX.Editor.ProjectSettings
 #else
             foreach (Type type in types)
             {
+                if (BoltCore.instance == null ||
+                    BoltCore.instance.configuration == null)
+                {
+                    return false;
+                }
+
                 if (!BoltCore.Configuration.typeOptions.Contains(type))
                 {
                     return false;

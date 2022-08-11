@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - `StringKeyDictionary` and `IntKeyDictionary` can now be initialized with capacities as static fields.
+- Bolt changes in Unity 2022 causing Project Settings from being able to load properly.
 
 ## [3.0.1] - 2022-07-12
 
