@@ -5,15 +5,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using GDX.Collections.Generic;
-using UnityEngine;
+using GDX.Collections;
 
 namespace GDX.Threading
 {
     public static class TaskDirector
     {
-        // TODO: Bit field ignore
-        // TODO: Make log easier to access? << FIRST
         static readonly object k_LogLock = new object();
         static readonly object k_StatusChangeLock = new object();
         static readonly List<TaskBase> k_TasksBusy = new List<TaskBase>();
@@ -22,10 +19,12 @@ namespace GDX.Threading
         static readonly List<TaskBase> k_TasksWaiting = new List<TaskBase>();
 
         static readonly List<string> k_BlockedNames = new List<string>();
+        static readonly int[] k_BlockedBits = new int[16];
 
-        static SimpleList<string> s_Log = new SimpleList<string>(20);
+        static readonly Queue<string> k_TaskLog = new Queue<string>(10);
 
         public static Action<bool> OnBlockUserInput;
+        public static Action<string[]> OnLogAdded;
 
         static bool s_BlockInput;
 
@@ -70,7 +69,7 @@ namespace GDX.Threading
         {
             lock (k_LogLock)
             {
-                s_Log.AddWithExpandCheck(message);
+                k_TaskLog.Enqueue(message);
             }
         }
 
@@ -110,6 +109,12 @@ namespace GDX.Threading
                                 continue;
                             }
 
+                            BitArray16 bits = task.GetBits();
+                            if (IsBlockedByBits(ref bits))
+                            {
+                                continue;
+                            }
+
                             AddBusyTask(task);
                             ThreadPool.QueueUserWorkItem(delegate { task.Run(); });
                             k_TasksProcessed.Add(task);
@@ -124,6 +129,16 @@ namespace GDX.Threading
                         s_TasksWaitingCount = k_TasksWaiting.Count;
                         k_TasksProcessed.Clear();
                     }
+                }
+            }
+
+            // Dispatch logging
+            lock (k_LogLock)
+            {
+                if (k_TaskLog.Count > 0)
+                {
+                    OnLogAdded?.Invoke(k_TaskLog.ToArray());
+                    k_TaskLog.Clear();
                 }
             }
 
@@ -155,27 +170,6 @@ namespace GDX.Threading
             return s_TasksWaitingCount;
         }
 
-        public static void ClearLog()
-        {
-            lock (k_LogLock)
-            {
-                s_Log.Clear();
-            }
-        }
-        public static string[] GetLog()
-        {
-            lock (k_LogLock)
-            {
-                int count = s_Log.Count;
-                string[] returnValue = new string[count];
-                for (int i = 0; i < count; i++)
-                {
-                    returnValue[i] = s_Log.Array[i];
-                }
-                return returnValue;
-            }
-        }
-
         static void AddBusyTask(TaskBase task)
         {
             lock (k_StatusChangeLock)
@@ -198,10 +192,34 @@ namespace GDX.Threading
                         k_BlockedNames.Add(task.GetName());
                     }
 
+                    if (task.IsBlockingBits())
+                    {
+                        BitArray16 blockedBits = task.GetBlockedBits();
+                        for (int i = 0; i < 16; i++)
+                        {
+                            if (blockedBits[(byte)i])
+                            {
+                                k_BlockedBits[i]++;
+                            }
+                        }
+                    }
+
                     k_TasksBusy.Add(task);
                     s_TasksBusyCount++;
                 }
             }
+        }
+
+        static bool IsBlockedByBits(ref BitArray16 task)
+        {
+            for (int i = 0; i < 16; i++)
+            {
+                if (task[(byte)i] && k_BlockedBits[i] > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         static void RemoveBusyTask(TaskBase task)
@@ -230,9 +248,20 @@ namespace GDX.Threading
                     {
                         k_BlockedNames.Remove(task.GetName());
                     }
+
+                    if (task.IsBlockingBits())
+                    {
+                        BitArray16 blockedBits = task.GetBlockedBits();
+                        for (int i = 0; i < 16; i++)
+                        {
+                            if (blockedBits[(byte)i])
+                            {
+                                k_BlockedBits[i]--;
+                            }
+                        }
+                    }
                 }
             }
         }
-
     }
 }

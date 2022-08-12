@@ -72,21 +72,6 @@ namespace GDX.Threading
         protected BlockingModeFlags m_BlockingModes = BlockingModeFlags.None;
 
         /// <summary>
-        ///     Did an exception occur while executing this <see cref="TaskBase"/>?
-        /// </summary>
-        bool m_ExceptionOccured;
-
-        /// <summary>
-        ///     Has the task finished its execution/work.
-        /// </summary>
-        bool m_IsDone;
-
-        /// <summary>
-        ///     A flag indicating if the task is executing, or if it is still waiting.
-        /// </summary>
-        bool m_IsExecuting;
-
-        /// <summary>
         ///     Should the task report information to the <see cref="TaskDirector"/> log.
         /// </summary>
         protected bool m_IsLogging = true;
@@ -103,6 +88,21 @@ namespace GDX.Threading
         protected string m_StatusMessage;
 
         /// <summary>
+        ///     Did an exception occur while executing this <see cref="TaskBase"/>?
+        /// </summary>
+        bool m_ExceptionOccured;
+
+        /// <summary>
+        ///     Has the task finished its execution/work.
+        /// </summary>
+        bool m_IsDone;
+
+        /// <summary>
+        ///     A flag indicating if the task is executing, or if it is still waiting.
+        /// </summary>
+        bool m_IsExecuting;
+
+        /// <summary>
         ///     The core logic to be defined for a task.
         /// </summary>
         public abstract void DoWork();
@@ -113,6 +113,140 @@ namespace GDX.Threading
         public void Enqueue()
         {
             TaskDirector.QueueTask(this);
+        }
+
+        /// <summary>
+        ///     Gets the associated <see cref="BitArray16"/> with this task.
+        /// </summary>
+        /// <returns>The defined flags.</returns>
+        public BitArray16 GetBits()
+        {
+            return m_Bits;
+        }
+
+        /// <summary>
+        ///     Gets the <see cref="BitArray16"/> to evaluate other tasks against.
+        /// </summary>
+        /// <returns>The defined bits.</returns>
+        public BitArray16 GetBlockedBits()
+        {
+            return m_BlockingBits;
+        }
+
+        /// <summary>
+        ///     Returns the <see cref="BlockingModeFlags"/> used to determine other task execution.
+        /// </summary>
+        /// <returns>A set of flags indicating if other tasks should be able to start execution.</returns>
+        public BlockingModeFlags GetBlockingModes()
+        {
+            return m_BlockingModes;
+        }
+
+        /// <summary>
+        ///     Gets the user-friendly name of the task.
+        /// </summary>
+        /// <returns>The defined <see cref="string"/> name of the task.</returns>
+        public string GetName()
+        {
+            return m_Name;
+        }
+
+        /// <summary>
+        ///     Gets the internal task status message.
+        /// </summary>
+        /// <returns>A <see cref="string"/> value if present, otherwise null.</returns>
+        public string GetStatusMessage()
+        {
+            return m_StatusMessage;
+        }
+
+        /// <summary>
+        ///     Did an exception occur while executing off thread?
+        /// </summary>
+        /// <remarks>
+        ///     <see cref="GetStatusMessage"/> for more details.
+        /// </remarks>
+        /// <returns>Returns <b>true</b> if an exception occured.</returns>
+        public bool HadExceptionOccur()
+        {
+            return m_ExceptionOccured;
+        }
+
+
+        /// <summary>
+        ///     Does this <see cref="TaskBase"/> block any further task execution?
+        /// </summary>
+        /// <returns><b>true</b> if the task has defined blocking modes, otherwise <b>false</b>.</returns>
+        public bool IsBlocking()
+        {
+            return m_BlockingModes.HasFlags(BlockingModeFlags.None);
+        }
+
+        /// <summary>
+        ///     Does this <see cref="TaskBase"/> block all other tasks after it from starting execution?
+        /// </summary>
+        /// <remarks>
+        ///     This will keep all tasks after it sitting waiting for this task to complete.
+        /// </remarks>
+        /// <returns><b>true</b> if this task blocks all after it, otherwise <b>false</b>.</returns>
+        public bool IsBlockingAllTasks()
+        {
+            return m_BlockingModes.HasFlags(BlockingModeFlags.All);
+        }
+
+        /// <summary>
+        ///     Does this <see cref="TaskBase"/> block other tasks from executing based on its
+        ///     <see cref="m_BlockingBits"/>?
+        /// </summary>
+        /// <returns><b>true</b> if this tasks blocks based on bits, otherwise <b>false</b>.</returns>
+        public bool IsBlockingBits()
+        {
+            return m_BlockingModes.HasFlags(BlockingModeFlags.Bits);
+        }
+
+        /// <summary>
+        ///     Does this <see cref="TaskBase"/> block all other tasks of the same name from starting during
+        ///     its execution?
+        /// </summary>
+        /// <returns><b>true</b> if this tasks blocks same named tasks, otherwise <b>false</b>.</returns>
+        public bool IsBlockingSameName()
+        {
+            return m_BlockingModes.HasFlags(BlockingModeFlags.SameName);
+        }
+
+        /// <summary>
+        ///     Should the execution of this <see cref="TaskBase"/> prevent the user from providing input to the
+        ///     user interface?
+        /// </summary>
+        /// <remarks>
+        ///     This directly relates to the <see cref="TaskDirector.OnBlockUserInput"/>, altering the count used
+        ///     to trigger that particular event.
+        /// </remarks>
+        /// <returns><b>true</b> if this task should prevent user input, otherwise <b>false</b>.</returns>
+        public bool IsBlockingUserInterface()
+        {
+            return m_BlockingModes.HasFlags(BlockingModeFlags.UserInteraction);
+        }
+
+        /// <summary>
+        ///     Is the <see cref="TaskBase"/> finished executing?
+        /// </summary>
+        /// <returns>
+        ///     Returns <b>true</b> if the execution phase of the task has been completed. This will be
+        ///     <b>true</b> if an exception has occured.
+        /// </returns>
+        public bool IsDone()
+        {
+            return m_IsDone;
+        }
+
+        /// <summary>
+        ///     Is the <see cref="TaskBase"/> currently executing on the thread pool?
+        /// </summary>
+        /// <returns>Returns <b>true</b> if the task is executing, otherwise <b>false</b>.</returns>
+        public bool IsExecuting()
+        {
+            return m_IsExecuting;
         }
 
         /// <summary>
@@ -160,139 +294,6 @@ namespace GDX.Threading
                     TaskDirector.AddLog($"{m_Name} finished in {m_Stopwatch.ElapsedMilliseconds}ms.");
                 }
             }
-        }
-
-        /// <summary>
-        ///     Did an exception occur while executing off thread?
-        /// </summary>
-        /// <remarks>
-        ///     <see cref="GetStatusMessage"/> for more details.
-        /// </remarks>
-        /// <returns>Returns <b>true</b> if an exception occured.</returns>
-        public bool HadExceptionOccur()
-        {
-            return m_ExceptionOccured;
-        }
-
-        /// <summary>
-        ///     Returns the <see cref="BlockingModeFlags"/> used to determine other task execution.
-        /// </summary>
-        /// <returns>A set of flags indicating if other tasks should be able to start execution.</returns>
-        public BlockingModeFlags GetBlockingModes()
-        {
-            return m_BlockingModes;
-        }
-
-        /// <summary>
-        ///     Gets the <see cref="BitArray16"/> to evaluate other tasks against.
-        /// </summary>
-        /// <returns>The defined bits.</returns>
-        public BitArray16 GetBlockedBits()
-        {
-            return m_BlockingBits;
-        }
-
-        /// <summary>
-        ///     Gets the associated <see cref="BitArray16"/> with this task.
-        /// </summary>
-        /// <returns>The defined flags.</returns>
-        public BitArray16 GetBits()
-        {
-            return m_Bits;
-        }
-
-        /// <summary>
-        ///     Gets the user-friendly name of the task.
-        /// </summary>
-        /// <returns>The defined <see cref="string"/> name of the task.</returns>
-        public string GetName()
-        {
-            return m_Name;
-        }
-
-        /// <summary>
-        ///     Gets the internal task status message.
-        /// </summary>
-        /// <returns>A <see cref="string"/> value if present, otherwise null.</returns>
-        public string GetStatusMessage()
-        {
-            return m_StatusMessage;
-        }
-
-        /// <summary>
-        ///     Does this <see cref="TaskBase"/> block any further task execution?
-        /// </summary>
-        /// <returns><b>true</b> if the task has defined blocking modes, otherwise <b>false</b>.</returns>
-        public bool IsBlocking()
-        {
-            return m_BlockingModes.HasFlags(BlockingModeFlags.None);
-        }
-
-        /// <summary>
-        ///     Does this <see cref="TaskBase"/> block all other tasks after it from starting execution?
-        /// </summary>
-        /// <remarks>
-        ///     This will keep all tasks after it sitting waiting for this task to complete.
-        /// </remarks>
-        /// <returns><b>true</b> if this task blocks all after it, otherwise <b>false</b>.</returns>
-        public bool IsBlockingAllTasks()
-        {
-            return m_BlockingModes.HasFlags(BlockingModeFlags.All);
-        }
-
-        /// <summary>
-        ///     Does this <see cref="TaskBase"/> block all other tasks of the same name from starting during
-        ///     its execution?
-        /// </summary>
-        /// <returns><b>true</b> if this tasks blocks same named tasks, otherwise <b>false</b>.</returns>
-        public bool IsBlockingSameName()
-        {
-            return m_BlockingModes.HasFlags(BlockingModeFlags.SameName);
-        }
-
-        /// <summary>
-        ///     Does this <see cref="TaskBase"/> block other tasks from executing based on its
-        ///     <see cref="m_BlockingBits"/>?
-        /// </summary>
-        /// <returns><b>true</b> if this tasks blocks based on bits, otherwise <b>false</b>.</returns>
-        public bool IsBlockingBits()
-        {
-            return m_BlockingModes.HasFlags(BlockingModeFlags.Bits);
-        }
-
-        /// <summary>
-        ///     Is the <see cref="TaskBase"/> finished executing?
-        /// </summary>
-        /// <returns>
-        ///     Returns <b>true</b> if the execution phase of the task has been completed. This will be
-        ///     <b>true</b> if an exception has occured.
-        /// </returns>
-        public bool IsDone()
-        {
-            return m_IsDone;
-        }
-
-        /// <summary>
-        ///     Is the <see cref="TaskBase"/> currently executing on the thread pool?
-        /// </summary>
-        /// <returns>Returns <b>true</b> if the task is executing, otherwise <b>false</b>.</returns>
-        public bool IsExecuting()
-        {
-            return m_IsExecuting;
-        }
-
-        /// <summary>
-        ///     Should the execution of this <see cref="TaskBase"/> prevent the user from providing input to the
-        ///     user interface?
-        /// </summary>
-        /// <remarks>
-        ///     This directly relates to the <see cref="TaskDirector.OnBlockUserInput"/>, altering the count used
-        ///     to trigger that particular event.
-        /// </remarks>
-        /// <returns><b>true</b> if this task should prevent user input, otherwise <b>false</b>.</returns>
-        public bool IsBlockingUserInterface()
-        {
-            return m_BlockingModes.HasFlags(BlockingModeFlags.UserInteraction);
         }
     }
 }
