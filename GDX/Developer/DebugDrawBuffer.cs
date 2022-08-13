@@ -554,7 +554,7 @@ namespace GDX.Developer
         /// Is the given <paramref name="token"/> present in the draw commands buffer.
         /// </summary>
         /// <param name="token">The token of the draw commands to check for.</param>
-        /// <returns>Returns <b>true</b> if the token is found in the existing draw commands.</returns>
+        /// <returns>Returns true if the token is found in the existing draw commands.</returns>
         public bool HasToken(int token)
         {
             return m_DrawCommands.ContainsKey(token);

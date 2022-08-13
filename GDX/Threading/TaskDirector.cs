@@ -5,34 +5,110 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using GDX.Collections;
 
 namespace GDX.Threading
 {
+    /// <summary>
+    ///     A simple control mechanism for distributed <see cref="TaskBase"/> work across the
+    ///     thread pool. Tasks should be short-lived and can queue up additional work.
+    /// </summary>
     public static class TaskDirector
     {
-        static readonly object k_LogLock = new object();
-        static readonly object k_StatusChangeLock = new object();
-        static readonly List<TaskBase> k_TasksBusy = new List<TaskBase>();
-        static readonly List<TaskBase> k_TasksFinished = new List<TaskBase>();
-        static readonly List<TaskBase> k_TasksProcessed = new List<TaskBase>();
-        static readonly List<TaskBase> k_TasksWaiting = new List<TaskBase>();
-
-        static readonly List<string> k_BlockedNames = new List<string>();
-        static readonly int[] k_BlockedBits = new int[16];
-
-        static readonly Queue<string> k_TaskLog = new Queue<string>(10);
-
+        /// <summary>
+        ///     An event invoked during <see cref="Tick"/> when user input should be blocked.
+        /// </summary>
         public static Action<bool> OnBlockUserInput;
+
+        /// <summary>
+        ///     An event invoked during <see cref="Tick"/> with new log content.
+        /// </summary>
         public static Action<string[]> OnLogAdded;
 
-        static bool s_BlockInput;
+        /// <summary>
+        ///     A running tally of bits that are blocked by the currently executing tasks.
+        /// </summary>
+        static readonly int[] k_BlockedBits = new int[16];
 
-        static int s_TasksBusyCount;
-        static int s_TasksWaitingCount;
-        static int s_BlockInputCount;
+        /// <summary>
+        ///     A collection of task names which are currently blocked from beginning to executed based
+        ///     on the currently executing tasks.
+        /// </summary>
+        static readonly List<string> k_BlockedNames = new List<string>();
+
+        /// <summary>
+        ///     A locking mechanism used for log entries ensuring thread safety.
+        /// </summary>
+        static readonly object k_LogLock = new object();
+
+        /// <summary>
+        ///     A locking mechanism used for changes to task lists ensuring thread safety.
+        /// </summary>
+        static readonly object k_StatusChangeLock = new object();
+
+        /// <summary>
+        ///     A list of tasks currently being executed by the thread pool.
+        /// </summary>
+        static readonly List<TaskBase> k_TasksBusy = new List<TaskBase>();
+
+        /// <summary>
+        ///     A working list of tasks that recently finished, used in <see cref="Tick"/> to ensure
+        ///     callbacks occur on the main thread.
+        /// </summary>
+        static readonly List<TaskBase> k_TasksFinished = new List<TaskBase>();
+
+        /// <summary>
+        ///     An accumulating collection of log content which will be passed to <see cref="OnLogAdded"/>
+        ///     subscribed methods during <see cref="Tick"/>.
+        /// </summary>
+        static readonly Queue<string> k_TaskLog = new Queue<string>(10);
+
+        /// <summary>
+        ///     A list of tasks that were moved from waiting state to a working/busy state during
+        ///     <see cref="Tick"/>.
+        /// </summary>
+        static readonly List<TaskBase> k_TasksProcessed = new List<TaskBase>();
+
+        /// <summary>
+        ///     A list of tasks currently waiting to start work.
+        /// </summary>
+        static readonly List<TaskBase> k_TasksQueue = new List<TaskBase>();
+
+        /// <summary>
+        ///     The number of tasks that are busy executing which block all other tasks from executing.
+        /// </summary>
+        /// <remarks>
+        ///     This number can be higher then one, when tasks are forcibly started and then added to the
+        ///     <see cref="TaskDirector"/>.
+        /// </remarks>
         static int s_BlockAllTasksCount;
 
+        /// <summary>
+        ///     Is user input blocked?
+        /// </summary>
+        static bool s_BlockInput;
+
+        /// <summary>
+        ///     The number of tasks that are busy executing which block user input.
+        /// </summary>
+        static int s_BlockInputCount;
+
+        /// <summary>
+        ///     A cached count of <see cref="k_TasksBusy"/>.
+        /// </summary>
+        static int s_TasksBusyCount;
+
+        /// <summary>
+        ///     A cached count of <see cref="k_TasksQueue"/>.
+        /// </summary>
+        static int s_TasksQueueCount;
+
+        /// <summary>
+        ///     Adds a thread-safe log entry to a queue which will be dispatched to <see cref="OnLogAdded"/> on
+        ///     the <see cref="Tick"/> invoking thread.
+        /// </summary>
+        /// <param name="message">The log content.</param>
         public static void AddLog(string message)
         {
             lock (k_LogLock)
@@ -41,12 +117,53 @@ namespace GDX.Threading
             }
         }
 
-        public static bool HasTasks()
+        /// <summary>
+        ///     The number of tasks currently in process or awaiting execution by the thread pool.
+        /// </summary>
+        /// <returns>The number of tasks sitting in <see cref="k_TasksBusy"/>.</returns>
+        public static int GetBusyCount()
         {
-            return s_TasksBusyCount > 0 || s_TasksWaitingCount > 0;
+            return s_TasksBusyCount;
         }
 
+        /// <summary>
+        ///     The number of tasks waiting in the queue.
+        /// </summary>
+        /// <returns>The number of tasks sitting in <see cref="k_TasksQueue"/>.</returns>
+        public static int GetQueueCount()
+        {
+            return s_TasksQueueCount;
+        }
 
+        /// <summary>
+        ///     Get the status message for the <see cref="TaskDirector"/>.
+        /// </summary>
+        /// <returns>A pre-formatted status message.</returns>
+        public static string GetStatus()
+        {
+            if (s_TasksBusyCount > 0)
+            {
+                return $"{s_TasksBusyCount.ToString()} Busy / {s_TasksQueueCount.ToString()} Queued";
+            }
+            return s_TasksQueueCount > 0 ? $"{s_TasksQueueCount.ToString()} Queued" : null;
+        }
+
+        /// <summary>
+        ///     Does the <see cref="TaskDirector"/> have any known busy or queued tasks?
+        /// </summary>
+        /// <returns>A true/false value indicating tasks.</returns>
+        public static bool HasTasks()
+        {
+            return s_TasksBusyCount > 0 || s_TasksQueueCount > 0;
+        }
+
+        /// <summary>
+        ///     Add a task to the queue, to be later started when possible.
+        /// </summary>
+        /// <remarks>
+        ///     If the <paramref name="task"/> is already executing it will be added to the known busy list.
+        /// </remarks>
+        /// <param name="task">An established task.</param>
         public static void QueueTask(TaskBase task)
         {
             if (task.IsExecuting())
@@ -57,39 +174,24 @@ namespace GDX.Threading
 
             lock (k_StatusChangeLock)
             {
-                if (k_TasksWaiting.Contains(task))
+                if (k_TasksQueue.Contains(task))
                 {
                     return;
                 }
 
-                k_TasksWaiting.Add(task);
-                s_TasksWaitingCount++;
+                k_TasksQueue.Add(task);
+                s_TasksQueueCount++;
             }
         }
 
-        public static void UpdateTask(TaskBase task)
-        {
-            if (task.IsDone())
-            {
-                RemoveBusyTask(task);
-            }
-            else if (task.IsExecuting())
-            {
-                AddBusyTask(task);
-            }
-        }
-
-        public static void Complete()
-        {
-            while (HasTasks())
-            {
-                Tick();
-            }
-            Tick();
-        }
-
-
-        // tick on main thread????
+        /// <summary>
+        ///     Update the <see cref="TaskDirector"/>, evaluating known tasks for work eligibility and execution.
+        /// </summary>
+        /// <remarks>
+        ///     This should occur on the main thread. If the <see cref="TaskDirector"/> is used during play mode,
+        ///     something needs to call this every global tick. While in edit mode the EditorTaskDirector triggers this
+        ///     method.
+        /// </remarks>
         public static void Tick()
         {
             // We are blocked by a running task from adding anything else.
@@ -110,13 +212,13 @@ namespace GDX.Threading
                 if (s_BlockAllTasksCount == 0)
                 {
                     // Spin up workers needed to process
-                    int count = k_TasksWaiting.Count;
+                    int count = k_TasksQueue.Count;
 
                     if (count > 0)
                     {
                         for (int i = 0; i < count; i++)
                         {
-                            TaskBase task = k_TasksWaiting[i];
+                            TaskBase task = k_TasksQueue[i];
 
                             // Check if task has a blocked name
                             if (k_BlockedNames.Contains(task.GetName()))
@@ -138,10 +240,10 @@ namespace GDX.Threading
                         int processedCount = k_TasksProcessed.Count;
                         for (int i = 0; i < processedCount; i++)
                         {
-                            k_TasksWaiting.Remove(k_TasksProcessed[i]);
+                            k_TasksQueue.Remove(k_TasksProcessed[i]);
                         }
 
-                        s_TasksWaitingCount = k_TasksWaiting.Count;
+                        s_TasksQueueCount = k_TasksQueue.Count;
                         k_TasksProcessed.Clear();
                     }
                 }
@@ -170,21 +272,64 @@ namespace GDX.Threading
             }
         }
 
-        public static string GetTaskStatus()
+        /// <summary>
+        ///     Evaluate the provided task and update its state inside of the <see cref="TaskDirector"/>.
+        /// </summary>
+        /// <remarks>
+        ///     This will add a task to the <see cref="TaskDirector"/> if it does not already know about it, regardless
+        ///     of the current blocking mode status. Do not use this method to add non executing tasks, they will not
+        ///     be added to the <see cref="TaskDirector"/> in this way.
+        /// </remarks>
+        /// <param name="task">An established task.</param>
+        public static void UpdateTask(TaskBase task)
         {
-            return s_TasksBusyCount > 0 ? $"{s_TasksBusyCount} Running / {s_TasksWaitingCount} Waiting" : null;
+            if (task.IsDone())
+            {
+                RemoveBusyTask(task);
+            }
+            else if (task.IsExecuting())
+            {
+                AddBusyTask(task);
+            }
         }
 
-        public static int GetBusyCount()
+        /// <summary>
+        ///     Wait on the completion of all known tasks, blocking the invoking thread.
+        /// </summary>
+        /// <remarks>
+        ///     Useful to force the main thread to wait for completion of tasks.
+        /// </remarks>
+        public static void Wait()
         {
-            return s_TasksBusyCount;
+            while (HasTasks())
+            {
+                Thread.Sleep(1);
+                Tick();
+            }
+            Tick();
         }
 
-        public static int GetWaitingCount()
+        /// <summary>
+        ///     Asynchronously wait on the completion of all known tasks.
+        /// </summary>
+        public static async Task WaitAsync()
         {
-            return s_TasksWaitingCount;
+            while (HasTasks())
+            {
+                await Task.Delay(1);
+                Tick();
+            }
+            Tick();
         }
 
+
+        /// <summary>
+        ///     Add a <see cref="TaskBase"/> to the known list of working tasks.
+        /// </summary>
+        /// <remarks>
+        ///     This will add the blocking mode settings to the current settings.
+        /// </remarks>
+        /// <param name="task">An established task.</param>
         static void AddBusyTask(TaskBase task)
         {
             lock (k_StatusChangeLock)
@@ -225,11 +370,16 @@ namespace GDX.Threading
             }
         }
 
-        static bool IsBlockedByBits(ref BitArray16 task)
+        /// <summary>
+        ///     Is the provided bit array blocked by the current blocking settings.
+        /// </summary>
+        /// <param name="bits">A <see cref="TaskBase"/>'s bits.</param>
+        /// <returns>true/false if the task should be blocked from executing.</returns>
+        static bool IsBlockedByBits(ref BitArray16 bits)
         {
             for (int i = 0; i < 16; i++)
             {
-                if (task[(byte)i] && k_BlockedBits[i] > 0)
+                if (bits[(byte)i] && k_BlockedBits[i] > 0)
                 {
                     return true;
                 }
@@ -237,6 +387,13 @@ namespace GDX.Threading
             return false;
         }
 
+        /// <summary>
+        ///     Remove a <see cref="TaskBase"/> from the known list of working tasks.
+        /// </summary>
+        /// <remarks>
+        ///     This will remove the blocking mode settings to the current settings.
+        /// </remarks>
+        /// <param name="task">An established task.</param>
         static void RemoveBusyTask(TaskBase task)
         {
             lock (k_StatusChangeLock)

@@ -16,53 +16,36 @@ namespace GDX.Threading
     /// </summary>
     public class TaskBaseTests
     {
-        List<string> m_TestLog = new List<string>();
-
-        void AddToLog(string[] values)
+        List<string> m_Log = new List<string>();
+        void LogAdded(string[] values)
         {
-            Debug.Log("ADDTOLOG CALLED");
-            m_TestLog.AddRange(values);
+            m_Log.AddRange(values);
         }
 
         [SetUp]
         public void Setup()
         {
-            Debug.Log("SETUP CALLED");
-            TaskDirector.OnLogAdded += AddToLog;
+            TaskDirector.OnLogAdded += LogAdded;
         }
 
         [TearDown]
         public void Teardown()
         {
-            TaskDirector.OnLogAdded -= AddToLog;
-            Debug.Log($"TEARDOWN CALLED {m_TestLog.Count}");
-
-            m_TestLog.Clear();
+            TaskDirector.OnLogAdded -= LogAdded;
+            m_Log.Clear();
         }
 
-        [UnityTest]
+        [Test]
         [Category(Core.TestCategory)]
-        public IEnumerator TaskDirector_Logging()
+        public void TaskDirector_Logging()
         {
             new TestTask(TestLiterals.HelloWorld, 5, null, null).Enqueue();
 
-            TaskDirector.Complete();
-            //
-            // // Force the tick on the director during the test
-            // while (TaskDirector.HasTasks())
-            // {
-            //     TaskDirector.Tick();
-            //     yield return null;
-            // }
-            //
-            // // One final tick for our main thread callbacks
-            // TaskDirector.Tick();
+            TaskDirector.Wait();
 
-            // One more update
-            yield return null;
-
-            Assert.IsTrue(m_TestLog.Count == 5, $"{m_TestLog.Count} != 5");
+            Assert.IsTrue(m_Log.Count == 5, $"{m_Log.Count} != 5");
         }
+
         public class TestTask : TaskBase
         {
             readonly string m_Message;

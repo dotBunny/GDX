@@ -45,7 +45,7 @@ namespace GDX.Editor
         /// <summary>
         ///     Get whether the <see cref="EditorTaskDirector"/> triggers the <see cref="TaskDirector "/> when in playmode?
         /// </summary>
-        /// <returns>A <b>true</b> or <b>false</b> answer.</returns>
+        /// <returns>A true or false answer.</returns>
         public static bool GetTickInPlayMode()
         {
             return s_TickInPlayMode;
@@ -59,7 +59,7 @@ namespace GDX.Editor
         ///     but not in a player.
         /// </remarks>
         /// <param name="shouldTick">
-        ///     A <b>true</b>/<b>false</b> value indicating if it should trigger the <see cref="TaskDirector"/> in playmode.
+        ///     A true/false value indicating if it should trigger the <see cref="TaskDirector"/> in playmode.
         /// </param>
         public static void SetTickInPlayMode(bool shouldTick)
         {
@@ -158,7 +158,7 @@ namespace GDX.Editor
         /// <summary>
         ///     Sets whether the <see cref="EditorApplication.update"/> callback is subscribed too or not.
         /// </summary>
-        /// <param name="subscribe">A <b>true</b>/<b>false</b> indication.</param>
+        /// <param name="subscribe">A true/false indication.</param>
         static void EditorUpdateCallback(bool subscribe)
         {
             if (subscribe && !s_SubscribedToUpdate)

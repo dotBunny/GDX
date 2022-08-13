@@ -4,8 +4,6 @@ using GDX.Collections;
 
 namespace GDX.Threading
 {
-    // TODO: Dependency chains
-
     /// <summary>
     ///     The base of a task used by <see cref="TaskDirector"/>.
     /// </summary>
@@ -166,7 +164,7 @@ namespace GDX.Threading
         /// <remarks>
         ///     <see cref="GetStatusMessage"/> for more details.
         /// </remarks>
-        /// <returns>Returns <b>true</b> if an exception occured.</returns>
+        /// <returns>Returns true if an exception occured.</returns>
         public bool HadExceptionOccur()
         {
             return m_ExceptionOccured;
@@ -176,7 +174,7 @@ namespace GDX.Threading
         /// <summary>
         ///     Does this <see cref="TaskBase"/> block any further task execution?
         /// </summary>
-        /// <returns><b>true</b> if the task has defined blocking modes, otherwise <b>false</b>.</returns>
+        /// <returns>true if the task has defined blocking modes, otherwise false.</returns>
         public bool IsBlocking()
         {
             return m_BlockingModes.HasFlags(BlockingModeFlags.None);
@@ -188,7 +186,7 @@ namespace GDX.Threading
         /// <remarks>
         ///     This will keep all tasks after it sitting waiting for this task to complete.
         /// </remarks>
-        /// <returns><b>true</b> if this task blocks all after it, otherwise <b>false</b>.</returns>
+        /// <returns>true if this task blocks all after it, otherwise false.</returns>
         public bool IsBlockingAllTasks()
         {
             return m_BlockingModes.HasFlags(BlockingModeFlags.All);
@@ -198,7 +196,7 @@ namespace GDX.Threading
         ///     Does this <see cref="TaskBase"/> block other tasks from executing based on its
         ///     <see cref="m_BlockingBits"/>?
         /// </summary>
-        /// <returns><b>true</b> if this tasks blocks based on bits, otherwise <b>false</b>.</returns>
+        /// <returns>true if this tasks blocks based on bits, otherwise false.</returns>
         public bool IsBlockingBits()
         {
             return m_BlockingModes.HasFlags(BlockingModeFlags.Bits);
@@ -208,7 +206,7 @@ namespace GDX.Threading
         ///     Does this <see cref="TaskBase"/> block all other tasks of the same name from starting during
         ///     its execution?
         /// </summary>
-        /// <returns><b>true</b> if this tasks blocks same named tasks, otherwise <b>false</b>.</returns>
+        /// <returns>true if this tasks blocks same named tasks, otherwise false.</returns>
         public bool IsBlockingSameName()
         {
             return m_BlockingModes.HasFlags(BlockingModeFlags.SameName);
@@ -222,7 +220,7 @@ namespace GDX.Threading
         ///     This directly relates to the <see cref="TaskDirector.OnBlockUserInput"/>, altering the count used
         ///     to trigger that particular event.
         /// </remarks>
-        /// <returns><b>true</b> if this task should prevent user input, otherwise <b>false</b>.</returns>
+        /// <returns>true if this task should prevent user input, otherwise false.</returns>
         public bool IsBlockingUserInterface()
         {
             return m_BlockingModes.HasFlags(BlockingModeFlags.UserInteraction);
@@ -232,8 +230,8 @@ namespace GDX.Threading
         ///     Is the <see cref="TaskBase"/> finished executing?
         /// </summary>
         /// <returns>
-        ///     Returns <b>true</b> if the execution phase of the task has been completed. This will be
-        ///     <b>true</b> if an exception has occured.
+        ///     Returns true if the execution phase of the task has been completed. This will be
+        ///     true if an exception has occured.
         /// </returns>
         public bool IsDone()
         {
@@ -243,7 +241,7 @@ namespace GDX.Threading
         /// <summary>
         ///     Is the <see cref="TaskBase"/> currently executing on the thread pool?
         /// </summary>
-        /// <returns>Returns <b>true</b> if the task is executing, otherwise <b>false</b>.</returns>
+        /// <returns>Returns true if the task is executing, otherwise false.</returns>
         public bool IsExecuting()
         {
             return m_IsExecuting;
