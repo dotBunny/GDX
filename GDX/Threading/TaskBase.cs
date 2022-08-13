@@ -74,7 +74,7 @@ namespace GDX.Threading
         /// <summary>
         ///     Should the task report information to the <see cref="TaskDirector"/> log.
         /// </summary>
-        protected bool m_IsLogging = true;
+        protected bool m_IsLogging = false;
 
         /// <summary>
         ///     The user-friendly name of the task, used by different feedback systems.

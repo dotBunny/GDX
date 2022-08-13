@@ -33,6 +33,20 @@ namespace GDX.Threading
         static int s_BlockInputCount;
         static int s_BlockAllTasksCount;
 
+        public static void AddLog(string message)
+        {
+            lock (k_LogLock)
+            {
+                k_TaskLog.Enqueue(message);
+            }
+        }
+
+        public static bool HasTasks()
+        {
+            return s_TasksBusyCount > 0 || s_TasksWaitingCount > 0;
+        }
+
+
         public static void QueueTask(TaskBase task)
         {
             if (task.IsExecuting())
@@ -65,12 +79,13 @@ namespace GDX.Threading
             }
         }
 
-        public static void AddLog(string message)
+        public static void Complete()
         {
-            lock (k_LogLock)
+            while (HasTasks())
             {
-                k_TaskLog.Enqueue(message);
+                Tick();
             }
+            Tick();
         }
 
 

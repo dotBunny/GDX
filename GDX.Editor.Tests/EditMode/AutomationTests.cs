@@ -14,6 +14,9 @@ using UnityEngine.TestTools;
 
 namespace GDX.Editor
 {
+    /// <summary>
+    ///     A simple unit test to validate the behaviour of <see cref="Automation"/>.
+    /// </summary>
     public class AutomationTests
     {
         [Test]

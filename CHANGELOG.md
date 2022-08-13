@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Addded
 
 - New toggle added to Project Settings -> GDX -> Environment, ensuring that shaders included are always included in a build
+- 
 
 ### Fixed
 
