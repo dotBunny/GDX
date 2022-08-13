@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace GDX.Threading
@@ -54,16 +55,16 @@ namespace GDX.Threading
                 $"{m_Log.Count.ToString()} != {AddLogTestTask.LogCount.ToString()}");
         }
 
-        [Test]
-        [Category(Core.TestCategory)]
-        public void Tick_OnBlockedUserInput_Blocked()
-        {
-            new OneSecondTestTask().Enqueue();
-            TaskDirector.Tick();
-            Assert.IsTrue(m_BlockInput);
-            TaskDirector.Wait();
-            Assert.IsTrue(!m_BlockInput);
-        }
+        // [Test]
+        // [Category(Core.TestCategory)]
+        // public async Task WaitAsync_OnBlockedUserInput_Blocked()
+        // {
+        //     new OneSecondTestTask().Enqueue();
+        //     TaskDirector.Tick();
+        //     Assert.IsTrue(m_BlockInput);
+        //     await TaskDirector.WaitAsync();
+        //     Assert.IsTrue(!m_BlockInput);
+        // }
 
         [Test]
         [Category(Core.TestCategory)]
@@ -109,6 +110,7 @@ namespace GDX.Threading
 
             a.Enqueue();
             TaskDirector.Tick();
+            Assert.IsTrue(TaskDirector.IsBlockingBit(1));
             b.Enqueue();
             TaskDirector.Tick();
 
@@ -122,10 +124,63 @@ namespace GDX.Threading
             Assert.IsTrue(m_OnCompleteMainThreadCalled);
         }
 
-        // GetStatus
-        // QueueTask
-        // WaitAsync
+        [Test]
+        [Category(Core.TestCategory)]
+        public void GetStatus_Busy_Content()
+        {
+            new NameBlockingTestTask().Enqueue();
+            TaskDirector.Tick();
+            string message = TaskDirector.GetStatus();
+            Assert.IsNotNull(message);
+            Assert.IsTrue(message.Contains("Busy"));
 
+            TaskDirector.Wait();
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void GetStatus_Queued_ReturnsContent()
+        {
+            new NameBlockingTestTask().Enqueue();
+
+            string message = TaskDirector.GetStatus();
+            Assert.IsNotNull(message);
+            Assert.IsFalse(message.Contains("Busy"));
+            Assert.IsTrue(message.Contains("Queued"));
+
+            TaskDirector.Wait();
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void GetStatus_Nothing_ReturnsNull()
+        {
+            Assert.IsNull(TaskDirector.GetStatus());
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void QueueTask_AddAlreadyExecuting_TaskAdded()
+        {
+            OneSecondTestTask task = new OneSecondTestTask();
+            ThreadPool.QueueUserWorkItem(delegate { task.Run(); });
+            Thread.Sleep(100);
+            TaskDirector.QueueTask(task);
+            Assert.IsTrue(TaskDirector.GetBusyCount() == 1);
+            Assert.IsTrue(TaskDirector.GetQueueCount() == 0);
+            TaskDirector.Wait();
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void QueueTask_AlreadyQueued_NotQueued()
+        {
+            OneSecondTestTask task = new OneSecondTestTask();
+            TaskDirector.QueueTask(task);
+            TaskDirector.QueueTask(task);
+            Assert.IsTrue(TaskDirector.GetQueueCount() == 1);
+            TaskDirector.Wait();
+        }
         void LogAdded(string[] values)
         {
             m_Log.AddRange(values);

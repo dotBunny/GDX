@@ -3,7 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using GDX.Collections;
@@ -117,6 +119,21 @@ namespace GDX.Threading
             }
         }
 
+        public static IEnumerator AsIEnumeratorReturnNull<T>(this Task<T> task)
+        {
+            while (!task.IsCompleted)
+            {
+                yield return null;
+            }
+
+            if (task.IsFaulted && task.Exception != null)
+            {
+                ExceptionDispatchInfo.Capture(task.Exception).Throw();
+            }
+
+            yield return null;
+        }
+
         /// <summary>
         ///     The number of tasks currently in process or awaiting execution by the thread pool.
         /// </summary>
@@ -151,10 +168,26 @@ namespace GDX.Threading
         /// <summary>
         ///     Does the <see cref="TaskDirector"/> have any known busy or queued tasks?
         /// </summary>
+        /// <remarks>
+        ///     It's not performant to poll this.
+        /// </remarks>
         /// <returns>A true/false value indicating tasks.</returns>
         public static bool HasTasks()
         {
             return s_TasksBusyCount > 0 || s_TasksQueueCount > 0;
+        }
+
+        /// <summary>
+        ///     Is the <see cref="TaskDirector"/> blocking tasks with a specific bit?
+        /// </summary>
+        /// <remarks>
+        ///     It isn't ideal to constantly poll this method, ideally this could be used to block things outside of
+        ///     the <see cref="TaskDirector"/>'s control based on tasks running.
+        /// </remarks>
+        /// <returns>A true/false value indicating if a <see cref="BitArray16"/> index is being blocked.</returns>
+        public static bool IsBlockingBit(int index)
+        {
+            return k_BlockedBits[index] > 0;
         }
 
         /// <summary>
@@ -168,7 +201,7 @@ namespace GDX.Threading
         {
             if (task.IsExecuting())
             {
-                AddBusyTask(task);
+                // Already running tasks self subscribe
                 return;
             }
 
