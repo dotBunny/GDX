@@ -281,9 +281,11 @@ namespace GDX.Threading
             {
                 m_IsDone = true;
                 m_IsExecuting = false;
-                TaskDirector.UpdateTask(this);
 
+                // Invoke off thread (before main thread)
                 Completed?.Invoke(this);
+
+                TaskDirector.UpdateTask(this);
 
                 m_Stopwatch.Stop();
 
