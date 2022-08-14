@@ -59,13 +59,13 @@ namespace GDX.Threading
                 $"{m_Log.Count.ToString()} != {AddLogTestTask.LogCount.ToString()}");
         }
 
-        [Test]
+        [UnityTest]
         [Category(Core.TestCategory)]
-        public void BuiltIn_Logging_ExpectedCount()
+        public IEnumerator BuiltIn_Logging_ExpectedCount()
         {
             new BuiltInLoggingTestTask().Enqueue();
             TaskDirector.Tick();
-            TaskDirector.Wait();
+            yield return TaskDirector.WaitAsync().AsIEnumerator();
 
             Assert.IsTrue(m_Log.Count == BuiltInLoggingTestTask.Count,
                 $"{m_Log.Count.ToString()} != {BuiltInLoggingTestTask.Count.ToString()}");
@@ -278,7 +278,6 @@ namespace GDX.Threading
             /// <inheritdoc />
             public override void DoWork()
             {
-                Thread.Sleep(100);
                 throw new NotImplementedException();
             }
         }
