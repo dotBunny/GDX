@@ -64,9 +64,9 @@ namespace GDX.Threading
         public IEnumerator BuiltIn_Logging_ExpectedCount()
         {
             new BuiltInLoggingTestTask().Enqueue();
-            TaskDirector.Tick();
             yield return TaskDirector.WaitAsync().AsIEnumerator();
             yield return null;
+            TaskDirector.Tick();
             Assert.IsTrue(m_Log.Count == BuiltInLoggingTestTask.Count,
                 $"{m_Log.Count.ToString()} != {BuiltInLoggingTestTask.Count.ToString()}");
         }
