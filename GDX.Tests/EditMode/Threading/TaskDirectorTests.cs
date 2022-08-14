@@ -278,6 +278,7 @@ namespace GDX.Threading
             /// <inheritdoc />
             public override void DoWork()
             {
+                Thread.Sleep(100);
                 throw new NotImplementedException();
             }
         }
