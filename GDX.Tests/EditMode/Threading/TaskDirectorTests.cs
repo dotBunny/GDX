@@ -66,7 +66,7 @@ namespace GDX.Threading
             new BuiltInLoggingTestTask().Enqueue();
             TaskDirector.Tick();
             yield return TaskDirector.WaitAsync().AsIEnumerator();
-
+            yield return null;
             Assert.IsTrue(m_Log.Count == BuiltInLoggingTestTask.Count,
                 $"{m_Log.Count.ToString()} != {BuiltInLoggingTestTask.Count.ToString()}");
         }
@@ -91,6 +91,7 @@ namespace GDX.Threading
             TaskDirector.Tick();
             Assert.IsTrue(m_BlockInput);
             yield return TaskDirector.WaitAsync().AsIEnumerator();
+            yield return null;
             Assert.IsTrue(!m_BlockInput);
         }
 
