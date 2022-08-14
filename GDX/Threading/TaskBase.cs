@@ -40,7 +40,7 @@ namespace GDX.Threading
         ///     It is <b>super important</b> to remember that subscribed actions will invoke off of the main thread.
         ///     Any logic that requires the main thread will not work. Many of Unity's APIs are not safe for this.
         /// </remarks>
-        public Action<TaskBase> Completed;
+        public Action<TaskBase> completed;
 
         /// <summary>
         ///     An event that is triggered once the <see cref="TaskBase"/> has finished, during the next tick of the
@@ -49,7 +49,7 @@ namespace GDX.Threading
         /// <remarks>
         ///     This is a safe way to do work which requires being executed on the main thread.
         /// </remarks>
-        public Action<TaskBase> CompletedMainThread;
+        public Action<TaskBase> completedMainThread;
 
         /// <summary>
         ///     The <see cref="TaskBase"/>'s descriptive bits.
@@ -70,6 +70,12 @@ namespace GDX.Threading
         protected BlockingModeFlags m_BlockingModes = BlockingModeFlags.None;
 
         /// <summary>
+        ///     The exception that occured.
+        /// </summary>
+        /// <remarks>See <see cref="IsFaulted"/>.</remarks>
+        protected Exception m_Exception;
+
+        /// <summary>
         ///     Should the task report information to the <see cref="TaskDirector"/> log.
         /// </summary>
         protected bool m_IsLogging = false;
@@ -81,14 +87,9 @@ namespace GDX.Threading
         protected string m_Name = k_DefaultName;
 
         /// <summary>
-        ///     Any messaging related to the task; most often used to store exception messages.
-        /// </summary>
-        protected string m_StatusMessage;
-
-        /// <summary>
         ///     Did an exception occur while executing this <see cref="TaskBase"/>?
         /// </summary>
-        bool m_ExceptionOccured;
+        bool m_IsFaulted;
 
         /// <summary>
         ///     Has the task finished its execution/work.
@@ -141,43 +142,22 @@ namespace GDX.Threading
         }
 
         /// <summary>
+        ///     Returns the <see cref="Exception"/> that was created when the task faulted.
+        /// </summary>
+        /// <remarks>See <see cref="IsFaulted"/>.</remarks>
+        /// <returns>An <see cref="Exception"/> object.</returns>
+        public Exception GetException()
+        {
+            return m_Exception;
+        }
+
+        /// <summary>
         ///     Gets the user-friendly name of the task.
         /// </summary>
         /// <returns>The defined <see cref="string"/> name of the task.</returns>
         public string GetName()
         {
             return m_Name;
-        }
-
-        /// <summary>
-        ///     Gets the internal task status message.
-        /// </summary>
-        /// <returns>A <see cref="string"/> value if present, otherwise null.</returns>
-        public string GetStatusMessage()
-        {
-            return m_StatusMessage;
-        }
-
-        /// <summary>
-        ///     Did an exception occur while executing off thread?
-        /// </summary>
-        /// <remarks>
-        ///     <see cref="GetStatusMessage"/> for more details.
-        /// </remarks>
-        /// <returns>Returns true if an exception occured.</returns>
-        public bool HadExceptionOccur()
-        {
-            return m_ExceptionOccured;
-        }
-
-
-        /// <summary>
-        ///     Does this <see cref="TaskBase"/> block any further task execution?
-        /// </summary>
-        /// <returns>true if the task has defined blocking modes, otherwise false.</returns>
-        public bool IsBlocking()
-        {
-            return m_BlockingModes.HasFlags(BlockingModeFlags.None);
         }
 
         /// <summary>
@@ -217,7 +197,7 @@ namespace GDX.Threading
         ///     user interface?
         /// </summary>
         /// <remarks>
-        ///     This directly relates to the <see cref="TaskDirector.OnBlockUserInput"/>, altering the count used
+        ///     This directly relates to the <see cref="TaskDirector.inputBlocked"/>, altering the count used
         ///     to trigger that particular event.
         /// </remarks>
         /// <returns>true if this task should prevent user input, otherwise false.</returns>
@@ -248,6 +228,18 @@ namespace GDX.Threading
         }
 
         /// <summary>
+        ///     Did an exception occur while executing off thread?
+        /// </summary>
+        /// <remarks>
+        ///     <see cref="GetStatusMessage"/> for more details.
+        /// </remarks>
+        /// <returns>Returns true if an exception occured.</returns>
+        public bool IsFaulted()
+        {
+            return m_IsFaulted;
+        }
+
+        /// <summary>
         ///     Execute task logic.
         /// </summary>
         public void Run()
@@ -266,16 +258,19 @@ namespace GDX.Threading
             {
                 if (m_IsLogging)
                 {
-                    TaskDirector.AddLog($"Starting {m_Name}");
+                    TaskDirector.Log($"Starting {m_Name}");
                 }
 
                 DoWork();
             }
             catch (Exception e)
             {
-                m_ExceptionOccured = true;
-                m_StatusMessage = e.Message;
-                TaskDirector.AddLog(m_StatusMessage);
+                m_IsFaulted = true;
+                m_Exception = e;
+                if (m_IsLogging)
+                {
+                    TaskDirector.Log(e.Message);
+                }
             }
             finally
             {
@@ -283,7 +278,7 @@ namespace GDX.Threading
                 m_IsExecuting = false;
 
                 // Invoke off thread (before main thread)
-                Completed?.Invoke(this);
+                completed?.Invoke(this);
 
                 TaskDirector.UpdateTask(this);
 
@@ -291,7 +286,7 @@ namespace GDX.Threading
 
                 if (m_IsLogging)
                 {
-                    TaskDirector.AddLog($"{m_Name} finished in {m_Stopwatch.ElapsedMilliseconds}ms.");
+                    TaskDirector.Log($"{m_Name} finished in {m_Stopwatch.ElapsedMilliseconds}ms.");
                 }
             }
         }

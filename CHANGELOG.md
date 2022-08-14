@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `TaskDirector` to assist with `TaskBase` based scheduling of the thread pool.
 - `EditorTaskDirector` to automatically tick the `TaskDirector` while in edit mode.
 
+### Changes
+
+- `SimpleListManagedPool` events renamed for consistency to `destroyedItem`, `returnedItem`, `spawnedItem`, `tearingDown`.
+
 ### Fixed
 
 - `StringKeyDictionary` and `IntKeyDictionary` can now be initialized with capacities as static fields.

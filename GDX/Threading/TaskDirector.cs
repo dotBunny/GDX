@@ -3,9 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using GDX.Collections;
@@ -19,14 +17,19 @@ namespace GDX.Threading
     public static class TaskDirector
     {
         /// <summary>
+        ///     An event invoked when a <see cref="TaskBase"/> throws an exception.
+        /// </summary>
+        public static Action<Exception> exceptionOccured;
+
+        /// <summary>
         ///     An event invoked during <see cref="Tick"/> when user input should be blocked.
         /// </summary>
-        public static Action<bool> OnBlockUserInput;
+        public static Action<bool> inputBlocked;
 
         /// <summary>
         ///     An event invoked during <see cref="Tick"/> with new log content.
         /// </summary>
-        public static Action<string[]> OnLogAdded;
+        public static Action<string[]> logAdded;
 
         /// <summary>
         ///     A running tally of bits that are blocked by the currently executing tasks.
@@ -38,6 +41,12 @@ namespace GDX.Threading
         ///     on the currently executing tasks.
         /// </summary>
         static readonly List<string> k_BlockedNames = new List<string>();
+
+        /// <summary>
+        ///     An accumulating collection of log content which will be passed to <see cref="logAdded"/>
+        ///     subscribed methods during <see cref="Tick"/>.
+        /// </summary>
+        static readonly Queue<string> k_Log = new Queue<string>(10);
 
         /// <summary>
         ///     A locking mechanism used for log entries ensuring thread safety.
@@ -59,12 +68,6 @@ namespace GDX.Threading
         ///     callbacks occur on the main thread.
         /// </summary>
         static readonly List<TaskBase> k_TasksFinished = new List<TaskBase>();
-
-        /// <summary>
-        ///     An accumulating collection of log content which will be passed to <see cref="OnLogAdded"/>
-        ///     subscribed methods during <see cref="Tick"/>.
-        /// </summary>
-        static readonly Queue<string> k_TaskLog = new Queue<string>(10);
 
         /// <summary>
         ///     A list of tasks that were moved from waiting state to a working/busy state during
@@ -105,34 +108,6 @@ namespace GDX.Threading
         ///     A cached count of <see cref="k_TasksQueue"/>.
         /// </summary>
         static int s_TasksQueueCount;
-
-        /// <summary>
-        ///     Adds a thread-safe log entry to a queue which will be dispatched to <see cref="OnLogAdded"/> on
-        ///     the <see cref="Tick"/> invoking thread.
-        /// </summary>
-        /// <param name="message">The log content.</param>
-        public static void AddLog(string message)
-        {
-            lock (k_LogLock)
-            {
-                k_TaskLog.Enqueue(message);
-            }
-        }
-
-        public static IEnumerator AsIEnumeratorReturnNull<T>(this Task<T> task)
-        {
-            while (!task.IsCompleted)
-            {
-                yield return null;
-            }
-
-            if (task.IsFaulted && task.Exception != null)
-            {
-                ExceptionDispatchInfo.Capture(task.Exception).Throw();
-            }
-
-            yield return null;
-        }
 
         /// <summary>
         ///     The number of tasks currently in process or awaiting execution by the thread pool.
@@ -191,6 +166,19 @@ namespace GDX.Threading
         }
 
         /// <summary>
+        ///     Adds a thread-safe log entry to a queue which will be dispatched to <see cref="logAdded"/> on
+        ///     the <see cref="Tick"/> invoking thread.
+        /// </summary>
+        /// <param name="message">The log content.</param>
+        public static void Log(string message)
+        {
+            lock (k_LogLock)
+            {
+                k_Log.Enqueue(message);
+            }
+        }
+
+        /// <summary>
         ///     Add a task to the queue, to be later started when possible.
         /// </summary>
         /// <remarks>
@@ -236,7 +224,7 @@ namespace GDX.Threading
                     for (int i = 0; i < finishedWorkersCount; i++)
                     {
                         TaskBase taskBase = k_TasksFinished[i];
-                        taskBase.CompletedMainThread?.Invoke(taskBase);
+                        taskBase.completedMainThread?.Invoke(taskBase);
                     }
 
                     k_TasksFinished.Clear();
@@ -285,22 +273,22 @@ namespace GDX.Threading
             // Dispatch logging
             lock (k_LogLock)
             {
-                if (k_TaskLog.Count > 0)
+                if (k_Log.Count > 0)
                 {
-                    OnLogAdded?.Invoke(k_TaskLog.ToArray());
-                    k_TaskLog.Clear();
+                    logAdded?.Invoke(k_Log.ToArray());
+                    k_Log.Clear();
                 }
             }
 
             // Invoke notification to anything subscribed to block input
             if (s_BlockInputCount > 0 && !s_BlockInput)
             {
-                OnBlockUserInput?.Invoke(true);
+                inputBlocked?.Invoke(true);
                 s_BlockInput = true;
             }
             else if (s_BlockInputCount <= 0 && s_BlockInput)
             {
-                OnBlockUserInput?.Invoke(false);
+                inputBlocked?.Invoke(false);
                 s_BlockInput = false;
             }
         }
@@ -465,6 +453,11 @@ namespace GDX.Threading
                             }
                         }
                     }
+                }
+
+                if (task.IsFaulted())
+                {
+                    exceptionOccured?.Invoke(task.GetException());
                 }
             }
         }

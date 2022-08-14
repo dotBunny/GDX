@@ -63,10 +63,10 @@ namespace GDX.Collections.Pooling
             newGameManagedPool.OutCachedCount = 0;
 
             // Assign actions
-            newGameManagedPool.OnDestroyItem += OnDestroyItemAction;
-            newGameManagedPool.OnTearDown += OnTearDownAction;
-            newGameManagedPool.OnSpawnedFromPool += OnSpawnedFromPoolAction;
-            newGameManagedPool.OnReturnedToPool += OnReturnedToPoolAction;
+            newGameManagedPool.destroyedItem += OnDestroyItemAction;
+            newGameManagedPool.tearingDown += OnTearDownAction;
+            newGameManagedPool.spawnedItem += OnSpawnedFromPoolAction;
+            newGameManagedPool.returnedItem += OnReturnedToPoolAction;
 
             return newGameManagedPool;
         }

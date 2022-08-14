@@ -18,6 +18,7 @@ namespace GDX.Developer
         {
             DebugDrawBuffer buffer = DebugDraw.GetUnmanagedBuffer(0);
             Assert.IsNotNull(buffer);
+            DebugDraw.RemoveUnmanagedBuffer(0);
         }
 
         [Test]
@@ -29,6 +30,8 @@ namespace GDX.Developer
 
             Assert.IsTrue(bufferA.Key == bufferB.Key);
             Assert.IsTrue(bufferA == bufferB);
+
+            DebugDraw.RemoveUnmanagedBuffer(bufferA.Key);
         }
 
         [Test]

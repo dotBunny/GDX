@@ -3,10 +3,11 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using NUnit.Framework;
+using UnityEngine.TestTools;
 
 namespace GDX.Threading
 {
@@ -20,6 +21,7 @@ namespace GDX.Threading
         bool m_BlockInput;
         bool m_OnCompleteCalled ;
         bool m_OnCompleteMainThreadCalled;
+        Exception m_Exception;
 
         [SetUp]
         public void Setup()
@@ -27,15 +29,17 @@ namespace GDX.Threading
             // There should be nothing going on when we go to do a test
             TaskDirector.Wait();
 
-            TaskDirector.OnLogAdded += LogAdded;
-            TaskDirector.OnBlockUserInput += BlockInput;
+            TaskDirector.logAdded += OnLogAdded;
+            TaskDirector.inputBlocked += OnBlockInput;
+            TaskDirector.exceptionOccured += OnExceptionOccured;
         }
 
         [TearDown]
         public void Teardown()
         {
-            TaskDirector.OnLogAdded -= LogAdded;
-            TaskDirector.OnBlockUserInput -= BlockInput;
+            TaskDirector.logAdded -= OnLogAdded;
+            TaskDirector.inputBlocked -= OnBlockInput;
+            TaskDirector.exceptionOccured -= OnExceptionOccured;
 
             m_BlockInput = false;
             m_OnCompleteCalled = false;
@@ -55,16 +59,40 @@ namespace GDX.Threading
                 $"{m_Log.Count.ToString()} != {AddLogTestTask.LogCount.ToString()}");
         }
 
-        // [Test]
-        // [Category(Core.TestCategory)]
-        // public async Task WaitAsync_OnBlockedUserInput_Blocked()
-        // {
-        //     new OneSecondTestTask().Enqueue();
-        //     TaskDirector.Tick();
-        //     Assert.IsTrue(m_BlockInput);
-        //     await TaskDirector.WaitAsync();
-        //     Assert.IsTrue(!m_BlockInput);
-        // }
+        [Test]
+        [Category(Core.TestCategory)]
+        public void BuiltIn_Logging_ExpectedCount()
+        {
+            new BuiltInLoggingTestTask().Enqueue();
+            TaskDirector.Tick();
+            TaskDirector.Wait();
+
+            Assert.IsTrue(m_Log.Count == BuiltInLoggingTestTask.Count,
+                $"{m_Log.Count.ToString()} != {BuiltInLoggingTestTask.Count.ToString()}");
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void AddLog_Logging_ExpectedCount()
+        {
+            new AddLogTestTask().Enqueue();
+
+            TaskDirector.Wait();
+
+            Assert.IsTrue(m_Log.Count == AddLogTestTask.LogCount,
+                $"{m_Log.Count.ToString()} != {AddLogTestTask.LogCount.ToString()}");
+        }
+
+        [UnityTest]
+        [Category(Core.TestCategory)]
+        public IEnumerator WaitAsync_OnBlockedUserInput_Blocked()
+        {
+            new OneSecondTestTask().Enqueue();
+            TaskDirector.Tick();
+            Assert.IsTrue(m_BlockInput);
+            yield return TaskDirector.WaitAsync().AsIEnumerator();
+            Assert.IsTrue(!m_BlockInput);
+        }
 
         [Test]
         [Category(Core.TestCategory)]
@@ -82,6 +110,15 @@ namespace GDX.Threading
             TaskDirector.Wait();
             Assert.IsTrue(TaskDirector.GetBusyCount() == 0);
             Assert.IsTrue(TaskDirector.GetQueueCount() == 0);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void ExceptionOccured_Throws_Logs()
+        {
+            new ExceptionTestTask().Enqueue();
+            TaskDirector.Wait();
+            Assert.IsTrue(m_Exception != null);
         }
 
         [Test]
@@ -106,7 +143,8 @@ namespace GDX.Threading
         public void BlockingBits_BlocksBits_CompletesCalled()
         {
             CallbackBitTestTask a = new CallbackBitTestTask(null, OnCallbackMainThread);
-            CallbackBitTestTask b = new CallbackBitTestTask(OnCallback, null);
+            CallbackBitTestTask b = new CallbackBitTestTask(OnCallback, null); ;
+            Assert.IsTrue(a.GetBlockingModes().HasFlag(TaskBase.BlockingModeFlags.Bits));
 
             a.Enqueue();
             TaskDirector.Tick();
@@ -181,14 +219,19 @@ namespace GDX.Threading
             Assert.IsTrue(TaskDirector.GetQueueCount() == 1);
             TaskDirector.Wait();
         }
-        void LogAdded(string[] values)
+        void OnLogAdded(string[] values)
         {
             m_Log.AddRange(values);
         }
 
-        void BlockInput(bool inputBlocked)
+        void OnBlockInput(bool inputBlocked)
         {
             m_BlockInput = inputBlocked;
+        }
+
+        void OnExceptionOccured(Exception e)
+        {
+            m_Exception = e;
         }
 
         void OnCallback(TaskBase task)
@@ -219,21 +262,49 @@ namespace GDX.Threading
             {
                 for (int i = 0; i < LogCount; i++)
                 {
-                    TaskDirector.AddLog(m_Name);
+                    TaskDirector.Log(m_Name);
                 }
             }
         }
-        class OneSecondTestTask : TaskBase
+
+        class BuiltInLoggingTestTask : TaskBase
         {
-            public OneSecondTestTask()
+            public const int Count = 3;
+            public BuiltInLoggingTestTask()
             {
-                m_Name = "OneSecondTestTask";
-                m_BlockingModes = BlockingModeFlags.UserInteraction;
+                m_IsLogging = true;
+            }
+
+            /// <inheritdoc />
+            public override void DoWork()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        class CallbackBitTestTask : TaskBase
+        {
+            public CallbackBitTestTask(Action<TaskBase> onComplete, Action<TaskBase> onCompleteMainThread)
+            {
+                m_BlockingBits[1] = true;
+                m_Bits[1] = true;
+                m_BlockingModes = BlockingModeFlags.Bits;
+
+                completed += onComplete;
+                completedMainThread += onCompleteMainThread;
             }
 
             public override void DoWork()
             {
-                Thread.Sleep(1000);
+                Thread.Sleep(100);
+            }
+        }
+
+        class ExceptionTestTask : TaskBase
+        {
+            public override void DoWork()
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -251,22 +322,16 @@ namespace GDX.Threading
             }
         }
 
-        class CallbackBitTestTask : TaskBase
+        class OneSecondTestTask : TaskBase
         {
-            public CallbackBitTestTask(Action<TaskBase> onComplete, Action<TaskBase> onCompleteMainThread)
+            public OneSecondTestTask()
             {
-                m_Name = "CallbackBitTestTask";
-                m_BlockingBits[1] = true;
-                m_Bits[1] = true;
-                m_BlockingModes = BlockingModeFlags.Bits;
-
-                Completed += onComplete;
-                CompletedMainThread += onCompleteMainThread;
+                m_BlockingModes = BlockingModeFlags.UserInteraction;
             }
 
             public override void DoWork()
             {
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
             }
         }
     }

@@ -203,14 +203,6 @@ namespace GDX.Developer
         }
 
         /// <summary>
-        ///     Ensure that we dispose associated resources.
-        /// </summary>
-        ~DebugDrawBuffer()
-        {
-            m_CommandBuffer?.Dispose();
-        }
-
-        /// <summary>
         ///     Converges all working vertices/material additions into finalized meshReference forms and fills the command
         ///     buffer with the appropriate data.
         /// </summary>
