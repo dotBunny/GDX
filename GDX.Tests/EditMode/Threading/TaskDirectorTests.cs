@@ -144,7 +144,7 @@ namespace GDX.Threading
         public void BlockingBits_BlocksBits_CompletesCalled()
         {
             CallbackBitTestTask a = new CallbackBitTestTask(null, OnCallbackMainThread);
-            CallbackBitTestTask b = new CallbackBitTestTask(OnCallback, null); ;
+            CallbackBitTestTask b = new CallbackBitTestTask(OnCallback, null);
             Assert.IsTrue(a.GetBlockingModes().HasFlag(TaskBase.BlockingModeFlags.Bits));
 
             a.Enqueue();

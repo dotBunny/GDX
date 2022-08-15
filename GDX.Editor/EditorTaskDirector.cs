@@ -76,6 +76,15 @@ namespace GDX.Editor
         }
 
         /// <summary>
+        ///     Update the rate at which the <see cref="EditorTaskDirector"/> updates the <see cref="TaskDirector"/>.
+        /// </summary>
+        /// <param name="tickRate">The new tick rate.</param>
+        public static void SetTickRate(float tickRate)
+        {
+            s_TickRate = tickRate;
+        }
+
+        /// <summary>
         ///     Sets up some default state for the <see cref="EditorTaskDirector"/>.
         /// </summary>
         [InitializeOnLoadMethod]
