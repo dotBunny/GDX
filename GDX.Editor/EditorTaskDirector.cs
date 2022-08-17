@@ -5,6 +5,7 @@
 using GDX.Threading;
 using Unity.Mathematics;
 using UnityEditor;
+using UnityEngine;
 
 namespace GDX.Editor
 {
@@ -13,6 +14,11 @@ namespace GDX.Editor
     /// </summary>
     public static class EditorTaskDirector
     {
+        /// <summary>
+        ///     The default editor tick rate
+        /// </summary>
+        public static double DefaultTickRate = 0.5f;
+
         /// <summary>
         ///     The last time a tick occured.
         /// </summary>
@@ -26,7 +32,7 @@ namespace GDX.Editor
         /// <summary>
         ///     Is the <see cref="EditorTaskDirector"/> subscribed to <see cref="EditorApplication.update"/>?
         /// </summary>
-        static bool s_SubscribedToUpdate;
+        static bool s_SubscribedToEditorUpdate;
 
         /// <summary>
         ///     Should the <see cref="EditorTaskDirector"/> tick when the editor is in playmode?
@@ -40,7 +46,7 @@ namespace GDX.Editor
         ///     This works by accumulation, when time between the last tick and current time exceeds
         ///     <see cref="s_TickRate"/>, a tick will be triggered.
         /// </remarks>
-        static double s_TickRate = 0.5f; // TODO: Make GDX config?
+        static double s_TickRate = DefaultTickRate; // TODO: Make GDX config?
 
         /// <summary>
         ///     Get whether the <see cref="EditorTaskDirector"/> triggers the <see cref="TaskDirector "/> when in playmode?
@@ -49,6 +55,18 @@ namespace GDX.Editor
         public static bool GetTickInPlayMode()
         {
             return s_TickInPlayMode;
+        }
+
+        /// <summary>
+        ///     Get the current tick rate used by the <see cref="EditorTaskDirector"/>.
+        /// </summary>
+        /// <returns>
+        ///     A double value representing the elapsed time necessary to trigger an update to the
+        ///     <see cref="TaskDirector"/>.
+        /// </returns>
+        public static double GetTickRate()
+        {
+            return s_TickRate;
         }
 
         /// <summary>
@@ -79,7 +97,7 @@ namespace GDX.Editor
         ///     Update the rate at which the <see cref="EditorTaskDirector"/> updates the <see cref="TaskDirector"/>.
         /// </summary>
         /// <param name="tickRate">The new tick rate.</param>
-        public static void SetTickRate(float tickRate)
+        public static void SetTickRate(double tickRate)
         {
             s_TickRate = tickRate;
         }
@@ -102,10 +120,10 @@ namespace GDX.Editor
         {
             switch (state)
             {
-                case PlayModeStateChange.EnteredEditMode when !s_SubscribedToUpdate:
+                case PlayModeStateChange.EnteredEditMode:
                     EditorUpdateCallback(true);
                     break;
-                case PlayModeStateChange.ExitingEditMode when s_SubscribedToUpdate:
+                case PlayModeStateChange.ExitingEditMode:
                     EditorUpdateCallback(false);
                     break;
             }
@@ -123,8 +141,7 @@ namespace GDX.Editor
             // We're going to avoid ticking when the editor really is actually busy
             if (s_TickRate == 0 ||
                 EditorApplication.isCompiling ||
-                EditorApplication.isUpdating ||
-                EditorApplication.isPlayingOrWillChangePlaymode)
+                EditorApplication.isUpdating)
             {
                 return;
             }
@@ -170,15 +187,15 @@ namespace GDX.Editor
         /// <param name="subscribe">A true/false indication.</param>
         static void EditorUpdateCallback(bool subscribe)
         {
-            if (subscribe && !s_SubscribedToUpdate)
+            if (subscribe && !s_SubscribedToEditorUpdate)
             {
                 EditorApplication.update += EditorUpdate;
-                s_SubscribedToUpdate = true;
+                s_SubscribedToEditorUpdate = true;
             }
-            else if (!subscribe && s_SubscribedToUpdate)
+            else if (!subscribe && s_SubscribedToEditorUpdate)
             {
                 EditorApplication.update -= EditorUpdate;
-                s_SubscribedToUpdate = false;
+                s_SubscribedToEditorUpdate = false;
             }
         }
     }
