@@ -25,6 +25,9 @@ namespace GDX.Collections.Generic
     ///     <para>
     ///         The process of serializing and deserializing this dictionary should not be considered performant.
     ///     </para>
+    ///     <para>
+    ///         The property drawer will not show structs, it will be blank. It does work however if done through code.
+    ///     </para>
     /// </remarks>
     /// <typeparam name="TKey">The dictionary's key <see cref="Type" />.</typeparam>
     /// <typeparam name="TValue">The dictionary's value <see cref="Type" />.</typeparam>
@@ -42,7 +45,6 @@ namespace GDX.Collections.Generic
         /// </summary>
         /// <remarks>This field is determined/cached in the constructor.</remarks>
         [FormerlySerializedAs("isSerializable")]
-
         [HideInInspector] [SerializeField] bool m_IsSerializable;
 
         /// <summary>

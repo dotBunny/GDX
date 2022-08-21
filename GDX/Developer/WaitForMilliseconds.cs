@@ -10,6 +10,12 @@ namespace GDX.Developer
 {
     public class WaitForMilliseconds
     {
+        public const int OneSecond = 1000;
+        public const int TenSeconds = 10000;
+        public const int ThirtySeconds = 30000;
+        public const int OneMinute = 60000;
+        public const int TenMinutes = 600000;
+
         readonly Stopwatch m_Stopwatch = new Stopwatch();
         readonly int m_Duration;
 
@@ -19,14 +25,6 @@ namespace GDX.Developer
             m_Stopwatch.Restart();
         }
 
-        public async Task WaitAsync()
-        {
-            await Task.Run(() =>
-            {
-
-                Task.Delay(m_Duration).Wait();
-            });
-        }
         public bool Wait()
         {
             if (m_Stopwatch.ElapsedMilliseconds >= m_Duration)
@@ -36,6 +34,14 @@ namespace GDX.Developer
             }
 
             return true;
+        }
+
+        public async Task WaitAsync()
+        {
+            await Task.Run(() =>
+            {
+                Task.Delay(m_Duration).Wait();
+            });
         }
 
         public IEnumerator While()

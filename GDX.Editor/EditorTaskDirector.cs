@@ -141,7 +141,8 @@ namespace GDX.Editor
             // We're going to avoid ticking when the editor really is actually busy
             if (s_TickRate == 0 ||
                 EditorApplication.isCompiling ||
-                EditorApplication.isUpdating)
+                EditorApplication.isUpdating ||
+                (!s_TickInPlayMode && Application.isPlaying))
             {
                 return;
             }
