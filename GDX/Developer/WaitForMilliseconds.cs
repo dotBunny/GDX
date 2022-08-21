@@ -11,6 +11,8 @@ namespace GDX.Developer
     public class WaitForMilliseconds
     {
         public const int OneSecond = 1000;
+        public const int TwoSeconds = 2000;
+        public const int FiveSeconds = 5000;
         public const int TenSeconds = 10000;
         public const int ThirtySeconds = 30000;
         public const int OneMinute = 60000;

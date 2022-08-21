@@ -8,7 +8,6 @@ using GDX.Developer;
 using GDX.Threading;
 using NUnit.Framework;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
@@ -21,29 +20,29 @@ namespace GDX.Editor
     /// </summary>
     public class EditorTaskDirectorTests
     {
-        WaitForMilliseconds _waitForOneSecond = new WaitForMilliseconds(WaitForMilliseconds.OneSecond);
-        EnterPlayModeOptions _previousOptions;
-        bool _previousToggle;
-        bool _previousTickInPlayMode;
-        double _previousTickRate;
-        Scene _testScene;
+        readonly WaitForMilliseconds m_WaitForOneSecond = new WaitForMilliseconds(WaitForMilliseconds.OneSecond);
+        EnterPlayModeOptions m_PreviousOptions;
+        bool m_PreviousToggle;
+        bool m_PreviousTickInPlayMode;
+        double m_PreviousTickRate;
+        Scene m_TestScene;
 
         [UnitySetUp]
         public IEnumerator Setup()
         {
             // Ensure we are not in a scene
-            _testScene = TestFramework.ForceEmptyScene();
+            m_TestScene = TestFramework.ForceEmptyScene();
 
             // Cache previous settings we are bound to play with
-            _previousToggle = EditorSettings.enterPlayModeOptionsEnabled;
-            _previousOptions = EditorSettings.enterPlayModeOptions;
-            _previousTickInPlayMode = EditorTaskDirector.GetTickInPlayMode();
-            _previousTickRate = EditorTaskDirector.GetTickRate();
+            m_PreviousToggle = EditorSettings.enterPlayModeOptionsEnabled;
+            m_PreviousOptions = EditorSettings.enterPlayModeOptions;
+            m_PreviousTickInPlayMode = EditorTaskDirector.GetTickInPlayMode();
+            m_PreviousTickRate = EditorTaskDirector.GetTickRate();
 
             EditorSettings.enterPlayModeOptionsEnabled = true;
             EditorSettings.enterPlayModeOptions = EnterPlayModeOptions.DisableDomainReload;
 
-            _waitForOneSecond.Reset();
+            m_WaitForOneSecond.Reset();
 
             // Wait for any outstanding to finish
             yield return TaskDirector.WaitAsync().AsIEnumerator();
@@ -59,15 +58,15 @@ namespace GDX.Editor
             }
             yield return null;
 
-            EditorTaskDirector.SetTickInPlayMode(_previousTickInPlayMode);
-            EditorTaskDirector.SetTickRate(_previousTickRate);
-            EditorSettings.enterPlayModeOptionsEnabled = _previousToggle;
-            EditorSettings.enterPlayModeOptions = _previousOptions;
+            EditorTaskDirector.SetTickInPlayMode(m_PreviousTickInPlayMode);
+            EditorTaskDirector.SetTickRate(m_PreviousTickRate);
+            EditorSettings.enterPlayModeOptionsEnabled = m_PreviousToggle;
+            EditorSettings.enterPlayModeOptions = m_PreviousOptions;
 
             // Only unload if there is more then one
             if (SceneManager.sceneCount > 1)
             {
-                SceneManager.UnloadSceneAsync(_testScene);
+                SceneManager.UnloadSceneAsync(m_TestScene);
             }
 
             yield return TaskDirector.WaitAsync().AsIEnumerator();
@@ -78,101 +77,82 @@ namespace GDX.Editor
         public IEnumerator SetTickRate_QueuesOnZero_BusyWhenSet()
         {
             EditorTaskDirector.SetTickRate(0);
-            new CallbackTestTask(WaitForMilliseconds.TenSeconds).Enqueue();
+            new CallbackTestTask(WaitForMilliseconds.TwoSeconds).Enqueue();
 
             Assert.IsTrue(TaskDirector.GetBusyCount() == 0,
                 $"Expected 0, {TaskDirector.GetBusyCount().ToString()} (Queued: {TaskDirector.GetQueueCount().ToString()})");
             Assert.IsTrue(TaskDirector.GetQueueCount() == 1, $"Expected 1, {TaskDirector.GetQueueCount().ToString()}");
 
             EditorTaskDirector.SetTickRate(EditorTaskDirector.DefaultTickRate);
-            yield return _waitForOneSecond.While();
+            yield return m_WaitForOneSecond.While();
 
             Assert.IsTrue(TaskDirector.GetBusyCount() == 1,
                 $"Expected 1, {TaskDirector.GetBusyCount().ToString()} (Queued: {TaskDirector.GetQueueCount().ToString()})");
             Assert.IsTrue(TaskDirector.GetQueueCount() == 0, $"Expected 0, {TaskDirector.GetQueueCount().ToString()}");
         }
 
+        [UnityTest]
+        [Category(Core.TestCategory)]
+        public IEnumerator SetTickInPlayMode_True_Ticks()
+        {
+            // Ensure that before we start the test that we're zeroed out.
+            int busyCount = TaskDirector.GetBusyCount();
+            int queueCount = TaskDirector.GetQueueCount();
+            Assert.IsTrue(
+                busyCount == 0 && queueCount == 0,
+                $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
+
+            // Set tick in playmode
+            EditorTaskDirector.SetTickRate(0.1f);
+            EditorTaskDirector.SetTickInPlayMode(true);
+
+            yield return new EnterPlayMode();
+
+            new CallbackTestTask(1).Enqueue();
+
+            yield return m_WaitForOneSecond.While();
+
+            busyCount = TaskDirector.GetBusyCount();
+            queueCount = TaskDirector.GetQueueCount();
+            Assert.IsTrue(
+                busyCount == 0 && queueCount == 0,
+                $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
+        }
+
         // [UnityTest]
         // [Category(Core.TestCategory)]
         // public IEnumerator SetTickInPlayMode_False_NoTick()
         // {
-        //     // Ensure that before we start the test that we're zero'd out.
+        //     // Ensure that before we start the test that we're zeroed out.
         //     int busyCount = TaskDirector.GetBusyCount();
         //     int queueCount = TaskDirector.GetQueueCount();
         //     Assert.IsTrue(
         //         busyCount == 0 && queueCount == 0,
         //         $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
         //
-        //     // Stop ticking in general
-        //     EditorTaskDirector.SetTickRate(0);
-        //
-        //     // No ticking in playmode yet either
+        //     // Set tick in playmode
+        //     EditorTaskDirector.SetTickRate(0.1f);
         //     EditorTaskDirector.SetTickInPlayMode(false);
         //
-        //     // This should add but do nothing
-        //     new CallbackTestTask(WaitForMilliseconds.TenSeconds).Enqueue();
-        //
-        //     // Check if we have just 1 task queued since it is unable to run
-        //     busyCount = TaskDirector.GetBusyCount();
-        //     queueCount = TaskDirector.GetQueueCount();
-        //     Assert.IsTrue(
-        //         busyCount == 0 && queueCount == 1,
-        //         $"Expected 0/1 - Found {busyCount.ToString()}/{queueCount.ToString()}");
-        //
-        //     // Going into playmode can reload the domain, we have turned it off for this test,
-        //     // otherwise things would disappear between loads
         //     yield return new EnterPlayMode();
         //
-        //     // Still maintain that nothing has moved even through the entering playmode
+        //     new CallbackTestTask(1).Enqueue();
+        //
         //     busyCount = TaskDirector.GetBusyCount();
         //     queueCount = TaskDirector.GetQueueCount();
         //     Assert.IsTrue(
         //         busyCount == 0 && queueCount == 1,
         //         $"Expected 0/1 - Found {busyCount.ToString()}/{queueCount.ToString()}");
         //
-        //     // Test setting the tick rate to something, wait enough that it could in theory tick
-        //     EditorTaskDirector.SetTickRate(EditorTaskDirector.DefaultTickRate);
-        //     yield return _waitForOneSecond.While();
-        //     _waitForOneSecond.Reset();
+        //     yield return m_WaitForOneSecond.While(); // It is ticking for some reason
         //
-        //     // The task should remain still queued up because while ticking is enabled, in playmode has
-        //     // not been enabled
         //     busyCount = TaskDirector.GetBusyCount();
         //     queueCount = TaskDirector.GetQueueCount();
         //     Assert.IsTrue(
         //         busyCount == 0 && queueCount == 1,
         //         $"Expected 0/1 - Found {busyCount.ToString()}/{queueCount.ToString()}");
-        //
-        //     // Wait for the task to clear out in edit mode
-        //     yield return new ExitPlayMode();
-        //     yield return TaskDirector.WaitAsync().AsIEnumerator();
-        //
-        //     // Allow ticking in editor mode
-        //     EditorTaskDirector.SetTickInPlayMode(true);
-        //     yield return new EnterPlayMode();
-        //
-        //     // Add new task to the queue that should be processed
-        //     new CallbackTestTask(WaitForMilliseconds.OneSecond).Enqueue();
-        //
-        //     // Wait for two seconds which should be enough to process the task and run it
-        //     _waitForOneSecond.Reset();
-        //     yield return _waitForOneSecond.While();
-        //     _waitForOneSecond.Reset();
-        //     yield return _waitForOneSecond.While();
-        //
-        //     busyCount = TaskDirector.GetBusyCount();
-        //     queueCount = TaskDirector.GetQueueCount();
-        //     Assert.IsTrue(
-        //         busyCount == 0 && queueCount == 0,
-        //         $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
-        //
-        //     yield return new ExitPlayMode();
-        //     yield return null;
         // }
 
-        // SetTickRate
-        // EditorUpdate
-        // EditorUpdateCallback
         class CallbackTestTask : TaskBase
         {
             readonly int m_Delay;

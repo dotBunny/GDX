@@ -17,7 +17,7 @@ namespace GDX.Editor
         /// <summary>
         ///     The default editor tick rate
         /// </summary>
-        public static double DefaultTickRate = 0.5f;
+        public static double DefaultTickRate = 0.5f; // make GDXconfig, should also make if we use this
 
         /// <summary>
         ///     The last time a tick occured.
@@ -81,16 +81,11 @@ namespace GDX.Editor
         /// </param>
         public static void SetTickInPlayMode(bool shouldTick)
         {
-            if (shouldTick && !s_TickInPlayMode)
+            if (Application.isPlaying && !shouldTick)
             {
-                EditorApplication.playModeStateChanged -= EditorApplicationOnplayModeStateChanged;
-                s_TickInPlayMode = true;
+                EditorApplicationOnplayModeStateChanged(PlayModeStateChange.ExitingEditMode);
             }
-            else if (!shouldTick && s_TickInPlayMode)
-            {
-                EditorApplication.playModeStateChanged += EditorApplicationOnplayModeStateChanged;
-                s_TickInPlayMode = false;
-            }
+            s_TickInPlayMode = shouldTick;
         }
 
         /// <summary>
@@ -110,6 +105,7 @@ namespace GDX.Editor
         {
             EditorUpdateCallback(true);
             SetTickInPlayMode(false);
+            EditorApplication.playModeStateChanged += EditorApplicationOnplayModeStateChanged;
         }
 
         /// <summary>
@@ -124,7 +120,10 @@ namespace GDX.Editor
                     EditorUpdateCallback(true);
                     break;
                 case PlayModeStateChange.ExitingEditMode:
-                    EditorUpdateCallback(false);
+                    if (!s_TickInPlayMode)
+                    {
+                        EditorUpdateCallback(false);
+                    }
                     break;
             }
         }
@@ -139,7 +138,8 @@ namespace GDX.Editor
         static void EditorUpdate()
         {
             // We're going to avoid ticking when the editor really is actually busy
-            if (s_TickRate == 0 ||
+            // It's important to check greater then due to ambiguity of the precision
+            if (s_TickRate < Platform.DoubleTolerance ||
                 EditorApplication.isCompiling ||
                 EditorApplication.isUpdating ||
                 (!s_TickInPlayMode && Application.isPlaying))
