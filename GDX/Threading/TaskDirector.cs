@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using GDX.Collections;
-using UnityEngine.LowLevel;
 
 namespace GDX.Threading
 {
@@ -461,25 +460,6 @@ namespace GDX.Threading
                     exceptionOccured?.Invoke(task.GetException());
                 }
             }
-        }
-    }
-
-
-
-    public static class TaskDirectorPlayerLoopSystem
-    {
-        public static void Subscribe()
-        {
-            PlayerLoopSystem playerLoop = PlayerLoop.GetCurrentPlayerLoop();
-        }
-
-        public static void Unsubscribe()
-        {
-
-        }
-        public static void Update()
-        {
-            TaskDirector.Tick();
         }
     }
 }

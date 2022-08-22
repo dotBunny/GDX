@@ -12,8 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - New toggle added to Project Settings -> GDX -> Environment, ensuring that shaders included are always included in a build
-- `TaskDirector` to assist with `TaskBase` based scheduling of the thread pool.
+- `TaskDirector` to assist with `TaskBase` based scheduling of the thread pool, configurable in GDX project preferences.
 - `EditorTaskDirector` to automatically tick the `TaskDirector` while in edit mode.
+- `AddChildSystem()`, `RemoveChildSystem()`, `ReplaceChildSystem()`, `TryGetChildSystem()` found in `PlayerLoopSystemExtensions` to make modifying the PlayerLoop easier.
 
 ### Changes
 

@@ -132,11 +132,11 @@ namespace GDX.Editor
                 case PlayModeStateChange.EnteredPlayMode:
                     if (s_TickInPlayMode)
                     {
-                        TaskDirectorPlayerLoopSystem.Subscribe();
+                        TaskDirectorSystem.AddToPlayerLoop();
                     }
                     break;
                 case PlayModeStateChange.ExitingPlayMode:
-                    TaskDirectorPlayerLoopSystem.Unsubscribe();
+                    TaskDirectorSystem.RemoveFromPlayerLoop();
                     break;
             }
         }
