@@ -41,9 +41,14 @@ namespace GDX.Editor
             m_PreviousTickRate = EditorTaskDirector.GetTickRate();
 
             EditorSettings.enterPlayModeOptionsEnabled = true;
+#if UNITY_2022_1_OR_NEWER
             EditorSettings.enterPlayModeOptions = EnterPlayModeOptions.DisableDomainReload |
                                                   EnterPlayModeOptions.DisableSceneReload |
                                                   EnterPlayModeOptions.DisableSceneBackupUnlessDirty;
+#else
+            EditorSettings.enterPlayModeOptions = EnterPlayModeOptions.DisableDomainReload |
+                                                  EnterPlayModeOptions.DisableSceneReload;
+#endif
 
             m_WaitForOneSecond.Reset();
 
