@@ -9,16 +9,13 @@ using UnityEngine;
 
 namespace GDX.Editor
 {
+    // TODO: Block going into playmode when there are background tasks still
+
     /// <summary>
     ///     An editor-only method of ticking <see cref="TaskDirector"/>.
     /// </summary>
     public static class EditorTaskDirector
     {
-        /// <summary>
-        ///     The default editor tick rate
-        /// </summary>
-        public static double DefaultTickRate = 0.5f; // make GDXconfig, should also make if we use this
-
         /// <summary>
         ///     The last time a tick occured.
         /// </summary>
@@ -35,7 +32,8 @@ namespace GDX.Editor
         static bool s_SubscribedToEditorUpdate;
 
         /// <summary>
-        ///     Should the <see cref="EditorTaskDirector"/> tick when the editor is in playmode?
+        ///     Should the <see cref="EditorTaskDirector"/> tick when the editor is in playmode? Default configured in
+        ///     <see cref="Config"/>.
         /// </summary>
         static bool s_TickInPlayMode;
 
@@ -44,9 +42,9 @@ namespace GDX.Editor
         /// </summary>
         /// <remarks>
         ///     This works by accumulation, when time between the last tick and current time exceeds
-        ///     <see cref="s_TickRate"/>, a tick will be triggered.
+        ///     <see cref="s_TickRate"/>, a tick will be triggered. Default configured in <see cref="Config"/>.
         /// </remarks>
-        static double s_TickRate = DefaultTickRate; // TODO: Make GDX config?
+        static double s_TickRate = -1;
 
         /// <summary>
         ///     Get whether the <see cref="EditorTaskDirector"/> triggers the <see cref="TaskDirector "/> when in playmode?
@@ -81,9 +79,10 @@ namespace GDX.Editor
         /// </param>
         public static void SetTickInPlayMode(bool shouldTick)
         {
-            if (Application.isPlaying && !shouldTick)
+            if (EditorApplication.isPlaying && !shouldTick)
             {
                 EditorApplicationOnplayModeStateChanged(PlayModeStateChange.ExitingEditMode);
+                EditorApplicationOnplayModeStateChanged(PlayModeStateChange.EnteredPlayMode);
             }
             s_TickInPlayMode = shouldTick;
         }
@@ -103,9 +102,17 @@ namespace GDX.Editor
         [InitializeOnLoadMethod]
         static void Initialize()
         {
-            EditorUpdateCallback(true);
-            SetTickInPlayMode(false);
-            EditorApplication.playModeStateChanged += EditorApplicationOnplayModeStateChanged;
+            if (Config.EnvironmentEditorTaskDirector)
+            {
+                if (s_TickRate < 0)
+                {
+                    s_TickRate = Config.EnvironmentEditorTaskDirectorTickRate;
+                }
+
+                EditorUpdateCallback(true);
+                SetTickInPlayMode(Config.EnvironmentEditorTaskDirectorTickInPlayMode);
+                EditorApplication.playModeStateChanged += EditorApplicationOnplayModeStateChanged;
+            }
         }
 
         /// <summary>
@@ -120,10 +127,16 @@ namespace GDX.Editor
                     EditorUpdateCallback(true);
                     break;
                 case PlayModeStateChange.ExitingEditMode:
-                    if (!s_TickInPlayMode)
+                    EditorUpdateCallback(false);
+                    break;
+                case PlayModeStateChange.EnteredPlayMode:
+                    if (s_TickInPlayMode)
                     {
-                        EditorUpdateCallback(false);
+                        TaskDirectorPlayerLoopSystem.Subscribe();
                     }
+                    break;
+                case PlayModeStateChange.ExitingPlayMode:
+                    TaskDirectorPlayerLoopSystem.Unsubscribe();
                     break;
             }
         }
@@ -142,7 +155,8 @@ namespace GDX.Editor
             if (s_TickRate < Platform.DoubleTolerance ||
                 EditorApplication.isCompiling ||
                 EditorApplication.isUpdating ||
-                (!s_TickInPlayMode && Application.isPlaying))
+                (!s_TickInPlayMode && EditorApplication.isPlaying))
+
             {
                 return;
             }

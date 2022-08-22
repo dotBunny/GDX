@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections;
 using System.Threading;
 using GDX.Developer;
@@ -40,7 +41,9 @@ namespace GDX.Editor
             m_PreviousTickRate = EditorTaskDirector.GetTickRate();
 
             EditorSettings.enterPlayModeOptionsEnabled = true;
-            EditorSettings.enterPlayModeOptions = EnterPlayModeOptions.DisableDomainReload;
+            EditorSettings.enterPlayModeOptions = EnterPlayModeOptions.DisableDomainReload |
+                                                  EnterPlayModeOptions.DisableSceneReload |
+                                                  EnterPlayModeOptions.DisableSceneBackupUnlessDirty;
 
             m_WaitForOneSecond.Reset();
 
@@ -79,49 +82,28 @@ namespace GDX.Editor
             EditorTaskDirector.SetTickRate(0);
             new CallbackTestTask(WaitForMilliseconds.TwoSeconds).Enqueue();
 
-            Assert.IsTrue(TaskDirector.GetBusyCount() == 0,
-                $"Expected 0, {TaskDirector.GetBusyCount().ToString()} (Queued: {TaskDirector.GetQueueCount().ToString()})");
-            Assert.IsTrue(TaskDirector.GetQueueCount() == 1, $"Expected 1, {TaskDirector.GetQueueCount().ToString()}");
-
-            EditorTaskDirector.SetTickRate(EditorTaskDirector.DefaultTickRate);
-            yield return m_WaitForOneSecond.While();
-
-            Assert.IsTrue(TaskDirector.GetBusyCount() == 1,
-                $"Expected 1, {TaskDirector.GetBusyCount().ToString()} (Queued: {TaskDirector.GetQueueCount().ToString()})");
-            Assert.IsTrue(TaskDirector.GetQueueCount() == 0, $"Expected 0, {TaskDirector.GetQueueCount().ToString()}");
-        }
-
-        [UnityTest]
-        [Category(Core.TestCategory)]
-        public IEnumerator SetTickInPlayMode_True_Ticks()
-        {
-            // Ensure that before we start the test that we're zeroed out.
             int busyCount = TaskDirector.GetBusyCount();
             int queueCount = TaskDirector.GetQueueCount();
             Assert.IsTrue(
-                busyCount == 0 && queueCount == 0,
-                $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
+                busyCount == 0 && queueCount == 1,
+                $"Expected 0/1 - Found {busyCount.ToString()}/{queueCount.ToString()}");
 
-            // Set tick in playmode
             EditorTaskDirector.SetTickRate(0.1f);
-            EditorTaskDirector.SetTickInPlayMode(true);
-
-            yield return new EnterPlayMode();
-
-            new CallbackTestTask(1).Enqueue();
 
             yield return m_WaitForOneSecond.While();
 
             busyCount = TaskDirector.GetBusyCount();
             queueCount = TaskDirector.GetQueueCount();
             Assert.IsTrue(
-                busyCount == 0 && queueCount == 0,
-                $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
+                busyCount == 1 && queueCount == 0,
+                $"Expected 1/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
         }
+
+        // TODO: fix player loop subscribe?
 
         // [UnityTest]
         // [Category(Core.TestCategory)]
-        // public IEnumerator SetTickInPlayMode_False_NoTick()
+        // public IEnumerator SetTickInPlayMode_True_Ticks()
         // {
         //     // Ensure that before we start the test that we're zeroed out.
         //     int busyCount = TaskDirector.GetBusyCount();
@@ -132,26 +114,58 @@ namespace GDX.Editor
         //
         //     // Set tick in playmode
         //     EditorTaskDirector.SetTickRate(0.1f);
-        //     EditorTaskDirector.SetTickInPlayMode(false);
+        //     EditorTaskDirector.SetTickInPlayMode(true);
         //
-        //     yield return new EnterPlayMode();
+        //     yield return new EnterPlayMode(false);
         //
         //     new CallbackTestTask(1).Enqueue();
         //
-        //     busyCount = TaskDirector.GetBusyCount();
-        //     queueCount = TaskDirector.GetQueueCount();
-        //     Assert.IsTrue(
-        //         busyCount == 0 && queueCount == 1,
-        //         $"Expected 0/1 - Found {busyCount.ToString()}/{queueCount.ToString()}");
-        //
-        //     yield return m_WaitForOneSecond.While(); // It is ticking for some reason
+        //     yield return m_WaitForOneSecond.While();
         //
         //     busyCount = TaskDirector.GetBusyCount();
         //     queueCount = TaskDirector.GetQueueCount();
         //     Assert.IsTrue(
-        //         busyCount == 0 && queueCount == 1,
-        //         $"Expected 0/1 - Found {busyCount.ToString()}/{queueCount.ToString()}");
+        //         busyCount == 0 && queueCount == 0,
+        //         $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
         // }
+
+        [UnityTest]
+        [Category(Core.TestCategory)]
+        public IEnumerator SetTickInPlayMode_False_NoTick()
+        {
+            // Ensure that before we start the test that we're zeroed out.
+            int busyCount = TaskDirector.GetBusyCount();
+            int queueCount = TaskDirector.GetQueueCount();
+            Assert.IsTrue(
+                busyCount == 0 && queueCount == 0,
+                $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
+
+            // Set tick in playmode
+            EditorTaskDirector.SetTickRate(0.1f);
+            EditorTaskDirector.SetTickInPlayMode(false);
+
+            yield return new EnterPlayMode(true);
+            m_WaitForOneSecond.Reset();
+            yield return m_WaitForOneSecond.While();
+            m_WaitForOneSecond.Reset();
+            Assert.IsTrue(EditorApplication.isPlaying);
+
+            new CallbackTestTask(1).Enqueue();
+
+            busyCount = TaskDirector.GetBusyCount();
+            queueCount = TaskDirector.GetQueueCount();
+            Assert.IsTrue(
+                busyCount == 0 && queueCount == 1,
+                $"Expected 0/1 - Found {busyCount.ToString()}/{queueCount.ToString()}");
+
+            yield return m_WaitForOneSecond.While(); // ISSUE TODO It is ticking for some reason
+
+            busyCount = TaskDirector.GetBusyCount();
+            queueCount = TaskDirector.GetQueueCount();
+            Assert.IsTrue(
+                busyCount == 0 && queueCount == 1,
+                $"Expected 0/1 - Found {busyCount.ToString()}/{queueCount.ToString()}");
+        }
 
         class CallbackTestTask : TaskBase
         {
@@ -160,6 +174,7 @@ namespace GDX.Editor
             {
                 m_Delay = delay;
                 m_BlockingModes = BlockingModeFlags.All;
+                m_Name = "CallbackTestTask";
             }
 
             public override void DoWork()

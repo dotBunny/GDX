@@ -103,6 +103,13 @@ namespace GDX
         const string k_DeveloperCommandLineParserArgumentSplitDefault = "=";
 
         /// <summary>
+        ///     Should GDX make sure that it's shaders are always included in builds.
+        /// </summary>
+        [OriginalValue(k_EnvironmentAlwaysIncludeShadersDefault)]
+        public static bool EnvironmentAlwaysIncludeShaders = k_EnvironmentAlwaysIncludeShadersDefault;
+        const bool k_EnvironmentAlwaysIncludeShadersDefault = true;
+
+        /// <summary>
         ///     Should a GDX scripting define symbol be added to all target build groups.
         /// </summary>
         [OriginalValue(k_EnvironmentScriptingDefineSymbolDefault)]
@@ -110,11 +117,25 @@ namespace GDX
         const bool k_EnvironmentScriptingDefineSymbolDefault = false;
 
         /// <summary>
-        ///     Should GDX make sure that it's shaders are always included in builds.
+        ///     Should the Editor Task Director tick the Task Director.
         /// </summary>
-        [OriginalValue(k_EnvironmentAlwaysIncludeShadersDefault)]
-        public static bool EnvironmentAlwaysIncludeShaders = k_EnvironmentAlwaysIncludeShadersDefault;
-        const bool k_EnvironmentAlwaysIncludeShadersDefault = true;
+        [OriginalValue(k_EnvironmentEditorTaskDirectorDefault)]
+        public static bool EnvironmentEditorTaskDirector = k_EnvironmentEditorTaskDirectorDefault;
+        const bool k_EnvironmentEditorTaskDirectorDefault = true;
+
+        /// <summary>
+        ///     Should the editor task director also tick in play mode?
+        /// </summary>
+        [OriginalValue(k_EnvironmentEditorTaskDirectorTickInPlayModeDefault)]
+        public static bool EnvironmentEditorTaskDirectorTickInPlayMode = k_EnvironmentEditorTaskDirectorTickInPlayModeDefault;
+        const bool k_EnvironmentEditorTaskDirectorTickInPlayModeDefault = false;
+
+        /// <summary>
+        ///     How often should the editor task director tick?
+        /// </summary>
+        [OriginalValue(k_EnvironmentEditorTaskDirectorTickRateDefault)]
+        public static double EnvironmentEditorTaskDirectorTickRate = k_EnvironmentEditorTaskDirectorTickRateDefault;
+        const double k_EnvironmentEditorTaskDirectorTickRateDefault = 0.5d;
 
         /// <summary>
         ///     The language to set the default thread culture too.

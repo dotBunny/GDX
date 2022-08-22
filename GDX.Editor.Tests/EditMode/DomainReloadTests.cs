@@ -8,6 +8,7 @@ using System.Text;
 using NUnit.Framework;
 using Unity.Collections;
 using UnityEditor;
+using UnityEditor.VersionControl;
 using UnityEngine.TestTools;
 using Application = UnityEngine.Application;
 
@@ -19,6 +20,7 @@ namespace GDX.Editor
     public class DomainReloadTests
     {
         const string k_LeakDetectionModeKey = "GDX_DomainReloadTests_LeakDetectionMode";
+
         static string GetFilePath()
         {
             return Path.Combine(Application.dataPath, "DomainReloadTest.cs");
@@ -66,9 +68,13 @@ namespace GDX.Editor
         public IEnumerator Setup()
         {
             EditorPrefs.SetInt(k_LeakDetectionModeKey, (int)NativeLeakDetection.Mode);
+
             string filePath = GetFilePath();
             Platform.ForceDeleteFile(filePath);
             Platform.ForceDeleteFile($"{filePath}.meta");
+
+            AssetDatabase.Refresh();
+
             yield return null;
         }
 
@@ -79,7 +85,8 @@ namespace GDX.Editor
             NativeLeakDetection.Mode = NativeLeakDetectionMode.Disabled;
             File.WriteAllText(GetFilePath(),GetFileContent());
             AssetDatabase.ImportAsset(GetFilePath().Replace(Application.dataPath + "\\", "Assets/"));
-            yield return new RecompileScripts();
+
+            yield return new RecompileScripts(false);
 
             // Any warning or error will fail this
             LogAssert.NoUnexpectedReceived();
@@ -90,9 +97,11 @@ namespace GDX.Editor
         public IEnumerator Recompile_JobsLeakDetection_NoUnexpectedMessages()
         {
             NativeLeakDetection.Mode = NativeLeakDetectionMode.Enabled;
+
             File.WriteAllText(GetFilePath(),GetFileContent());
             AssetDatabase.ImportAsset(GetFilePath().Replace(Application.dataPath + "\\", "Assets/"));
-            yield return new RecompileScripts();
+
+            yield return new RecompileScripts(false);
 
             // Any warning or error will fail this
             LogAssert.NoUnexpectedReceived();
@@ -105,7 +114,10 @@ namespace GDX.Editor
             string filePath = GetFilePath();
             Platform.ForceDeleteFile(filePath);
             Platform.ForceDeleteFile($"{filePath}.meta");
+            yield return new RecompileScripts(false);
+
             yield return null;
+
         }
     }
 }
