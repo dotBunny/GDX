@@ -26,6 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `StringKeyDictionary` and `IntKeyDictionary` can now be initialized with capacities as static fields.
 - Bolt changes in Unity 2022 causing Project Settings from being able to load properly.
 
+### Removed
+
+- Removed portability tests based on depreciation of tool.
+
 ## [3.0.1] - 2022-07-12
 
 ***"3D Arrays"***
@@ -85,7 +89,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved `TransientReference` into the `GDX.Developer` namespace.
 - `Byte2` accessor throws `IndexOutOfRangeException` when using `ENABLE_UNITY_COLLECTIONS_CHECKS`.
 
-### Fixed  
+### Fixed
 
 - `Platform::IsFocused()` now returns the proper focus state on desktop platforms.
 - `TransformExtensions::DestroyChildren()` no longer has issues with child counts.
