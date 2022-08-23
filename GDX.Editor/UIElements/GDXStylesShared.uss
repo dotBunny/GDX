@@ -26,6 +26,11 @@
     background-image: resource('Builtin Skins/DarkSkin/Images/OL box.png');
 }
 
+.gdx-sub-header {
+    -unity-font-style: bold;
+    margin-bottom: 5px;
+}
+
 .gdx-groupbox .unity-label {
     white-space: normal;
 }

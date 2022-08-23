@@ -5,7 +5,6 @@
 using GDX.Threading;
 using Unity.Mathematics;
 using UnityEditor;
-using UnityEngine;
 
 namespace GDX.Editor
 {
@@ -32,12 +31,6 @@ namespace GDX.Editor
         static bool s_SubscribedToEditorUpdate;
 
         /// <summary>
-        ///     Should the <see cref="EditorTaskDirector"/> tick when the editor is in playmode? Default configured in
-        ///     <see cref="Config"/>.
-        /// </summary>
-        static bool s_TickInPlayMode;
-
-        /// <summary>
         ///     How often should the <see cref="TaskDirector"/> be ticked?
         /// </summary>
         /// <remarks>
@@ -45,15 +38,6 @@ namespace GDX.Editor
         ///     <see cref="s_TickRate"/>, a tick will be triggered. Default configured in <see cref="Config"/>.
         /// </remarks>
         static double s_TickRate = -1;
-
-        /// <summary>
-        ///     Get whether the <see cref="EditorTaskDirector"/> triggers the <see cref="TaskDirector "/> when in playmode?
-        /// </summary>
-        /// <returns>A true or false answer.</returns>
-        public static bool GetTickInPlayMode()
-        {
-            return s_TickInPlayMode;
-        }
 
         /// <summary>
         ///     Get the current tick rate used by the <see cref="EditorTaskDirector"/>.
@@ -65,26 +49,6 @@ namespace GDX.Editor
         public static double GetTickRate()
         {
             return s_TickRate;
-        }
-
-        /// <summary>
-        ///     Set whether the <see cref="EditorTaskDirector"/> triggers the <see cref="TaskDirector"/> when in playmode.
-        /// </summary>
-        /// <remarks>
-        ///     There are specific scenarios where you may want to have <see cref="TaskBase"/> that execute in playmode,
-        ///     but not in a player.
-        /// </remarks>
-        /// <param name="shouldTick">
-        ///     A true/false value indicating if it should trigger the <see cref="TaskDirector"/> in playmode.
-        /// </param>
-        public static void SetTickInPlayMode(bool shouldTick)
-        {
-            if (EditorApplication.isPlaying && !shouldTick)
-            {
-                EditorApplicationOnplayModeStateChanged(PlayModeStateChange.ExitingEditMode);
-                EditorApplicationOnplayModeStateChanged(PlayModeStateChange.EnteredPlayMode);
-            }
-            s_TickInPlayMode = shouldTick;
         }
 
         /// <summary>
@@ -108,9 +72,7 @@ namespace GDX.Editor
                 {
                     s_TickRate = Config.EnvironmentEditorTaskDirectorTickRate;
                 }
-
                 EditorUpdateCallback(true);
-                SetTickInPlayMode(Config.EnvironmentEditorTaskDirectorTickInPlayMode);
                 EditorApplication.playModeStateChanged += EditorApplicationOnplayModeStateChanged;
             }
         }
@@ -130,10 +92,7 @@ namespace GDX.Editor
                     EditorUpdateCallback(false);
                     break;
                 case PlayModeStateChange.EnteredPlayMode:
-                    if (s_TickInPlayMode)
-                    {
-                        TaskDirectorSystem.AddToPlayerLoop();
-                    }
+                    TaskDirectorSystem.AddToPlayerLoop();
                     break;
                 case PlayModeStateChange.ExitingPlayMode:
                     TaskDirectorSystem.RemoveFromPlayerLoop();
@@ -155,7 +114,7 @@ namespace GDX.Editor
             if (s_TickRate < Platform.DoubleTolerance ||
                 EditorApplication.isCompiling ||
                 EditorApplication.isUpdating ||
-                (!s_TickInPlayMode && EditorApplication.isPlaying))
+                EditorApplication.isPlaying)
 
             {
                 return;

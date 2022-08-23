@@ -138,6 +138,20 @@ namespace GDX
         const double k_EnvironmentEditorTaskDirectorTickRateDefault = 0.5d;
 
         /// <summary>
+        ///     Should the Task Director System be added to the player loop during playmode.
+        /// </summary>
+        [OriginalValue(k_EnvironmentTaskDirectorDefault)]
+        public static bool EnvironmentTaskDirector = k_EnvironmentTaskDirectorDefault;
+        const bool k_EnvironmentTaskDirectorDefault = true;
+
+        /// <summary>
+        ///     How often should the task director tick in playmode?
+        /// </summary>
+        [OriginalValue(k_EnvironmentTaskDirectorTickRateDefault)]
+        public static float EnvironmentTaskDirectorTickRate = k_EnvironmentTaskDirectorTickRateDefault;
+        const float k_EnvironmentTaskDirectorTickRateDefault = 0.1f;
+
+        /// <summary>
         ///     The language to set the default thread culture too.
         /// </summary>
         [OriginalValue(k_LocalizationDefaultCultureDefault)]

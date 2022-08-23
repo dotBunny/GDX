@@ -38,7 +38,7 @@ namespace GDX.Editor
             // Cache previous settings we are bound to play with
             m_PreviousToggle = EditorSettings.enterPlayModeOptionsEnabled;
             m_PreviousOptions = EditorSettings.enterPlayModeOptions;
-            m_PreviousTickInPlayMode = EditorTaskDirector.GetTickInPlayMode();
+            m_PreviousTickInPlayMode = Config.EnvironmentTaskDirector;
             m_PreviousTickRate = EditorTaskDirector.GetTickRate();
 
             EditorSettings.enterPlayModeOptionsEnabled = true;
@@ -66,7 +66,7 @@ namespace GDX.Editor
             }
             yield return null;
 
-            EditorTaskDirector.SetTickInPlayMode(m_PreviousTickInPlayMode);
+            Config.EnvironmentTaskDirector = m_PreviousTickInPlayMode;
             EditorTaskDirector.SetTickRate(m_PreviousTickRate);
             EditorSettings.enterPlayModeOptionsEnabled = m_PreviousToggle;
             EditorSettings.enterPlayModeOptions = m_PreviousOptions;
@@ -115,9 +115,8 @@ namespace GDX.Editor
                 busyCount == 0 && queueCount == 0,
                 $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
 
-            // Set tick in playmode
             EditorTaskDirector.SetTickRate(0.1f);
-            EditorTaskDirector.SetTickInPlayMode(true);
+            Config.EnvironmentTaskDirector = true;
 
             float preRuntimeTick = TaskDirectorSystem.GetTickRate();
             TaskDirectorSystem.SetTickRate(0.1f);
@@ -158,10 +157,9 @@ namespace GDX.Editor
                 busyCount == 0 && queueCount == 0,
                 $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
 
-            // Set tick in playmode
-            EditorTaskDirector.SetTickRate(0.1f);
-            EditorTaskDirector.SetTickInPlayMode(false);
+            Config.EnvironmentTaskDirector = false;
 
+            // Set tick in playmode
             yield return new EnterPlayMode(true);
             m_WaitForOneSecond.Reset();
             yield return m_WaitForOneSecond.While();

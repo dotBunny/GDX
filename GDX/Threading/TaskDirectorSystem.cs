@@ -31,7 +31,7 @@ namespace GDX.Threading
 
         public static void AddToPlayerLoop()
         {
-            if (s_AddedToPlayerLoop) return;
+            if (s_AddedToPlayerLoop || !Config.EnvironmentTaskDirector) return;
 
             PlayerLoopSystem systemRoot = PlayerLoop.GetCurrentPlayerLoop();
             PlayerLoopSystem taskDirectorSystem = new PlayerLoopSystem()
@@ -81,14 +81,18 @@ namespace GDX.Threading
         [RuntimeInitializeOnLoadMethod]
         static void Initialize()
         {
-            if (Config.EnvironmentEditorTaskDirector)
+            if (Config.EnvironmentTaskDirector)
             {
                 if (s_TickRate < 0)
                 {
-                    s_TickRate = 0.1f; // TODO: COnfig
+                    s_TickRate = Config.EnvironmentTaskDirectorTickRate;
                 }
+
+                AddToPlayerLoop();
             }
         }
+
+
 
         static void PlayerLoopTick()
         {
