@@ -119,6 +119,9 @@ namespace GDX.Editor
             EditorTaskDirector.SetTickRate(0.1f);
             EditorTaskDirector.SetTickInPlayMode(true);
 
+            float preRuntimeTick = TaskDirectorSystem.GetTickRate();
+            TaskDirectorSystem.SetTickRate(0.1f);
+
             PlayerLoopSystem beforePlayerLoop = PlayerLoop.GetCurrentPlayerLoop();
             Assert.IsFalse(beforePlayerLoop.GenerateSystemTree().ToString().Contains(nameof(TaskDirectorSystem)));
 
@@ -138,6 +141,7 @@ namespace GDX.Editor
                 $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
 
             yield return new ExitPlayMode();
+            TaskDirectorSystem.SetTickRate(preRuntimeTick);
 
             PlayerLoopSystem afterPlayerLoop = PlayerLoop.GetCurrentPlayerLoop();
             Assert.IsFalse(afterPlayerLoop.GenerateSystemTree().ToString().Contains(nameof(TaskDirectorSystem)));
