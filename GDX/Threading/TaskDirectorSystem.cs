@@ -24,7 +24,7 @@ namespace GDX.Threading
             {
                 updateDelegate = PlayerLoopTick, type = typeof(TaskDirectorSystem)
             };
-            systemRoot.AddChildSystem(typeof(Update.ScriptRunDelayedTasks), ref taskDirectorSystem);
+            systemRoot.AddChildSystemToFirstOfType(typeof(Update.ScriptRunDelayedTasks), ref taskDirectorSystem);
             PlayerLoop.SetPlayerLoop(systemRoot);
 
             s_AddedToPlayerLoop = true;
@@ -34,7 +34,8 @@ namespace GDX.Threading
         {
             if (!s_AddedToPlayerLoop) return;
             PlayerLoopSystem systemRoot = PlayerLoop.GetCurrentPlayerLoop();
-            systemRoot.RemoveChildSystem(typeof(Update.ScriptRunDelayedTasks), typeof(TaskDirectorSystem));
+            systemRoot.RemoveAllChildSystemOfTypeFromType(typeof(Update.ScriptRunDelayedTasks),
+                typeof(TaskDirectorSystem));
             PlayerLoop.SetPlayerLoop(systemRoot);
             s_AddedToPlayerLoop = false;
         }
