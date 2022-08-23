@@ -90,6 +90,15 @@ namespace GDX.Developer
         }
 
         /// <summary>
+        ///     Gets the current indent level of the <see cref="TextGenerator"/>.
+        /// </summary>
+        /// <returns>The indent level.</returns>
+        public int GetIndentLevel()
+        {
+            return m_IndentLevel;
+        }
+
+        /// <summary>
         ///     Move the builder to the start of the next line.
         /// </summary>
         public void NextLine()

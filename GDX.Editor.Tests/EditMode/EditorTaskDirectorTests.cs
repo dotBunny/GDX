@@ -10,6 +10,7 @@ using GDX.Threading;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.LowLevel;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
@@ -49,7 +50,6 @@ namespace GDX.Editor
             EditorSettings.enterPlayModeOptions = EnterPlayModeOptions.DisableDomainReload |
                                                   EnterPlayModeOptions.DisableSceneReload;
 #endif
-
             m_WaitForOneSecond.Reset();
 
             // Wait for any outstanding to finish
@@ -104,35 +104,44 @@ namespace GDX.Editor
                 $"Expected 1/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
         }
 
-        // TODO: fix player loop subscribe?
+        [UnityTest]
+        [Category(Core.TestCategory)]
+        public IEnumerator SetTickInPlayMode_True_Ticks()
+        {
+            // Ensure that before we start the test that we're zeroed out.
+            int busyCount = TaskDirector.GetBusyCount();
+            int queueCount = TaskDirector.GetQueueCount();
+            Assert.IsTrue(
+                busyCount == 0 && queueCount == 0,
+                $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
 
-        // [UnityTest]
-        // [Category(Core.TestCategory)]
-        // public IEnumerator SetTickInPlayMode_True_Ticks()
-        // {
-        //     // Ensure that before we start the test that we're zeroed out.
-        //     int busyCount = TaskDirector.GetBusyCount();
-        //     int queueCount = TaskDirector.GetQueueCount();
-        //     Assert.IsTrue(
-        //         busyCount == 0 && queueCount == 0,
-        //         $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
-        //
-        //     // Set tick in playmode
-        //     EditorTaskDirector.SetTickRate(0.1f);
-        //     EditorTaskDirector.SetTickInPlayMode(true);
-        //
-        //     yield return new EnterPlayMode(false);
-        //
-        //     new CallbackTestTask(1).Enqueue();
-        //
-        //     yield return m_WaitForOneSecond.While();
-        //
-        //     busyCount = TaskDirector.GetBusyCount();
-        //     queueCount = TaskDirector.GetQueueCount();
-        //     Assert.IsTrue(
-        //         busyCount == 0 && queueCount == 0,
-        //         $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
-        // }
+            // Set tick in playmode
+            EditorTaskDirector.SetTickRate(0.1f);
+            EditorTaskDirector.SetTickInPlayMode(true);
+
+            PlayerLoopSystem beforePlayerLoop = PlayerLoop.GetCurrentPlayerLoop();
+            Assert.IsFalse(beforePlayerLoop.GenerateSystemTree().ToString().Contains(nameof(TaskDirectorSystem)));
+
+            yield return new EnterPlayMode(false);
+
+            PlayerLoopSystem duringPlayerLoop = PlayerLoop.GetCurrentPlayerLoop();
+            Assert.IsTrue(duringPlayerLoop.GenerateSystemTree().ToString().Contains(nameof(TaskDirectorSystem)));
+
+            new CallbackTestTask(1).Enqueue();
+
+            yield return m_WaitForOneSecond.While();
+
+            busyCount = TaskDirector.GetBusyCount();
+            queueCount = TaskDirector.GetQueueCount();
+            Assert.IsTrue(
+                busyCount == 0 && queueCount == 0,
+                $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
+
+            yield return new ExitPlayMode();
+
+            PlayerLoopSystem afterPlayerLoop = PlayerLoop.GetCurrentPlayerLoop();
+            Assert.IsFalse(afterPlayerLoop.GenerateSystemTree().ToString().Contains(nameof(TaskDirectorSystem)));
+        }
 
         [UnityTest]
         [Category(Core.TestCategory)]
