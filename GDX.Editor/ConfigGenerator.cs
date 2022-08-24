@@ -38,46 +38,44 @@ namespace GDX.Editor
             // boilerplate around it that its really easy.
             AddToGenerator(code, configFields, nameof(Config.ConfigOutputPath), rhs.ConfigOutputPath);
 
-            AddToGenerator(code, configFields, nameof(Config.DeveloperBuildInfoAssemblyDefinition),
-                rhs.DeveloperBuildInfoAssemblyDefinition);
-            AddToGenerator(code, configFields, nameof(Config.DeveloperBuildInfoBuildChangelistArgument),
-                rhs.DeveloperBuildInfoBuildChangelistArgument);
-            AddToGenerator(code, configFields, nameof(Config.DeveloperBuildInfoBuildDescriptionArgument),
-                rhs.DeveloperBuildInfoBuildDescriptionArgument);
-            AddToGenerator(code, configFields, nameof(Config.DeveloperBuildInfoBuildNumberArgument),
-                rhs.DeveloperBuildInfoBuildNumberArgument);
-            AddToGenerator(code, configFields, nameof(Config.DeveloperBuildInfoBuildStreamArgument),
-                rhs.DeveloperBuildInfoBuildStreamArgument);
-            AddToGenerator(code, configFields, nameof(Config.DeveloperBuildInfoBuildTaskArgument),
-                rhs.DeveloperBuildInfoBuildTaskArgument);
-            AddToGenerator(code,configFields, nameof(Config.DeveloperBuildInfoEnabled),
-                rhs.DeveloperBuildInfoEnabled);
-            AddToGenerator(code, configFields, nameof(Config.DeveloperBuildInfoNamespace),
-                rhs.DeveloperBuildInfoNamespace);
-            AddToGenerator(code, configFields, nameof(Config.DeveloperBuildInfoPath),
-                rhs.DeveloperBuildInfoPath);
+            AddToGenerator(code,configFields, nameof(Config.BuildInfo),
+                rhs.BuildInfo);
+            AddToGenerator(code, configFields, nameof(Config.BuildInfoAssemblyDefinition),
+                rhs.BuildInfoAssemblyDefinition);
+            AddToGenerator(code, configFields, nameof(Config.BuildInfoBuildChangelistArgument),
+                rhs.BuildInfoBuildChangelistArgument);
+            AddToGenerator(code, configFields, nameof(Config.BuildInfoBuildDescriptionArgument),
+                rhs.BuildInfoBuildDescriptionArgument);
+            AddToGenerator(code, configFields, nameof(Config.BuildInfoBuildNumberArgument),
+                rhs.BuildInfoBuildNumberArgument);
+            AddToGenerator(code, configFields, nameof(Config.BuildInfoBuildStreamArgument),
+                rhs.BuildInfoBuildStreamArgument);
+            AddToGenerator(code, configFields, nameof(Config.BuildInfoBuildTaskArgument),
+                rhs.BuildInfoBuildTaskArgument);
+            AddToGenerator(code, configFields, nameof(Config.BuildInfoNamespace),
+                rhs.BuildInfoNamespace);
+            AddToGenerator(code, configFields, nameof(Config.BuildInfoOutputPath),
+                rhs.BuildInfoOutputPath);
 
-            AddToGenerator(code, configFields, nameof(Config.DeveloperCommandLineParserArgumentPrefix),
-                rhs.DeveloperCommandLineParserArgumentPrefix);
-            AddToGenerator(code, configFields, nameof(Config.DeveloperCommandLineParserArgumentSplit),
-                rhs.DeveloperCommandLineParserArgumentSplit);
+            AddToGenerator(code, configFields, nameof(Config.CommandLineParserArgumentPrefix),
+                rhs.CommandLineParserArgumentPrefix);
+            AddToGenerator(code, configFields, nameof(Config.CommandLineParserArgumentSplit),
+                rhs.CommandLineParserArgumentSplit);
+
+            AddToGenerator(code, configFields, nameof(Config.EditorTaskDirectorSystem),
+                rhs.EditorTaskDirectorSystem);
+            AddToGenerator(code, configFields, nameof(Config.EditorTaskDirectorSystemTickRate),
+                rhs.EditorTaskDirectorSystemTickRate);
 
             AddToGenerator(code, configFields, nameof(Config.EnvironmentAlwaysIncludeShaders),
                 rhs.EnvironmentAlwaysIncludeShaders);
             AddToGenerator(code, configFields, nameof(Config.EnvironmentScriptingDefineSymbol),
                 rhs.EnvironmentScriptingDefineSymbol);
 
-
-            AddToGenerator(code, configFields, nameof(Config.EnvironmentEditorTaskDirector),
-                rhs.EnvironmentEditorTaskDirector);
-            AddToGenerator(code, configFields, nameof(Config.EnvironmentEditorTaskDirectorTickRate),
-                rhs.EnvironmentEditorTaskDirectorTickRate);
-            AddToGenerator(code, configFields, nameof(Config.EnvironmentTaskDirector),
-                rhs.EnvironmentTaskDirector);
-            AddToGenerator(code, configFields, nameof(Config.EnvironmentTaskDirectorTickRate),
-                rhs.EnvironmentTaskDirectorTickRate);
-
-
+            AddToGenerator(code, configFields, nameof(Config.TaskDirectorSystem),
+                rhs.TaskDirectorSystem);
+            AddToGenerator(code, configFields, nameof(Config.TaskDirectorSystemTickRate),
+                rhs.TaskDirectorSystemTickRate);
 
             AddToGenerator(code, configFields, nameof(Config.LocalizationDefaultCulture),
                 rhs.LocalizationDefaultCulture);

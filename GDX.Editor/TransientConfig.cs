@@ -20,57 +20,67 @@ namespace GDX.Editor
         /// <summary>
         ///     Ensure that there is an assembly definition wrapping the generated content.
         /// </summary>
-        public bool DeveloperBuildInfoAssemblyDefinition;
+        public bool BuildInfoAssemblyDefinition;
 
         /// <summary>
         ///     The argument key for the build's changelist to be passed to the BuildInfoGenerator.
         /// </summary>
-        public string DeveloperBuildInfoBuildChangelistArgument;
+        public string BuildInfoBuildChangelistArgument;
 
         /// <summary>
         ///     The argument key for the build description to be passed to the BuildInfoGenerator.
         /// </summary>
-        public string DeveloperBuildInfoBuildDescriptionArgument;
+        public string BuildInfoBuildDescriptionArgument;
 
         /// <summary>
         ///     The argument key for the build number to be passed to the BuildInfoGenerator.
         /// </summary>
-        public string DeveloperBuildInfoBuildNumberArgument;
+        public string BuildInfoBuildNumberArgument;
 
         /// <summary>
         ///     The argument key for the build's stream to be passed to the BuildInfoGenerator.
         /// </summary>
-        public string DeveloperBuildInfoBuildStreamArgument;
+        public string BuildInfoBuildStreamArgument;
 
         /// <summary>
         ///     The argument key for the build's task to be passed to the BuildInfoGenerator.
         /// </summary>
-        public string DeveloperBuildInfoBuildTaskArgument;
+        public string BuildInfoBuildTaskArgument;
 
         /// <summary>
         ///     Should the BuildInfo file be written during builds?
         /// </summary>
-        public bool DeveloperBuildInfoEnabled;
+        public bool BuildInfo;
 
         /// <summary>
         ///     The namespace where the BuildInfo should be placed.
         /// </summary>
-        public string DeveloperBuildInfoNamespace;
+        public string BuildInfoNamespace;
 
         /// <summary>
         ///     The path to output the BuildInfo file.
         /// </summary>
-        public string DeveloperBuildInfoPath;
+        public string BuildInfoOutputPath;
 
         /// <summary>
         ///     What should be used to denote arguments in the command line?
         /// </summary>
-        public string DeveloperCommandLineParserArgumentPrefix;
+        public string CommandLineParserArgumentPrefix;
 
         /// <summary>
         ///     What should be used to split arguments from their values in the command line?
         /// </summary>
-        public string DeveloperCommandLineParserArgumentSplit;
+        public string CommandLineParserArgumentSplit;
+
+        /// <summary>
+        ///     Should the Editor Task Director tick the Task Director.
+        /// </summary>
+        public bool EditorTaskDirectorSystem;
+
+        /// <summary>
+        ///     How often should the editor task director tick trigger the task director to tick?
+        /// </summary>
+        public double EditorTaskDirectorSystemTickRate;
 
         /// <summary>
         ///     Should GDX make sure that it's shaders are always included in builds.
@@ -78,29 +88,9 @@ namespace GDX.Editor
         public bool EnvironmentAlwaysIncludeShaders;
 
         /// <summary>
-        ///     Should the Editor Task Director tick the Task Director.
-        /// </summary>
-        public bool EnvironmentEditorTaskDirector;
-
-        /// <summary>
-        ///     How often should the editor task director tick trigger the task director to tick?
-        /// </summary>
-        public double EnvironmentEditorTaskDirectorTickRate;
-
-        /// <summary>
         ///     Should a GDX scripting define symbol be added to all target build groups.
         /// </summary>
         public bool EnvironmentScriptingDefineSymbol;
-
-        /// <summary>
-        ///     Should the Task Director System be added to the player loop during playmode.
-        /// </summary>
-        public bool EnvironmentTaskDirector;
-
-        /// <summary>
-        ///     How often should the task director tick in playmode?
-        /// </summary>
-        public float EnvironmentTaskDirectorTickRate;
 
         /// <summary>
         ///     The language to set the default thread culture too.
@@ -121,6 +111,16 @@ namespace GDX.Editor
         ///     The project relative path to use as a cache.
         /// </summary>
         public string PlatformCacheFolder;
+
+        /// <summary>
+        ///     Should the Task Director System be added to the player loop during playmode.
+        /// </summary>
+        public bool TaskDirectorSystem;
+
+        /// <summary>
+        ///     How often should the task director tick in playmode?
+        /// </summary>
+        public float TaskDirectorSystemTickRate;
 
         /// <summary>
         ///     What is the level of traces which should be processed and logged by GDX in debug builds?
@@ -155,23 +155,23 @@ namespace GDX.Editor
         public TransientConfig()
         {
             ConfigOutputPath = Config.ConfigOutputPath;
-            DeveloperBuildInfoAssemblyDefinition = Config.DeveloperBuildInfoAssemblyDefinition;
-            DeveloperBuildInfoBuildChangelistArgument = Config.DeveloperBuildInfoBuildChangelistArgument;
-            DeveloperBuildInfoBuildDescriptionArgument = Config.DeveloperBuildInfoBuildDescriptionArgument;
-            DeveloperBuildInfoBuildNumberArgument = Config.DeveloperBuildInfoBuildNumberArgument;
-            DeveloperBuildInfoBuildStreamArgument = Config.DeveloperBuildInfoBuildStreamArgument;
-            DeveloperBuildInfoBuildTaskArgument = Config.DeveloperBuildInfoBuildTaskArgument;
-            DeveloperBuildInfoEnabled = Config.DeveloperBuildInfoEnabled;
-            DeveloperBuildInfoNamespace = Config.DeveloperBuildInfoNamespace;
-            DeveloperBuildInfoPath = Config.DeveloperBuildInfoPath;
-            DeveloperCommandLineParserArgumentPrefix = Config.DeveloperCommandLineParserArgumentPrefix;
-            DeveloperCommandLineParserArgumentSplit = Config.DeveloperCommandLineParserArgumentSplit;
+            BuildInfoAssemblyDefinition = Config.BuildInfoAssemblyDefinition;
+            BuildInfoBuildChangelistArgument = Config.BuildInfoBuildChangelistArgument;
+            BuildInfoBuildDescriptionArgument = Config.BuildInfoBuildDescriptionArgument;
+            BuildInfoBuildNumberArgument = Config.BuildInfoBuildNumberArgument;
+            BuildInfoBuildStreamArgument = Config.BuildInfoBuildStreamArgument;
+            BuildInfoBuildTaskArgument = Config.BuildInfoBuildTaskArgument;
+            BuildInfo = Config.BuildInfo;
+            BuildInfoNamespace = Config.BuildInfoNamespace;
+            BuildInfoOutputPath = Config.BuildInfoOutputPath;
+            CommandLineParserArgumentPrefix = Config.CommandLineParserArgumentPrefix;
+            CommandLineParserArgumentSplit = Config.CommandLineParserArgumentSplit;
             EnvironmentAlwaysIncludeShaders = Config.EnvironmentAlwaysIncludeShaders;
-            EnvironmentEditorTaskDirector = Config.EnvironmentEditorTaskDirector;
-            EnvironmentEditorTaskDirectorTickRate = Config.EnvironmentEditorTaskDirectorTickRate;
+            EditorTaskDirectorSystem = Config.EditorTaskDirectorSystem;
+            EditorTaskDirectorSystemTickRate = Config.EditorTaskDirectorSystemTickRate;
             EnvironmentScriptingDefineSymbol = Config.EnvironmentScriptingDefineSymbol;
-            EnvironmentTaskDirector = Config.EnvironmentTaskDirector;
-            EnvironmentTaskDirectorTickRate = Config.EnvironmentTaskDirectorTickRate;
+            TaskDirectorSystem = Config.TaskDirectorSystem;
+            TaskDirectorSystemTickRate = Config.TaskDirectorSystemTickRate;
             LocalizationDefaultCulture = Config.LocalizationDefaultCulture;
             LocalizationSetDefaultCulture = Config.LocalizationSetDefaultCulture;
             PlatformAutomationFolder = Config.PlatformAutomationFolder;
@@ -187,23 +187,23 @@ namespace GDX.Editor
         public bool HasChanges()
         {
             return UpdateProviderCheckForUpdates == Config.UpdateProviderCheckForUpdates &&
-                   DeveloperCommandLineParserArgumentPrefix == Config.DeveloperCommandLineParserArgumentPrefix &&
-                   DeveloperCommandLineParserArgumentSplit == Config.DeveloperCommandLineParserArgumentSplit &&
-                   DeveloperBuildInfoAssemblyDefinition == Config.DeveloperBuildInfoAssemblyDefinition &&
-                   DeveloperBuildInfoEnabled == Config.DeveloperBuildInfoEnabled &&
-                   DeveloperBuildInfoPath == Config.DeveloperBuildInfoPath &&
-                   DeveloperBuildInfoNamespace == Config.DeveloperBuildInfoNamespace &&
-                   DeveloperBuildInfoBuildNumberArgument == Config.DeveloperBuildInfoBuildNumberArgument &&
-                   DeveloperBuildInfoBuildDescriptionArgument == Config.DeveloperBuildInfoBuildDescriptionArgument &&
-                   DeveloperBuildInfoBuildChangelistArgument == Config.DeveloperBuildInfoBuildChangelistArgument &&
-                   DeveloperBuildInfoBuildTaskArgument == Config.DeveloperBuildInfoBuildTaskArgument &&
-                   DeveloperBuildInfoBuildStreamArgument == Config.DeveloperBuildInfoBuildStreamArgument &&
+                   CommandLineParserArgumentPrefix == Config.CommandLineParserArgumentPrefix &&
+                   CommandLineParserArgumentSplit == Config.CommandLineParserArgumentSplit &&
+                   BuildInfoAssemblyDefinition == Config.BuildInfoAssemblyDefinition &&
+                   BuildInfo == Config.BuildInfo &&
+                   BuildInfoOutputPath == Config.BuildInfoOutputPath &&
+                   BuildInfoNamespace == Config.BuildInfoNamespace &&
+                   BuildInfoBuildNumberArgument == Config.BuildInfoBuildNumberArgument &&
+                   BuildInfoBuildDescriptionArgument == Config.BuildInfoBuildDescriptionArgument &&
+                   BuildInfoBuildChangelistArgument == Config.BuildInfoBuildChangelistArgument &&
+                   BuildInfoBuildTaskArgument == Config.BuildInfoBuildTaskArgument &&
+                   BuildInfoBuildStreamArgument == Config.BuildInfoBuildStreamArgument &&
                    EnvironmentScriptingDefineSymbol == Config.EnvironmentScriptingDefineSymbol &&
                    EnvironmentAlwaysIncludeShaders == Config.EnvironmentAlwaysIncludeShaders &&
-                   EnvironmentTaskDirector == Config.EnvironmentTaskDirector &&
-                   Math.Abs(EnvironmentTaskDirectorTickRate - Config.EnvironmentTaskDirectorTickRate) < Platform.FloatTolerance &&
-                   EnvironmentEditorTaskDirector == Config.EnvironmentEditorTaskDirector &&
-                   Math.Abs(EnvironmentEditorTaskDirectorTickRate - Config.EnvironmentEditorTaskDirectorTickRate) < Platform.DoubleTolerance &&
+                   TaskDirectorSystem == Config.TaskDirectorSystem &&
+                   Math.Abs(TaskDirectorSystemTickRate - Config.TaskDirectorSystemTickRate) < Platform.FloatTolerance &&
+                   EditorTaskDirectorSystem == Config.EditorTaskDirectorSystem &&
+                   Math.Abs(EditorTaskDirectorSystemTickRate - Config.EditorTaskDirectorSystemTickRate) < Platform.DoubleTolerance &&
                    TraceDevelopmentLevels == Config.TraceDevelopmentLevels &&
                    TraceDebugLevels == Config.TraceDebugLevels &&
                    TraceReleaseLevels == Config.TraceReleaseLevels &&

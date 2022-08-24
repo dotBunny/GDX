@@ -67,7 +67,7 @@ namespace GDX.Editor
         {
             s_TickRate = tickRate;
 #if UNITY_EDITOR
-            if (s_TickRate >= 0 && !Config.EnvironmentEditorTaskDirector)
+            if (s_TickRate >= 0 && !Config.EditorTaskDirectorSystem)
             {
                 Trace.Output(Trace.TraceLevel.Warning,
                     "Tick rate set whilst EditorTaskDirectorSystem has been configured off.");
@@ -83,9 +83,9 @@ namespace GDX.Editor
         static void Initialize()
         {
             // Default tick rate if enabled
-            if (Config.EnvironmentEditorTaskDirector && s_TickRate < 0)
+            if (Config.EditorTaskDirectorSystem && s_TickRate < 0)
             {
-                SetTickRate(Config.EnvironmentEditorTaskDirectorTickRate);
+                SetTickRate(Config.EditorTaskDirectorSystemTickRate);
             }
 
             // Always subscribe, maybe in the future we will make a monolithic UnityHooks type system.
@@ -181,7 +181,7 @@ namespace GDX.Editor
         /// <param name="subscribe">A true/false indication.</param>
         static void SubscribeToEditorApplicationUpdate(bool subscribe)
         {
-            if (subscribe && !s_SubscribedToEditorApplicationUpdate && Config.EnvironmentEditorTaskDirector)
+            if (subscribe && !s_SubscribedToEditorApplicationUpdate && Config.EditorTaskDirectorSystem)
             {
                 EditorApplication.update += OnUpdate;
                 s_SubscribedToEditorApplicationUpdate = true;

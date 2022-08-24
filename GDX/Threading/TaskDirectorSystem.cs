@@ -37,7 +37,7 @@ namespace GDX.Threading
 
         public static void AddToPlayerLoop()
         {
-            if (s_AddedToPlayerLoop || !Config.EnvironmentTaskDirector) return;
+            if (s_AddedToPlayerLoop || !Config.TaskDirectorSystem) return;
 
             PlayerLoopSystem systemRoot = PlayerLoop.GetCurrentPlayerLoop();
             systemRoot.AddSubSystemToFirstSubSystemOfType(
@@ -78,7 +78,7 @@ namespace GDX.Threading
         {
             s_TickRate = tickRate;
 #if UNITY_EDITOR
-            if (s_TickRate >= 0 && !Config.EnvironmentTaskDirector)
+            if (s_TickRate >= 0 && !Config.TaskDirectorSystem)
             {
                 Trace.Output(Trace.TraceLevel.Warning,
                     "Tick rate set whilst TaskDirectorSystem has been configured off.");
@@ -104,11 +104,11 @@ namespace GDX.Threading
         [RuntimeInitializeOnLoadMethod]
         static void Initialize()
         {
-            if (Config.EnvironmentTaskDirector)
+            if (Config.TaskDirectorSystem)
             {
                 if (s_TickRate < 0)
                 {
-                    s_TickRate = Config.EnvironmentTaskDirectorTickRate;
+                    s_TickRate = Config.TaskDirectorSystemTickRate;
                 }
 
                 AddToPlayerLoop();

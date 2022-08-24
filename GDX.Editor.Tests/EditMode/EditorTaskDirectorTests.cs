@@ -28,10 +28,10 @@ namespace GDX.Editor
             m_TestScene = TestFramework.ForceEmptyScene();
 
             // Cache previous settings we are bound to play with
-            m_PreviousEditorTaskDirectorSystem = Config.EnvironmentEditorTaskDirector;
+            m_PreviousEditorTaskDirectorSystem = Config.EditorTaskDirectorSystem;
             m_PreviousEditorTickRate = EditorTaskDirectorSystem.GetTickRate();
 
-            Config.EnvironmentEditorTaskDirector = true;
+            Config.EditorTaskDirectorSystem = true;
 
             // Wait for any outstanding to finish
             yield return TaskDirector.WaitAsync().AsIEnumerator();
@@ -44,7 +44,7 @@ namespace GDX.Editor
             yield return null;
 
             // Restore tick rate
-            Config.EnvironmentEditorTaskDirector = m_PreviousEditorTaskDirectorSystem;
+            Config.EditorTaskDirectorSystem = m_PreviousEditorTaskDirectorSystem;
             EditorTaskDirectorSystem.SetTickRate(m_PreviousEditorTickRate);
 
             // Only unload if there is more then one

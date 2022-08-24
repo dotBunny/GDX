@@ -111,11 +111,11 @@ namespace GDX.Editor.ProjectSettings
 
             m_TaskDirectorToggle = m_RootElement.Q<Toggle>("toggle-task-director");
             ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_TaskDirectorToggle);
-            m_TaskDirectorToggle.value = ProjectSettingsProvider.WorkingConfig.EnvironmentTaskDirector;
+            m_TaskDirectorToggle.value = ProjectSettingsProvider.WorkingConfig.TaskDirectorSystem;
             m_TaskDirectorToggle.RegisterValueChangedCallback(evt =>
             {
-                ProjectSettingsProvider.WorkingConfig.EnvironmentTaskDirector = evt.newValue;
-                if (Config.EnvironmentTaskDirector != evt.newValue)
+                ProjectSettingsProvider.WorkingConfig.TaskDirectorSystem = evt.newValue;
+                if (Config.TaskDirectorSystem != evt.newValue)
                 {
                     m_TaskDirectorToggle.AddToClassList(ResourcesProvider.ChangedClass);
                 }
@@ -128,11 +128,11 @@ namespace GDX.Editor.ProjectSettings
 
             m_TaskDirectorTickRate = m_RootElement.Q<Slider>("slider-task-director-tick-rate");
             ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_TaskDirectorTickRate);
-            m_TaskDirectorTickRate.value = ProjectSettingsProvider.WorkingConfig.EnvironmentTaskDirectorTickRate;
+            m_TaskDirectorTickRate.value = ProjectSettingsProvider.WorkingConfig.TaskDirectorSystemTickRate;
             m_TaskDirectorTickRate.RegisterValueChangedCallback(evt =>
             {
-                ProjectSettingsProvider.WorkingConfig.EnvironmentTaskDirectorTickRate = evt.newValue;
-                if (Math.Abs(Config.EnvironmentTaskDirectorTickRate - evt.newValue) > Platform.FloatTolerance)
+                ProjectSettingsProvider.WorkingConfig.TaskDirectorSystemTickRate = evt.newValue;
+                if (Math.Abs(Config.TaskDirectorSystemTickRate - evt.newValue) > Platform.FloatTolerance)
                 {
                     m_TaskDirectorTickRate.AddToClassList(ResourcesProvider.ChangedClass);
                 }
@@ -146,11 +146,11 @@ namespace GDX.Editor.ProjectSettings
 
             m_EditorTaskDirectorToggle = m_RootElement.Q<Toggle>("toggle-editor-task-director");
             ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_EditorTaskDirectorToggle);
-            m_EditorTaskDirectorToggle.value = ProjectSettingsProvider.WorkingConfig.EnvironmentEditorTaskDirector;
+            m_EditorTaskDirectorToggle.value = ProjectSettingsProvider.WorkingConfig.EditorTaskDirectorSystem;
             m_EditorTaskDirectorToggle.RegisterValueChangedCallback(evt =>
             {
-                ProjectSettingsProvider.WorkingConfig.EnvironmentEditorTaskDirector = evt.newValue;
-                if (Config.EnvironmentEditorTaskDirector != evt.newValue)
+                ProjectSettingsProvider.WorkingConfig.EditorTaskDirectorSystem = evt.newValue;
+                if (Config.EditorTaskDirectorSystem != evt.newValue)
                 {
                     m_EditorTaskDirectorToggle.AddToClassList(ResourcesProvider.ChangedClass);
                 }
@@ -163,11 +163,11 @@ namespace GDX.Editor.ProjectSettings
 
             m_EditorTaskDirectorTickRate = m_RootElement.Q<Slider>("slider-editor-task-director-tick-rate");
             ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_EditorTaskDirectorTickRate);
-            m_EditorTaskDirectorTickRate.value = (float)ProjectSettingsProvider.WorkingConfig.EnvironmentEditorTaskDirectorTickRate;
+            m_EditorTaskDirectorTickRate.value = (float)ProjectSettingsProvider.WorkingConfig.EditorTaskDirectorSystemTickRate;
             m_EditorTaskDirectorTickRate.RegisterValueChangedCallback(evt =>
             {
-                ProjectSettingsProvider.WorkingConfig.EnvironmentEditorTaskDirectorTickRate = evt.newValue;
-                if (Math.Abs(Config.EnvironmentEditorTaskDirectorTickRate - evt.newValue) > Platform.FloatTolerance)
+                ProjectSettingsProvider.WorkingConfig.EditorTaskDirectorSystemTickRate = evt.newValue;
+                if (Math.Abs(Config.EditorTaskDirectorSystemTickRate - evt.newValue) > Platform.FloatTolerance)
                 {
                     m_EditorTaskDirectorTickRate.AddToClassList(ResourcesProvider.ChangedClass);
                 }
@@ -345,20 +345,20 @@ namespace GDX.Editor.ProjectSettings
 
         public void UpdateSectionContent()
         {
-            ProjectSettingsProvider.SetStructChangeCheck(m_TaskDirectorToggle, Config.EnvironmentTaskDirector,
-                ProjectSettingsProvider.WorkingConfig.EnvironmentTaskDirector);
+            ProjectSettingsProvider.SetStructChangeCheck(m_TaskDirectorToggle, Config.TaskDirectorSystem,
+                ProjectSettingsProvider.WorkingConfig.TaskDirectorSystem);
 
             ProjectSettingsProvider.SetStructChangeCheck(m_TaskDirectorTickRate,
-                Config.EnvironmentTaskDirectorTickRate,
-                ProjectSettingsProvider.WorkingConfig.EnvironmentTaskDirectorTickRate);
+                Config.TaskDirectorSystemTickRate,
+                ProjectSettingsProvider.WorkingConfig.TaskDirectorSystemTickRate);
 
             ProjectSettingsProvider.SetStructChangeCheck(m_EditorTaskDirectorToggle,
-                Config.EnvironmentEditorTaskDirector,
-                ProjectSettingsProvider.WorkingConfig.EnvironmentEditorTaskDirector);
+                Config.EditorTaskDirectorSystem,
+                ProjectSettingsProvider.WorkingConfig.EditorTaskDirectorSystem);
 
             ProjectSettingsProvider.SetStructChangeCheck(m_EditorTaskDirectorTickRate,
-                (float)Config.EnvironmentEditorTaskDirectorTickRate,
-                (float)ProjectSettingsProvider.WorkingConfig.EnvironmentEditorTaskDirectorTickRate);
+                (float)Config.EditorTaskDirectorSystemTickRate,
+                (float)ProjectSettingsProvider.WorkingConfig.EditorTaskDirectorSystemTickRate);
 
             ProjectSettingsProvider.SetStructChangeCheck(m_ToggleEnsureShaders,
                 Config.EnvironmentAlwaysIncludeShaders,

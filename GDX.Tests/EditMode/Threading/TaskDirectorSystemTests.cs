@@ -37,8 +37,8 @@ namespace GDX.Threading
             // Cache previous settings we are bound to play with
             m_PreviousToggle = EditorSettings.enterPlayModeOptionsEnabled;
             m_PreviousOptions = EditorSettings.enterPlayModeOptions;
-            m_PreviousEnvironmentTaskDirector = Config.EnvironmentTaskDirector;
-            m_PreviousEnvironmentEditorTaskDirector = Config.EnvironmentEditorTaskDirector;
+            m_PreviousEnvironmentTaskDirector = Config.TaskDirectorSystem;
+            m_PreviousEnvironmentEditorTaskDirector = Config.EditorTaskDirectorSystem;
             m_PreviousEditorTickRate = EditorTaskDirectorSystem.GetTickRate();
             m_PreviousTickRate = TaskDirectorSystem.GetTickRate();
 
@@ -54,7 +54,7 @@ namespace GDX.Threading
             m_WaitForOneSecond.Reset();
 
             EditorTaskDirectorSystem.SetTickRate(-1);
-            Config.EnvironmentTaskDirector = true;
+            Config.TaskDirectorSystem = true;
 
             // Wait for any outstanding to finish
             yield return TaskDirector.WaitAsync().AsIEnumerator();
@@ -70,8 +70,8 @@ namespace GDX.Threading
             }
             yield return null;
 
-            Config.EnvironmentTaskDirector = m_PreviousEnvironmentTaskDirector;
-            Config.EnvironmentEditorTaskDirector = m_PreviousEnvironmentEditorTaskDirector;
+            Config.TaskDirectorSystem = m_PreviousEnvironmentTaskDirector;
+            Config.EditorTaskDirectorSystem = m_PreviousEnvironmentEditorTaskDirector;
             TaskDirectorSystem.SetTickRate(m_PreviousTickRate);
             EditorTaskDirectorSystem.SetTickRate(m_PreviousEditorTickRate);
 
@@ -98,7 +98,7 @@ namespace GDX.Threading
                 busyCount == 0 && queueCount == 0,
                 $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
 
-            Config.EnvironmentTaskDirector = false;
+            Config.TaskDirectorSystem = false;
 
             // Set tick in playmode
             yield return new EnterPlayMode(true);
@@ -135,7 +135,7 @@ namespace GDX.Threading
                 busyCount == 0 && queueCount == 0,
                 $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
 
-            Config.EnvironmentTaskDirector = true;
+            Config.TaskDirectorSystem = true;
             TaskDirectorSystem.SetTickRate(0.1f);
 
             // Check that system is not present
