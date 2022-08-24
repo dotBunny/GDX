@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using UnityEngine;
 using UnityEngine.LowLevel;
 using UnityEngine.PlayerLoop;
@@ -29,16 +30,19 @@ namespace GDX.Threading
         /// </summary>
         static float s_TimeSinceLastTick = 0;
 
+        /// <summary>
+        ///     Triggered after the <see cref="TaskDirectorSystem"/> has ticked, with the delta time.
+        /// </summary>
+        public static Action<float> ticked;
+
         public static void AddToPlayerLoop()
         {
             if (s_AddedToPlayerLoop || !Config.EnvironmentTaskDirector) return;
 
             PlayerLoopSystem systemRoot = PlayerLoop.GetCurrentPlayerLoop();
-            PlayerLoopSystem taskDirectorSystem = new PlayerLoopSystem()
-            {
-                updateDelegate = PlayerLoopTick, type = typeof(TaskDirectorSystem)
-            };
-            systemRoot.AddSubSystemToFirstSubSystemOfType(typeof(Update.ScriptRunDelayedTasks), ref taskDirectorSystem);
+            systemRoot.AddSubSystemToFirstSubSystemOfType(
+                typeof(Update.ScriptRunDelayedTasks),
+                typeof(TaskDirectorSystem), PlayerLoopTick);
             PlayerLoop.SetPlayerLoop(systemRoot);
 
             s_AddedToPlayerLoop = true;
@@ -73,6 +77,25 @@ namespace GDX.Threading
         public static void SetTickRate(float tickRate)
         {
             s_TickRate = tickRate;
+#if UNITY_EDITOR
+            if (s_TickRate >= 0 && !Config.EnvironmentTaskDirector)
+            {
+                Trace.Output(Trace.TraceLevel.Warning,
+                    "Tick rate set whilst TaskDirectorSystem has been configured off.");
+            }
+#endif
+
+            // If for some reason the tick rate is set at runtime
+#if !UNITY_EDITOR
+            if (tickRate >= 0)
+            {
+                AddToPlayerLoop();
+            }
+            else
+            {
+                RemoveFromPlayerLoop();
+            }
+#endif
         }
 
         /// <summary>
@@ -92,8 +115,6 @@ namespace GDX.Threading
             }
         }
 
-
-
         static void PlayerLoopTick()
         {
             if (!Application.isPlaying) { return; }
@@ -105,6 +126,7 @@ namespace GDX.Threading
             }
 
             TaskDirector.Tick();
+            ticked?.Invoke(s_TimeSinceLastTick);
             s_TimeSinceLastTick = 0;
         }
     }

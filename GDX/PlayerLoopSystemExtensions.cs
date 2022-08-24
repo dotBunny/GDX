@@ -44,6 +44,39 @@ namespace GDX
         /// </summary>
         /// <param name="rootSystem">The root system which the <paramref name="parentSystemType"/> will be searched recursively for.</param>
         /// <param name="parentSystemType">The system <see cref="Type"/> that will be searched for as the parent.</param>
+        /// <param name="subSystemType">The type assigned when creating the <see cref="PlayerLoopSystem"/> to be added.</param>
+        /// <param name="subSystemUpdateFunction">The method to invoke when the system is updated.</param>
+        /// <returns>true/false if the <paramref name="parentSystemType"/> was found, and therefore the add could occur.</returns>
+        public static bool AddSubSystemToFirstSubSystemOfType(this ref PlayerLoopSystem rootSystem,
+            Type parentSystemType, Type subSystemType, PlayerLoopSystem.UpdateFunction subSystemUpdateFunction)
+        {
+            if (subSystemUpdateFunction == null || subSystemType == null)
+            {
+                return false;
+            }
+
+            PlayerLoopSystem newSubSystem = new PlayerLoopSystem()
+            {
+                updateDelegate = subSystemUpdateFunction, type = subSystemType
+            };
+
+            ref PlayerLoopSystem foundParent = ref rootSystem.TryGetFirstSubSystemOfType(parentSystemType, out bool foundTargetSystem);
+            if (!foundTargetSystem)
+            {
+                return false;
+            }
+
+            AddSubSystem(ref foundParent, ref newSubSystem);
+            return true;
+        }
+
+
+        /// <summary>
+        ///     Adds a child (sub) system to the first found instance of a <paramref name="parentSystemType"/> system in
+        ///     <paramref name="rootSystem"/>.
+        /// </summary>
+        /// <param name="rootSystem">The root system which the <paramref name="parentSystemType"/> will be searched recursively for.</param>
+        /// <param name="parentSystemType">The system <see cref="Type"/> that will be searched for as the parent.</param>
         /// <param name="subSystem">The child (sub) system that is to be added to the parent.</param>
         /// <returns>true/false if the <paramref name="parentSystemType"/> was found, and therefore the add could occur.</returns>
         public static bool AddSubSystemToFirstSubSystemOfType(this ref PlayerLoopSystem rootSystem, Type parentSystemType, ref PlayerLoopSystem subSystem)

@@ -2,31 +2,23 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Collections;
 using System.Threading;
 using GDX.Developer;
 using GDX.Threading;
 using NUnit.Framework;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.LowLevel;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
-
 
 namespace GDX.Editor
 {
     /// <summary>
-    ///     A collection of unit tests to validate functionality of the <see cref="EditorTaskDirector"/>.
+    ///     A collection of unit tests to validate functionality of the <see cref="EditorTaskDirectorSystem"/>.
     /// </summary>
     public class EditorTaskDirectorTests
     {
-        readonly WaitForMilliseconds m_WaitForOneSecond = new WaitForMilliseconds(WaitForMilliseconds.OneSecond);
-        EnterPlayModeOptions m_PreviousOptions;
-        bool m_PreviousToggle;
-        bool m_PreviousTickInPlayMode;
-        double m_PreviousTickRate;
+        bool m_PreviousEditorTaskDirectorSystem;
+        double m_PreviousEditorTickRate;
         Scene m_TestScene;
 
         [UnitySetUp]
@@ -36,21 +28,10 @@ namespace GDX.Editor
             m_TestScene = TestFramework.ForceEmptyScene();
 
             // Cache previous settings we are bound to play with
-            m_PreviousToggle = EditorSettings.enterPlayModeOptionsEnabled;
-            m_PreviousOptions = EditorSettings.enterPlayModeOptions;
-            m_PreviousTickInPlayMode = Config.EnvironmentTaskDirector;
-            m_PreviousTickRate = EditorTaskDirector.GetTickRate();
+            m_PreviousEditorTaskDirectorSystem = Config.EnvironmentEditorTaskDirector;
+            m_PreviousEditorTickRate = EditorTaskDirectorSystem.GetTickRate();
 
-            EditorSettings.enterPlayModeOptionsEnabled = true;
-#if UNITY_2022_1_OR_NEWER
-            EditorSettings.enterPlayModeOptions = EnterPlayModeOptions.DisableDomainReload |
-                                                  EnterPlayModeOptions.DisableSceneReload |
-                                                  EnterPlayModeOptions.DisableSceneBackupUnlessDirty;
-#else
-            EditorSettings.enterPlayModeOptions = EnterPlayModeOptions.DisableDomainReload |
-                                                  EnterPlayModeOptions.DisableSceneReload;
-#endif
-            m_WaitForOneSecond.Reset();
+            Config.EnvironmentEditorTaskDirector = true;
 
             // Wait for any outstanding to finish
             yield return TaskDirector.WaitAsync().AsIEnumerator();
@@ -60,16 +41,11 @@ namespace GDX.Editor
         [UnityTearDown]
         public IEnumerator TearDown()
         {
-            if (Application.isPlaying)
-            {
-                yield return new ExitPlayMode();
-            }
             yield return null;
 
-            Config.EnvironmentTaskDirector = m_PreviousTickInPlayMode;
-            EditorTaskDirector.SetTickRate(m_PreviousTickRate);
-            EditorSettings.enterPlayModeOptionsEnabled = m_PreviousToggle;
-            EditorSettings.enterPlayModeOptions = m_PreviousOptions;
+            // Restore tick rate
+            Config.EnvironmentEditorTaskDirector = m_PreviousEditorTaskDirectorSystem;
+            EditorTaskDirectorSystem.SetTickRate(m_PreviousEditorTickRate);
 
             // Only unload if there is more then one
             if (SceneManager.sceneCount > 1)
@@ -82,9 +58,10 @@ namespace GDX.Editor
 
         [UnityTest]
         [Category(Core.TestCategory)]
-        public IEnumerator SetTickRate_QueuesOnZero_BusyWhenSet()
+        public IEnumerator SetTickRate_QueuesOnLessThanZero_BusyWhenSet()
         {
-            EditorTaskDirector.SetTickRate(0);
+
+            EditorTaskDirectorSystem.SetTickRate(-1);
             new CallbackTestTask(WaitForMilliseconds.TwoSeconds).Enqueue();
 
             int busyCount = TaskDirector.GetBusyCount();
@@ -93,94 +70,15 @@ namespace GDX.Editor
                 busyCount == 0 && queueCount == 1,
                 $"Expected 0/1 - Found {busyCount.ToString()}/{queueCount.ToString()}");
 
-            EditorTaskDirector.SetTickRate(0.1f);
+            EditorTaskDirectorSystem.SetTickRate(0.1f);
 
-            yield return m_WaitForOneSecond.While();
+            yield return new WaitForMilliseconds(WaitForMilliseconds.OneSecond).While();
 
             busyCount = TaskDirector.GetBusyCount();
             queueCount = TaskDirector.GetQueueCount();
             Assert.IsTrue(
                 busyCount == 1 && queueCount == 0,
                 $"Expected 1/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
-        }
-
-        [UnityTest]
-        [Category(Core.TestCategory)]
-        public IEnumerator SetTickInPlayMode_True_Ticks()
-        {
-            // Ensure that before we start the test that we're zeroed out.
-            int busyCount = TaskDirector.GetBusyCount();
-            int queueCount = TaskDirector.GetQueueCount();
-            Assert.IsTrue(
-                busyCount == 0 && queueCount == 0,
-                $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
-
-            EditorTaskDirector.SetTickRate(0.1f);
-            Config.EnvironmentTaskDirector = true;
-
-            float preRuntimeTick = TaskDirectorSystem.GetTickRate();
-            TaskDirectorSystem.SetTickRate(0.1f);
-
-            PlayerLoopSystem beforePlayerLoop = PlayerLoop.GetCurrentPlayerLoop();
-            Assert.IsFalse(beforePlayerLoop.GenerateSystemTree().ToString().Contains(nameof(TaskDirectorSystem)));
-
-            yield return new EnterPlayMode(false);
-
-            PlayerLoopSystem duringPlayerLoop = PlayerLoop.GetCurrentPlayerLoop();
-            Assert.IsTrue(duringPlayerLoop.GenerateSystemTree().ToString().Contains(nameof(TaskDirectorSystem)));
-
-            new CallbackTestTask(1).Enqueue();
-
-            yield return m_WaitForOneSecond.While();
-
-            busyCount = TaskDirector.GetBusyCount();
-            queueCount = TaskDirector.GetQueueCount();
-            Assert.IsTrue(
-                busyCount == 0 && queueCount == 0,
-                $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
-
-            yield return new ExitPlayMode();
-            TaskDirectorSystem.SetTickRate(preRuntimeTick);
-
-            PlayerLoopSystem afterPlayerLoop = PlayerLoop.GetCurrentPlayerLoop();
-            Assert.IsFalse(afterPlayerLoop.GenerateSystemTree().ToString().Contains(nameof(TaskDirectorSystem)));
-        }
-
-        [UnityTest]
-        [Category(Core.TestCategory)]
-        public IEnumerator SetTickInPlayMode_False_NoTick()
-        {
-            // Ensure that before we start the test that we're zeroed out.
-            int busyCount = TaskDirector.GetBusyCount();
-            int queueCount = TaskDirector.GetQueueCount();
-            Assert.IsTrue(
-                busyCount == 0 && queueCount == 0,
-                $"Expected 0/0 - Found {busyCount.ToString()}/{queueCount.ToString()}");
-
-            Config.EnvironmentTaskDirector = false;
-
-            // Set tick in playmode
-            yield return new EnterPlayMode(true);
-            m_WaitForOneSecond.Reset();
-            yield return m_WaitForOneSecond.While();
-            m_WaitForOneSecond.Reset();
-            Assert.IsTrue(EditorApplication.isPlaying);
-
-            new CallbackTestTask(1).Enqueue();
-
-            busyCount = TaskDirector.GetBusyCount();
-            queueCount = TaskDirector.GetQueueCount();
-            Assert.IsTrue(
-                busyCount == 0 && queueCount == 1,
-                $"Expected 0/1 - Found {busyCount.ToString()}/{queueCount.ToString()}");
-
-            yield return m_WaitForOneSecond.While(); // ISSUE TODO It is ticking for some reason
-
-            busyCount = TaskDirector.GetBusyCount();
-            queueCount = TaskDirector.GetQueueCount();
-            Assert.IsTrue(
-                busyCount == 0 && queueCount == 1,
-                $"Expected 0/1 - Found {busyCount.ToString()}/{queueCount.ToString()}");
         }
 
         class CallbackTestTask : TaskBase

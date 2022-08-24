@@ -13,7 +13,7 @@ namespace GDX.Editor
     /// <summary>
     ///     An editor-only method of ticking <see cref="TaskDirector"/>.
     /// </summary>
-    public static class EditorTaskDirector
+    public static class EditorTaskDirectorSystem
     {
         /// <summary>
         ///     The last time a tick occured.
@@ -26,9 +26,9 @@ namespace GDX.Editor
         static int s_ProgressID = -1;
 
         /// <summary>
-        ///     Is the <see cref="EditorTaskDirector"/> subscribed to <see cref="EditorApplication.update"/>?
+        ///     Is the <see cref="EditorTaskDirectorSystem"/> subscribed to <see cref="EditorApplication.update"/>?
         /// </summary>
-        static bool s_SubscribedToEditorUpdate;
+        static bool s_SubscribedToEditorApplicationUpdate;
 
         /// <summary>
         ///     How often should the <see cref="TaskDirector"/> be ticked?
@@ -40,7 +40,12 @@ namespace GDX.Editor
         static double s_TickRate = -1;
 
         /// <summary>
-        ///     Get the current tick rate used by the <see cref="EditorTaskDirector"/>.
+        ///     Triggered after the <see cref="EditorTaskDirectorSystem"/> has ticked.
+        /// </summary>
+        public static System.Action ticked;
+
+        /// <summary>
+        ///     Get the current tick rate used by the <see cref="EditorTaskDirectorSystem"/>.
         /// </summary>
         /// <returns>
         ///     A double value representing the elapsed time necessary to trigger an update to the
@@ -52,44 +57,57 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        ///     Update the rate at which the <see cref="EditorTaskDirector"/> updates the <see cref="TaskDirector"/>.
+        ///     Update the rate at which the <see cref="EditorTaskDirectorSystem"/> updates the <see cref="TaskDirector"/>.
         /// </summary>
+        /// <remarks>
+        ///     Setting the tick rate is temporary in comparison to setting the actual value in the GDX config.
+        /// </remarks>
         /// <param name="tickRate">The new tick rate.</param>
         public static void SetTickRate(double tickRate)
         {
             s_TickRate = tickRate;
+#if UNITY_EDITOR
+            if (s_TickRate >= 0 && !Config.EnvironmentEditorTaskDirector)
+            {
+                Trace.Output(Trace.TraceLevel.Warning,
+                    "Tick rate set whilst EditorTaskDirectorSystem has been configured off.");
+            }
+#endif
+            SubscribeToEditorApplicationUpdate(tickRate >= 0);
         }
 
         /// <summary>
-        ///     Sets up some default state for the <see cref="EditorTaskDirector"/>.
+        ///     Sets up some default state for the <see cref="EditorTaskDirectorSystem"/>.
         /// </summary>
         [InitializeOnLoadMethod]
         static void Initialize()
         {
-            if (Config.EnvironmentEditorTaskDirector)
+            // Default tick rate if enabled
+            if (Config.EnvironmentEditorTaskDirector && s_TickRate < 0)
             {
-                if (s_TickRate < 0)
-                {
-                    s_TickRate = Config.EnvironmentEditorTaskDirectorTickRate;
-                }
-                EditorUpdateCallback(true);
-                EditorApplication.playModeStateChanged += EditorApplicationOnplayModeStateChanged;
+                SetTickRate(Config.EnvironmentEditorTaskDirectorTickRate);
             }
+
+            // Always subscribe, maybe in the future we will make a monolithic UnityHooks type system.
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
         }
 
         /// <summary>
         ///     Method invoked by <see cref="EditorApplication.playModeStateChanged"/> when monitoring.
         /// </summary>
         /// <param name="state"></param>
-        static void EditorApplicationOnplayModeStateChanged(PlayModeStateChange state)
+        static void OnPlayModeStateChanged(PlayModeStateChange state)
         {
             switch (state)
             {
                 case PlayModeStateChange.EnteredEditMode:
-                    EditorUpdateCallback(true);
+                    if (s_TickRate >= 0)
+                    {
+                        SubscribeToEditorApplicationUpdate(true);
+                    }
                     break;
                 case PlayModeStateChange.ExitingEditMode:
-                    EditorUpdateCallback(false);
+                    SubscribeToEditorApplicationUpdate(false);
                     break;
                 case PlayModeStateChange.EnteredPlayMode:
                     TaskDirectorSystem.AddToPlayerLoop();
@@ -107,15 +125,14 @@ namespace GDX.Editor
         ///     Functions much like a proxy tick system where it manages the delta and eventually triggers the
         ///     <see cref="TaskDirector.Tick"/> when the <see cref="s_TickRate"/> has been exceeded.
         /// </remarks>
-        static void EditorUpdate()
+        static void OnUpdate()
         {
             // We're going to avoid ticking when the editor really is actually busy
             // It's important to check greater then due to ambiguity of the precision
-            if (s_TickRate < Platform.DoubleTolerance ||
+            if (s_TickRate < 0 ||
                 EditorApplication.isCompiling ||
                 EditorApplication.isUpdating ||
                 EditorApplication.isPlaying)
-
             {
                 return;
             }
@@ -153,23 +170,26 @@ namespace GDX.Editor
                 Progress.Finish(s_ProgressID);
                 s_ProgressID = -1;
             }
+
+            // Trigger any subscribers
+            ticked?.Invoke();
         }
 
         /// <summary>
         ///     Sets whether the <see cref="EditorApplication.update"/> callback is subscribed too or not.
         /// </summary>
         /// <param name="subscribe">A true/false indication.</param>
-        static void EditorUpdateCallback(bool subscribe)
+        static void SubscribeToEditorApplicationUpdate(bool subscribe)
         {
-            if (subscribe && !s_SubscribedToEditorUpdate)
+            if (subscribe && !s_SubscribedToEditorApplicationUpdate && Config.EnvironmentEditorTaskDirector)
             {
-                EditorApplication.update += EditorUpdate;
-                s_SubscribedToEditorUpdate = true;
+                EditorApplication.update += OnUpdate;
+                s_SubscribedToEditorApplicationUpdate = true;
             }
-            else if (!subscribe && s_SubscribedToEditorUpdate)
+            else if (!subscribe && s_SubscribedToEditorApplicationUpdate)
             {
-                EditorApplication.update -= EditorUpdate;
-                s_SubscribedToEditorUpdate = false;
+                EditorApplication.update -= OnUpdate;
+                s_SubscribedToEditorApplicationUpdate = false;
             }
         }
     }
