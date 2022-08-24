@@ -2,6 +2,8 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+
 namespace GDX.Editor
 {
     /// <summary>
@@ -71,14 +73,34 @@ namespace GDX.Editor
         public string DeveloperCommandLineParserArgumentSplit;
 
         /// <summary>
+        ///     Should GDX make sure that it's shaders are always included in builds.
+        /// </summary>
+        public bool EnvironmentAlwaysIncludeShaders;
+
+        /// <summary>
+        ///     Should the Editor Task Director tick the Task Director.
+        /// </summary>
+        public bool EnvironmentEditorTaskDirector;
+
+        /// <summary>
+        ///     How often should the editor task director tick trigger the task director to tick?
+        /// </summary>
+        public double EnvironmentEditorTaskDirectorTickRate;
+
+        /// <summary>
         ///     Should a GDX scripting define symbol be added to all target build groups.
         /// </summary>
         public bool EnvironmentScriptingDefineSymbol;
 
         /// <summary>
-        ///     Should GDX make sure that it's shaders are always included in builds.
+        ///     Should the Task Director System be added to the player loop during playmode.
         /// </summary>
-        public bool EnvironmentAlwaysIncludeShaders;
+        public bool EnvironmentTaskDirector;
+
+        /// <summary>
+        ///     How often should the task director tick in playmode?
+        /// </summary>
+        public float EnvironmentTaskDirectorTickRate;
 
         /// <summary>
         ///     The language to set the default thread culture too.
@@ -144,8 +166,12 @@ namespace GDX.Editor
             DeveloperBuildInfoPath = Config.DeveloperBuildInfoPath;
             DeveloperCommandLineParserArgumentPrefix = Config.DeveloperCommandLineParserArgumentPrefix;
             DeveloperCommandLineParserArgumentSplit = Config.DeveloperCommandLineParserArgumentSplit;
-            EnvironmentScriptingDefineSymbol = Config.EnvironmentScriptingDefineSymbol;
             EnvironmentAlwaysIncludeShaders = Config.EnvironmentAlwaysIncludeShaders;
+            EnvironmentEditorTaskDirector = Config.EnvironmentEditorTaskDirector;
+            EnvironmentEditorTaskDirectorTickRate = Config.EnvironmentEditorTaskDirectorTickRate;
+            EnvironmentScriptingDefineSymbol = Config.EnvironmentScriptingDefineSymbol;
+            EnvironmentTaskDirector = Config.EnvironmentTaskDirector;
+            EnvironmentTaskDirectorTickRate = Config.EnvironmentTaskDirectorTickRate;
             LocalizationDefaultCulture = Config.LocalizationDefaultCulture;
             LocalizationSetDefaultCulture = Config.LocalizationSetDefaultCulture;
             PlatformAutomationFolder = Config.PlatformAutomationFolder;
@@ -174,6 +200,10 @@ namespace GDX.Editor
                    DeveloperBuildInfoBuildStreamArgument == Config.DeveloperBuildInfoBuildStreamArgument &&
                    EnvironmentScriptingDefineSymbol == Config.EnvironmentScriptingDefineSymbol &&
                    EnvironmentAlwaysIncludeShaders == Config.EnvironmentAlwaysIncludeShaders &&
+                   EnvironmentTaskDirector == Config.EnvironmentTaskDirector &&
+                   Math.Abs(EnvironmentTaskDirectorTickRate - Config.EnvironmentTaskDirectorTickRate) < Platform.FloatTolerance &&
+                   EnvironmentEditorTaskDirector == Config.EnvironmentEditorTaskDirector &&
+                   Math.Abs(EnvironmentEditorTaskDirectorTickRate - Config.EnvironmentEditorTaskDirectorTickRate) < Platform.DoubleTolerance &&
                    TraceDevelopmentLevels == Config.TraceDevelopmentLevels &&
                    TraceDebugLevels == Config.TraceDebugLevels &&
                    TraceReleaseLevels == Config.TraceReleaseLevels &&

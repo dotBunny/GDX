@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
@@ -20,7 +21,7 @@ namespace GDX.Editor.ProjectSettings
     {
         public const int SectionIndex = 4;
         public const string SectionKey = "GDX.Environment";
-        static readonly string[] k_Keywords = { "environment", "debug", "culture", "define", "symbol", "trace" };
+        static readonly string[] k_Keywords = { "environment", "debug", "culture", "define", "symbol", "trace", "task" };
         VisualElement m_RootElement;
         Toggle m_ToggleEnsureSymbol;
         Toggle m_ToggleEnsureShaders;
@@ -29,6 +30,12 @@ namespace GDX.Editor.ProjectSettings
         MaskField m_MaskDevelopment;
         MaskField m_MaskDebug;
         MaskField m_MaskRelease;
+
+        Slider m_EditorTaskDirectorTickRate;
+        Toggle m_EditorTaskDirectorToggle;
+        Slider m_TaskDirectorTickRate;
+        Toggle m_TaskDirectorToggle;
+
 
         static readonly List<string> k_TraceChoices = new List<string>()
         {
@@ -98,6 +105,76 @@ namespace GDX.Editor.ProjectSettings
                     m_ToggleEnsureShaders.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
 
+                ProjectSettingsProvider.UpdateForChanges();
+            });
+
+
+            m_TaskDirectorToggle = m_RootElement.Q<Toggle>("toggle-task-director");
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_TaskDirectorToggle);
+            m_TaskDirectorToggle.value = ProjectSettingsProvider.WorkingConfig.EnvironmentTaskDirector;
+            m_TaskDirectorToggle.RegisterValueChangedCallback(evt =>
+            {
+                ProjectSettingsProvider.WorkingConfig.EnvironmentTaskDirector = evt.newValue;
+                if (Config.EnvironmentTaskDirector != evt.newValue)
+                {
+                    m_TaskDirectorToggle.AddToClassList(ResourcesProvider.ChangedClass);
+                }
+                else
+                {
+                    m_TaskDirectorToggle.RemoveFromClassList(ResourcesProvider.ChangedClass);
+                }
+                ProjectSettingsProvider.UpdateForChanges();
+            });
+
+            m_TaskDirectorTickRate = m_RootElement.Q<Slider>("slider-task-director-tick-rate");
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_TaskDirectorTickRate);
+            m_TaskDirectorTickRate.value = ProjectSettingsProvider.WorkingConfig.EnvironmentTaskDirectorTickRate;
+            m_TaskDirectorTickRate.RegisterValueChangedCallback(evt =>
+            {
+                ProjectSettingsProvider.WorkingConfig.EnvironmentTaskDirectorTickRate = evt.newValue;
+                if (Math.Abs(Config.EnvironmentTaskDirectorTickRate - evt.newValue) > Platform.FloatTolerance)
+                {
+                    m_TaskDirectorTickRate.AddToClassList(ResourcesProvider.ChangedClass);
+                }
+                else
+                {
+                    m_TaskDirectorTickRate.RemoveFromClassList(ResourcesProvider.ChangedClass);
+                }
+                ProjectSettingsProvider.UpdateForChanges();
+            });
+
+
+            m_EditorTaskDirectorToggle = m_RootElement.Q<Toggle>("toggle-editor-task-director");
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_EditorTaskDirectorToggle);
+            m_EditorTaskDirectorToggle.value = ProjectSettingsProvider.WorkingConfig.EnvironmentEditorTaskDirector;
+            m_EditorTaskDirectorToggle.RegisterValueChangedCallback(evt =>
+            {
+                ProjectSettingsProvider.WorkingConfig.EnvironmentEditorTaskDirector = evt.newValue;
+                if (Config.EnvironmentEditorTaskDirector != evt.newValue)
+                {
+                    m_EditorTaskDirectorToggle.AddToClassList(ResourcesProvider.ChangedClass);
+                }
+                else
+                {
+                    m_EditorTaskDirectorToggle.RemoveFromClassList(ResourcesProvider.ChangedClass);
+                }
+                ProjectSettingsProvider.UpdateForChanges();
+            });
+
+            m_EditorTaskDirectorTickRate = m_RootElement.Q<Slider>("slider-editor-task-director-tick-rate");
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_EditorTaskDirectorTickRate);
+            m_EditorTaskDirectorTickRate.value = (float)ProjectSettingsProvider.WorkingConfig.EnvironmentEditorTaskDirectorTickRate;
+            m_EditorTaskDirectorTickRate.RegisterValueChangedCallback(evt =>
+            {
+                ProjectSettingsProvider.WorkingConfig.EnvironmentEditorTaskDirectorTickRate = evt.newValue;
+                if (Math.Abs(Config.EnvironmentEditorTaskDirectorTickRate - evt.newValue) > Platform.FloatTolerance)
+                {
+                    m_EditorTaskDirectorTickRate.AddToClassList(ResourcesProvider.ChangedClass);
+                }
+                else
+                {
+                    m_EditorTaskDirectorTickRate.RemoveFromClassList(ResourcesProvider.ChangedClass);
+                }
                 ProjectSettingsProvider.UpdateForChanges();
             });
 
@@ -268,6 +345,25 @@ namespace GDX.Editor.ProjectSettings
 
         public void UpdateSectionContent()
         {
+            ProjectSettingsProvider.SetStructChangeCheck(m_TaskDirectorToggle, Config.EnvironmentTaskDirector,
+                ProjectSettingsProvider.WorkingConfig.EnvironmentTaskDirector);
+
+            ProjectSettingsProvider.SetStructChangeCheck(m_TaskDirectorTickRate,
+                Config.EnvironmentTaskDirectorTickRate,
+                ProjectSettingsProvider.WorkingConfig.EnvironmentTaskDirectorTickRate);
+
+            ProjectSettingsProvider.SetStructChangeCheck(m_EditorTaskDirectorToggle,
+                Config.EnvironmentEditorTaskDirector,
+                ProjectSettingsProvider.WorkingConfig.EnvironmentEditorTaskDirector);
+
+            ProjectSettingsProvider.SetStructChangeCheck(m_EditorTaskDirectorTickRate,
+                (float)Config.EnvironmentEditorTaskDirectorTickRate,
+                (float)ProjectSettingsProvider.WorkingConfig.EnvironmentEditorTaskDirectorTickRate);
+
+            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleEnsureShaders,
+                Config.EnvironmentAlwaysIncludeShaders,
+                ProjectSettingsProvider.WorkingConfig.EnvironmentAlwaysIncludeShaders);
+
             ProjectSettingsProvider.SetStructChangeCheck(m_ToggleEnsureSymbol,
                 Config.EnvironmentScriptingDefineSymbol,
                 ProjectSettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol);

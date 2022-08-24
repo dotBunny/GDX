@@ -16,6 +16,11 @@ namespace GDX
     public static class Config
     {
         /// <summary>
+        ///     A reference number to what version the config was generated based off of.
+        /// </summary>
+        public const int FormatVersion = 1;
+
+        /// <summary>
         ///     The asset database relative path of the GDX config override file.
         /// </summary>
         [OriginalValue(k_ConfigOutputPathDefault)]
@@ -110,13 +115,6 @@ namespace GDX
         const bool k_EnvironmentAlwaysIncludeShadersDefault = true;
 
         /// <summary>
-        ///     Should a GDX scripting define symbol be added to all target build groups.
-        /// </summary>
-        [OriginalValue(k_EnvironmentScriptingDefineSymbolDefault)]
-        public static bool EnvironmentScriptingDefineSymbol = k_EnvironmentScriptingDefineSymbolDefault;
-        const bool k_EnvironmentScriptingDefineSymbolDefault = false;
-
-        /// <summary>
         ///     Should the Editor Task Director tick the Task Director.
         /// </summary>
         [OriginalValue(k_EnvironmentEditorTaskDirectorDefault)]
@@ -124,25 +122,25 @@ namespace GDX
         const bool k_EnvironmentEditorTaskDirectorDefault = true;
 
         /// <summary>
-        ///     Should the editor task director also tick in play mode?
-        /// </summary>
-        [OriginalValue(k_EnvironmentEditorTaskDirectorTickInPlayModeDefault)]
-        public static bool EnvironmentEditorTaskDirectorTickInPlayMode = k_EnvironmentEditorTaskDirectorTickInPlayModeDefault;
-        const bool k_EnvironmentEditorTaskDirectorTickInPlayModeDefault = false;
-
-        /// <summary>
-        ///     How often should the editor task director tick?
+        ///     How often should the editor task director tick trigger the task director to tick?
         /// </summary>
         [OriginalValue(k_EnvironmentEditorTaskDirectorTickRateDefault)]
         public static double EnvironmentEditorTaskDirectorTickRate = k_EnvironmentEditorTaskDirectorTickRateDefault;
         const double k_EnvironmentEditorTaskDirectorTickRateDefault = 0.5d;
 
         /// <summary>
+        ///     Should a GDX scripting define symbol be added to all target build groups.
+        /// </summary>
+        [OriginalValue(k_EnvironmentScriptingDefineSymbolDefault)]
+        public static bool EnvironmentScriptingDefineSymbol = k_EnvironmentScriptingDefineSymbolDefault;
+        const bool k_EnvironmentScriptingDefineSymbolDefault = false;
+
+        /// <summary>
         ///     Should the Task Director System be added to the player loop during playmode.
         /// </summary>
         [OriginalValue(k_EnvironmentTaskDirectorDefault)]
         public static bool EnvironmentTaskDirector = k_EnvironmentTaskDirectorDefault;
-        const bool k_EnvironmentTaskDirectorDefault = true;
+        const bool k_EnvironmentTaskDirectorDefault = false;
 
         /// <summary>
         ///     How often should the task director tick in playmode?
