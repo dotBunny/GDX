@@ -106,28 +106,29 @@ namespace GDX.Editor
 
         static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, bool rhs)
         {
-            bool lhs = OriginalValueAttribute.GetValue<bool>(GetFirstFieldInfoByNameContains(configFields, member));
+            bool lhs = OriginalValueAttribute.GetValue<bool>(GetFirstFieldInfoByName(configFields, member));
             if (lhs == rhs) return;
             code.AppendLine(rhs ? $"{k_CoreConfigPath}.{member} = true;" : $"{k_CoreConfigPath}.{member} = false;");
         }
 
         static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, double rhs)
         {
-            double lhs = OriginalValueAttribute.GetValue<double>(GetFirstFieldInfoByNameContains(configFields, member));
+            double lhs = OriginalValueAttribute.GetValue<double>(GetFirstFieldInfoByName(configFields, member));
             if (Math.Abs(lhs - rhs) < Platform.DoubleTolerance) return;
             code.AppendLine($"{k_CoreConfigPath}.{member} = {rhs}d;");
         }
 
         static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, float rhs)
         {
-            float lhs = OriginalValueAttribute.GetValue<float>(GetFirstFieldInfoByNameContains(configFields, member));
+            FieldInfo f = GetFirstFieldInfoByName(configFields, member);
+            float lhs = OriginalValueAttribute.GetValue<float>(GetFirstFieldInfoByName(configFields, member));
             if (Math.Abs(lhs - rhs) < Platform.DoubleTolerance) return;
             code.AppendLine($"{k_CoreConfigPath}.{member} = {rhs}f;");
         }
 
         static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, string rhs)
         {
-            string lhs = OriginalValueAttribute.GetValue<string>(GetFirstFieldInfoByNameContains(configFields, member));
+            string lhs = OriginalValueAttribute.GetValue<string>(GetFirstFieldInfoByName(configFields, member));
             if (lhs == rhs) return;
             code.AppendLine($"{k_CoreConfigPath}.{member} = \"{rhs}\";");
         }
@@ -135,7 +136,7 @@ namespace GDX.Editor
         static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, Trace.TraceLevel rhs)
         {
             Trace.TraceLevel lhs = OriginalValueAttribute.GetValue<Trace.TraceLevel>(
-                GetFirstFieldInfoByNameContains(configFields, member));
+                GetFirstFieldInfoByName(configFields, member));
 
             if (lhs == rhs) return;
 
@@ -176,18 +177,18 @@ namespace GDX.Editor
         static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, Localization.Language rhs)
         {
             Localization.Language lhs = OriginalValueAttribute.GetValue<Localization.Language>(
-                GetFirstFieldInfoByNameContains(configFields, member));
+                GetFirstFieldInfoByName(configFields, member));
 
             if (lhs == rhs) return;
             code.AppendLine($"{k_CoreConfigPath}.{member} = Localization.Language.{rhs.ToString()};");
         }
 
-        static FieldInfo GetFirstFieldInfoByNameContains(FieldInfo[] configFields, string name)
+        static FieldInfo GetFirstFieldInfoByName(FieldInfo[] configFields, string name)
         {
             int count = configFields.Length;
             for (int i = 0; i < count; i++)
             {
-                if (configFields[i].Name.Contains(name))
+                if (configFields[i].Name == name)
                 {
                     return configFields[i];
                 }
