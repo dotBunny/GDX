@@ -294,7 +294,7 @@ namespace GDX.Editor.ProjectSettings
         }
         public string GetSectionHelpLink()
         {
-            return "manual/features/visual-scripting.html";
+            return "manual/getting-started/visual-scripting.html";
         }
         public bool GetToggleSupport()
         {
