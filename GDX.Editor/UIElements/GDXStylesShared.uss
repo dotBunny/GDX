@@ -118,13 +118,6 @@ Button.gdx-link:hover {
     --size-header: 26px;
 }
 
-#gdx-project-settings-header {
-    margin-bottom: 12px;
-    margin-left: 8px;
-    margin-top: 1px;
-    height: 28px;
-}
-
 #gdx-config-changes {
     margin-top: 2px;
 }
@@ -147,6 +140,13 @@ Button.gdx-button {
     height: 25px;
     border-radius: 3px;
     border-width: 1px;
+}
+
+Button.gdx-small-button {
+    height: 18px;
+    border-radius: 3px;
+    border-width: 1px;
+    margin-top: 0px;
 }
 
 #gdx-config-changes #button-clear-changes {
@@ -235,7 +235,21 @@ Button.gdx-button {
     background-color: rgba(0, 0, 0, 0);
 }
 
-.gdx-project-settings-section-header #button-expand:hover {
+#gdx-section-button {
+    width: 16px;
+    height: 16px;
+    border-width: 0;
+    margin-left: 5px;
+    margin-top: 4px;
+    margin-bottom: 0;
+    padding: 0;
+    background-image: resource('Icons/d__Menu@2x.png');
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.gdx-project-settings-section-header #button-expand:hover,
+#gdx-section-button:hover,
+{
     -unity-background-image-tint-color: var(--color-primary);
 }
 

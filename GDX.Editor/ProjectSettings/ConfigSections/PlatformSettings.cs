@@ -11,7 +11,7 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     class PlatformSettings : IConfigSection
     {
-        public const int SectionIndex = 5;
+        public const int SectionIndex = 6;
         public const string SectionKey = "GDX.Platform";
         static readonly string[] k_Keywords = { "platform", "automation", "cache" };
         VisualElement m_RootElement;

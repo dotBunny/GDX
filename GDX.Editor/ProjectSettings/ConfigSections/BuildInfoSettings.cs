@@ -16,7 +16,7 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     class BuildInfoSettings : IConfigSection
     {
-        public const int SectionIndex = 2;
+        public const int SectionIndex = 1;
         public const string SectionKey = "GDX.Editor.Build.BuildInfoProvider";
         static readonly string[] k_Keywords = { "build", "info", "changelist", "stream" };
         VisualElement m_RootElement;

@@ -12,7 +12,7 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     class TaskDirectorSettings : IConfigSection
     {
-        public const int SectionIndex = 8;
+        public const int SectionIndex = 7;
         public const string SectionKey = "GDX.TaskDirector";
         static readonly string[] k_Keywords = { "task", "tasks" };
         VisualElement m_RootElement;

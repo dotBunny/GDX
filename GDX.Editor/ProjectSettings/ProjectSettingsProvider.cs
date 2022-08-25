@@ -118,8 +118,10 @@ namespace GDX.Editor
         static VisualElement s_HolderElement;
 
         static Button s_ClearButton;
+        static Button s_SectionButton;
         static Button s_SaveButton;
         static EditorWindow s_ProjectSettingsWindow;
+
 
         static void CacheSectionContent(int sectionIndex)
         {
@@ -229,11 +231,7 @@ namespace GDX.Editor
             {
                 label = "GDX",
                 // ReSharper disable once UnusedParameter.Local
-#if UNITY_2022_2_OR_NEWER
-                activateHandler = (_, rootElement) =>
-#else
                 activateHandler = (searchContext, rootElement) =>
-#endif
                 {
                     s_RootElement = rootElement;
 
@@ -326,8 +324,49 @@ namespace GDX.Editor
                     Button buttonIssue = rootElement.Q<Button>("button-issue");
                     buttonIssue.clicked += () =>
                     {
-                        Application.OpenURL("https://github.com/dotBunny/GDX/issues");
+                        Application.OpenURL("https://dotbunny.youtrack.cloud/youtrack/issues/GDX");
                     };
+
+                    VisualElement banner = rootElement.Q<VisualElement>("gdx-banner");
+                    banner.style.backgroundImage = new StyleBackground(ResourcesProvider.GetBanner());
+
+                    s_SectionButton = rootElement.Q<Button>("gdx-section-button");
+                    s_SectionButton.clicked += () =>
+                    {
+                        int openCount = 0;
+                        for (int i = 0; i < k_SectionCount; i++)
+                        {
+                            string sectionKey = k_ConfigSections[i].GetSectionKey();
+                            if (EditorPrefsCache.GetBoolean(sectionKey))
+                            {
+                                openCount++;
+                            }
+                        }
+
+                        if (openCount > (k_SectionCount / 2))
+                        {
+                            // Close
+                            for (int i = 0; i < k_SectionCount; i++)
+                            {
+                                string sectionKey = k_ConfigSections[i].GetSectionKey();
+                                EditorPrefsCache.SetBoolean(sectionKey, false);
+                                UpdateSectionHeader(i);
+                                UpdateSectionContent(i);
+                            }
+                        }
+                        else
+                        {
+                            // Open
+                            for (int i = 0; i < k_SectionCount; i++)
+                            {
+                                string sectionKey = k_ConfigSections[i].GetSectionKey();
+                                EditorPrefsCache.SetBoolean(sectionKey, true);
+                                UpdateSectionHeader(i);
+                                UpdateSectionContent(i);
+                            }
+                        }
+                    };
+
 
                     VisualElement packageHolderElement =
                         rootElement.Q<VisualElement>("gdx-project-settings-packages");
@@ -358,12 +397,7 @@ namespace GDX.Editor
                         UpdateSectionContent(i);
                     }
                 },
-                //keywords = s_SearchKeywords.Array,
-#if UNITY_2022_2_OR_NEWER
-                hasSearchInterestHandler = (searchString) => s_SearchKeywords.PartialMatch(searchString),
-#else
                 hasSearchInterestHandler = searchString => s_SearchKeywords.PartialMatch(searchString),
-#endif
                 inspectorUpdateHandler = () =>
                 {
                     if (s_ProjectSettingsWindow == null)

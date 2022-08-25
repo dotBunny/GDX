@@ -15,7 +15,7 @@ namespace GDX.Editor.ProjectSettings
     {
         public const int SectionIndex = 0;
         public const string SectionKey = "GDX.Editor.UpdateProvider";
-        static readonly string[] k_Keywords = { "git", "upm", "automatic", "updates", "package" };
+        static readonly string[] k_Keywords = { "git", "upm", "automatic", "updates", "package", "gdx" };
 
         VisualElement m_RootElement;
         VisualElement m_ElementLocalVersion;

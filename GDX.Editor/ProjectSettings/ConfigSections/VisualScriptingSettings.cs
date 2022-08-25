@@ -19,7 +19,7 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     class VisualScriptingSettings : IConfigSection
     {
-        public const int SectionIndex = 7;
+        public const int SectionIndex = 9;
         /// <summary>
         ///     Internal section identifier.
         /// </summary>

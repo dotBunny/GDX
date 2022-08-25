@@ -19,9 +19,9 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     class TracesSettings : IConfigSection
     {
-        public const int SectionIndex = 9;
+        public const int SectionIndex = 8;
         public const string SectionKey = "GDX.Traces";
-        static readonly string[] k_Keywords = { "traces", "debug", "define", "symbol", "trace"};
+        static readonly string[] k_Keywords = { "traces", "debug", "trace"};
         VisualElement m_RootElement;
         Toggle m_ToggleDebugConsole;
         Toggle m_ToggleDevelopmentConsole;

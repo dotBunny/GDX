@@ -1,36 +1,48 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="GDXStylesShared.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStyles" />
+    <Style src="project://database/Packages/com.dotbunny.gdx/GDX.Editor/UIElements/GDXStylesShared.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStylesShared" />
     <ui:VisualElement name="gdx-project-settings" style="flex-grow: 1;">
-        <ui:VisualElement name="gdx-project-settings-header" style="flex-direction: row;">
-            <ui:Label text="Game Development Extensions" display-tooltip-when-elided="true" class="gdx-big-title" />
+        <ui:VisualElement name="gdx-project-settings-header" style="flex-direction: row; flex-shrink: 0; height: 40px; border-left-color: rgb(40, 40, 40); border-right-color: rgb(40, 40, 40); border-top-color: rgb(40, 40, 40); border-bottom-color: rgb(40, 40, 40); border-bottom-width: 1px; background-color: rgb(53, 53, 53);">
+            <ui:VisualElement style="margin-top: 1px; margin-left: 9px;">
+                <ui:Label text="Game Development Extensions" display-tooltip-when-elided="true" class="gdx-big-title" style="padding-left: 0;" />
+                <ui:Label text="A battle-tested library of game-ready high-performance C# code." display-tooltip-when-elided="true" style="flex-wrap: wrap; padding-left: 3px; margin-top: -3px; -unity-font-style: italic; font-size: 10px;" />
+            </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="gdx-config-changes" style="flex-direction: row;">
+            <ui:VisualElement name="gdx-config-changes" style="flex-direction: row; margin-top: 6px; margin-right: 4px;">
                 <ui:Button text="Clear" display-tooltip-when-elided="true" name="button-clear-changes" tooltip="Reset working configuration to saved GDX config." class="gdx-button" />
                 <ui:Button text="Save Changes" display-tooltip-when-elided="true" name="button-save-changes" tooltip="Write out modified GDXSettings file which will overwrite GDX config settings." class="gdx-button" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:ScrollView name="gdx-project-settings-content">
-            <ui:VisualElement name="gdx-project-settings-info" style="flex-direction: row;">
-                <ui:VisualElement style="flex-grow: 1; flex-wrap: nowrap;">
-                    <ui:Label text="A battle-tested library of game-ready high-performance C# code." display-tooltip-when-elided="true" style="flex-wrap: wrap;" />
+        <ui:ScrollView name="gdx-project-settings-content" vertical-scroller-visibility="AlwaysVisible" style="flex-grow: 1;">
+            <ui:VisualElement name="gdx-project-settings-info" style="flex-direction: row; min-width: 210px;">
+                <ui:VisualElement style="flex-grow: 1; flex-wrap: nowrap; flex-shrink: 0;">
                     <ui:VisualElement class="gdx-fixed-vertical-spacer-10" />
                     <ui:VisualElement style="white-space: nowrap; align-items: flex-start; flex-direction: row;">
-                        <ui:Label text="-" class="gdx-bullet"/>
+                        <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="white-space: nowrap; align-items: flex-start; flex-direction: row;">
+                        <ui:Label text="-" class="gdx-bullet" />
                         <ui:Button name="button-repository" text="Repository" display-tooltip-when-elided="true" class="gdx-link" />
                     </ui:VisualElement>
                     <ui:VisualElement style="white-space: nowrap; align-items: flex-start; flex-direction: row;">
                         <ui:Label text="-" class="gdx-bullet" />
-                        <ui:Button name="button-documentation"  text="Documentation" display-tooltip-when-elided="true" class="gdx-link" />
+                        <ui:Button name="button-documentation" text="Documentation" display-tooltip-when-elided="true" class="gdx-link" />
                     </ui:VisualElement>
                     <ui:VisualElement style="white-space: nowrap; align-items: flex-start; flex-direction: row;">
                         <ui:Label text="-" class="gdx-bullet" />
                         <ui:Button name="button-issue" text="Report an Issue" display-tooltip-when-elided="true" class="gdx-link" />
                     </ui:VisualElement>
                     <ui:VisualElement class="gdx-fixed-vertical-spacer-10" />
+                    <ui:VisualElement style="flex-direction: row;">
+                        <ui:VisualElement class="gdx-icon-button" style="flex-direction: row; overflow: visible; width: auto; background-color: rgb(0, 0, 0);">
+                            <ui:Button name="gdx-section-button" style="margin-right: 6px;" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="gdx-fixed-vertical-spacer-10" style="height: 5px;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="gdx-project-settings-packages" class="gdx-groupbox" style="width: 200px;">
+                    <ui:VisualElement name="gdx-banner" style="width: 181px; height: 95px; flex-shrink: 0; background-color: rgb(0, 0, 0);" />
+                    <ui:VisualElement class="gdx-fixed-vertical-spacer-5" style="height: 10px;" />
                     <ui:Label text="Packages Found" display-tooltip-when-elided="true" class="gdx-small-title" />
-                    <ui:VisualElement class="gdx-fixed-vertical-spacer-5" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:ScrollView>

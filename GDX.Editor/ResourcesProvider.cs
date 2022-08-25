@@ -3,8 +3,12 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.IO;
+using System.Runtime.CompilerServices;
 using GDX.Collections.Generic;
 using UnityEditor;
+using UnityEngine;
+using UnityEngine.Assertions.Must;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor
@@ -23,6 +27,12 @@ namespace GDX.Editor
         ///     A collection of queried <see cref="VisualTreeAsset" /> assets keyed by their search.
         /// </summary>
         static StringKeyDictionary<VisualTreeAsset> s_Assets = new StringKeyDictionary<VisualTreeAsset>(10);
+
+        /// <summary>
+        ///     The GDX logo banner image.
+        /// </summary>
+        /// <remarks>Cleverly lifted from the docs templates out of project.</remarks>
+        static Texture2D s_Banner;
 
         /// <summary>
         ///     The cached reference to the global stylesheet.
@@ -69,6 +79,27 @@ namespace GDX.Editor
                 element.RemoveFromClassList("dark");
                 element.AddToClassList("light");
             }
+        }
+
+        /// <summary>
+        ///     Returns an instance of the GDX logo banner image.
+        /// </summary>
+        /// <returns>An image loaded from disk, if not cached.</returns>
+        public static Texture2D GetBanner()
+        {
+            if (s_Banner != null) return s_Banner;
+
+            string imagePath = Path.Combine(
+                Path.GetDirectoryName(UpdateProvider.LocalPackage.PackageManifestPath),
+                ".docfx", "images", "home", "gdx-banner.png" );
+
+            if (File.Exists(imagePath))
+            {
+                byte[] bytes = File.ReadAllBytes(imagePath);
+                s_Banner = new Texture2D(1200, 630, TextureFormat.RGBA32, false);
+                s_Banner.LoadImage(bytes);
+            }
+            return s_Banner;
         }
 
         /// <summary>

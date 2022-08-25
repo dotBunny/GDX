@@ -3,9 +3,9 @@
     <ui:VisualElement name="gdx-task-director" class="gdx-project-settings-section-content">
         <ui:VisualElement class="gdx-fixed-vertical-spacer-10" />
         <ui:Toggle label="EditMode Tick" name="toggle-editor-task-director" tooltip="Should the TaskDirector be ticked in the editor while in EditMode via the EditorTaskDirector?" />
-        <ui:Slider picking-mode="Ignore" label="EditMode Tick Rate" value="1" high-value="60" name="slider-editor-task-director-tick-rate" low-value="0" show-input-field="true" tooltip="How often should the TaskDirector be ticked while in Edit Mode in the editor." />
+        <ui:Slider picking-mode="Ignore" label="EditMode Tick Rate" value="1" high-value="60" name="slider-editor-task-director-tick-rate" low-value="0" show-input-field="true" tooltip="How often (in seconds) should the TaskDirector be ticked while in Edit Mode in the editor." />
         <ui:VisualElement style="flex-shrink: 0; height: 5px;" />
         <ui:Toggle label="PlayMode Tick" name="toggle-task-director" tooltip="Should the TaskDirector tick at runtime via modifying the PlayerLoop?" />
-        <ui:Slider picking-mode="Ignore" label="PlayMode Tick Rate" value="0.1" high-value="60" name="slider-task-director-tick-rate" low-value="0" show-input-field="true" tooltip="How often should the TaskDirector be ticked while in Play Mode / RUntime" />
+        <ui:Slider picking-mode="Ignore" label="PlayMode Tick Rate" value="0.1" high-value="60" name="slider-task-director-tick-rate" low-value="0" show-input-field="true" tooltip="How often (in seconds) should the TaskDirector be ticked while in Play Mode / Runtime" />
     </ui:VisualElement>
 </ui:UXML>

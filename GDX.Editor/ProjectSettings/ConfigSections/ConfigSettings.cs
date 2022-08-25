@@ -11,9 +11,9 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     class ConfigSettings : IConfigSection
     {
-        public const int SectionIndex = 1;
+        public const int SectionIndex = 3;
         public const string SectionKey = "GDX.Config";
-        static readonly string[] k_Keywords = { "config" };
+        static readonly string[] k_Keywords = { "config", "override" };
         VisualElement m_RootElement;
         TextField m_TextOutputFolder;
 

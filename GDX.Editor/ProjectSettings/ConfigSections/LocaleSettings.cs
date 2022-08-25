@@ -16,7 +16,7 @@ namespace GDX.Editor.ProjectSettings
     /// </summary>
     class LocaleSettings : IConfigSection
     {
-        public const int SectionIndex = 6;
+        public const int SectionIndex = 5;
         public const string SectionKey = "GDX.Localization";
         static readonly string[] k_Keywords = { "locale", "loc", "localization" };
         VisualElement m_RootElement;
