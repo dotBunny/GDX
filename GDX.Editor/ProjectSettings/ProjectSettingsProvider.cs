@@ -33,7 +33,7 @@ namespace GDX.Editor
         /// <summary>
         ///     The expected number of sections to be available in the project settings.
         /// </summary>
-        const int k_SectionCount = 8;
+        const int k_SectionCount = 10;
 
         /// <summary>
         ///     The currently known search string of the Project Settings window.
@@ -100,6 +100,8 @@ namespace GDX.Editor
         /// </summary>
         static readonly SimpleList<VisualElement>[] k_SearchSectionElementMap = new SimpleList<VisualElement>[]
         {
+            new SimpleList<VisualElement>(10),
+            new SimpleList<VisualElement>(10),
             new SimpleList<VisualElement>(10),
             new SimpleList<VisualElement>(10),
             new SimpleList<VisualElement>(10),
@@ -472,7 +474,9 @@ namespace GDX.Editor
             k_ConfigSections[CommandLineProcessorSettings.SectionIndex] ??= new CommandLineProcessorSettings();
             k_ConfigSections[EnvironmentSettings.SectionIndex] ??= new EnvironmentSettings();
             k_ConfigSections[PlatformSettings.SectionIndex] ??= new PlatformSettings();
-            k_ConfigSections[LocaleSettings.SectionIndex] = new LocaleSettings();
+            k_ConfigSections[LocaleSettings.SectionIndex] ??= new LocaleSettings();
+            k_ConfigSections[TaskDirectorSettings.SectionIndex] ??= new TaskDirectorSettings();
+            k_ConfigSections[TracesSettings.SectionIndex] ??= new TracesSettings();
 #if GDX_VISUALSCRIPTING
             k_ConfigSections[VisualScriptingSettings.SectionIndex] ??= new VisualScriptingSettings();
 #endif

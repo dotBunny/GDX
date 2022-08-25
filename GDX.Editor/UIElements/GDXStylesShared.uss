@@ -30,9 +30,6 @@
     margin-bottom: 5px;
     margin-top: 10px;
     color: var(--color-primary);
-    padding-bottom:2px;
-    border-bottom-color: rgb(133, 133, 133);
-    border-bottom-width: 1px;
     flex-grow: 0;
     -unity-font-style: bold;
 }

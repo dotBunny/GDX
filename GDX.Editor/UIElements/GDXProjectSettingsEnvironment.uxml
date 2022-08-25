@@ -4,31 +4,5 @@
         <ui:VisualElement class="gdx-fixed-vertical-spacer-10" />
         <ui:Toggle label="Ensure GDX Symbol" name="toggle-ensure-symbol" tooltip="Should GDX make sure that there is a GDX scripting define symbol across all viable build target groups." />
         <ui:Toggle label="Always Include Shaders" name="toggle-ensure-shaders" tooltip="Should GDX make sure that it&apos;s shaders are always included in builds." />
-        <ui:Label text="Task Director" display-tooltip-when-elided="true" class="gdx-sub-header" />
-        <ui:Toggle label="EditMode Tick" name="toggle-editor-task-director" tooltip="Should the TaskDirector be ticked in the editor while in EditMode via the EditorTaskDirector?" />
-        <ui:Slider picking-mode="Ignore" label="EditMode Tick Rate" value="1" high-value="60" name="slider-editor-task-director-tick-rate" low-value="0" show-input-field="true" tooltip="How often should the TaskDirector be ticked while in Edit Mode in the editor." />
-        <ui:VisualElement style="flex-shrink: 0; height: 5px;" />
-        <ui:Toggle label="PlayMode Tick" name="toggle-task-director" tooltip="Should the TaskDirector tick at runtime via modifying the PlayerLoop?" />
-        <ui:Slider picking-mode="Ignore" label="PlayMode Tick Rate" value="0.1" high-value="60" name="slider-task-director-tick-rate" low-value="0" show-input-field="true" tooltip="How often should the TaskDirector be ticked while in Play Mode / RUntime" />
-        <ui:Label text="Traces" display-tooltip-when-elided="true" class="gdx-sub-header" style="white-space: normal;" />
-        <ui:VisualElement name="notice" class="gdx-groupbox" style="flex-direction: row;">
-            <ui:VisualElement class="gdx-notice-icon" />
-            <ui:Label text="Make sure to disable console output if you have subscribed additional logging systems which may echo back to the console." display-tooltip-when-elided="true" class="gdx-notice-text" style="flex-wrap: wrap; flex-shrink: 1; flex-grow: 1;" />
-        </ui:VisualElement>
-        <ui:VisualElement name="gdx-trace-table" style="flex-direction: column;">
-            <ui:VisualElement name="table-header" style="flex-direction: row; flex-grow: 1;">
-                <ui:Label name="label-trace" text="Build" style="-unity-font-style: italic; white-space: normal;" />
-                <ui:Label text="Flags" display-tooltip-when-elided="true" name="label-flags" style="-unity-font-style: italic; white-space: normal;" />
-                <ui:Label text="Console Output" display-tooltip-when-elided="true" name="label-console" style="-unity-font-style: italic;" />
-            </ui:VisualElement>
-            <ui:VisualElement class="gdx-fixed-vertical-spacer-5" />
-            <uie:MaskField label="Development" choices="System.Collections.Generic.List`1[System.String]" name="mask-development" tooltip="The levels of trace call to be logged in a development/editor build.">
-                <ui:Toggle name="toggle-console-development" tooltip="Should traces be outputted to Unity&apos;s console in development builds" />
-            </uie:MaskField>
-            <uie:MaskField label="Debug" choices="System.Collections.Generic.List`1[System.String]" name="mask-debug" tooltip="The levels of trace call to be logged in a debug build.">
-                <ui:Toggle name="toggle-console-debug" tooltip="Should traces be outputted to Unity&apos;s console in debug builds" />
-            </uie:MaskField>
-            <uie:MaskField label="Release" choices="System.Collections.Generic.List`1[System.String]" name="mask-release" tooltip="The levels of trace call to be logged in a release build." />
-        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
