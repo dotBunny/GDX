@@ -61,7 +61,7 @@ namespace GDX.Collections.Generic
         ///     An array of all of the values, in order, used to recreate the base <see cref="Dictionary{TKey,TValue}" />.
         /// </summary>
         [FormerlySerializedAs("serializedValues")]
-        [HideInInspector] [SerializeField] TValue[] m_SerializedValues;
+        [SerializeField] TValue[] m_SerializedValues;
 
         // ReSharper restore InconsistentNaming
 #pragma warning restore IDE1006

@@ -4,6 +4,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using GDX.Mathematics;
 
 namespace GDX.Collections
 {
@@ -1821,5 +1822,98 @@ namespace GDX.Collections
         }
 
         #endregion
+    }
+
+    public struct SparseArrayEntry
+    {
+        public int denseIndex;
+        public int indexOfArray;
+    }
+    public struct MultiSparseSet
+    {
+        /// <summary>
+        ///     Holds references to dense array indices.
+        /// </summary>
+        /// <remarks>
+        ///     Its own indices are claimed and freed via a free-list.
+        /// </remarks>
+        public SparseArrayEntry[] SparseArray;
+
+        /// <summary>
+        ///     How many sparse indices are being used currently?
+        /// </summary>
+        public int SparseCount;
+
+        /// <summary>
+        ///     How many dense indices are being used currently by each dense array?
+        /// </summary>
+        public int[] DenseCounts;
+
+        /// <summary>
+        ///     Holds references to the sparse array for swapping indices.
+        /// </summary>
+        public int[][] DenseArrays;
+
+        /// <summary>
+        ///     The first free (currently unused) index in the sparse array.
+        /// </summary>
+        public int FreeIndex;
+
+        /// <summary>
+        ///     Create a <see cref="SparseSet" /> with <paramref name="initialDenseCapacities" />.
+        /// </summary>
+        /// /// <param name="initialDenseCapacities">The initial capacity of each dense int array.</param>
+        public MultiSparseSet(int[] initialDenseCapacities)
+        {
+            int denseOuterCapacity = initialDenseCapacities.Length;
+            DenseArrays = new int[denseOuterCapacity][];
+            DenseCounts = initialDenseCapacities;
+            SparseCount = 0;
+            FreeIndex = 0;
+
+            int initialSparseCapacity = 0;
+
+            for (int i = 0; i < denseOuterCapacity; i++)
+            {
+                int initialDenseCapacity = initialDenseCapacities[i];
+                initialDenseCapacity = initialDenseCapacity < 1 ? 1 : initialDenseCapacity;
+                initialDenseCapacity--;
+                initialDenseCapacity |= initialDenseCapacity >> 1;
+                initialDenseCapacity |= initialDenseCapacity >> 2;
+                initialDenseCapacity |= initialDenseCapacity >> 4;
+                initialDenseCapacity |= initialDenseCapacity >> 8;
+                initialDenseCapacity |= initialDenseCapacity >> 16;
+                ++initialDenseCapacity;
+
+                initialDenseCapacities[i] = initialDenseCapacity;
+
+                int[] denseArray = new int[initialDenseCapacity];
+                DenseArrays[i] = denseArray;
+
+                for (int j = 0; j < initialDenseCapacity; j++)
+                {
+                    denseArray[j] = -1;
+                }
+
+                initialSparseCapacity += initialDenseCapacity;
+            }
+
+            initialSparseCapacity = initialSparseCapacity < 1 ? 1 : initialSparseCapacity;
+            initialSparseCapacity--;
+            initialSparseCapacity |= initialSparseCapacity >> 1;
+            initialSparseCapacity |= initialSparseCapacity >> 2;
+            initialSparseCapacity |= initialSparseCapacity >> 4;
+            initialSparseCapacity |= initialSparseCapacity >> 8;
+            initialSparseCapacity |= initialSparseCapacity >> 16;
+            ++initialSparseCapacity;
+
+            SparseArray = new SparseArrayEntry[initialSparseCapacity];
+
+            for (int i = 0; i < initialSparseCapacity; i++)
+            {
+                SparseArray[i].denseIndex = i + 1;
+                SparseArray[i].indexOfArray = -1;
+            }
+        }
     }
 }

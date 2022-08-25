@@ -4,13 +4,550 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using GDX.Collections;
 using UnityEditor;
 using UnityEngine;
 using GDX.Collections.Generic;
+using PlasticPipe.Server;
+using Unity.Collections;
 using Object = UnityEngine.Object;
+using Unity.UI;
+using Unity.UI.Builder;
+using Unity.UIElements;
+using Unity.UIElements.Editor;
+using Unity.VisualScripting;
+using UnityEngine.UIElements;
 
 namespace GDX.Editor.PropertyDrawers
 {
+    public static class StringKeyPropertyDrawerDB<T>
+    {
+        public struct PropertyValue
+        {
+            public StringKeyDictionary<EntryValue<T>> StringKeyDictionary;
+            public int Selection;
+            public bool SeenThisFrame;
+        }
+
+        public static object DefaultValue = typeof(T).GetDefault();
+
+        public static SimpleList<StringKeyDictionary<EntryValue<T>>> stringKeyDictionaryPool = new SimpleList<StringKeyDictionary<EntryValue<T>>>(16);
+
+        public static StringHashedStructKeyDictionary<StringKeyDictionaryPropertyDrawerDB.PropertyKey, PropertyValue> serializedObjectToPropertyMap = new StringHashedStructKeyDictionary<StringKeyDictionaryPropertyDrawerDB.PropertyKey, PropertyValue>(16);
+    }
+
+
+
+
+    public struct EntryValue<T>
+    {
+        public string UserEnteredKey;
+        public object UserEnteredValue;
+        public bool HasValueToSet;
+    }
+    public static class StringKeyDictionaryPropertyDrawerDB
+    {
+        public struct PropertyKey : IEquatable<PropertyKey>, IStringHashedStructKey
+        {
+            public string PropertyPath;
+            public SerializedObject SerializedObject;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public bool Equals(PropertyKey other)
+            {
+                return PropertyPath == other.PropertyPath && SerializedObject == other.SerializedObject;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public override int GetHashCode()
+            {
+                return PropertyPath.GetStableHashCode();
+            }
+
+
+            public string stringToHash { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { return PropertyPath; } }
+        }
+
+        // public static GDX.Collections.Pooling.ArrayPool<string> arrayPool = new Collections.Pooling.ArrayPool<string>
+        // (
+        //     new int[31],
+        //     new int[]{65536, 65536, 65536, 65536, 65536, 65536, 65536, 65536, 65536, 65536, 65536, 65536,
+        //                             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+        // );
+
+        public static object[] parameterScratchpadArray = new object[1];
+        public static MethodInfo baseMethodInfo = typeof(StringKeyDictionaryPropertyDrawer).GetMethod(nameof(ProcessDictionary));
+        public static Dictionary<Type, MethodInfo> genericRegistry = new Dictionary<Type, MethodInfo>(128);
+        public static SimpleList<int> modifiedEntries = new SimpleList<int>(128);
+        public static SimpleList<int> modifiedBucketEntries = new SimpleList<int>(128);
+
+        public static VisualElement ProcessDictionary<T>(SerializedProperty property, Rect position)
+        {
+            Object targetObject = property.serializedObject.targetObject;
+            SerializedProperty arrayProp = property.FindPropertyRelative(nameof(StringKeyDictionary<T>.Entries));
+            int arraySize = arrayProp.arraySize;
+
+            // First: determine if the dictionary is new, and extract all values if it is. Sort them for visualization.
+
+            PropertyKey key = new PropertyKey() { PropertyPath = property.propertyPath, SerializedObject = property.serializedObject };
+
+            object defaultValue = StringKeyPropertyDrawerDB<T>.DefaultValue;
+
+            StringKeyPropertyDrawerDB<T>.PropertyValue propertyValue = default;
+            if (!StringKeyPropertyDrawerDB<T>.serializedObjectToPropertyMap.TryGetValue(key, ref propertyValue))
+            {
+                propertyValue.StringKeyDictionary = new StringKeyDictionary<EntryValue<T>>(arraySize);
+                StringKeyDictionary<T> stringKeyDictionary = (StringKeyDictionary<T>)property.boxedValue;
+
+                propertyValue.StringKeyDictionary.Count = stringKeyDictionary.Count;
+                propertyValue.StringKeyDictionary.FreeListHead = stringKeyDictionary.FreeListHead;
+                propertyValue.Selection = -1;
+
+                for (int i = 0; i < arraySize; i++)
+                {
+                    ref StringKeyEntry<T> serializedEntry = ref stringKeyDictionary.Entries[i];
+                    ref StringKeyEntry<EntryValue<T>> cachedEntry = ref propertyValue.StringKeyDictionary.Entries[i];
+
+                    cachedEntry.Key = serializedEntry.Key;
+                    cachedEntry.Value.UserEnteredKey = serializedEntry.Key;
+                    cachedEntry.Next = serializedEntry.Next;
+                    cachedEntry.HashCode = serializedEntry.HashCode;
+
+                    propertyValue.StringKeyDictionary.Buckets[i] = stringKeyDictionary.Buckets[i];
+                }
+
+                StringKeyPropertyDrawerDB<T>.serializedObjectToPropertyMap.AddWithExpandCheck(key, propertyValue);
+            }
+
+            // Second: Process user input, and update visual representation for added, removed, modified,
+            //         and invalid modified entries. Extract deltas from modified entries. Mark property as "seen".
+            //         This section is going to get bigger with entry reversion etc.
+
+            SimpleList<int> modified = modifiedEntries;
+            SimpleList<int> modifiedBucket = modifiedBucketEntries;
+
+            modified.Reserve(propertyValue.StringKeyDictionary.Entries.Length * 2);
+            modifiedBucket.Reserve(propertyValue.StringKeyDictionary.Entries.Length * 2);
+
+            float singleLineHeight = EditorGUIUtility.singleLineHeight;
+            float footerHeight = SerializableDictionaryPropertyDrawer.Styles.ActionButtonVerticalPadding +
+                                 singleLineHeight +
+                                 SerializableDictionaryPropertyDrawer.Styles.ActionButtonVerticalPadding;
+            // Build our top level position
+            Rect foldoutRect = new Rect(position.x, position.y, position.width, singleLineHeight);
+
+            int currEntryCount = property.FindPropertyRelative(nameof(StringKeyDictionary<T>.Count)).intValue;
+            // Draw the foldout at the top of the space
+            bool clearAddKey = DrawFoldout(foldoutRect, arrayProp, currEntryCount);
+
+            float heightContentElements = (EditorGUIUtility.singleLineHeight + SerializableDictionaryPropertyDrawer.Styles.ContentAreaElementSpacing) *
+                Mathf.Max(
+                    1, currEntryCount) - SerializableDictionaryPropertyDrawer.Styles.ContentAreaElementSpacing;
+            // If the foldout is expanded, draw the actual content
+            if (arrayProp.isExpanded)
+            {
+                Rect contentRect = new Rect(position.x, foldoutRect.yMax + SerializableDictionaryPropertyDrawer.Styles.ContentAreaTopMargin, position.width,
+                    singleLineHeight);
+
+                // Paint the background
+                if (Event.current.type == EventType.Repaint)
+                {
+                    Rect headerBackgroundRect = new Rect(contentRect.x, contentRect.y, contentRect.width, 4);
+
+                    // The extra 2 pixels are used to get rid of the rounded corners on the content box
+                    Rect contentBackgroundRect = new Rect(contentRect.x, headerBackgroundRect.yMax, contentRect.width,
+                        heightContentElements + 2);
+                    Rect footerBackgroundRect = new Rect(contentRect.x, contentBackgroundRect.yMax - 2, contentRect.width,
+                        4);
+
+                    SerializableDictionaryPropertyDrawer.Styles.BoxBackground.Draw(contentBackgroundRect, false, false, false, false);
+
+                    SerializableDictionaryPropertyDrawer.Styles.HeaderBackground.Draw(headerBackgroundRect, false, false, false, false);
+                    SerializableDictionaryPropertyDrawer.Styles.FooterBackground.Draw(footerBackgroundRect, false, false, false, false);
+                }
+
+                // Bring in the provided rect
+                contentRect.yMin += 4;
+                contentRect.yMax -= 4;
+                contentRect.xMin += SerializableDictionaryPropertyDrawer.Styles.ContentAreaHorizontalPadding;
+                contentRect.xMax -= SerializableDictionaryPropertyDrawer.Styles.ContentAreaHorizontalPadding;
+
+                // If we have nothing simply display the message
+                if (currEntryCount == 0)
+                {
+                    EditorGUI.LabelField(contentRect, SerializableDictionaryPropertyDrawer.Content.EmptyDictionary, EditorStyles.label);
+                    return default;
+                }
+
+                float columnWidth = (contentRect.width - 34) / 2f;
+
+                int iterator = 0;
+                while (propertyValue.StringKeyDictionary.MoveNext(ref iterator))
+                {
+                    int iteratorIndex = iterator - 1;
+                    float topOffset = (EditorGUIUtility.singleLineHeight + SerializableDictionaryPropertyDrawer.Styles.ContentAreaElementSpacing) * iteratorIndex;
+
+                    Rect selectionRect = new Rect(
+                        contentRect.x - SerializableDictionaryPropertyDrawer.Styles.ContentAreaHorizontalPadding + 1,
+                        contentRect.y + topOffset - 2,
+                        contentRect.width + SerializableDictionaryPropertyDrawer.Styles.ContentAreaHorizontalPadding * 2 - 3,
+                        EditorGUIUtility.singleLineHeight + 4);
+
+                    // Handle selection (left-click), do not consume/use the event so that fields receive.
+                    if (Event.current.type == EventType.MouseDown &&
+                        Event.current.button == 0 &&
+                        selectionRect.Contains(Event.current.mousePosition))
+                    {
+                        propertyValue.Selection = iteratorIndex;
+
+                        // Attempt to force a redraw of the inspector
+                        EditorUtility.SetDirty(targetObject);
+                    }
+
+                    if (iteratorIndex == propertyValue.Selection)
+                    {
+                        if (Event.current.type == EventType.Repaint)
+                        {
+                            SerializableDictionaryPropertyDrawer.Styles.ElementBackground.Draw(selectionRect, false, true, true, true);
+                        }
+                    }
+
+                    // Draw Key Icon
+#if UNITY_2021_1_OR_NEWER
+                    Rect keyIconRect =
+                        new Rect(contentRect.x - 2, contentRect.y + topOffset - 1, 17, EditorGUIUtility.singleLineHeight);
+#else
+                    Rect keyIconRect = new Rect(position.x, position.y + topOffset, 17,
+                    EditorGUIUtility.singleLineHeight);
+#endif
+                    EditorGUI.LabelField(keyIconRect, SerializableDictionaryPropertyDrawer.Content.IconKey);
+
+                    var entry = propertyValue.StringKeyDictionary.Entries[iterator - 1];
+                    string entryKey = entry.Key;
+                    EntryValue<T> entryValue = entry.Value;
+
+                    // Draw Key Property
+                    Rect keyPropertyRect = new Rect(keyIconRect.xMax, contentRect.y + topOffset, columnWidth,
+                        EditorGUIUtility.singleLineHeight);
+
+                    string modifiedKeyString = EditorGUI.TextField(keyPropertyRect, entry.Value.UserEnteredKey);
+                    SerializedProperty arrayPropAtIndex = arrayProp.GetArrayElementAtIndex(iterator - 1);
+                    SerializedProperty valueAtIndex = arrayPropAtIndex.FindPropertyRelative(nameof(StringKeyEntry<T>.Value));
+
+                    // Draw Value Icon
+                    Rect valueIconRect = new Rect(keyPropertyRect.xMax + 3, contentRect.y + topOffset - 1, 17,
+                        EditorGUIUtility.singleLineHeight);
+                    EditorGUI.LabelField(valueIconRect, SerializableDictionaryPropertyDrawer.Content.IconValue);
+
+                    // Draw Value Property
+                    Rect valuePropertyRect = new Rect(valueIconRect.xMax, contentRect.y + topOffset, columnWidth - 1,
+                        EditorGUIUtility.singleLineHeight);
+                    EditorGUI.PropertyField(valuePropertyRect, valueAtIndex, GUIContent.none);
+
+                    Event currentEvent = Event.current;
+
+                    var newValue = entryValue;
+                    newValue.UserEnteredKey = modifiedKeyString;
+
+                    if (modifiedKeyString != entryValue.UserEnteredKey &&
+                        currentEvent.type == EventType.KeyDown &&
+                        (currentEvent.keyCode == KeyCode.Return || currentEvent.keyCode == KeyCode.KeypadEnter ||
+                        currentEvent.character == '\n'))
+                    {
+                        // Reinsert if valid
+
+                        if (!propertyValue.StringKeyDictionary.ContainsKey(modifiedKeyString))
+                        {
+                            modified.AddUnchecked(iterator - 1);
+
+                            int modifiedIndex = propertyValue.StringKeyDictionary.ModifyKeyUnchecked(iterator - 1, modifiedKeyString, out bool wasFirstEntryInChain);
+                            if (wasFirstEntryInChain)
+                            {
+                               modifiedBucket.AddUnchecked(modifiedIndex);
+                            }
+                            else
+                            {
+                                modified.AddUnchecked(modifiedIndex);
+                            }
+
+                            int newBucketIndex = propertyValue.StringKeyDictionary.BucketOf(entryKey);
+                            modifiedBucket.AddUnchecked(newBucketIndex);
+                        }
+                    }
+
+                    propertyValue.StringKeyDictionary.Entries[iterator - 1].Value = newValue;
+                }
+
+                propertyValue.SeenThisFrame = true;
+                StringKeyPropertyDrawerDB<T>.serializedObjectToPropertyMap[key] = propertyValue;
+
+                // Event footerEvent = Event.current;
+                // if (modifiedKeyString != entryValue.UserEnteredKey &&
+                //     footerEvent.type == EventType.KeyDown &&
+                //     (footerEvent.keyCode == KeyCode.Return || footerEvent.keyCode == KeyCode.KeypadEnter ||
+                //      footerEvent.character == '\n'))
+                // {
+                //
+                // }
+
+                // Finally: Take deltas and update their serialized entries.
+
+                int modifiedCount = modified.Count;
+                for (int i = 0; i < modifiedCount; i++)
+                {
+                    int modifiedIndex = modified.Array[i];
+                    var entry = propertyValue.StringKeyDictionary.Entries[modifiedIndex];
+                    SerializedProperty arrayPropAtIndex = arrayProp.GetArrayElementAtIndex(modifiedIndex);
+                    SerializedProperty keyAtIndex = arrayPropAtIndex.FindPropertyRelative(nameof(StringKeyEntry<T>.Key));
+                    SerializedProperty nextAtIndex = arrayPropAtIndex.FindPropertyRelative(nameof(StringKeyEntry<T>.Next));
+                    SerializedProperty hashAtIndex = arrayPropAtIndex.FindPropertyRelative(nameof(StringKeyEntry<T>.HashCode));
+                    SerializedProperty valueAtIndex = arrayPropAtIndex.FindPropertyRelative(nameof(StringKeyEntry<T>.Value));
+                    keyAtIndex.stringValue = entry.Key;
+                    nextAtIndex.intValue = entry.Next;
+                    hashAtIndex.intValue = entry.HashCode;
+
+                    if (entry.Value.HasValueToSet)
+                    {
+                        valueAtIndex.boxedValue = entry.Value.UserEnteredValue;
+                        propertyValue.StringKeyDictionary.Entries[modifiedIndex].Value.HasValueToSet = false;
+                        propertyValue.StringKeyDictionary.Entries[modifiedIndex].Value.UserEnteredValue = defaultValue;
+                    }
+                }
+
+                SerializedProperty bucketsProp = property.FindPropertyRelative(nameof(StringKeyDictionary<T>.Buckets));
+                int modifiedBucketCount = modifiedBucket.Count;
+                for (int i = 0; i < modifiedBucketCount; i++)
+                {
+                    int modifiedIndex = modifiedBucket.Array[i];
+                    int bucketEntry = propertyValue.StringKeyDictionary.Buckets[modifiedIndex];
+                    SerializedProperty arrayPropAtIndex = bucketsProp.GetArrayElementAtIndex(modifiedIndex);
+                    arrayPropAtIndex.intValue = bucketEntry;
+                }
+
+                modified.Count = 0;
+                modifiedBucket.Count = 0;
+                modifiedEntries = modified;
+                modifiedBucketEntries = modifiedBucket;
+
+                int finalEntriesArraySize = propertyValue.StringKeyDictionary.Entries.Length;
+                if (arraySize < finalEntriesArraySize)
+                {
+                    arrayProp.arraySize = finalEntriesArraySize;
+                    bucketsProp.arraySize = finalEntriesArraySize;
+
+                    for (int i = 0; i < finalEntriesArraySize; i++)
+                    {
+                        bucketsProp.GetArrayElementAtIndex(i).intValue = propertyValue.StringKeyDictionary.Buckets[i];
+                    }
+
+                    for (int i = arraySize; i < finalEntriesArraySize; i++)
+                    {
+                        var entry = propertyValue.StringKeyDictionary.Entries[i];
+                        SerializedProperty arrayPropAtIndex = arrayProp.GetArrayElementAtIndex(i);
+                        SerializedProperty keyAtIndex = arrayPropAtIndex.FindPropertyRelative(nameof(StringKeyEntry<T>.Key));
+                        SerializedProperty nextAtIndex = arrayPropAtIndex.FindPropertyRelative(nameof(StringKeyEntry<T>.Next));
+                        SerializedProperty hashAtIndex = arrayPropAtIndex.FindPropertyRelative(nameof(StringKeyEntry<T>.HashCode));
+                        SerializedProperty valueAtIndex = arrayPropAtIndex.FindPropertyRelative(nameof(StringKeyEntry<T>.Value));
+                        keyAtIndex.stringValue = entry.Key;
+                        nextAtIndex.intValue = entry.Next;
+                        hashAtIndex.intValue = entry.HashCode;
+
+                        if (entry.Value.HasValueToSet)
+                        {
+                            valueAtIndex.boxedValue = entry.Value.UserEnteredValue;
+                            propertyValue.StringKeyDictionary.Entries[i].Value.HasValueToSet = false;
+                            propertyValue.StringKeyDictionary.Entries[i].Value.UserEnteredValue = defaultValue;
+                        }
+                    }
+                }
+
+                property.FindPropertyRelative(nameof(StringKeyDictionary<T>.Count)).intValue = propertyValue.StringKeyDictionary.Count;
+                property.FindPropertyRelative(nameof(StringKeyDictionary<T>.FreeListHead)).intValue = propertyValue.StringKeyDictionary.FreeListHead;
+
+                //DrawContentArea(contentRect);
+                Rect footerRect = new Rect(position.x, contentRect.yMax, position.width, footerHeight);
+                DrawFooterActions(footerRect);
+            }
+
+            // Create undo point if we've changed something
+            if (GUI.changed)
+            {
+                Undo.SetCurrentGroupName("Serializable Dictionary Action");
+            }
+
+            // Anything we changed property wise we should save
+            property.serializedObject.ApplyModifiedProperties();
+
+
+
+            // End of frame: Remove all dictionaries that were not seen this frame.
+
+            int count = 0;
+
+            for (int i = 0; i < count; i++)
+            {
+
+
+            }
+
+            VisualElement returnElement = new VisualElement();
+
+            return returnElement;
+        }
+
+        static bool DrawFoldout(Rect position, SerializedProperty property, int entryCount)
+        {
+            bool clearAddKey = false;
+            // Generate a foldout GUI element representing the name of the dictionary
+            bool newExpanded =
+                EditorGUI.Foldout(position, property.isExpanded, "String Key Dictionary", true, EditorStyles.foldout);
+            if (newExpanded != property.isExpanded)
+            {
+                property.isExpanded = newExpanded;
+
+                // If we're collapsing the foldout, make sure there is no key cached
+                if (!newExpanded)
+                {
+                    clearAddKey = true;
+                }
+            }
+
+            // Indicate Count - but ready only
+            GUI.enabled = false;
+            const int k_ItemCountSize = 48;
+            EditorGUI.TextField(new Rect(position.x + position.width - k_ItemCountSize,
+                position.y, k_ItemCountSize, position.height), entryCount.ToString());
+            GUI.enabled = true;
+
+            return clearAddKey;
+        }
+
+        // <summary>
+        ///     Draw the content area, including elements.
+        /// </summary>
+        /// <param name="contentRect">A <see cref="Rect" /> representing the space which the content area will be drawn.</param>
+        static void DrawContentArea(Rect contentRect, float heightContentHeader, float heightContentElements, float heightContentFooter, ref int selectionIndex)
+        {
+            // Paint the background
+            if (Event.current.type == EventType.Repaint)
+            {
+                Rect headerBackgroundRect = new Rect(contentRect.x, contentRect.y, contentRect.width, heightContentHeader);
+
+                // The extra 2 pixels are used to get rid of the rounded corners on the content box
+                Rect contentBackgroundRect = new Rect(contentRect.x, headerBackgroundRect.yMax, contentRect.width,
+                    heightContentElements + 2);
+                Rect footerBackgroundRect = new Rect(contentRect.x, contentBackgroundRect.yMax - 2, contentRect.width,
+                    heightContentFooter);
+
+                SerializableDictionaryPropertyDrawer.Styles.BoxBackground.Draw(contentBackgroundRect, false, false, false, false);
+
+                SerializableDictionaryPropertyDrawer.Styles.HeaderBackground.Draw(headerBackgroundRect, false, false, false, false);
+                SerializableDictionaryPropertyDrawer.Styles.FooterBackground.Draw(footerBackgroundRect, false, false, false, false);
+            }
+
+            // Bring in the provided rect
+            contentRect.yMin += heightContentHeader;
+            contentRect.yMax -= heightContentFooter;
+            contentRect.xMin += SerializableDictionaryPropertyDrawer.Styles.ContentAreaHorizontalPadding;
+            contentRect.xMax -= SerializableDictionaryPropertyDrawer.Styles.ContentAreaHorizontalPadding;
+
+            // If we have nothing simply display the message
+            if (m_PropertyCountCache == 0)
+            {
+                EditorGUI.LabelField(contentRect, SerializableDictionaryPropertyDrawer.Content.EmptyDictionary, EditorStyles.label);
+                return;
+            }
+
+
+            float columnWidth = (contentRect.width - 34) / 2f;
+
+
+            for (int iteratorIndex = 0; iteratorIndex < m_PropertyCountCache; iteratorIndex++)
+            {
+                float topOffset = (EditorGUIUtility.singleLineHeight + SerializableDictionaryPropertyDrawer.Styles.ContentAreaElementSpacing) * iteratorIndex;
+
+                Rect selectionRect = new Rect(
+                    contentRect.x - SerializableDictionaryPropertyDrawer.Styles.ContentAreaHorizontalPadding + 1,
+                    contentRect.y + topOffset - 2,
+                    contentRect.width + SerializableDictionaryPropertyDrawer.Styles.ContentAreaHorizontalPadding * 2 - 3,
+                    EditorGUIUtility.singleLineHeight + 4);
+
+                // Handle selection (left-click), do not consume/use the event so that fields receive.
+                if (Event.current.type == EventType.MouseDown &&
+                    Event.current.button == 0 &&
+                    selectionRect.Contains(Event.current.mousePosition))
+                {
+                    selectionIndex = iteratorIndex;
+
+                    // Attempt to force a redraw of the inspector
+                    EditorUtility.SetDirty(m_TargetObject);
+                }
+
+                if (iteratorIndex == selectionIndex)
+                {
+                    if (Event.current.type == EventType.Repaint)
+                    {
+                        SerializableDictionaryPropertyDrawer.Styles.ElementBackground.Draw(selectionRect, false, true, true, true);
+                    }
+                }
+
+                // Draw Key Icon
+#if UNITY_2021_1_OR_NEWER
+                Rect keyIconRect =
+                    new Rect(contentRect.x - 2, contentRect.y + topOffset - 1, 17, EditorGUIUtility.singleLineHeight);
+#else
+                Rect keyIconRect = new Rect(position.x, position.y + topOffset, 17,
+                    EditorGUIUtility.singleLineHeight);
+#endif
+                EditorGUI.LabelField(keyIconRect, SerializableDictionaryPropertyDrawer.Content.IconKey);
+
+                // Draw Key Property
+                Rect keyPropertyRect = new Rect(keyIconRect.xMax, contentRect.y + topOffset, columnWidth,
+                    EditorGUIUtility.singleLineHeight);
+                EditorGUI.PropertyField(keyPropertyRect, m_PropertyKeys.GetArrayElementAtIndex(iteratorIndex), GUIContent.none);
+
+                // Draw Value Icon
+                Rect valueIconRect = new Rect(keyPropertyRect.xMax + 3, contentRect.y + topOffset - 1, 17,
+                    EditorGUIUtility.singleLineHeight);
+                EditorGUI.LabelField(valueIconRect, SerializableDictionaryPropertyDrawer.Content.IconValue);
+
+                // Draw Value Property
+                Rect valuePropertyRect = new Rect(valueIconRect.xMax, contentRect.y + topOffset, columnWidth - 1,
+                    EditorGUIUtility.singleLineHeight);
+                EditorGUI.PropertyField(valuePropertyRect, m_PropertyValues.GetArrayElementAtIndex(iteratorIndex), GUIContent.none);
+            }
+        }
+    }
+
+    [CustomPropertyDrawer(typeof(StringKeyDictionary<>))]
+    public class StringKeyDictionaryPropertyDrawer : PropertyDrawer
+    {
+        public override VisualElement CreatePropertyGUI(SerializedProperty property)
+        {
+            Type propertyType = fieldInfo.FieldType;
+
+            MethodInfo genericMethod;
+            var genericRegistry = StringKeyDictionaryPropertyDrawerDB.genericRegistry;
+            var baseMethodInfo = StringKeyDictionaryPropertyDrawerDB.baseMethodInfo;
+            var parameterScratchpadArray = StringKeyDictionaryPropertyDrawerDB.parameterScratchpadArray;
+
+            if (!genericRegistry.TryGetValue(propertyType, out genericMethod))
+            {
+                genericMethod = baseMethodInfo.MakeGenericMethod(propertyType);
+                genericRegistry.Add(propertyType, genericMethod);
+            }
+
+            parameterScratchpadArray[0] = property;
+            object returnVal = genericMethod.Invoke(null, parameterScratchpadArray);
+            parameterScratchpadArray[0] = null;
+
+            return (VisualElement)returnVal;
+        }
+    }
+
 #if !UNITY_DOTSRUNTIME
     /// <summary>
     ///     A <see cref="PropertyDrawer" /> for <see cref="SerializableDictionary{TKey,TValue}" />.
@@ -663,7 +1200,7 @@ namespace GDX.Editor.PropertyDrawers
         /// <summary>
         ///     <see cref="PropertyDrawer" /> Fixed Content.
         /// </summary>
-        static class Content
+        internal static class Content
         {
             /// <summary>
             ///     The prefix of the <see cref="string" /> identifier of the add field.
@@ -729,7 +1266,7 @@ namespace GDX.Editor.PropertyDrawers
         /// <summary>
         ///     <see cref="PropertyDrawer" /> Styles.
         /// </summary>
-        static class Styles
+        internal static class Styles
         {
             /// <summary>
             ///     The width of an individual button in the footer.
