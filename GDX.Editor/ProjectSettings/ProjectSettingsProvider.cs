@@ -119,9 +119,12 @@ namespace GDX.Editor
         static GenericMenu s_PopupMenu;
 
         static Button s_ClearButton;
-        static Button s_SectionButton;
+        static Button s_ExtrasButton;
         static Button s_SaveButton;
+        static ScrollView s_ChangelogScrollView;
+
         static EditorWindow s_ProjectSettingsWindow;
+
 
 
         static void CacheSectionContent(int sectionIndex)
@@ -327,16 +330,23 @@ namespace GDX.Editor
                     {
                         Application.OpenURL("https://dotbunny.youtrack.cloud/youtrack/issues/GDX");
                     };
+                    Button buttonLicense = rootElement.Q<Button>("button-license");
+                    buttonLicense.clicked += () =>
+                    {
+                        Application.OpenURL("https://github.com/dotBunny/GDX/blob/dev/LICENSE");
+                    };
 
                     VisualElement banner = rootElement.Q<VisualElement>("gdx-banner");
                     banner.style.backgroundImage = new StyleBackground(ResourcesProvider.GetBanner());
-
-                    s_SectionButton = rootElement.Q<Button>("gdx-section-button");
-                    s_SectionButton.clicked += () =>
+                    s_ExtrasButton = rootElement.Q<Button>("gdx-extras-button");
+                    s_ExtrasButton.style.backgroundImage = new StyleBackground(ResourcesProvider.GetLogo());
+                    s_ExtrasButton.clicked += () =>
                     {
                         ShowPopupMenu();
                     };
 
+                    s_ChangelogScrollView = rootElement.Q<ScrollView>("gdx-changelog");
+                    ChangelogProvider.StartProcess(s_ChangelogScrollView.contentContainer);
 
                     rootElement.Q<Label>("gdx-version").text = UpdateProvider.LocalPackage.Definition.version;
 
@@ -411,13 +421,25 @@ namespace GDX.Editor
         }
 
 
+
         static void ShowPopupMenu()
         {
             if (s_PopupMenu == null)
             {
                 s_PopupMenu = new GenericMenu();
 
+                s_PopupMenu.AddItem(new GUIContent("About dotBunny"), false, () =>
+                {
+
+                });
+
+                s_PopupMenu.AddItem(new GUIContent("Changelog"), false, () =>
+                {
+                    Application.OpenURL(UpdateProvider.GetLocalChangelogPath());
+                });
+
                 // s_PopupMenu.AddSeparator("");
+
                 s_PopupMenu.AddItem(new GUIContent("Expand Sections"), false, () =>
                 {
                     // Open
@@ -443,7 +465,6 @@ namespace GDX.Editor
             }
             s_PopupMenu.ShowAsContext();
         }
-
 
         static void QueryElements(string searchContext)
         {

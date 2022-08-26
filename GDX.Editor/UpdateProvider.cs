@@ -187,6 +187,42 @@ namespace GDX.Editor
             }
         }
 
+        public static string GetLocalChangelogPath()
+        {
+            string filePath = Path.Combine(
+                Path.GetDirectoryName(
+                    LocalPackage.PackageManifestPath) ??
+                string.Empty, "CHANGELOG.md" );
+
+            return File.Exists(filePath) ? filePath : null;
+        }
+        public static string[] GetLocalChangelog(int versionLimit = -1)
+        {
+            string path = GetLocalChangelogPath();
+            if (path != null)
+            {
+                string[] lines = File.ReadAllLines(path);
+                int lineCount = lines.Length;
+                int versionCount = 0;
+                List<string> returnLines = new List<string>(100);
+                for (int i = 7; i < lineCount; i++)
+                {
+                    string line = lines[i];
+                    if (line.StartsWith("## "))
+                    {
+                        versionCount++;
+                    }
+
+                    if (versionLimit > 0 && versionCount > versionLimit)
+                    {
+                        return returnLines.ToArray();
+                    }
+                    returnLines.Add(line);
+                }
+                return returnLines.ToArray();
+            }
+            return null;
+        }
         /// <summary>
         ///     Gets the last time that we checked for an update to the package.
         /// </summary>

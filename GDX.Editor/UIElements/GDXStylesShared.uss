@@ -18,11 +18,13 @@
     padding-bottom: 10px;
 }
 
-.light .gdx-groupbox {
+.light .gdx-groupbox,
+.light #gdx-changelog-background {
     background-image: resource('Builtin Skins/LightSkin/Images/OL box.png');
 }
 
-.dark .gdx-groupbox {
+.dark .gdx-groupbox,
+.dark #gdx-changelog-background {
     background-image: resource('Builtin Skins/DarkSkin/Images/OL box.png');
 }
 
@@ -115,6 +117,8 @@ Button.gdx-link:hover {
     --color-tertiary-55: rgba(136, 225, 65, 0.55);
 
     --color-header-footer: rgb(0, 0, 0);
+    --color-border-dark: rgb(42, 42, 42);
+    --color-border-light: rgb(165, 165, 165);
     --size-header: 26px;
 }
 
@@ -235,7 +239,7 @@ Button.gdx-small-button {
     background-color: rgba(0, 0, 0, 0);
 }
 
-#gdx-section-button {
+#gdx-extras-button {
     width: 16px;
     height: 16px;
     border-width: 0;
@@ -243,12 +247,37 @@ Button.gdx-small-button {
     margin-top: 4px;
     margin-bottom: 0;
     padding: 0;
-    background-image: resource('Icons/d_UnityLogo.png');
     background-color: rgba(0, 0, 0, 0);
 }
+#gdx-extras-button:hover {
+    -unity-background-image-tint-color: rgb(54, 53, 56);
+}
 
-.gdx-project-settings-section-header #button-expand:hover,
-#gdx-section-button:hover,
+.dark .gdx-backdrop {
+    background-color: var(--color-border-dark);
+}
+
+.dark #gdx-banner {
+    border-color: var(--color-border-dark);
+    border-top-color: var(--color-border-dark);
+    border-bottom-color: var(--color-border-dark);
+    border-left-color: var(--color-border-dark);
+    border-right-color: var(--color-border-dark);
+}
+
+.light .gdx-backdrop {
+    background-color: var(--color-border-light);
+}
+
+.light #gdx-banner {
+    border-color: var(--color-border-light);
+    border-top-color: var(--color-border-light);
+    border-bottom-color: var(--color-border-light);
+    border-left-color: var(--color-border-light);
+    border-right-color: var(--color-border-light);
+}
+
+.gdx-project-settings-section-header #button-expand:hover
 {
     -unity-background-image-tint-color: var(--color-primary);
 }
@@ -421,3 +450,95 @@ Button.gdx-small-button {
     border-left-width: 0;
     padding-left: 0;
 }
+.gdx-changelog-title
+{
+    font-size: 16px;
+    -unity-font-style: bold;
+    margin-bottom: 10px;
+}
+.gdx-changelog-h1
+{
+    font-size: 14px;
+    -unity-font-style: bold;
+}
+.gdx-changelog-h2
+{
+    font-size: 12px;
+    -unity-font-style: bold;
+}
+.gdx-changelog-h3
+{
+    font-size: 11px;
+    -unity-font-style: bold;
+}
+.gdx-changelog-quote
+{
+    -unity-font-style: italic;
+}
+.gdx-changelog-item
+{
+    padding-left: 5px;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    -unity-text-align: middle-left;
+}
+
+#gdx-changelog Label {
+    padding-left: 0;
+    padding-right: 0;
+    flex-wrap: wrap;
+    white-space: normal;
+}
+
+#gdx-changelog .dot
+{
+    width: 8px;
+    height: 8px;
+    border-width: 0;
+    margin-left: 5px;
+    margin-top: 5px;
+    margin-bottom: 0;
+    margin-right: 5px;
+    padding: 0;
+}
+
+#gdx-changelog .dot-container
+{
+    height: 100%;
+}
+
+.gdx-changelog-item .text-container
+{
+    flex-wrap: wrap;
+    white-space: normal;
+    flex-direction: row;
+    -unity-text-align: middle-left;
+}
+
+#gdx-changelog .gdx-code
+{
+    background-color: #5e5e5e;
+    padding:2px;
+    -unity-font-style: bold;
+}
+
+#gdx-changelog .dot-added
+{
+    background-image: resource('Icons/sv_icon_dot11_sml.png');
+
+}
+#gdx-changelog .dot-changed
+{
+    background-image: resource('Icons/sv_icon_dot1_sml.png');
+}
+#gdx-changelog .dot-removed
+{
+    background-image: resource('Icons/sv_icon_dot14_sml.png');
+}
+
+#gdx-changelog .dot-fixed
+{
+    background-image: resource('Icons/sv_icon_dot13_sml.png');
+}
+
+

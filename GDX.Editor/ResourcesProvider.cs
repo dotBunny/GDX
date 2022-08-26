@@ -34,6 +34,8 @@ namespace GDX.Editor
         /// <remarks>Cleverly lifted from the docs templates out of project.</remarks>
         static Texture2D s_Banner;
 
+        static Texture2D s_dotBunnyLogo;
+
         /// <summary>
         ///     The cached reference to the global stylesheet.
         /// </summary>
@@ -96,10 +98,31 @@ namespace GDX.Editor
             if (File.Exists(imagePath))
             {
                 byte[] bytes = File.ReadAllBytes(imagePath);
-                s_Banner = new Texture2D(1200, 630, TextureFormat.RGBA32, false);
+                s_Banner = new Texture2D(1200, 630, TextureFormat.RGBA32, true);
                 s_Banner.LoadImage(bytes);
             }
             return s_Banner;
+        }
+
+        /// <summary>
+        ///     Returns an instance of the dotBunny logo image.
+        /// </summary>
+        /// <returns>An image loaded from disk, if not cached.</returns>
+        public static Texture2D GetLogo()
+        {
+            if (s_dotBunnyLogo != null) return s_dotBunnyLogo;
+
+            string imagePath = Path.Combine(
+                Path.GetDirectoryName(UpdateProvider.LocalPackage.PackageManifestPath),
+                ".docfx", "images", "branding", "dotBunny.png" );
+
+            if (File.Exists(imagePath))
+            {
+                byte[] bytes = File.ReadAllBytes(imagePath);
+                s_dotBunnyLogo = new Texture2D(800, 800, TextureFormat.RGBA32, true);
+                s_dotBunnyLogo.LoadImage(bytes);
+            }
+            return s_dotBunnyLogo;
         }
 
         /// <summary>

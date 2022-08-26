@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.1.0] - ?
 ***"Dinner Table"***
->
+> 
 
 ### Added
 
@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `EditorTaskDirector` to automatically tick the `TaskDirector` while in edit mode.
 - Boilerplate in `PlayerLoopSystemExtensions` to make modifying the PlayerLoop much simpler.
 
-### Changes
+### Changed
 
 - `SimpleListManagedPool` events renamed for consistency to `destroyedItem`, `returnedItem`, `spawnedItem`, `tearingDown`.
 - Explicit callout that `SerializableDictionary` does not support custom struct keys.
@@ -39,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - New `Array3D` and `NativeArray3D` flattened 3D arrays.
 
-### Changes
+### Changed
 
 - `BitArray8`, `BitArray16`, `BitArray32`, `BitArray64` have been marked `Serializable`.
 
