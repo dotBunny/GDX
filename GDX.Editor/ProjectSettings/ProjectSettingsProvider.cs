@@ -116,6 +116,7 @@ namespace GDX.Editor
         static VisualElement s_ChangesElement;
         static VisualElement s_RootElement;
         static VisualElement s_HolderElement;
+        static GenericMenu s_PopupMenu;
 
         static Button s_ClearButton;
         static Button s_SectionButton;
@@ -333,50 +334,21 @@ namespace GDX.Editor
                     s_SectionButton = rootElement.Q<Button>("gdx-section-button");
                     s_SectionButton.clicked += () =>
                     {
-                        int openCount = 0;
-                        for (int i = 0; i < k_SectionCount; i++)
-                        {
-                            string sectionKey = k_ConfigSections[i].GetSectionKey();
-                            if (EditorPrefsCache.GetBoolean(sectionKey))
-                            {
-                                openCount++;
-                            }
-                        }
-
-                        if (openCount > (k_SectionCount / 2))
-                        {
-                            // Close
-                            for (int i = 0; i < k_SectionCount; i++)
-                            {
-                                string sectionKey = k_ConfigSections[i].GetSectionKey();
-                                EditorPrefsCache.SetBoolean(sectionKey, false);
-                                UpdateSectionHeader(i);
-                                UpdateSectionContent(i);
-                            }
-                        }
-                        else
-                        {
-                            // Open
-                            for (int i = 0; i < k_SectionCount; i++)
-                            {
-                                string sectionKey = k_ConfigSections[i].GetSectionKey();
-                                EditorPrefsCache.SetBoolean(sectionKey, true);
-                                UpdateSectionHeader(i);
-                                UpdateSectionContent(i);
-                            }
-                        }
+                        ShowPopupMenu();
                     };
 
 
-                    VisualElement packageHolderElement =
-                        rootElement.Q<VisualElement>("gdx-project-settings-packages");
-                    // ReSharper disable once StringLiteralTypo
-                    packageHolderElement.Add(GetPackageStatus("Addressables",
-                        Developer.Conditionals.HasAddressablesPackage));
-                    packageHolderElement.Add(GetPackageStatus("Platforms",
-                        Developer.Conditionals.HasPlatformsPackage));
-                    packageHolderElement.Add(GetPackageStatus("Visual Scripting",
-                        Developer.Conditionals.HasVisualScriptingPackage));
+                    rootElement.Q<Label>("gdx-version").text = UpdateProvider.LocalPackage.Definition.version;
+
+                    // VisualElement packageHolderElement =
+                    //     rootElement.Q<VisualElement>("gdx-project-settings-packages");
+                    // // ReSharper disable once StringLiteralTypo
+                    // packageHolderElement.Add(GetPackageStatus("Addressables",
+                    //     Developer.Conditionals.HasAddressablesPackage));
+                    // packageHolderElement.Add(GetPackageStatus("Platforms",
+                    //     Developer.Conditionals.HasPlatformsPackage));
+                    // packageHolderElement.Add(GetPackageStatus("Visual Scripting",
+                    //     Developer.Conditionals.HasVisualScriptingPackage));
 
                     // Build some useful references
                     ScrollView contentScrollView = rootElement.Q<ScrollView>("gdx-project-settings-content");
@@ -437,6 +409,41 @@ namespace GDX.Editor
                 }
             };
         }
+
+
+        static void ShowPopupMenu()
+        {
+            if (s_PopupMenu == null)
+            {
+                s_PopupMenu = new GenericMenu();
+
+                // s_PopupMenu.AddSeparator("");
+                s_PopupMenu.AddItem(new GUIContent("Expand Sections"), false, () =>
+                {
+                    // Open
+                    for (int i = 0; i < k_SectionCount; i++)
+                    {
+                        string sectionKey = k_ConfigSections[i].GetSectionKey();
+                        EditorPrefsCache.SetBoolean(sectionKey, true);
+                        UpdateSectionHeader(i);
+                        UpdateSectionContent(i);
+                    }
+                });
+                s_PopupMenu.AddItem(new GUIContent("Collapse Sections"), false, () =>
+                {
+                    // Close
+                    for (int i = 0; i < k_SectionCount; i++)
+                    {
+                        string sectionKey = k_ConfigSections[i].GetSectionKey();
+                        EditorPrefsCache.SetBoolean(sectionKey, false);
+                        UpdateSectionHeader(i);
+                        UpdateSectionContent(i);
+                    }
+                });
+            }
+            s_PopupMenu.ShowAsContext();
+        }
+
 
         static void QueryElements(string searchContext)
         {
