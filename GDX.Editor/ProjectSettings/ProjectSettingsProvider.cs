@@ -346,8 +346,7 @@ namespace GDX.Editor
                     };
 
                     s_ChangelogScrollView = rootElement.Q<ScrollView>("gdx-changelog");
-                    ChangelogProvider.StartProcess(s_ChangelogScrollView.contentContainer);
-
+                    ChangelogProvider.StartTask(s_ChangelogScrollView.contentContainer);
                     rootElement.Q<Label>("gdx-version").text = UpdateProvider.LocalPackage.Definition.version;
 
                     // VisualElement packageHolderElement =

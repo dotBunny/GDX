@@ -455,32 +455,46 @@ Button.gdx-small-button {
     border-left-width: 0;
     padding-left: 0;
 }
-.gdx-changelog-title
+
+.gdx-md-h1
 {
     font-size: 16px;
     -unity-font-style: bold;
     margin-top: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
-.gdx-changelog-h1
+.gdx-md-h2
 {
+    margin-top: 10px;
     font-size: 14px;
     -unity-font-style: bold;
 }
-.gdx-changelog-h2
+.gdx-md-h3
 {
+    margin-top: 5px;
     font-size: 12px;
     -unity-font-style: bold;
 }
-.gdx-changelog-h3
+.gdx-md-h4
 {
+    margin-top: 5px;
     font-size: 11px;
     -unity-font-style: bold;
 }
-.gdx-changelog-quote
+
+.gdx-md-bold
+{
+    -unity-font-style: bold;
+}
+.gdx-md-italic
 {
     -unity-font-style: italic;
 }
+.gdx-md-bold-italic
+{
+    -unity-font-style: bold-and-italic;
+}
+
 .gdx-changelog-item
 {
     padding-left: 5px;
