@@ -165,14 +165,14 @@ namespace GDX.Editor
                     {
                         if (newLine.Length > 0)
                         {
-                            Label regularText = new Label(newLine.ToString());
+                            Label regularText = new Label(newLine.ToString().Trim());
                             textContainer.Add(regularText);
                             newLine.Clear();
                         }
                     }
                     else
                     {
-                        Label codeText = new Label(newLine.ToString());
+                        Label codeText = new Label(newLine.ToString().Trim());
                         codeText.AddToClassList("gdx-code");
                         textContainer.Add(codeText);
                         newLine.Clear();
@@ -182,10 +182,9 @@ namespace GDX.Editor
                 else
                 {
                     newLine.Append(item[i]);
-
                     if (item[i] == ' ' && newLine.Length > 0)
                     {
-                        Label regularText = new Label(newLine.ToString());
+                        Label regularText = new Label(newLine.ToString().Trim());
                         textContainer.Add(regularText);
                         newLine.Clear();
                     }
@@ -195,7 +194,7 @@ namespace GDX.Editor
 
             if (newLine.Length > 0)
             {
-                Label regularText = new Label(newLine.ToString());
+                Label regularText = new Label(newLine.ToString().Trim());
                 textContainer.Add(regularText);
                 newLine.Clear();
             }

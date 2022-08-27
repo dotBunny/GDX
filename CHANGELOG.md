@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.1.0] - ?
 ***"Dinner Table"***
-> 
+> This release introduces minor functionality while shoring existing features with fixes and unit testing. We are starting to work more on visibility and discoverability. 
 
 ### Added
 

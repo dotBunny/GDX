@@ -28,6 +28,11 @@
     background-image: resource('Builtin Skins/DarkSkin/Images/OL box.png');
 }
 
+#gdx-changelog
+{
+    padding-left: 10px;
+}
+
 .gdx-sub-header {
     margin-bottom: 5px;
     margin-top: 10px;
@@ -454,6 +459,7 @@ Button.gdx-small-button {
 {
     font-size: 16px;
     -unity-font-style: bold;
+    margin-top: 10px;
     margin-bottom: 10px;
 }
 .gdx-changelog-h1
@@ -485,7 +491,7 @@ Button.gdx-small-button {
 
 #gdx-changelog Label {
     padding-left: 0;
-    padding-right: 0;
+    padding-right: 2px;
     flex-wrap: wrap;
     white-space: normal;
 }
@@ -517,9 +523,19 @@ Button.gdx-small-button {
 
 #gdx-changelog .gdx-code
 {
-    background-color: #5e5e5e;
-    padding:2px;
+    padding: 2px;
     -unity-font-style: bold;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    border-radius: 5px;
+}
+.dark #gdx-changelog .gdx-code
+{
+    background-color: #5e5e5e;
+}
+.light #gdx-changelog .gdx-code
+{
+    background-color: #ececec;
 }
 
 #gdx-changelog .dot-added
