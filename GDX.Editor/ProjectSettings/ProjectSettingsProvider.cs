@@ -116,6 +116,7 @@ namespace GDX.Editor
         static VisualElement s_ChangesElement;
         static VisualElement s_RootElement;
         static VisualElement s_HolderElement;
+        static VisualElement s_PackageBadgeElement;
         static GenericMenu s_PopupMenu;
 
         static Button s_ClearButton;
@@ -315,11 +316,6 @@ namespace GDX.Editor
                     };
 
                     // Handle Links
-                    Button buttonRepository = rootElement.Q<Button>("button-repository");
-                    buttonRepository.clicked += () =>
-                    {
-                        Application.OpenURL("https://github.com/dotBunny/GDX/");
-                    };
                     Button buttonDocumentation = rootElement.Q<Button>("button-documentation");
                     buttonDocumentation.clicked += () =>
                     {
@@ -352,15 +348,14 @@ namespace GDX.Editor
                     ChangelogProvider.StartTask(s_ChangelogScrollView.contentContainer);
                     rootElement.Q<Label>("gdx-version").text = UpdateProvider.LocalPackage.Definition.version;
 
-                    // VisualElement packageHolderElement =
-                    //     rootElement.Q<VisualElement>("gdx-project-settings-packages");
-                    // // ReSharper disable once StringLiteralTypo
-                    // packageHolderElement.Add(GetPackageStatus("Addressables",
-                    //     Developer.Conditionals.HasAddressablesPackage));
-                    // packageHolderElement.Add(GetPackageStatus("Platforms",
-                    //     Developer.Conditionals.HasPlatformsPackage));
-                    // packageHolderElement.Add(GetPackageStatus("Visual Scripting",
-                    //     Developer.Conditionals.HasVisualScriptingPackage));
+                    // Badges
+                    s_PackageBadgeElement = rootElement.Q<VisualElement>("gdx-packages");
+                    AddPackageBadge(s_PackageBadgeElement, "Addressables",
+                        Developer.Conditionals.HasAddressablesPackage);
+                    AddPackageBadge(s_PackageBadgeElement, "Platforms",
+                        Developer.Conditionals.HasPlatformsPackage);
+                    AddPackageBadge(s_PackageBadgeElement, "Visual Scripting",
+                        Developer.Conditionals.HasVisualScriptingPackage);
 
                     // Build some useful references
                     ScrollView contentScrollView = rootElement.Q<ScrollView>("gdx-project-settings-content");
@@ -423,6 +418,14 @@ namespace GDX.Editor
         }
 
 
+        static void AddPackageBadge(VisualElement container, string content, bool found)
+        {
+            Label packageLabel = new Label(content);
+            packageLabel.AddToClassList("gdx-badge");
+            packageLabel.AddToClassList("gdx-package");
+            packageLabel.AddToClassList(found ? "gdx-package-found" : "gdx-package-not-found");
+            container.Add(packageLabel);
+        }
 
         static void ShowPopupMenu()
         {
@@ -440,6 +443,11 @@ namespace GDX.Editor
                 s_PopupMenu.AddItem(new GUIContent("Changelog"), false, () =>
                 {
                     Application.OpenURL(UpdateProvider.GetLocalChangelogPath());
+                });
+
+                s_PopupMenu.AddItem(new GUIContent("Git Repository"), false, () =>
+                {
+                    Application.OpenURL("https://github.com/dotBunny/GDX/");
                 });
 
                 s_PopupMenu.AddSeparator("");

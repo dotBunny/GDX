@@ -31,7 +31,7 @@ namespace GDX.Editor
             DotFixed,
             Item,
             ItemText,
-            Code,
+            Badge,
             Spacer
         }
         enum ChangelogSection
@@ -160,9 +160,9 @@ namespace GDX.Editor
                     }
 
                     return itemContainer;
-                case ArtifactType.Code:
+                case ArtifactType.Badge:
                     Label code = new Label(artifact.Content);
-                    code.AddToClassList("gdx-code");
+                    code.AddToClassList("gdx-badge");
                     return code;
                 case ArtifactType.Spacer:
                     VisualElement spacer = new VisualElement { style = { width = 10, height = 10 } };
@@ -227,7 +227,7 @@ namespace GDX.Editor
                     }
                     else
                     {
-                        textContainer.SubArtifacts.Add(new Artifact(newLine.ToString().Trim(), ArtifactType.Code));
+                        textContainer.SubArtifacts.Add(new Artifact(newLine.ToString().Trim(), ArtifactType.Badge));
                         newLine.Clear();
                     }
 

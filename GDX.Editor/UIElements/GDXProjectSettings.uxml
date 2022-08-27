@@ -29,10 +29,6 @@
                     <ui:VisualElement class="gdx-fixed-vertical-spacer-10" style="height: 5px;" />
                     <ui:VisualElement style="white-space: nowrap; align-items: flex-start; flex-direction: row;">
                         <ui:Label text="-" class="gdx-bullet" />
-                        <ui:Button name="button-repository" text="Repository" display-tooltip-when-elided="true" class="gdx-link" />
-                    </ui:VisualElement>
-                    <ui:VisualElement style="white-space: nowrap; align-items: flex-start; flex-direction: row;">
-                        <ui:Label text="-" class="gdx-bullet" />
                         <ui:Button name="button-documentation" text="Documentation" display-tooltip-when-elided="true" class="gdx-link" />
                     </ui:VisualElement>
                     <ui:VisualElement style="white-space: nowrap; align-items: flex-start; flex-direction: row;">
@@ -43,6 +39,7 @@
                         <ui:Label text="-" class="gdx-bullet" />
                         <ui:Button name="button-license" text="License" display-tooltip-when-elided="true" class="gdx-link" />
                     </ui:VisualElement>
+                    <ui:VisualElement name="gdx-packages" style="flex-direction: row; flex-wrap: wrap;" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:ScrollView>

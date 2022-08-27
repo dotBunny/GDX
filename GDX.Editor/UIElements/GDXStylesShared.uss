@@ -177,19 +177,26 @@ Button.gdx-small-button {
 #gdx-config-changes #button-save-changes:hover {
     background-color: var(--color-tertiary);
 }
-
-#gdx-package-status {
+#gdx-packages
+{
     margin-top: 5px;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
-
-#gdx-package-status #element-status {
-    width: 16px;
-    height: 16px;
-    background-image: resource('Icons/TestNormal.png');
+.gdx-package
+{
+    -unity-font-style: bold;
+    font-size: 10px;
+    margin-right: 8px;
+    color: rgb(0,0,0);
 }
-
-#gdx-package-status #element-status.found {
-    background-image: resource('Icons/TestPassed.png');
+.gdx-package-found
+{
+    background-color: var(--color-tertiary);
+}
+.gdx-package-not-found
+{
+    background-color: var(--color-secondary);
 }
 
 #gdx-project-settings-content {
@@ -510,6 +517,12 @@ Button.gdx-small-button {
     white-space: normal;
 }
 
+#gdx-changelog .gdx-changelog-item Label
+{
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
 #gdx-changelog .dot
 {
     width: 8px;
@@ -535,12 +548,6 @@ Button.gdx-small-button {
     -unity-text-align: middle-left;
 }
 
-.gdx-changelog-item Label
-{
-    flex-wrap: nowrap;
-    white-space: nowrap;
-}
-
 #gdx-changelog .gdx-right-arrow
 {
     width: 10px;
@@ -557,32 +564,11 @@ Button.gdx-small-button {
     background-image: resource('Icons/forward@2x.png');
 }
 
-#gdx-changelog .gdx-code
+#gdx-changelog Button.gdx-link
 {
-    padding: 2px;
-    -unity-font-style: bold;
-    margin-top: 1px;
-    margin-bottom: 1px;
-    border-radius: 5px;
-    flex-grow: 0;
-    flex-shrink: 0;
-    white-space: normal;
-    flex-wrap: nowrap;
-    -unity-text-align: middle-center;
-}
-#gdx-changelog .gdx-link
-{
-    padding-top:3px;
+    padding-top:1px;
     margin-right: 2px;
-    margin-bottom: 2px;
-}
-.dark #gdx-changelog .gdx-code
-{
-    background-color: #5e5e5e;
-}
-.light #gdx-changelog .gdx-code
-{
-    background-color: #ececec;
+    margin-bottom: 1px;
 }
 
 #gdx-changelog .dot-added
@@ -611,4 +597,36 @@ Button.gdx-small-button {
     margin-top: 10px;
 }
 
+.gdx-badge
+{
+    border-radius: 5px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    white-space: normal;
+    flex-wrap: nowrap;
+    -unity-text-align: middle-center;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+#gdx-changelog .gdx-badge
+{
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    -unity-font-style: bold;
+}
+.dark #gdx-changelog .gdx-badge
+{
+    background-color: #5e5e5e;
+}
+.light #gdx-changelog .gdx-badge
+{
+    background-color: #ececec;
+}
 
