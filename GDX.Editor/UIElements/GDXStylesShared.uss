@@ -604,4 +604,11 @@ Button.gdx-small-button {
     background-image: resource('Icons/sv_icon_dot13_sml.png');
 }
 
+#gdx-changelog .gdx-changelog-loading
+{
+    font-size: 18px;
+    -unity-font-style: bold;
+    margin-top: 10px;
+}
+
 
