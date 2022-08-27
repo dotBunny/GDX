@@ -4,7 +4,6 @@
 
 using System;
 using System.Text;
-using UnityEngine.Device;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor
@@ -234,7 +233,7 @@ namespace GDX.Editor
                 linkedButton.text = display;
                 linkedButton.clicked += () =>
                 {
-                    Application.OpenURL(link);
+                    UnityEngine.Application.OpenURL(link);
                 };
                 linkedButton.AddToClassList("gdx-link");
                 return linkedButton;
