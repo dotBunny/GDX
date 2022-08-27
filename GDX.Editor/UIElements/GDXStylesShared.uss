@@ -521,6 +521,22 @@ Button.gdx-small-button {
     -unity-text-align: middle-left;
 }
 
+#gdx-changelog .gdx-right-arrow
+{
+    width: 10px;
+    height: 10px;
+    margin-top:2px;
+    margin-right:1px;
+    margin-left:0;
+}
+.dark #gdx-changelog .gdx-right-arrow {
+    background-image: resource('Icons/d_forward@2x.png');
+}
+
+.light #gdx-changelog .gdx-right-arrow {
+    background-image: resource('Icons/forward@2x.png');
+}
+
 #gdx-changelog .gdx-code
 {
     padding: 2px;
@@ -528,6 +544,12 @@ Button.gdx-small-button {
     margin-top: 1px;
     margin-bottom: 1px;
     border-radius: 5px;
+}
+#gdx-changelog .gdx-link
+{
+    padding-top:3px;
+    margin-right: 2px;
+    margin-bottom: 2px;
 }
 .dark #gdx-changelog .gdx-code
 {

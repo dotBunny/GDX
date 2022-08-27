@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- New toggle added to Project Settings -> GDX -> Environment, ensuring that shaders included are always included in a build
+- New toggle added to Project Settings -> GDX -> Environment, ensuring that shaders included are always included in a build.
 - `TaskDirector` to assist with `TaskBase` based scheduling of the thread pool, configurable in GDX project preferences.
 - `EditorTaskDirector` to automatically tick the `TaskDirector` while in edit mode.
 - Boilerplate in `PlayerLoopSystemExtensions` to make modifying the PlayerLoop much simpler.
@@ -74,7 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Package's project settings were rebuilt to use `UIElement`s instead of `IMGUI` with added searchability.
 - `Smooth::HalfLifeToSmoothingFactor()` no longer defaults elapsed time to `Time.deltaTime`
 - The visual scripting module detects the package based installation available in `Unity 2021` and forward. If you wish to have support in `Unity 2020.3` via the Asset Store you will need to add a scripting define symbol of `GDX_VISUALSCRIPTING` to your project.
-- All internal `Dictionary<string, value>` have been replaced with `StringKeyDictionary<value>`
+- All internal `Dictionary<string,value>` have been replaced with `StringKeyDictionary<value>`
 - `BuildInfoProvider` now uses a `TextGenerator` for codegen.
 - `Platform::GetOutputFolder()` supports being overridden via command-line argument `GDX_OUTPUT_FOLDER`.
 - Internal members of `SerializableDictionary` have been renamed, `FormerlySerializedAs` attribute has been used to hopefully upgrade content.

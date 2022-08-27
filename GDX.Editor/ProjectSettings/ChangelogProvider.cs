@@ -4,6 +4,7 @@
 
 using System;
 using System.Text;
+using UnityEngine.Device;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor
@@ -16,6 +17,8 @@ namespace GDX.Editor
         static int s_ChangedLineHash = "### Changed".GetStableHashCode();
         static int s_FixedLineHash = "### Fixed".GetStableHashCode();
         static int s_RemovedLineHash = "### Removed".GetStableHashCode();
+
+        static int s_ArrowHash = "->".GetStableHashCode();
 
         enum ChangelogSection
         {
@@ -157,16 +160,25 @@ namespace GDX.Editor
 
             StringBuilder newLine = new StringBuilder();
             bool insideCodeIndicator = false;
+            int insideDontBreak = 0;
             for (int i = 0; i < length; i++)
             {
+                if (item[i] == '[')
+                {
+                    insideDontBreak++;
+                }
+
+                if (item[i] == ']')
+                {
+                    insideDontBreak--;
+                }
                 if (item[i] == '`')
                 {
                     if (!insideCodeIndicator)
                     {
                         if (newLine.Length > 0)
                         {
-                            Label regularText = new Label(newLine.ToString().Trim());
-                            textContainer.Add(regularText);
+                            textContainer.Add(ParseRegularText(newLine.ToString().Trim()));
                             newLine.Clear();
                         }
                     }
@@ -182,10 +194,9 @@ namespace GDX.Editor
                 else
                 {
                     newLine.Append(item[i]);
-                    if (item[i] == ' ' && newLine.Length > 0)
+                    if (item[i] == ' ' && newLine.Length > 0 && insideDontBreak == 0)
                     {
-                        Label regularText = new Label(newLine.ToString().Trim());
-                        textContainer.Add(regularText);
+                        textContainer.Add(ParseRegularText(newLine.ToString().Trim()));
                         newLine.Clear();
                     }
                 }
@@ -194,13 +205,43 @@ namespace GDX.Editor
 
             if (newLine.Length > 0)
             {
-                Label regularText = new Label(newLine.ToString().Trim());
-                textContainer.Add(regularText);
+                textContainer.Add(ParseRegularText(newLine.ToString().Trim()));
                 newLine.Clear();
             }
 
             container.Add(textContainer);
             return container;
+        }
+
+        static VisualElement ParseRegularText(string text)
+        {
+            int hash = text.GetStableHashCode();
+
+            // Right quick arrow
+            if (hash == s_ArrowHash)
+            {
+                VisualElement arrow = new VisualElement();
+                arrow.AddToClassList("gdx-right-arrow");
+                return arrow;
+            }
+
+            // Link
+            if (text.StartsWith("[") && text.EndsWith(")") && text.Contains("]("))
+            {
+                string display = text.Substring(1, text.IndexOf("]", StringComparison.Ordinal) - 1);
+                string link = text.Substring(text.IndexOf("](") + 2).TrimEnd(')');
+                Button linkedButton = new Button();
+                linkedButton.text = display;
+                linkedButton.clicked += () =>
+                {
+                    Application.OpenURL(link);
+                };
+                linkedButton.AddToClassList("gdx-link");
+                return linkedButton;
+            }
+
+            // text
+            return new Label(text);
         }
 
         static void ProcessChangelog()
