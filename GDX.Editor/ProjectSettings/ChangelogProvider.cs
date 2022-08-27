@@ -56,7 +56,7 @@ namespace GDX.Editor
             {
                 new ParseChangelogTask(container, OnTaskComplete).Enqueue();
                 container.Clear();
-                Label loadingLabel = new Label("Parsing ...");
+                Label loadingLabel = new Label("Loading ...");
                 loadingLabel.AddToClassList("gdx-changelog-loading");
                 container.Add(loadingLabel);
             }
