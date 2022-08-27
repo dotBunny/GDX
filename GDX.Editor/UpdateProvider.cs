@@ -187,6 +187,10 @@ namespace GDX.Editor
             }
         }
 
+        /// <summary>
+        ///     Get the local changelog path.
+        /// </summary>
+        /// <returns>A full path if it exists, otherwise null.</returns>
         public static string GetLocalChangelogPath()
         {
             string filePath = Path.Combine(
@@ -196,6 +200,14 @@ namespace GDX.Editor
 
             return File.Exists(filePath) ? filePath : null;
         }
+
+        /// <summary>
+        ///     Get some or all of the version information from the local changelog.
+        /// </summary>
+        /// <param name="versionLimit">
+        ///     An optional limit to the number of versions worth of information to return.
+        /// </param>
+        /// <returns>The changelog lines corresponding to the versions.</returns>
         public static string[] GetLocalChangelog(int versionLimit = -1)
         {
             string path = GetLocalChangelogPath();
@@ -223,6 +235,7 @@ namespace GDX.Editor
             }
             return null;
         }
+
         /// <summary>
         ///     Gets the last time that we checked for an update to the package.
         /// </summary>
@@ -235,6 +248,20 @@ namespace GDX.Editor
             }
 
             return lastTime;
+        }
+
+        /// <summary>
+        ///     Get the path to the local license file.
+        /// </summary>
+        /// <returns>A full path if it exists, otherwise null.</returns>
+        public static string GetLocalLicensePath()
+        {
+            string filePath = Path.Combine(
+                Path.GetDirectoryName(
+                    LocalPackage.PackageManifestPath) ??
+                string.Empty, "LICENSE" );
+
+            return File.Exists(filePath) ? filePath : null;
         }
 
         /// <summary>

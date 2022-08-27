@@ -28,7 +28,7 @@ namespace GDX.Threading
         /// <summary>
         ///     An accumulation of time since the last tick.
         /// </summary>
-        static float s_TimeSinceLastTick = 0;
+        static float s_TimeSinceLastTick;
 
         /// <summary>
         ///     Triggered after the <see cref="TaskDirectorSystem"/> has ticked, with the delta time.

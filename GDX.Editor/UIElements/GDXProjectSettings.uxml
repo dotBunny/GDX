@@ -41,7 +41,7 @@
                     </ui:VisualElement>
                     <ui:VisualElement style="white-space: nowrap; align-items: flex-start; flex-direction: row;">
                         <ui:Label text="-" class="gdx-bullet" />
-                        <ui:Button name="button-license" text="Boost Software License 1.0" display-tooltip-when-elided="true" class="gdx-link" />
+                        <ui:Button name="button-license" text="License" display-tooltip-when-elided="true" class="gdx-link" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>

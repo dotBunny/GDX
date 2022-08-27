@@ -535,6 +535,12 @@ Button.gdx-small-button {
     -unity-text-align: middle-left;
 }
 
+.gdx-changelog-item Label
+{
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
 #gdx-changelog .gdx-right-arrow
 {
     width: 10px;

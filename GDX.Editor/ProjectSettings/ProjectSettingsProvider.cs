@@ -333,7 +333,10 @@ namespace GDX.Editor
                     Button buttonLicense = rootElement.Q<Button>("button-license");
                     buttonLicense.clicked += () =>
                     {
-                        Application.OpenURL("https://github.com/dotBunny/GDX/blob/dev/LICENSE");
+                        Application.OpenURL(
+                            Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork
+                                ? "https://github.com/dotBunny/GDX/blob/dev/LICENSE"
+                                : UpdateProvider.GetLocalLicensePath());
                     };
 
                     VisualElement banner = rootElement.Q<VisualElement>("gdx-banner");

@@ -135,7 +135,7 @@ namespace GDX.Editor
                     VisualElement dotModified = new VisualElement();
                     dotModifiedSurround.Add(dotModified);
                     dotModified.AddToClassList("dot");
-                    dotModified.AddToClassList("dot-changed");
+                    dotModified.AddToClassList("dot-fixed");
                     return dotModifiedSurround;
                 case ArtifactType.Item:
                     VisualElement item = new VisualElement();

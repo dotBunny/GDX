@@ -12,13 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- New toggle added to Project Settings -> GDX -> Environment, ensuring that shaders included are always included in a build.
+- New toggle added to Project Settings -> GDX -> Environment, ensuring that GDX shaders included are always included in a build. This is encompases the shaders necessary to draw the `DebugDraw` commands.
 - `TaskDirector` to assist with `TaskBase` based scheduling of the thread pool, configurable in GDX project preferences.
-- `EditorTaskDirector` to automatically tick the `TaskDirector` while in edit mode.
+- `EditorTaskDirectorSystem` and `TaskDirectorSystem` to automatically tick the `TaskDirector` in appropriate modes.
 - Boilerplate in `PlayerLoopSystemExtensions` to make modifying the PlayerLoop much simpler.
 
 ### Changed
 
+- Reworked the project settings window to now incude some of the recent changelog for visibility.
 - `SimpleListManagedPool` events renamed for consistency to `destroyedItem`, `returnedItem`, `spawnedItem`, `tearingDown`.
 - Explicit callout that `SerializableDictionary` does not support custom struct keys.
 
