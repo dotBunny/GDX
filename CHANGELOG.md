@@ -6,8 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [3.1.0] - ?
+
 ***"Dinner Table"***
-> This release introduces minor functionality while shoring existing features with fixes and unit testing. We are starting to work more on visibility and discoverability. 
+> This release introduces minor functionality while shoring existing features with fixes and unit testing. We are starting to work more on visibility and discoverability.
 
 ### Added
 
@@ -399,7 +400,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 > A DocFX generated [site](https://gdx.dotbunny.com/) is now being stood up by our internal CI when a new commit is made to the `main` branch.
 ### Added
 
-- A proper [**Getting Started**](https://gdx.dotbunny.com/manual/getting-started/index.html) section to the manual
+- A proper [Getting Started](https://gdx.dotbunny.com/manual/getting-started/index.html) section to the manual
 
 ### Changed
 

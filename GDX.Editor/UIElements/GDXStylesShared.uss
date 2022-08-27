@@ -456,41 +456,41 @@ Button.gdx-small-button {
     padding-left: 0;
 }
 
-.gdx-md-h1
+.gdx-changelog-h1
 {
-    font-size: 16px;
+    font-size: 18px;
     -unity-font-style: bold;
     margin-top: 10px;
     margin-bottom: 5px;
 }
-.gdx-md-h2
+.gdx-changelog-h2
 {
     margin-top: 10px;
     font-size: 14px;
     -unity-font-style: bold;
 }
-.gdx-md-h3
+.gdx-changelog-h3
 {
     margin-top: 5px;
     font-size: 12px;
     -unity-font-style: bold;
 }
-.gdx-md-h4
+.gdx-changelog-h4
 {
     margin-top: 5px;
     font-size: 11px;
     -unity-font-style: bold;
 }
 
-.gdx-md-bold
+.gdx-changelog-bold
 {
     -unity-font-style: bold;
 }
-.gdx-md-italic
+.gdx-changelog-italic
 {
     -unity-font-style: italic;
 }
-.gdx-md-bold-italic
+.gdx-changelog-bold-italic
 {
     -unity-font-style: bold-and-italic;
 }
@@ -558,6 +558,11 @@ Button.gdx-small-button {
     margin-top: 1px;
     margin-bottom: 1px;
     border-radius: 5px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    white-space: normal;
+    flex-wrap: nowrap;
+    -unity-text-align: middle-center;
 }
 #gdx-changelog .gdx-link
 {

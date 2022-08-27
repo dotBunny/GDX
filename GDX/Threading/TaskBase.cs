@@ -102,6 +102,20 @@ namespace GDX.Threading
         bool m_IsExecuting;
 
         /// <summary>
+        ///     Forcibly completes the task on the given thread where the method is invoked.
+        /// </summary>
+        /// <remarks>
+        ///     This will also forcibly tick the <see cref="TaskDirector"/> upon completion to trigger callbacks. You
+        ///     should not be using this unless you have an explicit purpose too.
+        /// </remarks>
+        public void Complete()
+        {
+            Enqueue();
+            DoWork();
+            TaskDirector.Tick();
+        }
+
+        /// <summary>
         ///     The core logic to be defined for a task.
         /// </summary>
         public abstract void DoWork();

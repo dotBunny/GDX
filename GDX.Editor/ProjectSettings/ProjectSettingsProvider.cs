@@ -429,15 +429,17 @@ namespace GDX.Editor
 
                 s_PopupMenu.AddItem(new GUIContent("About dotBunny"), false, () =>
                 {
-
+                    Application.OpenURL("https://dotbunny.com/about");
                 });
+
+                s_PopupMenu.AddSeparator("");
 
                 s_PopupMenu.AddItem(new GUIContent("Changelog"), false, () =>
                 {
                     Application.OpenURL(UpdateProvider.GetLocalChangelogPath());
                 });
 
-                // s_PopupMenu.AddSeparator("");
+                s_PopupMenu.AddSeparator("");
 
                 s_PopupMenu.AddItem(new GUIContent("Expand Sections"), false, () =>
                 {
