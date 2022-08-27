@@ -244,9 +244,6 @@ namespace GDX.Threading
         /// <summary>
         ///     Did an exception occur while executing off thread?
         /// </summary>
-        /// <remarks>
-        ///     <see cref="GetStatusMessage"/> for more details.
-        /// </remarks>
         /// <returns>Returns true if an exception occured.</returns>
         public bool IsFaulted()
         {

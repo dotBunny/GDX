@@ -171,8 +171,8 @@ namespace GDX.Editor
         ///     Ensure that the GDX based shaders are always included in builds.
         /// </summary>
         /// <remarks>
-        ///     Useful to ensure that the default materials used by the <see cref="DrawCommandBuffer" /> are added to
-        ///     the build.
+        ///     Useful to ensure that the default materials used by the <see cref="GDX.Developer.DebugDraw" /> are added
+        ///     to the build.
         /// </remarks>
         public static void EnsureAlwaysIncludeShaders()
         {

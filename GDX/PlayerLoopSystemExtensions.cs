@@ -101,10 +101,7 @@ namespace GDX
         public static TextGenerator GenerateSystemTree(this ref PlayerLoopSystem rootSystem, TextGenerator generator = null)
         {
             // We abuse this for recursion
-            if (generator == null)
-            {
-                generator = new TextGenerator();
-            }
+            generator ??= new TextGenerator();
 
             if (rootSystem.type != null)
             {
@@ -112,15 +109,7 @@ namespace GDX
             }
             else
             {
-                if (generator.GetIndentLevel() == 0)
-                {
-                    generator.AppendLine("_RootSystem_");
-                }
-                else
-                {
-                    generator.AppendLine("_NullSystem_");
-                }
-
+                generator.AppendLine(generator.GetIndentLevel() == 0 ? "_RootSystem_" : "_NullSystem_");
             }
 
             if (rootSystem.subSystemList == null || rootSystem.subSystemList.Length <= 0)

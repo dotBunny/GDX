@@ -97,8 +97,7 @@ namespace GDX.Editor
                     boldItalic.AddToClassList("gdx-changelog-bold-italic");
                     return boldItalic;
                 case ArtifactType.Link:
-                    Button linkedButton = new Button();
-                    linkedButton.text = artifact.Content;
+                    Button linkedButton = new Button { text = artifact.Content };
                     linkedButton.clicked += () => { Application.OpenURL(artifact.Extra); };
                     linkedButton.AddToClassList("gdx-link");
                     return linkedButton;
@@ -164,10 +163,7 @@ namespace GDX.Editor
                     code.AddToClassList("gdx-code");
                     return code;
                 case ArtifactType.Spacer:
-                    VisualElement spacer = new VisualElement();
-                    spacer.style.width = 10;
-                    ;
-                    spacer.style.height = 10;
+                    VisualElement spacer = new VisualElement { style = { width = 10, height = 10 } };
                     return spacer;
             }
 

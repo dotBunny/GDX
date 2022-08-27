@@ -4,11 +4,9 @@
 
 using System;
 using System.IO;
-using System.Runtime.CompilerServices;
 using GDX.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor
@@ -34,7 +32,10 @@ namespace GDX.Editor
         /// <remarks>Cleverly lifted from the docs templates out of project.</remarks>
         static Texture2D s_Banner;
 
-        static Texture2D s_dotBunnyLogo;
+        /// <summary>
+        ///     A dotBunny logo image.
+        /// </summary>
+        static Texture2D s_CompanyLogo;
 
         /// <summary>
         ///     The cached reference to the global stylesheet.
@@ -110,7 +111,7 @@ namespace GDX.Editor
         /// <returns>An image loaded from disk, if not cached.</returns>
         public static Texture2D GetLogo()
         {
-            if (s_dotBunnyLogo != null) return s_dotBunnyLogo;
+            if (s_CompanyLogo != null) return s_CompanyLogo;
 
             string imagePath = Path.Combine(
                 Path.GetDirectoryName(UpdateProvider.LocalPackage.PackageManifestPath),
@@ -119,10 +120,10 @@ namespace GDX.Editor
             if (File.Exists(imagePath))
             {
                 byte[] bytes = File.ReadAllBytes(imagePath);
-                s_dotBunnyLogo = new Texture2D(800, 800, TextureFormat.RGBA32, true);
-                s_dotBunnyLogo.LoadImage(bytes);
+                s_CompanyLogo = new Texture2D(800, 800, TextureFormat.RGBA32, true);
+                s_CompanyLogo.LoadImage(bytes);
             }
-            return s_dotBunnyLogo;
+            return s_CompanyLogo;
         }
 
         /// <summary>

@@ -44,7 +44,6 @@ namespace GDX.Editor
         {
             EditorApplication.ExecuteMenuItem("Window/General/Game");
 
-            Texture2D targetTexture = null;
             EditorWindow gameView = Automation.GetGameView();
 
             Assert.IsTrue(gameView != null, "Expected game view reference.");
@@ -53,7 +52,7 @@ namespace GDX.Editor
             Assert.IsTrue(gameView.hasFocus, "Game view doesn't think it has focus.");
 
             Assert.IsTrue(EditorWindow.focusedWindow == gameView, "Expected game view to be focused.");
-            targetTexture = Automation.CaptureFocusedEditorWindow();
+            Texture2D targetTexture = Automation.CaptureFocusedEditorWindow();
 
             Assert.IsTrue(targetTexture != null, "Returned texture is null.");
         }

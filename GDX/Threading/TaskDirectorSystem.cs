@@ -73,6 +73,9 @@ namespace GDX.Threading
         /// <summary>
         ///     Update the rate at which the <see cref="TaskDirectorSystem"/> updates the <see cref="TaskDirector"/>.
         /// </summary>
+        /// <remarks>
+        ///     This will not survive domain reload, please see <see cref="Config.TaskDirectorSystemTickRate"/>.
+        /// </remarks>
         /// <param name="tickRate">The new tick rate.</param>
         public static void SetTickRate(float tickRate)
         {

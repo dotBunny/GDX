@@ -4,7 +4,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GDX.Collections.Generic;
 using GDX.Mathematics.Random;
 #if UNITY_EDITOR
 using UnityEditor;

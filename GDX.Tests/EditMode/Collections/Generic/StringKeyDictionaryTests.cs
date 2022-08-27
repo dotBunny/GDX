@@ -56,8 +56,10 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void IndexerAdd_CheckExists()
         {
-            StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16);
-            dictionary[TestLiterals.Foo] = TestLiterals.Bar;
+            StringKeyDictionary<string> dictionary = new StringKeyDictionary<string>(16)
+            {
+                [TestLiterals.Foo] = TestLiterals.Bar
+            };
 
             string storedValue = dictionary[TestLiterals.Foo];
 

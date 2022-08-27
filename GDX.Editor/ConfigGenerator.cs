@@ -120,7 +120,6 @@ namespace GDX.Editor
 
         static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, float rhs)
         {
-            FieldInfo f = GetFirstFieldInfoByName(configFields, member);
             float lhs = OriginalValueAttribute.GetValue<float>(GetFirstFieldInfoByName(configFields, member));
             if (Math.Abs(lhs - rhs) < Platform.DoubleTolerance) return;
             code.AppendLine($"{k_CoreConfigPath}.{member} = {rhs}f;");

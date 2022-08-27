@@ -8,7 +8,6 @@ using System.Text;
 using NUnit.Framework;
 using Unity.Collections;
 using UnityEditor;
-using UnityEditor.VersionControl;
 using UnityEngine.TestTools;
 using Application = UnityEngine.Application;
 

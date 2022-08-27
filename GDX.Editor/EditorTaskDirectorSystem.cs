@@ -60,7 +60,7 @@ namespace GDX.Editor
         ///     Update the rate at which the <see cref="EditorTaskDirectorSystem"/> updates the <see cref="TaskDirector"/>.
         /// </summary>
         /// <remarks>
-        ///     Setting the tick rate is temporary in comparison to setting the actual value in the GDX config.
+        ///     This will not survive domain reload, please see <see cref="Config.EditorTaskDirectorSystemTickRate"/>.
         /// </remarks>
         /// <param name="tickRate">The new tick rate.</param>
         public static void SetTickRate(double tickRate)
