@@ -243,8 +243,11 @@ namespace GDX.IO
                 do
                 {
                     int copySize = Math.Min(count, (int)(k_BlockSize - BlockOffset));
-
-                    EnsureCapacity(Position + copySize);
+                    long intendedLength = Position + copySize;
+                    if (intendedLength > m_LengthInternal)
+                    {
+                        m_LengthInternal = intendedLength;
+                    }
 
                     Buffer.BlockCopy(buffer, offset, Block, (int)BlockOffset, copySize);
                     count -= copySize;
@@ -283,22 +286,13 @@ namespace GDX.IO
         /// <param name="value">The <see cref="byte"/> to write to the <see cref="CoalesceStream"/>.</param>
         public override void WriteByte(byte value)
         {
-            EnsureCapacity(Position + 1);
-            Block[BlockOffset] = value;
-            Position++;
-        }
-
-        /// <summary>
-        ///     Arbitrarily set the internal length of the <see cref="CoalesceStream"/>, if the provided
-        ///     <paramref name="intendedLength"/> is larger.
-        /// </summary>
-        /// <param name="intendedLength">The intended length value.</param>
-        void EnsureCapacity(long intendedLength)
-        {
+            long intendedLength = Position + 1;
             if (intendedLength > m_LengthInternal)
             {
                 m_LengthInternal = intendedLength;
             }
+            Block[BlockOffset] = value;
+            Position++;
         }
     }
 }
