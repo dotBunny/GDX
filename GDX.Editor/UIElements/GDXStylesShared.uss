@@ -177,9 +177,15 @@ Button.gdx-small-button {
 #gdx-config-changes #button-save-changes:hover {
     background-color: var(--color-tertiary);
 }
+
+#gdx-info-box .gdx-link
+{
+    -unity-font-style: bold;
+}
+
 #gdx-packages
 {
-    margin-top: 5px;
+    margin-top: 10px;
     flex-grow: 0;
     flex-shrink: 0;
 }
@@ -190,6 +196,11 @@ Button.gdx-small-button {
     margin-right: 8px;
     color: rgb(0,0,0);
 }
+.gdx-badge.gdx-package
+{
+    margin-bottom: 5px;
+}
+
 .gdx-package-found
 {
     background-color: var(--color-tertiary);
