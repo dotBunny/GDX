@@ -48,11 +48,6 @@ namespace GDX.IO
 
         [Test]
         [Category(Core.TestCategory)]
-        public void Flush_()
-        {
-        }
-        [Test]
-        [Category(Core.TestCategory)]
         public void Read_()
         {
         }
