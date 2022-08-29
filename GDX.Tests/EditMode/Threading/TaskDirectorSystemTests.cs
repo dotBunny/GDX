@@ -87,9 +87,19 @@ namespace GDX.Threading
             yield return TaskDirector.WaitAsync().AsIEnumerator();
         }
 
+        [Test]
+        [Category(Core.TestCategory)]
+        public void Task_Complete_TicksDirector()
+        {
+            InstantTestTask task = new InstantTestTask();
+            task.Enqueue();
+            task.Complete();
+            Assert.IsTrue(task.Finished);
+        }
+
         [UnityTest]
         [Category(Core.TestCategory)]
-        public IEnumerator Offline__NoTick()
+        public IEnumerator Offline_NoTick()
         {
             // Ensure that before we start the test that we're zeroed out.
             int busyCount = TaskDirector.GetBusyCount();
@@ -179,6 +189,17 @@ namespace GDX.Threading
             public override void DoWork()
             {
                 Thread.Sleep(m_Delay);
+            }
+        }
+
+        class InstantTestTask : TaskBase
+        {
+            public bool Finished;
+
+            /// <inheritdoc />
+            public override void DoWork()
+            {
+                Finished = true;
             }
         }
     }
