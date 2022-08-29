@@ -23,5 +23,18 @@ namespace GDX.Developer
 
             Assert.IsTrue(output == $"{TestLiterals.Foo}{Environment.NewLine}{TestLiterals.Bar}");
         }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void PopIndent_IndentLevelLessThenZero_DoesNothing()
+        {
+            TextGenerator mockGenerator = new TextGenerator();
+            mockGenerator.PushIndent();
+            mockGenerator.AppendLine(TestLiterals.Foo);
+            mockGenerator.PopIndent();
+            mockGenerator.PopIndent();
+            string output = mockGenerator.ToString().Trim();
+            Assert.IsTrue(output == TestLiterals.Foo);
+        }
     }
 }
