@@ -63,6 +63,32 @@ namespace GDX
 
         [Test]
         [Category(Core.TestCategory)]
+        public void AddWithExpandCheckUniqueValue_NonUniqueFloat_ReturnsFalse()
+        {
+            SimpleList<float> mockData = new SimpleList<float>(3);
+
+            mockData.AddWithExpandCheckUniqueValue(1);
+            mockData.AddWithExpandCheckUniqueValue(2);
+            mockData.AddWithExpandCheckUniqueValue(3);
+
+            Assert.IsFalse(mockData.AddWithExpandCheckUniqueValue(1));
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void AddWithExpandCheckUniqueValue_UniqueFloat_ReturnsTrue()
+        {
+            SimpleList<float> mockData = new SimpleList<float>(3);
+
+            mockData.AddWithExpandCheckUniqueValue(1);
+            mockData.AddWithExpandCheckUniqueValue(2);
+            mockData.AddWithExpandCheckUniqueValue(3);
+
+            Assert.IsTrue(mockData.AddWithExpandCheckUniqueValue(4));
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
         public void AddUncheckedUniqueItem_NonUniqueString_ReturnsFalse()
         {
             SimpleList<string> listOfStrings = new SimpleList<string>(3);
@@ -434,6 +460,33 @@ namespace GDX
             bool evaluate = listItems.RemoveLastReference(new object());
 
             Assert.IsFalse(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void ContainsValue_MockDataValue_Found()
+        {
+            SimpleList<float> listItems = new SimpleList<float>(3);
+
+            // Build test rig
+            listItems.AddUnchecked(1);
+            listItems.AddUnchecked(2);
+            listItems.AddUnchecked(3);
+
+            Assert.IsTrue(listItems.ContainsValue(2));
+        }
+        [Test]
+        [Category(Core.TestCategory)]
+        public void ContainsValue_MockDataNoValue_NotFound()
+        {
+            SimpleList<float> listItems = new SimpleList<float>(3);
+
+            // Build test rig
+            listItems.AddUnchecked(1);
+            listItems.AddUnchecked(2);
+            listItems.AddUnchecked(3);
+
+            Assert.IsFalse(listItems.ContainsValue(4));
         }
     }
 }
