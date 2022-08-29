@@ -62,7 +62,7 @@ namespace GDX.Editor
         {
 
             EditorTaskDirectorSystem.SetTickRate(-1);
-            new CallbackTestTask(WaitForMilliseconds.TwoSeconds).Enqueue();
+            new CallbackTestTask(WaitFor.TwoSeconds).Enqueue();
 
             int busyCount = TaskDirector.GetBusyCount();
             int queueCount = TaskDirector.GetQueueCount();
@@ -72,7 +72,7 @@ namespace GDX.Editor
 
             EditorTaskDirectorSystem.SetTickRate(0.1f);
 
-            yield return new WaitForMilliseconds(WaitForMilliseconds.OneSecond).While();
+            yield return WaitFor.While(WaitFor.OneSecond);
 
             busyCount = TaskDirector.GetBusyCount();
             queueCount = TaskDirector.GetQueueCount();

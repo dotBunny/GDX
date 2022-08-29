@@ -4,7 +4,6 @@
 
 using System.Collections;
 using System.Threading;
-using GDX.Developer;
 using GDX.Editor;
 using NUnit.Framework;
 using UnityEditor;
@@ -17,7 +16,6 @@ namespace GDX.Threading
 {
     public class TaskDirectorSystemTests
     {
-        readonly WaitForMilliseconds m_WaitForOneSecond = new WaitForMilliseconds(WaitForMilliseconds.OneSecond);
         EnterPlayModeOptions m_PreviousOptions;
         bool m_PreviousToggle;
         bool m_PreviousEnvironmentEditorTaskDirector;
@@ -51,7 +49,6 @@ namespace GDX.Threading
             EditorSettings.enterPlayModeOptions = EnterPlayModeOptions.DisableDomainReload |
                                                   EnterPlayModeOptions.DisableSceneReload;
 #endif
-            m_WaitForOneSecond.Reset();
 
             EditorTaskDirectorSystem.SetTickRate(-1);
             Config.TaskDirectorSystem = true;
@@ -111,10 +108,8 @@ namespace GDX.Threading
             Config.TaskDirectorSystem = false;
 
             // Set tick in playmode
-            yield return new EnterPlayMode(true);
-            m_WaitForOneSecond.Reset();
-            yield return m_WaitForOneSecond.While();
-            m_WaitForOneSecond.Reset();
+            yield return new EnterPlayMode();
+            yield return WaitFor.While(WaitFor.OneSecond);
             Assert.IsTrue(EditorApplication.isPlaying);
 
             new CallbackTestTask(1).Enqueue();
@@ -125,7 +120,7 @@ namespace GDX.Threading
                 busyCount == 0 && queueCount == 1,
                 $"Expected 0/1 - Found {busyCount.ToString()}/{queueCount.ToString()}");
 
-            yield return m_WaitForOneSecond.While(); // ISSUE TODO It is ticking for some reason
+            yield return WaitFor.While(WaitFor.OneSecond);
 
             busyCount = TaskDirector.GetBusyCount();
             queueCount = TaskDirector.GetQueueCount();
@@ -160,7 +155,7 @@ namespace GDX.Threading
 
             new CallbackTestTask(1).Enqueue();
 
-            yield return m_WaitForOneSecond.While();
+            yield return WaitFor.While(WaitFor.OneSecond);
 
             // Check that we actually ticked and cleared
             busyCount = TaskDirector.GetBusyCount();

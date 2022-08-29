@@ -5,6 +5,7 @@
 using System.Collections;
 using System.IO;
 using GDX.Jobs.ParallelFor;
+using GDX.Threading;
 using NUnit.Framework;
 using Unity.Collections;
 using Unity.Jobs;
@@ -98,13 +99,13 @@ namespace GDX.Editor
         {
             EditorWindow sceneViewA = Automation.GetWindow<SceneView>();
             sceneViewA.Focus();
-            yield return new Developer.WaitForMilliseconds(500).While();
+            yield return WaitFor.While(500);
             Texture2D screenshotA = Automation.CaptureEditorWindow(sceneViewA);
             sceneViewA.Close();
 
             EditorWindow sceneViewB = Automation.GetWindow<SceneView>();
             sceneViewB.Focus();
-            yield return new Developer.WaitForMilliseconds(500).While();
+            yield return WaitFor.While(500);
             Texture2D screenshotB = Automation.CaptureEditorWindow(sceneViewB);
             sceneViewB.Close();
 
