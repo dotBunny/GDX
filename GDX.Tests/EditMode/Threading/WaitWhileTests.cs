@@ -15,17 +15,21 @@ namespace GDX.Threading
 
         bool LessThan20Milliseconds()
         {
-            return m_Stopwatch.ElapsedMilliseconds < 20;
+            lock (m_Stopwatch)
+            {
+                return m_Stopwatch.ElapsedMilliseconds < 20;
+            }
         }
 
         [UnityTest]
         [Category(Core.TestCategory)]
         public IEnumerator WaitWhile_LessThanOne()
         {
-            m_Stopwatch.Restart();
+            m_Stopwatch.Reset();
+            m_Stopwatch.Start();
             yield return WaitWhile.WaitAsync(LessThan20Milliseconds).AsIEnumerator();
             m_Stopwatch.Stop();
-            Assert.IsTrue(m_Stopwatch.ElapsedMilliseconds >= 20);
+            Assert.IsTrue(m_Stopwatch.ElapsedMilliseconds >= 20, m_Stopwatch.ElapsedMilliseconds.ToString());
         }
 
 
@@ -33,10 +37,11 @@ namespace GDX.Threading
         [Category(Core.TestCategory)]
         public IEnumerator While_OneSecond_Elapsed()
         {
-            m_Stopwatch.Restart();
+            m_Stopwatch.Reset();
+            m_Stopwatch.Start();
             yield return WaitWhile.While(LessThan20Milliseconds);
             m_Stopwatch.Stop();
-            Assert.IsTrue(m_Stopwatch.ElapsedMilliseconds >= 20);
+            Assert.IsTrue(m_Stopwatch.ElapsedMilliseconds >= 20, m_Stopwatch.ElapsedMilliseconds.ToString());
         }
     }
 }

@@ -21,7 +21,7 @@ namespace GDX.Threading
         {
             await Task.Run(() =>
             {
-                if (conditional())
+                while(conditional())
                 {
                     Task.Delay(1).Wait();
                 }
