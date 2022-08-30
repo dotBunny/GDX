@@ -23,23 +23,22 @@ namespace GDX.Threading
 
         [UnityTest]
         [Category(Core.TestCategory)]
-        public IEnumerator WaitWhile_LessThanOne()
+        public IEnumerator GetEnumerator_OneSecond_Elapsed()
         {
             m_Stopwatch.Reset();
             m_Stopwatch.Start();
-            yield return WaitWhile.WaitAsync(LessThan20Milliseconds).AsIEnumerator();
+            yield return WaitWhile.GetEnumerator(LessThan20Milliseconds);
             m_Stopwatch.Stop();
             Assert.IsTrue(m_Stopwatch.ElapsedMilliseconds >= 20, m_Stopwatch.ElapsedMilliseconds.ToString());
         }
 
-
         [UnityTest]
         [Category(Core.TestCategory)]
-        public IEnumerator While_OneSecond_Elapsed()
+        public IEnumerator GetTask_LessThanOne()
         {
             m_Stopwatch.Reset();
             m_Stopwatch.Start();
-            yield return WaitWhile.While(LessThan20Milliseconds);
+            yield return WaitWhile.GetTask(LessThan20Milliseconds).AsIEnumerator();
             m_Stopwatch.Stop();
             Assert.IsTrue(m_Stopwatch.ElapsedMilliseconds >= 20, m_Stopwatch.ElapsedMilliseconds.ToString());
         }

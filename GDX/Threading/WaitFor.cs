@@ -49,23 +49,11 @@ namespace GDX.Threading
         public const int TenMinutes = 600000;
 
         /// <summary>
-        ///     Wait asynchronously.
-        /// </summary>
-        /// <param name="milliseconds">The number of milliseconds to wait for.</param>
-        public static async Task WaitAsync(int milliseconds)
-        {
-            await Task.Run(() =>
-            {
-                Task.Delay(milliseconds).Wait();
-            });
-        }
-
-        /// <summary>
         ///     Wait using an <see cref="IEnumerator"/>.
         /// </summary>
         /// <param name="milliseconds">The number of milliseconds to wait for.</param>
         /// <returns>Yields null values.</returns>
-        public static IEnumerator While(int milliseconds)
+        public static IEnumerator GetEnumerator(int milliseconds)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Restart();
@@ -74,6 +62,18 @@ namespace GDX.Threading
                 yield return null;
             }
             stopwatch.Stop();
+        }
+
+        /// <summary>
+        ///     Wait asynchronously.
+        /// </summary>
+        /// <param name="milliseconds">The number of milliseconds to wait for.</param>
+        public static async Task GetTask(int milliseconds)
+        {
+            await Task.Run(() =>
+            {
+                Task.Delay(milliseconds).Wait();
+            });
         }
     }
 }

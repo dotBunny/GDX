@@ -72,7 +72,7 @@ namespace GDX.Editor
 
             EditorTaskDirectorSystem.SetTickRate(0.1f);
 
-            yield return WaitFor.While(WaitFor.OneSecond);
+            yield return WaitFor.GetEnumerator(WaitFor.OneSecond);
 
             busyCount = TaskDirector.GetBusyCount();
             queueCount = TaskDirector.GetQueueCount();

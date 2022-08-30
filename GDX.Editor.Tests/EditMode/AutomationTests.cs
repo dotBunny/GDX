@@ -99,13 +99,13 @@ namespace GDX.Editor
         {
             EditorWindow sceneViewA = Automation.GetWindow<SceneView>();
             sceneViewA.Focus();
-            yield return WaitFor.While(500);
+            yield return WaitFor.GetEnumerator(500);
             Texture2D screenshotA = Automation.CaptureEditorWindow(sceneViewA);
             sceneViewA.Close();
 
             EditorWindow sceneViewB = Automation.GetWindow<SceneView>();
             sceneViewB.Focus();
-            yield return WaitFor.While(500);
+            yield return WaitFor.GetEnumerator(500);
             Texture2D screenshotB = Automation.CaptureEditorWindow(sceneViewB);
             sceneViewB.Close();
 

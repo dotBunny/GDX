@@ -14,10 +14,23 @@ namespace GDX.Threading
     public static class WaitWhile
     {
         /// <summary>
+        ///     Wait using an <see cref="IEnumerator"/> while the <paramref name="conditional"/> is true.
+        /// </summary>
+        /// <param name="conditional">A function evaluated to determine if the wait continues.</param>
+        /// <returns>Yields null values.</returns>
+        public static IEnumerator GetEnumerator(Func<bool> conditional)
+        {
+            while (conditional())
+            {
+                yield return null;
+            }
+        }
+
+        /// <summary>
         ///     Wait asynchronously while the <paramref name="conditional"/> is true.
         /// </summary>
         /// <param name="conditional">A function evaluated to determine if the wait continues.</param>
-        public static async Task WaitAsync(Func<bool> conditional)
+        public static async Task GetTask(Func<bool> conditional)
         {
             await Task.Run(() =>
             {
@@ -26,19 +39,6 @@ namespace GDX.Threading
                     Task.Delay(1).Wait();
                 }
             });
-        }
-
-        /// <summary>
-        ///     Wait using an <see cref="IEnumerator"/> while the <paramref name="conditional"/> is true.
-        /// </summary>
-        /// <param name="conditional">A function evaluated to determine if the wait continues.</param>
-        /// <returns>Yields null values.</returns>
-        public static IEnumerator While(Func<bool> conditional)
-        {
-            while (conditional())
-            {
-                yield return null;
-            }
         }
     }
 }

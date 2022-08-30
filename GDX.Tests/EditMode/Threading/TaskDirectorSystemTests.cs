@@ -109,7 +109,7 @@ namespace GDX.Threading
 
             // Set tick in playmode
             yield return new EnterPlayMode();
-            yield return WaitFor.While(WaitFor.OneSecond);
+            yield return WaitFor.GetEnumerator(WaitFor.OneSecond);
             Assert.IsTrue(EditorApplication.isPlaying);
 
             new CallbackTestTask(1).Enqueue();
@@ -120,7 +120,7 @@ namespace GDX.Threading
                 busyCount == 0 && queueCount == 1,
                 $"Expected 0/1 - Found {busyCount.ToString()}/{queueCount.ToString()}");
 
-            yield return WaitFor.While(WaitFor.OneSecond);
+            yield return WaitFor.GetEnumerator(WaitFor.OneSecond);
 
             busyCount = TaskDirector.GetBusyCount();
             queueCount = TaskDirector.GetQueueCount();
@@ -155,7 +155,7 @@ namespace GDX.Threading
 
             new CallbackTestTask(1).Enqueue();
 
-            yield return WaitFor.While(WaitFor.OneSecond);
+            yield return WaitFor.GetEnumerator(WaitFor.OneSecond);
 
             // Check that we actually ticked and cleared
             busyCount = TaskDirector.GetBusyCount();
