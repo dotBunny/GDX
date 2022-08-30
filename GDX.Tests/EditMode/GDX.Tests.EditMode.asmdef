@@ -35,6 +35,11 @@
             "name": "com.unity.test-framework.performance",
             "expression": "2.0.0",
             "define": "GDX_PERFORMANCETESTING"
+        },
+        {
+            "name": "com.unity.collections",
+            "expression": "1.2.3",
+            "define": "GDX_UNSAFE_COLLECTIONS"
         }
     ],
     "noEngineReferences": false
