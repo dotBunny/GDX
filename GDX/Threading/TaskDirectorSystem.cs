@@ -118,9 +118,19 @@ namespace GDX.Threading
             }
         }
 
+        /// <summary>
+        ///     The internal update call to the <see cref="TaskDirector"/>.
+        /// </summary>
         static void PlayerLoopTick()
         {
-            if (!Application.isPlaying) { return; }
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                Trace.Output(Trace.TraceLevel.Warning,
+                    "Unable to tick Task Director from PlayerLoop outside of PlayMode.");
+                return;
+            }
+#endif
 
             s_TimeSinceLastTick += Time.deltaTime;
             if (s_TimeSinceLastTick < s_TickRate)

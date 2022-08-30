@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections;
 using System.Threading;
 using GDX.Editor;
@@ -23,6 +24,7 @@ namespace GDX.Threading
 
         float m_PreviousTickRate;
         double m_PreviousEditorTickRate;
+        int m_Counter;
 
         Scene m_TestScene;
 
@@ -39,6 +41,7 @@ namespace GDX.Threading
             m_PreviousEnvironmentEditorTaskDirector = Config.EditorTaskDirectorSystem;
             m_PreviousEditorTickRate = EditorTaskDirectorSystem.GetTickRate();
             m_PreviousTickRate = TaskDirectorSystem.GetTickRate();
+            m_Counter = 0;
 
             EditorSettings.enterPlayModeOptionsEnabled = true;
 #if UNITY_2022_1_OR_NEWER
@@ -84,6 +87,11 @@ namespace GDX.Threading
             yield return TaskDirector.WaitAsync().AsIEnumerator();
         }
 
+        void IncrementCounter(float delta)
+        {
+            m_Counter++;
+        }
+
         [Test]
         [Category(Core.TestCategory)]
         public void Task_Complete_TicksDirector()
@@ -92,6 +100,18 @@ namespace GDX.Threading
             task.Enqueue();
             task.Complete();
             Assert.IsTrue(task.Finished);
+        }
+
+        [UnityTest]
+        [Category(Core.TestCategory)]
+        public IEnumerator Initialize_DefaultTickRate()
+        {
+            Config.TaskDirectorSystem = true;
+            TaskDirectorSystem.SetTickRate(-1);
+            yield return new EnterPlayMode();
+            yield return WaitFor.GetEnumerator(WaitFor.OneSecond);
+            Assert.IsTrue(EditorApplication.isPlaying);
+            Assert.IsTrue(Math.Abs(TaskDirectorSystem.GetTickRate() - Config.TaskDirectorSystemTickRate) < Platform.FloatTolerance);
         }
 
         [UnityTest]
@@ -169,6 +189,42 @@ namespace GDX.Threading
             // Validate that we removed the system
             PlayerLoopSystem afterPlayerLoop = PlayerLoop.GetCurrentPlayerLoop();
             Assert.IsFalse(afterPlayerLoop.GenerateSystemTree().ToString().Contains(nameof(TaskDirectorSystem)));
+        }
+        [UnityTest]
+        [Category(Core.TestCategory)]
+        public IEnumerator Ticks_AtRate()
+        {
+            // Ensure that before we start the test that we're zeroed out.
+            Config.TaskDirectorSystem = true;
+            TaskDirectorSystem.SetTickRate(2f);
+            TaskDirectorSystem.ticked += IncrementCounter;
+
+            yield return new EnterPlayMode(false);
+            yield return WaitFor.GetEnumerator(WaitFor.TwoSeconds);
+            yield return new ExitPlayMode();
+
+            TaskDirectorSystem.ticked -= IncrementCounter;
+            Assert.IsTrue(m_Counter == 1, m_Counter.ToString());
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void SetTickRate_WhileOff_Warning()
+        {
+            Config.TaskDirectorSystem = false;
+            TaskDirectorSystem.SetTickRate(1);
+            LogAssert.Expect(LogType.Warning,
+            "Tick rate set whilst TaskDirectorSystem has been configured off.");
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void Invoke_PlayerLoopTick_NoTickInEditMode()
+        {
+            Reflection.InvokeStaticMethod("GDX.Threading.TaskDirectorSystem", "PlayerLoopTick", null,
+                Reflection.PrivateStaticFlags);
+            LogAssert.Expect(LogType.Warning,
+                "Unable to tick Task Director from PlayerLoop outside of PlayMode.");
         }
 
         class CallbackTestTask : TaskBase
