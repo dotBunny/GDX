@@ -13,14 +13,15 @@ namespace GDX.IO
     ///     A byte backed stream which combines multiple arrays acting as one uniform stream.
     /// </summary>
     /// <remarks>
-    ///     Max size being limited to <see cref="m_LengthInternal"/> type limitations.
+    ///     Max size being limited to <see cref="m_Length"/> type limitations.
     /// </remarks>
     public class CoalesceStream : Stream
     {
+
         /// <summary>
-        ///     The size of each allocated block array.
+        ///     The default size of each allocated block array.
         /// </summary>
-        const long k_BlockSize = 65536;
+        const int k_DefaultBucketSize = 65536;
 
         /// <summary>
         ///     The internal arrays storage of blocks.
@@ -28,24 +29,33 @@ namespace GDX.IO
         readonly List<byte[]> m_Blocks = new List<byte[]>();
 
         /// <summary>
+        ///     The block size used to allocate new arrays.
+        /// </summary>
+        readonly int m_BucketSize;
+
+        /// <summary>
         ///     The perceived length of the data contained within.
         /// </summary>
-        long m_LengthInternal;
+        long m_Length;
 
         /// <summary>
         ///     Create a <see cref="CoalesceStream"/>.
         /// </summary>
-        public CoalesceStream()
+        /// <param name="bucketSize">The block allocation size.</param>
+        public CoalesceStream(int bucketSize = k_DefaultBucketSize)
         {
             Position = 0;
+            m_BucketSize = bucketSize;
         }
 
         /// <summary>
         ///     Create a <see cref="CoalesceStream"/> and fill it with the data found in <paramref name="source"/>.
         /// </summary>
         /// <param name="source">An array used to prefill the <see cref="CoalesceStream"/> with.</param>
-        public CoalesceStream(byte[] source)
+        /// <param name="bucketSize">The block allocation size.</param>
+        public CoalesceStream(byte[] source, int bucketSize = k_DefaultBucketSize)
         {
+            m_BucketSize = bucketSize;
             Write(source, 0, source.Length);
             Position = 0;
         }
@@ -54,13 +64,15 @@ namespace GDX.IO
         ///     Preallocate a <see cref="CoalesceStream"/> at the desired <paramref name="length"/>.
         /// </summary>
         /// <param name="length">The desired pre-allocated size.</param>
-        public CoalesceStream(int length)
+        /// <param name="bucketSize">The block allocation size.</param>
+        public CoalesceStream(int length, int bucketSize = k_DefaultBucketSize)
         {
+            m_BucketSize = bucketSize;
             SetLength(length);
             Position = length;
             while (m_Blocks.Count <= BlockIndex)
             {
-                m_Blocks.Add(new byte[k_BlockSize]);
+                m_Blocks.Add(new byte[m_BucketSize]);
             }
             Position = 0;
         }
@@ -69,13 +81,15 @@ namespace GDX.IO
         ///     Preallocate a <see cref="CoalesceStream"/> at the desired <paramref name="length"/>.
         /// </summary>
         /// <param name="length">The desired pre-allocated size.</param>
-        public CoalesceStream(long length)
+        /// <param name="bucketSize">The block allocation size.</param>
+        public CoalesceStream(long length, int bucketSize = k_DefaultBucketSize)
         {
+            m_BucketSize = bucketSize;
             SetLength(length);
             Position = length;
             while (m_Blocks.Count <= BlockIndex)
             {
-                m_Blocks.Add(new byte[k_BlockSize]);
+                m_Blocks.Add(new byte[m_BucketSize]);
             }
             Position = 0;
         }
@@ -97,7 +111,7 @@ namespace GDX.IO
         /// <summary>
         ///     Get the combined length of the internal arrays.
         /// </summary>
-        public override long Length => m_LengthInternal;
+        public override long Length => m_Length;
 
         /// <summary>
         ///     Get the current position in the <see cref="Stream"/>.
@@ -113,7 +127,7 @@ namespace GDX.IO
             {
                 while (m_Blocks.Count <= BlockIndex)
                 {
-                    m_Blocks.Add(new byte[k_BlockSize]);
+                    m_Blocks.Add(new byte[m_BucketSize]);
                 }
 
                 return m_Blocks[(int)BlockIndex];
@@ -123,12 +137,12 @@ namespace GDX.IO
         /// <summary>
         ///     Determine the current block index based on the position and block size.
         /// </summary>
-        long BlockIndex => Position / k_BlockSize;
+        long BlockIndex => Position / m_BucketSize;
 
         /// <summary>
         ///     Determine the current block offset based on the position and block size.
         /// </summary>
-        long BlockOffset => Position % k_BlockSize;
+        long BlockOffset => Position % m_BucketSize;
 
 
         /// <summary>
@@ -165,7 +179,7 @@ namespace GDX.IO
                     "Number of bytes to copy cannot be negative.");
             }
 
-            long remaining = m_LengthInternal - Position;
+            long remaining = m_Length - Position;
             if (readCount > remaining)
             {
                 readCount = remaining;
@@ -184,7 +198,7 @@ namespace GDX.IO
             int read = 0;
             do
             {
-                long copySize = Math.Min(readCount, k_BlockSize - BlockOffset);
+                long copySize = Math.Min(readCount, m_BucketSize - BlockOffset);
                 Buffer.BlockCopy(Block, (int)BlockOffset, buffer, offset, (int)copySize);
                 readCount -= copySize;
                 offset += (int)copySize;
@@ -228,7 +242,7 @@ namespace GDX.IO
         /// <param name="value">The new length value.</param>
         public sealed override void SetLength(long value)
         {
-            m_LengthInternal = value;
+            m_Length = value;
         }
 
         /// <summary>
@@ -244,11 +258,11 @@ namespace GDX.IO
             {
                 do
                 {
-                    int copySize = Math.Min(count, (int)(k_BlockSize - BlockOffset));
+                    int copySize = Math.Min(count, (int)(m_BucketSize - BlockOffset));
                     long intendedLength = Position + copySize;
-                    if (intendedLength > m_LengthInternal)
+                    if (intendedLength > m_Length)
                     {
-                        m_LengthInternal = intendedLength;
+                        m_Length = intendedLength;
                     }
 
                     Buffer.BlockCopy(buffer, offset, Block, (int)BlockOffset, copySize);
@@ -271,7 +285,7 @@ namespace GDX.IO
         /// <returns>A valid byte as an int, or -1.</returns>
         public override int ReadByte()
         {
-            if (Position >= m_LengthInternal)
+            if (Position >= m_Length)
             {
                 return -1;
             }
@@ -289,9 +303,9 @@ namespace GDX.IO
         public override void WriteByte(byte value)
         {
             long intendedLength = Position + 1;
-            if (intendedLength > m_LengthInternal)
+            if (intendedLength > m_Length)
             {
-                m_LengthInternal = intendedLength;
+                m_Length = intendedLength;
             }
             Block[BlockOffset] = value;
             Position++;
