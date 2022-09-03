@@ -51,10 +51,10 @@ namespace GDX.Collections.Generic
             m_BucketSize = bucketSize;
             m_BucketSizeMinusOne = (ulong)m_BucketSize - 1;
 
-            ulong remainder = length & m_BucketSizeMinusOne;
-            ulong arrayCount = ((length - remainder) / (ulong)m_BucketSize) + 1;
-            m_Arrays = new SimpleList<T[]>((int)arrayCount);
-            for (int i = 0; i < (int)arrayCount; i++)
+            int placesToShift = math.tzcnt(m_BucketSize);
+            int arrayCount = (int)(length >> placesToShift) + 1;
+            m_Arrays = new SimpleList<T[]>(arrayCount);
+            for (int i = 0; i < arrayCount; i++)
             {
                 m_Arrays.Array[i] = new T[m_BucketSize];
             }
