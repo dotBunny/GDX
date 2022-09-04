@@ -27,7 +27,7 @@ namespace GDX.Collections.Generic
         readonly ulong m_BucketSize;
 
         /// <summary>
-        ///     Cached version of the bucket size, minus one used in <see cref="GetIndex"/>.
+        ///     Cached version of the bucket size, minus one used in <see cref="GetBucketLocation"/>.
         /// </summary>
         readonly ulong m_BucketSizeMinusOne;
 
@@ -76,60 +76,81 @@ namespace GDX.Collections.Generic
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                (int arrayIndex, int offset) info = GetIndex(index);
-                return m_Buckets.Array[info.arrayIndex][info.offset];
+                (int bucketIndex, int bucketOffset) info = GetBucketLocation(index);
+                return m_Buckets.Array[info.bucketIndex][info.bucketOffset];
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set
             {
-                (int arrayIndex, int offset) info = GetIndex(index);
-                m_Buckets.Array[info.arrayIndex][info.offset] = value;
+                (int bucketIndex, int bucketOffset) info = GetBucketLocation(index);
+                m_Buckets.Array[info.bucketIndex][info.bucketOffset] = value;
             }
         }
 
         public ulong Length
         {
             get => m_Length;
-            set
-            {
-                ulong remainder = value & m_BucketSizeMinusOne;
-                int extraArray = 0;
-                if (remainder > 0)
-                {
-                    extraArray = 1;
-                }
-                int arrayCount = (int)((value - remainder) / m_BucketSize) + extraArray;
-                int previousCount = m_Buckets.Count;
+        }
 
-                if (arrayCount > previousCount)
-                {
-                    int additionalCount = arrayCount - previousCount;
-                    for (int i = 0; i < additionalCount; i++)
-                    {
-                        m_Buckets.AddWithExpandCheck(new T[m_BucketSize]);
-                    }
-                }
-                else if (arrayCount < previousCount)
-                {
-                    int extraCount = previousCount - arrayCount;
-                    for (int i = 0; i < extraCount; i++)
-                    {
-                        m_Buckets.RemoveFromBack();
-                    }
-                }
+        public ref T[] GetBucket(int bucketIndex)
+        {
+            return ref m_Buckets.Array[bucketIndex];
+        }
 
-                m_Length = value;
-            }
+        public int GetBucketCount()
+        {
+            return m_Buckets.Count;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        (int arrayIndex, int offset) GetIndex(ulong index)
+        public (int bucketIndex, int bucketOffset) GetBucketLocation(ulong index)
         {
-            int remainder = (int)(index & m_BucketSizeMinusOne);
+            int bucketOffset = (int)(index & m_BucketSizeMinusOne);
             int placesToShift = math.tzcnt(m_BucketSize);
-            int arrayIndex = (int)(index >> placesToShift);
-            return (arrayIndex, remainder);
+            int bucketIndex = (int)(index >> placesToShift);
+            return (bucketIndex, bucketOffset);
         }
+
+        public bool Resize(ulong desiredLength)
+        {
+            ulong remainder = desiredLength & m_BucketSizeMinusOne;
+            int extraArray = 0;
+            if (remainder > 0)
+            {
+                extraArray = 1;
+            }
+            int arrayCount = (int)((desiredLength - remainder) / m_BucketSize) + extraArray;
+            int previousCount = m_Buckets.Count;
+
+            // Grow
+            if (arrayCount > previousCount)
+            {
+                int additionalCount = arrayCount - previousCount;
+                for (int i = 0; i < additionalCount; i++)
+                {
+                    m_Buckets.AddWithExpandCheck(new T[m_BucketSize]);
+                }
+                m_Length = desiredLength;
+                return true;
+            }
+
+            // Shrink
+            if (arrayCount < previousCount)
+            {
+                int extraCount = previousCount - arrayCount;
+                for (int i = 0; i < extraCount; i++)
+                {
+                    m_Buckets.RemoveFromBack();
+                }
+                m_Length = desiredLength;
+                return true;
+            }
+
+            // Do nothing
+            m_Length = desiredLength;
+            return false;
+        }
+
     }
 }
