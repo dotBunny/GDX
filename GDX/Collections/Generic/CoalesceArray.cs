@@ -41,7 +41,8 @@ namespace GDX.Collections.Generic
             int sizeOf = UnsafeUtility.SizeOf(typeof(T));
             ulong expectedSize = length * (ulong)sizeOf;
 
-            // Wrapped over the limit or bigger then allowed bucket
+            // Check if we've wrapped around, if the size is bigger then our max data size, or if the length will exceed
+            // the array address space.
             if (expectedSize < length || expectedSize > k_MaxByteSize || length >= k_MaxByteSize)
             {
                 m_BucketSize = k_MaxByteSize / (ulong)sizeOf;
