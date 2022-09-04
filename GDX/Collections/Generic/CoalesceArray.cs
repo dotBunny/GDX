@@ -3,28 +3,28 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Runtime.CompilerServices;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
 
 namespace GDX.Collections.Generic
 {
     /// <summary>
-    ///
+    ///     Multiple arrays acting as one uniform coalesced array.
     /// </summary>
     /// <remarks>Stores a maximum of 18,446,744,073,709,551,615 elements.</remarks>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The type of data to be stored.</typeparam>
     public struct CoalesceArray<T>
     {
-        const int k_MaximumBucketSize = 2147483646;
-
+        const ulong k_MaxByteSize = 2147483648;
         /// <summary>
         ///     The internal arrays storage
         /// </summary>
-        SimpleList<T[]> m_Arrays;
+        SimpleList<T[]> m_Buckets;
 
         /// <summary>
         ///     The block size used to allocate new arrays.
         /// </summary>
-        readonly int m_BucketSize;
+        readonly ulong m_BucketSize;
 
         /// <summary>
         ///     Cached version of the bucket size, minus one used in <see cref="GetIndex"/>.
@@ -36,27 +36,35 @@ namespace GDX.Collections.Generic
         /// </summary>
         ulong m_Length;
 
-        public CoalesceArray(ulong length, int bucketSize = 65536)
+        public CoalesceArray(ulong length)
         {
-            // Ensure array size is power of 2 based.
-            if (!math.ispow2(bucketSize))
-            {
-                bucketSize -= 1;
-            }
-            else if (bucketSize > k_MaximumBucketSize)
-            {
-                bucketSize = k_MaximumBucketSize;
-            }
+            int sizeOf = UnsafeUtility.SizeOf(typeof(T));
+            ulong expectedSize = length * (ulong)sizeOf;
 
-            m_BucketSize = bucketSize;
-            m_BucketSizeMinusOne = (ulong)m_BucketSize - 1;
+            // Wrapped over the limit or bigger then allowed bucket
+            if (expectedSize < length || expectedSize > k_MaxByteSize)
+            {
+                m_BucketSize = k_MaxByteSize / (ulong)sizeOf;
+            }
+            else
+            {
+                m_BucketSize = math.ceilpow2(length);
+            }
+            m_BucketSizeMinusOne = m_BucketSize - 1;
 
+            // Build our empty arrays
+            ulong remainder = length & m_BucketSizeMinusOne;
+            int extraArray = 0;
+            if (remainder > 0)
+            {
+                extraArray = 1;
+            }
             int placesToShift = math.tzcnt(m_BucketSize);
-            int arrayCount = (int)(length >> placesToShift) + 1;
-            m_Arrays = new SimpleList<T[]>(arrayCount);
+            int arrayCount = (int)(length >> placesToShift) + extraArray;
+            m_Buckets = new SimpleList<T[]>(arrayCount);
             for (int i = 0; i < arrayCount; i++)
             {
-                m_Arrays.Array[i] = new T[m_BucketSize];
+                m_Buckets.Array[i] = new T[(int)m_BucketSize];
             }
 
             m_Length = length;
@@ -68,14 +76,14 @@ namespace GDX.Collections.Generic
             get
             {
                 (int arrayIndex, int offset) info = GetIndex(index);
-                return m_Arrays.Array[info.arrayIndex][info.offset];
+                return m_Buckets.Array[info.arrayIndex][info.offset];
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set
             {
                 (int arrayIndex, int offset) info = GetIndex(index);
-                m_Arrays.Array[info.arrayIndex][info.offset] = value;
+                m_Buckets.Array[info.arrayIndex][info.offset] = value;
             }
         }
 
@@ -85,17 +93,29 @@ namespace GDX.Collections.Generic
             set
             {
                 ulong remainder = value & m_BucketSizeMinusOne;
-                ulong arrayCount = ((value - remainder) / (ulong)m_BucketSize) + 1;
-                int previousCount = m_Arrays.Count;
-                if ((int)arrayCount <= previousCount)
+                int extraArray = 0;
+                if (remainder > 0)
                 {
-                    return;
+                    extraArray = 1;
                 }
+                int arrayCount = (int)((value - remainder) / m_BucketSize) + extraArray;
+                int previousCount = m_Buckets.Count;
 
-                int additionalCount = (int)arrayCount - previousCount;
-                for (int i = 0; i < additionalCount; i++)
+                if (arrayCount > previousCount)
                 {
-                    m_Arrays.AddWithExpandCheck(new T[m_BucketSize]);
+                    int additionalCount = arrayCount - previousCount;
+                    for (int i = 0; i < additionalCount; i++)
+                    {
+                        m_Buckets.AddWithExpandCheck(new T[m_BucketSize]);
+                    }
+                }
+                else if (arrayCount < previousCount)
+                {
+                    int extraCount = previousCount - arrayCount;
+                    for (int i = 0; i < extraCount; i++)
+                    {
+                        m_Buckets.RemoveFromBack();
+                    }
                 }
 
                 m_Length = value;
