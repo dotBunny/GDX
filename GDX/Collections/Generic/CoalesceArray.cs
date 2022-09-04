@@ -42,7 +42,7 @@ namespace GDX.Collections.Generic
             ulong expectedSize = length * (ulong)sizeOf;
 
             // Wrapped over the limit or bigger then allowed bucket
-            if (expectedSize < length || expectedSize > k_MaxByteSize)
+            if (expectedSize < length || expectedSize > k_MaxByteSize || length >= k_MaxByteSize)
             {
                 m_BucketSize = k_MaxByteSize / (ulong)sizeOf;
             }
