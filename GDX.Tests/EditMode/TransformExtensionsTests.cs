@@ -2,8 +2,10 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace GDX
 {
@@ -17,9 +19,10 @@ namespace GDX
         GameObject m_ChildOne;
         GameObject m_ChildTwo;
         GameObject m_ChildThree;
+        GameObject m_ChildFour;
 
-        [SetUp]
-        public void Setup()
+        [UnitySetUp]
+        public IEnumerator Setup()
         {
             m_BaseTransform = new GameObject(TestLiterals.Foo).transform;
 
@@ -31,12 +34,33 @@ namespace GDX
 
             m_ChildThree = new GameObject(TestLiterals.HelloWorld);
             m_ChildThree.transform.SetParent(m_BaseTransform, false);
+            m_ChildThree.AddComponent<Rigidbody>();
+
+
+            m_ChildFour = new GameObject(TestLiterals.Foo);
+            m_ChildFour.transform.SetParent(m_ChildThree.transform, false);
+            m_ChildFour.AddComponent<CapsuleCollider>();
+
             m_ChildThree.SetActive(false);
+
+            // We need this next frame for things to work on creating objects
+            yield return null;
         }
 
-        [TearDown]
-        public void TearDown()
+        [UnityTearDown]
+        public IEnumerator TearDown()
         {
+            if (Application.isPlaying)
+            {
+                yield return new ExitPlayMode();
+            }
+            yield return null;
+
+            if (m_ChildFour != null)
+            {
+                Object.DestroyImmediate(m_ChildFour);
+            }
+
             if (m_ChildThree != null)
             {
                 Object.DestroyImmediate(m_ChildThree);
@@ -76,6 +100,24 @@ namespace GDX
             Assert.IsTrue(count == 1);
         }
 
+        [UnityTest]
+        [Category(Core.TestCategory)]
+        public IEnumerator DestroyChildren_NotImmediate_OneChildRemaining()
+        {
+            yield return new EnterPlayMode(true);
+            yield return Setup();
+            m_BaseTransform.DestroyChildren(false, false);
+
+            int count = m_BaseTransform.childCount;
+            Assert.IsTrue(count == 3); // because not immediate
+
+            yield return null; // next frame
+
+            count = m_BaseTransform.childCount;
+            Assert.IsTrue(count == 1); // because not immediate
+            yield return new ExitPlayMode();
+        }
+
         [Test]
         [Category(Core.TestCategory)]
         public void GetActiveChildrenCount_MockData_AccurateCount()
@@ -90,6 +132,24 @@ namespace GDX
             Transform t = m_BaseTransform.GetFirstComponentInChildrenComplex<Transform>(true, 0, 1);
             Assert.IsTrue(t != null);
         }
+
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void GetFirstComponentInChildrenComplex_MockData_ThirdChildComponentInActive()
+        {
+            Rigidbody r = m_BaseTransform.GetFirstComponentInChildrenComplex<Rigidbody>(true, 0, 1);
+            Assert.IsTrue(r != null);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void GetFirstComponentInChildrenComplex_MockData_DeepDive()
+        {
+            CapsuleCollider c = m_BaseTransform.GetFirstComponentInChildrenComplex<CapsuleCollider>(true, 0);
+            Assert.IsTrue(c != null);
+        }
+
 
         [Test]
         [Category(Core.TestCategory)]

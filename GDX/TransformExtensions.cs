@@ -84,15 +84,12 @@ namespace GDX
         /// <typeparam name="T">The target <see cref="UnityEngine.Component" /> type that is being looked for.</typeparam>
         /// <returns>The first found <see cref="Component" />.</returns>
         public static T GetFirstComponentInChildrenComplex<T>(this Transform targetTransform, bool includeInactive,
-            int currentDepth, int maxLevelsOfRecursion)
+            int currentDepth, int maxLevelsOfRecursion = -1) where T : Component
         {
-            // Make sure we have nothing to return if necessary.
-            T returnComponent = default;
-
             // Increase depth count
             currentDepth++;
 
-            if (maxLevelsOfRecursion >= 0 && currentDepth > maxLevelsOfRecursion) return returnComponent;
+            if (maxLevelsOfRecursion >= 0 && currentDepth > maxLevelsOfRecursion) return default;
 
             int cachedChildCount = targetTransform.childCount;
             for (int i = 0; i < cachedChildCount; i++)
@@ -105,7 +102,9 @@ namespace GDX
                     continue;
 
                 // Lets check the current transform for the component.
-                returnComponent = transformToCheck.GetComponent<T>();
+                T returnComponent = transformToCheck.GetComponent<T>();
+
+                // Its important to use the Equals here, not a !=
                 if (returnComponent != null) return returnComponent;
 
                 // OK, time to deep dive.
@@ -116,7 +115,7 @@ namespace GDX
                 if (returnComponent != null) return returnComponent;
             }
 
-            return returnComponent;
+            return default;
         }
 
         /// <summary>

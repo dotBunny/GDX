@@ -46,11 +46,11 @@ namespace GDX.IO
             Assert.IsTrue(bytes != null);
         }
 
-        [Test]
-        [Category(Core.TestCategory)]
-        public void Read_()
-        {
-        }
+        // [Test]
+        // [Category(Core.TestCategory)]
+        // public void Read_()
+        // {
+        // }
 
         [Test]
         [Category(Core.TestCategory)]
@@ -70,28 +70,28 @@ namespace GDX.IO
             Assert.IsTrue(stream.ReadByte() == -1);
         }
 
-        [Test]
-        [Category(Core.TestCategory)]
-        public void Seek_()
-        {
-        }
+        // [Test]
+        // [Category(Core.TestCategory)]
+        // public void Seek_()
+        // {
+        // }
+        //
+        // [Test]
+        // [Category(Core.TestCategory)]
+        // public void SetLength_()
+        // {
+        // }
 
-        [Test]
-        [Category(Core.TestCategory)]
-        public void SetLength_()
-        {
-        }
+        // [Test]
+        // [Category(Core.TestCategory)]
+        // public void Write_()
+        // {
+        // }
 
-        [Test]
-        [Category(Core.TestCategory)]
-        public void Write_()
-        {
-        }
-
-        [Test]
-        [Category(Core.TestCategory)]
-        public void WriteByte_()
-        {
-        }
+        // [Test]
+        // [Category(Core.TestCategory)]
+        // public void WriteByte_()
+        // {
+        // }
     }
 }

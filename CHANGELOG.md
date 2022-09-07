@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- New toggle added to Project Settings -> GDX -> Environment, ensuring that GDX shaders included are always included in a build. This is encompases the shaders necessary to draw the `DebugDraw` commands.
+- New toggle added to Project Settings -> GDX -> Environment, ensuring that GDX shaders included are always included in a build. This is encompasses the shaders necessary to draw the `DebugDraw` commands.
 - `TaskDirector` to assist with `TaskBase` based scheduling of the thread pool, configurable in GDX project preferences.
 - `EditorTaskDirectorSystem` and `TaskDirectorSystem` to automatically tick the `TaskDirector` in appropriate modes.
 - Boilerplate in `PlayerLoopSystemExtensions` to make modifying the PlayerLoop much simpler.
@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `StringKeyDictionary` and `IntKeyDictionary` can now be initialized with capacities as static fields.
 - Bolt changes in Unity 2022 causing Project Settings from being able to load properly.
+- `TransformExtensions::GetFirstComponentInChildrenComplex()` will now properly handle the recursive compare of objects appropriately.
 
 ### Removed
 

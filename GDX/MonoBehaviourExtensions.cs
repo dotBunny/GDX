@@ -4,6 +4,7 @@
 
 #if !UNITY_DOTSRUNTIME
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -46,8 +47,9 @@ namespace GDX
         /// </param>
         /// <returns>The first found <see cref="Component" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ExcludeFromCodeCoverage]
         public static T GetFirstComponentInChildrenComplex<T>(this MonoBehaviour targetMonoBehaviour,
-            bool includeInactive = false, bool lookInChildrenFirst = false, int maxLevelsOfRecursion = -1)
+            bool includeInactive = false, bool lookInChildrenFirst = false, int maxLevelsOfRecursion = -1) where T : Component
         {
             return targetMonoBehaviour.gameObject.GetFirstComponentInChildrenComplex<T>(includeInactive,
                 lookInChildrenFirst, maxLevelsOfRecursion);
