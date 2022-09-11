@@ -8,7 +8,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.Profiling;
 using System.IO;
+#if UNITY_2022_2_OR_NEWER
+using Unity.Profiling.Memory;
+#else
 using UnityEngine.Profiling.Memory.Experimental;
+#endif
 
 namespace GDX.Developer
 {
