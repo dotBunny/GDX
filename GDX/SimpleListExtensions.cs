@@ -132,6 +132,30 @@ namespace GDX
         /// <summary>
         ///     <para>Does <paramref name="targetSimpleList" /> contain <paramref name="targetItem" />?</para>
         /// </summary>
+        /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
+        /// <param name="targetItem">The target class object to look for.</param>
+        /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
+        /// <returns>true/false</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool Contains<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : IEquatable<T>
+        {
+            int length = targetSimpleList.Count;
+            T[] array = targetSimpleList.Array;
+
+            for (int i = 0; i < length; i++)
+            {
+                if (array[i].Equals(targetItem))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     <para>Does <paramref name="targetSimpleList" /> contain <paramref name="targetItem" />?</para>
+        /// </summary>
         /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
         /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
         /// <param name="targetItem">The target class object to look for.</param>

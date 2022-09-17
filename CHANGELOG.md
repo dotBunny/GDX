@@ -17,7 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `EditorTaskDirectorSystem` and `TaskDirectorSystem` to automatically tick the `TaskDirector` in appropriate modes.
 - Boilerplate in `PlayerLoopSystemExtensions` to make modifying the PlayerLoop much simpler.
 - `Compact()` added to `SimpleList` utilizing a properly sized version of the backing array.
-- `FirstIndexOf()` and `LastIndexOf()` methods added to `ArrayExtensions` constrained to IEquatable for easier string comparison.
+- `FirstIndexOf()` and `LastIndexOf()` methods added to `ArrayExtensions` constrained to `IEquatable` for easier string comparison.
+- `Contains()` to `SimpleListExtensions` constrained to `IEquatable`.
 
 ### Changed
 
@@ -35,7 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed portability tests based on depreciation of tool.
 - Reliance on `jobs` package.
-- Any usage of AssetDatabase.FindAssets
+- Any usage of `AssetDatabase.FindAssets()`
 
 ## [3.0.1] - 2022-07-12
 
