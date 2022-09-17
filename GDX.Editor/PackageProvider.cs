@@ -8,10 +8,10 @@ using System.Reflection;
 using System.Text;
 using GDX.Collections.Generic;
 using UnityEditor;
-using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Application = UnityEngine.Application;
+using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace GDX.Editor
 {
@@ -99,12 +99,9 @@ namespace GDX.Editor
         public readonly InstallationType InstallationMethod;
 
         /// <summary>
-        ///     Asset database path to the root of the package.
+        ///     Unity's own information about the package.
         /// </summary>
-        /// <remarks>
-        ///     This is useful for situations where you need to provide an asset database relative path.
-        /// </remarks>
-        public readonly string PackageAssetPath;
+        public PackageInfo PackageManagerInfo;
 
         /// <summary>
         ///     Fully qualified path to the package.json file.
@@ -124,36 +121,20 @@ namespace GDX.Editor
         {
             EditorApplication.delayCall += DelayCall;
 
-            // Find Local Definition
-            // ReSharper disable once StringLiteralTypo
-            string[] editorAssemblyDefinition = AssetDatabase.FindAssets("GDX.Editor t:asmdef");
-            if (editorAssemblyDefinition.Length > 0)
+            PackageManagerInfo = PackageInfo.FindForAssembly(Assembly.GetAssembly(typeof(PackageProvider)));
+            PackageManifestPath = Path.Combine(PackageManagerInfo.resolvedPath, "package.json");
+            if (!File.Exists(PackageManifestPath))
             {
-                // Establish package root path
-                PackageAssetPath =
-                    Path.Combine(
-                        Path.GetDirectoryName(AssetDatabase.GUIDToAssetPath(editorAssemblyDefinition[0])) ??
-                        string.Empty, "..");
+                return;
+            }
 
-                // Build the package manifest path
-                PackageManifestPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6),
-                    PackageAssetPath ?? string.Empty, "package.json");
-
-                // Make sure the file exists
-                if (!File.Exists(PackageManifestPath))
-                {
-                    return;
-                }
-
-                // Lets try and parse the package JSON
-                try
-                {
-                    Definition = JsonUtility.FromJson<PackageDefinition>(File.ReadAllText(PackageManifestPath));
-                }
-                catch (Exception)
-                {
-                    // Don't go any further if there is an error
-                }
+            try
+            {
+                Definition = JsonUtility.FromJson<PackageDefinition>(File.ReadAllText(PackageManifestPath));
+            }
+            catch (Exception)
+            {
+                // Don't go any further if there is an error
             }
 
             // It didn't actually parse correctly so lets just stop right now.

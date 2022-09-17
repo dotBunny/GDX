@@ -53,11 +53,6 @@ namespace GDX.Editor
 #pragma warning restore IDE0051
 
         /// <summary>
-        ///     A cached pathing to where our UXML are stored.
-        /// </summary>
-        static string s_FoundAssetFolder;
-
-        /// <summary>
         ///     The cached reference to the light theme stylesheet.
         /// </summary>
         /// <remarks>
@@ -137,14 +132,8 @@ namespace GDX.Editor
             {
                 return s_Stylesheet;
             }
-
-            string[] potentialStyles = AssetDatabase.FindAssets("t:Stylesheet GDXStylesShared");
-            if (potentialStyles.Length <= 0)
-            {
-                return s_Stylesheet;
-            }
-
-            s_Stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(potentialStyles[0]));
+            s_Stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(
+                $"{UpdateProvider.LocalPackage.PackageManagerInfo.assetPath}/GDX.Editor/UIElements/GDXStylesShared.uxml");
 
             return s_Stylesheet;
         }
@@ -156,13 +145,8 @@ namespace GDX.Editor
                 return s_LightThemeStylesheet;
             }
 
-            string[] potentialStyles = AssetDatabase.FindAssets("t:Stylesheet GDXStylesLightTheme");
-            if (potentialStyles.Length <= 0)
-            {
-                return s_LightThemeStylesheet;
-            }
-
-            s_LightThemeStylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(potentialStyles[0]));
+            s_LightThemeStylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(
+                $"{UpdateProvider.LocalPackage.PackageManagerInfo.assetPath}/GDX.Editor/UIElements/GDXStylesLightTheme.uss");
 
             return s_LightThemeStylesheet;
         }
@@ -182,13 +166,8 @@ namespace GDX.Editor
                 return s_StylesheetOverride;
             }
 
-            string[] potentialStyles = AssetDatabase.FindAssets("t:Stylesheet GDXStylesUnity2020");
-            if (potentialStyles.Length <= 0)
-            {
-                return s_StylesheetOverride;
-            }
-
-            s_StylesheetOverride = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(potentialStyles[0]));
+            s_StylesheetOverride = AssetDatabase.LoadAssetAtPath<StyleSheet>(
+                $"{UpdateProvider.LocalPackage.PackageManagerInfo.assetPath}/GDX.Editor/UIElements/GDXStylesUnity2020.uss");
 
             return s_StylesheetOverride;
 #endif
@@ -202,30 +181,10 @@ namespace GDX.Editor
         /// <returns>The queried asset if found, or null.</returns>
         internal static VisualTreeAsset GetVisualTreeAsset(string targetName)
         {
-            if (s_Assets.ContainsKey(targetName))
+            if (!s_Assets.ContainsKey(targetName))
             {
-                return s_Assets[targetName];
-            }
-
-            if (s_FoundAssetFolder == null)
-            {
-                string[] potentialTree = AssetDatabase.FindAssets($"t:VisualTreeAsset {targetName}");
-                if (potentialTree.Length <= 0)
-                {
-                    return null;
-                }
-
-                string assetPath = AssetDatabase.GUIDToAssetPath(potentialTree[0]);
-
-                s_FoundAssetFolder = assetPath.Substring(0,
-                    assetPath.IndexOf(targetName, StringComparison.Ordinal));
-                s_Assets.AddWithExpandCheck(targetName,
-                    AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(assetPath));
-            }
-            else
-            {
-                s_Assets.AddWithExpandCheck(targetName,
-                    AssetDatabase.LoadAssetAtPath<VisualTreeAsset>($"{s_FoundAssetFolder}{targetName}.uxml"));
+                s_Assets.AddWithExpandCheck(targetName, AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
+                    $"{UpdateProvider.LocalPackage.PackageManagerInfo.assetPath}/GDX.Editor/UIElements/{targetName}.uxml"));
             }
 
             return s_Assets[targetName];

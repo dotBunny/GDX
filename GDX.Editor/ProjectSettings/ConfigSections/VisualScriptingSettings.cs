@@ -58,7 +58,7 @@ namespace GDX.Editor.ProjectSettings
                 {
                     string sourceFile = System.IO.Path.Combine(
                         Application.dataPath.Substring(0, Application.dataPath.Length - 6),
-                        UpdateProvider.LocalPackage.PackageAssetPath,
+                        UpdateProvider.LocalPackage.PackageManagerInfo.assetPath,
                         ".docfx", "GDX.xml");
 
                     Platform.EnsureFolderHierarchyExists(BoltCore.Paths.assemblyDocumentations);

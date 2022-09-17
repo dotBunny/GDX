@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed portability tests based on depreciation of tool.
 - Reliance on `jobs` package.
+- Any usage of AssetDatabase.FindAssets
 
 ## [3.0.1] - 2022-07-12
 
