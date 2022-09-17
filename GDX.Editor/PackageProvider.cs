@@ -6,7 +6,9 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using GDX.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Application = UnityEngine.Application;
@@ -219,53 +221,6 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        ///     Ensure that the GDX define is present across all viable platforms.
-        /// </summary>
-        public static void EnsureScriptingDefineSymbol()
-        {
-            // Create a list of all the build targets
-            Array buildTargets = Enum.GetValues(typeof(BuildTargetGroup));
-            int buildTargetsCount = buildTargets.Length;
-
-            // Iterate over them all - skipping unknown
-            for (int i = 1; i < buildTargetsCount; i++)
-            {
-                // Get our object
-                object target = buildTargets.GetValue(i);
-
-                // Cast back
-                BuildTargetGroup group = (BuildTargetGroup)target;
-                Type enumType =  group.GetType();
-
-                // Check if we can find an ObsoleteAttribute
-                FieldInfo fieldInfo = enumType.GetField(Enum.GetName(enumType, target));
-                Attribute foundAttribute = fieldInfo.GetCustomAttribute(typeof(ObsoleteAttribute), false);
-
-                // It doesnt have one, so we should assume we can update the scripting defines for this target.
-                if (foundAttribute != null)
-                {
-                    continue;
-                }
-
-                PlayerSettings.GetScriptingDefineSymbolsForGroup(group, out string[] defines);
-                int location = defines.FirstIndexOfItem("GDX");
-
-                // Found
-                if (location != -1)
-                {
-                    continue;
-                }
-
-                // Add to it!
-                int oldLength = defines.Length;
-                string[] newDefines = new string[oldLength + 1];
-                Array.Copy(defines, newDefines, oldLength);
-                newDefines[oldLength] = "GDX";
-                PlayerSettings.SetScriptingDefineSymbolsForGroup(group, newDefines);
-            }
-        }
-
-        /// <summary>
         ///     Get a friendly <see cref="string" /> name of an <see cref="InstallationType" />.
         /// </summary>
         /// <param name="installationType">The <see cref="InstallationType" /> to return a name for.</param>
@@ -446,19 +401,88 @@ namespace GDX.Editor
         }
 
         /// <summary>
+        ///     Ensure that the GDX define is present across all viable platforms.
+        /// </summary>
+        public static void UpdateScriptingDefineSymbols()
+        {
+            // Create a list of all the build targets
+            Array buildTargets = Enum.GetValues(typeof(BuildTargetGroup));
+
+            // Iterate over them all - skipping unknown
+            int buildTargetsCount = buildTargets.Length;
+            for (int i = 1; i < buildTargetsCount; i++)
+            {
+                UpdateScriptingDefineSymbolsForBuildTargetGroup((BuildTargetGroup)buildTargets.GetValue(i));
+            }
+        }
+
+        /// <summary>
         /// Execute delayed logic that won't interfere with a current import process.
         /// </summary>
         static void DelayCall()
         {
-            // Make sure that the project has the GDX preprocessor added
-            if (Config.EnvironmentScriptingDefineSymbol)
-            {
-                EnsureScriptingDefineSymbol();
-            }
+            // Check our scripting defines
+            UpdateScriptingDefineSymbols();
 
             if (Config.EnvironmentAlwaysIncludeShaders)
             {
                 EnsureAlwaysIncludeShaders();
+            }
+        }
+
+        /// <summary>
+        ///     Update an given <see cref="BuildTargetGroup"/>'s scripting defines.
+        /// </summary>
+        /// <param name="group">The target build group to alter.</param>
+        static void UpdateScriptingDefineSymbolsForBuildTargetGroup(BuildTargetGroup group)
+        {
+            Type enumType =  group.GetType();
+
+            // Check if we can find an ObsoleteAttribute
+            FieldInfo fieldInfo = enumType.GetField(Enum.GetName(enumType, group));
+            Attribute foundAttribute = fieldInfo.GetCustomAttribute(typeof(ObsoleteAttribute), false);
+
+            // It doesnt have one, so we should assume we can update the scripting defines for this target.
+            if (foundAttribute != null)
+            {
+                return;
+            }
+
+            PlayerSettings.GetScriptingDefineSymbolsForGroup(group, out string[] defines);
+
+            bool changes = false;
+            SimpleList<string> lazyDefines = new SimpleList<string>(defines, defines.Length);
+
+            // Check for GDX
+            int symbolLocation = lazyDefines.Array.FirstIndexOf("GDX");
+            if (Config.EnvironmentScriptingDefineSymbol && symbolLocation == -1)
+            {
+                lazyDefines.AddWithExpandCheck("GDX");
+                changes = true;
+            }
+            else if (!Config.EnvironmentScriptingDefineSymbol && symbolLocation != -1)
+            {
+                lazyDefines.RemoveAtSwapBack(symbolLocation);
+                changes = true;
+            }
+
+            // Check for GDX Tools Menu
+            int toolsLocation = lazyDefines.Array.FirstIndexOf("GDX_TOOLS");
+            if (Config.EnvironmentToolsMenu && toolsLocation == -1)
+            {
+                lazyDefines.AddWithExpandCheck("GDX_TOOLS");
+                changes = true;
+            }
+            else if (!Config.EnvironmentToolsMenu && toolsLocation != -1)
+            {
+                lazyDefines.RemoveAtSwapBack(toolsLocation);
+                changes = true;
+            }
+
+            if (changes && lazyDefines.Array != null)
+            {
+                lazyDefines.Compact();
+                PlayerSettings.SetScriptingDefineSymbolsForGroup(group, lazyDefines.Array);
             }
         }
 

@@ -16,10 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `TaskDirector` to assist with `TaskBase` based scheduling of the thread pool, configurable in GDX project preferences.
 - `EditorTaskDirectorSystem` and `TaskDirectorSystem` to automatically tick the `TaskDirector` in appropriate modes.
 - Boilerplate in `PlayerLoopSystemExtensions` to make modifying the PlayerLoop much simpler.
+- `Compact()` added to `SimpleList` utilizing a properly sized version of the backing array.
+- `FirstIndexOf()` and `LastIndexOf()` methods added to `ArrayExtensions` constrained to IEquatable for easier string comparison.
 
 ### Changed
 
-- Reworked the project settings window to now incude some of the recent changelog for visibility.
+- Reworked the project settings window to now include some of the recent changelog for visibility.
 - `SimpleListManagedPool` events renamed for consistency to `destroyedItem`, `returnedItem`, `spawnedItem`, `tearingDown`.
 - Explicit callout that `SerializableDictionary` does not support custom struct keys.
 

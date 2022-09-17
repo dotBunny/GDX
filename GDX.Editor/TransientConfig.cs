@@ -93,6 +93,11 @@ namespace GDX.Editor
         public bool EnvironmentScriptingDefineSymbol;
 
         /// <summary>
+        ///     Should the GDX tools menu be added in the editor?
+        /// </summary>
+        public bool EnvironmentToolsMenu;
+
+        /// <summary>
         ///     The language to set the default thread culture too.
         /// </summary>
         public Localization.Language LocalizationDefaultCulture;
@@ -170,6 +175,7 @@ namespace GDX.Editor
             EditorTaskDirectorSystem = Config.EditorTaskDirectorSystem;
             EditorTaskDirectorSystemTickRate = Config.EditorTaskDirectorSystemTickRate;
             EnvironmentScriptingDefineSymbol = Config.EnvironmentScriptingDefineSymbol;
+            EnvironmentToolsMenu = Config.EnvironmentToolsMenu;
             TaskDirectorSystem = Config.TaskDirectorSystem;
             TaskDirectorSystemTickRate = Config.TaskDirectorSystemTickRate;
             LocalizationDefaultCulture = Config.LocalizationDefaultCulture;
@@ -199,6 +205,7 @@ namespace GDX.Editor
                    BuildInfoBuildTaskArgument == Config.BuildInfoBuildTaskArgument &&
                    BuildInfoBuildStreamArgument == Config.BuildInfoBuildStreamArgument &&
                    EnvironmentScriptingDefineSymbol == Config.EnvironmentScriptingDefineSymbol &&
+                   EnvironmentToolsMenu == Config.EnvironmentToolsMenu &&
                    EnvironmentAlwaysIncludeShaders == Config.EnvironmentAlwaysIncludeShaders &&
                    TaskDirectorSystem == Config.TaskDirectorSystem &&
                    Math.Abs(TaskDirectorSystemTickRate - Config.TaskDirectorSystemTickRate) < Platform.FloatTolerance &&

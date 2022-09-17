@@ -17,6 +17,7 @@ namespace GDX.Editor.ProjectSettings
         static readonly string[] k_Keywords = { "environment", "define", "symbol" };
         VisualElement m_RootElement;
         Toggle m_ToggleEnsureSymbol;
+        Toggle m_ToggleToolsMenu;
         Toggle m_ToggleEnsureShaders;
 
         public string[] GetSearchKeywords()
@@ -46,6 +47,24 @@ namespace GDX.Editor.ProjectSettings
                 else
                 {
                     m_ToggleEnsureSymbol.RemoveFromClassList(ResourcesProvider.ChangedClass);
+                }
+
+                ProjectSettingsProvider.UpdateForChanges();
+            });
+
+            m_ToggleToolsMenu = m_RootElement.Q<Toggle>("toggle-tools-menu");
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_ToggleToolsMenu);
+            m_ToggleToolsMenu.value = ProjectSettingsProvider.WorkingConfig.EnvironmentToolsMenu;
+            m_ToggleToolsMenu.RegisterValueChangedCallback(evt =>
+            {
+                ProjectSettingsProvider.WorkingConfig.EnvironmentToolsMenu = evt.newValue;
+                if (Config.EnvironmentToolsMenu != evt.newValue)
+                {
+                    m_ToggleToolsMenu.AddToClassList(ResourcesProvider.ChangedClass);
+                }
+                else
+                {
+                    m_ToggleToolsMenu.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
 
                 ProjectSettingsProvider.UpdateForChanges();
@@ -121,6 +140,10 @@ namespace GDX.Editor.ProjectSettings
             ProjectSettingsProvider.SetStructChangeCheck(m_ToggleEnsureSymbol,
                 Config.EnvironmentScriptingDefineSymbol,
                 ProjectSettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol);
+
+            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleToolsMenu,
+                Config.EnvironmentToolsMenu,
+                ProjectSettingsProvider.WorkingConfig.EnvironmentToolsMenu);
         }
     }
 }

@@ -3,17 +3,20 @@
 // See the LICENSE file in the project root for more information.
 
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 
 namespace GDX.Editor
 {
-    static class MenuItems
+
+    public static class MenuItems
     {
-        [MenuItem("Tools/GDX/Developer/Output Resource Audit", false, 100)]
+#if GDX_TOOLS
+        [UnityEditor.MenuItem("Tools/GDX/Developer/Output Resource Audit", false, 100)]
+#endif
         static void ManagedMemoryReport()
         {
-            string outputPath = Platform.GetUniqueOutputFilePath("GDX_ManagedMemory_", ".log", Config.PlatformCacheFolder);
+            string outputPath =
+ Platform.GetUniqueOutputFilePath("GDX_ManagedMemory_", ".log", Config.PlatformCacheFolder);
             File.WriteAllLines(outputPath,  Developer.Reports.ResourcesAuditReport.GetAll().Output());
             Trace.Output(Trace.TraceLevel.Info, $"Resource Audit written to {outputPath}.");
             Application.OpenURL(outputPath);

@@ -71,6 +71,8 @@ namespace GDX.Editor
                 rhs.EnvironmentAlwaysIncludeShaders);
             AddToGenerator(code, configFields, nameof(Config.EnvironmentScriptingDefineSymbol),
                 rhs.EnvironmentScriptingDefineSymbol);
+            AddToGenerator(code, configFields, nameof(Config.EnvironmentToolsMenu),
+                rhs.EnvironmentToolsMenu);
 
             AddToGenerator(code, configFields, nameof(Config.TaskDirectorSystem),
                 rhs.TaskDirectorSystem);

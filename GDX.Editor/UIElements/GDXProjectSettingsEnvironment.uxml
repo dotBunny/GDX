@@ -4,5 +4,6 @@
         <ui:VisualElement class="gdx-fixed-vertical-spacer-10" />
         <ui:Toggle label="Ensure GDX Symbol" name="toggle-ensure-symbol" tooltip="Should GDX make sure that there is a GDX scripting define symbol across all viable build target groups." />
         <ui:Toggle label="Always Include Shaders" name="toggle-ensure-shaders" tooltip="Should GDX make sure that it&apos;s shaders are always included in builds." />
+        <ui:Toggle label="Tools Menu" name="toggle-tools-menu" tooltip="Should the GDX tool menu be added to the editor?" />
     </ui:VisualElement>
 </ui:UXML>

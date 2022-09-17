@@ -218,6 +218,18 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
+        ///     Shrink/compact the backing <see cref="Array"/> so there is no unused space.
+        /// </summary>
+        public void Compact()
+        {
+            int arrayLength = Array.Length;
+            if (Count < arrayLength)
+            {
+                System.Array.Resize(ref Array, Count);
+            }
+        }
+
+        /// <summary>
         ///     Insert an item into the <see cref="SimpleList{T}" /> without checking the <see cref="Array" /> size.
         /// </summary>
         /// <param name="item">A typed <see cref="object" /> to insert.</param>

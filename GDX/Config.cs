@@ -134,6 +134,13 @@ namespace GDX
         const bool k_EnvironmentScriptingDefineSymbol = false;
 
         /// <summary>
+        ///     Should the GDX tools menu be added in the editor?
+        /// </summary>
+        [OriginalValue(k_EnvironmentToolsMenu)]
+        public static bool EnvironmentToolsMenu = k_EnvironmentToolsMenu;
+        const bool k_EnvironmentToolsMenu = false;
+
+        /// <summary>
         ///     The language to set the default thread culture too.
         /// </summary>
         [OriginalValue(k_LocalizationDefaultCulture)]
