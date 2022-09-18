@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Boilerplate in `PlayerLoopSystemExtensions` to make modifying the PlayerLoop much simpler.
 - `Compact()` added to `SimpleList` utilizing a properly sized version of the backing array.
 - `FirstIndexOf()` and `LastIndexOf()` methods added to `ArrayExtensions` constrained to `IEquatable` for easier string comparison.
+- `FirstIndexOf()`, `FirstIndexOfItem()`, `FirstIndexOfValue()`, `LastIndexOf()`, `LastIndexOfItem()`, `LastIndexOfValue()` methods added to `SimpleListExtensions`.
 - `Contains()` to `SimpleListExtensions` constrained to `IEquatable`.
 
 ### Changed

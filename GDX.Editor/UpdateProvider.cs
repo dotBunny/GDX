@@ -410,7 +410,7 @@ namespace GDX.Editor
                         Path.Combine(tempExtractFolder, "GDX-" + UpdatePackageDefinition.version),
                         targetPath);
 
-                    AssetDatabase.ImportAsset(LocalPackage.PackageManagerInfo.assetPath);
+                    AssetDatabase.ImportAsset(LocalPackage.PackageAssetPath);
                 }
                 finally
                 {
@@ -453,7 +453,7 @@ namespace GDX.Editor
                         process.WaitForExit();
 
                         // Lets force the import anyways now
-                        AssetDatabase.ImportAsset(LocalPackage.PackageManagerInfo.assetPath);
+                        AssetDatabase.ImportAsset(LocalPackage.PackageAssetPath);
                     }
                 }
                 finally

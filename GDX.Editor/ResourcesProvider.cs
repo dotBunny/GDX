@@ -133,7 +133,7 @@ namespace GDX.Editor
                 return s_Stylesheet;
             }
             s_Stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(
-                $"{UpdateProvider.LocalPackage.PackageManagerInfo.assetPath}/GDX.Editor/UIElements/GDXStylesShared.uxml");
+                $"{UpdateProvider.LocalPackage.PackageAssetPath}/GDX.Editor/UIElements/GDXStylesShared.uxml");
 
             return s_Stylesheet;
         }
@@ -146,7 +146,7 @@ namespace GDX.Editor
             }
 
             s_LightThemeStylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(
-                $"{UpdateProvider.LocalPackage.PackageManagerInfo.assetPath}/GDX.Editor/UIElements/GDXStylesLightTheme.uss");
+                $"{UpdateProvider.LocalPackage.PackageAssetPath}/GDX.Editor/UIElements/GDXStylesLightTheme.uss");
 
             return s_LightThemeStylesheet;
         }
@@ -167,7 +167,7 @@ namespace GDX.Editor
             }
 
             s_StylesheetOverride = AssetDatabase.LoadAssetAtPath<StyleSheet>(
-                $"{UpdateProvider.LocalPackage.PackageManagerInfo.assetPath}/GDX.Editor/UIElements/GDXStylesUnity2020.uss");
+                $"{UpdateProvider.LocalPackage.PackageAssetPath}/GDX.Editor/UIElements/GDXStylesUnity2020.uss");
 
             return s_StylesheetOverride;
 #endif
@@ -184,7 +184,7 @@ namespace GDX.Editor
             if (!s_Assets.ContainsKey(targetName))
             {
                 s_Assets.AddWithExpandCheck(targetName, AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                    $"{UpdateProvider.LocalPackage.PackageManagerInfo.assetPath}/GDX.Editor/UIElements/{targetName}.uxml"));
+                    $"{UpdateProvider.LocalPackage.PackageAssetPath}/GDX.Editor/UIElements/{targetName}.uxml"));
             }
 
             return s_Assets[targetName];

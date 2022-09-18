@@ -233,6 +233,134 @@ namespace GDX
         }
 
         /// <summary>
+        ///     Find the first index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" />.
+        /// </summary>
+        /// <remarks>This will work for <see cref="string"/> comparisons.</remarks>
+        /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
+        /// <param name="targetItem">The object to be found.</param>
+        /// <typeparam name="T">The type of the array.</typeparam>
+        /// <returns>The index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" /> backing array, or -1 if not found.</returns>
+        public static int FirstIndexOf<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : IEquatable<T>
+        {
+            int length = targetSimpleList.Count;
+            for (int i = 0; i < length; i++)
+            {
+                if (targetSimpleList.Array[i].Equals(targetItem))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        /// <summary>
+        ///     Find the first index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" />.
+        /// </summary>
+        /// <remarks>Ignores equality check and end up comparing object pointers. Do NOT use this for <see cref="string"/> types.</remarks>
+        /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
+        /// <param name="targetItem">The object to be found.</param>
+        /// <typeparam name="T">The type of the array.</typeparam>
+        /// <returns>The index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" /> backing array, or -1 if not found.</returns>
+        public static int FirstIndexOfItem<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : class
+        {
+            int length = targetSimpleList.Count;
+            for (int i = 0; i < length; i++)
+            {
+                if (targetSimpleList.Array[i] == targetItem)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        /// <summary>
+        ///     Find the first index of <paramref name="targetValue" /> in <paramref name="targetSimpleList" />.
+        /// </summary>
+        /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
+        /// <param name="targetValue">The value to be found.</param>
+        /// <typeparam name="T">The type of the array.</typeparam>
+        /// <returns>The index of <paramref name="targetValue" /> in <paramref name="targetSimpleList" /> backing array, or -1 if not found.</returns>
+        public static int FirstIndexOfValue<T>(ref this SimpleList<T> targetSimpleList, T targetValue) where T : struct
+        {
+            int length = targetSimpleList.Count;
+            for (int i = 0; i < length; i++)
+            {
+                if (targetSimpleList.Array[i].Equals(targetValue))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+
+        /// <summary>
+        ///     Find the last index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" />.
+        /// </summary>
+        /// <remarks>This will work for <see cref="string"/> comparisons.</remarks>
+        /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
+        /// <param name="targetItem">The object to be found.</param>
+        /// <typeparam name="T">The type of the array.</typeparam>
+        /// <returns>The index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" /> backing array, or -1 if not found.</returns>
+        public static int LastIndexOf<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : IEquatable<T>
+        {
+            int length = targetSimpleList.Count;
+            for (int i = length - 1; i >= 0; i--)
+            {
+                if (targetSimpleList.Array[i].Equals(targetItem))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        ///     Find the last index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" />.
+        /// </summary>
+        /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
+        /// <param name="targetItem">The object to be found.</param>
+        /// <typeparam name="T">The type of the array.</typeparam>
+        /// <returns>The index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" /> backing array, or -1 if not found.</returns>
+        public static int LastIndexOfItem<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : class
+        {
+            int length = targetSimpleList.Count;
+            for (int i = length - 1; i >= 0; i--)
+            {
+                if (targetSimpleList.Array[i] == targetItem)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        ///     Find the last index of <paramref name="targetValue" /> in <paramref name="targetSimpleList" />.
+        /// </summary>
+        /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
+        /// <param name="targetValue">The value to be found.</param>
+        /// <typeparam name="T">The type of the array.</typeparam>
+        /// <returns>The index of <paramref name="targetValue" /> in <paramref name="targetSimpleList" /> backing array, or -1 if not found.</returns>
+        public static int LastIndexOfValue<T>(ref this SimpleList<T> targetSimpleList, T targetValue) where T : struct
+        {
+            int length = targetSimpleList.Count;
+            for (int i = length - 1; i >= 0; i--)
+            {
+                if (targetSimpleList.Array[i].Equals(targetValue))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        /// <summary>
         ///     <para>Removes the first <paramref name="targetItem" /> from the provided <paramref name="targetSimpleList" />.</para>
         /// </summary>
         /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>

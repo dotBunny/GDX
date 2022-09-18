@@ -104,6 +104,11 @@ namespace GDX.Editor
         public PackageInfo PackageManagerInfo;
 
         /// <summary>
+        ///     Asset database base path of package.
+        /// </summary>
+        public readonly string PackageAssetPath;
+
+        /// <summary>
         ///     Fully qualified path to the package.json file.
         /// </summary>
         public readonly string PackageManifestPath;
@@ -122,7 +127,28 @@ namespace GDX.Editor
             EditorApplication.delayCall += DelayCall;
 
             PackageManagerInfo = PackageInfo.FindForAssembly(Assembly.GetAssembly(typeof(PackageProvider)));
-            PackageManifestPath = Path.Combine(PackageManagerInfo.resolvedPath, "package.json");
+            if (PackageManagerInfo != null)
+            {
+                // Fast route
+                PackageAssetPath = PackageManagerInfo.assetPath;
+                PackageManifestPath = Path.Combine(PackageManagerInfo.resolvedPath, "package.json");
+            }
+            else
+            {
+                // Slow fallback for in project extraction
+                string[] editorAssemblyDefinition = AssetDatabase.FindAssets("GDX.Editor t:asmdef");
+                if (editorAssemblyDefinition.Length > 0)
+                {
+                    PackageAssetPath =
+                        Path.Combine(
+                            Path.GetDirectoryName(AssetDatabase.GUIDToAssetPath(editorAssemblyDefinition[0])) ??
+                            string.Empty, "..");
+
+                    PackageManifestPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6),
+                        PackageAssetPath ?? string.Empty, "package.json");
+                }
+            }
+
             if (!File.Exists(PackageManifestPath))
             {
                 return;
@@ -391,9 +417,18 @@ namespace GDX.Editor
 
             // Iterate over them all - skipping unknown
             int buildTargetsCount = buildTargets.Length;
+            int changeCount = 0;
             for (int i = 1; i < buildTargetsCount; i++)
             {
-                UpdateScriptingDefineSymbolsForBuildTargetGroup((BuildTargetGroup)buildTargets.GetValue(i));
+                if (UpdateScriptingDefineSymbolsForBuildTargetGroup((BuildTargetGroup)buildTargets.GetValue(i)))
+                {
+                    changeCount++;
+                }
+            }
+
+            if (changeCount > 0)
+            {
+                EditorApplication.ExecuteMenuItem("File/Save Project");
             }
         }
 
@@ -415,7 +450,7 @@ namespace GDX.Editor
         ///     Update an given <see cref="BuildTargetGroup"/>'s scripting defines.
         /// </summary>
         /// <param name="group">The target build group to alter.</param>
-        static void UpdateScriptingDefineSymbolsForBuildTargetGroup(BuildTargetGroup group)
+        static bool UpdateScriptingDefineSymbolsForBuildTargetGroup(BuildTargetGroup group)
         {
             Type enumType =  group.GetType();
 
@@ -426,7 +461,7 @@ namespace GDX.Editor
             // It doesnt have one, so we should assume we can update the scripting defines for this target.
             if (foundAttribute != null)
             {
-                return;
+                return false;
             }
 
             PlayerSettings.GetScriptingDefineSymbolsForGroup(group, out string[] defines);
@@ -435,7 +470,7 @@ namespace GDX.Editor
             SimpleList<string> lazyDefines = new SimpleList<string>(defines, defines.Length);
 
             // Check for GDX
-            int symbolLocation = lazyDefines.Array.FirstIndexOf("GDX");
+            int symbolLocation = lazyDefines.FirstIndexOf("GDX");
             if (Config.EnvironmentScriptingDefineSymbol && symbolLocation == -1)
             {
                 lazyDefines.AddWithExpandCheck("GDX");
@@ -448,7 +483,7 @@ namespace GDX.Editor
             }
 
             // Check for GDX Tools Menu
-            int toolsLocation = lazyDefines.Array.FirstIndexOf("GDX_TOOLS");
+            int toolsLocation = lazyDefines.FirstIndexOf("GDX_TOOLS");
             if (Config.EnvironmentToolsMenu && toolsLocation == -1)
             {
                 lazyDefines.AddWithExpandCheck("GDX_TOOLS");
@@ -465,6 +500,8 @@ namespace GDX.Editor
                 lazyDefines.Compact();
                 PlayerSettings.SetScriptingDefineSymbolsForGroup(group, lazyDefines.Array);
             }
+
+            return changes;
         }
 
         /// <summary>
