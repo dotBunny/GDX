@@ -478,7 +478,7 @@ namespace GDX.Developer
             return DrawLines(color, ref vertices, ref CubeSegmentIndices);
         }
 
-        public int DrawWireCapsule(Color color, Vector3 bottom, Vector3 top, float radius, Vector3 direction)
+        public int DrawWireCapsule(Color color, Vector3 bottom, Vector3 top, float radius)
         {
             Vector3[] vertices = new Vector3[8];
             int[] segments = new int[16];

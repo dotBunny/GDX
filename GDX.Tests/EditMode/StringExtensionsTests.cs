@@ -41,7 +41,7 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void GetAfterFirst_MockData_ReturnsString()
         {
-            string result = StringExtensions.GetAfterFirst(Complex, "_M");
+            string result = Complex.GetAfterFirst("_M");
 
             bool evaluate = result == "\"y_TEST_STR#$34343";
 
@@ -52,7 +52,7 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void GetAfterLast_MockData_ReturnsString()
         {
-            string result = StringExtensions.GetAfterLast(Complex, "_");
+            string result = Complex.GetAfterLast("_");
 
             bool evaluate = result == "STR#$34343";
 
@@ -63,7 +63,7 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void GetBeforeFirst_MockData_ReturnsEmptyString()
         {
-            string result = StringExtensions.GetBeforeFirst(Complex, "_");
+            string result = Complex.GetBeforeFirst("_");
 
             bool evaluate = result == string.Empty;
 
@@ -74,7 +74,7 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void GetBeforeLast_MockData_ReturnsString()
         {
-            string result = StringExtensions.GetBeforeLast(Complex, "_");
+            string result = Complex.GetBeforeLast("_");
 
             bool evaluate = result == "_tH\\is_I!is_M\"y_TEST";
 
@@ -85,14 +85,14 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void HasUpperCase_LowerCaseString_ReturnsFalse()
         {
-            Assert.IsFalse(StringExtensions.HasUpperCase(AllLowerCase));
+            Assert.IsFalse(AllLowerCase.HasUpperCase());
         }
 
         [Test]
         [Category(Core.TestCategory)]
         public void HasLowerCase_UpperCaseString_ReturnsFalse()
         {
-            Assert.IsFalse(StringExtensions.HasLowerCase(AllUpperCase));
+            Assert.IsFalse(AllUpperCase.HasLowerCase());
         }
 
         [Test]
@@ -254,7 +254,7 @@ namespace GDX
         public void Encrypt_Decrypt_IsEqual()
         {
             string encryptedSimple = TestLiterals.HelloWorld.Encrypt();
-            string encryptedComplex = StringExtensions.Encrypt(Complex);
+            string encryptedComplex = Complex.Encrypt();
 
             bool evaluate = encryptedSimple.Decrypt() == TestLiterals.HelloWorld &&
                             encryptedComplex.Decrypt() == Complex;
@@ -275,12 +275,12 @@ namespace GDX
         {
             int oldSimpleHash = TestLiterals.HelloWorld.ToLower().GetStableHashCode();
             int newSimpleHash = TestLiterals.HelloWorld.GetStableLowerCaseHashCode();
-            int oldLowerCaseHash = StringExtensions.GetStableHashCode(AllLowerCase.ToLower());
-            int newLowerCaseHash = StringExtensions.GetStableLowerCaseHashCode(AllLowerCase);
-            int oldUpperCaseHash = StringExtensions.GetStableHashCode(AllUpperCase.ToLower());
-            int newUpperCaseHash = StringExtensions.GetStableLowerCaseHashCode(AllUpperCase);
-            int oldComplexHash = StringExtensions.GetStableHashCode(Complex.ToLower());
-            int newComplexHash = StringExtensions.GetStableLowerCaseHashCode(Complex);
+            int oldLowerCaseHash = AllLowerCase.ToLower().GetStableHashCode();
+            int newLowerCaseHash = AllLowerCase.GetStableLowerCaseHashCode();
+            int oldUpperCaseHash = AllUpperCase.ToLower().GetStableHashCode();
+            int newUpperCaseHash = AllUpperCase.GetStableLowerCaseHashCode();
+            int oldComplexHash = Complex.ToLower().GetStableHashCode();
+            int newComplexHash = Complex.GetStableLowerCaseHashCode();
 
             bool evaluate = oldSimpleHash == newSimpleHash &&
                             oldComplexHash == newComplexHash &&
@@ -294,14 +294,14 @@ namespace GDX
         [Category(Core.TestCategory)]
         public void GetStableUpperCaseHashCode_ToUpperGetStableHashCode_IsEqual()
         {
-            int oldComplexHash = StringExtensions.GetStableHashCode(Complex.ToUpper());
-            int newComplexHash = StringExtensions.GetStableUpperCaseHashCode(Complex);
-            int oldLowerCaseHash = StringExtensions.GetStableHashCode(AllLowerCase.ToUpper());
-            int newLowerCaseHash = StringExtensions.GetStableUpperCaseHashCode(AllLowerCase);
+            int oldComplexHash = Complex.ToUpper().GetStableHashCode();
+            int newComplexHash = Complex.GetStableUpperCaseHashCode();
+            int oldLowerCaseHash = AllLowerCase.ToUpper().GetStableHashCode();
+            int newLowerCaseHash = AllLowerCase.GetStableUpperCaseHashCode();
             int oldSimpleHash = TestLiterals.HelloWorld.ToUpper().GetStableHashCode();
             int newSimpleHash = TestLiterals.HelloWorld.GetStableUpperCaseHashCode();
-            int oldUpperCaseHash = StringExtensions.GetStableHashCode(AllUpperCase.ToUpper());
-            int newUpperCaseHash = StringExtensions.GetStableUpperCaseHashCode(AllUpperCase);
+            int oldUpperCaseHash = AllUpperCase.ToUpper().GetStableHashCode();
+            int newUpperCaseHash = AllUpperCase.GetStableUpperCaseHashCode();
 
             bool evaluate = oldComplexHash == newComplexHash &&
                             oldLowerCaseHash == newLowerCaseHash &&
