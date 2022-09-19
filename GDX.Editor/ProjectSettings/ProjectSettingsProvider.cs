@@ -339,10 +339,7 @@ namespace GDX.Editor
                     banner.style.backgroundImage = new StyleBackground(ResourcesProvider.GetBanner());
                     s_ExtrasButton = rootElement.Q<Button>("gdx-extras-button");
                     s_ExtrasButton.style.backgroundImage = new StyleBackground(ResourcesProvider.GetLogo());
-                    s_ExtrasButton.clicked += () =>
-                    {
-                        ShowPopupMenu();
-                    };
+                    s_ExtrasButton.clicked += ShowPopupMenu;
 
                     s_ChangelogScrollView = rootElement.Q<ScrollView>("gdx-changelog");
                     ChangelogProvider.StartTask(s_ChangelogScrollView.contentContainer);
@@ -497,25 +494,6 @@ namespace GDX.Editor
                     s_SearchContentResults.AddWithExpandCheckUniqueItem(k_SearchKeywordMap[hash][j]);
                 }
             }
-        }
-
-        static VisualElement GetPackageStatus(string package, bool status)
-        {
-            VisualTreeAsset packageStatusAsset =
-                ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsPackageStatus");
-
-            VisualElement newInstance = packageStatusAsset.Instantiate()[0];
-
-            Label label = newInstance.Q<Label>("label-package");
-            label.text = package;
-
-            VisualElement statusElement = newInstance.Q<VisualElement>("element-status");
-            if (status)
-            {
-                statusElement.AddToClassList("found");
-            }
-
-            return newInstance;
         }
 
         public static void Reset()

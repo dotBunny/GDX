@@ -4,7 +4,6 @@
 
 using System.Collections;
 using System.Threading;
-using GDX.Developer;
 using GDX.Threading;
 using NUnit.Framework;
 using UnityEngine.SceneManagement;

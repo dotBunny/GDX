@@ -101,7 +101,7 @@ namespace GDX.Editor
         /// <summary>
         ///     Unity's own information about the package.
         /// </summary>
-        public PackageInfo PackageManagerInfo;
+        public readonly PackageInfo PackageManagerInfo;
 
         /// <summary>
         ///     Asset database base path of package.
@@ -149,7 +149,7 @@ namespace GDX.Editor
                 }
             }
 
-            if (!File.Exists(PackageManifestPath))
+            if (PackageManifestPath == null || !File.Exists(PackageManifestPath))
             {
                 return;
             }
