@@ -55,8 +55,8 @@ Type | Description | Base
 :--- | :--- | ---
 Bit Arrays | A selection of sized [8](xref:GDX.Collections.BitArray8), [16](xref:GDX.Collections.BitArray16), [32](xref:GDX.Collections.BitArray32), [64](xref:GDX.Collections.BitArray64), [128](xref:GDX.Collections.BitArray128), [256](xref:GDX.Collections.BitArray256) and [512](xref:GDX.Collections.BitArray512) index accessed bit arrays. | `struct`
 [Free List](xref:GDX.Collections.FreeList) | An array where indices are allocated from and stored in an in-place linked list. | `struct`
-[Native Sparse Set](xref:GDX.Collections.NativeSparseSet) | A [Sparse Set](xref:GDX.Collections.NativeSparseSet), backed by two `NativeArray`. | `struct`
-[Sparse Set](xref:GDX.Collections.NativeSparseSet) | An adapter collection for external data arrays that allows constant-time insertion, deletion, and lookup by handle, as well as array-like iteration. | `struct`
+[Native Sparse Set](xref:GDX.Collections.NativeArraySparseSet) | A [Sparse Set](xref:GDX.Collections.NativeArraySparseSet), backed by two `NativeArray`. | `struct`
+[Sparse Set](xref:GDX.Collections.SparseSet) | An adapter collection for external data arrays that allows constant-time insertion, deletion, and lookup by handle, as well as array-like iteration. | `struct`
 
 ### Generic
 

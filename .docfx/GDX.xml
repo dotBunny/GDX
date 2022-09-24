@@ -4,116 +4,116 @@
         <name>GDX</name>
     </assembly>
     <members>
-        <member name="T:GDX.SemanticVersion">
+        <member name="T:GDX.Developer.SemanticVersion">
             <summary>
                 A Semantic Versioning structure.
             </summary>
             <remarks>https://semver.org/</remarks>
         </member>
-        <member name="F:GDX.SemanticVersion.k_VersionIndicators">
+        <member name="F:GDX.Developer.SemanticVersion.k_VersionIndicators">
             <summary>
                 An array of System.Char used to split versions.
             </summary>
         </member>
-        <member name="F:GDX.SemanticVersion.Major">
+        <member name="F:GDX.Developer.SemanticVersion.Major">
             <summary>
                 Major Version.
             </summary>
             <remarks>Is incremented when you make incompatible API changes.</remarks>
         </member>
-        <member name="F:GDX.SemanticVersion.Minor">
+        <member name="F:GDX.Developer.SemanticVersion.Minor">
             <summary>
                 Minor Version.
             </summary>
             <remarks>Is incremented when you add functionality in a backwards-compatible manner.</remarks>
         </member>
-        <member name="F:GDX.SemanticVersion.Patch">
+        <member name="F:GDX.Developer.SemanticVersion.Patch">
             <summary>
                 Patch Version
             </summary>
             <remarks>Is incremented when you make backwards-compatible fixes.</remarks>
         </member>
-        <member name="M:GDX.SemanticVersion.#ctor(System.String)">
+        <member name="M:GDX.Developer.SemanticVersion.#ctor(System.String)">
             <summary>
-                Create a GDX.SemanticVersion based on a formatted System.String.
+                Create a GDX.Developer.SemanticVersion based on a formatted System.String.
             </summary>
             <param name="version">A formatted version semantic version string (2020.1.0).</param>
         </member>
-        <member name="M:GDX.SemanticVersion.op_GreaterThan(GDX.SemanticVersion,GDX.SemanticVersion)">
+        <member name="M:GDX.Developer.SemanticVersion.op_GreaterThan(GDX.Developer.SemanticVersion,GDX.Developer.SemanticVersion)">
             <summary>
-                Determine if GDX.SemanticVersion is greater than another GDX.SemanticVersion.
+                Determine if GDX.Developer.SemanticVersion is greater than another GDX.Developer.SemanticVersion.
             </summary>
-            <param name="lhs">Left-hand side GDX.SemanticVersion.</param>
-            <param name="rhs">Right-hand side GDX.SemanticVersion.</param>
-            <returns>Returns the result of a GREATER THAN operation on two GDX.SemanticVersion values.</returns>
+            <param name="lhs">Left-hand side GDX.Developer.SemanticVersion.</param>
+            <param name="rhs">Right-hand side GDX.Developer.SemanticVersion.</param>
+            <returns>Returns the result of a GREATER THAN operation on two GDX.Developer.SemanticVersion values.</returns>
         </member>
-        <member name="M:GDX.SemanticVersion.op_GreaterThanOrEqual(GDX.SemanticVersion,GDX.SemanticVersion)">
+        <member name="M:GDX.Developer.SemanticVersion.op_GreaterThanOrEqual(GDX.Developer.SemanticVersion,GDX.Developer.SemanticVersion)">
             <summary>
-                Determine if GDX.SemanticVersion is greater than or equal to another GDX.SemanticVersion.
+                Determine if GDX.Developer.SemanticVersion is greater than or equal to another GDX.Developer.SemanticVersion.
             </summary>
-            <param name="lhs">Left-hand side GDX.SemanticVersion.</param>
-            <param name="rhs">Right-hand side GDX.SemanticVersion.</param>
+            <param name="lhs">Left-hand side GDX.Developer.SemanticVersion.</param>
+            <param name="rhs">Right-hand side GDX.Developer.SemanticVersion.</param>
             <returns>
-                Returns the result of a GREATER THAN OR EQUAL operation on two GDX.SemanticVersion
+                Returns the result of a GREATER THAN OR EQUAL operation on two GDX.Developer.SemanticVersion
                 values.
             </returns>
         </member>
-        <member name="M:GDX.SemanticVersion.op_LessThanOrEqual(GDX.SemanticVersion,GDX.SemanticVersion)">
+        <member name="M:GDX.Developer.SemanticVersion.op_LessThanOrEqual(GDX.Developer.SemanticVersion,GDX.Developer.SemanticVersion)">
             <summary>
-                Determine if GDX.SemanticVersion is less than or equal to another GDX.SemanticVersion.
+                Determine if GDX.Developer.SemanticVersion is less than or equal to another GDX.Developer.SemanticVersion.
             </summary>
-            <param name="lhs">Left-hand side GDX.SemanticVersion.</param>
-            <param name="rhs">Right-hand side GDX.SemanticVersion.</param>
+            <param name="lhs">Left-hand side GDX.Developer.SemanticVersion.</param>
+            <param name="rhs">Right-hand side GDX.Developer.SemanticVersion.</param>
             <returns>
-                Returns the result of a LESS THAN OR EQUAL operation on two GDX.SemanticVersion
+                Returns the result of a LESS THAN OR EQUAL operation on two GDX.Developer.SemanticVersion
                 values.
             </returns>
         </member>
-        <member name="M:GDX.SemanticVersion.op_LessThan(GDX.SemanticVersion,GDX.SemanticVersion)">
+        <member name="M:GDX.Developer.SemanticVersion.op_LessThan(GDX.Developer.SemanticVersion,GDX.Developer.SemanticVersion)">
             <summary>
-                Determine if GDX.SemanticVersion is less than another GDX.SemanticVersion.
+                Determine if GDX.Developer.SemanticVersion is less than another GDX.Developer.SemanticVersion.
             </summary>
-            <param name="lhs">Left-hand side GDX.SemanticVersion.</param>
-            <param name="rhs">Right-hand side GDX.SemanticVersion.</param>
-            <returns>Returns the result of a LESS THAN operation on two GDX.SemanticVersion values.</returns>
+            <param name="lhs">Left-hand side GDX.Developer.SemanticVersion.</param>
+            <param name="rhs">Right-hand side GDX.Developer.SemanticVersion.</param>
+            <returns>Returns the result of a LESS THAN operation on two GDX.Developer.SemanticVersion values.</returns>
         </member>
-        <member name="M:GDX.SemanticVersion.op_Equality(GDX.SemanticVersion,GDX.SemanticVersion)">
+        <member name="M:GDX.Developer.SemanticVersion.op_Equality(GDX.Developer.SemanticVersion,GDX.Developer.SemanticVersion)">
             <summary>
-                Determine if GDX.SemanticVersion is equal to another GDX.SemanticVersion.
+                Determine if GDX.Developer.SemanticVersion is equal to another GDX.Developer.SemanticVersion.
             </summary>
-            <param name="lhs">Left-hand side GDX.SemanticVersion.</param>
-            <param name="rhs">Right-hand side GDX.SemanticVersion.</param>
-            <returns>Returns the result of a EQUALITY operation on two GDX.SemanticVersion values.</returns>
+            <param name="lhs">Left-hand side GDX.Developer.SemanticVersion.</param>
+            <param name="rhs">Right-hand side GDX.Developer.SemanticVersion.</param>
+            <returns>Returns the result of a EQUALITY operation on two GDX.Developer.SemanticVersion values.</returns>
         </member>
-        <member name="M:GDX.SemanticVersion.op_Inequality(GDX.SemanticVersion,GDX.SemanticVersion)">
+        <member name="M:GDX.Developer.SemanticVersion.op_Inequality(GDX.Developer.SemanticVersion,GDX.Developer.SemanticVersion)">
             <summary>
-                Determine if GDX.SemanticVersion does not equal than another GDX.SemanticVersion.
+                Determine if GDX.Developer.SemanticVersion does not equal than another GDX.Developer.SemanticVersion.
             </summary>
-            <param name="lhs">Left-hand side GDX.SemanticVersion.</param>
-            <param name="rhs">Right-hand side GDX.SemanticVersion.</param>
-            <returns>Returns the result of a NOT EQUAL operation on two GDX.SemanticVersion values.</returns>
+            <param name="lhs">Left-hand side GDX.Developer.SemanticVersion.</param>
+            <param name="rhs">Right-hand side GDX.Developer.SemanticVersion.</param>
+            <returns>Returns the result of a NOT EQUAL operation on two GDX.Developer.SemanticVersion values.</returns>
         </member>
-        <member name="M:GDX.SemanticVersion.Equals(System.Object)">
+        <member name="M:GDX.Developer.SemanticVersion.Equals(System.Object)">
             <summary>
-                Does the obj equal this GDX.SemanticVersion.
+                Does the obj equal this GDX.Developer.SemanticVersion.
             </summary>
             <param name="obj">An System.Object to compare against.</param>
             <returns>Returns the result of an EQUALITY operation.</returns>
         </member>
-        <member name="M:GDX.SemanticVersion.GetHashCode">
+        <member name="M:GDX.Developer.SemanticVersion.GetHashCode">
             <summary>
-                Get the hash code of the GDX.SemanticVersion.
+                Get the hash code of the GDX.Developer.SemanticVersion.
             </summary>
             <returns>A System.Int32 value.</returns>
         </member>
-        <member name="M:GDX.SemanticVersion.Equals(GDX.SemanticVersion)">
+        <member name="M:GDX.Developer.SemanticVersion.Equals(GDX.Developer.SemanticVersion)">
             <summary>
-                Does the otherSemanticVersion equal the GDX.SemanticVersion.
+                Does the otherSemanticVersion equal the GDX.Developer.SemanticVersion.
             </summary>
             <param name="otherSemanticVersion"></param>
             <returns>
-                The results of checking the GDX.SemanticVersion.Major/GDX.SemanticVersion.Minor/
-                GDX.SemanticVersion.Patch for equality.
+                The results of checking the GDX.Developer.SemanticVersion.Major/GDX.Developer.SemanticVersion.Minor/
+                GDX.Developer.SemanticVersion.Patch for equality.
             </returns>
         </member>
         <member name="T:GDX.Developer.Conditionals">
@@ -192,7 +192,7 @@
         </member>
         <member name="F:GDX.Developer.Reports.Resource.Objects.ObjectInfo.Reference">
             <summary>
-                A GDX.TransientReference to the target object.
+                A GDX.Developer.TransientReference to the target object.
             </summary>
         </member>
         <member name="F:GDX.Developer.Reports.Resource.Objects.ObjectInfo.TotalMemoryUsage">
@@ -217,13 +217,13 @@
             </summary>
             <returns>A System.String of additional information.</returns>
         </member>
-        <member name="M:GDX.Developer.Reports.Resource.Objects.ObjectInfo.Populate(UnityEngine.Object,GDX.TransientReference)">
+        <member name="M:GDX.Developer.Reports.Resource.Objects.ObjectInfo.Populate(UnityEngine.Object,GDX.Developer.TransientReference)">
             <summary>
                 Populate an GDX.Developer.Reports.Resource.Objects.ObjectInfo from the targetObject. Optionally providing an existing
                 reference created prior.
             </summary>
             <param name="targetObject">The System.Object which to cache information about.</param>
-            <param name="reference">An existing GDX.TransientReference targeting the targetObject.</param>
+            <param name="reference">An existing GDX.Developer.TransientReference targeting the targetObject.</param>
         </member>
         <member name="M:GDX.Developer.Reports.Resource.Objects.ObjectInfo.CompareTo(System.Object)">
             <summary>
@@ -407,7 +407,7 @@
                 An audit of loaded UnityEngine.Object for queried types.
             </summary>
             <remarks>
-                Information is referenced to the target objects by a modified weak reference (GDX.TransientReference),
+                Information is referenced to the target objects by a modified weak reference (GDX.Developer.TransientReference),
                 thus this will not prevent garbage collection.
             </remarks>
             <exception cref="T:GDX.UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
@@ -613,6 +613,12 @@
             </summary>
             <param name="content">The content to be added.</param>
         </member>
+        <member name="M:GDX.Developer.TextGenerator.GetIndentLevel">
+            <summary>
+                Gets the current indent level of the GDX.Developer.TextGenerator.
+            </summary>
+            <returns>The indent level.</returns>
+        </member>
         <member name="M:GDX.Developer.TextGenerator.NextLine">
             <summary>
                 Move the builder to the start of the next line.
@@ -634,6 +640,369 @@
                 Returns the built string content for the builder.
             </summary>
             <remarks>Will automatically reduce the indentation level to 0.</remarks>
+        </member>
+        <member name="T:GDX.Developer.DebugDrawBuffer">
+            <summary>
+            An optimized method for drawing static procedural content.
+            </summary>
+            <remarks>
+                This still suffers from multiple SetPass calls associated with the UnityEngine.Rendering.CommandBuffer.
+                It should be possible in the future to using GraphicsBuffers/BatchRenderGroup once that API stabilizes.
+            </remarks>
+        </member>
+        <member name="F:GDX.Developer.DebugDrawBuffer.DefaultMaximumVerticesPerMesh">
+            <summary>
+                The default maximum number of vertices per meshReference when dynamically creating meshes.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.DebugDrawBuffer.CubeSegmentIndices">
+            <summary>
+                The ordered segment index pairs used to describe a cube.
+            </summary>
+            <remarks>
+                This effectively wraps the left side, then the right, then connects the two sides.
+            </remarks>
+        </member>
+        <member name="F:GDX.Developer.DebugDrawBuffer.s_DottedLineMaterial">
+            <summary>
+                The base instance of the default dotted line material.
+            </summary>
+            <remarks>
+                This will be cloned when a new color value is provided and not found by
+                GDX.Developer.DebugDrawBuffer.GetDottedLineMaterialByColor(UnityEngine.Color).
+            </remarks>
+        </member>
+        <member name="F:GDX.Developer.DebugDrawBuffer.s_LineMaterial">
+            <summary>
+                The base instance of the default line material.
+            </summary>
+            <remarks>
+                This will be cloned when a new color value is provided and not found by
+                GDX.Developer.DebugDrawBuffer.GetSolidLineMaterialByColor(UnityEngine.Color).
+            </remarks>
+        </member>
+        <member name="F:GDX.Developer.DebugDrawBuffer.s_LineSegmentIndices">
+            <summary>
+                The ordered segment index pairs used to describe a line.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.DebugDrawBuffer.Key">
+            <summary>
+            The associated System.Int32 key with the GDX.Developer.DebugDrawBuffer.
+            </summary>
+            <remarks>
+                <para>
+                    This is useful for identifying the GDX.Developer.DebugDrawBuffer in different contexts; its
+                    specific use is meant for being able to recall a GDX.Developer.DebugDrawBuffer from the
+                    GDX.Developer.DebugDraw.
+                </para>
+                <para>
+                    A common pattern is to use the the UnityEngine.GameObject's InstanceID or an Entity Number to
+                    create a unique indexer. Collisions can occur if you are not careful about how you index your
+                    GDX.Developer.DebugDrawBuffer.
+                </para>
+            </remarks>
+        </member>
+        <member name="F:GDX.Developer.DebugDrawBuffer.m_CommandBuffer">
+            <summary>
+                The actual allocated UnityEngine.Rendering.CommandBuffer used by the GDX.Developer.DebugDrawBuffer.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.DebugDrawBuffer.m_MaximumVerticesPerMesh">
+            <summary>
+                The established maximum number of vertices per meshReference for this particular GDX.Developer.DebugDrawBuffer.
+            </summary>
+            <remarks>
+                Once this is set in the constructor it cannot be changed. Arbitrary meshReference adds are not effected by this
+            </remarks>
+        </member>
+        <member name="F:GDX.Developer.DebugDrawBuffer.m_CurrentToken">
+            <summary>
+                The current incremental token used when associating draw commands.
+            </summary>
+            <remarks>
+                This is used to provide a stable index in an extremely simple form. While it will eventually roll over,
+                at that threshold you should be considering if multiple GDX.Developer.DebugDrawBuffer may be more
+                optimal.
+            </remarks>
+        </member>
+        <member name="F:GDX.Developer.DebugDrawBuffer.m_DottedLineMaterials">
+            <summary>
+                An indexed dictionary of all dotted line materials, referenced by the hashcode of the color.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.DebugDrawBuffer.m_DrawCommands">
+            <summary>
+                An indexed dictionary of all of the draw commands to use with the buffer.
+            </summary>
+            <remarks>
+                This includes the meshReference and an index of the material to use with that meshReference when drawing. As items are
+                added, the GDX.Developer.DebugDrawBuffer.m_CurrentToken is incremented to simulate a stable ID.
+            </remarks>
+        </member>
+        <member name="F:GDX.Developer.DebugDrawBuffer.m_LineMaterials">
+            <summary>
+                An indexed dictionary of all line materials, referenced by the hashcode of the color.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.DebugDrawBuffer.m_Materials">
+            <summary>
+                An ever expanding list of materials used with the GDX.Developer.DebugDrawBuffer.
+            </summary>
+            <remarks>
+                Both GDX.Developer.DebugDrawBuffer.m_DottedLineMaterials and GDX.Developer.DebugDrawBuffer.m_LineMaterials store indexes of
+                UnityEngine.Materials inside of this list.
+            </remarks>
+        </member>
+        <member name="F:GDX.Developer.DebugDrawBuffer.m_WorkingPoints">
+            <summary>
+                A storage of working vertices information indexed based on the hashcode of the material it is meant to
+                be drawn with.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.DebugDrawBuffer.m_WorkingSegments">
+            <summary>
+                A storage of working segment indices pairs indexed based on the hashcode of the material it is meant to
+                be drawn with.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.DebugDrawBuffer.m_WorkingTokens">
+            <summary>
+                A storage of working expected tokens of meshes to be created in the future.
+            </summary>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.#ctor(System.Int32,System.Int32,System.Int32)">
+            <summary>
+                Create a GDX.Developer.DebugDrawBuffer.
+            </summary>
+            <param name="key">The internally cached key associated with this buffer.</param>
+            <param name="initialMaterialCount">
+                An initial allocation of the expected number of materials that will be used.
+            </param>
+            <param name="verticesPerMesh">The number of vertices to ingest before a meshReference is split.</param>
+        </member>
+        <member name="P:GDX.Developer.DebugDrawBuffer.Finalized">
+            <summary>
+                Has the GDX.Developer.DebugDrawBuffer been converged?
+            </summary>
+            <remarks>
+                A finalized GDX.Developer.DebugDrawBuffer has had its command buffer filled with the fixed draw calls
+                based on the meshes/materials outlined. If a meshReference is invalidated by GDX.Developer.DebugDrawBuffer.Invalidate(System.Int32), the
+                GDX.Developer.DebugDrawBuffer will become not finalized and will re-converge itself next
+                GDX.Developer.DebugDrawBuffer.Execute.
+            </remarks>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.Converge">
+            <summary>
+                Converges all working vertices/material additions into finalized meshReference forms and fills the command
+                buffer with the appropriate data.
+            </summary>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.DrawDottedCube(UnityEngine.Color,UnityEngine.Vector3,UnityEngine.Vector3)">
+            <summary>
+                Draw a dotted line cube of a specific color to the buffer.
+            </summary>
+            <param name="color">The color which to draw the dotted line cube with.</param>
+            <param name="center">The center world position of the cube.</param>
+            <param name="size">The unit size of the cube</param>
+            <returns>The created cube's invalidation token.</returns>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.DrawDottedLine(UnityEngine.Color,UnityEngine.Vector3,UnityEngine.Vector3)">
+            <summary>
+                Draw a dotted line of a specific color as defined to the buffer.
+            </summary>
+            <remarks>
+                If multiple lines are being drawn it is much more performant to use
+                GDX.Developer.DebugDrawBuffer.DrawDottedLines(UnityEngine.Color,UnityEngine.Vector3[]@,System.Int32[]@).
+            </remarks>
+            <param name="color">The color which to draw the dotted line with.</param>
+            <param name="startPoint">The start of the line in world space.</param>
+            <param name="endPoint">The end of the line in world space.</param>
+            <returns>The dotted line's invalidation token.</returns>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.DrawDottedLines(UnityEngine.Color,UnityEngine.Vector3[]@,System.Int32[]@)">
+            <summary>
+                Draw dotted lines of a specific color as defined to the buffer.
+            </summary>
+            <param name="color">The color which to draw the dotted lines with.</param>
+            <param name="vertices">The vertices of the dotted lines.</param>
+            <param name="segments">The segment pairs based on vertices.</param>
+            <returns>The dotted lines' invalidation token.</returns>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.DrawDottedLines(UnityEngine.Color,UnityEngine.Vector3[]@,System.Int32,System.Int32,System.Int32[]@,System.Int32,System.Int32)">
+            <summary>
+                Draw dotted lines of a specific color as defined to the buffer.
+            </summary>
+            <param name="color">The color which to draw the dotted lines with.</param>
+            <param name="vertices">The vertices of the dotted lines.</param>
+            <param name="verticesStartIndex">The index to start at in the vertices array.</param>
+            <param name="verticesLength">The number of elements in the vertices array to use.</param>
+            <param name="segments">The segment pairs based on vertices.</param>
+            <param name="segmentsStartIndex">The index to start at in the segments array.</param>
+            <param name="segmentsLength">The number of elements in the segments array to use.</param>
+            <returns>The dotted lines' invalidation token.</returns>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.DrawLine(UnityEngine.Color,UnityEngine.Vector3,UnityEngine.Vector3)">
+            <summary>
+                Draw a line of a specific color as defined to the buffer.
+            </summary>
+            <remarks>
+                If multiple lines are being drawn it is much more performant to use
+                GDX.Developer.DebugDrawBuffer.DrawLines(UnityEngine.Color,UnityEngine.Vector3[]@,System.Int32[]@).
+            </remarks>
+            <param name="color">The color which to draw the line with.</param>
+            <param name="startPoint">The start of the line in world space.</param>
+            <param name="endPoint">The end of the line in world space.</param>
+            <returns>The line's invalidation token.</returns>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.DrawLines(UnityEngine.Color,UnityEngine.Vector3[]@,System.Int32[]@)">
+            <summary>
+                Draw lines of a specific color as defined to the buffer.
+            </summary>
+            <param name="color">The color which to draw the lines with.</param>
+            <param name="vertices">The vertices of the lines.</param>
+            <param name="segments">The segment pairs based on vertices.</param>
+            <returns>The lines' invalidation token.</returns>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.DrawLines(UnityEngine.Color,UnityEngine.Vector3[]@,System.Int32,System.Int32,System.Int32[]@,System.Int32,System.Int32)">
+            <summary>
+                Draw lines of a specific color as defined to the buffer.
+            </summary>
+            <param name="color">The color which to draw the lines with.</param>
+            <param name="vertices">The vertices of the lines.</param>
+            <param name="verticesStartIndex">The index to start at in the vertices array.</param>
+            <param name="verticesLength">The number of elements in the vertices array to use.</param>
+            <param name="segments">The segment pairs based on vertices.</param>
+            <param name="segmentsStartIndex">The index to start at in the segments array.</param>
+            <param name="segmentsLength">The number of elements in the segments array to use.</param>
+            <returns>The lines' invalidation token.</returns>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.DrawLines(UnityEngine.Material,UnityEngine.Vector3[]@,System.Int32,System.Int32,System.Int32[]@,System.Int32,System.Int32)">
+            <summary>
+                Draw lines with a specific material to the buffer.
+            </summary>
+            <param name="material">A <em>potentially</em> unlit material to draw the lines with. This will only be drawin</param>
+            <param name="vertices">The vertices of the lines.</param>
+            <param name="verticesStartIndex">The index to start at in the vertices array.</param>
+            <param name="verticesLength">The number of elements in the vertices array to use.</param>
+            <param name="segments">The segment pairs based on vertices.</param>
+            <param name="segmentsStartIndex">The index to start at in the segments array.</param>
+            <param name="segmentsLength">The number of elements in the segments array to use.</param>
+            <returns>The lines' invalidation token.</returns>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.DrawWireCube(UnityEngine.Color,UnityEngine.Vector3,UnityEngine.Vector3)">
+            <summary>
+                Draw a wireframe cube of a specific color to the buffer.
+            </summary>
+            <param name="color">The color which to draw the wire cube with.</param>
+            <param name="center">The center world position of the cube.</param>
+            <param name="size">The unit size of the cube</param>
+            <returns>The created cube's invalidation token.</returns>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.Execute">
+            <summary>
+                Execute the GDX.Developer.DebugDrawBuffer, rendering its outputs to the screen.
+            </summary>
+            <remarks>
+                This will finalize the command buffer, converging all data into meshes, etc. In order to change the
+                buffer, you will need to
+            </remarks>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.GetBuffer">
+            <summary>
+                Get the internal command buffer being used by this GDX.Developer.DebugDrawBuffer.
+            </summary>
+            <returns>A UnityEngine.Rendering.CommandBuffer.</returns>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.HasToken(System.Int32)">
+            <summary>
+            Is the given token present in the draw commands buffer.
+            </summary>
+            <param name="token">The token of the draw commands to check for.</param>
+            <returns>Returns true if the token is found in the existing draw commands.</returns>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.Invalidate(System.Int32)">
+            <summary>
+                Invalidates a GDX.Developer.DebugDrawBuffer.DrawCommand based on the provided token, forcing the buffer to be refilled.
+            </summary>
+            <param name="token">The token of the draw commands to invalidate.</param>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.InvalidateAll">
+            <summary>
+                Invalidates the entire GDX.Developer.DebugDrawBuffer.
+            </summary>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.NextDottedLineBatch(UnityEngine.Color)">
+            <summary>
+                Move to the next batch for a given dotted line color.
+            </summary>
+            <param name="color">The color which the dotted line is drawn as.</param>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.NextLineBatch(UnityEngine.Color)">
+            <summary>
+                Move to the next batch for a given line color.
+            </summary>
+            <param name="color">The color which the line is drawn as.</param>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.NextLineBatch(UnityEngine.Material)">
+            <summary>
+                Move to the next batch for a given material.
+            </summary>
+            <param name="material">The material used by a batch.</param>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.Reset">
+            <summary>
+                Resets the GDX.Developer.DebugDrawBuffer, as if it were newly created. However all fields are already
+                allocating their previous sizes.
+            </summary>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.GetCubeVertices(UnityEngine.Vector3,UnityEngine.Vector3)">
+            <summary>
+                Get the vertices that make up a cube.
+            </summary>
+            <remarks>
+                Ordered based on GDX.Developer.DebugDrawBuffer.CubeSegmentIndices.
+            </remarks>
+            <param name="center">The world space center location of the cube.</param>
+            <param name="size">The size of the cube.</param>
+            <returns>An array of ordered vertices.</returns>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.AddLineDrawCommand(UnityEngine.Material,UnityEngine.Vector3[]@,System.Int32[]@,System.Int32)">
+            <summary>
+                Builds a line based meshReference from the given vertices and adds it to the draw buffer.
+            </summary>
+            <param name="material">The material to use when drawing the created meshReference.</param>
+            <param name="vertices">The vertices of the created meshReference.</param>
+            <param name="segments">The segment pairs based on vertices.</param>
+            <param name="token">Force a specific token for the meshReference. Don't use this.</param>
+            <returns>The created meshReference's invalidation token.</returns>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.GetDottedLineMaterialByColor(UnityEngine.Color)">
+            <summary>
+                Gets the cached dotted line material, or creates one for the given color.
+            </summary>
+            <param name="color">A defined draw color.</param>
+            <returns>The qualified dotted line material of the color.</returns>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.GetMaterialByHashCode(System.Int32)">
+            <summary>
+                Gets a material from the internal cache based on its !:Material.GetHashCode.
+            </summary>
+            <remarks>A warning will be thrown in the editor if the material is not found.</remarks>
+            <param name="hashCode">The integer based hash code of the material.</param>
+            <returns>The material if found, otherwise a default material will be returned.</returns>
+        </member>
+        <member name="M:GDX.Developer.DebugDrawBuffer.GetSolidLineMaterialByColor(UnityEngine.Color)">
+            <summary>
+                Gets the cached solid line material, or creates one for the given color.
+            </summary>
+            <param name="color">A defined draw color.</param>
+            <returns>The qualified line material of the color.</returns>
+        </member>
+        <member name="T:GDX.Developer.DebugDrawBuffer.DrawCommand">
+            <summary>
+                A structure describing a finalized meshReference/material and its draw operation.
+            </summary>
         </member>
         <member name="T:GDX.Developer.CommandLineParser">
             <summary>
@@ -716,6 +1085,176 @@
             <summary>
                 Finalize a profiling session during an import.
             </summary>
+        </member>
+        <member name="T:GDX.Developer.TransientReference">
+            <summary>
+                A comparable weak reference to an object which will not prevent garbage collection. It will positively
+                compare against similar targeted reference trackers as well as the actual target object.
+            </summary>
+            <remarks>
+                There isn't a lot of great use cases for using this sort of thing; System.WeakReference on its own
+                is sufficient in most of the use cases, however this particular arrangement is useful for developer-ish
+                stuff.
+            </remarks>
+        </member>
+        <member name="M:GDX.Developer.TransientReference.#ctor(System.Object)">
+            <summary>
+                Create a GDX.Developer.TransientReference referencing the target.
+            </summary>
+            <param name="target">The target System.Object to reference.</param>
+        </member>
+        <member name="M:GDX.Developer.TransientReference.#ctor(System.Object,System.Boolean)">
+            <summary>
+                Create a GDX.Developer.TransientReference referencing the target.
+            </summary>
+            <param name="target">The target System.Object to reference.</param>
+            <param name="trackResurrection">Should the object remain tracked after it has been finalized.</param>
+        </member>
+        <member name="M:GDX.Developer.TransientReference.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Create a GDX.Developer.TransientReference from the info.
+            </summary>
+            <param name="info">A System.Runtime.Serialization.SerializationInfo representation of a GDX.Developer.TransientReference.</param>
+            <param name="context">Describes the source of the System.Runtime.Serialization.SerializationInfo.</param>
+        </member>
+        <member name="M:GDX.Developer.TransientReference.CompareTo(System.Object)">
+            <summary>
+                Compare this GDX.Developer.TransientReference to the target System.Object.
+            </summary>
+            <param name="obj">The target System.Object to compare against.</param>
+            <returns>1 if the same, 0 otherwise.</returns>
+        </member>
+        <member name="M:GDX.Developer.TransientReference.CompareTo(GDX.Developer.TransientReference)">
+            <summary>
+                Compare this GDX.Developer.TransientReference to the target GDX.Developer.TransientReference.
+            </summary>
+            <param name="obj">The target GDX.Developer.TransientReference to compare against.</param>
+            <returns>1 if the same, 0 otherwise.</returns>
+        </member>
+        <member name="M:GDX.Developer.TransientReference.CompareTo(System.WeakReference)">
+            <summary>
+                Compare this GDX.Developer.TransientReference to the target System.WeakReference.
+            </summary>
+            <param name="obj">The target System.WeakReference to compare against.</param>
+            <returns>1 if the same, 0 otherwise.</returns>
+        </member>
+        <member name="M:GDX.Developer.TransientReference.Equals(GDX.Developer.TransientReference)">
+            <summary>
+                Does this GDX.Developer.TransientReference equal the target GDX.Developer.TransientReference.
+            </summary>
+            <param name="other">The target GDX.Developer.TransientReference to compare with.</param>
+            <returns>true if it is the same, false otherwise.</returns>
+        </member>
+        <member name="M:GDX.Developer.TransientReference.Equals(System.WeakReference)">
+            <summary>
+                Does this GDX.Developer.TransientReference equal the target System.WeakReference.
+            </summary>
+            <param name="other">The target System.WeakReference to compare with.</param>
+            <returns>true if it is the same, false otherwise.</returns>
+        </member>
+        <member name="M:GDX.Developer.TransientReference.Equals(System.Object)">
+            <summary>
+                Does this GDX.Developer.TransientReference equal the target System.Object.
+            </summary>
+            <param name="obj">The target System.Object to compare with.</param>
+            <returns>true if it is the same, false otherwise.</returns>
+        </member>
+        <member name="M:GDX.Developer.TransientReference.GetHashCode">
+            <summary>
+                Return the hashcode of the P:System.WeakReference.Target.
+            </summary>
+            <returns>Returns the P:System.WeakReference.Target's hash code, or -1 if null.</returns>
+        </member>
+        <member name="M:GDX.Developer.TransientReference.op_Equality(GDX.Developer.TransientReference,GDX.Developer.TransientReference)">
+            <summary>
+                Compare GDX.Developer.TransientReferences to see if they are equal.
+            </summary>
+            <param name="left">Left-side GDX.Developer.TransientReference.</param>
+            <param name="right">Right-side GDX.Developer.TransientReference.</param>
+            <returns>true/false if they are equal.</returns>
+        </member>
+        <member name="M:GDX.Developer.TransientReference.op_Inequality(GDX.Developer.TransientReference,GDX.Developer.TransientReference)">
+            <summary>
+                Compare GDX.Developer.TransientReferences to see if they are not equal.
+            </summary>
+            <param name="left">Left-side GDX.Developer.TransientReference.</param>
+            <param name="right">Right-side GDX.Developer.TransientReference.</param>
+            <returns>true/false if they are not equal.</returns>
+        </member>
+        <member name="T:GDX.Developer.DebugDraw">
+            <summary>
+                A debug draw system useful in both the editor and at runtime.
+            </summary>
+        </member>
+        <member name="F:GDX.Developer.DebugDraw.s_UnmanagedBuffers">
+            <summary>
+                A dictionary of known GDX.Developer.DebugDrawBuffer and their ID which are not automatically executed.
+            </summary>
+        </member>
+        <member name="M:GDX.Developer.DebugDraw.GetUnmanagedBuffer(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Get an instance of GDX.Developer.DebugDrawBuffer based on the provided key that is not managed.
+            </summary>
+            <example>
+                By checking the P:GDX.Developer.DebugDrawBuffer.Finalized property we can skip over the expensive building step.
+                <code>
+                    DebugDrawBuffer buffer = DebugDraw.GetUnmanagedBuffer(gameObjet.GetInstanceID());
+                    if (!buffer.Finalized)
+                    {
+                        /// Draw lots of stuff ...
+                        buffer.DrawWireCube(Color.white, worldPosition, size);
+                    }
+                    buffer.Execute();
+                </code>
+            </example>
+            <param name="key">
+                A value based key used to reference a GDX.Developer.DebugDrawBuffer in a
+                GDX.Collections.Generic.IntKeyDictionary`1.
+            </param>
+            <param name="initialColorCount">Initial number of internal materials to allocate (x2).</param>
+            <param name="verticesPerMesh">The number of vertices to split batched meshes on.</param>
+            <returns>
+                A newly created GDX.Developer.DebugDrawBuffer if the provided key is not found, or the previously
+                created GDX.Developer.DebugDrawBuffer identified by the key.
+            </returns>
+        </member>
+        <member name="M:GDX.Developer.DebugDraw.HasUnmanagedBuffer(System.Int32)">
+            <summary>
+                Returns if the provided key has an unmanaged GDX.Developer.DebugDrawBuffer referenced.
+            </summary>
+            <param name="key">
+                The key used to reference the GDX.Developer.DebugDrawBuffer.
+            </param>
+            <returns>true/false if the key has a GDX.Developer.DebugDrawBuffer associated with it.</returns>
+        </member>
+        <member name="M:GDX.Developer.DebugDraw.RemoveUnmanagedBuffer(System.Int32)">
+            <summary>
+                Dereference the indicated unmanaged GDX.Developer.DebugDrawBuffer from the provider.
+            </summary>
+            <param name="key">
+                The key used to reference the GDX.Developer.DebugDrawBuffer.
+            </param>
+        </member>
+        <member name="T:GDX.OriginalValueAttribute">
+            <summary>
+                An attribute allowing for the storage of some additional data along side of a field or property.
+            </summary>
+        </member>
+        <member name="M:GDX.OriginalValueAttribute.GetValue``1(System.Reflection.FieldInfo)">
+            <summary>
+            Get the original value associated with the given field.
+            </summary>
+            <param name="field">A given System.Reflection.FieldInfo.</param>
+            <typeparam name="T">The type of data being read.</typeparam>
+            <returns>The original value.</returns>
+        </member>
+        <member name="M:GDX.OriginalValueAttribute.GetValue``1(System.Reflection.PropertyInfo)">
+            <summary>
+            Get the original value associated with the given property.
+            </summary>
+            <param name="property">A given System.Reflection.PropertyInfo.</param>
+            <typeparam name="T">The type of data being read.</typeparam>
+            <returns>The original value.</returns>
         </member>
         <member name="T:GDX.IListExtensions">
             <summary>
@@ -944,6 +1483,33 @@
             </summary>
             <param name="primes">An array of prime numbers.</param>
         </member>
+        <member name="T:GDX.Collections.Generic.CoalesceArray`1">
+            <summary>
+                Multiple arrays acting as one uniform coalesced array.
+            </summary>
+            <remarks>Stores a maximum of 18,446,744,073,709,551,615 elements.</remarks>
+            <typeparam name="T">The type of data to be stored.</typeparam>
+        </member>
+        <member name="F:GDX.Collections.Generic.CoalesceArray`1.m_Buckets">
+            <summary>
+                The internal arrays storage
+            </summary>
+        </member>
+        <member name="F:GDX.Collections.Generic.CoalesceArray`1.m_BucketSize">
+            <summary>
+                The block size used to allocate new arrays.
+            </summary>
+        </member>
+        <member name="F:GDX.Collections.Generic.CoalesceArray`1.m_BucketSizeMinusOne">
+            <summary>
+                Cached version of the bucket size, minus one used in GDX.Collections.Generic.CoalesceArray`1.GetBucketLocation(System.UInt64).
+            </summary>
+        </member>
+        <member name="F:GDX.Collections.Generic.CoalesceArray`1.m_Length">
+            <summary>
+                The number of elements the GDX.Collections.Generic.CoalesceArray`1 is capable of holding.
+            </summary>
+        </member>
         <member name="T:GDX.Collections.Generic.SerializableDictionary`2">
             <summary>
                 A Unity serializable System.Collections.Generic.Dictionary`2.
@@ -956,6 +1522,9 @@
                 </para>
                 <para>
                     The process of serializing and deserializing this dictionary should not be considered performant.
+                </para>
+                <para>
+                    The property drawer will not show structs, it will be blank. It does work however if done through code.
                 </para>
             </remarks>
             <typeparam name="TKey">The dictionary's key System.Type.</typeparam>
@@ -1032,6 +1601,365 @@
             </summary>
             <remarks>We will always create the arrays so the property drawers function nicely.</remarks>
         </member>
+        <member name="T:GDX.Collections.Generic.IntKeyDictionary`1">
+            <summary>
+                An optimized System.Collections.Generic.Dictionary`2-like data structure with a
+                System.String key requirement.
+            </summary>
+        </member>
+        <member name="M:GDX.Collections.Generic.IntKeyDictionary`1.#ctor(System.Int32)">
+            <summary>
+            Initializes the dictionary with at least minCapacity capacity.
+            </summary>
+            <param name="minCapacity">The minimal initial capacity to reserve.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.IntKeyDictionary`1.AddWithExpandCheck(System.Int32,`0)">
+            <summary>
+            Adds the key value pair to the dictionary, expanding if necessary but not checking for duplicate entries.
+            </summary>
+            <param name="key">The key to add.</param>
+            <param name="value">The value to add.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.IntKeyDictionary`1.AddWithUniqueCheck(System.Int32,`0)">
+            <summary>
+            Adds the key value pair to the dictionary, checking for duplicates but not expanding if necessary.
+            </summary>
+            <param name="key">The key to add.</param>
+            <param name="value">The value to add.</param>
+            <returns>True if the entry was successfully created.</returns>
+        </member>
+        <member name="M:GDX.Collections.Generic.IntKeyDictionary`1.AddSafe(System.Int32,`0)">
+            <summary>
+            Adds the key value pair to the dictionary, checking for duplicate entries and expanding if necessary.
+            </summary>
+            <param name="key">The key to add.</param>
+            <param name="value">The value to add.</param>
+            <returns>True if the entry was successfully created.</returns>
+        </member>
+        <member name="M:GDX.Collections.Generic.IntKeyDictionary`1.AddUnchecked(System.Int32,`0)">
+            <summary>
+            Adds the key value pair to the dictionary, without checking for available capacity or duplicate entries.
+            </summary>
+            <param name="key">The key to add.</param>
+            <param name="value">The value to add.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.IntKeyDictionary`1.ContainsKey(System.Int32)">
+            <summary>
+            Checks if the dictionary contains the given key.
+            </summary>
+            <param name="key">The key to check for.</param>
+            <returns>True if the dictionary contains the key.</returns>
+        </member>
+        <member name="M:GDX.Collections.Generic.IntKeyDictionary`1.ExpandWhenFull">
+            <summary>
+            Resizes the dictionary with the assumption that it is full. Do not use otherwise.
+            </summary>
+        </member>
+        <member name="M:GDX.Collections.Generic.IntKeyDictionary`1.Reserve(System.Int32)">
+            <summary>
+            Expands the dictionary if it does not have enough empty space for capacityToReserve.
+            </summary>
+            <param name="capacityToReserve"></param>
+        </member>
+        <member name="M:GDX.Collections.Generic.IntKeyDictionary`1.IndexOf(System.Int32)">
+            <summary>
+            Finds the index of the entry corresponding to a key.
+            </summary>
+            <param name="key">The key to find the index of.</param>
+            <returns>The index of the entry, or -1 if the entry does not exist.</returns>
+        </member>
+        <member name="M:GDX.Collections.Generic.IntKeyDictionary`1.TryModifyValue(System.Int32,`0)">
+            <summary>
+            Replaces the value of the entry if the entry exists.
+            </summary>
+            <param name="key">The key of the entry to modify.</param>
+            <param name="value">The new value of the entry.</param>
+            <returns>True if the entry was found.</returns>
+        </member>
+        <member name="M:GDX.Collections.Generic.IntKeyDictionary`1.TryRemove(System.Int32)">
+            <summary>
+            Removes the entry if it exists.
+            </summary>
+            <param name="key">The key to remove.</param>
+            <returns>True if the entry was found.</returns>
+        </member>
+        <member name="M:GDX.Collections.Generic.IntKeyDictionary`1.TryRemoveNoValueClear(System.Int32)">
+            <summary>
+            Removes the entry if it exists, but does not remove the value of the key value pair.
+            </summary>
+            <param name="key">The key to remove.</param>
+            <returns>True if the entry was found.</returns>
+        </member>
+        <member name="M:GDX.Collections.Generic.IntKeyDictionary`1.TryGetValue(System.Int32,`0@)">
+            <summary>
+            Attempts to get the value for the given key; returns true if key was found, false otherwise.
+            </summary>
+            <param name="key">The key to retrieve.</param>
+            <param name="value">The value of the entry found.</param>
+            <returns>True if the entry was found; false otherwise.</returns>
+        </member>
+        <member name="P:GDX.Collections.Generic.IntKeyDictionary`1.Item(System.Int32)">
+            <summary>
+                Directly access a value by key.
+            </summary>
+            <param name="key">The target key to look for a value identified by.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when a null key is provided to lookup.</exception>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">Thrown when the key is not found in the GDX.Collections.Generic.StringKeyDictionary`1.</exception>
+        </member>
+        <member name="M:GDX.Collections.Generic.IntKeyDictionary`1.MoveNext(System.Int32@,System.Int32,System.Int32@,GDX.Collections.Generic.IntKeyEntry{`0}@)">
+            <summary>
+            Iterates the dictionary.
+            </summary>
+            <param name="iteratedIndexCount">The number of indices iterated so far - pass in 0 at the start of iteration.</param>
+            <param name="iteratorVersion">The version when iteration started.</param>
+            <param name="dictionaryVersion">The current version of the dictionary - update this on add, remove, or clear operations.</param>
+            <param name="entry">The entry returned by the iterator</param>
+            <returns>Whether the iterator found an entry, finished iteration, or could not continue due to an invalid version.</returns>
+        </member>
+        <member name="M:GDX.Collections.Generic.IntKeyDictionary`1.MoveNext(System.Int32@,GDX.Collections.Generic.IntKeyEntry{`0}@)">
+            <summary>
+            Iterates the dictionary.
+            NOTE: if you suspect the dictionary might be modified while iterating, this will not catch the error -- use the other overload instead.
+            </summary>
+            <param name="iteratedIndexCount">The number of indices iterated so far - pass in 0 at the start of iteration.</param>
+            <param name="entry">The entry returned by the iterator</param>
+            <returns>Whether or not the iterator found an entry</returns>
+        </member>
+        <member name="M:GDX.Collections.Generic.IntKeyDictionary`1.MoveNext(System.Int32@)">
+            <summary>
+                Iterates the dictionary.
+            </summary>
+            <remarks>
+                <para>
+                    If you use iteratedIndexCount during iteration, you need to decrement it by 1 to
+                    properly access the current iterations index.
+                </para>
+                <para>
+                    If you suspect the dictionary might be modified while iterating, this will not catch the error.
+                    You must use the other overload instead.
+                </para>
+            </remarks>
+            <param name="iteratedIndexCount">The number of indices iterated so far - pass in 0 at the start of iteration.</param>
+            <returns>Whether or not the iterator found an entry</returns>
+        </member>
+        <member name="M:GDX.Collections.Generic.IntKeyDictionary`1.Clear">
+            <summary>
+            Clears the dictionary.
+            </summary>
+        </member>
+        <member name="T:GDX.Collections.Generic.Array3D`1">
+            <summary>
+                A three-dimensional array backed a flat array.
+            </summary>
+            <typeparam name="T">Type of objects.</typeparam>
+        </member>
+        <member name="F:GDX.Collections.Generic.Array3D`1.Array">
+            <summary>
+                The backing flat array.
+            </summary>
+        </member>
+        <member name="F:GDX.Collections.Generic.Array3D`1.Depth">
+            <summary>
+                The stride of the z-axis segment in GDX.Collections.Generic.Array3D`1.Array.
+            </summary>
+        </member>
+        <member name="F:GDX.Collections.Generic.Array3D`1.DepthLength">
+            <summary>
+                The total length of a single GDX.Collections.Generic.Array3D`1.Depth.
+            </summary>
+        </member>
+        <member name="F:GDX.Collections.Generic.Array3D`1.Height">
+            <summary>
+                The stride of the y-axis segment in GDX.Collections.Generic.Array3D`1.Array.
+            </summary>
+        </member>
+        <member name="F:GDX.Collections.Generic.Array3D`1.Length">
+            <summary>
+                The length of GDX.Collections.Generic.Array3D`1.Array.
+            </summary>
+        </member>
+        <member name="F:GDX.Collections.Generic.Array3D`1.Width">
+            <summary>
+                The stride of the x-axis segment in GDX.Collections.Generic.Array3D`1.Array.
+            </summary>
+        </member>
+        <member name="M:GDX.Collections.Generic.Array3D`1.#ctor(System.Int32,System.Int32,System.Int32)">
+            <summary>
+                Create a GDX.Collections.Generic.Array3D`1 with a uniform dimensional length.
+            </summary>
+            <remarks></remarks>
+            <param name="width">X-axis length.</param>
+            <param name="height">Y-axis length.</param>
+            <param name="depth">Z-axis length.</param>
+        </member>
+        <member name="P:GDX.Collections.Generic.Array3D`1.Item(System.Int32,System.Int32,System.Int32)">
+            <summary>
+                Access a specific location in the voxel.
+            </summary>
+            <param name="x">X location index.</param>
+            <param name="y">Y location index.</param>
+            <param name="z">Z location index.</param>
+        </member>
+        <member name="P:GDX.Collections.Generic.Array3D`1.Item(Unity.Mathematics.int3)">
+            <summary>
+                Access a specific location in the voxel.
+            </summary>
+            <param name="index">A three-dimensional index.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.Array3D`1.Dispose">
+            <summary>
+                Properly dispose of the GDX.Collections.Generic.Array3D`1.
+            </summary>
+        </member>
+        <member name="M:GDX.Collections.Generic.Array3D`1.GetFromIndex(System.Int32)">
+            <summary>
+                Get the three-dimensional index of a flat array index.
+            </summary>
+            <param name="index">A flat array index.</param>
+            <returns>A three-dimensional voxel index.</returns>
+        </member>
+        <member name="T:GDX.Collections.Generic.NativeArray3D`1">
+            <summary>
+                A three-dimensional Unity.Collections.NativeArray`1 backed array.
+            </summary>
+            <typeparam name="T">Type of objects.</typeparam>
+        </member>
+        <member name="F:GDX.Collections.Generic.NativeArray3D`1.Array">
+            <summary>
+                The backing Unity.Collections.NativeArray`1.
+            </summary>
+        </member>
+        <member name="F:GDX.Collections.Generic.NativeArray3D`1.Depth">
+            <summary>
+                The stride of the z-axis segment in GDX.Collections.Generic.NativeArray3D`1.Array.
+            </summary>
+        </member>
+        <member name="F:GDX.Collections.Generic.NativeArray3D`1.DepthLength">
+            <summary>
+                The total length of a single GDX.Collections.Generic.NativeArray3D`1.Depth.
+            </summary>
+        </member>
+        <member name="F:GDX.Collections.Generic.NativeArray3D`1.Height">
+            <summary>
+                The stride of the y-axis segment in GDX.Collections.Generic.NativeArray3D`1.Array.
+            </summary>
+        </member>
+        <member name="F:GDX.Collections.Generic.NativeArray3D`1.Length">
+            <summary>
+                The length of GDX.Collections.Generic.NativeArray3D`1.Array.
+            </summary>
+        </member>
+        <member name="F:GDX.Collections.Generic.NativeArray3D`1.Width">
+            <summary>
+                The stride of the x-axis segment in GDX.Collections.Generic.NativeArray3D`1.Array.
+            </summary>
+        </member>
+        <member name="M:GDX.Collections.Generic.NativeArray3D`1.#ctor(System.Int32,System.Int32,System.Int32,Unity.Collections.Allocator,Unity.Collections.NativeArrayOptions)">
+            <summary>
+                Create a GDX.Collections.Generic.NativeArray3D`1 with a uniform dimensional length.
+            </summary>
+            <remarks></remarks>
+            <param name="width">X-axis length.</param>
+            <param name="height">Y-axis length.</param>
+            <param name="depth">Z-axis length.</param>
+            <param name="allocator">The Unity.Collections.Allocator type to use.</param>
+            <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
+        </member>
+        <member name="P:GDX.Collections.Generic.NativeArray3D`1.Item(System.Int32,System.Int32,System.Int32)">
+            <summary>
+                Access a specific location in the voxel.
+            </summary>
+            <param name="x">X location index.</param>
+            <param name="y">Y location index.</param>
+            <param name="z">Z location index.</param>
+        </member>
+        <member name="P:GDX.Collections.Generic.NativeArray3D`1.Item(Unity.Mathematics.int3)">
+            <summary>
+                Access a specific location in the voxel.
+            </summary>
+            <param name="index">A three-dimensional index.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.NativeArray3D`1.Dispose">
+            <summary>
+                Properly dispose of the GDX.Collections.Generic.NativeUniformArray3D`1.
+            </summary>
+        </member>
+        <member name="M:GDX.Collections.Generic.NativeArray3D`1.GetFromIndex(System.Int32)">
+            <summary>
+                Get the three-dimensional index of a flat array index.
+            </summary>
+            <param name="index">A flat array index.</param>
+            <returns>A three-dimensional voxel index.</returns>
+        </member>
+        <member name="T:GDX.Collections.Generic.UniformArray3D`1">
+            <summary>
+                A uniform three-dimensional array.
+            </summary>
+            <typeparam name="T">Type of objects.</typeparam>
+        </member>
+        <member name="F:GDX.Collections.Generic.UniformArray3D`1.Array">
+            <summary>
+                The backing GDX.Collections.Generic.UniformArray3D`1.Array.
+            </summary>
+        </member>
+        <member name="F:GDX.Collections.Generic.UniformArray3D`1.Length">
+            <summary>
+                The length of GDX.Collections.Generic.UniformArray3D`1.Array.
+            </summary>
+        </member>
+        <member name="F:GDX.Collections.Generic.UniformArray3D`1.Stride">
+            <summary>
+                The stride of each dimensional segment in GDX.Collections.Generic.UniformArray3D`1.Array.
+            </summary>
+        </member>
+        <member name="F:GDX.Collections.Generic.UniformArray3D`1.StrideSquared">
+            <summary>
+                Stores a cached copy of the stride squared.
+            </summary>
+        </member>
+        <member name="M:GDX.Collections.Generic.UniformArray3D`1.#ctor(System.Int32)">
+            <summary>
+                Create a GDX.Collections.Generic.UniformArray3D`1 with a uniform dimensional length.
+            </summary>
+            <remarks></remarks>
+            <param name="stride">X length, Y length and Z length will all be set to this value.</param>
+        </member>
+        <member name="P:GDX.Collections.Generic.UniformArray3D`1.Item(System.Int32,System.Int32,System.Int32)">
+            <summary>
+                Access a specific location in the voxel.
+            </summary>
+            <remarks>x + WIDTH * (y + DEPTH * z)</remarks>
+            <param name="x">X location index.</param>
+            <param name="y">Y location index.</param>
+            <param name="z">Z location index.</param>
+        </member>
+        <member name="P:GDX.Collections.Generic.UniformArray3D`1.Item(Unity.Mathematics.int3)">
+            <summary>
+                Access a specific location in the voxel.
+            </summary>
+            <param name="index">A three-dimensional index.</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.UniformArray3D`1.Dispose">
+            <summary>
+                Properly dispose of the GDX.Collections.Generic.UniformArray3D`1.
+            </summary>
+        </member>
+        <member name="M:GDX.Collections.Generic.UniformArray3D`1.GetFromIndex(System.Int32)">
+            <summary>
+                Get the three-dimensional index of a flat array index.
+            </summary>
+            <param name="index">A flat array index.</param>
+            <returns>A three-dimensional voxel index.</returns>
+        </member>
+        <member name="M:GDX.Collections.Generic.UniformArray3D`1.GetFromIndex(System.Int32,System.Int32,System.Int32)">
+            <summary>
+                Get the three-dimensional index of a flat array index.
+            </summary>
+            <param name="index">A flat array index.</param>
+            <param name="stride">The predetermined length of an axis.</param>
+            <param name="strideSquared">The squared value of stride.</param>
+            <returns>A three-dimensional voxel index.</returns>
+        </member>
         <member name="T:GDX.Collections.Generic.Array2D`1">
             <summary>
                 A 2-dimensional array backed by a flat array.
@@ -1077,6 +2005,11 @@
             </summary>
             <param name="x">The row/line number (vertical axis).</param>
             <param name="y">The column number (horizontal axis).</param>
+        </member>
+        <member name="M:GDX.Collections.Generic.Array2D`1.Dispose">
+            <summary>
+                Properly dispose of the GDX.Collections.Generic.Array2D`1.
+            </summary>
         </member>
         <member name="M:GDX.Collections.Generic.Array2D`1.AddRows(System.Int32)">
             <summary>
@@ -1220,21 +2153,26 @@
                 Clear out the GDX.Collections.Generic.SimpleList`1.Array in GDX.Collections.Generic.SimpleList`1 and sets the GDX.Collections.Generic.SimpleList`1.Count to 0.
             </summary>
         </member>
-        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertUnchecked(`0,System.Int32)">
+        <member name="M:GDX.Collections.Generic.SimpleList`1.Compact">
+            <summary>
+                Shrink/compact the backing GDX.Collections.Generic.SimpleList`1.Array so there is no unused space.
+            </summary>
+        </member>
+        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertUnchecked(System.Int32,`0)">
             <summary>
                 Insert an item into the GDX.Collections.Generic.SimpleList`1 without checking the GDX.Collections.Generic.SimpleList`1.Array size.
             </summary>
             <param name="item">A typed System.Object to insert.</param>
             <param name="index">The index in GDX.Collections.Generic.SimpleList`1.Array to add the item at.</param>
         </member>
-        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertWithExpandCheck(`0,System.Int32)">
+        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertWithExpandCheck(System.Int32,`0)">
             <summary>
                 Insert an item into the GDX.Collections.Generic.SimpleList`1, checking if GDX.Collections.Generic.SimpleList`1.Array needs to be resized.
             </summary>
             <param name="item">A typed System.Object to insert.</param>
             <param name="index">The index in GDX.Collections.Generic.SimpleList`1.Array to add the item at.</param>
         </member>
-        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertWithExpandCheck(`0,System.Int32,System.Int32)">
+        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertWithExpandCheck(System.Int32,`0,System.Int32)">
             <summary>
                 Insert an item into the GDX.Collections.Generic.SimpleList`1, checking if GDX.Collections.Generic.SimpleList`1.Array needs to be resized.
             </summary>
@@ -1242,7 +2180,7 @@
             <param name="index">The index in GDX.Collections.Generic.SimpleList`1.Array to add the item at.</param>
             <param name="howMuchToExpand">The number of elements to add at the end of the array when expanding.</param>
         </member>
-        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertExpandNoClear(`0,System.Int32,GDX.Collections.Pooling.ArrayPool{`0})">
+        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertExpandNoClear(System.Int32,`0,GDX.Collections.Pooling.ArrayPool{`0})">
             <summary>
                 Insert an item into the GDX.Collections.Generic.SimpleList`1, checking if GDX.Collections.Generic.SimpleList`1.Array needs to be resized.
             </summary>
@@ -1250,7 +2188,7 @@
             <param name="index">The index in GDX.Collections.Generic.SimpleList`1.Array to add the item at.</param>
             <param name="pool">Pool to allocate the array from if resizing.</param>
         </member>
-        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertExpandClearOld(`0,System.Int32,GDX.Collections.Pooling.ArrayPool{`0})">
+        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertExpandClearOld(System.Int32,`0,GDX.Collections.Pooling.ArrayPool{`0})">
             <summary>
                 Insert an item into the GDX.Collections.Generic.SimpleList`1, checking if GDX.Collections.Generic.SimpleList`1.Array needs to be resized. Clears the old array on resize after copying its contents.
             </summary>
@@ -1258,7 +2196,7 @@
             <param name="index">The index in GDX.Collections.Generic.SimpleList`1.Array to add the item at.</param>
             <param name="pool">Pool to allocate the array from if resizing.</param>
         </member>
-        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertExpandClearNew(`0,System.Int32,GDX.Collections.Pooling.ArrayPool{`0})">
+        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertExpandClearNew(System.Int32,`0,GDX.Collections.Pooling.ArrayPool{`0})">
             <summary>
                 Insert an item into the GDX.Collections.Generic.SimpleList`1, checking if GDX.Collections.Generic.SimpleList`1.Array needs to be resized. Clears unused indices of the new array on resize.
             </summary>
@@ -1266,20 +2204,13 @@
             <param name="index">The index in GDX.Collections.Generic.SimpleList`1.Array to add the item at.</param>
             <param name="pool">Pool to allocate the array from if resizing.</param>
         </member>
-        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertExpandClearBoth(`0,System.Int32,GDX.Collections.Pooling.ArrayPool{`0})">
+        <member name="M:GDX.Collections.Generic.SimpleList`1.InsertExpandClearBoth(System.Int32,`0,GDX.Collections.Pooling.ArrayPool{`0})">
             <summary>
                 Insert an item into the GDX.Collections.Generic.SimpleList`1, checking if GDX.Collections.Generic.SimpleList`1.Array needs to be resized. Clears old and new arrays on resize.
             </summary>
             <param name="item">A typed System.Object to insert.</param>
             <param name="index">The index in GDX.Collections.Generic.SimpleList`1.Array to add the item at.</param>
             <param name="pool">Pool to allocate the array from if resizing.</param>
-        </member>
-        <member name="M:GDX.Collections.Generic.SimpleList`1.Insert(`0,System.Int32)">
-            <summary>
-                Insert an item into the GDX.Collections.Generic.SimpleList`1, checking if GDX.Collections.Generic.SimpleList`1.Array needs to be resized.
-            </summary>
-            <param name="item">A typed System.Object to insert.</param>
-            <param name="index">The index in GDX.Collections.Generic.SimpleList`1.Array to add the item at.</param>
         </member>
         <member name="M:GDX.Collections.Generic.SimpleList`1.RemoveAt(System.Int32)">
             <summary>
@@ -1339,7 +2270,7 @@
         </member>
         <member name="T:GDX.Collections.Generic.NativeUniformArray3D`1">
             <summary>
-                A 3-Dimensional Unity.Collections.NativeArray`1 backed array.
+                A three-dimensional Unity.Collections.NativeArray`1 backed array.
             </summary>
             <typeparam name="T">Type of objects.</typeparam>
         </member>
@@ -1356,6 +2287,11 @@
         <member name="F:GDX.Collections.Generic.NativeUniformArray3D`1.Stride">
             <summary>
                 The stride of each dimensional segment in GDX.Collections.Generic.NativeUniformArray3D`1.Array.
+            </summary>
+        </member>
+        <member name="F:GDX.Collections.Generic.NativeUniformArray3D`1.StrideSquared">
+            <summary>
+                Stores a cached copy of the stride squared.
             </summary>
         </member>
         <member name="M:GDX.Collections.Generic.NativeUniformArray3D`1.#ctor(System.Int32,Unity.Collections.Allocator,Unity.Collections.NativeArrayOptions)">
@@ -1388,10 +2324,10 @@
         </member>
         <member name="M:GDX.Collections.Generic.NativeUniformArray3D`1.GetFromIndex(System.Int32)">
             <summary>
-                Get the 3-Dimensional index of a flat array index.
+                Get the three-dimensional index of a flat array index.
             </summary>
-            <param name="idx">A flat array index.</param>
-            <returns>A 3-Dimensional voxel index.</returns>
+            <param name="index">A flat array index.</param>
+            <returns>A three-dimensional voxel index.</returns>
         </member>
         <member name="T:GDX.Collections.Generic.StringKeyDictionary`1">
             <summary>
@@ -1877,6 +2813,11 @@
             </summary>
             <remarks>Used more by implementations of pools, then this base class.</remarks>
         </member>
+        <member name="F:GDX.Collections.Pooling.SimpleListManagedPool.destroyedItem">
+            <summary>
+                An <c>event</c> invoked when an item is destroyed by the GDX.Collections.Pooling.SimpleListManagedPool.
+            </summary>
+        </member>
         <member name="F:GDX.Collections.Pooling.SimpleListManagedPool.InItems">
             <summary>
                 A collection of items that are currently contained in the pool for use when spawning items upon request.
@@ -1892,24 +2833,19 @@
                 GDX.Collections.Pooling.SimpleListManagedPool itself, leaving 4-7 for additional use.
             </remarks>
         </member>
-        <member name="F:GDX.Collections.Pooling.SimpleListManagedPool.OnDestroyItem">
+        <member name="F:GDX.Collections.Pooling.SimpleListManagedPool.returnedItem">
             <summary>
-                A <c>delegate</c> call made when an item is destroyed by the GDX.Collections.Pooling.SimpleListManagedPool.
+                An <c>event</c> invoked when an item is returned to the GDX.Collections.Pooling.SimpleListManagedPool.
             </summary>
         </member>
-        <member name="F:GDX.Collections.Pooling.SimpleListManagedPool.OnReturnedToPool">
+        <member name="F:GDX.Collections.Pooling.SimpleListManagedPool.spawnedItem">
             <summary>
-                A <c>delegate</c> call made when an item is returned to the GDX.Collections.Pooling.SimpleListManagedPool.
+                An <c>event</c> invoked when an item is spawned from the GDX.Collections.Pooling.SimpleListManagedPool.
             </summary>
         </member>
-        <member name="F:GDX.Collections.Pooling.SimpleListManagedPool.OnSpawnedFromPool">
+        <member name="F:GDX.Collections.Pooling.SimpleListManagedPool.tearingDown">
             <summary>
-                A <c>delegate</c> call made when an item is spawned from the GDX.Collections.Pooling.SimpleListManagedPool.
-            </summary>
-        </member>
-        <member name="F:GDX.Collections.Pooling.SimpleListManagedPool.OnTearDown">
-            <summary>
-                A <c>delegate</c> call made when a pool is tearing down, before the items are pooled.
+                An <c>event</c> invoked when a pool is tearing down, before the items are pooled.
             </summary>
         </member>
         <member name="M:GDX.Collections.Pooling.SimpleListManagedPool.#ctor(System.Object,System.Func{GDX.Collections.Pooling.SimpleListManagedPool,System.Object},System.Int32,System.Int32,System.Object,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
@@ -2484,18 +3420,18 @@
             </summary>
             <param name="index">Target bit index.</param>
         </member>
-        <member name="T:GDX.Collections.NativeSparseSet">
+        <member name="T:GDX.Collections.NativeArraySparseSet">
             <summary>
                 An adapter collection for external data arrays that allows constant-time insertion, deletion, and lookup by
                 handle, as well as array-like iteration.
             </summary>
         </member>
-        <member name="F:GDX.Collections.NativeSparseSet.DenseArray">
+        <member name="F:GDX.Collections.NativeArraySparseSet.DenseArray">
             <summary>
                 Holds references to the sparse array for swapping indices.
             </summary>
         </member>
-        <member name="F:GDX.Collections.NativeSparseSet.SparseArray">
+        <member name="F:GDX.Collections.NativeArraySparseSet.SparseArray">
             <summary>
                 Holds references to dense array indices.
             </summary>
@@ -2503,25 +3439,32 @@
                 Its own indices are claimed and freed via a free-list.
             </remarks>
         </member>
-        <member name="F:GDX.Collections.NativeSparseSet.Count">
+        <member name="F:GDX.Collections.NativeArraySparseSet.Count">
             <summary>
                 How many indices are being used currently?
             </summary>
         </member>
-        <member name="F:GDX.Collections.NativeSparseSet.FreeIndex">
+        <member name="F:GDX.Collections.NativeArraySparseSet.FreeIndex">
             <summary>
                 The first free (currently unused) index in the sparse array.
             </summary>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.#ctor(System.Int32,Unity.Collections.Allocator,Unity.Collections.NativeArrayOptions)">
+        <member name="M:GDX.Collections.NativeArraySparseSet.#ctor(System.Int32,Unity.Collections.Allocator)">
             <summary>
-                Create a GDX.Collections.NativeSparseSet with an initialCapacity.
+                Create a GDX.Collections.NativeArraySparseSet with an initialCapacity.
             </summary>
             <param name="initialCapacity">The initial capacity of the sparse and dense int arrays.</param>
             <param name="allocator">The Unity.Collections.Allocator type to use.</param>
-            <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.AddWithExpandCheck(System.Int32,System.Int32@,System.Int32@,Unity.Collections.Allocator,Unity.Collections.NativeArrayOptions)">
+        <member name="M:GDX.Collections.NativeArraySparseSet.#ctor(System.Int32,Unity.Collections.Allocator,Unity.Collections.NativeArray{System.UInt64}@)">
+            <summary>
+                Create a GDX.Collections.NativeArraySparseSet with an initialCapacity.
+            </summary>
+            <param name="initialCapacity">The initial capacity of the sparse and dense int arrays.</param>
+            <param name="allocator">The Unity.Collections.Allocator type to use.</param>
+            <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
+        </member>
+        <member name="M:GDX.Collections.NativeArraySparseSet.AddWithExpandCheck(System.Int32,System.Int32@,System.Int32@,Unity.Collections.Allocator)">
             <summary>
                 Adds a sparse/dense index pair to the set and expands the arrays if necessary.
             </summary>
@@ -2529,24 +3472,43 @@
             <param name="sparseIndex">The sparse index allocated.</param>
             <param name="denseIndex">The dense index allocated.</param>
             <param name="allocator">The Unity.Collections.Allocator type to use.</param>
-            <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
             <returns>True if the index pool expanded.</returns>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.AddUnchecked(System.Int32@,System.Int32@)">
+        <member name="M:GDX.Collections.NativeArraySparseSet.AddWithExpandCheck(System.Int32,System.Int32@,System.Int32@,Unity.Collections.Allocator,Unity.Collections.NativeArray{System.UInt64}@)">
+            <summary>
+                Adds a sparse/dense index pair to the set and expands the arrays if necessary.
+            </summary>
+            <param name="expandBy">How many indices to expand by.</param>
+            <param name="sparseIndex">The sparse index allocated.</param>
+            <param name="denseIndex">The dense index allocated.</param>
+            <param name="allocator">The Unity.Collections.Allocator type to use.</param>
+            <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
+            <returns>True if the index pool expanded.</returns>
+        </member>
+        <member name="M:GDX.Collections.NativeArraySparseSet.AddUnchecked(System.Int32@,System.Int32@)">
             <summary>
                 Adds a sparse/dense index pair to the set without checking if the set needs to expand.
             </summary>
             <param name="sparseIndex">The sparse index allocated.</param>
             <param name="denseIndex">The dense index allocated.</param>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.GetDenseIndexUnchecked(System.Int32)">
+        <member name="M:GDX.Collections.NativeArraySparseSet.AddUnchecked(System.Int32@,System.Int32@,Unity.Collections.NativeArray{System.UInt64},System.UInt64@)">
+            <summary>
+                Adds a sparse/dense index pair to the set without checking if the set needs to expand.
+            </summary>
+            <param name="sparseIndex">The sparse index allocated.</param>
+            <param name="denseIndex">The dense index allocated.</param>
+            <param name="versionArray">The array containing the version number to check against.</param>
+            <param name="version">Enables detection of use-after-free errors when using the sparse index as a reference.</param>
+        </member>
+        <member name="M:GDX.Collections.NativeArraySparseSet.GetDenseIndexUnchecked(System.Int32)">
             <summary>
                 Gets the value of the sparse array at the given index without any data validation.
             </summary>
             <param name="sparseIndex">The index to check in the sparse array.</param>
             <returns>The dense index at the given sparse index.</returns>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.GetDenseIndexWithBoundsCheck(System.Int32)">
+        <member name="M:GDX.Collections.NativeArraySparseSet.GetDenseIndexWithBoundsCheck(System.Int32)">
             <summary>
                 Gets the value of the sparse array at the given index,
                 or -1 if the dense and sparse indices don't point to each other or if the dense index is outside the dense bounds.
@@ -2554,7 +3516,7 @@
             <param name="sparseIndex">The index in the sparse array to check against.</param>
             <returns>The dense index pointed to by the current sparse index, or -1 if invalid.</returns>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.GetDenseIndexWithVersionCheck(System.Int32,System.UInt64,Unity.Collections.NativeArray{System.UInt64})">
+        <member name="M:GDX.Collections.NativeArraySparseSet.GetDenseIndexWithVersionCheck(System.Int32,System.UInt64,Unity.Collections.NativeArray{System.UInt64})">
             <summary>
                 Gets the value of the sparse array at the given index,
                 or -1 if the version number does not match.
@@ -2564,7 +3526,7 @@
             <param name="versionArray">The array containing the version number to check against.</param>
             <returns>The dense index pointed to by the current sparse index, or -1 if invalid.</returns>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.GetDenseIndexWithBoundsAndVersionCheck(System.Int32,System.UInt64,Unity.Collections.NativeArray{System.UInt64})">
+        <member name="M:GDX.Collections.NativeArraySparseSet.GetDenseIndexWithBoundsAndVersionCheck(System.Int32,System.UInt64,Unity.Collections.NativeArray{System.UInt64})">
             <summary>
                 Gets the value of the sparse array at the given index,
                 or -1 if the given sparse index is invalid..
@@ -2574,14 +3536,19 @@
             <param name="versionArray">The array containing the version number to check against.</param>
             <returns>The dense index pointed to by the current sparse index, or -1 if invalid.</returns>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.RemoveWithNullValueCheck(System.Int32@)">
+        <member name="M:GDX.Collections.NativeArraySparseSet.RemoveWithBoundsCheck(System.Int32@,System.Int32@,System.Int32@)">
             <summary>
-                Returns true if the element was successfully removed.
-                WARNING: Will not protect against accidentally removing twice if the index in question was recycled between Remove
-                calls.
+                Removes the entry corresponding to the sparse index if the entry is within bounds and currently in use.
             </summary>
+            <param name="sparseIndexToRemove">The sparse index corresponding to the entry to remove. Cleared to -1 in this operation.</param>
+            <param name="dataIndexToSwapFrom">
+                Set the data array value at this index to default after swapping with the data array
+                value at indexToSwapTo.
+            </param>
+            <param name="dataIndexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
+            <returns>True if the index reference was valid, and thus removed.</returns>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.RemoveWithBoundsAndVersionChecks(System.Int32@,System.UInt64,Unity.Collections.NativeArray{System.UInt64})">
+        <member name="M:GDX.Collections.NativeArraySparseSet.RemoveWithBoundsAndVersionChecks(System.Int32@,System.UInt64,Unity.Collections.NativeArray{System.UInt64},System.Int32@,System.Int32@)">
             <summary>
                 Removes the associated sparse/dense index pair from active use.
                 calls.
@@ -2591,23 +3558,28 @@
                 The version number of the int used to access the sparse index. Used to guard against accessing
                 indices that have been removed and reused.
             </param>
-            <param name="versionArray">The array where version numbers to check against are stored.</param>
+            <param name="versionArray">The array containing the version number to check against.</param>
+            <param name="indexToSwapFrom">
+                Set the data array value at this index to default after swapping with the data array
+                value at indexToSwapTo.
+            </param>
+            <param name="indexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
             <returns>True if the element was successfully removed.</returns>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.RemoveUnchecked(System.Int32)">
+        <member name="M:GDX.Collections.NativeArraySparseSet.RemoveUnchecked(System.Int32)">
             <summary>
                 Removes the associated sparse/dense index pair from active use.
             </summary>
             <param name="sparseIndexToRemove">The sparse index to remove.</param>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.RemoveUnchecked(System.Int32,Unity.Collections.NativeArray{System.UInt64})">
+        <member name="M:GDX.Collections.NativeArraySparseSet.RemoveUnchecked(System.Int32,Unity.Collections.NativeArray{System.UInt64})">
             <summary>
                 Removes the associated sparse/dense index pair from active use and increments the version.
             </summary>
             <param name="sparseIndexToRemove">The sparse index to remove.</param>
-            <param name="versionArray">The array where version numbers to check against are stored.</param>
+            <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.RemoveUnchecked(System.Int32,System.Int32@,System.Int32@)">
+        <member name="M:GDX.Collections.NativeArraySparseSet.RemoveUnchecked(System.Int32,System.Int32@,System.Int32@)">
             <summary>
                 Removes the associated sparse/dense index pair from active use.
                 Out parameters used to manage parallel data arrays.
@@ -2619,33 +3591,33 @@
                 value at indexToSwapTo.
             </param>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.RemoveUnchecked(System.Int32,Unity.Collections.NativeArray{System.UInt64},System.Int32@,System.Int32@)">
+        <member name="M:GDX.Collections.NativeArraySparseSet.RemoveUnchecked(System.Int32,Unity.Collections.NativeArray{System.UInt64},System.Int32@,System.Int32@)">
             <summary>
                 Removes the associated sparse/dense index pair from active use and increments the version.
                 Out parameters used to manage parallel data arrays.
             </summary>
             <param name="sparseIndexToRemove">The sparse index to remove.</param>
-            <param name="versionArray">The array where version numbers to check against are stored.</param>
+            <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
             <param name="indexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
             <param name="indexToSwapFrom">
                 Set the data array value at this index to default after swapping with the data array
                 value at indexToSwapTo.
             </param>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.RemoveUncheckedFromDenseIndex(System.Int32)">
+        <member name="M:GDX.Collections.NativeArraySparseSet.RemoveUncheckedFromDenseIndex(System.Int32)">
             <summary>
                 Removes the associated sparse/dense index pair from active use.
             </summary>
             <param name="denseIndexToRemove">The dense index associated with the sparse index to remove.</param>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.RemoveUncheckedFromDenseIndex(System.Int32,System.UInt64[])">
+        <member name="M:GDX.Collections.NativeArraySparseSet.RemoveUncheckedFromDenseIndex(System.Int32,Unity.Collections.NativeArray{System.UInt64})">
             <summary>
                 Removes the associated sparse/dense index pair from active use.
             </summary>
             <param name="denseIndexToRemove">The dense index associated with the sparse index to remove.</param>
-            <param name="versionArray">The array where version numbers to check against are stored.</param>
+            <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.RemoveUncheckedFromDenseIndex(System.Int32,System.Int32@)">
+        <member name="M:GDX.Collections.NativeArraySparseSet.RemoveUncheckedFromDenseIndex(System.Int32,System.Int32@)">
             <summary>
                 Removes the associated sparse/dense index pair from active use.
                 Out parameter used to manage parallel data arrays.
@@ -2656,19 +3628,19 @@
                 value at denseIndexToRemove.
             </param>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.RemoveUncheckedFromDenseIndex(System.Int32,Unity.Collections.NativeArray{System.UInt64},System.Int32@)">
+        <member name="M:GDX.Collections.NativeArraySparseSet.RemoveUncheckedFromDenseIndex(System.Int32,Unity.Collections.NativeArray{System.UInt64},System.Int32@)">
             <summary>
                 Removes the associated sparse/dense index pair from active use.
                 Out parameter used to manage parallel data arrays.
             </summary>
             <param name="denseIndexToRemove">The sparse index to remove.</param>
-            <param name="versionArray">The array where version numbers to check against are stored.</param>
+            <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
             <param name="indexToSwapFrom">
                 Set the data array value at this index to default after swapping with the data array
                 value at denseIndexToRemove.
             </param>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.TryRemoveWithVersionCheck(System.Int32,System.UInt64,Unity.Collections.NativeArray{System.UInt64},System.Int32@,System.Int32@)">
+        <member name="M:GDX.Collections.NativeArraySparseSet.RemoveWithVersionCheck(System.Int32,System.UInt64,Unity.Collections.NativeArray{System.UInt64},System.Int32@,System.Int32@)">
             <summary>
                 Attempts to remove the associated sparse/dense index pair from active use and increments the version if successful.
                 Out parameters used to manage parallel data arrays.
@@ -2678,50 +3650,62 @@
                 The version number of the int used to access the sparse index. Used to guard against accessing
                 indices that have been removed and reused.
             </param>
-            <param name="versionArray">The array where version numbers to check against are stored.</param>
+            <param name="versionArray">The array containing the version number to check against.</param>
             <param name="indexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
             <param name="indexToSwapFrom">
                 Set the data array value at this index to default after swapping with the data array
                 value at indexToSwapTo.
             </param>
-            <returns>Whether or not the remove attempt succeeded.</returns>
+            <returns>True if the entry was valid and thus removed.</returns>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.TryRemoveFromDenseIndexWithVersionCheck(System.Int32,System.UInt64,Unity.Collections.NativeArray{System.UInt64})">
-            <summary>
-                Attempts to remove the associated sparse/dense index pair from active use and increments the version if successful.
-            </summary>
-            <param name="denseIndexToRemove">The dense index associated with the sparse index to remove.</param>
-            <param name="version">The array where version numbers to check against are stored.</param>
-            <param name="versionArray">The array where version numbers to check against are stored.</param>
-            <returns>Whether or not the remove attempt succeeded.</returns>
-        </member>
-        <member name="M:GDX.Collections.NativeSparseSet.Clear">
+        <member name="M:GDX.Collections.NativeArraySparseSet.Clear">
             <summary>
                 Clear the dense and sparse arrays.
             </summary>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.Clear(Unity.Collections.NativeArray{System.UInt64})">
+        <member name="M:GDX.Collections.NativeArraySparseSet.Clear(Unity.Collections.NativeArray{System.UInt64})">
             <summary>
                 Clear the dense and sparse arrays.
             </summary>
-            <param name="versionArray">Array containing version numbers to check against.</param>
+            <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.Expand(System.Int32,Unity.Collections.Allocator,Unity.Collections.NativeArrayOptions)">
+        <member name="M:GDX.Collections.NativeArraySparseSet.ClearWithVersionArrayReset(Unity.Collections.NativeArray{System.UInt64})">
+            <summary>
+                Clear the dense and sparse arrays and reset the version array.
+                Note: Only clear the version array if you are sure there are no outstanding dependencies on version numbers.
+            </summary>
+            ///
+            <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
+        </member>
+        <member name="M:GDX.Collections.NativeArraySparseSet.Expand(System.Int32,Unity.Collections.Allocator)">
             <summary>
                 Reallocate the dense and sparse arrays with additional capacity.
             </summary>
             <param name="extraCapacity">How many indices to expand the dense and sparse arrays by.</param>
             <param name="allocator">The Unity.Collections.Allocator type to use.</param>
-            <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
         </member>
-        <member name="M:GDX.Collections.NativeSparseSet.Expand(System.Int32,Unity.Collections.NativeArray{System.UInt64}@,Unity.Collections.Allocator,Unity.Collections.NativeArrayOptions)">
+        <member name="M:GDX.Collections.NativeArraySparseSet.Expand(System.Int32,Unity.Collections.Allocator,Unity.Collections.NativeArray{System.UInt64}@)">
             <summary>
                 Reallocate the dense and sparse arrays with additional capacity.
             </summary>
             <param name="extraCapacity">How many indices to expand the dense and sparse arrays by.</param>
-            <param name="versionArray">Array containing version numbers to check against.</param>
-            <param name="allocator">The Unity.Collections.Allocator type to use.</param>
-            <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
+            <param name="allocator">Which Unity memory allocator to use with the backing array.</param>
+            <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
+        </member>
+        <member name="M:GDX.Collections.NativeArraySparseSet.Reserve(System.Int32,Unity.Collections.Allocator)">
+            <summary>
+            Reallocate the dense and sparse arrays with additional capacity if there are not at least numberToReserve unused entries.
+            </summary>
+            <param name="numberToReserve">The number of unused entries to ensure capacity for.</param>
+            <param name="allocator">The allocator to use on expansion.</param>
+        </member>
+        <member name="M:GDX.Collections.NativeArraySparseSet.Reserve(System.Int32,Unity.Collections.Allocator,Unity.Collections.NativeArray{System.UInt64}@)">
+            <summary>
+            Reallocate the dense and sparse arrays with additional capacity if there are not at least numberToReserve unused entries.
+            </summary>
+            <param name="numberToReserve">The number of unused entries to ensure capacity for.</param>
+            <param name="allocator">The allocator to use on expansion.</param>
+            <param name="versionArray">Enables detection of use-after-free errors when using sparse indices as references.</param>
         </member>
         <member name="T:GDX.Collections.BitArray128">
             <summary>
@@ -2834,6 +3818,13 @@
             </summary>
             <param name="initialCapacity">The initial capacity of the sparse and dense int arrays.</param>
         </member>
+        <member name="M:GDX.Collections.SparseSet.#ctor(System.Int32,System.UInt64[]@)">
+            <summary>
+                Create a GDX.Collections.SparseSet with an initialCapacity.
+            </summary>
+            <param name="initialCapacity">The initial capacity of the sparse and dense int arrays.</param>
+            <param name="versionArray">Array containing version numbers to check sparse references against.</param>
+        </member>
         <member name="M:GDX.Collections.SparseSet.AddWithExpandCheck(System.Int32,System.Int32@,System.Int32@)">
             <summary>
                 Adds a sparse/dense index pair to the set and expands the arrays if necessary.
@@ -2843,12 +3834,32 @@
             <param name="denseIndex">The dense index allocated.</param>
             <returns>True if the index pool expanded.</returns>
         </member>
+        <member name="M:GDX.Collections.SparseSet.AddWithExpandCheck(System.Int32,System.Int32@,System.Int32@,System.UInt64[]@,System.UInt64@)">
+            <summary>
+                Adds a sparse/dense index pair to the set and expands the arrays if necessary.
+            </summary>
+            <param name="expandBy">How many indices to expand by.</param>
+            <param name="sparseIndex">The sparse index allocated.</param>
+            <param name="denseIndex">The dense index allocated.</param>
+            <param name="versionArray">The array containing the version number to check against.</param>
+            <param name="version">Enables detection of use-after-free errors when using the sparse index as a reference.</param>
+            <returns>True if the index pool expanded.</returns>
+        </member>
         <member name="M:GDX.Collections.SparseSet.AddUnchecked(System.Int32@,System.Int32@)">
             <summary>
                 Adds a sparse/dense index pair to the set without checking if the set needs to expand.
             </summary>
             <param name="sparseIndex">The sparse index allocated.</param>
             <param name="denseIndex">The dense index allocated.</param>
+        </member>
+        <member name="M:GDX.Collections.SparseSet.AddUnchecked(System.Int32@,System.Int32@,System.UInt64[],System.UInt64@)">
+            <summary>
+                Adds a sparse/dense index pair to the set without checking if the set needs to expand.
+            </summary>
+            <param name="sparseIndex">The sparse index allocated.</param>
+            <param name="denseIndex">The dense index allocated.</param>
+            <param name="versionArray">The array containing the version number to check against.</param>
+            <param name="version">Enables detection of use-after-free errors when using the sparse index as a reference.</param>
         </member>
         <member name="M:GDX.Collections.SparseSet.GetDenseIndexUnchecked(System.Int32)">
             <summary>
@@ -2885,17 +3896,23 @@
             <param name="versionArray">The array containing the version number to check against.</param>
             <returns>The dense index pointed to by the current sparse index, or -1 if invalid.</returns>
         </member>
-        <member name="M:GDX.Collections.SparseSet.RemoveWithNullValueCheck(System.Int32@)">
+        <member name="M:GDX.Collections.SparseSet.RemoveWithBoundsCheck(System.Int32@,System.Int32@,System.Int32@)">
             <summary>
-                Returns true if the element was successfully removed.
-                WARNING: Will not protect against accidentally removing twice if the index in question was recycled between Remove
-                calls.
+                Frees the allocated entry corresponding to the sparse index.
+                WARNING: Will not protect against accidentally removing twice if the index in question was recycled between Remove calls.
+            <param name="sparseIndexToRemove">The sparse index corresponding to the entry to remove.</param>
+            <param name="dataIndexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
+            <param name="dataIndexToSwapFrom">
+                Set the data array value at this index to default after swapping with the data array
+                value at dataIndexToSwapTo.
+            </param>
             </summary>
+            <returns>True if the entry was valid and thus removed.</returns>
         </member>
-        <member name="M:GDX.Collections.SparseSet.RemoveWithBoundsAndVersionChecks(System.Int32@,System.UInt64,System.UInt64[]@)">
+        <member name="M:GDX.Collections.SparseSet.RemoveWithVersionCheck(System.Int32,System.UInt64,System.UInt64[],System.Int32@,System.Int32@)">
             <summary>
-                Removes the associated sparse/dense index pair from active use.
-                calls.
+                Removes the allocated entry corresponding to the sparse index.
+                Indicates which dense indices were swapped as a result of removing the entry.
             </summary>
             <param name="sparseIndexToRemove">The sparse index to remove.</param>
             <param name="version">
@@ -2903,20 +3920,35 @@
                 indices that have been removed and reused.
             </param>
             <param name="versionArray">The array where version numbers to check against are stored.</param>
-            <returns>True if the element was successfully removed.</returns>
+            <param name="dataIndexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
+            <param name="dataIndexToSwapFrom">
+                Set the data array value at this index to default after swapping with the data array
+                value at dataIndexToSwapTo.
+            </param>
+            <returns>Whether or not the remove attempt succeeded.</returns>
+        </member>
+        <member name="M:GDX.Collections.SparseSet.RemoveWithBoundsAndVersionChecks(System.Int32@,System.UInt64,System.UInt64[],System.Int32@,System.Int32@)">
+            <summary>
+                Removes the allocated entry corresponding to the sparse index.
+            </summary>
+            <param name="sparseIndexToRemove">The sparse index corresponding to the entry to remove.</param>
+            <param name="version">
+                The version number of the int used to access the sparse index. Used to guard against erroneously accessing
+                freed indices currently in use with an outdated reference.
+            </param>
+            <param name="dataIndexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
+            <param name="dataIndexToSwapFrom">
+                Set the data array value at this index to default after swapping with the data array
+                value at dataIndexToSwapTo.
+            </param>
+            <param name="versionArray">The array where version numbers to check against are stored.</param>
+            <returns>True if the entry was valid and thus removed.</returns>
         </member>
         <member name="M:GDX.Collections.SparseSet.RemoveUnchecked(System.Int32)">
             <summary>
                 Removes the associated sparse/dense index pair from active use.
             </summary>
             <param name="sparseIndexToRemove">The sparse index to remove.</param>
-        </member>
-        <member name="M:GDX.Collections.SparseSet.RemoveUnchecked(System.Int32,System.UInt64[])">
-            <summary>
-                Removes the associated sparse/dense index pair from active use and increments the version.
-            </summary>
-            <param name="sparseIndexToRemove">The sparse index to remove.</param>
-            <param name="versionArray">The array where version numbers to check against are stored.</param>
         </member>
         <member name="M:GDX.Collections.SparseSet.RemoveUnchecked(System.Int32,System.Int32@,System.Int32@)">
             <summary>
@@ -2979,33 +4011,6 @@
                 value at denseIndexToRemove.
             </param>
         </member>
-        <member name="M:GDX.Collections.SparseSet.TryRemoveWithVersionCheck(System.Int32,System.UInt64,System.UInt64[],System.Int32@,System.Int32@)">
-            <summary>
-                Attempts to remove the associated sparse/dense index pair from active use and increments the version if successful.
-                Out parameters used to manage parallel data arrays.
-            </summary>
-            <param name="sparseIndexToRemove">The sparse index to remove.</param>
-            <param name="version">
-                The version number of the int used to access the sparse index. Used to guard against accessing
-                indices that have been removed and reused.
-            </param>
-            <param name="versionArray">The array where version numbers to check against are stored.</param>
-            <param name="indexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
-            <param name="indexToSwapFrom">
-                Set the data array value at this index to default after swapping with the data array
-                value at indexToSwapTo.
-            </param>
-            <returns>Whether or not the remove attempt succeeded.</returns>
-        </member>
-        <member name="M:GDX.Collections.SparseSet.TryRemoveFromDenseIndexWithVersionCheck(System.Int32,System.UInt64,System.UInt64[])">
-            <summary>
-                Attempts to remove the associated sparse/dense index pair from active use and increments the version if successful.
-            </summary>
-            <param name="denseIndexToRemove">The dense index associated with the sparse index to remove.</param>
-            <param name="version">The array where version numbers to check against are stored.</param>
-            <param name="versionArray">The array where version numbers to check against are stored.</param>
-            <returns>Whether or not the remove attempt succeeded.</returns>
-        </member>
         <member name="M:GDX.Collections.SparseSet.Clear">
             <summary>
                 Clear the dense and sparse arrays.
@@ -3014,6 +4019,14 @@
         <member name="M:GDX.Collections.SparseSet.Clear(System.UInt64[])">
             <summary>
                 Clear the dense and sparse arrays.
+            </summary>
+            ///
+            <param name="versionArray">Array containing version numbers to check against.</param>
+        </member>
+        <member name="M:GDX.Collections.SparseSet.ClearWithVersionArrayReset(System.UInt64[])">
+            <summary>
+                Clear the dense and sparse arrays and reset the version array.
+                Note: Only clear the version array if you are sure there are no outstanding dependencies on version numbers.
             </summary>
             ///
             <param name="versionArray">Array containing version numbers to check against.</param>
@@ -3815,6 +4828,24 @@
             </summary>
             <param name="v">The System.Double value to transcribe.</param>
         </member>
+        <member name="M:GDX.Mathematics.Byte2.#ctor(Unity.Mathematics.bool2)">
+            <summary>
+                Constructs a GDX.Mathematics.Byte2 from a Unity.Mathematics.bool2 by conversion.
+            </summary>
+            <param name="v">The value to transcribe.</param>
+        </member>
+        <member name="M:GDX.Mathematics.Byte2.#ctor(Unity.Mathematics.float2)">
+            <summary>
+                Constructs a GDX.Mathematics.Byte2 from a Unity.Mathematics.float2 by conversion.
+            </summary>
+            <param name="v">The value to transcribe.</param>
+        </member>
+        <member name="M:GDX.Mathematics.Byte2.#ctor(Unity.Mathematics.double2)">
+            <summary>
+                Constructs a GDX.Mathematics.Byte2 from a Unity.Mathematics.double2 by conversion.
+            </summary>
+            <param name="v">The value to transcribe.</param>
+        </member>
         <member name="P:GDX.Mathematics.Byte2.XX">
             <summary>
                 Get a new GDX.Mathematics.Byte2 created with GDX.Mathematics.Byte2.X as both components.
@@ -3840,7 +4871,7 @@
                 Get the System.Byte at the provided index.
             </summary>
             <param name="index">Returns the byte element at a specified index.</param>
-            <exception cref="T:System.ArgumentException">Out of range check.</exception>
+            <exception cref="T:System.IndexOutOfRangeException">Out of range check.</exception>
         </member>
         <member name="M:GDX.Mathematics.Byte2.Equals(GDX.Mathematics.Byte2)">
             <summary>
@@ -4202,24 +5233,6 @@
             <summary>
                 Y System.Byte.
             </summary>
-        </member>
-        <member name="M:GDX.Mathematics.Byte2.#ctor(Unity.Mathematics.bool2)">
-            <summary>
-                Constructs a GDX.Mathematics.Byte2 from a Unity.Mathematics.bool2 by conversion.
-            </summary>
-            <param name="v">The value to transcribe.</param>
-        </member>
-        <member name="M:GDX.Mathematics.Byte2.#ctor(Unity.Mathematics.float2)">
-            <summary>
-                Constructs a GDX.Mathematics.Byte2 from a Unity.Mathematics.float2 by conversion.
-            </summary>
-            <param name="v">The value to transcribe.</param>
-        </member>
-        <member name="M:GDX.Mathematics.Byte2.#ctor(Unity.Mathematics.double2)">
-            <summary>
-                Constructs a GDX.Mathematics.Byte2 from a Unity.Mathematics.double2 by conversion.
-            </summary>
-            <param name="v">The value to transcribe.</param>
         </member>
         <member name="M:GDX.Mathematics.Byte2.op_Explicit(Unity.Mathematics.bool2)~GDX.Mathematics.Byte2">
             <summary>
@@ -4937,70 +5950,98 @@
             <summary>
                 Project-wide configuration configurable for runtime override.
             </summary>
+            <remarks>
+                Field order matters to the Config Generator.
+            </remarks>
+        </member>
+        <member name="F:GDX.Config.FormatVersion">
+            <summary>
+                A reference number to what version the config was generated based off of.
+            </summary>
         </member>
         <member name="F:GDX.Config.ConfigOutputPath">
             <summary>
                 The asset database relative path of the GDX config override file.
             </summary>
         </member>
-        <member name="F:GDX.Config.DeveloperBuildInfoAssemblyDefinition">
-            <summary>
-                Ensure that there is an assembly definition wrapping the generated content.
-            </summary>
-        </member>
-        <member name="F:GDX.Config.DeveloperBuildInfoBuildChangelistArgument">
-            <summary>
-                The argument key for the build's changelist to be passed to the BuildInfoGenerator.
-            </summary>
-        </member>
-        <member name="F:GDX.Config.DeveloperBuildInfoBuildDescriptionArgument">
-            <summary>
-                The argument key for the build description to be passed to the BuildInfoGenerator.
-            </summary>
-        </member>
-        <member name="F:GDX.Config.DeveloperBuildInfoBuildNumberArgument">
-            <summary>
-                The argument key for the build number to be passed to the BuildInfoGenerator.
-            </summary>
-        </member>
-        <member name="F:GDX.Config.DeveloperBuildInfoBuildStreamArgument">
-            <summary>
-                The argument key for the build's stream to be passed to the BuildInfoGenerator.
-            </summary>
-        </member>
-        <member name="F:GDX.Config.DeveloperBuildInfoBuildTaskArgument">
-            <summary>
-                The argument key for the build's task to be passed to the BuildInfoGenerator.
-            </summary>
-        </member>
-        <member name="F:GDX.Config.DeveloperBuildInfoEnabled">
+        <member name="F:GDX.Config.BuildInfo">
             <summary>
                 Should the BuildInfo file be written during builds?
             </summary>
         </member>
-        <member name="F:GDX.Config.DeveloperBuildInfoNamespace">
+        <member name="F:GDX.Config.BuildInfoAssemblyDefinition">
+            <summary>
+                Ensure that there is an assembly definition wrapping the generated content.
+            </summary>
+        </member>
+        <member name="F:GDX.Config.BuildInfoBuildChangelistArgument">
+            <summary>
+                The argument key for the build's changelist to be passed to the BuildInfoGenerator.
+            </summary>
+        </member>
+        <member name="F:GDX.Config.BuildInfoBuildDescriptionArgument">
+            <summary>
+                The argument key for the build description to be passed to the BuildInfoGenerator.
+            </summary>
+        </member>
+        <member name="F:GDX.Config.BuildInfoBuildNumberArgument">
+            <summary>
+                The argument key for the build number to be passed to the BuildInfoGenerator.
+            </summary>
+        </member>
+        <member name="F:GDX.Config.BuildInfoBuildStreamArgument">
+            <summary>
+                The argument key for the build's stream to be passed to the BuildInfoGenerator.
+            </summary>
+        </member>
+        <member name="F:GDX.Config.BuildInfoBuildTaskArgument">
+            <summary>
+                The argument key for the build's task to be passed to the BuildInfoGenerator.
+            </summary>
+        </member>
+        <member name="F:GDX.Config.BuildInfoNamespace">
             <summary>
                 The namespace where the BuildInfo should be placed.
             </summary>
         </member>
-        <member name="F:GDX.Config.DeveloperBuildInfoPath">
+        <member name="F:GDX.Config.BuildInfoOutputPath">
             <summary>
                 The path to output the BuildInfo file.
             </summary>
         </member>
-        <member name="F:GDX.Config.DeveloperCommandLineParserArgumentPrefix">
+        <member name="F:GDX.Config.CommandLineParserArgumentPrefix">
             <summary>
                 What should be used to denote arguments in the command line?
             </summary>
         </member>
-        <member name="F:GDX.Config.DeveloperCommandLineParserArgumentSplit">
+        <member name="F:GDX.Config.CommandLineParserArgumentSplit">
             <summary>
                 What should be used to split arguments from their values in the command line?
+            </summary>
+        </member>
+        <member name="F:GDX.Config.EditorTaskDirectorSystem">
+            <summary>
+                Should the Editor Task Director tick the Task Director.
+            </summary>
+        </member>
+        <member name="F:GDX.Config.EditorTaskDirectorSystemTickRate">
+            <summary>
+                How often should the editor task director tick trigger the task director to tick?
+            </summary>
+        </member>
+        <member name="F:GDX.Config.EnvironmentAlwaysIncludeShaders">
+            <summary>
+                Should GDX make sure that it's shaders are always included in builds.
             </summary>
         </member>
         <member name="F:GDX.Config.EnvironmentScriptingDefineSymbol">
             <summary>
                 Should a GDX scripting define symbol be added to all target build groups.
+            </summary>
+        </member>
+        <member name="F:GDX.Config.EnvironmentToolsMenu">
+            <summary>
+                Should the GDX tools menu be added in the editor?
             </summary>
         </member>
         <member name="F:GDX.Config.LocalizationDefaultCulture">
@@ -5021,6 +6062,16 @@
         <member name="F:GDX.Config.PlatformCacheFolder">
             <summary>
                 The project relative path to use as a cache.
+            </summary>
+        </member>
+        <member name="F:GDX.Config.TaskDirectorSystem">
+            <summary>
+                Should the Task Director System be added to the player loop during playmode.
+            </summary>
+        </member>
+        <member name="F:GDX.Config.TaskDirectorSystemTickRate">
+            <summary>
+                How often should the task director tick in playmode?
             </summary>
         </member>
         <member name="F:GDX.Config.TraceDebugLevels">
@@ -5053,6 +6104,672 @@
                 Should GDX check for updates at editor time?
             </summary>
         </member>
+        <member name="T:GDX.PlayerLoopSystemExtensions">
+            <summary>
+                UnityEngine.LowLevel.PlayerLoopSystem Based Extension Methods
+            </summary>
+        </member>
+        <member name="M:GDX.PlayerLoopSystemExtensions.AddSubSystem(UnityEngine.LowLevel.PlayerLoopSystem@,UnityEngine.LowLevel.PlayerLoopSystem@)">
+            <summary>
+                Adds a child (sub) system to the provided parentSystem.
+            </summary>
+            <param name="parentSystem">The parent system which a child (sub) system should be added too.</param>
+            <param name="subSystem">The child (sub) system that is to be added to the parent.</param>
+        </member>
+        <member name="M:GDX.PlayerLoopSystemExtensions.AddSubSystemToFirstSubSystemOfType(UnityEngine.LowLevel.PlayerLoopSystem@,System.Type,System.Type,UnityEngine.LowLevel.PlayerLoopSystem.UpdateFunction)">
+            <summary>
+                Adds a child (sub) system to the first found instance of a parentSystemType system in
+                rootSystem.
+            </summary>
+            <param name="rootSystem">The root system which the parentSystemType will be searched recursively for.</param>
+            <param name="parentSystemType">The system System.Type that will be searched for as the parent.</param>
+            <param name="subSystemType">The type assigned when creating the UnityEngine.LowLevel.PlayerLoopSystem to be added.</param>
+            <param name="subSystemUpdateFunction">The method to invoke when the system is updated.</param>
+            <returns>true/false if the parentSystemType was found, and therefore the add could occur.</returns>
+        </member>
+        <member name="M:GDX.PlayerLoopSystemExtensions.AddSubSystemToFirstSubSystemOfType(UnityEngine.LowLevel.PlayerLoopSystem@,System.Type,UnityEngine.LowLevel.PlayerLoopSystem@)">
+            <summary>
+                Adds a child (sub) system to the first found instance of a parentSystemType system in
+                rootSystem.
+            </summary>
+            <param name="rootSystem">The root system which the parentSystemType will be searched recursively for.</param>
+            <param name="parentSystemType">The system System.Type that will be searched for as the parent.</param>
+            <param name="subSystem">The child (sub) system that is to be added to the parent.</param>
+            <returns>true/false if the parentSystemType was found, and therefore the add could occur.</returns>
+        </member>
+        <member name="M:GDX.PlayerLoopSystemExtensions.GenerateSystemTree(UnityEngine.LowLevel.PlayerLoopSystem@,GDX.Developer.TextGenerator)">
+            <summary>
+                Populates a GDX.Developer.TextGenerator with a tree-like structure that represents the
+                UnityEngine.LowLevel.PlayerLoopSystem found under the rootSystem.
+            </summary>
+            <param name="rootSystem">The root system which the tree should be crafted based off of.</param>
+            <param name="generator">Optionally, provide a generator to be populated.</param>
+            <returns>A GDX.Developer.TextGenerator populated with the system output.</returns>
+        </member>
+        <member name="M:GDX.PlayerLoopSystemExtensions.RemoveSubSystemsOfType(UnityEngine.LowLevel.PlayerLoopSystem@,System.Type)">
+            <summary>
+                Removes all child (sub) systems of the specified subSystemType from the provided
+                parentSystem.
+            </summary>
+            <remarks>
+                This is NOT recursive, and will not effect the child (sub) systems of the child (sub) systems of the
+                parentSystem
+            </remarks>
+            <param name="parentSystem">The parent system which the child (sub) systems should be removed from.</param>
+            <param name="subSystemType">The system System.Type that will be removed.</param>
+            <returns>true/false, if a remove was done.</returns>
+        </member>
+        <member name="M:GDX.PlayerLoopSystemExtensions.RemoveSubSystemsOfTypeFromFirstSubSystemOfType(UnityEngine.LowLevel.PlayerLoopSystem@,System.Type,System.Type)">
+            <summary>
+                Removes all the child (sub) systems of to the first found instance of a parentSystemType system in rootSystem
+            </summary>
+            <param name="rootSystem">The root system which the parentSystemType will be searched recursively for.</param>
+            <param name="parentSystemType">The system System.Type that will be searched for as the parent.</param>
+            <param name="subSystemType">The child (sub) system System.Type that will be removed.</param>
+            <returns>true/false, if a remove occured.</returns>
+        </member>
+        <member name="M:GDX.PlayerLoopSystemExtensions.ReplaceFirstSubSystemOfType(UnityEngine.LowLevel.PlayerLoopSystem@,System.Type,UnityEngine.LowLevel.PlayerLoopSystem@)">
+            <summary>
+                Replaces the first child (sub) system of the given rootSystem of
+                subSystemType with the provided updatedSystem.
+            </summary>
+            <param name="rootSystem">The root system which the subSystemType will be searched recursively for.</param>
+            <param name="subSystemType">The child (sub) system System.Type that will be replaced.</param>
+            <param name="updatedSystem">The system to replace the found subSystemType with.</param>
+            <returns>true/false if the replace occured.</returns>
+        </member>
+        <member name="M:GDX.PlayerLoopSystemExtensions.ReplaceSubSystemsOfType(UnityEngine.LowLevel.PlayerLoopSystem@,System.Type,UnityEngine.LowLevel.PlayerLoopSystem@)">
+            <summary>
+                Replaces all child (sub) systems of the specified subSystemType from the provided
+                parentSystem.
+            </summary>
+            <remarks>
+                This is NOT recursive, and will not effect the child (sub) systems of the child (sub) systems of the
+                parentSystem
+            </remarks>
+            <param name="parentSystem">The parent system which the child (sub) systems should be replaced.</param>
+            <param name="subSystemType">The system System.Type that will be replaced.</param>
+            <param name="updatedSystem">The system to replace the found subSystemType with.</param>
+            <returns>true/false if any replacement occured.</returns>
+        </member>
+        <member name="M:GDX.PlayerLoopSystemExtensions.TryGetFirstSubSystemOfType(UnityEngine.LowLevel.PlayerLoopSystem@,System.Type,System.Boolean@)">
+            <summary>
+                Searches the provided rootSystem child (sub) systems for the first instance of a
+                subSystemType system.
+            </summary>
+            <param name="rootSystem">
+                The root system which the subSystemType will be searched recursively for.
+            </param>
+            <param name="subSystemType">The child (sub) system System.Type that will be searched for recursively.</param>
+            <param name="foundSubSystem">Was an appropriate system found?</param>
+            <returns>
+                The found system, or the root system. Check foundSubSystem to determine if the system
+                was actually found. This pattern is used to preserve the reference.
+            </returns>
+        </member>
+        <member name="M:GDX.PlayerLoopSystemExtensions.TryGetFirstSystemWithSubSystemOfType(UnityEngine.LowLevel.PlayerLoopSystem@,System.Type,System.Boolean@,System.Int32@)">
+            <summary>
+                Searches the provided rootSystem child (sub) systems for the first instance of a
+                subSystemType and returns the parent system, with foundSystemIndex
+                of the found child (sub) system.
+            </summary>
+            <param name="rootSystem">
+                The root system which the subSystemType will be searched recursively for.
+            </param>
+            <param name="subSystemType">The child (sub) system System.Type that will be searched for recursively.</param>
+            <param name="foundSubSystem">Was an appropriate child (sub) system found?</param>
+            <param name="foundSystemIndex">The index of the found sub (child) system.</param>
+            <returns>
+                The found parent system, or the root system. Check foundSubSystem to determine if the
+                child (sub) system was actually found. This pattern is used to preserve the reference.
+            </returns>
+        </member>
+        <member name="T:GDX.Threading.TaskBase">
+            <summary>
+                The base of a task used by GDX.Threading.TaskDirector.
+            </summary>
+        </member>
+        <member name="T:GDX.Threading.TaskBase.BlockingModeFlags">
+            <summary>
+                A set of flags indicating what type of blocking this task does when it comes to other tasks,
+                or even user experience.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskBase.k_DefaultName">
+            <summary>
+                The default user-friendly name given to GDX.Threading.TaskBase.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskBase.m_Stopwatch">
+            <summary>
+                A timing mechanism to measure the duration of execution of the GDX.Threading.TaskBase.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskBase.completed">
+            <summary>
+                An event that is triggered when the GDX.Threading.TaskBase has finished its execution.
+            </summary>
+            <remarks>
+                It is <b>super important</b> to remember that subscribed actions will invoke off of the main thread.
+                Any logic that requires the main thread will not work. Many of Unity's APIs are not safe for this.
+            </remarks>
+        </member>
+        <member name="F:GDX.Threading.TaskBase.completedMainThread">
+            <summary>
+                An event that is triggered once the GDX.Threading.TaskBase has finished, during the next tick of the
+                GDX.Threading.TaskDirector.
+            </summary>
+            <remarks>
+                This is a safe way to do work which requires being executed on the main thread.
+            </remarks>
+        </member>
+        <member name="F:GDX.Threading.TaskBase.m_Bits">
+            <summary>
+                The GDX.Threading.TaskBase's descriptive bits.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskBase.m_BlockingBits">
+            <summary>
+                A quick set of bits used to describe tasks that should be blocked when
+                GDX.Threading.TaskBase.m_BlockingModes contains GDX.Threading.TaskBase.BlockingModeFlags.Bits. The opposing
+                GDX.Threading.TaskBase will have its GDX.Threading.TaskBase.m_Bits checked for positives that match.
+            </summary>
+            <remarks>If any of them are the sam</remarks>
+        </member>
+        <member name="F:GDX.Threading.TaskBase.m_BlockingModes">
+            <summary>
+                The GDX.Threading.TaskBase's blocking modes for other tasks.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskBase.m_Exception">
+            <summary>
+                The exception that occured.
+            </summary>
+            <remarks>See GDX.Threading.TaskBase.IsFaulted.</remarks>
+        </member>
+        <member name="F:GDX.Threading.TaskBase.m_IsLogging">
+            <summary>
+                Should the task report information to the GDX.Threading.TaskDirector log.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskBase.m_Name">
+            <summary>
+                The user-friendly name of the task, used by different feedback systems.
+            </summary>
+            <remarks>It's important to set this in inherited constructors.</remarks>
+        </member>
+        <member name="F:GDX.Threading.TaskBase.m_IsFaulted">
+            <summary>
+                Did an exception occur while executing this GDX.Threading.TaskBase?
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskBase.m_IsDone">
+            <summary>
+                Has the task finished its execution/work.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskBase.m_IsExecuting">
+            <summary>
+                A flag indicating if the task is executing, or if it is still waiting.
+            </summary>
+        </member>
+        <member name="M:GDX.Threading.TaskBase.Complete">
+            <summary>
+                Forcibly completes the task on the given thread where the method is invoked.
+            </summary>
+            <remarks>
+                This will also forcibly tick the GDX.Threading.TaskDirector upon completion to trigger callbacks. You
+                should not be using this unless you have an explicit purpose too.
+            </remarks>
+        </member>
+        <member name="M:GDX.Threading.TaskBase.DoWork">
+            <summary>
+                The core logic to be defined for a task.
+            </summary>
+        </member>
+        <member name="M:GDX.Threading.TaskBase.Enqueue">
+            <summary>
+                Enqueue the current GDX.Threading.TaskBase with the GDX.Threading.TaskDirector for execution.
+            </summary>
+        </member>
+        <member name="M:GDX.Threading.TaskBase.GetBits">
+            <summary>
+                Gets the associated GDX.Collections.BitArray16 with this task.
+            </summary>
+            <returns>The defined flags.</returns>
+        </member>
+        <member name="M:GDX.Threading.TaskBase.GetBlockedBits">
+            <summary>
+                Gets the GDX.Collections.BitArray16 to evaluate other tasks against.
+            </summary>
+            <returns>The defined bits.</returns>
+        </member>
+        <member name="M:GDX.Threading.TaskBase.GetBlockingModes">
+            <summary>
+                Returns the GDX.Threading.TaskBase.BlockingModeFlags used to determine other task execution.
+            </summary>
+            <returns>A set of flags indicating if other tasks should be able to start execution.</returns>
+        </member>
+        <member name="M:GDX.Threading.TaskBase.GetException">
+            <summary>
+                Returns the System.Exception that was created when the task faulted.
+            </summary>
+            <remarks>See GDX.Threading.TaskBase.IsFaulted.</remarks>
+            <returns>An System.Exception object.</returns>
+        </member>
+        <member name="M:GDX.Threading.TaskBase.GetName">
+            <summary>
+                Gets the user-friendly name of the task.
+            </summary>
+            <returns>The defined System.String name of the task.</returns>
+        </member>
+        <member name="M:GDX.Threading.TaskBase.IsBlockingAllTasks">
+            <summary>
+                Does this GDX.Threading.TaskBase block all other tasks after it from starting execution?
+            </summary>
+            <remarks>
+                This will keep all tasks after it sitting waiting for this task to complete.
+            </remarks>
+            <returns>true if this task blocks all after it, otherwise false.</returns>
+        </member>
+        <member name="M:GDX.Threading.TaskBase.IsBlockingBits">
+            <summary>
+                Does this GDX.Threading.TaskBase block other tasks from executing based on its
+                GDX.Threading.TaskBase.m_BlockingBits?
+            </summary>
+            <returns>true if this tasks blocks based on bits, otherwise false.</returns>
+        </member>
+        <member name="M:GDX.Threading.TaskBase.IsBlockingSameName">
+            <summary>
+                Does this GDX.Threading.TaskBase block all other tasks of the same name from starting during
+                its execution?
+            </summary>
+            <returns>true if this tasks blocks same named tasks, otherwise false.</returns>
+        </member>
+        <member name="M:GDX.Threading.TaskBase.IsBlockingUserInterface">
+            <summary>
+                Should the execution of this GDX.Threading.TaskBase prevent the user from providing input to the
+                user interface?
+            </summary>
+            <remarks>
+                This directly relates to the GDX.Threading.TaskDirector.inputBlocked, altering the count used
+                to trigger that particular event.
+            </remarks>
+            <returns>true if this task should prevent user input, otherwise false.</returns>
+        </member>
+        <member name="M:GDX.Threading.TaskBase.IsDone">
+            <summary>
+                Is the GDX.Threading.TaskBase finished executing?
+            </summary>
+            <returns>
+                Returns true if the execution phase of the task has been completed. This will be
+                true if an exception has occured.
+            </returns>
+        </member>
+        <member name="M:GDX.Threading.TaskBase.IsExecuting">
+            <summary>
+                Is the GDX.Threading.TaskBase currently executing on the thread pool?
+            </summary>
+            <returns>Returns true if the task is executing, otherwise false.</returns>
+        </member>
+        <member name="M:GDX.Threading.TaskBase.IsFaulted">
+            <summary>
+                Did an exception occur while executing off thread?
+            </summary>
+            <returns>Returns true if an exception occured.</returns>
+        </member>
+        <member name="M:GDX.Threading.TaskBase.Run">
+            <summary>
+                Execute task logic.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirectorSystem.s_AddedToPlayerLoop">
+            <summary>
+                Has the task director been added to the player loop for updating at runtime.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirectorSystem.s_TickRate">
+            <summary>
+                How often should the GDX.Threading.TaskDirector be ticked?
+            </summary>
+            <remarks>
+                This works by accumulation, when time between the last tick and current time exceeds
+                GDX.Threading.TaskDirectorSystem.s_TickRate, a tick will be triggered. Default configured in GDX.Config.
+            </remarks>
+        </member>
+        <member name="F:GDX.Threading.TaskDirectorSystem.s_TimeSinceLastTick">
+            <summary>
+                An accumulation of time since the last tick.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirectorSystem.ticked">
+            <summary>
+                Triggered after the GDX.Threading.TaskDirectorSystem has ticked, with the delta time.
+            </summary>
+        </member>
+        <member name="M:GDX.Threading.TaskDirectorSystem.GetTickRate">
+            <summary>
+                Get the current tick rate used by the GDX.Threading.TaskDirectorSystem.
+            </summary>
+            <returns>
+                A double value representing the elapsed time necessary to trigger an update to the
+                GDX.Threading.TaskDirectorSystem.
+            </returns>
+        </member>
+        <member name="M:GDX.Threading.TaskDirectorSystem.SetTickRate(System.Single)">
+            <summary>
+                Update the rate at which the GDX.Threading.TaskDirectorSystem updates the GDX.Threading.TaskDirector.
+            </summary>
+            <remarks>
+                This will not survive domain reload, please see GDX.Config.TaskDirectorSystemTickRate.
+            </remarks>
+            <param name="tickRate">The new tick rate.</param>
+        </member>
+        <member name="M:GDX.Threading.TaskDirectorSystem.Initialize">
+            <summary>
+                Sets up some default state for the GDX.Threading.TaskDirectorSystem.
+            </summary>
+        </member>
+        <member name="M:GDX.Threading.TaskDirectorSystem.PlayerLoopTick">
+            <summary>
+                The internal update call to the GDX.Threading.TaskDirector.
+            </summary>
+        </member>
+        <member name="T:GDX.Threading.TaskExtensions">
+            <summary>
+                System.Threading.Tasks.Task Based Extension Methods
+            </summary>
+        </member>
+        <member name="M:GDX.Threading.TaskExtensions.AsIEnumerator(System.Threading.Tasks.Task)">
+            <summary>
+                Wraps a System.Threading.Tasks.Task for use in a coroutine.
+            </summary>
+            <remarks>Don't use coroutines.</remarks>
+            <param name="task">An established System.Threading.Tasks.Task.</param>
+            <returns>An System.Collections.IEnumerator for use with coroutines.</returns>
+        </member>
+        <member name="T:GDX.Threading.WaitWhile">
+            <summary>
+                Some useful wait while methods to control program flow.
+            </summary>
+        </member>
+        <member name="M:GDX.Threading.WaitWhile.GetEnumerator(System.Func{System.Boolean})">
+            <summary>
+                Wait using an System.Collections.IEnumerator while the conditional is true.
+            </summary>
+            <param name="conditional">A function evaluated to determine if the wait continues.</param>
+            <returns>Yields null values.</returns>
+        </member>
+        <member name="M:GDX.Threading.WaitWhile.GetTask(System.Func{System.Boolean})">
+            <summary>
+                Wait asynchronously while the conditional is true.
+            </summary>
+            <param name="conditional">A function evaluated to determine if the wait continues.</param>
+        </member>
+        <member name="T:GDX.Threading.TaskDirector">
+            <summary>
+                A simple control mechanism for distributed GDX.Threading.TaskBase work across the
+                thread pool. Tasks should be short-lived and can queue up additional work.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirector.exceptionOccured">
+            <summary>
+                An event invoked when a GDX.Threading.TaskBase throws an exception.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirector.inputBlocked">
+            <summary>
+                An event invoked during GDX.Threading.TaskDirector.Tick when user input should be blocked.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirector.logAdded">
+            <summary>
+                An event invoked during GDX.Threading.TaskDirector.Tick with new log content.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirector.k_BlockedBits">
+            <summary>
+                A running tally of bits that are blocked by the currently executing tasks.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirector.k_BlockedNames">
+            <summary>
+                A collection of task names which are currently blocked from beginning to executed based
+                on the currently executing tasks.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirector.k_Log">
+            <summary>
+                An accumulating collection of log content which will be passed to GDX.Threading.TaskDirector.logAdded
+                subscribed methods during GDX.Threading.TaskDirector.Tick.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirector.k_LogLock">
+            <summary>
+                A locking mechanism used for log entries ensuring thread safety.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirector.k_StatusChangeLock">
+            <summary>
+                A locking mechanism used for changes to task lists ensuring thread safety.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirector.k_TasksBusy">
+            <summary>
+                A list of tasks currently being executed by the thread pool.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirector.k_TasksFinished">
+            <summary>
+                A working list of tasks that recently finished, used in GDX.Threading.TaskDirector.Tick to ensure
+                callbacks occur on the main thread.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirector.k_TasksProcessed">
+            <summary>
+                A list of tasks that were moved from waiting state to a working/busy state during
+                GDX.Threading.TaskDirector.Tick.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirector.k_TasksQueue">
+            <summary>
+                A list of tasks currently waiting to start work.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirector.s_BlockAllTasksCount">
+            <summary>
+                The number of tasks that are busy executing which block all other tasks from executing.
+            </summary>
+            <remarks>
+                This number can be higher then one, when tasks are forcibly started and then added to the
+                GDX.Threading.TaskDirector.
+            </remarks>
+        </member>
+        <member name="F:GDX.Threading.TaskDirector.s_BlockInput">
+            <summary>
+                Is user input blocked?
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirector.s_BlockInputCount">
+            <summary>
+                The number of tasks that are busy executing which block user input.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirector.s_TasksBusyCount">
+            <summary>
+                A cached count of GDX.Threading.TaskDirector.k_TasksBusy.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.TaskDirector.s_TasksQueueCount">
+            <summary>
+                A cached count of GDX.Threading.TaskDirector.k_TasksQueue.
+            </summary>
+        </member>
+        <member name="M:GDX.Threading.TaskDirector.GetBusyCount">
+            <summary>
+                The number of tasks currently in process or awaiting execution by the thread pool.
+            </summary>
+            <returns>The number of tasks sitting in GDX.Threading.TaskDirector.k_TasksBusy.</returns>
+        </member>
+        <member name="M:GDX.Threading.TaskDirector.GetQueueCount">
+            <summary>
+                The number of tasks waiting in the queue.
+            </summary>
+            <returns>The number of tasks sitting in GDX.Threading.TaskDirector.k_TasksQueue.</returns>
+        </member>
+        <member name="M:GDX.Threading.TaskDirector.GetStatus">
+            <summary>
+                Get the status message for the GDX.Threading.TaskDirector.
+            </summary>
+            <returns>A pre-formatted status message.</returns>
+        </member>
+        <member name="M:GDX.Threading.TaskDirector.HasTasks">
+            <summary>
+                Does the GDX.Threading.TaskDirector have any known busy or queued tasks?
+            </summary>
+            <remarks>
+                It's not performant to poll this.
+            </remarks>
+            <returns>A true/false value indicating tasks.</returns>
+        </member>
+        <member name="M:GDX.Threading.TaskDirector.IsBlockingBit(System.Int32)">
+            <summary>
+                Is the GDX.Threading.TaskDirector blocking tasks with a specific bit?
+            </summary>
+            <remarks>
+                It isn't ideal to constantly poll this method, ideally this could be used to block things outside of
+                the GDX.Threading.TaskDirector's control based on tasks running.
+            </remarks>
+            <returns>A true/false value indicating if a GDX.Collections.BitArray16 index is being blocked.</returns>
+        </member>
+        <member name="M:GDX.Threading.TaskDirector.Log(System.String)">
+            <summary>
+                Adds a thread-safe log entry to a queue which will be dispatched to GDX.Threading.TaskDirector.logAdded on
+                the GDX.Threading.TaskDirector.Tick invoking thread.
+            </summary>
+            <param name="message">The log content.</param>
+        </member>
+        <member name="M:GDX.Threading.TaskDirector.QueueTask(GDX.Threading.TaskBase)">
+            <summary>
+                Add a task to the queue, to be later started when possible.
+            </summary>
+            <remarks>
+                If the task is already executing it will be added to the known busy list.
+            </remarks>
+            <param name="task">An established task.</param>
+        </member>
+        <member name="M:GDX.Threading.TaskDirector.Tick">
+            <summary>
+                Update the GDX.Threading.TaskDirector, evaluating known tasks for work eligibility and execution.
+            </summary>
+            <remarks>
+                This should occur on the main thread. If the GDX.Threading.TaskDirector is used during play mode,
+                something needs to call this every global tick. While in edit mode the EditorTaskDirector triggers this
+                method.
+            </remarks>
+        </member>
+        <member name="M:GDX.Threading.TaskDirector.UpdateTask(GDX.Threading.TaskBase)">
+            <summary>
+                Evaluate the provided task and update its state inside of the GDX.Threading.TaskDirector.
+            </summary>
+            <remarks>
+                This will add a task to the GDX.Threading.TaskDirector if it does not already know about it, regardless
+                of the current blocking mode status. Do not use this method to add non executing tasks, they will not
+                be added to the GDX.Threading.TaskDirector in this way.
+            </remarks>
+            <param name="task">An established task.</param>
+        </member>
+        <member name="M:GDX.Threading.TaskDirector.Wait">
+            <summary>
+                Wait on the completion of all known tasks, blocking the invoking thread.
+            </summary>
+            <remarks>
+                Useful to force the main thread to wait for completion of tasks.
+            </remarks>
+        </member>
+        <member name="M:GDX.Threading.TaskDirector.WaitAsync">
+            <summary>
+                Asynchronously wait on the completion of all known tasks.
+            </summary>
+        </member>
+        <member name="M:GDX.Threading.TaskDirector.AddBusyTask(GDX.Threading.TaskBase)">
+            <summary>
+                Add a GDX.Threading.TaskBase to the known list of working tasks.
+            </summary>
+            <remarks>
+                This will add the blocking mode settings to the current settings.
+            </remarks>
+            <param name="task">An established task.</param>
+        </member>
+        <member name="M:GDX.Threading.TaskDirector.IsBlockedByBits(GDX.Collections.BitArray16@)">
+            <summary>
+                Is the provided bit array blocked by the current blocking settings.
+            </summary>
+            <param name="bits">A GDX.Threading.TaskBase's bits.</param>
+            <returns>true/false if the task should be blocked from executing.</returns>
+        </member>
+        <member name="M:GDX.Threading.TaskDirector.RemoveBusyTask(GDX.Threading.TaskBase)">
+            <summary>
+                Remove a GDX.Threading.TaskBase from the known list of working tasks.
+            </summary>
+            <remarks>
+                This will remove the blocking mode settings to the current settings.
+            </remarks>
+            <param name="task">An established task.</param>
+        </member>
+        <member name="T:GDX.Threading.WaitFor">
+            <summary>
+                Some useful wait for methods to control program flow.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.WaitFor.OneSecond">
+            <summary>
+                One second worth of milliseconds.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.WaitFor.TwoSeconds">
+            <summary>
+                Two seconds worth of milliseconds.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.WaitFor.FiveSeconds">
+            <summary>
+                Five seconds worth of milliseconds.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.WaitFor.TenSeconds">
+            <summary>
+                Ten seconds worth of milliseconds.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.WaitFor.ThirtySeconds">
+            <summary>
+                Thirty seconds worth of milliseconds.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.WaitFor.OneMinute">
+            <summary>
+                One minute worth of milliseconds.
+            </summary>
+        </member>
+        <member name="F:GDX.Threading.WaitFor.TenMinutes">
+            <summary>
+                Ten minutes worth of milliseconds.
+            </summary>
+        </member>
+        <member name="M:GDX.Threading.WaitFor.GetEnumerator(System.Int32)">
+            <summary>
+                Wait using an System.Collections.IEnumerator.
+            </summary>
+            <param name="milliseconds">The number of milliseconds to wait for.</param>
+            <returns>Yields null values.</returns>
+        </member>
+        <member name="M:GDX.Threading.WaitFor.GetTask(System.Int32)">
+            <summary>
+                Wait asynchronously.
+            </summary>
+            <param name="milliseconds">The number of milliseconds to wait for.</param>
+        </member>
         <member name="T:GDX.InspectorMessageBoxAttribute">
             <summary>
                 Create a message box of information above the property in the inspector.
@@ -5062,6 +6779,158 @@
             <summary>
                 Valid types of messages.
             </summary>
+        </member>
+        <member name="T:GDX.IO.CoalesceStream">
+            <summary>
+                A byte backed stream which combines multiple arrays acting as one uniform stream.
+            </summary>
+            <remarks>
+                Max size being limited to GDX.IO.CoalesceStream.m_Length type limitations.
+            </remarks>
+        </member>
+        <member name="F:GDX.IO.CoalesceStream.k_DefaultBucketSize">
+            <summary>
+                The default size of each allocated bucket array.
+            </summary>
+        </member>
+        <member name="F:GDX.IO.CoalesceStream.m_Buckets">
+            <summary>
+                The internal arrays storage of buckets.
+            </summary>
+        </member>
+        <member name="F:GDX.IO.CoalesceStream.m_BucketSize">
+            <summary>
+                The bucket size used to allocate new arrays.
+            </summary>
+        </member>
+        <member name="F:GDX.IO.CoalesceStream.m_Length">
+            <summary>
+                The perceived length of the data contained within.
+            </summary>
+        </member>
+        <member name="M:GDX.IO.CoalesceStream.#ctor(System.Int32)">
+            <summary>
+                Create a GDX.IO.CoalesceStream.
+            </summary>
+            <param name="bucketSize">The bucket allocation size.</param>
+        </member>
+        <member name="M:GDX.IO.CoalesceStream.#ctor(System.Byte[],System.Int32)">
+            <summary>
+                Create a GDX.IO.CoalesceStream and fill it with the data found in source.
+            </summary>
+            <param name="source">An array used to prefill the GDX.IO.CoalesceStream with.</param>
+            <param name="bucketSize">The bucket allocation size.</param>
+        </member>
+        <member name="M:GDX.IO.CoalesceStream.#ctor(System.Int32,System.Int32)">
+            <summary>
+                Preallocate a GDX.IO.CoalesceStream at the desired length.
+            </summary>
+            <param name="length">The desired pre-allocated size.</param>
+            <param name="bucketSize">The bucket allocation size.</param>
+        </member>
+        <member name="M:GDX.IO.CoalesceStream.#ctor(System.Int64,System.Int32)">
+            <summary>
+                Preallocate a GDX.IO.CoalesceStream at the desired length.
+            </summary>
+            <param name="length">The desired pre-allocated size.</param>
+            <param name="bucketSize">The bucket allocation size.</param>
+        </member>
+        <member name="P:GDX.IO.CoalesceStream.CanRead">
+            <summary>
+                Is this System.IO.Stream capable of reading?
+            </summary>
+        </member>
+        <member name="P:GDX.IO.CoalesceStream.CanSeek">
+            <summary>
+                Is this System.IO.Stream capable of seeking?
+            </summary>
+        </member>
+        <member name="P:GDX.IO.CoalesceStream.CanWrite">
+            <summary>
+                Is this System.IO.Stream capable of writing?
+            </summary>
+        </member>
+        <member name="P:GDX.IO.CoalesceStream.Length">
+            <summary>
+                Get the combined length of the internal arrays.
+            </summary>
+        </member>
+        <member name="P:GDX.IO.CoalesceStream.Position">
+            <summary>
+                Get the current position in the System.IO.Stream.
+            </summary>
+        </member>
+        <member name="P:GDX.IO.CoalesceStream.Bucket">
+            <summary>
+                Get the current bucket.
+            </summary>
+        </member>
+        <member name="P:GDX.IO.CoalesceStream.BucketIndex">
+            <summary>
+                Determine the current bucket index based on the position and bucket size.
+            </summary>
+        </member>
+        <member name="P:GDX.IO.CoalesceStream.BucketOffset">
+            <summary>
+                Determine the current bucket offset based on the position and bucket size.
+            </summary>
+        </member>
+        <member name="M:GDX.IO.CoalesceStream.Flush">
+            <summary>
+                Flush reading and writing buffers.
+            </summary>
+            <remarks>
+                Does nothing for the GDX.IO.CoalesceStream.
+            </remarks>
+        </member>
+        <member name="M:GDX.IO.CoalesceStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+                Read from the GDX.IO.CoalesceStream into a buffer.
+            </summary>
+            <param name="buffer">The target buffer to write the read data into.</param>
+            <param name="offset">The offset position to start writing into the buffer.</param>
+            <param name="count">The number of System.Bytes to read.</param>
+            <returns>The number of bytes read.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+                Thrown when a negative amounts of bytes are requested, or a negative offset is provided.
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+                Thrown when the provided buffer is null.
+            </exception>
+        </member>
+        <member name="M:GDX.IO.CoalesceStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <summary>
+            Seek the internal position to a new location.
+            </summary>
+            <param name="offset">The value to offset the internal position by.</param>
+            <param name="origin">The origin of the offset.</param>
+            <returns></returns>
+        </member>
+        <member name="M:GDX.IO.CoalesceStream.SetLength(System.Int64)">
+            <summary>
+                Arbitrarily set the internal length of the GDX.IO.CoalesceStream
+            </summary>
+            <param name="value">The new length value.</param>
+        </member>
+        <member name="M:GDX.IO.CoalesceStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+                Write into the GDX.IO.CoalesceStream at the current position.
+            </summary>
+            <param name="buffer">The source array to read data from</param>
+            <param name="offset">An offset of where to start in the buffer.</param>
+            <param name="count">The number of bytes to read from the buffer.</param>
+        </member>
+        <member name="M:GDX.IO.CoalesceStream.ReadByte">
+            <summary>
+                Read a singular System.Byte from the current position, incrementing the position.
+            </summary>
+            <returns>A valid byte as an int, or -1.</returns>
+        </member>
+        <member name="M:GDX.IO.CoalesceStream.WriteByte(System.Byte)">
+            <summary>
+                Write a singular System.Byte to the GDX.IO.CoalesceStream, incrementing the position.
+            </summary>
+            <param name="value">The System.Byte to write to the GDX.IO.CoalesceStream.</param>
         </member>
         <member name="T:GDX.IO.Compression.TarFile">
             <summary>
@@ -5139,7 +7008,7 @@
         </member>
         <member name="T:GDX.DisableInInspectorAttribute">
             <summary>
-                Make the field in the inspector disabled by toggling GUI.enabled before and after.
+                Make the field in the inspector disabled by toggling the GUI.enabled before and after.
             </summary>
         </member>
         <member name="T:GDX.MeshExtensions">
@@ -5232,17 +7101,34 @@
             </summary>
             <remarks>Torn about the existence of this utility class, yet alone the conditions dictating it.</remarks>
         </member>
-        <member name="M:GDX.Reflection.GetFieldValue``1(System.Object,System.String,System.String,System.Reflection.BindingFlags)">
+        <member name="F:GDX.Reflection.PrivateFieldFlags">
             <summary>
-                Access the field value of a specific targetObject, which may not be normally accessible.
+                System.Reflection.BindingFlags for a private field.
             </summary>
-            <remarks></remarks>
-            <param name="targetObject">The instanced object which will have it's field value read.</param>
-            <param name="type">The explicit type of the targetObject.</param>
-            <param name="name">The field's name to read.</param>
-            <param name="flags">The field's access flags.</param>
-            <typeparam name="T">The type of data being read from the field.</typeparam>
-            <returns>The field's value.</returns>
+        </member>
+        <member name="F:GDX.Reflection.PrivateStaticFlags">
+            <summary>
+                System.Reflection.BindingFlags for a private static.
+            </summary>
+        </member>
+        <member name="F:GDX.Reflection.PublicStaticFlags">
+            <summary>
+                System.Reflection.BindingFlags for a public static.
+            </summary>
+        </member>
+        <member name="M:GDX.Reflection.GetDefault(System.Type)">
+            <summary>
+                Returns the default value for a given type.
+            </summary>
+            <param name="type">A qualified type.</param>
+            <returns>The default value.</returns>
+        </member>
+        <member name="M:GDX.Reflection.GetType(System.String)">
+            <summary>
+                Returns a qualified type..
+            </summary>
+            <param name="type">The full name of a type.</param>
+            <returns>A System.Type if found.</returns>
         </member>
         <member name="M:GDX.Reflection.InvokeStaticMethod(System.String,System.String,System.Object[],System.Reflection.BindingFlags)">
             <summary>
@@ -5253,6 +7139,78 @@
             <param name="parameters">Any parameters that should be passed to the method?</param>
             <param name="flags">The method's access flags.</param>
             <returns>An System.Object of the return value. This can be null.</returns>
+        </member>
+        <member name="M:GDX.Reflection.SetFieldOrPropertyValue(System.Object,System.String,System.Object,System.Reflection.BindingFlags,System.Reflection.BindingFlags)">
+            <summary>
+                Set the field or property value of a specific targetObject, which may not be
+                normally accessible.
+            </summary>
+            <param name="targetObject">The instanced object which will have it's field or property value set.</param>
+            <param name="name">The field or property's name to set.</param>
+            <param name="value">The value to set the field or property to.</param>
+            <param name="fieldFlags">The field's access flags.</param>
+            <param name="propertyFlags">The property's access flags.</param>
+            <returns>true/false if the value was set.</returns>
+        </member>
+        <member name="M:GDX.Reflection.SetFieldValue(System.Object,System.Type,System.String,System.Object,System.Reflection.BindingFlags)">
+            <summary>
+                Set the field value of a specific targetObject, which may not be normally accessible.
+            </summary>
+            <param name="targetObject">The instanced object which will have it's field value set; use a null value if this is a static field.</param>
+            <param name="type">The explicit type of the targetObject.</param>
+            <param name="name">The field's name to set.</param>
+            <param name="value">The value to set the field to.</param>
+            <param name="flags">The field's access flags.</param>
+            <returns>true/false if the value was set.</returns>
+        </member>
+        <member name="M:GDX.Reflection.SetPropertyValue(System.Object,System.Type,System.String,System.Object,System.Reflection.BindingFlags)">
+            <summary>
+                Set the property value of a specific targetObject, which may not be normally accessible.
+            </summary>
+            <param name="targetObject">The instanced object which will have it's property value set; use a null value if this is a static property.</param>
+            <param name="type">The type of the targetObject.</param>
+            <param name="name">The property's name to set.</param>
+            <param name="value">The value to set the property to.</param>
+            <param name="flags">The property's access flags.</param>
+            <returns>true/false if the value was set.</returns>
+        </member>
+        <member name="M:GDX.Reflection.TryGetFieldValue``1(System.Object,System.Type,System.String,``0@,System.Reflection.BindingFlags)">
+            <summary>
+                Try to access the field value of a specific targetObject, which may not be normally accessible.
+            </summary>
+            <remarks></remarks>
+            <param name="targetObject">The instanced object which will have it's field value read; use a null value if this is a static field.</param>
+            <param name="type">The qualified type of the targetObject.</param>
+            <param name="name">The field's name to read.</param>
+            <param name="returnValue">The returned value from the field, the default value if the field was unable to be read.</param>
+            <param name="flags">The field's access flags.</param>
+            <typeparam name="T">The type of data being read from the field.</typeparam>
+            <returns>true/false if the process was successful.</returns>
+        </member>
+        <member name="M:GDX.Reflection.TryGetFieldOrPropertyValue(System.Object,System.String,System.Object@,System.Reflection.BindingFlags,System.Reflection.BindingFlags)">
+            <summary>
+                Try to access the field or property value of a specific targetObject, which may not
+                be normally accessible.
+            </summary>
+            <remarks>Useful for when you really do not know the System.Type.</remarks>
+            <param name="targetObject">The instanced object which will have it's field or property value read.</param>
+            <param name="name">The field or property's name to read.</param>
+            <param name="returnValue">The returned value from the field or property, the default value if the property was unable to be read.</param>
+            <param name="fieldFlags">The field's access flags.</param>
+            <param name="propertyFlags">The property's access flags.</param>
+            <returns>true/false if a value was found.</returns>
+        </member>
+        <member name="M:GDX.Reflection.TryGetPropertyValue``1(System.Object,System.Type,System.String,``0@,System.Reflection.BindingFlags)">
+            <summary>
+                Try to get a property value from targetObject, which may not be normally accessible.
+            </summary>
+            <param name="targetObject">The instanced object which will have it's property value read; use a null value if this is a static property.</param>
+            <param name="type">The explicit type of the targetObject.</param>
+            <param name="name">The property's name to read.</param>
+            <param name="returnValue">The returned value from the property, the default value if the property was unable to be read.</param>
+            <param name="flags">The property's access flags.</param>
+            <typeparam name="T">The type of data being read from the property.</typeparam>
+            <returns>true/false if the process was successful.</returns>
         </member>
         <member name="T:GDX.ArrayExtensions">
             <summary>
@@ -5297,11 +7255,21 @@
             <typeparam name="T">The type of the System.Array.</typeparam>
             <returns>true/false</returns>
         </member>
+        <member name="M:GDX.ArrayExtensions.FirstIndexOf``1(``0[],``0)">
+            <summary>
+                Find the first index of targetItem in targetArray.
+            </summary>
+            <remarks>This will work for System.String comparisons.</remarks>
+            <param name="targetArray">The array which to look in.</param>
+            <param name="targetItem">The object to be found.</param>
+            <typeparam name="T">The type of the array.</typeparam>
+            <returns>The index of targetItem in targetArray, or -1 if not found.</returns>
+        </member>
         <member name="M:GDX.ArrayExtensions.FirstIndexOfItem``1(``0[],``0)">
             <summary>
                 Find the first index of targetItem in targetArray.
             </summary>
-            <remarks>Ignores equality check and end up comparing object pointers.</remarks>
+            <remarks>Ignores equality check and end up comparing object pointers. Do NOT use this for System.String types.</remarks>
             <param name="targetArray">The array which to look in.</param>
             <param name="targetItem">The object to be found.</param>
             <typeparam name="T">The type of the array.</typeparam>
@@ -5315,6 +7283,16 @@
             <param name="targetValue">The value to be found.</param>
             <typeparam name="T">The type of the array.</typeparam>
             <returns>The index of targetValue in targetArray, or -1 if not found.</returns>
+        </member>
+        <member name="M:GDX.ArrayExtensions.LastIndexOf``1(``0[],``0)">
+            <summary>
+                Find the last index of targetItem in targetArray.
+            </summary>
+            <remarks>This will work for System.String comparisons.</remarks>
+            <param name="targetArray">The array which to look in.</param>
+            <param name="targetItem">The object to be found.</param>
+            <typeparam name="T">The type of the array.</typeparam>
+            <returns>The index of targetItem in targetArray, or -1 if not found.</returns>
         </member>
         <member name="M:GDX.ArrayExtensions.LastIndexOfItem``1(``0[],``0)">
             <summary>
@@ -5411,6 +7389,11 @@
                 A collection of localization related helper utilities.
             </summary>
         </member>
+        <member name="F:GDX.Localization.ByteSizes">
+            <summary>
+                An array of strings representative for file size formats.
+            </summary>
+        </member>
         <member name="T:GDX.Localization.Language">
             <summary>
                 A list of supported languages.
@@ -5427,11 +7410,6 @@
         <member name="F:GDX.Localization.LocalTimestampFormat">
             <summary>
                 The local ISO 8601 compliant System.DateTime.ToString(System.String).
-            </summary>
-        </member>
-        <member name="F:GDX.Localization.k_ReadableByteSizes">
-            <summary>
-                An array of strings representative for file size formats.
             </summary>
         </member>
         <member name="M:GDX.Localization.GetHumanReadableFileSize(System.Int64)">
@@ -5631,6 +7609,15 @@
             <typeparam name="T">The type of the GDX.Collections.Generic.SimpleList`1.</typeparam>
             <returns>true/false if the operation was able to add the reference successfully.</returns>
         </member>
+        <member name="M:GDX.SimpleListExtensions.Contains``1(GDX.Collections.Generic.SimpleList{``0}@,``0)">
+            <summary>
+                <para>Does targetSimpleList contain targetItem?</para>
+            </summary>
+            <param name="targetSimpleList">The GDX.Collections.Generic.SimpleList`1 to look in.</param>
+            <param name="targetItem">The target class object to look for.</param>
+            <typeparam name="T">The type of the GDX.Collections.Generic.SimpleList`1.</typeparam>
+            <returns>true/false</returns>
+        </member>
         <member name="M:GDX.SimpleListExtensions.ContainsItem``1(GDX.Collections.Generic.SimpleList{``0}@,``0)">
             <summary>
                 <para>Does targetSimpleList contain targetItem?</para>
@@ -5660,6 +7647,63 @@
             <param name="targetItem">The target class object to look for.</param>
             <typeparam name="T">The type of the GDX.Collections.Generic.SimpleList`1.</typeparam>
             <returns>true/false</returns>
+        </member>
+        <member name="M:GDX.SimpleListExtensions.FirstIndexOf``1(GDX.Collections.Generic.SimpleList{``0}@,``0)">
+            <summary>
+                Find the first index of targetItem in targetSimpleList.
+            </summary>
+            <remarks>This will work for System.String comparisons.</remarks>
+            <param name="targetSimpleList">The GDX.Collections.Generic.SimpleList`1 to look in.</param>
+            <param name="targetItem">The object to be found.</param>
+            <typeparam name="T">The type of the array.</typeparam>
+            <returns>The index of targetItem in targetSimpleList backing array, or -1 if not found.</returns>
+        </member>
+        <member name="M:GDX.SimpleListExtensions.FirstIndexOfItem``1(GDX.Collections.Generic.SimpleList{``0}@,``0)">
+            <summary>
+                Find the first index of targetItem in targetSimpleList.
+            </summary>
+            <remarks>Ignores equality check and end up comparing object pointers. Do NOT use this for System.String types.</remarks>
+            <param name="targetSimpleList">The GDX.Collections.Generic.SimpleList`1 to look in.</param>
+            <param name="targetItem">The object to be found.</param>
+            <typeparam name="T">The type of the array.</typeparam>
+            <returns>The index of targetItem in targetSimpleList backing array, or -1 if not found.</returns>
+        </member>
+        <member name="M:GDX.SimpleListExtensions.FirstIndexOfValue``1(GDX.Collections.Generic.SimpleList{``0}@,``0)">
+            <summary>
+                Find the first index of targetValue in targetSimpleList.
+            </summary>
+            <param name="targetSimpleList">The GDX.Collections.Generic.SimpleList`1 to look in.</param>
+            <param name="targetValue">The value to be found.</param>
+            <typeparam name="T">The type of the array.</typeparam>
+            <returns>The index of targetValue in targetSimpleList backing array, or -1 if not found.</returns>
+        </member>
+        <member name="M:GDX.SimpleListExtensions.LastIndexOf``1(GDX.Collections.Generic.SimpleList{``0}@,``0)">
+            <summary>
+                Find the last index of targetItem in targetSimpleList.
+            </summary>
+            <remarks>This will work for System.String comparisons.</remarks>
+            <param name="targetSimpleList">The GDX.Collections.Generic.SimpleList`1 to look in.</param>
+            <param name="targetItem">The object to be found.</param>
+            <typeparam name="T">The type of the array.</typeparam>
+            <returns>The index of targetItem in targetSimpleList backing array, or -1 if not found.</returns>
+        </member>
+        <member name="M:GDX.SimpleListExtensions.LastIndexOfItem``1(GDX.Collections.Generic.SimpleList{``0}@,``0)">
+            <summary>
+                Find the last index of targetItem in targetSimpleList.
+            </summary>
+            <param name="targetSimpleList">The GDX.Collections.Generic.SimpleList`1 to look in.</param>
+            <param name="targetItem">The object to be found.</param>
+            <typeparam name="T">The type of the array.</typeparam>
+            <returns>The index of targetItem in targetSimpleList backing array, or -1 if not found.</returns>
+        </member>
+        <member name="M:GDX.SimpleListExtensions.LastIndexOfValue``1(GDX.Collections.Generic.SimpleList{``0}@,``0)">
+            <summary>
+                Find the last index of targetValue in targetSimpleList.
+            </summary>
+            <param name="targetSimpleList">The GDX.Collections.Generic.SimpleList`1 to look in.</param>
+            <param name="targetValue">The value to be found.</param>
+            <typeparam name="T">The type of the array.</typeparam>
+            <returns>The index of targetValue in targetSimpleList backing array, or -1 if not found.</returns>
         </member>
         <member name="M:GDX.SimpleListExtensions.RemoveFirstItem``1(GDX.Collections.Generic.SimpleList{``0}@,``0)">
             <summary>
@@ -5799,7 +7843,7 @@
             </summary>
             <exception cref="T:GDX.UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
         </member>
-        <member name="M:GDX.TransformExtensions.DestroyChildren(UnityEngine.Transform,System.Boolean,System.Boolean)">
+        <member name="M:GDX.TransformExtensions.DestroyChildren(UnityEngine.Transform,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
                 Destroy child UnityEngine.Transform.
             </summary>
@@ -5810,6 +7854,7 @@
                 will be destroyed at the end of the frame.
             </param>
             <param name="destroyInactive">Should inactive UnityEngine.GameObject be destroyed as well?</param>
+            <param name="immediateMode">Should the destroy be done immediately? This is useful for author time calls.</param>
         </member>
         <member name="M:GDX.TransformExtensions.GetActiveChildCount(UnityEngine.Transform)">
             <summary>
@@ -6003,221 +8048,6 @@
             <param name="worldPosition">A UnityEngine.Vector3 point in world space.</param>
             <returns>true/false if the world position is contained within the targetBoxCollider.</returns>
         </member>
-        <member name="T:GDX.ConfigDefaults">
-            <summary>
-                The default values used by GDX.Config.
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.ConfigOutputPath">
-            <summary>
-                The asset database relative path of the GDX config override file.
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.DeveloperBuildInfoAssemblyDefinition">
-            <summary>
-                Ensure that there is an assembly definition wrapping the generated content.
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.DeveloperBuildInfoBuildChangelistArgument">
-            <summary>
-                The argument key for the build's changelist to be passed to the BuildInfoGenerator.
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.DeveloperBuildInfoBuildDescriptionArgument">
-            <summary>
-                The argument key for the build description to be passed to the BuildInfoGenerator.
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.DeveloperBuildInfoBuildNumberArgument">
-            <summary>
-                The argument key for the build number to be passed to the BuildInfoGenerator.
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.DeveloperBuildInfoBuildStreamArgument">
-            <summary>
-                The argument key for the build's stream to be passed to the BuildInfoGenerator.
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.DeveloperBuildInfoBuildTaskArgument">
-            <summary>
-                The argument key for the build's task to be passed to the BuildInfoGenerator.
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.DeveloperBuildInfoEnabled">
-            <summary>
-                Should the BuildInfo file be written during builds?
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.DeveloperBuildInfoNamespace">
-            <summary>
-                The namespace where the BuildInfo should be placed.
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.DeveloperBuildInfoPath">
-            <summary>
-                The path to output the BuildInfo file.
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.DeveloperCommandLineParserArgumentPrefix">
-            <summary>
-                What should be used to denote arguments in the command line?
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.DeveloperCommandLineParserArgumentSplit">
-            <summary>
-                What should be used to split arguments from their values in the command line?
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.EnvironmentScriptingDefineSymbol">
-            <summary>
-                Should a GDX scripting define symbol be added to all target build groups.
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.LocalizationDefaultCulture">
-            <summary>
-                The language to set the default thread culture too.
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.LocalizationSetDefaultCulture">
-            <summary>
-                Should the default thread culture be set?
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.PlatformAutomationFolder">
-            <summary>
-                The project relative path where automation should store its artifacts.
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.PlatformCacheFolder">
-            <summary>
-                The project relative path to use as a cache.
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.TraceDebugLevels">
-            <summary>
-                What is the level of traces which should be processed and logged by GDX in debug builds?
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.TraceDebugOutputToUnityConsole">
-            <summary>
-                Should GDX based traces output to the Unity console in debug builds?
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.TraceDevelopmentLevels">
-            <summary>
-                What is the level of traces which should be processed and logged by GDX in the editor or development builds?
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.TraceDevelopmentOutputToUnityConsole">
-            <summary>
-                Should GDX based traces output to the Unity console in the editor or development builds?
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.TraceReleaseLevels">
-            <summary>
-                What is the level of traces which should be processed and logged by GDX in release builds?
-            </summary>
-        </member>
-        <member name="F:GDX.ConfigDefaults.UpdateProviderCheckForUpdates">
-            <summary>
-                Should GDX check for updates at editor time?
-            </summary>
-        </member>
-        <member name="T:GDX.TransientReference">
-            <summary>
-                A comparable weak reference to an object which will not prevent garbage collection. It will positively
-                compare against similar targeted reference trackers as well as the actual target object.
-            </summary>
-            <remarks>
-                There isn't a lot of great use cases for using this sort of thing; System.WeakReference on its own
-                is sufficient in most of the use cases, however this particular arrangement is useful for developer-ish
-                stuff.
-            </remarks>
-        </member>
-        <member name="M:GDX.TransientReference.#ctor(System.Object)">
-            <summary>
-                Create a GDX.TransientReference referencing the target.
-            </summary>
-            <param name="target">The target System.Object to reference.</param>
-        </member>
-        <member name="M:GDX.TransientReference.#ctor(System.Object,System.Boolean)">
-            <summary>
-                Create a GDX.TransientReference referencing the target.
-            </summary>
-            <param name="target">The target System.Object to reference.</param>
-            <param name="trackResurrection">Should the object remain tracked after it has been finalized.</param>
-        </member>
-        <member name="M:GDX.TransientReference.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-                Create a GDX.TransientReference from the info.
-            </summary>
-            <param name="info">A System.Runtime.Serialization.SerializationInfo representation of a GDX.TransientReference.</param>
-            <param name="context">Describes the source of the System.Runtime.Serialization.SerializationInfo.</param>
-        </member>
-        <member name="M:GDX.TransientReference.CompareTo(System.Object)">
-            <summary>
-                Compare this GDX.TransientReference to the target System.Object.
-            </summary>
-            <param name="obj">The target System.Object to compare against.</param>
-            <returns>1 if the same, 0 otherwise.</returns>
-        </member>
-        <member name="M:GDX.TransientReference.CompareTo(GDX.TransientReference)">
-            <summary>
-                Compare this GDX.TransientReference to the target GDX.TransientReference.
-            </summary>
-            <param name="obj">The target GDX.TransientReference to compare against.</param>
-            <returns>1 if the same, 0 otherwise.</returns>
-        </member>
-        <member name="M:GDX.TransientReference.CompareTo(System.WeakReference)">
-            <summary>
-                Compare this GDX.TransientReference to the target System.WeakReference.
-            </summary>
-            <param name="obj">The target System.WeakReference to compare against.</param>
-            <returns>1 if the same, 0 otherwise.</returns>
-        </member>
-        <member name="M:GDX.TransientReference.Equals(GDX.TransientReference)">
-            <summary>
-                Does this GDX.TransientReference equal the target GDX.TransientReference.
-            </summary>
-            <param name="other">The target GDX.TransientReference to compare with.</param>
-            <returns>true if it is the same, false otherwise.</returns>
-        </member>
-        <member name="M:GDX.TransientReference.Equals(System.WeakReference)">
-            <summary>
-                Does this GDX.TransientReference equal the target System.WeakReference.
-            </summary>
-            <param name="other">The target System.WeakReference to compare with.</param>
-            <returns>true if it is the same, false otherwise.</returns>
-        </member>
-        <member name="M:GDX.TransientReference.Equals(System.Object)">
-            <summary>
-                Does this GDX.TransientReference equal the target System.Object.
-            </summary>
-            <param name="obj">The target System.Object to compare with.</param>
-            <returns>true if it is the same, false otherwise.</returns>
-        </member>
-        <member name="M:GDX.TransientReference.GetHashCode">
-            <summary>
-                Return the hashcode of the P:System.WeakReference.Target.
-            </summary>
-            <returns>Returns the P:System.WeakReference.Target's hash code, or -1 if null.</returns>
-        </member>
-        <member name="M:GDX.TransientReference.op_Equality(GDX.TransientReference,GDX.TransientReference)">
-            <summary>
-                Compare GDX.TransientReferences to see if they are equal.
-            </summary>
-            <param name="left">Left-side GDX.TransientReference.</param>
-            <param name="right">Right-side GDX.TransientReference.</param>
-            <returns>true/false if they are equal.</returns>
-        </member>
-        <member name="M:GDX.TransientReference.op_Inequality(GDX.TransientReference,GDX.TransientReference)">
-            <summary>
-                Compare GDX.TransientReferences to see if they are not equal.
-            </summary>
-            <param name="left">Left-side GDX.TransientReference.</param>
-            <param name="right">Right-side GDX.TransientReference.</param>
-            <returns>true/false if they are not equal.</returns>
-        </member>
         <member name="T:GDX.SegmentedString">
             <summary>
                 A segmented collection of System.Char.
@@ -6225,7 +8055,7 @@
         </member>
         <member name="F:GDX.SegmentedString.m_Characters">
             <summary>
-                The array of characters.
+                The initial array of characters.
             </summary>
         </member>
         <member name="F:GDX.SegmentedString.m_Segments">
@@ -6415,11 +8245,6 @@
                 The point in tick based time when the core was initialized.
             </summary>
         </member>
-        <member name="F:GDX.Core.s_Initialized">
-            <summary>
-                Has the GDX.Core been initialized?
-            </summary>
-        </member>
         <member name="F:GDX.Core.s_InitializedMainThread">
             <summary>
                 Has the GDX.Core main thread initialization happened?
@@ -6431,16 +8256,46 @@
             </summary>
             <remarks>Nothing in here can reference the Unity engine and must be thread-safe.</remarks>
         </member>
-        <member name="M:GDX.Core.Initialize">
-            <summary>
-                Static initializer
-            </summary>
-            <remarks>Nothing in here can reference the Unity engine and must be thread-safe.</remarks>
-        </member>
         <member name="M:GDX.Core.InitializeOnMainThread">
             <summary>
                 Main-thread initializer.
             </summary>
+        </member>
+        <member name="T:GDX.Rendering.ShaderProvider">
+            <summary>
+                A provider of GDX built-in shader references and properties.
+            </summary>
+        </member>
+        <member name="F:GDX.Rendering.ShaderProvider.s_DottedLineShader">
+            <summary>
+                The cached reference to the dotted line shader.
+            </summary>
+        </member>
+        <member name="F:GDX.Rendering.ShaderProvider.s_UnlitColorShader">
+            <summary>
+                The cached reference to the unlit colored shader.
+            </summary>
+        </member>
+        <member name="F:GDX.Rendering.ShaderProvider.ColorPropertyID">
+            <summary>
+                The cached "_Color" property ID.
+            </summary>
+        </member>
+        <member name="P:GDX.Rendering.ShaderProvider.DottedLine">
+            <summary>
+                A reference to a clip-space sin wave discard based shader, which cheaply provides a dotted line effect.
+            </summary>
+        </member>
+        <member name="P:GDX.Rendering.ShaderProvider.UnlitColor">
+            <summary>
+                A reference to a unlit single color shader.
+            </summary>
+        </member>
+        <member name="M:GDX.Rendering.ShaderProvider.GetProvidedShaders">
+            <summary>
+                Get all shaders which GDX.Rendering.ShaderProvider is aware of.
+            </summary>
+            <returns>An array of the known shaders to GDX.Rendering.ShaderProvider.</returns>
         </member>
     </members>
 </doc>
