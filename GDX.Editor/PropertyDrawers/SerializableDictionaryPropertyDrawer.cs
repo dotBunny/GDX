@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using GDX.Collections;
 using UnityEditor;
@@ -29,18 +30,26 @@ namespace GDX.Editor.PropertyDrawers
         {
             public StringKeyDictionary<EntryValue<T>> StringKeyDictionary;
             public int Selection;
+            public string AddKeyGUIControlName;
+            public string AddKeyValue;
             public bool SeenThisFrame;
         }
 
-        public static object DefaultValue = typeof(T).GetDefault();
+        public static object DefaultValue = null;
 
         public static SimpleList<StringKeyDictionary<EntryValue<T>>> stringKeyDictionaryPool = new SimpleList<StringKeyDictionary<EntryValue<T>>>(16);
 
-        public static StringHashedStructKeyDictionary<StringKeyDictionaryPropertyDrawerDB.PropertyKey, PropertyValue> serializedObjectToPropertyMap = new StringHashedStructKeyDictionary<StringKeyDictionaryPropertyDrawerDB.PropertyKey, PropertyValue>(16);
+        public static Dictionary<StringKeyDictionaryPropertyDrawerDB.PropertyKey, PropertyValue> serializedObjectToPropertyMap = new Dictionary<StringKeyDictionaryPropertyDrawerDB.PropertyKey, PropertyValue>(16);
+
+        public static bool IsTypeValid = TypeCache.GetTypesWithAttribute<SerializableAttribute>().Contains(typeof(T));
     }
 
-
-
+    public class OnGUIParameterContainer
+    {
+        public SerializedProperty property;
+        public Rect position;
+        public GUIContent content;
+    }
 
     public struct EntryValue<T>
     {
@@ -50,7 +59,7 @@ namespace GDX.Editor.PropertyDrawers
     }
     public static class StringKeyDictionaryPropertyDrawerDB
     {
-        public struct PropertyKey : IEquatable<PropertyKey>, IStringHashedStructKey
+        public struct PropertyKey : IEquatable<PropertyKey>
         {
             public string PropertyPath;
             public SerializedObject SerializedObject;
@@ -66,26 +75,19 @@ namespace GDX.Editor.PropertyDrawers
             {
                 return PropertyPath.GetStableHashCode();
             }
-
-
-            public string stringToHash { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { return PropertyPath; } }
         }
 
-        // public static GDX.Collections.Pooling.ArrayPool<string> arrayPool = new Collections.Pooling.ArrayPool<string>
-        // (
-        //     new int[31],
-        //     new int[]{65536, 65536, 65536, 65536, 65536, 65536, 65536, 65536, 65536, 65536, 65536, 65536,
-        //                             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-        // );
-
-        public static object[] parameterScratchpadArray = new object[1];
+        public static object[] parameterScratchpadArray = new object[]{new OnGUIParameterContainer()};
         public static MethodInfo baseMethodInfo = typeof(StringKeyDictionaryPropertyDrawer).GetMethod(nameof(ProcessDictionary));
         public static Dictionary<Type, MethodInfo> genericRegistry = new Dictionary<Type, MethodInfo>(128);
         public static SimpleList<int> modifiedEntries = new SimpleList<int>(128);
         public static SimpleList<int> modifiedBucketEntries = new SimpleList<int>(128);
 
-        public static VisualElement ProcessDictionary<T>(SerializedProperty property, Rect position)
+        public static void ProcessDictionary<T>(SerializedProperty property, Rect position)
         {
+            if (!StringKeyPropertyDrawerDB<T>.IsTypeValid)
+                return;
+
             Object targetObject = property.serializedObject.targetObject;
             SerializedProperty arrayProp = property.FindPropertyRelative(nameof(StringKeyDictionary<T>.Entries));
             int arraySize = arrayProp.arraySize;
@@ -96,14 +98,24 @@ namespace GDX.Editor.PropertyDrawers
 
             object defaultValue = StringKeyPropertyDrawerDB<T>.DefaultValue;
 
+            if (defaultValue == null)
+            {
+                arrayProp.arraySize = arraySize + 1;
+                defaultValue = arrayProp.GetArrayElementAtIndex(arraySize).FindPropertyRelative(nameof(StringKeyEntry<T>.Value)).boxedValue;
+                arrayProp.arraySize = arraySize;
+                StringKeyPropertyDrawerDB<T>.DefaultValue = defaultValue;
+            }
+
             StringKeyPropertyDrawerDB<T>.PropertyValue propertyValue = default;
-            if (!StringKeyPropertyDrawerDB<T>.serializedObjectToPropertyMap.TryGetValue(key, ref propertyValue))
+            if (!StringKeyPropertyDrawerDB<T>.serializedObjectToPropertyMap.TryGetValue(key, out propertyValue))
             {
                 propertyValue.StringKeyDictionary = new StringKeyDictionary<EntryValue<T>>(arraySize);
                 StringKeyDictionary<T> stringKeyDictionary = (StringKeyDictionary<T>)property.boxedValue;
 
                 propertyValue.StringKeyDictionary.Count = stringKeyDictionary.Count;
                 propertyValue.StringKeyDictionary.FreeListHead = stringKeyDictionary.FreeListHead;
+                propertyValue.AddKeyGUIControlName = "AddNewStringKeyDictionaryEntry" + property.propertyPath;
+                propertyValue.AddKeyValue = string.Empty;
                 propertyValue.Selection = -1;
 
                 for (int i = 0; i < arraySize; i++)
@@ -119,7 +131,7 @@ namespace GDX.Editor.PropertyDrawers
                     propertyValue.StringKeyDictionary.Buckets[i] = stringKeyDictionary.Buckets[i];
                 }
 
-                StringKeyPropertyDrawerDB<T>.serializedObjectToPropertyMap.AddWithExpandCheck(key, propertyValue);
+                StringKeyPropertyDrawerDB<T>.serializedObjectToPropertyMap.Add(key, propertyValue);
             }
 
             // Second: Process user input, and update visual representation for added, removed, modified,
@@ -175,13 +187,6 @@ namespace GDX.Editor.PropertyDrawers
                 contentRect.xMin += SerializableDictionaryPropertyDrawer.Styles.ContentAreaHorizontalPadding;
                 contentRect.xMax -= SerializableDictionaryPropertyDrawer.Styles.ContentAreaHorizontalPadding;
 
-                // If we have nothing simply display the message
-                if (currEntryCount == 0)
-                {
-                    EditorGUI.LabelField(contentRect, SerializableDictionaryPropertyDrawer.Content.EmptyDictionary, EditorStyles.label);
-                    return default;
-                }
-
                 float columnWidth = (contentRect.width - 34) / 2f;
 
                 int iterator = 0;
@@ -233,7 +238,7 @@ namespace GDX.Editor.PropertyDrawers
                     Rect keyPropertyRect = new Rect(keyIconRect.xMax, contentRect.y + topOffset, columnWidth,
                         EditorGUIUtility.singleLineHeight);
 
-                    string modifiedKeyString = EditorGUI.TextField(keyPropertyRect, entry.Value.UserEnteredKey);
+                    string modifiedKeyString = EditorGUI.TextField(keyPropertyRect, entryValue.UserEnteredKey);
                     SerializedProperty arrayPropAtIndex = arrayProp.GetArrayElementAtIndex(iterator - 1);
                     SerializedProperty valueAtIndex = arrayPropAtIndex.FindPropertyRelative(nameof(StringKeyEntry<T>.Value));
 
@@ -245,17 +250,27 @@ namespace GDX.Editor.PropertyDrawers
                     // Draw Value Property
                     Rect valuePropertyRect = new Rect(valueIconRect.xMax, contentRect.y + topOffset, columnWidth - 1,
                         EditorGUIUtility.singleLineHeight);
+
+                    EditorGUI.BeginChangeCheck();
                     EditorGUI.PropertyField(valuePropertyRect, valueAtIndex, GUIContent.none);
+                    bool modifiedValue = EditorGUI.EndChangeCheck();
 
                     Event currentEvent = Event.current;
 
                     var newValue = entryValue;
                     newValue.UserEnteredKey = modifiedKeyString;
 
-                    if (modifiedKeyString != entryValue.UserEnteredKey &&
+                    if (modifiedValue)
+                    {
+                        newValue.UserEnteredValue = valueAtIndex.boxedValue;
+                    }
+
+                    newValue.HasValueToSet = modifiedValue;
+
+                    if (iteratorIndex == propertyValue.Selection &&
                         currentEvent.type == EventType.KeyDown &&
                         (currentEvent.keyCode == KeyCode.Return || currentEvent.keyCode == KeyCode.KeypadEnter ||
-                        currentEvent.character == '\n'))
+                         currentEvent.character == '\n'))
                     {
                         // Reinsert if valid
 
@@ -263,7 +278,7 @@ namespace GDX.Editor.PropertyDrawers
                         {
                             modified.AddUnchecked(iterator - 1);
 
-                            int modifiedIndex = propertyValue.StringKeyDictionary.ModifyKeyUnchecked(iterator - 1, modifiedKeyString, out bool wasFirstEntryInChain);
+                            int modifiedIndex = propertyValue.StringKeyDictionary.SwapKeyAtIndexUnchecked(iterator - 1, modifiedKeyString, out bool wasFirstEntryInChain);
                             if (wasFirstEntryInChain)
                             {
                                modifiedBucket.AddUnchecked(modifiedIndex);
@@ -281,17 +296,140 @@ namespace GDX.Editor.PropertyDrawers
                     propertyValue.StringKeyDictionary.Entries[iterator - 1].Value = newValue;
                 }
 
-                propertyValue.SeenThisFrame = true;
-                StringKeyPropertyDrawerDB<T>.serializedObjectToPropertyMap[key] = propertyValue;
-
-                // Event footerEvent = Event.current;
-                // if (modifiedKeyString != entryValue.UserEnteredKey &&
-                //     footerEvent.type == EventType.KeyDown &&
-                //     (footerEvent.keyCode == KeyCode.Return || footerEvent.keyCode == KeyCode.KeypadEnter ||
-                //      footerEvent.character == '\n'))
-                // {
                 //
-                // }
+                // Footer stuff starts here:
+                //
+
+                position = new Rect(position.x, contentRect.yMax, position.width, footerHeight);
+
+                float inputWidth = position.width / 2 - SerializableDictionaryPropertyDrawer.Styles.ActionButtonWidth - SerializableDictionaryPropertyDrawer.Styles.ActionButtonHorizontalPadding;
+                Rect addBackgroundRect = new Rect(position.xMin + 10f, position.y,
+                    SerializableDictionaryPropertyDrawer.Styles.ActionButtonWidth + inputWidth + SerializableDictionaryPropertyDrawer.Styles.ActionButtonHorizontalPadding * 2,
+                    position.height);
+
+                // Create button rects
+                Rect addRect = new Rect(addBackgroundRect.xMin + SerializableDictionaryPropertyDrawer.Styles.ActionButtonHorizontalPadding,
+                    addBackgroundRect.yMin + SerializableDictionaryPropertyDrawer.Styles.ActionButtonVerticalPadding,
+                    SerializableDictionaryPropertyDrawer.Styles.ActionButtonWidth, SerializableDictionaryPropertyDrawer.Styles.ActionButtonHeight);
+                Rect inputRect = new Rect(
+                    addBackgroundRect.xMin + SerializableDictionaryPropertyDrawer.Styles.ActionButtonWidth + SerializableDictionaryPropertyDrawer.Styles.ActionButtonHorizontalPadding,
+                    addBackgroundRect.yMin + SerializableDictionaryPropertyDrawer.Styles.ActionButtonVerticalPadding, inputWidth, SerializableDictionaryPropertyDrawer.Styles.ActionButtonHeight);
+
+                if (Event.current.type == EventType.Repaint)
+                {
+                    SerializableDictionaryPropertyDrawer.Styles.ButtonBackground.Draw(addBackgroundRect, false, false, false, false);
+                }
+
+                bool doAdd = false;
+                // Hitting enter while the add key field is selected
+                if (Event.current.type == EventType.KeyDown &&
+                    (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter || Event.current.character == '\n') &&
+                    propertyValue.Selection == -2
+                    && GUI.GetNameOfFocusedControl() == propertyValue.AddKeyGUIControlName)
+                {
+                    Event.current.Use();
+                    GUIUtility.hotControl = 0;
+                    doAdd = true;
+                }
+
+                // Draw the input before the button so it overlaps it
+                GUI.SetNextControlName(propertyValue.AddKeyGUIControlName);
+
+                GUIStyle entryStyleToUse = EditorStyles.textField;
+
+                if (propertyValue.StringKeyDictionary.ContainsKey(propertyValue.AddKeyValue))
+                {
+                    entryStyleToUse = SerializableDictionaryPropertyDrawer.Styles.InvalidEntryText;
+                }
+
+                propertyValue.AddKeyValue = EditorGUI.TextField(inputRect, propertyValue.AddKeyValue, entryStyleToUse);
+
+                if (GUI.Button(addRect, SerializableDictionaryPropertyDrawer.Content.IconPlus, SerializableDictionaryPropertyDrawer.Styles.FooterButton))
+                {
+                    // Remove control focus
+                    GUIUtility.hotControl = 0;
+                    doAdd = true;
+                }
+
+                if (doAdd)
+                {
+                    propertyValue.Selection = -1;
+                    EntryValue<T> newEntryValue = new EntryValue<T>()
+                    {
+                        HasValueToSet = false, UserEnteredKey = propertyValue.AddKeyValue, UserEnteredValue = defaultValue
+                    };
+
+                    if (propertyValue.StringKeyDictionary.AddSafe(propertyValue.AddKeyValue, newEntryValue))
+                    {
+                        int bucketIndex = propertyValue.StringKeyDictionary.BucketOf(propertyValue.AddKeyValue);
+                        int indexOf = propertyValue.StringKeyDictionary.IndexOf(propertyValue.AddKeyValue);
+                        propertyValue.AddKeyValue = string.Empty;
+                        modified.AddUnchecked(indexOf);
+                        modifiedBucket.AddUnchecked(bucketIndex);
+                    }
+                }
+
+                GUI.enabled = true;
+
+                // Only visible when we have something selected (with a failsafe on item count)
+                if (propertyValue.StringKeyDictionary.Count != 0 && propertyValue.Selection >= 0)
+                {
+                    Rect removeBackground = new Rect(
+                        position.xMax - (10 + SerializableDictionaryPropertyDrawer.Styles.ActionButtonWidth + SerializableDictionaryPropertyDrawer.Styles.ActionButtonHorizontalPadding * 2),
+                        position.y,
+                        SerializableDictionaryPropertyDrawer.Styles.ActionButtonWidth + SerializableDictionaryPropertyDrawer.Styles.ActionButtonHorizontalPadding * 2,
+                        position.height);
+
+                    if (Event.current.type == EventType.Repaint)
+                    {
+                        SerializableDictionaryPropertyDrawer.Styles.ButtonBackground.Draw(removeBackground, false, false, false, false);
+                    }
+
+                    if (propertyValue.Selection >= 0 && propertyValue.Selection >= propertyValue.StringKeyDictionary.Entries.Length
+                    && GUI.Button(
+                            new Rect(
+                                removeBackground.xMin + SerializableDictionaryPropertyDrawer.Styles.ActionButtonHorizontalPadding,
+                                removeBackground.yMin + SerializableDictionaryPropertyDrawer.Styles.ActionButtonVerticalPadding,
+                                SerializableDictionaryPropertyDrawer.Styles.ActionButtonWidth, SerializableDictionaryPropertyDrawer.Styles.ActionButtonHeight),
+                            SerializableDictionaryPropertyDrawer.Content.IconMinus, SerializableDictionaryPropertyDrawer.Styles.FooterButton))
+                    {
+                        // Remove control focus
+                        GUIUtility.hotControl = 0;
+
+                        int selectionBackwards = propertyValue.Selection - 1;
+                        while (selectionBackwards >= 0)
+                        {
+                            ref StringKeyEntry<EntryValue<T>> keyEntry = ref propertyValue.StringKeyDictionary.Entries[selectionBackwards];
+
+                            if (keyEntry.Key != null)
+                            {
+                                break;
+                            }
+                            selectionBackwards--;
+                        }
+
+                        int bucketOfRemoval = propertyValue.StringKeyDictionary.BucketOf(propertyValue.StringKeyDictionary.Entries[propertyValue.Selection].Key);
+
+                        propertyValue.StringKeyDictionary.RemoveEntryAtIndexIfValid(propertyValue.Selection, out int previousIndex, out bool bucketWasPreviousIndex);
+
+                        modified.AddUnchecked(propertyValue.Selection);
+                        modifiedBucket.AddUnchecked(bucketOfRemoval);
+
+                        if (!bucketWasPreviousIndex)
+                        {
+                            modified.AddUnchecked(previousIndex);
+                        }
+
+                        if (selectionBackwards >= 0)
+                        {
+                            propertyValue.Selection = selectionBackwards;
+                        }
+                        else
+                        {
+                            propertyValue.Selection = -1;
+                        }
+                    }
+                }
 
                 // Finally: Take deltas and update their serialized entries.
 
@@ -313,7 +451,6 @@ namespace GDX.Editor.PropertyDrawers
                     {
                         valueAtIndex.boxedValue = entry.Value.UserEnteredValue;
                         propertyValue.StringKeyDictionary.Entries[modifiedIndex].Value.HasValueToSet = false;
-                        propertyValue.StringKeyDictionary.Entries[modifiedIndex].Value.UserEnteredValue = defaultValue;
                     }
                 }
 
@@ -367,15 +504,14 @@ namespace GDX.Editor.PropertyDrawers
                 property.FindPropertyRelative(nameof(StringKeyDictionary<T>.Count)).intValue = propertyValue.StringKeyDictionary.Count;
                 property.FindPropertyRelative(nameof(StringKeyDictionary<T>.FreeListHead)).intValue = propertyValue.StringKeyDictionary.FreeListHead;
 
-                //DrawContentArea(contentRect);
-                Rect footerRect = new Rect(position.x, contentRect.yMax, position.width, footerHeight);
-                DrawFooterActions(footerRect);
+                propertyValue.SeenThisFrame = true;
+                StringKeyPropertyDrawerDB<T>.serializedObjectToPropertyMap[key] = propertyValue;
             }
 
             // Create undo point if we've changed something
             if (GUI.changed)
             {
-                Undo.SetCurrentGroupName("Serializable Dictionary Action");
+                Undo.SetCurrentGroupName("String Key Dictionary Action");
             }
 
             // Anything we changed property wise we should save
@@ -385,17 +521,12 @@ namespace GDX.Editor.PropertyDrawers
 
             // End of frame: Remove all dictionaries that were not seen this frame.
 
-            int count = 0;
+            int count = StringKeyPropertyDrawerDB<T>.serializedObjectToPropertyMap.Count;
 
             for (int i = 0; i < count; i++)
             {
 
-
             }
-
-            VisualElement returnElement = new VisualElement();
-
-            return returnElement;
         }
 
         static bool DrawFoldout(Rect position, SerializedProperty property, int entryCount)
@@ -424,108 +555,12 @@ namespace GDX.Editor.PropertyDrawers
 
             return clearAddKey;
         }
-
-        // <summary>
-        ///     Draw the content area, including elements.
-        /// </summary>
-        /// <param name="contentRect">A <see cref="Rect" /> representing the space which the content area will be drawn.</param>
-        static void DrawContentArea(Rect contentRect, float heightContentHeader, float heightContentElements, float heightContentFooter, ref int selectionIndex)
-        {
-            // Paint the background
-            if (Event.current.type == EventType.Repaint)
-            {
-                Rect headerBackgroundRect = new Rect(contentRect.x, contentRect.y, contentRect.width, heightContentHeader);
-
-                // The extra 2 pixels are used to get rid of the rounded corners on the content box
-                Rect contentBackgroundRect = new Rect(contentRect.x, headerBackgroundRect.yMax, contentRect.width,
-                    heightContentElements + 2);
-                Rect footerBackgroundRect = new Rect(contentRect.x, contentBackgroundRect.yMax - 2, contentRect.width,
-                    heightContentFooter);
-
-                SerializableDictionaryPropertyDrawer.Styles.BoxBackground.Draw(contentBackgroundRect, false, false, false, false);
-
-                SerializableDictionaryPropertyDrawer.Styles.HeaderBackground.Draw(headerBackgroundRect, false, false, false, false);
-                SerializableDictionaryPropertyDrawer.Styles.FooterBackground.Draw(footerBackgroundRect, false, false, false, false);
-            }
-
-            // Bring in the provided rect
-            contentRect.yMin += heightContentHeader;
-            contentRect.yMax -= heightContentFooter;
-            contentRect.xMin += SerializableDictionaryPropertyDrawer.Styles.ContentAreaHorizontalPadding;
-            contentRect.xMax -= SerializableDictionaryPropertyDrawer.Styles.ContentAreaHorizontalPadding;
-
-            // If we have nothing simply display the message
-            if (m_PropertyCountCache == 0)
-            {
-                EditorGUI.LabelField(contentRect, SerializableDictionaryPropertyDrawer.Content.EmptyDictionary, EditorStyles.label);
-                return;
-            }
-
-
-            float columnWidth = (contentRect.width - 34) / 2f;
-
-
-            for (int iteratorIndex = 0; iteratorIndex < m_PropertyCountCache; iteratorIndex++)
-            {
-                float topOffset = (EditorGUIUtility.singleLineHeight + SerializableDictionaryPropertyDrawer.Styles.ContentAreaElementSpacing) * iteratorIndex;
-
-                Rect selectionRect = new Rect(
-                    contentRect.x - SerializableDictionaryPropertyDrawer.Styles.ContentAreaHorizontalPadding + 1,
-                    contentRect.y + topOffset - 2,
-                    contentRect.width + SerializableDictionaryPropertyDrawer.Styles.ContentAreaHorizontalPadding * 2 - 3,
-                    EditorGUIUtility.singleLineHeight + 4);
-
-                // Handle selection (left-click), do not consume/use the event so that fields receive.
-                if (Event.current.type == EventType.MouseDown &&
-                    Event.current.button == 0 &&
-                    selectionRect.Contains(Event.current.mousePosition))
-                {
-                    selectionIndex = iteratorIndex;
-
-                    // Attempt to force a redraw of the inspector
-                    EditorUtility.SetDirty(m_TargetObject);
-                }
-
-                if (iteratorIndex == selectionIndex)
-                {
-                    if (Event.current.type == EventType.Repaint)
-                    {
-                        SerializableDictionaryPropertyDrawer.Styles.ElementBackground.Draw(selectionRect, false, true, true, true);
-                    }
-                }
-
-                // Draw Key Icon
-#if UNITY_2021_1_OR_NEWER
-                Rect keyIconRect =
-                    new Rect(contentRect.x - 2, contentRect.y + topOffset - 1, 17, EditorGUIUtility.singleLineHeight);
-#else
-                Rect keyIconRect = new Rect(position.x, position.y + topOffset, 17,
-                    EditorGUIUtility.singleLineHeight);
-#endif
-                EditorGUI.LabelField(keyIconRect, SerializableDictionaryPropertyDrawer.Content.IconKey);
-
-                // Draw Key Property
-                Rect keyPropertyRect = new Rect(keyIconRect.xMax, contentRect.y + topOffset, columnWidth,
-                    EditorGUIUtility.singleLineHeight);
-                EditorGUI.PropertyField(keyPropertyRect, m_PropertyKeys.GetArrayElementAtIndex(iteratorIndex), GUIContent.none);
-
-                // Draw Value Icon
-                Rect valueIconRect = new Rect(keyPropertyRect.xMax + 3, contentRect.y + topOffset - 1, 17,
-                    EditorGUIUtility.singleLineHeight);
-                EditorGUI.LabelField(valueIconRect, SerializableDictionaryPropertyDrawer.Content.IconValue);
-
-                // Draw Value Property
-                Rect valuePropertyRect = new Rect(valueIconRect.xMax, contentRect.y + topOffset, columnWidth - 1,
-                    EditorGUIUtility.singleLineHeight);
-                EditorGUI.PropertyField(valuePropertyRect, m_PropertyValues.GetArrayElementAtIndex(iteratorIndex), GUIContent.none);
-            }
-        }
     }
 
     [CustomPropertyDrawer(typeof(StringKeyDictionary<>))]
     public class StringKeyDictionaryPropertyDrawer : PropertyDrawer
     {
-        public override VisualElement CreatePropertyGUI(SerializedProperty property)
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             Type propertyType = fieldInfo.FieldType;
 
@@ -540,11 +575,17 @@ namespace GDX.Editor.PropertyDrawers
                 genericRegistry.Add(propertyType, genericMethod);
             }
 
-            parameterScratchpadArray[0] = property;
-            object returnVal = genericMethod.Invoke(null, parameterScratchpadArray);
-            parameterScratchpadArray[0] = null;
+            OnGUIParameterContainer parameterContainer = (OnGUIParameterContainer)parameterScratchpadArray[0];
 
-            return (VisualElement)returnVal;
+            parameterContainer.property = property;
+            parameterContainer.position = position;
+            parameterContainer.content = label;
+
+            genericMethod.Invoke(null, parameterScratchpadArray);
+
+            parameterContainer.property = null;
+            parameterContainer.position = default;
+            parameterContainer.content = null;
         }
     }
 
@@ -1334,6 +1375,8 @@ namespace GDX.Editor.PropertyDrawers
             /// </summary>
             public static readonly GUIStyle HeaderBackground = "RL Empty Header";
 
+            public static readonly GUIStyle InvalidEntryText;
+
             /// <summary>
             ///     Initialize some of the styles slightly different then expected.
             /// </summary>
@@ -1341,6 +1384,10 @@ namespace GDX.Editor.PropertyDrawers
             {
                 HeaderBackground.fixedHeight = 0;
                 FooterBackground.fixedHeight = 0;
+                GUIStyle s = new GUIStyle(EditorStyles.textField);
+                s.normal.textColor = Color.red;
+                InvalidEntryText = s;
+
             }
         }
     }
