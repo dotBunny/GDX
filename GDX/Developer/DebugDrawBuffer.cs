@@ -1,9 +1,9 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+// Copyright (c) 2020-2022 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 using GDX.Collections.Generic;
-
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -477,6 +477,55 @@ namespace GDX.Developer
             Vector3[] vertices = GetCubeVertices(center, size);
             return DrawLines(color, ref vertices, ref CubeSegmentIndices);
         }
+
+        // TODO:
+        // first build out function to get points of a circle
+        // then make that work for the other functions
+
+        public Vector3[] GetCircleVertices(Vector3 center, float radius, Vector3 direction, int count)
+        {
+            // Allocate our point loop
+            Vector3[] points = new Vector3[count];
+            float interval = Mathf.PI * 2f / count;
+
+
+            // Loop through and figure out the points
+            for (int i = 0; i < count; i++)
+            {
+                // TODO: need to handle direction
+                float angle = i * interval;
+                points[i] = new Vector3(0, math.sin(angle) * radius, math.cos(angle) * radius);
+            }
+
+
+            // Send it back
+            return points;
+        }
+
+        public int DrawWireCircle(Color color, Vector3 center, float radius, Vector3 direction)
+        {
+            Vector3[] vertices = GetCircleVertices(center, radius, direction, 3);
+
+            int pointCount = vertices.Length;
+            int[] segments = new int[pointCount * 2];
+            int segmentCount = segments.Length;
+            int baseCount = 0;
+
+            for (int i = 0; i < segmentCount; i+=2)
+            {
+                segments[i] = baseCount;
+                baseCount++;
+                segments[i + 1] = baseCount;
+            }
+            segments[segmentCount - 1] = 0;
+
+            return DrawLines(color, ref vertices, ref segments);
+        }
+        // public int DrawWireSphere(Color color, Vector3 center, float radius)
+        // {
+        //     DrawWireCircle(color, center, radius, Vector3.up);
+        //     DrawWireCircle(color, center, radius, Vector3.up);
+        // }
 
         public int DrawWireCapsule(Color color, Vector3 bottom, Vector3 top, float radius)
         {
