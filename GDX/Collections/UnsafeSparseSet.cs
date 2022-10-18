@@ -18,7 +18,7 @@ namespace GDX.Collections
     ///     handle, as well as array-like iteration.
     /// </summary>
     [DebuggerDisplay("Count = {Count}, Length = {Length}, IsCreated = {IsCreated}, IsEmpty = {IsEmpty}")]
-    [DebuggerTypeProxy(typeof(UnsafeListTDebugView<>))]
+    [DebuggerTypeProxy(typeof(UnsafeSparseSetDebugView))]
     [StructLayout(LayoutKind.Sequential)]
     [BurstCompatible(GenericTypeArguments = new[] { typeof(int) })]
     public unsafe struct UnsafeSparseSet : INativeDisposable
@@ -69,16 +69,16 @@ namespace GDX.Collections
         /// Whether this Sparse Set has been allocated (and not yet deallocated).
         /// </summary>
         /// <value>True if this list has been allocated (and not yet deallocated).</value>
-        public bool IsCreated => Data != null;
+        public bool IsCreated { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { return Data != null; } }
 
         /// <summary>
         /// Whether the Sparse Set is empty.
         /// </summary>
         /// <value>True if the Sparse Set is empty or has not been constructed.</value>
-        public bool IsEmpty => !IsCreated || Length == 0;
+        public bool IsEmpty { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { return !IsCreated || Length == 0; } }
 
         /// <summary>
-        ///     Create a <see cref="NativeArraySparseSet" /> with an <paramref name="initialCapacity" />.
+        ///     Create an <see cref="UnsafeSparseSet" /> with an <paramref name="initialCapacity" />.
         /// </summary>
         /// <param name="initialCapacity">The initial capacity of the sparse and dense int arrays.</param>
         /// <param name="allocator">The <see cref="AllocatorManager.AllocatorHandle" /> type to use.</param>
@@ -107,7 +107,7 @@ namespace GDX.Collections
         }
 
         /// <summary>
-        ///     Create a <see cref="NativeArraySparseSet" /> with an <paramref name="initialCapacity" />.
+        ///     Create an <see cref="UnsafeSparseSet" /> with an <paramref name="initialCapacity" />.
         /// </summary>
         /// <param name="initialCapacity">The initial capacity of the sparse and dense int arrays.</param>
         /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
@@ -1115,6 +1115,37 @@ namespace GDX.Collections
             versionArray = null;
 
             return inputDeps;
+        }
+    }
+
+    public struct SparseDenseIndexPair
+    {
+        public int SparseIndex;
+        public int DenseIndex;
+    }
+
+    internal sealed class UnsafeSparseSetDebugView
+    {
+        UnsafeSparseSet Data;
+
+        public UnsafeSparseSetDebugView(UnsafeSparseSet data)
+        {
+            Data = data;
+        }
+
+        public unsafe SparseDenseIndexPair[] Items
+        {
+            get
+            {
+                SparseDenseIndexPair[] result = new SparseDenseIndexPair[Data.Count];
+
+                for (var i = 0; i < Data.Count; ++i)
+                {
+                    result[i] = new SparseDenseIndexPair() { DenseIndex = i, SparseIndex = Data.DenseArray[i] };
+                }
+
+                return result;
+            }
         }
     }
 }
