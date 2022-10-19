@@ -10,6 +10,7 @@ using Unity.Jobs;
 using Unity.Jobs.LowLevel.Unsafe;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Unity.Burst;
 
 namespace GDX.Collections
 {
@@ -1057,7 +1058,7 @@ namespace GDX.Collections
                 Length = 0;
                 Count = 0;
                 FreeIndex = 0;
-                Allocator = AllocatorManager.Invalid;
+                Allocator = Unity.Collections.Allocator.Invalid;
             }
         }
 
@@ -1071,18 +1072,54 @@ namespace GDX.Collections
         {
             if (CollectionHelper.ShouldDeallocate(Allocator))
             {
-                var jobHandle = new UnsafeDisposeJob { Ptr = Data, Allocator = Allocator }.Schedule(inputDeps);
+                var jobHandle = new DisposeUnsafeSparseSetJob { Ptr = Data, Capacity = Length, Allocator = Allocator }.Schedule(inputDeps);
 
                 Data = null;
                 Length = 0;
                 Count = 0;
                 FreeIndex = 0;
-                Allocator = AllocatorManager.Invalid;
+                Allocator = Unity.Collections.Allocator.Invalid;
 
                 return jobHandle;
             }
 
             Data = null;
+            Length = 0;
+            Count = 0;
+            FreeIndex = 0;
+            Allocator = Unity.Collections.Allocator.Invalid;
+
+            return inputDeps;
+        }
+
+        /// <summary>
+        /// Creates and schedules a job that disposes the memory of this Sparse Set.
+        /// </summary>
+        /// <param name="inputDeps">The dependency for the new job.</param>
+        /// <returns>The handle of the new job. The job depends upon `inputDeps` and frees the memory of this Sparse Set.</returns>
+        [NotBurstCompatible /* This is not burst compatible because of IJob's use of a static IntPtr. Should switch to IJobBurstSchedulable in the future */]
+        public JobHandle Dispose(JobHandle inputDeps, ref ulong* versionArray)
+        {
+            if (CollectionHelper.ShouldDeallocate(Allocator))
+            {
+                var jobHandle = new DisposeUnsafeSparseSetAndVersionArrayJob { Ptr = Data, VersionArrayPtr = versionArray, Capacity = Length, Allocator = Allocator }.Schedule(inputDeps);
+
+                Data = null;
+                Length = 0;
+                Count = 0;
+                FreeIndex = 0;
+                Allocator = Unity.Collections.Allocator.Invalid;
+                versionArray = null;
+
+                return jobHandle;
+            }
+
+            Data = null;
+            Length = 0;
+            Count = 0;
+            FreeIndex = 0;
+            Allocator = Unity.Collections.Allocator.Invalid;
+            versionArray = null;
 
             return inputDeps;
         }
@@ -1107,7 +1144,9 @@ namespace GDX.Collections
         {
             if (CollectionHelper.ShouldDeallocate(Allocator))
             {
-                var jobHandle = new UnsafeDisposeJob { Ptr = versionArray, Allocator = Allocator }.Schedule(inputDeps);
+                var jobHandle = new DisposeUnsafeVersionArrayJob { Ptr = versionArray, Capacity = Length, Allocator = Allocator }.Schedule(inputDeps);
+
+                versionArray = null;
 
                 return jobHandle;
             }
@@ -1115,6 +1154,51 @@ namespace GDX.Collections
             versionArray = null;
 
             return inputDeps;
+        }
+    }
+
+    [BurstCompile]
+    internal unsafe struct DisposeUnsafeSparseSetJob : IJob
+    {
+        [NativeDisableUnsafePtrRestriction]
+        public void* Ptr;
+        public int Capacity;
+        public AllocatorManager.AllocatorHandle Allocator;
+
+        public void Execute()
+        {
+            Allocator.Free(Ptr, UnsafeUtility.SizeOf<int>(), JobsUtility.CacheLineSize, Capacity * 2);
+        }
+    }
+
+    [BurstCompile]
+    internal unsafe struct DisposeUnsafeVersionArrayJob : IJob
+    {
+        [NativeDisableUnsafePtrRestriction]
+        public void* Ptr;
+        public int Capacity;
+        public AllocatorManager.AllocatorHandle Allocator;
+
+        public void Execute()
+        {
+            Allocator.Free(Ptr, UnsafeUtility.SizeOf<ulong>(), JobsUtility.CacheLineSize, Capacity);
+        }
+    }
+
+    [BurstCompile]
+    internal unsafe struct DisposeUnsafeSparseSetAndVersionArrayJob : IJob
+    {
+        [NativeDisableUnsafePtrRestriction]
+        public void* Ptr;
+        [NativeDisableUnsafePtrRestriction]
+        public void* VersionArrayPtr;
+        public int Capacity;
+        public AllocatorManager.AllocatorHandle Allocator;
+
+        public void Execute()
+        {
+            Allocator.Free(Ptr, UnsafeUtility.SizeOf<int>(), JobsUtility.CacheLineSize, Capacity * 2);
+            Allocator.Free(VersionArrayPtr, UnsafeUtility.SizeOf<ulong>(), JobsUtility.CacheLineSize, Capacity);
         }
     }
 
