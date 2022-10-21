@@ -482,19 +482,22 @@ namespace GDX.Developer
         // first build out function to get points of a circle
         // then make that work for the other functions
 
-        public Vector3[] GetCircleVertices(Vector3 center, float radius, Vector3 direction, int count)
+        public Vector3[] GetCircleVertices(Vector3 center, float radius, Vector3 angles, int count)
         {
             // Allocate our point loop
             Vector3[] points = new Vector3[count];
             float interval = Mathf.PI * 2f / count;
+            Quaternion rotation = Quaternion.Euler(angles);
 
 
             // Loop through and figure out the points
             for (int i = 0; i < count; i++)
             {
-                // TODO: need to handle direction
+                // TODO: need to handle angles
                 float angle = i * interval;
                 points[i] = new Vector3(0, math.sin(angle) * radius, math.cos(angle) * radius);
+                //Angle * (Point - Pivot) + Pivot
+                points[i] = rotation * (points[i] - center) + center;
             }
 
 
@@ -504,7 +507,7 @@ namespace GDX.Developer
 
         public int DrawWireCircle(Color color, Vector3 center, float radius, Vector3 direction)
         {
-            Vector3[] vertices = GetCircleVertices(center, radius, direction, 3);
+            Vector3[] vertices = GetCircleVertices(center, radius, direction, 32);
 
             int pointCount = vertices.Length;
             int[] segments = new int[pointCount * 2];
