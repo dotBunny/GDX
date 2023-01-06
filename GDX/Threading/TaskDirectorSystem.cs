@@ -39,6 +39,10 @@ namespace GDX.Threading
         {
             if (s_AddedToPlayerLoop || !Config.TaskDirectorSystem) return;
 
+#if !UNITY_EDITOR
+            Trace.Output(Trace.TraceLevel.Info, "GDX runtime task scheduler activated.");
+#endif
+
             PlayerLoopSystem systemRoot = PlayerLoop.GetCurrentPlayerLoop();
             systemRoot.AddSubSystemToFirstSubSystemOfType(
                 typeof(Update.ScriptRunDelayedTasks),

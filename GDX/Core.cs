@@ -71,6 +71,15 @@ namespace GDX
         /// <summary>
         ///     Main-thread initializer.
         /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         It might be important to call this function if you are using GDX related configurations inside of
+        ///         another <see cref="RuntimeInitializeOnLoadMethod"/> decorated static method.
+        ///     </para>
+        ///     <para>
+        ///         An example of this sort of usage is in the <see cref="GDX.Threading.TaskDirectorSystem"/>.
+        ///     </para>
+        /// </remarks>
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
 #else
