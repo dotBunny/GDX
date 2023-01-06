@@ -104,9 +104,13 @@ namespace GDX.Threading
         /// <summary>
         ///     Sets up some default state for the <see cref="TaskDirectorSystem"/>.
         /// </summary>
-        [RuntimeInitializeOnLoadMethod]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
         static void Initialize()
         {
+            // Because invoke order is not deterministic, we cheat a bit and make sure that the core gets called
+            // regardless from this system. This pattern probably needs to happen in other cases like this.
+            Core.InitializeOnMainThread();
+
             if (Config.TaskDirectorSystem)
             {
                 if (s_TickRate < 0)
