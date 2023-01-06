@@ -5,6 +5,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using GDX.Mathematics.Random;
+using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -48,8 +49,13 @@ namespace GDX
         [ExcludeFromCodeCoverage]
         static Core()
         {
+#if !UNITY_EDITOR
+            Debug.Log("[GDX] Begin construction ...");
+#endif
+
             // Record initialization time.
             StartTicks = DateTime.Now.Ticks;
+
 
             // The assemblies will change between editor time and compile time so we are going to unfortunately pay a
             // cost to iterate over them and try to find our settings class
@@ -66,6 +72,9 @@ namespace GDX
                 Random.Dispose();
             };
             // ReSharper restore UnusedParameter.Local
+#if !UNITY_EDITOR
+            Debug.Log("[GDX] Constructed.");
+#endif
         }
 
         /// <summary>
@@ -91,6 +100,10 @@ namespace GDX
             {
                 return;
             }
+
+#if !UNITY_EDITOR
+            Debug.Log("[GDX] Initializing ...");
+#endif
 
             Localization.SetDefaultCulture();
 
