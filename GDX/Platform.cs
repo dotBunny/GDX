@@ -139,9 +139,9 @@ namespace GDX
             {
                 if (Developer.CommandLineParser.Arguments.ContainsKey("GDX_OUTPUT_FOLDER"))
                 {
-                    // Escape spaces and remove quotes
+                    // Assign and remove quotes
                     s_OutputFolder = Developer.CommandLineParser.Arguments["GDX_OUTPUT_FOLDER"]
-                        .Replace(" ", "\\ ").Replace("\"","");
+                        .Replace("\"","");
                 }
                 else
                 {
