@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading.Tasks;
 using GDX.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace GDX.Developer.Reports.BuildVerification
@@ -40,10 +41,11 @@ namespace GDX.Developer.Reports.BuildVerification
             string scenePath = SceneUtility.GetScenePathByBuildIndex(sceneBuildIndex);
 
             Trace.Output(Trace.TraceLevel.Info, $"[BVT] Load {scenePath}");
-            SceneManager.LoadScene(sceneBuildIndex, LoadSceneMode.Additive);
-
-            // Generic settling delay
-            await Task.Delay(100);
+            AsyncOperation loadOperation = SceneManager.LoadSceneAsync(sceneBuildIndex, LoadSceneMode.Additive);
+            while (!loadOperation.isDone)
+            {
+                await Task.Delay(1);
+            }
 
             // Restart timer for timeout
             s_Timer.Restart();
@@ -68,9 +70,11 @@ namespace GDX.Developer.Reports.BuildVerification
             Reset();
 
             Trace.Output(Trace.TraceLevel.Info, $"[BVT] Unload {scenePath}");
-            SceneManager.UnloadSceneAsync(sceneBuildIndex);
-
-            await Task.Delay(250);
+            AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(sceneBuildIndex);
+            while (!unloadOperation.isDone)
+            {
+                await Task.Delay(1);
+            }
         }
 
 
