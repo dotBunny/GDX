@@ -39,12 +39,8 @@ namespace GDX.Developer.Reports.BuildVerification
         {
             string scenePath = SceneUtility.GetScenePathByBuildIndex(sceneBuildIndex);
 
-            // Load the desired scene
-            new Task(() =>
-            {
-                Trace.Output(Trace.TraceLevel.Info, $"[BVT] Load {scenePath}");
-                SceneManager.LoadScene(sceneBuildIndex, LoadSceneMode.Additive);
-            }).RunSynchronously();
+            Trace.Output(Trace.TraceLevel.Info, $"[BVT] Load {scenePath}");
+            SceneManager.LoadScene(sceneBuildIndex, LoadSceneMode.Additive);
 
             // Generic settling delay
             await Task.Delay(100);
@@ -71,10 +67,8 @@ namespace GDX.Developer.Reports.BuildVerification
             // Make sure we remove all registered as a safety precaution / will also stop the timer
             Reset();
 
-            new Task(() => {
-                Trace.Output(Trace.TraceLevel.Info, $"[BVT] Unload {scenePath}");
-                SceneManager.UnloadSceneAsync(sceneBuildIndex);
-            }).RunSynchronously();
+            Trace.Output(Trace.TraceLevel.Info, $"[BVT] Unload {scenePath}");
+            SceneManager.UnloadSceneAsync(sceneBuildIndex);
 
             await Task.Delay(250);
         }
