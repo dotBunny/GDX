@@ -25,7 +25,7 @@ namespace GDX.Developer.Reports.BuildVerification
         }
 
 
-        public static async Task EvaluateTestScene(string scenePath, float millisecondTimeout = 30000)
+        public static async Task EvaluateTestScene(string scenePath, float loadTimeout = 10000, float testTimeout = 30000, float unloadTimeout = 10000)
         {
             int sceneBuildIndex = SceneUtility.GetBuildIndexByScenePath(scenePath);
             if (sceneBuildIndex < 0)
@@ -33,25 +33,36 @@ namespace GDX.Developer.Reports.BuildVerification
                 Trace.Output(Trace.TraceLevel.Error, $"[BVT] Unable to find scene: {scenePath}");
                 return;
             }
-            await EvaluateTestScene(sceneBuildIndex, millisecondTimeout);
+            await EvaluateTestScene(sceneBuildIndex, loadTimeout, testTimeout, unloadTimeout);
         }
 
-        public static async Task EvaluateTestScene(int sceneBuildIndex, float millisecondTimeout = 30000)
+        public static async Task EvaluateTestScene(int sceneBuildIndex, float loadTimeout = 10000, float testTimeout = 30000, float unloadTimeout = 10000)
         {
             string scenePath = SceneUtility.GetScenePathByBuildIndex(sceneBuildIndex);
 
             Trace.Output(Trace.TraceLevel.Info, $"[BVT] Load {scenePath}");
             AsyncOperation loadOperation = SceneManager.LoadSceneAsync(sceneBuildIndex, LoadSceneMode.Additive);
+
+            s_Timer.Restart();
             while (!loadOperation.isDone)
             {
-                await Task.Delay(1);
+                if (s_Timer.ElapsedMilliseconds < loadTimeout)
+                {
+                    await Task.Delay(1);
+                }
+                else
+                {
+                    Trace.Output(Trace.TraceLevel.Error, $"[BVT] Failed to load {scenePath}.");
+                    Reset();
+                    return;
+                }
             }
 
             // Restart timer for timeout
             s_Timer.Restart();
             while (HasRemainingTests())
             {
-                if (s_Timer.ElapsedMilliseconds < millisecondTimeout)
+                if (s_Timer.ElapsedMilliseconds < testTimeout)
                 {
                     await Task.Delay(100);
                 }
@@ -63,18 +74,29 @@ namespace GDX.Developer.Reports.BuildVerification
                         BuildVerificationReport.Assert(s_KnownTest.Array[i].GetIdentifier(), false, "Test timed out.");
                     }
                     s_KnownTest.Clear();
+                    break;
+                }
+            }
+
+            s_Timer.Restart();
+            Trace.Output(Trace.TraceLevel.Info, $"[BVT] Unload {scenePath}");
+            AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(sceneBuildIndex);
+            while (!unloadOperation.isDone)
+            {
+                if (s_Timer.ElapsedMilliseconds < unloadTimeout)
+                {
+                    await Task.Delay(1);
+                }
+                else
+                {
+                    Trace.Output(Trace.TraceLevel.Error, $"[BVT] Failed to unload {scenePath}.");
+                    Reset();
+                    return;
                 }
             }
 
             // Make sure we remove all registered as a safety precaution / will also stop the timer
             Reset();
-
-            Trace.Output(Trace.TraceLevel.Info, $"[BVT] Unload {scenePath}");
-            AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(sceneBuildIndex);
-            while (!unloadOperation.isDone)
-            {
-                await Task.Delay(1);
-            }
         }
 
 
