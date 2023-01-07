@@ -94,11 +94,11 @@ namespace GDX
             if (traceObject is Exception traceException)
             {
                 Console.WriteLine(
-                    $"{traceException.Message}\n{traceException.StackTrace}\n{memberName}\n{sourceFilePath}:{sourceLineNumber.ToString()}");
+                    $"{traceException.Message}\n{memberName} (at {sourceFilePath}:{sourceLineNumber.ToString()})\n{traceException.StackTrace}");
             }
             else
             {
-                Console.WriteLine($"{traceObject}\n{memberName}\n{sourceFilePath}:{sourceLineNumber.ToString()}");
+                Console.WriteLine($"{traceObject}\n{memberName} (at {sourceFilePath}:{sourceLineNumber.ToString()})");
             }
 
             // Is outputting to the Unity console enabled?
