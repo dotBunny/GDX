@@ -24,36 +24,42 @@ namespace GDX.Developer.Reports.BuildVerification
             }
         }
 
-
-        public static async Task EvaluateTestScene(string scenePath, float loadTimeout = 10000, float testTimeout = 30000, float unloadTimeout = 10000)
-        {
-            int sceneBuildIndex = SceneUtility.GetBuildIndexByScenePath(scenePath);
-            if (sceneBuildIndex < 0)
-            {
-                Trace.Output(Trace.TraceLevel.Error, $"[BVT] Unable to find scene: {scenePath}");
-                return;
-            }
-            await EvaluateTestScene(sceneBuildIndex, loadTimeout, testTimeout, unloadTimeout);
-        }
-
+        /// <summary>
+        ///
+        /// </summary>
+        /// <remarks>
+        ///     Use <see cref="UnityEngine.SceneManagement.SceneUtility.GetBuildIndexByScenePath"/> to get the build
+        ///     index.
+        /// </remarks>
+        /// <param name="sceneBuildIndex"></param>
+        /// <param name="loadTimeout"></param>
+        /// <param name="testTimeout"></param>
+        /// <param name="unloadTimeout"></param>
         public static async Task EvaluateTestScene(int sceneBuildIndex, float loadTimeout = 10000, float testTimeout = 30000, float unloadTimeout = 10000)
         {
+            if (sceneBuildIndex < 0)
+            {
+                Trace.Output(Trace.TraceLevel.Warning, $"[BVT] Invalid scene build index ({sceneBuildIndex.ToString()}.");
+                Reset();
+                return;
+            }
+
             string scenePath = SceneUtility.GetScenePathByBuildIndex(sceneBuildIndex);
 
-            Trace.Output(Trace.TraceLevel.Info, $"[BVT] Load {scenePath}");
+            Trace.Output(Trace.TraceLevel.Info, $"[BVT] Load {scenePath} ({sceneBuildIndex.ToString()})");
             AsyncOperation loadOperation = SceneManager.LoadSceneAsync(sceneBuildIndex, LoadSceneMode.Additive);
-
+            loadOperation.allowSceneActivation = true;
             s_Timer.Restart();
             while (!loadOperation.isDone)
             {
                 if (s_Timer.ElapsedMilliseconds < loadTimeout)
                 {
-                    UnityEngine.Debug.Log("Waiting on load ...");
+                    UnityEngine.Debug.Log($"Waiting on load ... {loadOperation.progress.ToString()}");
                     await Task.Delay(1);
                 }
                 else
                 {
-                    Trace.Output(Trace.TraceLevel.Error, $"[BVT] Failed to load {scenePath}.");
+                    Trace.Output(Trace.TraceLevel.Error, $"[BVT] Failed to load {scenePath} ({sceneBuildIndex.ToString()}).");
                     Reset();
                     return;
                 }
@@ -66,7 +72,7 @@ namespace GDX.Developer.Reports.BuildVerification
                 if (s_Timer.ElapsedMilliseconds < testTimeout)
                 {
                     UnityEngine.Debug.Log("Waiting on tests ...");
-                    await Task.Delay(100);
+                    await Task.Delay(1);
                 }
                 else
                 {
@@ -81,18 +87,19 @@ namespace GDX.Developer.Reports.BuildVerification
             }
 
             s_Timer.Restart();
-            Trace.Output(Trace.TraceLevel.Info, $"[BVT] Unload {scenePath}");
+            Trace.Output(Trace.TraceLevel.Info, $"[BVT] Unload {scenePath} ({sceneBuildIndex.ToString()})");
             AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(sceneBuildIndex);
+
             while (!unloadOperation.isDone)
             {
                 if (s_Timer.ElapsedMilliseconds < unloadTimeout)
                 {
-                    UnityEngine.Debug.Log("Waiting on unload ...");
-                    await Task.Delay(100);
+                    UnityEngine.Debug.Log($"Waiting on unload ... {unloadOperation.progress.ToString()}");
+                    await Task.Delay(1);
                 }
                 else
                 {
-                    Trace.Output(Trace.TraceLevel.Error, $"[BVT] Failed to unload {scenePath}.");
+                    Trace.Output(Trace.TraceLevel.Error, $"[BVT] Failed to unload {scenePath} ({sceneBuildIndex.ToString()}).");
                     Reset();
                     return;
                 }
