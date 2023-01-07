@@ -55,7 +55,7 @@ namespace GDX.Developer.Reports.BuildVerification
                 if (s_Timer.ElapsedMilliseconds < loadTimeout)
                 {
                     UnityEngine.Debug.Log($"Waiting on load ... {loadOperation.progress.ToString()}");
-                    await Task.Delay(1);
+                    await Task.Delay(1).ConfigureAwait(true);
                 }
                 else
                 {
@@ -72,7 +72,7 @@ namespace GDX.Developer.Reports.BuildVerification
                 if (s_Timer.ElapsedMilliseconds < testTimeout)
                 {
                     UnityEngine.Debug.Log("Waiting on tests ...");
-                    await Task.Delay(1);
+                    await Task.Delay(1).ConfigureAwait(true);
                 }
                 else
                 {
@@ -95,7 +95,7 @@ namespace GDX.Developer.Reports.BuildVerification
                 if (s_Timer.ElapsedMilliseconds < unloadTimeout)
                 {
                     UnityEngine.Debug.Log($"Waiting on unload ... {unloadOperation.progress.ToString()}");
-                    await Task.Delay(1);
+                    await Task.Delay(1).ConfigureAwait(true);
                 }
                 else
                 {
