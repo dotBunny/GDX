@@ -24,8 +24,6 @@ namespace GDX.Developer.Reports.BuildVerification
         {
         }
 
-
-
         void Awake()
         {
             TestRunner.AddTest(this);
