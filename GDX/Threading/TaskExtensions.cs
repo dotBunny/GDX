@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections;
-using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 
 namespace GDX.Threading
@@ -24,11 +23,6 @@ namespace GDX.Threading
             while (!task.IsCompleted)
             {
                 yield return null;
-            }
-
-            if (task.IsFaulted)
-            {
-                ExceptionDispatchInfo.Capture(task.Exception).Throw();
             }
         }
     }

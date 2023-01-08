@@ -5,6 +5,7 @@
 using System.Collections;
 using System.Diagnostics;
 using System.Globalization;
+using System.Threading.Tasks;
 using GDX.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,32 +14,9 @@ namespace GDX.Developer.Reports.BuildVerification
 {
     public static class TestRunner
     {
-        public readonly struct TestScene
-        {
-            public readonly int BuildIndex;
-            public readonly string ScenePath;
-            public readonly int LoadTimeout;
-            public readonly int TestTimeout;
-            public readonly int UnloadTimeout;
-
-            public TestScene(int buildIndex, int loadTimeout = 10000, int testTimeout = 30000, int unloadTimeout = 10000)
-            {
-                BuildIndex = buildIndex;
-                ScenePath = SceneUtility.GetScenePathByBuildIndex(buildIndex);
-
-                LoadTimeout = loadTimeout;
-                TestTimeout = testTimeout;
-                UnloadTimeout = unloadTimeout;
-            }
-
-            public bool IsValid()
-            {
-                return !string.IsNullOrEmpty(ScenePath);
-            }
-        }
 
         static SimpleList<ITestBehaviour> s_KnownTest = new SimpleList<ITestBehaviour>(10);
-        static readonly Stopwatch s_Timer = new Stopwatch();
+        static Stopwatch s_Timer = new Stopwatch();
 
         public static void AddTest(SimpleTestBehaviour simpleTest)
         {
@@ -48,39 +26,43 @@ namespace GDX.Developer.Reports.BuildVerification
             }
         }
 
-        public static IEnumerator Process(TestScene[] scenes)
+        /// <summary>
+        ///
+        /// </summary>
+        /// <remarks>
+        ///     Use <see cref="UnityEngine.SceneManagement.SceneUtility.GetBuildIndexByScenePath"/> to get the build
+        ///     index.
+        /// </remarks>
+        /// <param name="sceneBuildIndex"></param>
+        /// <param name="loadTimeout"></param>
+        /// <param name="testTimeout"></param>
+        /// <param name="unloadTimeout"></param>
+        public static async Task EvaluateTestScene(int sceneBuildIndex, float loadTimeout = 10000, float testTimeout = 30000, float unloadTimeout = 10000)
         {
-            for (int i = 0; i < scenes.Length; i++)
+            if (sceneBuildIndex < 0)
             {
-                yield return Process(scenes[i]);
-            }
-        }
-
-        public static IEnumerator Process(TestScene testScene)
-        {
-            WaitForEndOfFrame cachedEndOfFrameWait = new WaitForEndOfFrame();
-
-            if (!testScene.IsValid())
-            {
-                Trace.Output(Trace.TraceLevel.Warning, $"[BVT] Invalid scene {testScene.BuildIndex.ToString()}.");
+                Trace.Output(Trace.TraceLevel.Warning, $"[BVT] Invalid scene build index ({sceneBuildIndex.ToString()}.");
                 Reset();
-                yield break;
+                return;
             }
 
-            Trace.Output(Trace.TraceLevel.Info, $"[BVT] Load {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
-            AsyncOperation loadOperation = SceneManager.LoadSceneAsync(testScene.BuildIndex, LoadSceneMode.Additive);
+            string scenePath = SceneUtility.GetScenePathByBuildIndex(sceneBuildIndex);
+
+            Trace.Output(Trace.TraceLevel.Info, $"[BVT] Load {scenePath} ({sceneBuildIndex.ToString()})");
+            AsyncOperation loadOperation = SceneManager.LoadSceneAsync(sceneBuildIndex, LoadSceneMode.Additive);
             s_Timer.Restart();
             while (!loadOperation.isDone)
             {
-                if (s_Timer.ElapsedMilliseconds < testScene.LoadTimeout)
+                if (s_Timer.ElapsedMilliseconds < loadTimeout)
                 {
-                    yield return cachedEndOfFrameWait;
+                    UnityEngine.Debug.Log($"Waiting on load ... {loadOperation.progress.ToString()}");
+                    await Task.Delay(1);
                 }
                 else
                 {
-                    Trace.Output(Trace.TraceLevel.Error, $"[BVT] Failed to load {testScene.ScenePath} ({testScene.BuildIndex.ToString()}).");
+                    Trace.Output(Trace.TraceLevel.Error, $"[BVT] Failed to load {scenePath} ({sceneBuildIndex.ToString()}).");
                     Reset();
-                    yield break;
+                    return;
                 }
             }
 
@@ -89,9 +71,10 @@ namespace GDX.Developer.Reports.BuildVerification
             s_Timer.Restart();
             while (HasRemainingTests())
             {
-                if (s_Timer.ElapsedMilliseconds < testScene.TestTimeout)
+                if (s_Timer.ElapsedMilliseconds < testTimeout)
                 {
-                    yield return cachedEndOfFrameWait;
+                    UnityEngine.Debug.Log("Waiting on tests ...");
+                    await Task.Delay(1);
                 }
                 else
                 {
@@ -106,19 +89,20 @@ namespace GDX.Developer.Reports.BuildVerification
             }
 
             s_Timer.Restart();
-            Trace.Output(Trace.TraceLevel.Info, $"[BVT] Unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
-            AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(testScene.BuildIndex);
+            Trace.Output(Trace.TraceLevel.Info, $"[BVT] Unload {scenePath} ({sceneBuildIndex.ToString()})");
+            AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(sceneBuildIndex);
             while (!unloadOperation.isDone)
             {
-                if (s_Timer.ElapsedMilliseconds < testScene.UnloadTimeout)
+                if (s_Timer.ElapsedMilliseconds < unloadTimeout)
                 {
-                    yield return cachedEndOfFrameWait;
+                    UnityEngine.Debug.Log($"Waiting on unload ... {unloadOperation.progress.ToString()}");
+                    await Task.Delay(1);
                 }
                 else
                 {
-                    Trace.Output(Trace.TraceLevel.Error, $"[BVT] Failed to unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()}).");
+                    Trace.Output(Trace.TraceLevel.Error, $"[BVT] Failed to unload {scenePath} ({sceneBuildIndex.ToString()}).");
                     Reset();
-                    yield break;
+                    return;
                 }
             }
 
@@ -126,10 +110,12 @@ namespace GDX.Developer.Reports.BuildVerification
             Reset();
         }
 
+
         public static void RemoveTest(SimpleTestBehaviour simpleTest)
         {
             s_KnownTest.RemoveFirstItem(simpleTest);
         }
+
 
         public static void Reset()
         {
