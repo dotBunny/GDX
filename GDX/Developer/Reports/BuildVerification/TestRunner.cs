@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections;
 using System.Diagnostics;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace GDX.Developer.Reports.BuildVerification
 {
     public static class TestRunner
     {
+
         static SimpleList<ITestBehaviour> s_KnownTest = new SimpleList<ITestBehaviour>(10);
         static Stopwatch s_Timer = new Stopwatch();
 
@@ -48,14 +50,13 @@ namespace GDX.Developer.Reports.BuildVerification
 
             Trace.Output(Trace.TraceLevel.Info, $"[BVT] Load {scenePath} ({sceneBuildIndex.ToString()})");
             AsyncOperation loadOperation = SceneManager.LoadSceneAsync(sceneBuildIndex, LoadSceneMode.Additive);
-            loadOperation.allowSceneActivation = true;
             s_Timer.Restart();
             while (!loadOperation.isDone)
             {
                 if (s_Timer.ElapsedMilliseconds < loadTimeout)
                 {
                     UnityEngine.Debug.Log($"Waiting on load ... {loadOperation.progress.ToString()}");
-                    await Task.Delay(1).ConfigureAwait(true);
+                   // await Task.Delay(1);
                 }
                 else
                 {
@@ -65,6 +66,7 @@ namespace GDX.Developer.Reports.BuildVerification
                 }
             }
 
+
             // Restart timer for timeout
             s_Timer.Restart();
             while (HasRemainingTests())
@@ -72,7 +74,7 @@ namespace GDX.Developer.Reports.BuildVerification
                 if (s_Timer.ElapsedMilliseconds < testTimeout)
                 {
                     UnityEngine.Debug.Log("Waiting on tests ...");
-                    await Task.Delay(1).ConfigureAwait(true);
+                  //  await Task.Delay(1);
                 }
                 else
                 {
@@ -89,13 +91,12 @@ namespace GDX.Developer.Reports.BuildVerification
             s_Timer.Restart();
             Trace.Output(Trace.TraceLevel.Info, $"[BVT] Unload {scenePath} ({sceneBuildIndex.ToString()})");
             AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(sceneBuildIndex);
-
             while (!unloadOperation.isDone)
             {
                 if (s_Timer.ElapsedMilliseconds < unloadTimeout)
                 {
                     UnityEngine.Debug.Log($"Waiting on unload ... {unloadOperation.progress.ToString()}");
-                    await Task.Delay(1).ConfigureAwait(true);
+                 //   await Task.Delay(1);
                 }
                 else
                 {
