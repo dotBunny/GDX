@@ -35,7 +35,7 @@ namespace GDX.Developer.Reports.BuildVerification
         /// </summary>
 #pragma warning disable IDE0051
         // ReSharper disable UnusedMember.Local
-        void LateUpdate()
+        void Start()
         {
             if (m_HasRan) return;
             m_HasRan = true;

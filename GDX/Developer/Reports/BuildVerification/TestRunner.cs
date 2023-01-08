@@ -73,7 +73,6 @@ namespace GDX.Developer.Reports.BuildVerification
             Trace.Output(Trace.TraceLevel.Info, $"[BVT] Activating {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
             loadOperation.allowSceneActivation = true;
 
-
             // Restart timer for timeout
             timeoutTimer.Restart();
             while (HasRemainingTests())
@@ -94,13 +93,10 @@ namespace GDX.Developer.Reports.BuildVerification
                 }
             }
 
-            await Task.Delay(SafeDelayTime);
-
-
             Trace.Output(Trace.TraceLevel.Info, $"[BVT] Unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
             AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(testScene.BuildIndex, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
             timeoutTimer.Restart();
-            while (unloadOperation.progress <= 0.9f)
+            while (unloadOperation.progress < 0.9f)
             {
                 if (timeoutTimer.ElapsedMilliseconds < testScene.UnloadTimeout)
                 {
