@@ -13,12 +13,18 @@ namespace GDX.Developer.Reports.BuildVerification
 {
     public static class TestRunner
     {
+        /// <summary>
+        ///
+        /// </summary>
+        const int SafeDelayTime = 2000;
         static readonly object s_lockKnownTests = new object();
         static SimpleList<ITestBehaviour> s_KnownTest = new SimpleList<ITestBehaviour>(10);
         static Stopwatch s_timeoutTimer = new Stopwatch();
 
         public static void AddTest(SimpleTestBehaviour simpleTest)
         {
+            if (simpleTest == null) return;
+
             lock (s_lockKnownTests)
             {
                 if (!s_KnownTest.ContainsReference(simpleTest))
@@ -52,7 +58,7 @@ namespace GDX.Developer.Reports.BuildVerification
             {
                 if (s_timeoutTimer.ElapsedMilliseconds < testScene.LoadTimeout)
                 {
-                    await Task.Delay(1);
+                    await Task.Delay(SafeDelayTime);
                 }
                 else
                 {
@@ -61,8 +67,6 @@ namespace GDX.Developer.Reports.BuildVerification
                     return;
                 }
             }
-            Trace.Output(Trace.TraceLevel.Info, "[BVT] Load finished.");
-
 
             // Restart timer for timeout
             s_timeoutTimer.Restart();
@@ -70,7 +74,7 @@ namespace GDX.Developer.Reports.BuildVerification
             {
                 if (s_timeoutTimer.ElapsedMilliseconds < testScene.TestTimeout)
                 {
-                    await Task.Delay(1);
+                    await Task.Delay(SafeDelayTime);
                 }
                 else
                 {
@@ -92,7 +96,7 @@ namespace GDX.Developer.Reports.BuildVerification
                 if (s_timeoutTimer.ElapsedMilliseconds < testScene.UnloadTimeout)
                 {
                     UnityEngine.Debug.Log($"Waiting on unload ... {unloadOperation.progress.ToString()}");
-                    await Task.Delay(1);
+                    await Task.Delay(SafeDelayTime);
                 }
                 else
                 {
@@ -101,7 +105,6 @@ namespace GDX.Developer.Reports.BuildVerification
                     return;
                 }
             }
-            Trace.Output(Trace.TraceLevel.Info, "[BVT] Unload finished.");
 
             // Make sure we remove all registered as a safety precaution / will also stop the timer
             Reset();
@@ -110,6 +113,8 @@ namespace GDX.Developer.Reports.BuildVerification
 
         public static void RemoveTest(SimpleTestBehaviour simpleTest)
         {
+            if (simpleTest == null) return;
+
             lock (s_lockKnownTests)
             {
                 s_KnownTest.RemoveFirstItem(simpleTest);
