@@ -16,7 +16,8 @@ namespace GDX.Developer.Reports.BuildVerification
         /// <summary>
         ///
         /// </summary>
-        const int SafeDelayTime = 1;
+        const int SafeDelayTime = 500;
+
         static readonly object s_lockKnownTests = new object();
         static SimpleList<ITestBehaviour> s_KnownTest = new SimpleList<ITestBehaviour>(10);
 

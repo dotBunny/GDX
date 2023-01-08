@@ -8,6 +8,7 @@ namespace GDX.Developer.Reports.BuildVerification
     public abstract class SimpleTestBehaviour : MonoBehaviour, ITestBehaviour
     {
         string m_StartTime;
+        bool m_HasRan = false;
         Stopwatch m_Timer;
 
         public abstract TestCase Check();
@@ -30,12 +31,15 @@ namespace GDX.Developer.Reports.BuildVerification
         }
 
         /// <summary>
-        ///     Unity's Start event.
+        ///     Run the test in Unity's late update
         /// </summary>
 #pragma warning disable IDE0051
         // ReSharper disable UnusedMember.Local
-        void Start()
+        void LateUpdate()
         {
+            if (m_HasRan) return;
+            m_HasRan = true;
+
             m_StartTime = DateTime.Now.ToString(Localization.UtcTimestampFormat);
             m_Timer = new Stopwatch();
             m_Timer.Restart();
@@ -49,6 +53,7 @@ namespace GDX.Developer.Reports.BuildVerification
 
             TestRunner.RemoveTest(this);
         }
+
         // ReSharper restore UnusedMember.Local
 #pragma warning restore IDE0051
 
