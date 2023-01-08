@@ -25,6 +25,8 @@ namespace GDX
         // ReSharper disable once RedundantArrayCreationExpression, HeapView.ObjectAllocation.Evident
         public static readonly object[] EmptyObjectArray = new object[] { };
 
+        public static int MainThreadID = -1;
+
         /// <summary>
         ///     A pseudorandom number generated seeded with <see cref="StartTicks"/>.
         /// </summary>
@@ -92,6 +94,8 @@ namespace GDX
                 return;
             }
 
+            MainThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
+            
             Localization.SetDefaultCulture();
 
             s_InitializedMainThread = true;
