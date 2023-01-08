@@ -16,10 +16,9 @@ namespace GDX.Developer.Reports.BuildVerification
         /// <summary>
         ///
         /// </summary>
-        const int SafeDelayTime = 2000;
+        const int SafeDelayTime = 100;
         static readonly object s_lockKnownTests = new object();
         static SimpleList<ITestBehaviour> s_KnownTest = new SimpleList<ITestBehaviour>(10);
-        static Stopwatch s_timeoutTimer = new Stopwatch();
 
         public static void AddTest(SimpleTestBehaviour simpleTest)
         {
@@ -51,12 +50,14 @@ namespace GDX.Developer.Reports.BuildVerification
                 return;
             }
 
+            Stopwatch timeoutTimer = new Stopwatch();
+
             Trace.Output(Trace.TraceLevel.Info, $"[BVT] Load {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
             AsyncOperation loadOperation = SceneManager.LoadSceneAsync(testScene.BuildIndex, LoadSceneMode.Additive);
-            s_timeoutTimer.Restart();
+            timeoutTimer.Restart();
             while (!loadOperation.isDone)
             {
-                if (s_timeoutTimer.ElapsedMilliseconds < testScene.LoadTimeout)
+                if (timeoutTimer.ElapsedMilliseconds < testScene.LoadTimeout)
                 {
                     await Task.Delay(SafeDelayTime);
                 }
@@ -69,33 +70,33 @@ namespace GDX.Developer.Reports.BuildVerification
             }
 
             // Restart timer for timeout
-            s_timeoutTimer.Restart();
+            timeoutTimer.Restart();
             while (HasRemainingTests())
             {
-                if (s_timeoutTimer.ElapsedMilliseconds < testScene.TestTimeout)
+                if (timeoutTimer.ElapsedMilliseconds < testScene.TestTimeout)
                 {
                     await Task.Delay(SafeDelayTime);
                 }
                 else
                 {
-                    Trace.Output(Trace.TraceLevel.Warning, $"[BVT] Test run timed out after {(s_timeoutTimer.ElapsedMilliseconds/1000f).ToString(CultureInfo.CurrentCulture)} seconds.");
+                    Trace.Output(Trace.TraceLevel.Warning, $"[BVT] Test run timed out after {(timeoutTimer.ElapsedMilliseconds/1000f).ToString(CultureInfo.CurrentCulture)} seconds.");
                     for (int i = 0; i < s_KnownTest.Count; i++)
                     {
                         BuildVerificationReport.Assert(s_KnownTest.Array[i].GetIdentifier(), false, "Test timed out.");
                     }
-                    s_KnownTest.Clear();
+                    Reset();
                     break;
                 }
             }
 
-            s_timeoutTimer.Restart();
+
             Trace.Output(Trace.TraceLevel.Info, $"[BVT] Unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
-            AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(testScene.BuildIndex);
+            AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(testScene.BuildIndex, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
+            timeoutTimer.Restart();
             while (!unloadOperation.isDone)
             {
-                if (s_timeoutTimer.ElapsedMilliseconds < testScene.UnloadTimeout)
+                if (timeoutTimer.ElapsedMilliseconds < testScene.UnloadTimeout)
                 {
-                    UnityEngine.Debug.Log($"Waiting on unload ... {unloadOperation.progress.ToString()}");
                     await Task.Delay(SafeDelayTime);
                 }
                 else
@@ -135,7 +136,6 @@ namespace GDX.Developer.Reports.BuildVerification
             {
                 s_KnownTest.Clear();
             }
-            s_timeoutTimer?.Stop();
         }
     }
 }
