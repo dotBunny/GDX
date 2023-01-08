@@ -36,7 +36,7 @@ namespace GDX.Developer.Reports.BuildVerification
 
         public static async Task Execute(TestScene[] scenes)
         {
-            for (int testSceneIndex = 1; testSceneIndex < scenes.Length; testSceneIndex++)
+            for (int testSceneIndex = 0; testSceneIndex < scenes.Length; testSceneIndex++)
             {
                 await Execute(scenes[testSceneIndex]);
             }
@@ -55,8 +55,9 @@ namespace GDX.Developer.Reports.BuildVerification
 
             Trace.Output(Trace.TraceLevel.Info, $"[BVT] Load {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
             AsyncOperation loadOperation = SceneManager.LoadSceneAsync(testScene.BuildIndex, LoadSceneMode.Additive);
+            loadOperation.allowSceneActivation = false;
             timeoutTimer.Restart();
-            while (!loadOperation.isDone)
+            while (loadOperation.progress < 0.9f)
             {
                 if (timeoutTimer.ElapsedMilliseconds < testScene.LoadTimeout)
                 {
@@ -69,6 +70,9 @@ namespace GDX.Developer.Reports.BuildVerification
                     return;
                 }
             }
+            Trace.Output(Trace.TraceLevel.Info, $"[BVT] Activating {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
+            loadOperation.allowSceneActivation = true;
+
 
             // Restart timer for timeout
             timeoutTimer.Restart();
@@ -76,7 +80,7 @@ namespace GDX.Developer.Reports.BuildVerification
             {
                 if (timeoutTimer.ElapsedMilliseconds < testScene.TestTimeout)
                 {
-                    await Task.Delay(SafeDelayTime);
+                   await Task.Delay(SafeDelayTime);
                 }
                 else
                 {
@@ -90,15 +94,17 @@ namespace GDX.Developer.Reports.BuildVerification
                 }
             }
 
+            await Task.Delay(SafeDelayTime);
+
 
             Trace.Output(Trace.TraceLevel.Info, $"[BVT] Unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
             AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(testScene.BuildIndex, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
             timeoutTimer.Restart();
-            while (!unloadOperation.isDone)
+            while (unloadOperation.progress <= 0.9f)
             {
                 if (timeoutTimer.ElapsedMilliseconds < testScene.UnloadTimeout)
                 {
-                    await Task.Delay(SafeDelayTime);
+                  await Task.Delay(SafeDelayTime);
                 }
                 else
                 {
