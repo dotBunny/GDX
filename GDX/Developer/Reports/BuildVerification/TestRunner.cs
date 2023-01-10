@@ -16,13 +16,10 @@ namespace GDX.Developer.Reports.BuildVerification
         /// <summary>
         ///
         /// </summary>
-        const int SafeDelayTime = 5;
+        const int SafeDelayTime = 1;
 
         static readonly object s_lockKnownTests = new object();
         static SimpleList<ITestBehaviour> s_KnownTest = new SimpleList<ITestBehaviour>(10);
-
-        static readonly object s_lockHold = new object();
-        static bool s_hold = false;
 
         public static void AddTest(SimpleTestBehaviour simpleTest)
         {
@@ -77,10 +74,10 @@ namespace GDX.Developer.Reports.BuildVerification
             loadOperation.allowSceneActivation = true;
 
             // Wait for next update - super important around integration of loaded content
-            float currentTime = Time.time;
-            while (Time.time == currentTime)
+            float loadCurrentTime = Time.time;
+            while (Time.time == loadCurrentTime)
             {
-                await Task.Delay(1);
+                await Task.Delay(SafeDelayTime);
             }
 
             // Restart timer for timeout
@@ -123,6 +120,13 @@ namespace GDX.Developer.Reports.BuildVerification
                         return;
                     }
                 }
+            }
+
+            // Wait for next update - super important around unloading
+            float unloadCurrentTime = Time.time;
+            while (Time.time == unloadCurrentTime)
+            {
+                await Task.Delay(SafeDelayTime);
             }
 
             // Make sure we remove all registered as a safety precaution / will also stop the timer
