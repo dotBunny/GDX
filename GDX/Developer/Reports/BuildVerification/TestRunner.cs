@@ -16,10 +16,13 @@ namespace GDX.Developer.Reports.BuildVerification
         /// <summary>
         ///
         /// </summary>
-        const int SafeDelayTime = 500;
+        const int SafeDelayTime = 5;
 
         static readonly object s_lockKnownTests = new object();
         static SimpleList<ITestBehaviour> s_KnownTest = new SimpleList<ITestBehaviour>(10);
+
+        static readonly object s_lockHold = new object();
+        static bool s_hold = false;
 
         public static void AddTest(SimpleTestBehaviour simpleTest)
         {
@@ -73,6 +76,13 @@ namespace GDX.Developer.Reports.BuildVerification
             Trace.Output(Trace.TraceLevel.Info, $"[BVT] Activating {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
             loadOperation.allowSceneActivation = true;
 
+            // Wait for next update - super important around integration of loaded content
+            float currentTime = Time.time;
+            while (Time.time == currentTime)
+            {
+                await Task.Delay(1);
+            }
+
             // Restart timer for timeout
             timeoutTimer.Restart();
             while (HasRemainingTests())
@@ -96,17 +106,22 @@ namespace GDX.Developer.Reports.BuildVerification
             Trace.Output(Trace.TraceLevel.Info, $"[BVT] Unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
             AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(testScene.BuildIndex, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
             timeoutTimer.Restart();
-            while (unloadOperation.progress < 0.9f)
+
+            if (unloadOperation != null)
             {
-                if (timeoutTimer.ElapsedMilliseconds < testScene.UnloadTimeout)
+                while (unloadOperation.progress < 0.9f)
                 {
-                  await Task.Delay(SafeDelayTime);
-                }
-                else
-                {
-                    Trace.Output(Trace.TraceLevel.Error, $"[BVT] Failed to unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()}).");
-                    Reset();
-                    return;
+                    if (timeoutTimer.ElapsedMilliseconds < testScene.UnloadTimeout)
+                    {
+                        await Task.Delay(SafeDelayTime);
+                    }
+                    else
+                    {
+                        Trace.Output(Trace.TraceLevel.Error,
+                            $"[BVT] Failed to unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()}).");
+                        Reset();
+                        return;
+                    }
                 }
             }
 
