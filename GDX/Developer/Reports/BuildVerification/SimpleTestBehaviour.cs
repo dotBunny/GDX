@@ -7,6 +7,7 @@ namespace GDX.Developer.Reports.BuildVerification
 {
     public abstract class SimpleTestBehaviour : MonoBehaviour, ITestBehaviour
     {
+        int m_frameWait = 5;
         string m_StartTime;
         Stopwatch m_Timer;
 
@@ -24,7 +25,7 @@ namespace GDX.Developer.Reports.BuildVerification
         {
         }
 
-        void Awake()
+        void Start()
         {
             TestRunner.AddTest(this);
         }
@@ -34,8 +35,18 @@ namespace GDX.Developer.Reports.BuildVerification
         /// </summary>
 #pragma warning disable IDE0051
         // ReSharper disable UnusedMember.Local
-        void Start()
+        void Update()
         {
+            // Handle frame delay
+            if (m_frameWait > 0)
+            {
+                m_frameWait--;
+                return;
+            }
+            if (m_frameWait < 0) return;
+
+            m_frameWait--;
+
             m_StartTime = DateTime.Now.ToString(Localization.UtcTimestampFormat);
             m_Timer = new Stopwatch();
             m_Timer.Restart();

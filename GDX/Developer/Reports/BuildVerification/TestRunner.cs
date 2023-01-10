@@ -55,25 +55,27 @@ namespace GDX.Developer.Reports.BuildVerification
 
             Trace.Output(Trace.TraceLevel.Info, $"[BVT] Load {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
             AsyncOperation loadOperation = SceneManager.LoadSceneAsync(testScene.BuildIndex, LoadSceneMode.Additive);
-            loadOperation.allowSceneActivation = false;
             timeoutTimer.Restart();
-            while (loadOperation.progress < 0.9f)
+            if (loadOperation != null)
             {
-                if (timeoutTimer.ElapsedMilliseconds < testScene.LoadTimeout)
+                while (!loadOperation.isDone)
                 {
-                    await Task.Delay(SafeDelayTime);
-                }
-                else
-                {
-                    Trace.Output(Trace.TraceLevel.Error, $"[BVT] Failed to load {testScene.ScenePath} ({testScene.BuildIndex.ToString()}).");
-                    Reset();
-                    return;
+                    if (timeoutTimer.ElapsedMilliseconds < testScene.LoadTimeout)
+                    {
+                        await Task.Delay(SafeDelayTime);
+                    }
+                    else
+                    {
+                        Trace.Output(Trace.TraceLevel.Error,
+                            $"[BVT] Failed to load {testScene.ScenePath} ({testScene.BuildIndex.ToString()}).");
+                        Reset();
+                        return;
+                    }
                 }
             }
-            Trace.Output(Trace.TraceLevel.Info, $"[BVT] Activating {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
-            loadOperation.allowSceneActivation = true;
 
             // Wait for next update - super important around integration of loaded content
+            Trace.Output(Trace.TraceLevel.Info, "[BVT] Waiting at least frame ...");
             float loadCurrentTime = Time.time;
             while (Time.time == loadCurrentTime)
             {
@@ -100,13 +102,19 @@ namespace GDX.Developer.Reports.BuildVerification
                 }
             }
 
+            Trace.Output(Trace.TraceLevel.Info, "[BVT] Waiting at least frame ...");
+            float testCurrentTime = Time.time;
+            while (Time.time == testCurrentTime)
+            {
+                await Task.Delay(SafeDelayTime);
+            }
+
             Trace.Output(Trace.TraceLevel.Info, $"[BVT] Unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
             AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(testScene.BuildIndex, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
             timeoutTimer.Restart();
-
             if (unloadOperation != null)
             {
-                while (unloadOperation.progress < 0.9f)
+                while (!unloadOperation.isDone)
                 {
                     if (timeoutTimer.ElapsedMilliseconds < testScene.UnloadTimeout)
                     {
@@ -123,6 +131,7 @@ namespace GDX.Developer.Reports.BuildVerification
             }
 
             // Wait for next update - super important around unloading
+            Trace.Output(Trace.TraceLevel.Info, "[BVT] Waiting at least frame ...");
             float unloadCurrentTime = Time.time;
             while (Time.time == unloadCurrentTime)
             {
@@ -131,6 +140,8 @@ namespace GDX.Developer.Reports.BuildVerification
 
             // Make sure we remove all registered as a safety precaution / will also stop the timer
             Reset();
+
+            Trace.Output(Trace.TraceLevel.Info, $"[BVT] Test scene {testScene.ScenePath} ({testScene.BuildIndex.ToString()}) execution finished.");
         }
 
 
