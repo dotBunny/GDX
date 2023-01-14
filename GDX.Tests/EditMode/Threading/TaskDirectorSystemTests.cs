@@ -196,7 +196,7 @@ namespace GDX.Threading
         {
             // Ensure that before we start the test that we're zeroed out.
             Config.TaskDirectorSystem = true;
-            TaskDirectorSystem.SetTickRate(2f);
+            TaskDirectorSystem.SetTickRate(1.9f); // Need to be just under the 2 seconds to ensure we always tick right
             TaskDirectorSystem.ticked += IncrementCounter;
 
             yield return new EnterPlayMode(false);

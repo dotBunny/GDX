@@ -13,8 +13,8 @@ namespace GDX
 {
     public static class Core
     {
-        public const string OverrideClass = "CustomConfig";
 
+        public const string OverrideClass = "CustomConfig";
         public const string OverrideMethod = "Init";
         public const string PerformanceCategory = "GDX.Performance";
         public const string TestCategory = "GDX.Tests";
@@ -24,6 +24,8 @@ namespace GDX
         /// </summary>
         // ReSharper disable once RedundantArrayCreationExpression, HeapView.ObjectAllocation.Evident
         public static readonly object[] EmptyObjectArray = new object[] { };
+
+        public static int MainThreadID = -1;
 
         /// <summary>
         ///     A pseudorandom number generated seeded with <see cref="StartTicks"/>.
@@ -71,6 +73,15 @@ namespace GDX
         /// <summary>
         ///     Main-thread initializer.
         /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         It might be important to call this function if you are using GDX related configurations inside of
+        ///         another <see cref="RuntimeInitializeOnLoadMethod"/> decorated static method.
+        ///     </para>
+        ///     <para>
+        ///         An example of this sort of usage is in the <see cref="GDX.Threading.TaskDirectorSystem"/>.
+        ///     </para>
+        /// </remarks>
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
 #else
@@ -83,6 +94,8 @@ namespace GDX
                 return;
             }
 
+            MainThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
+            
             Localization.SetDefaultCulture();
 
             s_InitializedMainThread = true;

@@ -137,15 +137,23 @@ namespace GDX
             if (s_OutputFolder != null && string.IsNullOrEmpty(folderName)) return s_OutputFolder;
             if (s_OutputFolder == null)
             {
-                s_OutputFolder = Developer.CommandLineParser.Arguments.ContainsKey("GDX_OUTPUT_FOLDER") ?
-                    Developer.CommandLineParser.Arguments["GDX_OUTPUT_FOLDER"] :
+                if (Developer.CommandLineParser.Arguments.ContainsKey("GDX_OUTPUT_FOLDER"))
+                {
+                    // Assign and remove quotes
+                    s_OutputFolder = Developer.CommandLineParser.Arguments["GDX_OUTPUT_FOLDER"]
+                        .Replace("\"","");
+                }
+                else
+                {
+                    s_OutputFolder =
 #if UNITY_EDITOR
-                    Path.Combine(Application.dataPath, "..");
+                        Path.Combine(Application.dataPath, "..");
 #elif UNITY_DOTSRUNTIME
-                    Directory.GetCurrentDirectory();
+                        Directory.GetCurrentDirectory();
 #else
-                    Application.persistentDataPath;
+                        Application.persistentDataPath;
 #endif
+                }
 
                 // Cleanup the folder pathing
                 s_OutputFolder = Path.GetFullPath(s_OutputFolder);
