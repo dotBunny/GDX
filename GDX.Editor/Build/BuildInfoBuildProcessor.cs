@@ -8,7 +8,7 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
-namespace GDX.Editor.Build.Legacy
+namespace GDX.Editor.Build
 {
     /// <summary>
     ///     <para>
@@ -64,11 +64,7 @@ namespace GDX.Editor.Build.Legacy
     ///         </item>
     ///     </list>
     /// </remarks>
-    public class BuildInfoBuildProcessor :
-#if !GDX_PLATFORMS
-        IPreprocessBuildWithReport,
-#endif
-        IPostprocessBuildWithReport
+    public class BuildInfoBuildProcessor : IPreprocessBuildWithReport, IPostprocessBuildWithReport
     {
         /// <summary>
         ///     The priority for the processor to be executed, before defaults.
@@ -89,7 +85,7 @@ namespace GDX.Editor.Build.Legacy
 
             BuildInfoProvider.WriteDefaultFile();
         }
-#if !GDX_PLATFORMS
+
         /// <summary>
         ///     Writes out <c>BuildInfo</c> prior to build.
         /// </summary>
@@ -114,6 +110,5 @@ namespace GDX.Editor.Build.Legacy
                 Trace.Output(Trace.TraceLevel.Warning, e);
             }
         }
-#endif
     }
 }

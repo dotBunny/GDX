@@ -5,9 +5,8 @@
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 
-namespace GDX.Editor.Build.Legacy
+namespace GDX.Editor.Build
 {
-#if !GDX_PLATFORMS
     /// <summary>
     ///     A process step for the legacy build pipeline in Unity which ensures, if enabled that the GDX scripting
     ///     define symbol is present for the target.
@@ -30,5 +29,4 @@ namespace GDX.Editor.Build.Legacy
             PackageProvider.UpdateScriptingDefineSymbols();
         }
     }
-#endif
 }
