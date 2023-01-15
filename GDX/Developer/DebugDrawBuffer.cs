@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.Collections.Generic;
+using GDX.Mathematics;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -484,7 +485,17 @@ namespace GDX.Developer
 
         // axis must be in world space
 
-        public Vector3[] GetCircleVertices(Vector3 center, float radius, Vector3 axis, int count)
+        /// <summary>
+        /// /
+        /// </summary>
+        /// <param name="center"></param>
+        /// <param name="normal"></param>
+        /// <param name="radius"></param>
+        /// <param name="count"></param>
+        /// <param name="startAngle"></param>
+        /// <param name="startAngle"></param>
+        /// <returns></returns>
+        public Vector3[] GetCircleVertices(Vector3 center, Quaternion rotation, float radius, int count = 32, float startAngle = 0, float endAngle = 360)
         {
             // Allocate our point loop
             Vector3[] points = new Vector3[count];
@@ -492,7 +503,6 @@ namespace GDX.Developer
             // A circle has 360 degrees or 2pi radians
             float degreeInterval = 360f / count;
             float radiansInterval = Mathf.PI * 2f / count;
-            Quaternion rotation = Quaternion.Euler(axis);
 
             // Loop through and figure out the points
             for (int i = 0; i < count; i++)
@@ -500,11 +510,8 @@ namespace GDX.Developer
                 // TODO: need to handle axis
                 float angle = i * radiansInterval;
 
-                points[i] = new Vector3(0, math.sin(angle) * radius, math.cos(angle) * radius);
-                //Vector3 basePosition = new Vector3(0, math.sin(angle) * radius, math.cos(angle) * radius);
-
-                //Angle * (Point - Pivot) + Pivot
-             //   points[i] = (rotation * (basePosition - center)) + center;
+                // Create base point
+                points[i] = rotation * new Vector3(0, math.sin(angle) * radius, math.cos(angle) * radius);
             }
 
 
@@ -512,9 +519,18 @@ namespace GDX.Developer
             return points;
         }
 
-        public int DrawWireCircle(Color color, Vector3 center, float radius, Vector3 direction)
+        public int DrawWireCircle(Color color, Vector3 center, Vector3 normal, float radius)
         {
-            Vector3[] vertices = GetCircleVertices(center, radius, direction, 32);
+            // TODO: this needs to take the axis and put it into a proper rotation value in worldspace
+            // We need to generate a world rotation
+            Quaternion rotation = Quaternion.Euler(normal);
+
+            return DrawWireCircle(color, center, rotation, radius);
+        }
+
+        public int DrawWireCircle(Color color, Vector3 center, Quaternion rotation, float radius)
+        {
+            Vector3[] vertices = GetCircleVertices(center, rotation, radius, 32);
 
             int pointCount = vertices.Length;
             int[] segments = new int[pointCount * 2];
