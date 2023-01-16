@@ -3,8 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.Collections.Generic;
-using GDX.Mathematics;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -25,17 +23,6 @@ namespace GDX.Developer
         ///     The default maximum number of vertices per meshReference when dynamically creating meshes.
         /// </summary>
         public const int DefaultMaximumVerticesPerMesh = 512;
-
-        /// <summary>
-        ///     The ordered segment index pairs used to describe a cube.
-        /// </summary>
-        /// <remarks>
-        ///     This effectively wraps the left side, then the right, then connects the two sides.
-        /// </remarks>
-        public static int[] CubeSegmentIndices =
-        {
-            0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7
-        };
 
         /// <summary>
         ///     The base instance of the default dotted line material.
@@ -249,18 +236,6 @@ namespace GDX.Developer
             Finalized = true;
         }
 
-        /// <summary>
-        ///     Draw a dotted line cube of a specific color to the buffer.
-        /// </summary>
-        /// <param name="color">The color which to draw the dotted line cube with.</param>
-        /// <param name="center">The center world position of the cube.</param>
-        /// <param name="size">The unit size of the cube</param>
-        /// <returns>The created cube's invalidation token.</returns>
-        public int DrawDottedCube(Color color, Vector3 center, Vector3 size)
-        {
-            Vector3[] vertices = GetCubeVertices(center, size);
-            return DrawDottedLines(color, ref vertices, ref CubeSegmentIndices);
-        }
 
         /// <summary>
         ///     Draw a dotted line of a specific color as defined to the buffer.
@@ -467,131 +442,6 @@ namespace GDX.Developer
         }
 
         /// <summary>
-        ///     Draw a wireframe cube of a specific color to the buffer.
-        /// </summary>
-        /// <param name="color">The color which to draw the wire cube with.</param>
-        /// <param name="center">The center world position of the cube.</param>
-        /// <param name="size">The unit size of the cube</param>
-        /// <returns>The created cube's invalidation token.</returns>
-        public int DrawWireCube(Color color, Vector3 center, Vector3 size)
-        {
-            Vector3[] vertices = GetCubeVertices(center, size);
-            return DrawLines(color, ref vertices, ref CubeSegmentIndices);
-        }
-
-        // TODO:
-        // first build out function to get points of a circle
-        // then make that work for the other functions
-
-        // axis must be in world space
-
-        /// <summary>
-        /// /
-        /// </summary>
-        /// <param name="center"></param>
-        /// <param name="normal"></param>
-        /// <param name="radius"></param>
-        /// <param name="count"></param>
-        /// <param name="startAngle"></param>
-        /// <param name="startAngle"></param>
-        /// <returns></returns>
-        public Vector3[] GetCircleVertices(Vector3 center, Quaternion rotation, float radius, int count = 32, float startAngle = 0, float endAngle = 360)
-        {
-            // Allocate our point loop
-            Vector3[] points = new Vector3[count];
-
-            // A circle has 360 degrees or 2pi radians
-            float degreeInterval = 360f / count;
-            float radiansInterval = Mathf.PI * 2f / count;
-
-            // Loop through and figure out the points
-            for (int i = 0; i < count; i++)
-            {
-                // TODO: need to handle axis
-                float angle = i * radiansInterval;
-
-                // Create base point
-                points[i] = rotation * new Vector3(0, math.sin(angle) * radius, math.cos(angle) * radius);
-            }
-
-
-            // Send it back
-            return points;
-        }
-
-        public int DrawWireCircle(Color color, Vector3 center, Vector3 normal, float radius)
-        {
-            // TODO: this needs to take the axis and put it into a proper rotation value in worldspace
-            // We need to generate a world rotation
-            Quaternion rotation = Quaternion.Euler(normal);
-
-            return DrawWireCircle(color, center, rotation, radius);
-        }
-
-        public int DrawWireCircle(Color color, Vector3 center, Quaternion rotation, float radius)
-        {
-            Vector3[] vertices = GetCircleVertices(center, rotation, radius, 32);
-
-            int pointCount = vertices.Length;
-            int[] segments = new int[pointCount * 2];
-            int segmentCount = segments.Length;
-            int baseCount = 0;
-
-            for (int i = 0; i < segmentCount; i+=2)
-            {
-                segments[i] = baseCount;
-                baseCount++;
-                segments[i + 1] = baseCount;
-            }
-            segments[segmentCount - 1] = 0;
-
-            return DrawLines(color, ref vertices, ref segments);
-        }
-        // public int DrawWireSphere(Color color, Vector3 center, float radius)
-        // {
-        //     DrawWireCircle(color, center, radius, Vector3.up);
-        //     DrawWireCircle(color, center, radius, Vector3.up);
-        // }
-
-        public int DrawWireCapsule(Color color, Vector3 bottom, Vector3 top, float radius)
-        {
-            Vector3[] vertices = new Vector3[8];
-            int[] segments = new int[16];
-
-            Vector3 xRadius = new Vector3(radius, 0, 0);
-            Vector3 zRadius = new Vector3(0, 0, radius);
-
-            vertices[0] = bottom - xRadius;
-            vertices[1] = bottom + xRadius;
-            segments[0] = 0;
-            segments[1] = 1;
-            vertices[2] = top + xRadius;
-            segments[2] = 1;
-            segments[3] = 2;
-            vertices[3] = top - xRadius;
-            segments[4] = 2;
-            segments[5] = 3;
-            segments[6] = 3;
-            segments[7] = 0;
-
-            vertices[4] = bottom - zRadius;
-            vertices[5] = bottom + zRadius;
-            segments[8] = 4;
-            segments[9] = 5;
-            vertices[6] = top + zRadius;
-            segments[10] = 5;
-            segments[11] = 6;
-            vertices[7] = top - zRadius;
-            segments[12] = 6;
-            segments[13] = 7;
-            segments[14] = 7;
-            segments[15] = 4;
-
-
-            return DrawLines(color, ref vertices, ref segments);
-        }
-
-        /// <summary>
         ///     Execute the <see cref="DebugDrawBuffer"/>, rendering its outputs to the screen.
         /// </summary>
         /// <remarks>
@@ -721,41 +571,6 @@ namespace GDX.Developer
             m_CommandBuffer.Clear();
 
             Finalized = false;
-        }
-
-        /// <summary>
-        ///     Get the vertices that make up a cube.
-        /// </summary>
-        /// <remarks>
-        ///     Ordered based on <see cref="CubeSegmentIndices"/>.
-        /// </remarks>
-        /// <param name="center">The world space center location of the cube.</param>
-        /// <param name="size">The size of the cube.</param>
-        /// <returns>An array of ordered vertices.</returns>
-        static Vector3[] GetCubeVertices(Vector3 center, Vector3 size)
-        {
-            Vector3 half = size / 2f;
-
-            float centerMinusHalfX = center.x - half.x;
-            float centerMinusHalfY = center.y - half.y;
-            float centerMinusHalfZ = center.z - half.z;
-            float centerPlusHalfX = center.x + half.x;
-            float centerPlusHalfY = center.y + half.y;
-            float centerPlusHalfZ = center.z + half.z;
-
-            Vector3[] points =
-            {
-                new Vector3(centerMinusHalfX, centerMinusHalfY, centerMinusHalfZ), // Front Bottom Left (0)
-                new Vector3(centerMinusHalfX, centerMinusHalfY, centerPlusHalfZ), // Back Bottom Left (1)
-                new Vector3(centerMinusHalfX, centerPlusHalfY, centerPlusHalfZ), // Back Top Left (2)
-                new Vector3(centerMinusHalfX, centerPlusHalfY, centerMinusHalfZ), // Front Top Left (3)
-                new Vector3(centerPlusHalfX, centerMinusHalfY, centerMinusHalfZ), // Front Bottom Right (4)
-                new Vector3(centerPlusHalfX, centerMinusHalfY, centerPlusHalfZ), // Back Bottom Right (5)
-                new Vector3(centerPlusHalfX, centerPlusHalfY, centerPlusHalfZ), // Back Top Right (6)
-                new Vector3(centerPlusHalfX, centerPlusHalfY, centerMinusHalfZ), // Front Top Right (7)
-            };
-
-            return points;
         }
 
         /// <summary>
