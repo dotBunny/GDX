@@ -153,6 +153,88 @@ namespace GDX.Developer
 
         public static int DrawWireCapsule(this DebugDrawBuffer buffer, Color color, Vector3 startSpherePosition, Vector3 endSpherePosition, Quaternion rotation, float radius, int circleVertexCount = DefaultCircleVertexCount)
         {
+
+            // Currently we have two circles worth of points
+            int arcCount = (circleVertexCount / 2);
+            arcCount += (arcCount % 2);
+            circleVertexCount = arcCount * 2;
+
+            int pointCount = circleVertexCount * 2;
+
+            Vector3[] vertices = new Vector3[pointCount];
+
+            // Build top arcs
+            float radiansInterval = Mathf.PI * 2f / circleVertexCount;
+
+            // Get two circle unmoved which we will manipulate
+            for (int i = 0; i < circleVertexCount; i++)
+            {
+                float angle = i * radiansInterval;
+                float y = math.sin(angle) * radius;
+                float z = math.cos(angle) * radius;
+
+                if (i <= arcCount)
+                {
+                    // Top
+                    vertices[i] = (rotation * new Vector3(0, y, z)) + startSpherePosition;
+                    vertices[i+arcCount]  = ((Space.Axis.X.ToRotation() * rotation) * new Vector3(0, y, z)) + startSpherePosition;
+                }
+                else
+                {
+                    // Bottom
+                    vertices[i+(arcCount*2)] = (rotation * new Vector3(0, y, z)) + endSpherePosition;
+                    vertices[i+(arcCount*3)]  = ((Space.Axis.X.ToRotation() * rotation) * new Vector3(0, y, z)) + endSpherePosition;
+                }
+            }
+
+            //
+            //
+            //
+            // // TODO: asign segments, knowing hte first and last position are wherere matching pairs shoudl happen
+            //
+            // // Add 4 segments for the connective lines
+            int[] segments = new int[(pointCount * 2) + 4];
+            //int segmentCount = segments.Length;
+            // int baseCount = 0;
+            //
+            // for (int i = 0; i < arcCount; i+=2)
+            // {
+            //     segments[i] = baseCount;
+            //     baseCount++;
+            //     segments[i + 1] = baseCount;
+            // }
+            // for (int i = arcCount; i < arcDouble; i+=2)
+            // {
+            //     segments[i] = baseCount;
+            //     baseCount++;
+            //     segments[i + 1] = baseCount;
+            // }
+
+            //
+            // segments[arcCount - 1] = segments[arcCount - 1];
+            // segments[arcDouble - 1] = segments[arcDouble - 1];
+            // segments[arcCount - 1] = segments[arcTriple - 1];
+            // segments[arcCount - 1] = segments[arcCount - 1];
+            // segments[arcDouble - 1] = arcCount;
+            // segments[arcTriple - 1] = circleVertexCount * 2;
+            // segments[segmentCount - 1] = circleVertexCount * 3;
+
+            return buffer.DrawLines(color, ref vertices, ref segments);
+
+            // Build bottom arcs
+            // connect two
+            // add mid circles
+
+
+
+
+            // Get the circle vertices based on position
+           // GetCircleVertices(ref vertices,  0, startSpherePosition + (Vector3.up * halfRadius), Space.Axis.X.ToRotation() * rotation, radius, circleVertexCount);
+           // GetCircleVertices(ref vertices,  0, endSpherePosition + (Vector3.down * halfRadius), Space.Axis.X.ToRotation() * rotation, radius, circleVertexCount);
+
+
+
+
             // Vector3[] vertices = new Vector3[8];
             // int[] segments = new int[16];
             //
@@ -193,31 +275,15 @@ namespace GDX.Developer
             //     playerRadius, Vector3.up, raycastHits);
 
 
-            int pointCount = circleVertexCount * 4;
-            Vector3[] vertices = new Vector3[pointCount];
+            // int pointCount = circleVertexCount * 4;
+            // Vector3[] vertices = new Vector3[pointCount];
+            //
+            // GetCircleVertices(ref vertices,  0, startSpherePosition, Space.Axis.X.ToRotation() * rotation, radius, circleVertexCount);
+            // GetCircleVertices(ref vertices, circleVertexCount, startSpherePosition, Space.Axis.Y.ToRotation() * rotation, radius, circleVertexCount);
+            // GetCircleVertices(ref vertices, circleVertexCount * 2, endSpherePosition, Space.Axis.X.ToRotation() * rotation, radius, circleVertexCount);
+            // GetCircleVertices(ref vertices, circleVertexCount * 3, endSpherePosition, Space.Axis.Y.ToRotation() * rotation, radius, circleVertexCount);
+            //
 
-            GetCircleVertices(ref vertices,  0, startSpherePosition, Space.Axis.X.ToRotation() * rotation, radius, circleVertexCount);
-            GetCircleVertices(ref vertices, circleVertexCount, startSpherePosition, Space.Axis.Y.ToRotation() * rotation, radius, circleVertexCount);
-            GetCircleVertices(ref vertices, circleVertexCount * 2, endSpherePosition, Space.Axis.X.ToRotation() * rotation, radius, circleVertexCount);
-            GetCircleVertices(ref vertices, circleVertexCount * 3, endSpherePosition, Space.Axis.Y.ToRotation() * rotation, radius, circleVertexCount);
-
-            int[] segments = new int[pointCount * 2];
-            int segmentCount = segments.Length;
-            int baseCount = 0;
-
-            for (int i = 0; i < segmentCount; i+=2)
-            {
-                segments[i] = baseCount;
-                baseCount++;
-                segments[i + 1] = baseCount;
-            }
-
-            segments[circleVertexCount - 1] = 0;
-            segments[(circleVertexCount * 2) - 1] = circleVertexCount;
-            segments[(circleVertexCount*3) - 1] = circleVertexCount * 2;
-            segments[segmentCount - 1] = circleVertexCount * 3;
-
-            return buffer.DrawLines(color, ref vertices, ref segments);
         }
 
         public static int DrawWireCircle(this DebugDrawBuffer buffer, Color color, Vector3 center, Quaternion rotation, float radius, int circleVertexCount = DefaultCircleVertexCount)
