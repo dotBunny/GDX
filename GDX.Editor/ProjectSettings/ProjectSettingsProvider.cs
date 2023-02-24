@@ -779,13 +779,13 @@ namespace GDX.Editor
 
                 if (found)
                 {
-                    k_ConfigSectionHeaders[i].RemoveFromClassList(ResourcesProvider.HiddenClass);
-                    k_ConfigSectionContents[i].RemoveFromClassList(ResourcesProvider.HiddenClass);
+                    k_ConfigSectionHeaders[i]?.RemoveFromClassList(ResourcesProvider.HiddenClass);
+                    k_ConfigSectionContents[i]?.RemoveFromClassList(ResourcesProvider.HiddenClass);
                 }
                 else
                 {
-                    k_ConfigSectionHeaders[i].AddToClassList(ResourcesProvider.HiddenClass);
-                    k_ConfigSectionContents[i].AddToClassList(ResourcesProvider.HiddenClass);
+                    k_ConfigSectionHeaders[i]?.AddToClassList(ResourcesProvider.HiddenClass);
+                    k_ConfigSectionContents[i]?.AddToClassList(ResourcesProvider.HiddenClass);
                 }
             }
         }
