@@ -374,6 +374,7 @@ Button.gdx-small-button {
     margin-top: 2px;
     background-color: rgba(0,0,0,0);
     border-width: 0;
+    height: 18px;
     background-image: resource('Builtin Skins/DarkSkin/Images/IN foldout.png');
 }
 #gdx-visual-scripting-category #button-foldout:hover{
