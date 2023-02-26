@@ -464,7 +464,12 @@ namespace GDX.Editor
                 return false;
             }
 
+#if UNITY_2023_1_OR_NEWER
+            PlayerSettings.GetScriptingDefineSymbols(UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(group),
+                out string[] defines);
+#else
             PlayerSettings.GetScriptingDefineSymbolsForGroup(group, out string[] defines);
+#endif
 
             bool changes = false;
             SimpleList<string> lazyDefines = new SimpleList<string>(defines, defines.Length);
@@ -498,7 +503,11 @@ namespace GDX.Editor
             if (changes && lazyDefines.Array != null)
             {
                 lazyDefines.Compact();
+#if UNITY_2023_1_OR_NEWER
+                PlayerSettings.SetScriptingDefineSymbols(UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(group), lazyDefines.Array);
+#else
                 PlayerSettings.SetScriptingDefineSymbolsForGroup(group, lazyDefines.Array);
+#endif
             }
 
             return changes;
