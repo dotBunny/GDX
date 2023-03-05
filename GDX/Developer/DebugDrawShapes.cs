@@ -151,139 +151,43 @@ namespace GDX.Developer
             return buffer.DrawDottedLines(color, ref vertices, ref CubeSegmentIndices);
         }
 
-        public static int DrawWireCapsule(this DebugDrawBuffer buffer, Color color, Vector3 startSpherePosition, Vector3 endSpherePosition, Quaternion rotation, float radius, int circleVertexCount = DefaultCircleVertexCount)
+        public static int DrawWireCapsule(this DebugDrawBuffer buffer, Color color, Vector3 startSpherePosition, Vector3 endSpherePosition, Quaternion rotation, float radius, int arcVertexCount = DefaultCircleVertexCount / 2)
         {
+            // TODO: Capsule
+            // top wire arcs
+            // connect to bottom wire arcs
+            // bottom wire arcs
+            return -1;
 
-            // Currently we have two circles worth of points
-            int arcCount = (circleVertexCount / 2);
-            arcCount += (arcCount % 2);
-            circleVertexCount = arcCount * 2;
+        }
 
-            int pointCount = circleVertexCount * 2;
 
-            Vector3[] vertices = new Vector3[pointCount];
 
-            // Build top arcs
-            float radiansInterval = Mathf.PI * 2f / circleVertexCount;
+        // TODO: rotation
+        public static int DrawWireArc(this DebugDrawBuffer buffer, Color color, Vector3 center, Quaternion rotation, float radius, float startAngle = 0f, float endAngle = 180f, int arcVertexCount = DefaultCircleVertexCount / 2)
+        {
+            Vector3[] vertices = new Vector3[arcVertexCount+1];
 
-            // Get two circle unmoved which we will manipulate
-            for (int i = 0; i < circleVertexCount; i++)
+            float baseAngle = startAngle;
+            float arcLength = endAngle - startAngle;
+            for (int i = 0; i <= arcVertexCount; i++)
             {
-                float angle = i * radiansInterval;
-                float y = math.sin(angle) * radius;
-                float z = math.cos(angle) * radius;
-
-                if (i <= arcCount)
-                {
-                    // Top
-                    vertices[i] = (rotation * new Vector3(0, y, z)) + startSpherePosition;
-                    vertices[i+arcCount]  = ((Space.Axis.X.ToRotation() * rotation) * new Vector3(0, y, z)) + startSpherePosition;
-                }
-                else
-                {
-                    // Bottom
-                    vertices[i+(arcCount*2)] = (rotation * new Vector3(0, y, z)) + endSpherePosition;
-                    vertices[i+(arcCount*3)]  = ((Space.Axis.X.ToRotation() * rotation) * new Vector3(0, y, z)) + endSpherePosition;
-                }
+                float currentAngle = Mathf.Deg2Rad * baseAngle;
+                vertices[i] = (rotation * new Vector3(0, Mathf.Sin(currentAngle) * radius,Mathf.Cos(currentAngle) * radius)) + center;
+                baseAngle += (arcLength / arcVertexCount);
             }
 
-            //
-            //
-            //
-            // // TODO: asign segments, knowing hte first and last position are wherere matching pairs shoudl happen
-            //
-            // // Add 4 segments for the connective lines
-            int[] segments = new int[(pointCount * 2) + 4];
-            //int segmentCount = segments.Length;
-            // int baseCount = 0;
-            //
-            // for (int i = 0; i < arcCount; i+=2)
-            // {
-            //     segments[i] = baseCount;
-            //     baseCount++;
-            //     segments[i + 1] = baseCount;
-            // }
-            // for (int i = arcCount; i < arcDouble; i+=2)
-            // {
-            //     segments[i] = baseCount;
-            //     baseCount++;
-            //     segments[i + 1] = baseCount;
-            // }
-
-            //
-            // segments[arcCount - 1] = segments[arcCount - 1];
-            // segments[arcDouble - 1] = segments[arcDouble - 1];
-            // segments[arcCount - 1] = segments[arcTriple - 1];
-            // segments[arcCount - 1] = segments[arcCount - 1];
-            // segments[arcDouble - 1] = arcCount;
-            // segments[arcTriple - 1] = circleVertexCount * 2;
-            // segments[segmentCount - 1] = circleVertexCount * 3;
-
+            // Create segment connections
+            int[] segments = new int[arcVertexCount * 2];
+            int segmentCount = segments.Length;
+            int baseCount = 0;
+            for (int i = 0; i < segmentCount; i+=2)
+            {
+                segments[i] = baseCount;
+                baseCount++;
+                segments[i + 1] = baseCount;
+            }
             return buffer.DrawLines(color, ref vertices, ref segments);
-
-            // Build bottom arcs
-            // connect two
-            // add mid circles
-
-
-
-
-            // Get the circle vertices based on position
-           // GetCircleVertices(ref vertices,  0, startSpherePosition + (Vector3.up * halfRadius), Space.Axis.X.ToRotation() * rotation, radius, circleVertexCount);
-           // GetCircleVertices(ref vertices,  0, endSpherePosition + (Vector3.down * halfRadius), Space.Axis.X.ToRotation() * rotation, radius, circleVertexCount);
-
-
-
-
-            // Vector3[] vertices = new Vector3[8];
-            // int[] segments = new int[16];
-            //
-            // Vector3 xRadius = new Vector3(radius, 0, 0);
-            // Vector3 zRadius = new Vector3(0, 0, radius);
-            //
-            // vertices[0] = bottom - xRadius;
-            // vertices[1] = bottom + xRadius;
-            // segments[0] = 0;
-            // segments[1] = 1;
-            // vertices[2] = top + xRadius;
-            // segments[2] = 1;
-            // segments[3] = 2;
-            // vertices[3] = top - xRadius;
-            // segments[4] = 2;
-            // segments[5] = 3;
-            // segments[6] = 3;
-            // segments[7] = 0;
-            //
-            // vertices[4] = bottom - zRadius;
-            // vertices[5] = bottom + zRadius;
-            // segments[8] = 4;
-            // segments[9] = 5;
-            // vertices[6] = top + zRadius;
-            // segments[10] = 5;
-            // segments[11] = 6;
-            // vertices[7] = top - zRadius;
-            // segments[12] = 6;
-            // segments[13] = 7;
-            // segments[14] = 7;
-            // segments[15] = 4;
-
-            //return buffer.DrawLines(color, ref vertices, ref segments);
-
-            // int centerCapsuleHits = Physics.CapsuleCastNonAlloc(
-            //     centerPointOfContactSphere,
-            //     centerPointOfContactTopSphere,
-            //     playerRadius, Vector3.up, raycastHits);
-
-
-            // int pointCount = circleVertexCount * 4;
-            // Vector3[] vertices = new Vector3[pointCount];
-            //
-            // GetCircleVertices(ref vertices,  0, startSpherePosition, Space.Axis.X.ToRotation() * rotation, radius, circleVertexCount);
-            // GetCircleVertices(ref vertices, circleVertexCount, startSpherePosition, Space.Axis.Y.ToRotation() * rotation, radius, circleVertexCount);
-            // GetCircleVertices(ref vertices, circleVertexCount * 2, endSpherePosition, Space.Axis.X.ToRotation() * rotation, radius, circleVertexCount);
-            // GetCircleVertices(ref vertices, circleVertexCount * 3, endSpherePosition, Space.Axis.Y.ToRotation() * rotation, radius, circleVertexCount);
-            //
-
         }
 
         public static int DrawWireCircle(this DebugDrawBuffer buffer, Color color, Vector3 center, Quaternion rotation, float radius, int circleVertexCount = DefaultCircleVertexCount)
@@ -328,14 +232,15 @@ namespace GDX.Developer
             return buffer.DrawLines(color, ref vertices, ref CubeSegmentIndices);
         }
 
+        // TODO: Add rotation
         public static int DrawWireSphere(this DebugDrawBuffer buffer, Color color, Vector3 center, Quaternion rotation, float radius, int circleVertexCount = DefaultCircleVertexCount)
         {
             int pointCount = circleVertexCount * 2;
             Vector3[] vertices = new Vector3[pointCount];
 
             float radiansInterval = Mathf.PI * 2f / circleVertexCount;
-            Quaternion xRotation = Space.Axis.X.ToRotation();
-            Quaternion yRotation = Space.Axis.Y.ToRotation();
+            Quaternion xRotation = Space.Axis.X.ToRotation() * rotation; // ?
+            Quaternion yRotation = Space.Axis.Y.ToRotation() * rotation; // ?
 
             // Loop through and figure out the points
             for (int i = 0; i < circleVertexCount; i++)
