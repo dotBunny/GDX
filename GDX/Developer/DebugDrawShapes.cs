@@ -9,7 +9,8 @@ namespace GDX.Developer
 {
     public static class DebugDrawShapes
     {
-
+        const float PI = 3.1415927f;
+        const float Deg2Rad = 0.017453292f;
         const int DefaultCircleVertexCount = 32;
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace GDX.Developer
 
         static void GetCircleVertices(ref Vector3[] vertices, int startIndex, Vector3 center, Quaternion rotation, float radius, int circleVertexCount = DefaultCircleVertexCount)
         {
-            float radiansInterval = Mathf.PI * 2f / circleVertexCount;
+            float radiansInterval = PI * 2f / circleVertexCount;
 
             // Loop through and figure out the points
             for (int i = 0; i < circleVertexCount; i++)
@@ -153,26 +154,74 @@ namespace GDX.Developer
 
         public static int DrawWireCapsule(this DebugDrawBuffer buffer, Color color, Vector3 startSpherePosition, Vector3 endSpherePosition, Quaternion rotation, float radius, int arcVertexCount = DefaultCircleVertexCount / 2)
         {
+            // Calculate total vertices
+            int totalVertices = (arcVertexCount + 1) * 4;
+            // TODO: add circles?
+
+            Vector3[] vertices = new Vector3[totalVertices];
+            float baseAngle = 0f;
+            float arcLength = 180f;
+
+
+            int bottomPrimaryStartIndex = arcVertexCount + 1;
+            int topSecondaryStartIndex = bottomPrimaryStartIndex * 2;
+            int bottomSecondaryStartIndex = bottomPrimaryStartIndex * 3;
+
+
+            Quaternion offsetRotation = rotation * Space.Direction.Left.ToRotation();
+            Quaternion invertedRotation = rotation * Space.Direction.Down.ToRotation();
+            Quaternion invertedOffsetRotation = invertedRotation * Space.Direction.Left.ToRotation();
+
+            for (int i = 0; i <= arcVertexCount; i++)
+            {
+                float currentAngle = Deg2Rad * baseAngle;
+                Vector3 basePosition = new Vector3(0, Mathf.Sin(currentAngle) * radius, Mathf.Cos(currentAngle) * radius);
+
+                // Primary Loop
+                vertices[i] = rotation * basePosition + startSpherePosition;
+                vertices[i+bottomPrimaryStartIndex] = invertedRotation * basePosition + endSpherePosition;
+
+                // Secondary Loop
+                vertices[i+topSecondaryStartIndex] =  offsetRotation * basePosition + startSpherePosition;
+                vertices[i+bottomSecondaryStartIndex] = invertedOffsetRotation * basePosition + endSpherePosition;
+
+                baseAngle += (arcLength / arcVertexCount);
+            }
+
+            // We need to connect all the verts, and inject the vertical connections
+
+
             // TODO: Capsule
             // top wire arcs
             // connect to bottom wire arcs
             // bottom wire arcs
-            return -1;
 
+
+
+            // TODO : need to build this in a way to loop through one time, with offsets for the above, and inject the connective parts too
+
+            // Create segment connections
+            int[] segments = new int[(totalVertices * 2) + 8]; // TODO: add connection
+            int segmentCount = segments.Length;
+            int baseCount = 0;
+            for (int i = 0; i < segmentCount; i+=2)
+            {
+                segments[i] = baseCount;
+                baseCount++;
+                segments[i + 1] = baseCount;
+            }
+            return buffer.DrawLines(color, ref vertices, ref segments);
         }
 
-
-
-        // TODO: rotation
         public static int DrawWireArc(this DebugDrawBuffer buffer, Color color, Vector3 center, Quaternion rotation, float radius, float startAngle = 0f, float endAngle = 180f, int arcVertexCount = DefaultCircleVertexCount / 2)
         {
-            Vector3[] vertices = new Vector3[arcVertexCount+1];
-
+            // We do the plus one to complete the full arc segment, otherwise it would not be every peice
+            Vector3[] vertices = new Vector3[arcVertexCount + 1];
             float baseAngle = startAngle;
             float arcLength = endAngle - startAngle;
             for (int i = 0; i <= arcVertexCount; i++)
             {
-                float currentAngle = Mathf.Deg2Rad * baseAngle;
+                float currentAngle = Deg2Rad * baseAngle;
                 vertices[i] = (rotation * new Vector3(0, Mathf.Sin(currentAngle) * radius,Mathf.Cos(currentAngle) * radius)) + center;
                 baseAngle += (arcLength / arcVertexCount);
             }
@@ -193,7 +242,7 @@ namespace GDX.Developer
         public static int DrawWireCircle(this DebugDrawBuffer buffer, Color color, Vector3 center, Quaternion rotation, float radius, int circleVertexCount = DefaultCircleVertexCount)
         {
             Vector3[] vertices = new Vector3[circleVertexCount];
-            float radiansInterval = Mathf.PI * 2f / circleVertexCount;
+            float radiansInterval = PI * 2f / circleVertexCount;
 
             // Loop through and figure out the points
             for (int i = 0; i < circleVertexCount; i++)
@@ -232,15 +281,14 @@ namespace GDX.Developer
             return buffer.DrawLines(color, ref vertices, ref CubeSegmentIndices);
         }
 
-        // TODO: Add rotation
         public static int DrawWireSphere(this DebugDrawBuffer buffer, Color color, Vector3 center, Quaternion rotation, float radius, int circleVertexCount = DefaultCircleVertexCount)
         {
             int pointCount = circleVertexCount * 2;
             Vector3[] vertices = new Vector3[pointCount];
 
-            float radiansInterval = Mathf.PI * 2f / circleVertexCount;
-            Quaternion xRotation = Space.Axis.X.ToRotation() * rotation; // ?
-            Quaternion yRotation = Space.Axis.Y.ToRotation() * rotation; // ?
+            float radiansInterval = PI * 2f / circleVertexCount;
+            Quaternion xRotation = Space.Axis.X.ToRotation() * rotation;
+            Quaternion yRotation = Space.Axis.Y.ToRotation() * rotation;
 
             // Loop through and figure out the points
             for (int i = 0; i < circleVertexCount; i++)
