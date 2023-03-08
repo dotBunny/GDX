@@ -152,7 +152,14 @@ namespace GDX.Developer
             return buffer.DrawDottedLines(color, ref vertices, ref CubeSegmentIndices);
         }
 
-        public static int DrawWireCapsule(this DebugDrawBuffer buffer, Color color, Vector3 startSpherePosition, Vector3 endSpherePosition, Quaternion rotation, float radius, int arcVertexCount = DefaultCircleVertexCount / 2)
+        static readonly Quaternion k_RotationPrimaryTopLoop = Quaternion.Euler(0, 90, 0);
+        static readonly Quaternion k_RotationPrimaryBottomLoop = Quaternion.Euler(0, 90, 180);
+
+        static readonly Quaternion k_RotationSecondaryTopLoop = Quaternion.Euler(0, 180, 0);
+        static readonly Quaternion k_RotationSecondaryBottomLoop = Quaternion.Euler(0, 180, 180);
+
+
+        public static int DrawWireCapsule(this DebugDrawBuffer buffer, Color color, Vector3 bottomSpherePosition, Vector3 topSpherePosition, Quaternion rotation, float radius, int arcVertexCount = DefaultCircleVertexCount / 2)
         {
             // Calculate total vertices
             int totalVertices = (arcVertexCount + 1) * 4;
@@ -167,41 +174,30 @@ namespace GDX.Developer
             int topSecondaryStartIndex = bottomPrimaryStartIndex * 2;
             int bottomSecondaryStartIndex = bottomPrimaryStartIndex * 3;
 
+            Quaternion primaryTopRotation = rotation * k_RotationPrimaryTopLoop;
+            Quaternion primaryBottomRotation = rotation * k_RotationPrimaryBottomLoop;
+            Quaternion secondaryTopRotation = rotation * k_RotationSecondaryTopLoop;
+            Quaternion secondaryBottomRotation = rotation * k_RotationSecondaryBottomLoop;
 
-            Quaternion offsetRotation = rotation * Space.Direction.Left.ToRotation();
-            Quaternion invertedRotation = rotation * Space.Direction.Down.ToRotation();
-            Quaternion invertedOffsetRotation = invertedRotation * Space.Direction.Left.ToRotation();
 
             for (int i = 0; i <= arcVertexCount; i++)
             {
                 float currentAngle = Deg2Rad * baseAngle;
                 Vector3 basePosition = new Vector3(0, Mathf.Sin(currentAngle) * radius, Mathf.Cos(currentAngle) * radius);
 
-                // Primary Loop
-                vertices[i] = rotation * basePosition + startSpherePosition;
-                vertices[i+bottomPrimaryStartIndex] = invertedRotation * basePosition + endSpherePosition;
-
-                // Secondary Loop
-                vertices[i+topSecondaryStartIndex] =  offsetRotation * basePosition + startSpherePosition;
-                vertices[i+bottomSecondaryStartIndex] = invertedOffsetRotation * basePosition + endSpherePosition;
+                vertices[i] = primaryTopRotation * basePosition + topSpherePosition;
+                vertices[i+bottomPrimaryStartIndex] = primaryBottomRotation * basePosition + bottomSpherePosition;
+                vertices[i+topSecondaryStartIndex] = secondaryTopRotation * basePosition + topSpherePosition;
+                vertices[i+bottomSecondaryStartIndex] = secondaryBottomRotation * basePosition + bottomSpherePosition;
 
                 baseAngle += (arcLength / arcVertexCount);
             }
 
-            // We need to connect all the verts, and inject the vertical connections
 
-
-            // TODO: Capsule
-            // top wire arcs
-            // connect to bottom wire arcs
-            // bottom wire arcs
-
-
-
-            // TODO : need to build this in a way to loop through one time, with offsets for the above, and inject the connective parts too
-
+            // TODO SEGEMENT MAPPING
             // Create segment connections
-            int[] segments = new int[(totalVertices * 2) + 8]; // TODO: add connection
+            int[] segments = new int[(totalVertices * 2) + 8];
+
             int segmentCount = segments.Length;
             int baseCount = 0;
             for (int i = 0; i < segmentCount; i+=2)
@@ -210,6 +206,9 @@ namespace GDX.Developer
                 baseCount++;
                 segments[i + 1] = baseCount;
             }
+
+            // Link top to bottom
+
             return buffer.DrawLines(color, ref vertices, ref segments);
         }
 
