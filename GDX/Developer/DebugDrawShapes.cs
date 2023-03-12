@@ -179,14 +179,15 @@ namespace GDX.Developer
             Quaternion secondaryTopRotation = rotation * k_RotationSecondaryTopLoop;
             Quaternion secondaryBottomRotation = rotation * k_RotationSecondaryBottomLoop;
 
-
             for (int i = 0; i <= arcVertexCount; i++)
             {
                 float currentAngle = Deg2Rad * baseAngle;
+
                 Vector3 basePosition = new Vector3(0, Mathf.Sin(currentAngle) * radius, Mathf.Cos(currentAngle) * radius);
 
                 vertices[i] = primaryTopRotation * basePosition + topSpherePosition;
                 vertices[i+bottomPrimaryStartIndex] = primaryBottomRotation * basePosition + bottomSpherePosition;
+
                 vertices[i+topSecondaryStartIndex] = secondaryTopRotation * basePosition + topSpherePosition;
                 vertices[i+bottomSecondaryStartIndex] = secondaryBottomRotation * basePosition + bottomSpherePosition;
 
@@ -198,17 +199,32 @@ namespace GDX.Developer
             // Create segment connections
             int[] segments = new int[(totalVertices * 2) + 8];
 
+            // Offset indices to allow for connections
+            bottomPrimaryStartIndex += 2;
+            topSecondaryStartIndex += 4;
+            bottomSecondaryStartIndex += 6;
+
             int segmentCount = segments.Length;
             int baseCount = 0;
             for (int i = 0; i < segmentCount; i+=2)
             {
+                // Were gonna skip the spots to connect and hook up after
+                if (i == bottomPrimaryStartIndex || i == topSecondaryStartIndex || i == bottomSecondaryStartIndex)
+                {
+                    segments[i] = baseCount - 1;
+                    segments[i + 1] = baseCount;
+                    baseCount -= 3;
+                    continue;
+                }
+
                 segments[i] = baseCount;
                 baseCount++;
                 segments[i + 1] = baseCount;
             }
 
-            // Link top to bottom
+            segments[segmentCount - 1] = segments[bottomSecondaryStartIndex];
 
+            // Link top to bottom
             return buffer.DrawLines(color, ref vertices, ref segments);
         }
 
