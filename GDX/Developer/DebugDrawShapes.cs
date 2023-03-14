@@ -153,7 +153,7 @@ namespace GDX.Developer
         }
 
         static readonly Quaternion k_RotationPrimaryTopLoop = Quaternion.Euler(0, 90, 0);
-        static readonly Quaternion k_RotationPrimaryBottomLoop = Quaternion.Euler(0, 90, 180);
+        static readonly Quaternion k_RotationPrimaryBottomLoop = Quaternion.Euler(0, -90, 180);
 
         static readonly Quaternion k_RotationSecondaryTopLoop = Quaternion.Euler(0, 180, 0);
         static readonly Quaternion k_RotationSecondaryBottomLoop = Quaternion.Euler(0, 180, 180);
@@ -188,8 +188,11 @@ namespace GDX.Developer
                 vertices[i] = primaryTopRotation * basePosition + topSpherePosition;
                 vertices[i+bottomPrimaryStartIndex] = primaryBottomRotation * basePosition + bottomSpherePosition;
 
-                vertices[i+topSecondaryStartIndex] = secondaryTopRotation * basePosition + topSpherePosition;
-                vertices[i+bottomSecondaryStartIndex] = secondaryBottomRotation * basePosition + bottomSpherePosition;
+               // vertices[i+topSecondaryStartIndex] = secondaryTopRotation * basePosition + topSpherePosition;
+               // vertices[i+bottomSecondaryStartIndex] = secondaryBottomRotation * basePosition + bottomSpherePosition;
+
+                vertices[i+topSecondaryStartIndex] = basePosition;
+                vertices[i+bottomSecondaryStartIndex] = basePosition;
 
                 baseAngle += (arcLength / arcVertexCount);
             }
@@ -200,29 +203,97 @@ namespace GDX.Developer
             int[] segments = new int[(totalVertices * 2) + 8];
 
             // Offset indices to allow for connections
-            bottomPrimaryStartIndex += 2;
-            topSecondaryStartIndex += 4;
-            bottomSecondaryStartIndex += 6;
+            bottomPrimaryStartIndex = (bottomPrimaryStartIndex * 2); // += 2
+            topSecondaryStartIndex = (topSecondaryStartIndex * 2); //+= 4;
+            bottomSecondaryStartIndex = (bottomSecondaryStartIndex * 2); //+= 6;
 
             int segmentCount = segments.Length;
             int baseCount = 0;
+            int workingOffset = 0;
+
+            //
+            // // Build Primary Loop Link
+            // for (int i = 0; i <= arcVertexCount; i+=2)
+            // {
+            //     segments[i] = baseCount;
+            //     baseCount++;
+            //     segments[i + 1] = baseCount;
+            // }
+            //
+            // baseCount = bottomPrimaryStartIndex;
+            // workingOffset = (topSecondaryStartIndex * 2);
+            // for (int i = bottomPrimaryStartIndex * 2); i < workingOffset; i+=2)
+            // {
+            //     segments[i] = baseCount;
+            //     baseCount++;
+            //     segments[i + 1] = baseCount;
+            // }
+            // // Connect top arc to bottom arc
+            // segments[arcVertexCount + 1] = segments[arcVertexCount];
+            // segments[arcVertexCount + 2] = segments[bottomPrimaryStartIndex*2];
+            // segments[workingOffset + 1] = segments[bottomPrimaryStartIndex*2+arcVertexCount];
+            // segments[workingOffset + 2] = segments[0];
+            //
+            //
+            // // Build Secondary Loop
+            // baseCount = topSecondaryStartIndex;
+            // workingOffset = bottomSecondaryStartIndex - 2;
+            // for (int i = topSecondaryStartIndex; i < workingOffset; i+=2)
+            // {
+            //     segments[i] = baseCount;
+            //     baseCount++;
+            //     segments[i + 1] = baseCount;
+            // }
+            // baseCount = bottomSecondaryStartIndex;
+            // workingOffset = segmentCount - 2;
+            // for (int i = bottomSecondaryStartIndex; i < workingOffset; i+=2)
+            // {
+            //     segments[i] = baseCount;
+            //     baseCount++;
+            //     segments[i + 1] = baseCount;
+            // }
+            // segments[workingOffset + 1] = segments[bottomPrimaryStartIndex*2+arcVertexCount];
+            // segments[workingOffset + 2] = segments[topSecondaryStartIndex];
+            //
+            //
+            //
+
+            // Connect Arc
+
+
+
             for (int i = 0; i < segmentCount; i+=2)
             {
                 // Were gonna skip the spots to connect and hook up after
-                if (i == bottomPrimaryStartIndex || i == topSecondaryStartIndex || i == bottomSecondaryStartIndex)
+                //if (i == bottomPrimaryStartIndex || i == topSecondaryStartIndex || i == bottomSecondaryStartIndex)
+                if (i == bottomPrimaryStartIndex)
                 {
-                    segments[i] = baseCount - 1;
-                    segments[i + 1] = baseCount;
+                    // Create Link
+                     segments[i] = baseCount - 1;
+                    segments[i - 1] = baseCount;
+                    baseCount++;
+                    continue;
+                }
+
+                if (i == topSecondaryStartIndex || i == bottomSecondaryStartIndex)
+                {
+                    // segments[i] = baseCount - 1;
+                    //segments[i - 1] = baseCount;
                     baseCount -= 3;
                     continue;
                 }
+
 
                 segments[i] = baseCount;
                 baseCount++;
                 segments[i + 1] = baseCount;
             }
 
-            segments[segmentCount - 1] = segments[bottomSecondaryStartIndex];
+            // Last segment should connect
+
+          //  segments[bottomPrimaryStartIndex-1] = segments[0];
+
+           // segments[segmentCount - 1] = segments[topSecondaryStartIndex];
 
             // Link top to bottom
             return buffer.DrawLines(color, ref vertices, ref segments);
