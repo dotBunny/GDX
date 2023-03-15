@@ -161,16 +161,18 @@ namespace GDX.Developer
 
         public static int DrawWireCapsule(this DebugDrawBuffer buffer, Color color, Vector3 bottomSpherePosition, Vector3 topSpherePosition, Quaternion rotation, float radius, int arcVertexCount = DefaultCircleVertexCount / 2)
         {
-            // Calculate total vertices
-            int totalVertices = (arcVertexCount + 1) * 4;
-            // TODO: add circles?
+            arcVertexCount = 2;
 
+            // Calculate total vertices
+            int totalVertices = arcVertexCount * 4;
+
+            // TODO: add circles?
             Vector3[] vertices = new Vector3[totalVertices];
             float baseAngle = 0f;
             float arcLength = 180f;
+            int lineCount = arcVertexCount - 1;
 
-
-            int bottomPrimaryStartIndex = arcVertexCount + 1;
+            int bottomPrimaryStartIndex = arcVertexCount;
             int topSecondaryStartIndex = bottomPrimaryStartIndex * 2;
             int bottomSecondaryStartIndex = bottomPrimaryStartIndex * 3;
 
@@ -179,13 +181,14 @@ namespace GDX.Developer
             Quaternion secondaryTopRotation = rotation * k_RotationSecondaryTopLoop;
             Quaternion secondaryBottomRotation = rotation * k_RotationSecondaryBottomLoop;
 
-            for (int i = 0; i <= arcVertexCount; i++)
+            for (int i = 0; i < arcVertexCount; i++)
             {
                 float currentAngle = Deg2Rad * baseAngle;
 
                 Vector3 basePosition = new Vector3(0, Mathf.Sin(currentAngle) * radius, Mathf.Cos(currentAngle) * radius);
 
                 vertices[i] = primaryTopRotation * basePosition + topSpherePosition;
+
                 vertices[i+bottomPrimaryStartIndex] = primaryBottomRotation * basePosition + bottomSpherePosition;
 
                // vertices[i+topSecondaryStartIndex] = secondaryTopRotation * basePosition + topSpherePosition;
@@ -194,106 +197,86 @@ namespace GDX.Developer
                 vertices[i+topSecondaryStartIndex] = basePosition;
                 vertices[i+bottomSecondaryStartIndex] = basePosition;
 
-                baseAngle += (arcLength / arcVertexCount);
+                baseAngle += arcLength / lineCount;
             }
 
 
             // TODO SEGEMENT MAPPING
             // Create segment connections
-            int[] segments = new int[(totalVertices * 2) + 8];
+            int blockSize = (arcVertexCount * 2) + 2;
+            int[] segments = new int[(totalVertices * 2) + 8]; // The extras are for the connections
 
-            // Offset indices to allow for connections
-            bottomPrimaryStartIndex = (bottomPrimaryStartIndex * 2); // += 2
-            topSecondaryStartIndex = (topSecondaryStartIndex * 2); //+= 4;
-            bottomSecondaryStartIndex = (bottomSecondaryStartIndex * 2); //+= 6;
+            int primaryTopBottomConnectionIndex = blockSize - 2;
+            int primaryBottomTopConnectionIndex = (blockSize * 2) - 2;
+            int secondaryTopBottomConnectionIndex = (blockSize * 3) - 2;
+            int secondaryBottomTopConnectionIndex = (blockSize * 4) - 2;
 
             int segmentCount = segments.Length;
             int baseCount = 0;
-            int workingOffset = 0;
-
-            //
-            // // Build Primary Loop Link
-            // for (int i = 0; i <= arcVertexCount; i+=2)
-            // {
-            //     segments[i] = baseCount;
-            //     baseCount++;
-            //     segments[i + 1] = baseCount;
-            // }
-            //
-            // baseCount = bottomPrimaryStartIndex;
-            // workingOffset = (topSecondaryStartIndex * 2);
-            // for (int i = bottomPrimaryStartIndex * 2); i < workingOffset; i+=2)
-            // {
-            //     segments[i] = baseCount;
-            //     baseCount++;
-            //     segments[i + 1] = baseCount;
-            // }
-            // // Connect top arc to bottom arc
-            // segments[arcVertexCount + 1] = segments[arcVertexCount];
-            // segments[arcVertexCount + 2] = segments[bottomPrimaryStartIndex*2];
-            // segments[workingOffset + 1] = segments[bottomPrimaryStartIndex*2+arcVertexCount];
-            // segments[workingOffset + 2] = segments[0];
-            //
-            //
-            // // Build Secondary Loop
-            // baseCount = topSecondaryStartIndex;
-            // workingOffset = bottomSecondaryStartIndex - 2;
-            // for (int i = topSecondaryStartIndex; i < workingOffset; i+=2)
-            // {
-            //     segments[i] = baseCount;
-            //     baseCount++;
-            //     segments[i + 1] = baseCount;
-            // }
-            // baseCount = bottomSecondaryStartIndex;
-            // workingOffset = segmentCount - 2;
-            // for (int i = bottomSecondaryStartIndex; i < workingOffset; i+=2)
-            // {
-            //     segments[i] = baseCount;
-            //     baseCount++;
-            //     segments[i + 1] = baseCount;
-            // }
-            // segments[workingOffset + 1] = segments[bottomPrimaryStartIndex*2+arcVertexCount];
-            // segments[workingOffset + 2] = segments[topSecondaryStartIndex];
-            //
-            //
-            //
-
-            // Connect Arc
-
-
 
             for (int i = 0; i < segmentCount; i+=2)
             {
-                // Were gonna skip the spots to connect and hook up after
-                //if (i == bottomPrimaryStartIndex || i == topSecondaryStartIndex || i == bottomSecondaryStartIndex)
-                if (i == bottomPrimaryStartIndex)
+                if (i == primaryTopBottomConnectionIndex || i == primaryBottomTopConnectionIndex || i == secondaryTopBottomConnectionIndex || i == secondaryBottomTopConnectionIndex)
                 {
-                    // Create Link
-                     segments[i] = baseCount - 1;
-                    segments[i - 1] = baseCount;
                     baseCount++;
                     continue;
                 }
-
-                if (i == topSecondaryStartIndex || i == bottomSecondaryStartIndex)
-                {
-                    // segments[i] = baseCount - 1;
-                    //segments[i - 1] = baseCount;
-                    baseCount -= 3;
-                    continue;
-                }
-
 
                 segments[i] = baseCount;
                 baseCount++;
                 segments[i + 1] = baseCount;
             }
 
-            // Last segment should connect
+            segments[primaryTopBottomConnectionIndex] = segments[primaryTopBottomConnectionIndex - 1];
+            segments[primaryTopBottomConnectionIndex+1] = segments[primaryTopBottomConnectionIndex + 2];
 
-          //  segments[bottomPrimaryStartIndex-1] = segments[0];
+            segments[primaryBottomTopConnectionIndex] = segments[primaryBottomTopConnectionIndex - 1];
+            segments[primaryBottomTopConnectionIndex+1] = segments[0];
 
-           // segments[segmentCount - 1] = segments[topSecondaryStartIndex];
+            segments[secondaryTopBottomConnectionIndex] = segments[secondaryTopBottomConnectionIndex - 1];
+            segments[secondaryTopBottomConnectionIndex+1] = segments[secondaryTopBottomConnectionIndex + 2];
+
+            segments[secondaryBottomTopConnectionIndex] = segments[secondaryBottomTopConnectionIndex - 1];
+            segments[secondaryBottomTopConnectionIndex+1] = segments[primaryBottomTopConnectionIndex - 2];
+
+
+
+            // vertices = {Vector3[]} Vector3[8]
+            //     [0] = {Vector3} (4.22900963, 5.70499992, 0.52099371)
+            //     [1] = {Vector3} (3.72900963, 5.70499992, 0.52099371)
+            //     [2] = {Vector3} (3.72900963, 4.125, 0.52099371)
+            //     [3] = {Vector3} (4.22900963, 4.125, 0.52099371)
+            //     [4] = {Vector3} (0, 0, 0.25)
+            //     [5] = {Vector3} (0, -2.18556941E-08, -0.25)
+            //     [6] = {Vector3} (0, 0, 0.25)
+            //     [7] = {Vector3} (0, -2.18556941E-08, -0.25)
+
+            // segments = {int[]} int[24]
+            //     [0] = {int} 0
+            //     [1] = {int} 1
+            //     [2] = {int} 1
+            //     [3] = {int} 2
+            //     [4] = {int} 2
+            //     [5] = {int} 3
+            //     [6] = {int} 3
+            //     [7] = {int} 4
+            //     [8] = {int} 4
+            //     [9] = {int} 5
+            //     [10] = {int} 5
+            //     [11] = {int} 0
+            //     [12] = {int} 6
+            //     [13] = {int} 7
+            //     [14] = {int} 7
+            //     [15] = {int} 8
+            //     [16] = {int} 8
+            //     [17] = {int} 9
+            //     [18] = {int} 9
+            //     [19] = {int} 10
+            //     [20] = {int} 10
+            //     [21] = {int} 11
+            //     [22] = {int} 11
+            //     [23] = {int} 4
+
 
             // Link top to bottom
             return buffer.DrawLines(color, ref vertices, ref segments);
