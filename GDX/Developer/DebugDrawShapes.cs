@@ -156,13 +156,11 @@ namespace GDX.Developer
         static readonly Quaternion k_RotationPrimaryBottomLoop = Quaternion.Euler(0, -90, 180);
 
         static readonly Quaternion k_RotationSecondaryTopLoop = Quaternion.Euler(0, 180, 0);
-        static readonly Quaternion k_RotationSecondaryBottomLoop = Quaternion.Euler(0, 180, 180);
+        static readonly Quaternion k_RotationSecondaryBottomLoop = Quaternion.Euler(0, 0, 180);
 
 
         public static int DrawWireCapsule(this DebugDrawBuffer buffer, Color color, Vector3 bottomSpherePosition, Vector3 topSpherePosition, Quaternion rotation, float radius, int arcVertexCount = DefaultCircleVertexCount / 2)
         {
-            arcVertexCount = 2;
-
             // Calculate total vertices
             int totalVertices = arcVertexCount * 4;
 
@@ -188,23 +186,18 @@ namespace GDX.Developer
                 Vector3 basePosition = new Vector3(0, Mathf.Sin(currentAngle) * radius, Mathf.Cos(currentAngle) * radius);
 
                 vertices[i] = primaryTopRotation * basePosition + topSpherePosition;
-
                 vertices[i+bottomPrimaryStartIndex] = primaryBottomRotation * basePosition + bottomSpherePosition;
 
-               // vertices[i+topSecondaryStartIndex] = secondaryTopRotation * basePosition + topSpherePosition;
-               // vertices[i+bottomSecondaryStartIndex] = secondaryBottomRotation * basePosition + bottomSpherePosition;
-
-                vertices[i+topSecondaryStartIndex] = basePosition;
-                vertices[i+bottomSecondaryStartIndex] = basePosition;
+                vertices[i+topSecondaryStartIndex] = secondaryTopRotation * basePosition + topSpherePosition;
+                vertices[i+bottomSecondaryStartIndex] = secondaryBottomRotation * basePosition + bottomSpherePosition;
 
                 baseAngle += arcLength / lineCount;
             }
 
 
-            // TODO SEGEMENT MAPPING
             // Create segment connections
-            int blockSize = (arcVertexCount * 2) + 2;
-            int[] segments = new int[(totalVertices * 2) + 8]; // The extras are for the connections
+            int blockSize = (lineCount * 2) + 2;
+            int[] segments = new int[blockSize * 4];
 
             int primaryTopBottomConnectionIndex = blockSize - 2;
             int primaryBottomTopConnectionIndex = (blockSize * 2) - 2;
@@ -237,46 +230,7 @@ namespace GDX.Developer
             segments[secondaryTopBottomConnectionIndex+1] = segments[secondaryTopBottomConnectionIndex + 2];
 
             segments[secondaryBottomTopConnectionIndex] = segments[secondaryBottomTopConnectionIndex - 1];
-            segments[secondaryBottomTopConnectionIndex+1] = segments[primaryBottomTopConnectionIndex - 2];
-
-
-
-            // vertices = {Vector3[]} Vector3[8]
-            //     [0] = {Vector3} (4.22900963, 5.70499992, 0.52099371)
-            //     [1] = {Vector3} (3.72900963, 5.70499992, 0.52099371)
-            //     [2] = {Vector3} (3.72900963, 4.125, 0.52099371)
-            //     [3] = {Vector3} (4.22900963, 4.125, 0.52099371)
-            //     [4] = {Vector3} (0, 0, 0.25)
-            //     [5] = {Vector3} (0, -2.18556941E-08, -0.25)
-            //     [6] = {Vector3} (0, 0, 0.25)
-            //     [7] = {Vector3} (0, -2.18556941E-08, -0.25)
-
-            // segments = {int[]} int[24]
-            //     [0] = {int} 0
-            //     [1] = {int} 1
-            //     [2] = {int} 1
-            //     [3] = {int} 2
-            //     [4] = {int} 2
-            //     [5] = {int} 3
-            //     [6] = {int} 3
-            //     [7] = {int} 4
-            //     [8] = {int} 4
-            //     [9] = {int} 5
-            //     [10] = {int} 5
-            //     [11] = {int} 0
-            //     [12] = {int} 6
-            //     [13] = {int} 7
-            //     [14] = {int} 7
-            //     [15] = {int} 8
-            //     [16] = {int} 8
-            //     [17] = {int} 9
-            //     [18] = {int} 9
-            //     [19] = {int} 10
-            //     [20] = {int} 10
-            //     [21] = {int} 11
-            //     [22] = {int} 11
-            //     [23] = {int} 4
-
+            segments[secondaryBottomTopConnectionIndex+1] = segments[primaryBottomTopConnectionIndex + 2];
 
             // Link top to bottom
             return buffer.DrawLines(color, ref vertices, ref segments);
@@ -285,18 +239,19 @@ namespace GDX.Developer
         public static int DrawWireArc(this DebugDrawBuffer buffer, Color color, Vector3 center, Quaternion rotation, float radius, float startAngle = 0f, float endAngle = 180f, int arcVertexCount = DefaultCircleVertexCount / 2)
         {
             // We do the plus one to complete the full arc segment, otherwise it would not be every peice
-            Vector3[] vertices = new Vector3[arcVertexCount + 1];
+            Vector3[] vertices = new Vector3[arcVertexCount];
             float baseAngle = startAngle;
             float arcLength = endAngle - startAngle;
-            for (int i = 0; i <= arcVertexCount; i++)
+            int lineCount = arcVertexCount - 1;
+            for (int i = 0; i < arcVertexCount; i++)
             {
                 float currentAngle = Deg2Rad * baseAngle;
                 vertices[i] = (rotation * new Vector3(0, Mathf.Sin(currentAngle) * radius,Mathf.Cos(currentAngle) * radius)) + center;
-                baseAngle += (arcLength / arcVertexCount);
+                baseAngle += (arcLength / lineCount);
             }
 
             // Create segment connections
-            int[] segments = new int[arcVertexCount * 2];
+            int[] segments = new int[lineCount * 2];
             int segmentCount = segments.Length;
             int baseCount = 0;
             for (int i = 0; i < segmentCount; i+=2)
