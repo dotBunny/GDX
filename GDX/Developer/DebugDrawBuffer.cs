@@ -162,6 +162,7 @@ namespace GDX.Developer
             m_CurrentToken = 0;
 
             m_CommandBuffer = new CommandBuffer();
+            m_CommandBuffer.name = $"GDX_DebugDrawBuffer_{Key}";
 
             // Make sure our statics have their desired default materials atm
             if (s_LineMaterial == null)
