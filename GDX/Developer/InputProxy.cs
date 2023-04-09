@@ -365,7 +365,7 @@ namespace GDX.Developer
             }
         }
 
-        static readonly Dictionary<ushort, ushort> k_KnownScanCodes = new();
+        static readonly Dictionary<ushort, ushort> k_KnownScanCodes = new Dictionary<ushort, ushort>();
 
         /// <summary>
         ///     A generic hardware input event.
