@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
-using Screen = UnityEngine.Device.Screen;
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
 using System.Runtime.InteropServices;
 #endif
