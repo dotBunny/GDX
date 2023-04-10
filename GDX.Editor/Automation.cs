@@ -369,29 +369,87 @@ namespace GDX.Editor
             return returnWindow;
         }
 
+
+        public struct EditorWindowSetup
+        {
+            public bool UseExisting;
+            public bool Maximized;
+            public bool Focus;
+
+            public bool HasSize;
+            public int Width ;
+            public int Height;
+            public bool HasPosition;
+            public int X;
+            public int Y;
+
+            public EditorWindowSetup(bool useExisting = false, bool setFocus = true, bool maximized = false, bool setSize = false,
+                int width = 800, int height = 600, bool setPosition = false, int x = 0, int y = 0)
+            {
+                UseExisting = useExisting;
+                Maximized = maximized;
+                Focus = setFocus;
+                HasSize = setSize;
+                Width = width;
+                Height = height;
+                HasPosition = setPosition;
+                X = x;
+                Y = y;
+            }
+        }
+
         /// <summary>
         /// Get the existing or open a new window with the indicated size / flags.
         /// </summary>
-        /// <remarks>This will undock a window.  It is important to wait for the window to paint itself.</remarks>
+        /// <remarks>Maintains old behaviour.</remarks>
         /// <param name="shouldMaximize">Should the window be maximized?</param>
         /// <param name="width">The desired window pixel width.</param>
         /// <param name="height">The desired window pixel height.</param>
         /// <typeparam name="T">The type of the window requested.</typeparam>
         /// <returns>The instantiated window, or null.</returns>
-        public static T GetWindow<T>(bool shouldMaximize = false, int width = 800, int height = 600) where T : EditorWindow
+        public static T GetWindow<T>(bool shouldMaximize = false, int width = 800, int height = 600)
+            where T : EditorWindow
         {
-            T window = EditorWindow.GetWindowWithRect<T>(new Rect(0, 0, width, height), false, typeof(T).ToString(), true);
+            return GetWindow<T>(new EditorWindowSetup(false, true, shouldMaximize, true, width, height, true));
+        }
+
+        public static T GetWindow<T>(EditorWindowSetup setup) where T : EditorWindow
+        {
+            T window;
+            if (setup.UseExisting && EditorWindow.HasOpenInstances<T>())
+            {
+                window = EditorWindow.GetWindow<T>(typeof(T).ToString());
+            }
+            else
+            {
+                window = EditorWindow.CreateWindow<T>(typeof(T).ToString());
+            }
 
             if (window != null)
             {
-                // Enforce the size of the window through setting its position. It's not great but works.
-                window.position = new Rect(0, 0, width, height);
+                Debug.Log("Found altering");
+                if (setup.HasSize)
+                {
+                    window.minSize = new Vector2(setup.Width, setup.Height);
+                    window.maxSize = new Vector2(setup.Width, setup.Height);
+                }
+
+                if (setup.HasPosition)
+                {
+                    window.position = new Rect(setup.X, setup.Y, setup.Width, setup.Height);
+                }
+
                 window.Show(true);
 
                 // Do we want it to me maximized?
-                if (shouldMaximize)
+                if (setup.Maximized)
                 {
                     window.maximized = true;
+                }
+
+                if (setup.Focus)
+                {
+                    window.Focus();
                 }
 
                 ForceWindowRepaint(window);
