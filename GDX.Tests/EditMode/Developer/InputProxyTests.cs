@@ -21,6 +21,7 @@ namespace GDX.Developer
     {
         [UnityTest]
         [Category(Core.TestCategory)]
+        [UnityPlatform(exclude = new [] { RuntimePlatform.OSXServer, RuntimePlatform.OSXEditor, RuntimePlatform.OSXPlayer })]
         public IEnumerator Keyboard_Synthesize_CompoundExtendedKeys()
         {
             InputProxy.KeyboardInput[] mockInputs = new[]
@@ -52,6 +53,7 @@ namespace GDX.Developer
 
         [UnityTest]
         [Category(Core.TestCategory)]
+        [UnityPlatform(exclude = new [] { RuntimePlatform.OSXServer, RuntimePlatform.OSXEditor, RuntimePlatform.OSXPlayer })]
         public IEnumerator Mouse_Synthesize_MoveClickMoveClick()
         {
 
