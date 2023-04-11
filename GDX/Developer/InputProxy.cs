@@ -5,8 +5,8 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using UnityEngine;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace GDX.Developer
 {
@@ -208,6 +208,17 @@ namespace GDX.Developer
 
         [DllImport("user32.dll")]
         static extern uint MapVirtualKey(uint uCode, uint uMapType);
+#else
+        static uint SendInput(uint numberOfInputs, InputItem[] inputs, uint sizeOfInputStructure)
+        {
+            Debug.LogWarning("InputProxy::SendInput is not supported on this platform.")
+            return 0;
+        }
+        static uint MapVirtualKey(uint uCode, uint uMapType);
+        {
+            Debug.LogWarning("InputProxy::MapVirtualKey is not supported on this platform.")
+            return 0;
+        }
 #endif
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -231,11 +242,7 @@ namespace GDX.Developer
                 items[i] = new InputItem(InputType.Keyboard, new InputData(keyboardInputs[i]));
             }
 
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
             return SendInput(count, items, k_InputStructureSize);
-#else
-            return 0;
-#endif
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -257,11 +264,8 @@ namespace GDX.Developer
             {
                 items[i] = new InputItem(InputType.Mouse, new InputData(mouseInputs[i]));
             }
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+
             return SendInput(count, items, k_InputStructureSize);
-#else
-            return 0;
-#endif
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -283,11 +287,8 @@ namespace GDX.Developer
             {
                 items[i] = new InputItem(InputType.Hardware, new InputData(hardwareInputs[i]));
             }
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+
             return SendInput(count, items, k_InputStructureSize);
-#else
-            return 0;
-#endif
         }
 
         public static bool KeyPress(KeyCode keyCode)
