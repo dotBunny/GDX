@@ -211,12 +211,12 @@ namespace GDX.Developer
 #else
         static uint SendInput(uint numberOfInputs, InputItem[] inputs, uint sizeOfInputStructure)
         {
-            Debug.LogWarning("InputProxy::SendInput is not supported on this platform.")
+            Debug.LogWarning("InputProxy::SendInput is not supported on this platform.");
             return 0;
         }
-        static uint MapVirtualKey(uint uCode, uint uMapType);
+        static uint MapVirtualKey(uint uCode, uint uMapType)
         {
-            Debug.LogWarning("InputProxy::MapVirtualKey is not supported on this platform.")
+            Debug.LogWarning("InputProxy::MapVirtualKey is not supported on this platform.");
             return 0;
         }
 #endif
