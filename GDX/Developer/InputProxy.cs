@@ -10,6 +10,12 @@ using UnityEngine;
 
 namespace GDX.Developer
 {
+    /// <summary>
+    ///
+    /// </summary>
+    /// <remarks>
+    ///     This is NOT supported in batch mode operation of the editor.
+    /// </remarks>
     public static class InputProxy
     {
         /// <summary>

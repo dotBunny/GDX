@@ -24,6 +24,11 @@ namespace GDX.Developer
         [UnityPlatform(exclude = new [] { RuntimePlatform.OSXEditor })]
         public IEnumerator Keyboard_Synthesize_CompoundExtendedKeys()
         {
+            if (Application.isBatchMode)
+            {
+                Assert.Ignore("InputProxy is not supported in batch mode.");
+            }
+
             InputProxy.KeyboardInput[] mockInputs = new[]
             {
                 new InputProxy.KeyboardInput(InputProxy.KeyCode.Control, InputProxy.KeyboardFlag.KeyDown, 0,IntPtr.Zero),
@@ -56,7 +61,11 @@ namespace GDX.Developer
         [UnityPlatform(exclude = new [] { RuntimePlatform.OSXEditor })]
         public IEnumerator Mouse_Synthesize_MoveClickMoveClick()
         {
-
+            if (Application.isBatchMode)
+            {
+                Assert.Ignore("InputProxy is not supported in batch mode.");
+            }
+            
            // EditorWindow window = Automation.GetWindow<SceneView>(false);
 
             InputProxy.MouseInput[] mockInputs = new[]
