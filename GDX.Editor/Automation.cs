@@ -252,25 +252,6 @@ namespace GDX.Editor
             }
         }
 
-        public static void ForceWindowRepaint(EditorWindow window)
-        {
-                // Lets do it proper
-                window.Repaint();
-
-                // We need to force some internal repainting without having the API surface area to do so.
-                // We'll exploit reflection a bit to get around this for now.
-                MethodInfo repaintMethod = window.GetType().GetMethod("RepaintImmediately",
-                    BindingFlags.NonPublic | BindingFlags.Instance);
-
-                // The exact sequence is frustrating and I'm not entirely sure that it will cover the dreaded white
-                // screen that happens from time to time, but as we expanded out the number of steps we haven't seen
-                // a fail yet from testing.
-                if (repaintMethod != null)
-                {
-                    repaintMethod.Invoke(window, Core.EmptyObjectArray);
-                }
-        }
-
         /// <summary>
         /// Generate the project's solution and associated project files.
         /// </summary>
@@ -369,35 +350,6 @@ namespace GDX.Editor
             return returnWindow;
         }
 
-
-        public struct EditorWindowSetup
-        {
-            public bool UseExisting;
-            public bool Maximized;
-            public bool Focus;
-
-            public bool HasSize;
-            public int Width ;
-            public int Height;
-            public bool HasPosition;
-            public int X;
-            public int Y;
-
-            public EditorWindowSetup(bool useExisting = false, bool setFocus = true, bool maximized = false, bool setSize = false,
-                int width = 800, int height = 600, bool setPosition = false, int x = 0, int y = 0)
-            {
-                UseExisting = useExisting;
-                Maximized = maximized;
-                Focus = setFocus;
-                HasSize = setSize;
-                Width = width;
-                Height = height;
-                HasPosition = setPosition;
-                X = x;
-                Y = y;
-            }
-        }
-
         /// <summary>
         /// Get the existing or open a new window with the indicated size / flags.
         /// </summary>
@@ -410,10 +362,10 @@ namespace GDX.Editor
         public static T GetWindow<T>(bool shouldMaximize = false, int width = 800, int height = 600)
             where T : EditorWindow
         {
-            return GetWindow<T>(new EditorWindowSetup(false, true, shouldMaximize, true, width, height, true));
+            return GetWindow<T>(new EditorWindowExtensions.EditorWindowSetup(false, true, shouldMaximize, true, width, height, true));
         }
 
-        public static T GetWindow<T>(EditorWindowSetup setup) where T : EditorWindow
+        public static T GetWindow<T>(EditorWindowExtensions.EditorWindowSetup setup) where T : EditorWindow
         {
             T window;
             if (setup.UseExisting && EditorWindow.HasOpenInstances<T>())
@@ -424,36 +376,7 @@ namespace GDX.Editor
             {
                 window = EditorWindow.CreateWindow<T>(typeof(T).ToString());
             }
-
-            if (window != null)
-            {
-                Debug.Log("Found altering");
-                if (setup.HasSize)
-                {
-                    window.minSize = new Vector2(setup.Width, setup.Height);
-                    window.maxSize = new Vector2(setup.Width, setup.Height);
-                }
-
-                if (setup.HasPosition)
-                {
-                    window.position = new Rect(setup.X, setup.Y, setup.Width, setup.Height);
-                }
-
-                window.Show(true);
-
-                // Do we want it to me maximized?
-                if (setup.Maximized)
-                {
-                    window.maximized = true;
-                }
-
-                if (setup.Focus)
-                {
-                    window.Focus();
-                }
-
-                ForceWindowRepaint(window);
-            }
+            window.ApplySetup(setup);
             return window;
         }
 
@@ -491,7 +414,7 @@ namespace GDX.Editor
                     MethodInfo loadMethod = windowLayout.GetMethod("LoadWindowLayout", new[] {typeof(string), typeof(bool), typeof(bool), typeof(bool)});
                     if (loadMethod != null)
                     {
-                        loadMethod.Invoke(null,new object[]{LayoutStashPath(), false, false, true});
+                        loadMethod.Invoke(null,new object[]{path, false, false, true});
                     }
                 }
                 Platform.ForceDeleteFile(path);
