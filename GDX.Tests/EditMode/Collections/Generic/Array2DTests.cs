@@ -85,14 +85,11 @@ namespace GDX.Collections.Generic
             mockArray.ReverseColumns();
 
             Assert.That(mockArray[1, 0], Is.EqualTo(4));
-            Assert.That(mockArray[1, 1], Is.EqualTo(4));
-            bool evaluate = mockArray[1, 0] == 4 &&
-                            mockArray[1, 1] == 3 &&
-                            mockArray[1, 2] == 2 &&
-                            mockArray[1, 3] == 1 &&
-                            mockArray[1, 4] == 0;
+            Assert.That(mockArray[1, 1], Is.EqualTo(3));
+            Assert.That(mockArray[1, 2], Is.EqualTo(2));
 
-            Assert.IsTrue(evaluate);
+            Assert.That(mockArray[1, 3], Is.EqualTo(1));
+            Assert.That(mockArray[1, 4], Is.EqualTo(0));
         }
 
         [Test]

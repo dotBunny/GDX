@@ -13,11 +13,12 @@ namespace GDX.Editor
     /// </summary>
     public static class EditorWindowExtensions
     {
+        /// <summary>
+        ///     Force a window to repaint immediately.
+        /// </summary>
+        /// <param name="window">The <see cref="EditorWindow"/> to target.</param>
         public static void ForceRepaint(this EditorWindow window)
         {
-            // Lets do it proper
-            window.Repaint();
-
             // We need to force some internal repainting without having the API surface area to do so.
             // We'll exploit reflection a bit to get around this for now.
             MethodInfo repaintMethod = window.GetType().GetMethod("RepaintImmediately",
@@ -32,7 +33,11 @@ namespace GDX.Editor
             }
         }
 
-
+        /// <summary>
+        ///     Apply the settings found in a <see cref="EditorWindowSetup"/> to a given <see cref="EditorWindow"/>.
+        /// </summary>
+        /// <param name="window">The target <see cref="EditorWindow"/>.</param>
+        /// <param name="setup">The settings data to be used.</param>
         public static void ApplySetup(this EditorWindow window, EditorWindowSetup setup)
         {
             if (window == null)
