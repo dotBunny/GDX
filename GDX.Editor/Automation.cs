@@ -252,25 +252,6 @@ namespace GDX.Editor
             }
         }
 
-        public static void ForceWindowRepaint(EditorWindow window)
-        {
-                // Lets do it proper
-                window.Repaint();
-
-                // We need to force some internal repainting without having the API surface area to do so.
-                // We'll exploit reflection a bit to get around this for now.
-                MethodInfo repaintMethod = window.GetType().GetMethod("RepaintImmediately",
-                    BindingFlags.NonPublic | BindingFlags.Instance);
-
-                // The exact sequence is frustrating and I'm not entirely sure that it will cover the dreaded white
-                // screen that happens from time to time, but as we expanded out the number of steps we haven't seen
-                // a fail yet from testing.
-                if (repaintMethod != null)
-                {
-                    repaintMethod.Invoke(window, Core.EmptyObjectArray);
-                }
-        }
-
         /// <summary>
         /// Generate the project's solution and associated project files.
         /// </summary>
@@ -372,30 +353,30 @@ namespace GDX.Editor
         /// <summary>
         /// Get the existing or open a new window with the indicated size / flags.
         /// </summary>
-        /// <remarks>This will undock a window.  It is important to wait for the window to paint itself.</remarks>
+        /// <remarks>Maintains old behaviour.</remarks>
         /// <param name="shouldMaximize">Should the window be maximized?</param>
         /// <param name="width">The desired window pixel width.</param>
         /// <param name="height">The desired window pixel height.</param>
         /// <typeparam name="T">The type of the window requested.</typeparam>
         /// <returns>The instantiated window, or null.</returns>
-        public static T GetWindow<T>(bool shouldMaximize = false, int width = 800, int height = 600) where T : EditorWindow
+        public static T GetWindow<T>(bool shouldMaximize = false, int width = 800, int height = 600)
+            where T : EditorWindow
         {
-            T window = EditorWindow.GetWindowWithRect<T>(new Rect(0, 0, width, height), false, typeof(T).ToString(), true);
+            return GetWindow<T>(new EditorWindowExtensions.EditorWindowSetup(false, true, shouldMaximize, true, width, height, true));
+        }
 
-            if (window != null)
+        public static T GetWindow<T>(EditorWindowExtensions.EditorWindowSetup setup) where T : EditorWindow
+        {
+            T window;
+            if (setup.UseExisting && EditorWindow.HasOpenInstances<T>())
             {
-                // Enforce the size of the window through setting its position. It's not great but works.
-                window.position = new Rect(0, 0, width, height);
-                window.Show(true);
-
-                // Do we want it to me maximized?
-                if (shouldMaximize)
-                {
-                    window.maximized = true;
-                }
-
-                ForceWindowRepaint(window);
+                window = EditorWindow.GetWindow<T>(typeof(T).ToString());
             }
+            else
+            {
+                window = EditorWindow.CreateWindow<T>(typeof(T).ToString());
+            }
+            window.ApplySetup(setup);
             return window;
         }
 
@@ -433,7 +414,7 @@ namespace GDX.Editor
                     MethodInfo loadMethod = windowLayout.GetMethod("LoadWindowLayout", new[] {typeof(string), typeof(bool), typeof(bool), typeof(bool)});
                     if (loadMethod != null)
                     {
-                        loadMethod.Invoke(null,new object[]{LayoutStashPath(), false, false, true});
+                        loadMethod.Invoke(null,new object[]{path, false, false, true});
                     }
                 }
                 Platform.ForceDeleteFile(path);

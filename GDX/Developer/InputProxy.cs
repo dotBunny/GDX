@@ -5,12 +5,17 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
 using System.Runtime.InteropServices;
-#endif
+using UnityEngine;
 
 namespace GDX.Developer
 {
+    /// <summary>
+    ///
+    /// </summary>
+    /// <remarks>
+    ///     This is NOT supported in batch mode operation of the editor.
+    /// </remarks>
     public static class InputProxy
     {
         /// <summary>
@@ -209,6 +214,17 @@ namespace GDX.Developer
 
         [DllImport("user32.dll")]
         static extern uint MapVirtualKey(uint uCode, uint uMapType);
+#else
+        static uint SendInput(uint numberOfInputs, InputItem[] inputs, uint sizeOfInputStructure)
+        {
+            Debug.LogWarning("InputProxy::SendInput is not supported on this platform.");
+            return 0;
+        }
+        static uint MapVirtualKey(uint uCode, uint uMapType)
+        {
+            Debug.LogWarning("InputProxy::MapVirtualKey is not supported on this platform.");
+            return 0;
+        }
 #endif
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -231,11 +247,8 @@ namespace GDX.Developer
             {
                 items[i] = new InputItem(InputType.Keyboard, new InputData(keyboardInputs[i]));
             }
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+
             return SendInput(count, items, k_InputStructureSize);
-#else
-            return 0;
-#endif
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -257,11 +270,8 @@ namespace GDX.Developer
             {
                 items[i] = new InputItem(InputType.Mouse, new InputData(mouseInputs[i]));
             }
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+
             return SendInput(count, items, k_InputStructureSize);
-#else
-            return 0;
-#endif
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -283,11 +293,8 @@ namespace GDX.Developer
             {
                 items[i] = new InputItem(InputType.Hardware, new InputData(hardwareInputs[i]));
             }
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+
             return SendInput(count, items, k_InputStructureSize);
-#else
-            return 0;
-#endif
         }
 
         public static bool KeyPress(KeyCode keyCode)
@@ -326,9 +333,9 @@ namespace GDX.Developer
         /// <remarks>Order and types matters as it is mapped into native, using 24 bytes.</remarks>
         public struct KeyboardInput
         {
-            public KeyCode Key;
-            public ushort ScanCode;
-            public KeyboardFlag Flags;
+            public readonly ushort Key;
+            public readonly ushort ScanCode;
+            public readonly uint Flags;
 
             /// <summary>
             ///     The timestamp of the event, if 0, OS will just make its own. This is useful if you want to simulate
@@ -340,24 +347,27 @@ namespace GDX.Developer
 
             public KeyboardInput(KeyCode key, KeyboardFlag flags, uint timestamp, IntPtr extraInfo)
             {
-                Key = key;
-                Flags = flags;
+                Key = (ushort)key;
+
 
                 // Safety check for extended key
-                if (IsExtendedKey(Key) && !flags.HasFlags(KeyboardFlag.ExtendedKey))
+                if (IsExtendedKey(key) && !flags.HasFlags(KeyboardFlag.ExtendedKey))
                 {
-                    Flags = Flags | KeyboardFlag.ExtendedKey;
+                    Flags = (uint)(flags | KeyboardFlag.ExtendedKey);
+                }
+                else
+                {
+                    Flags = (uint)flags;
                 }
 
-                ushort castedKey = (ushort)key;
-                if (k_KnownScanCodes.TryGetValue(castedKey, out ushort value))
+                if (k_KnownScanCodes.TryGetValue(Key, out ushort value))
                 {
                     ScanCode = value;
                 }
                 else
                 {
                     ScanCode = (ushort)(MapVirtualKey((uint)key, 0) & 0xFFU);
-                    k_KnownScanCodes.Add(castedKey, ScanCode);
+                    k_KnownScanCodes.Add(Key, ScanCode);
                 }
 
                 Timestamp = timestamp;
@@ -365,7 +375,7 @@ namespace GDX.Developer
             }
         }
 
-        static readonly Dictionary<ushort, ushort> k_KnownScanCodes = new();
+        static readonly Dictionary<ushort, ushort> k_KnownScanCodes = new Dictionary<ushort, ushort>();
 
         /// <summary>
         ///     A generic hardware input event.
@@ -411,15 +421,15 @@ namespace GDX.Developer
             /// <summary>
             ///     The absolute X position or delta depending on the <see cref="MouseFlag" /> used.
             /// </summary>
-            public int X;
+            public readonly int X;
 
             /// <summary>
             ///     The absolute Y position or delta depending on the <see cref="MouseFlag" /> used.
             /// </summary>
-            public int Y;
+            public readonly int Y;
 
             public uint Data;
-            public MouseFlag Flags;
+            public readonly uint Flags;
 
             /// <summary>
             ///     The timestamp of the event, if 0, OS will just make its own. This is useful if you want to simulate
@@ -431,10 +441,24 @@ namespace GDX.Developer
 
             public MouseInput(int x, int y, uint data, MouseFlag flags, uint timestamp, IntPtr extraInfo)
             {
-                X = x;
-                Y = y;
+
                 Data = data;
-                Flags = flags;
+
+                // Absolute on main monitor?
+                if (flags.HasFlags(MouseFlag.Absolute) && !flags.HasFlags(MouseFlag.VirtualDesk))
+                {
+
+                    float widthPercent = (float)x / Screen.currentResolution.width;
+                    float heightPercent = (float)y / Screen.currentResolution.height;
+                    X = (int)(widthPercent * 65535);
+                    Y = (int)(heightPercent * 65535);
+                }
+                else
+                {
+                    X = x;
+                    Y = y;
+                }
+                Flags = (uint)flags;
                 Timestamp = timestamp;
                 ExtraInfo = extraInfo;
             }
@@ -477,12 +501,10 @@ namespace GDX.Developer
         /// <summary>
         ///     An explicit data structure used to represent the input event being synthesized.
         /// </summary>
-        [StructLayout(LayoutKind.Explicit)]
         struct InputItem
         {
-            [FieldOffset(0)] readonly InputType Type;
-            [FieldOffset(4)] readonly InputData Data;
-
+            readonly InputType Type;
+            readonly InputData Data;
             public InputItem(InputType type, InputData data)
             {
                 Type = type;
