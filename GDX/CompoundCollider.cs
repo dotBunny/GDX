@@ -118,7 +118,7 @@ namespace GDX
             for (int i = 0; i < childrenColliderCount; i++)
             {
                 Collider collider = childrenColliders[i];
-                if (collider is not MeshCollider meshCollider || compoundCollider.Mappings.ContainsKey(meshCollider))
+                if (!(collider is MeshCollider meshCollider) || compoundCollider.Mappings.ContainsKey(meshCollider))
                 {
                     continue;
                 }
