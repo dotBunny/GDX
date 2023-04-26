@@ -38,6 +38,15 @@ namespace GDX
         public List<Collider> Colliders = new List<Collider>();
         public SerializableDictionary<Collider, Collider> Mappings = new SerializableDictionary<Collider, Collider>();
 
+        public void Expand()
+        {
+
+        }
+
+        public void Build()
+        {
+
+        }
         public static CompoundCollider Create(GameObject targetGameObject, CompositeStrategy strategy = CompositeStrategy.Cubes,
             bool useChildGameObject = true, bool collectColliders = true)
         {
