@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace GDX
 {
+    // TODO: handle scale
+    // better descriptions/ cant be rotated?
     public static class ColliderExtensions
     {
         static void BaseCopy(Collider sourceCollider, Collider destinationCollider)

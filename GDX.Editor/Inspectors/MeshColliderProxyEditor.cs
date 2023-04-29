@@ -8,8 +8,8 @@ using UnityEngine.UIElements;
 
 namespace GDX.Editor.Inspectors
 {
-    [CustomEditor(typeof(CompoundCollider))]
-    public class CapsuleColliderInspector : UnityEditor.Editor
+    [CustomEditor(typeof(MeshColliderProxy))]
+    public class MeshColliderProxyEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {
@@ -18,21 +18,20 @@ namespace GDX.Editor.Inspectors
             EditorGUILayout.BeginVertical();
             EditorGUILayout.Space();
             EditorGUILayout.BeginHorizontal();
-
+            if (GUILayout.Button("Generate"))
+            {
+                MeshColliderProxy proxy = (MeshColliderProxy)target;
+                proxy.Generate();
+                EditorUtility.SetDirty(proxy.gameObject);
+            }
             if (GUILayout.Button("Expand"))
             {
-                CompoundCollider collider = (CompoundCollider)serializedObject.targetObject;
-                collider.Expand();
-                EditorUtility.SetDirty(collider.gameObject);
-            }
 
+            }
             if (GUILayout.Button("Contract"))
             {
-                CompoundCollider collider = (CompoundCollider)serializedObject.targetObject;
-                collider.Build();
-                EditorUtility.SetDirty(collider.gameObject);
-            }
 
+            }
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space();
             EditorGUILayout.EndVertical();
