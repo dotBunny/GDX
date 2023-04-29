@@ -33,7 +33,6 @@ namespace GDX
 #if UNITY_EDITOR
         public MeshCollider TargetMeshCollider;
         public Collider[] GeneratedColliders;
-#endif
 
         public void Generate()
         {
@@ -59,6 +58,7 @@ namespace GDX
                 GeneratedColliders = Generate(TargetMeshCollider);
             }
         }
+#endif
 
         public static Collider[] Generate(MeshCollider meshCollider, CompositeStrategy strategy = CompositeStrategy.Cubes)
         {
