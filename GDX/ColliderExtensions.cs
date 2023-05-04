@@ -10,6 +10,8 @@ namespace GDX
     // better descriptions/ cant be rotated?
     public static class ColliderExtensions
     {
+        public const string CreatedGameObjectName = "Collider_";
+
         static void BaseCopy(Collider sourceCollider, Collider destinationCollider)
         {
             destinationCollider.contactOffset = sourceCollider.contactOffset;
