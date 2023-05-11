@@ -11,6 +11,7 @@ using UnityEditor;
 
 namespace GDX
 {
+    [UnityEngine.Scripting.Preserve]
     public static class Core
     {
 
@@ -76,7 +77,7 @@ namespace GDX
         /// <remarks>
         ///     <para>
         ///         It might be important to call this function if you are using GDX related configurations inside of
-        ///         another <see cref="RuntimeInitializeOnLoadMethod"/> decorated static method.
+        ///         another <see cref="UnityEngine.RuntimeInitializeOnLoadMethod"/> decorated static method.
         ///     </para>
         ///     <para>
         ///         An example of this sort of usage is in the <see cref="GDX.Threading.TaskDirectorSystem"/>.
@@ -95,7 +96,7 @@ namespace GDX
             }
 
             MainThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
-            
+
             Localization.SetDefaultCulture();
 
             s_InitializedMainThread = true;
