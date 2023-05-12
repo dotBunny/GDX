@@ -27,8 +27,19 @@ namespace GDX.Collections
         public SimpleTable(Type[] columnTypes, int preallocateRowCount = 10,
             GrowthStrategy growthStrategy = GrowthStrategy.Double)
         {
+
+            m_TypesLength = columnTypes.Length;
             m_Types = columnTypes;
-            m_TypesLength = m_Types.Length;
+
+            // Check types are serializable
+            for (int i = 0; i < m_TypesLength; i++)
+            {
+                if (!m_Types[i].IsSerializable)
+                {
+                    Debug.LogWarning($"Utilizing unserializable type ({m_Types[i].FullName}) in a SimpleTable will work at runtime but is unable to be saved.");
+                }
+            }
+
             m_Layout = new SparseSet(preallocateRowCount);
             m_Data = new Array2D<object>(10, m_TypesLength);
             m_GrowthStrategy = growthStrategy;
