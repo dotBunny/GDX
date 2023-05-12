@@ -85,13 +85,7 @@ namespace GDX.Collections.Generic
         public void AddRows(int numberOfNewRows)
         {
             int newArrayCount = RowCount + numberOfNewRows;
-            T[] newArray = new T[newArrayCount * ColumnCount];
-            for (int i = 0; i < Array.Length; i++)
-            {
-                newArray[i] = Array[i];
-            }
-
-            Array = newArray;
+            System.Array.Resize(ref Array, newArrayCount * ColumnCount);
             RowCount = newArrayCount;
         }
 
