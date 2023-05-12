@@ -80,15 +80,15 @@ namespace GDX.Collections
 
             return returnArray;
         }
-#if UNITY_2021_1_OR_NEWER
-        public ReadOnlySpan<object> GetRow(int rowIndex)
-        {
-            return new ReadOnlySpan<object>(m_Data.Array, m_Data.GetRowIndex(rowIndex), m_TypesLength);
-        }
-#else
+
         public Span<object> GetRow(int rowIndex)
         {
             return new Span<object>(m_Data.Array, m_Data.GetRowIndex(rowIndex), m_TypesLength);
+        }
+#if UNITY_2021_1_OR_NEWER
+        public ReadOnlySpan<object> GetRowReadOnly(int rowIndex)
+        {
+            return new ReadOnlySpan<object>(m_Data.Array, m_Data.GetRowIndex(rowIndex), m_TypesLength);
         }
 #endif
 
