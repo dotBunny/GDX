@@ -14,7 +14,6 @@ namespace GDX
     [UnityEngine.Scripting.Preserve]
     public static class Core
     {
-
         public const string OverrideClass = "CustomConfig";
         public const string OverrideMethod = "Init";
         public const string PerformanceCategory = "GDX.Performance";
@@ -101,6 +100,5 @@ namespace GDX
 
             s_InitializedMainThread = true;
         }
-
     }
 }
