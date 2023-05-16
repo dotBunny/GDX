@@ -9,6 +9,11 @@ namespace GDX
 {
     public class SimpleTable : ScriptableObject
     {
+        public struct SimpleTableRowRef
+        {
+            public int RowID;
+        }
+
         public enum ColumnType
         {
             Invalid = -1,
