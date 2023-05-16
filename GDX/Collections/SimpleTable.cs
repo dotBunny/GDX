@@ -11,6 +11,7 @@ namespace GDX
     {
         public struct SimpleTableRowRef
         {
+            public SimpleTable Table;
             public int RowID;
         }
 
