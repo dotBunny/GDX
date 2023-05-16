@@ -4,9 +4,9 @@ The `GDX` package can be dropped into any compatible [Unity](http://unity3d.com)
 
 ## Unity Versions
 
-The suggested minimum Unity version for using `GDX` is Unity `2020.3`; internal development is done on `2022.1`.
+The suggested minimum Unity version for using `GDX` is Unity `2022.2`; internal development is done on `2022.2`.
 
-Compatibility is automatically tested against Unity's **L**ong **T**erm **S**upport releases `2020.3` and `2021.3`, as well as the current `2022.1` release.
+Compatibility is automatically tested against Unity's **L**ong **T**erm **S**upport releases `2020.3` and `2021.3`, as well as the current `2022.2` and `2023.2` releases. While we do our best to support features across all versions of Unity, there are cases where we are unable to support older legacy LTS versions of Unity.
 
 `GDX` utilizes assembly definition version defines to gate feature sets and employs specific coding patterns that may not be available in previous versions of Unity.
 
@@ -16,10 +16,10 @@ We try to make sure we are compatible with the latest verified release of a pack
 
 Define | Package | Minimum Unity Version | Minimum Package Version
 :--- | :--- | :--- | ---
-GDX_ADDRESSABLES | com.unity.addressables | _n/a_ | `1.16.16`
+GDX_ADDRESSABLES | com.unity.addressables | _n/a_ | `1.18.19`
 GDX_BURST | com.unity.burst | _n/a_ | `1.6.4`
 GDX_MATHEMATICS | com.unity.mathematics | _n/a_ | `1.2.5`
-GDX_PLATFORMS | com.unity.platforms | _n/a_ |`0.11.0-preview.17`
+GDX_PLATFORMS | com.unity.platforms | _n/a_ | `0.9.0`
 GDX_VISUALSCRIPTING | com.unity.visual-scripting | 2021.1 |`1.5.2`
 GDX_COLLECTIONS | com.unity.collections | _n/a_ | `1.2.3`
 

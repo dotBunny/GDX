@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using GDX.Editor.Windows;
 using UnityEditor;
 using UnityEngine;
 #if UNITY_2022_2_OR_NEWER
@@ -27,15 +28,11 @@ namespace GDX.Editor.Inspectors
             ProjectWindowUtil.ShowCreatedAsset(asset);
         }
 
-        public static void OpenAsset(SimpleTable table)
-        {
-
-        }
 
         void OpenTargetAsset()
         {
             SimpleTable table = (SimpleTable)target;
-            OpenAsset(table);
+            SimpleTableWindow.OpenAsset(table);
         }
 
 #if UNITY_2022_2_OR_NEWER
