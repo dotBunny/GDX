@@ -240,31 +240,8 @@ namespace GDX.Editor
                 {
                     s_RootElement = rootElement;
 
-                    // Add base style sheet
-                    if (ResourcesProvider.GetStyleSheet() != null)
-                    {
-                        rootElement.styleSheets.Add(ResourcesProvider.GetStyleSheet());
-                    }
-
-                    // Add a light mode style sheet if we have to
-                    if (!EditorGUIUtility.isProSkin)
-                    {
-                        if (ResourcesProvider.GetLightThemeStylesheet() != null)
-                        {
-                            rootElement.styleSheets.Add(ResourcesProvider.GetLightThemeStylesheet());
-                        }
-                    }
-
-                    // Add any overrides
-                    if (ResourcesProvider.GetStyleSheetOverride() != null)
-                    {
-                        rootElement.styleSheets.Add(ResourcesProvider.GetStyleSheetOverride());
-                    }
-
-                    // Get our base element
+                    ResourcesProvider.SetupStylesheets(rootElement);
                     ResourcesProvider.GetVisualTreeAsset("GDXProjectSettings").CloneTree(rootElement);
-
-                    // Early handle of theme
                     ResourcesProvider.CheckTheme(rootElement);
 
                     s_ChangesElement = rootElement.Q<VisualElement>("gdx-config-changes");

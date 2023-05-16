@@ -173,6 +173,32 @@ namespace GDX.Editor
         }
 
         /// <summary>
+        /// Sets up the initial stylesheets for a <see cref="VisualElement"/>.
+        /// </summary>
+        /// <param name="rootElement">The target <see cref="VisualElement"/> to have the stylesheets applied to.</param>
+        public static void SetupStylesheets(VisualElement rootElement)
+        {
+            if (GetStyleSheet() != null)
+            {
+                rootElement.styleSheets.Add(GetStyleSheet());
+            }
+            if (!EditorGUIUtility.isProSkin)
+            {
+                if (GetLightThemeStylesheet() != null)
+                {
+                    rootElement.styleSheets.Add(GetLightThemeStylesheet());
+                }
+            }
+            // Add any overrides
+            if (GetStyleSheetOverride() != null)
+            {
+                rootElement.styleSheets.Add(GetStyleSheetOverride());
+            }
+
+            CheckTheme(rootElement);
+        }
+
+        /// <summary>
         ///     Return the target visual tree asset, by name.
         /// </summary>
         /// <remarks>This will find and cache the reference for future use, using the first asset to match the query.</remarks>
