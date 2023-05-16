@@ -44,14 +44,8 @@ namespace GDX.Threading
             m_Counter = 0;
 
             EditorSettings.enterPlayModeOptionsEnabled = true;
-#if UNITY_2022_1_OR_NEWER
-            EditorSettings.enterPlayModeOptions = EnterPlayModeOptions.DisableDomainReload |
-                                                  EnterPlayModeOptions.DisableSceneReload |
-                                                  EnterPlayModeOptions.DisableSceneBackupUnlessDirty;
-#else
             EditorSettings.enterPlayModeOptions = EnterPlayModeOptions.DisableDomainReload |
                                                   EnterPlayModeOptions.DisableSceneReload;
-#endif
 
             EditorTaskDirectorSystem.SetTickRate(-1);
             Config.TaskDirectorSystem = true;

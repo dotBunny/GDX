@@ -104,7 +104,7 @@ namespace GDX
         [Category(Core.TestCategory)]
         public IEnumerator DestroyChildren_NotImmediate_OneChildRemaining()
         {
-            yield return new EnterPlayMode(true);
+            yield return new EnterPlayMode();
             yield return Setup();
             m_BaseTransform.DestroyChildren(false, false);
 
