@@ -126,8 +126,9 @@ namespace GDX.Data
 
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++)
             {
+
                 int[] columnOrders = allColumnOrders[columnIndex];
-                int columnOrdersLength = columnOrders.Length;
+                int columnOrdersLength = columnOrders?.Length ?? 0;
 
                 int[] columnIndices = columnDenseIndexToIDMap[columnIndex];
                 string[] columnNames = allColumnNames[columnIndex];
@@ -1244,12 +1245,14 @@ namespace GDX.Data
             int columnIDToDenseIndexMapLength = columnIDToDenseIndexMap?.Length ?? 0;
             if (columnIndex >= columnIDToDenseIndexMapLength)
             {
-                Array.Resize(ref columnIDToDenseIndexMap, columnIndex * 2);
+                int newSize = columnIndex * 2;
+                newSize = newSize == 0 ? 1 : newSize;
+                Array.Resize(ref columnIDToDenseIndexMap, newSize);
                 for (int i = 0; i < columnIndex; i++)
                 {
-                    ref ColumnEntryInternal entryInternal = ref columnIDToDenseIndexMap[columnIndex + i];
-                    entryInternal.columnDenseIndex = columnIndex + i + 1;
-                    entryInternal.columnType = ColumnType.Invalid;
+                    ref ColumnEntryInternal entry = ref columnIDToDenseIndexMap[columnIndex + i];
+                    entry.columnDenseIndex = columnIndex + i + 1;
+                    entry.columnType = ColumnType.Invalid;
                 }
             }
 
@@ -1262,7 +1265,7 @@ namespace GDX.Data
             newEntryInternal.columnDenseIndex = denseIndexToIDMapLength;
             newEntryInternal.columnType = typeIndex;
 
-            insertAt = insertAt < 0 ? combinedColumnCount + 1 : insertAt;
+            insertAt = insertAt < 0 ? combinedColumnCount : insertAt;
             ref int[] columnOrdersOfType = ref allColumnOrders[(int)typeIndex];
             int columnOrdersOfTypeLength = columnOrdersOfType?.Length ?? 0;
             Array.Resize(ref columnOrdersOfType, columnOrdersOfTypeLength + 1);
@@ -1271,8 +1274,7 @@ namespace GDX.Data
             for (int i = 0; i < (int)ColumnType.Count; i++)
             {
                 int[] columnOrdersOfTypeCurrent = allColumnOrders[i];
-
-                int columnOrdersLength = columnOrdersOfTypeCurrent.Length;
+                int columnOrdersLength = columnOrdersOfTypeCurrent?.Length ?? 0;
                 for (int j = 0; j < columnOrdersLength; j++)
                 {
                     int columnOrderCurrent = columnOrdersOfTypeCurrent[j];
