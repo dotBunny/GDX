@@ -13,9 +13,13 @@ namespace GDX.Editor.Windows
     {
         static readonly Dictionary<SimpleTable, SimpleTableWindow> k_Windows = new Dictionary<SimpleTable, SimpleTableWindow>();
 
-        SimpleTable targetTable;
-        bool initialized;
-        VisualTreeAsset rowAsset;
+        SimpleTable m_TargetTable;
+        SimpleTable.ColumnEntry[] m_ColumnDefinitions;
+
+        MultiColumnListView m_TableView;
+        Columns m_TableViewColumns;
+
+        bool m_Initialized;
 
         [OnOpenAsset(1)]
         public static bool OpenSimpleTable(int instanceID, int line)
@@ -42,35 +46,67 @@ namespace GDX.Editor.Windows
                 k_Windows.Add(table, simpleTableWindow);
             }
 
-            if (!simpleTableWindow.initialized)
+            if (!simpleTableWindow.m_Initialized)
             {
                 VisualElement rootElement = simpleTableWindow.rootVisualElement;
                 ResourcesProvider.SetupStylesheets(rootElement);
                 ResourcesProvider.GetVisualTreeAsset("GDXSimpleTable").CloneTree(rootElement);
                 ResourcesProvider.CheckTheme(rootElement);
 
-                simpleTableWindow.rowAsset = ResourcesProvider.GetVisualTreeAsset("GDXSimpleTableRow");
-                simpleTableWindow.initialized = true;
+                simpleTableWindow.m_Initialized = true;
             }
 
-            simpleTableWindow.targetTable = table;
-            simpleTableWindow.Rebuild();
+            simpleTableWindow.Rebind(table);
+
             simpleTableWindow.Show();
             simpleTableWindow.Focus();
 
             return simpleTableWindow;
         }
 
+
+
+        void Rebind(SimpleTable table)
+        {
+            m_TargetTable = table;
+            titleContent = new GUIContent(m_TargetTable.name);
+            m_ColumnDefinitions = table.GetOrderedColumns();
+
+            // Precache some things
+            VisualElement rootElement = rootVisualElement[0];
+
+            // Generate columns for MCLV
+            m_TableViewColumns = new Columns();
+            int columnCount = table.ColumnCount;
+            for (int i = 0; i < columnCount; i++)
+            {
+                ref SimpleTable.ColumnEntry refColumn = ref m_ColumnDefinitions[i];
+                Column column = new Column
+                {
+                    name = refColumn.Name,
+                    title = refColumn.Name,
+                };
+                m_TableViewColumns.Add(column);
+            }
+
+            // Create MCLV
+            if (m_TableView != null)
+            {
+                rootElement.Remove(m_TableView);
+            }
+            m_TableView = new MultiColumnListView(m_TableViewColumns);
+            rootElement.Add(m_TableView);
+        }
+
         public void OnDestroy()
         {
-            Debug.Log("Remove Key:" + targetTable.name);
-            k_Windows.Remove(targetTable);
+            k_Windows.Remove(m_TargetTable);
         }
 
 
-        public void Rebuild()
+        void RebuildView()
         {
-            this.titleContent = new GUIContent(targetTable.name);
+
         }
     }
 }

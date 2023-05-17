@@ -2,7 +2,5 @@
     <Style src="project://database/Packages/com.dotbunny.gdx/GDX.Editor/UIElements/GDXStylesShared.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStylesShared" />
     <ui:VisualElement name="gdx-simple-table" style="flex-direction: column;">
         <uie:Toolbar name="gdx-simple-table-toolbar" style="width: 100%;" />
-        <uie:Toolbar name="gdx-simple-table-header" style="background-color: rgb(128, 127, 127); height: 30px;" />
-        <ui:ListView focusable="true" name="gdx-simple-table-list" show-alternating-row-backgrounds="All" reorderable="false" horizontal-scrolling="true" show-foldout-header="false" show-add-remove-footer="true" style="flex-grow: 1; align-items: flex-start; align-self: auto;" />
     </ui:VisualElement>
 </ui:UXML>

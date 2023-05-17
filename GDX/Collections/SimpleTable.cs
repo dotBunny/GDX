@@ -52,6 +52,12 @@ namespace GDX
 
         public struct ColumnEntry
         {
+            public string Name;
+            public int Id;
+            public ColumnType Type;
+        }
+        internal struct ColumnEntryInternal
+        {
             public ColumnType columnType;
             public int columnDenseIndex;
         }
@@ -92,11 +98,64 @@ namespace GDX
         internal string[] allRowNames;
         internal int rowCount;
 
-        internal ColumnEntry[] columnIDToDenseIndexMap;
+        internal ColumnEntryInternal[] columnIDToDenseIndexMap;
         internal int[][] columnDenseIndexToIDMap = new int[(int)ColumnType.Count][];
         internal int columnEntriesFreeListHead;
 
         internal int combinedColumnCount;
+
+
+        // BEGIN - View Hacks
+        public int ColumnCount
+        {
+            get
+            {
+                return combinedColumnCount;
+            }
+        }
+
+        public int RowCount
+        {
+            get
+            {
+                return rowCount;
+            }
+        }
+
+        public ColumnEntry[] GetOrderedColumns()
+        {
+            if (combinedColumnCount == 0) return null;
+
+            int columnCount = (int)ColumnType.Count;
+            ColumnEntry[] returnArray = new ColumnEntry[combinedColumnCount];
+
+            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++)
+            {
+                int[] columnOrders = allColumnOrders[columnIndex];
+                int columnOrdersLength = allColumnOrders.Length;
+                int[] columnIndices = columnDenseIndexToIDMap[columnIndex];
+                string[] columnNames = allColumnNames[columnIndex];
+
+                for (int i = 0; i < columnOrdersLength; i++)
+                {
+
+                    returnArray[columnOrders[i]] = new ColumnEntry
+                    {
+                        Name =  columnNames[i],
+                        Id = columnIndices[i],
+                        Type = (ColumnType)columnIndex
+                    };
+                }
+            }
+            return returnArray;
+        }
+
+
+        // END - View Hacks
+
+        // TODO: Way to set column name
+
+
 
         public void AddRow(string rowName = null, int insertAt = -1)
         {
@@ -1189,9 +1248,9 @@ namespace GDX
                 Array.Resize(ref columnIDToDenseIndexMap, columnIndex * 2);
                 for (int i = 0; i < columnIndex; i++)
                 {
-                    ref ColumnEntry entry = ref columnIDToDenseIndexMap[columnIndex + i];
-                    entry.columnDenseIndex = columnIndex + i + 1;
-                    entry.columnType = ColumnType.Invalid;
+                    ref ColumnEntryInternal entryInternal = ref columnIDToDenseIndexMap[columnIndex + i];
+                    entryInternal.columnDenseIndex = columnIndex + i + 1;
+                    entryInternal.columnType = ColumnType.Invalid;
                 }
             }
 
@@ -1200,9 +1259,9 @@ namespace GDX
             Array.Resize(ref denseIndexToIDMap, denseIndexToIDMapLength + 1);
             denseIndexToIDMap[denseIndexToIDMapLength] = columnIndex;
 
-            ref ColumnEntry newEntry = ref columnIDToDenseIndexMap[columnIndex];
-            newEntry.columnDenseIndex = denseIndexToIDMapLength;
-            newEntry.columnType = typeIndex;
+            ref ColumnEntryInternal newEntryInternal = ref columnIDToDenseIndexMap[columnIndex];
+            newEntryInternal.columnDenseIndex = denseIndexToIDMapLength;
+            newEntryInternal.columnType = typeIndex;
 
             insertAt = insertAt < 0 ? combinedColumnCount + 1 : insertAt;
             ref int[] columnOrdersOfType = ref allColumnOrders[(int)typeIndex];
@@ -1256,7 +1315,7 @@ namespace GDX
             int[] denseIndicesOfType = columnDenseIndexToIDMap[(int)typeIndex];
             int sparseIndexAt = denseIndicesOfType[columnLocation];
             int sparseIndexToSwap = columnOrdersOfType[lastIndex];
-            ref ColumnEntry sparseIndexToFree = ref columnIDToDenseIndexMap[sparseIndexAt];
+            ref ColumnEntryInternal sparseIndexToFree = ref columnIDToDenseIndexMap[sparseIndexAt];
             sparseIndexToFree.columnType = ColumnType.Invalid;
             sparseIndexToFree.columnDenseIndex = columnEntriesFreeListHead;
             columnEntriesFreeListHead = sparseIndexAt;
