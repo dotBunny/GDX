@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using GDX.Collections;
 using UnityEngine;
 
 namespace GDX.Data
@@ -60,19 +61,7 @@ namespace GDX.Data
             public int columnDenseIndex;
         }
 
-        [Serializable]
-        internal struct ArrayHolder<T>
-        {
-            public T[] TArray;
 
-            public ref T this[int index]
-            {
-                get
-                {
-                    return ref TArray[index];
-                }
-            }
-        }
 
 
         [SerializeField] internal ArrayHolder<string>[] allStringColumns;
