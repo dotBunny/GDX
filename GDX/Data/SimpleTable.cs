@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace GDX.Data
 {
+    [Serializable]
     public class SimpleTable : ScriptableObject
     {
         public enum ColumnType
@@ -44,61 +45,89 @@ namespace GDX.Data
             Count
         }
 
+        [Serializable]
         public struct ColumnEntry
         {
             public string Name;
             public int Id;
             public ColumnType Type;
         }
+
+        [Serializable]
         internal struct ColumnEntryInternal
         {
             public ColumnType columnType;
             public int columnDenseIndex;
         }
 
-        internal string[][] allStringColumns;
-        internal bool[][] allBoolColumns;
-        internal char[][] allCharColumns;
-        internal sbyte[][] allSbyteColumns;
-        internal byte[][] allByteColumns;
-        internal short[][] allShortColumns;
-        internal ushort[][] allUshortColumns;
-        internal int[][] allIntColumns;
-        internal uint[][] allUintColumns;
-        internal long[][] allLongColumns;
-        internal ulong[][] allUlongColumns;
-        internal float[][] allFloatColumns;
-        internal double[][] allDoubleColumns;
-        internal Vector2[][] allVector2Columns;
-        internal Vector3[][] allVector3Columns;
-        internal Vector4[][] allVector4Columns;
-        internal Vector2Int[][] allVector2IntColumns;
-        internal Vector3Int[][] allVector3IntColumns;
-        internal Quaternion[][] allQuaternionColumns;
-        internal Rect[][] allRectColumns;
-        internal RectInt[][] allRectIntColumns;
-        internal Color[][] allColorColumns;
-        internal LayerMask[][] allLayerMaskColumns;
-        internal Bounds[][] allBoundsColumns;
-        internal BoundsInt[][] allBoundsIntColumns;
-        internal Hash128[][] allHash128Columns;
-        internal Gradient[][] allGradientColumns;
-        internal AnimationCurve[][] allAnimationCurveColumns;
-        internal UnityEngine.Object[][] allObjectRefColumns;
+        [Serializable]
+        internal struct ArrayHolder<T>
+        {
+            public T[] TArray;
 
-        internal string[][] allColumnNames = new string[(int)ColumnType.Count][]; // Contains the name of each column of each type. Ordered by ColumnType
-        internal int[][] allColumnOrders = new int[(int)ColumnType.Count][]; // Contains the left-to-right order of each column of each type. Ordered by ColumnType
+            public ref T this[int index]
+            {
+                get
+                {
+                    return ref TArray[index];
+                }
+            }
+        }
 
+
+        [SerializeField] internal ArrayHolder<string>[] allStringColumns;
+        [SerializeField] internal ArrayHolder<bool>[] allBoolColumns;
+        [SerializeField] internal ArrayHolder<char>[] allCharColumns;
+        [SerializeField] internal ArrayHolder<sbyte>[] allSbyteColumns;
+        [SerializeField] internal ArrayHolder<byte>[] allByteColumns;
+        [SerializeField] internal ArrayHolder<short>[] allShortColumns;
+        [SerializeField] internal ArrayHolder<ushort>[] allUshortColumns;
+        [SerializeField] internal ArrayHolder<int>[] allIntColumns;
+        [SerializeField] internal ArrayHolder<uint>[] allUintColumns;
+        [SerializeField] internal ArrayHolder<long>[] allLongColumns;
+        [SerializeField] internal ArrayHolder<ulong>[] allUlongColumns;
+        [SerializeField] internal ArrayHolder<float>[] allFloatColumns;
+        [SerializeField] internal ArrayHolder<double>[] allDoubleColumns;
+        [SerializeField] internal ArrayHolder<Vector2>[] allVector2Columns;
+        [SerializeField] internal ArrayHolder<Vector3>[] allVector3Columns;
+        [SerializeField] internal ArrayHolder<Vector4>[] allVector4Columns;
+        [SerializeField] internal ArrayHolder<Vector2Int>[] allVector2IntColumns;
+        [SerializeField] internal ArrayHolder<Vector3Int>[] allVector3IntColumns;
+        [SerializeField] internal ArrayHolder<Quaternion>[] allQuaternionColumns;
+        [SerializeField] internal ArrayHolder<Rect>[] allRectColumns;
+        [SerializeField] internal ArrayHolder<RectInt>[] allRectIntColumns;
+        [SerializeField] internal ArrayHolder<Color>[] allColorColumns;
+        [SerializeField] internal ArrayHolder<LayerMask>[] allLayerMaskColumns;
+        [SerializeField] internal ArrayHolder<Bounds>[] allBoundsColumns;
+        [SerializeField] internal ArrayHolder<BoundsInt>[] allBoundsIntColumns;
+        [SerializeField] internal ArrayHolder<Hash128>[] allHash128Columns;
+        [SerializeField] internal ArrayHolder<Gradient>[] allGradientColumns;
+        [SerializeField] internal ArrayHolder<AnimationCurve>[] allAnimationCurveColumns;
+        [SerializeField] internal ArrayHolder<UnityEngine.Object>[] allObjectRefColumns;
+        [SerializeField] internal ArrayHolder<string>[] allColumnNames = new ArrayHolder<string>[(int)ColumnType.Count]; // Contains the name of each column of each type. Ordered by ColumnType
+        [SerializeField] internal ArrayHolder<int>[] allColumnOrders = new ArrayHolder<int>[(int)ColumnType.Count]; // Contains the left-to-right order of each column of each type. Ordered by ColumnType
+
+
+        [SerializeField]
         internal string[] allRowNames;
+
+        [SerializeField]
         internal int rowCount;
 
+        [SerializeField]
         internal ColumnEntryInternal[] columnIDToDenseIndexMap;
-        internal int[][] columnDenseIndexToIDMap = new int[(int)ColumnType.Count][];
+
+        // TODO move with other block
+        [SerializeField] internal int[][] columnDenseIndexToIDMap = new int[(int)ColumnType.Count][];
+
+        [SerializeField]
         internal int columnEntriesFreeListHead;
 
+        [SerializeField]
         internal int combinedColumnCount;
-        internal ulong dataVersion = 1;
 
+        [SerializeField]
+        internal ulong dataVersion = 1;
 
         // BEGIN - View Hacks
         public int ColumnCount
@@ -127,11 +156,11 @@ namespace GDX.Data
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++)
             {
 
-                int[] columnOrders = allColumnOrders[columnIndex];
+                int[] columnOrders = allColumnOrders[columnIndex].TArray;
                 int columnOrdersLength = columnOrders?.Length ?? 0;
 
                 int[] columnIndices = columnDenseIndexToIDMap[columnIndex];
-                string[] columnNames = allColumnNames[columnIndex];
+                string[] columnNames = allColumnNames[columnIndex].TArray;
 
                 for (int i = 0; i < columnOrdersLength; i++)
                 {
@@ -1229,17 +1258,17 @@ namespace GDX.Data
 
         // Internal
 
-        internal int AddColumnInternal<T>(string columnName, ref T[][] allColumnsOfType, ColumnType typeIndex, int insertAt)
+        internal int AddColumnInternal<T>(string columnName, ref ArrayHolder<T>[] allColumnsOfType, ColumnType typeIndex, int insertAt)
         {
             int columnCount = allColumnsOfType?.Length ?? 0;
             Array.Resize(ref allColumnsOfType, columnCount + 1);
-            allColumnsOfType[columnCount] = new T[rowCount];
+            allColumnsOfType[columnCount].TArray = new T[rowCount];
 
-            string[] columnNamesForType = allColumnNames[(int)typeIndex];
+            string[] columnNamesForType = allColumnNames[(int)typeIndex].TArray;
             int columnNamesCount = columnNamesForType?.Length ?? 0;
             Array.Resize(ref columnNamesForType, columnNamesCount + 1);
             columnNamesForType[columnNamesCount] = columnName;
-            allColumnNames[(int)typeIndex] = columnNamesForType;
+            allColumnNames[(int)typeIndex].TArray = columnNamesForType;
 
             int columnIndex = columnEntriesFreeListHead;
             int columnIDToDenseIndexMapLength = columnIDToDenseIndexMap?.Length ?? 0;
@@ -1266,14 +1295,14 @@ namespace GDX.Data
             newEntryInternal.columnType = typeIndex;
 
             insertAt = insertAt < 0 ? combinedColumnCount : insertAt;
-            ref int[] columnOrdersOfType = ref allColumnOrders[(int)typeIndex];
+            ref int[] columnOrdersOfType = ref allColumnOrders[(int)typeIndex].TArray;
             int columnOrdersOfTypeLength = columnOrdersOfType?.Length ?? 0;
             Array.Resize(ref columnOrdersOfType, columnOrdersOfTypeLength + 1);
             columnOrdersOfType[columnOrdersOfTypeLength] = insertAt;
 
             for (int i = 0; i < (int)ColumnType.Count; i++)
             {
-                int[] columnOrdersOfTypeCurrent = allColumnOrders[i];
+                int[] columnOrdersOfTypeCurrent = allColumnOrders[i].TArray;
                 int columnOrdersLength = columnOrdersOfTypeCurrent?.Length ?? 0;
                 for (int j = 0; j < columnOrdersLength; j++)
                 {
@@ -1292,28 +1321,29 @@ namespace GDX.Data
             return columnIndex;
         }
 
-        internal void RemoveColumnInternal<T>(ref T[][] allColumnsOfType, ColumnType typeIndex, int columnID)
+        internal void RemoveColumnInternal<T>(ref ArrayHolder<T>[] allColumnsOfType, ColumnType typeIndex, int columnID)
         {
             int columnLocation = columnIDToDenseIndexMap[columnID].columnDenseIndex;
 
             int lastIndex = allColumnsOfType.Length - 1;
             allColumnsOfType[columnLocation] = allColumnsOfType[lastIndex];
-            T[][] newColumnArray = new T[lastIndex][];
+           // T[][] newColumnArray = new T[lastIndex][];
+            ArrayHolder<T>[] newColumnArray = new ArrayHolder<T>[lastIndex];
             Array.Copy(allColumnsOfType, 0, newColumnArray, 0, lastIndex);
             allColumnsOfType = newColumnArray;
 
-            string[] columnNamesOfType = allColumnNames[(int)typeIndex];
+            string[] columnNamesOfType = allColumnNames[(int)typeIndex].TArray;
             columnNamesOfType[columnLocation] = columnNamesOfType[lastIndex];
             string[] newColumnNamesOfType = new string[lastIndex];
             Array.Copy(columnNamesOfType, 0, newColumnNamesOfType, 0, lastIndex);
-            allColumnNames[(int)typeIndex] = newColumnNamesOfType;
+            allColumnNames[(int)typeIndex].TArray = newColumnNamesOfType;
 
-            int[] columnOrdersOfType = allColumnOrders[(int)typeIndex];
+            int[] columnOrdersOfType = allColumnOrders[(int)typeIndex].TArray;
             int columnOrder = columnOrdersOfType[columnLocation];
             columnOrdersOfType[columnLocation] = columnOrdersOfType[lastIndex];
             int[] newColumnOrdersOfType = new int[lastIndex];
             Array.Copy(columnOrdersOfType, 0, newColumnOrdersOfType, 0, lastIndex);
-            allColumnOrders[(int)typeIndex] = newColumnOrdersOfType;
+            allColumnOrders[(int)typeIndex].TArray = newColumnOrdersOfType;
 
             int[] denseIndicesOfType = columnDenseIndexToIDMap[(int)typeIndex];
             int sparseIndexAt = denseIndicesOfType[columnLocation];
@@ -1330,7 +1360,7 @@ namespace GDX.Data
 
             for (int i = 0; i < (int)ColumnType.Count; i++)
             {
-                int[] columnOrdersOfTypeCurrent = allColumnOrders[i];
+                int[] columnOrdersOfTypeCurrent = allColumnOrders[i].TArray;
 
                 int columnOrdersLength = columnOrdersOfTypeCurrent.Length;
                 for (int j = 0; j < columnOrdersLength; j++)
@@ -1348,12 +1378,12 @@ namespace GDX.Data
             dataVersion++;
         }
 
-        internal void InsertRowsOfTypeInternal<T>(ref T[][] allColumnsOfType, int insertAt, int numberOfNewRows)
+        internal void InsertRowsOfTypeInternal<T>(ref ArrayHolder<T>[] allColumnsOfType, int insertAt, int numberOfNewRows)
         {
             int columnCount = allColumnsOfType?.Length ?? 0;
             for (int i = 0; i < columnCount; i++)
             {
-                ref T[] column = ref allColumnsOfType[i];
+                ref T[] column = ref allColumnsOfType[i].TArray;
                 int newRowCount = rowCount + numberOfNewRows;
                 Array.Resize(ref column, newRowCount);
                 for (int j = newRowCount - 1; j > insertAt + numberOfNewRows - 1; j--)
@@ -1368,13 +1398,13 @@ namespace GDX.Data
             }
         }
 
-        internal void DeleteRowsOfTypeInternal<T>(ref T[][] allColumnsOfType, int removeAt, int numberOfRowsToDelete)
+        internal void DeleteRowsOfTypeInternal<T>(ref ArrayHolder<T>[] allColumnsOfType, int removeAt, int numberOfRowsToDelete)
         {
             int columnCount = allColumnsOfType?.Length ?? 0;
 
             for (int i = 0; i < columnCount; i++)
             {
-                ref T[] column = ref allColumnsOfType[i];
+                ref T[] column = ref allColumnsOfType[i].TArray;
                 int newRowCount = rowCount - numberOfRowsToDelete;
 
                 for (int j = removeAt; j < rowCount - numberOfRowsToDelete; j++)
@@ -1386,29 +1416,29 @@ namespace GDX.Data
             }
         }
 
-        internal ref T GetCellRef<T>(int row, int columnID, ref T[][] allColumnsOfType)
+        internal ref T GetCellRef<T>(int row, int columnID, ref ArrayHolder<T>[] allColumnsOfType)
         {
             int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
             return ref allColumnsOfType[column][row];
         }
 
-        internal T GetCell<T>(int row, int columnID, ref T[][] allColumnsOfType)
+        internal T GetCell<T>(int row, int columnID, ref ArrayHolder<T>[] allColumnsOfType)
         {
             int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
             return allColumnsOfType[column][row];
         }
 
-        internal void SetCell<T>(int row, int columnID, ref T[][] allColumnsOfType, T value)
+        internal void SetCell<T>(int row, int columnID, ref ArrayHolder<T>[] allColumnsOfType, T value)
         {
             int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
             allColumnsOfType[column][row] = value;
             dataVersion++;
         }
 
-        internal T[] GetColumn<T>(int columnID, ref T[][] allColumnsOfType)
+        internal T[] GetColumn<T>(int columnID, ref ArrayHolder<T>[] allColumnsOfType)
         {
             int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
-            return allColumnsOfType[column];
+            return allColumnsOfType[column].TArray;
         }
     }
 }

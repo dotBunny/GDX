@@ -38,6 +38,7 @@ namespace GDX.Editor.Windows
 
         public void OnDestroy()
         {
+            AssetDatabase.SaveAssetIfDirty(m_TargetTable);
             if (k_Windows.ContainsKey(m_TargetTable))
             {
                 k_Windows.Remove(m_TargetTable);
@@ -240,6 +241,7 @@ namespace GDX.Editor.Windows
 
             // TODO: REbnd data?
             RebindData(m_TargetTable);
+            AddColumn_Hide();
         }
 
         void AddColumn_Show()
@@ -248,10 +250,15 @@ namespace GDX.Editor.Windows
             m_AddColumnOverlay.visible = true;
         }
 
+        void AddColumn_Hide()
+        {
+            m_Overlay.visible = false;
+            m_AddColumnOverlay.visible = false;
+        }
+
         void AddColumn_CancelButtonClicked()
         {
-            m_AddColumnOverlay.visible = false;
-            m_Overlay.visible = false;
+            AddColumn_Hide();
         }
     }
 #endif
