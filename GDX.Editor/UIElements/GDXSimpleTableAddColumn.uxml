@@ -1,6 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Packages/com.dotbunny.gdx/GDX.Editor/UIElements/GDXStylesShared.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStylesShared" />
-    <ui:VisualElement name="gdx-simple-table-add-column" style="flex-direction: column;">
-        <ui:EnumField label="Type" type="GDX.SimpleTable+ColumnType, GDX" name="gdx-simple-table-column-type" />
-    </ui:VisualElement>
-</ui:UXML>

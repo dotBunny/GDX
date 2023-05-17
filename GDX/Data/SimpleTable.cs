@@ -5,16 +5,10 @@
 using System;
 using UnityEngine;
 
-namespace GDX
+namespace GDX.Data
 {
     public class SimpleTable : ScriptableObject
     {
-        public struct SimpleTableRowRef
-        {
-            public SimpleTable Table;
-            public int RowID;
-        }
-
         public enum ColumnType
         {
             Invalid = -1,
@@ -103,6 +97,7 @@ namespace GDX
         internal int columnEntriesFreeListHead;
 
         internal int combinedColumnCount;
+        internal ulong dataVersion = 1;
 
 
         // BEGIN - View Hacks
@@ -201,6 +196,7 @@ namespace GDX
             InsertRowsOfTypeInternal(ref allObjectRefColumns, insertAt, 1);
 
             ++rowCount;
+            dataVersion++;
         }
 
         public void AddRows(int numberOfNewRows, string[] rowNames = null, int insertAt = -1)
@@ -257,6 +253,7 @@ namespace GDX
             InsertRowsOfTypeInternal(ref allObjectRefColumns, insertAt, numberOfNewRows);
 
             rowCount += numberOfNewRows;
+            dataVersion++;
         }
 
         public void RemoveRow(int removeAt)
@@ -300,6 +297,7 @@ namespace GDX
             DeleteRowsOfTypeInternal(ref allObjectRefColumns, removeAt, 1);
 
             --rowCount;
+            dataVersion++;
         }
 
         public void RemoveRows(int removeAt, int numberOfRowsToDelete)
@@ -343,6 +341,7 @@ namespace GDX
             DeleteRowsOfTypeInternal(ref allObjectRefColumns, removeAt, numberOfRowsToDelete);
 
             rowCount -= numberOfRowsToDelete;
+            dataVersion++;
         }
 
         // Add Column
@@ -1286,6 +1285,8 @@ namespace GDX
             }
 
             ++combinedColumnCount;
+            dataVersion++;
+
             return columnIndex;
         }
 
@@ -1342,6 +1343,7 @@ namespace GDX
             }
 
             --combinedColumnCount;
+            dataVersion++;
         }
 
         internal void InsertRowsOfTypeInternal<T>(ref T[][] allColumnsOfType, int insertAt, int numberOfNewRows)
@@ -1398,6 +1400,7 @@ namespace GDX
         {
             int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
             allColumnsOfType[column][row] = value;
+            dataVersion++;
         }
 
         internal T[] GetColumn<T>(int columnID, ref T[][] allColumnsOfType)

@@ -14,7 +14,7 @@ namespace GDX.Editor.PropertyDrawers
     /// <summary>
     ///     The drawing component of the <see cref="DisableInInspectorAttribute" />.
     /// </summary>
-    [CustomPropertyDrawer(typeof(SimpleTable.SimpleTableRowRef))]
+    [CustomPropertyDrawer(typeof(Data.SimpleTableRowRef))]
     public class SimpleTableRowRefDrawer : PropertyDrawer
     {
 #if UNITY_2022_2_OR_NEWER

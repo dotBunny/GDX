@@ -12,13 +12,13 @@ using UnityEngine.UIElements;
 
 namespace GDX.Editor.Inspectors
 {
-    [CustomEditor(typeof(SimpleTable))]
+    [CustomEditor(typeof(Data.SimpleTable))]
     public class SimpleTableInspector : UnityEditor.Editor
     {
         [MenuItem("Assets/Create/GDX/Simple Table")]
         public static void CreateAsset()
         {
-            SimpleTable asset = CreateInstance<SimpleTable>();
+            Data.SimpleTable asset = CreateInstance<Data.SimpleTable>();
 
             AssetDatabase.CreateAsset(asset, "Assets/SimpleTable.asset");
             AssetDatabase.SaveAssets();
@@ -32,14 +32,14 @@ namespace GDX.Editor.Inspectors
 
         void OpenTargetAsset()
         {
-            SimpleTable table = (SimpleTable)target;
+            Data.SimpleTable table = (Data.SimpleTable)target;
             SimpleTableWindow.OpenAsset(table);
         }
 
         /// <inheritdoc />
         public override VisualElement CreateInspectorGUI()
         {
-            SimpleTable table = (SimpleTable)target;
+            Data.SimpleTable table = (Data.SimpleTable)target;
             VisualElement container = new VisualElement();
 
             var columns = table.GetOrderedColumns();
