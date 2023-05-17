@@ -132,13 +132,13 @@ namespace GDX
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++)
             {
                 int[] columnOrders = allColumnOrders[columnIndex];
-                int columnOrdersLength = allColumnOrders.Length;
+                int columnOrdersLength = columnOrders.Length;
+                
                 int[] columnIndices = columnDenseIndexToIDMap[columnIndex];
                 string[] columnNames = allColumnNames[columnIndex];
 
                 for (int i = 0; i < columnOrdersLength; i++)
                 {
-
                     returnArray[columnOrders[i]] = new ColumnEntry
                     {
                         Name =  columnNames[i],
