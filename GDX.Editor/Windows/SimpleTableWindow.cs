@@ -24,8 +24,6 @@ namespace GDX.Editor.Windows
         SimpleTable.ColumnEntry[] m_ColumnDefinitions;
 
 
-        bool m_Initialized;
-
         VisualElement m_Overlay;
 
         MultiColumnListView m_TableView;
@@ -71,16 +69,7 @@ namespace GDX.Editor.Windows
                 k_Windows.Add(table, simpleTableWindow);
             }
 
-            if (!simpleTableWindow.m_Initialized)
-            {
-                VisualElement rootElement = simpleTableWindow.rootVisualElement;
-                ResourcesProvider.SetupStylesheets(rootElement);
-                ResourcesProvider.GetVisualTreeAsset("GDXSimpleTable").CloneTree(rootElement);
-                ResourcesProvider.CheckTheme(rootElement);
 
-                simpleTableWindow.m_Initialized = true;
-                simpleTableWindow.RebindWindow();
-            }
 
             simpleTableWindow.BindSimpleTable(table);
 
@@ -88,6 +77,22 @@ namespace GDX.Editor.Windows
             simpleTableWindow.Focus();
 
             return simpleTableWindow;
+        }
+
+        void OnEnable()
+        {
+            ResourcesProvider.SetupStylesheets(rootVisualElement);
+            ResourcesProvider.GetVisualTreeAsset("GDXSimpleTable").CloneTree(rootVisualElement);
+            ResourcesProvider.CheckTheme(rootVisualElement);
+
+            BindWindow();
+
+            // Catch domain reload and rebind/relink window
+            if (m_TargetTable != null)
+            {
+                k_Windows[m_TargetTable] = this;
+                BindSimpleTable(m_TargetTable);
+            }
         }
 
 
@@ -119,7 +124,7 @@ namespace GDX.Editor.Windows
             rootElement.Insert(1, m_TableView);
         }
 
-        void RebindWindow()
+        void BindWindow()
         {
             m_ToolbarAddColumn = rootVisualElement.Q<Button>("gdx-simple-table-toolbar-add-column");
             m_ToolbarAddColumn.clicked += AddColumn_Show;
