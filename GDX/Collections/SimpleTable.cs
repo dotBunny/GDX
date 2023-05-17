@@ -133,7 +133,7 @@ namespace GDX
             {
                 int[] columnOrders = allColumnOrders[columnIndex];
                 int columnOrdersLength = columnOrders.Length;
-                
+
                 int[] columnIndices = columnDenseIndexToIDMap[columnIndex];
                 string[] columnNames = allColumnNames[columnIndex];
 

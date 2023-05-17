@@ -15,8 +15,6 @@ namespace GDX.Editor.Inspectors
     [CustomEditor(typeof(SimpleTable))]
     public class SimpleTableInspector : UnityEditor.Editor
     {
-        const string k_ButtonText = "Open Table";
-
         [MenuItem("Assets/Create/GDX/Simple Table")]
         public static void CreateAsset()
         {
@@ -28,6 +26,9 @@ namespace GDX.Editor.Inspectors
             ProjectWindowUtil.ShowCreatedAsset(asset);
         }
 
+#if UNITY_2022_2_OR_NEWER
+
+        const string k_ButtonText = "Open Table";
 
         void OpenTargetAsset()
         {
@@ -35,35 +36,37 @@ namespace GDX.Editor.Inspectors
             SimpleTableWindow.OpenAsset(table);
         }
 
-#if UNITY_2022_2_OR_NEWER
         /// <inheritdoc />
         public override VisualElement CreateInspectorGUI()
         {
             SimpleTable table = (SimpleTable)target;
             VisualElement container = new VisualElement();
 
+            var columns = table.GetOrderedColumns();
+            Label columnsLabel;
+            if (columns == null)
+            {
+                columnsLabel = new Label($"No columns");
+            }
+            else
+            {
+                columnsLabel = new Label($"{columns.Length.ToString()} Columns");
+
+            }
+            container.Add(columnsLabel);
+
             Button button = new Button(OpenTargetAsset);
             button.text = k_ButtonText;
-
             container.Add(button);
+
             return container;
         }
 #else
         /// <inheritdoc />
         public override void OnInspectorGUI()
         {
-            SimpleTable table = (SimpleTable)target;
-
-            // TODO: info on table?
-
-            if (GUILayout.Button(k_ButtonText))
-            {
-                OpenTargetAsset();
-            }
-
+            GUILayout.Label("Editing a SimpleTable is unsupported on this version of Unity.");
         }
 #endif
-
-
     }
 }

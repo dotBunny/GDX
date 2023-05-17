@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using GDX.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
@@ -9,6 +6,7 @@ using UnityEngine.UIElements;
 
 namespace GDX.Editor.Windows
 {
+#if UNITY_2022_2_OR_NEWER
     public class SimpleTableWindow : EditorWindow
     {
         static readonly Dictionary<SimpleTable, SimpleTableWindow> k_Windows = new Dictionary<SimpleTable, SimpleTableWindow>();
@@ -109,4 +107,5 @@ namespace GDX.Editor.Windows
 
         }
     }
+#endif
 }
