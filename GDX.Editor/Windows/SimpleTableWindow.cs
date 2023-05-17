@@ -82,7 +82,7 @@ namespace GDX.Editor.Windows
                 simpleTableWindow.RebindWindow();
             }
 
-            simpleTableWindow.RebindData(table);
+            simpleTableWindow.BindSimpleTable(table);
 
             simpleTableWindow.Show();
             simpleTableWindow.Focus();
@@ -91,7 +91,7 @@ namespace GDX.Editor.Windows
         }
 
 
-        void RebindData(SimpleTable table)
+        void BindSimpleTable(SimpleTable table)
         {
             m_TargetTable = table;
             titleContent = new GUIContent(m_TargetTable.name);
@@ -240,7 +240,7 @@ namespace GDX.Editor.Windows
             EditorUtility.SetDirty(m_TargetTable);
 
             // TODO: REbnd data?
-            RebindData(m_TargetTable);
+            BindSimpleTable(m_TargetTable);
             AddColumn_Hide();
         }
 

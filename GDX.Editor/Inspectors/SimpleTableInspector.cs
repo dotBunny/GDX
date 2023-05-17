@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System.Reflection;
 using GDX.Editor.Windows;
 using UnityEditor;
 using UnityEngine;
@@ -19,10 +20,19 @@ namespace GDX.Editor.Inspectors
         public static void CreateAsset()
         {
             Data.SimpleTable asset = CreateInstance<Data.SimpleTable>();
-
-            AssetDatabase.CreateAsset(asset, "Assets/SimpleTable.asset");
+            object[] args = { null };
+            bool found = (bool)Reflection.InvokeStaticMethod("UnityEditor.ProjectWindowUtil", "TryGetActiveFolderPath", args,
+                BindingFlags.Static | BindingFlags.NonPublic);
+            if (found)
+            {
+                string basePath = (string)args[0];
+                AssetDatabase.CreateAsset(asset, $"{basePath}/SimpleTable.asset");
+            }
+            else
+            {
+                AssetDatabase.CreateAsset(asset, "Assets/SimpleTable.asset");
+            }
             AssetDatabase.SaveAssets();
-
             ProjectWindowUtil.ShowCreatedAsset(asset);
         }
 

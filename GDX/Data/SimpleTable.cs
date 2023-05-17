@@ -107,7 +107,7 @@ namespace GDX.Data
         internal ColumnEntryInternal[] columnIDToDenseIndexMap;
 
         // TODO move with other block
-        [SerializeField] internal int[][] columnDenseIndexToIDMap = new int[(int)ColumnType.Count][];
+        [SerializeField] ArrayHolder<int>[] columnDenseIndexToIDMap = new ArrayHolder<int>[(int)ColumnType.Count];
 
         [SerializeField]
         internal int columnEntriesFreeListHead;
@@ -148,7 +148,7 @@ namespace GDX.Data
                 int[] columnOrders = allColumnOrders[columnIndex].TArray;
                 int columnOrdersLength = columnOrders?.Length ?? 0;
 
-                int[] columnIndices = columnDenseIndexToIDMap[columnIndex];
+                int[] columnIndices = columnDenseIndexToIDMap[columnIndex].TArray;
                 string[] columnNames = allColumnNames[columnIndex].TArray;
 
                 for (int i = 0; i < columnOrdersLength; i++)
@@ -1274,7 +1274,7 @@ namespace GDX.Data
                 }
             }
 
-            ref int[] denseIndexToIDMap = ref columnDenseIndexToIDMap[(int)typeIndex];
+            ref int[] denseIndexToIDMap = ref columnDenseIndexToIDMap[(int)typeIndex].TArray;
             int denseIndexToIDMapLength = denseIndexToIDMap?.Length ?? 0;
             Array.Resize(ref denseIndexToIDMap, denseIndexToIDMapLength + 1);
             denseIndexToIDMap[denseIndexToIDMapLength] = columnIndex;
@@ -1334,7 +1334,7 @@ namespace GDX.Data
             Array.Copy(columnOrdersOfType, 0, newColumnOrdersOfType, 0, lastIndex);
             allColumnOrders[(int)typeIndex].TArray = newColumnOrdersOfType;
 
-            int[] denseIndicesOfType = columnDenseIndexToIDMap[(int)typeIndex];
+            int[] denseIndicesOfType = columnDenseIndexToIDMap[(int)typeIndex].TArray;
             int sparseIndexAt = denseIndicesOfType[columnLocation];
             int sparseIndexToSwap = columnOrdersOfType[lastIndex];
             ref ColumnEntryInternal sparseIndexToFree = ref columnIDToDenseIndexMap[sparseIndexAt];
@@ -1345,7 +1345,7 @@ namespace GDX.Data
             denseIndicesOfType[columnLocation] = sparseIndexToSwap;
             int[] newDenseIndicesOfType = new int[lastIndex];
             Array.Copy(denseIndicesOfType, 0, newDenseIndicesOfType, 0, lastIndex);
-            columnDenseIndexToIDMap[(int)typeIndex] = newDenseIndicesOfType;
+            columnDenseIndexToIDMap[(int)typeIndex].TArray = newDenseIndicesOfType;
 
             for (int i = 0; i < (int)ColumnType.Count; i++)
             {
