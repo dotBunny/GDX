@@ -24,7 +24,7 @@ namespace GDX.Editor.Windows
         TextField m_AddColumnName;
 
         VisualElement m_AddColumnOverlay;
-        EnumField m_AddColumnType;
+        PopupField<int> m_AddColumnType;
         ITable.ColumnEntry[] m_ColumnDefinitions;
 
 
@@ -36,6 +36,7 @@ namespace GDX.Editor.Windows
         SimpleTable m_TargetTable;
 
         Button m_ToolbarAddColumn;
+        Button m_ToolbarAddRow;
 
 
         public void OnDestroy()
@@ -129,10 +130,17 @@ namespace GDX.Editor.Windows
             rootElement.Insert(1, m_TableView);
         }
 
+        string FormatColumnType(int value)
+        {
+            return ((ITable.ColumnType)value).ToString();
+        }
         void BindWindow()
         {
             m_ToolbarAddColumn = rootVisualElement.Q<Button>("gdx-simple-table-toolbar-add-column");
             m_ToolbarAddColumn.clicked += AddColumn_Show;
+
+            m_ToolbarAddRow = rootVisualElement.Q<Button>("gdx-simple-table-toolbar-add-row");
+            m_ToolbarAddRow.clicked += AddRow_Clicked;
 
             m_Overlay = rootVisualElement.Q<VisualElement>("gdx-simple-table-overlay");
             // Ensure that the overlay is not visible
@@ -142,7 +150,17 @@ namespace GDX.Editor.Windows
             m_AddColumnOverlay = m_Overlay.Q<VisualElement>("gdx-simple-table-add-column");
             m_AddColumnName = m_AddColumnOverlay.Q<TextField>("gdx-simple-table-column-name");
 
-            m_AddColumnType = m_AddColumnOverlay.Q<EnumField>("gdx-simple-table-column-type");
+            // Build our custom column type enum
+            int columnNameIndex = m_AddColumnOverlay.IndexOf(m_AddColumnName);
+            List<int> typeValues = new List<int>((int)ITable.ColumnType.Count);
+            for (int i = 0; i < (int)ITable.ColumnType.Count; i++)
+            {
+                typeValues.Add(i);
+            }
+            m_AddColumnType = new PopupField<int>(typeValues, 0, FormatColumnType, FormatColumnType);
+            m_AddColumnType.label = "Type";
+            m_AddColumnType.name = "gdx-simple-table-column-type";
+            m_AddColumnOverlay.Insert(columnNameIndex + 1, m_AddColumnType);
 
             m_AddColumnAddButton = m_AddColumnOverlay.Q<Button>("gdx-simple-table-column-add");
             m_AddColumnAddButton.clicked += AddColumn_AddButtonClicked;
@@ -271,6 +289,12 @@ namespace GDX.Editor.Windows
         void AddColumn_CancelButtonClicked()
         {
             AddColumn_Hide();
+        }
+
+        void AddRow_Clicked()
+        {
+            m_TargetTable.AddRow();
+            BindSimpleTable(m_TargetTable);
         }
     }
 #endif
