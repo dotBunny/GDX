@@ -4,12 +4,13 @@
 
 using System;
 using GDX.Collections;
+using GDX.Tables.CellValues;
 using UnityEngine;
 
-namespace GDX.Data
+namespace GDX.Tables
 {
     [Serializable]
-    public class SimpleTable : ScriptableObject
+    public class SimpleTable : ScriptableObject, ITable
     {
         public enum ColumnType
         {
@@ -17,14 +18,14 @@ namespace GDX.Data
             String,
             Char,
             Bool,
-            Sbyte,
+            SByte,
             Byte,
             Short,
-            Ushort,
+            UShort,
             Int,
-            Uint,
+            UInt,
             Long,
-            Ulong,
+            ULong,
             Float,
             Double,
             Vector2,
@@ -133,6 +134,11 @@ namespace GDX.Data
             {
                 return rowCount;
             }
+        }
+
+        public ulong GetDataVersion()
+        {
+            return dataVersion;
         }
 
         public ColumnEntry[] GetOrderedColumns()
@@ -382,7 +388,7 @@ namespace GDX.Data
 
         public int AddSbyteColumn(string columnName, int insertAt = -1)
         {
-            return AddColumnInternal(columnName, ref allSbyteColumns, ColumnType.Sbyte, insertAt);
+            return AddColumnInternal(columnName, ref allSbyteColumns, ColumnType.SByte, insertAt);
         }
 
         public int AddByteColumn(string columnName, int insertAt = -1)
@@ -397,7 +403,7 @@ namespace GDX.Data
 
         public int AddUshortColumn(string columnName, int insertAt = -1)
         {
-            return AddColumnInternal(columnName, ref allUshortColumns, ColumnType.Ushort, insertAt);
+            return AddColumnInternal(columnName, ref allUshortColumns, ColumnType.UShort, insertAt);
         }
 
         public int AddIntColumn(string columnName, int insertAt = -1)
@@ -407,7 +413,7 @@ namespace GDX.Data
 
         public int AddUintColumn(string columnName, int insertAt = -1)
         {
-            return AddColumnInternal(columnName, ref allUintColumns, ColumnType.Uint, insertAt);
+            return AddColumnInternal(columnName, ref allUintColumns, ColumnType.UInt, insertAt);
         }
 
         public int AddLongColumn(string columnName, int insertAt = -1)
@@ -417,7 +423,7 @@ namespace GDX.Data
 
         public int AddUlongColumn(string columnName, int insertAt = -1)
         {
-            return AddColumnInternal(columnName, ref allUlongColumns, ColumnType.Ulong, insertAt);
+            return AddColumnInternal(columnName, ref allUlongColumns, ColumnType.ULong, insertAt);
         }
 
         public int AddFloatColumn(string columnName, int insertAt = -1)
@@ -529,7 +535,7 @@ namespace GDX.Data
 
         public void RemoveSbyteColumn(int removeAt)
         {
-            RemoveColumnInternal(ref allSbyteColumns, ColumnType.Sbyte, removeAt);
+            RemoveColumnInternal(ref allSbyteColumns, ColumnType.SByte, removeAt);
         }
 
         public void RemoveByteColumn(int removeAt)
@@ -544,7 +550,7 @@ namespace GDX.Data
 
         public void RemoveUshortColumn(int removeAt)
         {
-            RemoveColumnInternal(ref allUshortColumns, ColumnType.Ushort, removeAt);
+            RemoveColumnInternal(ref allUshortColumns, ColumnType.UShort, removeAt);
         }
 
         public void RemoveIntColumn(int removeAt)
@@ -554,7 +560,7 @@ namespace GDX.Data
 
         public void RemoveUintColumn(int removeAt)
         {
-            RemoveColumnInternal(ref allUintColumns, ColumnType.Uint, removeAt);
+            RemoveColumnInternal(ref allUintColumns, ColumnType.UInt, removeAt);
         }
 
         public void RemoveLongColumn(int removeAt)
@@ -564,7 +570,7 @@ namespace GDX.Data
 
         public void RemoveUlongColumn(int removeAt)
         {
-            RemoveColumnInternal(ref allUlongColumns, ColumnType.Ulong, removeAt);
+            RemoveColumnInternal(ref allUlongColumns, ColumnType.ULong, removeAt);
         }
 
         public void RemoveFloatColumn(int removeAt)
@@ -659,153 +665,152 @@ namespace GDX.Data
 
         // Set
 
-        public void SetString(int row, int columnID, string value)
+        public ulong SetString(int row, int columnID, string value)
         {
-            SetCell(row, columnID, ref allStringColumns, value);
+            return SetCell(row, columnID, ref allStringColumns, value);
         }
 
-        public void SetBool(int row, int columnID, bool value)
+        public ulong SetBool(int row, int columnID, bool value)
         {
-            SetCell(row, columnID, ref allBoolColumns, value);
+            return SetCell(row, columnID, ref allBoolColumns, value);
         }
 
-        public void SetChar(int row, int columnID, char value)
+        public ulong SetChar(int row, int columnID, char value)
         {
-            SetCell(row, columnID, ref allCharColumns, value);
+            return SetCell(row, columnID, ref allCharColumns, value);
         }
 
-        public void SetSbyte(int row, int columnID, sbyte value)
+        public ulong SetSByte(int row, int columnID, sbyte value)
         {
-            SetCell(row, columnID, ref allSbyteColumns, value);
+            return SetCell(row, columnID, ref allSbyteColumns, value);
         }
 
-        public void SetByte(int row, int columnID, byte value)
+        public ulong SetByte(int row, int columnID, byte value)
         {
-            SetCell(row, columnID, ref allByteColumns, value);
+            return SetCell(row, columnID, ref allByteColumns, value);
         }
 
-        public void SetShort(int row, int columnID, short value)
+        public ulong SetShort(int row, int columnID, short value)
         {
-            SetCell(row, columnID, ref allShortColumns, value);
+            return SetCell(row, columnID, ref allShortColumns, value);
         }
 
-        public void SetUshort(int row, int columnID, ushort value)
+        public ulong SetUShort(int row, int columnID, ushort value)
         {
-            SetCell(row, columnID, ref allUshortColumns, value);
+            return SetCell(row, columnID, ref allUshortColumns, value);
         }
 
-        public void SetInt(int row, int columnID, int value)
+        public ulong SetInt(int row, int columnID, int value)
         {
-            SetCell(row, columnID, ref allIntColumns, value);
+            return SetCell(row, columnID, ref allIntColumns, value);
         }
 
-        public void SetUint(int row, int columnID, uint value)
+        public ulong SetUInt(int row, int columnID, uint value)
         {
-            SetCell(row, columnID, ref allUintColumns, value);
+            return SetCell(row, columnID, ref allUintColumns, value);
         }
 
-        public void SetLong(int row, int columnID, long value)
+        public ulong SetLong(int row, int columnID, long value)
         {
-            SetCell(row, columnID, ref allLongColumns, value);
+            return SetCell(row, columnID, ref allLongColumns, value);
         }
 
-        public void SetUlong(int row, int columnID, ulong value)
+        public ulong SetULong(int row, int columnID, ulong value)
         {
-            SetCell(row, columnID, ref allUlongColumns, value);
+            return SetCell(row, columnID, ref allUlongColumns, value);
         }
 
-        public void SetFloat(int row, int columnID, float value)
+        public ulong SetFloat(int row, int columnID, float value)
         {
-            SetCell(row, columnID, ref allFloatColumns, value);
+            return SetCell(row, columnID, ref allFloatColumns, value);
         }
 
-        public void SetDouble(int row, int columnID, double value)
+        public ulong SetDouble(int row, int columnID, double value)
         {
-            SetCell(row, columnID, ref allDoubleColumns, value);
+            return SetCell(row, columnID, ref allDoubleColumns, value);
         }
 
-        public void SetVector2(int row, int columnID, Vector2 value)
+        public ulong SetVector2(int row, int columnID, Vector2 value)
         {
-            SetCell(row, columnID, ref allVector2Columns, value);
+            return SetCell(row, columnID, ref allVector2Columns, value);
         }
 
-        public void SetVector3(int row, int columnID, Vector3 value)
+        public ulong SetVector3(int row, int columnID, Vector3 value)
         {
-            SetCell(row, columnID, ref allVector3Columns, value);
+            return SetCell(row, columnID, ref allVector3Columns, value);
         }
 
-        public void SetVector4(int row, int columnID, Vector4 value)
+        public ulong SetVector4(int row, int columnID, Vector4 value)
         {
-            SetCell(row, columnID, ref allVector4Columns, value);
+            return SetCell(row, columnID, ref allVector4Columns, value);
         }
 
-        public void SetVector2Int(int row, int columnID, Vector2Int value)
+        public ulong SetVector2Int(int row, int columnID, Vector2Int value)
         {
-            SetCell(row, columnID, ref allVector2IntColumns, value);
+            return SetCell(row, columnID, ref allVector2IntColumns, value);
         }
 
-        public void SetVector3Int(int row, int columnID, Vector3Int value)
+        public ulong SetVector3Int(int row, int columnID, Vector3Int value)
         {
-            SetCell(row, columnID, ref allVector3IntColumns, value);
+            return SetCell(row, columnID, ref allVector3IntColumns, value);
         }
 
-        public void SetQuaternion(int row, int columnID, Quaternion value)
+        public ulong SetQuaternion(int row, int columnID, Quaternion value)
         {
-            SetCell(row, columnID, ref allQuaternionColumns, value);
+            return SetCell(row, columnID, ref allQuaternionColumns, value);
         }
 
-        public void SetRect(int row, int columnID, Rect value)
+        public ulong SetRect(int row, int columnID, Rect value)
         {
-            SetCell(row, columnID, ref allRectColumns, value);
+            return SetCell(row, columnID, ref allRectColumns, value);
         }
 
-        public void SetRectInt(int row, int columnID, RectInt value)
+        public ulong SetRectInt(int row, int columnID, RectInt value)
         {
-            SetCell(row, columnID, ref allRectIntColumns, value);
+            return SetCell(row, columnID, ref allRectIntColumns, value);
         }
 
-        public void SetColor(int row, int columnID, Color value)
+        public ulong SetColor(int row, int columnID, Color value)
         {
-            SetCell(row, columnID, ref allColorColumns, value);
+            return SetCell(row, columnID, ref allColorColumns, value);
         }
 
-        public void SetLayerMask(int row, int columnID, LayerMask value)
+        public ulong SetLayerMask(int row, int columnID, LayerMask value)
         {
-            SetCell(row, columnID, ref allLayerMaskColumns, value);
+            return SetCell(row, columnID, ref allLayerMaskColumns, value);
         }
 
-        public void SetBounds(int row, int columnID, Bounds value)
+        public ulong SetBounds(int row, int columnID, Bounds value)
         {
-            SetCell(row, columnID, ref allBoundsColumns, value);
+            return SetCell(row, columnID, ref allBoundsColumns, value);
         }
 
-        public void SetBoundsInt(int row, int columnID, BoundsInt value)
+        public ulong SetBoundsInt(int row, int columnID, BoundsInt value)
         {
-            SetCell(row, columnID, ref allBoundsIntColumns, value);
+            return SetCell(row, columnID, ref allBoundsIntColumns, value);
         }
 
-        public void SetHash128(int row, int columnID, Hash128 value)
+        public ulong SetHash128(int row, int columnID, Hash128 value)
         {
-            SetCell(row, columnID, ref allHash128Columns, value);
+            return SetCell(row, columnID, ref allHash128Columns, value);
         }
 
-        public void SetGradient(int row, int columnID, Gradient value)
+        public ulong SetGradient(int row, int columnID, Gradient value)
         {
-            SetCell(row, columnID, ref allGradientColumns, value);
+            return SetCell(row, columnID, ref allGradientColumns, value);
         }
 
-        public void SetAnimationCurve(int row, int columnID, AnimationCurve value)
+        public ulong SetAnimationCurve(int row, int columnID, AnimationCurve value)
         {
-            SetCell(row, columnID, ref allAnimationCurveColumns, value);
+            return SetCell(row, columnID, ref allAnimationCurveColumns, value);
         }
 
-        public void SetObject(int row, int columnID, UnityEngine.Object value)
+        public ulong SetObject(int row, int columnID, UnityEngine.Object value)
         {
-            SetCell(row, columnID, ref allObjectRefColumns, value);
+            return SetCell(row, columnID, ref allObjectRefColumns, value);
         }
 
         // Get
-
         public string GetString(int row, int columnID)
         {
             return GetCell(row, columnID, ref allStringColumns);
@@ -821,7 +826,7 @@ namespace GDX.Data
             return GetCell(row, columnID, ref allCharColumns);
         }
 
-        public sbyte GetSbyte(int row, int columnID)
+        public sbyte GetSByte(int row, int columnID)
         {
             return GetCell(row, columnID, ref allSbyteColumns);
         }
@@ -836,7 +841,7 @@ namespace GDX.Data
             return GetCell(row, columnID, ref allShortColumns);
         }
 
-        public ushort GetUshort(int row, int columnID)
+        public ushort GetUShort(int row, int columnID)
         {
             return GetCell(row, columnID, ref allUshortColumns);
         }
@@ -846,7 +851,7 @@ namespace GDX.Data
             return GetCell(row, columnID, ref allIntColumns);
         }
 
-        public uint GetUint(int row, int columnID)
+        public uint GetUInt(int row, int columnID)
         {
             return GetCell(row, columnID, ref allUintColumns);
         }
@@ -856,7 +861,7 @@ namespace GDX.Data
             return GetCell(row, columnID, ref allLongColumns);
         }
 
-        public ulong GetUlong(int row, int columnID)
+        public ulong GetULong(int row, int columnID)
         {
             return GetCell(row, columnID, ref allUlongColumns);
         }
@@ -1417,11 +1422,12 @@ namespace GDX.Data
             return allColumnsOfType[column][row];
         }
 
-        internal void SetCell<T>(int row, int columnID, ref ArrayHolder<T>[] allColumnsOfType, T value)
+        internal ulong SetCell<T>(int row, int columnID, ref ArrayHolder<T>[] allColumnsOfType, T value)
         {
             int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
             allColumnsOfType[column][row] = value;
             dataVersion++;
+            return dataVersion;
         }
 
         internal T[] GetColumn<T>(int columnID, ref ArrayHolder<T>[] allColumnsOfType)

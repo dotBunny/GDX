@@ -13,13 +13,13 @@ using UnityEngine.UIElements;
 
 namespace GDX.Editor.Inspectors
 {
-    [CustomEditor(typeof(Data.SimpleTable))]
+    [CustomEditor(typeof(Tables.SimpleTable))]
     public class SimpleTableInspector : UnityEditor.Editor
     {
         [MenuItem("Assets/Create/GDX/Simple Table")]
         public static void CreateAsset()
         {
-            Data.SimpleTable asset = CreateInstance<Data.SimpleTable>();
+            Tables.SimpleTable asset = CreateInstance<Tables.SimpleTable>();
             object[] args = { null };
             bool found = (bool)Reflection.InvokeStaticMethod("UnityEditor.ProjectWindowUtil", "TryGetActiveFolderPath", args,
                 BindingFlags.Static | BindingFlags.NonPublic);
@@ -42,14 +42,14 @@ namespace GDX.Editor.Inspectors
 
         void OpenTargetAsset()
         {
-            Data.SimpleTable table = (Data.SimpleTable)target;
+            Tables.SimpleTable table = (Tables.SimpleTable)target;
             SimpleTableWindow.OpenAsset(table);
         }
 
         /// <inheritdoc />
         public override VisualElement CreateInspectorGUI()
         {
-            Data.SimpleTable table = (Data.SimpleTable)target;
+            Tables.SimpleTable table = (Tables.SimpleTable)target;
             VisualElement container = new VisualElement();
 
             var columns = table.GetOrderedColumns();

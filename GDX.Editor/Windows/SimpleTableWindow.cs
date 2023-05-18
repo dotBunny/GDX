@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
 using GDX.Data;
+using GDX.Tables;
 using UnityEditor;
 using UnityEditor.Callbacks;
+using UnityEditor.UI;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
+using Button = UnityEngine.UIElements.Button;
 using Object = UnityEngine.Object;
 
 namespace GDX.Editor.Windows
@@ -108,10 +112,11 @@ namespace GDX.Editor.Windows
             // Generate columns for MCLV
             m_TableViewColumns = new Columns();
             int columnCount = table.ColumnCount;
+            Length columnSizePercentage = Length.Percent(1f / columnCount);
             for (int i = 0; i < columnCount; i++)
             {
                 ref SimpleTable.ColumnEntry refColumn = ref m_ColumnDefinitions[i];
-                Column column = new Column { name = refColumn.Name, title = refColumn.Name };
+                Column column = new Column { name = refColumn.Name, title = refColumn.Name, width = columnSizePercentage };
                 m_TableViewColumns.Add(column);
             }
 
@@ -158,7 +163,7 @@ namespace GDX.Editor.Windows
                 case SimpleTable.ColumnType.Bool:
                     m_TargetTable.AddBoolColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Sbyte:
+                case SimpleTable.ColumnType.SByte:
                     m_TargetTable.AddSbyteColumn(m_AddColumnName.value);
                     break;
                 case SimpleTable.ColumnType.Byte:
@@ -167,19 +172,19 @@ namespace GDX.Editor.Windows
                 case SimpleTable.ColumnType.Short:
                     m_TargetTable.AddShortColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Ushort:
+                case SimpleTable.ColumnType.UShort:
                     m_TargetTable.AddUshortColumn(m_AddColumnName.value);
                     break;
                 case SimpleTable.ColumnType.Int:
                     m_TargetTable.AddIntColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Uint:
+                case SimpleTable.ColumnType.UInt:
                     m_TargetTable.AddUintColumn(m_AddColumnName.value);
                     break;
                 case SimpleTable.ColumnType.Long:
                     m_TargetTable.AddLongColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Ulong:
+                case SimpleTable.ColumnType.ULong:
                     m_TargetTable.AddUlongColumn(m_AddColumnName.value);
                     break;
                 case SimpleTable.ColumnType.Float:
