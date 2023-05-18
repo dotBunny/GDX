@@ -25,7 +25,7 @@ namespace GDX.Editor.Windows
 
         VisualElement m_AddColumnOverlay;
         EnumField m_AddColumnType;
-        SimpleTable.ColumnEntry[] m_ColumnDefinitions;
+        ITable.ColumnEntry[] m_ColumnDefinitions;
 
 
         VisualElement m_Overlay;
@@ -115,7 +115,7 @@ namespace GDX.Editor.Windows
             Length columnSizePercentage = Length.Percent(1f / columnCount);
             for (int i = 0; i < columnCount; i++)
             {
-                ref SimpleTable.ColumnEntry refColumn = ref m_ColumnDefinitions[i];
+                ref ITable.ColumnEntry refColumn = ref m_ColumnDefinitions[i];
                 Column column = new Column { name = refColumn.Name, title = refColumn.Name, width = columnSizePercentage };
                 m_TableViewColumns.Add(column);
             }
@@ -141,7 +141,9 @@ namespace GDX.Editor.Windows
             // Build out references for adding a column
             m_AddColumnOverlay = m_Overlay.Q<VisualElement>("gdx-simple-table-add-column");
             m_AddColumnName = m_AddColumnOverlay.Q<TextField>("gdx-simple-table-column-name");
+
             m_AddColumnType = m_AddColumnOverlay.Q<EnumField>("gdx-simple-table-column-type");
+
             m_AddColumnAddButton = m_AddColumnOverlay.Q<Button>("gdx-simple-table-column-add");
             m_AddColumnAddButton.clicked += AddColumn_AddButtonClicked;
             m_AddColumnCancelButton = m_AddColumnOverlay.Q<Button>("gdx-simple-table-column-cancel");
@@ -151,94 +153,94 @@ namespace GDX.Editor.Windows
 
         void AddColumn_AddButtonClicked()
         {
-            SimpleTable.ColumnType selectedType = (SimpleTable.ColumnType)m_AddColumnType.value;
+            ITable.ColumnType selectedType = (ITable.ColumnType)m_AddColumnType.value;
             switch (selectedType)
             {
-                case SimpleTable.ColumnType.String:
+                case ITable.ColumnType.String:
                     m_TargetTable.AddStringColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Char:
+                case ITable.ColumnType.Char:
                     m_TargetTable.AddCharColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Bool:
+                case ITable.ColumnType.Bool:
                     m_TargetTable.AddBoolColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.SByte:
+                case ITable.ColumnType.SByte:
                     m_TargetTable.AddSbyteColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Byte:
+                case ITable.ColumnType.Byte:
                     m_TargetTable.AddByteColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Short:
+                case ITable.ColumnType.Short:
                     m_TargetTable.AddShortColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.UShort:
+                case ITable.ColumnType.UShort:
                     m_TargetTable.AddUshortColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Int:
+                case ITable.ColumnType.Int:
                     m_TargetTable.AddIntColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.UInt:
+                case ITable.ColumnType.UInt:
                     m_TargetTable.AddUintColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Long:
+                case ITable.ColumnType.Long:
                     m_TargetTable.AddLongColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.ULong:
+                case ITable.ColumnType.ULong:
                     m_TargetTable.AddUlongColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Float:
+                case ITable.ColumnType.Float:
                     m_TargetTable.AddFloatColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Double:
+                case ITable.ColumnType.Double:
                     m_TargetTable.AddDoubleColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Vector2:
+                case ITable.ColumnType.Vector2:
                     m_TargetTable.AddVector2Column(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Vector3:
+                case ITable.ColumnType.Vector3:
                     m_TargetTable.AddVector3Column(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Vector4:
+                case ITable.ColumnType.Vector4:
                     m_TargetTable.AddVector4Column(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Vector2Int:
+                case ITable.ColumnType.Vector2Int:
                     m_TargetTable.AddVector2IntColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Vector3Int:
+                case ITable.ColumnType.Vector3Int:
                     m_TargetTable.AddVector3IntColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Quaternion:
+                case ITable.ColumnType.Quaternion:
                     m_TargetTable.AddQuaternionColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Rect:
+                case ITable.ColumnType.Rect:
                     m_TargetTable.AddRectColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.RectInt:
+                case ITable.ColumnType.RectInt:
                     m_TargetTable.AddRectIntColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Color:
+                case ITable.ColumnType.Color:
                     m_TargetTable.AddColorColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.LayerMask:
+                case ITable.ColumnType.LayerMask:
                     m_TargetTable.AddLayerMaskColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Bounds:
+                case ITable.ColumnType.Bounds:
                     m_TargetTable.AddBoundsColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.BoundsInt:
+                case ITable.ColumnType.BoundsInt:
                     m_TargetTable.AddBoundsIntColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Hash128:
+                case ITable.ColumnType.Hash128:
                     m_TargetTable.AddHash128Column(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Gradient:
+                case ITable.ColumnType.Gradient:
                     m_TargetTable.AddGradientColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.AnimationCurve:
+                case ITable.ColumnType.AnimationCurve:
                     m_TargetTable.AddAnimationCurveColumn(m_AddColumnName.value);
                     break;
-                case SimpleTable.ColumnType.Object:
+                case ITable.ColumnType.Object:
                     m_TargetTable.AddObjectColumn(m_AddColumnName.value);
                     break;
                 default:

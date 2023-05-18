@@ -2,13 +2,58 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using UnityEngine;
-using GDX.Tables.CellValues;
+using Object = UnityEngine.Object;
 
 namespace GDX.Tables
 {
     public interface ITable
     {
+        public struct ColumnEntry
+        {
+            public string Name;
+            public int Id;
+            public ColumnType Type;
+        }
+
+        public enum ColumnType
+        {
+            Invalid = -1,
+            String,
+            Char,
+            Bool,
+            SByte,
+            Byte,
+            Short,
+            UShort,
+            Int,
+            UInt,
+            Long,
+            ULong,
+            Float,
+            Double,
+            Vector2,
+            Vector3,
+            Vector4,
+            Vector2Int,
+            Vector3Int,
+            Quaternion,
+            Rect,
+            RectInt,
+            Color,
+            LayerMask,
+            Bounds,
+            BoundsInt,
+            Hash128,
+            Gradient,
+            AnimationCurve,
+            Object,
+            Count
+        }
+
+
+
         ulong GetDataVersion();
 
         string GetString(int row, int columnID);

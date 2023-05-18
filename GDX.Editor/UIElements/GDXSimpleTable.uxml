@@ -9,7 +9,7 @@
         <ui:VisualElement name="gdx-simple-table-add-column" style="flex-direction: column; top: 35%; flex-grow: 0; width: 80%; margin-left: 10%; margin-right: 10%;">
             <ui:Label tabindex="-1" text="Add Column" display-tooltip-when-elided="true" style="font-size: 16px; -unity-font-style: bold;" />
             <ui:TextField picking-mode="Ignore" label="Name" value="MyColumn" name="gdx-simple-table-column-name" />
-            <ui:EnumField label="Type" type="GDX.Tables.SimpleTable+ColumnType, GDX" name="gdx-simple-table-column-type" />
+            <ui:EnumField label="Type" type="GDX.Tables.ITable+ColumnType, GDX" name="gdx-simple-table-column-type" />
             <ui:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row-reverse; top: 10px;">
                 <ui:Button text="Cancel" display-tooltip-when-elided="true" name="gdx-simple-table-column-cancel" enable-rich-text="false" />
                 <ui:Button text="Add" display-tooltip-when-elided="true" name="gdx-simple-table-column-add" enable-rich-text="false" />
