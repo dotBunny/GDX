@@ -3,12 +3,13 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.Tables;
+using UnityEditor;
 
-namespace GDX.Data
+namespace GDX.Editor.Inspectors
 {
-    public struct TableRowRef
+    [CustomEditor(typeof(StableTable))]
+    public class StableTableInspector : ITableInspector
     {
-        public ITable Table;
-        public int RowID;
+
     }
 }

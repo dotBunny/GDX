@@ -10,15 +10,15 @@ namespace GDX.Tables.CellValues
     {
         RectInt m_CachedValue;
         public readonly ITable Table;
-        public readonly int ColumnID;
-        public readonly int RowID;
+        public readonly int Column;
+        public readonly int Row;
         ulong m_TableVersion;
 
-        public RectIntCellValue(ITable table, int rowID, int columnID)
+        public RectIntCellValue(ITable table, int row, int column)
         {
             Table = table;
-            RowID = rowID;
-            ColumnID = columnID;
+            Row = row;
+            Column = column;
             m_TableVersion = 0;
             m_CachedValue = default;
             Get();
@@ -28,7 +28,7 @@ namespace GDX.Tables.CellValues
         {
             if (m_TableVersion != Table.GetDataVersion())
             {
-                m_CachedValue = Table.GetRectInt(RowID, ColumnID);
+                m_CachedValue = Table.GetRectInt(Row, Column);
                 m_TableVersion = Table.GetDataVersion();
             }
             return m_CachedValue;
@@ -44,7 +44,7 @@ namespace GDX.Tables.CellValues
             m_CachedValue = value;
             if (updateTable)
             {
-                m_TableVersion = Table.SetRectInt(RowID, ColumnID, value);
+                m_TableVersion = Table.SetRectInt(Row, Column, value);
             }
         }
     }

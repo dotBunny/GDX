@@ -10,15 +10,15 @@ namespace GDX.Tables.CellValues
     {
         Gradient m_CachedValue;
         public readonly ITable Table;
-        public readonly int ColumnID;
-        public readonly int RowID;
+        public readonly int Column;
+        public readonly int Row;
         ulong m_TableVersion;
 
-        public GradientCellValue(ITable table, int rowID, int columnID)
+        public GradientCellValue(ITable table, int row, int column)
         {
             Table = table;
-            RowID = rowID;
-            ColumnID = columnID;
+            Row = row;
+            Column = column;
             m_TableVersion = 0;
             m_CachedValue = default;
             Get();
@@ -28,7 +28,7 @@ namespace GDX.Tables.CellValues
         {
             if (m_TableVersion != Table.GetDataVersion())
             {
-                m_CachedValue = Table.GetGradient(RowID, ColumnID);
+                m_CachedValue = Table.GetGradient(Row, Column);
                 m_TableVersion = Table.GetDataVersion();
             }
             return m_CachedValue;
@@ -44,7 +44,7 @@ namespace GDX.Tables.CellValues
             m_CachedValue = value;
             if (updateTable)
             {
-                m_TableVersion = Table.SetGradient(RowID, ColumnID, value);
+                m_TableVersion = Table.SetGradient(Row, Column, value);
             }
         }
     }

@@ -4,22 +4,19 @@
 
 using System;
 using GDX.Collections;
-using GDX.Tables.CellValues;
 using UnityEngine;
 
 namespace GDX.Tables
 {
+
+    [CreateAssetMenu(menuName = "GDX/Stable Table", fileName = "GDXStableTable")]
     [Serializable]
-    public class SimpleTable : ScriptableObject, ITable
+    public class StableTable : ScriptableObject, ITable
     {
-
-
-
-
         [Serializable]
-        internal struct ColumnEntryInternal
+        internal struct ColumnEntry
         {
-            public ITable.ColumnType ColumnType;
+            public Serializable.SerializableTypes ColumnType;
             public int columnDenseIndex;
         }
 
@@ -52,8 +49,8 @@ namespace GDX.Tables
         [SerializeField] internal ArrayHolder<Gradient>[] allGradientColumns;
         [SerializeField] internal ArrayHolder<AnimationCurve>[] allAnimationCurveColumns;
         [SerializeField] internal ArrayHolder<UnityEngine.Object>[] allObjectRefColumns;
-        [SerializeField] internal ArrayHolder<string>[] allColumnNames = new ArrayHolder<string>[(int)ITable.ColumnType.Count]; // Contains the name of each column of each type. Ordered by ITable.ColumnType
-        [SerializeField] internal ArrayHolder<int>[] allColumnOrders = new ArrayHolder<int>[(int)ITable.ColumnType.Count]; // Contains the left-to-right order of each column of each type. Ordered by ITable.ColumnType
+        [SerializeField] internal ArrayHolder<string>[] allColumnNames = new ArrayHolder<string>[Serializable.SerializableTypesCount]; // Contains the name of each column of each type. Ordered by Serializable.SerializableTypes
+        [SerializeField] internal ArrayHolder<int>[] allColumnOrders = new ArrayHolder<int>[Serializable.SerializableTypesCount]; // Contains the left-to-right order of each column of each type. Ordered by Serializable.SerializableTypes
 
 
         [SerializeField]
@@ -63,10 +60,10 @@ namespace GDX.Tables
         internal int rowCount;
 
         [SerializeField]
-        internal ColumnEntryInternal[] columnIDToDenseIndexMap;
+        internal ColumnEntry[] columnIDToDenseIndexMap;
 
         // TODO move with other block
-        [SerializeField] ArrayHolder<int>[] columnDenseIndexToIDMap = new ArrayHolder<int>[(int)ITable.ColumnType.Count];
+        [SerializeField] ArrayHolder<int>[] columnDenseIndexToIDMap = new ArrayHolder<int>[Serializable.SerializableTypesCount];
 
         [SerializeField]
         internal int columnEntriesFreeListHead;
@@ -77,36 +74,30 @@ namespace GDX.Tables
         [SerializeField]
         internal ulong dataVersion = 1;
 
-        // BEGIN - View Hacks
-        public int ColumnCount
-        {
-            get
-            {
-                return combinedColumnCount;
-            }
-        }
-
-        public int RowCount
-        {
-            get
-            {
-                return rowCount;
-            }
-        }
 
         public ulong GetDataVersion()
         {
             return dataVersion;
         }
 
-        public ITable.ColumnEntry[] GetOrderedColumns()
+        /// <inheritdoc />
+        public int GetColumnCount()
+        {
+            return combinedColumnCount;
+        }
+
+        /// <inheritdoc />
+        public int GetRowCount()
+        {
+            return rowCount;
+        }
+
+        public ITable.ColumnDescription[] GetOrderedColumns()
         {
             if (combinedColumnCount == 0) return null;
+            ITable.ColumnDescription[] returnArray = new ITable.ColumnDescription[combinedColumnCount];
 
-            int columnCount = (int)ITable.ColumnType.Count;
-            ITable.ColumnEntry[] returnArray = new ITable.ColumnEntry[combinedColumnCount];
-
-            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++)
+            for (int columnIndex = 0; columnIndex < Serializable.SerializableTypesCount; columnIndex++)
             {
 
                 int[] columnOrders = allColumnOrders[columnIndex].TArray;
@@ -117,11 +108,11 @@ namespace GDX.Tables
 
                 for (int i = 0; i < columnOrdersLength; i++)
                 {
-                    returnArray[columnOrders[i]] = new ITable.ColumnEntry
+                    returnArray[columnOrders[i]] = new ITable.ColumnDescription
                     {
                         Name =  columnNames[i],
-                        Id = columnIndices[i],
-                        Type = (ITable.ColumnType)columnIndex
+                        Index = columnIndices[i],
+                        Type = (Serializable.SerializableTypes)columnIndex
                     };
                 }
             }
@@ -327,591 +318,463 @@ namespace GDX.Tables
             dataVersion++;
         }
 
-        // Add Column
 
-        public int AddStringColumn(string columnName, int insertAt = -1)
+        // TODO: Need to make sure that insertAt is the stableID, also this should return the stableID of the newly created row.
+        public int AddColumn(Serializable.SerializableTypes columnType, string columnName, int insertAt = -1)
         {
-            return AddColumnInternal(columnName, ref allStringColumns, ITable.ColumnType.String, insertAt);
+            switch (columnType)
+            {
+                case Serializable.SerializableTypes.String:
+                    return AddColumnInternal(columnName, ref allStringColumns, Serializable.SerializableTypes.String, insertAt);
+                case Serializable.SerializableTypes.Char:
+                    return AddColumnInternal(columnName, ref allCharColumns, Serializable.SerializableTypes.Char, insertAt);
+                case Serializable.SerializableTypes.Bool:
+                    return AddColumnInternal(columnName, ref allBoolColumns, Serializable.SerializableTypes.Bool, insertAt);
+                case Serializable.SerializableTypes.SByte:
+                    return AddColumnInternal(columnName, ref allSbyteColumns, Serializable.SerializableTypes.SByte, insertAt);
+                case Serializable.SerializableTypes.Byte:
+                    return AddColumnInternal(columnName, ref allByteColumns, Serializable.SerializableTypes.Byte, insertAt);
+                case Serializable.SerializableTypes.Short:
+                    return AddColumnInternal(columnName, ref allShortColumns, Serializable.SerializableTypes.Short, insertAt);
+                case Serializable.SerializableTypes.UShort:
+                    return AddColumnInternal(columnName, ref allUshortColumns, Serializable.SerializableTypes.UShort, insertAt);
+                case Serializable.SerializableTypes.Int:
+                    return AddColumnInternal(columnName, ref allIntColumns, Serializable.SerializableTypes.Int, insertAt);
+                case Serializable.SerializableTypes.UInt:
+                    return AddColumnInternal(columnName, ref allUintColumns, Serializable.SerializableTypes.UInt, insertAt);
+                case Serializable.SerializableTypes.Long:
+                    return AddColumnInternal(columnName, ref allLongColumns, Serializable.SerializableTypes.Long, insertAt);
+                case Serializable.SerializableTypes.ULong:
+                    return AddColumnInternal(columnName, ref allUlongColumns, Serializable.SerializableTypes.ULong, insertAt);
+                case Serializable.SerializableTypes.Float:
+                    return AddColumnInternal(columnName, ref allFloatColumns, Serializable.SerializableTypes.Float, insertAt);
+                case Serializable.SerializableTypes.Double:
+                    return AddColumnInternal(columnName, ref allDoubleColumns, Serializable.SerializableTypes.Double, insertAt);
+                case Serializable.SerializableTypes.Vector2:
+                    return AddColumnInternal(columnName, ref allVector2Columns, Serializable.SerializableTypes.Vector2, insertAt);
+                case Serializable.SerializableTypes.Vector3:
+                    return AddColumnInternal(columnName, ref allVector3Columns, Serializable.SerializableTypes.Vector3, insertAt);
+                case Serializable.SerializableTypes.Vector4:
+                    return AddColumnInternal(columnName, ref allVector4Columns, Serializable.SerializableTypes.Vector4, insertAt);
+                case Serializable.SerializableTypes.Vector2Int:
+                    return AddColumnInternal(columnName, ref allVector2IntColumns, Serializable.SerializableTypes.Vector2Int, insertAt);
+                case Serializable.SerializableTypes.Vector3Int:
+                    return AddColumnInternal(columnName, ref allVector3IntColumns, Serializable.SerializableTypes.Vector3Int, insertAt);
+                case Serializable.SerializableTypes.Quaternion:
+                    return AddColumnInternal(columnName, ref allQuaternionColumns, Serializable.SerializableTypes.Quaternion, insertAt);
+                case Serializable.SerializableTypes.Rect:
+                    return AddColumnInternal(columnName, ref allRectColumns, Serializable.SerializableTypes.Rect, insertAt);
+                case Serializable.SerializableTypes.RectInt:
+                    return AddColumnInternal(columnName, ref allRectIntColumns, Serializable.SerializableTypes.RectInt, insertAt);
+                case Serializable.SerializableTypes.Color:
+                    return AddColumnInternal(columnName, ref allColorColumns, Serializable.SerializableTypes.Color, insertAt);
+                case Serializable.SerializableTypes.LayerMask:
+                    return AddColumnInternal(columnName, ref allLayerMaskColumns, Serializable.SerializableTypes.LayerMask, insertAt);
+                case Serializable.SerializableTypes.Bounds:
+                    return AddColumnInternal(columnName, ref allBoundsColumns, Serializable.SerializableTypes.Bounds, insertAt);
+                case Serializable.SerializableTypes.BoundsInt:
+                    return AddColumnInternal(columnName, ref allBoundsIntColumns, Serializable.SerializableTypes.BoundsInt, insertAt);
+                case Serializable.SerializableTypes.Hash128:
+                    return AddColumnInternal(columnName, ref allHash128Columns, Serializable.SerializableTypes.Hash128, insertAt);
+                case Serializable.SerializableTypes.Gradient:
+                    return AddColumnInternal(columnName, ref allGradientColumns, Serializable.SerializableTypes.Gradient, insertAt);
+                case Serializable.SerializableTypes.AnimationCurve:
+                    return AddColumnInternal(columnName, ref allAnimationCurveColumns, Serializable.SerializableTypes.AnimationCurve, insertAt);
+                case Serializable.SerializableTypes.Object:
+                    return AddColumnInternal(columnName, ref allObjectRefColumns, Serializable.SerializableTypes.Object, insertAt);
+            }
+            return -1;
         }
 
-        public int AddBoolColumn(string columnName, int insertAt = -1)
+        // TODO: need to make sure this is the stable ID?
+        public void RemoveColumn(Serializable.SerializableTypes columnType, int removeAt = -1)
         {
-            return AddColumnInternal(columnName, ref allBoolColumns, ITable.ColumnType.Bool, insertAt);
+            switch (columnType)
+            {
+                case Serializable.SerializableTypes.String:
+                    RemoveColumnInternal(ref allStringColumns, Serializable.SerializableTypes.String, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Char:
+                    RemoveColumnInternal(ref allCharColumns, Serializable.SerializableTypes.Char, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Bool:
+                    RemoveColumnInternal(ref allBoolColumns, Serializable.SerializableTypes.Bool, removeAt);
+                    break;
+                case Serializable.SerializableTypes.SByte:
+                    RemoveColumnInternal(ref allSbyteColumns, Serializable.SerializableTypes.SByte, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Byte:
+                    RemoveColumnInternal(ref allByteColumns, Serializable.SerializableTypes.Byte, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Short:
+                    RemoveColumnInternal(ref allShortColumns, Serializable.SerializableTypes.Short, removeAt);
+                    break;
+                case Serializable.SerializableTypes.UShort:
+                    RemoveColumnInternal(ref allUshortColumns, Serializable.SerializableTypes.UShort, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Int:
+                    RemoveColumnInternal(ref allIntColumns, Serializable.SerializableTypes.Int, removeAt);
+                    break;
+                case Serializable.SerializableTypes.UInt:
+                    RemoveColumnInternal(ref allUintColumns, Serializable.SerializableTypes.UInt, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Long:
+                    RemoveColumnInternal(ref allLongColumns, Serializable.SerializableTypes.Long, removeAt);
+                    break;
+                case Serializable.SerializableTypes.ULong:
+                    RemoveColumnInternal(ref allUlongColumns, Serializable.SerializableTypes.ULong, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Float:
+                    RemoveColumnInternal(ref allFloatColumns, Serializable.SerializableTypes.Float, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Double:
+                    RemoveColumnInternal(ref allDoubleColumns, Serializable.SerializableTypes.Double, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Vector2:
+                    RemoveColumnInternal(ref allVector2Columns, Serializable.SerializableTypes.Vector2, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Vector3:
+                    RemoveColumnInternal(ref allVector3Columns, Serializable.SerializableTypes.Vector3, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Vector4:
+                    RemoveColumnInternal(ref allVector4Columns, Serializable.SerializableTypes.Vector4, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Vector2Int:
+                    RemoveColumnInternal(ref allVector2IntColumns, Serializable.SerializableTypes.Vector2Int, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Vector3Int:
+                    RemoveColumnInternal(ref allVector3IntColumns, Serializable.SerializableTypes.Vector3Int, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Quaternion:
+                    RemoveColumnInternal(ref allQuaternionColumns, Serializable.SerializableTypes.Quaternion, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Rect:
+                    RemoveColumnInternal(ref allRectColumns, Serializable.SerializableTypes.Rect, removeAt);
+                    break;
+                case Serializable.SerializableTypes.RectInt:
+                    RemoveColumnInternal(ref allRectIntColumns, Serializable.SerializableTypes.RectInt, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Color:
+                    RemoveColumnInternal(ref allColorColumns, Serializable.SerializableTypes.Color, removeAt);
+                    break;
+                case Serializable.SerializableTypes.LayerMask:
+                    RemoveColumnInternal(ref allLayerMaskColumns, Serializable.SerializableTypes.LayerMask, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Bounds:
+                    RemoveColumnInternal(ref allBoundsColumns, Serializable.SerializableTypes.Bounds, removeAt);
+                    break;
+                case Serializable.SerializableTypes.BoundsInt:
+                    RemoveColumnInternal(ref allBoundsIntColumns, Serializable.SerializableTypes.BoundsInt, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Hash128:
+                    RemoveColumnInternal(ref allHash128Columns, Serializable.SerializableTypes.Hash128, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Gradient:
+                    RemoveColumnInternal(ref allGradientColumns, Serializable.SerializableTypes.Gradient, removeAt);
+                    break;
+                case Serializable.SerializableTypes.AnimationCurve:
+                    RemoveColumnInternal(ref allAnimationCurveColumns, Serializable.SerializableTypes.AnimationCurve, removeAt);
+                    break;
+                case Serializable.SerializableTypes.Object:
+                    RemoveColumnInternal(ref allObjectRefColumns, Serializable.SerializableTypes.Object, removeAt);
+                    break;
+            }
         }
 
-        public int AddCharColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allCharColumns, ITable.ColumnType.Char, insertAt);
-        }
 
-        public int AddSbyteColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allSbyteColumns, ITable.ColumnType.SByte, insertAt);
-        }
 
-        public int AddByteColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allByteColumns, ITable.ColumnType.Byte, insertAt);
-        }
-
-        public int AddShortColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allShortColumns, ITable.ColumnType.Short, insertAt);
-        }
-
-        public int AddUshortColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allUshortColumns, ITable.ColumnType.UShort, insertAt);
-        }
-
-        public int AddIntColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allIntColumns, ITable.ColumnType.Int, insertAt);
-        }
-
-        public int AddUintColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allUintColumns, ITable.ColumnType.UInt, insertAt);
-        }
-
-        public int AddLongColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allLongColumns, ITable.ColumnType.Long, insertAt);
-        }
-
-        public int AddUlongColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allUlongColumns, ITable.ColumnType.ULong, insertAt);
-        }
-
-        public int AddFloatColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allFloatColumns, ITable.ColumnType.Float, insertAt);
-        }
-
-        public int AddDoubleColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allDoubleColumns, ITable.ColumnType.Double, insertAt);
-        }
-
-        public int AddVector2Column(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allVector2Columns, ITable.ColumnType.Vector2, insertAt);
-        }
-
-        public int AddVector3Column(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allVector3Columns, ITable.ColumnType.Vector3, insertAt);
-        }
-
-        public int AddVector4Column(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allVector4Columns, ITable.ColumnType.Vector4, insertAt);
-        }
-
-        public int AddVector2IntColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allVector2IntColumns, ITable.ColumnType.Vector2Int, insertAt);
-        }
-
-        public int AddVector3IntColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allVector3IntColumns, ITable.ColumnType.Vector3Int, insertAt);
-        }
-
-        public int AddQuaternionColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allQuaternionColumns, ITable.ColumnType.Quaternion, insertAt);
-        }
-
-        public int AddRectColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allRectColumns, ITable.ColumnType.Rect, insertAt);
-        }
-
-        public int AddRectIntColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allRectIntColumns, ITable.ColumnType.RectInt, insertAt);
-        }
-
-        public int AddColorColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allColorColumns, ITable.ColumnType.Color, insertAt);
-        }
-
-        public int AddLayerMaskColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allLayerMaskColumns, ITable.ColumnType.LayerMask, insertAt);
-        }
-
-        public int AddBoundsColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allBoundsColumns, ITable.ColumnType.Bounds, insertAt);
-        }
-
-        public int AddBoundsIntColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allBoundsIntColumns, ITable.ColumnType.BoundsInt, insertAt);
-        }
-
-        public int AddHash128Column(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allHash128Columns, ITable.ColumnType.Hash128, insertAt);
-        }
-
-        public int AddGradientColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allGradientColumns, ITable.ColumnType.Gradient, insertAt);
-        }
-
-        public int AddAnimationCurveColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allAnimationCurveColumns, ITable.ColumnType.AnimationCurve, insertAt);
-        }
-
-        public int AddObjectColumn(string columnName, int insertAt = -1)
-        {
-            return AddColumnInternal(columnName, ref allObjectRefColumns, ITable.ColumnType.Object, insertAt);
-        }
-
-        // Remove Column
-
-        public void RemoveStringColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allStringColumns, ITable.ColumnType.String, removeAt);
-        }
-
-        public void RemoveBoolColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allBoolColumns, ITable.ColumnType.Bool, removeAt);
-        }
-
-        public void RemoveCharColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allCharColumns, ITable.ColumnType.Char, removeAt);
-        }
-
-        public void RemoveSbyteColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allSbyteColumns, ITable.ColumnType.SByte, removeAt);
-        }
-
-        public void RemoveByteColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allByteColumns, ITable.ColumnType.Byte, removeAt);
-        }
-
-        public void RemoveShortColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allShortColumns, ITable.ColumnType.Short, removeAt);
-        }
-
-        public void RemoveUshortColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allUshortColumns, ITable.ColumnType.UShort, removeAt);
-        }
-
-        public void RemoveIntColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allIntColumns, ITable.ColumnType.Int, removeAt);
-        }
-
-        public void RemoveUintColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allUintColumns, ITable.ColumnType.UInt, removeAt);
-        }
-
-        public void RemoveLongColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allLongColumns, ITable.ColumnType.Long, removeAt);
-        }
-
-        public void RemoveUlongColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allUlongColumns, ITable.ColumnType.ULong, removeAt);
-        }
-
-        public void RemoveFloatColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allFloatColumns, ITable.ColumnType.Float, removeAt);
-        }
-
-        public void RemoveDoubleColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allDoubleColumns, ITable.ColumnType.Double, removeAt);
-        }
-
-        public void RemoveVector2Column(int removeAt)
-        {
-            RemoveColumnInternal(ref allVector2Columns, ITable.ColumnType.Vector2, removeAt);
-        }
-
-        public void RemoveVector3Column(int removeAt)
-        {
-            RemoveColumnInternal(ref allVector3Columns, ITable.ColumnType.Vector3, removeAt);
-        }
-
-        public void RemoveVector4Column(int removeAt)
-        {
-            RemoveColumnInternal(ref allVector4Columns, ITable.ColumnType.Vector4, removeAt);
-        }
-
-        public void RemoveVector2IntColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allVector2IntColumns, ITable.ColumnType.Vector2Int, removeAt);
-        }
-
-        public void RemoveVector3IntColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allVector3IntColumns, ITable.ColumnType.Vector3Int, removeAt);
-        }
-
-        public void RemoveQuaternionColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allQuaternionColumns, ITable.ColumnType.Quaternion, removeAt);
-        }
-
-        public void RemoveRectColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allRectColumns, ITable.ColumnType.Rect, removeAt);
-        }
-
-        public void RemoveRectIntColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allRectIntColumns, ITable.ColumnType.RectInt, removeAt);
-        }
-
-        public void RemoveColorColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allColorColumns, ITable.ColumnType.Color, removeAt);
-        }
-
-        public void RemoveLayerMaskColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allLayerMaskColumns, ITable.ColumnType.LayerMask, removeAt);
-        }
-
-        public void RemoveBoundsColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allBoundsColumns, ITable.ColumnType.Bounds, removeAt);
-        }
-
-        public void RemoveBoundsIntColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allBoundsIntColumns, ITable.ColumnType.BoundsInt, removeAt);
-        }
-
-        public void RemoveHash128Column(int removeAt)
-        {
-            RemoveColumnInternal(ref allHash128Columns, ITable.ColumnType.Hash128, removeAt);
-        }
-
-        public void RemoveGradientColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allGradientColumns, ITable.ColumnType.Gradient, removeAt);
-        }
-
-        public void RemoveAnimationCurveColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allAnimationCurveColumns, ITable.ColumnType.AnimationCurve, removeAt);
-        }
-
-        public void RemoveObjectColumn(int removeAt)
-        {
-            RemoveColumnInternal(ref allObjectRefColumns, ITable.ColumnType.Object, removeAt);
-        }
 
         // Set
 
-        public ulong SetString(int row, int columnID, string value)
+        public ulong SetString(int row, int column, string value)
         {
-            return SetCell(row, columnID, ref allStringColumns, value);
+            return SetCell(row, column, ref allStringColumns, value);
         }
 
-        public ulong SetBool(int row, int columnID, bool value)
+        public ulong SetBool(int row, int column, bool value)
         {
-            return SetCell(row, columnID, ref allBoolColumns, value);
+            return SetCell(row, column, ref allBoolColumns, value);
         }
 
-        public ulong SetChar(int row, int columnID, char value)
+        public ulong SetChar(int row, int column, char value)
         {
-            return SetCell(row, columnID, ref allCharColumns, value);
+            return SetCell(row, column, ref allCharColumns, value);
         }
 
-        public ulong SetSByte(int row, int columnID, sbyte value)
+        public ulong SetSByte(int row, int column, sbyte value)
         {
-            return SetCell(row, columnID, ref allSbyteColumns, value);
+            return SetCell(row, column, ref allSbyteColumns, value);
         }
 
-        public ulong SetByte(int row, int columnID, byte value)
+        public ulong SetByte(int row, int column, byte value)
         {
-            return SetCell(row, columnID, ref allByteColumns, value);
+            return SetCell(row, column, ref allByteColumns, value);
         }
 
-        public ulong SetShort(int row, int columnID, short value)
+        public ulong SetShort(int row, int column, short value)
         {
-            return SetCell(row, columnID, ref allShortColumns, value);
+            return SetCell(row, column, ref allShortColumns, value);
         }
 
-        public ulong SetUShort(int row, int columnID, ushort value)
+        public ulong SetUShort(int row, int column, ushort value)
         {
-            return SetCell(row, columnID, ref allUshortColumns, value);
+            return SetCell(row, column, ref allUshortColumns, value);
         }
 
-        public ulong SetInt(int row, int columnID, int value)
+        public ulong SetInt(int row, int column, int value)
         {
-            return SetCell(row, columnID, ref allIntColumns, value);
+            return SetCell(row, column, ref allIntColumns, value);
         }
 
-        public ulong SetUInt(int row, int columnID, uint value)
+        public ulong SetUInt(int row, int column, uint value)
         {
-            return SetCell(row, columnID, ref allUintColumns, value);
+            return SetCell(row, column, ref allUintColumns, value);
         }
 
-        public ulong SetLong(int row, int columnID, long value)
+        public ulong SetLong(int row, int column, long value)
         {
-            return SetCell(row, columnID, ref allLongColumns, value);
+            return SetCell(row, column, ref allLongColumns, value);
         }
 
-        public ulong SetULong(int row, int columnID, ulong value)
+        public ulong SetULong(int row, int column, ulong value)
         {
-            return SetCell(row, columnID, ref allUlongColumns, value);
+            return SetCell(row, column, ref allUlongColumns, value);
         }
 
-        public ulong SetFloat(int row, int columnID, float value)
+        public ulong SetFloat(int row, int column, float value)
         {
-            return SetCell(row, columnID, ref allFloatColumns, value);
+            return SetCell(row, column, ref allFloatColumns, value);
         }
 
-        public ulong SetDouble(int row, int columnID, double value)
+        public ulong SetDouble(int row, int column, double value)
         {
-            return SetCell(row, columnID, ref allDoubleColumns, value);
+            return SetCell(row, column, ref allDoubleColumns, value);
         }
 
-        public ulong SetVector2(int row, int columnID, Vector2 value)
+        public ulong SetVector2(int row, int column, Vector2 value)
         {
-            return SetCell(row, columnID, ref allVector2Columns, value);
+            return SetCell(row, column, ref allVector2Columns, value);
         }
 
-        public ulong SetVector3(int row, int columnID, Vector3 value)
+        public ulong SetVector3(int row, int column, Vector3 value)
         {
-            return SetCell(row, columnID, ref allVector3Columns, value);
+            return SetCell(row, column, ref allVector3Columns, value);
         }
 
-        public ulong SetVector4(int row, int columnID, Vector4 value)
+        public ulong SetVector4(int row, int column, Vector4 value)
         {
-            return SetCell(row, columnID, ref allVector4Columns, value);
+            return SetCell(row, column, ref allVector4Columns, value);
         }
 
-        public ulong SetVector2Int(int row, int columnID, Vector2Int value)
+        public ulong SetVector2Int(int row, int column, Vector2Int value)
         {
-            return SetCell(row, columnID, ref allVector2IntColumns, value);
+            return SetCell(row, column, ref allVector2IntColumns, value);
         }
 
-        public ulong SetVector3Int(int row, int columnID, Vector3Int value)
+        public ulong SetVector3Int(int row, int column, Vector3Int value)
         {
-            return SetCell(row, columnID, ref allVector3IntColumns, value);
+            return SetCell(row, column, ref allVector3IntColumns, value);
         }
 
-        public ulong SetQuaternion(int row, int columnID, Quaternion value)
+        public ulong SetQuaternion(int row, int column, Quaternion value)
         {
-            return SetCell(row, columnID, ref allQuaternionColumns, value);
+            return SetCell(row, column, ref allQuaternionColumns, value);
         }
 
-        public ulong SetRect(int row, int columnID, Rect value)
+        public ulong SetRect(int row, int column, Rect value)
         {
-            return SetCell(row, columnID, ref allRectColumns, value);
+            return SetCell(row, column, ref allRectColumns, value);
         }
 
-        public ulong SetRectInt(int row, int columnID, RectInt value)
+        public ulong SetRectInt(int row, int column, RectInt value)
         {
-            return SetCell(row, columnID, ref allRectIntColumns, value);
+            return SetCell(row, column, ref allRectIntColumns, value);
         }
 
-        public ulong SetColor(int row, int columnID, Color value)
+        public ulong SetColor(int row, int column, Color value)
         {
-            return SetCell(row, columnID, ref allColorColumns, value);
+            return SetCell(row, column, ref allColorColumns, value);
         }
 
-        public ulong SetLayerMask(int row, int columnID, LayerMask value)
+        public ulong SetLayerMask(int row, int column, LayerMask value)
         {
-            return SetCell(row, columnID, ref allLayerMaskColumns, value);
+            return SetCell(row, column, ref allLayerMaskColumns, value);
         }
 
-        public ulong SetBounds(int row, int columnID, Bounds value)
+        public ulong SetBounds(int row, int column, Bounds value)
         {
-            return SetCell(row, columnID, ref allBoundsColumns, value);
+            return SetCell(row, column, ref allBoundsColumns, value);
         }
 
-        public ulong SetBoundsInt(int row, int columnID, BoundsInt value)
+        public ulong SetBoundsInt(int row, int column, BoundsInt value)
         {
-            return SetCell(row, columnID, ref allBoundsIntColumns, value);
+            return SetCell(row, column, ref allBoundsIntColumns, value);
         }
 
-        public ulong SetHash128(int row, int columnID, Hash128 value)
+        public ulong SetHash128(int row, int column, Hash128 value)
         {
-            return SetCell(row, columnID, ref allHash128Columns, value);
+            return SetCell(row, column, ref allHash128Columns, value);
         }
 
-        public ulong SetGradient(int row, int columnID, Gradient value)
+        public ulong SetGradient(int row, int column, Gradient value)
         {
-            return SetCell(row, columnID, ref allGradientColumns, value);
+            return SetCell(row, column, ref allGradientColumns, value);
         }
 
-        public ulong SetAnimationCurve(int row, int columnID, AnimationCurve value)
+        public ulong SetAnimationCurve(int row, int column, AnimationCurve value)
         {
-            return SetCell(row, columnID, ref allAnimationCurveColumns, value);
+            return SetCell(row, column, ref allAnimationCurveColumns, value);
         }
 
-        public ulong SetObject(int row, int columnID, UnityEngine.Object value)
+        public ulong SetObject(int row, int column, UnityEngine.Object value)
         {
-            return SetCell(row, columnID, ref allObjectRefColumns, value);
+            return SetCell(row, column, ref allObjectRefColumns, value);
         }
 
         // Get
-        public string GetString(int row, int columnID)
+        public string GetString(int row, int column)
         {
-            return GetCell(row, columnID, ref allStringColumns);
+            return GetCell(row, column, ref allStringColumns);
         }
 
-        public bool GetBool(int row, int columnID)
+        public bool GetBool(int row, int column)
         {
-            return GetCell(row, columnID, ref allBoolColumns);
+            return GetCell(row, column, ref allBoolColumns);
         }
 
-        public char GetChar(int row, int columnID)
+        public char GetChar(int row, int column)
         {
-            return GetCell(row, columnID, ref allCharColumns);
+            return GetCell(row, column, ref allCharColumns);
         }
 
-        public sbyte GetSByte(int row, int columnID)
+        public sbyte GetSByte(int row, int column)
         {
-            return GetCell(row, columnID, ref allSbyteColumns);
+            return GetCell(row, column, ref allSbyteColumns);
         }
 
-        public byte GetByte(int row, int columnID)
+        public byte GetByte(int row, int column)
         {
-            return GetCell(row, columnID, ref allByteColumns);
+            return GetCell(row, column, ref allByteColumns);
         }
 
-        public short GetShort(int row, int columnID)
+        public short GetShort(int row, int column)
         {
-            return GetCell(row, columnID, ref allShortColumns);
+            return GetCell(row, column, ref allShortColumns);
         }
 
-        public ushort GetUShort(int row, int columnID)
+        public ushort GetUShort(int row, int column)
         {
-            return GetCell(row, columnID, ref allUshortColumns);
+            return GetCell(row, column, ref allUshortColumns);
         }
 
-        public int GetInt(int row, int columnID)
+        public int GetInt(int row, int column)
         {
-            return GetCell(row, columnID, ref allIntColumns);
+            return GetCell(row, column, ref allIntColumns);
         }
 
-        public uint GetUInt(int row, int columnID)
+        public uint GetUInt(int row, int column)
         {
-            return GetCell(row, columnID, ref allUintColumns);
+            return GetCell(row, column, ref allUintColumns);
         }
 
-        public long GetLong(int row, int columnID)
+        public long GetLong(int row, int column)
         {
-            return GetCell(row, columnID, ref allLongColumns);
+            return GetCell(row, column, ref allLongColumns);
         }
 
-        public ulong GetULong(int row, int columnID)
+        public ulong GetULong(int row, int column)
         {
-            return GetCell(row, columnID, ref allUlongColumns);
+            return GetCell(row, column, ref allUlongColumns);
         }
 
-        public float GetFloat(int row, int columnID)
+        public float GetFloat(int row, int column)
         {
-            return GetCell(row, columnID, ref allFloatColumns);
+            return GetCell(row, column, ref allFloatColumns);
         }
 
-        public double GetDouble(int row, int columnID)
+        public double GetDouble(int row, int column)
         {
-            return GetCell(row, columnID, ref allDoubleColumns);
+            return GetCell(row, column, ref allDoubleColumns);
         }
 
-        public Vector2 GetVector2(int row, int columnID)
+        public Vector2 GetVector2(int row, int column)
         {
-            return GetCell(row, columnID, ref allVector2Columns);
+            return GetCell(row, column, ref allVector2Columns);
         }
 
-        public Vector3 GetVector3(int row, int columnID)
+        public Vector3 GetVector3(int row, int column)
         {
-            return GetCell(row, columnID, ref allVector3Columns);
+            return GetCell(row, column, ref allVector3Columns);
         }
 
-        public Vector4 GetVector4(int row, int columnID)
+        public Vector4 GetVector4(int row, int column)
         {
-            return GetCell(row, columnID, ref allVector4Columns);
+            return GetCell(row, column, ref allVector4Columns);
         }
 
-        public Vector2Int GetVector2Int(int row, int columnID)
+        public Vector2Int GetVector2Int(int row, int column)
         {
-            return GetCell(row, columnID, ref allVector2IntColumns);
+            return GetCell(row, column, ref allVector2IntColumns);
         }
 
-        public Vector3Int GetVector3Int(int row, int columnID)
+        public Vector3Int GetVector3Int(int row, int column)
         {
-            return GetCell(row, columnID, ref allVector3IntColumns);
+            return GetCell(row, column, ref allVector3IntColumns);
         }
 
-        public Quaternion GetQuaternion(int row, int columnID)
+        public Quaternion GetQuaternion(int row, int column)
         {
-            return GetCell(row, columnID, ref allQuaternionColumns);
+            return GetCell(row, column, ref allQuaternionColumns);
         }
 
-        public Rect GetRect(int row, int columnID)
+        public Rect GetRect(int row, int column)
         {
-            return GetCell(row, columnID, ref allRectColumns);
+            return GetCell(row, column, ref allRectColumns);
         }
 
-        public RectInt GetRectInt(int row, int columnID)
+        public RectInt GetRectInt(int row, int column)
         {
-            return GetCell(row, columnID, ref allRectIntColumns);
+            return GetCell(row, column, ref allRectIntColumns);
         }
 
-        public Color GetColor(int row, int columnID)
+        public Color GetColor(int row, int column)
         {
-            return GetCell(row, columnID, ref allColorColumns);
+            return GetCell(row, column, ref allColorColumns);
         }
 
-        public LayerMask GetLayerMask(int row, int columnID)
+        public LayerMask GetLayerMask(int row, int column)
         {
-            return GetCell(row, columnID, ref allLayerMaskColumns);
+            return GetCell(row, column, ref allLayerMaskColumns);
         }
 
-        public Bounds GetBounds(int row, int columnID)
+        public Bounds GetBounds(int row, int column)
         {
-            return GetCell(row, columnID, ref allBoundsColumns);
+            return GetCell(row, column, ref allBoundsColumns);
         }
 
-        public BoundsInt GetBoundsInt(int row, int columnID)
+        public BoundsInt GetBoundsInt(int row, int column)
         {
-            return GetCell(row, columnID, ref allBoundsIntColumns);
+            return GetCell(row, column, ref allBoundsIntColumns);
         }
 
-        public Hash128 GetHash128(int row, int columnID)
+        public Hash128 GetHash128(int row, int column)
         {
-            return GetCell(row, columnID, ref allHash128Columns);
+            return GetCell(row, column, ref allHash128Columns);
         }
 
-        public Gradient GetGradient(int row, int columnID)
+        public Gradient GetGradient(int row, int column)
         {
-            return GetCell(row, columnID, ref allGradientColumns);
+            return GetCell(row, column, ref allGradientColumns);
         }
 
-        public AnimationCurve GetAnimationCurve(int row, int columnID)
+        public AnimationCurve GetAnimationCurve(int row, int column)
         {
-            return GetCell(row, columnID, ref allAnimationCurveColumns);
+            return GetCell(row, column, ref allAnimationCurveColumns);
         }
 
-        public UnityEngine.Object GetObject(int row, int columnID)
+        public UnityEngine.Object GetObject(int row, int column)
         {
-            return GetCell(row, columnID, ref allObjectRefColumns);
+            return GetCell(row, column, ref allObjectRefColumns);
         }
 
         // Get ref
@@ -1210,7 +1073,7 @@ namespace GDX.Tables
 
         // Internal
 
-        internal int AddColumnInternal<T>(string columnName, ref ArrayHolder<T>[] allColumnsOfType, ITable.ColumnType typeIndex, int insertAt)
+        internal int AddColumnInternal<T>(string columnName, ref ArrayHolder<T>[] allColumnsOfType, Serializable.SerializableTypes typeIndex, int insertAt)
         {
             int columnCount = allColumnsOfType?.Length ?? 0;
             Array.Resize(ref allColumnsOfType, columnCount + 1);
@@ -1231,9 +1094,9 @@ namespace GDX.Tables
                 Array.Resize(ref columnIDToDenseIndexMap, newSize);
                 for (int i = 0; i < columnIndex; i++)
                 {
-                    ref ColumnEntryInternal entry = ref columnIDToDenseIndexMap[columnIndex + i];
+                    ref ColumnEntry entry = ref columnIDToDenseIndexMap[columnIndex + i];
                     entry.columnDenseIndex = columnIndex + i + 1;
-                    entry.ColumnType = ITable.ColumnType.Invalid;
+                    entry.ColumnType = Serializable.SerializableTypes.Invalid;
                 }
             }
 
@@ -1242,9 +1105,9 @@ namespace GDX.Tables
             Array.Resize(ref denseIndexToIDMap, denseIndexToIDMapLength + 1);
             denseIndexToIDMap[denseIndexToIDMapLength] = columnIndex;
 
-            ref ColumnEntryInternal newEntryInternal = ref columnIDToDenseIndexMap[columnIndex];
-            newEntryInternal.columnDenseIndex = denseIndexToIDMapLength;
-            newEntryInternal.ColumnType = typeIndex;
+            ref ColumnEntry newEntry = ref columnIDToDenseIndexMap[columnIndex];
+            newEntry.columnDenseIndex = denseIndexToIDMapLength;
+            newEntry.ColumnType = typeIndex;
 
             insertAt = insertAt < 0 ? combinedColumnCount : insertAt;
             ref int[] columnOrdersOfType = ref allColumnOrders[(int)typeIndex].TArray;
@@ -1252,7 +1115,7 @@ namespace GDX.Tables
             Array.Resize(ref columnOrdersOfType, columnOrdersOfTypeLength + 1);
             columnOrdersOfType[columnOrdersOfTypeLength] = insertAt;
 
-            for (int i = 0; i < (int)ITable.ColumnType.Count; i++)
+            for (int i = 0; i < Serializable.SerializableTypesCount; i++)
             {
                 int[] columnOrdersOfTypeCurrent = allColumnOrders[i].TArray;
                 int columnOrdersLength = columnOrdersOfTypeCurrent?.Length ?? 0;
@@ -1273,7 +1136,7 @@ namespace GDX.Tables
             return columnIndex;
         }
 
-        internal void RemoveColumnInternal<T>(ref ArrayHolder<T>[] allColumnsOfType, ITable.ColumnType typeIndex, int columnID)
+        internal void RemoveColumnInternal<T>(ref ArrayHolder<T>[] allColumnsOfType, Serializable.SerializableTypes typeIndex, int columnID)
         {
             int columnLocation = columnIDToDenseIndexMap[columnID].columnDenseIndex;
 
@@ -1300,8 +1163,8 @@ namespace GDX.Tables
             int[] denseIndicesOfType = columnDenseIndexToIDMap[(int)typeIndex].TArray;
             int sparseIndexAt = denseIndicesOfType[columnLocation];
             int sparseIndexToSwap = columnOrdersOfType[lastIndex];
-            ref ColumnEntryInternal sparseIndexToFree = ref columnIDToDenseIndexMap[sparseIndexAt];
-            sparseIndexToFree.ColumnType = ITable.ColumnType.Invalid;
+            ref ColumnEntry sparseIndexToFree = ref columnIDToDenseIndexMap[sparseIndexAt];
+            sparseIndexToFree.ColumnType = Serializable.SerializableTypes.Invalid;
             sparseIndexToFree.columnDenseIndex = columnEntriesFreeListHead;
             columnEntriesFreeListHead = sparseIndexAt;
             columnIDToDenseIndexMap[sparseIndexToSwap].columnDenseIndex = columnLocation;
@@ -1310,7 +1173,7 @@ namespace GDX.Tables
             Array.Copy(denseIndicesOfType, 0, newDenseIndicesOfType, 0, lastIndex);
             columnDenseIndexToIDMap[(int)typeIndex].TArray = newDenseIndicesOfType;
 
-            for (int i = 0; i < (int)ITable.ColumnType.Count; i++)
+            for (int i = 0; i < Serializable.SerializableTypesCount; i++)
             {
                 int[] columnOrdersOfTypeCurrent = allColumnOrders[i].TArray;
 

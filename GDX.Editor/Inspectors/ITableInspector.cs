@@ -4,6 +4,7 @@
 
 using System.Reflection;
 using GDX.Editor.Windows;
+using GDX.Tables;
 using UnityEditor;
 using UnityEngine;
 #if UNITY_2022_2_OR_NEWER
@@ -13,43 +14,22 @@ using UnityEngine.UIElements;
 
 namespace GDX.Editor.Inspectors
 {
-    [CustomEditor(typeof(Tables.SimpleTable))]
-    public class SimpleTableInspector : UnityEditor.Editor
+    public class ITableInspector : UnityEditor.Editor
     {
-        [MenuItem("Assets/Create/GDX/Simple Table")]
-        public static void CreateAsset()
-        {
-            Tables.SimpleTable asset = CreateInstance<Tables.SimpleTable>();
-            object[] args = { null };
-            bool found = (bool)Reflection.InvokeStaticMethod("UnityEditor.ProjectWindowUtil", "TryGetActiveFolderPath", args,
-                BindingFlags.Static | BindingFlags.NonPublic);
-            if (found)
-            {
-                string basePath = (string)args[0];
-                AssetDatabase.CreateAsset(asset, $"{basePath}/SimpleTable.asset");
-            }
-            else
-            {
-                AssetDatabase.CreateAsset(asset, "Assets/SimpleTable.asset");
-            }
-            AssetDatabase.SaveAssets();
-            ProjectWindowUtil.ShowCreatedAsset(asset);
-        }
-
 #if UNITY_2022_2_OR_NEWER
 
         const string k_ButtonText = "Open Table";
 
         void OpenTargetAsset()
         {
-            Tables.SimpleTable table = (Tables.SimpleTable)target;
-            SimpleTableWindow.OpenAsset(table);
+            ITable table = (ITable)target;
+            TableWindow.OpenAsset(table);
         }
 
         /// <inheritdoc />
         public override VisualElement CreateInspectorGUI()
         {
-            Tables.SimpleTable table = (Tables.SimpleTable)target;
+            ITable table = (ITable)target;
             VisualElement container = new VisualElement();
 
             var columns = table.GetOrderedColumns();
@@ -75,7 +55,7 @@ namespace GDX.Editor.Inspectors
         /// <inheritdoc />
         public override void OnInspectorGUI()
         {
-            GUILayout.Label("Editing a SimpleTable is unsupported on this version of Unity.");
+            GUILayout.Label("Editing an ITable is unsupported on this version of Unity.");
         }
 #endif
     }
