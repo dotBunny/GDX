@@ -46,9 +46,12 @@ namespace GDX.Editor.Windows
                 AssetDatabase.SaveAssetIfDirty(m_ScriptableObject);
             } // TODO: do we need to dirty this if its not a SO
 
-            if (k_Windows.ContainsKey(m_TargetTable))
+            if (m_TargetTable != null)
             {
-                k_Windows.Remove(m_TargetTable);
+                if (k_Windows.ContainsKey(m_TargetTable))
+                {
+                    k_Windows.Remove(m_TargetTable);
+                }
             }
         }
 
@@ -153,10 +156,6 @@ namespace GDX.Editor.Windows
             rootElement.Insert(1, m_TableView);
         }
 
-        string FormatColumnType(int value)
-        {
-            return ((Serializable.SerializableTypes)value).ToString();
-        }
         void BindWindow()
         {
             m_ToolbarAddColumn = rootVisualElement.Q<Button>("gdx-table-toolbar-add-column");
@@ -180,9 +179,11 @@ namespace GDX.Editor.Windows
             {
                 typeValues.Add(i);
             }
-            m_AddColumnType = new PopupField<int>(typeValues, 0, FormatColumnType, FormatColumnType);
-            m_AddColumnType.label = "Type";
-            m_AddColumnType.name = "gdx-table-column-type";
+            m_AddColumnType = new PopupField<int>(typeValues, 0, Serializable.GetSerializableTypesLabel, Serializable.GetSerializableTypesLabel)
+            {
+                label = "Type",
+                name = "gdx-table-column-type"
+            };
             m_AddColumnOverlay.Insert(columnNameIndex + 1, m_AddColumnType);
 
             m_AddColumnAddButton = m_AddColumnOverlay.Q<Button>("gdx-table-column-add");
