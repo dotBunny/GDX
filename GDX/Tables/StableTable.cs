@@ -1208,7 +1208,7 @@ namespace GDX.Tables
 
                 for (int j = 0; j < numberOfNewRows; j++)
                 {
-                    column[insertAt + i] = default;
+                    column[insertAt + j] = default;
                 }
             }
         }

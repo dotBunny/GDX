@@ -29,6 +29,9 @@ namespace GDX.Tables
         /// <returns>A count of rows.</returns>
         int GetRowCount();
 
+        // int GetRowByName();
+        // int GetColumnByName();
+
         string GetString(int row, int column);
         bool GetBool(int row, int column);
         char GetChar(int row, int column);

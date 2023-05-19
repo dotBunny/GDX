@@ -31,19 +31,11 @@ namespace GDX.Editor.Inspectors
         {
             ITable table = (ITable)target;
             VisualElement container = new VisualElement();
+            int columnCount = table.GetColumnCount();
+            int rowCount = table.GetRowCount();
 
-            var columns = table.GetOrderedColumns();
-            Label columnsLabel;
-            if (columns == null)
-            {
-                columnsLabel = new Label($"No columns");
-            }
-            else
-            {
-                columnsLabel = new Label($"{columns.Length.ToString()} Columns");
-
-            }
-            container.Add(columnsLabel);
+            Label dataLabel = new Label( $"{rowCount} Rows with {columnCount} Columns.");
+            container.Add(dataLabel);
 
             Button button = new Button(OpenTargetAsset);
             button.text = k_ButtonText;

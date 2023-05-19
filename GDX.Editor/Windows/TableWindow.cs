@@ -24,7 +24,7 @@ namespace GDX.Editor.Windows
 
         VisualElement m_AddColumnOverlay;
         PopupField<int> m_AddColumnType;
-        ITable.ColumnDescription[] m_ColumnDefinitions;
+        ITable.ColumnDescription[] m_ColumnDescriptions;
 
 
         VisualElement m_Overlay;
@@ -81,7 +81,7 @@ namespace GDX.Editor.Windows
                 k_Windows.Add(table, tableWindow);
             }
 
-            tableWindow.BindSimpleTable(table);
+            tableWindow.BindTable(table);
 
             tableWindow.Show();
             tableWindow.Focus();
@@ -101,7 +101,7 @@ namespace GDX.Editor.Windows
             if (m_TargetTable != null)
             {
                 k_Windows[m_TargetTable] = this;
-                BindSimpleTable(m_TargetTable);
+                BindTable(m_TargetTable);
             }
 
             EditorApplication.delayCall += CheckForNoTable;
@@ -116,8 +116,13 @@ namespace GDX.Editor.Windows
             }
         }
 
+        void UpdateColumnDescriptions()
+        {
+            // TODO: get
+            // update existing columns?
+        }
 
-        void BindSimpleTable(ITable table)
+        void BindTable(ITable table)
         {
 
             m_TargetTable = table;
@@ -131,19 +136,23 @@ namespace GDX.Editor.Windows
                 titleContent = new GUIContent("Table"); // TODO?? Name tables?
             }
 
-            m_ColumnDefinitions = table.GetOrderedColumns();
+            m_ColumnDescriptions = table.GetOrderedColumns();
 
             // Precache some things
             VisualElement rootElement = rootVisualElement[0];
 
             // Generate columns for MCLV
-            m_TableViewColumns = new Columns();
+            m_TableViewColumns = new Columns { reorderable = true, resizable = true };
+
             int columnCount = table.GetColumnCount();
             Length columnSizePercentage = Length.Percent(100f / columnCount);
+
             for (int i = 0; i < columnCount; i++)
             {
-                ref ITable.ColumnDescription refColumn = ref m_ColumnDefinitions[i];
+                ref ITable.ColumnDescription refColumn = ref m_ColumnDescriptions[i];
+
                 Column column = new Column { name = refColumn.Name, title = refColumn.Name, width = columnSizePercentage };
+
                 m_TableViewColumns.Add(column);
             }
 
@@ -152,7 +161,13 @@ namespace GDX.Editor.Windows
             {
                 rootElement.Remove(m_TableView);
             }
-            m_TableView = new MultiColumnListView(m_TableViewColumns);
+
+            m_TableView = new MultiColumnListView(m_TableViewColumns)
+            {
+                sortingEnabled = false, // TODO: make this yes when we can move rows?
+                name = "gdx-table-view",
+                selectionType = SelectionType.Single,
+            };
             rootElement.Insert(1, m_TableView);
         }
 
@@ -207,7 +222,7 @@ namespace GDX.Editor.Windows
 
 
             // TODO: REbnd data?
-            BindSimpleTable(m_TargetTable);
+            BindTable(m_TargetTable);
             AddColumn_Hide();
         }
 
@@ -231,7 +246,7 @@ namespace GDX.Editor.Windows
         void AddRow_Clicked()
         {
             m_TargetTable.AddRow();
-            BindSimpleTable(m_TargetTable);
+            BindTable(m_TargetTable);
         }
     }
 #endif
