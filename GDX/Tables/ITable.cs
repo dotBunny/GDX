@@ -8,8 +8,6 @@ namespace GDX.Tables
 {
     public interface ITable
     {
-        ColumnDescription[] GetOrderedColumns();
-
         int AddColumn(Serializable.SerializableTypes columnType, string columnName, int insertAt = -1);
         void RemoveColumn(Serializable.SerializableTypes columnType, int removeAt = -1);
         void AddRow(string rowName = null, int insertAt = -1);
@@ -29,8 +27,16 @@ namespace GDX.Tables
         /// <returns>A count of rows.</returns>
         int GetRowCount();
 
-        // int GetRowByName();
-        // int GetColumnByName();
+        RowDescription[] GetAllRowDescriptions();
+        RowDescription GetRowDescription(string name);
+        RowDescription GetRowDescription(int order);
+        /// <summary>
+        /// Returns an ordered array of all columns descriptions
+        /// </summary>
+        /// <returns></returns>
+        ColumnDescription[] GetAllColumnDescriptions();
+        ColumnDescription GetColumnDescription(string name);
+        ColumnDescription GetColumnDescription(int order);
 
         string GetString(int row, int column);
         bool GetBool(int row, int column);

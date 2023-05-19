@@ -1,14 +1,12 @@
-using System;
 using System.Collections.Generic;
 using GDX.Tables;
 using UnityEditor;
 using UnityEditor.Callbacks;
-using UnityEditor.UI;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
 using Object = UnityEngine.Object;
+using Toggle = UnityEngine.UIElements.Toggle;
 
 namespace GDX.Editor.Windows
 {
@@ -39,6 +37,8 @@ namespace GDX.Editor.Windows
         Button m_ToolbarAddRow;
 
 
+        readonly List<ITable.RowDescription> k_RowDescriptions = new List<ITable.RowDescription>();
+
         public void OnDestroy()
         {
             if (m_ScriptableObject != null)
@@ -56,10 +56,10 @@ namespace GDX.Editor.Windows
         }
 
         [OnOpenAsset(1)]
-        public static bool OpenSimpleTable(int instanceID, int line)
+        public static bool OnOpenAssetTable(int instanceID, int line)
         {
             Object unityObject = EditorUtility.InstanceIDToObject(instanceID);
-            if (unityObject is StableTable table)
+            if (unityObject is ITable table)
             {
                 OpenAsset(table);
                 return true;
@@ -136,7 +136,7 @@ namespace GDX.Editor.Windows
                 titleContent = new GUIContent("Table"); // TODO?? Name tables?
             }
 
-            m_ColumnDescriptions = table.GetOrderedColumns();
+            m_ColumnDescriptions = table.GetAllColumnDescriptions();
 
             // Precache some things
             VisualElement rootElement = rootVisualElement[0];
@@ -151,24 +151,102 @@ namespace GDX.Editor.Windows
             {
                 ref ITable.ColumnDescription refColumn = ref m_ColumnDescriptions[i];
 
-                Column column = new Column { name = refColumn.Name, title = refColumn.Name, width = columnSizePercentage };
-
+                // We embed the column stable index
+                Column column = new Column { name = $"Column_{refColumn.Index.ToString()}", title = refColumn.Name, width = columnSizePercentage };
+                // Customize column based on type
+                switch (refColumn.Type)
+                {
+                    case Serializable.SerializableTypes.String:
+                        column.makeCell = MakeStringCell;
+                        column.bindCell = BindStringCell;
+                        break;
+                    case Serializable.SerializableTypes.Char:
+                        column.makeCell = MakeCharCell;
+                        break;
+                    case Serializable.SerializableTypes.Bool:
+                        column.makeCell = MakeBoolCell;
+                        break;
+                    case Serializable.SerializableTypes.SByte:
+                        column.makeCell = MakeSByteCell;
+                        break;
+                    case Serializable.SerializableTypes.Byte:
+                        column.makeCell = MakeByteCell;
+                        break;
+                    case Serializable.SerializableTypes.Short:
+                        break;
+                    case Serializable.SerializableTypes.UShort:
+                        break;
+                    case Serializable.SerializableTypes.Int:
+                        break;
+                    case Serializable.SerializableTypes.UInt:
+                        break;
+                    case Serializable.SerializableTypes.Long:
+                        break;
+                    case Serializable.SerializableTypes.ULong:
+                        break;
+                    case Serializable.SerializableTypes.Float:
+                        break;
+                    case Serializable.SerializableTypes.Double:
+                        break;
+                    case Serializable.SerializableTypes.Vector2:
+                        break;
+                    case Serializable.SerializableTypes.Vector3:
+                        break;
+                    case Serializable.SerializableTypes.Vector4:
+                        break;
+                    case Serializable.SerializableTypes.Vector2Int:
+                        break;
+                    case Serializable.SerializableTypes.Vector3Int:
+                        break;
+                    case Serializable.SerializableTypes.Quaternion:
+                        break;
+                    case Serializable.SerializableTypes.Rect:
+                        break;
+                    case Serializable.SerializableTypes.RectInt:
+                        break;
+                    case Serializable.SerializableTypes.Color:
+                        break;
+                    case Serializable.SerializableTypes.LayerMask:
+                        break;
+                    case Serializable.SerializableTypes.Bounds:
+                        break;
+                    case Serializable.SerializableTypes.BoundsInt:
+                        break;
+                    case Serializable.SerializableTypes.Hash128:
+                        break;
+                    case Serializable.SerializableTypes.Gradient:
+                        break;
+                    case Serializable.SerializableTypes.AnimationCurve:
+                        break;
+                    case Serializable.SerializableTypes.Object:
+                        break;
+                }
                 m_TableViewColumns.Add(column);
             }
+
+
 
             // Create MCLV
             if (m_TableView != null)
             {
                 rootElement.Remove(m_TableView);
             }
-
             m_TableView = new MultiColumnListView(m_TableViewColumns)
             {
                 sortingEnabled = false, // TODO: make this yes when we can move rows?
                 name = "gdx-table-view",
                 selectionType = SelectionType.Single,
+                itemsSource = k_RowDescriptions
             };
             rootElement.Insert(1, m_TableView);
+            RebuildRowData();
+        }
+
+        void RebuildRowData()
+        {
+            k_RowDescriptions.Clear();
+            k_RowDescriptions.AddRange(m_TargetTable.GetAllRowDescriptions());
+            // TODO : Trigger update of each cell? or does it use version to know it needs to update
         }
 
         void BindWindow()
@@ -246,8 +324,92 @@ namespace GDX.Editor.Windows
         void AddRow_Clicked()
         {
             m_TargetTable.AddRow();
-            BindTable(m_TargetTable);
+            //BindTable(m_TargetTable);
+            RebuildRowData();
         }
+
+        const string k_CellFieldName = "gdx-data-field";
+
+
+        VisualElement MakeStringCell()
+        {
+            return new TextField(null) { name = k_CellFieldName };;
+        }
+        VisualElement MakeCharCell()
+        {
+            return new TextField(null, 1, false, false, ' ') { name = k_CellFieldName };
+        }
+        VisualElement MakeBoolCell()
+        {
+            return new Toggle(null) { name = k_CellFieldName };
+        }
+        VisualElement MakeSByteCell()
+        {
+            return new SliderInt(-128, 127) { name = k_CellFieldName, showInputField = true };
+        }
+        VisualElement MakeByteCell()
+        {
+            return new SliderInt(0, 255) { name = k_CellFieldName, showInputField = true };
+        }
+
+        void BindStringCell(VisualElement cell, int row)
+        {
+
+        }
+
+
+
+
+                    //
+                    // case Serializable.SerializableTypes.Short:
+                    //     break;
+                    // case Serializable.SerializableTypes.UShort:
+                    //     break;
+                    // case Serializable.SerializableTypes.Int:
+                    //     break;
+                    // case Serializable.SerializableTypes.UInt:
+                    //     break;
+                    // case Serializable.SerializableTypes.Long:
+                    //     break;
+                    // case Serializable.SerializableTypes.ULong:
+                    //     break;
+                    // case Serializable.SerializableTypes.Float:
+                    //     break;
+                    // case Serializable.SerializableTypes.Double:
+                    //     break;
+                    // case Serializable.SerializableTypes.Vector2:
+                    //     break;
+                    // case Serializable.SerializableTypes.Vector3:
+                    //     break;
+                    // case Serializable.SerializableTypes.Vector4:
+                    //     break;
+                    // case Serializable.SerializableTypes.Vector2Int:
+                    //     break;
+                    // case Serializable.SerializableTypes.Vector3Int:
+                    //     break;
+                    // case Serializable.SerializableTypes.Quaternion:
+                    //     break;
+                    // case Serializable.SerializableTypes.Rect:
+                    //     break;
+                    // case Serializable.SerializableTypes.RectInt:
+                    //     break;
+                    // case Serializable.SerializableTypes.Color:
+                    //     break;
+                    // case Serializable.SerializableTypes.LayerMask:
+                    //     break;
+                    // case Serializable.SerializableTypes.Bounds:
+                    //     break;
+                    // case Serializable.SerializableTypes.BoundsInt:
+                    //     break;
+                    // case Serializable.SerializableTypes.Hash128:
+                    //     break;
+                    // case Serializable.SerializableTypes.Gradient:
+                    //     break;
+                    // case Serializable.SerializableTypes.AnimationCurve:
+                    //     break;
+                    // case Serializable.SerializableTypes.Object:
+                    //     break;
+
     }
 #endif
 }
