@@ -139,7 +139,7 @@ namespace GDX.Editor.Windows
             // Generate columns for MCLV
             m_TableViewColumns = new Columns();
             int columnCount = table.GetColumnCount();
-            Length columnSizePercentage = Length.Percent(1f / columnCount);
+            Length columnSizePercentage = Length.Percent(100f / columnCount);
             for (int i = 0; i < columnCount; i++)
             {
                 ref ITable.ColumnDescription refColumn = ref m_ColumnDefinitions[i];
