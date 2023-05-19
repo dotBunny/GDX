@@ -53,8 +53,11 @@ namespace GDX.Tables
         [SerializeField] internal ArrayHolder<int>[] allColumnOrders = new ArrayHolder<int>[Serializable.SerializableTypesCount]; // Contains the left-to-right order of each column of each type. Ordered by Serializable.SerializableTypes
 
 
-        [SerializeField]
-        internal string[] allRowNames;
+        [SerializeField] internal string[] allRowNames;
+        [SerializeField] internal int[] rowIDToDenseIndexMap;
+        [SerializeField] internal int[] rowDenseIndexToIDMap;
+        [SerializeField] internal int rowEntriesFreeListHead;
+
 
         [SerializeField]
         internal int rowCount;
@@ -128,6 +131,26 @@ namespace GDX.Tables
 
         public void AddRow(string rowName = null, int insertAt = -1)
         {
+            // TODO: For adam to do
+            // int rowIndex = rowEntriesFreeListHead;
+            // int rowIDToDenseIndexMapLength = rowIDToDenseIndexMap?.Length ?? 0;
+            // if (rowIndex >= rowIDToDenseIndexMapLength)
+            // {
+            //     int newSize = rowIndex * 2;
+            //     newSize = newSize == 0 ? 1 : newSize;
+            //     Array.Resize(ref rowIDToDenseIndexMap, newSize);
+            //     for (int i = 0; i < rowIndex; i++)
+            //     {
+            //         rowIDToDenseIndexMap[rowIndex + i] = rowIndex + i + 1;
+            //     }
+            // }
+            // int denseIndexToIDMapLength = rowDenseIndexToIDMap?.Length ?? 0;
+            // Array.Resize(ref rowDenseIndexToIDMap, denseIndexToIDMapLength + 1);
+            //
+            //
+            // rowDenseIndexToIDMap[denseIndexToIDMapLength] = rowIndex;
+
+
             insertAt = insertAt < 0 ? rowCount : insertAt;
 
             Array.Resize(ref allRowNames, rowCount + 1);
@@ -779,24 +802,24 @@ namespace GDX.Tables
 
         // Get ref
 
-        public ref string GetStringRef(int row, int columnID)
+        public ref string GetStringRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allStringColumns);
+            return ref GetCellRef(row, column, ref allStringColumns);
         }
 
-        public ref bool GetBoolRef(int row, int columnID)
+        public ref bool GetBoolRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allBoolColumns);
+            return ref GetCellRef(row, column, ref allBoolColumns);
         }
 
-        public ref char GetCharRef(int row, int columnID)
+        public ref char GetCharRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allCharColumns);
+            return ref GetCellRef(row, column, ref allCharColumns);
         }
 
-        public ref sbyte GetSbyteRef(int row, int columnID)
+        public ref sbyte GetSbyteRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allSbyteColumns);
+            return ref GetCellRef(row, column, ref allSbyteColumns);
         }
 
         public ref byte GetByteRef(int row, int columnID)
@@ -804,271 +827,271 @@ namespace GDX.Tables
             return ref GetCellRef(row, columnID, ref allByteColumns);
         }
 
-        public ref short GetShortRef(int row, int columnID)
+        public ref short GetShortRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allShortColumns);
+            return ref GetCellRef(row, column, ref allShortColumns);
         }
 
-        public ref ushort GetUshortRef(int row, int columnID)
+        public ref ushort GetUshortRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allUshortColumns);
+            return ref GetCellRef(row, column, ref allUshortColumns);
         }
 
-        public ref int GetIntRef(int row, int columnID)
+        public ref int GetIntRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allIntColumns);
+            return ref GetCellRef(row, column, ref allIntColumns);
         }
 
-        public ref uint GetUintRef(int row, int columnID)
+        public ref uint GetUintRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allUintColumns);
+            return ref GetCellRef(row, column, ref allUintColumns);
         }
 
-        public ref long GetLongRef(int row, int columnID)
+        public ref long GetLongRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allLongColumns);
+            return ref GetCellRef(row, column, ref allLongColumns);
         }
 
-        public ref ulong GetUlongRef(int row, int columnID)
+        public ref ulong GetUlongRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allUlongColumns);
+            return ref GetCellRef(row, column, ref allUlongColumns);
         }
 
-        public ref float GetFloatRef(int row, int columnID)
+        public ref float GetFloatRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allFloatColumns);
+            return ref GetCellRef(row, column, ref allFloatColumns);
         }
 
-        public ref double GetDoubleRef(int row, int columnID)
+        public ref double GetDoubleRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allDoubleColumns);
+            return ref GetCellRef(row, column, ref allDoubleColumns);
         }
 
-        public ref Vector2 GetVector2Ref(int row, int columnID)
+        public ref Vector2 GetVector2Ref(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allVector2Columns);
+            return ref GetCellRef(row, column, ref allVector2Columns);
         }
 
-        public ref Vector3 GetVector3Ref(int row, int columnID)
+        public ref Vector3 GetVector3Ref(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allVector3Columns);
+            return ref GetCellRef(row, column, ref allVector3Columns);
         }
 
-        public ref Vector4 GetVector4Ref(int row, int columnID)
+        public ref Vector4 GetVector4Ref(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allVector4Columns);
+            return ref GetCellRef(row, column, ref allVector4Columns);
         }
 
-        public ref Vector2Int GetVector2IntRef(int row, int columnID)
+        public ref Vector2Int GetVector2IntRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allVector2IntColumns);
+            return ref GetCellRef(row, column, ref allVector2IntColumns);
         }
 
-        public ref Vector3Int GetVector3IntRef(int row, int columnID)
+        public ref Vector3Int GetVector3IntRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allVector3IntColumns);
+            return ref GetCellRef(row, column, ref allVector3IntColumns);
         }
 
-        public ref Quaternion GetQuaternionRef(int row, int columnID)
+        public ref Quaternion GetQuaternionRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allQuaternionColumns);
+            return ref GetCellRef(row, column, ref allQuaternionColumns);
         }
 
-        public ref Rect GetRectRef(int row, int columnID)
+        public ref Rect GetRectRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allRectColumns);
+            return ref GetCellRef(row, column, ref allRectColumns);
         }
 
-        public ref RectInt GetRectIntRef(int row, int columnID)
+        public ref RectInt GetRectIntRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allRectIntColumns);
+            return ref GetCellRef(row, column, ref allRectIntColumns);
         }
 
-        public ref Color GetColorRef(int row, int columnID)
+        public ref Color GetColorRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allColorColumns);
+            return ref GetCellRef(row, column, ref allColorColumns);
         }
 
-        public ref LayerMask GetLayerMaskRef(int row, int columnID)
+        public ref LayerMask GetLayerMaskRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allLayerMaskColumns);
+            return ref GetCellRef(row, column, ref allLayerMaskColumns);
         }
 
-        public ref Bounds GetBoundsRef(int row, int columnID)
+        public ref Bounds GetBoundsRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allBoundsColumns);
+            return ref GetCellRef(row, column, ref allBoundsColumns);
         }
 
-        public ref BoundsInt GetBoundsIntRef(int row, int columnID)
+        public ref BoundsInt GetBoundsIntRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allBoundsIntColumns);
+            return ref GetCellRef(row, column, ref allBoundsIntColumns);
         }
 
-        public ref Hash128 GetHash128Ref(int row, int columnID)
+        public ref Hash128 GetHash128Ref(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allHash128Columns);
+            return ref GetCellRef(row, column, ref allHash128Columns);
         }
 
-        public ref Gradient GetGradientRef(int row, int columnID)
+        public ref Gradient GetGradientRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allGradientColumns);
+            return ref GetCellRef(row, column, ref allGradientColumns);
         }
 
-        public ref AnimationCurve GetAnimationCurveRef(int row, int columnID)
+        public ref AnimationCurve GetAnimationCurveRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allAnimationCurveColumns);
+            return ref GetCellRef(row, column, ref allAnimationCurveColumns);
         }
 
-        public ref UnityEngine.Object GetObjectRef(int row, int columnID)
+        public ref UnityEngine.Object GetObjectRef(int row, int column)
         {
-            return ref GetCellRef(row, columnID, ref allObjectRefColumns);
+            return ref GetCellRef(row, column, ref allObjectRefColumns);
         }
 
         // Get Column
 
-        public string[] GetStringColumn(int columnID)
+        public string[] GetStringColumn(int column)
         {
-            return GetColumn(columnID, ref allStringColumns);
+            return GetColumn(column, ref allStringColumns);
         }
 
-        public bool[] GetBoolColumn(int columnID)
+        public bool[] GetBoolColumn(int column)
         {
-            return GetColumn(columnID, ref allBoolColumns);
+            return GetColumn(column, ref allBoolColumns);
         }
 
-        public char[] GetCharColumn(int columnID)
+        public char[] GetCharColumn(int column)
         {
-            return GetColumn(columnID, ref allCharColumns);
+            return GetColumn(column, ref allCharColumns);
         }
 
-        public sbyte[] GetSbyteColumn(int columnID)
+        public sbyte[] GetSbyteColumn(int column)
         {
-            return GetColumn(columnID, ref allSbyteColumns);
+            return GetColumn(column, ref allSbyteColumns);
         }
 
-        public byte[] GetByteColumn(int columnID)
+        public byte[] GetByteColumn(int column)
         {
-            return GetColumn(columnID, ref allByteColumns);
+            return GetColumn(column, ref allByteColumns);
         }
 
-        public short[] GetShortColumn(int columnID)
+        public short[] GetShortColumn(int column)
         {
-            return GetColumn(columnID, ref allShortColumns);
+            return GetColumn(column, ref allShortColumns);
         }
 
-        public ushort[] GetUshortColumn(int columnID)
+        public ushort[] GetUshortColumn(int column)
         {
-            return GetColumn(columnID, ref allUshortColumns);
+            return GetColumn(column, ref allUshortColumns);
         }
 
-        public int[] GetIntColumn(int columnID)
+        public int[] GetIntColumn(int column)
         {
-            return GetColumn(columnID, ref allIntColumns);
+            return GetColumn(column, ref allIntColumns);
         }
 
-        public uint[] GetUintColumn(int columnID)
+        public uint[] GetUintColumn(int column)
         {
-            return GetColumn(columnID, ref allUintColumns);
+            return GetColumn(column, ref allUintColumns);
         }
 
-        public long[] GetLongColumn(int columnID)
+        public long[] GetLongColumn(int column)
         {
-            return GetColumn(columnID, ref allLongColumns);
+            return GetColumn(column, ref allLongColumns);
         }
 
-        public ulong[] GetUlongColumn(int columnID)
+        public ulong[] GetUlongColumn(int column)
         {
-            return GetColumn(columnID, ref allUlongColumns);
+            return GetColumn(column, ref allUlongColumns);
         }
 
-        public float[] GetFloatColumn(int columnID)
+        public float[] GetFloatColumn(int column)
         {
-            return GetColumn(columnID, ref allFloatColumns);
+            return GetColumn(column, ref allFloatColumns);
         }
 
-        public double[] GetDoubleColumn(int columnID)
+        public double[] GetDoubleColumn(int column)
         {
-            return GetColumn(columnID, ref allDoubleColumns);
+            return GetColumn(column, ref allDoubleColumns);
         }
 
-        public Vector2[] GetVector2Column(int columnID)
+        public Vector2[] GetVector2Column(int column)
         {
-            return GetColumn(columnID, ref allVector2Columns);
+            return GetColumn(column, ref allVector2Columns);
         }
 
-        public Vector3[] GetVector3Column(int columnID)
+        public Vector3[] GetVector3Column(int column)
         {
-            return GetColumn(columnID, ref allVector3Columns);
+            return GetColumn(column, ref allVector3Columns);
         }
 
-        public Vector4[] GetVector4Column(int columnID)
+        public Vector4[] GetVector4Column(int column)
         {
-            return GetColumn(columnID, ref allVector4Columns);
+            return GetColumn(column, ref allVector4Columns);
         }
 
-        public Vector2Int[] GetVector2IntColumn(int columnID)
+        public Vector2Int[] GetVector2IntColumn(int column)
         {
-            return GetColumn(columnID, ref allVector2IntColumns);
+            return GetColumn(column, ref allVector2IntColumns);
         }
 
-        public Vector3Int[] GetVector3IntColumn(int columnID)
+        public Vector3Int[] GetVector3IntColumn(int column)
         {
-            return GetColumn(columnID, ref allVector3IntColumns);
+            return GetColumn(column, ref allVector3IntColumns);
         }
 
-        public Quaternion[] GetQuaternionColumn(int columnID)
+        public Quaternion[] GetQuaternionColumn(int column)
         {
-            return GetColumn(columnID, ref allQuaternionColumns);
+            return GetColumn(column, ref allQuaternionColumns);
         }
 
-        public Rect[] GetRectColumn(int columnID)
+        public Rect[] GetRectColumn(int column)
         {
-            return GetColumn(columnID, ref allRectColumns);
+            return GetColumn(column, ref allRectColumns);
         }
 
-        public RectInt[] GetRectIntColumn(int columnID)
+        public RectInt[] GetRectIntColumn(int column)
         {
-            return GetColumn(columnID, ref allRectIntColumns);
+            return GetColumn(column, ref allRectIntColumns);
         }
 
-        public Color[] GetColorColumn(int columnID)
+        public Color[] GetColorColumn(int column)
         {
-            return GetColumn(columnID, ref allColorColumns);
+            return GetColumn(column, ref allColorColumns);
         }
 
-        public LayerMask[] GetLayerMaskColumn(int columnID)
+        public LayerMask[] GetLayerMaskColumn(int column)
         {
-            return GetColumn(columnID, ref allLayerMaskColumns);
+            return GetColumn(column, ref allLayerMaskColumns);
         }
 
-        public Bounds[] GetBoundsColumn(int columnID)
+        public Bounds[] GetBoundsColumn(int column)
         {
-            return GetColumn(columnID, ref allBoundsColumns);
+            return GetColumn(column, ref allBoundsColumns);
         }
 
-        public BoundsInt[] GetBoundsIntColumn(int columnID)
+        public BoundsInt[] GetBoundsIntColumn(int column)
         {
-            return GetColumn(columnID, ref allBoundsIntColumns);
+            return GetColumn(column, ref allBoundsIntColumns);
         }
 
-        public Hash128[] GetHash128Column(int columnID)
+        public Hash128[] GetHash128Column(int column)
         {
-            return GetColumn(columnID, ref allHash128Columns);
+            return GetColumn(column, ref allHash128Columns);
         }
 
-        public Gradient[] GetGradientColumn(int columnID)
+        public Gradient[] GetGradientColumn(int column)
         {
-            return GetColumn(columnID, ref allGradientColumns);
+            return GetColumn(column, ref allGradientColumns);
         }
 
-        public AnimationCurve[] GetAnimationCurveColumn(int columnID)
+        public AnimationCurve[] GetAnimationCurveColumn(int column)
         {
-            return GetColumn(columnID, ref allAnimationCurveColumns);
+            return GetColumn(column, ref allAnimationCurveColumns);
         }
 
-        public UnityEngine.Object[] GetObjectColumn(int columnID)
+        public UnityEngine.Object[] GetObjectColumn(int column)
         {
-            return GetColumn(columnID, ref allObjectRefColumns);
+            return GetColumn(column, ref allObjectRefColumns);
         }
 
         // Internal
@@ -1136,9 +1159,9 @@ namespace GDX.Tables
             return columnIndex;
         }
 
-        internal void RemoveColumnInternal<T>(ref ArrayHolder<T>[] allColumnsOfType, Serializable.SerializableTypes typeIndex, int columnID)
+        internal void RemoveColumnInternal<T>(ref ArrayHolder<T>[] allColumnsOfType, Serializable.SerializableTypes typeIndex, int column)
         {
-            int columnLocation = columnIDToDenseIndexMap[columnID].columnDenseIndex;
+            int columnLocation = columnIDToDenseIndexMap[column].columnDenseIndex;
 
             int lastIndex = allColumnsOfType.Length - 1;
             allColumnsOfType[columnLocation] = allColumnsOfType[lastIndex];
@@ -1231,22 +1254,22 @@ namespace GDX.Tables
             }
         }
 
-        internal ref T GetCellRef<T>(int row, int columnID, ref ArrayHolder<T>[] allColumnsOfType)
+        internal ref T GetCellRef<T>(int rowID, int columnID, ref ArrayHolder<T>[] allColumnsOfType)
         {
             int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
-            return ref allColumnsOfType[column][row];
+            return ref allColumnsOfType[column][rowID];
         }
 
-        internal T GetCell<T>(int row, int columnID, ref ArrayHolder<T>[] allColumnsOfType)
+        internal T GetCell<T>(int rowID, int columnID, ref ArrayHolder<T>[] allColumnsOfType)
         {
             int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
-            return allColumnsOfType[column][row];
+            return allColumnsOfType[column][rowID];
         }
 
-        internal ulong SetCell<T>(int row, int columnID, ref ArrayHolder<T>[] allColumnsOfType, T value)
+        internal ulong SetCell<T>(int rowID, int columnID, ref ArrayHolder<T>[] allColumnsOfType, T value)
         {
             int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
-            allColumnsOfType[column][row] = value;
+            allColumnsOfType[column][rowID] = value;
             dataVersion++;
             return dataVersion;
         }
