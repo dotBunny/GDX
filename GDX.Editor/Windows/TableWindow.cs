@@ -13,6 +13,7 @@ namespace GDX.Editor.Windows
     public class TableWindow : EditorWindow
     {
         const string k_CellFieldName = "gdx-data-field";
+        const string k_RowFieldName = "gdx-data-row";
 
         static readonly Dictionary<ITable, TableWindow> k_Windows =
             new Dictionary<ITable, TableWindow>();
@@ -281,6 +282,18 @@ namespace GDX.Editor.Windows
                 m_TableViewColumns.Add(column);
             }
 
+            // Add row header column
+            m_TableViewColumns.Insert(0,
+                new Column
+                {
+                    makeCell = MakeRowHeader,
+                    bindCell = BindRowHeader,
+                    resizable = false,
+                    width = 25,
+                    maxWidth = 25,
+                    minWidth = 25
+                });
+
             // Create MCLV
             if (m_TableView != null)
             {
@@ -387,11 +400,24 @@ namespace GDX.Editor.Windows
         }
 
 
+        static VisualElement MakeRowHeader()
+        {
+            return new Button();
+        }
+
+        void BindRowHeader(VisualElement cell, int row)
+        {
+            Button button = (Button)cell;
+            button.text = row.ToString();
+           // button.clicked += () => { Debug.Log("ROW CLICKED!"); };
+        }
+
         void BindStringCell(VisualElement cell, int row)
         {
             TextField field = (TextField)cell;
             StringCellValue cellValue =
                 new StringCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -498,6 +524,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindUIntCell(VisualElement cell, int row)
         {
             IntegerField field = (IntegerField)cell;
@@ -511,6 +538,7 @@ namespace GDX.Editor.Windows
                 local.Set((uint)e.newValue);
             });
         }
+
         void BindLongCell(VisualElement cell, int row)
         {
             LongField field = (LongField)cell;
@@ -524,6 +552,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindULongCell(VisualElement cell, int row)
         {
             LongField field = (LongField)cell;
@@ -537,6 +566,7 @@ namespace GDX.Editor.Windows
                 local.Set((ulong)e.newValue);
             });
         }
+
         void BindFloatCell(VisualElement cell, int row)
         {
             FloatField field = (FloatField)cell;
@@ -550,6 +580,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindDoubleCell(VisualElement cell, int row)
         {
             DoubleField field = (DoubleField)cell;
@@ -563,6 +594,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindVector2Cell(VisualElement cell, int row)
         {
             Vector2Field field = (Vector2Field)cell;
@@ -576,6 +608,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindVector3Cell(VisualElement cell, int row)
         {
             Vector3Field field = (Vector3Field)cell;
@@ -589,6 +622,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindVector4Cell(VisualElement cell, int row)
         {
             Vector4Field field = (Vector4Field)cell;
@@ -602,6 +636,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindVector2IntCell(VisualElement cell, int row)
         {
             Vector2IntField field = (Vector2IntField)cell;
@@ -615,6 +650,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindVector3IntCell(VisualElement cell, int row)
         {
             Vector3IntField field = (Vector3IntField)cell;
@@ -628,6 +664,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindQuaternionCell(VisualElement cell, int row)
         {
             Vector4Field field = (Vector4Field)cell;
@@ -647,6 +684,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindRectCell(VisualElement cell, int row)
         {
             RectField field = (RectField)cell;
@@ -660,6 +698,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindRectIntCell(VisualElement cell, int row)
         {
             RectIntField field = (RectIntField)cell;
@@ -673,6 +712,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindColorCell(VisualElement cell, int row)
         {
             ColorField field = (ColorField)cell;
@@ -686,6 +726,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindLayerMaskCell(VisualElement cell, int row)
         {
             LayerMaskField field = (LayerMaskField)cell;
@@ -699,6 +740,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindBoundsCell(VisualElement cell, int row)
         {
             BoundsField field = (BoundsField)cell;
@@ -712,6 +754,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindBoundsIntCell(VisualElement cell, int row)
         {
             BoundsIntField field = (BoundsIntField)cell;
@@ -725,6 +768,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindHash128Cell(VisualElement cell, int row)
         {
             Hash128Field field = (Hash128Field)cell;
@@ -738,6 +782,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindGradientCell(VisualElement cell, int row)
         {
             GradientField field = (GradientField)cell;
@@ -751,6 +796,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindAnimationCurveCell(VisualElement cell, int row)
         {
             CurveField field = (CurveField)cell;
@@ -764,6 +810,7 @@ namespace GDX.Editor.Windows
                 local.Set(e.newValue);
             });
         }
+
         void BindObjectCell(VisualElement cell, int row)
         {
             ObjectField field = (ObjectField)cell;
@@ -785,10 +832,7 @@ namespace GDX.Editor.Windows
 
         static VisualElement MakeCharCell(object data = null)
         {
-            return new TextField(null, 1, false, false, ' ')
-            {
-                name = k_CellFieldName, userData = data
-            };
+            return new TextField(null, 1, false, false, ' ') { name = k_CellFieldName, userData = data };
         }
 
         static VisualElement MakeBoolCell(object data = null)
@@ -847,7 +891,7 @@ namespace GDX.Editor.Windows
         static VisualElement MakeULongCell(object data = null)
         {
             //TODO: Crunches
-            return new LongField(null) { name = k_CellFieldName, userData = data, };
+            return new LongField(null) { name = k_CellFieldName, userData = data };
         }
 
         static VisualElement MakeFloatCell(object data = null)
