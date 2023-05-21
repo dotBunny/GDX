@@ -39,6 +39,16 @@ namespace GDX.Tables.CellValues
             return m_CachedValue;
         }
 
+        public void Set(Vector3 eulerAngles, bool updateTable = true)
+        {
+            Set(Quaternion.Euler(eulerAngles), updateTable);
+        }
+
+        public void Set(Vector4 value, bool updateTable = true)
+        {
+            Set(new Quaternion(value.x, value.y, value.z, value.w), updateTable);
+        }
+
         public void Set(Quaternion value, bool updateTable = true)
         {
             m_CachedValue = value;

@@ -93,7 +93,37 @@ namespace GDX.Tables
             return rowCount;
         }
 
-        public ITable.ColumnDescription[] GetOrderedColumns()
+        public ITable.RowDescription[] GetAllRowDescriptions()
+        {
+            if (combinedColumnCount == 0) return null;
+            ITable.RowDescription[] returnArray = new ITable.RowDescription[rowCount];
+
+            // TODO: populate with stable etc
+
+            return returnArray;
+        }
+        public ITable.RowDescription GetRowDescription(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITable.RowDescription GetRowDescription(int order)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITable.ColumnDescription GetColumnDescription(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITable.ColumnDescription GetColumnDescription(int order)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public ITable.ColumnDescription[] GetAllColumnDescriptions()
         {
             if (combinedColumnCount == 0) return null;
             ITable.ColumnDescription[] returnArray = new ITable.ColumnDescription[combinedColumnCount];
@@ -115,10 +145,13 @@ namespace GDX.Tables
             return returnArray;
         }
 
+        public void SetColumnName(string name, int column)
+        {
+            throw new NotImplementedException();
+            // TODO: Way to set column name
+        }
 
-        // END - View Hacks
 
-        // TODO: Way to set column name
 
         public void SetColumnName(int columnID, string name)
         {

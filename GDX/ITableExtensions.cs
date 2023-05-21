@@ -5,7 +5,6 @@
 using System.Runtime.CompilerServices;
 using GDX.Tables;
 using GDX.Tables.CellValues;
-using UnityEditor;
 
 namespace GDX
 {
