@@ -38,6 +38,14 @@ namespace GDX.Tables
         ColumnDescription GetColumnDescription(string name);
         ColumnDescription GetColumnDescription(int order);
 
+        void SetColumnName(string columnName, int column);
+        string GetColumnName(int column);
+
+        void SetRowName(string rowName, int row);
+        string GetRowName(int row);
+
+
+
         string GetString(int row, int column);
         bool GetBool(int row, int column);
         char GetChar(int row, int column);

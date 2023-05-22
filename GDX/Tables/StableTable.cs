@@ -203,16 +203,26 @@ namespace GDX.Tables
             return returnArray;
         }
 
-        public void SetColumnName(string name, int columnID)
+        public void SetColumnName(string columnName, int column)
         {
-            ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[columnID];
-            allColumnNames[(int)columnEntry.ColumnType][columnEntry.columnDenseIndex] = name;
+            ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[column];
+            allColumnNames[(int)columnEntry.ColumnType][columnEntry.columnDenseIndex] = columnName;
         }
 
-        public string GetColumnName(int columnID)
+        public string GetColumnName(int column)
         {
-            ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[columnID];
+            ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[column];
             return allColumnNames[(int)columnEntry.ColumnType][columnEntry.columnDenseIndex];
+        }
+
+        public void SetRowName(string rowName, int row)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetRowName(int row)
+        {
+            throw new NotImplementedException();
         }
 
         public ref string GetColumnNameRef(int columnID)
@@ -228,7 +238,7 @@ namespace GDX.Tables
             int rowIDToDenseIndexMapLength = rowIDToDenseIndexMap?.Length ?? 0;
             if (rowID >= rowIDToDenseIndexMapLength)
             {
-                int newSize = rowID * 2; 
+                int newSize = rowID * 2;
                 newSize = newSize == 0 ? 1 : newSize;
                 Array.Resize(ref rowIDToDenseIndexMap, newSize);
                 for (int i = rowID; i < newSize; i++)
@@ -1305,7 +1315,7 @@ namespace GDX.Tables
             columnNamesForType[columnNamesCount] = columnName == null ? columnID.ToString() : columnName;
             allColumnNames[(int)typeIndex].TArray = columnNamesForType;
 
-           
+
             int columnIDToDenseIndexMapLength = columnIDToDenseIndexMap?.Length ?? 0;
             if (columnID >= columnIDToDenseIndexMapLength)
             {
