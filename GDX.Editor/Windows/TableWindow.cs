@@ -353,8 +353,11 @@ namespace GDX.Editor.Windows
             // TODO : Trigger update of each cell? or does it use version to know it needs to update
         }
 
+
+
         void BindWindow()
         {
+            rootVisualElement.RegisterCallback<KeyDownEvent>(OnKeyboardEvent);
             m_Toolbar = rootVisualElement.Q<Toolbar>("gdx-table-toolbar");
             m_ToolbarAddColumn = m_Toolbar.Q<Button>("gdx-table-toolbar-add-column");
             m_ToolbarAddColumn.clicked += AddColumn;
@@ -408,14 +411,22 @@ namespace GDX.Editor.Windows
             m_RenameRowCancelButton.clicked += CancelOverlay;
 
             // Ensure state of everything
-            SetOverlay(OverlayDialog.Hide);
+            SetOverlay(OverlayState.Hide);
+        }
+
+        void OnKeyboardEvent(KeyDownEvent evt)
+        {
+            if (evt.keyCode == KeyCode.Escape && m_OverlayState != OverlayState.Hide)
+            {
+                CancelOverlay();
+            }
         }
 
 
         void AddColumn()
         {
-            m_AddColumnName.SetValueWithoutNotify($"Column_{Core.Random.NextInteger().ToString()}");
-            SetOverlay(OverlayDialog.AddColumn);
+            m_AddColumnName.SetValueWithoutNotify($"Column_{Core.Random.NextInteger(1, 9999).ToString()}");
+            SetOverlay(OverlayState.AddColumn);
         }
         void AddColumn_AddButtonClicked()
         {
@@ -432,14 +443,14 @@ namespace GDX.Editor.Windows
 
             // TODO: REbnd data?
             BindTable(m_TargetTable);
-            SetOverlay(OverlayDialog.Hide);
+            SetOverlay(OverlayState.Hide);
         }
 
         void RenameColumn(int column)
         {
             m_RenameColumnName.SetValueWithoutNotify(m_ColumnDescriptions[column].Name);
             m_RenameRowName.userData = column;
-            SetOverlay(OverlayDialog.RenameColumn);
+            SetOverlay(OverlayState.RenameColumn);
         }
 
         void RenameColumn_RenameButtonClicked()
@@ -447,42 +458,42 @@ namespace GDX.Editor.Windows
             m_TargetTable.SetColumnName(m_RenameColumnName.text, (int)m_RenameColumnName.userData);
             //BindTable(m_TargetTable);
             RebuildRowData();
-            SetOverlay(OverlayDialog.Hide);
+            SetOverlay(OverlayState.Hide);
         }
 
         void AddRow()
         {
-            m_AddRowName.SetValueWithoutNotify($"Row_{Core.Random.NextInteger().ToString()}");
-            SetOverlay(OverlayDialog.AddRow);
+            m_AddRowName.SetValueWithoutNotify($"Row_{Core.Random.NextInteger(1, 9999).ToString()}");
+            SetOverlay(OverlayState.AddRow);
         }
         void AddRow_AddButtonClicked()
         {
             m_TargetTable.AddRow(m_AddRowName.text);
             //BindTable(m_TargetTable);
             RebuildRowData();
-            SetOverlay(OverlayDialog.Hide);
+            SetOverlay(OverlayState.Hide);
         }
 
         void RenameRow(int row)
         {
             m_RenameRowName.SetValueWithoutNotify(k_RowDescriptions[row].Name);
             m_RenameRowName.userData = row;
-            SetOverlay(OverlayDialog.RenameRow);
+            SetOverlay(OverlayState.RenameRow);
         }
         void RenameRow_RenameButtonClicked()
         {
             m_TargetTable.SetRowName(m_RenameRowName.text, (int)m_RenameRowName.userData);
             //BindTable(m_TargetTable);
             RebuildRowData();
-            SetOverlay(OverlayDialog.Hide);
+            SetOverlay(OverlayState.Hide);
         }
 
         void CancelOverlay()
         {
-            SetOverlay(OverlayDialog.Hide);
+            SetOverlay(OverlayState.Hide);
         }
 
-        enum OverlayDialog
+        enum OverlayState
         {
             Hide,
             AddColumn,
@@ -491,10 +502,11 @@ namespace GDX.Editor.Windows
             RenameRow
         }
 
-        void SetOverlay(OverlayDialog dialog)
+        OverlayState m_OverlayState;
+        void SetOverlay(OverlayState state)
         {
             // Handle focus
-            if (dialog == OverlayDialog.Hide)
+            if (state == OverlayState.Hide)
             {
                 m_Toolbar.focusable = true;
                 m_ToolbarAddColumn.focusable = true;
@@ -514,24 +526,24 @@ namespace GDX.Editor.Windows
                 m_Overlay.focusable = true;
             }
 
-            switch (dialog)
+            switch (state)
             {
-                case OverlayDialog.AddColumn:
+                case OverlayState.AddColumn:
                     m_Overlay.style.display = DisplayStyle.Flex;
                     m_AddColumnOverlay.style.display = DisplayStyle.Flex;
                     m_AddColumnAddButton.Focus();
                     break;
-                case OverlayDialog.AddRow:
+                case OverlayState.AddRow:
                     m_Overlay.style.display = DisplayStyle.Flex;
                     m_AddRowOverlay.style.display = DisplayStyle.Flex;
                     m_AddRowAddButton.Focus();
                     break;
-                case OverlayDialog.RenameColumn:
+                case OverlayState.RenameColumn:
                     m_Overlay.style.display = DisplayStyle.Flex;
                     m_RenameColumnOverlay.style.display = DisplayStyle.Flex;
                     m_RenameColumnName.Focus();
                     break;
-                case OverlayDialog.RenameRow:
+                case OverlayState.RenameRow:
                     m_Overlay.style.display = DisplayStyle.Flex;
                     m_RenameRowOverlay.style.display = DisplayStyle.Flex;
                     m_RenameRowName.Focus();
@@ -548,6 +560,8 @@ namespace GDX.Editor.Windows
                     }
                     break;
             }
+
+            m_OverlayState = state;
         }
 
 
