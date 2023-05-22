@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using GDX.Collections.Generic;
 using GDX.Tables;
@@ -7,6 +8,7 @@ using UnityEditor.Callbacks;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace GDX.Editor.Windows
 {
@@ -14,7 +16,7 @@ namespace GDX.Editor.Windows
     public class TableWindow : EditorWindow
     {
         const string k_CellFieldName = "gdx-data-field";
-        const string k_RowFieldName = "gdx-data-row";
+        const string k_RowHeaderFieldName = "gdx-data-row-header";
 
         static readonly Dictionary<ITable, TableWindow> k_Windows =
             new Dictionary<ITable, TableWindow>();
@@ -25,12 +27,31 @@ namespace GDX.Editor.Windows
 
         readonly List<ITable.RowDescription> k_RowDescriptions = new List<ITable.RowDescription>();
 
+
+        VisualElement m_AddColumnOverlay;
         Button m_AddColumnAddButton;
         Button m_AddColumnCancelButton;
         TextField m_AddColumnName;
-
-        VisualElement m_AddColumnOverlay;
         PopupField<int> m_AddColumnType;
+
+        VisualElement m_AddRowOverlay;
+        Button m_AddRowAddButton;
+        Button m_AddRowCancelButton;
+        TextField m_AddRowName;
+
+        VisualElement m_RenameRowOverlay;
+        Button m_RenameRowRenameButton;
+        Button m_RenameRowCancelButton;
+        TextField m_RenameRowName;
+
+        VisualElement m_RenameColumnOverlay;
+        Button m_RenameColumnRenameButton;
+        Button m_RenameColumnCancelButton;
+        TextField m_RenameColumnName;
+
+
+
+
         ITable.ColumnDescription[] m_ColumnDescriptions;
 
 
@@ -159,8 +180,10 @@ namespace GDX.Editor.Windows
                 // We embed the column stable index
                 Column column = new Column
                 {
-                    name = $"Column_{columnIndex}", title = refColumn.Name, width = columnSizePercentage,
-                    destroyCell = DestroyCell
+                    name = $"Column_{columnIndex}",
+                    title = refColumn.Name,
+                    width = columnSizePercentage,
+                    destroyCell = DestroyCell,
                 };
 
                 // Customize column based on type
@@ -332,19 +355,16 @@ namespace GDX.Editor.Windows
         void BindWindow()
         {
             m_ToolbarAddColumn = rootVisualElement.Q<Button>("gdx-table-toolbar-add-column");
-            m_ToolbarAddColumn.clicked += AddColumn_Show;
+            m_ToolbarAddColumn.clicked += AddColumn;
 
             m_ToolbarAddRow = rootVisualElement.Q<Button>("gdx-table-toolbar-add-row");
-            m_ToolbarAddRow.clicked += AddRow_Clicked;
+            m_ToolbarAddRow.clicked += AddRow;
 
             m_Overlay = rootVisualElement.Q<VisualElement>("gdx-table-overlay");
-            // Ensure that the overlay is not visible
-            m_Overlay.visible = false;
 
             // Build out references for adding a column
             m_AddColumnOverlay = m_Overlay.Q<VisualElement>("gdx-table-add-column");
             m_AddColumnName = m_AddColumnOverlay.Q<TextField>("gdx-table-column-name");
-
             // Build our custom column type enum
             int columnNameIndex = m_AddColumnOverlay.IndexOf(m_AddColumnName);
             List<int> typeValues = new List<int>(Serializable.SerializableTypesCount);
@@ -352,19 +372,49 @@ namespace GDX.Editor.Windows
             {
                 typeValues.Add(i);
             }
-
             m_AddColumnType =
                 new PopupField<int>(typeValues, 0, Serializable.GetSerializableTypesLabel,
                     Serializable.GetSerializableTypesLabel) { label = "Type", name = "gdx-table-column-type" };
             m_AddColumnOverlay.Insert(columnNameIndex + 1, m_AddColumnType);
-
             m_AddColumnAddButton = m_AddColumnOverlay.Q<Button>("gdx-table-column-add");
             m_AddColumnAddButton.clicked += AddColumn_AddButtonClicked;
             m_AddColumnCancelButton = m_AddColumnOverlay.Q<Button>("gdx-table-column-cancel");
-            m_AddColumnCancelButton.clicked += AddColumn_CancelButtonClicked;
+            m_AddColumnCancelButton.clicked += CancelOverlay;
+
+            // Build out our Adding Rows
+            m_AddRowOverlay = m_Overlay.Q<VisualElement>("gdx-table-add-row");
+            m_AddRowName = m_AddRowOverlay.Q<TextField>("gdx-table-row-name");
+            m_AddRowAddButton = m_AddRowOverlay.Q<Button>("gdx-table-row-add");
+            m_AddRowAddButton.clicked += AddRow_AddButtonClicked;
+            m_AddRowCancelButton = m_AddRowOverlay.Q<Button>("gdx-table-row-cancel");
+            m_AddRowCancelButton.clicked += CancelOverlay;
+
+            // Bind our Renaming Columns
+            m_RenameColumnOverlay = m_Overlay.Q<VisualElement>("gdx-table-rename-column");
+            m_RenameColumnName = m_RenameColumnOverlay.Q<TextField>("gdx-table-column-name");
+            m_RenameColumnRenameButton = m_RenameColumnOverlay.Q<Button>("gdx-table-column-rename");
+            m_RenameColumnRenameButton.clicked += RenameColumn_RenameButtonClicked;
+            m_RenameColumnCancelButton = m_RenameColumnOverlay.Q<Button>("gdx-table-column-cancel");
+            m_RenameColumnCancelButton.clicked += CancelOverlay;
+
+            // Bind our Renaming Rows
+            m_RenameRowOverlay = m_Overlay.Q<VisualElement>("gdx-table-rename-row");
+            m_RenameRowName = m_RenameRowOverlay.Q<TextField>("gdx-table-row-name");
+            m_RenameRowRenameButton = m_RenameRowOverlay.Q<Button>("gdx-table-row-rename");
+            m_RenameRowRenameButton.clicked += RenameRow_RenameButtonClicked;
+            m_RenameRowCancelButton = m_RenameRowOverlay.Q<Button>("gdx-table-row-cancel");
+            m_RenameRowCancelButton.clicked += CancelOverlay;
+
+            // Ensure state of everything
+            SetOverlay(OverlayDialog.Hide);
         }
 
 
+        void AddColumn()
+        {
+            m_AddColumnName.SetValueWithoutNotify($"Column_{Core.Random.NextInteger().ToString()}");
+            SetOverlay(OverlayDialog.AddColumn);
+        }
         void AddColumn_AddButtonClicked()
         {
             Serializable.SerializableTypes selectedType = (Serializable.SerializableTypes)m_AddColumnType.value;
@@ -380,44 +430,119 @@ namespace GDX.Editor.Windows
 
             // TODO: REbnd data?
             BindTable(m_TargetTable);
-            AddColumn_Hide();
+            SetOverlay(OverlayDialog.Hide);
         }
 
-        void AddColumn_Show()
+        void RenameColumn(int column)
         {
-            m_Overlay.visible = true;
-            m_AddColumnOverlay.visible = true;
+            m_RenameColumnName.SetValueWithoutNotify(m_ColumnDescriptions[column].Name);
+            m_RenameRowName.userData = column;
+            SetOverlay(OverlayDialog.RenameColumn);
         }
 
-        void AddColumn_Hide()
+        void RenameColumn_RenameButtonClicked()
         {
-            m_Overlay.visible = false;
-            m_AddColumnOverlay.visible = false;
-        }
-
-        void AddColumn_CancelButtonClicked()
-        {
-            AddColumn_Hide();
-        }
-
-        void AddRow_Clicked()
-        {
-            m_TargetTable.AddRow();
+            m_TargetTable.RenameColumn((int)m_RenameColumnName.userData, m_RenameColumnName.text);
             //BindTable(m_TargetTable);
             RebuildRowData();
+            SetOverlay(OverlayDialog.Hide);
+        }
+
+        void AddRow()
+        {
+            m_AddRowName.SetValueWithoutNotify($"Row_{Core.Random.NextInteger().ToString()}");
+            SetOverlay(OverlayDialog.AddRow);
+        }
+        void AddRow_AddButtonClicked()
+        {
+            m_TargetTable.AddRow(m_AddRowName.text);
+            //BindTable(m_TargetTable);
+            RebuildRowData();
+            SetOverlay(OverlayDialog.Hide);
+        }
+
+        void RenameRow(int row)
+        {
+            m_RenameRowName.SetValueWithoutNotify(k_RowDescriptions[row].Name);
+            m_RenameRowName.userData = row;
+            SetOverlay(OverlayDialog.RenameRow);
+        }
+        void RenameRow_RenameButtonClicked()
+        {
+            m_TargetTable.RenameRow((int)m_RenameRowName.userData, m_RenameRowName.text);
+            //BindTable(m_TargetTable);
+            RebuildRowData();
+            SetOverlay(OverlayDialog.Hide);
+        }
+
+        void CancelOverlay()
+        {
+            SetOverlay(OverlayDialog.Hide);
+        }
+
+        enum OverlayDialog
+        {
+            Hide,
+            AddColumn,
+            AddRow,
+            RenameColumn,
+            RenameRow
+        }
+
+        void SetOverlay(OverlayDialog dialog)
+        {
+            switch (dialog)
+            {
+                case OverlayDialog.AddColumn:
+                    m_Overlay.style.display = DisplayStyle.Flex;
+                    m_AddColumnOverlay.style.display = DisplayStyle.Flex;
+                    break;
+                case OverlayDialog.AddRow:
+                    m_Overlay.style.display = DisplayStyle.Flex;
+                    m_AddRowOverlay.style.display = DisplayStyle.Flex;
+                    break;
+                case OverlayDialog.RenameColumn:
+                    m_Overlay.style.display = DisplayStyle.Flex;
+                    m_RenameColumnOverlay.style.display = DisplayStyle.Flex;
+                    break;
+                case OverlayDialog.RenameRow:
+                    m_Overlay.style.display = DisplayStyle.Flex;
+                    m_RenameRowOverlay.style.display = DisplayStyle.Flex;
+                    break;
+                default:
+                    m_Overlay.style.display = DisplayStyle.None;
+
+                    m_AddColumnOverlay.style.display = DisplayStyle.None;
+                    m_AddRowOverlay.style.display = DisplayStyle.None;
+                    m_RenameColumnOverlay.style.display = DisplayStyle.None;
+                    m_RenameRowOverlay.style.display = DisplayStyle.None;
+                    break;
+            }
         }
 
 
         static VisualElement MakeRowHeader()
         {
-            return new Button();
+            return new Label() { name = k_RowHeaderFieldName};
         }
 
         void BindRowHeader(VisualElement cell, int row)
         {
-            Button button = (Button)cell;
-            button.text = row.ToString();
-           // button.clicked += () => { Debug.Log("ROW CLICKED!"); };
+            Label label = (Label)cell;
+            ITable.RowDescription description = k_RowDescriptions[row];
+            if (!string.IsNullOrEmpty(k_RowDescriptions[row].Name))
+            {
+                label.text = k_RowDescriptions[row].Name;
+            }
+            else
+            {
+                label.text = row.ToString();
+            }
+
+            label.AddManipulator(new ContextualMenuManipulator(evt =>
+            {
+                evt.menu.AppendAction("Rename", a => RenameRow(description.Index));
+            }));;
         }
 
         void BindStringCell(VisualElement cell, int row)
