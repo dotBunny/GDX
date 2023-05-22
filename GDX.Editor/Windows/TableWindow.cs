@@ -317,10 +317,6 @@ namespace GDX.Editor.Windows
                 {
                     makeCell = MakeRowHeader,
                     bindCell = BindRowHeader,
-                    resizable = false,
-                    width = 25,
-                    maxWidth = 25,
-                    minWidth = 25
                 });
 
             // Create MCLV
@@ -448,16 +444,38 @@ namespace GDX.Editor.Windows
 
         void RenameColumn(int column)
         {
-            m_RenameColumnName.SetValueWithoutNotify(m_ColumnDescriptions[column].Name);
+            m_RenameColumnName.SetValueWithoutNotify(m_TargetTable.GetColumnName(column));
             m_RenameRowName.userData = column;
             SetOverlay(OverlayState.RenameColumn);
         }
 
         void RenameColumn_RenameButtonClicked()
         {
-            m_TargetTable.SetColumnName(m_RenameColumnName.text, (int)m_RenameColumnName.userData);
-            //BindTable(m_TargetTable);
-            RebuildRowData();
+            int userData = (int)m_RenameColumnName.userData;
+            string newName = m_RenameColumnName.text;
+            m_TargetTable.SetColumnName(newName, userData);
+
+            // Figure out index of target
+            int columnCount = m_TableViewColumns.Count;
+            int foundIndex = -1;
+            for (int i = 0; i < columnCount; i++)
+            {
+                int indexOfSplit = m_TableViewColumns[i].name.IndexOf("_", StringComparison.Ordinal);
+                string column = m_TableViewColumns[i].name.Substring(indexOfSplit);
+                int columnInteger = int.Parse(column);
+                if (columnInteger == userData)
+                {
+                    foundIndex = i;
+                    break;
+                }
+            }
+
+            if (foundIndex != -1)
+            {
+                m_ColumnDescriptions[foundIndex].Name = newName;
+                m_TableViewColumns[foundIndex].title = newName;
+            }
+
             SetOverlay(OverlayState.Hide);
         }
 
@@ -476,13 +494,20 @@ namespace GDX.Editor.Windows
 
         void RenameRow(int row)
         {
-            m_RenameRowName.SetValueWithoutNotify(k_RowDescriptions[row].Name);
+
+            m_RenameRowName.SetValueWithoutNotify(m_TargetTable.GetRowName(row));
             m_RenameRowName.userData = row;
             SetOverlay(OverlayState.RenameRow);
         }
         void RenameRow_RenameButtonClicked()
         {
-            m_TargetTable.SetRowName(m_RenameRowName.text, (int)m_RenameRowName.userData);
+            int userData = (int)m_RenameRowName.userData;
+            string newName = m_RenameRowName.text;
+
+            m_TargetTable.SetRowName(newName, userData);
+
+            // TODO: optimized populate of data like RenameOfCOlumn
+
             //BindTable(m_TargetTable);
             RebuildRowData();
             SetOverlay(OverlayState.Hide);
