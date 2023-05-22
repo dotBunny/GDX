@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GDX.Collections.Generic;
 using GDX.Tables;
 using GDX.Tables.CellValues;
 using UnityEditor;
@@ -17,6 +18,9 @@ namespace GDX.Editor.Windows
 
         static readonly Dictionary<ITable, TableWindow> k_Windows =
             new Dictionary<ITable, TableWindow>();
+
+        static readonly Dictionary<VisualElement, int> k_CellToColumnIDMap =
+            new SerializableDictionary<VisualElement, int>();
 
 
         readonly List<ITable.RowDescription> k_RowDescriptions = new List<ITable.RowDescription>();
@@ -155,7 +159,8 @@ namespace GDX.Editor.Windows
                 // We embed the column stable index
                 Column column = new Column
                 {
-                    name = $"Column_{columnIndex}", title = refColumn.Name, width = columnSizePercentage
+                    name = $"Column_{columnIndex}", title = refColumn.Name, width = columnSizePercentage,
+                    destroyCell = DestroyCell
                 };
 
                 // Customize column based on type
@@ -419,7 +424,7 @@ namespace GDX.Editor.Windows
         {
             TextField field = (TextField)cell;
             StringCellValue cellValue =
-                new StringCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new StringCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -434,7 +439,7 @@ namespace GDX.Editor.Windows
         {
             TextField field = (TextField)cell;
             CharCellValue cellValue =
-                new CharCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new CharCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe().ToString());
             field.RegisterValueChangedCallback(e =>
@@ -448,7 +453,7 @@ namespace GDX.Editor.Windows
         {
             Toggle field = (Toggle)cell;
             BoolCellValue cellValue =
-                new BoolCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new BoolCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -462,7 +467,7 @@ namespace GDX.Editor.Windows
         {
             SliderInt field = (SliderInt)cell;
             SByteCellValue cellValue =
-                new SByteCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new SByteCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -476,7 +481,7 @@ namespace GDX.Editor.Windows
         {
             SliderInt field = (SliderInt)cell;
             ByteCellValue cellValue =
-                new ByteCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new ByteCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -490,7 +495,7 @@ namespace GDX.Editor.Windows
         {
             SliderInt field = (SliderInt)cell;
             ShortCellValue cellValue =
-                new ShortCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new ShortCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -504,7 +509,7 @@ namespace GDX.Editor.Windows
         {
             SliderInt field = (SliderInt)cell;
             UShortCellValue cellValue =
-                new UShortCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new UShortCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -518,7 +523,7 @@ namespace GDX.Editor.Windows
         {
             SliderInt field = (SliderInt)cell;
             IntCellValue cellValue =
-                new IntCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new IntCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -532,7 +537,7 @@ namespace GDX.Editor.Windows
         {
             IntegerField field = (IntegerField)cell;
             UIntCellValue cellValue =
-                new UIntCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new UIntCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify((int)cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -546,7 +551,7 @@ namespace GDX.Editor.Windows
         {
             LongField field = (LongField)cell;
             LongCellValue cellValue =
-                new LongCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new LongCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -560,7 +565,7 @@ namespace GDX.Editor.Windows
         {
             LongField field = (LongField)cell;
             ULongCellValue cellValue =
-                new ULongCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new ULongCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify((long)cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -574,7 +579,7 @@ namespace GDX.Editor.Windows
         {
             FloatField field = (FloatField)cell;
             FloatCellValue cellValue =
-                new FloatCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new FloatCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -588,7 +593,7 @@ namespace GDX.Editor.Windows
         {
             DoubleField field = (DoubleField)cell;
             DoubleCellValue cellValue =
-                new DoubleCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new DoubleCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -602,7 +607,7 @@ namespace GDX.Editor.Windows
         {
             Vector2Field field = (Vector2Field)cell;
             Vector2CellValue cellValue =
-                new Vector2CellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new Vector2CellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -616,7 +621,7 @@ namespace GDX.Editor.Windows
         {
             Vector3Field field = (Vector3Field)cell;
             Vector3CellValue cellValue =
-                new Vector3CellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new Vector3CellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -630,7 +635,7 @@ namespace GDX.Editor.Windows
         {
             Vector4Field field = (Vector4Field)cell;
             Vector4CellValue cellValue =
-                new Vector4CellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new Vector4CellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -644,7 +649,7 @@ namespace GDX.Editor.Windows
         {
             Vector2IntField field = (Vector2IntField)cell;
             Vector2IntCellValue cellValue =
-                new Vector2IntCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new Vector2IntCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -658,7 +663,7 @@ namespace GDX.Editor.Windows
         {
             Vector3IntField field = (Vector3IntField)cell;
             Vector3IntCellValue cellValue =
-                new Vector3IntCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new Vector3IntCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -672,7 +677,7 @@ namespace GDX.Editor.Windows
         {
             Vector4Field field = (Vector4Field)cell;
             QuaternionCellValue cellValue =
-                new QuaternionCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new QuaternionCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
 
             // Figure it out
@@ -692,7 +697,7 @@ namespace GDX.Editor.Windows
         {
             RectField field = (RectField)cell;
             RectCellValue cellValue =
-                new RectCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new RectCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -706,7 +711,7 @@ namespace GDX.Editor.Windows
         {
             RectIntField field = (RectIntField)cell;
             RectIntCellValue cellValue =
-                new RectIntCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new RectIntCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -720,7 +725,7 @@ namespace GDX.Editor.Windows
         {
             ColorField field = (ColorField)cell;
             ColorCellValue cellValue =
-                new ColorCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new ColorCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -734,7 +739,7 @@ namespace GDX.Editor.Windows
         {
             LayerMaskField field = (LayerMaskField)cell;
             LayerMaskCellValue cellValue =
-                new LayerMaskCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new LayerMaskCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -748,7 +753,7 @@ namespace GDX.Editor.Windows
         {
             BoundsField field = (BoundsField)cell;
             BoundsCellValue cellValue =
-                new BoundsCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new BoundsCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -762,7 +767,7 @@ namespace GDX.Editor.Windows
         {
             BoundsIntField field = (BoundsIntField)cell;
             BoundsIntCellValue cellValue =
-                new BoundsIntCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new BoundsIntCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -776,7 +781,7 @@ namespace GDX.Editor.Windows
         {
             Hash128Field field = (Hash128Field)cell;
             Hash128CellValue cellValue =
-                new Hash128CellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new Hash128CellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -790,7 +795,7 @@ namespace GDX.Editor.Windows
         {
             GradientField field = (GradientField)cell;
             GradientCellValue cellValue =
-                new GradientCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new GradientCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -804,7 +809,7 @@ namespace GDX.Editor.Windows
         {
             CurveField field = (CurveField)cell;
             AnimationCurveCellValue cellValue =
-                new AnimationCurveCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new AnimationCurveCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -818,7 +823,7 @@ namespace GDX.Editor.Windows
         {
             ObjectField field = (ObjectField)cell;
             ObjectCellValue cellValue =
-                new ObjectCellValue(m_TargetTable, k_RowDescriptions[row].Index, (int)cell.userData);
+                new ObjectCellValue(m_TargetTable, k_RowDescriptions[row].Index, k_CellToColumnIDMap[cell]);
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
             field.RegisterValueChangedCallback(e =>
@@ -828,163 +833,226 @@ namespace GDX.Editor.Windows
             });
         }
 
-        static VisualElement MakeStringCell(object data = null)
+        static void DestroyCell(VisualElement cell)
         {
-            return new TextField(null) { name = k_CellFieldName, userData = data };
+            k_CellToColumnIDMap.Remove(cell);
         }
 
-        static VisualElement MakeCharCell(object data = null)
+        static VisualElement MakeStringCell(int column)
         {
-            return new TextField(null, 1, false, false, ' ') { name = k_CellFieldName, userData = data };
+            TextField newField = new TextField(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeBoolCell(object data = null)
+        static VisualElement MakeCharCell(int column)
         {
-            return new Toggle(null) { name = k_CellFieldName, userData = data };
+            TextField newField =  new TextField(null, 1, false, false, ' ') { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeSByteCell(object data = null)
+        static VisualElement MakeBoolCell(int column)
         {
-            return new SliderInt(sbyte.MinValue, sbyte.MaxValue)
+            Toggle newField =  new Toggle(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
+        }
+
+        static VisualElement MakeSByteCell(int column)
+        {
+            SliderInt newField = new SliderInt(sbyte.MinValue, sbyte.MaxValue)
             {
-                name = k_CellFieldName, showInputField = true, label = null, userData = data
+                name = k_CellFieldName, showInputField = true, label = null
             };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeByteCell(object data = null)
+        static VisualElement MakeByteCell(int column)
         {
-            return new SliderInt(byte.MinValue, byte.MaxValue)
+            SliderInt newField =new SliderInt(byte.MinValue, byte.MaxValue)
             {
-                name = k_CellFieldName, showInputField = true, label = null, userData = data
+                name = k_CellFieldName, showInputField = true, label = null
             };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeShortCell(object data = null)
+        static VisualElement MakeShortCell(int column)
         {
-            return new SliderInt(short.MinValue, short.MaxValue)
+            SliderInt newField = new SliderInt(short.MinValue, short.MaxValue)
             {
-                name = k_CellFieldName, showInputField = true, label = null, userData = data
+                name = k_CellFieldName, showInputField = true, label = null
             };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeUShortCell(object data = null)
+        static VisualElement MakeUShortCell(int column)
         {
-            return new SliderInt(ushort.MinValue, ushort.MaxValue)
+            SliderInt newField = new SliderInt(ushort.MinValue, ushort.MaxValue)
             {
-                name = k_CellFieldName, showInputField = true, label = null, userData = data
+                name = k_CellFieldName, showInputField = true, label = null
             };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeIntCell(object data = null)
+        static VisualElement MakeIntCell(int column)
         {
-            return new IntegerField(null) { name = k_CellFieldName, userData = data };
+            IntegerField newField = new IntegerField(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeUIntCell(object data = null)
+        static VisualElement MakeUIntCell(int column)
         {
             //TODO: Crunches
-            return new IntegerField(null) { name = k_CellFieldName, userData = data };
+            IntegerField newField = new IntegerField(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeLongCell(object data = null)
+        static VisualElement MakeLongCell(int column)
         {
-            return new LongField(null) { name = k_CellFieldName, userData = data };
+            LongField newField = new LongField(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeULongCell(object data = null)
+        static VisualElement MakeULongCell(int column)
         {
             //TODO: Crunches
-            return new LongField(null) { name = k_CellFieldName, userData = data };
+            LongField newField = new LongField(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeFloatCell(object data = null)
+        static VisualElement MakeFloatCell(int column)
         {
-            return new FloatField(null) { name = k_CellFieldName, userData = data };
+            FloatField newField = new FloatField(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeDoubleCell(object data = null)
+        static VisualElement MakeDoubleCell(int column)
         {
-            return new DoubleField(null) { name = k_CellFieldName, userData = data };
+            DoubleField newField = new DoubleField(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeVector2Cell(object data = null)
+        static VisualElement MakeVector2Cell(int column)
         {
-            return new Vector2Field(null) { name = k_CellFieldName, userData = data };
+            Vector2Field newField = new Vector2Field(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeVector3Cell(object data = null)
+        static VisualElement MakeVector3Cell(int column)
         {
-            return new Vector3Field(null) { name = k_CellFieldName, userData = data };
+            Vector3Field newField = new Vector3Field(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeVector4Cell(object data = null)
+        static VisualElement MakeVector4Cell(int column)
         {
-            return new Vector4Field(null) { name = k_CellFieldName, userData = data };
+            Vector4Field newField = new Vector4Field(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeVector2IntCell(object data = null)
+        static VisualElement MakeVector2IntCell(int column)
         {
-            return new Vector2IntField(null) { name = k_CellFieldName, userData = data };
+            Vector2IntField newField = new Vector2IntField(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeVector3IntCell(object data = null)
+        static VisualElement MakeVector3IntCell(int column)
         {
-            return new Vector3IntField(null) { name = k_CellFieldName, userData = data };
+            Vector3IntField newField = new Vector3IntField(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeQuaternionCell(object data = null)
+        static VisualElement MakeQuaternionCell(int column)
         {
-            return new Vector4Field(null) { name = k_CellFieldName, userData = data };
+            Vector4Field newField = new Vector4Field(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeRectCell(object data = null)
+        static VisualElement MakeRectCell(int column)
         {
-            return new RectField(null) { name = k_CellFieldName, userData = data };
+            RectField newField = new RectField(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeRectIntCell(object data = null)
+        static VisualElement MakeRectIntCell(int column)
         {
-            return new RectIntField(null) { name = k_CellFieldName, userData = data };
+            RectIntField newField = new RectIntField(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeColorCell(object data = null)
+        static VisualElement MakeColorCell(int column)
         {
-            return new ColorField(null) { name = k_CellFieldName, userData = data };
+            ColorField newField = new ColorField(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeLayerMaskCell(object data = null)
+        static VisualElement MakeLayerMaskCell(int column)
         {
-            return new LayerMaskField(null) { name = k_CellFieldName, userData = data };
+            LayerMaskField newField = new LayerMaskField(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeBoundsCell(object data = null)
+        static VisualElement MakeBoundsCell(int column)
         {
-            return new BoundsField(null) { name = k_CellFieldName, userData = data };
+            BoundsField newField = new BoundsField(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeBoundsIntCell(object data = null)
+        static VisualElement MakeBoundsIntCell(int column)
         {
-            return new BoundsIntField(null) { name = k_CellFieldName, userData = data };
+            BoundsIntField newField = new BoundsIntField(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeHash128Cell(object data = null)
+        static VisualElement MakeHash128Cell(int column)
         {
-            return new Hash128Field(null) { name = k_CellFieldName, userData = data };
+            Hash128Field newField = new Hash128Field(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeGradientCell(object data = null)
+        static VisualElement MakeGradientCell(int column)
         {
-            return new GradientField(null) { name = k_CellFieldName, userData = data };
+            GradientField newField = new GradientField(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeAnimationCurveCell(object data = null)
+        static VisualElement MakeAnimationCurveCell(int column)
         {
-            return new CurveField(null) { name = k_CellFieldName, userData = data };
+            CurveField newField = new CurveField(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
 
-        static VisualElement MakeObjectCell(object data = null)
+        static VisualElement MakeObjectCell(int column)
         {
-            return new ObjectField(null) { name = k_CellFieldName, userData = data };
+            ObjectField newField = new ObjectField(null) { name = k_CellFieldName };
+            k_CellToColumnIDMap.Add(newField, column);
+            return newField;
         }
     }
 #endif
