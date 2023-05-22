@@ -16,74 +16,85 @@ namespace GDX.Editor.Windows
         static readonly Dictionary<ITable, TableWindow> k_TableWindowMap =
             new Dictionary<ITable, TableWindow>();
 
+        static int s_TableTicketHead = 0;
+        static readonly Dictionary<ITable, int> k_TableToTicket = new Dictionary<ITable, int>(5);
+        static readonly Dictionary<int, ITable> k_TicketToTable = new Dictionary<int, ITable>(5);
 
-        static readonly List<ITable> k_KnownTables = new List<ITable>(2);
+        static int s_TableWindowTicketHead = 0;
+        static readonly Dictionary<TableWindow, int> k_TableWindowToTicket = new Dictionary<TableWindow, int>(5);
+        static readonly Dictionary<int, TableWindow> k_TicketToTableWindow = new Dictionary<int, TableWindow>(5);
 
-        static readonly List<TableWindow> k_KnownTablesWindows = new List<TableWindow>(2);
 
-        internal static ITable GetTable(int index)
+        internal static ITable GetTable(int ticket)
         {
-            return k_KnownTables[index];
+            return k_TicketToTable.TryGetValue(ticket, out ITable table) ? table : null;
         }
 
-        internal static int GetTableIndex(ITable table)
+        internal static TableWindow GetTableWindow(int ticket)
         {
-            return k_KnownTables.IndexOf(table);
+            return k_TicketToTableWindow.TryGetValue(ticket, out TableWindow tableWindow) ? tableWindow : null;
         }
 
-        internal static int RegisterTable(ITable table)
+        internal static int GetTableTicket(ITable table)
         {
-            if (k_KnownTables.Contains(table))
-            {
-                return k_KnownTables.IndexOf(table);
-            }
-
-            k_KnownTables.Add(table);
-            return k_KnownTables.Count - 1;
+            return k_TableToTicket.TryGetValue(table, out int ticket) ? ticket : -1;
         }
 
-        internal static void UnregisterTable(ITable table)
+        internal static int GetTableWindowTicket(TableWindow tableWindow)
         {
-            if (k_KnownTables.Contains(table))
-            {
-                k_KnownTables.Remove(table);
-            }
+            return k_TableWindowToTicket.TryGetValue(tableWindow, out int ticket) ? ticket : -1;
         }
-
-        internal static TableWindow GetTableWindow(int index)
-        {
-            return k_KnownTablesWindows[index];
-        }
-
         internal static TableWindow GetTableWindow(ITable table)
         {
             return k_TableWindowMap.TryGetValue(table, out TableWindow window) ? window : null;
         }
 
-        internal static int GetTableWindowIndex(TableWindow tableWindow)
+        internal static int RegisterTable(ITable table)
         {
-            return k_KnownTablesWindows.IndexOf(tableWindow);
+            int ticket = GetTableTicket(table);
+            if (ticket != -1) return ticket;
+
+            // Register table
+            int head = s_TableTicketHead;
+            k_TicketToTable.Add(head, table);
+            k_TableToTicket.Add(table, head);
+
+            // Increment our next head
+            s_TableTicketHead++;
+            return head;
+        }
+
+        internal static void UnregisterTable(ITable table)
+        {
+            int ticket = GetTableTicket(table);
+            k_TableToTicket.Remove(table);
+            k_TicketToTable.Remove(ticket);
         }
 
         internal static int RegisterTableWindow(TableWindow tableWindow, ITable table)
         {
+            int ticket = GetTableWindowTicket(tableWindow);
             k_TableWindowMap[table] = tableWindow;
-
-            if (k_KnownTablesWindows.Contains(tableWindow))
+            if (ticket != -1)
             {
-                return k_KnownTablesWindows.IndexOf(tableWindow);
+                return ticket;
             }
 
-            k_KnownTablesWindows.Add(tableWindow);
-            return k_KnownTablesWindows.Count - 1;
+            // Register table
+            int head = s_TableWindowTicketHead;
+            k_TicketToTableWindow.Add(head, tableWindow);
+            k_TableWindowToTicket.Add(tableWindow, head);
+
+            // Increment our next head
+            s_TableWindowTicketHead++;
+            return head;
         }
 
         internal static void UnregisterTableWindow(TableWindow tableWindow, ITable table)
         {
-            if (k_KnownTablesWindows.Contains(tableWindow))
-            {
-                k_KnownTablesWindows.Remove(tableWindow);
-            }
+            int ticket = GetTableWindowTicket(tableWindow);
+            k_TableWindowToTicket.Remove(tableWindow);
+            k_TicketToTableWindow.Remove(ticket);
         }
 
         [OnOpenAsset(1)]
