@@ -233,7 +233,7 @@ namespace GDX.Tables
                 Array.Resize(ref rowIDToDenseIndexMap, newSize);
                 for (int i = rowID; i < newSize; i++)
                 {
-                    rowIDToDenseIndexMap[rowID + i] = rowID + i + 1;
+                    rowIDToDenseIndexMap[i] = i + 1;
                 }
             }
 
@@ -1310,8 +1310,8 @@ namespace GDX.Tables
                 Array.Resize(ref columnIDToDenseIndexMap, newSize);
                 for (int i = columnID; i < newSize; i++)
                 {
-                    ref ColumnEntry entry = ref columnIDToDenseIndexMap[columnID + i];
-                    entry.columnDenseIndex = columnID + i + 1;
+                    ref ColumnEntry entry = ref columnIDToDenseIndexMap[i];
+                    entry.columnDenseIndex = i + 1;
                     entry.ColumnType = Serializable.SerializableTypes.Invalid;
                 }
 
