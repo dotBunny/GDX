@@ -53,8 +53,8 @@ namespace GDX.Tables
 
         [SerializeField] internal int[] rowIDToDenseIndexMap;
         [SerializeField] internal int[] rowDenseIndexToIDMap;
+        [SerializeField] internal string[] rowNames;
         [SerializeField] internal int rowEntriesFreeListHead;
-
 
         [SerializeField]
         internal int rowCount;
@@ -97,29 +97,87 @@ namespace GDX.Tables
         {
             if (combinedColumnCount == 0 || rowCount == 0) return null;
             ITable.RowDescription[] returnArray = new ITable.RowDescription[rowCount];
-
-            // TODO: populate with stable etc
+            string empty = string.Empty;
+            for (int i = 0; i < rowCount; i++)
+            {
+                returnArray[i].Index = rowDenseIndexToIDMap[i];
+                returnArray[i].Name = empty;
+            }
 
             return returnArray;
         }
         public ITable.RowDescription GetRowDescription(string name)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < rowCount; i++)
+            {
+                string nameAt = rowNames[i];
+
+                if (nameAt == name)
+                {
+                    return new ITable.RowDescription
+                    {
+                        Index = rowDenseIndexToIDMap[i],
+                        Name = nameAt
+                    };
+                }
+            }
+
+            throw new ArgumentException("Row with name " + name + " does not exist in the table");
         }
 
         public ITable.RowDescription GetRowDescription(int order)
         {
-            throw new NotImplementedException();
+            return new ITable.RowDescription
+            {
+                Index = rowDenseIndexToIDMap[order],
+                Name = rowNames[order]
+            };
         }
 
         public ITable.ColumnDescription GetColumnDescription(string name)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < Serializable.SerializableTypesCount; i++)
+            {
+                string[] columnNames = allColumnNames[i].TArray;
+
+                if (columnNames != null)
+                {
+                    for (int j = 0; j < columnNames.Length; j++)
+                    {
+                        string nameAt = columnNames[j];
+
+                        if (name == nameAt)
+                        {
+                            int columnID = columnDenseIndexToIDMap[i].TArray[j];
+
+                            ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[columnID];
+                            return new ITable.ColumnDescription
+                            {
+                                Index = columnID,
+                                Name = nameAt,
+                                Type = columnEntry.ColumnType
+                            };
+                        }
+                    }
+                }
+            }
+
+            throw new ArgumentException("Column with name " + name + " does not exist in the table");
         }
 
         public ITable.ColumnDescription GetColumnDescription(int order)
         {
-            throw new NotImplementedException();
+            int idAtOrderedIndex = sortedOrderToColumnIDMap[order];
+            ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[idAtOrderedIndex];
+
+            string columnName = allColumnNames[(int)columnEntry.ColumnType][columnEntry.columnDenseIndex];
+
+            return new ITable.ColumnDescription
+            {
+                Index = idAtOrderedIndex,
+                Name = columnName,
+                Type = columnEntry.ColumnType
+            };
         }
 
         /// <inheritdoc />
@@ -145,15 +203,7 @@ namespace GDX.Tables
             return returnArray;
         }
 
-        public void SetColumnName(string name, int column)
-        {
-            throw new NotImplementedException();
-            // TODO: Way to set column name
-        }
-
-
-
-        public void SetColumnName(int columnID, string name)
+        public void SetColumnName(string name, int columnID)
         {
             ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[columnID];
             allColumnNames[(int)columnEntry.ColumnType][columnEntry.columnDenseIndex] = name;
@@ -189,6 +239,7 @@ namespace GDX.Tables
 
             int denseIndexToIDMapLength = rowDenseIndexToIDMap?.Length ?? 0;
             Array.Resize(ref rowDenseIndexToIDMap, denseIndexToIDMapLength + 1);
+            Array.Resize(ref rowNames, denseIndexToIDMapLength + 1);
 
             int insertAt = insertAtRowID < 0 ? rowCount : rowIDToDenseIndexMap[insertAtRowID];
 
@@ -198,11 +249,14 @@ namespace GDX.Tables
                 rowDenseIndexToIDMap[i] = currentRowID;
 
                 rowIDToDenseIndexMap[currentRowID] = i;
+
+                rowNames[i] = rowNames[i - 1];
             }
 
             rowEntriesFreeListHead = rowIDToDenseIndexMap[rowID];
             rowIDToDenseIndexMap[rowID] = insertAt;
             rowDenseIndexToIDMap[insertAt] = rowID;
+            rowNames[insertAt] = rowName == null ? string.Empty : rowName;
 
             InsertRowsOfTypeInternal(ref allStringColumns, insertAt, 1);
             InsertRowsOfTypeInternal(ref allBoolColumns, insertAt, 1);
@@ -265,6 +319,7 @@ namespace GDX.Tables
 
             int denseIndexToIDMapLength = rowDenseIndexToIDMap?.Length ?? 0;
             Array.Resize(ref rowDenseIndexToIDMap, denseIndexToIDMapLength + numberOfNewRows);
+            Array.Resize(ref rowNames, denseIndexToIDMapLength + numberOfNewRows);
 
             int insertAt = insertAtRowID < 0 ? rowCount : rowIDToDenseIndexMap[insertAtRowID];
 
@@ -274,6 +329,8 @@ namespace GDX.Tables
                 rowDenseIndexToIDMap[i] = currentRowID;
 
                 rowIDToDenseIndexMap[currentRowID] = i;
+
+                rowNames[i] = rowNames[i - numberOfNewRows];
             }
 
             int freeListHead = rowEntriesFreeListHead;
@@ -284,6 +341,19 @@ namespace GDX.Tables
                 freeListHead = rowIDToDenseIndexMap[rowID];
                 rowIDToDenseIndexMap[rowID] = insertAt + i;
                 rowDenseIndexToIDMap[insertAt + i] = rowID;
+            }
+
+            int numberOfNewRowNames = rowNames?.Length ?? 0;
+            string emptyString = string.Empty;
+            for (int i = 0; i < numberOfNewRowNames; i++)
+            {
+                string currentRowName = rowNames[i];
+                rowNames[insertAt + i] = currentRowName == null ? emptyString : currentRowName;
+            }
+
+            for (int i = numberOfNewRowNames; i < numberOfNewRows; i++)
+            {
+                rowNames[insertAt + i] = string.Empty;
             }
 
             rowEntriesFreeListHead = freeListHead;
@@ -356,6 +426,8 @@ namespace GDX.Tables
                 rowDenseIndexToIDMap[i] = currentRowID;
 
                 rowIDToDenseIndexMap[currentRowID] = i;
+
+                rowNames[i] = rowNames[i - numberOfNewRows];
             }
 
             int freeListHead = rowEntriesFreeListHead;
@@ -367,6 +439,19 @@ namespace GDX.Tables
                 rowIDToDenseIndexMap[rowID] = insertAt + i;
                 rowDenseIndexToIDMap[insertAt + i] = rowID;
                 rowIDs[i] = rowID;
+            }
+
+            int numberOfNewRowNames = rowNames?.Length ?? 0;
+            string emptyString = string.Empty;
+            for (int i = 0; i < numberOfNewRowNames; i++)
+            {
+                string currentRowName = rowNames[i];
+                rowNames[insertAt + i] = currentRowName == null ? emptyString : currentRowName;
+            }
+
+            for (int i = numberOfNewRowNames; i < numberOfNewRows; i++)
+            {
+                rowNames[insertAt + i] = string.Empty;
             }
 
             rowEntriesFreeListHead = freeListHead;
@@ -407,6 +492,20 @@ namespace GDX.Tables
 
         public void RemoveRow(int rowID)
         {
+            int rowDenseIndex = rowIDToDenseIndexMap[rowID];
+            for (int i = rowDenseIndex + 1; i < rowCount; i++)
+            {
+                int currentRowID = rowDenseIndexToIDMap[i];
+                rowIDToDenseIndexMap[currentRowID] = i - 1;
+                rowDenseIndexToIDMap[i - 1] = currentRowID;
+                rowNames[i - 1] = rowNames[i];
+            }
+
+            rowIDToDenseIndexMap[rowID] = rowEntriesFreeListHead;
+            rowEntriesFreeListHead = rowID;
+            Array.Resize(ref rowDenseIndexToIDMap, rowCount - 1);
+            Array.Resize(ref rowNames, rowCount - 1);
+
             DeleteRowsOfTypeInternal(ref allStringColumns, rowID, 1);
             DeleteRowsOfTypeInternal(ref allBoolColumns, rowID, 1);
             DeleteRowsOfTypeInternal(ref allCharColumns, rowID, 1);
@@ -600,9 +699,6 @@ namespace GDX.Tables
                     break;
             }
         }
-
-
-
 
         // Set
 
