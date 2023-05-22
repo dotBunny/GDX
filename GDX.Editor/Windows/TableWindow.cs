@@ -530,15 +530,7 @@ namespace GDX.Editor.Windows
         {
             Label label = (Label)cell;
             ITable.RowDescription description = k_RowDescriptions[row];
-            if (!string.IsNullOrEmpty(k_RowDescriptions[row].Name))
-            {
-                label.text = k_RowDescriptions[row].Name;
-            }
-            else
-            {
-                label.text = row.ToString();
-            }
-
+            label.text = description.Name;
             label.AddManipulator(new ContextualMenuManipulator(evt =>
             {
                 evt.menu.AppendAction("Rename", a => RenameRow(description.Index));
