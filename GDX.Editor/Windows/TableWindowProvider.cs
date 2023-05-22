@@ -90,7 +90,7 @@ namespace GDX.Editor.Windows
             return head;
         }
 
-        internal static void UnregisterTableWindow(TableWindow tableWindow, ITable table)
+        internal static void UnregisterTableWindow(TableWindow tableWindow)
         {
             int ticket = GetTableWindowTicket(tableWindow);
             k_TableWindowToTicket.Remove(tableWindow);

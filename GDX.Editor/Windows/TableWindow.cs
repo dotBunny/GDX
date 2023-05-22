@@ -81,8 +81,13 @@ namespace GDX.Editor.Windows
                 AssetDatabase.SaveAssetIfDirty(m_ScriptableObject);
             } // TODO: do we need to dirty this if its not a SO
 
-            TableWindowProvider.UnregisterTableWindow(this, m_TargetTable);
-            TableWindowProvider.UnregisterTable(m_TargetTable);
+
+            TableWindowProvider.UnregisterTableWindow(this);
+
+            if (m_TargetTable != null)
+            {
+                TableWindowProvider.UnregisterTable(m_TargetTable);
+            }
         }
 
         public int GetRowDescriptionIndex(int row)
@@ -119,6 +124,17 @@ namespace GDX.Editor.Windows
                 titleContent = new GUIContent("Table"); // TODO?? Name tables?
             }
 
+            int columnCount = table.GetColumnCount();
+            if (columnCount == 0)
+            {
+                if (m_TableView != null)
+                {
+                    m_TableView.style.display = DisplayStyle.None;
+                }
+                SetOverlay(OverlayState.AddColumn);
+                return;
+            }
+
             m_ColumnDescriptions = table.GetAllColumnDescriptions();
 
             // Precache some things
@@ -127,7 +143,7 @@ namespace GDX.Editor.Windows
             // Generate columns for MCLV
             m_TableViewColumns = new Columns { reorderable = true, resizable = true };
 
-            int columnCount = table.GetColumnCount();
+
             Length columnSizePercentage = Length.Percent(100f / columnCount);
 
             for (int i = 0; i < columnCount; i++)
@@ -141,7 +157,8 @@ namespace GDX.Editor.Windows
                     name = $"Column_{columnIndex}",
                     title = refColumn.Name,
                     width = columnSizePercentage,
-                    destroyCell = TableWindowCells.DestroyCell
+                    destroyCell = TableWindowCells.DestroyCell,
+                    resizable = true
                 };
 
                 // Customize column based on type
@@ -284,7 +301,7 @@ namespace GDX.Editor.Windows
                 name = "gdx-table-view",
                 selectionType = SelectionType.Single,
                 itemsSource = k_RowDescriptions,
-                showAlternatingRowBackgrounds = AlternatingRowBackground.ContentOnly
+                showAlternatingRowBackgrounds = AlternatingRowBackground.ContentOnly,
             };
             BuildTableWindowContextMenu(m_TableView);
             rootElement.Insert(1, m_TableView);
@@ -445,6 +462,8 @@ namespace GDX.Editor.Windows
 
         void AddRow_AddButtonClicked()
         {
+            if (m_TargetTable.GetColumnCount() == 0) return;
+
             m_TargetTable.AddRow(m_AddRowName.text);
             //BindTable(m_TargetTable);
             RebuildRowData();
@@ -497,7 +516,10 @@ namespace GDX.Editor.Windows
                 m_Toolbar.focusable = false;
                 m_ToolbarAddColumn.focusable = false;
                 m_ToolbarAddRow.focusable = false;
-                m_TableView.focusable = false;
+                if (m_TableView != null)
+                {
+                    m_TableView.focusable = false;
+                }
                 m_Overlay.focusable = true;
             }
 
