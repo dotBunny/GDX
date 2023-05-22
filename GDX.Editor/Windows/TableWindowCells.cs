@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 namespace GDX.Editor.Windows
 {
 #if UNITY_2022_2_OR_NEWER
-    public static class TableWindowCells
+    static class TableWindowCells
     {
         const string k_CellFieldName = "gdx-data-field";
 
