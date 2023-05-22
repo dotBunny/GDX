@@ -1316,9 +1316,9 @@ namespace GDX.Tables
                 }
 
                 Array.Resize(ref columnIDToSortOrderMap, newSize);
-                for (int i = 0; i < columnID; i++)
+                for (int i = columnID; i < newSize; i++)
                 {
-                    columnIDToSortOrderMap[columnID + i] = -1;
+                    columnIDToSortOrderMap[i] = -1;
                 }
             }
 
