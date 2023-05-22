@@ -180,6 +180,16 @@ namespace GDX.Tables
             };
         }
 
+        public void RenameColumn(int column, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RenameRow(int row, string name)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <inheritdoc />
         public ITable.ColumnDescription[] GetAllColumnDescriptions()
         {
@@ -228,7 +238,7 @@ namespace GDX.Tables
             int rowIDToDenseIndexMapLength = rowIDToDenseIndexMap?.Length ?? 0;
             if (rowID >= rowIDToDenseIndexMapLength)
             {
-                int newSize = rowID * 2; 
+                int newSize = rowID * 2;
                 newSize = newSize == 0 ? 1 : newSize;
                 Array.Resize(ref rowIDToDenseIndexMap, newSize);
                 for (int i = rowID; i < newSize; i++)
@@ -1305,7 +1315,7 @@ namespace GDX.Tables
             columnNamesForType[columnNamesCount] = columnName == null ? columnID.ToString() : columnName;
             allColumnNames[(int)typeIndex].TArray = columnNamesForType;
 
-           
+
             int columnIDToDenseIndexMapLength = columnIDToDenseIndexMap?.Length ?? 0;
             if (columnID >= columnIDToDenseIndexMapLength)
             {
