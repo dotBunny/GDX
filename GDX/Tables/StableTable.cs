@@ -1305,10 +1305,10 @@ namespace GDX.Tables
             int columnIDToDenseIndexMapLength = columnIDToDenseIndexMap?.Length ?? 0;
             if (columnID >= columnIDToDenseIndexMapLength)
             {
-                int newSize = columnID * 2;
+                int newSize = columnIDToDenseIndexMapLength * 2;
                 newSize = newSize == 0 ? 1 : newSize;
                 Array.Resize(ref columnIDToDenseIndexMap, newSize);
-                for (int i = columnID; i < newSize; i++)
+                for (int i = columnIDToDenseIndexMapLength; i < newSize; i++)
                 {
                     ref ColumnEntry entry = ref columnIDToDenseIndexMap[i];
                     entry.columnDenseIndex = i + 1;
@@ -1316,7 +1316,7 @@ namespace GDX.Tables
                 }
 
                 Array.Resize(ref columnIDToSortOrderMap, newSize);
-                for (int i = columnID; i < newSize; i++)
+                for (int i = columnIDToDenseIndexMapLength; i < newSize; i++)
                 {
                     columnIDToSortOrderMap[i] = -1;
                 }
@@ -1340,7 +1340,7 @@ namespace GDX.Tables
                 columnIDToSortOrderMap[currentColumnID] = i;
             }
 
-            columnEntriesFreeListHead = columnIDToSortOrderMap[columnID];
+            columnEntriesFreeListHead = columnIDToDenseIndexMap[columnID].columnDenseIndex;
             columnIDToSortOrderMap[columnID] = insertAtSortedIndex;
             sortedOrderToColumnIDMap[insertAtSortedIndex] = columnID;
 
