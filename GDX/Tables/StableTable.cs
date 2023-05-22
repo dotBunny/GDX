@@ -95,7 +95,7 @@ namespace GDX.Tables
 
         public ITable.RowDescription[] GetAllRowDescriptions()
         {
-            if (combinedColumnCount == 0) return null;
+            if (combinedColumnCount == 0 || rowCount == 0) return null;
             ITable.RowDescription[] returnArray = new ITable.RowDescription[rowCount];
 
             // TODO: populate with stable etc
@@ -1235,7 +1235,7 @@ namespace GDX.Tables
             newEntry.columnDenseIndex = denseIndexToIDMapLength;
             newEntry.ColumnType = typeIndex;
 
-            insertAtSortedIndex = insertAtSortedIndex < 0 ? combinedColumnCount : insertAtSortedIndex; 
+            insertAtSortedIndex = insertAtSortedIndex < 0 ? combinedColumnCount : insertAtSortedIndex;
             Array.Resize(ref sortedOrderToColumnIDMap, combinedColumnCount + 1);
             for (int i = combinedColumnCount; i > insertAtSortedIndex; i--)
             {

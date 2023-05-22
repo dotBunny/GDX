@@ -315,7 +315,10 @@ namespace GDX.Editor.Windows
         void RebuildRowData()
         {
             k_RowDescriptions.Clear();
-            k_RowDescriptions.AddRange(m_TargetTable.GetAllRowDescriptions());
+            if (m_TargetTable.GetRowCount() > 0)
+            {
+                k_RowDescriptions.AddRange(m_TargetTable.GetAllRowDescriptions());
+            }
             m_TableView.RefreshItems();
 
             // TODO : Trigger update of each cell? or does it use version to know it needs to update
