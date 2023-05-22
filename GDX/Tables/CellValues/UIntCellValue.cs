@@ -4,6 +4,7 @@
 
 namespace GDX.Tables.CellValues
 {
+    [System.Serializable]
     public struct UIntCellValue
     {
         uint m_CachedValue;

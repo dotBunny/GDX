@@ -4,6 +4,7 @@
 
 namespace GDX.Tables.CellValues
 {
+    [System.Serializable]
     public struct DoubleCellValue
     {
         double m_CachedValue;

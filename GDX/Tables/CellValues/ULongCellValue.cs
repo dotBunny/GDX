@@ -4,6 +4,7 @@
 
 namespace GDX.Tables.CellValues
 {
+    [System.Serializable]
     public struct ULongCellValue
     {
         ulong m_CachedValue;

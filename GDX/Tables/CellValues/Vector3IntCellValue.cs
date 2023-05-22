@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace GDX.Tables.CellValues
 {
+    [System.Serializable]
     public struct Vector3IntCellValue
     {
         Vector3Int m_CachedValue;
