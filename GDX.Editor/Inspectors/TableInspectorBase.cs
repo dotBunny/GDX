@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 
 namespace GDX.Editor.Inspectors
 {
-    public class ITableInspector : UnityEditor.Editor
+    public abstract class TableInspectorBase : UnityEditor.Editor
     {
 #if UNITY_2022_2_OR_NEWER
 
@@ -48,7 +48,6 @@ namespace GDX.Editor.Inspectors
             ITable table = (ITable)target;
             k_KnownInspectors.Remove(table);
         }
-
 
         /// <inheritdoc />
         public override VisualElement CreateInspectorGUI()

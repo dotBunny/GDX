@@ -396,7 +396,7 @@ namespace GDX.Editor.Windows
             // TODO: REbnd data?
             BindTable(m_TargetTable);
             SetOverlay(OverlayState.Hide);
-            ITableInspector.RedrawInspector(m_TargetTable);
+            TableInspectorBase.RedrawInspector(m_TargetTable);
         }
 
         void RenameColumn(int column)
@@ -447,7 +447,7 @@ namespace GDX.Editor.Windows
             m_TargetTable.AddRow(m_AddRowName.text);
             //BindTable(m_TargetTable);
             RebuildRowData();
-            ITableInspector.RedrawInspector(m_TargetTable);
+            TableInspectorBase.RedrawInspector(m_TargetTable);
             SetOverlay(OverlayState.Hide);
         }
 
@@ -559,7 +559,6 @@ namespace GDX.Editor.Windows
                     evt.menu.AppendAction("Add Row", a => AddRow(), DropdownMenuAction.Status.Disabled);
                 }
             }));
-            ;
         }
 
         void BindRowHeader(VisualElement cell, int row)

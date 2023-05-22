@@ -10,6 +10,7 @@ using UnityEngine;
 
 namespace GDX.Editor.Windows
 {
+#if UNITY_2022_2_OR_NEWER
     static class TableWindowProvider
     {
         static readonly Dictionary<ITable, TableWindow> k_TableWindowMap =
@@ -114,4 +115,5 @@ namespace GDX.Editor.Windows
             return tableWindow;
         }
     }
+#endif
 }
