@@ -180,16 +180,6 @@ namespace GDX.Tables
             };
         }
 
-        public void RenameColumn(int column, string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RenameRow(int row, string name)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <inheritdoc />
         public ITable.ColumnDescription[] GetAllColumnDescriptions()
         {
@@ -213,16 +203,26 @@ namespace GDX.Tables
             return returnArray;
         }
 
-        public void SetColumnName(string name, int columnID)
+        public void SetColumnName(string columnName, int column)
         {
-            ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[columnID];
-            allColumnNames[(int)columnEntry.ColumnType][columnEntry.columnDenseIndex] = name;
+            ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[column];
+            allColumnNames[(int)columnEntry.ColumnType][columnEntry.columnDenseIndex] = columnName;
         }
 
-        public string GetColumnName(int columnID)
+        public string GetColumnName(int column)
         {
-            ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[columnID];
+            ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[column];
             return allColumnNames[(int)columnEntry.ColumnType][columnEntry.columnDenseIndex];
+        }
+
+        public void SetRowName(string rowName, int row)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetRowName(int row)
+        {
+            throw new NotImplementedException();
         }
 
         public ref string GetColumnNameRef(int columnID)

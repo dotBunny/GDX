@@ -442,7 +442,7 @@ namespace GDX.Editor.Windows
 
         void RenameColumn_RenameButtonClicked()
         {
-            m_TargetTable.RenameColumn((int)m_RenameColumnName.userData, m_RenameColumnName.text);
+            m_TargetTable.SetColumnName(m_RenameColumnName.text, (int)m_RenameColumnName.userData);
             //BindTable(m_TargetTable);
             RebuildRowData();
             SetOverlay(OverlayDialog.Hide);
@@ -469,7 +469,7 @@ namespace GDX.Editor.Windows
         }
         void RenameRow_RenameButtonClicked()
         {
-            m_TargetTable.RenameRow((int)m_RenameRowName.userData, m_RenameRowName.text);
+            m_TargetTable.SetRowName(m_RenameRowName.text, (int)m_RenameRowName.userData);
             //BindTable(m_TargetTable);
             RebuildRowData();
             SetOverlay(OverlayDialog.Hide);
