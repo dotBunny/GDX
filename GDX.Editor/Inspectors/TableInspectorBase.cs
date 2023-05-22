@@ -73,7 +73,7 @@ namespace GDX.Editor.Inspectors
         /// <inheritdoc />
         public override void OnInspectorGUI()
         {
-            GUILayout.Label("Editing an ITable is unsupported on this version of Unity.");
+            UnityEngine.GUILayout.Label("Editing an ITable is unsupported on this version of Unity.");
         }
 #endif
     }
