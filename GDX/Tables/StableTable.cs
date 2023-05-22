@@ -101,7 +101,7 @@ namespace GDX.Tables
             for (int i = 0; i < rowCount; i++)
             {
                 returnArray[i].Index = rowDenseIndexToIDMap[i];
-                returnArray[i].Name = empty;
+                returnArray[i].Name = rowNames[i];
             }
 
             return returnArray;
@@ -1302,7 +1302,7 @@ namespace GDX.Tables
 
         // Internal
 
-        internal int AddColumnInternal<T>(string columnName, ref ArrayHolder<T>[] allColumnsOfType, Serializable.SerializableTypes typeIndex, int insertAtSortedIndex)
+        internal int AddColumnInternal<T>(string columnName, ref ArrayHolder<T>[] allColumnsOfType, Serializable.SerializableTypes typeIndex, int insertAtColumnID)
         {
             int columnCount = allColumnsOfType?.Length ?? 0;
             Array.Resize(ref allColumnsOfType, columnCount + 1);
@@ -1336,6 +1336,8 @@ namespace GDX.Tables
                 }
             }
 
+            columnEntriesFreeListHead = columnIDToDenseIndexMap[columnID].columnDenseIndex;
+
             ref int[] denseIndexToIDMap = ref columnDenseIndexToIDMap[(int)typeIndex].TArray;
             int denseIndexToIDMapLength = denseIndexToIDMap?.Length ?? 0;
             Array.Resize(ref denseIndexToIDMap, denseIndexToIDMapLength + 1);
@@ -1345,7 +1347,7 @@ namespace GDX.Tables
             newEntry.columnDenseIndex = denseIndexToIDMapLength;
             newEntry.ColumnType = typeIndex;
 
-            insertAtSortedIndex = insertAtSortedIndex < 0 ? combinedColumnCount : insertAtSortedIndex;
+            int insertAtSortedIndex = insertAtColumnID < 0 ? combinedColumnCount : columnIDToSortOrderMap[insertAtColumnID];
             Array.Resize(ref sortedOrderToColumnIDMap, combinedColumnCount + 1);
             for (int i = combinedColumnCount; i > insertAtSortedIndex; i--)
             {
@@ -1354,7 +1356,7 @@ namespace GDX.Tables
                 columnIDToSortOrderMap[currentColumnID] = i;
             }
 
-            columnEntriesFreeListHead = columnIDToDenseIndexMap[columnID].columnDenseIndex;
+            
             columnIDToSortOrderMap[columnID] = insertAtSortedIndex;
             sortedOrderToColumnIDMap[insertAtSortedIndex] = columnID;
 
