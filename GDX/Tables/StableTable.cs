@@ -256,7 +256,7 @@ namespace GDX.Tables
             rowEntriesFreeListHead = rowIDToDenseIndexMap[rowID];
             rowIDToDenseIndexMap[rowID] = insertAt;
             rowDenseIndexToIDMap[insertAt] = rowID;
-            rowNames[insertAt] = rowName == null ? string.Empty : rowName;
+            rowNames[insertAt] = rowName == null ? rowID.ToString() : rowName;
 
             InsertRowsOfTypeInternal(ref allStringColumns, insertAt, 1);
             InsertRowsOfTypeInternal(ref allBoolColumns, insertAt, 1);
@@ -348,12 +348,14 @@ namespace GDX.Tables
             for (int i = 0; i < numberOfNewRowNames; i++)
             {
                 string currentRowName = rowNames[i];
-                rowNames[insertAt + i] = currentRowName == null ? emptyString : currentRowName;
+                int rowIDAt = rowDenseIndexToIDMap[insertAt + i];
+                rowNames[insertAt + i] = currentRowName == null ? rowIDAt.ToString() : currentRowName;
             }
 
             for (int i = numberOfNewRowNames; i < numberOfNewRows; i++)
             {
-                rowNames[insertAt + i] = string.Empty;
+                int rowIDAt = rowDenseIndexToIDMap[insertAt + i];
+                rowNames[insertAt + i] = rowIDAt.ToString();
             }
 
             rowEntriesFreeListHead = freeListHead;
@@ -442,16 +444,17 @@ namespace GDX.Tables
             }
 
             int numberOfNewRowNames = rowNames?.Length ?? 0;
-            string emptyString = string.Empty;
             for (int i = 0; i < numberOfNewRowNames; i++)
             {
                 string currentRowName = rowNames[i];
-                rowNames[insertAt + i] = currentRowName == null ? emptyString : currentRowName;
+                int rowIDAt = rowDenseIndexToIDMap[insertAt + i];
+                rowNames[insertAt + i] = currentRowName == null ? rowIDAt.ToString() : currentRowName;
             }
 
             for (int i = numberOfNewRowNames; i < numberOfNewRows; i++)
             {
-                rowNames[insertAt + i] = string.Empty;
+                int rowIDAt = rowDenseIndexToIDMap[insertAt + i];
+                rowNames[insertAt + i] = rowIDAt.ToString();
             }
 
             rowEntriesFreeListHead = freeListHead;
@@ -1295,13 +1298,14 @@ namespace GDX.Tables
             Array.Resize(ref allColumnsOfType, columnCount + 1);
             allColumnsOfType[columnCount].TArray = new T[rowCount];
 
+            int columnID = columnEntriesFreeListHead;
             string[] columnNamesForType = allColumnNames[(int)typeIndex].TArray;
             int columnNamesCount = columnNamesForType?.Length ?? 0;
             Array.Resize(ref columnNamesForType, columnNamesCount + 1);
-            columnNamesForType[columnNamesCount] = columnName;
+            columnNamesForType[columnNamesCount] = columnName == null ? columnID.ToString() : columnName;
             allColumnNames[(int)typeIndex].TArray = columnNamesForType;
 
-            int columnID = columnEntriesFreeListHead;
+           
             int columnIDToDenseIndexMapLength = columnIDToDenseIndexMap?.Length ?? 0;
             if (columnID >= columnIDToDenseIndexMapLength)
             {
