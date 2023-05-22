@@ -228,10 +228,10 @@ namespace GDX.Tables
             int rowIDToDenseIndexMapLength = rowIDToDenseIndexMap?.Length ?? 0;
             if (rowID >= rowIDToDenseIndexMapLength)
             {
-                int newSize = rowID * 2;
+                int newSize = rowID * 2; 
                 newSize = newSize == 0 ? 1 : newSize;
                 Array.Resize(ref rowIDToDenseIndexMap, newSize);
-                for (int i = 0; i < rowID; i++)
+                for (int i = rowID; i < newSize; i++)
                 {
                     rowIDToDenseIndexMap[rowID + i] = rowID + i + 1;
                 }
@@ -1308,7 +1308,7 @@ namespace GDX.Tables
                 int newSize = columnID * 2;
                 newSize = newSize == 0 ? 1 : newSize;
                 Array.Resize(ref columnIDToDenseIndexMap, newSize);
-                for (int i = 0; i < columnID; i++)
+                for (int i = columnID; i < newSize; i++)
                 {
                     ref ColumnEntry entry = ref columnIDToDenseIndexMap[columnID + i];
                     entry.columnDenseIndex = columnID + i + 1;
