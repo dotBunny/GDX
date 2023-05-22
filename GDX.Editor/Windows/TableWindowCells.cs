@@ -152,7 +152,7 @@ namespace GDX.Editor.Windows
 
         internal static void BindIntCell(VisualElement cell, int row)
         {
-            SliderInt field = (SliderInt)cell;
+            IntegerField field = (IntegerField)cell;
             TableWindowCellMapping map = k_CellToMapping[cell];
 
             IntCellValue cellValue =
