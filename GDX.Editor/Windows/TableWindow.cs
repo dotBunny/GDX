@@ -63,6 +63,7 @@ namespace GDX.Editor.Windows
 
         ITable m_TargetTable;
 
+        Toolbar m_Toolbar;
         Button m_ToolbarAddColumn;
         Button m_ToolbarAddRow;
 
@@ -354,10 +355,11 @@ namespace GDX.Editor.Windows
 
         void BindWindow()
         {
-            m_ToolbarAddColumn = rootVisualElement.Q<Button>("gdx-table-toolbar-add-column");
+            m_Toolbar = rootVisualElement.Q<Toolbar>("gdx-table-toolbar");
+            m_ToolbarAddColumn = m_Toolbar.Q<Button>("gdx-table-toolbar-add-column");
             m_ToolbarAddColumn.clicked += AddColumn;
 
-            m_ToolbarAddRow = rootVisualElement.Q<Button>("gdx-table-toolbar-add-row");
+            m_ToolbarAddRow = m_Toolbar.Q<Button>("gdx-table-toolbar-add-row");
             m_ToolbarAddRow.clicked += AddRow;
 
             m_Overlay = rootVisualElement.Q<VisualElement>("gdx-table-overlay");
@@ -491,31 +493,59 @@ namespace GDX.Editor.Windows
 
         void SetOverlay(OverlayDialog dialog)
         {
+            // Handle focus
+            if (dialog == OverlayDialog.Hide)
+            {
+                m_Toolbar.focusable = true;
+                m_ToolbarAddColumn.focusable = true;
+                m_ToolbarAddRow.focusable = true;
+                m_Overlay.focusable = false;
+                if (m_TableView != null)
+                {
+                    m_TableView.focusable = true;
+                }
+            }
+            else
+            {
+                m_Toolbar.focusable = false;
+                m_ToolbarAddColumn.focusable = false;
+                m_ToolbarAddRow.focusable = false;
+                m_TableView.focusable = false;
+                m_Overlay.focusable = true;
+            }
+
             switch (dialog)
             {
                 case OverlayDialog.AddColumn:
                     m_Overlay.style.display = DisplayStyle.Flex;
                     m_AddColumnOverlay.style.display = DisplayStyle.Flex;
+                    m_AddColumnAddButton.Focus();
                     break;
                 case OverlayDialog.AddRow:
                     m_Overlay.style.display = DisplayStyle.Flex;
                     m_AddRowOverlay.style.display = DisplayStyle.Flex;
+                    m_AddRowAddButton.Focus();
                     break;
                 case OverlayDialog.RenameColumn:
                     m_Overlay.style.display = DisplayStyle.Flex;
                     m_RenameColumnOverlay.style.display = DisplayStyle.Flex;
+                    m_RenameColumnName.Focus();
                     break;
                 case OverlayDialog.RenameRow:
                     m_Overlay.style.display = DisplayStyle.Flex;
                     m_RenameRowOverlay.style.display = DisplayStyle.Flex;
+                    m_RenameRowName.Focus();
                     break;
                 default:
                     m_Overlay.style.display = DisplayStyle.None;
-
                     m_AddColumnOverlay.style.display = DisplayStyle.None;
                     m_AddRowOverlay.style.display = DisplayStyle.None;
                     m_RenameColumnOverlay.style.display = DisplayStyle.None;
                     m_RenameRowOverlay.style.display = DisplayStyle.None;
+                    if (m_TableView != null)
+                    {
+                        m_TableView.Focus();
+                    }
                     break;
             }
         }
