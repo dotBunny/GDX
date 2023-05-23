@@ -13,12 +13,15 @@ namespace GDX.Tables
     [Serializable]
     public class StableTable : ScriptableObject, ITable
     {
+
         [Serializable]
         internal struct ColumnEntry
         {
             public Serializable.SerializableTypes ColumnType;
             public int columnDenseIndex;
         }
+
+        [SerializeField] internal string m_DisplayName = "GDXStableTable";
 
         [SerializeField] internal ArrayHolder<string>[] allStringColumns;
         [SerializeField] internal ArrayHolder<bool>[] allBoolColumns;
@@ -75,6 +78,7 @@ namespace GDX.Tables
         [SerializeField]
         internal ulong dataVersion = 1;
 
+        [SerializeField] BitArray8 m_Flags;
 
         public ulong GetDataVersion()
         {
@@ -91,6 +95,26 @@ namespace GDX.Tables
         public int GetRowCount()
         {
             return rowCount;
+        }
+
+        public string GetDisplayName()
+        {
+            return m_DisplayName;
+        }
+
+        public void SetDisplayName(string displayName)
+        {
+            m_DisplayName = displayName;
+        }
+
+        public bool GetFlag(byte index)
+        {
+            return m_Flags[index];
+        }
+
+        public void SetFlag(byte index, bool toggle)
+        {
+            m_Flags[index] = toggle;
         }
 
         public ITable.RowDescription[] GetAllRowDescriptions()
@@ -1356,7 +1380,7 @@ namespace GDX.Tables
                 columnIDToSortOrderMap[currentColumnID] = i;
             }
 
-            
+
             columnIDToSortOrderMap[columnID] = insertAtSortedIndex;
             sortedOrderToColumnIDMap[insertAtSortedIndex] = columnID;
 

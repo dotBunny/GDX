@@ -13,8 +13,8 @@ namespace GDX.Editor.Windows
 #if UNITY_2022_2_OR_NEWER
     static class TableWindowCells
     {
-        const string k_RowHeaderFieldName = "gdx-data-row-header";
-        const string k_CellFieldName = "gdx-data-field";
+        const string k_RowHeaderFieldName = "gdx-table-row-header";
+        const string k_CellFieldName = "gdx-table-field";
 
         static readonly Dictionary<VisualElement, TableWindowCellMapping> k_CellToMapping =
             new Dictionary<VisualElement, TableWindowCellMapping>();
