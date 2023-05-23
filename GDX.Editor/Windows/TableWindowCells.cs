@@ -13,6 +13,7 @@ namespace GDX.Editor.Windows
 #if UNITY_2022_2_OR_NEWER
     static class TableWindowCells
     {
+        const string k_RowHeaderFieldName = "gdx-data-row-header";
         const string k_CellFieldName = "gdx-data-field";
 
         static readonly Dictionary<VisualElement, TableWindowCellMapping> k_CellToMapping =
@@ -766,6 +767,11 @@ namespace GDX.Editor.Windows
             ObjectField newField = new ObjectField(null) { name = k_CellFieldName };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { KnownTableIndex = table, ColumnID = column });
             return newField;
+        }
+
+        internal static VisualElement MakeRowHeader()
+        {
+            return new Label { name = k_RowHeaderFieldName };
         }
 
         struct TableWindowCellMapping

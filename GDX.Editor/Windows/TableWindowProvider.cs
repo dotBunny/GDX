@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using GDX.Tables;
 using UnityEditor;
 using UnityEditor.Callbacks;
-using UnityEditor.ShortcutManagement;
 using UnityEngine;
 
 namespace GDX.Editor.Windows
@@ -24,20 +23,6 @@ namespace GDX.Editor.Windows
         static int s_TableWindowTicketHead = 0;
         static readonly Dictionary<TableWindow, int> k_TableWindowToTicket = new Dictionary<TableWindow, int>(5);
         static readonly Dictionary<int, TableWindow> k_TicketToTableWindow = new Dictionary<int, TableWindow>(5);
-
-        [GDXShortcut("Add Row",  KeyCode.R, ShortcutModifiers.Control | ShortcutModifiers.Shift, typeof(TableWindow))]
-        internal static void ShortcutAddRow()
-        {
-            TableWindow table = (TableWindow)EditorWindow.focusedWindow;
-            if(table != null) table.AddRow();
-        }
-
-        [GDXShortcut("Add Column", KeyCode.Plus, ShortcutModifiers.Control | ShortcutModifiers.Shift, typeof(TableWindow))]
-        internal static void ShortcutAddColumn()
-        {
-            TableWindow table = (TableWindow)EditorWindow.focusedWindow;
-            if(table != null) table.AddColumn();
-        }
 
         internal static ITable GetTable(int ticket)
         {

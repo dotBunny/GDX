@@ -642,3 +642,11 @@ Button.gdx-small-button {
     background-color: #ececec;
 }
 
+#gdx-data-row-header
+{
+    height: 100%;
+    width: 100%;
+    -unity-text-align: middle-left;
+    padding-left: 5px;
+}
+
