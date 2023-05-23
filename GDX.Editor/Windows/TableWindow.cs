@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using GDX.Editor.Inspectors;
 using GDX.Tables;
 using UnityEditor;
+using UnityEditor.ShortcutManagement;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -398,14 +399,35 @@ namespace GDX.Editor.Windows
 
         void OnKeyboardEvent(KeyDownEvent evt)
         {
+            // Escape to cancel overlay
             if (evt.keyCode == KeyCode.Escape && m_OverlayState != OverlayState.Hide)
             {
                 CancelOverlay();
             }
+
+            // Submit on enter
+            if (evt.keyCode == KeyCode.Percent || evt.keyCode == KeyCode.Return)
+            {
+                switch (m_OverlayState)
+                {
+                    case OverlayState.AddColumn:
+                        AddColumn_AddButtonClicked();
+                        break;
+                    case OverlayState.AddRow:
+                        AddRow_AddButtonClicked();
+                        break;
+                    case OverlayState.RenameColumn:
+                        RenameColumn_RenameButtonClicked();
+                        break;
+                    case OverlayState.RenameRow:
+                        RenameRow_RenameButtonClicked();
+                        break;
+                }
+            }
         }
 
 
-        void AddColumn()
+        public void AddColumn()
         {
             m_AddColumnName.SetValueWithoutNotify($"Column_{Core.Random.NextInteger(1, 9999).ToString()}");
             SetOverlay(OverlayState.AddColumn);
@@ -466,8 +488,7 @@ namespace GDX.Editor.Windows
 
             SetOverlay(OverlayState.Hide);
         }
-
-        void AddRow()
+        public void AddRow()
         {
             m_AddRowName.SetValueWithoutNotify($"Row_{Core.Random.NextInteger(1, 9999).ToString()}");
             SetOverlay(OverlayState.AddRow);
