@@ -5,6 +5,9 @@
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
+#if !UNITY_2022_2_OR_NEWER
+using UnityEngine;
+#endif
 
 namespace GDX.Editor.PropertyDrawers.CellValues
 {
