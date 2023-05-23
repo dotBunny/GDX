@@ -84,6 +84,22 @@ namespace GDX
         }
 
         /// <summary>
+        ///     Invoke a known private method on an object.
+        /// </summary>
+        /// <param name="targetObject">The ambiguous object to invoke a method on.</param>
+        /// <param name="method">The name of the method to invoke.</param>
+        /// <param name="parameters">Any parameters that should be passed to the method?</param>
+        /// <param name="flags">The <paramref name="method"/>'s access flags.</param>
+        /// <returns>An <see cref="object"/> of the return value. This can be null.</returns>
+        public static object InvokeMethod(object targetObject, string method, object[] parameters = null,
+            BindingFlags flags = PrivateFieldFlags)
+        {
+            Type targetType = targetObject.GetType();
+            MethodInfo targetMethod = targetType.GetMethod(method, flags);
+            return targetMethod != null ? targetMethod.Invoke(targetObject, parameters ?? Core.EmptyObjectArray) : null;
+        }
+
+        /// <summary>
         ///     Set the field or property value of a specific <paramref name="targetObject"/>, which may not be
         ///     normally accessible.
         /// </summary>

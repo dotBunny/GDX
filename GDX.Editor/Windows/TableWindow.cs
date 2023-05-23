@@ -48,6 +48,7 @@ namespace GDX.Editor.Windows
         ScriptableObject m_ScriptableObject;
 
         MultiColumnListView m_TableView;
+        VisualElement m_TableViewHeader;
         Columns m_TableViewColumns;
 
         ITable m_TargetTable;
@@ -305,7 +306,14 @@ namespace GDX.Editor.Windows
             };
             BuildTableWindowContextMenu(m_TableView);
             rootElement.Insert(1, m_TableView);
+
+            // Link other parts of table that we need for functionality
+            m_TableViewHeader = m_TableView.Q<VisualElement>(null, "unity-multi-column-header");
+
             RebuildRowData();
+
+            // Next frame resize things
+            EditorApplication.delayCall += AutoResizeColumns;
         }
 
         void RebuildRowData()
@@ -319,6 +327,11 @@ namespace GDX.Editor.Windows
             m_TableView.RefreshItems();
 
             // TODO : Trigger update of each cell? or does it use version to know it needs to update
+        }
+
+        void AutoResizeColumns()
+        {
+            Reflection.InvokeMethod(m_TableViewHeader, "ResizeToFit");
         }
 
 
