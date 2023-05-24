@@ -320,7 +320,7 @@ namespace GDX.Editor.Windows.Tables
                 evt.menu.AppendAction("Rename",
                     a => parentWindow.GetController().ShowRenameColumnDialog(stableColumnID));
                 evt.menu.AppendAction("Remove",
-                    a => parentWindow.GetController().ShowRemoveColumnDialog(stableColumnID));
+                    a => parentWindow.GetController().ShowRemoveColumnDialog(stableColumnID), CanRemoveColumn);
                 evt.menu.AppendSeparator();
             }));
         }
@@ -335,6 +335,11 @@ namespace GDX.Editor.Windows.Tables
                 evt.menu.AppendAction("Remove",
                     a => parentWindow.GetController().ShowRemoveRowDialog(stableRowID));
             }));
+        }
+
+        DropdownMenuAction.Status CanRemoveColumn(DropdownMenuAction action)
+        {
+            return parentWindow.GetTable().GetColumnCount() > 1 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
         }
     }
 #endif
