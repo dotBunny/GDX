@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace GDX.Tables.CellValues
 {
+    [System.Serializable]
     public struct LayerMaskCellValue
     {
         LayerMask m_CachedValue;

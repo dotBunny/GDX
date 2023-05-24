@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace GDX.Tables.CellValues
 {
+    [System.Serializable]
     public struct Hash128CellValue
     {
         Hash128 m_CachedValue;

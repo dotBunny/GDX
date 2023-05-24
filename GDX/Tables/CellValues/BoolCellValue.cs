@@ -4,6 +4,7 @@
 
 namespace GDX.Tables.CellValues
 {
+ [System.Serializable]
     public struct BoolCellValue
     {
         bool m_CachedValue;

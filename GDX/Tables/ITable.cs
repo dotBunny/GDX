@@ -2,12 +2,15 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using GDX.Collections;
 using UnityEngine;
 
 namespace GDX.Tables
 {
     public interface ITable
     {
+        public const int EnableUndoSetting = 0;
+
         int AddColumn(Serializable.SerializableTypes columnType, string columnName, int insertAt = -1);
         void RemoveColumn(Serializable.SerializableTypes columnType, int removeAt = -1);
         int AddRow(string rowName = null, int insertAt = -1);
@@ -26,6 +29,11 @@ namespace GDX.Tables
         /// </summary>
         /// <returns>A count of rows.</returns>
         int GetRowCount();
+
+        string GetDisplayName();
+        void SetDisplayName(string displayName);
+        bool GetFlag(byte index);
+        void SetFlag(byte index, bool toggle);
 
         RowDescription[] GetAllRowDescriptions();
         RowDescription GetRowDescription(string name);

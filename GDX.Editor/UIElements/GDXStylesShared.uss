@@ -586,7 +586,6 @@ Button.gdx-small-button {
 #gdx-changelog .dot-added
 {
     background-image: resource('Icons/sv_icon_dot11_sml.png');
-
 }
 #gdx-changelog .dot-changed
 {
@@ -642,3 +641,15 @@ Button.gdx-small-button {
     background-color: #ececec;
 }
 
+#gdx-table-row-header
+{
+    height: 100%;
+    width: 100%;
+    -unity-text-align: middle-left;
+    padding-left: 5px;
+}
+
+#gdx-data-dtest
+{
+    background-image: resource('Icons/sv_icon_dot11_sml.png');
+}
