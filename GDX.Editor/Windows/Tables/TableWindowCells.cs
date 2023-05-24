@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
+using GDX.Collections.Generic;
 using GDX.Tables.CellValues;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -22,6 +23,24 @@ namespace GDX.Editor.Windows.Tables
         internal static void DestroyCell(VisualElement cell)
         {
             k_CellToMapping.Remove(cell);
+        }
+
+        internal static void CleanTableReferences(int knownTableIndex)
+        {
+            int count = k_CellToMapping.Count;
+            SimpleList<VisualElement> elementsToClean = new SimpleList<VisualElement>(count);
+            foreach (KeyValuePair<VisualElement, TableWindowCellMapping> kvp in k_CellToMapping)
+            {
+                if (kvp.Value.KnownTableIndex == knownTableIndex)
+                {
+                    elementsToClean.AddUnchecked(kvp.Key);
+                }
+            }
+
+            for (int i = 0; i < elementsToClean.Count; i++)
+            {
+                k_CellToMapping.Remove(elementsToClean.Array[i]);
+            }
         }
 
         internal static void BindStringCell(VisualElement cell, int row)
