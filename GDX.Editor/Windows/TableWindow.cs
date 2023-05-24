@@ -698,10 +698,17 @@ namespace GDX.Editor.Windows
             Label label = (Label)cell;
             ITable.RowDescription description = k_RowDescriptions[row];
             label.text = description.Name;
-            label.AddManipulator(new ContextualMenuManipulator(evt =>
+            //BindRowContextMenu(label, description.Index);
+            BindRowContextMenu(label.parent.parent, description.Index);
+        }
+
+        void BindRowContextMenu(VisualElement element, int row)
+        {
+            element.AddManipulator(new ContextualMenuManipulator(evt =>
             {
-                evt.menu.AppendAction("Rename", a => RenameRow(description.Index));
-                evt.menu.AppendAction("Remove", a => RemoveRow(description.Index));
+                evt.menu.AppendSeparator();
+                evt.menu.AppendAction("Rename", a => RenameRow(row));
+                evt.menu.AppendAction("Remove", a => RemoveRow(row));
             }));
         }
 
