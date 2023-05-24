@@ -1470,19 +1470,22 @@ namespace GDX.Tables
         internal ref T GetCellRef<T>(int rowID, int columnID, ref ArrayHolder<T>[] allColumnsOfType)
         {
             int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
-            return ref allColumnsOfType[column][rowID];
+            int row = rowIDToDenseIndexMap[rowID];
+            return ref allColumnsOfType[column][row];
         }
 
         internal T GetCell<T>(int rowID, int columnID, ref ArrayHolder<T>[] allColumnsOfType)
         {
             int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
-            return allColumnsOfType[column][rowID];
+            int row = rowIDToDenseIndexMap[rowID];
+            return allColumnsOfType[column][row];
         }
 
         internal ulong SetCell<T>(int rowID, int columnID, ref ArrayHolder<T>[] allColumnsOfType, T value)
         {
             int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
-            allColumnsOfType[column][rowID] = value;
+            int row = rowIDToDenseIndexMap[rowID];
+            allColumnsOfType[column][row] = value;
             dataVersion++;
             return dataVersion;
         }
