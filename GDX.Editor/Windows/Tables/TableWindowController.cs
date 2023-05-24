@@ -106,6 +106,10 @@ namespace GDX.Editor.Windows.Tables
         public bool RemoveColumn(int internalIndex)
         {
             ITable table = m_TableWindow.GetTable();
+            if (table.GetColumnCount() <= 1)
+            {
+                return false;
+            }
             RegisterUndo($"Remove Column ({table.GetColumnName(internalIndex)})");
             table.RemoveColumn(m_TableWindow.GetView().GetColumnType(internalIndex), internalIndex);
             m_TableWindow.BindTable(table);
