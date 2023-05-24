@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Collections;
 using UnityEngine;
 
 namespace GDX.Tables
@@ -38,6 +37,9 @@ namespace GDX.Tables
         RowDescription[] GetAllRowDescriptions();
         RowDescription GetRowDescription(string name);
         RowDescription GetRowDescription(int order);
+
+        void SetAllRowDescriptionsOrder(RowDescription[] updatedOrders);
+
         /// <summary>
         /// Returns an ordered array of all columns descriptions
         /// </summary>
@@ -45,6 +47,7 @@ namespace GDX.Tables
         ColumnDescription[] GetAllColumnDescriptions();
         ColumnDescription GetColumnDescription(string name);
         ColumnDescription GetColumnDescription(int order);
+        void SetAllColumnDescriptionsOrder(ColumnDescription[] updatedOrders);
 
         void SetColumnName(string columnName, int column);
         string GetColumnName(int column);
@@ -119,12 +122,14 @@ namespace GDX.Tables
             public string Name;
             public int InternalIndex;
             public Serializable.SerializableTypes Type;
+            public int SortingOrder;
         }
 
         public struct RowDescription
         {
             public string Name;
             public int InternalIndex;
+            public int SortingOrder;
         }
     }
 }

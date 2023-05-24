@@ -126,6 +126,7 @@ namespace GDX.Tables
             {
                 returnArray[i].InternalIndex = rowDenseIndexToIDMap[i];
                 returnArray[i].Name = rowNames[i];
+                returnArray[i].SortingOrder = i; // TODO: @adam validate
             }
 
             return returnArray;
@@ -141,7 +142,8 @@ namespace GDX.Tables
                     return new ITable.RowDescription
                     {
                         InternalIndex = rowDenseIndexToIDMap[i],
-                        Name = nameAt
+                        Name = nameAt,
+                        SortingOrder = i // TODO: @adam validate
                     };
                 }
             }
@@ -154,8 +156,15 @@ namespace GDX.Tables
             return new ITable.RowDescription
             {
                 InternalIndex = rowDenseIndexToIDMap[order],
-                Name = rowNames[order]
+                Name = rowNames[order],
+                SortingOrder =  order // TODO: @adam validate
             };
+        }
+
+        public void SetAllRowDescriptionsOrder(ITable.RowDescription[] updatedOrders)
+        {
+            // TODO: @adam array coming in will have the row stable ID (internalIndex), but the sorting order will be changed
+            throw new NotImplementedException();
         }
 
         public ITable.ColumnDescription GetColumnDescription(string name)
@@ -179,7 +188,8 @@ namespace GDX.Tables
                             {
                                 InternalIndex = columnID,
                                 Name = nameAt,
-                                Type = columnEntry.ColumnType
+                                Type = columnEntry.ColumnType,
+                                SortingOrder = columnID // TODO: @adam this right?
                             };
                         }
                     }
@@ -200,8 +210,15 @@ namespace GDX.Tables
             {
                 InternalIndex = idAtOrderedIndex,
                 Name = columnName,
-                Type = columnEntry.ColumnType
+                Type = columnEntry.ColumnType,
+                SortingOrder = order // TODO: @adam validate
             };
+        }
+
+        public void SetAllColumnDescriptionsOrder(ITable.ColumnDescription[] updatedOrders)
+        {
+            // TODO: @adam array coming in will have the column stable ID (internalIndex), but the sorting order will be changed
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
@@ -223,7 +240,8 @@ namespace GDX.Tables
                 {
                     Name = name,
                     InternalIndex = columnID,
-                    Type = entryForID.ColumnType
+                    Type = entryForID.ColumnType,
+                    SortingOrder = i // TODO: @adam validate
                 };
             }
 
