@@ -37,8 +37,7 @@ namespace GDX.Tables
         RowDescription[] GetAllRowDescriptions();
         RowDescription GetRowDescription(string name);
         RowDescription GetRowDescription(int order);
-
-        void SetAllRowDescriptionsOrder(RowDescription[] updatedOrders);
+        void SetAllRowDescriptionsOrder(RowDescription[] orderedRows);
 
         /// <summary>
         /// Returns an ordered array of all columns descriptions
@@ -47,7 +46,7 @@ namespace GDX.Tables
         ColumnDescription[] GetAllColumnDescriptions();
         ColumnDescription GetColumnDescription(string name);
         ColumnDescription GetColumnDescription(int order);
-        void SetAllColumnDescriptionsOrder(ColumnDescription[] updatedOrders);
+        void SetAllColumnDescriptionsOrder(ColumnDescription[] orderedColumns);
 
         void SetColumnName(string columnName, int column);
         string GetColumnName(int column);
@@ -122,14 +121,12 @@ namespace GDX.Tables
             public string Name;
             public int InternalIndex;
             public Serializable.SerializableTypes Type;
-            public int SortingOrder;
         }
 
         public struct RowDescription
         {
             public string Name;
             public int InternalIndex;
-            public int SortingOrder;
         }
     }
 }

@@ -126,7 +126,6 @@ namespace GDX.Tables
             {
                 returnArray[i].InternalIndex = rowDenseIndexToIDMap[i];
                 returnArray[i].Name = rowNames[i];
-                returnArray[i].SortingOrder = i; // TODO: @adam validate
             }
 
             return returnArray;
@@ -143,7 +142,6 @@ namespace GDX.Tables
                     {
                         InternalIndex = rowDenseIndexToIDMap[i],
                         Name = nameAt,
-                        SortingOrder = i // TODO: @adam validate
                     };
                 }
             }
@@ -157,13 +155,12 @@ namespace GDX.Tables
             {
                 InternalIndex = rowDenseIndexToIDMap[order],
                 Name = rowNames[order],
-                SortingOrder =  order // TODO: @adam validate
             };
         }
 
-        public void SetAllRowDescriptionsOrder(ITable.RowDescription[] updatedOrders)
+        public void SetAllRowDescriptionsOrder(ITable.RowDescription[] orderedRows)
         {
-            // TODO: @adam array coming in will have the row stable ID (internalIndex), but the sorting order will be changed
+            // TODO: @adam array coming in be in the new order, just use the internalIndex (stable to reorder inside here
             throw new NotImplementedException();
         }
 
@@ -189,7 +186,6 @@ namespace GDX.Tables
                                 InternalIndex = columnID,
                                 Name = nameAt,
                                 Type = columnEntry.ColumnType,
-                                SortingOrder = columnID // TODO: @adam this right?
                             };
                         }
                     }
@@ -211,13 +207,12 @@ namespace GDX.Tables
                 InternalIndex = idAtOrderedIndex,
                 Name = columnName,
                 Type = columnEntry.ColumnType,
-                SortingOrder = order // TODO: @adam validate
             };
         }
 
-        public void SetAllColumnDescriptionsOrder(ITable.ColumnDescription[] updatedOrders)
+        public void SetAllColumnDescriptionsOrder(ITable.ColumnDescription[] orderedColumns)
         {
-            // TODO: @adam array coming in will have the column stable ID (internalIndex), but the sorting order will be changed
+            // TODO: @adam array coming in be in the new order, just use the internalIndex (stable to reorder inside here
             throw new NotImplementedException();
         }
 
@@ -241,7 +236,6 @@ namespace GDX.Tables
                     Name = name,
                     InternalIndex = columnID,
                     Type = entryForID.ColumnType,
-                    SortingOrder = i // TODO: @adam validate
                 };
             }
 
