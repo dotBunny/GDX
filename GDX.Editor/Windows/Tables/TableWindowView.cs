@@ -14,7 +14,7 @@ namespace GDX.Editor.Windows.Tables
     public class TableWindowView
     {
         readonly List<ITable.RowDescription> k_RowDescriptions = new List<ITable.RowDescription>();
-        readonly ITable.ColumnDescription[] m_ColumnDescriptions;
+        readonly List<ITable.ColumnDescription> m_ColumnDescriptions = new List<ITable.ColumnDescription>();
         readonly MultiColumnListView m_MultiColumnListView;
         readonly Columns m_TableViewColumns;
         readonly VisualElement m_TableViewHeader;
@@ -33,32 +33,47 @@ namespace GDX.Editor.Windows.Tables
             }
 
             ITable table = window.GetTable();
-            int columnCount = table.GetColumnCount();
-            m_ColumnDescriptions = table.GetAllColumnDescriptions();
+            int tableTicket = TableWindowProvider.RegisterTable(table);
+
+
+            // Add row header column ahead of actual columns
+            m_ColumnDescriptions.Add(new ITable.ColumnDescription
+            {
+                Name = "RowName", InternalIndex = -1, Type = Serializable.SerializableTypes.String
+            });
+            m_ColumnDescriptions.AddRange(table.GetAllColumnDescriptions());
 
             // Generate columns for MCLV
             m_TableViewColumns = new Columns { reorderable = true, resizable = true };
-            int tableTicket = TableWindowProvider.RegisterTable(table);
 
+            int columnCount = m_ColumnDescriptions.Count;
             Length columnSizePercentage = Length.Percent(100f / columnCount);
 
-            for (int i = 0; i < columnCount; i++)
+            m_TableViewColumns.Insert(0,
+                new Column
+                {
+                    makeCell = TableWindowCells.MakeRowHeader,
+                    bindCell = BindRowHeader,
+                    name = "RowName",
+                    title = "Row Name"
+                });
+            for (int i = 1; i < columnCount; i++)
             {
-                ref ITable.ColumnDescription refColumn = ref m_ColumnDescriptions[i];
-                int columnIndex = refColumn.InternalIndex;
+                ITable.ColumnDescription columnDescription = m_ColumnDescriptions[i];
+                int columnIndex = columnDescription.InternalIndex;
 
                 // We embed the column stable index
                 Column column = new Column
                 {
                     name = $"Column_{columnIndex}",
-                    title = refColumn.Name,
+                    title = columnDescription.Name,
                     width = columnSizePercentage,
                     destroyCell = TableWindowCells.DestroyCell,
                     resizable = true
                 };
 
                 // Customize column based on type
-                switch (refColumn.Type)
+                switch (columnDescription.Type)
                 {
                     case Serializable.SerializableTypes.String:
                         column.makeCell += () => TableWindowCells.MakeStringCell(tableTicket, columnIndex);
@@ -181,16 +196,6 @@ namespace GDX.Editor.Windows.Tables
                 m_TableViewColumns.Add(column);
             }
 
-            // Add row header column
-            m_TableViewColumns.Insert(0,
-                new Column
-                {
-                    makeCell = TableWindowCells.MakeRowHeader,
-                    bindCell = BindRowHeader,
-                    name = "RowName",
-                    title = "Row Name"
-                });
-
             // Create MCLV
             m_MultiColumnListView = new MultiColumnListView(m_TableViewColumns)
             {
@@ -280,7 +285,7 @@ namespace GDX.Editor.Windows.Tables
                 int columnInteger = int.Parse(column);
                 if (columnInteger == internalIndex)
                 {
-                    return m_ColumnDescriptions[i-1].Type;
+                    return m_ColumnDescriptions[i].Type;
                 }
             }
 
@@ -308,7 +313,12 @@ namespace GDX.Editor.Windows.Tables
 
             if (foundIndex != -1)
             {
-                m_ColumnDescriptions[foundIndex-1].Name = newName;
+                m_ColumnDescriptions[foundIndex] = new ITable.ColumnDescription()
+                {
+                    Name = newName,
+                    InternalIndex = m_ColumnDescriptions[foundIndex].InternalIndex,
+                    Type = m_ColumnDescriptions[foundIndex].Type
+                };
                 m_TableViewColumns[foundIndex].title = newName;
             }
         }
