@@ -4,7 +4,7 @@
 
 using UnityEngine.UIElements;
 
-namespace GDX.Editor.ProjectSettings
+namespace GDX.Editor.Windows.ProjectSettings
 {
     public interface IConfigSection
     {

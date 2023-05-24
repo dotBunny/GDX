@@ -9,7 +9,7 @@ using GDX.Threading;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GDX.Editor
+namespace GDX.Editor.Windows.ProjectSettings
 {
     public static class ChangelogProvider
     {

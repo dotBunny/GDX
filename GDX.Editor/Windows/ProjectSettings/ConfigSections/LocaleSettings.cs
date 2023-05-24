@@ -9,7 +9,7 @@ using UnityEditor.UIElements;
 #endif
 
 
-namespace GDX.Editor.ProjectSettings
+namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 {
     /// <summary>
     ///     Locale Settings

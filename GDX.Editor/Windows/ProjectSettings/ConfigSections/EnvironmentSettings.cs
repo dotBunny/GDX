@@ -5,7 +5,7 @@
 using UnityEngine.UIElements;
 using Toggle = UnityEngine.UIElements.Toggle;
 
-namespace GDX.Editor.ProjectSettings
+namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 {
     /// <summary>
     ///     Environment Settings

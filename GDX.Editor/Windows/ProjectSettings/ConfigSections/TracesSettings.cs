@@ -11,7 +11,7 @@ using UnityEngine.UI;
 using System.Reflection;
 #endif
 
-namespace GDX.Editor.ProjectSettings
+namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 {
     /// <summary>
     ///     Environment Settings

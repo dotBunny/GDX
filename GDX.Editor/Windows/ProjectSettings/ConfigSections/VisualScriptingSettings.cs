@@ -12,7 +12,7 @@ using Unity.VisualScripting;
 
 using UnityEngine.UIElements;
 
-namespace GDX.Editor.ProjectSettings
+namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 {
     /// <summary>
     ///     Visual Scripting Settings

@@ -6,7 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using GDX.Collections.Generic;
-using GDX.Editor.ProjectSettings;
+using GDX.Editor.Windows.ProjectSettings;
+using GDX.Editor.Windows.ProjectSettings.ConfigSections;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -14,7 +15,7 @@ using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
 using Label = UnityEngine.UIElements.Label;
 
-namespace GDX.Editor
+namespace GDX.Editor.Windows.ProjectSettings
 {
     /// <summary>
     ///     A settings provider scoped to the project which is backed by the <see cref="Config"/>.
