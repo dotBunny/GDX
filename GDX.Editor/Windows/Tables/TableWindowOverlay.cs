@@ -11,58 +11,51 @@ namespace GDX.Editor.Windows.Tables
 #if UNITY_2022_2_OR_NEWER
     class TableWindowOverlay
     {
-        VisualElement rootElement;
-        TableWindow parentWindow;
-
-        Button m_AddColumnAddButton;
-        Button m_AddColumnCancelButton;
-        TextField m_AddColumnName;
-
+        readonly VisualElement m_RootElement;
+        readonly TableWindow m_TableWindow;
 
         VisualElement m_AddColumnOverlay;
+        TextField m_AddColumnName;
         PopupField<int> m_AddColumnType;
+        Button m_AddColumnAddButton;
+        Button m_AddColumnCancelButton;
+
         VisualElement m_AddRowOverlay;
+        TextField m_AddRowName;
         Button m_AddRowAddButton;
         Button m_AddRowCancelButton;
-        TextField m_AddRowName;
-        Button m_RenameColumnCancelButton;
-        TextField m_RenameColumnName;
 
-        VisualElement m_RenameColumnOverlay;
-        Button m_RenameColumnRenameButton;
-        Button m_RenameRowCancelButton;
-        TextField m_RenameRowName;
+        VisualElement m_RenameOverlay;
+        Button m_RenameAcceptButton;
+        Button m_RenameCancelButton;
+        TextField m_RenameName;
+        Label m_RenameTitleLabel;
 
-        VisualElement m_RenameRowOverlay;
-        Button m_RenameRowRenameButton;
+        VisualElement m_ConfirmationOverlay;
+        Button m_ConfirmationAcceptButton;
+        Button m_ConfirmationCancelButton;
+        Label m_ConfirmationTitleLabel;
+        Label m_ConfirmationMessageLabel;
 
-        OverlayState m_OverlayState;
-
-        int cachedIndex = 0;
-
-        public int GetCachedIndex()
-        {
-            return cachedIndex;
-        }
-
+        OverlayState m_CurrentState;
+        ConfirmationState m_ConfirmationState;
+        int m_CachedIndex;
 
         internal TableWindowOverlay(VisualElement element, TableWindow window)
         {
-            rootElement = element;
-            parentWindow = window;
+            // Cache a few things
+            m_RootElement = element;
+            m_TableWindow = window;
 
-
-               // Build out references for adding a column
-            m_AddColumnOverlay = rootElement.Q<VisualElement>("gdx-table-add-column");
+            // Bind our column adding overlay
+            m_AddColumnOverlay = m_RootElement.Q<VisualElement>("gdx-table-add-column");
             m_AddColumnName = m_AddColumnOverlay.Q<TextField>("gdx-table-column-name");
-            // Build our custom column type enum
             int columnNameIndex = m_AddColumnOverlay.IndexOf(m_AddColumnName);
             List<int> typeValues = new List<int>(Serializable.SerializableTypesCount);
             for (int i = 0; i < Serializable.SerializableTypesCount; i++)
             {
                 typeValues.Add(i);
             }
-
             m_AddColumnType =
                 new PopupField<int>(typeValues, 0, Serializable.GetSerializableTypesLabel,
                     Serializable.GetSerializableTypesLabel) { label = "Type", name = "gdx-table-column-type" };
@@ -72,107 +65,121 @@ namespace GDX.Editor.Windows.Tables
             m_AddColumnCancelButton = m_AddColumnOverlay.Q<Button>("gdx-table-column-cancel");
             m_AddColumnCancelButton.clicked += SetOverlayStateHidden;
 
-            // Build out our Adding Rows
-            m_AddRowOverlay = rootElement.Q<VisualElement>("gdx-table-add-row");
+            // Bind our row adding overlay
+            m_AddRowOverlay = m_RootElement.Q<VisualElement>("gdx-table-add-row");
             m_AddRowName = m_AddRowOverlay.Q<TextField>("gdx-table-row-name");
             m_AddRowAddButton = m_AddRowOverlay.Q<Button>("gdx-table-row-add");
             m_AddRowAddButton.clicked += SubmitAddRow;
             m_AddRowCancelButton = m_AddRowOverlay.Q<Button>("gdx-table-row-cancel");
             m_AddRowCancelButton.clicked += SetOverlayStateHidden;
 
-            // Bind our Renaming Columns
-            m_RenameColumnOverlay = rootElement.Q<VisualElement>("gdx-table-rename-column");
-            m_RenameColumnName = m_RenameColumnOverlay.Q<TextField>("gdx-table-column-name");
-            m_RenameColumnRenameButton = m_RenameColumnOverlay.Q<Button>("gdx-table-column-rename");
-            m_RenameColumnRenameButton.clicked += SubmitRenameColumn;
-            m_RenameColumnCancelButton = m_RenameColumnOverlay.Q<Button>("gdx-table-column-cancel");
-            m_RenameColumnCancelButton.clicked += SetOverlayStateHidden;
+            // Bind our renaming overlay
+            m_RenameOverlay = m_RootElement.Q<VisualElement>("gdx-table-rename-row");
+            m_RenameName = m_RenameOverlay.Q<TextField>("gdx-table-rename-name");
+            m_RenameTitleLabel = m_RenameOverlay.Q<Label>("gdx-table-rename-title");
+            m_RenameAcceptButton = m_RenameOverlay.Q<Button>("gdx-table-rename-accept");
+            m_RenameAcceptButton.clicked += SubmitRename;
+            m_RenameCancelButton = m_RenameOverlay.Q<Button>("gdx-table-rename-cancel");
+            m_RenameCancelButton.clicked += SetOverlayStateHidden;
 
-            // Bind our Renaming Rows
-            m_RenameRowOverlay = rootElement.Q<VisualElement>("gdx-table-rename-row");
-            m_RenameRowName = m_RenameRowOverlay.Q<TextField>("gdx-table-row-name");
-            m_RenameRowRenameButton = m_RenameRowOverlay.Q<Button>("gdx-table-row-rename");
-            m_RenameRowRenameButton.clicked += SubmitRenameRow;
-            m_RenameRowCancelButton = m_RenameRowOverlay.Q<Button>("gdx-table-row-cancel");
-            m_RenameRowCancelButton.clicked += SetOverlayStateHidden;
+            // Bind our generic confirmation overlay
+            m_ConfirmationOverlay = m_RootElement.Q<VisualElement>("gdx-table-confirmation");
+            m_ConfirmationAcceptButton = m_ConfirmationOverlay.Q<Button>("gdx-table-confirmation-accept");
+            m_ConfirmationAcceptButton.clicked += SubmitConfirmation;
+            m_ConfirmationCancelButton = m_ConfirmationOverlay.Q<Button>("gdx-table-confirmation-cancel");
+            m_ConfirmationCancelButton.clicked += SetOverlayStateHidden;
+            m_ConfirmationTitleLabel = m_ConfirmationOverlay.Q<Label>("gdx-confirmation-title");
+            m_ConfirmationMessageLabel = m_ConfirmationOverlay.Q<Label>("gdx-confirmation-message");
 
             // Ensure state of everything
             SetState(OverlayState.Hide);
 
         }
 
-        public OverlayState GetState()
+        public OverlayState GetPrimaryState()
         {
-            return m_OverlayState;
+            return m_CurrentState;
+        }
+
+        // internal void SetState(OverlayState state, int stableIndex = -1, string previousValue = null)
+        // {
+        //
+        // }
+
+        internal void SetConfirmationState(ConfirmationState state, int stableIndex, string title, string message)
+        {
+            m_ConfirmationTitleLabel.text = title;
+            m_ConfirmationMessageLabel.text = message;
+            SetState(OverlayState.Confirmation, stableIndex);
         }
 
         internal void SetState(OverlayState state, int stableIndex = -1, string previousValue = null)
         {
-            cachedIndex = stableIndex;
+            m_CachedIndex = stableIndex;
 
             // Handle focus
             if (state == OverlayState.Hide)
             {
-                parentWindow.m_Toolbar.SetFocusable(true);
-                rootElement.focusable = false;
-                if (parentWindow.GetView()?.GetTableView() != null)
+                m_TableWindow.m_Toolbar.SetFocusable(true);
+                m_RootElement.focusable = false;
+                if (m_TableWindow.GetView()?.GetTableView() != null)
                 {
-                    parentWindow.GetView().GetTableView().focusable = true;
+                    m_TableWindow.GetView().GetTableView().focusable = true;
                 }
             }
             else
             {
-                parentWindow.m_Toolbar.SetFocusable(false);
-                if (parentWindow.GetView().GetTableView() != null)
+                m_TableWindow.m_Toolbar.SetFocusable(false);
+                if (m_TableWindow.GetView().GetTableView() != null)
                 {
-                    parentWindow.GetView().GetTableView().focusable = false;
+                    m_TableWindow.GetView().GetTableView().focusable = false;
                 }
-                rootElement.focusable = true;
+                m_RootElement.focusable = true;
             }
 
             switch (state)
             {
                 case OverlayState.AddColumn:
-                    rootElement.style.display = DisplayStyle.Flex;
+                    m_RootElement.style.display = DisplayStyle.Flex;
                     m_AddColumnOverlay.style.display = DisplayStyle.Flex;
                     m_AddColumnName.SetValueWithoutNotify($"Column_{Core.Random.NextInteger(1, 9999).ToString()}");
                     m_AddColumnAddButton.Focus();
                     break;
                 case OverlayState.AddRow:
-                    rootElement.style.display = DisplayStyle.Flex;
+                    m_RootElement.style.display = DisplayStyle.Flex;
                     m_AddRowOverlay.style.display = DisplayStyle.Flex;
                     m_AddRowName.SetValueWithoutNotify($"Row_{Core.Random.NextInteger(1, 9999).ToString()}");
                     m_AddRowAddButton.Focus();
                     break;
                 case OverlayState.RenameColumn:
-                    rootElement.style.display = DisplayStyle.Flex;
-                    m_RenameColumnOverlay.style.display = DisplayStyle.Flex;
-                    m_RenameColumnName.SetValueWithoutNotify(previousValue ??
-                                                             $"Column_{Core.Random.NextInteger(1, 9999).ToString()}");
-                    m_RenameColumnName.Focus();
+                    m_RootElement.style.display = DisplayStyle.Flex;
+                    m_RenameOverlay.style.display = DisplayStyle.Flex;
+                    m_RenameTitleLabel.text = "Rename Column";
+                    m_RenameName.SetValueWithoutNotify(previousValue ??
+                                                       $"Column_{Core.Random.NextInteger(1, 9999).ToString()}");
+                    m_RenameName.Focus();
                     break;
                 case OverlayState.RenameRow:
-                    rootElement.style.display = DisplayStyle.Flex;
-                    m_RenameRowOverlay.style.display = DisplayStyle.Flex;
-                    m_RenameRowName.SetValueWithoutNotify(previousValue ??
+                    m_RootElement.style.display = DisplayStyle.Flex;
+                    m_RenameOverlay.style.display = DisplayStyle.Flex;
+                    m_RenameTitleLabel.text = "Rename Row";
+                    m_RenameName.SetValueWithoutNotify(previousValue ??
                                                              $"Row_{Core.Random.NextInteger(1, 9999).ToString()}");
-                    m_RenameRowName.Focus();
+                    m_RenameName.Focus();
                     break;
                 default:
-                    rootElement.style.display = DisplayStyle.None;
+                    m_RootElement.style.display = DisplayStyle.None;
                     m_AddColumnOverlay.style.display = DisplayStyle.None;
                     m_AddRowOverlay.style.display = DisplayStyle.None;
-                    m_RenameColumnOverlay.style.display = DisplayStyle.None;
-                    m_RenameRowOverlay.style.display = DisplayStyle.None;
-                    if (parentWindow.GetView()?.GetTableView() != null)
+                    m_RenameOverlay.style.display = DisplayStyle.None;
+                    m_ConfirmationOverlay.style.display = DisplayStyle.None;
+                    if (m_TableWindow.GetView()?.GetTableView() != null)
                     {
-                        parentWindow.GetView()?.GetTableView().Focus();
+                        m_TableWindow.GetView()?.GetTableView().Focus();
                     }
-
                     break;
             }
-
-            m_OverlayState = state;
+            m_CurrentState = state;
         }
         internal void SetOverlayStateHidden()
         {
@@ -189,12 +196,17 @@ namespace GDX.Editor.Windows.Tables
             Settings,
             Confirmation
         }
+        public enum ConfirmationState
+        {
+            RemoveRow,
+            RemoveColumn
+        }
 
         internal void SubmitAddColumn()
         {
-            if (m_OverlayState != OverlayState.AddColumn) return;
+            if (m_CurrentState != OverlayState.AddColumn) return;
 
-            if (parentWindow.GetController().AddColumn(m_AddColumnName.text, (Serializable.SerializableTypes)m_AddColumnType.value))
+            if (m_TableWindow.GetController().AddColumn(m_AddColumnName.text, (Serializable.SerializableTypes)m_AddColumnType.value))
             {
                 SetOverlayStateHidden();
             }
@@ -202,34 +214,51 @@ namespace GDX.Editor.Windows.Tables
 
         internal void SubmitAddRow()
         {
-            if (m_OverlayState != OverlayState.AddRow) return;
+            if (m_CurrentState != OverlayState.AddRow) return;
 
-            if (parentWindow.GetController().AddRow(m_AddRowName.text))
+            if (m_TableWindow.GetController().AddRow(m_AddRowName.text))
             {
                 SetOverlayStateHidden();
             }
         }
 
-        internal void SubmitRenameColumn()
+        internal void SubmitRename()
         {
-            if (m_OverlayState != OverlayState.RenameColumn) return;
-
-            if (parentWindow.GetController().RenameColumn(cachedIndex, m_RenameColumnName.text))
+            switch (m_CurrentState)
             {
-                SetOverlayStateHidden();
+                case OverlayState.RenameColumn:
+                    if (m_TableWindow.GetController().RenameColumn(m_CachedIndex, m_RenameName.text))
+                    {
+                        SetOverlayStateHidden();
+                    }
+                    break;
+                case OverlayState.RenameRow:
+                    if (m_TableWindow.GetController().RenameRow(m_CachedIndex, m_RenameName.text))
+                    {
+                        SetOverlayStateHidden();
+                    }
+                    break;
             }
         }
-        internal void SubmitRenameRow()
+
+        internal void SubmitConfirmation()
         {
-            if (m_OverlayState != OverlayState.RenameRow) return;
-
-            if (parentWindow.GetController().RenameRow(cachedIndex, m_RenameRowName.text))
+            switch (m_ConfirmationState)
             {
-                SetOverlayStateHidden();
+                case ConfirmationState.RemoveRow:
+                    if (m_TableWindow.GetController().RemoveRow(m_CachedIndex))
+                    {
+                        SetOverlayStateHidden();
+                    }
+                    break;
+                case ConfirmationState.RemoveColumn:
+                    if (m_TableWindow.GetController().RemoveColumn(m_CachedIndex))
+                    {
+                        SetOverlayStateHidden();
+                    }
+                    break;
             }
         }
-
-
     }
 #endif
 }

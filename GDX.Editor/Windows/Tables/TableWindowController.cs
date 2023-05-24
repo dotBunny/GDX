@@ -31,24 +31,26 @@ namespace GDX.Editor.Windows.Tables
             m_Overlay.SetState(TableWindowOverlay.OverlayState.AddColumn);
         }
 
-        public void ShowRenameRowDialog(int stableID)
+        public void ShowRenameRowDialog(int internalIndex)
         {
-            m_Overlay.SetState(TableWindowOverlay.OverlayState.RenameRow, stableID, m_TableWindow.GetTable().GetRowName(stableID));
+            m_Overlay.SetState(TableWindowOverlay.OverlayState.RenameRow, internalIndex, m_TableWindow.GetTable().GetRowName(internalIndex));
         }
 
-        public void ShowRenameColumnDialog(int stableID)
+        public void ShowRenameColumnDialog(int internalIndex)
         {
-            m_Overlay.SetState(TableWindowOverlay.OverlayState.RenameColumn, stableID, m_TableWindow.GetTable().GetColumnName(stableID));
+            m_Overlay.SetState(TableWindowOverlay.OverlayState.RenameColumn, internalIndex, m_TableWindow.GetTable().GetColumnName(internalIndex));
         }
 
-        public void ShowRemoveColumnDialog(int stableID)
+        public void ShowRemoveColumnDialog(int internalIndex)
         {
-
+            m_Overlay.SetConfirmationState(TableWindowOverlay.ConfirmationState.RemoveColumn, internalIndex,
+                "Remove Column", "Are you sure you wish to delete this column?");
         }
 
-        public void ShowRemoveRowDialog(int stableID)
+        public void ShowRemoveRowDialog(int internalIndex)
         {
-
+            m_Overlay.SetConfirmationState(TableWindowOverlay.ConfirmationState.RemoveRow, internalIndex,
+                "Remove Column", "Are you sure you wish to delete this row?");
         }
 
         public bool AddColumn(string name, Serializable.SerializableTypes type,  int orderedIndex = -1)
@@ -97,29 +99,46 @@ namespace GDX.Editor.Windows.Tables
         {
             ITable.RowDescription selectedRow = (ITable.RowDescription)m_TableWindow.GetView().GetTableView().selectedItem;
             RegisterUndo($"Remove Row ({selectedRow.Name})");
-            m_TableWindow.GetTable().RemoveRow(selectedRow.Index);
+            m_TableWindow.GetTable().RemoveRow(selectedRow.InternalIndex);
             m_TableWindow.GetView().RebuildRowData();
         }
 
-        public bool RenameRow(int stableID, string name)
+        public bool RemoveColumn(int internalIndex)
+        {
+            ITable table = m_TableWindow.GetTable();
+            RegisterUndo($"Remove Column ({table.GetColumnName(internalIndex)})");
+            table.RemoveColumn(m_TableWindow.GetView().GetColumnType(internalIndex), internalIndex);
+            m_TableWindow.BindTable(table);
+            return true;
+        }
+        public bool RemoveRow(int internalIndex)
+        {
+            ITable table = m_TableWindow.GetTable();
+            RegisterUndo($"Remove Row ({table.GetRowName(internalIndex)})");
+            table.RemoveRow(internalIndex);
+            m_TableWindow.GetView().RebuildRowData();
+            return true;
+        }
+
+        public bool RenameRow(int internalIndex, string name)
         {
             ITable table = m_TableWindow.GetTable();
             RegisterUndo($"Rename Row ({name})");
-            table.SetRowName(name, stableID);
+            table.SetRowName(name, internalIndex);
 
             m_TableWindow.GetView().RebuildRowData();
             return true;
         }
 
-        public bool RenameColumn(int stableID, string name)
+        public bool RenameColumn(int internalIndex, string name)
         {
             ITable table = m_TableWindow.GetTable();
             RegisterUndo($"Rename Column ({name})");
 
             // Update column data in place
-            m_TableWindow.GetView().UpdateColumnData(stableID, name);
+            m_TableWindow.GetView().UpdateColumnData(internalIndex, name);
 
-            table.SetColumnName(name, stableID);
+            table.SetColumnName(name, internalIndex);
 
           //  m_TableWindow.GetView().RebuildRowData();
             return true;

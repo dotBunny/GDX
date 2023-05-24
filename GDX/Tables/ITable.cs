@@ -117,14 +117,14 @@ namespace GDX.Tables
         public struct ColumnDescription
         {
             public string Name;
-            public int Index;
+            public int InternalIndex;
             public Serializable.SerializableTypes Type;
         }
 
         public struct RowDescription
         {
             public string Name;
-            public int Index;
+            public int InternalIndex;
         }
     }
 }

@@ -37,7 +37,7 @@ namespace GDX.Editor.Windows.Tables
             for (int i = 0; i < columnCount; i++)
             {
                 ref ITable.ColumnDescription refColumn = ref m_ColumnDescriptions[i];
-                int columnIndex = refColumn.Index;
+                int columnIndex = refColumn.InternalIndex;
 
                 // We embed the column stable index
                 Column column = new Column
@@ -45,7 +45,7 @@ namespace GDX.Editor.Windows.Tables
                     name = $"Column_{columnIndex}",
                     title = refColumn.Name,
                     width = columnSizePercentage,
-                    destroyCell = TableWindowCells.DestroyCell,
+                    destroyCell = CellProvider.DestroyCell,
                     resizable = true
                 };
 
@@ -53,120 +53,120 @@ namespace GDX.Editor.Windows.Tables
                 switch (refColumn.Type)
                 {
                     case Serializable.SerializableTypes.String:
-                        column.makeCell += () => TableWindowCells.MakeStringCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindStringCell;
+                        column.makeCell += () => CellProvider.MakeStringCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindStringCell;
                         break;
                     case Serializable.SerializableTypes.Char:
-                        column.makeCell += () => TableWindowCells.MakeCharCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindCharCell;
+                        column.makeCell += () => CellProvider.MakeCharCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindCharCell;
                         break;
                     case Serializable.SerializableTypes.Bool:
-                        column.makeCell += () => TableWindowCells.MakeBoolCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindBoolCell;
+                        column.makeCell += () => CellProvider.MakeBoolCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindBoolCell;
                         break;
                     case Serializable.SerializableTypes.SByte:
-                        column.makeCell += () => TableWindowCells.MakeSByteCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindSByteCell;
+                        column.makeCell += () => CellProvider.MakeSByteCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindSByteCell;
                         break;
                     case Serializable.SerializableTypes.Byte:
-                        column.makeCell += () => TableWindowCells.MakeByteCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindByteCell;
+                        column.makeCell += () => CellProvider.MakeByteCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindByteCell;
                         break;
                     case Serializable.SerializableTypes.Short:
-                        column.makeCell += () => TableWindowCells.MakeShortCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindShortCell;
+                        column.makeCell += () => CellProvider.MakeShortCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindShortCell;
                         break;
                     case Serializable.SerializableTypes.UShort:
-                        column.makeCell += () => TableWindowCells.MakeUShortCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindUShortCell;
+                        column.makeCell += () => CellProvider.MakeUShortCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindUShortCell;
                         break;
                     case Serializable.SerializableTypes.Int:
-                        column.makeCell += () => TableWindowCells.MakeIntCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindIntCell;
+                        column.makeCell += () => CellProvider.MakeIntCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindIntCell;
                         break;
                     case Serializable.SerializableTypes.UInt:
-                        column.makeCell += () => TableWindowCells.MakeUIntCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindUIntCell;
+                        column.makeCell += () => CellProvider.MakeUIntCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindUIntCell;
                         break;
                     case Serializable.SerializableTypes.Long:
-                        column.makeCell += () => TableWindowCells.MakeLongCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindLongCell;
+                        column.makeCell += () => CellProvider.MakeLongCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindLongCell;
                         break;
                     case Serializable.SerializableTypes.ULong:
-                        column.makeCell += () => TableWindowCells.MakeULongCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindULongCell;
+                        column.makeCell += () => CellProvider.MakeULongCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindULongCell;
                         break;
                     case Serializable.SerializableTypes.Float:
-                        column.makeCell += () => TableWindowCells.MakeFloatCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindFloatCell;
+                        column.makeCell += () => CellProvider.MakeFloatCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindFloatCell;
                         break;
                     case Serializable.SerializableTypes.Double:
-                        column.makeCell += () => TableWindowCells.MakeDoubleCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindDoubleCell;
+                        column.makeCell += () => CellProvider.MakeDoubleCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindDoubleCell;
                         break;
                     case Serializable.SerializableTypes.Vector2:
-                        column.makeCell += () => TableWindowCells.MakeVector2Cell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindVector2Cell;
+                        column.makeCell += () => CellProvider.MakeVector2Cell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindVector2Cell;
                         break;
                     case Serializable.SerializableTypes.Vector3:
-                        column.makeCell += () => TableWindowCells.MakeVector3Cell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindVector3Cell;
+                        column.makeCell += () => CellProvider.MakeVector3Cell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindVector3Cell;
                         break;
                     case Serializable.SerializableTypes.Vector4:
-                        column.makeCell += () => TableWindowCells.MakeVector4Cell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindVector4Cell;
+                        column.makeCell += () => CellProvider.MakeVector4Cell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindVector4Cell;
                         break;
                     case Serializable.SerializableTypes.Vector2Int:
-                        column.makeCell += () => TableWindowCells.MakeVector2IntCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindVector2IntCell;
+                        column.makeCell += () => CellProvider.MakeVector2IntCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindVector2IntCell;
                         break;
                     case Serializable.SerializableTypes.Vector3Int:
-                        column.makeCell += () => TableWindowCells.MakeVector3IntCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindVector3IntCell;
+                        column.makeCell += () => CellProvider.MakeVector3IntCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindVector3IntCell;
                         break;
                     case Serializable.SerializableTypes.Quaternion:
-                        column.makeCell += () => TableWindowCells.MakeQuaternionCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindQuaternionCell;
+                        column.makeCell += () => CellProvider.MakeQuaternionCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindQuaternionCell;
                         break;
                     case Serializable.SerializableTypes.Rect:
-                        column.makeCell += () => TableWindowCells.MakeRectCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindRectCell;
+                        column.makeCell += () => CellProvider.MakeRectCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindRectCell;
                         break;
                     case Serializable.SerializableTypes.RectInt:
-                        column.makeCell += () => TableWindowCells.MakeRectIntCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindRectIntCell;
+                        column.makeCell += () => CellProvider.MakeRectIntCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindRectIntCell;
                         break;
                     case Serializable.SerializableTypes.Color:
-                        column.makeCell += () => TableWindowCells.MakeColorCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindColorCell;
+                        column.makeCell += () => CellProvider.MakeColorCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindColorCell;
                         break;
                     case Serializable.SerializableTypes.LayerMask:
-                        column.makeCell += () => TableWindowCells.MakeLayerMaskCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindLayerMaskCell;
+                        column.makeCell += () => CellProvider.MakeLayerMaskCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindLayerMaskCell;
                         break;
                     case Serializable.SerializableTypes.Bounds:
-                        column.makeCell += () => TableWindowCells.MakeBoundsCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindBoundsCell;
+                        column.makeCell += () => CellProvider.MakeBoundsCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindBoundsCell;
                         break;
                     case Serializable.SerializableTypes.BoundsInt:
-                        column.makeCell += () => TableWindowCells.MakeBoundsIntCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindBoundsIntCell;
+                        column.makeCell += () => CellProvider.MakeBoundsIntCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindBoundsIntCell;
                         break;
                     case Serializable.SerializableTypes.Hash128:
-                        column.makeCell += () => TableWindowCells.MakeHash128Cell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindHash128Cell;
+                        column.makeCell += () => CellProvider.MakeHash128Cell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindHash128Cell;
                         break;
                     case Serializable.SerializableTypes.Gradient:
-                        column.makeCell += () => TableWindowCells.MakeGradientCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindGradientCell;
+                        column.makeCell += () => CellProvider.MakeGradientCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindGradientCell;
                         break;
                     case Serializable.SerializableTypes.AnimationCurve:
-                        column.makeCell += () => TableWindowCells.MakeAnimationCurveCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindAnimationCurveCell;
+                        column.makeCell += () => CellProvider.MakeAnimationCurveCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindAnimationCurveCell;
                         break;
                     case Serializable.SerializableTypes.Object:
-                        column.makeCell += () => TableWindowCells.MakeObjectCell(tableTicket, columnIndex);
-                        column.bindCell = TableWindowCells.BindObjectCell;
+                        column.makeCell += () => CellProvider.MakeObjectCell(tableTicket, columnIndex);
+                        column.bindCell = CellProvider.BindObjectCell;
                         break;
                 }
 
@@ -175,7 +175,7 @@ namespace GDX.Editor.Windows.Tables
 
             // Add row header column
             m_TableViewColumns.Insert(0,
-                new Column { makeCell = TableWindowCells.MakeRowHeader, bindCell = BindRowHeader, name = "RowName", title = "Row Name" });
+                new Column { makeCell = CellProvider.MakeRowHeader, bindCell = BindRowHeader, name = "RowName", title = "Row Name" });
 
             // Create MCLV
             if (m_TableView != null)
@@ -213,7 +213,7 @@ namespace GDX.Editor.Windows.Tables
 
         public int GetRowDescriptionIndex(int row)
         {
-            return k_RowDescriptions[row].Index;
+            return k_RowDescriptions[row].InternalIndex;
         }
 
         public MultiColumnListView GetTableView()
@@ -236,6 +236,13 @@ namespace GDX.Editor.Windows.Tables
             m_TableView.style.display = DisplayStyle.Flex;
         }
 
+        public int GetSelectedRowInternalIndex()
+        {
+            if (m_TableView.selectedItem == null) return -1;
+            ITable.RowDescription selectedItem = (ITable.RowDescription)m_TableView.selectedItem;
+            return selectedItem.InternalIndex;
+        }
+
         void BindRowHeader(VisualElement cell, int row)
         {
             Label label = (Label)cell;
@@ -244,10 +251,26 @@ namespace GDX.Editor.Windows.Tables
 
             // Make the context menu effect the entirety of the row, this is a bit brittle as it relies on the actual
             // layout of the UXML document to be the same across versions.
-            MakeRowContextMenu(label.parent.parent, description.Index);
+            MakeRowContextMenu(label.parent.parent, description.InternalIndex);
         }
 
-        internal void UpdateColumnData(int index, string newName)
+        internal Serializable.SerializableTypes GetColumnType(int internalIndex)
+        {
+            int columnCount = m_TableViewColumns.Count;
+            for (int i = 0; i < columnCount; i++)
+            {
+                int indexOfSplit = m_TableViewColumns[i].name.IndexOf("_", StringComparison.Ordinal);
+                string column = m_TableViewColumns[i].name.Substring(indexOfSplit);
+                int columnInteger = int.Parse(column);
+                if (columnInteger == internalIndex)
+                {
+                    return m_ColumnDescriptions[i].Type;
+                }
+            }
+            return Serializable.SerializableTypes.Invalid;
+        }
+
+        internal void UpdateColumnData(int internalIndex, string newName)
         {
             // Figure out index of target
             int columnCount = m_TableViewColumns.Count;
@@ -257,7 +280,7 @@ namespace GDX.Editor.Windows.Tables
                 int indexOfSplit = m_TableViewColumns[i].name.IndexOf("_", StringComparison.Ordinal);
                 string column = m_TableViewColumns[i].name.Substring(indexOfSplit);
                 int columnInteger = int.Parse(column);
-                if (columnInteger == index)
+                if (columnInteger == internalIndex)
                 {
                     foundIndex = i;
                     break;

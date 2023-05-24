@@ -41,8 +41,18 @@ namespace GDX.Editor.Windows.Tables
             }
         }
 
-        [GDXShortcut("Remove Selected Row", KeyCode.Delete, ShortcutModifiers.Shift, typeof(TableWindow))]
+        [GDXShortcut("Remove Selected Row", KeyCode.Delete, ShortcutModifiers.None, typeof(TableWindow))]
         internal static void RemoveSelectedRow()
+        {
+            TableWindow table = (TableWindow)EditorWindow.focusedWindow;
+            if (table != null)
+            {
+                table.GetController().ShowRemoveRowDialog(table.GetView().GetSelectedRowInternalIndex());
+            }
+        }
+
+        [GDXShortcut("Remove Selected Row (Quick)", KeyCode.Delete, ShortcutModifiers.Shift, typeof(TableWindow))]
+        internal static void RemoveSelectedRowQuick()
         {
             TableWindow table = (TableWindow)EditorWindow.focusedWindow;
             if (table != null)

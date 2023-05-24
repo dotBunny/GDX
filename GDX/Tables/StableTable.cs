@@ -124,7 +124,7 @@ namespace GDX.Tables
             string empty = string.Empty;
             for (int i = 0; i < rowCount; i++)
             {
-                returnArray[i].Index = rowDenseIndexToIDMap[i];
+                returnArray[i].InternalIndex = rowDenseIndexToIDMap[i];
                 returnArray[i].Name = rowNames[i];
             }
 
@@ -140,7 +140,7 @@ namespace GDX.Tables
                 {
                     return new ITable.RowDescription
                     {
-                        Index = rowDenseIndexToIDMap[i],
+                        InternalIndex = rowDenseIndexToIDMap[i],
                         Name = nameAt
                     };
                 }
@@ -153,7 +153,7 @@ namespace GDX.Tables
         {
             return new ITable.RowDescription
             {
-                Index = rowDenseIndexToIDMap[order],
+                InternalIndex = rowDenseIndexToIDMap[order],
                 Name = rowNames[order]
             };
         }
@@ -177,7 +177,7 @@ namespace GDX.Tables
                             ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[columnID];
                             return new ITable.ColumnDescription
                             {
-                                Index = columnID,
+                                InternalIndex = columnID,
                                 Name = nameAt,
                                 Type = columnEntry.ColumnType
                             };
@@ -198,7 +198,7 @@ namespace GDX.Tables
 
             return new ITable.ColumnDescription
             {
-                Index = idAtOrderedIndex,
+                InternalIndex = idAtOrderedIndex,
                 Name = columnName,
                 Type = columnEntry.ColumnType
             };
@@ -219,7 +219,7 @@ namespace GDX.Tables
                 returnArray[i] = new ITable.ColumnDescription
                 {
                     Name = name,
-                    Index = columnID,
+                    InternalIndex = columnID,
                     Type = columnType
                 };
             }

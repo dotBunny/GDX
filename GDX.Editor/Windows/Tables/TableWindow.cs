@@ -68,7 +68,7 @@ namespace GDX.Editor.Windows.Tables
 
         void OnKeyboardEvent(KeyDownEvent evt)
         {
-            TableWindowOverlay.OverlayState state = m_Overlay.GetState();
+            TableWindowOverlay.OverlayState state = m_Overlay.GetPrimaryState();
             // Escape to cancel overlay
             if (evt.keyCode == KeyCode.Escape && state != TableWindowOverlay.OverlayState.Hide)
             {
@@ -86,11 +86,9 @@ namespace GDX.Editor.Windows.Tables
                     case TableWindowOverlay.OverlayState.AddRow:
                         m_Overlay.SubmitAddRow();
                         break;
-                    case TableWindowOverlay.OverlayState.RenameColumn:
-                        m_Overlay.SubmitRenameColumn();
-                        break;
                     case TableWindowOverlay.OverlayState.RenameRow:
-                        m_Overlay.SubmitRenameRow();
+                    case TableWindowOverlay.OverlayState.RenameColumn:
+                        m_Overlay.SubmitRename();
                         break;
                 }
             }

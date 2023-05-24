@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 namespace GDX.Editor.Windows.Tables
 {
 #if UNITY_2022_2_OR_NEWER
-    static class TableWindowCells
+    static class CellProvider
     {
         const string k_RowHeaderFieldName = "gdx-table-row-header";
         const string k_CellFieldName = "gdx-table-field";

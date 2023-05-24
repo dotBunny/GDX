@@ -55,7 +55,7 @@ namespace GDX.Editor.Windows.Tables
         void RenameRow()
         {
             ITable.RowDescription selectedItem = (ITable.RowDescription)m_ParentWindow.GetView().GetTableView().selectedItem;
-            m_ParentWindow.GetController().ShowRenameRowDialog(selectedItem.Index);
+            m_ParentWindow.GetController().ShowRenameRowDialog(selectedItem.InternalIndex);
         }
 
     }
