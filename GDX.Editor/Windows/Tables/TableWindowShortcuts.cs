@@ -11,7 +11,7 @@ namespace GDX.Editor.Windows.Tables
 #if UNITY_2022_2_OR_NEWER
     static class TableWindowShortcuts
     {
-        [GDXShortcut("Add Row",  KeyCode.Equals, ShortcutModifiers.Control, typeof(TableWindow))]
+        [GDXShortcut("Add Row", KeyCode.Equals, ShortcutModifiers.Control, typeof(TableWindow))]
         internal static void AddRow()
         {
             TableWindow table = (TableWindow)EditorWindow.focusedWindow;
@@ -21,7 +21,8 @@ namespace GDX.Editor.Windows.Tables
             }
         }
 
-        [GDXShortcut("Add Row (Default)",  KeyCode.Equals, ShortcutModifiers.Control | ShortcutModifiers.Shift, typeof(TableWindow))]
+        [GDXShortcut("Add Row (Default)", KeyCode.Equals, ShortcutModifiers.Control | ShortcutModifiers.Shift,
+            typeof(TableWindow))]
         internal static void AddRowDefault()
         {
             TableWindow table = (TableWindow)EditorWindow.focusedWindow;
@@ -31,7 +32,8 @@ namespace GDX.Editor.Windows.Tables
             }
         }
 
-        [GDXShortcut("Add Column", KeyCode.Minus, ShortcutModifiers.Control | ShortcutModifiers.Shift, typeof(TableWindow))]
+        [GDXShortcut("Add Column", KeyCode.Minus, ShortcutModifiers.Control | ShortcutModifiers.Shift,
+            typeof(TableWindow))]
         internal static void AddColumn()
         {
             TableWindow table = (TableWindow)EditorWindow.focusedWindow;

@@ -12,8 +12,8 @@ namespace GDX.Editor.Windows.Tables
 #if UNITY_2022_2_OR_NEWER
     public class TableWindowController
     {
-        readonly TableWindow m_TableWindow;
         readonly TableWindowOverlay m_Overlay;
+        readonly TableWindow m_TableWindow;
 
         internal TableWindowController(TableWindow window, TableWindowOverlay overlay)
         {
@@ -33,12 +33,14 @@ namespace GDX.Editor.Windows.Tables
 
         public void ShowRenameRowDialog(int internalIndex)
         {
-            m_Overlay.SetState(TableWindowOverlay.OverlayState.RenameRow, internalIndex, m_TableWindow.GetTable().GetRowName(internalIndex));
+            m_Overlay.SetState(TableWindowOverlay.OverlayState.RenameRow, internalIndex,
+                m_TableWindow.GetTable().GetRowName(internalIndex));
         }
 
         public void ShowRenameColumnDialog(int internalIndex)
         {
-            m_Overlay.SetState(TableWindowOverlay.OverlayState.RenameColumn, internalIndex, m_TableWindow.GetTable().GetColumnName(internalIndex));
+            m_Overlay.SetState(TableWindowOverlay.OverlayState.RenameColumn, internalIndex,
+                m_TableWindow.GetTable().GetColumnName(internalIndex));
         }
 
         public void ShowRemoveColumnDialog(int internalIndex)
@@ -53,7 +55,7 @@ namespace GDX.Editor.Windows.Tables
                 "Remove Row", "Are you sure you wish to delete this row?");
         }
 
-        public bool AddColumn(string name, Serializable.SerializableTypes type,  int orderedIndex = -1)
+        public bool AddColumn(string name, Serializable.SerializableTypes type, int orderedIndex = -1)
         {
             RegisterUndo($"Add Column ({name})");
 
@@ -85,7 +87,10 @@ namespace GDX.Editor.Windows.Tables
         public void AddRowDefault()
         {
             ITable table = m_TableWindow.GetTable();
-            if (table.GetColumnCount() == 0) return;
+            if (table.GetColumnCount() == 0)
+            {
+                return;
+            }
 
             RegisterUndo("Add Default Row");
             table.AddRow($"Row_{Core.Random.NextInteger(1, 9999).ToString()}");
@@ -97,7 +102,8 @@ namespace GDX.Editor.Windows.Tables
 
         public void RemoveSelectedRow()
         {
-            ITable.RowDescription selectedRow = (ITable.RowDescription)m_TableWindow.GetView().GetMultiColumnListView().selectedItem;
+            ITable.RowDescription selectedRow =
+                (ITable.RowDescription)m_TableWindow.GetView().GetMultiColumnListView().selectedItem;
             RegisterUndo($"Remove Row ({selectedRow.Name})");
             m_TableWindow.GetTable().RemoveRow(selectedRow.InternalIndex);
             m_TableWindow.GetView().RebuildRowData();
@@ -110,11 +116,13 @@ namespace GDX.Editor.Windows.Tables
             {
                 return false;
             }
+
             RegisterUndo($"Remove Column ({table.GetColumnName(internalIndex)})");
             table.RemoveColumn(m_TableWindow.GetView().GetColumnType(internalIndex), internalIndex);
             m_TableWindow.BindTable(table);
             return true;
         }
+
         public bool RemoveRow(int internalIndex)
         {
             ITable table = m_TableWindow.GetTable();
@@ -144,7 +152,7 @@ namespace GDX.Editor.Windows.Tables
 
             table.SetColumnName(name, internalIndex);
 
-          //  m_TableWindow.GetView().RebuildRowData();
+            //  m_TableWindow.GetView().RebuildRowData();
             return true;
         }
 
@@ -161,6 +169,7 @@ namespace GDX.Editor.Windows.Tables
                 Undo.RegisterCompleteObjectUndo(scriptableObject, name);
             }
         }
+
         void SetDirty()
         {
             ScriptableObject scriptableObject = m_TableWindow.GetScriptableObject();

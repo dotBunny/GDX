@@ -50,7 +50,8 @@ namespace GDX.Editor.Windows.Tables
 
             StringCellValue cellValue =
                 new StringCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -68,7 +69,8 @@ namespace GDX.Editor.Windows.Tables
 
             CharCellValue cellValue =
                 new CharCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe().ToString());
@@ -87,7 +89,8 @@ namespace GDX.Editor.Windows.Tables
 
             BoolCellValue cellValue =
                 new BoolCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -105,7 +108,8 @@ namespace GDX.Editor.Windows.Tables
 
             SByteCellValue cellValue =
                 new SByteCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -123,7 +127,8 @@ namespace GDX.Editor.Windows.Tables
 
             ByteCellValue cellValue =
                 new ByteCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -141,7 +146,8 @@ namespace GDX.Editor.Windows.Tables
 
             ShortCellValue cellValue =
                 new ShortCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -159,7 +165,8 @@ namespace GDX.Editor.Windows.Tables
 
             UShortCellValue cellValue =
                 new UShortCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -177,7 +184,8 @@ namespace GDX.Editor.Windows.Tables
 
             IntCellValue cellValue =
                 new IntCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -195,7 +203,8 @@ namespace GDX.Editor.Windows.Tables
 
             UIntCellValue cellValue =
                 new UIntCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify((int)cellValue.GetUnsafe());
@@ -213,7 +222,8 @@ namespace GDX.Editor.Windows.Tables
 
             LongCellValue cellValue =
                 new LongCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -231,7 +241,8 @@ namespace GDX.Editor.Windows.Tables
 
             ULongCellValue cellValue =
                 new ULongCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify((long)cellValue.GetUnsafe());
@@ -249,7 +260,8 @@ namespace GDX.Editor.Windows.Tables
 
             FloatCellValue cellValue =
                 new FloatCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -267,7 +279,8 @@ namespace GDX.Editor.Windows.Tables
 
             DoubleCellValue cellValue =
                 new DoubleCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -285,7 +298,8 @@ namespace GDX.Editor.Windows.Tables
 
             Vector2CellValue cellValue =
                 new Vector2CellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -303,7 +317,8 @@ namespace GDX.Editor.Windows.Tables
 
             Vector3CellValue cellValue =
                 new Vector3CellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -321,7 +336,8 @@ namespace GDX.Editor.Windows.Tables
 
             Vector4CellValue cellValue =
                 new Vector4CellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -339,7 +355,8 @@ namespace GDX.Editor.Windows.Tables
 
             Vector2IntCellValue cellValue =
                 new Vector2IntCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -357,7 +374,8 @@ namespace GDX.Editor.Windows.Tables
 
             Vector3IntCellValue cellValue =
                 new Vector3IntCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -375,7 +393,8 @@ namespace GDX.Editor.Windows.Tables
 
             QuaternionCellValue cellValue =
                 new QuaternionCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             // Figure it out
@@ -398,7 +417,8 @@ namespace GDX.Editor.Windows.Tables
 
             RectCellValue cellValue =
                 new RectCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -416,7 +436,8 @@ namespace GDX.Editor.Windows.Tables
 
             RectIntCellValue cellValue =
                 new RectIntCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -434,7 +455,8 @@ namespace GDX.Editor.Windows.Tables
 
             ColorCellValue cellValue =
                 new ColorCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -452,7 +474,8 @@ namespace GDX.Editor.Windows.Tables
 
             LayerMaskCellValue cellValue =
                 new LayerMaskCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -470,7 +493,8 @@ namespace GDX.Editor.Windows.Tables
 
             BoundsCellValue cellValue =
                 new BoundsCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -488,7 +512,8 @@ namespace GDX.Editor.Windows.Tables
 
             BoundsIntCellValue cellValue =
                 new BoundsIntCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -506,7 +531,8 @@ namespace GDX.Editor.Windows.Tables
 
             Hash128CellValue cellValue =
                 new Hash128CellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -524,7 +550,8 @@ namespace GDX.Editor.Windows.Tables
 
             GradientCellValue cellValue =
                 new GradientCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -542,7 +569,8 @@ namespace GDX.Editor.Windows.Tables
 
             AnimationCurveCellValue cellValue =
                 new AnimationCurveCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -560,7 +588,8 @@ namespace GDX.Editor.Windows.Tables
 
             ObjectCellValue cellValue =
                 new ObjectCellValue(TableWindowProvider.GetTable(map.KnownTableIndex),
-                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row), map.ColumnID);
+                    TableWindowProvider.GetTableWindow(map.KnownTableIndex).GetView().GetRowDescriptionIndex(row),
+                    map.ColumnID);
 
             field.userData = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());

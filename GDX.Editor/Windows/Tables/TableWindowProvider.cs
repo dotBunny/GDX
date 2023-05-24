@@ -16,11 +16,11 @@ namespace GDX.Editor.Windows.Tables
         static readonly Dictionary<ITable, TableWindow> k_TableWindowMap =
             new Dictionary<ITable, TableWindow>();
 
-        static int s_TableTicketHead = 0;
+        static int s_TableTicketHead;
         static readonly Dictionary<ITable, int> k_TableToTicket = new Dictionary<ITable, int>(5);
         static readonly Dictionary<int, ITable> k_TicketToTable = new Dictionary<int, ITable>(5);
 
-        static int s_TableWindowTicketHead = 0;
+        static int s_TableWindowTicketHead;
         static readonly Dictionary<TableWindow, int> k_TableWindowToTicket = new Dictionary<TableWindow, int>(5);
         static readonly Dictionary<int, TableWindow> k_TicketToTableWindow = new Dictionary<int, TableWindow>(5);
 
@@ -43,6 +43,7 @@ namespace GDX.Editor.Windows.Tables
         {
             return k_TableWindowToTicket.TryGetValue(tableWindow, out int ticket) ? ticket : -1;
         }
+
         internal static TableWindow GetTableWindow(ITable table)
         {
             return k_TableWindowMap.TryGetValue(table, out TableWindow window) ? window : null;
@@ -51,7 +52,10 @@ namespace GDX.Editor.Windows.Tables
         internal static int RegisterTable(ITable table)
         {
             int ticket = GetTableTicket(table);
-            if (ticket != -1) return ticket;
+            if (ticket != -1)
+            {
+                return ticket;
+            }
 
             // Register table
             int head = s_TableTicketHead;
@@ -97,7 +101,6 @@ namespace GDX.Editor.Windows.Tables
 
             // We need to remove all cells associated with a map
             TableWindowCells.CleanTableReferences(ticket);
-
         }
 
         [OnOpenAsset(1)]

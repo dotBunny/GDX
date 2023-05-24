@@ -1,31 +1,28 @@
-using System;
-using System.Collections.Generic;
-using GDX.Editor.Inspectors;
 using GDX.Tables;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+// TODO:
+// - Settings
+// - sorting
+// - selection in objects
+
 namespace GDX.Editor.Windows.Tables
 {
 #if UNITY_2022_2_OR_NEWER
     public class TableWindow : EditorWindow
     {
-        // TODO:
-        // - Settings
-        // - Confirmation mode
-        // - Rename columns bug fix
-        // - sorting
-        // - selection in objects
-
-        internal TableWindowToolbar m_Toolbar;
-        internal TableWindowOverlay m_Overlay;
-        internal TableWindowView m_View;
-        internal TableWindowController m_Controller;
+        TableWindowController m_Controller;
+        TableWindowOverlay m_Overlay;
+        ScriptableObject m_ScriptableObject;
 
         ITable m_TargetTable;
-        ScriptableObject m_ScriptableObject;
+
+
+        TableWindowToolbar m_Toolbar;
+        TableWindowView m_View;
 
         void OnEnable()
         {
@@ -81,7 +78,7 @@ namespace GDX.Editor.Windows.Tables
                 switch (state)
                 {
                     case TableWindowOverlay.OverlayState.AddColumn:
-                        m_Overlay.SubmitAddColumn(); ;
+                        m_Overlay.SubmitAddColumn();
                         break;
                     case TableWindowOverlay.OverlayState.AddRow:
                         m_Overlay.SubmitAddRow();
@@ -99,20 +96,26 @@ namespace GDX.Editor.Windows.Tables
         {
             return m_Controller;
         }
+
         public ScriptableObject GetScriptableObject()
         {
             return m_ScriptableObject;
         }
+
         public ITable GetTable()
         {
             return m_TargetTable;
         }
+
+        internal TableWindowToolbar GetToolbar()
+        {
+            return m_Toolbar;
+        }
+
         public TableWindowView GetView()
         {
             return m_View;
         }
-
-
 
 
         void CheckForNoTable()
@@ -122,7 +125,6 @@ namespace GDX.Editor.Windows.Tables
                 Close();
             }
         }
-
 
 
         public void BindTable(ITable table)

@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
 
@@ -11,35 +10,53 @@ namespace GDX.Editor.Windows.Tables
 #if UNITY_2022_2_OR_NEWER
     class TableWindowOverlay
     {
+        public enum ConfirmationState
+        {
+            Invalid,
+            RemoveRow,
+            RemoveColumn
+        }
+
+        public enum OverlayState
+        {
+            Hide,
+            AddColumn,
+            AddRow,
+            RenameColumn,
+            RenameRow,
+            Settings,
+            Confirmation
+        }
+
         readonly VisualElement m_RootElement;
         readonly TableWindow m_TableWindow;
+        readonly Button m_AddColumnAddButton;
+        readonly Button m_AddColumnCancelButton;
+        readonly TextField m_AddColumnName;
 
-        VisualElement m_AddColumnOverlay;
-        TextField m_AddColumnName;
-        PopupField<int> m_AddColumnType;
-        Button m_AddColumnAddButton;
-        Button m_AddColumnCancelButton;
+        readonly VisualElement m_AddColumnOverlay;
+        readonly PopupField<int> m_AddColumnType;
+        readonly Button m_AddRowAddButton;
+        readonly Button m_AddRowCancelButton;
+        readonly TextField m_AddRowName;
 
-        VisualElement m_AddRowOverlay;
-        TextField m_AddRowName;
-        Button m_AddRowAddButton;
-        Button m_AddRowCancelButton;
+        readonly VisualElement m_AddRowOverlay;
+        int m_CachedIndex;
+        readonly Button m_ConfirmationAcceptButton;
+        readonly Button m_ConfirmationCancelButton;
+        readonly Label m_ConfirmationMessageLabel;
 
-        VisualElement m_RenameOverlay;
-        Button m_RenameAcceptButton;
-        Button m_RenameCancelButton;
-        TextField m_RenameName;
-        Label m_RenameTitleLabel;
-
-        VisualElement m_ConfirmationOverlay;
-        Button m_ConfirmationAcceptButton;
-        Button m_ConfirmationCancelButton;
-        Label m_ConfirmationTitleLabel;
-        Label m_ConfirmationMessageLabel;
+        readonly VisualElement m_ConfirmationOverlay;
+        ConfirmationState m_ConfirmationState;
+        readonly Label m_ConfirmationTitleLabel;
 
         OverlayState m_CurrentState;
-        ConfirmationState m_ConfirmationState;
-        int m_CachedIndex;
+        readonly Button m_RenameAcceptButton;
+        readonly Button m_RenameCancelButton;
+        readonly TextField m_RenameName;
+
+        readonly VisualElement m_RenameOverlay;
+        readonly Label m_RenameTitleLabel;
 
         internal TableWindowOverlay(VisualElement element, TableWindow window)
         {
@@ -56,6 +73,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 typeValues.Add(i);
             }
+
             m_AddColumnType =
                 new PopupField<int>(typeValues, 0, Serializable.GetSerializableTypesLabel,
                     Serializable.GetSerializableTypesLabel) { label = "Type", name = "gdx-table-column-type" };
@@ -93,7 +111,6 @@ namespace GDX.Editor.Windows.Tables
 
             // Ensure state of everything
             SetState(OverlayState.Hide);
-
         }
 
         public OverlayState GetPrimaryState()
@@ -122,7 +139,7 @@ namespace GDX.Editor.Windows.Tables
             TableWindowView view = m_TableWindow.GetView();
             if (state == OverlayState.Hide)
             {
-                m_TableWindow.m_Toolbar.SetFocusable(true);
+                m_TableWindow.GetToolbar().SetFocusable(true);
                 m_RootElement.focusable = false;
 
 
@@ -133,11 +150,12 @@ namespace GDX.Editor.Windows.Tables
             }
             else
             {
-                m_TableWindow.m_Toolbar.SetFocusable(false);
+                m_TableWindow.GetToolbar().SetFocusable(false);
                 if (view?.GetMultiColumnListView() != null)
                 {
                     view.GetMultiColumnListView().focusable = false;
                 }
+
                 m_RootElement.focusable = true;
             }
 
@@ -168,7 +186,7 @@ namespace GDX.Editor.Windows.Tables
                     m_RenameOverlay.style.display = DisplayStyle.Flex;
                     m_RenameTitleLabel.text = "Rename Row";
                     m_RenameName.SetValueWithoutNotify(previousValue ??
-                                                             $"Row_{Core.Random.NextInteger(1, 9999).ToString()}");
+                                                       $"Row_{Core.Random.NextInteger(1, 9999).ToString()}");
                     m_RenameName.Focus();
                     break;
                 case OverlayState.Confirmation:
@@ -186,38 +204,28 @@ namespace GDX.Editor.Windows.Tables
                     {
                         m_TableWindow.GetView()?.GetMultiColumnListView().Focus();
                     }
+
                     m_ConfirmationState = ConfirmationState.Invalid;
                     break;
             }
+
             m_CurrentState = state;
         }
+
         internal void SetOverlayStateHidden()
         {
             SetState(OverlayState.Hide);
         }
 
-        public enum OverlayState
-        {
-            Hide,
-            AddColumn,
-            AddRow,
-            RenameColumn,
-            RenameRow,
-            Settings,
-            Confirmation
-        }
-        public enum ConfirmationState
-        {
-            Invalid,
-            RemoveRow,
-            RemoveColumn
-        }
-
         internal void SubmitAddColumn()
         {
-            if (m_CurrentState != OverlayState.AddColumn) return;
+            if (m_CurrentState != OverlayState.AddColumn)
+            {
+                return;
+            }
 
-            if (m_TableWindow.GetController().AddColumn(m_AddColumnName.text, (Serializable.SerializableTypes)m_AddColumnType.value))
+            if (m_TableWindow.GetController()
+                .AddColumn(m_AddColumnName.text, (Serializable.SerializableTypes)m_AddColumnType.value))
             {
                 SetOverlayStateHidden();
             }
@@ -225,7 +233,10 @@ namespace GDX.Editor.Windows.Tables
 
         internal void SubmitAddRow()
         {
-            if (m_CurrentState != OverlayState.AddRow) return;
+            if (m_CurrentState != OverlayState.AddRow)
+            {
+                return;
+            }
 
             if (m_TableWindow.GetController().AddRow(m_AddRowName.text))
             {
@@ -242,12 +253,14 @@ namespace GDX.Editor.Windows.Tables
                     {
                         SetOverlayStateHidden();
                     }
+
                     break;
                 case OverlayState.RenameRow:
                     if (m_TableWindow.GetController().RenameRow(m_CachedIndex, m_RenameName.text))
                     {
                         SetOverlayStateHidden();
                     }
+
                     break;
             }
         }
@@ -261,12 +274,14 @@ namespace GDX.Editor.Windows.Tables
                     {
                         SetOverlayStateHidden();
                     }
+
                     break;
                 case ConfirmationState.RemoveColumn:
                     if (m_TableWindow.GetController().RemoveColumn(m_CachedIndex))
                     {
                         SetOverlayStateHidden();
                     }
+
                     break;
             }
         }

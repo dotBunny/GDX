@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 namespace GDX.Editor.Windows.Tables
 {
 #if UNITY_2022_2_OR_NEWER
-    class TableWindowToolbar
+    internal class TableWindowToolbar
     {
         readonly TableWindow m_ParentWindow;
         readonly Toolbar m_Toolbar;
@@ -46,7 +46,9 @@ namespace GDX.Editor.Windows.Tables
 
         DropdownMenuAction.Status CanAddRow(DropdownMenuAction action)
         {
-            return m_ParentWindow.GetTable().GetColumnCount() > 0 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
+            return m_ParentWindow.GetTable().GetColumnCount() > 0
+                ? DropdownMenuAction.Status.Normal
+                : DropdownMenuAction.Status.Disabled;
         }
         DropdownMenuAction.Status CanRenameRow(DropdownMenuAction action)
         {

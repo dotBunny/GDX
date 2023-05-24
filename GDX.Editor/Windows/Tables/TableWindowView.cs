@@ -13,13 +13,13 @@ namespace GDX.Editor.Windows.Tables
     public class TableWindowView
     {
         readonly List<ITable.RowDescription> k_RowDescriptions = new List<ITable.RowDescription>();
-        ITable.ColumnDescription[] m_ColumnDescriptions;
-
-
-        TableWindow parentWindow;
+        readonly ITable.ColumnDescription[] m_ColumnDescriptions;
         internal MultiColumnListView m_MultiColumnListView;
-        VisualElement m_TableViewHeader;
-        Columns m_TableViewColumns;
+        readonly Columns m_TableViewColumns;
+        readonly VisualElement m_TableViewHeader;
+
+
+        readonly TableWindow parentWindow;
 
         public TableWindowView(VisualElement rootElement, TableWindow window)
         {
@@ -182,7 +182,13 @@ namespace GDX.Editor.Windows.Tables
 
             // Add row header column
             m_TableViewColumns.Insert(0,
-                new Column { makeCell = TableWindowCells.MakeRowHeader, bindCell = BindRowHeader, name = "RowName", title = "Row Name" });
+                new Column
+                {
+                    makeCell = TableWindowCells.MakeRowHeader,
+                    bindCell = BindRowHeader,
+                    name = "RowName",
+                    title = "Row Name"
+                });
 
             // Create MCLV
             m_MultiColumnListView = new MultiColumnListView(m_TableViewColumns)
@@ -191,7 +197,7 @@ namespace GDX.Editor.Windows.Tables
                 name = "gdx-table-view",
                 selectionType = SelectionType.Single,
                 itemsSource = k_RowDescriptions,
-                showAlternatingRowBackgrounds = AlternatingRowBackground.ContentOnly,
+                showAlternatingRowBackgrounds = AlternatingRowBackground.ContentOnly
             };
 
             //BuildTableWindowContextMenu(m_TableView);
@@ -240,7 +246,11 @@ namespace GDX.Editor.Windows.Tables
 
         public int GetSelectedRowInternalIndex()
         {
-            if (m_MultiColumnListView.selectedItem == null) return -1;
+            if (m_MultiColumnListView.selectedItem == null)
+            {
+                return -1;
+            }
+
             ITable.RowDescription selectedItem = (ITable.RowDescription)m_MultiColumnListView.selectedItem;
             return selectedItem.InternalIndex;
         }
@@ -263,13 +273,14 @@ namespace GDX.Editor.Windows.Tables
             for (int i = 1; i < columnCount; i++)
             {
                 int indexOfSplit = m_TableViewColumns[i].name.IndexOf("_", StringComparison.Ordinal);
-                string column = m_TableViewColumns[i].name.Substring(indexOfSplit+1);
+                string column = m_TableViewColumns[i].name.Substring(indexOfSplit + 1);
                 int columnInteger = int.Parse(column);
                 if (columnInteger == internalIndex)
                 {
                     return m_ColumnDescriptions[i].Type;
                 }
             }
+
             return Serializable.SerializableTypes.Invalid;
         }
 
@@ -283,7 +294,7 @@ namespace GDX.Editor.Windows.Tables
             for (int i = 1; i < columnCount; i++)
             {
                 int indexOfSplit = m_TableViewColumns[i].name.IndexOf("_", StringComparison.Ordinal);
-                string column = m_TableViewColumns[i].name.Substring(indexOfSplit+1);
+                string column = m_TableViewColumns[i].name.Substring(indexOfSplit + 1);
                 int columnInteger = int.Parse(column);
                 if (columnInteger == internalIndex)
                 {
@@ -299,7 +310,6 @@ namespace GDX.Editor.Windows.Tables
             }
         }
 
-
         internal void RebuildRowData()
         {
             ITable table = parentWindow.GetTable();
@@ -308,6 +318,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 k_RowDescriptions.AddRange(table.GetAllRowDescriptions());
             }
+
             m_MultiColumnListView.RefreshItems();
 
             // TODO : Trigger update of each cell? or does it use version to know it needs to update
@@ -339,7 +350,9 @@ namespace GDX.Editor.Windows.Tables
 
         DropdownMenuAction.Status CanRemoveColumn(DropdownMenuAction action)
         {
-            return parentWindow.GetTable().GetColumnCount() > 1 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
+            return parentWindow.GetTable().GetColumnCount() > 1
+                ? DropdownMenuAction.Status.Normal
+                : DropdownMenuAction.Status.Disabled;
         }
     }
 #endif
