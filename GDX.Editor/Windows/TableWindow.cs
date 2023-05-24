@@ -12,6 +12,13 @@ namespace GDX.Editor.Windows
 #if UNITY_2022_2_OR_NEWER
     public class TableWindow : EditorWindow
     {
+        // TODO:
+        // - Settings
+        // - Confirmation mode
+        // - Refactor
+        // - Rename columns bug fix
+        // - sorting
+        // - selection in objects
 
         readonly List<ITable.RowDescription> k_RowDescriptions = new List<ITable.RowDescription>();
         Button m_AddColumnAddButton;
@@ -53,8 +60,9 @@ namespace GDX.Editor.Windows
         ITable m_TargetTable;
 
         Toolbar m_Toolbar;
-        Button m_ToolbarAddColumn;
-        Button m_ToolbarAddRow;
+        ToolbarMenu m_ToolbarRowMenu;
+        ToolbarMenu m_ToolbarColumnMenu;
+        ToolbarButton m_ToolbarSettingsButton;
 
         void OnEnable()
         {
@@ -287,7 +295,7 @@ namespace GDX.Editor.Windows
 
             // Add row header column
             m_TableViewColumns.Insert(0,
-                new Column { makeCell = TableWindowCells.MakeRowHeader, bindCell = BindRowHeader });
+                new Column { makeCell = TableWindowCells.MakeRowHeader, bindCell = BindRowHeader, name = "RowName", title = "Row Name" });
 
             // Create MCLV
             if (m_TableView != null)
@@ -303,16 +311,38 @@ namespace GDX.Editor.Windows
                 itemsSource = k_RowDescriptions,
                 showAlternatingRowBackgrounds = AlternatingRowBackground.ContentOnly,
             };
-            BuildTableWindowContextMenu(m_TableView);
+
+            //BuildTableWindowContextMenu(m_TableView);
             rootElement.Insert(1, m_TableView);
 
             // Link other parts of table that we need for functionality
             m_TableViewHeader = m_TableView.Q<VisualElement>(null, "unity-multi-column-header");
+            VisualElement columnContainer = m_TableViewHeader[0];
+            for (int i = 0; i < columnContainer.childCount; i++)
+            {
+                string columnName = columnContainer[i].name;
+                if (columnName.StartsWith("Column_", StringComparison.OrdinalIgnoreCase))
+                {
+                    int index = int.Parse(columnName.Split('_', StringSplitOptions.RemoveEmptyEntries)[1]);
+                    BuildHeaderMenu(columnContainer[i], index);
+                }
+            }
+
 
             RebuildRowData();
 
             // Next frame resize things
             EditorApplication.delayCall += AutoResizeColumns;
+        }
+
+        void BuildHeaderMenu(VisualElement element, int index)
+        {
+            element.AddManipulator(new ContextualMenuManipulator(evt =>
+            {
+                evt.menu.AppendAction("Rename", a => RenameColumn(index));
+                evt.menu.AppendAction("Remove", a => RemoveColumn(index));
+                evt.menu.AppendSeparator();
+            }));
         }
 
         void RebuildRowData()
@@ -334,16 +364,38 @@ namespace GDX.Editor.Windows
         }
 
 
+        DropdownMenuAction.Status ToolbarMenu_CanAddRow(DropdownMenuAction action)
+        {
+            return m_TargetTable.GetColumnCount() > 0 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
+        }
+        DropdownMenuAction.Status ToolbarMenu_CanRenameRow(DropdownMenuAction action)
+        {
+            return m_TableView.selectedItem != null ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
+        }
+        void ToolbarMenu_RenameRow()
+        {
+            ITable.RowDescription selectedItem = (ITable.RowDescription)m_TableView.selectedItem;
+            Debug.Log($"Rename {selectedItem.Index}");
+            RenameRow(selectedItem.Index);
+        }
+
+
+
         void BindWindow()
         {
             rootVisualElement.RegisterCallback<KeyDownEvent>(OnKeyboardEvent);
-            BuildTableWindowContextMenu(rootVisualElement);
+            //BuildTableWindowContextMenu(rootVisualElement);
             m_Toolbar = rootVisualElement.Q<Toolbar>("gdx-table-toolbar");
-            m_ToolbarAddColumn = m_Toolbar.Q<Button>("gdx-table-toolbar-add-column");
-            m_ToolbarAddColumn.clicked += AddColumn;
 
-            m_ToolbarAddRow = m_Toolbar.Q<Button>("gdx-table-toolbar-add-row");
-            m_ToolbarAddRow.clicked += AddRow;
+            m_ToolbarColumnMenu = m_Toolbar.Q<ToolbarMenu>("gdx-table-toolbar-column");
+            m_ToolbarColumnMenu.menu.AppendAction("Add", _ => { AddColumn(); });
+            //m_ToolbarColumnMenu.menu.AppendAction("Rename", _ => { ToolbarMenu_RenameRow(); }, ToolbarMenu_CanRenameRow);
+
+            m_ToolbarRowMenu = m_Toolbar.Q<ToolbarMenu>("gdx-table-toolbar-row");
+            m_ToolbarRowMenu.menu.AppendAction("Add", _ => { AddRow(); }, ToolbarMenu_CanAddRow);
+            m_ToolbarRowMenu.menu.AppendAction("Rename", _ => { ToolbarMenu_RenameRow(); }, ToolbarMenu_CanRenameRow);
+
+            m_ToolbarSettingsButton = m_Toolbar.Q<ToolbarButton>("gdx-table-toolbar-settings");
 
             m_Overlay = rootVisualElement.Q<VisualElement>("gdx-table-overlay");
 
@@ -475,6 +527,13 @@ namespace GDX.Editor.Windows
             m_RenameRowName.userData = column;
             SetOverlayState(OverlayState.RenameColumn);
         }
+        void RemoveColumn(int column)
+        {
+            //TODO: actual
+            m_RenameColumnName.SetValueWithoutNotify(m_TargetTable.GetColumnName(column));
+            m_RenameRowName.userData = column;
+            SetOverlayState(OverlayState.RenameColumn);
+        }
 
         void RenameColumn_RenameButtonClicked()
         {
@@ -537,6 +596,14 @@ namespace GDX.Editor.Windows
             SetOverlayState(OverlayState.RenameRow);
         }
 
+        void RemoveRow(int row)
+        {
+            // TODO remove workflow
+            m_RenameRowName.SetValueWithoutNotify(m_TargetTable.GetRowName(row));
+            m_RenameRowName.userData = row;
+            SetOverlayState(OverlayState.RenameRow);
+        }
+
         void RenameRow_RenameButtonClicked()
         {
             RegisterUndo("Rename Row");
@@ -560,8 +627,9 @@ namespace GDX.Editor.Windows
             if (state == OverlayState.Hide)
             {
                 m_Toolbar.focusable = true;
-                m_ToolbarAddColumn.focusable = true;
-                m_ToolbarAddRow.focusable = true;
+                m_ToolbarColumnMenu.focusable = true;
+                m_ToolbarRowMenu.focusable = true;
+                m_ToolbarSettingsButton.focusable = true;
                 m_Overlay.focusable = false;
                 if (m_TableView != null)
                 {
@@ -571,8 +639,9 @@ namespace GDX.Editor.Windows
             else
             {
                 m_Toolbar.focusable = false;
-                m_ToolbarAddColumn.focusable = false;
-                m_ToolbarAddRow.focusable = false;
+                m_ToolbarColumnMenu.focusable = false;
+                m_ToolbarRowMenu.focusable = false;
+                m_ToolbarSettingsButton.focusable = false;
                 if (m_TableView != null)
                 {
                     m_TableView.focusable = false;
@@ -624,26 +693,6 @@ namespace GDX.Editor.Windows
         }
 
 
-
-
-        void BuildTableWindowContextMenu(VisualElement element)
-        {
-            element.AddManipulator(new ContextualMenuManipulator(evt =>
-            {
-                evt.menu.AppendAction("Add Column", a => AddColumn());
-
-                // Only when we have columns
-                if (m_TargetTable.GetColumnCount() > 0)
-                {
-                    evt.menu.AppendAction("Add Row", a => AddRow());
-                }
-                else
-                {
-                    evt.menu.AppendAction("Add Row", a => AddRow(), DropdownMenuAction.Status.Disabled);
-                }
-            }));
-        }
-
         void BindRowHeader(VisualElement cell, int row)
         {
             Label label = (Label)cell;
@@ -652,6 +701,7 @@ namespace GDX.Editor.Windows
             label.AddManipulator(new ContextualMenuManipulator(evt =>
             {
                 evt.menu.AppendAction("Rename", a => RenameRow(description.Index));
+                evt.menu.AppendAction("Remove", a => RemoveRow(description.Index));
             }));
         }
 
@@ -661,7 +711,9 @@ namespace GDX.Editor.Windows
             AddColumn,
             AddRow,
             RenameColumn,
-            RenameRow
+            RenameRow,
+            Settings,
+            Confirmation
         }
     }
 #endif

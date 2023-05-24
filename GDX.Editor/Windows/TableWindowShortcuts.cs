@@ -8,7 +8,8 @@ using UnityEngine;
 
 namespace GDX.Editor.Windows
 {
-    internal static class TableWindowShortcuts
+#if UNITY_2022_2_OR_NEWER
+    static class TableWindowShortcuts
     {
         [GDXShortcut("Add Row",  KeyCode.Equals, ShortcutModifiers.Control, typeof(TableWindow))]
         internal static void AddRow()
@@ -38,5 +39,8 @@ namespace GDX.Editor.Windows
             if(table != null) table.RemoveSelectedRows();
         }
 
+
+
     }
+#endif
 }
