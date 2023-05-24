@@ -305,7 +305,7 @@ namespace GDX.Editor.Windows.Tables
 
             if (foundIndex != -1)
             {
-                m_ColumnDescriptions[foundIndex].Name = newName;
+                m_ColumnDescriptions[foundIndex-1].Name = newName;
                 m_TableViewColumns[foundIndex].title = newName;
             }
         }
