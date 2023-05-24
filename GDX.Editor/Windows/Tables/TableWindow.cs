@@ -5,10 +5,10 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 // TODO:
-// - Settings
 // - sorting
 // - on undo repaint? rebind
 // - selection in objects
+// character input is bad
 
 namespace GDX.Editor.Windows.Tables
 {
