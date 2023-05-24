@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Packages/com.dotbunny.gdx/GDX.Editor/UIElements/GDXStylesShared.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStylesShared" />
-    <ui:VisualElement name="gdx-table" style="flex-direction: column;">
+    <ui:VisualElement name="gdx-table" style="flex-direction: column; height: 100%; width: 100%;">
         <uie:Toolbar name="gdx-table-toolbar" style="width: 100%;">
             <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" text="Column" name="gdx-table-toolbar-column" enable-rich-text="false" />
             <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" name="gdx-table-toolbar-row" text="Row" enable-rich-text="false" />

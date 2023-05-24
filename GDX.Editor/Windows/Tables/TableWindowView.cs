@@ -14,7 +14,7 @@ namespace GDX.Editor.Windows.Tables
     {
         readonly List<ITable.RowDescription> k_RowDescriptions = new List<ITable.RowDescription>();
         readonly ITable.ColumnDescription[] m_ColumnDescriptions;
-        internal MultiColumnListView m_MultiColumnListView;
+        readonly MultiColumnListView m_MultiColumnListView;
         readonly Columns m_TableViewColumns;
         readonly VisualElement m_TableViewHeader;
 
@@ -199,6 +199,7 @@ namespace GDX.Editor.Windows.Tables
                 itemsSource = k_RowDescriptions,
                 showAlternatingRowBackgrounds = AlternatingRowBackground.ContentOnly
             };
+            m_MultiColumnListView.style.height = new StyleLength(new Length(100f, LengthUnit.Percent));
 
             //BuildTableWindowContextMenu(m_TableView);
             rootElement.Insert(1, m_MultiColumnListView);
