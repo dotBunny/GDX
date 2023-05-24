@@ -219,6 +219,7 @@ namespace GDX.Editor.Windows.Tables
                     m_AddRowOverlay.style.display = DisplayStyle.None;
                     m_RenameOverlay.style.display = DisplayStyle.None;
                     m_ConfirmationOverlay.style.display = DisplayStyle.None;
+                    m_SettingsOverlay.style.display = DisplayStyle.None;
                     if (m_TableWindow.GetView()?.GetMultiColumnListView() != null)
                     {
                         m_TableWindow.GetView()?.GetMultiColumnListView().Focus();
