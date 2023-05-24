@@ -1434,9 +1434,9 @@ namespace GDX.Tables
                 ref T[] column = ref allColumnsOfType[i].TArray;
                 int newRowCount = rowCount - numberOfRowsToDelete;
 
-                for (int j = removeAt; j < rowCount - numberOfRowsToDelete; j++)
+                for (int j = removeAt + numberOfRowsToDelete; j < rowCount; j++)
                 {
-                    column[j] = column[j + numberOfRowsToDelete];
+                    column[j - numberOfRowsToDelete] = column[j];
                 }
 
                 Array.Resize(ref column, newRowCount);
