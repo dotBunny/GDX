@@ -277,7 +277,7 @@ namespace GDX.Editor.Windows.Tables
                 int columnInteger = int.Parse(column);
                 if (columnInteger == internalIndex)
                 {
-                    return m_ColumnDescriptions[i].Type;
+                    return m_ColumnDescriptions[i-1].Type;
                 }
             }
 
