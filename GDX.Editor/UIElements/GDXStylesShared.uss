@@ -649,6 +649,12 @@ Button.gdx-small-button {
     padding-left: 10px;
 }
 
+#gdx-table-field
+{
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
 .gdx-table-toolbar-context-button
 {
     border-width: 0;

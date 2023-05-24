@@ -20,6 +20,10 @@ namespace GDX.Editor.Windows.Tables
         static readonly Dictionary<VisualElement, TableWindowCellMapping> k_CellToMapping =
             new Dictionary<VisualElement, TableWindowCellMapping>();
 
+        static StyleLength m_StyleLength25 = new StyleLength(new Length(25, LengthUnit.Pixel));
+        static StyleLength m_StyleLength275 = new StyleLength(new Length(275, LengthUnit.Pixel));
+
+
         internal static void DestroyCell(VisualElement cell)
         {
             k_CellToMapping.Remove(cell);
@@ -610,6 +614,7 @@ namespace GDX.Editor.Windows.Tables
         internal static VisualElement MakeCharCell(int table, int column)
         {
             TextField newField = new TextField(null, 1, false, false, ' ') { name = k_CellFieldName };
+            newField.style.maxWidth = m_StyleLength25;
             k_CellToMapping.Add(newField, new TableWindowCellMapping { KnownTableIndex = table, ColumnID = column });
             return newField;
         }
@@ -792,6 +797,8 @@ namespace GDX.Editor.Windows.Tables
         internal static VisualElement MakeHash128Cell(int table, int column)
         {
             Hash128Field newField = new Hash128Field(null) { name = k_CellFieldName };
+            newField.style.maxWidth = m_StyleLength275;
+
             k_CellToMapping.Add(newField, new TableWindowCellMapping { KnownTableIndex = table, ColumnID = column });
             return newField;
         }
