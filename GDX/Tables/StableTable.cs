@@ -241,12 +241,20 @@ namespace GDX.Tables
 
         public void SetRowName(string rowName, int row)
         {
-            throw new NotImplementedException();
+            int rowDenseIndex = rowIDToDenseIndexMap[row];
+            rowNames[rowDenseIndex] = rowName;
         }
 
         public string GetRowName(int row)
         {
-            throw new NotImplementedException();
+            int rowDenseIndex = rowIDToDenseIndexMap[row];
+            return rowNames[rowDenseIndex];
+        }
+
+        public ref string GetRowNameRef(int row)
+        {
+            int rowDenseIndex = rowIDToDenseIndexMap[row];
+            return ref rowNames[rowDenseIndex];
         }
 
         public ref string GetColumnNameRef(int columnID)
@@ -1434,17 +1442,17 @@ namespace GDX.Tables
             int columnCount = allColumnsOfType?.Length ?? 0;
             for (int i = 0; i < columnCount; i++)
             {
-                ref T[] column = ref allColumnsOfType[i].TArray;
+                ref T[] rows = ref allColumnsOfType[i].TArray;
                 int newRowCount = rowCount + numberOfNewRows;
-                Array.Resize(ref column, newRowCount);
+                Array.Resize(ref rows, newRowCount);
                 for (int j = newRowCount - 1; j > insertAt + numberOfNewRows - 1; j--)
                 {
-                    column[j] = column[j - numberOfNewRows];
+                    rows[j] = rows[j - numberOfNewRows];
                 }
 
                 for (int j = 0; j < numberOfNewRows; j++)
                 {
-                    column[insertAt + j] = default;
+                    rows[insertAt + j] = default;
                 }
             }
         }
@@ -1455,15 +1463,15 @@ namespace GDX.Tables
 
             for (int i = 0; i < columnCount; i++)
             {
-                ref T[] column = ref allColumnsOfType[i].TArray;
+                ref T[] rows = ref allColumnsOfType[i].TArray;
                 int newRowCount = rowCount - numberOfRowsToDelete;
 
                 for (int j = removeAt + numberOfRowsToDelete; j < rowCount; j++)
                 {
-                    column[j - numberOfRowsToDelete] = column[j];
+                    rows[j - numberOfRowsToDelete] = rows[j];
                 }
 
-                Array.Resize(ref column, newRowCount);
+                Array.Resize(ref rows, newRowCount);
             }
         }
 
