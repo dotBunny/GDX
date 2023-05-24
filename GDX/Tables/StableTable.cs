@@ -213,6 +213,7 @@ namespace GDX.Tables
             for (int i = 0; i < combinedColumnCount; i++)
             {
                 int columnID = sortedOrderToColumnIDMap[i];
+                AssertColumnIDValid(columnID);
                 ref ColumnEntry entryForID = ref columnIDToDenseIndexMap[columnID];
                 ref ArrayHolder<string> nameColumnsForType = ref allColumnNames[(int)entryForID.ColumnType];
 
@@ -229,38 +230,74 @@ namespace GDX.Tables
             return returnArray;
         }
 
+        internal void AssertColumnIDValid(int columnID)
+        {
+            if (columnID < 0 || columnID >= columnIDToDenseIndexMap.Length)
+            {
+                throw new ArgumentException("Invalid column outside valid ID range: " + columnID);
+            }
+
+            ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[columnID];
+
+            if (columnEntry.ColumnType == Serializable.SerializableTypes.Invalid)
+            {
+                throw new ArgumentException("Invalid column pointing to deallocated entry: " + columnID);
+            }
+        }
+
+        internal void AssertRowIDValid(int rowID)
+        {
+            if (rowID < 0 || rowID >= rowIDToDenseIndexMap.Length)
+            {
+                throw new ArgumentException("Invalid row outside valid ID range: " + rowID);
+            }
+
+            int rowIndex = rowIDToDenseIndexMap[rowID];
+
+            if (rowIndex >= rowCount || rowIndex < 0)
+            {
+                throw new ArgumentException("Invalid row outside valid ID range: " + rowID);
+            }
+        }
+
         public void SetColumnName(string columnName, int column)
         {
+            AssertColumnIDValid(column);
             ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[column];
             allColumnNames[(int)columnEntry.ColumnType][columnEntry.columnDenseIndex] = columnName;
         }
 
         public string GetColumnName(int column)
         {
+            AssertColumnIDValid(column);
             ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[column];
             return allColumnNames[(int)columnEntry.ColumnType][columnEntry.columnDenseIndex];
         }
 
         public void SetRowName(string rowName, int row)
         {
+            AssertRowIDValid(row);
             int rowDenseIndex = rowIDToDenseIndexMap[row];
             rowNames[rowDenseIndex] = rowName;
         }
 
         public string GetRowName(int row)
         {
+            AssertRowIDValid(row);
             int rowDenseIndex = rowIDToDenseIndexMap[row];
             return rowNames[rowDenseIndex];
         }
 
         public ref string GetRowNameRef(int row)
         {
+            AssertRowIDValid(row);
             int rowDenseIndex = rowIDToDenseIndexMap[row];
             return ref rowNames[rowDenseIndex];
         }
 
         public ref string GetColumnNameRef(int columnID)
         {
+            AssertColumnIDValid(columnID);
             ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[columnID];
             return ref allColumnNames[(int)columnEntry.ColumnType][columnEntry.columnDenseIndex];
         }
@@ -268,6 +305,10 @@ namespace GDX.Tables
 
         public int AddRow(string rowName = null, int insertAtRowID = -1)
         {
+            if (insertAtRowID >= 0)
+            {
+                AssertRowIDValid(insertAtRowID);
+            }
             int rowID = rowEntriesFreeListHead;
             int rowIDToDenseIndexMapLength = rowIDToDenseIndexMap?.Length ?? 0;
             if (rowID >= rowIDToDenseIndexMapLength)
@@ -340,6 +381,10 @@ namespace GDX.Tables
 
         public void AddRows(int numberOfNewRows, string[] rowNames = null, int insertAtRowID = -1)
         {
+            if (insertAtRowID >= 0)
+            {
+                AssertRowIDValid(insertAtRowID);
+            }
             int rowIDToDenseIndexMapLength = rowIDToDenseIndexMap?.Length ?? 0;
             int newCount = rowCount + numberOfNewRows;
             if (newCount > rowIDToDenseIndexMapLength)
@@ -440,6 +485,10 @@ namespace GDX.Tables
 
         public void AddRows(int numberOfNewRows, ref int[] rowIDs, string[] rowNames = null, int insertAtRowID = -1)
         {
+            if (insertAtRowID >= 0)
+            {
+                AssertRowIDValid(insertAtRowID);
+            }
             int rowIDToDenseIndexMapLength = rowIDToDenseIndexMap?.Length ?? 0;
             int newCount = rowCount + numberOfNewRows;
             if (newCount > rowIDToDenseIndexMapLength)
@@ -539,6 +588,7 @@ namespace GDX.Tables
 
         public void RemoveRow(int rowID)
         {
+            AssertRowIDValid(rowID);
             int rowDenseIndex = rowIDToDenseIndexMap[rowID];
             for (int i = rowDenseIndex + 1; i < rowCount; i++)
             {
@@ -1338,6 +1388,10 @@ namespace GDX.Tables
 
         internal int AddColumnInternal<T>(string columnName, ref ArrayHolder<T>[] allColumnsOfType, Serializable.SerializableTypes typeIndex, int insertAtColumnID)
         {
+            if (insertAtColumnID >= 0)
+            {
+                AssertColumnIDValid(insertAtColumnID);
+            }
             int columnCount = allColumnsOfType?.Length ?? 0;
             Array.Resize(ref allColumnsOfType, columnCount + 1);
             allColumnsOfType[columnCount].TArray = new T[rowCount];
@@ -1402,6 +1456,7 @@ namespace GDX.Tables
 
         internal void RemoveColumnInternal<T>(ref ArrayHolder<T>[] allColumnsOfType, Serializable.SerializableTypes typeIndex, int columnID)
         {
+            AssertColumnIDValid(columnID);
             int columnLocation = columnIDToDenseIndexMap[columnID].columnDenseIndex;
 
             int lastIndex = allColumnsOfType.Length - 1;
@@ -1479,6 +1534,8 @@ namespace GDX.Tables
 
         internal ref T GetCellRef<T>(int rowID, int columnID, ref ArrayHolder<T>[] allColumnsOfType)
         {
+            AssertColumnIDValid(columnID);
+            AssertRowIDValid(rowID);
             int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
             int row = rowIDToDenseIndexMap[rowID];
             return ref allColumnsOfType[column][row];
@@ -1486,6 +1543,8 @@ namespace GDX.Tables
 
         internal T GetCell<T>(int rowID, int columnID, ref ArrayHolder<T>[] allColumnsOfType)
         {
+            AssertColumnIDValid(columnID);
+            AssertRowIDValid(rowID);
             int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
             int row = rowIDToDenseIndexMap[rowID];
             return allColumnsOfType[column][row];
@@ -1493,6 +1552,8 @@ namespace GDX.Tables
 
         internal ulong SetCell<T>(int rowID, int columnID, ref ArrayHolder<T>[] allColumnsOfType, T value)
         {
+            AssertColumnIDValid(columnID);
+            AssertRowIDValid(rowID);
             int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
             int row = rowIDToDenseIndexMap[rowID];
             allColumnsOfType[column][row] = value;
@@ -1502,6 +1563,7 @@ namespace GDX.Tables
 
         internal T[] GetColumn<T>(int columnID, ref ArrayHolder<T>[] allColumnsOfType)
         {
+            AssertColumnIDValid(columnID);
             int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
             return allColumnsOfType[column].TArray;
         }
