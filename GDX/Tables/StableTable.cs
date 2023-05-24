@@ -213,14 +213,16 @@ namespace GDX.Tables
             for (int i = 0; i < combinedColumnCount; i++)
             {
                 int columnID = sortedOrderToColumnIDMap[i];
-                Serializable.SerializableTypes columnType = columnIDToDenseIndexMap[columnID].ColumnType;
-                string name = allColumnNames[(int)columnType][columnIDToDenseIndexMap[columnID].columnDenseIndex];
+                ref ColumnEntry entryForID = ref columnIDToDenseIndexMap[columnID];
+                ref ArrayHolder<string> nameColumnsForType = ref allColumnNames[(int)entryForID.ColumnType];
+
+                string name = nameColumnsForType[entryForID.columnDenseIndex];
 
                 returnArray[i] = new ITable.ColumnDescription
                 {
                     Name = name,
                     InternalIndex = columnID,
-                    Type = columnType
+                    Type = entryForID.ColumnType
                 };
             }
 
