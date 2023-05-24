@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 // TODO:
 // - Settings
 // - sorting
+// - on undo repaint? rebind
 // - selection in objects
 
 namespace GDX.Editor.Windows.Tables
@@ -86,6 +87,12 @@ namespace GDX.Editor.Windows.Tables
                     case TableWindowOverlay.OverlayState.RenameRow:
                     case TableWindowOverlay.OverlayState.RenameColumn:
                         m_Overlay.SubmitRename();
+                        break;
+                    case TableWindowOverlay.OverlayState.Settings:
+                        m_Overlay.SubmitSettings();
+                        break;
+                    case TableWindowOverlay.OverlayState.Confirmation:
+                        m_Overlay.SubmitConfirmation();
                         break;
                 }
             }

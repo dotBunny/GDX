@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using GDX.Collections;
 using GDX.Editor.Inspectors;
 using GDX.Tables;
 using UnityEditor;
@@ -73,9 +74,9 @@ namespace GDX.Editor.Windows.Tables
             ITable table = m_TableWindow.GetTable();
             table.AddColumn(type, name, orderedIndex);
 
-            SetDirty();
+            OnTableChanged();
             m_TableWindow.BindTable(table);
-            TableInspectorBase.RedrawInspector(table);
+            OnTableChanged();
             return true;
         }
 
@@ -91,7 +92,8 @@ namespace GDX.Editor.Windows.Tables
             table.AddRow(name, orderedIndex);
 
             m_TableWindow.GetView().RebuildRowData();
-            TableInspectorBase.RedrawInspector(table);
+
+            OnTableChanged();
             return true;
         }
 
@@ -107,8 +109,8 @@ namespace GDX.Editor.Windows.Tables
             table.AddRow($"Row_{Core.Random.NextInteger(1, 9999).ToString()}");
 
             m_TableWindow.GetView().RebuildRowData();
-            TableInspectorBase.RedrawInspector(table);
             m_Overlay.SetOverlayStateHidden();
+            OnTableChanged();
         }
 
         public void RemoveSelectedRow()
@@ -118,6 +120,7 @@ namespace GDX.Editor.Windows.Tables
             RegisterUndo($"Remove Row ({selectedRow.Name})");
             m_TableWindow.GetTable().RemoveRow(selectedRow.InternalIndex);
             m_TableWindow.GetView().RebuildRowData();
+            OnTableChanged();
         }
 
         public bool RemoveColumn(int internalIndex)
@@ -131,6 +134,7 @@ namespace GDX.Editor.Windows.Tables
             RegisterUndo($"Remove Column ({table.GetColumnName(internalIndex)})");
             table.RemoveColumn(m_TableWindow.GetView().GetColumnType(internalIndex), internalIndex);
             m_TableWindow.BindTable(table);
+            OnTableChanged();
             return true;
         }
 
@@ -140,6 +144,7 @@ namespace GDX.Editor.Windows.Tables
             RegisterUndo($"Remove Row ({table.GetRowName(internalIndex)})");
             table.RemoveRow(internalIndex);
             m_TableWindow.GetView().RebuildRowData();
+            OnTableChanged();
             return true;
         }
 
@@ -150,6 +155,7 @@ namespace GDX.Editor.Windows.Tables
             table.SetRowName(name, internalIndex);
 
             m_TableWindow.GetView().RebuildRowData();
+            OnTableChanged();
             return true;
         }
 
@@ -163,7 +169,25 @@ namespace GDX.Editor.Windows.Tables
 
             table.SetColumnName(name, internalIndex);
 
-            //  m_TableWindow.GetView().RebuildRowData();
+            OnTableChanged();
+            return true;
+        }
+
+        public bool SetTableSettings(string displayName, bool enableUndo)
+        {
+            ITable table = m_TableWindow.GetTable();
+            RegisterUndo($"Table Settings");
+
+            // Check if there is a change
+            string tableDisplayName = table.GetDisplayName();
+            if (tableDisplayName != displayName)
+            {
+                table.SetDisplayName(displayName);
+                m_TableWindow.titleContent = new GUIContent(displayName);
+            }
+            table.SetFlag(ITable.EnableUndoFlag, enableUndo);
+
+            OnTableChanged();
             return true;
         }
 
@@ -181,13 +205,14 @@ namespace GDX.Editor.Windows.Tables
             }
         }
 
-        void SetDirty()
+        void OnTableChanged()
         {
             ScriptableObject scriptableObject = m_TableWindow.GetScriptableObject();
             if (scriptableObject != null)
             {
                 EditorUtility.SetDirty(scriptableObject);
             }
+            TableInspectorBase.RedrawInspector(m_TableWindow.GetTable());
         }
     }
 #endif

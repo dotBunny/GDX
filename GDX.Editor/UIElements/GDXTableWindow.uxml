@@ -39,6 +39,7 @@
             <ui:TextField picking-mode="Ignore" label="Display Name" value="MyColumn" name="gdx-table-display-name" />
             <ui:Toggle label="Support Undo" name="gdx-table-flag-undo" />
             <ui:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row-reverse; top: 10px;">
+                <ui:Button text="Cancel" display-tooltip-when-elided="true" name="gdx-table-settings-cancel" enable-rich-text="false" tabindex="2" />
                 <ui:Button text="Save" display-tooltip-when-elided="true" name="gdx-table-settings-save" enable-rich-text="false" tabindex="1" />
             </ui:VisualElement>
         </ui:VisualElement>

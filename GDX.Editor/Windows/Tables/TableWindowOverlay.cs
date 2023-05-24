@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
+using GDX.Tables;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor.Windows.Tables
@@ -50,13 +51,21 @@ namespace GDX.Editor.Windows.Tables
         ConfirmationState m_ConfirmationState;
         readonly Label m_ConfirmationTitleLabel;
 
-        OverlayState m_CurrentState;
         readonly Button m_RenameAcceptButton;
         readonly Button m_RenameCancelButton;
         readonly TextField m_RenameName;
-
         readonly VisualElement m_RenameOverlay;
         readonly Label m_RenameTitleLabel;
+
+        readonly VisualElement m_SettingsOverlay;
+        readonly TextField m_SettingsDisplayName;
+        readonly Toggle m_SettingsSupportUndoToggle;
+        readonly Button m_SettingsSaveButton;
+        readonly Button m_SettingsCancelButton;
+
+        OverlayState m_CurrentState;
+
+
 
         internal TableWindowOverlay(VisualElement element, TableWindow window)
         {
@@ -109,6 +118,15 @@ namespace GDX.Editor.Windows.Tables
             m_ConfirmationTitleLabel = m_ConfirmationOverlay.Q<Label>("gdx-confirmation-title");
             m_ConfirmationMessageLabel = m_ConfirmationOverlay.Q<Label>("gdx-confirmation-message");
 
+            // Bind our settings overlay
+            m_SettingsOverlay = m_RootElement.Q<VisualElement>("gdx-table-settings");
+            m_SettingsDisplayName = m_SettingsOverlay.Q<TextField>("gdx-table-display-name");
+            m_SettingsSupportUndoToggle = m_SettingsOverlay.Q<Toggle>("gdx-table-flag-undo");
+            m_SettingsSaveButton = m_SettingsOverlay.Q<Button>("gdx-table-settings-save");
+            m_SettingsSaveButton.clicked += SubmitSettings;
+            m_SettingsCancelButton = m_SettingsOverlay.Q<Button>("gdx-table-settings-cancel");
+            m_SettingsCancelButton.clicked += SetOverlayStateHidden;
+
             // Ensure state of everything
             SetState(OverlayState.Hide);
         }
@@ -117,11 +135,6 @@ namespace GDX.Editor.Windows.Tables
         {
             return m_CurrentState;
         }
-
-        // internal void SetState(OverlayState state, int stableIndex = -1, string previousValue = null)
-        // {
-        //
-        // }
 
         internal void SetConfirmationState(ConfirmationState state, int stableIndex, string title, string message)
         {
@@ -193,6 +206,12 @@ namespace GDX.Editor.Windows.Tables
                     m_RootElement.style.display = DisplayStyle.Flex;
                     m_ConfirmationOverlay.style.display = DisplayStyle.Flex;
                     m_ConfirmationAcceptButton.Focus();
+                    break;
+                case OverlayState.Settings:
+                    m_RootElement.style.display = DisplayStyle.Flex;
+                    m_SettingsOverlay.style.display = DisplayStyle.Flex;
+                    m_SettingsDisplayName.SetValueWithoutNotify(m_TableWindow.GetTable().GetDisplayName());
+                    m_SettingsSupportUndoToggle.SetValueWithoutNotify(m_TableWindow.GetTable().GetFlag(ITable.EnableUndoFlag));
                     break;
                 default:
                     m_RootElement.style.display = DisplayStyle.None;
@@ -283,6 +302,19 @@ namespace GDX.Editor.Windows.Tables
                     }
 
                     break;
+            }
+        }
+
+        internal void SubmitSettings()
+        {
+            if (m_CurrentState != OverlayState.Settings)
+            {
+                return;
+            }
+
+            if (m_TableWindow.GetController().SetTableSettings(m_SettingsDisplayName.text, m_SettingsSupportUndoToggle.value))
+            {
+                SetOverlayStateHidden();
             }
         }
     }
