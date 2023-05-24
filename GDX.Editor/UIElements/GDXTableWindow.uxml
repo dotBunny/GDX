@@ -43,7 +43,7 @@
         </ui:VisualElement>
         <ui:VisualElement name="gdx-table-confirmation" style="flex-direction: column; top: 35%; flex-grow: 0; width: 80%; margin-left: 10%; margin-right: 10%; visibility: visible; display: none;">
             <ui:Label tabindex="-1" text="Remove 5 Rows" display-tooltip-when-elided="true" name="gdx-confirmation-title" style="font-size: 16px; -unity-font-style: bold;" />
-            <ui:Label tabindex="-1" text="Are you sure?" display-tooltip-when-elided="true" name="gdx-confirmation-messsage" />
+            <ui:Label tabindex="-1" text="Are you sure?" display-tooltip-when-elided="true" name="gdx-confirmation-message" />
             <ui:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row-reverse; top: 10px; flex-wrap: nowrap;">
                 <ui:Button text="Cancel" display-tooltip-when-elided="true" name="gdx-table-confirmation-cancel" enable-rich-text="false" tabindex="2" />
                 <ui:Button text="Accept" display-tooltip-when-elided="true" name="gdx-table-confirmation-accept" enable-rich-text="false" tabindex="1" />

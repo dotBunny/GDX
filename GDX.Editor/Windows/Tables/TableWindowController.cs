@@ -50,7 +50,7 @@ namespace GDX.Editor.Windows.Tables
         public void ShowRemoveRowDialog(int internalIndex)
         {
             m_Overlay.SetConfirmationState(TableWindowOverlay.ConfirmationState.RemoveRow, internalIndex,
-                "Remove Column", "Are you sure you wish to delete this row?");
+                "Remove Row", "Are you sure you wish to delete this row?");
         }
 
         public bool AddColumn(string name, Serializable.SerializableTypes type,  int orderedIndex = -1)
@@ -97,7 +97,7 @@ namespace GDX.Editor.Windows.Tables
 
         public void RemoveSelectedRow()
         {
-            ITable.RowDescription selectedRow = (ITable.RowDescription)m_TableWindow.GetView().GetTableView().selectedItem;
+            ITable.RowDescription selectedRow = (ITable.RowDescription)m_TableWindow.GetView().GetMultiColumnListView().selectedItem;
             RegisterUndo($"Remove Row ({selectedRow.Name})");
             m_TableWindow.GetTable().RemoveRow(selectedRow.InternalIndex);
             m_TableWindow.GetView().RebuildRowData();

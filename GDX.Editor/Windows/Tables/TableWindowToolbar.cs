@@ -50,11 +50,11 @@ namespace GDX.Editor.Windows.Tables
         }
         DropdownMenuAction.Status CanRenameRow(DropdownMenuAction action)
         {
-            return m_ParentWindow.GetView().GetTableView().selectedItem != null ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
+            return m_ParentWindow.GetView().GetMultiColumnListView().selectedItem != null ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
         }
         void RenameRow()
         {
-            ITable.RowDescription selectedItem = (ITable.RowDescription)m_ParentWindow.GetView().GetTableView().selectedItem;
+            ITable.RowDescription selectedItem = (ITable.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
             m_ParentWindow.GetController().ShowRenameRowDialog(selectedItem.InternalIndex);
         }
 

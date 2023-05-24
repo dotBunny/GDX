@@ -74,7 +74,7 @@ namespace GDX.Editor.Windows.Tables
             m_AddRowCancelButton.clicked += SetOverlayStateHidden;
 
             // Bind our renaming overlay
-            m_RenameOverlay = m_RootElement.Q<VisualElement>("gdx-table-rename-row");
+            m_RenameOverlay = m_RootElement.Q<VisualElement>("gdx-table-rename");
             m_RenameName = m_RenameOverlay.Q<TextField>("gdx-table-rename-name");
             m_RenameTitleLabel = m_RenameOverlay.Q<Label>("gdx-table-rename-title");
             m_RenameAcceptButton = m_RenameOverlay.Q<Button>("gdx-table-rename-accept");
@@ -110,6 +110,7 @@ namespace GDX.Editor.Windows.Tables
         {
             m_ConfirmationTitleLabel.text = title;
             m_ConfirmationMessageLabel.text = message;
+            m_ConfirmationState = state;
             SetState(OverlayState.Confirmation, stableIndex);
         }
 
@@ -118,21 +119,24 @@ namespace GDX.Editor.Windows.Tables
             m_CachedIndex = stableIndex;
 
             // Handle focus
+            TableWindowView view = m_TableWindow.GetView();
             if (state == OverlayState.Hide)
             {
                 m_TableWindow.m_Toolbar.SetFocusable(true);
                 m_RootElement.focusable = false;
-                if (m_TableWindow.GetView()?.GetTableView() != null)
+
+
+                if (view?.GetMultiColumnListView() != null)
                 {
-                    m_TableWindow.GetView().GetTableView().focusable = true;
+                    view.GetMultiColumnListView().focusable = true;
                 }
             }
             else
             {
                 m_TableWindow.m_Toolbar.SetFocusable(false);
-                if (m_TableWindow.GetView().GetTableView() != null)
+                if (view?.GetMultiColumnListView() != null)
                 {
-                    m_TableWindow.GetView().GetTableView().focusable = false;
+                    view.GetMultiColumnListView().focusable = false;
                 }
                 m_RootElement.focusable = true;
             }
@@ -167,16 +171,22 @@ namespace GDX.Editor.Windows.Tables
                                                              $"Row_{Core.Random.NextInteger(1, 9999).ToString()}");
                     m_RenameName.Focus();
                     break;
+                case OverlayState.Confirmation:
+                    m_RootElement.style.display = DisplayStyle.Flex;
+                    m_ConfirmationOverlay.style.display = DisplayStyle.Flex;
+                    m_ConfirmationAcceptButton.Focus();
+                    break;
                 default:
                     m_RootElement.style.display = DisplayStyle.None;
                     m_AddColumnOverlay.style.display = DisplayStyle.None;
                     m_AddRowOverlay.style.display = DisplayStyle.None;
                     m_RenameOverlay.style.display = DisplayStyle.None;
                     m_ConfirmationOverlay.style.display = DisplayStyle.None;
-                    if (m_TableWindow.GetView()?.GetTableView() != null)
+                    if (m_TableWindow.GetView()?.GetMultiColumnListView() != null)
                     {
-                        m_TableWindow.GetView()?.GetTableView().Focus();
+                        m_TableWindow.GetView()?.GetMultiColumnListView().Focus();
                     }
+                    m_ConfirmationState = ConfirmationState.Invalid;
                     break;
             }
             m_CurrentState = state;
@@ -198,6 +208,7 @@ namespace GDX.Editor.Windows.Tables
         }
         public enum ConfirmationState
         {
+            Invalid,
             RemoveRow,
             RemoveColumn
         }
