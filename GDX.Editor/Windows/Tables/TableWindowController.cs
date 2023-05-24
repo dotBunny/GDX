@@ -55,6 +55,17 @@ namespace GDX.Editor.Windows.Tables
                 "Remove Row", "Are you sure you wish to delete this row?");
         }
 
+        public void ShowSettings()
+        {
+            m_Overlay.SetState(TableWindowOverlay.OverlayState.Settings);
+        }
+
+        public void OpenHelp()
+        {
+            GUIUtility.hotControl = 0;
+            Application.OpenURL($"{PackageProvider.DocumentationUri}/manual/features/tables.html");
+        }
+
         public bool AddColumn(string name, Serializable.SerializableTypes type, int orderedIndex = -1)
         {
             RegisterUndo($"Add Column ({name})");

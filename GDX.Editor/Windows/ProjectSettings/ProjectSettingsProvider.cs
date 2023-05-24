@@ -26,10 +26,7 @@ namespace GDX.Editor.Windows.ProjectSettings
     [HideFromDocFX]
     public static class ProjectSettingsProvider
     {
-        /// <summary>
-        ///     The public URI of the package's documentation.
-        /// </summary>
-        const string k_DocumentationUri = "https://gdx.dotbunny.com/";
+
 
         /// <summary>
         ///     The expected number of sections to be available in the project settings.
@@ -187,7 +184,7 @@ namespace GDX.Editor.Windows.ProjectSettings
             {
                 if (section.GetSectionHelpLink() != null)
                 {
-                    string helpLink = $"{k_DocumentationUri}{section.GetSectionHelpLink()}";
+                    string helpLink = $"{PackageProvider.DocumentationUri}{section.GetSectionHelpLink()}";
                     helpButton.clicked += () =>
                     {
                         GUIUtility.hotControl = 0;

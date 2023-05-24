@@ -91,7 +91,6 @@ namespace GDX.Editor.Windows.Tables
             }
         }
 
-
         public TableWindowController GetController()
         {
             return m_Controller;

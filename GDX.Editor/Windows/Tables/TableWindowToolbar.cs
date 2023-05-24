@@ -16,6 +16,7 @@ namespace GDX.Editor.Windows.Tables
         readonly ToolbarMenu m_ToolbarRowMenu;
         readonly ToolbarMenu m_ToolbarColumnMenu;
         readonly ToolbarButton m_ToolbarSettingsButton;
+        readonly ToolbarButton m_ToolbarHelpButton;
 
         internal TableWindowToolbar(Toolbar toolbar, TableWindow window)
         {
@@ -34,6 +35,11 @@ namespace GDX.Editor.Windows.Tables
             m_ToolbarRowMenu.menu.AppendAction("Rename", _ => { RenameRow(); }, CanRenameRow);
 
             m_ToolbarSettingsButton = m_Toolbar.Q<ToolbarButton>("gdx-table-toolbar-settings");
+            m_ToolbarSettingsButton.text = string.Empty;
+            m_ToolbarSettingsButton.clicked += ShowSettings;
+            m_ToolbarHelpButton = m_Toolbar.Q<ToolbarButton>("gdx-table-toolbar-help");
+            m_ToolbarHelpButton.text = string.Empty;
+            m_ToolbarHelpButton.clicked += OpenHelp;
         }
 
         internal void SetFocusable(bool state)
@@ -60,6 +66,15 @@ namespace GDX.Editor.Windows.Tables
             m_ParentWindow.GetController().ShowRenameRowDialog(selectedItem.InternalIndex);
         }
 
+        void ShowSettings()
+        {
+            m_ParentWindow.GetController().ShowSettings();
+        }
+
+        void OpenHelp()
+        {
+            m_ParentWindow.GetController().OpenHelp();
+        }
     }
 #endif
 }

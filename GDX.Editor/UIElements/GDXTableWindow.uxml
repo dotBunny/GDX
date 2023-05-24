@@ -5,7 +5,8 @@
             <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" text="Column" name="gdx-table-toolbar-column" enable-rich-text="false" />
             <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" name="gdx-table-toolbar-row" text="Row" enable-rich-text="false" />
             <uie:ToolbarSpacer style="flex-grow: 1;" />
-            <uie:ToolbarButton text="Settings" display-tooltip-when-elided="true" name="gdx-table-toolbar-settings" />
+            <uie:ToolbarButton text="Help" display-tooltip-when-elided="true" name="gdx-table-toolbar-help" class="gdx-table-toolbar-context-button" />
+            <uie:ToolbarButton text="Settings" display-tooltip-when-elided="true" name="gdx-table-toolbar-settings" class="gdx-table-toolbar-context-button" />
         </uie:Toolbar>
     </ui:VisualElement>
     <ui:VisualElement name="gdx-table-overlay" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.56); position: absolute; width: 100%; height: 100%; visibility: visible; display: flex;">

@@ -649,7 +649,26 @@ Button.gdx-small-button {
     padding-left: 10px;
 }
 
-#gdx-data-dtest
+.gdx-table-toolbar-context-button
 {
-    background-image: resource('Icons/sv_icon_dot11_sml.png');
+    border-width: 0;
+    padding: 0;
+    width: 22px;
+    -unity-slice-top: 0;
+    -unity-slice-bottom: 0;
+    -unity-background-scale-mode: scale-and-crop;
+    background-size: contain;
+}
+.dark #gdx-table-toolbar-settings {
+    background-image: resource('Icons/d__Popup.png');
+}
+.dark #gdx-table-toolbar-help {
+    background-image: resource('Icons/d__Help.png');
+}
+
+.light #gdx-table-toolbar-settings {
+    background-image: resource('Icons/_Popup.png');
+}
+.light #gdx-table-toolbar-help {
+    background-image: resource('Icons/_Help.png');
 }

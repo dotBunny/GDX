@@ -22,6 +22,10 @@ namespace GDX.Editor
     public class PackageProvider
     {
         /// <summary>
+        ///     The public URI of the package's documentation.
+        /// </summary>
+        public const string DocumentationUri = "https://gdx.dotbunny.com/";
+        /// <summary>
         ///     Reference to the Unity package name for GDX.
         /// </summary>
         public const string PackageName = "com.dotbunny.gdx";
