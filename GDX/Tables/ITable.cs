@@ -9,7 +9,7 @@ namespace GDX.Tables
 {
     public interface ITable
     {
-        public const int EnableUndoSetting = 0;
+        public const int EnableUndoFlag = 0;
 
         int AddColumn(Serializable.SerializableTypes columnType, string columnName, int insertAt = -1);
         void RemoveColumn(Serializable.SerializableTypes columnType, int removeAt = -1);

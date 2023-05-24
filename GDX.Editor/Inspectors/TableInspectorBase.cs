@@ -2,7 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Editor.Windows;
+using GDX.Editor.Windows.Tables;
 using GDX.Tables;
 #if UNITY_2022_2_OR_NEWER
 using System.Collections.Generic;

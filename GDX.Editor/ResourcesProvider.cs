@@ -206,7 +206,8 @@ namespace GDX.Editor
         /// <returns>The queried asset if found, or null.</returns>
         internal static VisualTreeAsset GetVisualTreeAsset(string targetName)
         {
-            if (!s_Assets.ContainsKey(targetName))
+            // We check for null asset as after a change it will null the original with the reference still existing
+            if (!s_Assets.ContainsKey(targetName) || s_Assets[targetName] == null)
             {
                 s_Assets.AddWithExpandCheck(targetName, AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                     $"{UpdateProvider.LocalPackage.PackageAssetPath}/GDX.Editor/UIElements/{targetName}.uxml"));

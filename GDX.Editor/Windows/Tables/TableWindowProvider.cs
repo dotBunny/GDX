@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
-namespace GDX.Editor.Windows
+namespace GDX.Editor.Windows.Tables
 {
 #if UNITY_2022_2_OR_NEWER
     static class TableWindowProvider

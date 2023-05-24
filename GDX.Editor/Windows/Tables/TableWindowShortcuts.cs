@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEditor.ShortcutManagement;
 using UnityEngine;
 
-namespace GDX.Editor.Windows
+namespace GDX.Editor.Windows.Tables
 {
 #if UNITY_2022_2_OR_NEWER
     static class TableWindowShortcuts
@@ -15,32 +15,41 @@ namespace GDX.Editor.Windows
         internal static void AddRow()
         {
             TableWindow table = (TableWindow)EditorWindow.focusedWindow;
-            if(table != null) table.AddRow();
+            if (table != null)
+            {
+                table.GetController().ShowAddRowDialog();
+            }
         }
 
-        [GDXShortcut("Add Row (Quick)",  KeyCode.Equals, ShortcutModifiers.Control | ShortcutModifiers.Shift, typeof(TableWindow))]
-        internal static void AddQuickRow()
+        [GDXShortcut("Add Row (Default)",  KeyCode.Equals, ShortcutModifiers.Control | ShortcutModifiers.Shift, typeof(TableWindow))]
+        internal static void AddRowDefault()
         {
             TableWindow table = (TableWindow)EditorWindow.focusedWindow;
-            if(table != null) table.AddRowQuick();
+            if (table != null)
+            {
+                table.GetController().AddRowDefault();
+            }
         }
 
         [GDXShortcut("Add Column", KeyCode.Minus, ShortcutModifiers.Control | ShortcutModifiers.Shift, typeof(TableWindow))]
         internal static void AddColumn()
         {
             TableWindow table = (TableWindow)EditorWindow.focusedWindow;
-            if(table != null) table.AddColumn();
+            if (table != null)
+            {
+                table.GetController().ShowAddColumnDialog();
+            }
         }
 
-        [GDXShortcut("Remove Selected Row(s)", KeyCode.Delete, ShortcutModifiers.Shift, typeof(TableWindow))]
+        [GDXShortcut("Remove Selected Row", KeyCode.Delete, ShortcutModifiers.Shift, typeof(TableWindow))]
         internal static void RemoveSelectedRow()
         {
             TableWindow table = (TableWindow)EditorWindow.focusedWindow;
-            if(table != null) table.RemoveSelectedRows();
+            if (table != null)
+            {
+                table.GetController().RemoveSelectedRow();
+            }
         }
-
-
-
     }
 #endif
 }
