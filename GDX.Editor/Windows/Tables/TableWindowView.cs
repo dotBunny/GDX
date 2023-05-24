@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using GDX.Tables;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor.Windows.Tables
@@ -209,6 +210,7 @@ namespace GDX.Editor.Windows.Tables
             VisualElement columnContainer = m_TableViewHeader[0];
             for (int i = 0; i < columnContainer.childCount; i++)
             {
+                columnContainer[i].style.unityFontStyleAndWeight = FontStyle.Bold;
                 string columnName = columnContainer[i].name;
                 if (columnName.StartsWith("Column_", StringComparison.OrdinalIgnoreCase))
                 {

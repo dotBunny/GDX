@@ -47,13 +47,13 @@ namespace GDX.Editor.Windows.Tables
         public void ShowRemoveColumnDialog(int internalIndex)
         {
             m_Overlay.SetConfirmationState(TableWindowOverlay.ConfirmationState.RemoveColumn, internalIndex,
-                "Remove Column", "Are you sure you wish to delete this column?");
+                "Remove Column", $"Are you sure you wish to delete column '{m_TableWindow.GetTable().GetColumnName(internalIndex)}'?");
         }
 
         public void ShowRemoveRowDialog(int internalIndex)
         {
             m_Overlay.SetConfirmationState(TableWindowOverlay.ConfirmationState.RemoveRow, internalIndex,
-                "Remove Row", "Are you sure you wish to delete this row?");
+                "Remove Row", $"Are you sure you wish to delete row '{m_TableWindow.GetTable().GetRowName(internalIndex)}'?");
         }
 
         public void ShowSettings()
