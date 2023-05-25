@@ -2,17 +2,21 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
+using GDX.Editor.Inspectors;
 using GDX.Tables;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace GDX.Editor.Windows.Tables
 {
 #if UNITY_2022_2_OR_NEWER
     public static class TableWindowProvider
     {
+        public const string UndoPrefix = "Table:";
         static readonly Dictionary<ITable, TableWindow> k_TableWindowMap =
             new Dictionary<ITable, TableWindow>();
 
@@ -74,9 +78,17 @@ namespace GDX.Editor.Windows.Tables
             k_TableToTicket.Remove(table);
             k_TicketToTable.Remove(ticket);
         }
-        static UndoPropertyModification[] HandleUndoEvent(UndoPropertyModification[] modifications)
+        static void UndoRedoEvent(in UndoRedoInfo undo)
         {
-            throw new System.NotImplementedException();
+            if (!undo.undoName.StartsWith("Table:", StringComparison.InvariantCultureIgnoreCase))
+                return;
+
+            // Update windows / inspectors
+            foreach(KeyValuePair<ITable,TableWindow> kvp in k_TableWindowMap)
+            {
+                kvp.Value.BindTable(kvp.Key);
+                TableInspectorBase.RedrawInspector(kvp.Key);
+            }
         }
 
         internal static int RegisterTableWindow(TableWindow tableWindow, ITable table)
@@ -93,9 +105,12 @@ namespace GDX.Editor.Windows.Tables
             k_TicketToTableWindow.Add(head, tableWindow);
             k_TableWindowToTicket.Add(tableWindow, head);
 
-         //   Undo.postprocessModifications += HandleUndoEvent;
-
-
+            // We're only going to subscribe for undo events when the table window is open and we have support
+            if (!s_SubscribedForUndo && table.GetFlag(ITable.EnableUndoFlag))
+            {
+                Undo.undoRedoEvent += UndoRedoEvent;
+                s_SubscribedForUndo = true;
+            }
 
             // Increment our next head
             s_TableWindowTicketHead++;
@@ -104,11 +119,18 @@ namespace GDX.Editor.Windows.Tables
 
 
 
+
         internal static void UnregisterTableWindow(TableWindow tableWindow)
         {
             int ticket = GetTableWindowTicket(tableWindow);
             k_TableWindowToTicket.Remove(tableWindow);
             k_TicketToTableWindow.Remove(ticket);
+
+            if (k_TableWindowToTicket.Count == 0 && s_SubscribedForUndo)
+            {
+                Undo.undoRedoEvent -= UndoRedoEvent;
+                s_SubscribedForUndo = false;
+            }
 
             // We need to remove all cells associated with a map
             TableWindowCells.CleanTableReferences(ticket);

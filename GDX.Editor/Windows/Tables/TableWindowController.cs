@@ -201,7 +201,7 @@ namespace GDX.Editor.Windows.Tables
             ScriptableObject scriptableObject = m_TableWindow.GetScriptableObject();
             if (scriptableObject != null && m_TableWindow.GetTable().GetFlag(ITable.EnableUndoFlag))
             {
-                Undo.RegisterCompleteObjectUndo(scriptableObject, name);
+                Undo.RegisterCompleteObjectUndo(scriptableObject, $"{TableWindowProvider.UndoPrefix} {name}");
             }
         }
 
