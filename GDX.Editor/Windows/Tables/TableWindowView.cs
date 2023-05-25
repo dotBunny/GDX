@@ -250,7 +250,6 @@ namespace GDX.Editor.Windows.Tables
             }
         }
 
-
         public int GetRowDescriptionIndex(int row)
         {
             return k_RowDescriptions[row].InternalIndex;
@@ -378,17 +377,17 @@ namespace GDX.Editor.Windows.Tables
             }
         }
 
-        void MakeRowContextMenu(VisualElement element, int stableRowID)
-        {
-            element.AddManipulator(new ContextualMenuManipulator(evt =>
-            {
-                evt.menu.AppendSeparator();
-                evt.menu.AppendAction("Rename",
-                    a => parentWindow.GetController().ShowRenameRowDialog(stableRowID));
-                evt.menu.AppendAction("Remove",
-                    a => parentWindow.GetController().ShowRemoveRowDialog(stableRowID));
-            }));
-        }
+        // void MakeRowContextMenu(VisualElement element, int stableRowID)
+        // {
+        //     element.AddManipulator(new ContextualMenuManipulator(evt =>
+        //     {
+        //         evt.menu.AppendSeparator();
+        //         evt.menu.AppendAction("Rename",
+        //             a => parentWindow.GetController().ShowRenameRowDialog(stableRowID));
+        //         evt.menu.AppendAction("Remove",
+        //             a => parentWindow.GetController().ShowRemoveRowDialog(stableRowID));
+        //     }));
+        // }
 
         DropdownMenuAction.Status CanRemoveColumn(DropdownMenuAction action)
         {

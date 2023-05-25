@@ -33,8 +33,8 @@ namespace GDX.Editor.Windows.Tables
             m_ToolbarRowMenu.menu.AppendAction("Add", _ => { m_ParentWindow.GetController().ShowAddRowDialog(); }, CanAddRow);
             m_ToolbarRowMenu.menu.AppendAction("Add (Default)", _ => { m_ParentWindow.GetController().AddRowDefault(); }, CanAddRow);
             m_ToolbarRowMenu.menu.AppendSeparator();
-            m_ToolbarRowMenu.menu.AppendAction("Rename", _ => { RenameRow(); }, CanOperateOnRow);
-            m_ToolbarRowMenu.menu.AppendAction("Remove", _ => { RemoveRow(); }, CanOperateOnRow);
+            m_ToolbarRowMenu.menu.AppendAction("Rename Selected", _ => { RenameRow(); }, CanOperateOnRow);
+            m_ToolbarRowMenu.menu.AppendAction("Remove Selected", _ => { RemoveRow(); }, CanOperateOnRow);
 
             m_ToolbarSettingsButton = m_Toolbar.Q<ToolbarButton>("gdx-table-toolbar-settings");
             m_ToolbarSettingsButton.text = string.Empty;
