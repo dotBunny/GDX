@@ -1384,6 +1384,71 @@ namespace GDX.Tables
             return GetColumn(column, ref allObjectRefColumns);
         }
 
+        // SetOrder
+
+        public void SetColumnOrder(int columnID, int newSortOrder)
+        {
+            AssertColumnIDValid(columnID);
+            AssertColumnSortOrderValid(newSortOrder);
+            int oldSortOrder = columnIDToSortOrderMap[columnID];
+            int iterDirection = newSortOrder > oldSortOrder ? 1 : -1;
+            for (int i = oldSortOrder; i != newSortOrder; i += iterDirection)
+            {
+                int columnIDAt = sortedOrderToColumnIDMap[i + iterDirection];
+                columnIDToSortOrderMap[columnIDAt] = i;
+                sortedOrderToColumnIDMap[i] = sortedOrderToColumnIDMap[i + iterDirection];
+            }
+
+            sortedOrderToColumnIDMap[newSortOrder] = columnID;
+            columnIDToSortOrderMap[columnID] = newSortOrder;
+        }
+
+        public void SetRowOrder(int rowID, int newSortOrder)
+        {
+            AssertRowIDValid(rowID);
+            AssertRowSortOrderValid(newSortOrder);
+
+            int oldSortOrder = rowIDToDenseIndexMap[rowID];
+            int iterDirection = newSortOrder > oldSortOrder ? 1 : -1;
+
+            for (int i = oldSortOrder; i != newSortOrder; i += iterDirection)
+            {
+                int rowIDAt = rowDenseIndexToIDMap[i + iterDirection];
+                rowIDToDenseIndexMap[rowIDAt] = i;
+                rowDenseIndexToIDMap[i] = rowDenseIndexToIDMap[i + iterDirection];
+            }
+        }
+
+        internal void SetRowOrderForColumns<T>(ArrayHolder<T>[] columns, int oldSortOrder, int newSortOrder)
+        {
+            int iterDirection = newSortOrder > oldSortOrder ? 1 : -1;
+            for (int i = 0; i < columns.Length; i++)
+            {
+                T[] column = columns[i].TArray;
+
+                for (int j = oldSortOrder; j != newSortOrder; j += iterDirection)
+                {
+                    column[i] = column[i + iterDirection];
+                }
+            }
+        }
+
+        internal void AssertColumnSortOrderValid(int sortedOrder)
+        {
+            if (sortedOrder >= combinedColumnCount || sortedOrder < 0)
+            {
+                throw new ArgumentException("Invalid column sort order argument: " + sortedOrder);
+            }
+        }
+
+        internal void AssertRowSortOrderValid(int sortedOrder)
+        {
+            if (sortedOrder >= rowCount || sortedOrder < 0)
+            {
+                throw new ArgumentException("Invalid row sort order argument: " + sortedOrder);
+            }
+        }
+
         // Internal
 
         internal int AddColumnInternal<T>(string columnName, ref ArrayHolder<T>[] allColumnsOfType, Serializable.SerializableTypes typeIndex, int insertAtColumnID)
