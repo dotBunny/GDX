@@ -352,6 +352,8 @@ namespace GDX.Editor.Windows.Tables
 
         void AppendColumnContextMenu(ContextualMenuPopulateEvent evt, Column column)
         {
+            if (column == null || column.name == null) return;
+
             int indexOfSplit = column.name.IndexOf("_", StringComparison.Ordinal);
             if (indexOfSplit != -1)
             {
