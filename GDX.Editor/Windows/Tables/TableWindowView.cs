@@ -78,6 +78,7 @@ namespace GDX.Editor.Windows.Tables
                     case Serializable.SerializableTypes.String:
                         column.makeCell += () => TableWindowCells.MakeStringCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindStringCell;
+                        column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.Char:
                         column.makeCell += () => TableWindowCells.MakeCharCell(tableTicket, columnIndex);
@@ -86,6 +87,7 @@ namespace GDX.Editor.Windows.Tables
                     case Serializable.SerializableTypes.Bool:
                         column.makeCell += () => TableWindowCells.MakeBoolCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindBoolCell;
+                        column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.SByte:
                         column.makeCell += () => TableWindowCells.MakeSByteCell(tableTicket, columnIndex);
@@ -98,34 +100,42 @@ namespace GDX.Editor.Windows.Tables
                     case Serializable.SerializableTypes.Short:
                         column.makeCell += () => TableWindowCells.MakeShortCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindShortCell;
+                        column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.UShort:
                         column.makeCell += () => TableWindowCells.MakeUShortCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindUShortCell;
+                        column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.Int:
                         column.makeCell += () => TableWindowCells.MakeIntCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindIntCell;
+                        column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.UInt:
                         column.makeCell += () => TableWindowCells.MakeUIntCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindUIntCell;
+                        column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.Long:
                         column.makeCell += () => TableWindowCells.MakeLongCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindLongCell;
+                        column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.ULong:
                         column.makeCell += () => TableWindowCells.MakeULongCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindULongCell;
+                        column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.Float:
                         column.makeCell += () => TableWindowCells.MakeFloatCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindFloatCell;
+                        column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.Double:
                         column.makeCell += () => TableWindowCells.MakeDoubleCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindDoubleCell;
+                        column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.Vector2:
                         column.makeCell += () => TableWindowCells.MakeVector2Cell(tableTicket, columnIndex);
@@ -178,6 +188,7 @@ namespace GDX.Editor.Windows.Tables
                     case Serializable.SerializableTypes.Hash128:
                         column.makeCell += () => TableWindowCells.MakeHash128Cell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindHash128Cell;
+                        column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Gradient:
                         column.makeCell += () => TableWindowCells.MakeGradientCell(tableTicket, columnIndex);
@@ -199,33 +210,35 @@ namespace GDX.Editor.Windows.Tables
             // Create MCLV
             m_MultiColumnListView = new MultiColumnListView(m_TableViewColumns)
             {
-                sortingEnabled = false, // TODO: make this yes when we can move rows?
+                sortingEnabled = true,
                 name = "gdx-table-view",
                 selectionType = SelectionType.Single,
                 itemsSource = k_RowDescriptions,
-                showAlternatingRowBackgrounds = AlternatingRowBackground.ContentOnly
+                showAlternatingRowBackgrounds = AlternatingRowBackground.ContentOnly,
             };
             m_MultiColumnListView.style.height = new StyleLength(new Length(100f, LengthUnit.Percent));
+            m_MultiColumnListView.headerContextMenuPopulateEvent += AppendColumnContextMenu;
+            m_MultiColumnListView.columnSortingChanged += SortItems;
 
+            //m_MultiColumnListView.
             //BuildTableWindowContextMenu(m_TableView);
             rootElement.Insert(1, m_MultiColumnListView);
 
-            // Link other parts of table that we need for functionality
+            // Link other parts of table that we need for reflection functionality
             m_TableViewHeader = m_MultiColumnListView.Q<VisualElement>(null, "unity-multi-column-header");
-            VisualElement columnContainer = m_TableViewHeader[0];
-            for (int i = 0; i < columnContainer.childCount; i++)
-            {
-                columnContainer[i].style.unityFontStyleAndWeight = FontStyle.Bold;
-                string columnName = columnContainer[i].name;
-                if (columnName.StartsWith("Column_", StringComparison.OrdinalIgnoreCase))
-                {
-                    int index = int.Parse(columnName.Split('_', StringSplitOptions.RemoveEmptyEntries)[1]);
-                    MakeColumnContextualMenu(columnContainer[i], index);
-                }
-            }
+
 
             RebuildRowData();
         }
+
+        void SortItems()
+        {
+            foreach (SortColumnDescription sortedColumn in m_MultiColumnListView.sortedColumns)
+            {
+                Debug.Log($"{sortedColumn.columnName}  {sortedColumn.direction.ToString()}");
+            }
+        }
+
 
         public int GetRowDescriptionIndex(int row)
         {
@@ -337,16 +350,19 @@ namespace GDX.Editor.Windows.Tables
             // TODO : Trigger update of each cell? or does it use version to know it needs to update
         }
 
-        void MakeColumnContextualMenu(VisualElement element, int stableColumnID)
+        void AppendColumnContextMenu(ContextualMenuPopulateEvent evt, Column column)
         {
-            element.AddManipulator(new ContextualMenuManipulator(evt =>
+            int indexOfSplit = column.name.IndexOf("_", StringComparison.Ordinal);
+            if (indexOfSplit != -1)
             {
-                evt.menu.AppendAction("Rename",
-                    a => parentWindow.GetController().ShowRenameColumnDialog(stableColumnID));
-                evt.menu.AppendAction("Remove",
-                    a => parentWindow.GetController().ShowRemoveColumnDialog(stableColumnID), CanRemoveColumn);
+                string columnInteger = column.name.Substring(indexOfSplit + 1);
+                int internalIndex = int.Parse(columnInteger);
                 evt.menu.AppendSeparator();
-            }));
+                evt.menu.AppendAction("Rename",
+                    a => parentWindow.GetController().ShowRenameColumnDialog(internalIndex));
+                evt.menu.AppendAction("Remove",
+                    a => parentWindow.GetController().ShowRemoveColumnDialog(internalIndex), CanRemoveColumn);
+            }
         }
 
         void MakeRowContextMenu(VisualElement element, int stableRowID)

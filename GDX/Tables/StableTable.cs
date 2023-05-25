@@ -141,7 +141,7 @@ namespace GDX.Tables
                     return new ITable.RowDescription
                     {
                         InternalIndex = rowDenseIndexToIDMap[i],
-                        Name = nameAt
+                        Name = nameAt,
                     };
                 }
             }
@@ -154,8 +154,14 @@ namespace GDX.Tables
             return new ITable.RowDescription
             {
                 InternalIndex = rowDenseIndexToIDMap[order],
-                Name = rowNames[order]
+                Name = rowNames[order],
             };
+        }
+
+        public void SetAllRowDescriptionsOrder(ITable.RowDescription[] orderedRows)
+        {
+            // TODO: @adam array coming in be in the new order, just use the internalIndex (stable to reorder inside here
+            throw new NotImplementedException();
         }
 
         public ITable.ColumnDescription GetColumnDescription(string name)
@@ -179,7 +185,7 @@ namespace GDX.Tables
                             {
                                 InternalIndex = columnID,
                                 Name = nameAt,
-                                Type = columnEntry.ColumnType
+                                Type = columnEntry.ColumnType,
                             };
                         }
                     }
@@ -200,8 +206,14 @@ namespace GDX.Tables
             {
                 InternalIndex = idAtOrderedIndex,
                 Name = columnName,
-                Type = columnEntry.ColumnType
+                Type = columnEntry.ColumnType,
             };
+        }
+
+        public void SetAllColumnDescriptionsOrder(ITable.ColumnDescription[] orderedColumns)
+        {
+            // TODO: @adam array coming in be in the new order, just use the internalIndex (stable to reorder inside here
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
@@ -223,7 +235,7 @@ namespace GDX.Tables
                 {
                     Name = name,
                     InternalIndex = columnID,
-                    Type = entryForID.ColumnType
+                    Type = entryForID.ColumnType,
                 };
             }
 
