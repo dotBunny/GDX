@@ -10,6 +10,21 @@ namespace GDX.Editor.PropertyDrawers.CellValues
     [CustomPropertyDrawer(typeof(Vector3IntCellValue))]
     public class Vector3IntCellValueDrawer : CellValueDrawerBase
     {
-
+        Vector3IntCellValue m_CellValue;
+        /// <inheritdoc />
+        protected override void Init(SerializedProperty serializedProperty)
+        {
+            if (Reflection.TryGetFieldValue(serializedProperty.serializedObject.targetObject, typeof(Vector3IntCellValue),
+                    serializedProperty.name, out Vector3IntCellValue cell))
+            {
+                m_CellValue = cell;
+                if (m_CellValue.Table != null)
+                {
+                    m_Table = m_CellValue.Table;
+                }
+                m_RowInternalIndex = m_CellValue.Row;
+                m_ColumnInternalIndex = m_CellValue.Column;
+            }
+        }
     }
 }
