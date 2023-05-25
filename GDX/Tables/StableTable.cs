@@ -1415,6 +1415,17 @@ namespace GDX.Tables
             columnIDToSortOrderMap[columnID] = newSortOrder;
         }
 
+        public void SetAllColumnOrders(int[] sortedColumnIDs)
+        {
+            AssertSortedColumnsArgValid(sortedColumnIDs);
+            for (int i = 0; i < sortedOrderToColumnIDMap.Length; i++)
+            {
+                int columnID = sortedColumnIDs[i];
+                sortedOrderToColumnIDMap[i] = columnID;
+                columnIDToSortOrderMap[columnID] = i;
+            }
+        }
+
         public void SetRowOrder(int rowID, int newSortOrder)
         {
             AssertRowIDValid(rowID);
@@ -1429,35 +1440,95 @@ namespace GDX.Tables
                 rowIDToDenseIndexMap[rowIDAt] = i;
                 rowDenseIndexToIDMap[i] = rowDenseIndexToIDMap[i + iterDirection];
             }
+
+            SetRowOrderForColumns(allStringColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allBoolColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allCharColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allSbyteColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allByteColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allShortColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allUshortColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allIntColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allUintColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allLongColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allUlongColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allFloatColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allDoubleColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allVector2Columns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allVector3Columns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allVector4Columns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allVector2IntColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allVector3IntColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allQuaternionColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allRectColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allRectIntColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allColorColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allLayerMaskColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allBoundsColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allBoundsIntColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allHash128Columns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allGradientColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allAnimationCurveColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(allObjectRefColumns, oldSortOrder, newSortOrder);
         }
 
-        internal void SetRowOrderForColumns<T>(ArrayHolder<T>[] columns, int oldSortOrder, int newSortOrder)
+        public void SetAllRowOrders(int[] sortedRowIDs)
         {
-            int iterDirection = newSortOrder > oldSortOrder ? 1 : -1;
+            AssertSorteRowsArgValid(sortedRowIDs);
+
+            ReSortRows(allStringColumns, sortedRowIDs);
+            ReSortRows(allBoolColumns, sortedRowIDs);
+            ReSortRows(allCharColumns, sortedRowIDs);
+            ReSortRows(allSbyteColumns, sortedRowIDs);
+            ReSortRows(allByteColumns, sortedRowIDs);
+            ReSortRows(allShortColumns, sortedRowIDs);
+            ReSortRows(allUshortColumns, sortedRowIDs);
+            ReSortRows(allIntColumns, sortedRowIDs);
+            ReSortRows(allUintColumns, sortedRowIDs);
+            ReSortRows(allLongColumns, sortedRowIDs);
+            ReSortRows(allUlongColumns, sortedRowIDs);
+            ReSortRows(allFloatColumns, sortedRowIDs);
+            ReSortRows(allDoubleColumns, sortedRowIDs);
+            ReSortRows(allVector2Columns, sortedRowIDs);
+            ReSortRows(allVector3Columns, sortedRowIDs);
+            ReSortRows(allVector4Columns, sortedRowIDs);
+            ReSortRows(allVector2IntColumns, sortedRowIDs);
+            ReSortRows(allVector3IntColumns, sortedRowIDs);
+            ReSortRows(allQuaternionColumns, sortedRowIDs);
+            ReSortRows(allRectColumns, sortedRowIDs);
+            ReSortRows(allRectIntColumns, sortedRowIDs);
+            ReSortRows(allColorColumns, sortedRowIDs);
+            ReSortRows(allLayerMaskColumns, sortedRowIDs);
+            ReSortRows(allBoundsColumns, sortedRowIDs);
+            ReSortRows(allBoundsIntColumns, sortedRowIDs);
+            ReSortRows(allHash128Columns, sortedRowIDs);
+            ReSortRows(allGradientColumns, sortedRowIDs);
+            ReSortRows(allAnimationCurveColumns, sortedRowIDs);
+            ReSortRows(allObjectRefColumns, sortedRowIDs);
+
+            for (int i = 0; i < sortedRowIDs.Length; i++)
+            {
+                int rowID = sortedRowIDs[i];
+                rowDenseIndexToIDMap[i] = rowID;
+                rowIDToDenseIndexMap[rowID] = i;
+            }
+        }
+
+        internal void ReSortRows<T>(ArrayHolder<T>[] columns, int[] sortedRowIDs)
+        {
             for (int i = 0; i < columns.Length; i++)
             {
                 T[] column = columns[i].TArray;
 
-                for (int j = oldSortOrder; j != newSortOrder; j += iterDirection)
+                for (int j = 0; j < sortedRowIDs.Length; j++)
                 {
-                    column[i] = column[i + iterDirection];
+                    T rowValueAt = column[j];
+                    int rowID = sortedRowIDs[j];
+                    int oldRowIndex = rowIDToDenseIndexMap[rowID];
+
+                    column[j] = column[oldRowIndex];
+                    column[oldRowIndex] = rowValueAt;
                 }
-            }
-        }
-
-        internal void AssertColumnSortOrderValid(int sortedOrder)
-        {
-            if (sortedOrder >= combinedColumnCount || sortedOrder < 0)
-            {
-                throw new ArgumentException("Invalid column sort order argument: " + sortedOrder);
-            }
-        }
-
-        internal void AssertRowSortOrderValid(int sortedOrder)
-        {
-            if (sortedOrder >= rowCount || sortedOrder < 0)
-            {
-                throw new ArgumentException("Invalid row sort order argument: " + sortedOrder);
             }
         }
 
@@ -1643,6 +1714,72 @@ namespace GDX.Tables
             AssertColumnIDValid(columnID);
             int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
             return allColumnsOfType[column].TArray;
+        }
+
+        internal void SetRowOrderForColumns<T>(ArrayHolder<T>[] columns, int oldSortOrder, int newSortOrder)
+        {
+            int iterDirection = newSortOrder > oldSortOrder ? 1 : -1;
+            for (int i = 0; i < columns.Length; i++)
+            {
+                T[] column = columns[i].TArray;
+
+                for (int j = oldSortOrder; j != newSortOrder; j += iterDirection)
+                {
+                    column[j] = column[j + iterDirection];
+                }
+            }
+        }
+
+        internal void AssertSortedColumnsArgValid(int[] sortedColumnIDs)
+        {
+            if (sortedColumnIDs == null)
+            {
+                throw new ArgumentException("sortedColumnIDs array cannot be null.");
+            }
+
+            if (sortedColumnIDs.Length != sortedOrderToColumnIDMap.Length)
+            {
+                throw new ArgumentException("sortedColumnIDs array must be the same length as GetColumnCount.");
+            }
+
+            for (int i = 0; i < sortedColumnIDs.Length; i++)
+            {
+                AssertColumnIDValid(sortedColumnIDs[i]);
+            }
+        }
+
+        internal void AssertColumnSortOrderValid(int sortedOrder)
+        {
+            if (sortedOrder >= combinedColumnCount || sortedOrder < 0)
+            {
+                throw new ArgumentException("Invalid column sort order argument: " + sortedOrder);
+            }
+        }
+
+        internal void AssertRowSortOrderValid(int sortedOrder)
+        {
+            if (sortedOrder >= rowCount || sortedOrder < 0)
+            {
+                throw new ArgumentException("Invalid row sort order argument: " + sortedOrder);
+            }
+        }
+
+        internal void AssertSorteRowsArgValid(int[] sortedRowIDs)
+        {
+            if (sortedRowIDs == null)
+            {
+                throw new ArgumentException("sortedRowIDs array cannot be null.");
+            }
+
+            if (sortedRowIDs.Length != rowDenseIndexToIDMap.Length)
+            {
+                throw new ArgumentException("sortedRowIDs array must be the same length as GetRowCount.");
+            }
+
+            for (int i = 0; i < sortedRowIDs.Length; i++)
+            {
+                AssertRowIDValid(sortedRowIDs[i]);
+            }
         }
     }
 }
