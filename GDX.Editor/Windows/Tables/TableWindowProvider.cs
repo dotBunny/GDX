@@ -23,6 +23,7 @@ namespace GDX.Editor.Windows.Tables
         static int s_TableWindowTicketHead;
         static readonly Dictionary<TableWindow, int> k_TableWindowToTicket = new Dictionary<TableWindow, int>(5);
         static readonly Dictionary<int, TableWindow> k_TicketToTableWindow = new Dictionary<int, TableWindow>(5);
+        static bool s_SubscribedForUndo = false;
 
         internal static ITable GetTable(int ticket)
         {
@@ -73,6 +74,10 @@ namespace GDX.Editor.Windows.Tables
             k_TableToTicket.Remove(table);
             k_TicketToTable.Remove(ticket);
         }
+        static UndoPropertyModification[] HandleUndoEvent(UndoPropertyModification[] modifications)
+        {
+            throw new System.NotImplementedException();
+        }
 
         internal static int RegisterTableWindow(TableWindow tableWindow, ITable table)
         {
@@ -88,10 +93,16 @@ namespace GDX.Editor.Windows.Tables
             k_TicketToTableWindow.Add(head, tableWindow);
             k_TableWindowToTicket.Add(tableWindow, head);
 
+         //   Undo.postprocessModifications += HandleUndoEvent;
+
+
+
             // Increment our next head
             s_TableWindowTicketHead++;
             return head;
         }
+
+
 
         internal static void UnregisterTableWindow(TableWindow tableWindow)
         {

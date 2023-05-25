@@ -14,6 +14,9 @@ namespace GDX.Editor.Windows.Tables
 #if UNITY_2022_2_OR_NEWER
     static class TableWindowCells
     {
+        internal const float k_DoubleHeight = 50f;
+        internal const float k_TripleHeight = 68f;
+
         const string k_RowHeaderFieldName = "gdx-table-row-header";
         const string k_CellFieldName = "gdx-table-field";
 

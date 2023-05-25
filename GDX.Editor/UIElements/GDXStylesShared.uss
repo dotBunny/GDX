@@ -641,18 +641,36 @@ Button.gdx-small-button {
     background-color: #ececec;
 }
 
+#gdx-table #unity-multi-column-header-column-title
+{
+    -unity-font-style: bold;
+}
 #gdx-table-row-header
 {
     height: 100%;
     width: 100%;
-    -unity-text-align: middle-left;
+    -unity-text-align: upper-left;
     padding-left: 10px;
+    padding-top: 5px;
+    -unity-font-style: bold-and-italic;
 }
 
 #gdx-table-field
 {
     flex-grow: 1;
     flex-shrink: 1;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    -unity-text-align: upper-left;
+}
+
+#gdx-table-field .unity-base-field__input
+{
+    height: 20px;
+}
+#gdx-table-field .unity-composite-field__input
+{
+    height: 22px;
 }
 
 .gdx-table-toolbar-context-button

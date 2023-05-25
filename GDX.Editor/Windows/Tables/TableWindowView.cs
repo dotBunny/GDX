@@ -22,6 +22,16 @@ namespace GDX.Editor.Windows.Tables
 
         readonly TableWindow parentWindow;
 
+        float m_DesiredRowHeight = 22f;
+
+        public void SetDesiredRowHeightMultiplier(float neededHeight)
+        {
+            if (neededHeight > m_DesiredRowHeight)
+            {
+                m_DesiredRowHeight = neededHeight;
+            }
+        }
+
         public TableWindowView(VisualElement rootElement, TableWindow window)
         {
             parentWindow = window;
@@ -180,10 +190,12 @@ namespace GDX.Editor.Windows.Tables
                     case Serializable.SerializableTypes.Bounds:
                         column.makeCell += () => TableWindowCells.MakeBoundsCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindBoundsCell;
+                        SetDesiredRowHeightMultiplier(TableWindowCells.k_DoubleHeight);
                         break;
                     case Serializable.SerializableTypes.BoundsInt:
                         column.makeCell += () => TableWindowCells.MakeBoundsIntCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindBoundsIntCell;
+                        SetDesiredRowHeightMultiplier(TableWindowCells.k_DoubleHeight);
                         break;
                     case Serializable.SerializableTypes.Hash128:
                         column.makeCell += () => TableWindowCells.MakeHash128Cell(tableTicket, columnIndex);
@@ -215,18 +227,17 @@ namespace GDX.Editor.Windows.Tables
                 selectionType = SelectionType.Single,
                 itemsSource = k_RowDescriptions,
                 showAlternatingRowBackgrounds = AlternatingRowBackground.ContentOnly,
+                virtualizationMethod = CollectionVirtualizationMethod.FixedHeight,
+                fixedItemHeight = m_DesiredRowHeight
             };
             m_MultiColumnListView.style.height = new StyleLength(new Length(100f, LengthUnit.Percent));
             m_MultiColumnListView.headerContextMenuPopulateEvent += AppendColumnContextMenu;
             m_MultiColumnListView.columnSortingChanged += SortItems;
 
-            //m_MultiColumnListView.
-            //BuildTableWindowContextMenu(m_TableView);
             rootElement.Insert(1, m_MultiColumnListView);
 
             // Link other parts of table that we need for reflection functionality
             m_TableViewHeader = m_MultiColumnListView.Q<VisualElement>(null, "unity-multi-column-header");
-
 
             RebuildRowData();
         }
@@ -284,7 +295,7 @@ namespace GDX.Editor.Windows.Tables
 
             // Make the context menu effect the entirety of the row, this is a bit brittle as it relies on the actual
             // layout of the UXML document to be the same across versions.
-            MakeRowContextMenu(label.parent.parent, description.InternalIndex);
+            //MakeRowContextMenu(label.parent.parent, description.InternalIndex);
         }
 
         internal Serializable.SerializableTypes GetColumnType(int internalIndex)

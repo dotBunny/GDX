@@ -32,7 +32,9 @@ namespace GDX.Editor.Windows.Tables
             m_ToolbarRowMenu = m_Toolbar.Q<ToolbarMenu>("gdx-table-toolbar-row");
             m_ToolbarRowMenu.menu.AppendAction("Add", _ => { m_ParentWindow.GetController().ShowAddRowDialog(); }, CanAddRow);
             m_ToolbarRowMenu.menu.AppendAction("Add (Default)", _ => { m_ParentWindow.GetController().AddRowDefault(); }, CanAddRow);
-            m_ToolbarRowMenu.menu.AppendAction("Rename", _ => { RenameRow(); }, CanRenameRow);
+            m_ToolbarRowMenu.menu.AppendSeparator();
+            m_ToolbarRowMenu.menu.AppendAction("Rename", _ => { RenameRow(); }, CanOperateOnRow);
+            m_ToolbarRowMenu.menu.AppendAction("Remove", _ => { RemoveRow(); }, CanOperateOnRow);
 
             m_ToolbarSettingsButton = m_Toolbar.Q<ToolbarButton>("gdx-table-toolbar-settings");
             m_ToolbarSettingsButton.text = string.Empty;
@@ -56,7 +58,7 @@ namespace GDX.Editor.Windows.Tables
                 ? DropdownMenuAction.Status.Normal
                 : DropdownMenuAction.Status.Disabled;
         }
-        DropdownMenuAction.Status CanRenameRow(DropdownMenuAction action)
+        DropdownMenuAction.Status CanOperateOnRow(DropdownMenuAction action)
         {
             return m_ParentWindow.GetView().GetMultiColumnListView().selectedItem != null ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
         }
@@ -64,6 +66,12 @@ namespace GDX.Editor.Windows.Tables
         {
             ITable.RowDescription selectedItem = (ITable.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
             m_ParentWindow.GetController().ShowRenameRowDialog(selectedItem.InternalIndex);
+        }
+
+        void RemoveRow()
+        {
+            ITable.RowDescription selectedItem = (ITable.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
+            m_ParentWindow.GetController().ShowRemoveRowDialog(selectedItem.InternalIndex);
         }
 
         void ShowSettings()
