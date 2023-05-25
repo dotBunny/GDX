@@ -11,7 +11,7 @@ using UnityEngine;
 namespace GDX.Editor.Windows.Tables
 {
 #if UNITY_2022_2_OR_NEWER
-    static class TableWindowProvider
+    public static class TableWindowProvider
     {
         static readonly Dictionary<ITable, TableWindow> k_TableWindowMap =
             new Dictionary<ITable, TableWindow>();
