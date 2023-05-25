@@ -13,7 +13,6 @@ namespace GDX.Tables
     [Serializable]
     public class StableTable : ScriptableObject, ITable
     {
-
         [Serializable]
         internal struct ColumnEntry
         {
@@ -107,14 +106,14 @@ namespace GDX.Tables
             m_DisplayName = displayName;
         }
 
-        public bool GetFlag(byte index)
+        public bool GetFlag(ITable.Flags flag)
         {
-            return m_Flags[index];
+            return m_Flags[(byte)flag];
         }
 
-        public void SetFlag(byte index, bool toggle)
+        public void SetFlag(ITable.Flags flag, bool toggle)
         {
-            m_Flags[index] = toggle;
+            m_Flags[(byte)flag] = toggle;
         }
 
         public ITable.RowDescription[] GetAllRowDescriptions()

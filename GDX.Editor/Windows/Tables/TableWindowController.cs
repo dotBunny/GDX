@@ -185,7 +185,7 @@ namespace GDX.Editor.Windows.Tables
                 table.SetDisplayName(displayName);
                 m_TableWindow.titleContent = new GUIContent(displayName);
             }
-            table.SetFlag(ITable.EnableUndoFlag, enableUndo);
+            table.SetFlag(ITable.Flags.EnableUndo, enableUndo);
 
             OnTableChanged();
             return true;
@@ -199,7 +199,7 @@ namespace GDX.Editor.Windows.Tables
         void RegisterUndo(string name)
         {
             ScriptableObject scriptableObject = m_TableWindow.GetScriptableObject();
-            if (scriptableObject != null && m_TableWindow.GetTable().GetFlag(ITable.EnableUndoFlag))
+            if (scriptableObject != null && m_TableWindow.GetTable().GetFlag(ITable.Flags.EnableUndo))
             {
                 Undo.RegisterCompleteObjectUndo(scriptableObject, $"{TableWindowProvider.UndoPrefix} {name}");
             }

@@ -8,7 +8,10 @@ namespace GDX.Tables
 {
     public interface ITable
     {
-        public const int EnableUndoFlag = 0;
+        public enum Flags : int
+        {
+            EnableUndo = 0
+        }
 
         int AddColumn(Serializable.SerializableTypes columnType, string columnName, int insertAt = -1);
         void RemoveColumn(Serializable.SerializableTypes columnType, int removeAt = -1);
@@ -31,8 +34,8 @@ namespace GDX.Tables
 
         string GetDisplayName();
         void SetDisplayName(string displayName);
-        bool GetFlag(byte index);
-        void SetFlag(byte index, bool toggle);
+        bool GetFlag(Flags flag);
+        void SetFlag(Flags flag, bool toggle);
 
         RowDescription[] GetAllRowDescriptions();
         RowDescription GetRowDescription(string name);

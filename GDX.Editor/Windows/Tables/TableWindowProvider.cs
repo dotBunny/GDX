@@ -106,7 +106,7 @@ namespace GDX.Editor.Windows.Tables
             k_TableWindowToTicket.Add(tableWindow, head);
 
             // We're only going to subscribe for undo events when the table window is open and we have support
-            if (!s_SubscribedForUndo && table.GetFlag(ITable.EnableUndoFlag))
+            if (!s_SubscribedForUndo && table.GetFlag(ITable.Flags.EnableUndo))
             {
                 Undo.undoRedoEvent += UndoRedoEvent;
                 s_SubscribedForUndo = true;
