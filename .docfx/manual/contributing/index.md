@@ -4,6 +4,10 @@ Thank you for your interest in contributing to GDX! :heart:
 
 > While the `GDX` package has Unity employees amongst its contributors, it is **not officially supported by Unity**, and it is not on Unity's roadmap.
 
+## [Boostrap](/manual/contributing/bootstrap.html)
+
+A secondary repository which allows for streamlined development of `GDX` outside of existing projects. This is used by automation as well to validate every commit.
+
 ## [Automation](/manual/contributing/automation.html)
 
 An overview of the automation that is ran in TeamCity against all commits to `GDX`.
