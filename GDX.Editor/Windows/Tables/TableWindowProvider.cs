@@ -8,7 +8,6 @@ using GDX.Editor.Inspectors;
 using GDX.Tables;
 using UnityEditor;
 using UnityEditor.Callbacks;
-using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace GDX.Editor.Windows.Tables
@@ -20,29 +19,17 @@ namespace GDX.Editor.Windows.Tables
         static readonly Dictionary<ITable, TableWindow> k_TableWindowMap =
             new Dictionary<ITable, TableWindow>();
 
-        static int s_TableTicketHead;
-        static readonly Dictionary<ITable, int> k_TableToTicket = new Dictionary<ITable, int>(5);
-        static readonly Dictionary<int, ITable> k_TicketToTable = new Dictionary<int, ITable>(5);
-
         static int s_TableWindowTicketHead;
         static readonly Dictionary<TableWindow, int> k_TableWindowToTicket = new Dictionary<TableWindow, int>(5);
         static readonly Dictionary<int, TableWindow> k_TicketToTableWindow = new Dictionary<int, TableWindow>(5);
         static bool s_SubscribedForUndo = false;
-
-        internal static ITable GetTable(int ticket)
-        {
-            return k_TicketToTable.TryGetValue(ticket, out ITable table) ? table : null;
-        }
 
         internal static TableWindow GetTableWindow(int ticket)
         {
             return k_TicketToTableWindow.TryGetValue(ticket, out TableWindow tableWindow) ? tableWindow : null;
         }
 
-        internal static int GetTableTicket(ITable table)
-        {
-            return k_TableToTicket.TryGetValue(table, out int ticket) ? ticket : -1;
-        }
+
 
         internal static int GetTableWindowTicket(TableWindow tableWindow)
         {
@@ -54,30 +41,9 @@ namespace GDX.Editor.Windows.Tables
             return k_TableWindowMap.TryGetValue(table, out TableWindow window) ? window : null;
         }
 
-        internal static int RegisterTable(ITable table)
-        {
-            int ticket = GetTableTicket(table);
-            if (ticket != -1)
-            {
-                return ticket;
-            }
 
-            // Register table
-            int head = s_TableTicketHead;
-            k_TicketToTable.Add(head, table);
-            k_TableToTicket.Add(table, head);
 
-            // Increment our next head
-            s_TableTicketHead++;
-            return head;
-        }
 
-        internal static void UnregisterTable(ITable table)
-        {
-            int ticket = GetTableTicket(table);
-            k_TableToTicket.Remove(table);
-            k_TicketToTable.Remove(ticket);
-        }
         static void UndoRedoEvent(in UndoRedoInfo undo)
         {
             if (!undo.undoName.StartsWith("Table:", StringComparison.InvariantCultureIgnoreCase))

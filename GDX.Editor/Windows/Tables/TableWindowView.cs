@@ -22,6 +22,18 @@ namespace GDX.Editor.Windows.Tables
 
         readonly TableWindow parentWindow;
 
+        readonly Length m_GenericMinWidth = new Length(75, LengthUnit.Pixel);
+        readonly Length m_ToggleMinWidth = new Length(25, LengthUnit.Pixel);
+        readonly Length m_NumericMinWidth = new Length(50, LengthUnit.Pixel);
+        readonly Length m_BoundsMinWidth = new Length(200, LengthUnit.Pixel);
+        readonly Length m_Vector2MinWidth = new Length(100, LengthUnit.Pixel);
+        readonly Length m_Vector3MinWidth = new Length(150, LengthUnit.Pixel);
+        readonly Length m_Vector4MinWidth = new Length(200, LengthUnit.Pixel);
+        readonly Length m_HashMinWidth = new Length(260, LengthUnit.Pixel);
+
+        static StyleLength m_StyleLength25 = new StyleLength(new Length(25, LengthUnit.Pixel));
+        static StyleLength m_StyleLength275 = new StyleLength(new Length(275, LengthUnit.Pixel));
+
         float m_DesiredRowHeight = 22f;
 
         public void SetDesiredRowHeightMultiplier(float neededHeight)
@@ -43,7 +55,7 @@ namespace GDX.Editor.Windows.Tables
             }
 
             ITable table = window.GetTable();
-            int tableTicket = TableWindowProvider.RegisterTable(table);
+            int tableTicket = TableCache.RegisterTable(table);
 
 
             // Add row header column ahead of actual columns
@@ -90,130 +102,159 @@ namespace GDX.Editor.Windows.Tables
                         column.makeCell += () => TableWindowCells.MakeStringCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindStringCell;
                         column.sortable = true;
+                        column.minWidth = m_GenericMinWidth;
                         break;
                     case Serializable.SerializableTypes.Char:
                         column.makeCell += () => TableWindowCells.MakeCharCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindCharCell;
+                        column.minWidth = m_ToggleMinWidth;
                         break;
                     case Serializable.SerializableTypes.Bool:
                         column.makeCell += () => TableWindowCells.MakeBoolCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindBoolCell;
                         column.sortable = true;
+                        column.minWidth = m_ToggleMinWidth;
                         break;
                     case Serializable.SerializableTypes.SByte:
                         column.makeCell += () => TableWindowCells.MakeSByteCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindSByteCell;
+                        column.minWidth = m_NumericMinWidth;
                         break;
                     case Serializable.SerializableTypes.Byte:
                         column.makeCell += () => TableWindowCells.MakeByteCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindByteCell;
+                        column.minWidth = m_NumericMinWidth;
                         break;
                     case Serializable.SerializableTypes.Short:
                         column.makeCell += () => TableWindowCells.MakeShortCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindShortCell;
+                        column.minWidth = m_NumericMinWidth;
                         column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.UShort:
                         column.makeCell += () => TableWindowCells.MakeUShortCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindUShortCell;
                         column.sortable = true;
+                        column.minWidth = m_NumericMinWidth;
                         break;
                     case Serializable.SerializableTypes.Int:
                         column.makeCell += () => TableWindowCells.MakeIntCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindIntCell;
                         column.sortable = true;
+                        column.minWidth = m_NumericMinWidth;
                         break;
                     case Serializable.SerializableTypes.UInt:
                         column.makeCell += () => TableWindowCells.MakeUIntCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindUIntCell;
                         column.sortable = true;
+                        column.minWidth = m_NumericMinWidth;
                         break;
                     case Serializable.SerializableTypes.Long:
                         column.makeCell += () => TableWindowCells.MakeLongCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindLongCell;
                         column.sortable = true;
+                        column.minWidth = m_NumericMinWidth;
                         break;
                     case Serializable.SerializableTypes.ULong:
                         column.makeCell += () => TableWindowCells.MakeULongCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindULongCell;
                         column.sortable = true;
+                        column.minWidth = m_NumericMinWidth;
                         break;
                     case Serializable.SerializableTypes.Float:
                         column.makeCell += () => TableWindowCells.MakeFloatCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindFloatCell;
                         column.sortable = true;
+                        column.minWidth = m_NumericMinWidth;
                         break;
                     case Serializable.SerializableTypes.Double:
                         column.makeCell += () => TableWindowCells.MakeDoubleCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindDoubleCell;
                         column.sortable = true;
+                        column.minWidth = m_NumericMinWidth;
                         break;
                     case Serializable.SerializableTypes.Vector2:
                         column.makeCell += () => TableWindowCells.MakeVector2Cell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindVector2Cell;
+                        column.minWidth = m_Vector2MinWidth;
                         break;
                     case Serializable.SerializableTypes.Vector3:
                         column.makeCell += () => TableWindowCells.MakeVector3Cell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindVector3Cell;
+                        column.minWidth = m_Vector3MinWidth;
                         break;
                     case Serializable.SerializableTypes.Vector4:
                         column.makeCell += () => TableWindowCells.MakeVector4Cell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindVector4Cell;
+                        column.minWidth = m_Vector4MinWidth;
                         break;
                     case Serializable.SerializableTypes.Vector2Int:
                         column.makeCell += () => TableWindowCells.MakeVector2IntCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindVector2IntCell;
+                        column.minWidth = m_Vector2MinWidth;
                         break;
                     case Serializable.SerializableTypes.Vector3Int:
                         column.makeCell += () => TableWindowCells.MakeVector3IntCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindVector3IntCell;
+                        column.minWidth = m_Vector3MinWidth;
                         break;
                     case Serializable.SerializableTypes.Quaternion:
                         column.makeCell += () => TableWindowCells.MakeQuaternionCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindQuaternionCell;
+                        column.minWidth = m_Vector4MinWidth;
                         break;
                     case Serializable.SerializableTypes.Rect:
                         column.makeCell += () => TableWindowCells.MakeRectCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindRectCell;
+                        column.minWidth = m_Vector2MinWidth;
                         break;
                     case Serializable.SerializableTypes.RectInt:
                         column.makeCell += () => TableWindowCells.MakeRectIntCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindRectIntCell;
+                        column.minWidth = m_Vector2MinWidth;
                         break;
                     case Serializable.SerializableTypes.Color:
                         column.makeCell += () => TableWindowCells.MakeColorCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindColorCell;
+                        column.minWidth = m_GenericMinWidth;
                         break;
                     case Serializable.SerializableTypes.LayerMask:
                         column.makeCell += () => TableWindowCells.MakeLayerMaskCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindLayerMaskCell;
+                        column.minWidth = m_GenericMinWidth;
                         break;
                     case Serializable.SerializableTypes.Bounds:
                         column.makeCell += () => TableWindowCells.MakeBoundsCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindBoundsCell;
+                        column.minWidth = m_BoundsMinWidth;
                         SetDesiredRowHeightMultiplier(TableWindowCells.k_DoubleHeight);
                         break;
                     case Serializable.SerializableTypes.BoundsInt:
                         column.makeCell += () => TableWindowCells.MakeBoundsIntCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindBoundsIntCell;
+                        column.minWidth = m_BoundsMinWidth;
                         SetDesiredRowHeightMultiplier(TableWindowCells.k_DoubleHeight);
                         break;
                     case Serializable.SerializableTypes.Hash128:
                         column.makeCell += () => TableWindowCells.MakeHash128Cell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindHash128Cell;
                         column.sortable = false;
+                        column.minWidth = m_HashMinWidth;
                         break;
                     case Serializable.SerializableTypes.Gradient:
                         column.makeCell += () => TableWindowCells.MakeGradientCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindGradientCell;
+                        column.minWidth = m_GenericMinWidth;
                         break;
                     case Serializable.SerializableTypes.AnimationCurve:
                         column.makeCell += () => TableWindowCells.MakeAnimationCurveCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindAnimationCurveCell;
+                        column.minWidth = m_GenericMinWidth;
                         break;
                     case Serializable.SerializableTypes.Object:
                         column.makeCell += () => TableWindowCells.MakeObjectCell(tableTicket, columnIndex);
                         column.bindCell = TableWindowCells.BindObjectCell;
+                        column.minWidth = m_GenericMinWidth;
                         break;
                 }
 
@@ -295,7 +336,7 @@ namespace GDX.Editor.Windows.Tables
 
             // Make the context menu effect the entirety of the row, this is a bit brittle as it relies on the actual
             // layout of the UXML document to be the same across versions.
-            label.parent.parent.AddManipulator(GetOrCreateManipulatorForRow(description.InternalIndex));
+//            label.parent.parent.AddManipulator(GetOrCreateManipulatorForRow(description.InternalIndex));
         }
         void UnbindRowHeader(VisualElement cell, int row)
         {

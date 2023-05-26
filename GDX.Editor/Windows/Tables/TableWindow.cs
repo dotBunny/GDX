@@ -55,12 +55,12 @@ namespace GDX.Editor.Windows.Tables
                 // TODO: do we need to dirty this if its not a SO
                 AssetDatabase.SaveAssetIfDirty(m_ScriptableObject);
             }
-
             TableWindowProvider.UnregisterTableWindow(this);
 
+            // TODO: do we need to do this really?
             if (m_TargetTable != null)
             {
-                TableWindowProvider.UnregisterTable(m_TargetTable);
+                TableCache.UnregisterTable(m_TargetTable);
             }
         }
 
