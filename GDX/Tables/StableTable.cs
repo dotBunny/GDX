@@ -51,6 +51,7 @@ namespace GDX.Tables
         [SerializeField] internal ArrayHolder<Gradient>[] allGradientColumns;
         [SerializeField] internal ArrayHolder<AnimationCurve>[] allAnimationCurveColumns;
         [SerializeField] internal ArrayHolder<UnityEngine.Object>[] allObjectRefColumns;
+        [SerializeField] internal string[] allObjectRefTypenames;
         [SerializeField] internal ArrayHolder<string>[] allColumnNames = new ArrayHolder<string>[Serializable.SerializableTypesCount]; // Contains the name of each column of each type. Ordered by Serializable.SerializableTypes
 
         [SerializeField] internal int[] rowIDToDenseIndexMap;
@@ -78,6 +79,8 @@ namespace GDX.Tables
         internal ulong dataVersion = 1;
 
         [SerializeField] BitArray8 m_Flags;
+
+        internal static string s_UnityObjectString = typeof(UnityEngine.Object).AssemblyQualifiedName;
 
         public ulong GetDataVersion()
         {
@@ -955,6 +958,13 @@ namespace GDX.Tables
             return SetCell(row, column, ref allObjectRefColumns, value);
         }
 
+        public void SetTypeNameForObjectColumn<T>(int columnID) where T : UnityEngine.Object
+        {
+            AssertObjectColumnIDValid(columnID);
+            int denseIndex = columnIDToDenseIndexMap[columnID].columnDenseIndex;
+            allObjectRefTypenames[denseIndex] = typeof(T).AssemblyQualifiedName;
+        }
+
         // Get
         public string GetString(int row, int column)
         {
@@ -1515,23 +1525,47 @@ namespace GDX.Tables
 
         internal void ReSortRows<T>(ArrayHolder<T>[] columns, int[] sortedRowIDs)
         {
-            for (int i = 0; i < columns.Length; i++)
+            int columnCount = columns?.Length ?? 0;
+            for (int i = 0; i < columnCount; i++)
             {
                 T[] column = columns[i].TArray;
-
+                T[] newColumn = new T[column.Length];
                 for (int j = 0; j < sortedRowIDs.Length; j++)
                 {
-                    T rowValueAt = column[j];
                     int rowID = sortedRowIDs[j];
                     int oldRowIndex = rowIDToDenseIndexMap[rowID];
 
-                    column[j] = column[oldRowIndex];
-                    column[oldRowIndex] = rowValueAt;
+                    newColumn[j] = column[oldRowIndex];
                 }
+
+                columns[i].TArray = newColumn;
             }
         }
 
         // Internal
+
+        internal void AddTypeNameEntryForUnityObjectColumn()
+        { 
+            int nameArrayLength = allObjectRefTypenames?.Length ?? 0;
+            Array.Resize(ref allObjectRefTypenames, nameArrayLength + 1);
+            allObjectRefTypenames[nameArrayLength] = s_UnityObjectString;
+        }
+
+        internal void RemoveTypeNameEntryForUnityObjectColumn(int columnDenseIndex)
+        {
+            int nameArrayLength = allObjectRefTypenames?.Length ?? 0;
+            allObjectRefTypenames[columnDenseIndex] = allObjectRefTypenames[nameArrayLength];
+            Array.Resize(ref allObjectRefTypenames, nameArrayLength - 1);
+        }
+
+        internal void AssertObjectColumnIDValid(int columnID)
+        {
+            AssertColumnIDValid(columnID);
+            if (columnIDToDenseIndexMap[columnID].ColumnType != Serializable.SerializableTypes.Object)
+            {
+                throw new ArgumentException("Column ID must correspond to a UnityEngine.Object column.");
+            }
+        }
 
         internal int AddColumnInternal<T>(string columnName, ref ArrayHolder<T>[] allColumnsOfType, Serializable.SerializableTypes typeIndex, int insertAtColumnID)
         {
@@ -1591,6 +1625,10 @@ namespace GDX.Tables
                 columnIDToSortOrderMap[currentColumnID] = i;
             }
 
+            if (typeIndex == Serializable.SerializableTypes.Object)
+            {
+                AddTypeNameEntryForUnityObjectColumn();
+            }
 
             columnIDToSortOrderMap[columnID] = insertAtSortedIndex;
             sortedOrderToColumnIDMap[insertAtSortedIndex] = columnID;
@@ -1627,6 +1665,11 @@ namespace GDX.Tables
             columnIDToDenseIndexMap[sparseIndexToSwap].columnDenseIndex = columnLocation;
             denseIndicesOfType[columnLocation] = sparseIndexToSwap;
             Array.Resize(ref denseIndicesOfType, lastIndex);
+
+            if (typeIndex == Serializable.SerializableTypes.Object)
+            {
+                RemoveTypeNameEntryForUnityObjectColumn(columnLocation);
+            }
 
             for (int i = columnOrder + 1; i < combinedColumnCount; i++)
             {
@@ -1717,8 +1760,9 @@ namespace GDX.Tables
 
         internal void SetRowOrderForColumns<T>(ArrayHolder<T>[] columns, int oldSortOrder, int newSortOrder)
         {
+            int columnCount = columns?.Length ?? 0;
             int iterDirection = newSortOrder > oldSortOrder ? 1 : -1;
-            for (int i = 0; i < columns.Length; i++)
+            for (int i = 0; i < columnCount; i++)
             {
                 T[] column = columns[i].TArray;
 
