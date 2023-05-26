@@ -1515,19 +1515,20 @@ namespace GDX.Tables
 
         internal void ReSortRows<T>(ArrayHolder<T>[] columns, int[] sortedRowIDs)
         {
-            for (int i = 0; i < columns.Length; i++)
+            int columnCount = columns?.Length ?? 0;
+            for (int i = 0; i < columnCount; i++)
             {
                 T[] column = columns[i].TArray;
-
+                T[] newColumn = new T[column.Length];
                 for (int j = 0; j < sortedRowIDs.Length; j++)
                 {
-                    T rowValueAt = column[j];
                     int rowID = sortedRowIDs[j];
                     int oldRowIndex = rowIDToDenseIndexMap[rowID];
 
-                    column[j] = column[oldRowIndex];
-                    column[oldRowIndex] = rowValueAt;
+                    newColumn[j] = column[oldRowIndex];
                 }
+
+                columns[i].TArray = newColumn;
             }
         }
 
@@ -1717,8 +1718,9 @@ namespace GDX.Tables
 
         internal void SetRowOrderForColumns<T>(ArrayHolder<T>[] columns, int oldSortOrder, int newSortOrder)
         {
+            int columnCount = columns?.Length ?? 0;
             int iterDirection = newSortOrder > oldSortOrder ? 1 : -1;
-            for (int i = 0; i < columns.Length; i++)
+            for (int i = 0; i < columnCount; i++)
             {
                 T[] column = columns[i].TArray;
 
