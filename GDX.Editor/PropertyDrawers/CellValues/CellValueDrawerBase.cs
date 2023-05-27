@@ -43,8 +43,6 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         protected int m_RowInternalIndex = -1;
         protected int m_ColumnInternalIndex = -1;
 
-        string m_Message = null;
-
         bool m_IsUnlocked = false;
 
 
@@ -126,30 +124,18 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             return m_Container;
         }
 
-
-
         void UpdateLinkStatus()
         {
-            if (!string.IsNullOrEmpty(m_Message))
-            {
-                m_TableButton.RemoveFromClassList("linked");
-                m_TableButton.RemoveFromClassList("unlinked");
-                m_TableButton.AddToClassList("error");
-
-                m_TableButton.tooltip = m_Message;
-            }
-            else if(m_Table != null && m_RowInternalIndex != -1 && m_ColumnInternalIndex != -1)
+            if(m_Table != null && m_RowInternalIndex != -1 && m_ColumnInternalIndex != -1)
             {
                 m_TableButton.AddToClassList("linked");
                 m_TableButton.RemoveFromClassList("unlinked");
-                m_TableButton.RemoveFromClassList("error");
                 m_TableButton.tooltip = $"{m_Table.GetDisplayName()} @ {m_RowInternalIndex}:{m_ColumnInternalIndex}";
             }
             else
             {
                 m_TableButton.RemoveFromClassList("linked");
                 m_TableButton.AddToClassList("unlinked");
-                m_TableButton.RemoveFromClassList("error");
 
                 // Complicated messaging
                 if (m_Table == null)
@@ -318,7 +304,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         {
             if (m_Table.GetRowCount() == 0)
             {
-                m_Message = "Table has no row data.";
+                Debug.LogWarning($"The selected table '{m_Table.GetDisplayName()}' has no row data.");
                 return null;
             }
 
@@ -341,7 +327,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
             if (m_RowInternalIndex == -1 || m_Table == null || m_Table.GetColumnCount() == 0)
             {
-                m_Message = "An error occured when trying to select a column.";
+                Debug.LogWarning("An error occured when trying to select a column. Please try again.");
                 return null;
             }
 
@@ -368,7 +354,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             int columnCount = m_ColumnDescriptions.Length;
             if (columnCount == 0)
             {
-                m_Message = $"No columns of {requiredType} are found in this table.";
+                Debug.LogWarning($"No columns of {requiredType} are found in the table '{m_Table.GetDisplayName()}'.");
                 return null;
             }
 
@@ -457,6 +443,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             }
             m_ValueContainer.Add(contentElement);
             UpdateLinkStatus();
+
+
         }
 
         void CheckForMessage()
