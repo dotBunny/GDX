@@ -13,39 +13,11 @@ namespace GDX.Editor.PropertyDrawers.CellValues
     public class SByteCellValueDrawer : CellValueDrawerBase
     {
         SByteCellValue m_CellValue;
-        /// <inheritdoc />
-        protected override void Init(SerializedProperty serializedProperty)
-        {
-            if (Reflection.TryGetFieldValue(serializedProperty.serializedObject.targetObject, typeof(SByteCellValue),
-                    serializedProperty.name, out SByteCellValue cell))
-            {
-                m_CellValue = cell;
-                if (m_CellValue.Table != null)
-                {
-                    m_Table = m_CellValue.Table;
-                    m_RowInternalIndex = m_CellValue.Row;
-                    m_ColumnInternalIndex = m_CellValue.Column;
-                }
-                else
-                {
-                    m_RowInternalIndex = -1;
-                    m_ColumnInternalIndex = -1;
-                }
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void CreateCellValue(TableBase table, int rowInternalIndex, int columnInternalIndex)
-        {
-            if (table != null && rowInternalIndex != -1 && columnInternalIndex != -1)
-            {
-                m_CellValue = new SByteCellValue(table, rowInternalIndex, columnInternalIndex);
-            }
-        }
 
         /// <inheritdoc />
         protected override VisualElement GetCellElement()
         {
+            m_CellValue = new SByteCellValue(m_Table, m_RowInternalIndex, m_ColumnInternalIndex);
             SliderInt newField = new SliderInt(sbyte.MinValue, sbyte.MaxValue)
             {
                 name = k_CellFieldName, showInputField = true, label = null

@@ -13,39 +13,11 @@ namespace GDX.Editor.PropertyDrawers.CellValues
     public class RectCellValueDrawer : CellValueDrawerBase
     {
         RectCellValue m_CellValue;
-        /// <inheritdoc />
-        protected override void Init(SerializedProperty serializedProperty)
-        {
-            if (Reflection.TryGetFieldValue(serializedProperty.serializedObject.targetObject, typeof(RectCellValue),
-                    serializedProperty.name, out RectCellValue cell))
-            {
-                m_CellValue = cell;
-                if (m_CellValue.Table != null)
-                {
-                    m_Table = m_CellValue.Table;
-                    m_RowInternalIndex = m_CellValue.Row;
-                    m_ColumnInternalIndex = m_CellValue.Column;
-                }
-                else
-                {
-                    m_RowInternalIndex = -1;
-                    m_ColumnInternalIndex = -1;
-                }
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void CreateCellValue(TableBase table, int rowInternalIndex, int columnInternalIndex)
-        {
-            if (table != null && rowInternalIndex != -1 && columnInternalIndex != -1)
-            {
-                m_CellValue = new RectCellValue(table, rowInternalIndex, columnInternalIndex);
-            }
-        }
-
+        
         /// <inheritdoc />
         protected override VisualElement GetCellElement()
         {
+            m_CellValue = new RectCellValue(m_Table, m_RowInternalIndex, m_ColumnInternalIndex);
             RectField newField = new RectField(null) { name = k_CellFieldName };
             newField.SetValueWithoutNotify(m_CellValue.Get());
             newField.RegisterValueChangedCallback(e =>

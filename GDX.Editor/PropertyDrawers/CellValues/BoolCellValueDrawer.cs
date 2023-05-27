@@ -14,39 +14,11 @@ namespace GDX.Editor.PropertyDrawers.CellValues
     public class BoolCellValueDrawer : CellValueDrawerBase
     {
         BoolCellValue m_CellValue;
-        /// <inheritdoc />
-        protected override void Init(SerializedProperty serializedProperty)
-        {
-            if (Reflection.TryGetFieldValue(serializedProperty.serializedObject.targetObject, typeof(BoolCellValue),
-                    serializedProperty.name, out BoolCellValue cell))
-            {
-                m_CellValue = cell;
-                if (m_CellValue.Table != null)
-                {
-                    m_Table = m_CellValue.Table;
-                    m_RowInternalIndex = m_CellValue.Row;
-                    m_ColumnInternalIndex = m_CellValue.Column;
-                }
-                else
-                {
-                    m_RowInternalIndex = -1;
-                    m_ColumnInternalIndex = -1;
-                }
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void CreateCellValue(TableBase table, int rowInternalIndex, int columnInternalIndex)
-        {
-            if (table != null && rowInternalIndex != -1 && columnInternalIndex != -1)
-            {
-                m_CellValue = new BoolCellValue(table, rowInternalIndex, columnInternalIndex);
-            }
-        }
 
         /// <inheritdoc />
         protected override VisualElement GetCellElement()
         {
+            m_CellValue = new BoolCellValue(m_Table, m_RowInternalIndex, m_ColumnInternalIndex);
             Toggle newField = new Toggle(null) { name = k_CellFieldName };
             newField.SetValueWithoutNotify(m_CellValue.Get());
             newField.RegisterValueChangedCallback(e =>

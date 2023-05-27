@@ -13,39 +13,11 @@ namespace GDX.Editor.PropertyDrawers.CellValues
     public class Vector4CellValueDrawer : CellValueDrawerBase
     {
         Vector4CellValue m_CellValue;
-        /// <inheritdoc />
-        protected override void Init(SerializedProperty serializedProperty)
-        {
-            if (Reflection.TryGetFieldValue(serializedProperty.serializedObject.targetObject, typeof(Vector4CellValue),
-                    serializedProperty.name, out Vector4CellValue cell))
-            {
-                m_CellValue = cell;
-                if (m_CellValue.Table != null)
-                {
-                    m_Table = m_CellValue.Table;
-                    m_RowInternalIndex = m_CellValue.Row;
-                    m_ColumnInternalIndex = m_CellValue.Column;
-                }
-                else
-                {
-                    m_RowInternalIndex = -1;
-                    m_ColumnInternalIndex = -1;
-                }
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void CreateCellValue(TableBase table, int rowInternalIndex, int columnInternalIndex)
-        {
-            if (table != null && rowInternalIndex != -1 && columnInternalIndex != -1)
-            {
-                m_CellValue = new Vector4CellValue(table, rowInternalIndex, columnInternalIndex);
-            }
-        }
 
         /// <inheritdoc />
         protected override VisualElement GetCellElement()
         {
+            m_CellValue = new Vector4CellValue(m_Table, m_RowInternalIndex, m_ColumnInternalIndex);
             Vector4Field newField = new Vector4Field(null) { name = k_CellFieldName };
             newField.SetValueWithoutNotify(m_CellValue.Get());
             newField.RegisterValueChangedCallback(e =>

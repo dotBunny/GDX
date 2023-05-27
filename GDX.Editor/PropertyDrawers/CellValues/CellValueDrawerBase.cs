@@ -17,7 +17,12 @@ namespace GDX.Editor.PropertyDrawers.CellValues
     public abstract class CellValueDrawerBase : PropertyDrawer
     {
         protected const string k_CellFieldName = "gdx-table-inspector-field";
+
         protected SerializedProperty m_SerializedProperty;
+        protected SerializedProperty m_TableProperty;
+        protected SerializedProperty m_RowProperty;
+        protected SerializedProperty m_ColumnProperty;
+
 
         AssetDatabaseReference[] m_Tables;
         VisualElement m_Container;
@@ -36,9 +41,6 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         protected int m_ColumnInternalIndex = -1;
 
 
-
-        protected abstract void Init(SerializedProperty serializedProperty);
-        protected abstract void CreateCellValue(TableBase table, int rowInternalIndex, int columnInternalIndex);
         protected abstract Serializable.SerializableTypes GetSupportedType();
 
         protected abstract VisualElement GetCellElement();
@@ -90,7 +92,17 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             m_SerializedProperty = property;
-            Init(m_SerializedProperty);
+
+            // Load Data
+            m_TableProperty = m_SerializedProperty.FindPropertyRelative("Table");
+            m_Table = (TableBase)m_TableProperty.objectReferenceValue;
+
+            m_RowProperty = m_SerializedProperty.FindPropertyRelative("Row");
+            m_RowInternalIndex = m_RowProperty.intValue;
+
+            m_ColumnProperty = m_SerializedProperty.FindPropertyRelative("Column");
+            m_ColumnInternalIndex = m_ColumnProperty.intValue;
+
             m_Container = new VisualElement();
             m_Breadcrumbs = new ToolbarBreadcrumbs();
             m_Container.Add(m_Breadcrumbs);
@@ -147,8 +159,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                 m_ColumnInternalIndex = m_ColumnDescriptions[arg].InternalIndex;
                 m_Breadcrumbs.Add(new Label(m_ColumnDescriptions[arg].Name));
 
-                // Save?
-                CreateCellValue(m_Table, m_RowInternalIndex, m_ColumnInternalIndex);
+                // Apply Properties
                 SaveSelection();
 
                 EditorUtility.SetDirty(m_SerializedProperty.serializedObject.targetObject);
