@@ -132,7 +132,7 @@ namespace GDX.Editor
                 return s_Stylesheet;
             }
             s_Stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(
-                $"{UpdateProvider.LocalPackage.PackageAssetPath}/GDX.Editor/UIElements/GDXStylesShared.uxml");
+                $"{UpdateProvider.LocalPackage.PackageAssetPath}/GDX.Editor/UIElements/GDXStylesShared.uss");
 
             return s_Stylesheet;
         }

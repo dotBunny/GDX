@@ -728,3 +728,75 @@ Button.gdx-small-button {
 .light #gdx-table-toolbar-help {
     background-image: resource('Icons/_Help.png');
 }
+
+
+#gdx-cell-value-container
+{
+    padding-right: 2px;
+    max-width: 58%;
+}
+.gdx-cell-field-inspector
+{
+    flex-grow: 1;
+}
+#gdx-cell-value-lock
+{
+    width: 12px;
+    height: 12px;
+    border-width: 0;
+    background-color: rgba(0,0,0,0);
+    -unity-slice-top: 0;
+    -unity-slice-bottom: 0;
+    -unity-background-scale-mode: scale-and-crop;
+    background-size: contain;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-left: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+#gdx-cell-value-lock.locked
+{
+    background-image: resource('Icons/LockIcon-On.png');
+}
+#gdx-cell-value-lock.unlocked
+{
+    background-image: resource('Icons/LockIcon.png');
+}
+
+#gdx-cell-value-table
+{
+    width: 12px;
+    height: 12px;
+    border-width: 0;
+    background-color: rgba(0,0,0,0);
+    -unity-slice-top: 0;
+    -unity-slice-bottom: 0;
+    -unity-background-scale-mode: scale-and-crop;
+    background-size: contain;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-left: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#gdx-cell-value-spacer
+{
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+#gdx-cell-value-table.linked
+{
+    background-image: resource('Icons/Linked.png');
+}
+
+#gdx-cell-value-table.unlinked
+{
+    background-image: resource('Icons/Unlinked.png');
+}
+#gdx-cell-value-table.error
+{
+    background-image: resource('Icons/Error.png');
+}

@@ -346,6 +346,13 @@ namespace GDX.Editor.Windows.Tables
         void UnbindRowHeader(VisualElement cell, int row)
         {
             Label label = (Label)cell;
+
+            if (row == -1 || row >= k_RowDescriptions.Count)
+            {
+                Debug.LogWarning($"Bad Data? {row} vs a count of {k_RowDescriptions.Count}");
+                return;
+            }
+
             TableBase.RowDescription description = k_RowDescriptions[row];
             if (m_RowContextMenus.TryGetValue(description.InternalIndex, out ContextualMenuManipulator manipulator))
             {
