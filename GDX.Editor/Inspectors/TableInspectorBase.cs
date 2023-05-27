@@ -15,9 +15,9 @@ namespace GDX.Editor.Inspectors
     {
 #if UNITY_2022_2_OR_NEWER
 
-        static readonly Dictionary<ITable, VisualElement> k_KnownInspectors = new Dictionary<ITable, VisualElement>();
+        static readonly Dictionary<TableBase, VisualElement> k_KnownInspectors = new Dictionary<TableBase, VisualElement>();
 
-        public static void RedrawInspector(ITable table)
+        public static void RedrawInspector(TableBase table)
         {
             if (k_KnownInspectors.TryGetValue(table, out VisualElement inspectorElement))
             {
@@ -25,7 +25,7 @@ namespace GDX.Editor.Inspectors
             }
         }
 
-        static void UpdateInspector(VisualElement rootElement, ITable table)
+        static void UpdateInspector(VisualElement rootElement, TableBase table)
         {
             Label dataLabel = rootElement.Q<Label>("gdx-table-inspector-data");
 
@@ -39,20 +39,20 @@ namespace GDX.Editor.Inspectors
 
         void OpenTargetAsset()
         {
-            ITable table = (ITable)target;
+            TableBase table = (TableBase)target;
             TableWindowProvider.OpenAsset(table);
         }
 
         void OnDestroy()
         {
-            ITable table = (ITable)target;
+            TableBase table = (TableBase)target;
             k_KnownInspectors.Remove(table);
         }
 
         /// <inheritdoc />
         public override VisualElement CreateInspectorGUI()
         {
-            ITable table = (ITable)target;
+            TableBase table = (TableBase)target;
             VisualElement container = new VisualElement();
 
             Label dataLabel = new Label { name = "gdx-table-inspector-data" };

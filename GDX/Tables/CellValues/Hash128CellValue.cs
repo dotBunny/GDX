@@ -10,12 +10,12 @@ namespace GDX.Tables.CellValues
     public struct Hash128CellValue
     {
         Hash128 m_CachedValue;
-        public readonly ITable Table;
-        public readonly int Column;
-        public readonly int Row;
+        public TableBase Table;
+        public int Column;
+        public int Row;
         ulong m_TableVersion;
 
-        public Hash128CellValue(ITable table, int row, int column)
+        public Hash128CellValue(TableBase table, int row, int column)
         {
             Table = table;
             Row = row;
@@ -47,6 +47,11 @@ namespace GDX.Tables.CellValues
             {
                 m_TableVersion = Table.SetHash128(Row, Column, value);
             }
+        }
+
+        public static Serializable.SerializableTypes GetSupportedType()
+        {
+            return Serializable.SerializableTypes.Hash128;
         }
     }
 }

@@ -211,7 +211,7 @@ namespace GDX.Editor.Windows.Tables
                     m_RootElement.style.display = DisplayStyle.Flex;
                     m_SettingsOverlay.style.display = DisplayStyle.Flex;
                     m_SettingsDisplayName.SetValueWithoutNotify(m_TableWindow.GetTable().GetDisplayName());
-                    m_SettingsSupportUndoToggle.SetValueWithoutNotify(m_TableWindow.GetTable().GetFlag(ITable.Flags.EnableUndo));
+                    m_SettingsSupportUndoToggle.SetValueWithoutNotify(m_TableWindow.GetTable().GetFlag(TableBase.Flags.EnableUndo));
                     break;
                 default:
                     m_RootElement.style.display = DisplayStyle.None;

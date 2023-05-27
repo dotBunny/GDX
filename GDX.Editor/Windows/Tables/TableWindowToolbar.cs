@@ -64,13 +64,13 @@ namespace GDX.Editor.Windows.Tables
         }
         void RenameRow()
         {
-            ITable.RowDescription selectedItem = (ITable.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
+            TableBase.RowDescription selectedItem = (TableBase.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
             m_ParentWindow.GetController().ShowRenameRowDialog(selectedItem.InternalIndex);
         }
 
         void RemoveRow()
         {
-            ITable.RowDescription selectedItem = (ITable.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
+            TableBase.RowDescription selectedItem = (TableBase.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
             m_ParentWindow.GetController().ShowRemoveRowDialog(selectedItem.InternalIndex);
         }
 

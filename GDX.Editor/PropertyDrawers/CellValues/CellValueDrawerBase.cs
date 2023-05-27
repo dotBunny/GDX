@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using GDX.Tables;
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 #if !UNITY_2022_2_OR_NEWER
 using UnityEngine;
@@ -16,8 +17,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
     public abstract class CellValueDrawerBase : PropertyDrawer
     {
         protected const string k_CellFieldName = "gdx-table-inspector-field";
+        protected SerializedProperty m_SerializedProperty;
 
-        UnityEngine.Object m_TargetObject;
         AssetDatabaseReference[] m_Tables;
         VisualElement m_Container;
         ToolbarBreadcrumbs m_Breadcrumbs;
@@ -25,30 +26,36 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         PopupField<int> m_SelectionPopup;
         List<int> m_SelectionPopupChoices;
 
-        ITable.RowDescription[] m_RowDescriptions;
-        ITable.ColumnDescription[] m_ColumnDescriptions;
+        TableBase.RowDescription[] m_RowDescriptions;
+        TableBase.ColumnDescription[] m_ColumnDescriptions;
 
         VisualElement m_CellElement;
 
-        protected ITable m_Table;
+        protected TableBase m_Table;
         protected int m_RowInternalIndex = -1;
         protected int m_ColumnInternalIndex = -1;
 
 
 
         protected abstract void Init(SerializedProperty serializedProperty);
-        protected abstract void CopyFromInspector(ITable table, int rowInternalIndex, int columnInternalIndex);
-        protected abstract void CopyToInspector();
+        protected abstract void CreateCellValue(TableBase table, int rowInternalIndex, int columnInternalIndex);
+        protected abstract Serializable.SerializableTypes GetSupportedType();
 
         protected abstract VisualElement GetCellElement();
 
-        // ITable m_Table;
-        // int m_columnInternalIndex;
-        // int m_rowInternalIndex;
-        // public override
+        void SaveSelection()
+        {
+            SerializedProperty tableProperty = m_SerializedProperty.FindPropertyRelative("Table");
+            tableProperty.objectReferenceValue = m_Table;
+            tableProperty.objectReferenceInstanceIDValue = m_Table.GetInstanceID();
+            SerializedProperty rowProperty = m_SerializedProperty.FindPropertyRelative("Row");
+            rowProperty.intValue = m_RowInternalIndex;
+            SerializedProperty columnProperty = m_SerializedProperty.FindPropertyRelative("Column");
+            columnProperty.intValue = m_ColumnInternalIndex;
+            m_SerializedProperty.serializedObject.ApplyModifiedProperties();
+        }
 
 #if UNITY_2022_2_OR_NEWER
-
 
         void UpdateDisplayMode()
         {
@@ -82,9 +89,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         /// <returns>A disabled visual element.</returns>
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            m_TargetObject = property.serializedObject.targetObject;
-
-            Init(property);
+            m_SerializedProperty = property;
+            Init(m_SerializedProperty);
             m_Container = new VisualElement();
             m_Breadcrumbs = new ToolbarBreadcrumbs();
             m_Container.Add(m_Breadcrumbs);
@@ -114,7 +120,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         {
             if (arg >= 0)
             {
-                m_Table = (ITable)m_Tables[arg].GetOrLoadAsset();
+                m_Table = (TableBase)m_Tables[arg].GetOrLoadAsset();
                 m_Breadcrumbs.Add(new Label(m_Tables[arg].GetFileNameWithoutExtension()));
                 UpdateDisplayMode();
                 return m_Tables[arg].GetPathWithoutExtension();
@@ -142,8 +148,10 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                 m_Breadcrumbs.Add(new Label(m_ColumnDescriptions[arg].Name));
 
                 // Save?
-                CopyFromInspector(m_Table, m_RowInternalIndex, m_ColumnInternalIndex);
-                EditorUtility.SetDirty(m_TargetObject);
+                CreateCellValue(m_Table, m_RowInternalIndex, m_ColumnInternalIndex);
+                SaveSelection();
+
+                EditorUtility.SetDirty(m_SerializedProperty.serializedObject.targetObject);
 
                 UpdateDisplayMode();
                 return "Updating ...";
@@ -194,21 +202,30 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                     m_Container.Add(m_SelectionPopup);
                     break;
                 case DisplayMode.SelectRow:
-                    // Get table rows
-                    m_RowDescriptions = m_Table.GetAllRowDescriptions();
-                    int rowCount = m_RowDescriptions.Length;
-                    m_SelectionPopupChoices = new List<int>(rowCount + 1) { -1 };
-                    if (rowCount > 0)
+                    if (m_Table.GetRowCount() == 0)
                     {
-                        for (int i = 0; i < rowCount; i++)
-                        {
-                            m_SelectionPopupChoices.Add(i);
-                        }
+                        m_Container.Add(new Label("Table has no rows"));
                     }
-                    m_SelectionPopup = new PopupField<int>("Row", m_SelectionPopupChoices, 0, OnRowSelected,
-                        FormatRowSelectionItem);
-                    m_Container.Add(m_SelectionPopup);
+                    else
+                    {
 
+
+                        // Get table rows
+                        m_RowDescriptions = m_Table.GetAllRowDescriptions();
+                        int rowCount = m_RowDescriptions.Length;
+                        m_SelectionPopupChoices = new List<int>(rowCount + 1) { -1 };
+                        if (rowCount > 0)
+                        {
+                            for (int i = 0; i < rowCount; i++)
+                            {
+                                m_SelectionPopupChoices.Add(i);
+                            }
+                        }
+
+                        m_SelectionPopup = new PopupField<int>("Row", m_SelectionPopupChoices, 0, OnRowSelected,
+                            FormatRowSelectionItem);
+                        m_Container.Add(m_SelectionPopup);
+                    }
                     break;
                 case DisplayMode.SelectColumn:
                     if (m_RowInternalIndex == -1)
@@ -219,20 +236,50 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
                     m_RowDescriptions = null;
 
-                    // Get table rows
-                    m_ColumnDescriptions = m_Table.GetAllColumnDescriptions();
-                    int columnCount = m_ColumnDescriptions.Length;
-                    m_SelectionPopupChoices = new List<int>(columnCount + 1) { -1 };
-                    if (columnCount > 0)
+                    if (m_Table.GetColumnCount() == 0)
                     {
-                        for (int i = 0; i < columnCount; i++)
+                        m_Container.Add(new Label("Table has no column"));
+                    }
+                    else
+                    {
+                        // Get table columns
+                        TableBase.ColumnDescription[] allColumns = m_Table.GetAllColumnDescriptions();
+                        int allColumnCount = allColumns.Length;
+                        Serializable.SerializableTypes requiredType = GetSupportedType();
+                        List<TableBase.ColumnDescription> validColumns =
+                            new List<TableBase.ColumnDescription>(allColumns.Length);
+
+                        for (int i = 0; i < allColumnCount; i++)
                         {
-                            m_SelectionPopupChoices.Add(i);
+                            if (allColumns[i].Type == requiredType)
+                            {
+                                validColumns.Add(allColumns[i]);
+                            }
+                        }
+
+                        //Filtered
+                        m_ColumnDescriptions = validColumns.ToArray();
+                        int columnCount = m_ColumnDescriptions.Length;
+                        if (columnCount == 0)
+                        {
+                            m_Container.Add(new Label("No " + requiredType.ToString() + " columns found"));
+
+                        }
+                        else
+                        {
+
+                            m_SelectionPopupChoices = new List<int>(columnCount + 1) { -1 };
+                            for (int i = 0; i < columnCount; i++)
+                            {
+                                m_SelectionPopupChoices.Add(i);
+                            }
+                            m_SelectionPopup = new PopupField<int>("Column", m_SelectionPopupChoices, 0,
+                                OnColumnSelected,
+                                FormatColumnSelectionItem);
+                            m_Container.Add(m_SelectionPopup);
                         }
                     }
-                    m_SelectionPopup = new PopupField<int>("Column", m_SelectionPopupChoices, 0, OnColumnSelected,
-                        FormatColumnSelectionItem);
-                    m_Container.Add(m_SelectionPopup);
+
                     break;
                 case DisplayMode.DisplayValue:
                     if (m_ColumnInternalIndex == -1)

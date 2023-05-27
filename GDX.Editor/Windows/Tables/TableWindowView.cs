@@ -13,8 +13,8 @@ namespace GDX.Editor.Windows.Tables
 #if UNITY_2022_2_OR_NEWER
     public class TableWindowView
     {
-        readonly List<ITable.RowDescription> k_RowDescriptions = new List<ITable.RowDescription>();
-        readonly List<ITable.ColumnDescription> m_ColumnDescriptions = new List<ITable.ColumnDescription>();
+        readonly List<TableBase.RowDescription> k_RowDescriptions = new List<TableBase.RowDescription>();
+        readonly List<TableBase.ColumnDescription> m_ColumnDescriptions = new List<TableBase.ColumnDescription>();
         readonly MultiColumnListView m_MultiColumnListView;
         readonly Columns m_TableViewColumns;
         readonly VisualElement m_TableViewHeader;
@@ -54,12 +54,12 @@ namespace GDX.Editor.Windows.Tables
                 rootElement.RemoveAt(1);
             }
 
-            ITable table = window.GetTable();
+            TableBase table = window.GetTable();
             int tableTicket = TableCache.RegisterTable(table);
 
 
             // Add row header column ahead of actual columns
-            m_ColumnDescriptions.Add(new ITable.ColumnDescription
+            m_ColumnDescriptions.Add(new TableBase.ColumnDescription
             {
                 Name = "RowName", InternalIndex = -1, Type = Serializable.SerializableTypes.String
             });
@@ -82,7 +82,7 @@ namespace GDX.Editor.Windows.Tables
                 });
             for (int i = 1; i < columnCount; i++)
             {
-                ITable.ColumnDescription columnDescription = m_ColumnDescriptions[i];
+                TableBase.ColumnDescription columnDescription = m_ColumnDescriptions[i];
                 int columnIndex = columnDescription.InternalIndex;
 
                 // We embed the column stable index
@@ -324,14 +324,14 @@ namespace GDX.Editor.Windows.Tables
                 return -1;
             }
 
-            ITable.RowDescription selectedItem = (ITable.RowDescription)m_MultiColumnListView.selectedItem;
+            TableBase.RowDescription selectedItem = (TableBase.RowDescription)m_MultiColumnListView.selectedItem;
             return selectedItem.InternalIndex;
         }
 
         void BindRowHeader(VisualElement cell, int row)
         {
             Label label = (Label)cell;
-            ITable.RowDescription description = k_RowDescriptions[row];
+            TableBase.RowDescription description = k_RowDescriptions[row];
             label.text = description.Name;
 
             // Make the context menu effect the entirety of the row, this is a bit brittle as it relies on the actual
@@ -341,7 +341,7 @@ namespace GDX.Editor.Windows.Tables
         void UnbindRowHeader(VisualElement cell, int row)
         {
             Label label = (Label)cell;
-            ITable.RowDescription description = k_RowDescriptions[row];
+            TableBase.RowDescription description = k_RowDescriptions[row];
             if (m_RowContextMenus.TryGetValue(description.InternalIndex, out ContextualMenuManipulator manipulator))
             {
                 label.parent.parent.RemoveManipulator(manipulator);
@@ -408,7 +408,7 @@ namespace GDX.Editor.Windows.Tables
 
             if (foundIndex != -1)
             {
-                m_ColumnDescriptions[foundIndex] = new ITable.ColumnDescription()
+                m_ColumnDescriptions[foundIndex] = new TableBase.ColumnDescription()
                 {
                     Name = newName,
                     InternalIndex = m_ColumnDescriptions[foundIndex].InternalIndex,
@@ -420,7 +420,7 @@ namespace GDX.Editor.Windows.Tables
 
         internal void RebuildRowData()
         {
-            ITable table = parentWindow.GetTable();
+            TableBase table = parentWindow.GetTable();
             k_RowDescriptions.Clear();
             if (table.GetRowCount() > 0)
             {

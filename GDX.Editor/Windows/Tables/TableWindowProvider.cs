@@ -16,8 +16,8 @@ namespace GDX.Editor.Windows.Tables
     public static class TableWindowProvider
     {
         public const string UndoPrefix = "Table:";
-        static readonly Dictionary<ITable, TableWindow> k_TableWindowMap =
-            new Dictionary<ITable, TableWindow>();
+        static readonly Dictionary<TableBase, TableWindow> k_TableWindowMap =
+            new Dictionary<TableBase, TableWindow>();
 
         static int s_TableWindowTicketHead;
         static readonly Dictionary<TableWindow, int> k_TableWindowToTicket = new Dictionary<TableWindow, int>(5);
@@ -36,7 +36,7 @@ namespace GDX.Editor.Windows.Tables
             return k_TableWindowToTicket.TryGetValue(tableWindow, out int ticket) ? ticket : -1;
         }
 
-        internal static TableWindow GetTableWindow(ITable table)
+        internal static TableWindow GetTableWindow(TableBase table)
         {
             return k_TableWindowMap.TryGetValue(table, out TableWindow window) ? window : null;
         }
@@ -50,14 +50,14 @@ namespace GDX.Editor.Windows.Tables
                 return;
 
             // Update windows / inspectors
-            foreach(KeyValuePair<ITable,TableWindow> kvp in k_TableWindowMap)
+            foreach(KeyValuePair<TableBase,TableWindow> kvp in k_TableWindowMap)
             {
                 kvp.Value.BindTable(kvp.Key);
                 TableInspectorBase.RedrawInspector(kvp.Key);
             }
         }
 
-        internal static int RegisterTableWindow(TableWindow tableWindow, ITable table)
+        internal static int RegisterTableWindow(TableWindow tableWindow, TableBase table)
         {
             int ticket = GetTableWindowTicket(tableWindow);
             k_TableWindowMap[table] = tableWindow;
@@ -72,7 +72,7 @@ namespace GDX.Editor.Windows.Tables
             k_TableWindowToTicket.Add(tableWindow, head);
 
             // We're only going to subscribe for undo events when the table window is open and we have support
-            if (!s_SubscribedForUndo && table.GetFlag(ITable.Flags.EnableUndo))
+            if (!s_SubscribedForUndo && table.GetFlag(TableBase.Flags.EnableUndo))
             {
                 Undo.undoRedoEvent += UndoRedoEvent;
                 s_SubscribedForUndo = true;
@@ -106,7 +106,7 @@ namespace GDX.Editor.Windows.Tables
         public static bool OnOpenAssetTable(int instanceID, int line)
         {
             Object unityObject = EditorUtility.InstanceIDToObject(instanceID);
-            if (unityObject is ITable table)
+            if (unityObject is TableBase table)
             {
                 OpenAsset(table);
                 return true;
@@ -115,7 +115,7 @@ namespace GDX.Editor.Windows.Tables
             return false;
         }
 
-        public static TableWindow OpenAsset(ITable table)
+        public static TableWindow OpenAsset(TableBase table)
         {
             TableWindow tableWindow = GetTableWindow(table);
             if (tableWindow == null)

@@ -19,7 +19,7 @@ namespace GDX.Editor.Windows.Tables
         TableWindowOverlay m_Overlay;
         ScriptableObject m_ScriptableObject;
 
-        ITable m_TargetTable;
+        TableBase m_TargetTable;
 
 
         TableWindowToolbar m_Toolbar;
@@ -108,7 +108,7 @@ namespace GDX.Editor.Windows.Tables
             return m_ScriptableObject;
         }
 
-        public ITable GetTable()
+        public TableBase GetTable()
         {
             return m_TargetTable;
         }
@@ -133,7 +133,7 @@ namespace GDX.Editor.Windows.Tables
         }
 
 
-        public void BindTable(ITable table)
+        public void BindTable(TableBase table)
         {
             m_TargetTable = table;
             titleContent = new GUIContent(m_TargetTable.GetDisplayName());

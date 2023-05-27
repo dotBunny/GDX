@@ -10,12 +10,12 @@ namespace GDX.Tables.CellValues
     public struct Vector4CellValue
     {
         Vector4 m_CachedValue;
-        public readonly ITable Table;
-        public readonly int Column;
-        public readonly int Row;
+        public TableBase Table;
+        public int Column;
+        public int Row;
         ulong m_TableVersion;
 
-        public Vector4CellValue(ITable table, int row, int column)
+        public Vector4CellValue(TableBase table, int row, int column)
         {
             Table = table;
             Row = row;
@@ -47,6 +47,11 @@ namespace GDX.Tables.CellValues
             {
                 m_TableVersion = Table.SetVector4(Row, Column, value);
             }
+        }
+
+        public static Serializable.SerializableTypes GetSupportedType()
+        {
+            return Serializable.SerializableTypes.BoundsInt;
         }
     }
 }

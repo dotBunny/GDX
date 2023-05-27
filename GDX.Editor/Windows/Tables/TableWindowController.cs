@@ -71,7 +71,7 @@ namespace GDX.Editor.Windows.Tables
         {
             RegisterUndo($"Add Column ({name})");
 
-            ITable table = m_TableWindow.GetTable();
+            TableBase table = m_TableWindow.GetTable();
             table.AddColumn(type, name, orderedIndex);
 
             OnTableChanged();
@@ -82,7 +82,7 @@ namespace GDX.Editor.Windows.Tables
 
         public bool AddRow(string name, int orderedIndex = -1)
         {
-            ITable table = m_TableWindow.GetTable();
+            TableBase table = m_TableWindow.GetTable();
             if (table.GetColumnCount() == 0)
             {
                 return false;
@@ -99,7 +99,7 @@ namespace GDX.Editor.Windows.Tables
 
         public void AddRowDefault()
         {
-            ITable table = m_TableWindow.GetTable();
+            TableBase table = m_TableWindow.GetTable();
             if (table.GetColumnCount() == 0)
             {
                 return;
@@ -115,8 +115,8 @@ namespace GDX.Editor.Windows.Tables
 
         public void RemoveSelectedRow()
         {
-            ITable.RowDescription selectedRow =
-                (ITable.RowDescription)m_TableWindow.GetView().GetMultiColumnListView().selectedItem;
+            TableBase.RowDescription selectedRow =
+                (TableBase.RowDescription)m_TableWindow.GetView().GetMultiColumnListView().selectedItem;
             RegisterUndo($"Remove Row ({selectedRow.Name})");
             m_TableWindow.GetTable().RemoveRow(selectedRow.InternalIndex);
             m_TableWindow.GetView().RebuildRowData();
@@ -125,7 +125,7 @@ namespace GDX.Editor.Windows.Tables
 
         public bool RemoveColumn(int internalIndex)
         {
-            ITable table = m_TableWindow.GetTable();
+            TableBase table = m_TableWindow.GetTable();
             if (table.GetColumnCount() <= 1)
             {
                 return false;
@@ -140,7 +140,7 @@ namespace GDX.Editor.Windows.Tables
 
         public bool RemoveRow(int internalIndex)
         {
-            ITable table = m_TableWindow.GetTable();
+            TableBase table = m_TableWindow.GetTable();
             RegisterUndo($"Remove Row ({table.GetRowName(internalIndex)})");
             table.RemoveRow(internalIndex);
             m_TableWindow.GetView().RebuildRowData();
@@ -150,7 +150,7 @@ namespace GDX.Editor.Windows.Tables
 
         public bool RenameRow(int internalIndex, string name)
         {
-            ITable table = m_TableWindow.GetTable();
+            TableBase table = m_TableWindow.GetTable();
             RegisterUndo($"Rename Row ({name})");
             table.SetRowName(name, internalIndex);
 
@@ -161,7 +161,7 @@ namespace GDX.Editor.Windows.Tables
 
         public bool RenameColumn(int internalIndex, string name)
         {
-            ITable table = m_TableWindow.GetTable();
+            TableBase table = m_TableWindow.GetTable();
             RegisterUndo($"Rename Column ({name})");
 
             // Update column data in place
@@ -175,7 +175,7 @@ namespace GDX.Editor.Windows.Tables
 
         public bool SetTableSettings(string displayName, bool enableUndo)
         {
-            ITable table = m_TableWindow.GetTable();
+            TableBase table = m_TableWindow.GetTable();
             RegisterUndo($"Table Settings");
 
             // Check if there is a change
@@ -185,7 +185,7 @@ namespace GDX.Editor.Windows.Tables
                 table.SetDisplayName(displayName);
                 m_TableWindow.titleContent = new GUIContent(displayName);
             }
-            table.SetFlag(ITable.Flags.EnableUndo, enableUndo);
+            table.SetFlag(TableBase.Flags.EnableUndo, enableUndo);
 
             OnTableChanged();
             return true;
@@ -199,7 +199,7 @@ namespace GDX.Editor.Windows.Tables
         void RegisterUndo(string name)
         {
             ScriptableObject scriptableObject = m_TableWindow.GetScriptableObject();
-            if (scriptableObject != null && m_TableWindow.GetTable().GetFlag(ITable.Flags.EnableUndo))
+            if (scriptableObject != null && m_TableWindow.GetTable().GetFlag(TableBase.Flags.EnableUndo))
             {
                 Undo.RegisterCompleteObjectUndo(scriptableObject, $"{TableWindowProvider.UndoPrefix} {name}");
             }

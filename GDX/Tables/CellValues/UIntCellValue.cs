@@ -2,18 +2,20 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using UnityEngine;
+
 namespace GDX.Tables.CellValues
 {
     [System.Serializable]
     public struct UIntCellValue
     {
         uint m_CachedValue;
-        public readonly ITable Table;
-        public readonly int Column;
-        public readonly int Row;
+        public TableBase Table;
+        public int Column;
+        public int Row;
         ulong m_TableVersion;
 
-        public UIntCellValue(ITable table, int row, int column)
+        public UIntCellValue(TableBase table, int row, int column)
         {
             Table = table;
             Row = row;
@@ -45,6 +47,11 @@ namespace GDX.Tables.CellValues
             {
                 m_TableVersion = Table.SetUInt(Row, Column, value);
             }
+        }
+
+        public static Serializable.SerializableTypes GetSupportedType()
+        {
+            return Serializable.SerializableTypes.UInt;
         }
     }
 }

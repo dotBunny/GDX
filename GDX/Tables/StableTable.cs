@@ -11,7 +11,7 @@ namespace GDX.Tables
 
     [CreateAssetMenu(menuName = "GDX/Stable Table", fileName = "GDXStableTable")]
     [Serializable]
-    public class StableTable : ScriptableObject, ITable
+    public class StableTable : TableBase
     {
         [Serializable]
         internal struct ColumnEntry
@@ -82,47 +82,47 @@ namespace GDX.Tables
 
         internal static string s_UnityObjectString = typeof(UnityEngine.Object).AssemblyQualifiedName;
 
-        public ulong GetDataVersion()
+        public override ulong GetDataVersion()
         {
             return dataVersion;
         }
 
         /// <inheritdoc />
-        public int GetColumnCount()
+        public override int GetColumnCount()
         {
             return combinedColumnCount;
         }
 
         /// <inheritdoc />
-        public int GetRowCount()
+        public override int GetRowCount()
         {
             return rowCount;
         }
 
-        public string GetDisplayName()
+        public override string GetDisplayName()
         {
             return m_DisplayName;
         }
 
-        public void SetDisplayName(string displayName)
+        public override void SetDisplayName(string displayName)
         {
             m_DisplayName = displayName;
         }
 
-        public bool GetFlag(ITable.Flags flag)
+        public override bool GetFlag(TableBase.Flags flag)
         {
             return m_Flags[(byte)flag];
         }
 
-        public void SetFlag(ITable.Flags flag, bool toggle)
+        public override void SetFlag(TableBase.Flags flag, bool toggle)
         {
             m_Flags[(byte)flag] = toggle;
         }
 
-        public ITable.RowDescription[] GetAllRowDescriptions()
+        public override TableBase.RowDescription[] GetAllRowDescriptions()
         {
             if (combinedColumnCount == 0 || rowCount == 0) return null;
-            ITable.RowDescription[] returnArray = new ITable.RowDescription[rowCount];
+            TableBase.RowDescription[] returnArray = new TableBase.RowDescription[rowCount];
             string empty = string.Empty;
             for (int i = 0; i < rowCount; i++)
             {
@@ -132,7 +132,7 @@ namespace GDX.Tables
 
             return returnArray;
         }
-        public ITable.RowDescription GetRowDescription(string name)
+        public override TableBase.RowDescription GetRowDescription(string name)
         {
             for (int i = 0; i < rowCount; i++)
             {
@@ -140,7 +140,7 @@ namespace GDX.Tables
 
                 if (nameAt == name)
                 {
-                    return new ITable.RowDescription
+                    return new TableBase.RowDescription
                     {
                         InternalIndex = rowDenseIndexToIDMap[i],
                         Name = nameAt,
@@ -151,22 +151,22 @@ namespace GDX.Tables
             throw new ArgumentException("Row with name " + name + " does not exist in the table");
         }
 
-        public ITable.RowDescription GetRowDescription(int order)
+        public override TableBase.RowDescription GetRowDescription(int order)
         {
-            return new ITable.RowDescription
+            return new TableBase.RowDescription
             {
                 InternalIndex = rowDenseIndexToIDMap[order],
                 Name = rowNames[order],
             };
         }
 
-        public void SetAllRowDescriptionsOrder(ITable.RowDescription[] orderedRows)
+        public override void SetAllRowDescriptionsOrder(TableBase.RowDescription[] orderedRows)
         {
             // TODO: @adam array coming in be in the new order, just use the internalIndex (stable to reorder inside here
             throw new NotImplementedException();
         }
 
-        public ITable.ColumnDescription GetColumnDescription(string name)
+        public override TableBase.ColumnDescription GetColumnDescription(string name)
         {
             for (int i = 0; i < Serializable.SerializableTypesCount; i++)
             {
@@ -183,7 +183,7 @@ namespace GDX.Tables
                             int columnID = columnDenseIndexToIDMap[i].TArray[j];
 
                             ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[columnID];
-                            return new ITable.ColumnDescription
+                            return new TableBase.ColumnDescription
                             {
                                 InternalIndex = columnID,
                                 Name = nameAt,
@@ -197,14 +197,14 @@ namespace GDX.Tables
             throw new ArgumentException("Column with name " + name + " does not exist in the table");
         }
 
-        public ITable.ColumnDescription GetColumnDescription(int order)
+        public override TableBase.ColumnDescription GetColumnDescription(int order)
         {
             int idAtOrderedIndex = sortedOrderToColumnIDMap[order];
             ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[idAtOrderedIndex];
 
             string columnName = allColumnNames[(int)columnEntry.ColumnType][columnEntry.columnDenseIndex];
 
-            return new ITable.ColumnDescription
+            return new TableBase.ColumnDescription
             {
                 InternalIndex = idAtOrderedIndex,
                 Name = columnName,
@@ -212,17 +212,17 @@ namespace GDX.Tables
             };
         }
 
-        public void SetAllColumnDescriptionsOrder(ITable.ColumnDescription[] orderedColumns)
+        public override void SetAllColumnDescriptionsOrder(TableBase.ColumnDescription[] orderedColumns)
         {
             // TODO: @adam array coming in be in the new order, just use the internalIndex (stable to reorder inside here
             throw new NotImplementedException();
         }
 
         /// <inheritdoc />
-        public ITable.ColumnDescription[] GetAllColumnDescriptions()
+        public override TableBase.ColumnDescription[] GetAllColumnDescriptions()
         {
             if (combinedColumnCount == 0) return null;
-            ITable.ColumnDescription[] returnArray = new ITable.ColumnDescription[combinedColumnCount];
+            TableBase.ColumnDescription[] returnArray = new TableBase.ColumnDescription[combinedColumnCount];
 
             for (int i = 0; i < combinedColumnCount; i++)
             {
@@ -233,7 +233,7 @@ namespace GDX.Tables
 
                 string name = nameColumnsForType[entryForID.columnDenseIndex];
 
-                returnArray[i] = new ITable.ColumnDescription
+                returnArray[i] = new TableBase.ColumnDescription
                 {
                     Name = name,
                     InternalIndex = columnID,
@@ -274,28 +274,28 @@ namespace GDX.Tables
             }
         }
 
-        public void SetColumnName(string columnName, int column)
+        public override void SetColumnName(string columnName, int column)
         {
             AssertColumnIDValid(column);
             ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[column];
             allColumnNames[(int)columnEntry.ColumnType][columnEntry.columnDenseIndex] = columnName;
         }
 
-        public string GetColumnName(int column)
+        public override string GetColumnName(int column)
         {
             AssertColumnIDValid(column);
             ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[column];
             return allColumnNames[(int)columnEntry.ColumnType][columnEntry.columnDenseIndex];
         }
 
-        public void SetRowName(string rowName, int row)
+        public override void SetRowName(string rowName, int row)
         {
             AssertRowIDValid(row);
             int rowDenseIndex = rowIDToDenseIndexMap[row];
             rowNames[rowDenseIndex] = rowName;
         }
 
-        public string GetRowName(int row)
+        public override string GetRowName(int row)
         {
             AssertRowIDValid(row);
             int rowDenseIndex = rowIDToDenseIndexMap[row];
@@ -317,7 +317,7 @@ namespace GDX.Tables
         }
 
 
-        public int AddRow(string rowName = null, int insertAtRowID = -1)
+        public override int AddRow(string rowName = null, int insertAtRowID = -1)
         {
             if (insertAtRowID >= 0)
             {
@@ -600,7 +600,7 @@ namespace GDX.Tables
             dataVersion++;
         }
 
-        public void RemoveRow(int rowID)
+        public override void RemoveRow(int rowID)
         {
             AssertRowIDValid(rowID);
             int rowDenseIndex = rowIDToDenseIndexMap[rowID];
@@ -651,7 +651,7 @@ namespace GDX.Tables
             dataVersion++;
         }
 
-        public int AddColumn(Serializable.SerializableTypes columnType, string columnName, int insertAtColumnID = -1)
+        public override int AddColumn(Serializable.SerializableTypes columnType, string columnName, int insertAtColumnID = -1)
         {
             switch (columnType)
             {
@@ -717,7 +717,7 @@ namespace GDX.Tables
             return -1;
         }
 
-        public void RemoveColumn(Serializable.SerializableTypes columnType, int columnID)
+        public override void RemoveColumn(Serializable.SerializableTypes columnType, int columnID)
         {
             switch (columnType)
             {
@@ -813,147 +813,147 @@ namespace GDX.Tables
 
         // Set
 
-        public ulong SetString(int row, int column, string value)
+        public override ulong SetString(int row, int column, string value)
         {
             return SetCell(row, column, ref allStringColumns, value);
         }
 
-        public ulong SetBool(int row, int column, bool value)
+        public override ulong SetBool(int row, int column, bool value)
         {
             return SetCell(row, column, ref allBoolColumns, value);
         }
 
-        public ulong SetChar(int row, int column, char value)
+        public override ulong SetChar(int row, int column, char value)
         {
             return SetCell(row, column, ref allCharColumns, value);
         }
 
-        public ulong SetSByte(int row, int column, sbyte value)
+        public override ulong SetSByte(int row, int column, sbyte value)
         {
             return SetCell(row, column, ref allSbyteColumns, value);
         }
 
-        public ulong SetByte(int row, int column, byte value)
+        public override ulong SetByte(int row, int column, byte value)
         {
             return SetCell(row, column, ref allByteColumns, value);
         }
 
-        public ulong SetShort(int row, int column, short value)
+        public override ulong SetShort(int row, int column, short value)
         {
             return SetCell(row, column, ref allShortColumns, value);
         }
 
-        public ulong SetUShort(int row, int column, ushort value)
+        public override ulong SetUShort(int row, int column, ushort value)
         {
             return SetCell(row, column, ref allUshortColumns, value);
         }
 
-        public ulong SetInt(int row, int column, int value)
+        public override ulong SetInt(int row, int column, int value)
         {
             return SetCell(row, column, ref allIntColumns, value);
         }
 
-        public ulong SetUInt(int row, int column, uint value)
+        public override ulong SetUInt(int row, int column, uint value)
         {
             return SetCell(row, column, ref allUintColumns, value);
         }
 
-        public ulong SetLong(int row, int column, long value)
+        public override ulong SetLong(int row, int column, long value)
         {
             return SetCell(row, column, ref allLongColumns, value);
         }
 
-        public ulong SetULong(int row, int column, ulong value)
+        public override ulong SetULong(int row, int column, ulong value)
         {
             return SetCell(row, column, ref allUlongColumns, value);
         }
 
-        public ulong SetFloat(int row, int column, float value)
+        public override ulong SetFloat(int row, int column, float value)
         {
             return SetCell(row, column, ref allFloatColumns, value);
         }
 
-        public ulong SetDouble(int row, int column, double value)
+        public override ulong SetDouble(int row, int column, double value)
         {
             return SetCell(row, column, ref allDoubleColumns, value);
         }
 
-        public ulong SetVector2(int row, int column, Vector2 value)
+        public override ulong SetVector2(int row, int column, Vector2 value)
         {
             return SetCell(row, column, ref allVector2Columns, value);
         }
 
-        public ulong SetVector3(int row, int column, Vector3 value)
+        public override ulong SetVector3(int row, int column, Vector3 value)
         {
             return SetCell(row, column, ref allVector3Columns, value);
         }
 
-        public ulong SetVector4(int row, int column, Vector4 value)
+        public override ulong SetVector4(int row, int column, Vector4 value)
         {
             return SetCell(row, column, ref allVector4Columns, value);
         }
 
-        public ulong SetVector2Int(int row, int column, Vector2Int value)
+        public override ulong SetVector2Int(int row, int column, Vector2Int value)
         {
             return SetCell(row, column, ref allVector2IntColumns, value);
         }
 
-        public ulong SetVector3Int(int row, int column, Vector3Int value)
+        public override ulong SetVector3Int(int row, int column, Vector3Int value)
         {
             return SetCell(row, column, ref allVector3IntColumns, value);
         }
 
-        public ulong SetQuaternion(int row, int column, Quaternion value)
+        public override ulong SetQuaternion(int row, int column, Quaternion value)
         {
             return SetCell(row, column, ref allQuaternionColumns, value);
         }
 
-        public ulong SetRect(int row, int column, Rect value)
+        public override ulong SetRect(int row, int column, Rect value)
         {
             return SetCell(row, column, ref allRectColumns, value);
         }
 
-        public ulong SetRectInt(int row, int column, RectInt value)
+        public override ulong SetRectInt(int row, int column, RectInt value)
         {
             return SetCell(row, column, ref allRectIntColumns, value);
         }
 
-        public ulong SetColor(int row, int column, Color value)
+        public override ulong SetColor(int row, int column, Color value)
         {
             return SetCell(row, column, ref allColorColumns, value);
         }
 
-        public ulong SetLayerMask(int row, int column, LayerMask value)
+        public override ulong SetLayerMask(int row, int column, LayerMask value)
         {
             return SetCell(row, column, ref allLayerMaskColumns, value);
         }
 
-        public ulong SetBounds(int row, int column, Bounds value)
+        public override ulong SetBounds(int row, int column, Bounds value)
         {
             return SetCell(row, column, ref allBoundsColumns, value);
         }
 
-        public ulong SetBoundsInt(int row, int column, BoundsInt value)
+        public override ulong SetBoundsInt(int row, int column, BoundsInt value)
         {
             return SetCell(row, column, ref allBoundsIntColumns, value);
         }
 
-        public ulong SetHash128(int row, int column, Hash128 value)
+        public override ulong SetHash128(int row, int column, Hash128 value)
         {
             return SetCell(row, column, ref allHash128Columns, value);
         }
 
-        public ulong SetGradient(int row, int column, Gradient value)
+        public override ulong SetGradient(int row, int column, Gradient value)
         {
             return SetCell(row, column, ref allGradientColumns, value);
         }
 
-        public ulong SetAnimationCurve(int row, int column, AnimationCurve value)
+        public override ulong SetAnimationCurve(int row, int column, AnimationCurve value)
         {
             return SetCell(row, column, ref allAnimationCurveColumns, value);
         }
 
-        public ulong SetObject(int row, int column, UnityEngine.Object value)
+        public override ulong SetObject(int row, int column, UnityEngine.Object value)
         {
             return SetCell(row, column, ref allObjectRefColumns, value);
         }
@@ -966,147 +966,147 @@ namespace GDX.Tables
         }
 
         // Get
-        public string GetString(int row, int column)
+        public override string GetString(int row, int column)
         {
             return GetCell(row, column, ref allStringColumns);
         }
 
-        public bool GetBool(int row, int column)
+        public override bool GetBool(int row, int column)
         {
             return GetCell(row, column, ref allBoolColumns);
         }
 
-        public char GetChar(int row, int column)
+        public override char GetChar(int row, int column)
         {
             return GetCell(row, column, ref allCharColumns);
         }
 
-        public sbyte GetSByte(int row, int column)
+        public override sbyte GetSByte(int row, int column)
         {
             return GetCell(row, column, ref allSbyteColumns);
         }
 
-        public byte GetByte(int row, int column)
+        public override byte GetByte(int row, int column)
         {
             return GetCell(row, column, ref allByteColumns);
         }
 
-        public short GetShort(int row, int column)
+        public override short GetShort(int row, int column)
         {
             return GetCell(row, column, ref allShortColumns);
         }
 
-        public ushort GetUShort(int row, int column)
+        public override ushort GetUShort(int row, int column)
         {
             return GetCell(row, column, ref allUshortColumns);
         }
 
-        public int GetInt(int row, int column)
+        public override int GetInt(int row, int column)
         {
             return GetCell(row, column, ref allIntColumns);
         }
 
-        public uint GetUInt(int row, int column)
+        public override uint GetUInt(int row, int column)
         {
             return GetCell(row, column, ref allUintColumns);
         }
 
-        public long GetLong(int row, int column)
+        public override long GetLong(int row, int column)
         {
             return GetCell(row, column, ref allLongColumns);
         }
 
-        public ulong GetULong(int row, int column)
+        public override ulong GetULong(int row, int column)
         {
             return GetCell(row, column, ref allUlongColumns);
         }
 
-        public float GetFloat(int row, int column)
+        public override float GetFloat(int row, int column)
         {
             return GetCell(row, column, ref allFloatColumns);
         }
 
-        public double GetDouble(int row, int column)
+        public override double GetDouble(int row, int column)
         {
             return GetCell(row, column, ref allDoubleColumns);
         }
 
-        public Vector2 GetVector2(int row, int column)
+        public override Vector2 GetVector2(int row, int column)
         {
             return GetCell(row, column, ref allVector2Columns);
         }
 
-        public Vector3 GetVector3(int row, int column)
+        public override Vector3 GetVector3(int row, int column)
         {
             return GetCell(row, column, ref allVector3Columns);
         }
 
-        public Vector4 GetVector4(int row, int column)
+        public override Vector4 GetVector4(int row, int column)
         {
             return GetCell(row, column, ref allVector4Columns);
         }
 
-        public Vector2Int GetVector2Int(int row, int column)
+        public override Vector2Int GetVector2Int(int row, int column)
         {
             return GetCell(row, column, ref allVector2IntColumns);
         }
 
-        public Vector3Int GetVector3Int(int row, int column)
+        public override Vector3Int GetVector3Int(int row, int column)
         {
             return GetCell(row, column, ref allVector3IntColumns);
         }
 
-        public Quaternion GetQuaternion(int row, int column)
+        public override Quaternion GetQuaternion(int row, int column)
         {
             return GetCell(row, column, ref allQuaternionColumns);
         }
 
-        public Rect GetRect(int row, int column)
+        public override Rect GetRect(int row, int column)
         {
             return GetCell(row, column, ref allRectColumns);
         }
 
-        public RectInt GetRectInt(int row, int column)
+        public override RectInt GetRectInt(int row, int column)
         {
             return GetCell(row, column, ref allRectIntColumns);
         }
 
-        public Color GetColor(int row, int column)
+        public override Color GetColor(int row, int column)
         {
             return GetCell(row, column, ref allColorColumns);
         }
 
-        public LayerMask GetLayerMask(int row, int column)
+        public override LayerMask GetLayerMask(int row, int column)
         {
             return GetCell(row, column, ref allLayerMaskColumns);
         }
 
-        public Bounds GetBounds(int row, int column)
+        public override Bounds GetBounds(int row, int column)
         {
             return GetCell(row, column, ref allBoundsColumns);
         }
 
-        public BoundsInt GetBoundsInt(int row, int column)
+        public override BoundsInt GetBoundsInt(int row, int column)
         {
             return GetCell(row, column, ref allBoundsIntColumns);
         }
 
-        public Hash128 GetHash128(int row, int column)
+        public override Hash128 GetHash128(int row, int column)
         {
             return GetCell(row, column, ref allHash128Columns);
         }
 
-        public Gradient GetGradient(int row, int column)
+        public override Gradient GetGradient(int row, int column)
         {
             return GetCell(row, column, ref allGradientColumns);
         }
 
-        public AnimationCurve GetAnimationCurve(int row, int column)
+        public override AnimationCurve GetAnimationCurve(int row, int column)
         {
             return GetCell(row, column, ref allAnimationCurveColumns);
         }
 
-        public UnityEngine.Object GetObject(int row, int column)
+        public override UnityEngine.Object GetObject(int row, int column)
         {
             return GetCell(row, column, ref allObjectRefColumns);
         }
@@ -1545,7 +1545,7 @@ namespace GDX.Tables
         // Internal
 
         internal void AddTypeNameEntryForUnityObjectColumn()
-        { 
+        {
             int nameArrayLength = allObjectRefTypenames?.Length ?? 0;
             Array.Resize(ref allObjectRefTypenames, nameArrayLength + 1);
             allObjectRefTypenames[nameArrayLength] = s_UnityObjectString;

@@ -15,7 +15,7 @@ namespace GDX.Editor
             List<AssetDatabaseReference> returnList = new List<AssetDatabaseReference>(5);
 
             // Get derived types
-            TypeCache.TypeCollection tableTypeCollection = TypeCache.GetTypesDerivedFrom<ITable>();
+            TypeCache.TypeCollection tableTypeCollection = TypeCache.GetTypesDerivedFrom<TableBase>();
             int count = tableTypeCollection.Count;
             for (int i = 0; i < count; i++)
             {
@@ -32,27 +32,27 @@ namespace GDX.Editor
         }
 
         static int s_TableTicketHead;
-        static readonly Dictionary<int, ITable> k_TicketToTable = new Dictionary<int, ITable>(5);
-        static readonly Dictionary<ITable, int> k_TableToTicket = new Dictionary<ITable, int>(5);
+        static readonly Dictionary<int, TableBase> k_TicketToTable = new Dictionary<int, TableBase>(5);
+        static readonly Dictionary<TableBase, int> k_TableToTicket = new Dictionary<TableBase, int>(5);
 
-        public static ITable GetTable(int ticket)
+        public static TableBase GetTable(int ticket)
         {
-            return k_TicketToTable.TryGetValue(ticket, out ITable table) ? table : null;
+            return k_TicketToTable.TryGetValue(ticket, out TableBase table) ? table : null;
         }
 
-        public static int GetTicket(ITable table)
+        public static int GetTicket(TableBase table)
         {
             return k_TableToTicket.TryGetValue(table, out int ticket) ? ticket : -1;
         }
 
-        public static void UnregisterTable(ITable table)
+        public static void UnregisterTable(TableBase table)
         {
             int ticket = GetTicket(table);
             k_TableToTicket.Remove(table);
             k_TicketToTable.Remove(ticket);
         }
 
-        public static int RegisterTable(ITable table)
+        public static int RegisterTable(TableBase table)
         {
             int ticket = GetTicket(table);
             if (ticket != -1)
