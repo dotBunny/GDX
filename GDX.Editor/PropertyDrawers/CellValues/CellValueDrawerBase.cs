@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
+using GDX.Editor.Windows.Tables;
 using GDX.Tables;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -112,7 +113,12 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         protected void NotifyOfChange()
         {
-
+            // TODO: Needs to target just a cell?
+            TableWindow window = TableWindowProvider.GetTableWindow(m_Table);
+            if (window != null)
+            {
+                window.GetView().RefreshItems();
+            }
         }
 
         string FormatTableSelectionItem(int arg)

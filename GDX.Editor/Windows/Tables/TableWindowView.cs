@@ -44,6 +44,11 @@ namespace GDX.Editor.Windows.Tables
             }
         }
 
+        public void RefreshItems()
+        {
+            m_MultiColumnListView.RefreshItems();
+        }
+
         public TableWindowView(VisualElement rootElement, TableWindow window)
         {
             parentWindow = window;
