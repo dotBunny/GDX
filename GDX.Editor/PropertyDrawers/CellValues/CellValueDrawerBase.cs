@@ -98,11 +98,14 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             m_TableProperty = m_SerializedProperty.FindPropertyRelative("Table");
             m_Table = (TableBase)m_TableProperty.objectReferenceValue;
 
-            m_RowProperty = m_SerializedProperty.FindPropertyRelative("Row");
-            m_RowInternalIndex = m_RowProperty.intValue;
+            if (m_Table != null)
+            {
+                m_RowProperty = m_SerializedProperty.FindPropertyRelative("Row");
+                m_RowInternalIndex = m_RowProperty.intValue;
 
-            m_ColumnProperty = m_SerializedProperty.FindPropertyRelative("Column");
-            m_ColumnInternalIndex = m_ColumnProperty.intValue;
+                m_ColumnProperty = m_SerializedProperty.FindPropertyRelative("Column");
+                m_ColumnInternalIndex = m_ColumnProperty.intValue;
+            }
 
             m_Container = new VisualElement();
             m_Breadcrumbs = new ToolbarBreadcrumbs();
