@@ -37,9 +37,14 @@ namespace GDX.Editor
         static Texture2D s_CompanyLogo;
 
         /// <summary>
+        ///     A collection of queried <see cref="StyleSheet"/> keyed by their search.
+        /// </summary>
+        static StringKeyDictionary<StyleSheet> s_StyleSheets = new StringKeyDictionary<StyleSheet>(10);
+
+        /// <summary>
         ///     The cached reference to the global stylesheet.
         /// </summary>
-        static StyleSheet s_Stylesheet;
+        static StyleSheet s_SharedStyleSheet;
 
         /// <summary>
         ///     The cached reference to the override stylesheet.
@@ -48,16 +53,8 @@ namespace GDX.Editor
         ///     Used to accomodate version specific styling.
         /// </remarks>
 #pragma warning disable IDE0051
-        static StyleSheet s_StylesheetOverride;
+        static StyleSheet s_SharedStyleSheetOverride;
 #pragma warning restore IDE0051
-
-        /// <summary>
-        ///     The cached reference to the light theme stylesheet.
-        /// </summary>
-        /// <remarks>
-        ///     Used to augment the styles used for those who use Unity's light theme. Who does this?
-        /// </remarks>
-        static StyleSheet s_LightThemeStylesheet;
 
         /// <summary>
         ///     Apply light/dark mode classes.
@@ -120,34 +117,32 @@ namespace GDX.Editor
             return s_CompanyLogo;
         }
 
+        public static StyleSheet GetStylesheet(string targetName)
+        {
+            // We check for null asset as after a change it will null the original with the reference still existing
+            if (!s_StyleSheets.ContainsKey(targetName) || s_StyleSheets[targetName] == null)
+            {
+                s_StyleSheets.AddWithExpandCheck(targetName, AssetDatabase.LoadAssetAtPath<StyleSheet>(
+                    $"{UpdateProvider.LocalPackage.PackageAssetPath}/GDX.Editor/StyleSheets/{targetName}.uss"));
+            }
+            return s_StyleSheets[targetName];
+        }
+
         /// <summary>
         ///     Return the global stylesheet.
         /// </summary>
         /// <remarks>This will find and cache the stylesheet reference for future use, using the first asset to match the query.</remarks>
         /// <returns>The stylesheet if found, or null.</returns>
-        public static StyleSheet GetStyleSheet()
+        public static StyleSheet GetSharedStylesheet()
         {
-            if (s_Stylesheet != null)
+            if (s_SharedStyleSheet != null)
             {
-                return s_Stylesheet;
+                return s_SharedStyleSheet;
             }
-            s_Stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(
+            s_SharedStyleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(
                 $"{UpdateProvider.LocalPackage.PackageAssetPath}/GDX.Editor/UIElements/GDXStylesShared.uss");
 
-            return s_Stylesheet;
-        }
-
-        public static StyleSheet GetLightThemeStylesheet()
-        {
-            if (s_LightThemeStylesheet != null)
-            {
-                return s_LightThemeStylesheet;
-            }
-
-            s_LightThemeStylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(
-                $"{UpdateProvider.LocalPackage.PackageAssetPath}/GDX.Editor/UIElements/GDXStylesLightTheme.uss");
-
-            return s_LightThemeStylesheet;
+            return s_SharedStyleSheet;
         }
 
         /// <summary>
@@ -176,18 +171,12 @@ namespace GDX.Editor
         /// Sets up the initial stylesheets for a <see cref="VisualElement"/>.
         /// </summary>
         /// <param name="rootElement">The target <see cref="VisualElement"/> to have the stylesheets applied to.</param>
-        public static void SetupStylesheets(VisualElement rootElement)
+        public static void SetupSharedStylesheets(VisualElement rootElement)
         {
-            if (GetStyleSheet() != null)
+            StyleSheet shared = GetSharedStylesheet();
+            if (shared != null)
             {
-                rootElement.styleSheets.Add(GetStyleSheet());
-            }
-            if (!EditorGUIUtility.isProSkin)
-            {
-                if (GetLightThemeStylesheet() != null)
-                {
-                    rootElement.styleSheets.Add(GetLightThemeStylesheet());
-                }
+                rootElement.styleSheets.Add(shared);
             }
             // Add any overrides
             if (GetStyleSheetOverride() != null)
@@ -196,6 +185,20 @@ namespace GDX.Editor
             }
 
             CheckTheme(rootElement);
+        }
+
+        /// <summary>
+        ///     Add the target stylesheet to the provided <paramref name="rootElement"/>.
+        /// </summary>
+        /// <param name="targetName">The name of the stylesheet found in the package.</param>
+        /// <param name="rootElement">The element to apply the stylesheet to.</param>
+        public static void SetupStylesheet(string targetName, VisualElement rootElement)
+        {
+            StyleSheet stylesheet = GetStylesheet(targetName);
+            if (stylesheet != null)
+            {
+                rootElement.styleSheets.Add(stylesheet);
+            }
         }
 
         /// <summary>

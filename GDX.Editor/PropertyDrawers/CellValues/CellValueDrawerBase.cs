@@ -6,34 +6,23 @@ using System.Collections.Generic;
 using GDX.Editor.Windows.Tables;
 using GDX.Tables;
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-#if !UNITY_2022_2_OR_NEWER
-using UnityEngine;
-#endif
+
 
 namespace GDX.Editor.PropertyDrawers.CellValues
 {
+#if UNITY_2022_2_OR_NEWER
     public abstract class CellValueDrawerBase : PropertyDrawer
     {
         protected const string k_CellFieldName = "gdx-table-inspector-field";
 
-
-        const string k_LinkedIcon = "Linked.png";
-        const string k_UnlinkIcon = "Unlinked.png";
-
-        protected SerializedProperty m_SerializedProperty;
-        protected SerializedProperty m_TableProperty;
-        protected SerializedProperty m_RowProperty;
-        protected SerializedProperty m_ColumnProperty;
-
+        SerializedProperty m_SerializedProperty;
+        SerializedProperty m_TableProperty;
+        SerializedProperty m_RowProperty;
+        SerializedProperty m_ColumnProperty;
 
         AssetDatabaseReference[] m_Tables;
-
-
-
-
         TableBase.RowDescription[] m_RowDescriptions;
         TableBase.ColumnDescription[] m_ColumnDescriptions;
 
@@ -78,7 +67,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
             // Build our base level inspector
             m_Container = new VisualElement { name = "gdx-cell-value", style = { flexDirection = FlexDirection.Row}};
-            ResourcesProvider.SetupStylesheets(m_Container);
+            ResourcesProvider.SetupSharedStylesheets(m_Container);
+            ResourcesProvider.SetupStylesheet("GDXCellValueDrawer", m_Container);
             m_Container.AddToClassList("unity-base-field");
             m_Container.AddToClassList("unity-base-field__inspector-field");
             m_Container.AddToClassList("unity-base-field__aligned");
@@ -446,24 +436,6 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
 
         }
-
-        void CheckForMessage()
-        {
-
-
-        }
-//         /// <summary>
-//         ///     Unity IMGUI Draw Event
-//         /// </summary>
-//         /// <param name="position">Rectangle on the screen to use for the property GUI.</param>
-//         /// <param name="property">The SerializedProperty to make the custom GUI for.</param>
-//         /// <param name="label">The label of this property.</param>
-//         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-//         {
-//             GUI.enabled = false;
-//             EditorGUI.PropertyField(position, property, label);
-//             GUI.enabled = true;
-//         }
-
+#endif
     }
 }

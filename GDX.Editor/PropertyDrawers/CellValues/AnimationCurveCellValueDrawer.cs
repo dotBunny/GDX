@@ -2,8 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Editor.Windows.Tables;
-using GDX.Tables;
 using GDX.Tables.CellValues;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -11,6 +9,7 @@ using UnityEngine.UIElements;
 
 namespace GDX.Editor.PropertyDrawers.CellValues
 {
+#if UNITY_2022_2_OR_NEWER
     [CustomPropertyDrawer(typeof(AnimationCurveCellValue))]
     public class AnimationCurveCellValueDrawer : CellValueDrawerBase
     {
@@ -36,4 +35,5 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             return AnimationCurveCellValue.GetSupportedType();
         }
     }
+#endif
 }

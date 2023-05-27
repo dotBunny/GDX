@@ -238,7 +238,7 @@ namespace GDX.Editor.Windows.ProjectSettings
                 {
                     s_RootElement = rootElement;
 
-                    ResourcesProvider.SetupStylesheets(rootElement);
+                    ResourcesProvider.SetupSharedStylesheets(rootElement);
                     ResourcesProvider.GetVisualTreeAsset("GDXProjectSettings").CloneTree(rootElement);
                     ResourcesProvider.CheckTheme(rootElement);
 

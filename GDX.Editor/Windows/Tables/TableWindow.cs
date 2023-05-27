@@ -6,9 +6,6 @@ using UnityEngine.UIElements;
 
 // TODO:
 // - sorting
-// - on undo repaint? rebind
-// - selection in objects
-// character input is bad
 
 namespace GDX.Editor.Windows.Tables
 {
@@ -27,7 +24,8 @@ namespace GDX.Editor.Windows.Tables
 
         void OnEnable()
         {
-            ResourcesProvider.SetupStylesheets(rootVisualElement);
+            ResourcesProvider.SetupSharedStylesheets(rootVisualElement);
+            ResourcesProvider.SetupStylesheet("GDXTableWindow", rootVisualElement);
             ResourcesProvider.GetVisualTreeAsset("GDXTableWindow").CloneTree(rootVisualElement);
             ResourcesProvider.CheckTheme(rootVisualElement);
 

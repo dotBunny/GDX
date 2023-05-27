@@ -2,13 +2,13 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Tables;
 using GDX.Tables.CellValues;
 using UnityEditor;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor.PropertyDrawers.CellValues
 {
+#if UNITY_2022_2_OR_NEWER
     [CustomPropertyDrawer(typeof(RectIntCellValue))]
     public class RectIntCellValueDrawer : CellValueDrawerBase
     {
@@ -34,4 +34,5 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             return RectIntCellValue.GetSupportedType();
         }
     }
+#endif
 }
