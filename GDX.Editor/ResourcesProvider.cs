@@ -140,7 +140,7 @@ namespace GDX.Editor
                 return s_SharedStyleSheet;
             }
             s_SharedStyleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(
-                $"{UpdateProvider.LocalPackage.PackageAssetPath}/GDX.Editor/UIElements/GDXStylesShared.uss");
+                $"{UpdateProvider.LocalPackage.PackageAssetPath}/GDX.Editor/StyleSheets/GDXShared.uss");
 
             return s_SharedStyleSheet;
         }
@@ -155,15 +155,15 @@ namespace GDX.Editor
 #if UNITY_2021_1_OR_NEWER
             return null;
 #else
-            if (s_StylesheetOverride != null)
+            if (s_SharedStyleSheetOverride != null)
             {
-                return s_StylesheetOverride;
+                return s_SharedStyleSheetOverride;
             }
 
-            s_StylesheetOverride = AssetDatabase.LoadAssetAtPath<StyleSheet>(
+            s_SharedStyleSheetOverride = AssetDatabase.LoadAssetAtPath<StyleSheet>(
                 $"{UpdateProvider.LocalPackage.PackageAssetPath}/GDX.Editor/UIElements/GDXStylesUnity2020.uss");
 
-            return s_StylesheetOverride;
+            return s_SharedStyleSheetOverride;
 #endif
         }
 

@@ -1,5 +1,4 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Packages/com.dotbunny.gdx/GDX.Editor/UIElements/GDXStylesShared.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStylesShared" />
     <ui:VisualElement name="gdx-task-director" class="gdx-project-settings-section-content">
         <ui:VisualElement class="gdx-fixed-vertical-spacer-10" />
         <ui:Toggle label="EditMode Tick" name="toggle-editor-task-director" tooltip="Should the TaskDirector be ticked in the editor while in EditMode via the EditorTaskDirector?" />

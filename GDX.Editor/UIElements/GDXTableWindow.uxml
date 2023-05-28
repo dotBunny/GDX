@@ -1,5 +1,4 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Packages/com.dotbunny.gdx/GDX.Editor/UIElements/GDXStylesShared.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStylesShared" />
     <ui:VisualElement name="gdx-table" style="flex-direction: column; height: 100%; width: 100%;">
         <uie:Toolbar name="gdx-table-toolbar" style="width: 100%;">
             <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" text="Column" name="gdx-table-toolbar-column" enable-rich-text="false" />
@@ -11,7 +10,7 @@
     </ui:VisualElement>
     <ui:VisualElement name="gdx-table-overlay">
         <ui:VisualElement name="gdx-table-add-column" class="gdx-table-overlay">
-            <ui:Label class="gdx-table-overlay-title"  tabindex="-1" text="Add Column" display-tooltip-when-elided="true" />
+            <ui:Label tabindex="-1" text="Add Column" display-tooltip-when-elided="true" class="gdx-table-overlay-title" />
             <ui:TextField picking-mode="Ignore" label="Name" value="MyColumn" name="gdx-table-column-name" />
             <ui:VisualElement name="VisualElement" class="gdx-table-overlay-buttons">
                 <ui:Button text="Cancel" display-tooltip-when-elided="true" name="gdx-table-column-cancel" enable-rich-text="false" tabindex="2" />
@@ -19,7 +18,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="gdx-table-add-row" class="gdx-table-overlay">
-            <ui:Label class="gdx-table-overlay-title"  tabindex="-1" text="Add Row" display-tooltip-when-elided="true" />
+            <ui:Label tabindex="-1" text="Add Row" display-tooltip-when-elided="true" class="gdx-table-overlay-title" />
             <ui:TextField picking-mode="Ignore" label="Name" value="MyRow" name="gdx-table-row-name" />
             <ui:VisualElement name="VisualElement" class="gdx-table-overlay-buttons">
                 <ui:Button text="Cancel" display-tooltip-when-elided="true" name="gdx-table-row-cancel" enable-rich-text="false" tabindex="2" />
@@ -27,15 +26,15 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="gdx-table-rename" class="gdx-table-overlay">
-            <ui:Label class="gdx-table-overlay-title"  name="gdx-table-rename-title" tabindex="-1" text="Rename What?" display-tooltip-when-elided="true" />
-            <ui:TextField picking-mode="Ignore" label="Name" value="" name="gdx-table-rename-name" />
+            <ui:Label name="gdx-table-rename-title" tabindex="-1" text="Rename What?" display-tooltip-when-elided="true" class="gdx-table-overlay-title" />
+            <ui:TextField picking-mode="Ignore" label="Name" name="gdx-table-rename-name" />
             <ui:VisualElement name="VisualElement" class="gdx-table-overlay-buttons">
                 <ui:Button text="Cancel" display-tooltip-when-elided="true" name="gdx-table-rename-cancel" enable-rich-text="false" tabindex="2" />
                 <ui:Button text="Rename" display-tooltip-when-elided="true" name="gdx-table-rename-accept" enable-rich-text="false" tabindex="1" />
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="gdx-table-settings" class="gdx-table-overlay">
-            <ui:Label class="gdx-table-overlay-title" tabindex="-1" text="Table Settings" display-tooltip-when-elided="true" />
+            <ui:Label tabindex="-1" text="Table Settings" display-tooltip-when-elided="true" class="gdx-table-overlay-title" />
             <ui:TextField picking-mode="Ignore" label="Display Name" value="MyColumn" name="gdx-table-display-name" />
             <ui:Toggle label="Support Undo" name="gdx-table-flag-undo" />
             <ui:VisualElement name="VisualElement" class="gdx-table-overlay-buttons">
@@ -44,7 +43,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="gdx-table-confirmation" class="gdx-table-overlay">
-            <ui:Label class="gdx-table-overlay-title"  tabindex="-1" text="Remove 5 Rows" display-tooltip-when-elided="true" name="gdx-confirmation-title" />
+            <ui:Label tabindex="-1" text="Remove 5 Rows" display-tooltip-when-elided="true" name="gdx-confirmation-title" class="gdx-table-overlay-title" />
             <ui:Label tabindex="-1" text="Are you sure?" display-tooltip-when-elided="true" name="gdx-confirmation-message" />
             <ui:VisualElement name="VisualElement" class="gdx-table-overlay-buttons">
                 <ui:Button text="Cancel" display-tooltip-when-elided="true" name="gdx-table-confirmation-cancel" enable-rich-text="false" tabindex="2" />

@@ -179,6 +179,9 @@ namespace GDX.Editor.Windows.Tables
                     m_AddColumnOverlay.style.display = DisplayStyle.Flex;
                     m_AddColumnName.SetValueWithoutNotify($"Column_{Core.Random.NextInteger(1, 9999).ToString()}");
                     m_AddColumnAddButton.Focus();
+
+                    // Don't allow cancel if we dont have column
+                    m_AddColumnCancelButton.SetEnabled(m_TableWindow.GetTable().GetColumnCount() > 0);
                     break;
                 case OverlayState.AddRow:
                     m_RootElement.style.display = DisplayStyle.Flex;
