@@ -98,7 +98,7 @@ namespace GDX.Editor.Windows.Tables
         public void OpenHelp()
         {
             GUIUtility.hotControl = 0;
-            Application.OpenURL($"{PackageProvider.DocumentationUri}/manual/features/tables.html");
+            Application.OpenURL($"{PackageProvider.GetDocumentationBaseUri()}/manual/features/tables.html");
         }
 
         public bool AddColumn(string name, Serializable.SerializableTypes type, int orderedIndex = -1)

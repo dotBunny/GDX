@@ -184,7 +184,7 @@ namespace GDX.Editor.Windows.ProjectSettings
             {
                 if (section.GetSectionHelpLink() != null)
                 {
-                    string helpLink = $"{PackageProvider.DocumentationUri}{section.GetSectionHelpLink()}";
+                    string helpLink = $"{PackageProvider.GetDocumentationBaseUri()}{section.GetSectionHelpLink()}";
                     helpButton.clicked += () =>
                     {
                         GUIUtility.hotControl = 0;

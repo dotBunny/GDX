@@ -22,9 +22,14 @@ namespace GDX.Editor
     public class PackageProvider
     {
         /// <summary>
+        ///     The public URI of the package's development documentation.
+        /// </summary>
+        public const string DevDocumentationUri = "https://gdx-dev.dotbunny.com/";
+
+        /// <summary>
         ///     The public URI of the package's documentation.
         /// </summary>
-        public const string DocumentationUri = "https://gdx.dotbunny.com/";
+        public const string MainDocumentationUri = "https://gdx.dotbunny.com/";
         /// <summary>
         ///     Reference to the Unity package name for GDX.
         /// </summary>
@@ -231,6 +236,19 @@ namespace GDX.Editor
             }
         }
 
+        /// <summary>
+        ///     Get the documentation base URI based on what branch the local package is detected as.
+        /// </summary>
+        /// <returns>A URI to the GDX documentation.</returns>
+        public static string GetDocumentationBaseUri()
+        {
+            if (UpdateProvider.LocalPackage != null && UpdateProvider.LocalPackage.SourceTag != null &&
+                UpdateProvider.LocalPackage.SourceTag.StartsWith("dev"))
+            {
+                return DevDocumentationUri;
+            }
+            return MainDocumentationUri;
+        }
         /// <summary>
         ///     Get a friendly <see cref="string" /> name of an <see cref="InstallationType" />.
         /// </summary>
