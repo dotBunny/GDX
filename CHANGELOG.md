@@ -5,10 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.1.0] - 2022-12-01
+## [3.1.0] - 2023-07-01
 
 ***"Dinner Table"***
-> This release introduces minor functionality while shoring existing features with fixes and unit testing. We are starting to work more on visibility and discoverability.
+> This release introduces some functionality while shoring existing features with fixes and unit testing. We are starting to work more on visibility and discoverability. Also, we are recommending the use of `2020.2` or newer moving forward. While we support older versions, much of the new development being done requires `2022.2` or newer.
 
 ### Added
 
@@ -20,12 +20,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FirstIndexOf()` and `LastIndexOf()` methods added to `ArrayExtensions` constrained to `IEquatable` for easier string comparison.
 - `FirstIndexOf()`, `FirstIndexOfItem()`, `FirstIndexOfValue()`, `LastIndexOf()`, `LastIndexOfItem()`, `LastIndexOfValue()` methods added to `SimpleListExtensions`.
 - `Contains()` to `SimpleListExtensions` constrained to `IEquatable`.
+- `StableTable` implementation of new `TableBase` with full suite of supporting references `*CellValue`. _Requires Unity 2022.2 or newer_.
 
 ### Changed
 
 - Reworked the project settings window to now include some of the recent changelog for visibility.
 - `SimpleListManagedPool` events renamed for consistency to `destroyedItem`, `returnedItem`, `spawnedItem`, `tearingDown`.
 - Explicit callout that `SerializableDictionary` does not support custom struct keys.
+- Addressables package version dependency increased to `1.18.19`.
 
 ### Fixed
 
