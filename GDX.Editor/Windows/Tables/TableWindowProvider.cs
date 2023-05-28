@@ -22,14 +22,12 @@ namespace GDX.Editor.Windows.Tables
         static readonly Dictionary<TableWindow, int> k_TableWindowToTicket = new Dictionary<TableWindow, int>(5);
         static readonly Dictionary<int, TableWindow> k_TicketToTableWindow = new Dictionary<int, TableWindow>(5);
 
-        static bool s_SubscribedForUndo = false;
+        static bool s_SubscribedForUndo;
 
         internal static TableWindow GetTableWindow(int tableTicket)
         {
             return k_TicketToTableWindow.TryGetValue(tableTicket, out TableWindow tableWindow) ? tableWindow : null;
         }
-
-
 
         internal static int GetTableWindowTicket(TableWindow tableWindow)
         {
@@ -40,9 +38,6 @@ namespace GDX.Editor.Windows.Tables
         {
             return k_TableWindowMap.TryGetValue(table, out TableWindow window) ? window : null;
         }
-
-
-
 
         static void UndoRedoEvent(in UndoRedoInfo undo)
         {
@@ -77,11 +72,9 @@ namespace GDX.Editor.Windows.Tables
                 Undo.undoRedoEvent += UndoRedoEvent;
                 s_SubscribedForUndo = true;
             }
+
             return ticket;
         }
-
-
-
 
         internal static void UnregisterTableWindow(TableWindow tableWindow)
         {
