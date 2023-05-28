@@ -47,6 +47,15 @@ namespace GDX
         /// <param name="subSystemType">The type assigned when creating the <see cref="PlayerLoopSystem"/> to be added.</param>
         /// <param name="subSystemUpdateFunction">The method to invoke when the system is updated.</param>
         /// <returns>true/false if the <paramref name="parentSystemType"/> was found, and therefore the add could occur.</returns>
+        /// <example>
+        /// <code>
+        ///     PlayerLoopSystem systemRoot = PlayerLoop.GetCurrentPlayerLoop();
+        ///     systemRoot.AddSubSystemToFirstSubSystemOfType(
+        ///         typeof(Update.ScriptRunDelayedTasks),
+        ///         typeof(TaskDirectorSystem), PlayerLoopTick);
+        ///     PlayerLoop.SetPlayerLoop(systemRoot);
+        /// </code>
+        /// </example>
         public static bool AddSubSystemToFirstSubSystemOfType(this ref PlayerLoopSystem rootSystem,
             Type parentSystemType, Type subSystemType, PlayerLoopSystem.UpdateFunction subSystemUpdateFunction)
         {
