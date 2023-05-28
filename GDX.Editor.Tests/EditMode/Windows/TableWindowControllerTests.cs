@@ -11,6 +11,7 @@ using UnityEngine.TestTools;
 
 namespace GDX.Editor.Windows
 {
+#if UNITY_2022_2_OR_NEWER
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="TableWindowController" />.
     /// </summary>
@@ -80,4 +81,5 @@ namespace GDX.Editor.Windows
             Assert.That(m_TestTable.GetRowName(rowDescription.InternalIndex) == "Test_Row");
         }
     }
+#endif
 }

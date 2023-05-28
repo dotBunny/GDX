@@ -10,6 +10,7 @@ using UnityEngine.TestTools;
 
 namespace GDX.Editor.Windows
 {
+#if UNITY_2022_2_OR_NEWER
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="TableWindowView" />.
     /// </summary>
@@ -36,4 +37,5 @@ namespace GDX.Editor.Windows
             yield return null;
         }
     }
+#endif
 }
