@@ -249,6 +249,7 @@ namespace GDX.Editor
             }
             return MainDocumentationUri;
         }
+
         /// <summary>
         ///     Get a friendly <see cref="string" /> name of an <see cref="InstallationType" />.
         /// </summary>
