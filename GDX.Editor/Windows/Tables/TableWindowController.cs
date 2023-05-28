@@ -40,7 +40,7 @@ namespace GDX.Editor.Windows.Tables
                         "Are you sure you want to replace your tables content with the imported CSV content?\n\nThe structural format of the CSV needs to match the column structure of the existing table; reference types will not replace the data in the existing cells at that location. Make sure the first row contains the column names, and that you have not reordered the rows or columns.",
                         "Yes", "No"))
                 {
-                    if (m_TableWindow.GetTable().FromCSV(openPath))
+                    if (m_TableWindow.GetTable().UpdateFromCommaSeperatedValues(openPath))
                     {
                         m_TableWindow.BindTable(m_TableWindow.GetTable());
                     }
@@ -56,7 +56,7 @@ namespace GDX.Editor.Windows.Tables
 
             if (savePath != null)
             {
-                m_TableWindow.GetTable().ToCSV(savePath);
+                m_TableWindow.GetTable().ExportToCommaSeperatedValues(savePath);
                 Debug.Log($"'{m_TableWindow.GetTable().GetDisplayName()}' was exported to CSV at {savePath}");
             }
         }

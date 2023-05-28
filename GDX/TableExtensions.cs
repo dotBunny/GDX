@@ -16,7 +16,7 @@ namespace GDX
     public static class TableExtensions
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static string MakeSafeString(string content)
+        static string MakeCommaSeperatedValue(string content)
         {
             if (content == null)
             {
@@ -33,47 +33,38 @@ namespace GDX
             return content.IndexOf(',') != -1 ? $"\"{content}\"" : content;
         }
 
-        static string[] GetDataFromSafeStrings(string csvText)
+        static string[] ParseCommaSeperatedValues(string content)
         {
-            List<string> tokens = new List<string>();
-
-            int last = -1;
-            int current = 0;
-            bool inText = false;
-
-            while(current < csvText.Length)
+            List<string> returnStrings = new List<string>();
+            int lastIndex = -1;
+            int currentIndex = 0;
+            bool isQuoted = false;
+            int length = content.Length;
+            while(currentIndex < length)
             {
-                switch(csvText[current])
+                switch(content[currentIndex])
                 {
                     case '"':
-                        inText = !inText; break;
+                        isQuoted = !isQuoted;
+                        break;
                     case ',':
-                        if (!inText)
+                        if (!isQuoted)
                         {
-                            tokens.Add(csvText.Substring(last + 1, (current - last)).Trim(' ', ','));
-                            last = current;
+                            returnStrings.Add(content.Substring(lastIndex + 1, (currentIndex - lastIndex)).Trim(' ', ','));
+                            lastIndex = currentIndex;
                         }
                         break;
                 }
-                current++;
+                currentIndex++;
             }
-
-            if (last != csvText.Length - 1)
+            if (lastIndex != content.Length - 1)
             {
-                tokens.Add(csvText.Substring(last+1).Trim());
+                returnStrings.Add(content.Substring(lastIndex+1).Trim());
             }
-
-            return tokens.ToArray();
+            return returnStrings.ToArray();
         }
 
-        struct VirtualRow
-        {
-            int RowID;
-            string RowName;
-            string[] Values;
-        }
-
-        public static bool FromCSV(this TableBase table, string filePath)
+        public static bool UpdateFromCommaSeperatedValues(this TableBase table, string filePath)
         {
             if (!File.Exists(filePath))
             {
@@ -87,7 +78,7 @@ namespace GDX
             TableBase.ColumnDescription[] columnDescriptions = table.GetAllColumnDescriptions();
 
             // Test Columns
-            string[] columnTest = GetDataFromSafeStrings(fileContent[0]);
+            string[] columnTest = ParseCommaSeperatedValues(fileContent[0]);
             if (columnTest.Length != tableColumnCount + 2)
             {
                 Debug.LogError($"The importing data has {columnTest.Length} columns where {tableColumnCount + 2} was expected.");
@@ -107,7 +98,7 @@ namespace GDX
             for (int i = 1; i < fileContent.Length; i++)
             {
                 int internalIndex = -1;
-                string[] rowStrings = GetDataFromSafeStrings(fileContent[i]);
+                string[] rowStrings = ParseCommaSeperatedValues(fileContent[i]);
                 if (string.IsNullOrEmpty(rowStrings[0]))
                 {
                     string rowName = rowStrings[1];
@@ -199,7 +190,7 @@ namespace GDX
             return true;
         }
 
-        public static void ToCSV(this TableBase table, string filePath)
+        public static void ExportToCommaSeperatedValues(this TableBase table, string filePath)
         {
             int rowCount = table.GetRowCount();
             int columnCount = table.GetColumnCount();
@@ -220,7 +211,7 @@ namespace GDX
             for (int r = 0; r < rowCount; r++)
             {
                 TableBase.RowDescription rowDescription = table.GetRowDescription(r);
-                generator.Append($"{rowDescription.InternalIndex}, {MakeSafeString(rowDescription.Name)}");
+                generator.Append($"{rowDescription.InternalIndex}, {MakeCommaSeperatedValue(rowDescription.Name)}");
                 for (int c = 0; c < columnCount; c++)
                 {
                     TableBase.ColumnDescription columnDescription = table.GetColumnDescription(c);
@@ -228,11 +219,11 @@ namespace GDX
                     switch (columnDescription.Type)
                     {
                         case Serializable.SerializableTypes.String:
-                            generator.Append(MakeSafeString(table.GetString(rowDescription.InternalIndex,
+                            generator.Append(MakeCommaSeperatedValue(table.GetString(rowDescription.InternalIndex,
                                 columnDescription.InternalIndex)));
                             break;
                         case Serializable.SerializableTypes.Char:
-                            generator.Append(MakeSafeString(table
+                            generator.Append(MakeCommaSeperatedValue(table
                                 .GetChar(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString()));
                             break;
                         case Serializable.SerializableTypes.Bool:
