@@ -4,9 +4,6 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-// TODO:
-// - sorting
-
 namespace GDX.Editor.Windows.Tables
 {
 #if UNITY_2022_2_OR_NEWER
