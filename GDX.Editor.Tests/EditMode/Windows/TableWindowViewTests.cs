@@ -2,6 +2,8 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+#if UNITY_2022_2_OR_NEWER
+
 using System.Collections;
 using GDX.Editor.Windows.Tables;
 using GDX.Tables;
@@ -10,7 +12,6 @@ using UnityEngine.TestTools;
 
 namespace GDX.Editor.Windows
 {
-#if UNITY_2022_2_OR_NEWER
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="TableWindowView" />.
     /// </summary>
@@ -37,5 +38,5 @@ namespace GDX.Editor.Windows
             yield return null;
         }
     }
-#endif
 }
+#endif
