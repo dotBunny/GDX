@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System.IO;
 using GDX.Collections;
 using GDX.Editor.Inspectors;
 using GDX.Tables;
@@ -29,7 +30,22 @@ namespace GDX.Editor.Windows.Tables
 
         public void ShowImportDialog()
         {
+            string openPath = EditorUtility.OpenFilePanel($"Import CSV into {m_TableWindow.titleContent.text}",
+                Application.dataPath,
+                "csv");
 
+            if (!string.IsNullOrEmpty(openPath))
+            {
+                if (EditorUtility.DisplayDialog($"Replace '{m_TableWindow.titleContent.text}' Content",
+                        "Are you sure you want to replace your tables content with the imported CSV content?\n\nThe structural format of the CSV needs to match the column structure of the existing table; reference types will not replace the data in the existing cells at that location. Make sure the first row contains the column names, and that you have not reordered the rows or columns.",
+                        "Yes", "No"))
+                {
+                    if (m_TableWindow.GetTable().FromCSV(openPath))
+                    {
+                        m_TableWindow.BindTable(m_TableWindow.GetTable());
+                    }
+                }
+            }
         }
 
         public void ShowExportDialog()
@@ -37,6 +53,7 @@ namespace GDX.Editor.Windows.Tables
             string savePath = EditorUtility.SaveFilePanel($"Export {m_TableWindow.titleContent.text} to CSV",
                 Application.dataPath,
                 m_TableWindow.GetTable().name, "csv");
+
             if (savePath != null)
             {
                 m_TableWindow.GetTable().ToCSV(savePath);

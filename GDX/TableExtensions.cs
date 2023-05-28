@@ -2,30 +2,201 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
-using GDX.Developer;
 using GDX.Tables;
 using GDX.Tables.CellValues;
+using UnityEngine;
+using TextGenerator = GDX.Developer.TextGenerator;
 
 namespace GDX
 {
     public static class TableExtensions
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static string MakeContentSafeForCSV(string content)
+        static string MakeSafeString(string content)
         {
-            if (content == null) return string.Empty;
+            if (content == null)
+            {
+                return string.Empty;
+            }
 
             // Double quote quotes
-            if(content.IndexOf('"') != -1)
+            if (content.IndexOf('"') != -1)
             {
                 content = content.Replace("\"", "\"\"");
             }
 
             // Ensure quotes for commas
             return content.IndexOf(',') != -1 ? $"\"{content}\"" : content;
+        }
+
+        static string[] GetDataFromSafeStrings(string csvText)
+        {
+            List<string> tokens = new List<string>();
+
+            int last = -1;
+            int current = 0;
+            bool inText = false;
+
+            while(current < csvText.Length)
+            {
+                switch(csvText[current])
+                {
+                    case '"':
+                        inText = !inText; break;
+                    case ',':
+                        if (!inText)
+                        {
+                            tokens.Add(csvText.Substring(last + 1, (current - last)).Trim(' ', ','));
+                            last = current;
+                        }
+                        break;
+                }
+                current++;
+            }
+
+            if (last != csvText.Length - 1)
+            {
+                tokens.Add(csvText.Substring(last+1).Trim());
+            }
+
+            return tokens.ToArray();
+        }
+
+        struct VirtualRow
+        {
+            int RowID;
+            string RowName;
+            string[] Values;
+        }
+
+        public static bool FromCSV(this TableBase table, string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                Debug.LogError($"Unable to find {filePath}.");
+                return false;
+            }
+
+            string[] fileContent = File.ReadAllLines(filePath);
+            int tableRowCount = table.GetRowCount();
+            int tableColumnCount = table.GetColumnCount();
+            TableBase.ColumnDescription[] columnDescriptions = table.GetAllColumnDescriptions();
+
+            // Test Columns
+            string[] columnTest = GetDataFromSafeStrings(fileContent[0]);
+            if (columnTest.Length != tableColumnCount + 2)
+            {
+                Debug.LogError($"The importing data has {columnTest.Length} columns where {tableColumnCount + 2} was expected.");
+                return false;
+            }
+
+            // Build a list of previous row ID, so we know what was removed
+            List<int> previousRowInternalIndices = new List<int>(tableRowCount);
+            TableBase.RowDescription[] rowDescriptions = table.GetAllRowDescriptions();
+            int rowDescriptionsLength = rowDescriptions.Length;
+            for (int i = 0; i < rowDescriptionsLength; i++)
+            {
+                previousRowInternalIndices.Add(rowDescriptions[i].InternalIndex);
+            }
+            List<int> foundRowInternalIndices = new List<int>(tableRowCount);
+
+            for (int i = 1; i < fileContent.Length; i++)
+            {
+                int internalIndex = -1;
+                string[] rowStrings = GetDataFromSafeStrings(fileContent[i]);
+                if (string.IsNullOrEmpty(rowStrings[0]))
+                {
+                    string rowName = rowStrings[1];
+                    if (string.IsNullOrEmpty(rowName))
+                    {
+                        rowName = "Unnamed";
+                    }
+
+                    // Create new row
+                    internalIndex = table.AddRow(rowName);
+                }
+                else
+                {
+                    internalIndex = int.Parse(rowStrings[0]);
+                }
+
+                foundRowInternalIndices.Add(internalIndex);
+
+                for (int j = 0; j < tableColumnCount; j++)
+                {
+                    string columnString = rowStrings[j + 2];
+                    switch (columnDescriptions[j].Type)
+                    {
+                        case Serializable.SerializableTypes.String:
+                            table.SetString(internalIndex, columnDescriptions[j].InternalIndex, columnString);
+                            break;
+                        case Serializable.SerializableTypes.Char:
+                            table.SetChar(internalIndex, columnDescriptions[j].InternalIndex, columnString[0]);
+                            break;
+                        case Serializable.SerializableTypes.Bool:
+                            table.SetBool(internalIndex, columnDescriptions[j].InternalIndex, bool.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.SByte:
+                            table.SetSByte(internalIndex, columnDescriptions[j].InternalIndex,
+                                sbyte.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.Byte:
+                            table.SetByte(internalIndex, columnDescriptions[j].InternalIndex, byte.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.Short:
+                            table.SetShort(internalIndex, columnDescriptions[j].InternalIndex,
+                                short.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.UShort:
+                            table.SetUShort(internalIndex, columnDescriptions[j].InternalIndex,
+                                ushort.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.Int:
+                            table.SetInt(internalIndex, columnDescriptions[j].InternalIndex, int.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.UInt:
+                            table.SetUInt(internalIndex, columnDescriptions[j].InternalIndex, uint.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.Long:
+                            table.SetLong(internalIndex, columnDescriptions[j].InternalIndex, long.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.ULong:
+                            table.SetULong(internalIndex, columnDescriptions[j].InternalIndex,
+                                ulong.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.Float:
+                            table.SetFloat(internalIndex, columnDescriptions[j].InternalIndex,
+                                float.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.Double:
+                            table.SetDouble(internalIndex, columnDescriptions[j].InternalIndex,
+                                double.Parse(columnString));
+                            break;
+                    }
+                }
+            }
+
+            // Remove indices that were not found any more?
+            int foundIndicesCount = foundRowInternalIndices.Count;
+            for (int i = 0; i < foundIndicesCount; i++)
+            {
+                if (previousRowInternalIndices.Contains(foundRowInternalIndices[i]))
+                {
+                    previousRowInternalIndices.Remove(foundRowInternalIndices[i]);
+                }
+            }
+
+            int indicesToRemove = previousRowInternalIndices.Count;
+            for(int i = 0; i < indicesToRemove; i++)
+            {
+                table.RemoveRow(previousRowInternalIndices[i]);
+            }
+
+            return true;
         }
 
         public static void ToCSV(this TableBase table, string filePath)
@@ -36,7 +207,7 @@ namespace GDX
 
             // Build first line
             TableBase.ColumnDescription[] columnDescriptions = table.GetAllColumnDescriptions();
-            generator.Append("Row Name");
+            generator.Append("Row ID, Row Name");
             for (int i = 0; i < columnCount; i++)
             {
                 generator.Append(", ");
@@ -49,7 +220,7 @@ namespace GDX
             for (int r = 0; r < rowCount; r++)
             {
                 TableBase.RowDescription rowDescription = table.GetRowDescription(r);
-                generator.Append(MakeContentSafeForCSV(rowDescription.Name));
+                generator.Append($"{rowDescription.InternalIndex}, {MakeSafeString(rowDescription.Name)}");
                 for (int c = 0; c < columnCount; c++)
                 {
                     TableBase.ColumnDescription columnDescription = table.GetColumnDescription(c);
@@ -57,11 +228,11 @@ namespace GDX
                     switch (columnDescription.Type)
                     {
                         case Serializable.SerializableTypes.String:
-                            generator.Append(MakeContentSafeForCSV(table.GetString(rowDescription.InternalIndex,
+                            generator.Append(MakeSafeString(table.GetString(rowDescription.InternalIndex,
                                 columnDescription.InternalIndex)));
                             break;
                         case Serializable.SerializableTypes.Char:
-                            generator.Append(MakeContentSafeForCSV(table
+                            generator.Append(MakeSafeString(table
                                 .GetChar(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString()));
                             break;
                         case Serializable.SerializableTypes.Bool:
