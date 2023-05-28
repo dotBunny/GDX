@@ -34,7 +34,7 @@ namespace GDX.Editor.Windows.Tables
         static StyleLength m_StyleLength25 = new StyleLength(new Length(25, LengthUnit.Pixel));
         static StyleLength m_StyleLength275 = new StyleLength(new Length(275, LengthUnit.Pixel));
 
-        float m_DesiredRowHeight = 22f;
+        float m_DesiredRowHeight = 27f;
 
         public void SetDesiredRowHeightMultiplier(float neededHeight)
         {
@@ -60,7 +60,7 @@ namespace GDX.Editor.Windows.Tables
             }
 
             TableBase table = window.GetTable();
-            int tableTicket = TableCache.RegisterTable(table);
+            int tableTicket = TableCache.GetTicket(table);
 
 
             // Add row header column ahead of actual columns

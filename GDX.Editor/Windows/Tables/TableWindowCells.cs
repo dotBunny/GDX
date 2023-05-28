@@ -34,18 +34,18 @@ namespace GDX.Editor.Windows.Tables
         internal static void CleanTableReferences(int knownTableIndex)
         {
             int count = k_CellToMapping.Count;
-            SimpleList<VisualElement> elementsToClean = new SimpleList<VisualElement>(count);
+            List<VisualElement> elementsToClean = new List<VisualElement>(count);
             foreach (KeyValuePair<VisualElement, TableWindowCellMapping> kvp in k_CellToMapping)
             {
                 if (kvp.Value.TableTicket == knownTableIndex)
                 {
-                    elementsToClean.AddUnchecked(kvp.Key);
+                    elementsToClean.Add(kvp.Key);
                 }
             }
 
             for (int i = 0; i < elementsToClean.Count; i++)
             {
-                k_CellToMapping.Remove(elementsToClean.Array[i]);
+                k_CellToMapping.Remove(elementsToClean[i]);
             }
         }
 

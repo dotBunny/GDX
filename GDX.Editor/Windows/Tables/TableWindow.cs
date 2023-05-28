@@ -51,12 +51,6 @@ namespace GDX.Editor.Windows.Tables
                 AssetDatabase.SaveAssetIfDirty(m_ScriptableObject);
             }
             TableWindowProvider.UnregisterTableWindow(this);
-
-            // TODO: do we need to do this really?
-            if (m_TargetTable != null)
-            {
-                TableCache.UnregisterTable(m_TargetTable);
-            }
         }
 
         void OnKeyboardEvent(KeyDownEvent evt)

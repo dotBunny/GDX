@@ -27,6 +27,23 @@ namespace GDX.Editor.Windows.Tables
             m_Overlay.SetState(TableWindowOverlay.OverlayState.AddRow);
         }
 
+        public void ShowImportDialog()
+        {
+
+        }
+
+        public void ShowExportDialog()
+        {
+            string savePath = EditorUtility.SaveFilePanel($"Export {m_TableWindow.titleContent.text} to CSV",
+                Application.dataPath,
+                m_TableWindow.GetTable().name, "csv");
+            if (savePath != null)
+            {
+                m_TableWindow.GetTable().ToCSV(savePath);
+                Debug.Log($"'{m_TableWindow.GetTable().GetDisplayName()}' was exported to CSV at {savePath}");
+            }
+        }
+
         public void ShowAddColumnDialog()
         {
             m_Overlay.SetState(TableWindowOverlay.OverlayState.AddColumn);

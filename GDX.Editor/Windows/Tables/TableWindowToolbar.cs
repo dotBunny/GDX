@@ -15,6 +15,7 @@ namespace GDX.Editor.Windows.Tables
         readonly Toolbar m_Toolbar;
         readonly ToolbarMenu m_ToolbarRowMenu;
         readonly ToolbarMenu m_ToolbarColumnMenu;
+        readonly ToolbarMenu m_ToolbarInterchangeMenu;
         readonly ToolbarButton m_ToolbarSettingsButton;
         readonly ToolbarButton m_ToolbarHelpButton;
 
@@ -36,6 +37,10 @@ namespace GDX.Editor.Windows.Tables
             m_ToolbarRowMenu.menu.AppendAction("Rename Selected", _ => { RenameRow(); }, CanOperateOnRow);
             m_ToolbarRowMenu.menu.AppendAction("Remove Selected", _ => { RemoveRow(); }, CanOperateOnRow);
 
+            m_ToolbarInterchangeMenu = m_Toolbar.Q<ToolbarMenu>("gdx-table-toolbar-interchange");
+            m_ToolbarInterchangeMenu.menu.AppendAction("Export to CSV", _ => { m_ParentWindow.GetController().ShowExportDialog(); }, CanInterchange);
+            m_ToolbarInterchangeMenu.menu.AppendAction("Import from CSV", _ => { m_ParentWindow.GetController().ShowImportDialog(); }, CanInterchange);
+
             m_ToolbarSettingsButton = m_Toolbar.Q<ToolbarButton>("gdx-table-toolbar-settings");
             m_ToolbarSettingsButton.text = string.Empty;
             m_ToolbarSettingsButton.clicked += ShowSettings;
@@ -50,9 +55,17 @@ namespace GDX.Editor.Windows.Tables
             m_ToolbarColumnMenu.focusable = state;
             m_ToolbarRowMenu.focusable = state;
             m_ToolbarSettingsButton.focusable = state;
+            m_ToolbarInterchangeMenu.focusable = state;
         }
 
         DropdownMenuAction.Status CanAddRow(DropdownMenuAction action)
+        {
+            return m_ParentWindow.GetTable().GetColumnCount() > 0
+                ? DropdownMenuAction.Status.Normal
+                : DropdownMenuAction.Status.Disabled;
+        }
+
+        DropdownMenuAction.Status CanInterchange(DropdownMenuAction action)
         {
             return m_ParentWindow.GetTable().GetColumnCount() > 0
                 ? DropdownMenuAction.Status.Normal
