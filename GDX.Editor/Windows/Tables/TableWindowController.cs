@@ -40,7 +40,7 @@ namespace GDX.Editor.Windows.Tables
                 {
                     if (m_TableWindow.GetTable().UpdateFromCommaSeperatedValues(openPath))
                     {
-                        m_TableWindow.BindTable(m_TableWindow.GetTable());
+                        m_TableWindow.RebindTable();
                     }
                 }
             }

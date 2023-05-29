@@ -37,7 +37,6 @@ namespace GDX.Editor.Windows.Tables
             // Catch domain reload and rebind/relink window
             if (m_TargetTable != null)
             {
-                TableWindowProvider.RegisterTableWindow(this, m_TargetTable);
                 BindTable(m_TargetTable);
             }
 
@@ -108,6 +107,11 @@ namespace GDX.Editor.Windows.Tables
             return m_View;
         }
 
+        public int GetTableTicket()
+        {
+            return m_TableTicket;
+        }
+
 
         void CheckForNoTable()
         {
@@ -121,10 +125,21 @@ namespace GDX.Editor.Windows.Tables
         public void BindTable(TableBase table)
         {
             m_TargetTable = table;
-            m_TableTicket = TableCache.GetTicket(table);
+            m_TableTicket = TableCache.RegisterTable(table);
+            TableWindowProvider.RegisterTableWindow(this, m_TargetTable);
+
+            RebindTable();
+
+            TableCache.RegisterColumnChanged(this, m_TableTicket);
+            TableCache.RegisterRowChanged(this, m_TableTicket);
+            TableCache.RegisterCellValueChanged(this, m_TableTicket);
+        }
+
+        public void RebindTable()
+        {
             titleContent = new GUIContent(m_TargetTable.GetDisplayName());
 
-            int columnCount = table.GetColumnCount();
+            int columnCount = m_TargetTable.GetColumnCount();
             if (columnCount == 0)
             {
                 m_View?.Hide();
@@ -137,16 +152,12 @@ namespace GDX.Editor.Windows.Tables
 
             // Next frame resize things
             EditorApplication.delayCall += m_Controller.AutoResizeColumns;
-
-            TableCache.RegisterColumnChanged(this, m_TableTicket);
-            TableCache.RegisterRowChanged(this, m_TableTicket);
-            TableCache.RegisterCellValueChanged(this, m_TableTicket);
         }
 
         /// <inheritdoc />
         public void OnColumnDefinitionChange()
         {
-            BindTable(m_TargetTable);
+            RebindTable();
         }
 
         /// <inheritdoc />

@@ -17,11 +17,11 @@ namespace GDX.Editor.Windows.Tables
     {
         public const string UndoPrefix = "Table:";
 
-        static readonly Dictionary<TableBase, TableWindow> k_TableWindowMap =
-            new Dictionary<TableBase, TableWindow>();
+        static readonly Dictionary<TableBase, TableWindow> k_TableWindowMap = new Dictionary<TableBase, TableWindow>();
 
         static readonly Dictionary<TableWindow, int> k_TableWindowToTicket = new Dictionary<TableWindow, int>(5);
         static readonly Dictionary<int, TableWindow> k_TicketToTableWindow = new Dictionary<int, TableWindow>(5);
+
 
         static bool s_SubscribedForUndo;
 
@@ -62,7 +62,6 @@ namespace GDX.Editor.Windows.Tables
             {
                 return ticket;
             }
-
             ticket = TableCache.RegisterTable(table);
             k_TicketToTableWindow.Add(ticket, tableWindow);
             k_TableWindowToTicket.Add(tableWindow, ticket);
@@ -79,9 +78,16 @@ namespace GDX.Editor.Windows.Tables
 
         internal static void UnregisterTableWindow(TableWindow tableWindow)
         {
-            int ticket = GetTableWindowTicket(tableWindow);
+            int tableWindowTicket = GetTableWindowTicket(tableWindow);
+            TableBase table = tableWindow.GetTable();
+
             k_TableWindowToTicket.Remove(tableWindow);
-            k_TicketToTableWindow.Remove(ticket);
+            k_TicketToTableWindow.Remove(tableWindowTicket);
+
+            if (table != null)
+            {
+                k_TableWindowMap.Remove(table);
+            }
 
             if (k_TableWindowToTicket.Count == 0 && s_SubscribedForUndo)
             {
@@ -89,9 +95,7 @@ namespace GDX.Editor.Windows.Tables
                 s_SubscribedForUndo = false;
             }
 
-            TableCache.UnregisterTable(tableWindow.GetTable());
-
-            // We need to remove all cells associated with a map
+            TableCache.UnregisterTable(table);
         }
 
         [OnOpenAsset(1)]
@@ -113,9 +117,7 @@ namespace GDX.Editor.Windows.Tables
             if (tableWindow == null)
             {
                 tableWindow = EditorWindow.CreateWindow<TableWindow>();
-                RegisterTableWindow(tableWindow, table);
             }
-
             tableWindow.BindTable(table);
             tableWindow.Show();
             tableWindow.Focus();

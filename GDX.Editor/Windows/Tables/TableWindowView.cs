@@ -13,9 +13,10 @@ namespace GDX.Editor.Windows.Tables
 #if UNITY_2022_2_OR_NEWER
     public class TableWindowView
     {
+
         static StyleLength m_StyleLength25 = new StyleLength(new Length(25, LengthUnit.Pixel));
         static StyleLength m_StyleLength275 = new StyleLength(new Length(275, LengthUnit.Pixel));
-        readonly List<TableBase.RowDescription> k_RowDescriptions = new List<TableBase.RowDescription>();
+        readonly List<TableBase.RowDescription> m_RowDescriptions = new List<TableBase.RowDescription>();
         readonly Length m_BoundsMinWidth = new Length(200, LengthUnit.Pixel);
         readonly List<TableBase.ColumnDescription> m_ColumnDescriptions = new List<TableBase.ColumnDescription>();
 
@@ -27,6 +28,7 @@ namespace GDX.Editor.Windows.Tables
         readonly Dictionary<int, ContextualMenuManipulator> m_RowContextMenus =
             new Dictionary<int, ContextualMenuManipulator>();
 
+        VisualElement m_RootElement;
         readonly Columns m_TableViewColumns;
         readonly VisualElement m_TableViewHeader;
         readonly Length m_ToggleMinWidth = new Length(25, LengthUnit.Pixel);
@@ -39,8 +41,14 @@ namespace GDX.Editor.Windows.Tables
 
         float m_DesiredRowHeight = 27f;
 
+        ~TableWindowView()
+        {
+            m_RootElement.Remove(m_MultiColumnListView);
+        }
+
         public TableWindowView(VisualElement rootElement, TableWindow window)
         {
+            m_RootElement = rootElement;
             parentWindow = window;
 
             // Remove previous
@@ -51,7 +59,6 @@ namespace GDX.Editor.Windows.Tables
 
             TableBase table = window.GetTable();
             int tableTicket = TableCache.GetTicket(table);
-
 
             // Add row header column ahead of actual columns
             m_ColumnDescriptions.Add(new TableBase.ColumnDescription
@@ -261,7 +268,7 @@ namespace GDX.Editor.Windows.Tables
                 sortingEnabled = true,
                 name = "gdx-table-view",
                 selectionType = SelectionType.Single,
-                itemsSource = k_RowDescriptions,
+                itemsSource = m_RowDescriptions,
                 showAlternatingRowBackgrounds = AlternatingRowBackground.ContentOnly,
                 virtualizationMethod = CollectionVirtualizationMethod.FixedHeight,
                 fixedItemHeight = m_DesiredRowHeight
@@ -301,7 +308,12 @@ namespace GDX.Editor.Windows.Tables
 
         public int GetRowDescriptionIndex(int row)
         {
-            return k_RowDescriptions[row].InternalIndex;
+            if (row >= m_RowDescriptions.Count)
+            {
+                Debug.Log($"Get k_RowDescriptions @ {row} (needs to be one less!) count:{m_RowDescriptions.Count}");
+            }
+
+            return m_RowDescriptions[row].InternalIndex;
         }
 
         public MultiColumnListView GetMultiColumnListView()
@@ -338,7 +350,7 @@ namespace GDX.Editor.Windows.Tables
         void BindRowHeader(VisualElement cell, int row)
         {
             Label label = (Label)cell;
-            TableBase.RowDescription description = k_RowDescriptions[row];
+            TableBase.RowDescription description = m_RowDescriptions[row];
             label.text = description.Name;
 
             // Make the context menu effect the entirety of the row, this is a bit brittle as it relies on the actual
@@ -348,7 +360,7 @@ namespace GDX.Editor.Windows.Tables
 
         void UnbindRowHeader(VisualElement cell, int row)
         {
-            if (row >= k_RowDescriptions.Count)
+            if (row >= m_RowDescriptions.Count)
             {
                 // Unbinding last row, this happens as the row updates after the actual data is removed.
                 return;
@@ -356,7 +368,7 @@ namespace GDX.Editor.Windows.Tables
 
             Label label = (Label)cell;
 
-            TableBase.RowDescription description = k_RowDescriptions[row];
+            TableBase.RowDescription description = m_RowDescriptions[row];
             if (m_RowContextMenus.TryGetValue(description.InternalIndex, out ContextualMenuManipulator manipulator))
             {
                 label.parent.parent.RemoveManipulator(manipulator);
@@ -435,12 +447,11 @@ namespace GDX.Editor.Windows.Tables
         internal void RebuildRowData()
         {
             TableBase table = parentWindow.GetTable();
-            k_RowDescriptions.Clear();
+            m_RowDescriptions.Clear();
             if (table.GetRowCount() > 0)
             {
-                k_RowDescriptions.AddRange(table.GetAllRowDescriptions());
+                m_RowDescriptions.AddRange(table.GetAllRowDescriptions());
             }
-
             m_MultiColumnListView.RefreshItems();
         }
 

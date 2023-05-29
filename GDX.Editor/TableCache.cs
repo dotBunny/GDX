@@ -21,10 +21,9 @@ namespace GDX.Editor
             new IntKeyDictionary<List<IRowDefinitionChangeCallbackReceiver>>(5);
 
         static int s_TableTicketHead;
-        static readonly Dictionary<int, TableBase> k_TicketToTable = new Dictionary<int, TableBase>(5);
-
-        static readonly Dictionary<TableBase, int> k_TableToTicket = new Dictionary<TableBase, int>(5);
-        static readonly Dictionary<TableBase, int> k_TableUsages = new Dictionary<TableBase, int>(5);
+        static readonly Dictionary<int, TableBase> k_TableTicketToTable = new Dictionary<int, TableBase>(5);
+        static readonly Dictionary<TableBase, int> k_TableToTableTicket = new Dictionary<TableBase, int>(5);
+        static readonly Dictionary<TableBase, int> k_TableUsageCounters = new Dictionary<TableBase, int>(5);
 
         public static void RegisterCellValueChanged(ICellValueChangedCallbackReceiver callback, TableBase table)
         {
@@ -101,7 +100,7 @@ namespace GDX.Editor
                 }
             }
 
-            EditorUtility.SetDirty(k_TicketToTable[tableTicket]);
+            EditorUtility.SetDirty(k_TableTicketToTable[tableTicket]);
         }
 
         public static void RegisterColumnChanged(IColumnDefinitionChangeCallbackReceiver callback, int tableTicket)
@@ -145,7 +144,7 @@ namespace GDX.Editor
                 }
             }
 
-            EditorUtility.SetDirty(k_TicketToTable[tableTicket]);
+            EditorUtility.SetDirty(k_TableTicketToTable[tableTicket]);
         }
 
         public static void NotifyOfCellValueChange(TableBase table, int rowInternalIndex, int columnInternalIndex, ICellValueChangedCallbackReceiver ignore = null)
@@ -165,7 +164,7 @@ namespace GDX.Editor
                 }
             }
 
-            EditorUtility.SetDirty(k_TicketToTable[tableTicket]);
+            EditorUtility.SetDirty(k_TableTicketToTable[tableTicket]);
         }
 
         public static AssetDatabaseReference[] FindTables()
@@ -191,12 +190,12 @@ namespace GDX.Editor
 
         public static TableBase GetTable(int ticket)
         {
-            return k_TicketToTable.TryGetValue(ticket, out TableBase table) ? table : null;
+            return k_TableTicketToTable.TryGetValue(ticket, out TableBase table) ? table : null;
         }
 
         public static int GetTicket(TableBase table)
         {
-            return k_TableToTicket.TryGetValue(table, out int ticket) ? ticket : -1;
+            return k_TableToTableTicket.TryGetValue(table, out int ticket) ? ticket : -1;
         }
 
         public static void UnregisterTable(TableBase table)
@@ -210,12 +209,12 @@ namespace GDX.Editor
 
             if (ticket != -1)
             {
-                k_TableUsages[table]--;
-                if (k_TableUsages[table] == 0)
+                k_TableUsageCounters[table]--;
+                if (k_TableUsageCounters[table] == 0)
                 {
-                    k_TableToTicket.Remove(table);
-                    k_TicketToTable.Remove(ticket);
-                    k_TableUsages.Remove(table);
+                    k_TableToTableTicket.Remove(table);
+                    k_TableTicketToTable.Remove(ticket);
+                    k_TableUsageCounters.Remove(table);
                 }
             }
         }
@@ -225,15 +224,15 @@ namespace GDX.Editor
             int ticket = GetTicket(table);
             if (ticket != -1)
             {
-                k_TableUsages[table]++;
+                k_TableUsageCounters[table]++;
                 return ticket;
             }
 
             // Register table
             int head = s_TableTicketHead;
-            k_TicketToTable.Add(head, table);
-            k_TableToTicket.Add(table, head);
-            k_TableUsages.Add(table, 1);
+            k_TableTicketToTable.Add(head, table);
+            k_TableToTableTicket.Add(table, head);
+            k_TableUsageCounters.Add(table, 1);
 
             // Increment our next head
             s_TableTicketHead++;
