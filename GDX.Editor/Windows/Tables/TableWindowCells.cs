@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using GDX.Tables.CellValues;
 using UnityEditor.UIElements;
@@ -29,13 +30,31 @@ namespace GDX.Editor.Windows.Tables
             k_CellToMapping.Remove(cell);
         }
 
-        internal static void CleanTableReferences(int knownTableIndex)
+        internal static void CleanTableReferences(int tableTicket)
         {
             int count = k_CellToMapping.Count;
             List<VisualElement> elementsToClean = new List<VisualElement>(count);
             foreach (KeyValuePair<VisualElement, TableWindowCellMapping> kvp in k_CellToMapping)
             {
-                if (kvp.Value.TableTicket == knownTableIndex)
+                if (kvp.Value.TableTicket == tableTicket)
+                {
+                    elementsToClean.Add(kvp.Key);
+                }
+            }
+
+            for (int i = 0; i < elementsToClean.Count; i++)
+            {
+                k_CellToMapping.Remove(elementsToClean[i]);
+            }
+        }
+
+        internal static void CleanTableReferences(int tableTicket, int columnIndex)
+        {
+            int count = k_CellToMapping.Count;
+            List<VisualElement> elementsToClean = new List<VisualElement>(count);
+            foreach (KeyValuePair<VisualElement, TableWindowCellMapping> kvp in k_CellToMapping)
+            {
+                if (kvp.Value.TableTicket == tableTicket && kvp.Value.ColumnID == columnIndex)
                 {
                     elementsToClean.Add(kvp.Key);
                 }
@@ -63,6 +82,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 StringCellValue local = (StringCellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -82,6 +102,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 CharCellValue local = (CharCellValue)field.userData;
                 local.Set(e.newValue[0]);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -101,6 +122,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 BoolCellValue local = (BoolCellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -120,6 +142,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 SByteCellValue local = (SByteCellValue)field.userData;
                 local.Set((sbyte)e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -139,6 +162,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 ByteCellValue local = (ByteCellValue)field.userData;
                 local.Set((byte)e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -158,6 +182,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 ShortCellValue local = (ShortCellValue)field.userData;
                 local.Set((short)e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -177,6 +202,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 UShortCellValue local = (UShortCellValue)field.userData;
                 local.Set((ushort)e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -196,6 +222,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 IntCellValue local = (IntCellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -215,6 +242,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 UIntCellValue local = (UIntCellValue)field.userData;
                 local.Set((uint)e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -234,6 +262,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 LongCellValue local = (LongCellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -253,6 +282,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 ULongCellValue local = (ULongCellValue)field.userData;
                 local.Set((ulong)e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -272,6 +302,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 FloatCellValue local = (FloatCellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -291,6 +322,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 DoubleCellValue local = (DoubleCellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -310,6 +342,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 Vector2CellValue local = (Vector2CellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -329,6 +362,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 Vector3CellValue local = (Vector3CellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -348,6 +382,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 Vector4CellValue local = (Vector4CellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -367,6 +402,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 Vector2IntCellValue local = (Vector2IntCellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -386,6 +422,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 Vector3IntCellValue local = (Vector3IntCellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -410,6 +447,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 QuaternionCellValue local = (QuaternionCellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -429,6 +467,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 RectCellValue local = (RectCellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -448,6 +487,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 RectIntCellValue local = (RectIntCellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -467,6 +507,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 ColorCellValue local = (ColorCellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -486,6 +527,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 LayerMaskCellValue local = (LayerMaskCellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -505,6 +547,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 BoundsCellValue local = (BoundsCellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -524,6 +567,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 BoundsIntCellValue local = (BoundsIntCellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -543,6 +587,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 Hash128CellValue local = (Hash128CellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -562,6 +607,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 GradientCellValue local = (GradientCellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -581,6 +627,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 AnimationCurveCellValue local = (AnimationCurveCellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
@@ -600,19 +647,20 @@ namespace GDX.Editor.Windows.Tables
             {
                 ObjectCellValue local = (ObjectCellValue)field.userData;
                 local.Set(e.newValue);
+                TableCache.NotifyOfCellValueChange(local.Table, local.Row, local.Column);
             });
         }
 
         internal static VisualElement MakeStringCell(int table, int column)
         {
-            TextField newField = new TextField(null) { name = k_CellFieldName };
+            TextField newField = new TextField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeCharCell(int table, int column)
         {
-            TextField newField = new TextField(null, 1, false, false, ' ') { name = k_CellFieldName };
+            TextField newField = new TextField(null, 1, false, false, ' ') { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             newField.style.maxWidth = m_StyleLength25;
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
@@ -620,7 +668,7 @@ namespace GDX.Editor.Windows.Tables
 
         internal static VisualElement MakeBoolCell(int table, int column)
         {
-            Toggle newField = new Toggle(null) { name = k_CellFieldName };
+            Toggle newField = new Toggle(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
@@ -629,7 +677,7 @@ namespace GDX.Editor.Windows.Tables
         {
             SliderInt newField = new SliderInt(sbyte.MinValue, sbyte.MaxValue)
             {
-                name = k_CellFieldName, showInputField = true, label = null
+                name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}", showInputField = true, label = null
             };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
@@ -639,7 +687,7 @@ namespace GDX.Editor.Windows.Tables
         {
             SliderInt newField = new SliderInt(byte.MinValue, byte.MaxValue)
             {
-                name = k_CellFieldName, showInputField = true, label = null
+                name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}", showInputField = true, label = null
             };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
@@ -649,7 +697,7 @@ namespace GDX.Editor.Windows.Tables
         {
             SliderInt newField = new SliderInt(short.MinValue, short.MaxValue)
             {
-                name = k_CellFieldName, showInputField = true, label = null
+                name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}", showInputField = true, label = null
             };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
@@ -659,7 +707,7 @@ namespace GDX.Editor.Windows.Tables
         {
             SliderInt newField = new SliderInt(ushort.MinValue, ushort.MaxValue)
             {
-                name = k_CellFieldName, showInputField = true, label = null
+                name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}", showInputField = true, label = null
             };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
@@ -667,7 +715,7 @@ namespace GDX.Editor.Windows.Tables
 
         internal static VisualElement MakeIntCell(int table, int column)
         {
-            IntegerField newField = new IntegerField(null) { name = k_CellFieldName };
+            IntegerField newField = new IntegerField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
@@ -675,14 +723,14 @@ namespace GDX.Editor.Windows.Tables
         internal static VisualElement MakeUIntCell(int table, int column)
         {
             //TODO: Crunches
-            IntegerField newField = new IntegerField(null) { name = k_CellFieldName };
+            IntegerField newField = new IntegerField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeLongCell(int table, int column)
         {
-            LongField newField = new LongField(null) { name = k_CellFieldName };
+            LongField newField = new LongField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
@@ -690,133 +738,133 @@ namespace GDX.Editor.Windows.Tables
         internal static VisualElement MakeULongCell(int table, int column)
         {
             //TODO: Crunches
-            LongField newField = new LongField(null) { name = k_CellFieldName };
+            LongField newField = new LongField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeFloatCell(int table, int column)
         {
-            FloatField newField = new FloatField(null) { name = k_CellFieldName };
+            FloatField newField = new FloatField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeDoubleCell(int table, int column)
         {
-            DoubleField newField = new DoubleField(null) { name = k_CellFieldName };
+            DoubleField newField = new DoubleField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeVector2Cell(int table, int column)
         {
-            Vector2Field newField = new Vector2Field(null) { name = k_CellFieldName };
+            Vector2Field newField = new Vector2Field(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeVector3Cell(int table, int column)
         {
-            Vector3Field newField = new Vector3Field(null) { name = k_CellFieldName };
+            Vector3Field newField = new Vector3Field(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeVector4Cell(int table, int column)
         {
-            Vector4Field newField = new Vector4Field(null) { name = k_CellFieldName };
+            Vector4Field newField = new Vector4Field(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeVector2IntCell(int table, int column)
         {
-            Vector2IntField newField = new Vector2IntField(null) { name = k_CellFieldName };
+            Vector2IntField newField = new Vector2IntField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeVector3IntCell(int table, int column)
         {
-            Vector3IntField newField = new Vector3IntField(null) { name = k_CellFieldName };
+            Vector3IntField newField = new Vector3IntField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeQuaternionCell(int table, int column)
         {
-            Vector4Field newField = new Vector4Field(null) { name = k_CellFieldName };
+            Vector4Field newField = new Vector4Field(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeRectCell(int table, int column)
         {
-            RectField newField = new RectField(null) { name = k_CellFieldName };
+            RectField newField = new RectField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeRectIntCell(int table, int column)
         {
-            RectIntField newField = new RectIntField(null) { name = k_CellFieldName };
+            RectIntField newField = new RectIntField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeColorCell(int table, int column)
         {
-            ColorField newField = new ColorField(null) { name = k_CellFieldName };
+            ColorField newField = new ColorField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeLayerMaskCell(int table, int column)
         {
-            LayerMaskField newField = new LayerMaskField(null) { name = k_CellFieldName };
+            LayerMaskField newField = new LayerMaskField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeBoundsCell(int table, int column)
         {
-            BoundsField newField = new BoundsField(null) { name = k_CellFieldName };
+            BoundsField newField = new BoundsField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeBoundsIntCell(int table, int column)
         {
-            BoundsIntField newField = new BoundsIntField(null) { name = k_CellFieldName };
+            BoundsIntField newField = new BoundsIntField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeHash128Cell(int table, int column)
         {
-            Hash128Field newField = new Hash128Field(null) { name = k_CellFieldName };
+            Hash128Field newField = new Hash128Field(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeGradientCell(int table, int column)
         {
-            GradientField newField = new GradientField(null) { name = k_CellFieldName };
+            GradientField newField = new GradientField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeAnimationCurveCell(int table, int column)
         {
-            CurveField newField = new CurveField(null) { name = k_CellFieldName };
+            CurveField newField = new CurveField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }
 
         internal static VisualElement MakeObjectCell(int table, int column)
         {
-            ObjectField newField = new ObjectField(null) { name = k_CellFieldName };
+            ObjectField newField = new ObjectField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
             k_CellToMapping.Add(newField, new TableWindowCellMapping { TableTicket = table, ColumnID = column });
             return newField;
         }

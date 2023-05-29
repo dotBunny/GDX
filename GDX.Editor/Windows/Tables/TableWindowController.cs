@@ -107,10 +107,7 @@ namespace GDX.Editor.Windows.Tables
 
             TableBase table = m_TableWindow.GetTable();
             table.AddColumn(type, name, orderedIndex);
-
-            OnTableChanged();
-            m_TableWindow.BindTable(table);
-            OnTableChanged();
+            TableCache.NotifyOfColumnChange(table);
             return true;
         }
 
@@ -125,9 +122,7 @@ namespace GDX.Editor.Windows.Tables
             RegisterUndo($"Add Row ({name})");
             table.AddRow(name, orderedIndex);
 
-            m_TableWindow.GetView().RebuildRowData();
-
-            OnTableChanged();
+            TableCache.NotifyOfRowChange(table);
             return true;
         }
 
@@ -142,9 +137,9 @@ namespace GDX.Editor.Windows.Tables
             RegisterUndo("Add Default Row");
             table.AddRow($"Row_{Core.Random.NextInteger(1, 9999).ToString()}");
 
-            m_TableWindow.GetView().RebuildRowData();
             m_Overlay.SetOverlayStateHidden();
-            OnTableChanged();
+
+            TableCache.NotifyOfRowChange(table);
         }
 
         public void RemoveSelectedRow()
@@ -153,8 +148,8 @@ namespace GDX.Editor.Windows.Tables
                 (TableBase.RowDescription)m_TableWindow.GetView().GetMultiColumnListView().selectedItem;
             RegisterUndo($"Remove Row ({selectedRow.Name})");
             m_TableWindow.GetTable().RemoveRow(selectedRow.InternalIndex);
-            m_TableWindow.GetView().RebuildRowData();
-            OnTableChanged();
+
+            TableCache.NotifyOfRowChange(m_TableWindow.GetTable());
         }
 
         public bool RemoveColumn(int internalIndex)
@@ -166,9 +161,12 @@ namespace GDX.Editor.Windows.Tables
             }
 
             RegisterUndo($"Remove Column ({table.GetColumnName(internalIndex)})");
+
+            TableWindowCells.CleanTableReferences(TableCache.GetTicket(table), internalIndex);
+
             table.RemoveColumn(m_TableWindow.GetView().GetColumnType(internalIndex), internalIndex);
-            m_TableWindow.BindTable(table);
-            OnTableChanged();
+
+            TableCache.NotifyOfColumnChange(table);
             return true;
         }
 
@@ -177,8 +175,8 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = m_TableWindow.GetTable();
             RegisterUndo($"Remove Row ({table.GetRowName(internalIndex)})");
             table.RemoveRow(internalIndex);
-            m_TableWindow.GetView().RebuildRowData();
-            OnTableChanged();
+
+            TableCache.NotifyOfRowChange(table);
             return true;
         }
 
@@ -188,8 +186,7 @@ namespace GDX.Editor.Windows.Tables
             RegisterUndo($"Rename Row ({name})");
             table.SetRowName(name, internalIndex);
 
-            m_TableWindow.GetView().RebuildRowData();
-            OnTableChanged();
+            TableCache.NotifyOfRowChange(table);
             return true;
         }
 
@@ -203,7 +200,7 @@ namespace GDX.Editor.Windows.Tables
 
             table.SetColumnName(name, internalIndex);
 
-            OnTableChanged();
+            TableCache.NotifyOfColumnChange(table, m_TableWindow);
             return true;
         }
 
@@ -221,8 +218,7 @@ namespace GDX.Editor.Windows.Tables
             }
 
             table.SetFlag(TableBase.Flags.EnableUndo, enableUndo);
-
-            OnTableChanged();
+            EditorUtility.SetDirty(m_TableWindow.GetTable());
             return true;
         }
 
@@ -233,22 +229,11 @@ namespace GDX.Editor.Windows.Tables
 
         void RegisterUndo(string name)
         {
-            ScriptableObject scriptableObject = m_TableWindow.GetScriptableObject();
+            ScriptableObject scriptableObject = m_TableWindow.GetTable();
             if (scriptableObject != null && m_TableWindow.GetTable().GetFlag(TableBase.Flags.EnableUndo))
             {
                 Undo.RegisterCompleteObjectUndo(scriptableObject, $"{TableWindowProvider.UndoPrefix} {name}");
             }
-        }
-
-        void OnTableChanged()
-        {
-            ScriptableObject scriptableObject = m_TableWindow.GetScriptableObject();
-            if (scriptableObject != null)
-            {
-                EditorUtility.SetDirty(scriptableObject);
-            }
-
-            TableInspectorBase.RedrawInspector(m_TableWindow.GetTable());
         }
     }
 #endif

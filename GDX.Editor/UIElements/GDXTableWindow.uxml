@@ -13,6 +13,7 @@
         <ui:VisualElement name="gdx-table-add-column" class="gdx-table-overlay">
             <ui:Label tabindex="-1" text="Add Column" display-tooltip-when-elided="true" class="gdx-table-overlay-title" />
             <ui:TextField picking-mode="Ignore" label="Name" value="MyColumn" name="gdx-table-column-name" />
+            <ui:TextField picking-mode="Ignore" label="Filter" value="" name="gdx-table-column-filter" />
             <ui:VisualElement name="VisualElement" class="gdx-table-overlay-buttons">
                 <ui:Button text="Cancel" display-tooltip-when-elided="true" name="gdx-table-column-cancel" enable-rich-text="false" tabindex="2" />
                 <ui:Button text="Add" display-tooltip-when-elided="true" name="gdx-table-column-add" enable-rich-text="false" tabindex="1" />

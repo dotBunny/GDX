@@ -11,23 +11,49 @@ using UnityEngine.UIElements;
 
 namespace GDX.Editor.Inspectors
 {
+#if UNITY_2022_2_OR_NEWER
+    public abstract class TableInspectorBase : UnityEditor.Editor, TableCache.IColumnDefinitionChangeCallbackReceiver, TableCache.IRowDefinitionChangeCallbackReceiver
+#else
     public abstract class TableInspectorBase : UnityEditor.Editor
+#endif
     {
 #if UNITY_2022_2_OR_NEWER
+        const string k_ButtonText = "Open Table";
 
-        static readonly Dictionary<TableBase, VisualElement> k_KnownInspectors = new Dictionary<TableBase, VisualElement>();
+        VisualElement m_RootElement;
+        int m_tableTicket;
 
-        public static void RedrawInspector(TableBase table)
+        void OnDestroy()
         {
-            if (k_KnownInspectors.TryGetValue(table, out VisualElement inspectorElement))
-            {
-                UpdateInspector(inspectorElement, table);
-            }
+            TableCache.UnregisterColumnChanged(this, m_tableTicket);
+            TableCache.UnregisterRowChanged(this, m_tableTicket);
         }
 
-        static void UpdateInspector(VisualElement rootElement, TableBase table)
+        /// <inheritdoc />
+        public override VisualElement CreateInspectorGUI()
         {
-            Label dataLabel = rootElement.Q<Label>("gdx-table-inspector-data");
+            TableBase table = (TableBase)target;
+
+            m_tableTicket = TableCache.RegisterTable(table);
+            m_RootElement = new VisualElement();
+
+            Label dataLabel = new Label { name = "gdx-table-inspector-data" };
+            m_RootElement.Add(dataLabel);
+
+            Button button = new Button(OpenTargetAsset);
+            button.text = k_ButtonText;
+            m_RootElement.Add(button);
+
+            UpdateInspector();
+            TableCache.RegisterColumnChanged(this, m_tableTicket);
+
+            return m_RootElement;
+        }
+
+        void UpdateInspector()
+        {
+            TableBase table = (TableBase)target;
+            Label dataLabel = m_RootElement.Q<Label>("gdx-table-inspector-data");
 
             int columnCount = table.GetColumnCount();
             int rowCount = table.GetRowCount();
@@ -35,46 +61,30 @@ namespace GDX.Editor.Inspectors
             dataLabel.text = $"{rowCount.ToString()} Rows with {columnCount.ToString()} Columns.";
         }
 
-        const string k_ButtonText = "Open Table";
-
         void OpenTargetAsset()
         {
             TableBase table = (TableBase)target;
             TableWindowProvider.OpenAsset(table);
         }
 
-        void OnDestroy()
+        /// <inheritdoc />
+        public void OnColumnDefinitionChange()
         {
-            TableBase table = (TableBase)target;
-            k_KnownInspectors.Remove(table);
+            UpdateInspector();
         }
 
         /// <inheritdoc />
-        public override VisualElement CreateInspectorGUI()
+        public void OnRowDefinitionChange()
         {
-            TableBase table = (TableBase)target;
-            VisualElement container = new VisualElement();
-
-            Label dataLabel = new Label { name = "gdx-table-inspector-data" };
-            container.Add(dataLabel);
-
-            Button button = new Button(OpenTargetAsset);
-            button.text = k_ButtonText;
-            container.Add(button);
-
-            k_KnownInspectors[table] = container;
-            UpdateInspector(container, table);
-
-            return container;
+            UpdateInspector();
         }
-
-
 #else
         /// <inheritdoc />
         public override void OnInspectorGUI()
         {
-            UnityEngine.GUILayout.Label("Editing an ITable is unsupported on this version of Unity.");
+            UnityEngine.GUILayout.Label("Editing an TableBase is unsupported on this version of Unity.");
         }
 #endif
+
     }
 }

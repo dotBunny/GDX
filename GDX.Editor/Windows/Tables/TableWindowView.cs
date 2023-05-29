@@ -443,8 +443,6 @@ namespace GDX.Editor.Windows.Tables
             }
 
             m_MultiColumnListView.RefreshItems();
-
-            // TODO : Trigger update of each cell? or does it use version to know it needs to update
         }
 
         void AppendColumnContextMenu(ContextualMenuPopulateEvent evt, Column column)

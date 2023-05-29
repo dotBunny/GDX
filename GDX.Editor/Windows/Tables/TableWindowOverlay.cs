@@ -35,6 +35,7 @@ namespace GDX.Editor.Windows.Tables
 
         readonly VisualElement m_AddColumnOverlay;
         readonly PopupField<int> m_AddColumnType;
+        readonly TextField m_AddColumnFilter;
         readonly Button m_AddRowAddButton;
         readonly Button m_AddRowCancelButton;
         readonly TextField m_AddRowName;
@@ -87,6 +88,9 @@ namespace GDX.Editor.Windows.Tables
                 new PopupField<int>(typeValues, 0, Serializable.GetSerializableTypesLabel,
                     Serializable.GetSerializableTypesLabel) { label = "Type", name = "gdx-table-column-type" };
             m_AddColumnOverlay.Insert(columnNameIndex + 1, m_AddColumnType);
+            m_AddColumnFilter = m_AddColumnOverlay.Q<TextField>("gdx-table-column-filter");
+            m_AddColumnFilter.AddToClassList("hidden");
+
             m_AddColumnAddButton = m_AddColumnOverlay.Q<Button>("gdx-table-column-add");
             m_AddColumnAddButton.clicked += SubmitAddColumn;
             m_AddColumnCancelButton = m_AddColumnOverlay.Q<Button>("gdx-table-column-cancel");

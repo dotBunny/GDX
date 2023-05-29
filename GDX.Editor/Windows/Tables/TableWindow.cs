@@ -7,17 +7,18 @@ using UnityEngine.UIElements;
 namespace GDX.Editor.Windows.Tables
 {
 #if UNITY_2022_2_OR_NEWER
-    public class TableWindow : EditorWindow
+    public class TableWindow : EditorWindow, TableCache.IColumnDefinitionChangeCallbackReceiver, TableCache.ICellValueChangedCallbackReceiver, TableCache.IRowDefinitionChangeCallbackReceiver
     {
+        int m_TableTicket;
         TableWindowController m_Controller;
         TableWindowOverlay m_Overlay;
-        ScriptableObject m_ScriptableObject;
 
         TableBase m_TargetTable;
 
 
         TableWindowToolbar m_Toolbar;
         TableWindowView m_View;
+        TableCache.ICellValueChangedCallbackReceiver m_ICellValueChangedCallbackReceiverImplementation;
 
         void OnEnable()
         {
@@ -45,10 +46,9 @@ namespace GDX.Editor.Windows.Tables
 
         void OnDestroy()
         {
-            if (m_ScriptableObject != null)
+            if (m_TargetTable != null)
             {
-                // TODO: do we need to dirty this if its not a SO
-                AssetDatabase.SaveAssetIfDirty(m_ScriptableObject);
+                AssetDatabase.SaveAssetIfDirty(m_TargetTable);
             }
 
             TableWindowProvider.UnregisterTableWindow(this);
@@ -93,11 +93,6 @@ namespace GDX.Editor.Windows.Tables
             return m_Controller;
         }
 
-        public ScriptableObject GetScriptableObject()
-        {
-            return m_ScriptableObject;
-        }
-
         public TableBase GetTable()
         {
             return m_TargetTable;
@@ -126,11 +121,8 @@ namespace GDX.Editor.Windows.Tables
         public void BindTable(TableBase table)
         {
             m_TargetTable = table;
+            m_TableTicket = TableCache.GetTicket(table);
             titleContent = new GUIContent(m_TargetTable.GetDisplayName());
-            if (m_TargetTable is ScriptableObject targetTable)
-            {
-                m_ScriptableObject = targetTable;
-            }
 
             int columnCount = table.GetColumnCount();
             if (columnCount == 0)
@@ -145,6 +137,28 @@ namespace GDX.Editor.Windows.Tables
 
             // Next frame resize things
             EditorApplication.delayCall += m_Controller.AutoResizeColumns;
+
+            TableCache.RegisterColumnChanged(this, m_TableTicket);
+            TableCache.RegisterRowChanged(this, m_TableTicket);
+            TableCache.RegisterCellValueChanged(this, m_TableTicket);
+        }
+
+        /// <inheritdoc />
+        public void OnColumnDefinitionChange()
+        {
+            BindTable(m_TargetTable);
+        }
+
+        /// <inheritdoc />
+        public void OnCellValueChanged(int rowInternalIndex, int columnInternalIndex)
+        {
+            m_View.RefreshItems();
+        }
+
+        /// <inheritdoc />
+        public void OnRowDefinitionChange()
+        {
+            m_View.RebuildRowData();
         }
     }
 #endif

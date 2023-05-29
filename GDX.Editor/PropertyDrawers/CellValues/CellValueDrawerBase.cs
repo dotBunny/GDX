@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
-using GDX.Editor.Windows.Tables;
 using GDX.Tables;
 using UnityEditor;
 using UnityEngine;
@@ -12,7 +11,7 @@ using UnityEngine.UIElements;
 namespace GDX.Editor.PropertyDrawers.CellValues
 {
 #if UNITY_2022_2_OR_NEWER
-    public abstract class CellValueDrawerBase : PropertyDrawer
+    public abstract class CellValueDrawerBase : PropertyDrawer, TableCache.ICellValueChangedCallbackReceiver
     {
         const string k_MessageClickToUnlock = "Click to unlock for editting.";
         const string k_MessageClickToLock = "Click to lock data.";
@@ -49,6 +48,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         AssetDatabaseReference[] m_Tables;
         VisualElement m_ValueContainer;
+        TableCache.ICellValueChangedCallbackReceiver m_ICellValueChangedCallbackReceiverImplementation;
 
 
         protected abstract Serializable.SerializableTypes GetSupportedType();
@@ -56,6 +56,10 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         protected abstract VisualElement GetCellElement();
         protected abstract ulong GetDataVersion();
 
+        ~CellValueDrawerBase()
+        {
+            UnregisterForCallback();
+        }
 
         /// <summary>
         ///     Overrides the method to make a UIElements based GUI for the property.
@@ -213,12 +217,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         protected void NotifyOfChange()
         {
-            // TODO: Needs to target just a cell?
-            TableWindow window = TableWindowProvider.GetTableWindow(m_Table);
-            if (window != null)
-            {
-                window.GetView().RefreshItems();
-            }
+            TableCache.NotifyOfCellValueChange(m_Table, m_RowInternalIndex, m_ColumnInternalIndex);
         }
 
         string FormatTableSelectionItem(int arg)
@@ -376,6 +375,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
 
                 VisualElement cellElement = GetCellElement();
+                RegisterForCallback();
+
                 cellElement.AddToClassList("gdx-cell-field-inspector");
                 Button lockButton = new Button(OnLockButtonClicked) { name = "gdx-cell-value-lock" };
                 if (!m_IsUnlocked)
@@ -413,6 +414,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             {
                 return;
             }
+
+            UnregisterForCallback();
 
             // Remove existing value content because it will need to change based on the perspective mode
             int childCount = m_ValueContainer.childCount;
@@ -458,6 +461,36 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             SelectRow,
             SelectColumn,
             DisplayValue
+        }
+
+        bool m_HasRegisteredForCallbacks = false;
+
+        void RegisterForCallback()
+        {
+            if (m_Table == null)
+            {
+                return;
+            }
+
+            TableCache.RegisterCellValueChanged(this, m_Table);
+            m_HasRegisteredForCallbacks = true;
+        }
+
+        void UnregisterForCallback()
+        {
+            if (m_HasRegisteredForCallbacks)
+            {
+                TableCache.UnregisterCellValueChanged(this, m_Table);
+            }
+        }
+
+        /// <inheritdoc />
+        public void OnCellValueChanged(int rowInternalIndex, int columnInternalIndex)
+        {
+            if (m_RowInternalIndex == rowInternalIndex && m_ColumnInternalIndex == columnInternalIndex)
+            {
+                SetDisplayMode(DisplayMode.DisplayValue);
+            }
         }
     }
 #endif

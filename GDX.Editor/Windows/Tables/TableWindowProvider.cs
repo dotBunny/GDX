@@ -50,8 +50,7 @@ namespace GDX.Editor.Windows.Tables
             // Update windows / inspectors
             foreach (KeyValuePair<TableBase, TableWindow> kvp in k_TableWindowMap)
             {
-                kvp.Value.BindTable(kvp.Key);
-                TableInspectorBase.RedrawInspector(kvp.Key);
+                TableCache.NotifyOfColumnChange(kvp.Key);
             }
         }
 
