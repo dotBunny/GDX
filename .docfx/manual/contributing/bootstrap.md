@@ -11,7 +11,6 @@ Once cloned, on a Windows machine, all you need to do is run **script-setup.bat*
 #### [script-setup.bat](https://github.com/dotBunny/GDX.Bootstrap/blob/main/script-setup.bat)
 
 This will download GDX into each of the development projects and symlink the .editorconfig into the right spot for your IDE to pick it up when generating a project from Unity.
-script-docs
 
 #### [script-docs.bat](https://github.com/dotBunny/GDX.Bootstrap/blob/main/script-docs.bat)
 

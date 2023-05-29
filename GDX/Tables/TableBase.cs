@@ -8,7 +8,7 @@ namespace GDX.Tables
 {
     public abstract class TableBase : ScriptableObject
     {
-        public enum Flags : int
+        public enum Flags
         {
             EnableUndo = 0
         }

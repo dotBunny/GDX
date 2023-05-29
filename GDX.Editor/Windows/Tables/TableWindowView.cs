@@ -349,13 +349,13 @@ namespace GDX.Editor.Windows.Tables
 
         void UnbindRowHeader(VisualElement cell, int row)
         {
-            Label label = (Label)cell;
-
-            if (row == -1 || row >= k_RowDescriptions.Count)
+            if (row >= k_RowDescriptions.Count)
             {
-                Debug.LogWarning($"Bad Data? {row} vs a count of {k_RowDescriptions.Count}");
+                // Unbinding last row, this happens as the row updates after the actual data is removed.
                 return;
             }
+
+            Label label = (Label)cell;
 
             TableBase.RowDescription description = k_RowDescriptions[row];
             if (m_RowContextMenus.TryGetValue(description.InternalIndex, out ContextualMenuManipulator manipulator))

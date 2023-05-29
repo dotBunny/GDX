@@ -38,6 +38,10 @@ resharper_simplify_string_interpolation_highlighting=none
 # Depending on where GDX is added it can throw namespace issues
 resharper_check_namespace_highlighting=none
 
+# For loops preferred
+resharper_for_can_be_converted_to_foreach_highlighting=none
+
+
 # Visual Studio Solution files (why!! TAB why!!)
 [*.sln]
 indent_style = tab

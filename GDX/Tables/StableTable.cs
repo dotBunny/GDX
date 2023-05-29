@@ -5,172 +5,164 @@
 using System;
 using GDX.Collections;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace GDX.Tables
 {
-
     [CreateAssetMenu(menuName = "GDX/Stable Table", fileName = "GDXStableTable")]
     [Serializable]
     public class StableTable : TableBase
     {
-        [Serializable]
-        internal struct ColumnEntry
-        {
-            public Serializable.SerializableTypes ColumnType;
-            public int columnDenseIndex;
-        }
+        internal static string UnityObjectString = typeof(Object).AssemblyQualifiedName;
 
-        [SerializeField] internal string m_DisplayName = "GDXStableTable";
+        [SerializeField] internal string DisplayName = "GDXStableTable";
 
-        [SerializeField] internal ArrayHolder<string>[] allStringColumns;
-        [SerializeField] internal ArrayHolder<bool>[] allBoolColumns;
-        [SerializeField] internal ArrayHolder<char>[] allCharColumns;
-        [SerializeField] internal ArrayHolder<sbyte>[] allSbyteColumns;
-        [SerializeField] internal ArrayHolder<byte>[] allByteColumns;
-        [SerializeField] internal ArrayHolder<short>[] allShortColumns;
-        [SerializeField] internal ArrayHolder<ushort>[] allUshortColumns;
-        [SerializeField] internal ArrayHolder<int>[] allIntColumns;
-        [SerializeField] internal ArrayHolder<uint>[] allUintColumns;
-        [SerializeField] internal ArrayHolder<long>[] allLongColumns;
-        [SerializeField] internal ArrayHolder<ulong>[] allUlongColumns;
-        [SerializeField] internal ArrayHolder<float>[] allFloatColumns;
-        [SerializeField] internal ArrayHolder<double>[] allDoubleColumns;
-        [SerializeField] internal ArrayHolder<Vector2>[] allVector2Columns;
-        [SerializeField] internal ArrayHolder<Vector3>[] allVector3Columns;
-        [SerializeField] internal ArrayHolder<Vector4>[] allVector4Columns;
-        [SerializeField] internal ArrayHolder<Vector2Int>[] allVector2IntColumns;
-        [SerializeField] internal ArrayHolder<Vector3Int>[] allVector3IntColumns;
-        [SerializeField] internal ArrayHolder<Quaternion>[] allQuaternionColumns;
-        [SerializeField] internal ArrayHolder<Rect>[] allRectColumns;
-        [SerializeField] internal ArrayHolder<RectInt>[] allRectIntColumns;
-        [SerializeField] internal ArrayHolder<Color>[] allColorColumns;
-        [SerializeField] internal ArrayHolder<LayerMask>[] allLayerMaskColumns;
-        [SerializeField] internal ArrayHolder<Bounds>[] allBoundsColumns;
-        [SerializeField] internal ArrayHolder<BoundsInt>[] allBoundsIntColumns;
-        [SerializeField] internal ArrayHolder<Hash128>[] allHash128Columns;
-        [SerializeField] internal ArrayHolder<Gradient>[] allGradientColumns;
-        [SerializeField] internal ArrayHolder<AnimationCurve>[] allAnimationCurveColumns;
-        [SerializeField] internal ArrayHolder<UnityEngine.Object>[] allObjectRefColumns;
-        [SerializeField] internal string[] allObjectRefTypenames;
-        [SerializeField] internal ArrayHolder<string>[] allColumnNames = new ArrayHolder<string>[Serializable.SerializableTypesCount]; // Contains the name of each column of each type. Ordered by Serializable.SerializableTypes
-
-        [SerializeField] internal int[] rowIDToDenseIndexMap;
-        [SerializeField] internal int[] rowDenseIndexToIDMap;
-        [SerializeField] internal string[] rowNames;
-        [SerializeField] internal int rowEntriesFreeListHead;
+        [SerializeField] internal ArrayHolder<string>[] AllStringColumns;
+        [SerializeField] internal ArrayHolder<bool>[] AllBoolColumns;
+        [SerializeField] internal ArrayHolder<char>[] AllCharColumns;
+        [SerializeField] internal ArrayHolder<sbyte>[] AllSbyteColumns;
+        [SerializeField] internal ArrayHolder<byte>[] AllByteColumns;
+        [SerializeField] internal ArrayHolder<short>[] AllShortColumns;
+        [SerializeField] internal ArrayHolder<ushort>[] AllUshortColumns;
+        [SerializeField] internal ArrayHolder<int>[] AllIntColumns;
+        [SerializeField] internal ArrayHolder<uint>[] AllUintColumns;
+        [SerializeField] internal ArrayHolder<long>[] AllLongColumns;
+        [SerializeField] internal ArrayHolder<ulong>[] AllUlongColumns;
+        [SerializeField] internal ArrayHolder<float>[] AllFloatColumns;
+        [SerializeField] internal ArrayHolder<double>[] AllDoubleColumns;
+        [SerializeField] internal ArrayHolder<Vector2>[] AllVector2Columns;
+        [SerializeField] internal ArrayHolder<Vector3>[] AllVector3Columns;
+        [SerializeField] internal ArrayHolder<Vector4>[] AllVector4Columns;
+        [SerializeField] internal ArrayHolder<Vector2Int>[] AllVector2IntColumns;
+        [SerializeField] internal ArrayHolder<Vector3Int>[] AllVector3IntColumns;
+        [SerializeField] internal ArrayHolder<Quaternion>[] AllQuaternionColumns;
+        [SerializeField] internal ArrayHolder<Rect>[] AllRectColumns;
+        [SerializeField] internal ArrayHolder<RectInt>[] AllRectIntColumns;
+        [SerializeField] internal ArrayHolder<Color>[] AllColorColumns;
+        [SerializeField] internal ArrayHolder<LayerMask>[] AllLayerMaskColumns;
+        [SerializeField] internal ArrayHolder<Bounds>[] AllBoundsColumns;
+        [SerializeField] internal ArrayHolder<BoundsInt>[] AllBoundsIntColumns;
+        [SerializeField] internal ArrayHolder<Hash128>[] AllHash128Columns;
+        [SerializeField] internal ArrayHolder<Gradient>[] AllGradientColumns;
+        [SerializeField] internal ArrayHolder<AnimationCurve>[] AllAnimationCurveColumns;
+        [SerializeField] internal ArrayHolder<Object>[] AllObjectRefColumns;
+        [SerializeField] internal string[] AllObjectRefTypeNames;
 
         [SerializeField]
-        internal int rowCount;
+        internal ArrayHolder<string>[]
+            AllColumnNames =
+                new ArrayHolder<string>[Serializable
+                    .SerializableTypesCount]; // Contains the name of each column of each type. Ordered by Serializable.SerializableTypes
 
-        [SerializeField] internal ColumnEntry[] columnIDToDenseIndexMap;
-        [SerializeField] internal int[] columnIDToSortOrderMap;
-        [SerializeField] internal int[] sortedOrderToColumnIDMap;
+        [SerializeField] internal int[] RowIDToDenseIndexMap;
+        [SerializeField] internal int[] RowDenseIndexToIDMap;
+        [SerializeField] internal string[] RowNames;
+        [SerializeField] internal int RowEntriesFreeListHead;
+
+        [SerializeField] internal int RowCount;
+
+        [SerializeField] internal ColumnEntry[] ColumnIDToDenseIndexMap;
+        [SerializeField] internal int[] ColumnIDToSortOrderMap;
+        [SerializeField] internal int[] SortedOrderToColumnIDMap;
 
         // TODO move with other block
-        [SerializeField] ArrayHolder<int>[] columnDenseIndexToIDMap = new ArrayHolder<int>[Serializable.SerializableTypesCount];
-
         [SerializeField]
-        internal int columnEntriesFreeListHead;
+        ArrayHolder<int>[] ColumnDenseIndexToIDMap = new ArrayHolder<int>[Serializable.SerializableTypesCount];
 
-        [SerializeField]
-        internal int combinedColumnCount;
+        [SerializeField] internal int ColumnEntriesFreeListHead;
 
-        [SerializeField]
-        internal ulong dataVersion = 1;
+        [SerializeField] internal int CombinedColumnCount;
 
-        [SerializeField] BitArray8 m_Flags;
+        [SerializeField] internal ulong DataVersion = 1;
 
-        internal static string s_UnityObjectString = typeof(UnityEngine.Object).AssemblyQualifiedName;
+        [SerializeField] BitArray8 SettingsFlags;
 
         public override ulong GetDataVersion()
         {
-            return dataVersion;
+            return DataVersion;
         }
 
         /// <inheritdoc />
         public override int GetColumnCount()
         {
-            return combinedColumnCount;
+            return CombinedColumnCount;
         }
 
         /// <inheritdoc />
         public override int GetRowCount()
         {
-            return rowCount;
+            return RowCount;
         }
 
         public override string GetDisplayName()
         {
-            return m_DisplayName;
+            return DisplayName;
         }
 
         public override void SetDisplayName(string displayName)
         {
-            m_DisplayName = displayName;
+            DisplayName = displayName;
         }
 
-        public override bool GetFlag(TableBase.Flags flag)
+        public override bool GetFlag(Flags flag)
         {
-            return m_Flags[(byte)flag];
+            return SettingsFlags[(byte)flag];
         }
 
-        public override void SetFlag(TableBase.Flags flag, bool toggle)
+        public override void SetFlag(Flags flag, bool toggle)
         {
-            m_Flags[(byte)flag] = toggle;
+            SettingsFlags[(byte)flag] = toggle;
         }
 
-        public override TableBase.RowDescription[] GetAllRowDescriptions()
+        public override RowDescription[] GetAllRowDescriptions()
         {
-            if (combinedColumnCount == 0 || rowCount == 0) return null;
-            TableBase.RowDescription[] returnArray = new TableBase.RowDescription[rowCount];
-            string empty = string.Empty;
-            for (int i = 0; i < rowCount; i++)
+            if (CombinedColumnCount == 0 || RowCount == 0)
             {
-                returnArray[i].InternalIndex = rowDenseIndexToIDMap[i];
-                returnArray[i].Name = rowNames[i];
+                return null;
+            }
+
+            RowDescription[] returnArray = new RowDescription[RowCount];
+            string empty = string.Empty;
+            for (int i = 0; i < RowCount; i++)
+            {
+                returnArray[i].InternalIndex = RowDenseIndexToIDMap[i];
+                returnArray[i].Name = RowNames[i];
             }
 
             return returnArray;
         }
-        public override TableBase.RowDescription GetRowDescription(string name)
+
+        public override RowDescription GetRowDescription(string name)
         {
-            for (int i = 0; i < rowCount; i++)
+            for (int i = 0; i < RowCount; i++)
             {
-                string nameAt = rowNames[i];
+                string nameAt = RowNames[i];
 
                 if (nameAt == name)
                 {
-                    return new TableBase.RowDescription
-                    {
-                        InternalIndex = rowDenseIndexToIDMap[i],
-                        Name = nameAt,
-                    };
+                    return new RowDescription { InternalIndex = RowDenseIndexToIDMap[i], Name = nameAt };
                 }
             }
 
             throw new ArgumentException("Row with name " + name + " does not exist in the table");
         }
 
-        public override TableBase.RowDescription GetRowDescription(int order)
+        public override RowDescription GetRowDescription(int order)
         {
-            return new TableBase.RowDescription
-            {
-                InternalIndex = rowDenseIndexToIDMap[order],
-                Name = rowNames[order],
-            };
+            return new RowDescription { InternalIndex = RowDenseIndexToIDMap[order], Name = RowNames[order] };
         }
 
-        public override void SetAllRowDescriptionsOrder(TableBase.RowDescription[] orderedRows)
+        public override void SetAllRowDescriptionsOrder(RowDescription[] orderedRows)
         {
             // TODO: @adam array coming in be in the new order, just use the internalIndex (stable to reorder inside here
             throw new NotImplementedException();
         }
 
-        public override TableBase.ColumnDescription GetColumnDescription(string name)
+        public override ColumnDescription GetColumnDescription(string name)
         {
             for (int i = 0; i < Serializable.SerializableTypesCount; i++)
             {
-                string[] columnNames = allColumnNames[i].TArray;
+                string[] columnNames = AllColumnNames[i].TArray;
 
                 if (columnNames != null)
                 {
@@ -180,14 +172,12 @@ namespace GDX.Tables
 
                         if (name == nameAt)
                         {
-                            int columnID = columnDenseIndexToIDMap[i].TArray[j];
+                            int columnID = ColumnDenseIndexToIDMap[i].TArray[j];
 
-                            ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[columnID];
-                            return new TableBase.ColumnDescription
+                            ref ColumnEntry columnEntry = ref ColumnIDToDenseIndexMap[columnID];
+                            return new ColumnDescription
                             {
-                                InternalIndex = columnID,
-                                Name = nameAt,
-                                Type = columnEntry.ColumnType,
+                                InternalIndex = columnID, Name = nameAt, Type = columnEntry.ColumnType
                             };
                         }
                     }
@@ -197,47 +187,47 @@ namespace GDX.Tables
             throw new ArgumentException("Column with name " + name + " does not exist in the table");
         }
 
-        public override TableBase.ColumnDescription GetColumnDescription(int order)
+        public override ColumnDescription GetColumnDescription(int order)
         {
-            int idAtOrderedIndex = sortedOrderToColumnIDMap[order];
-            ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[idAtOrderedIndex];
+            int idAtOrderedIndex = SortedOrderToColumnIDMap[order];
+            ref ColumnEntry columnEntry = ref ColumnIDToDenseIndexMap[idAtOrderedIndex];
 
-            string columnName = allColumnNames[(int)columnEntry.ColumnType][columnEntry.columnDenseIndex];
+            string columnName = AllColumnNames[(int)columnEntry.ColumnType][columnEntry.ColumnDenseIndex];
 
-            return new TableBase.ColumnDescription
+            return new ColumnDescription
             {
-                InternalIndex = idAtOrderedIndex,
-                Name = columnName,
-                Type = columnEntry.ColumnType,
+                InternalIndex = idAtOrderedIndex, Name = columnName, Type = columnEntry.ColumnType
             };
         }
 
-        public override void SetAllColumnDescriptionsOrder(TableBase.ColumnDescription[] orderedColumns)
+        public override void SetAllColumnDescriptionsOrder(ColumnDescription[] orderedColumns)
         {
             // TODO: @adam array coming in be in the new order, just use the internalIndex (stable to reorder inside here
             throw new NotImplementedException();
         }
 
         /// <inheritdoc />
-        public override TableBase.ColumnDescription[] GetAllColumnDescriptions()
+        public override ColumnDescription[] GetAllColumnDescriptions()
         {
-            if (combinedColumnCount == 0) return null;
-            TableBase.ColumnDescription[] returnArray = new TableBase.ColumnDescription[combinedColumnCount];
-
-            for (int i = 0; i < combinedColumnCount; i++)
+            if (CombinedColumnCount == 0)
             {
-                int columnID = sortedOrderToColumnIDMap[i];
+                return null;
+            }
+
+            ColumnDescription[] returnArray = new ColumnDescription[CombinedColumnCount];
+
+            for (int i = 0; i < CombinedColumnCount; i++)
+            {
+                int columnID = SortedOrderToColumnIDMap[i];
                 AssertColumnIDValid(columnID);
-                ref ColumnEntry entryForID = ref columnIDToDenseIndexMap[columnID];
-                ref ArrayHolder<string> nameColumnsForType = ref allColumnNames[(int)entryForID.ColumnType];
+                ref ColumnEntry entryForID = ref ColumnIDToDenseIndexMap[columnID];
+                ref ArrayHolder<string> nameColumnsForType = ref AllColumnNames[(int)entryForID.ColumnType];
 
-                string name = nameColumnsForType[entryForID.columnDenseIndex];
+                string name = nameColumnsForType[entryForID.ColumnDenseIndex];
 
-                returnArray[i] = new TableBase.ColumnDescription
+                returnArray[i] = new ColumnDescription
                 {
-                    Name = name,
-                    InternalIndex = columnID,
-                    Type = entryForID.ColumnType,
+                    Name = name, InternalIndex = columnID, Type = entryForID.ColumnType
                 };
             }
 
@@ -246,12 +236,12 @@ namespace GDX.Tables
 
         internal void AssertColumnIDValid(int columnID)
         {
-            if (columnID < 0 || columnID >= columnIDToDenseIndexMap.Length)
+            if (columnID < 0 || columnID >= ColumnIDToDenseIndexMap.Length)
             {
                 throw new ArgumentException("Invalid column outside valid ID range: " + columnID);
             }
 
-            ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[columnID];
+            ref ColumnEntry columnEntry = ref ColumnIDToDenseIndexMap[columnID];
 
             if (columnEntry.ColumnType == Serializable.SerializableTypes.Invalid)
             {
@@ -261,14 +251,14 @@ namespace GDX.Tables
 
         internal void AssertRowIDValid(int rowID)
         {
-            if (rowID < 0 || rowID >= rowIDToDenseIndexMap.Length)
+            if (rowID < 0 || rowID >= RowIDToDenseIndexMap.Length)
             {
                 throw new ArgumentException("Invalid row outside valid ID range: " + rowID);
             }
 
-            int rowIndex = rowIDToDenseIndexMap[rowID];
+            int rowIndex = RowIDToDenseIndexMap[rowID];
 
-            if (rowIndex >= rowCount || rowIndex < 0)
+            if (rowIndex >= RowCount || rowIndex < 0)
             {
                 throw new ArgumentException("Invalid row outside valid ID range: " + rowID);
             }
@@ -277,43 +267,43 @@ namespace GDX.Tables
         public override void SetColumnName(string columnName, int column)
         {
             AssertColumnIDValid(column);
-            ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[column];
-            allColumnNames[(int)columnEntry.ColumnType][columnEntry.columnDenseIndex] = columnName;
+            ref ColumnEntry columnEntry = ref ColumnIDToDenseIndexMap[column];
+            AllColumnNames[(int)columnEntry.ColumnType][columnEntry.ColumnDenseIndex] = columnName;
         }
 
         public override string GetColumnName(int column)
         {
             AssertColumnIDValid(column);
-            ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[column];
-            return allColumnNames[(int)columnEntry.ColumnType][columnEntry.columnDenseIndex];
+            ref ColumnEntry columnEntry = ref ColumnIDToDenseIndexMap[column];
+            return AllColumnNames[(int)columnEntry.ColumnType][columnEntry.ColumnDenseIndex];
         }
 
         public override void SetRowName(string rowName, int row)
         {
             AssertRowIDValid(row);
-            int rowDenseIndex = rowIDToDenseIndexMap[row];
-            rowNames[rowDenseIndex] = rowName;
+            int rowDenseIndex = RowIDToDenseIndexMap[row];
+            RowNames[rowDenseIndex] = rowName;
         }
 
         public override string GetRowName(int row)
         {
             AssertRowIDValid(row);
-            int rowDenseIndex = rowIDToDenseIndexMap[row];
-            return rowNames[rowDenseIndex];
+            int rowDenseIndex = RowIDToDenseIndexMap[row];
+            return RowNames[rowDenseIndex];
         }
 
         public ref string GetRowNameRef(int row)
         {
             AssertRowIDValid(row);
-            int rowDenseIndex = rowIDToDenseIndexMap[row];
-            return ref rowNames[rowDenseIndex];
+            int rowDenseIndex = RowIDToDenseIndexMap[row];
+            return ref RowNames[rowDenseIndex];
         }
 
         public ref string GetColumnNameRef(int columnID)
         {
             AssertColumnIDValid(columnID);
-            ref ColumnEntry columnEntry = ref columnIDToDenseIndexMap[columnID];
-            return ref allColumnNames[(int)columnEntry.ColumnType][columnEntry.columnDenseIndex];
+            ref ColumnEntry columnEntry = ref ColumnIDToDenseIndexMap[columnID];
+            return ref AllColumnNames[(int)columnEntry.ColumnType][columnEntry.ColumnDenseIndex];
         }
 
 
@@ -323,72 +313,73 @@ namespace GDX.Tables
             {
                 AssertRowIDValid(insertAtRowID);
             }
-            int rowID = rowEntriesFreeListHead;
-            int rowIDToDenseIndexMapLength = rowIDToDenseIndexMap?.Length ?? 0;
+
+            int rowID = RowEntriesFreeListHead;
+            int rowIDToDenseIndexMapLength = RowIDToDenseIndexMap?.Length ?? 0;
             if (rowID >= rowIDToDenseIndexMapLength)
             {
                 int newSize = rowID * 2;
                 newSize = newSize == 0 ? 1 : newSize;
-                Array.Resize(ref rowIDToDenseIndexMap, newSize);
+                Array.Resize(ref RowIDToDenseIndexMap, newSize);
                 for (int i = rowID; i < newSize; i++)
                 {
-                    rowIDToDenseIndexMap[i] = i + 1;
+                    RowIDToDenseIndexMap[i] = i + 1;
                 }
             }
 
-            int denseIndexToIDMapLength = rowDenseIndexToIDMap?.Length ?? 0;
-            Array.Resize(ref rowDenseIndexToIDMap, denseIndexToIDMapLength + 1);
-            Array.Resize(ref rowNames, denseIndexToIDMapLength + 1);
+            int denseIndexToIDMapLength = RowDenseIndexToIDMap?.Length ?? 0;
+            Array.Resize(ref RowDenseIndexToIDMap, denseIndexToIDMapLength + 1);
+            Array.Resize(ref RowNames, denseIndexToIDMapLength + 1);
 
-            int insertAt = insertAtRowID < 0 ? rowCount : rowIDToDenseIndexMap[insertAtRowID];
+            int insertAt = insertAtRowID < 0 ? RowCount : RowIDToDenseIndexMap[insertAtRowID];
 
             for (int i = denseIndexToIDMapLength; i > insertAt; i--)
             {
-                int currentRowID = rowDenseIndexToIDMap[i - 1];
-                rowDenseIndexToIDMap[i] = currentRowID;
+                int currentRowID = RowDenseIndexToIDMap[i - 1];
+                RowDenseIndexToIDMap[i] = currentRowID;
 
-                rowIDToDenseIndexMap[currentRowID] = i;
+                RowIDToDenseIndexMap[currentRowID] = i;
 
-                rowNames[i] = rowNames[i - 1];
+                RowNames[i] = RowNames[i - 1];
             }
 
-            rowEntriesFreeListHead = rowIDToDenseIndexMap[rowID];
-            rowIDToDenseIndexMap[rowID] = insertAt;
-            rowDenseIndexToIDMap[insertAt] = rowID;
-            rowNames[insertAt] = rowName == null ? rowID.ToString() : rowName;
+            RowEntriesFreeListHead = RowIDToDenseIndexMap[rowID];
+            RowIDToDenseIndexMap[rowID] = insertAt;
+            RowDenseIndexToIDMap[insertAt] = rowID;
+            RowNames[insertAt] = rowName == null ? rowID.ToString() : rowName;
 
-            InsertRowsOfTypeInternal(ref allStringColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allBoolColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allCharColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allSbyteColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allByteColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allShortColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allUshortColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allIntColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allUintColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allLongColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allUlongColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allFloatColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allDoubleColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allVector2Columns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allVector3Columns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allVector4Columns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allVector2IntColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allVector3IntColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allQuaternionColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allRectColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allRectIntColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allColorColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allLayerMaskColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allBoundsColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allBoundsIntColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allHash128Columns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allGradientColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allAnimationCurveColumns, insertAt, 1);
-            InsertRowsOfTypeInternal(ref allObjectRefColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllStringColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllBoolColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllCharColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllSbyteColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllByteColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllShortColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllUshortColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllIntColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllUintColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllLongColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllUlongColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllFloatColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllDoubleColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllVector2Columns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllVector3Columns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllVector4Columns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllVector2IntColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllVector3IntColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllQuaternionColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllRectColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllRectIntColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllColorColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllLayerMaskColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllBoundsColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllBoundsIntColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllHash128Columns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllGradientColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllAnimationCurveColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref AllObjectRefColumns, insertAt, 1);
 
-            ++rowCount;
-            dataVersion++;
+            ++RowCount;
+            DataVersion++;
 
             return rowID;
         }
@@ -399,8 +390,9 @@ namespace GDX.Tables
             {
                 AssertRowIDValid(insertAtRowID);
             }
-            int rowIDToDenseIndexMapLength = rowIDToDenseIndexMap?.Length ?? 0;
-            int newCount = rowCount + numberOfNewRows;
+
+            int rowIDToDenseIndexMapLength = RowIDToDenseIndexMap?.Length ?? 0;
+            int newCount = RowCount + numberOfNewRows;
             if (newCount > rowIDToDenseIndexMapLength)
             {
                 int newSize = newCount;
@@ -413,37 +405,37 @@ namespace GDX.Tables
                 ++newSize;
 
                 newSize = newSize == 0 ? 1 : newSize;
-                Array.Resize(ref rowIDToDenseIndexMap, newSize);
+                Array.Resize(ref RowIDToDenseIndexMap, newSize);
                 for (int i = rowIDToDenseIndexMapLength; i < newSize; i++)
                 {
-                    rowIDToDenseIndexMap[i] = i + 1;
+                    RowIDToDenseIndexMap[i] = i + 1;
                 }
             }
 
-            int denseIndexToIDMapLength = rowDenseIndexToIDMap?.Length ?? 0;
-            Array.Resize(ref rowDenseIndexToIDMap, denseIndexToIDMapLength + numberOfNewRows);
+            int denseIndexToIDMapLength = RowDenseIndexToIDMap?.Length ?? 0;
+            Array.Resize(ref RowDenseIndexToIDMap, denseIndexToIDMapLength + numberOfNewRows);
             Array.Resize(ref rowNames, denseIndexToIDMapLength + numberOfNewRows);
 
-            int insertAt = insertAtRowID < 0 ? rowCount : rowIDToDenseIndexMap[insertAtRowID];
+            int insertAt = insertAtRowID < 0 ? RowCount : RowIDToDenseIndexMap[insertAtRowID];
 
             for (int i = denseIndexToIDMapLength; i > insertAt + numberOfNewRows - 1; i--)
             {
-                int currentRowID = rowDenseIndexToIDMap[i - numberOfNewRows];
-                rowDenseIndexToIDMap[i] = currentRowID;
+                int currentRowID = RowDenseIndexToIDMap[i - numberOfNewRows];
+                RowDenseIndexToIDMap[i] = currentRowID;
 
-                rowIDToDenseIndexMap[currentRowID] = i;
+                RowIDToDenseIndexMap[currentRowID] = i;
 
                 rowNames[i] = rowNames[i - numberOfNewRows];
             }
 
-            int freeListHead = rowEntriesFreeListHead;
+            int freeListHead = RowEntriesFreeListHead;
 
             for (int i = 0; i < numberOfNewRows; i++)
             {
                 int rowID = freeListHead;
-                freeListHead = rowIDToDenseIndexMap[rowID];
-                rowIDToDenseIndexMap[rowID] = insertAt + i;
-                rowDenseIndexToIDMap[insertAt + i] = rowID;
+                freeListHead = RowIDToDenseIndexMap[rowID];
+                RowIDToDenseIndexMap[rowID] = insertAt + i;
+                RowDenseIndexToIDMap[insertAt + i] = rowID;
             }
 
             int numberOfNewRowNames = rowNames?.Length ?? 0;
@@ -451,50 +443,50 @@ namespace GDX.Tables
             for (int i = 0; i < numberOfNewRowNames; i++)
             {
                 string currentRowName = rowNames[i];
-                int rowIDAt = rowDenseIndexToIDMap[insertAt + i];
+                int rowIDAt = RowDenseIndexToIDMap[insertAt + i];
                 rowNames[insertAt + i] = currentRowName == null ? rowIDAt.ToString() : currentRowName;
             }
 
             for (int i = numberOfNewRowNames; i < numberOfNewRows; i++)
             {
-                int rowIDAt = rowDenseIndexToIDMap[insertAt + i];
+                int rowIDAt = RowDenseIndexToIDMap[insertAt + i];
                 rowNames[insertAt + i] = rowIDAt.ToString();
             }
 
-            rowEntriesFreeListHead = freeListHead;
+            RowEntriesFreeListHead = freeListHead;
 
-            InsertRowsOfTypeInternal(ref allStringColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allBoolColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allCharColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allSbyteColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allByteColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allShortColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allUshortColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allIntColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allUintColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allLongColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allUlongColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allFloatColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allDoubleColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allVector2Columns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allVector3Columns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allVector4Columns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allVector2IntColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allVector3IntColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allQuaternionColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allRectColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allRectIntColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allColorColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allLayerMaskColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allBoundsColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allBoundsIntColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allHash128Columns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allGradientColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allAnimationCurveColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allObjectRefColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllStringColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllBoolColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllCharColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllSbyteColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllByteColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllShortColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllUshortColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllIntColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllUintColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllLongColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllUlongColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllFloatColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllDoubleColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllVector2Columns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllVector3Columns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllVector4Columns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllVector2IntColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllVector3IntColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllQuaternionColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllRectColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllRectIntColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllColorColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllLayerMaskColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllBoundsColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllBoundsIntColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllHash128Columns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllGradientColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllAnimationCurveColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllObjectRefColumns, insertAt, numberOfNewRows);
 
-            rowCount += numberOfNewRows;
-            dataVersion++;
+            RowCount += numberOfNewRows;
+            DataVersion++;
         }
 
         public void AddRows(int numberOfNewRows, ref int[] rowIDs, string[] rowNames = null, int insertAtRowID = -1)
@@ -503,8 +495,9 @@ namespace GDX.Tables
             {
                 AssertRowIDValid(insertAtRowID);
             }
-            int rowIDToDenseIndexMapLength = rowIDToDenseIndexMap?.Length ?? 0;
-            int newCount = rowCount + numberOfNewRows;
+
+            int rowIDToDenseIndexMapLength = RowIDToDenseIndexMap?.Length ?? 0;
+            int newCount = RowCount + numberOfNewRows;
             if (newCount > rowIDToDenseIndexMapLength)
             {
                 int newSize = newCount;
@@ -517,36 +510,36 @@ namespace GDX.Tables
                 ++newSize;
 
                 newSize = newSize == 0 ? 1 : newSize;
-                Array.Resize(ref rowIDToDenseIndexMap, newSize);
+                Array.Resize(ref RowIDToDenseIndexMap, newSize);
                 for (int i = rowIDToDenseIndexMapLength; i < newSize; i++)
                 {
-                    rowIDToDenseIndexMap[i] = i + 1;
+                    RowIDToDenseIndexMap[i] = i + 1;
                 }
             }
 
-            int denseIndexToIDMapLength = rowDenseIndexToIDMap?.Length ?? 0;
-            Array.Resize(ref rowDenseIndexToIDMap, denseIndexToIDMapLength + numberOfNewRows);
+            int denseIndexToIDMapLength = RowDenseIndexToIDMap?.Length ?? 0;
+            Array.Resize(ref RowDenseIndexToIDMap, denseIndexToIDMapLength + numberOfNewRows);
 
-            int insertAt = insertAtRowID < 0 ? rowCount : rowIDToDenseIndexMap[insertAtRowID];
+            int insertAt = insertAtRowID < 0 ? RowCount : RowIDToDenseIndexMap[insertAtRowID];
 
             for (int i = denseIndexToIDMapLength; i > insertAt + numberOfNewRows - 1; i--)
             {
-                int currentRowID = rowDenseIndexToIDMap[i - numberOfNewRows];
-                rowDenseIndexToIDMap[i] = currentRowID;
+                int currentRowID = RowDenseIndexToIDMap[i - numberOfNewRows];
+                RowDenseIndexToIDMap[i] = currentRowID;
 
-                rowIDToDenseIndexMap[currentRowID] = i;
+                RowIDToDenseIndexMap[currentRowID] = i;
 
                 rowNames[i] = rowNames[i - numberOfNewRows];
             }
 
-            int freeListHead = rowEntriesFreeListHead;
+            int freeListHead = RowEntriesFreeListHead;
 
             for (int i = 0; i < numberOfNewRows; i++)
             {
                 int rowID = freeListHead;
-                freeListHead = rowIDToDenseIndexMap[rowID];
-                rowIDToDenseIndexMap[rowID] = insertAt + i;
-                rowDenseIndexToIDMap[insertAt + i] = rowID;
+                freeListHead = RowIDToDenseIndexMap[rowID];
+                RowIDToDenseIndexMap[rowID] = insertAt + i;
+                RowDenseIndexToIDMap[insertAt + i] = rowID;
                 rowIDs[i] = rowID;
             }
 
@@ -554,166 +547,197 @@ namespace GDX.Tables
             for (int i = 0; i < numberOfNewRowNames; i++)
             {
                 string currentRowName = rowNames[i];
-                int rowIDAt = rowDenseIndexToIDMap[insertAt + i];
+                int rowIDAt = RowDenseIndexToIDMap[insertAt + i];
                 rowNames[insertAt + i] = currentRowName == null ? rowIDAt.ToString() : currentRowName;
             }
 
             for (int i = numberOfNewRowNames; i < numberOfNewRows; i++)
             {
-                int rowIDAt = rowDenseIndexToIDMap[insertAt + i];
+                int rowIDAt = RowDenseIndexToIDMap[insertAt + i];
                 rowNames[insertAt + i] = rowIDAt.ToString();
             }
 
-            rowEntriesFreeListHead = freeListHead;
+            RowEntriesFreeListHead = freeListHead;
 
-            InsertRowsOfTypeInternal(ref allStringColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allBoolColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allCharColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allSbyteColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allByteColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allShortColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allUshortColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allIntColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allUintColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allLongColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allUlongColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allFloatColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allDoubleColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allVector2Columns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allVector3Columns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allVector4Columns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allVector2IntColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allVector3IntColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allQuaternionColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allRectColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allRectIntColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allColorColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allLayerMaskColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allBoundsColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allBoundsIntColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allHash128Columns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allGradientColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allAnimationCurveColumns, insertAt, numberOfNewRows);
-            InsertRowsOfTypeInternal(ref allObjectRefColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllStringColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllBoolColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllCharColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllSbyteColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllByteColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllShortColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllUshortColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllIntColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllUintColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllLongColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllUlongColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllFloatColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllDoubleColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllVector2Columns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllVector3Columns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllVector4Columns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllVector2IntColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllVector3IntColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllQuaternionColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllRectColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllRectIntColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllColorColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllLayerMaskColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllBoundsColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllBoundsIntColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllHash128Columns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllGradientColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllAnimationCurveColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref AllObjectRefColumns, insertAt, numberOfNewRows);
 
-            rowCount += numberOfNewRows;
-            dataVersion++;
+            RowCount += numberOfNewRows;
+            DataVersion++;
         }
 
         public override void RemoveRow(int rowID)
         {
             AssertRowIDValid(rowID);
-            int rowDenseIndex = rowIDToDenseIndexMap[rowID];
-            for (int i = rowDenseIndex + 1; i < rowCount; i++)
+            int rowDenseIndex = RowIDToDenseIndexMap[rowID];
+            for (int i = rowDenseIndex + 1; i < RowCount; i++)
             {
-                int currentRowID = rowDenseIndexToIDMap[i];
-                rowIDToDenseIndexMap[currentRowID] = i - 1;
-                rowDenseIndexToIDMap[i - 1] = currentRowID;
-                rowNames[i - 1] = rowNames[i];
+                int currentRowID = RowDenseIndexToIDMap[i];
+                RowIDToDenseIndexMap[currentRowID] = i - 1;
+                RowDenseIndexToIDMap[i - 1] = currentRowID;
+                RowNames[i - 1] = RowNames[i];
             }
 
-            rowIDToDenseIndexMap[rowID] = rowEntriesFreeListHead;
-            rowEntriesFreeListHead = rowID;
-            Array.Resize(ref rowDenseIndexToIDMap, rowCount - 1);
-            Array.Resize(ref rowNames, rowCount - 1);
+            RowIDToDenseIndexMap[rowID] = RowEntriesFreeListHead;
+            RowEntriesFreeListHead = rowID;
+            Array.Resize(ref RowDenseIndexToIDMap, RowCount - 1);
+            Array.Resize(ref RowNames, RowCount - 1);
 
-            DeleteRowsOfTypeInternal(ref allStringColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allBoolColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allCharColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allSbyteColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allByteColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allShortColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allUshortColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allIntColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allUintColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allLongColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allUlongColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allFloatColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allDoubleColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allVector2Columns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allVector3Columns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allVector4Columns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allVector2IntColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allVector3IntColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allQuaternionColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allRectColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allRectIntColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allColorColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allLayerMaskColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allBoundsColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allBoundsIntColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allHash128Columns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allGradientColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allAnimationCurveColumns, rowID, 1);
-            DeleteRowsOfTypeInternal(ref allObjectRefColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllStringColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllBoolColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllCharColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllSbyteColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllByteColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllShortColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllUshortColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllIntColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllUintColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllLongColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllUlongColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllFloatColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllDoubleColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllVector2Columns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllVector3Columns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllVector4Columns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllVector2IntColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllVector3IntColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllQuaternionColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllRectColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllRectIntColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllColorColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllLayerMaskColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllBoundsColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllBoundsIntColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllHash128Columns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllGradientColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllAnimationCurveColumns, rowID, 1);
+            DeleteRowsOfTypeInternal(ref AllObjectRefColumns, rowID, 1);
 
-            --rowCount;
-            dataVersion++;
+            --RowCount;
+            DataVersion++;
         }
 
-        public override int AddColumn(Serializable.SerializableTypes columnType, string columnName, int insertAtColumnID = -1)
+        public override int AddColumn(Serializable.SerializableTypes columnType, string columnName,
+            int insertAtColumnID = -1)
         {
             switch (columnType)
             {
                 case Serializable.SerializableTypes.String:
-                    return AddColumnInternal(columnName, ref allStringColumns, Serializable.SerializableTypes.String, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllStringColumns, Serializable.SerializableTypes.String,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.Char:
-                    return AddColumnInternal(columnName, ref allCharColumns, Serializable.SerializableTypes.Char, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllCharColumns, Serializable.SerializableTypes.Char,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.Bool:
-                    return AddColumnInternal(columnName, ref allBoolColumns, Serializable.SerializableTypes.Bool, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllBoolColumns, Serializable.SerializableTypes.Bool,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.SByte:
-                    return AddColumnInternal(columnName, ref allSbyteColumns, Serializable.SerializableTypes.SByte, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllSbyteColumns, Serializable.SerializableTypes.SByte,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.Byte:
-                    return AddColumnInternal(columnName, ref allByteColumns, Serializable.SerializableTypes.Byte, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllByteColumns, Serializable.SerializableTypes.Byte,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.Short:
-                    return AddColumnInternal(columnName, ref allShortColumns, Serializable.SerializableTypes.Short, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllShortColumns, Serializable.SerializableTypes.Short,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.UShort:
-                    return AddColumnInternal(columnName, ref allUshortColumns, Serializable.SerializableTypes.UShort, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllUshortColumns, Serializable.SerializableTypes.UShort,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.Int:
-                    return AddColumnInternal(columnName, ref allIntColumns, Serializable.SerializableTypes.Int, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllIntColumns, Serializable.SerializableTypes.Int,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.UInt:
-                    return AddColumnInternal(columnName, ref allUintColumns, Serializable.SerializableTypes.UInt, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllUintColumns, Serializable.SerializableTypes.UInt,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.Long:
-                    return AddColumnInternal(columnName, ref allLongColumns, Serializable.SerializableTypes.Long, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllLongColumns, Serializable.SerializableTypes.Long,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.ULong:
-                    return AddColumnInternal(columnName, ref allUlongColumns, Serializable.SerializableTypes.ULong, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllUlongColumns, Serializable.SerializableTypes.ULong,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.Float:
-                    return AddColumnInternal(columnName, ref allFloatColumns, Serializable.SerializableTypes.Float, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllFloatColumns, Serializable.SerializableTypes.Float,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.Double:
-                    return AddColumnInternal(columnName, ref allDoubleColumns, Serializable.SerializableTypes.Double, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllDoubleColumns, Serializable.SerializableTypes.Double,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.Vector2:
-                    return AddColumnInternal(columnName, ref allVector2Columns, Serializable.SerializableTypes.Vector2, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllVector2Columns, Serializable.SerializableTypes.Vector2,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.Vector3:
-                    return AddColumnInternal(columnName, ref allVector3Columns, Serializable.SerializableTypes.Vector3, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllVector3Columns, Serializable.SerializableTypes.Vector3,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.Vector4:
-                    return AddColumnInternal(columnName, ref allVector4Columns, Serializable.SerializableTypes.Vector4, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllVector4Columns, Serializable.SerializableTypes.Vector4,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.Vector2Int:
-                    return AddColumnInternal(columnName, ref allVector2IntColumns, Serializable.SerializableTypes.Vector2Int, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllVector2IntColumns,
+                        Serializable.SerializableTypes.Vector2Int, insertAtColumnID);
                 case Serializable.SerializableTypes.Vector3Int:
-                    return AddColumnInternal(columnName, ref allVector3IntColumns, Serializable.SerializableTypes.Vector3Int, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllVector3IntColumns,
+                        Serializable.SerializableTypes.Vector3Int, insertAtColumnID);
                 case Serializable.SerializableTypes.Quaternion:
-                    return AddColumnInternal(columnName, ref allQuaternionColumns, Serializable.SerializableTypes.Quaternion, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllQuaternionColumns,
+                        Serializable.SerializableTypes.Quaternion, insertAtColumnID);
                 case Serializable.SerializableTypes.Rect:
-                    return AddColumnInternal(columnName, ref allRectColumns, Serializable.SerializableTypes.Rect, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllRectColumns, Serializable.SerializableTypes.Rect,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.RectInt:
-                    return AddColumnInternal(columnName, ref allRectIntColumns, Serializable.SerializableTypes.RectInt, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllRectIntColumns, Serializable.SerializableTypes.RectInt,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.Color:
-                    return AddColumnInternal(columnName, ref allColorColumns, Serializable.SerializableTypes.Color, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllColorColumns, Serializable.SerializableTypes.Color,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.LayerMask:
-                    return AddColumnInternal(columnName, ref allLayerMaskColumns, Serializable.SerializableTypes.LayerMask, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllLayerMaskColumns,
+                        Serializable.SerializableTypes.LayerMask, insertAtColumnID);
                 case Serializable.SerializableTypes.Bounds:
-                    return AddColumnInternal(columnName, ref allBoundsColumns, Serializable.SerializableTypes.Bounds, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllBoundsColumns, Serializable.SerializableTypes.Bounds,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.BoundsInt:
-                    return AddColumnInternal(columnName, ref allBoundsIntColumns, Serializable.SerializableTypes.BoundsInt, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllBoundsIntColumns,
+                        Serializable.SerializableTypes.BoundsInt, insertAtColumnID);
                 case Serializable.SerializableTypes.Hash128:
-                    return AddColumnInternal(columnName, ref allHash128Columns, Serializable.SerializableTypes.Hash128, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllHash128Columns, Serializable.SerializableTypes.Hash128,
+                        insertAtColumnID);
                 case Serializable.SerializableTypes.Gradient:
-                    return AddColumnInternal(columnName, ref allGradientColumns, Serializable.SerializableTypes.Gradient, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllGradientColumns,
+                        Serializable.SerializableTypes.Gradient, insertAtColumnID);
                 case Serializable.SerializableTypes.AnimationCurve:
-                    return AddColumnInternal(columnName, ref allAnimationCurveColumns, Serializable.SerializableTypes.AnimationCurve, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllAnimationCurveColumns,
+                        Serializable.SerializableTypes.AnimationCurve, insertAtColumnID);
                 case Serializable.SerializableTypes.Object:
-                    return AddColumnInternal(columnName, ref allObjectRefColumns, Serializable.SerializableTypes.Object, insertAtColumnID);
+                    return AddColumnInternal(columnName, ref AllObjectRefColumns, Serializable.SerializableTypes.Object,
+                        insertAtColumnID);
             }
+
             return -1;
         }
 
@@ -722,91 +746,92 @@ namespace GDX.Tables
             switch (columnType)
             {
                 case Serializable.SerializableTypes.String:
-                    RemoveColumnInternal(ref allStringColumns, Serializable.SerializableTypes.String, columnID);
+                    RemoveColumnInternal(ref AllStringColumns, Serializable.SerializableTypes.String, columnID);
                     break;
                 case Serializable.SerializableTypes.Char:
-                    RemoveColumnInternal(ref allCharColumns, Serializable.SerializableTypes.Char, columnID);
+                    RemoveColumnInternal(ref AllCharColumns, Serializable.SerializableTypes.Char, columnID);
                     break;
                 case Serializable.SerializableTypes.Bool:
-                    RemoveColumnInternal(ref allBoolColumns, Serializable.SerializableTypes.Bool, columnID);
+                    RemoveColumnInternal(ref AllBoolColumns, Serializable.SerializableTypes.Bool, columnID);
                     break;
                 case Serializable.SerializableTypes.SByte:
-                    RemoveColumnInternal(ref allSbyteColumns, Serializable.SerializableTypes.SByte, columnID);
+                    RemoveColumnInternal(ref AllSbyteColumns, Serializable.SerializableTypes.SByte, columnID);
                     break;
                 case Serializable.SerializableTypes.Byte:
-                    RemoveColumnInternal(ref allByteColumns, Serializable.SerializableTypes.Byte, columnID);
+                    RemoveColumnInternal(ref AllByteColumns, Serializable.SerializableTypes.Byte, columnID);
                     break;
                 case Serializable.SerializableTypes.Short:
-                    RemoveColumnInternal(ref allShortColumns, Serializable.SerializableTypes.Short, columnID);
+                    RemoveColumnInternal(ref AllShortColumns, Serializable.SerializableTypes.Short, columnID);
                     break;
                 case Serializable.SerializableTypes.UShort:
-                    RemoveColumnInternal(ref allUshortColumns, Serializable.SerializableTypes.UShort, columnID);
+                    RemoveColumnInternal(ref AllUshortColumns, Serializable.SerializableTypes.UShort, columnID);
                     break;
                 case Serializable.SerializableTypes.Int:
-                    RemoveColumnInternal(ref allIntColumns, Serializable.SerializableTypes.Int, columnID);
+                    RemoveColumnInternal(ref AllIntColumns, Serializable.SerializableTypes.Int, columnID);
                     break;
                 case Serializable.SerializableTypes.UInt:
-                    RemoveColumnInternal(ref allUintColumns, Serializable.SerializableTypes.UInt, columnID);
+                    RemoveColumnInternal(ref AllUintColumns, Serializable.SerializableTypes.UInt, columnID);
                     break;
                 case Serializable.SerializableTypes.Long:
-                    RemoveColumnInternal(ref allLongColumns, Serializable.SerializableTypes.Long, columnID);
+                    RemoveColumnInternal(ref AllLongColumns, Serializable.SerializableTypes.Long, columnID);
                     break;
                 case Serializable.SerializableTypes.ULong:
-                    RemoveColumnInternal(ref allUlongColumns, Serializable.SerializableTypes.ULong, columnID);
+                    RemoveColumnInternal(ref AllUlongColumns, Serializable.SerializableTypes.ULong, columnID);
                     break;
                 case Serializable.SerializableTypes.Float:
-                    RemoveColumnInternal(ref allFloatColumns, Serializable.SerializableTypes.Float, columnID);
+                    RemoveColumnInternal(ref AllFloatColumns, Serializable.SerializableTypes.Float, columnID);
                     break;
                 case Serializable.SerializableTypes.Double:
-                    RemoveColumnInternal(ref allDoubleColumns, Serializable.SerializableTypes.Double, columnID);
+                    RemoveColumnInternal(ref AllDoubleColumns, Serializable.SerializableTypes.Double, columnID);
                     break;
                 case Serializable.SerializableTypes.Vector2:
-                    RemoveColumnInternal(ref allVector2Columns, Serializable.SerializableTypes.Vector2, columnID);
+                    RemoveColumnInternal(ref AllVector2Columns, Serializable.SerializableTypes.Vector2, columnID);
                     break;
                 case Serializable.SerializableTypes.Vector3:
-                    RemoveColumnInternal(ref allVector3Columns, Serializable.SerializableTypes.Vector3, columnID);
+                    RemoveColumnInternal(ref AllVector3Columns, Serializable.SerializableTypes.Vector3, columnID);
                     break;
                 case Serializable.SerializableTypes.Vector4:
-                    RemoveColumnInternal(ref allVector4Columns, Serializable.SerializableTypes.Vector4, columnID);
+                    RemoveColumnInternal(ref AllVector4Columns, Serializable.SerializableTypes.Vector4, columnID);
                     break;
                 case Serializable.SerializableTypes.Vector2Int:
-                    RemoveColumnInternal(ref allVector2IntColumns, Serializable.SerializableTypes.Vector2Int, columnID);
+                    RemoveColumnInternal(ref AllVector2IntColumns, Serializable.SerializableTypes.Vector2Int, columnID);
                     break;
                 case Serializable.SerializableTypes.Vector3Int:
-                    RemoveColumnInternal(ref allVector3IntColumns, Serializable.SerializableTypes.Vector3Int, columnID);
+                    RemoveColumnInternal(ref AllVector3IntColumns, Serializable.SerializableTypes.Vector3Int, columnID);
                     break;
                 case Serializable.SerializableTypes.Quaternion:
-                    RemoveColumnInternal(ref allQuaternionColumns, Serializable.SerializableTypes.Quaternion, columnID);
+                    RemoveColumnInternal(ref AllQuaternionColumns, Serializable.SerializableTypes.Quaternion, columnID);
                     break;
                 case Serializable.SerializableTypes.Rect:
-                    RemoveColumnInternal(ref allRectColumns, Serializable.SerializableTypes.Rect, columnID);
+                    RemoveColumnInternal(ref AllRectColumns, Serializable.SerializableTypes.Rect, columnID);
                     break;
                 case Serializable.SerializableTypes.RectInt:
-                    RemoveColumnInternal(ref allRectIntColumns, Serializable.SerializableTypes.RectInt, columnID);
+                    RemoveColumnInternal(ref AllRectIntColumns, Serializable.SerializableTypes.RectInt, columnID);
                     break;
                 case Serializable.SerializableTypes.Color:
-                    RemoveColumnInternal(ref allColorColumns, Serializable.SerializableTypes.Color, columnID);
+                    RemoveColumnInternal(ref AllColorColumns, Serializable.SerializableTypes.Color, columnID);
                     break;
                 case Serializable.SerializableTypes.LayerMask:
-                    RemoveColumnInternal(ref allLayerMaskColumns, Serializable.SerializableTypes.LayerMask, columnID);
+                    RemoveColumnInternal(ref AllLayerMaskColumns, Serializable.SerializableTypes.LayerMask, columnID);
                     break;
                 case Serializable.SerializableTypes.Bounds:
-                    RemoveColumnInternal(ref allBoundsColumns, Serializable.SerializableTypes.Bounds, columnID);
+                    RemoveColumnInternal(ref AllBoundsColumns, Serializable.SerializableTypes.Bounds, columnID);
                     break;
                 case Serializable.SerializableTypes.BoundsInt:
-                    RemoveColumnInternal(ref allBoundsIntColumns, Serializable.SerializableTypes.BoundsInt, columnID);
+                    RemoveColumnInternal(ref AllBoundsIntColumns, Serializable.SerializableTypes.BoundsInt, columnID);
                     break;
                 case Serializable.SerializableTypes.Hash128:
-                    RemoveColumnInternal(ref allHash128Columns, Serializable.SerializableTypes.Hash128, columnID);
+                    RemoveColumnInternal(ref AllHash128Columns, Serializable.SerializableTypes.Hash128, columnID);
                     break;
                 case Serializable.SerializableTypes.Gradient:
-                    RemoveColumnInternal(ref allGradientColumns, Serializable.SerializableTypes.Gradient, columnID);
+                    RemoveColumnInternal(ref AllGradientColumns, Serializable.SerializableTypes.Gradient, columnID);
                     break;
                 case Serializable.SerializableTypes.AnimationCurve:
-                    RemoveColumnInternal(ref allAnimationCurveColumns, Serializable.SerializableTypes.AnimationCurve, columnID);
+                    RemoveColumnInternal(ref AllAnimationCurveColumns, Serializable.SerializableTypes.AnimationCurve,
+                        columnID);
                     break;
                 case Serializable.SerializableTypes.Object:
-                    RemoveColumnInternal(ref allObjectRefColumns, Serializable.SerializableTypes.Object, columnID);
+                    RemoveColumnInternal(ref AllObjectRefColumns, Serializable.SerializableTypes.Object, columnID);
                     break;
             }
         }
@@ -815,594 +840,594 @@ namespace GDX.Tables
 
         public override ulong SetString(int row, int column, string value)
         {
-            return SetCell(row, column, ref allStringColumns, value);
+            return SetCell(row, column, ref AllStringColumns, value);
         }
 
         public override ulong SetBool(int row, int column, bool value)
         {
-            return SetCell(row, column, ref allBoolColumns, value);
+            return SetCell(row, column, ref AllBoolColumns, value);
         }
 
         public override ulong SetChar(int row, int column, char value)
         {
-            return SetCell(row, column, ref allCharColumns, value);
+            return SetCell(row, column, ref AllCharColumns, value);
         }
 
         public override ulong SetSByte(int row, int column, sbyte value)
         {
-            return SetCell(row, column, ref allSbyteColumns, value);
+            return SetCell(row, column, ref AllSbyteColumns, value);
         }
 
         public override ulong SetByte(int row, int column, byte value)
         {
-            return SetCell(row, column, ref allByteColumns, value);
+            return SetCell(row, column, ref AllByteColumns, value);
         }
 
         public override ulong SetShort(int row, int column, short value)
         {
-            return SetCell(row, column, ref allShortColumns, value);
+            return SetCell(row, column, ref AllShortColumns, value);
         }
 
         public override ulong SetUShort(int row, int column, ushort value)
         {
-            return SetCell(row, column, ref allUshortColumns, value);
+            return SetCell(row, column, ref AllUshortColumns, value);
         }
 
         public override ulong SetInt(int row, int column, int value)
         {
-            return SetCell(row, column, ref allIntColumns, value);
+            return SetCell(row, column, ref AllIntColumns, value);
         }
 
         public override ulong SetUInt(int row, int column, uint value)
         {
-            return SetCell(row, column, ref allUintColumns, value);
+            return SetCell(row, column, ref AllUintColumns, value);
         }
 
         public override ulong SetLong(int row, int column, long value)
         {
-            return SetCell(row, column, ref allLongColumns, value);
+            return SetCell(row, column, ref AllLongColumns, value);
         }
 
         public override ulong SetULong(int row, int column, ulong value)
         {
-            return SetCell(row, column, ref allUlongColumns, value);
+            return SetCell(row, column, ref AllUlongColumns, value);
         }
 
         public override ulong SetFloat(int row, int column, float value)
         {
-            return SetCell(row, column, ref allFloatColumns, value);
+            return SetCell(row, column, ref AllFloatColumns, value);
         }
 
         public override ulong SetDouble(int row, int column, double value)
         {
-            return SetCell(row, column, ref allDoubleColumns, value);
+            return SetCell(row, column, ref AllDoubleColumns, value);
         }
 
         public override ulong SetVector2(int row, int column, Vector2 value)
         {
-            return SetCell(row, column, ref allVector2Columns, value);
+            return SetCell(row, column, ref AllVector2Columns, value);
         }
 
         public override ulong SetVector3(int row, int column, Vector3 value)
         {
-            return SetCell(row, column, ref allVector3Columns, value);
+            return SetCell(row, column, ref AllVector3Columns, value);
         }
 
         public override ulong SetVector4(int row, int column, Vector4 value)
         {
-            return SetCell(row, column, ref allVector4Columns, value);
+            return SetCell(row, column, ref AllVector4Columns, value);
         }
 
         public override ulong SetVector2Int(int row, int column, Vector2Int value)
         {
-            return SetCell(row, column, ref allVector2IntColumns, value);
+            return SetCell(row, column, ref AllVector2IntColumns, value);
         }
 
         public override ulong SetVector3Int(int row, int column, Vector3Int value)
         {
-            return SetCell(row, column, ref allVector3IntColumns, value);
+            return SetCell(row, column, ref AllVector3IntColumns, value);
         }
 
         public override ulong SetQuaternion(int row, int column, Quaternion value)
         {
-            return SetCell(row, column, ref allQuaternionColumns, value);
+            return SetCell(row, column, ref AllQuaternionColumns, value);
         }
 
         public override ulong SetRect(int row, int column, Rect value)
         {
-            return SetCell(row, column, ref allRectColumns, value);
+            return SetCell(row, column, ref AllRectColumns, value);
         }
 
         public override ulong SetRectInt(int row, int column, RectInt value)
         {
-            return SetCell(row, column, ref allRectIntColumns, value);
+            return SetCell(row, column, ref AllRectIntColumns, value);
         }
 
         public override ulong SetColor(int row, int column, Color value)
         {
-            return SetCell(row, column, ref allColorColumns, value);
+            return SetCell(row, column, ref AllColorColumns, value);
         }
 
         public override ulong SetLayerMask(int row, int column, LayerMask value)
         {
-            return SetCell(row, column, ref allLayerMaskColumns, value);
+            return SetCell(row, column, ref AllLayerMaskColumns, value);
         }
 
         public override ulong SetBounds(int row, int column, Bounds value)
         {
-            return SetCell(row, column, ref allBoundsColumns, value);
+            return SetCell(row, column, ref AllBoundsColumns, value);
         }
 
         public override ulong SetBoundsInt(int row, int column, BoundsInt value)
         {
-            return SetCell(row, column, ref allBoundsIntColumns, value);
+            return SetCell(row, column, ref AllBoundsIntColumns, value);
         }
 
         public override ulong SetHash128(int row, int column, Hash128 value)
         {
-            return SetCell(row, column, ref allHash128Columns, value);
+            return SetCell(row, column, ref AllHash128Columns, value);
         }
 
         public override ulong SetGradient(int row, int column, Gradient value)
         {
-            return SetCell(row, column, ref allGradientColumns, value);
+            return SetCell(row, column, ref AllGradientColumns, value);
         }
 
         public override ulong SetAnimationCurve(int row, int column, AnimationCurve value)
         {
-            return SetCell(row, column, ref allAnimationCurveColumns, value);
+            return SetCell(row, column, ref AllAnimationCurveColumns, value);
         }
 
-        public override ulong SetObject(int row, int column, UnityEngine.Object value)
+        public override ulong SetObject(int row, int column, Object value)
         {
-            return SetCell(row, column, ref allObjectRefColumns, value);
+            return SetCell(row, column, ref AllObjectRefColumns, value);
         }
 
-        public void SetTypeNameForObjectColumn<T>(int columnID) where T : UnityEngine.Object
+        public void SetTypeNameForObjectColumn<T>(int columnID) where T : Object
         {
             AssertObjectColumnIDValid(columnID);
-            int denseIndex = columnIDToDenseIndexMap[columnID].columnDenseIndex;
-            allObjectRefTypenames[denseIndex] = typeof(T).AssemblyQualifiedName;
+            int denseIndex = ColumnIDToDenseIndexMap[columnID].ColumnDenseIndex;
+            AllObjectRefTypeNames[denseIndex] = typeof(T).AssemblyQualifiedName;
         }
 
         // Get
         public override string GetString(int row, int column)
         {
-            return GetCell(row, column, ref allStringColumns);
+            return GetCell(row, column, ref AllStringColumns);
         }
 
         public override bool GetBool(int row, int column)
         {
-            return GetCell(row, column, ref allBoolColumns);
+            return GetCell(row, column, ref AllBoolColumns);
         }
 
         public override char GetChar(int row, int column)
         {
-            return GetCell(row, column, ref allCharColumns);
+            return GetCell(row, column, ref AllCharColumns);
         }
 
         public override sbyte GetSByte(int row, int column)
         {
-            return GetCell(row, column, ref allSbyteColumns);
+            return GetCell(row, column, ref AllSbyteColumns);
         }
 
         public override byte GetByte(int row, int column)
         {
-            return GetCell(row, column, ref allByteColumns);
+            return GetCell(row, column, ref AllByteColumns);
         }
 
         public override short GetShort(int row, int column)
         {
-            return GetCell(row, column, ref allShortColumns);
+            return GetCell(row, column, ref AllShortColumns);
         }
 
         public override ushort GetUShort(int row, int column)
         {
-            return GetCell(row, column, ref allUshortColumns);
+            return GetCell(row, column, ref AllUshortColumns);
         }
 
         public override int GetInt(int row, int column)
         {
-            return GetCell(row, column, ref allIntColumns);
+            return GetCell(row, column, ref AllIntColumns);
         }
 
         public override uint GetUInt(int row, int column)
         {
-            return GetCell(row, column, ref allUintColumns);
+            return GetCell(row, column, ref AllUintColumns);
         }
 
         public override long GetLong(int row, int column)
         {
-            return GetCell(row, column, ref allLongColumns);
+            return GetCell(row, column, ref AllLongColumns);
         }
 
         public override ulong GetULong(int row, int column)
         {
-            return GetCell(row, column, ref allUlongColumns);
+            return GetCell(row, column, ref AllUlongColumns);
         }
 
         public override float GetFloat(int row, int column)
         {
-            return GetCell(row, column, ref allFloatColumns);
+            return GetCell(row, column, ref AllFloatColumns);
         }
 
         public override double GetDouble(int row, int column)
         {
-            return GetCell(row, column, ref allDoubleColumns);
+            return GetCell(row, column, ref AllDoubleColumns);
         }
 
         public override Vector2 GetVector2(int row, int column)
         {
-            return GetCell(row, column, ref allVector2Columns);
+            return GetCell(row, column, ref AllVector2Columns);
         }
 
         public override Vector3 GetVector3(int row, int column)
         {
-            return GetCell(row, column, ref allVector3Columns);
+            return GetCell(row, column, ref AllVector3Columns);
         }
 
         public override Vector4 GetVector4(int row, int column)
         {
-            return GetCell(row, column, ref allVector4Columns);
+            return GetCell(row, column, ref AllVector4Columns);
         }
 
         public override Vector2Int GetVector2Int(int row, int column)
         {
-            return GetCell(row, column, ref allVector2IntColumns);
+            return GetCell(row, column, ref AllVector2IntColumns);
         }
 
         public override Vector3Int GetVector3Int(int row, int column)
         {
-            return GetCell(row, column, ref allVector3IntColumns);
+            return GetCell(row, column, ref AllVector3IntColumns);
         }
 
         public override Quaternion GetQuaternion(int row, int column)
         {
-            return GetCell(row, column, ref allQuaternionColumns);
+            return GetCell(row, column, ref AllQuaternionColumns);
         }
 
         public override Rect GetRect(int row, int column)
         {
-            return GetCell(row, column, ref allRectColumns);
+            return GetCell(row, column, ref AllRectColumns);
         }
 
         public override RectInt GetRectInt(int row, int column)
         {
-            return GetCell(row, column, ref allRectIntColumns);
+            return GetCell(row, column, ref AllRectIntColumns);
         }
 
         public override Color GetColor(int row, int column)
         {
-            return GetCell(row, column, ref allColorColumns);
+            return GetCell(row, column, ref AllColorColumns);
         }
 
         public override LayerMask GetLayerMask(int row, int column)
         {
-            return GetCell(row, column, ref allLayerMaskColumns);
+            return GetCell(row, column, ref AllLayerMaskColumns);
         }
 
         public override Bounds GetBounds(int row, int column)
         {
-            return GetCell(row, column, ref allBoundsColumns);
+            return GetCell(row, column, ref AllBoundsColumns);
         }
 
         public override BoundsInt GetBoundsInt(int row, int column)
         {
-            return GetCell(row, column, ref allBoundsIntColumns);
+            return GetCell(row, column, ref AllBoundsIntColumns);
         }
 
         public override Hash128 GetHash128(int row, int column)
         {
-            return GetCell(row, column, ref allHash128Columns);
+            return GetCell(row, column, ref AllHash128Columns);
         }
 
         public override Gradient GetGradient(int row, int column)
         {
-            return GetCell(row, column, ref allGradientColumns);
+            return GetCell(row, column, ref AllGradientColumns);
         }
 
         public override AnimationCurve GetAnimationCurve(int row, int column)
         {
-            return GetCell(row, column, ref allAnimationCurveColumns);
+            return GetCell(row, column, ref AllAnimationCurveColumns);
         }
 
-        public override UnityEngine.Object GetObject(int row, int column)
+        public override Object GetObject(int row, int column)
         {
-            return GetCell(row, column, ref allObjectRefColumns);
+            return GetCell(row, column, ref AllObjectRefColumns);
         }
 
         // Get ref
 
         public ref string GetStringRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allStringColumns);
+            return ref GetCellRef(row, column, ref AllStringColumns);
         }
 
         public ref bool GetBoolRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allBoolColumns);
+            return ref GetCellRef(row, column, ref AllBoolColumns);
         }
 
         public ref char GetCharRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allCharColumns);
+            return ref GetCellRef(row, column, ref AllCharColumns);
         }
 
         public ref sbyte GetSbyteRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allSbyteColumns);
+            return ref GetCellRef(row, column, ref AllSbyteColumns);
         }
 
         public ref byte GetByteRef(int row, int columnID)
         {
-            return ref GetCellRef(row, columnID, ref allByteColumns);
+            return ref GetCellRef(row, columnID, ref AllByteColumns);
         }
 
         public ref short GetShortRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allShortColumns);
+            return ref GetCellRef(row, column, ref AllShortColumns);
         }
 
         public ref ushort GetUshortRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allUshortColumns);
+            return ref GetCellRef(row, column, ref AllUshortColumns);
         }
 
         public ref int GetIntRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allIntColumns);
+            return ref GetCellRef(row, column, ref AllIntColumns);
         }
 
         public ref uint GetUintRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allUintColumns);
+            return ref GetCellRef(row, column, ref AllUintColumns);
         }
 
         public ref long GetLongRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allLongColumns);
+            return ref GetCellRef(row, column, ref AllLongColumns);
         }
 
         public ref ulong GetUlongRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allUlongColumns);
+            return ref GetCellRef(row, column, ref AllUlongColumns);
         }
 
         public ref float GetFloatRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allFloatColumns);
+            return ref GetCellRef(row, column, ref AllFloatColumns);
         }
 
         public ref double GetDoubleRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allDoubleColumns);
+            return ref GetCellRef(row, column, ref AllDoubleColumns);
         }
 
         public ref Vector2 GetVector2Ref(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allVector2Columns);
+            return ref GetCellRef(row, column, ref AllVector2Columns);
         }
 
         public ref Vector3 GetVector3Ref(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allVector3Columns);
+            return ref GetCellRef(row, column, ref AllVector3Columns);
         }
 
         public ref Vector4 GetVector4Ref(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allVector4Columns);
+            return ref GetCellRef(row, column, ref AllVector4Columns);
         }
 
         public ref Vector2Int GetVector2IntRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allVector2IntColumns);
+            return ref GetCellRef(row, column, ref AllVector2IntColumns);
         }
 
         public ref Vector3Int GetVector3IntRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allVector3IntColumns);
+            return ref GetCellRef(row, column, ref AllVector3IntColumns);
         }
 
         public ref Quaternion GetQuaternionRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allQuaternionColumns);
+            return ref GetCellRef(row, column, ref AllQuaternionColumns);
         }
 
         public ref Rect GetRectRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allRectColumns);
+            return ref GetCellRef(row, column, ref AllRectColumns);
         }
 
         public ref RectInt GetRectIntRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allRectIntColumns);
+            return ref GetCellRef(row, column, ref AllRectIntColumns);
         }
 
         public ref Color GetColorRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allColorColumns);
+            return ref GetCellRef(row, column, ref AllColorColumns);
         }
 
         public ref LayerMask GetLayerMaskRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allLayerMaskColumns);
+            return ref GetCellRef(row, column, ref AllLayerMaskColumns);
         }
 
         public ref Bounds GetBoundsRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allBoundsColumns);
+            return ref GetCellRef(row, column, ref AllBoundsColumns);
         }
 
         public ref BoundsInt GetBoundsIntRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allBoundsIntColumns);
+            return ref GetCellRef(row, column, ref AllBoundsIntColumns);
         }
 
         public ref Hash128 GetHash128Ref(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allHash128Columns);
+            return ref GetCellRef(row, column, ref AllHash128Columns);
         }
 
         public ref Gradient GetGradientRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allGradientColumns);
+            return ref GetCellRef(row, column, ref AllGradientColumns);
         }
 
         public ref AnimationCurve GetAnimationCurveRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allAnimationCurveColumns);
+            return ref GetCellRef(row, column, ref AllAnimationCurveColumns);
         }
 
-        public ref UnityEngine.Object GetObjectRef(int row, int column)
+        public ref Object GetObjectRef(int row, int column)
         {
-            return ref GetCellRef(row, column, ref allObjectRefColumns);
+            return ref GetCellRef(row, column, ref AllObjectRefColumns);
         }
 
         // Get Column
 
         public string[] GetStringColumn(int column)
         {
-            return GetColumn(column, ref allStringColumns);
+            return GetColumn(column, ref AllStringColumns);
         }
 
         public bool[] GetBoolColumn(int column)
         {
-            return GetColumn(column, ref allBoolColumns);
+            return GetColumn(column, ref AllBoolColumns);
         }
 
         public char[] GetCharColumn(int column)
         {
-            return GetColumn(column, ref allCharColumns);
+            return GetColumn(column, ref AllCharColumns);
         }
 
         public sbyte[] GetSbyteColumn(int column)
         {
-            return GetColumn(column, ref allSbyteColumns);
+            return GetColumn(column, ref AllSbyteColumns);
         }
 
         public byte[] GetByteColumn(int column)
         {
-            return GetColumn(column, ref allByteColumns);
+            return GetColumn(column, ref AllByteColumns);
         }
 
         public short[] GetShortColumn(int column)
         {
-            return GetColumn(column, ref allShortColumns);
+            return GetColumn(column, ref AllShortColumns);
         }
 
         public ushort[] GetUshortColumn(int column)
         {
-            return GetColumn(column, ref allUshortColumns);
+            return GetColumn(column, ref AllUshortColumns);
         }
 
         public int[] GetIntColumn(int column)
         {
-            return GetColumn(column, ref allIntColumns);
+            return GetColumn(column, ref AllIntColumns);
         }
 
         public uint[] GetUintColumn(int column)
         {
-            return GetColumn(column, ref allUintColumns);
+            return GetColumn(column, ref AllUintColumns);
         }
 
         public long[] GetLongColumn(int column)
         {
-            return GetColumn(column, ref allLongColumns);
+            return GetColumn(column, ref AllLongColumns);
         }
 
         public ulong[] GetUlongColumn(int column)
         {
-            return GetColumn(column, ref allUlongColumns);
+            return GetColumn(column, ref AllUlongColumns);
         }
 
         public float[] GetFloatColumn(int column)
         {
-            return GetColumn(column, ref allFloatColumns);
+            return GetColumn(column, ref AllFloatColumns);
         }
 
         public double[] GetDoubleColumn(int column)
         {
-            return GetColumn(column, ref allDoubleColumns);
+            return GetColumn(column, ref AllDoubleColumns);
         }
 
         public Vector2[] GetVector2Column(int column)
         {
-            return GetColumn(column, ref allVector2Columns);
+            return GetColumn(column, ref AllVector2Columns);
         }
 
         public Vector3[] GetVector3Column(int column)
         {
-            return GetColumn(column, ref allVector3Columns);
+            return GetColumn(column, ref AllVector3Columns);
         }
 
         public Vector4[] GetVector4Column(int column)
         {
-            return GetColumn(column, ref allVector4Columns);
+            return GetColumn(column, ref AllVector4Columns);
         }
 
         public Vector2Int[] GetVector2IntColumn(int column)
         {
-            return GetColumn(column, ref allVector2IntColumns);
+            return GetColumn(column, ref AllVector2IntColumns);
         }
 
         public Vector3Int[] GetVector3IntColumn(int column)
         {
-            return GetColumn(column, ref allVector3IntColumns);
+            return GetColumn(column, ref AllVector3IntColumns);
         }
 
         public Quaternion[] GetQuaternionColumn(int column)
         {
-            return GetColumn(column, ref allQuaternionColumns);
+            return GetColumn(column, ref AllQuaternionColumns);
         }
 
         public Rect[] GetRectColumn(int column)
         {
-            return GetColumn(column, ref allRectColumns);
+            return GetColumn(column, ref AllRectColumns);
         }
 
         public RectInt[] GetRectIntColumn(int column)
         {
-            return GetColumn(column, ref allRectIntColumns);
+            return GetColumn(column, ref AllRectIntColumns);
         }
 
         public Color[] GetColorColumn(int column)
         {
-            return GetColumn(column, ref allColorColumns);
+            return GetColumn(column, ref AllColorColumns);
         }
 
         public LayerMask[] GetLayerMaskColumn(int column)
         {
-            return GetColumn(column, ref allLayerMaskColumns);
+            return GetColumn(column, ref AllLayerMaskColumns);
         }
 
         public Bounds[] GetBoundsColumn(int column)
         {
-            return GetColumn(column, ref allBoundsColumns);
+            return GetColumn(column, ref AllBoundsColumns);
         }
 
         public BoundsInt[] GetBoundsIntColumn(int column)
         {
-            return GetColumn(column, ref allBoundsIntColumns);
+            return GetColumn(column, ref AllBoundsIntColumns);
         }
 
         public Hash128[] GetHash128Column(int column)
         {
-            return GetColumn(column, ref allHash128Columns);
+            return GetColumn(column, ref AllHash128Columns);
         }
 
         public Gradient[] GetGradientColumn(int column)
         {
-            return GetColumn(column, ref allGradientColumns);
+            return GetColumn(column, ref AllGradientColumns);
         }
 
         public AnimationCurve[] GetAnimationCurveColumn(int column)
         {
-            return GetColumn(column, ref allAnimationCurveColumns);
+            return GetColumn(column, ref AllAnimationCurveColumns);
         }
 
-        public UnityEngine.Object[] GetObjectColumn(int column)
+        public Object[] GetObjectColumn(int column)
         {
-            return GetColumn(column, ref allObjectRefColumns);
+            return GetColumn(column, ref AllObjectRefColumns);
         }
 
         // SetOrder
@@ -1411,27 +1436,27 @@ namespace GDX.Tables
         {
             AssertColumnIDValid(columnID);
             AssertColumnSortOrderValid(newSortOrder);
-            int oldSortOrder = columnIDToSortOrderMap[columnID];
+            int oldSortOrder = ColumnIDToSortOrderMap[columnID];
             int iterDirection = newSortOrder > oldSortOrder ? 1 : -1;
             for (int i = oldSortOrder; i != newSortOrder; i += iterDirection)
             {
-                int columnIDAt = sortedOrderToColumnIDMap[i + iterDirection];
-                columnIDToSortOrderMap[columnIDAt] = i;
-                sortedOrderToColumnIDMap[i] = sortedOrderToColumnIDMap[i + iterDirection];
+                int columnIDAt = SortedOrderToColumnIDMap[i + iterDirection];
+                ColumnIDToSortOrderMap[columnIDAt] = i;
+                SortedOrderToColumnIDMap[i] = SortedOrderToColumnIDMap[i + iterDirection];
             }
 
-            sortedOrderToColumnIDMap[newSortOrder] = columnID;
-            columnIDToSortOrderMap[columnID] = newSortOrder;
+            SortedOrderToColumnIDMap[newSortOrder] = columnID;
+            ColumnIDToSortOrderMap[columnID] = newSortOrder;
         }
 
         public void SetAllColumnOrders(int[] sortedColumnIDs)
         {
             AssertSortedColumnsArgValid(sortedColumnIDs);
-            for (int i = 0; i < sortedOrderToColumnIDMap.Length; i++)
+            for (int i = 0; i < SortedOrderToColumnIDMap.Length; i++)
             {
                 int columnID = sortedColumnIDs[i];
-                sortedOrderToColumnIDMap[i] = columnID;
-                columnIDToSortOrderMap[columnID] = i;
+                SortedOrderToColumnIDMap[i] = columnID;
+                ColumnIDToSortOrderMap[columnID] = i;
             }
         }
 
@@ -1440,86 +1465,86 @@ namespace GDX.Tables
             AssertRowIDValid(rowID);
             AssertRowSortOrderValid(newSortOrder);
 
-            int oldSortOrder = rowIDToDenseIndexMap[rowID];
+            int oldSortOrder = RowIDToDenseIndexMap[rowID];
             int iterDirection = newSortOrder > oldSortOrder ? 1 : -1;
 
             for (int i = oldSortOrder; i != newSortOrder; i += iterDirection)
             {
-                int rowIDAt = rowDenseIndexToIDMap[i + iterDirection];
-                rowIDToDenseIndexMap[rowIDAt] = i;
-                rowDenseIndexToIDMap[i] = rowDenseIndexToIDMap[i + iterDirection];
+                int rowIDAt = RowDenseIndexToIDMap[i + iterDirection];
+                RowIDToDenseIndexMap[rowIDAt] = i;
+                RowDenseIndexToIDMap[i] = RowDenseIndexToIDMap[i + iterDirection];
             }
 
-            SetRowOrderForColumns(allStringColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allBoolColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allCharColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allSbyteColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allByteColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allShortColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allUshortColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allIntColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allUintColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allLongColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allUlongColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allFloatColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allDoubleColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allVector2Columns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allVector3Columns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allVector4Columns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allVector2IntColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allVector3IntColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allQuaternionColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allRectColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allRectIntColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allColorColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allLayerMaskColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allBoundsColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allBoundsIntColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allHash128Columns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allGradientColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allAnimationCurveColumns, oldSortOrder, newSortOrder);
-            SetRowOrderForColumns(allObjectRefColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllStringColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllBoolColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllCharColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllSbyteColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllByteColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllShortColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllUshortColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllIntColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllUintColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllLongColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllUlongColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllFloatColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllDoubleColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllVector2Columns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllVector3Columns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllVector4Columns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllVector2IntColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllVector3IntColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllQuaternionColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllRectColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllRectIntColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllColorColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllLayerMaskColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllBoundsColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllBoundsIntColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllHash128Columns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllGradientColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllAnimationCurveColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(AllObjectRefColumns, oldSortOrder, newSortOrder);
         }
 
         public void SetAllRowOrders(int[] sortedRowIDs)
         {
-            AssertSorteRowsArgValid(sortedRowIDs);
+            AssertSortRowsArgValid(sortedRowIDs);
 
-            ReSortRows(allStringColumns, sortedRowIDs);
-            ReSortRows(allBoolColumns, sortedRowIDs);
-            ReSortRows(allCharColumns, sortedRowIDs);
-            ReSortRows(allSbyteColumns, sortedRowIDs);
-            ReSortRows(allByteColumns, sortedRowIDs);
-            ReSortRows(allShortColumns, sortedRowIDs);
-            ReSortRows(allUshortColumns, sortedRowIDs);
-            ReSortRows(allIntColumns, sortedRowIDs);
-            ReSortRows(allUintColumns, sortedRowIDs);
-            ReSortRows(allLongColumns, sortedRowIDs);
-            ReSortRows(allUlongColumns, sortedRowIDs);
-            ReSortRows(allFloatColumns, sortedRowIDs);
-            ReSortRows(allDoubleColumns, sortedRowIDs);
-            ReSortRows(allVector2Columns, sortedRowIDs);
-            ReSortRows(allVector3Columns, sortedRowIDs);
-            ReSortRows(allVector4Columns, sortedRowIDs);
-            ReSortRows(allVector2IntColumns, sortedRowIDs);
-            ReSortRows(allVector3IntColumns, sortedRowIDs);
-            ReSortRows(allQuaternionColumns, sortedRowIDs);
-            ReSortRows(allRectColumns, sortedRowIDs);
-            ReSortRows(allRectIntColumns, sortedRowIDs);
-            ReSortRows(allColorColumns, sortedRowIDs);
-            ReSortRows(allLayerMaskColumns, sortedRowIDs);
-            ReSortRows(allBoundsColumns, sortedRowIDs);
-            ReSortRows(allBoundsIntColumns, sortedRowIDs);
-            ReSortRows(allHash128Columns, sortedRowIDs);
-            ReSortRows(allGradientColumns, sortedRowIDs);
-            ReSortRows(allAnimationCurveColumns, sortedRowIDs);
-            ReSortRows(allObjectRefColumns, sortedRowIDs);
+            ReSortRows(AllStringColumns, sortedRowIDs);
+            ReSortRows(AllBoolColumns, sortedRowIDs);
+            ReSortRows(AllCharColumns, sortedRowIDs);
+            ReSortRows(AllSbyteColumns, sortedRowIDs);
+            ReSortRows(AllByteColumns, sortedRowIDs);
+            ReSortRows(AllShortColumns, sortedRowIDs);
+            ReSortRows(AllUshortColumns, sortedRowIDs);
+            ReSortRows(AllIntColumns, sortedRowIDs);
+            ReSortRows(AllUintColumns, sortedRowIDs);
+            ReSortRows(AllLongColumns, sortedRowIDs);
+            ReSortRows(AllUlongColumns, sortedRowIDs);
+            ReSortRows(AllFloatColumns, sortedRowIDs);
+            ReSortRows(AllDoubleColumns, sortedRowIDs);
+            ReSortRows(AllVector2Columns, sortedRowIDs);
+            ReSortRows(AllVector3Columns, sortedRowIDs);
+            ReSortRows(AllVector4Columns, sortedRowIDs);
+            ReSortRows(AllVector2IntColumns, sortedRowIDs);
+            ReSortRows(AllVector3IntColumns, sortedRowIDs);
+            ReSortRows(AllQuaternionColumns, sortedRowIDs);
+            ReSortRows(AllRectColumns, sortedRowIDs);
+            ReSortRows(AllRectIntColumns, sortedRowIDs);
+            ReSortRows(AllColorColumns, sortedRowIDs);
+            ReSortRows(AllLayerMaskColumns, sortedRowIDs);
+            ReSortRows(AllBoundsColumns, sortedRowIDs);
+            ReSortRows(AllBoundsIntColumns, sortedRowIDs);
+            ReSortRows(AllHash128Columns, sortedRowIDs);
+            ReSortRows(AllGradientColumns, sortedRowIDs);
+            ReSortRows(AllAnimationCurveColumns, sortedRowIDs);
+            ReSortRows(AllObjectRefColumns, sortedRowIDs);
 
             for (int i = 0; i < sortedRowIDs.Length; i++)
             {
                 int rowID = sortedRowIDs[i];
-                rowDenseIndexToIDMap[i] = rowID;
-                rowIDToDenseIndexMap[rowID] = i;
+                RowDenseIndexToIDMap[i] = rowID;
+                RowIDToDenseIndexMap[rowID] = i;
             }
         }
 
@@ -1533,7 +1558,7 @@ namespace GDX.Tables
                 for (int j = 0; j < sortedRowIDs.Length; j++)
                 {
                     int rowID = sortedRowIDs[j];
-                    int oldRowIndex = rowIDToDenseIndexMap[rowID];
+                    int oldRowIndex = RowIDToDenseIndexMap[rowID];
 
                     newColumn[j] = column[oldRowIndex];
                 }
@@ -1546,83 +1571,86 @@ namespace GDX.Tables
 
         internal void AddTypeNameEntryForUnityObjectColumn()
         {
-            int nameArrayLength = allObjectRefTypenames?.Length ?? 0;
-            Array.Resize(ref allObjectRefTypenames, nameArrayLength + 1);
-            allObjectRefTypenames[nameArrayLength] = s_UnityObjectString;
+            int nameArrayLength = AllObjectRefTypeNames?.Length ?? 0;
+            Array.Resize(ref AllObjectRefTypeNames, nameArrayLength + 1);
+            AllObjectRefTypeNames[nameArrayLength] = UnityObjectString;
         }
 
         internal void RemoveTypeNameEntryForUnityObjectColumn(int columnDenseIndex)
         {
-            int nameArrayLength = allObjectRefTypenames?.Length ?? 0;
-            allObjectRefTypenames[columnDenseIndex] = allObjectRefTypenames[nameArrayLength];
-            Array.Resize(ref allObjectRefTypenames, nameArrayLength - 1);
+            int nameArrayLength = AllObjectRefTypeNames?.Length ?? 0;
+            AllObjectRefTypeNames[columnDenseIndex] = AllObjectRefTypeNames[nameArrayLength];
+            Array.Resize(ref AllObjectRefTypeNames, nameArrayLength - 1);
         }
 
         internal void AssertObjectColumnIDValid(int columnID)
         {
             AssertColumnIDValid(columnID);
-            if (columnIDToDenseIndexMap[columnID].ColumnType != Serializable.SerializableTypes.Object)
+            if (ColumnIDToDenseIndexMap[columnID].ColumnType != Serializable.SerializableTypes.Object)
             {
                 throw new ArgumentException("Column ID must correspond to a UnityEngine.Object column.");
             }
         }
 
-        internal int AddColumnInternal<T>(string columnName, ref ArrayHolder<T>[] allColumnsOfType, Serializable.SerializableTypes typeIndex, int insertAtColumnID)
+        internal int AddColumnInternal<T>(string columnName, ref ArrayHolder<T>[] allColumnsOfType,
+            Serializable.SerializableTypes typeIndex, int insertAtColumnID)
         {
             if (insertAtColumnID >= 0)
             {
                 AssertColumnIDValid(insertAtColumnID);
             }
+
             int columnCount = allColumnsOfType?.Length ?? 0;
             Array.Resize(ref allColumnsOfType, columnCount + 1);
-            allColumnsOfType[columnCount].TArray = new T[rowCount];
+            allColumnsOfType[columnCount].TArray = new T[RowCount];
 
-            int columnID = columnEntriesFreeListHead;
-            string[] columnNamesForType = allColumnNames[(int)typeIndex].TArray;
+            int columnID = ColumnEntriesFreeListHead;
+            string[] columnNamesForType = AllColumnNames[(int)typeIndex].TArray;
             int columnNamesCount = columnNamesForType?.Length ?? 0;
             Array.Resize(ref columnNamesForType, columnNamesCount + 1);
             columnNamesForType[columnNamesCount] = columnName == null ? columnID.ToString() : columnName;
-            allColumnNames[(int)typeIndex].TArray = columnNamesForType;
+            AllColumnNames[(int)typeIndex].TArray = columnNamesForType;
 
 
-            int columnIDToDenseIndexMapLength = columnIDToDenseIndexMap?.Length ?? 0;
+            int columnIDToDenseIndexMapLength = ColumnIDToDenseIndexMap?.Length ?? 0;
             if (columnID >= columnIDToDenseIndexMapLength)
             {
                 int newSize = columnIDToDenseIndexMapLength * 2;
                 newSize = newSize == 0 ? 1 : newSize;
-                Array.Resize(ref columnIDToDenseIndexMap, newSize);
+                Array.Resize(ref ColumnIDToDenseIndexMap, newSize);
                 for (int i = columnIDToDenseIndexMapLength; i < newSize; i++)
                 {
-                    ref ColumnEntry entry = ref columnIDToDenseIndexMap[i];
-                    entry.columnDenseIndex = i + 1;
+                    ref ColumnEntry entry = ref ColumnIDToDenseIndexMap[i];
+                    entry.ColumnDenseIndex = i + 1;
                     entry.ColumnType = Serializable.SerializableTypes.Invalid;
                 }
 
-                Array.Resize(ref columnIDToSortOrderMap, newSize);
+                Array.Resize(ref ColumnIDToSortOrderMap, newSize);
                 for (int i = columnIDToDenseIndexMapLength; i < newSize; i++)
                 {
-                    columnIDToSortOrderMap[i] = -1;
+                    ColumnIDToSortOrderMap[i] = -1;
                 }
             }
 
-            columnEntriesFreeListHead = columnIDToDenseIndexMap[columnID].columnDenseIndex;
+            ColumnEntriesFreeListHead = ColumnIDToDenseIndexMap[columnID].ColumnDenseIndex;
 
-            ref int[] denseIndexToIDMap = ref columnDenseIndexToIDMap[(int)typeIndex].TArray;
+            ref int[] denseIndexToIDMap = ref ColumnDenseIndexToIDMap[(int)typeIndex].TArray;
             int denseIndexToIDMapLength = denseIndexToIDMap?.Length ?? 0;
             Array.Resize(ref denseIndexToIDMap, denseIndexToIDMapLength + 1);
             denseIndexToIDMap[denseIndexToIDMapLength] = columnID;
 
-            ref ColumnEntry newEntry = ref columnIDToDenseIndexMap[columnID];
-            newEntry.columnDenseIndex = denseIndexToIDMapLength;
+            ref ColumnEntry newEntry = ref ColumnIDToDenseIndexMap[columnID];
+            newEntry.ColumnDenseIndex = denseIndexToIDMapLength;
             newEntry.ColumnType = typeIndex;
 
-            int insertAtSortedIndex = insertAtColumnID < 0 ? combinedColumnCount : columnIDToSortOrderMap[insertAtColumnID];
-            Array.Resize(ref sortedOrderToColumnIDMap, combinedColumnCount + 1);
-            for (int i = combinedColumnCount; i > insertAtSortedIndex; i--)
+            int insertAtSortedIndex =
+                insertAtColumnID < 0 ? CombinedColumnCount : ColumnIDToSortOrderMap[insertAtColumnID];
+            Array.Resize(ref SortedOrderToColumnIDMap, CombinedColumnCount + 1);
+            for (int i = CombinedColumnCount; i > insertAtSortedIndex; i--)
             {
-                int currentColumnID = sortedOrderToColumnIDMap[i - 1];
-                sortedOrderToColumnIDMap[i] = currentColumnID;
-                columnIDToSortOrderMap[currentColumnID] = i;
+                int currentColumnID = SortedOrderToColumnIDMap[i - 1];
+                SortedOrderToColumnIDMap[i] = currentColumnID;
+                ColumnIDToSortOrderMap[currentColumnID] = i;
             }
 
             if (typeIndex == Serializable.SerializableTypes.Object)
@@ -1630,39 +1658,40 @@ namespace GDX.Tables
                 AddTypeNameEntryForUnityObjectColumn();
             }
 
-            columnIDToSortOrderMap[columnID] = insertAtSortedIndex;
-            sortedOrderToColumnIDMap[insertAtSortedIndex] = columnID;
+            ColumnIDToSortOrderMap[columnID] = insertAtSortedIndex;
+            SortedOrderToColumnIDMap[insertAtSortedIndex] = columnID;
 
-            ++combinedColumnCount;
-            dataVersion++;
+            ++CombinedColumnCount;
+            DataVersion++;
 
             return columnID;
         }
 
-        internal void RemoveColumnInternal<T>(ref ArrayHolder<T>[] allColumnsOfType, Serializable.SerializableTypes typeIndex, int columnID)
+        internal void RemoveColumnInternal<T>(ref ArrayHolder<T>[] allColumnsOfType,
+            Serializable.SerializableTypes typeIndex, int columnID)
         {
             AssertColumnIDValid(columnID);
-            int columnLocation = columnIDToDenseIndexMap[columnID].columnDenseIndex;
+            int columnLocation = ColumnIDToDenseIndexMap[columnID].ColumnDenseIndex;
 
             int lastIndex = allColumnsOfType.Length - 1;
             allColumnsOfType[columnLocation] = allColumnsOfType[lastIndex];
             Array.Resize(ref allColumnsOfType, lastIndex);
 
-            ref string[] columnNamesOfType = ref allColumnNames[(int)typeIndex].TArray;
+            ref string[] columnNamesOfType = ref AllColumnNames[(int)typeIndex].TArray;
             columnNamesOfType[columnLocation] = columnNamesOfType[lastIndex];
             Array.Resize(ref columnNamesOfType, lastIndex);
 
-            int columnOrder = columnIDToSortOrderMap[columnID];
+            int columnOrder = ColumnIDToSortOrderMap[columnID];
 
-            ref int[] denseIndicesOfType = ref columnDenseIndexToIDMap[(int)typeIndex].TArray;
+            ref int[] denseIndicesOfType = ref ColumnDenseIndexToIDMap[(int)typeIndex].TArray;
             int sparseIndexToSwap = denseIndicesOfType[lastIndex];
 
-            ref ColumnEntry sparseIndexToFree = ref columnIDToDenseIndexMap[columnID];
+            ref ColumnEntry sparseIndexToFree = ref ColumnIDToDenseIndexMap[columnID];
             sparseIndexToFree.ColumnType = Serializable.SerializableTypes.Invalid;
-            sparseIndexToFree.columnDenseIndex = columnEntriesFreeListHead;
-            columnEntriesFreeListHead = columnID;
+            sparseIndexToFree.ColumnDenseIndex = ColumnEntriesFreeListHead;
+            ColumnEntriesFreeListHead = columnID;
 
-            columnIDToDenseIndexMap[sparseIndexToSwap].columnDenseIndex = columnLocation;
+            ColumnIDToDenseIndexMap[sparseIndexToSwap].ColumnDenseIndex = columnLocation;
             denseIndicesOfType[columnLocation] = sparseIndexToSwap;
             Array.Resize(ref denseIndicesOfType, lastIndex);
 
@@ -1671,26 +1700,27 @@ namespace GDX.Tables
                 RemoveTypeNameEntryForUnityObjectColumn(columnLocation);
             }
 
-            for (int i = columnOrder + 1; i < combinedColumnCount; i++)
+            for (int i = columnOrder + 1; i < CombinedColumnCount; i++)
             {
-                int currentColumnID = sortedOrderToColumnIDMap[i];
-                sortedOrderToColumnIDMap[i - 1] = currentColumnID;
-                columnIDToSortOrderMap[currentColumnID] = i - 1;
+                int currentColumnID = SortedOrderToColumnIDMap[i];
+                SortedOrderToColumnIDMap[i - 1] = currentColumnID;
+                ColumnIDToSortOrderMap[currentColumnID] = i - 1;
             }
 
-            Array.Resize(ref sortedOrderToColumnIDMap, combinedColumnCount - 1);
+            Array.Resize(ref SortedOrderToColumnIDMap, CombinedColumnCount - 1);
 
-            --combinedColumnCount;
-            dataVersion++;
+            --CombinedColumnCount;
+            DataVersion++;
         }
 
-        internal void InsertRowsOfTypeInternal<T>(ref ArrayHolder<T>[] allColumnsOfType, int insertAt, int numberOfNewRows)
+        internal void InsertRowsOfTypeInternal<T>(ref ArrayHolder<T>[] allColumnsOfType, int insertAt,
+            int numberOfNewRows)
         {
             int columnCount = allColumnsOfType?.Length ?? 0;
             for (int i = 0; i < columnCount; i++)
             {
                 ref T[] rows = ref allColumnsOfType[i].TArray;
-                int newRowCount = rowCount + numberOfNewRows;
+                int newRowCount = RowCount + numberOfNewRows;
                 Array.Resize(ref rows, newRowCount);
                 for (int j = newRowCount - 1; j > insertAt + numberOfNewRows - 1; j--)
                 {
@@ -1704,16 +1734,17 @@ namespace GDX.Tables
             }
         }
 
-        internal void DeleteRowsOfTypeInternal<T>(ref ArrayHolder<T>[] allColumnsOfType, int removeAt, int numberOfRowsToDelete)
+        internal void DeleteRowsOfTypeInternal<T>(ref ArrayHolder<T>[] allColumnsOfType, int removeAt,
+            int numberOfRowsToDelete)
         {
             int columnCount = allColumnsOfType?.Length ?? 0;
 
             for (int i = 0; i < columnCount; i++)
             {
                 ref T[] rows = ref allColumnsOfType[i].TArray;
-                int newRowCount = rowCount - numberOfRowsToDelete;
+                int newRowCount = RowCount - numberOfRowsToDelete;
 
-                for (int j = removeAt + numberOfRowsToDelete; j < rowCount; j++)
+                for (int j = removeAt + numberOfRowsToDelete; j < RowCount; j++)
                 {
                     rows[j - numberOfRowsToDelete] = rows[j];
                 }
@@ -1726,8 +1757,8 @@ namespace GDX.Tables
         {
             AssertColumnIDValid(columnID);
             AssertRowIDValid(rowID);
-            int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
-            int row = rowIDToDenseIndexMap[rowID];
+            int column = ColumnIDToDenseIndexMap[columnID].ColumnDenseIndex;
+            int row = RowIDToDenseIndexMap[rowID];
             return ref allColumnsOfType[column][row];
         }
 
@@ -1735,8 +1766,8 @@ namespace GDX.Tables
         {
             AssertColumnIDValid(columnID);
             AssertRowIDValid(rowID);
-            int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
-            int row = rowIDToDenseIndexMap[rowID];
+            int column = ColumnIDToDenseIndexMap[columnID].ColumnDenseIndex;
+            int row = RowIDToDenseIndexMap[rowID];
             return allColumnsOfType[column][row];
         }
 
@@ -1744,17 +1775,17 @@ namespace GDX.Tables
         {
             AssertColumnIDValid(columnID);
             AssertRowIDValid(rowID);
-            int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
-            int row = rowIDToDenseIndexMap[rowID];
+            int column = ColumnIDToDenseIndexMap[columnID].ColumnDenseIndex;
+            int row = RowIDToDenseIndexMap[rowID];
             allColumnsOfType[column][row] = value;
-            dataVersion++;
-            return dataVersion;
+            DataVersion++;
+            return DataVersion;
         }
 
         internal T[] GetColumn<T>(int columnID, ref ArrayHolder<T>[] allColumnsOfType)
         {
             AssertColumnIDValid(columnID);
-            int column = columnIDToDenseIndexMap[columnID].columnDenseIndex;
+            int column = ColumnIDToDenseIndexMap[columnID].ColumnDenseIndex;
             return allColumnsOfType[column].TArray;
         }
 
@@ -1780,7 +1811,7 @@ namespace GDX.Tables
                 throw new ArgumentException("sortedColumnIDs array cannot be null.");
             }
 
-            if (sortedColumnIDs.Length != sortedOrderToColumnIDMap.Length)
+            if (sortedColumnIDs.Length != SortedOrderToColumnIDMap.Length)
             {
                 throw new ArgumentException("sortedColumnIDs array must be the same length as GetColumnCount.");
             }
@@ -1793,7 +1824,7 @@ namespace GDX.Tables
 
         internal void AssertColumnSortOrderValid(int sortedOrder)
         {
-            if (sortedOrder >= combinedColumnCount || sortedOrder < 0)
+            if (sortedOrder >= CombinedColumnCount || sortedOrder < 0)
             {
                 throw new ArgumentException("Invalid column sort order argument: " + sortedOrder);
             }
@@ -1801,20 +1832,20 @@ namespace GDX.Tables
 
         internal void AssertRowSortOrderValid(int sortedOrder)
         {
-            if (sortedOrder >= rowCount || sortedOrder < 0)
+            if (sortedOrder >= RowCount || sortedOrder < 0)
             {
                 throw new ArgumentException("Invalid row sort order argument: " + sortedOrder);
             }
         }
 
-        internal void AssertSorteRowsArgValid(int[] sortedRowIDs)
+        internal void AssertSortRowsArgValid(int[] sortedRowIDs)
         {
             if (sortedRowIDs == null)
             {
                 throw new ArgumentException("sortedRowIDs array cannot be null.");
             }
 
-            if (sortedRowIDs.Length != rowDenseIndexToIDMap.Length)
+            if (sortedRowIDs.Length != RowDenseIndexToIDMap.Length)
             {
                 throw new ArgumentException("sortedRowIDs array must be the same length as GetRowCount.");
             }
@@ -1823,6 +1854,13 @@ namespace GDX.Tables
             {
                 AssertRowIDValid(sortedRowIDs[i]);
             }
+        }
+
+        [Serializable]
+        internal struct ColumnEntry
+        {
+            public Serializable.SerializableTypes ColumnType;
+            public int ColumnDenseIndex;
         }
     }
 }

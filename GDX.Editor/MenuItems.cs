@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace GDX.Editor
 {
-
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static class MenuItems
     {
 #if GDX_TOOLS
