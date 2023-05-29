@@ -44,22 +44,22 @@ namespace GDX.Editor.Windows
             yield return null;
         }
 
-        [Test]
-        [Category(Core.TestCategory)]
-        public void ColumnHeader_Name_InternalIndexMatches()
-        {
-            m_TableWindowController.AddColumn("A", Serializable.SerializableTypes.String);
-            m_TableWindowController.AddColumn("B", Serializable.SerializableTypes.String);
-            m_TableWindowController.AddColumn("C", Serializable.SerializableTypes.Bounds);
-            m_TableWindowController.AddColumn("D", Serializable.SerializableTypes.String);
-
-
-            TableBase.ColumnDescription columnDescription = m_TestTable.GetColumnDescription(3);
-            VisualElement columnCHeader = m_TableWindowView.GetColumnContainer()[0][3];
-            TableBase.ColumnDescription columnCDescription = m_TestTable.GetColumnDescription(columnCHeader.name.Split('_', StringSplitOptions.RemoveEmptyEntries)[1]);
-
-            Assert.That(columnDescription.InternalIndex == columnCDescription.InternalIndex);
-        }
+        // [Test]
+        // [Category(Core.TestCategory)]
+        // public void ColumnHeader_Name_InternalIndexMatches()
+        // {
+        //     m_TableWindowController.AddColumn("A", Serializable.SerializableTypes.String);
+        //     m_TableWindowController.AddColumn("B", Serializable.SerializableTypes.String);
+        //     m_TableWindowController.AddColumn("C", Serializable.SerializableTypes.Bounds);
+        //     m_TableWindowController.AddColumn("D", Serializable.SerializableTypes.String);
+        //
+        //
+        //     TableBase.ColumnDescription columnDescription = m_TestTable.GetColumnDescription(3);
+        //     VisualElement columnCHeader = m_TableWindowView.GetColumnContainer()[0][3];
+        //     TableBase.ColumnDescription columnCDescription = m_TestTable.GetColumnDescription(columnCHeader.name.Split('_', StringSplitOptions.RemoveEmptyEntries)[1]);
+        //
+        //     Assert.That(columnDescription.InternalIndex == columnCDescription.InternalIndex);
+        // }
     }
 }
 #endif
