@@ -27,7 +27,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         protected const string k_CellFieldName = "gdx-table-inspector-field";
 
-        VisualElement m_CellElement;
+
         TableBase.ColumnDescription[] m_ColumnDescriptions;
         protected int m_ColumnInternalIndex = -1;
         SerializedProperty m_ColumnProperty;
@@ -43,6 +43,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         SerializedProperty m_SerializedProperty;
 
         protected TableBase m_Table;
+        protected VisualElement m_CellElement;
         Button m_TableButton;
         SerializedProperty m_TableProperty;
 
@@ -51,9 +52,12 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         TableCache.ICellValueChangedCallbackReceiver m_ICellValueChangedCallbackReceiverImplementation;
 
 
+
         protected abstract Serializable.SerializableTypes GetSupportedType();
 
         protected abstract VisualElement GetCellElement();
+        protected abstract void UpdateValue();
+
         protected abstract ulong GetDataVersion();
 
         ~CellValueDrawerBase()
@@ -217,7 +221,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         protected void NotifyOfChange()
         {
-            TableCache.NotifyOfCellValueChange(m_Table, m_RowInternalIndex, m_ColumnInternalIndex);
+            TableCache.NotifyOfCellValueChange(m_Table, m_RowInternalIndex, m_ColumnInternalIndex, this);
         }
 
         string FormatTableSelectionItem(int arg)
@@ -374,14 +378,14 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                 VisualElement cellContainer = new VisualElement { style = { flexDirection = FlexDirection.Row } };
 
 
-                VisualElement cellElement = GetCellElement();
+                m_CellElement = GetCellElement();
                 RegisterForCallback();
 
-                cellElement.AddToClassList("gdx-cell-field-inspector");
+                m_CellElement.AddToClassList("gdx-cell-field-inspector");
                 Button lockButton = new Button(OnLockButtonClicked) { name = "gdx-cell-value-lock" };
                 if (!m_IsUnlocked)
                 {
-                    cellElement.SetEnabled(false);
+                    m_CellElement.SetEnabled(false);
                     lockButton.AddToClassList(k_StyleClassLocked);
                     lockButton.tooltip = k_MessageClickToUnlock;
                 }
@@ -391,7 +395,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                     lockButton.tooltip = k_MessageClickToLock;
                 }
 
-                cellContainer.Add(cellElement);
+                cellContainer.Add(m_CellElement);
                 cellContainer.Add(lockButton);
 
                 return cellContainer;
@@ -467,7 +471,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         void RegisterForCallback()
         {
-            if (m_Table == null)
+            if (m_Table == null || m_HasRegisteredForCallbacks)
             {
                 return;
             }
@@ -489,7 +493,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         {
             if (m_RowInternalIndex == rowInternalIndex && m_ColumnInternalIndex == columnInternalIndex)
             {
-                SetDisplayMode(DisplayMode.DisplayValue);
+                UpdateValue();
             }
         }
     }

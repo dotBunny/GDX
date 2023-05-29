@@ -28,6 +28,13 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             return newField;
         }
 
+        /// <inheritdoc />
+        protected override void UpdateValue()
+        {
+            DoubleField cellField = (DoubleField)m_CellElement;
+            cellField.SetValueWithoutNotify(m_CellValue.Get());
+        }
+
         protected override ulong GetDataVersion()
         {
             return m_CellValue.GetDataVersion();

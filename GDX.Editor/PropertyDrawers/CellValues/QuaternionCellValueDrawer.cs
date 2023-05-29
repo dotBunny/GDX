@@ -35,6 +35,18 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         }
 
         /// <inheritdoc />
+        protected override void UpdateValue()
+        {
+            Vector4Field cellField = (Vector4Field)m_CellElement;
+
+            Quaternion localQuaternion = m_CellValue.Get();
+            Vector4 fieldValue =
+                new Vector4(localQuaternion.x, localQuaternion.y, localQuaternion.z, localQuaternion.w);
+
+            cellField.SetValueWithoutNotify(fieldValue);
+        }
+
+        /// <inheritdoc />
         protected override ulong GetDataVersion()
         {
             return m_CellValue.GetDataVersion();

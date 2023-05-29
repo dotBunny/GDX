@@ -30,6 +30,13 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         }
 
         /// <inheritdoc />
+        protected override void UpdateValue()
+        {
+            IntegerField cellField = (IntegerField)m_CellElement;
+            cellField.SetValueWithoutNotify((int)m_CellValue.Get());
+        }
+
+        /// <inheritdoc />
         protected override ulong GetDataVersion()
         {
             return m_CellValue.GetDataVersion();

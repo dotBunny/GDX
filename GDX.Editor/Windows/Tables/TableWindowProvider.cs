@@ -92,7 +92,6 @@ namespace GDX.Editor.Windows.Tables
             TableCache.UnregisterTable(tableWindow.GetTable());
 
             // We need to remove all cells associated with a map
-            TableWindowCells.CleanTableReferences(ticket);
         }
 
         [OnOpenAsset(1)]

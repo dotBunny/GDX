@@ -86,7 +86,6 @@ namespace GDX.Editor.Windows.Tables
                     name = $"Column_{columnIndex}",
                     title = columnDescription.Name,
                     width = columnSizePercentage,
-                    destroyCell = TableWindowCells.DestroyCell,
                     resizable = true
                 };
 

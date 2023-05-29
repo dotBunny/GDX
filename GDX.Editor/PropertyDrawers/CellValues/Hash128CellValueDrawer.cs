@@ -29,6 +29,13 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         }
 
         /// <inheritdoc />
+        protected override void UpdateValue()
+        {
+            Hash128Field cellField = (Hash128Field)m_CellElement;
+            cellField.SetValueWithoutNotify(m_CellValue.Get());
+        }
+
+        /// <inheritdoc />
         protected override ulong GetDataVersion()
         {
             return m_CellValue.GetDataVersion();

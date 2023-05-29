@@ -162,8 +162,6 @@ namespace GDX.Editor.Windows.Tables
 
             RegisterUndo($"Remove Column ({table.GetColumnName(internalIndex)})");
 
-            TableWindowCells.CleanTableReferences(TableCache.GetTicket(table), internalIndex);
-
             table.RemoveColumn(m_TableWindow.GetView().GetColumnType(internalIndex), internalIndex);
 
             TableCache.NotifyOfColumnChange(table);

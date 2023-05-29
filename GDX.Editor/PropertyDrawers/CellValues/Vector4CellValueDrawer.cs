@@ -29,6 +29,13 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         }
 
         /// <inheritdoc />
+        protected override void UpdateValue()
+        {
+            Vector4Field cellField = (Vector4Field)m_CellElement;
+            cellField.SetValueWithoutNotify(m_CellValue.Get());
+        }
+
+        /// <inheritdoc />
         protected override ulong GetDataVersion()
         {
             return m_CellValue.GetDataVersion();
