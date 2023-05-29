@@ -2,8 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System.IO;
-using GDX.Collections;
 using GDX.Editor.Inspectors;
 using GDX.Tables;
 using UnityEditor;
@@ -81,13 +79,15 @@ namespace GDX.Editor.Windows.Tables
         public void ShowRemoveColumnDialog(int internalIndex)
         {
             m_Overlay.SetConfirmationState(TableWindowOverlay.ConfirmationState.RemoveColumn, internalIndex,
-                "Remove Column", $"Are you sure you wish to delete column '{m_TableWindow.GetTable().GetColumnName(internalIndex)}'?");
+                "Remove Column",
+                $"Are you sure you wish to delete column '{m_TableWindow.GetTable().GetColumnName(internalIndex)}'?");
         }
 
         public void ShowRemoveRowDialog(int internalIndex)
         {
             m_Overlay.SetConfirmationState(TableWindowOverlay.ConfirmationState.RemoveRow, internalIndex,
-                "Remove Row", $"Are you sure you wish to delete row '{m_TableWindow.GetTable().GetRowName(internalIndex)}'?");
+                "Remove Row",
+                $"Are you sure you wish to delete row '{m_TableWindow.GetTable().GetRowName(internalIndex)}'?");
         }
 
         public void ShowSettings()
@@ -210,7 +210,7 @@ namespace GDX.Editor.Windows.Tables
         public bool SetTableSettings(string displayName, bool enableUndo)
         {
             TableBase table = m_TableWindow.GetTable();
-            RegisterUndo($"Table Settings");
+            RegisterUndo("Table Settings");
 
             // Check if there is a change
             string tableDisplayName = table.GetDisplayName();
@@ -219,6 +219,7 @@ namespace GDX.Editor.Windows.Tables
                 table.SetDisplayName(displayName);
                 m_TableWindow.titleContent = new GUIContent(displayName);
             }
+
             table.SetFlag(TableBase.Flags.EnableUndo, enableUndo);
 
             OnTableChanged();
@@ -246,6 +247,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 EditorUtility.SetDirty(scriptableObject);
             }
+
             TableInspectorBase.RedrawInspector(m_TableWindow.GetTable());
         }
     }

@@ -29,8 +29,6 @@ namespace GDX.Editor.Windows.Tables
             Confirmation
         }
 
-        readonly VisualElement m_RootElement;
-        readonly TableWindow m_TableWindow;
         readonly Button m_AddColumnAddButton;
         readonly Button m_AddColumnCancelButton;
         readonly TextField m_AddColumnName;
@@ -42,13 +40,11 @@ namespace GDX.Editor.Windows.Tables
         readonly TextField m_AddRowName;
 
         readonly VisualElement m_AddRowOverlay;
-        int m_CachedIndex;
         readonly Button m_ConfirmationAcceptButton;
         readonly Button m_ConfirmationCancelButton;
         readonly Label m_ConfirmationMessageLabel;
 
         readonly VisualElement m_ConfirmationOverlay;
-        ConfirmationState m_ConfirmationState;
         readonly Label m_ConfirmationTitleLabel;
 
         readonly Button m_RenameAcceptButton;
@@ -57,14 +53,18 @@ namespace GDX.Editor.Windows.Tables
         readonly VisualElement m_RenameOverlay;
         readonly Label m_RenameTitleLabel;
 
-        readonly VisualElement m_SettingsOverlay;
-        readonly TextField m_SettingsDisplayName;
-        readonly Toggle m_SettingsSupportUndoToggle;
-        readonly Button m_SettingsSaveButton;
+        readonly VisualElement m_RootElement;
         readonly Button m_SettingsCancelButton;
+        readonly TextField m_SettingsDisplayName;
+
+        readonly VisualElement m_SettingsOverlay;
+        readonly Button m_SettingsSaveButton;
+        readonly Toggle m_SettingsSupportUndoToggle;
+        readonly TableWindow m_TableWindow;
+        int m_CachedIndex;
+        ConfirmationState m_ConfirmationState;
 
         OverlayState m_CurrentState;
-
 
 
         internal TableWindowOverlay(VisualElement element, TableWindow window)
@@ -214,7 +214,8 @@ namespace GDX.Editor.Windows.Tables
                     m_RootElement.style.display = DisplayStyle.Flex;
                     m_SettingsOverlay.style.display = DisplayStyle.Flex;
                     m_SettingsDisplayName.SetValueWithoutNotify(m_TableWindow.GetTable().GetDisplayName());
-                    m_SettingsSupportUndoToggle.SetValueWithoutNotify(m_TableWindow.GetTable().GetFlag(TableBase.Flags.EnableUndo));
+                    m_SettingsSupportUndoToggle.SetValueWithoutNotify(m_TableWindow.GetTable()
+                        .GetFlag(TableBase.Flags.EnableUndo));
                     break;
                 default:
                     m_RootElement.style.display = DisplayStyle.None;
@@ -316,7 +317,8 @@ namespace GDX.Editor.Windows.Tables
                 return;
             }
 
-            if (m_TableWindow.GetController().SetTableSettings(m_SettingsDisplayName.text, m_SettingsSupportUndoToggle.value))
+            if (m_TableWindow.GetController()
+                .SetTableSettings(m_SettingsDisplayName.text, m_SettingsSupportUndoToggle.value))
             {
                 SetOverlayStateHidden();
             }

@@ -16,6 +16,7 @@ namespace GDX.Editor.Windows.Tables
     public static class TableWindowProvider
     {
         public const string UndoPrefix = "Table:";
+
         static readonly Dictionary<TableBase, TableWindow> k_TableWindowMap =
             new Dictionary<TableBase, TableWindow>();
 
@@ -42,10 +43,12 @@ namespace GDX.Editor.Windows.Tables
         static void UndoRedoEvent(in UndoRedoInfo undo)
         {
             if (!undo.undoName.StartsWith("Table:", StringComparison.InvariantCultureIgnoreCase))
+            {
                 return;
+            }
 
             // Update windows / inspectors
-            foreach(KeyValuePair<TableBase,TableWindow> kvp in k_TableWindowMap)
+            foreach (KeyValuePair<TableBase, TableWindow> kvp in k_TableWindowMap)
             {
                 kvp.Value.BindTable(kvp.Key);
                 TableInspectorBase.RedrawInspector(kvp.Key);
@@ -54,7 +57,6 @@ namespace GDX.Editor.Windows.Tables
 
         internal static int RegisterTableWindow(TableWindow tableWindow, TableBase table)
         {
-
             int ticket = GetTableWindowTicket(tableWindow);
             k_TableWindowMap[table] = tableWindow;
             if (ticket != -1)

@@ -50,6 +50,7 @@ namespace GDX.Editor.Windows.Tables
                 // TODO: do we need to dirty this if its not a SO
                 AssetDatabase.SaveAssetIfDirty(m_ScriptableObject);
             }
+
             TableWindowProvider.UnregisterTableWindow(this);
         }
 

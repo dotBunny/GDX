@@ -14,6 +14,18 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 #if UNITY_2022_2_OR_NEWER
     public abstract class CellValueDrawerBase : PropertyDrawer
     {
+        const string k_MessageClickToUnlock = "Click to unlock for editting.";
+        const string k_MessageClickToLock = "Click to lock data.";
+        const string k_MessageNoTableSelected = "No table selected.";
+        const string k_PropertyRow = "Row";
+        const string k_PropertyColumn = "Column";
+        const string k_PropertyTable = "Table";
+
+        const string k_StyleClassLinked = "linked";
+        const string k_StyleClassUnlinked = "unlinked";
+        const string k_StyleClassLocked = "locked";
+        const string k_StyleClassUnlocked = "unlocked";
+
         protected const string k_CellFieldName = "gdx-table-inspector-field";
 
         VisualElement m_CellElement;
@@ -56,9 +68,9 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             m_SerializedProperty = property;
 
             // Reference serialization properties
-            m_TableProperty = m_SerializedProperty.FindPropertyRelative("Table");
-            m_RowProperty = m_SerializedProperty.FindPropertyRelative("Row");
-            m_ColumnProperty = m_SerializedProperty.FindPropertyRelative("Column");
+            m_TableProperty = m_SerializedProperty.FindPropertyRelative(k_PropertyTable);
+            m_RowProperty = m_SerializedProperty.FindPropertyRelative(k_PropertyRow);
+            m_ColumnProperty = m_SerializedProperty.FindPropertyRelative(k_PropertyColumn);
 
             // Load Data
             m_Table = (TableBase)m_TableProperty.objectReferenceValue;
@@ -124,22 +136,24 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         {
             if (m_Table != null && m_RowInternalIndex != -1 && m_ColumnInternalIndex != -1)
             {
-                m_TableButton.AddToClassList("linked");
-                m_TableButton.RemoveFromClassList("unlinked");
-                m_TableButton.tooltip = $"Table: {m_Table.GetDisplayName()}\nRow: {m_Table.GetRowName(m_RowInternalIndex)} ({m_RowInternalIndex})\nColumn: {m_Table.GetColumnName(m_ColumnInternalIndex)} ({m_ColumnInternalIndex})\nData Version: {GetDataVersion()}\n\nClick to reset link.";
+                m_TableButton.AddToClassList(k_StyleClassLinked);
+                m_TableButton.RemoveFromClassList(k_StyleClassUnlinked);
+                m_TableButton.tooltip =
+                    $"Table: {m_Table.GetDisplayName()}\nRow: {m_Table.GetRowName(m_RowInternalIndex)} ({m_RowInternalIndex})\nColumn: {m_Table.GetColumnName(m_ColumnInternalIndex)} ({m_ColumnInternalIndex})\nData Version: {GetDataVersion()}\n\nClick to reset link.";
             }
             else
             {
-                m_TableButton.RemoveFromClassList("linked");
-                m_TableButton.AddToClassList("unlinked");
+                m_TableButton.RemoveFromClassList(k_StyleClassLinked);
+                m_TableButton.AddToClassList(k_StyleClassUnlinked);
 
                 if (m_Table == null)
                 {
-                    m_TableButton.tooltip = "No table selected.";
+                    m_TableButton.tooltip = k_MessageNoTableSelected;
                 }
                 else if (m_RowInternalIndex == -1)
                 {
-                    m_TableButton.tooltip = $"Table: {m_Table.GetDisplayName()}\nRow: None selected.\n\nClick to reset link.";
+                    m_TableButton.tooltip =
+                        $"Table: {m_Table.GetDisplayName()}\nRow: None selected.\n\nClick to reset link.";
                 }
                 else if (m_ColumnInternalIndex == -1)
                 {
@@ -148,9 +162,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                 }
                 else
                 {
-                    m_TableButton.tooltip = "Pending";
+                    m_TableButton.tooltip = string.Empty;
                 }
-
             }
         }
 
@@ -368,13 +381,13 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                 if (!m_IsUnlocked)
                 {
                     cellElement.SetEnabled(false);
-                    lockButton.AddToClassList("locked");
-                    lockButton.tooltip = "Click to unlock for editing.";
+                    lockButton.AddToClassList(k_StyleClassLocked);
+                    lockButton.tooltip = k_MessageClickToUnlock;
                 }
                 else
                 {
-                    lockButton.AddToClassList("unlocked");
-                    lockButton.tooltip = "Click to lock data.";
+                    lockButton.AddToClassList(k_StyleClassUnlocked);
+                    lockButton.tooltip = k_MessageClickToLock;
                 }
 
                 cellContainer.Add(cellElement);
@@ -385,6 +398,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
             return null;
         }
+
 
         void OnLockButtonClicked()
         {

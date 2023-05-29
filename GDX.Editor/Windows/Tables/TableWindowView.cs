@@ -13,41 +13,31 @@ namespace GDX.Editor.Windows.Tables
 #if UNITY_2022_2_OR_NEWER
     public class TableWindowView
     {
+        static StyleLength m_StyleLength25 = new StyleLength(new Length(25, LengthUnit.Pixel));
+        static StyleLength m_StyleLength275 = new StyleLength(new Length(275, LengthUnit.Pixel));
         readonly List<TableBase.RowDescription> k_RowDescriptions = new List<TableBase.RowDescription>();
+        readonly Length m_BoundsMinWidth = new Length(200, LengthUnit.Pixel);
         readonly List<TableBase.ColumnDescription> m_ColumnDescriptions = new List<TableBase.ColumnDescription>();
+
+        readonly Length m_GenericMinWidth = new Length(75, LengthUnit.Pixel);
+        readonly Length m_HashMinWidth = new Length(260, LengthUnit.Pixel);
         readonly MultiColumnListView m_MultiColumnListView;
+        readonly Length m_NumericMinWidth = new Length(50, LengthUnit.Pixel);
+
+        readonly Dictionary<int, ContextualMenuManipulator> m_RowContextMenus =
+            new Dictionary<int, ContextualMenuManipulator>();
+
         readonly Columns m_TableViewColumns;
         readonly VisualElement m_TableViewHeader;
+        readonly Length m_ToggleMinWidth = new Length(25, LengthUnit.Pixel);
+        readonly Length m_Vector2MinWidth = new Length(100, LengthUnit.Pixel);
+        readonly Length m_Vector3MinWidth = new Length(150, LengthUnit.Pixel);
+        readonly Length m_Vector4MinWidth = new Length(200, LengthUnit.Pixel);
 
 
         readonly TableWindow parentWindow;
 
-        readonly Length m_GenericMinWidth = new Length(75, LengthUnit.Pixel);
-        readonly Length m_ToggleMinWidth = new Length(25, LengthUnit.Pixel);
-        readonly Length m_NumericMinWidth = new Length(50, LengthUnit.Pixel);
-        readonly Length m_BoundsMinWidth = new Length(200, LengthUnit.Pixel);
-        readonly Length m_Vector2MinWidth = new Length(100, LengthUnit.Pixel);
-        readonly Length m_Vector3MinWidth = new Length(150, LengthUnit.Pixel);
-        readonly Length m_Vector4MinWidth = new Length(200, LengthUnit.Pixel);
-        readonly Length m_HashMinWidth = new Length(260, LengthUnit.Pixel);
-
-        static StyleLength m_StyleLength25 = new StyleLength(new Length(25, LengthUnit.Pixel));
-        static StyleLength m_StyleLength275 = new StyleLength(new Length(275, LengthUnit.Pixel));
-
         float m_DesiredRowHeight = 27f;
-
-        public void SetDesiredRowHeightMultiplier(float neededHeight)
-        {
-            if (neededHeight > m_DesiredRowHeight)
-            {
-                m_DesiredRowHeight = neededHeight;
-            }
-        }
-
-        public void RefreshItems()
-        {
-            m_MultiColumnListView.RefreshItems();
-        }
 
         public TableWindowView(VisualElement rootElement, TableWindow window)
         {
@@ -289,6 +279,19 @@ namespace GDX.Editor.Windows.Tables
             RebuildRowData();
         }
 
+        public void SetDesiredRowHeightMultiplier(float neededHeight)
+        {
+            if (neededHeight > m_DesiredRowHeight)
+            {
+                m_DesiredRowHeight = neededHeight;
+            }
+        }
+
+        public void RefreshItems()
+        {
+            m_MultiColumnListView.RefreshItems();
+        }
+
         void SortItems()
         {
             foreach (SortColumnDescription sortedColumn in m_MultiColumnListView.sortedColumns)
@@ -343,6 +346,7 @@ namespace GDX.Editor.Windows.Tables
             // layout of the UXML document to be the same across versions.
 //            label.parent.parent.AddManipulator(GetOrCreateManipulatorForRow(description.InternalIndex));
         }
+
         void UnbindRowHeader(VisualElement cell, int row)
         {
             Label label = (Label)cell;
@@ -360,14 +364,13 @@ namespace GDX.Editor.Windows.Tables
             }
         }
 
-        readonly Dictionary<int, ContextualMenuManipulator> m_RowContextMenus = new Dictionary<int, ContextualMenuManipulator>();
-
         ContextualMenuManipulator GetOrCreateManipulatorForRow(int internalIndex)
         {
             if (m_RowContextMenus.TryGetValue(internalIndex, out ContextualMenuManipulator forRow))
             {
                 return forRow;
             }
+
             ContextualMenuManipulator menuManipulator = new ContextualMenuManipulator(evt =>
             {
                 evt.menu.AppendSeparator();
@@ -420,7 +423,7 @@ namespace GDX.Editor.Windows.Tables
 
             if (foundIndex != -1)
             {
-                m_ColumnDescriptions[foundIndex] = new TableBase.ColumnDescription()
+                m_ColumnDescriptions[foundIndex] = new TableBase.ColumnDescription
                 {
                     Name = newName,
                     InternalIndex = m_ColumnDescriptions[foundIndex].InternalIndex,
@@ -446,7 +449,10 @@ namespace GDX.Editor.Windows.Tables
 
         void AppendColumnContextMenu(ContextualMenuPopulateEvent evt, Column column)
         {
-            if (column == null || column.name == null) return;
+            if (column == null || column.name == null)
+            {
+                return;
+            }
 
             int indexOfSplit = column.name.IndexOf("_", StringComparison.Ordinal);
             if (indexOfSplit != -1)

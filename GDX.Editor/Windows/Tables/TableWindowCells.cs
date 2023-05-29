@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
-using GDX.Collections.Generic;
 using GDX.Tables.CellValues;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -15,7 +14,6 @@ namespace GDX.Editor.Windows.Tables
     static class TableWindowCells
     {
         internal const float k_DoubleHeight = 50f;
-        internal const float k_TripleHeight = 68f;
 
         const string k_RowHeaderFieldName = "gdx-table-row-header";
         const string k_CellFieldName = "gdx-table-field";
@@ -23,7 +21,7 @@ namespace GDX.Editor.Windows.Tables
         static readonly Dictionary<VisualElement, TableWindowCellMapping> k_CellToMapping =
             new Dictionary<VisualElement, TableWindowCellMapping>();
 
-        static StyleLength m_StyleLength25 = new StyleLength(new Length(25, LengthUnit.Pixel));
+        static readonly StyleLength m_StyleLength25 = new StyleLength(new Length(25, LengthUnit.Pixel));
 
 
         internal static void DestroyCell(VisualElement cell)
