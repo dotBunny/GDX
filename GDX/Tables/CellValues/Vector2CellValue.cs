@@ -35,6 +35,11 @@ namespace GDX.Tables.CellValues
             return m_CachedValue;
         }
 
+        public ulong GetDataVersion()
+        {
+            return m_TableVersion;
+        }
+
         public Vector2 GetUnsafe()
         {
             return m_CachedValue;

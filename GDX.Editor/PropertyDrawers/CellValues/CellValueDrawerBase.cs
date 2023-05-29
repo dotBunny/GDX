@@ -9,7 +9,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-
 namespace GDX.Editor.PropertyDrawers.CellValues
 {
 #if UNITY_2022_2_OR_NEWER
@@ -17,31 +16,37 @@ namespace GDX.Editor.PropertyDrawers.CellValues
     {
         protected const string k_CellFieldName = "gdx-table-inspector-field";
 
-        SerializedProperty m_SerializedProperty;
-        SerializedProperty m_TableProperty;
-        SerializedProperty m_RowProperty;
+        VisualElement m_CellElement;
+        TableBase.ColumnDescription[] m_ColumnDescriptions;
+        protected int m_ColumnInternalIndex = -1;
         SerializedProperty m_ColumnProperty;
 
-        AssetDatabaseReference[] m_Tables;
-        TableBase.RowDescription[] m_RowDescriptions;
-        TableBase.ColumnDescription[] m_ColumnDescriptions;
+        VisualElement m_Container;
+        Label m_FieldLabel;
 
-        VisualElement m_CellElement;
+        bool m_IsUnlocked;
+        TableBase.RowDescription[] m_RowDescriptions;
+        protected int m_RowInternalIndex = -1;
+        SerializedProperty m_RowProperty;
+
+        SerializedProperty m_SerializedProperty;
 
         protected TableBase m_Table;
-        protected int m_RowInternalIndex = -1;
-        protected int m_ColumnInternalIndex = -1;
+        Button m_TableButton;
+        SerializedProperty m_TableProperty;
 
-        bool m_IsUnlocked = false;
+        AssetDatabaseReference[] m_Tables;
+        VisualElement m_ValueContainer;
 
 
         protected abstract Serializable.SerializableTypes GetSupportedType();
 
         protected abstract VisualElement GetCellElement();
+        protected abstract ulong GetDataVersion();
 
 
         /// <summary>
-        /// Overrides the method to make a UIElements based GUI for the property.
+        ///     Overrides the method to make a UIElements based GUI for the property.
         /// </summary>
         /// <param name="property">The SerializedProperty to make the custom GUI for.</param>
         /// <returns>A disabled visual element.</returns>
@@ -63,10 +68,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                 m_ColumnInternalIndex = m_ColumnProperty.intValue;
             }
 
-            //m_Container = new TextField(property
-
             // Build our base level inspector
-            m_Container = new VisualElement { name = "gdx-cell-value", style = { flexDirection = FlexDirection.Row}};
+            m_Container = new VisualElement { name = "gdx-cell-value", style = { flexDirection = FlexDirection.Row } };
             ResourcesProvider.SetupSharedStylesheets(m_Container);
             ResourcesProvider.SetupStylesheet("GDXCellValueDrawer", m_Container);
             m_Container.AddToClassList("unity-base-field");
@@ -77,10 +80,13 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             m_Container.AddToClassList("unity-input-field");
 
 
-
-            VisualElement fieldLabelContainer = new VisualElement { style =
+            VisualElement fieldLabelContainer = new VisualElement
+            {
+                style =
                 {
-                    maxWidth = new StyleLength(new Length(42f, LengthUnit.Percent)), flexGrow = 1, flexDirection = FlexDirection.Row
+                    maxWidth = new StyleLength(new Length(42f, LengthUnit.Percent)),
+                    flexGrow = 1,
+                    flexDirection = FlexDirection.Row
                 }
             };
             m_FieldLabel = new Label(property.name) { name = "gdx-cell-value-label" };
@@ -94,14 +100,14 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             fieldLabelContainer.Add(m_FieldLabel);
 
             // Add spacer
-            fieldLabelContainer.Add(new VisualElement() { name = "gdx-cell-value-spacer"});
+            fieldLabelContainer.Add(new VisualElement { name = "gdx-cell-value-spacer" });
 
-            m_TableButton = new Button(OnLinkStatusClicked) { name = "gdx-cell-value-table" };
+            m_TableButton = new Button(TableLinkStatusClicked) { name = "gdx-cell-value-table" };
             fieldLabelContainer.Add(m_TableButton);
 
             m_Container.Add(fieldLabelContainer);
 
-            m_ValueContainer = new VisualElement() { name = "gdx-cell-value-container" };
+            m_ValueContainer = new VisualElement { name = "gdx-cell-value-container" };
             m_ValueContainer.AddToClassList("unity-base-field__input");
             m_ValueContainer.AddToClassList("unity-text-field__input");
             m_ValueContainer.AddToClassList("unity-property-field__input");
@@ -114,40 +120,41 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             return m_Container;
         }
 
-        void UpdateLinkStatus()
+        void UpdateTableLinkStatus()
         {
-            if(m_Table != null && m_RowInternalIndex != -1 && m_ColumnInternalIndex != -1)
+            if (m_Table != null && m_RowInternalIndex != -1 && m_ColumnInternalIndex != -1)
             {
                 m_TableButton.AddToClassList("linked");
                 m_TableButton.RemoveFromClassList("unlinked");
-                m_TableButton.tooltip = $"{m_Table.GetDisplayName()} @ {m_RowInternalIndex}:{m_ColumnInternalIndex}";
+                m_TableButton.tooltip = $"Table: {m_Table.GetDisplayName()}\nRow: {m_Table.GetRowName(m_RowInternalIndex)} ({m_RowInternalIndex})\nColumn: {m_Table.GetColumnName(m_ColumnInternalIndex)} ({m_ColumnInternalIndex})\nData Version: {GetDataVersion()}\n\nClick to reset link.";
             }
             else
             {
                 m_TableButton.RemoveFromClassList("linked");
                 m_TableButton.AddToClassList("unlinked");
 
-                // Complicated messaging
                 if (m_Table == null)
                 {
                     m_TableButton.tooltip = "No table selected.";
                 }
                 else if (m_RowInternalIndex == -1)
                 {
-                    m_TableButton.tooltip = $"{m_Table.GetDisplayName()} - No row selected.";
+                    m_TableButton.tooltip = $"Table: {m_Table.GetDisplayName()}\nRow: None selected.\n\nClick to reset link.";
                 }
                 else if (m_ColumnInternalIndex == -1)
                 {
-                    m_TableButton.tooltip = $"{m_Table.GetDisplayName()} @ {m_RowInternalIndex} - No column selected.";
+                    m_TableButton.tooltip =
+                        $"Table: {m_Table.GetDisplayName()}\nRow: {m_Table.GetRowName(m_RowInternalIndex)} ({m_RowInternalIndex})\nColumn: None selected.\n\nClick to reset link.";
                 }
                 else
                 {
                     m_TableButton.tooltip = "Pending";
                 }
+
             }
         }
 
-        void OnLinkStatusClicked()
+        void TableLinkStatusClicked()
         {
             m_Table = null;
             m_RowInternalIndex = -1;
@@ -155,16 +162,13 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             SetDisplayMode(DisplayMode.SelectTable);
         }
 
-
         void ApplySettings()
         {
-            //SerializedProperty tableProperty = m_SerializedProperty.FindPropertyRelative("Table");
             m_TableProperty.objectReferenceValue = m_Table;
             m_TableProperty.objectReferenceInstanceIDValue = m_Table.GetInstanceID();
-            //SerializedProperty rowProperty = m_SerializedProperty.FindPropertyRelative("Row");
             m_RowProperty.intValue = m_RowInternalIndex;
-            //SerializedProperty columnProperty = m_SerializedProperty.FindPropertyRelative("Column");
             m_ColumnProperty.intValue = m_ColumnInternalIndex;
+
             m_SerializedProperty.serializedObject.ApplyModifiedProperties();
             EditorUtility.SetDirty(m_SerializedProperty.serializedObject.targetObject);
         }
@@ -194,11 +198,6 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             }
         }
 
-        VisualElement m_Container;
-        VisualElement m_ValueContainer;
-        Label m_FieldLabel;
-        Button m_TableButton;
-
         protected void NotifyOfChange()
         {
             // TODO: Needs to target just a cell?
@@ -213,10 +212,12 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         {
             return arg == -1 ? "Select Table" : m_Tables[arg].GetPath().Replace(".asset", "");
         }
+
         string FormatRowSelectionItem(int arg)
         {
             return arg == -1 ? "Select Row" : m_RowDescriptions[arg].Name;
         }
+
         string FormatColumnSelectionItem(int arg)
         {
             return arg == -1 ? "Select Row" : m_ColumnDescriptions[arg].Name;
@@ -231,6 +232,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                 DetectDrawerMode();
                 return m_Tables[arg].GetPathWithoutExtension();
             }
+
             return "Select Table";
         }
 
@@ -243,6 +245,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                 DetectDrawerMode();
                 return "Updating ...";
             }
+
             return "Select Row";
         }
 
@@ -259,18 +262,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                 DetectDrawerMode();
                 return "Updating ...";
             }
+
             return "Select Column";
-        }
-
-
-
-
-        enum DisplayMode
-        {
-            SelectTable,
-            SelectRow,
-            SelectColumn,
-            DisplayValue
         }
 
         VisualElement MakeSelectTableElement()
@@ -287,9 +280,11 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                     choices.Add(i);
                 }
             }
-            return new PopupField<int>( null, choices, 0, OnTableSelected,
+
+            return new PopupField<int>(null, choices, 0, OnTableSelected,
                 FormatTableSelectionItem);
         }
+
         VisualElement MakeSelectRowElement()
         {
             if (m_Table.GetRowCount() == 0)
@@ -309,12 +304,12 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                     choices.Add(i);
                 }
             }
+
             return new PopupField<int>(choices, 0, OnRowSelected, FormatRowSelectionItem);
         }
 
         VisualElement MakeSelectColumnElement()
         {
-
             if (m_RowInternalIndex == -1 || m_Table == null || m_Table.GetColumnCount() == 0)
             {
                 Debug.LogWarning("An error occured when trying to select a column. Please try again.");
@@ -374,11 +369,14 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                 {
                     cellElement.SetEnabled(false);
                     lockButton.AddToClassList("locked");
+                    lockButton.tooltip = "Click to unlock for editing.";
                 }
                 else
                 {
                     lockButton.AddToClassList("unlocked");
+                    lockButton.tooltip = "Click to lock data.";
                 }
+
                 cellContainer.Add(cellElement);
                 cellContainer.Add(lockButton);
 
@@ -397,7 +395,10 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         void SetDisplayMode(DisplayMode displayMode)
         {
             // If we haven't built a container yet we really shouldn't even be here
-            if (m_Container == null) return;
+            if (m_Container == null)
+            {
+                return;
+            }
 
             // Remove existing value content because it will need to change based on the perspective mode
             int childCount = m_ValueContainer.childCount;
@@ -431,10 +432,18 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             {
                 SetDisplayMode((DisplayMode)(int)displayMode - 1);
             }
+
             m_ValueContainer.Add(contentElement);
-            UpdateLinkStatus();
+            UpdateTableLinkStatus();
+        }
 
 
+        enum DisplayMode
+        {
+            SelectTable,
+            SelectRow,
+            SelectColumn,
+            DisplayValue
         }
     }
 #endif

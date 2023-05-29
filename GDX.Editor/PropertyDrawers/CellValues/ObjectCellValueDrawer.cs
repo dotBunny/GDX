@@ -30,6 +30,12 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         }
 
         /// <inheritdoc />
+        protected override ulong GetDataVersion()
+        {
+            return m_CellValue.GetDataVersion();
+        }
+
+        /// <inheritdoc />
         protected override Serializable.SerializableTypes GetSupportedType()
         {
             return ObjectCellValue.GetSupportedType();

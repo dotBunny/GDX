@@ -28,6 +28,11 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             return newField;
         }
 
+        protected override ulong GetDataVersion()
+        {
+            return m_CellValue.GetDataVersion();
+        }
+
         /// <inheritdoc />
         protected override Serializable.SerializableTypes GetSupportedType()
         {
