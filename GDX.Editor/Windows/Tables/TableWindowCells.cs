@@ -28,7 +28,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             StringCellValue cellValue =
-                new StringCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new StringCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -49,7 +49,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             CharCellValue cellValue =
-                new CharCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new CharCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe().ToString());
@@ -70,7 +70,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             BoolCellValue cellValue =
-                new BoolCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new BoolCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -91,7 +91,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             SByteCellValue cellValue =
-                new SByteCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new SByteCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -112,7 +112,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             ByteCellValue cellValue =
-                new ByteCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new ByteCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -133,7 +133,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             ShortCellValue cellValue =
-                new ShortCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new ShortCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -154,7 +154,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             UShortCellValue cellValue =
-                new UShortCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new UShortCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -175,7 +175,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             IntCellValue cellValue =
-                new IntCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new IntCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -196,7 +196,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             UIntCellValue cellValue =
-                new UIntCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new UIntCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify((int)cellValue.GetUnsafe());
@@ -217,7 +217,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             LongCellValue cellValue =
-                new LongCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new LongCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -238,7 +238,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             ULongCellValue cellValue =
-                new ULongCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new ULongCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify((long)cellValue.GetUnsafe());
@@ -259,7 +259,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             FloatCellValue cellValue =
-                new FloatCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new FloatCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -280,7 +280,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             DoubleCellValue cellValue =
-                new DoubleCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new DoubleCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -301,7 +301,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             Vector2CellValue cellValue =
-                new Vector2CellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new Vector2CellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -322,7 +322,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             Vector3CellValue cellValue =
-                new Vector3CellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new Vector3CellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -343,7 +343,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             Vector4CellValue cellValue =
-                new Vector4CellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new Vector4CellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -364,7 +364,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             Vector2IntCellValue cellValue =
-                new Vector2IntCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new Vector2IntCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -385,7 +385,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             Vector3IntCellValue cellValue =
-                new Vector3IntCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new Vector3IntCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -406,7 +406,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             QuaternionCellValue cellValue =
-                new QuaternionCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new QuaternionCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             // Figure it out
@@ -432,7 +432,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             RectCellValue cellValue =
-                new RectCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new RectCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -453,7 +453,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             RectIntCellValue cellValue =
-                new RectIntCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new RectIntCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -474,7 +474,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             ColorCellValue cellValue =
-                new ColorCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new ColorCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -495,7 +495,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             LayerMaskCellValue cellValue =
-                new LayerMaskCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new LayerMaskCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -516,7 +516,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             BoundsCellValue cellValue =
-                new BoundsCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new BoundsCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -537,7 +537,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             BoundsIntCellValue cellValue =
-                new BoundsIntCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new BoundsIntCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -558,7 +558,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             Hash128CellValue cellValue =
-                new Hash128CellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new Hash128CellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -579,7 +579,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             GradientCellValue cellValue =
-                new GradientCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new GradientCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -600,7 +600,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             AnimationCurveCellValue cellValue =
-                new AnimationCurveCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new AnimationCurveCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -621,7 +621,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase table = TableCache.GetTable(map.TableTicket);
 
             ObjectCellValue cellValue =
-                new ObjectCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+                new ObjectCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
 
             string qualifiedType = table.GetTypeNameForObjectColumn(map.ColumnID);
             field.objectType = (!string.IsNullOrEmpty(qualifiedType) ? System.Type.GetType(qualifiedType) : typeof(Object)) ??

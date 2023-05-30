@@ -78,7 +78,7 @@ namespace GDX.Editor.Windows
 
             Assert.That(m_TestTable.GetColumnCount() == 3);
             Assert.That(m_TestTable.GetRowCount() == 1);
-            Assert.That(m_TestTable.GetRowName(rowDescription.InternalIndex) == "Test_Row");
+            Assert.That(m_TestTable.GetRowName(rowDescription.Identifier) == "Test_Row");
         }
 
         [Test]
@@ -93,17 +93,17 @@ namespace GDX.Editor.Windows
             m_TableWindowController.AddRowDefault();
             m_TableWindowController.AddRowDefault();
             m_TableWindowController.AddColumn("E", Serializable.SerializableTypes.Bounds);
-            m_TableWindowController.RemoveColumn(m_TestTable.GetColumnDescription(3).InternalIndex); // remove D
-            m_TableWindowController.RemoveColumn(m_TestTable.GetColumnDescription(3).InternalIndex); // remove E
+            m_TableWindowController.RemoveColumn(m_TestTable.GetColumnDescription(3).Identifier); // remove D
+            m_TableWindowController.RemoveColumn(m_TestTable.GetColumnDescription(3).Identifier); // remove E
             m_TableWindowController.AddColumn("E", Serializable.SerializableTypes.Bounds);
             m_TableWindowController.AddColumn("D", Serializable.SerializableTypes.String);
-            m_TableWindowController.RemoveColumn(m_TestTable.GetColumnDescription(3).InternalIndex); // remove E
+            m_TableWindowController.RemoveColumn(m_TestTable.GetColumnDescription(3).Identifier); // remove E
             m_TableWindowController.AddColumn("E", Serializable.SerializableTypes.Bounds);
             m_TableWindowController.AddColumn("F", Serializable.SerializableTypes.String);
             m_TableWindowController.AddColumn("G", Serializable.SerializableTypes.String);
             m_TableWindowController.AddRowDefault();
             m_TableWindowController.AddRowDefault();
-            m_TableWindowController.RemoveColumn(m_TestTable.GetColumnDescription(4).InternalIndex); // remove E
+            m_TableWindowController.RemoveColumn(m_TestTable.GetColumnDescription(4).Identifier); // remove E
 
             Assert.That(m_TestTable.GetColumnCount() == 6, $"Expected 6, found {m_TestTable.GetColumnCount()}");
         }

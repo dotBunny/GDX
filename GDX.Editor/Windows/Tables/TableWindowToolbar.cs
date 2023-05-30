@@ -97,14 +97,14 @@ namespace GDX.Editor.Windows.Tables
         {
             TableBase.RowDescription selectedItem =
                 (TableBase.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
-            m_ParentWindow.GetController().ShowRenameRowDialog(selectedItem.InternalIndex);
+            m_ParentWindow.GetController().ShowRenameRowDialog(selectedItem.Identifier);
         }
 
         void RemoveRow()
         {
             TableBase.RowDescription selectedItem =
                 (TableBase.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
-            m_ParentWindow.GetController().ShowRemoveRowDialog(selectedItem.InternalIndex);
+            m_ParentWindow.GetController().ShowRemoveRowDialog(selectedItem.Identifier);
         }
 
         void Save()

@@ -48,8 +48,7 @@ namespace GDX.Tables
         [SerializeField] internal ArrayHolder<Object>[] AllObjectRefColumns;
         [SerializeField] internal string[] AllObjectRefTypeNames;
 
-        [SerializeField]
-        internal ArrayHolder<string>[]
+        [SerializeField] internal ArrayHolder<string>[]
             AllColumnNames =
                 new ArrayHolder<string>[Serializable
                     .SerializableTypesCount]; // Contains the name of each column of each type. Ordered by Serializable.SerializableTypes
@@ -77,6 +76,7 @@ namespace GDX.Tables
 
         [SerializeField] BitArray8 SettingsFlags;
 
+        /// <inheritdoc />
         public override ulong GetDataVersion()
         {
             return DataVersion;
@@ -94,26 +94,31 @@ namespace GDX.Tables
             return RowCount;
         }
 
+        /// <inheritdoc />
         public override string GetDisplayName()
         {
             return DisplayName;
         }
 
+        /// <inheritdoc />
         public override void SetDisplayName(string displayName)
         {
             DisplayName = displayName;
         }
 
+        /// <inheritdoc />
         public override bool GetFlag(Flags flag)
         {
             return SettingsFlags[(byte)flag];
         }
 
+        /// <inheritdoc />
         public override void SetFlag(Flags flag, bool toggle)
         {
             SettingsFlags[(byte)flag] = toggle;
         }
 
+        /// <inheritdoc />
         public override RowDescription[] GetAllRowDescriptions()
         {
             if (CombinedColumnCount == 0 || RowCount == 0)
@@ -124,13 +129,14 @@ namespace GDX.Tables
             RowDescription[] returnArray = new RowDescription[RowCount];
             for (int i = 0; i < RowCount; i++)
             {
-                returnArray[i].InternalIndex = RowDenseIndexToIDMap[i];
+                returnArray[i].Identifier = RowDenseIndexToIDMap[i];
                 returnArray[i].Name = RowNames[i];
             }
 
             return returnArray;
         }
 
+        /// <inheritdoc />
         public override RowDescription GetRowDescription(string name)
         {
             for (int i = 0; i < RowCount; i++)
@@ -139,24 +145,27 @@ namespace GDX.Tables
 
                 if (nameAt == name)
                 {
-                    return new RowDescription { InternalIndex = RowDenseIndexToIDMap[i], Name = nameAt };
+                    return new RowDescription { Identifier = RowDenseIndexToIDMap[i], Name = nameAt };
                 }
             }
 
             throw new ArgumentException("Row with name " + name + " does not exist in the table");
         }
 
+        /// <inheritdoc />
         public override RowDescription GetRowDescription(int order)
         {
-            return new RowDescription { InternalIndex = RowDenseIndexToIDMap[order], Name = RowNames[order] };
+            return new RowDescription { Identifier = RowDenseIndexToIDMap[order], Name = RowNames[order] };
         }
 
+        /// <inheritdoc />
         public override void SetAllRowDescriptionsOrder(RowDescription[] orderedRows)
         {
             // TODO: @adam array coming in be in the new order, just use the internalIndex (stable to reorder inside here
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
         public override ColumnDescription GetColumnDescription(string name)
         {
             for (int i = 0; i < Serializable.SerializableTypesCount; i++)
@@ -176,7 +185,7 @@ namespace GDX.Tables
                             ref ColumnEntry columnEntry = ref ColumnIDToDenseIndexMap[columnID];
                             return new ColumnDescription
                             {
-                                InternalIndex = columnID, Name = nameAt, Type = columnEntry.ColumnType
+                                Identifier = columnID, Name = nameAt, Type = columnEntry.ColumnType
                             };
                         }
                     }
@@ -186,6 +195,7 @@ namespace GDX.Tables
             throw new ArgumentException("Column with name " + name + " does not exist in the table");
         }
 
+        /// <inheritdoc />
         public override ColumnDescription GetColumnDescription(int order)
         {
             int idAtOrderedIndex = SortedOrderToColumnIDMap[order];
@@ -195,10 +205,11 @@ namespace GDX.Tables
 
             return new ColumnDescription
             {
-                InternalIndex = idAtOrderedIndex, Name = columnName, Type = columnEntry.ColumnType
+                Identifier = idAtOrderedIndex, Name = columnName, Type = columnEntry.ColumnType
             };
         }
 
+        /// <inheritdoc />
         public override void SetAllColumnDescriptionsOrder(ColumnDescription[] orderedColumns)
         {
             // TODO: @adam array coming in be in the new order, just use the internalIndex (stable to reorder inside here
@@ -226,7 +237,7 @@ namespace GDX.Tables
 
                 returnArray[i] = new ColumnDescription
                 {
-                    Name = name, InternalIndex = columnID, Type = entryForID.ColumnType
+                    Name = name, Identifier = columnID, Type = entryForID.ColumnType
                 };
             }
 
@@ -263,33 +274,36 @@ namespace GDX.Tables
             }
         }
 
-        public override void SetColumnName(string columnName, int column)
+        /// <inheritdoc />
+        public override void SetColumnName(string columnName, int columnIdentifier)
         {
-            AssertColumnIDValid(column);
-            ref ColumnEntry columnEntry = ref ColumnIDToDenseIndexMap[column];
+            AssertColumnIDValid(columnIdentifier);
+            ref ColumnEntry columnEntry = ref ColumnIDToDenseIndexMap[columnIdentifier];
             AllColumnNames[(int)columnEntry.ColumnType][columnEntry.ColumnDenseIndex] = columnName;
         }
 
-        public override string GetColumnName(int column)
+        /// <inheritdoc />
+        public override string GetColumnName(int columnIdentifier)
         {
-            AssertColumnIDValid(column);
-            ref ColumnEntry columnEntry = ref ColumnIDToDenseIndexMap[column];
+            AssertColumnIDValid(columnIdentifier);
+            ref ColumnEntry columnEntry = ref ColumnIDToDenseIndexMap[columnIdentifier];
             return AllColumnNames[(int)columnEntry.ColumnType][columnEntry.ColumnDenseIndex];
         }
 
 
-
-        public override void SetRowName(string rowName, int row)
+        /// <inheritdoc />
+        public override void SetRowName(string rowName, int rowIdentifier)
         {
-            AssertRowIDValid(row);
-            int rowDenseIndex = RowIDToDenseIndexMap[row];
+            AssertRowIDValid(rowIdentifier);
+            int rowDenseIndex = RowIDToDenseIndexMap[rowIdentifier];
             RowNames[rowDenseIndex] = rowName;
         }
 
-        public override string GetRowName(int row)
+        /// <inheritdoc />
+        public override string GetRowName(int rowIdentifier)
         {
-            AssertRowIDValid(row);
-            int rowDenseIndex = RowIDToDenseIndexMap[row];
+            AssertRowIDValid(rowIdentifier);
+            int rowDenseIndex = RowIDToDenseIndexMap[rowIdentifier];
             return RowNames[rowDenseIndex];
         }
 
@@ -307,7 +321,7 @@ namespace GDX.Tables
             return ref AllColumnNames[(int)columnEntry.ColumnType][columnEntry.ColumnDenseIndex];
         }
 
-
+        /// <inheritdoc />
         public override int AddRow(string rowName = null, int insertAtRowID = -1)
         {
             if (insertAtRowID >= 0)
@@ -594,6 +608,7 @@ namespace GDX.Tables
             DataVersion++;
         }
 
+        /// <inheritdoc />
         public override void RemoveRow(int rowID)
         {
             AssertRowIDValid(rowID);
@@ -645,6 +660,7 @@ namespace GDX.Tables
             DataVersion++;
         }
 
+        /// <inheritdoc />
         public override int AddColumn(Serializable.SerializableTypes columnType, string columnName,
             int insertAtColumnID = -1)
         {
@@ -742,6 +758,7 @@ namespace GDX.Tables
             return -1;
         }
 
+        /// <inheritdoc />
         public override void RemoveColumn(Serializable.SerializableTypes columnType, int columnID)
         {
             switch (columnType)
@@ -838,309 +855,369 @@ namespace GDX.Tables
         }
 
         // Set
-
-        public override ulong SetString(int row, int column, string value)
+        /// <inheritdoc />
+        public override ulong SetString(int rowIdentifier, int columnIdentifier, string newValue)
         {
-            return SetCell(row, column, ref AllStringColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllStringColumns, newValue);
         }
 
-        public override ulong SetBool(int row, int column, bool value)
+        /// <inheritdoc />
+        public override ulong SetBool(int rowIdentifier, int columnIdentifier, bool newValue)
         {
-            return SetCell(row, column, ref AllBoolColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllBoolColumns, newValue);
         }
 
-        public override ulong SetChar(int row, int column, char value)
+        /// <inheritdoc />
+        public override ulong SetChar(int rowIdentifier, int columnIdentifier, char newValue)
         {
-            return SetCell(row, column, ref AllCharColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllCharColumns, newValue);
         }
 
-        public override ulong SetSByte(int row, int column, sbyte value)
+        /// <inheritdoc />
+        public override ulong SetSByte(int rowIdentifier, int columnIdentifier, sbyte newValue)
         {
-            return SetCell(row, column, ref AllSbyteColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllSbyteColumns, newValue);
         }
 
-        public override ulong SetByte(int row, int column, byte value)
+        /// <inheritdoc />
+        public override ulong SetByte(int rowIdentifier, int columnIdentifier, byte newValue)
         {
-            return SetCell(row, column, ref AllByteColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllByteColumns, newValue);
         }
 
-        public override ulong SetShort(int row, int column, short value)
+        /// <inheritdoc />
+        public override ulong SetShort(int rowIdentifier, int columnIdentifier, short newValue)
         {
-            return SetCell(row, column, ref AllShortColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllShortColumns, newValue);
         }
 
-        public override ulong SetUShort(int row, int column, ushort value)
+        /// <inheritdoc />
+        public override ulong SetUShort(int rowIdentifier, int columnIdentifier, ushort newValue)
         {
-            return SetCell(row, column, ref AllUshortColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllUshortColumns, newValue);
         }
 
-        public override ulong SetInt(int row, int column, int value)
+        /// <inheritdoc />
+        public override ulong SetInt(int rowIdentifier, int columnIdentifier, int newValue)
         {
-            return SetCell(row, column, ref AllIntColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllIntColumns, newValue);
         }
 
-        public override ulong SetUInt(int row, int column, uint value)
+        /// <inheritdoc />
+        public override ulong SetUInt(int rowIdentifier, int columnIdentifier, uint newValue)
         {
-            return SetCell(row, column, ref AllUintColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllUintColumns, newValue);
         }
 
-        public override ulong SetLong(int row, int column, long value)
+        /// <inheritdoc />
+        public override ulong SetLong(int rowIdentifier, int columnIdentifier, long newValue)
         {
-            return SetCell(row, column, ref AllLongColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllLongColumns, newValue);
         }
 
-        public override ulong SetULong(int row, int column, ulong value)
+        /// <inheritdoc />
+        public override ulong SetULong(int rowIdentifier, int columnIdentifier, ulong newValue)
         {
-            return SetCell(row, column, ref AllUlongColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllUlongColumns, newValue);
         }
 
-        public override ulong SetFloat(int row, int column, float value)
+        /// <inheritdoc />
+        public override ulong SetFloat(int rowIdentifier, int columnIdentifier, float newValue)
         {
-            return SetCell(row, column, ref AllFloatColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllFloatColumns, newValue);
         }
 
-        public override ulong SetDouble(int row, int column, double value)
+        /// <inheritdoc />
+        public override ulong SetDouble(int rowIdentifier, int columnIdentifier, double newValue)
         {
-            return SetCell(row, column, ref AllDoubleColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllDoubleColumns, newValue);
         }
 
-        public override ulong SetVector2(int row, int column, Vector2 value)
+        /// <inheritdoc />
+        public override ulong SetVector2(int rowIdentifier, int columnIdentifier, Vector2 newValue)
         {
-            return SetCell(row, column, ref AllVector2Columns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllVector2Columns, newValue);
         }
 
-        public override ulong SetVector3(int row, int column, Vector3 value)
+        /// <inheritdoc />
+        public override ulong SetVector3(int rowIdentifier, int columnIdentifier, Vector3 newValue)
         {
-            return SetCell(row, column, ref AllVector3Columns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllVector3Columns, newValue);
         }
 
-        public override ulong SetVector4(int row, int column, Vector4 value)
+        /// <inheritdoc />
+        public override ulong SetVector4(int rowIdentifier, int columnIdentifier, Vector4 value)
         {
-            return SetCell(row, column, ref AllVector4Columns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllVector4Columns, value);
         }
 
-        public override ulong SetVector2Int(int row, int column, Vector2Int value)
+        /// <inheritdoc />
+        public override ulong SetVector2Int(int rowIdentifier, int columnIdentifier, Vector2Int newValue)
         {
-            return SetCell(row, column, ref AllVector2IntColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllVector2IntColumns, newValue);
         }
 
-        public override ulong SetVector3Int(int row, int column, Vector3Int value)
+        /// <inheritdoc />
+        public override ulong SetVector3Int(int rowIdentifier, int columnIdentifier, Vector3Int newValue)
         {
-            return SetCell(row, column, ref AllVector3IntColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllVector3IntColumns, newValue);
         }
 
-        public override ulong SetQuaternion(int row, int column, Quaternion value)
+        /// <inheritdoc />
+        public override ulong SetQuaternion(int rowIdentifier, int columnIdentifier, Quaternion newValue)
         {
-            return SetCell(row, column, ref AllQuaternionColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllQuaternionColumns, newValue);
         }
 
-        public override ulong SetRect(int row, int column, Rect value)
+        /// <inheritdoc />
+        public override ulong SetRect(int rowIdentifier, int columnIdentifier, Rect newValue)
         {
-            return SetCell(row, column, ref AllRectColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllRectColumns, newValue);
         }
 
-        public override ulong SetRectInt(int row, int column, RectInt value)
+        /// <inheritdoc />
+        public override ulong SetRectInt(int rowIdentifier, int columnIdentifier, RectInt newValue)
         {
-            return SetCell(row, column, ref AllRectIntColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllRectIntColumns, newValue);
         }
 
-        public override ulong SetColor(int row, int column, Color value)
+        /// <inheritdoc />
+        public override ulong SetColor(int rowIdentifier, int columnIdentifier, Color newValue)
         {
-            return SetCell(row, column, ref AllColorColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllColorColumns, newValue);
         }
 
-        public override ulong SetLayerMask(int row, int column, LayerMask value)
+        /// <inheritdoc />
+        public override ulong SetLayerMask(int rowIdentifier, int columnIdentifier, LayerMask newValue)
         {
-            return SetCell(row, column, ref AllLayerMaskColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllLayerMaskColumns, newValue);
         }
 
-        public override ulong SetBounds(int row, int column, Bounds value)
+        /// <inheritdoc />
+        public override ulong SetBounds(int rowIdentifier, int columnIdentifier, Bounds newValue)
         {
-            return SetCell(row, column, ref AllBoundsColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllBoundsColumns, newValue);
         }
 
-        public override ulong SetBoundsInt(int row, int column, BoundsInt value)
+        /// <inheritdoc />
+        public override ulong SetBoundsInt(int rowIdentifier, int columnIdentifier, BoundsInt newValue)
         {
-            return SetCell(row, column, ref AllBoundsIntColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllBoundsIntColumns, newValue);
         }
 
-        public override ulong SetHash128(int row, int column, Hash128 value)
+        /// <inheritdoc />
+        public override ulong SetHash128(int rowIdentifier, int columnIdentifier, Hash128 newValue)
         {
-            return SetCell(row, column, ref AllHash128Columns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllHash128Columns, newValue);
         }
 
-        public override ulong SetGradient(int row, int column, Gradient value)
+        /// <inheritdoc />
+        public override ulong SetGradient(int rowIdentifier, int columnIdentifier, Gradient newValue)
         {
-            return SetCell(row, column, ref AllGradientColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllGradientColumns, newValue);
         }
 
-        public override ulong SetAnimationCurve(int row, int column, AnimationCurve value)
+        /// <inheritdoc />
+        public override ulong SetAnimationCurve(int rowIdentifier, int columnIdentifier, AnimationCurve newValue)
         {
-            return SetCell(row, column, ref AllAnimationCurveColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllAnimationCurveColumns, newValue);
         }
 
-        public override ulong SetObject(int row, int column, Object value)
+        /// <inheritdoc />
+        public override ulong SetObject(int rowIdentifier, int columnIdentifier, Object newValue)
         {
-            return SetCell(row, column, ref AllObjectRefColumns, value);
+            return SetCell(rowIdentifier, columnIdentifier, ref AllObjectRefColumns, newValue);
         }
 
-        public override void SetTypeNameForObjectColumn(int columnID, string assemblyQualifiedName)
+        /// <inheritdoc />
+        public override void SetTypeNameForObjectColumn(int columnIdentifier, string assemblyQualifiedName)
         {
-            AssertObjectColumnIDValid(columnID);
-            int denseIndex = ColumnIDToDenseIndexMap[columnID].ColumnDenseIndex;
+            AssertObjectColumnIDValid(columnIdentifier);
+            int denseIndex = ColumnIDToDenseIndexMap[columnIdentifier].ColumnDenseIndex;
             AllObjectRefTypeNames[denseIndex] = assemblyQualifiedName;
         }
-        public override string GetTypeNameForObjectColumn(int columnID)
+
+        /// <inheritdoc />
+        public override string GetTypeNameForObjectColumn(int columnIdentifier)
         {
-            AssertObjectColumnIDValid(columnID);
-            int denseIndex = ColumnIDToDenseIndexMap[columnID].ColumnDenseIndex;
+            AssertObjectColumnIDValid(columnIdentifier);
+            int denseIndex = ColumnIDToDenseIndexMap[columnIdentifier].ColumnDenseIndex;
             return AllObjectRefTypeNames[denseIndex];
         }
 
         // Get
-        public override string GetString(int row, int column)
+        /// <inheritdoc />
+        public override string GetString(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllStringColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllStringColumns);
         }
 
-        public override bool GetBool(int row, int column)
+        /// <inheritdoc />
+        public override bool GetBool(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllBoolColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllBoolColumns);
         }
 
-        public override char GetChar(int row, int column)
+        /// <inheritdoc />
+        public override char GetChar(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllCharColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllCharColumns);
         }
 
-        public override sbyte GetSByte(int row, int column)
+        /// <inheritdoc />
+        public override sbyte GetSByte(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllSbyteColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllSbyteColumns);
         }
 
-        public override byte GetByte(int row, int column)
+        /// <inheritdoc />
+        public override byte GetByte(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllByteColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllByteColumns);
         }
 
-        public override short GetShort(int row, int column)
+        /// <inheritdoc />
+        public override short GetShort(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllShortColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllShortColumns);
         }
 
-        public override ushort GetUShort(int row, int column)
+        /// <inheritdoc />
+        public override ushort GetUShort(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllUshortColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllUshortColumns);
         }
 
-        public override int GetInt(int row, int column)
+        /// <inheritdoc />
+        public override int GetInt(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllIntColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllIntColumns);
         }
 
-        public override uint GetUInt(int row, int column)
+        /// <inheritdoc />
+        public override uint GetUInt(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllUintColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllUintColumns);
         }
 
-        public override long GetLong(int row, int column)
+        /// <inheritdoc />
+        public override long GetLong(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllLongColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllLongColumns);
         }
 
-        public override ulong GetULong(int row, int column)
+        /// <inheritdoc />
+        public override ulong GetULong(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllUlongColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllUlongColumns);
         }
 
-        public override float GetFloat(int row, int column)
+        /// <inheritdoc />
+        public override float GetFloat(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllFloatColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllFloatColumns);
         }
 
-        public override double GetDouble(int row, int column)
+        /// <inheritdoc />
+        public override double GetDouble(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllDoubleColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllDoubleColumns);
         }
 
-        public override Vector2 GetVector2(int row, int column)
+        /// <inheritdoc />
+        public override Vector2 GetVector2(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllVector2Columns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllVector2Columns);
         }
 
-        public override Vector3 GetVector3(int row, int column)
+        /// <inheritdoc />
+        public override Vector3 GetVector3(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllVector3Columns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllVector3Columns);
         }
 
-        public override Vector4 GetVector4(int row, int column)
+        /// <inheritdoc />
+        public override Vector4 GetVector4(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllVector4Columns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllVector4Columns);
         }
 
-        public override Vector2Int GetVector2Int(int row, int column)
+        /// <inheritdoc />
+        public override Vector2Int GetVector2Int(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllVector2IntColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllVector2IntColumns);
         }
 
-        public override Vector3Int GetVector3Int(int row, int column)
+        /// <inheritdoc />
+        public override Vector3Int GetVector3Int(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllVector3IntColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllVector3IntColumns);
         }
 
-        public override Quaternion GetQuaternion(int row, int column)
+        /// <inheritdoc />
+        public override Quaternion GetQuaternion(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllQuaternionColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllQuaternionColumns);
         }
 
-        public override Rect GetRect(int row, int column)
+        /// <inheritdoc />
+        public override Rect GetRect(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllRectColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllRectColumns);
         }
 
-        public override RectInt GetRectInt(int row, int column)
+        /// <inheritdoc />
+        public override RectInt GetRectInt(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllRectIntColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllRectIntColumns);
         }
 
-        public override Color GetColor(int row, int column)
+        /// <inheritdoc />
+        public override Color GetColor(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllColorColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllColorColumns);
         }
 
-        public override LayerMask GetLayerMask(int row, int column)
+        /// <inheritdoc />
+        public override LayerMask GetLayerMask(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllLayerMaskColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllLayerMaskColumns);
         }
 
-        public override Bounds GetBounds(int row, int column)
+        /// <inheritdoc />
+        public override Bounds GetBounds(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllBoundsColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllBoundsColumns);
         }
 
-        public override BoundsInt GetBoundsInt(int row, int column)
+        /// <inheritdoc />
+        public override BoundsInt GetBoundsInt(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllBoundsIntColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllBoundsIntColumns);
         }
 
-        public override Hash128 GetHash128(int row, int column)
+        /// <inheritdoc />
+        public override Hash128 GetHash128(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllHash128Columns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllHash128Columns);
         }
 
-        public override Gradient GetGradient(int row, int column)
+        /// <inheritdoc />
+        public override Gradient GetGradient(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllGradientColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllGradientColumns);
         }
 
-        public override AnimationCurve GetAnimationCurve(int row, int column)
+        /// <inheritdoc />
+        public override AnimationCurve GetAnimationCurve(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllAnimationCurveColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllAnimationCurveColumns);
         }
 
-        public override Object GetObject(int row, int column)
+        /// <inheritdoc />
+        public override Object GetObject(int rowIdentifier, int columnIdentifier)
         {
-            return GetCell(row, column, ref AllObjectRefColumns);
+            return GetCell(rowIdentifier, columnIdentifier, ref AllObjectRefColumns);
         }
 
         // Get ref

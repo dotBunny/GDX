@@ -159,7 +159,7 @@ namespace GDX.Editor.Windows.Tables
             TableBase.RowDescription selectedRow =
                 (TableBase.RowDescription)m_TableWindow.GetView().GetMultiColumnListView().selectedItem;
             RegisterUndo($"Remove Row ({selectedRow.Name})");
-            m_TableWindow.GetTable().RemoveRow(selectedRow.InternalIndex);
+            m_TableWindow.GetTable().RemoveRow(selectedRow.Identifier);
 
             TableCache.NotifyOfRowChange(m_TableWindow.GetTable());
         }

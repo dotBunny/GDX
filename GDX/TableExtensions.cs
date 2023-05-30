@@ -91,7 +91,7 @@ namespace GDX
             int rowDescriptionsLength = rowDescriptions.Length;
             for (int i = 0; i < rowDescriptionsLength; i++)
             {
-                previousRowInternalIndices.Add(rowDescriptions[i].InternalIndex);
+                previousRowInternalIndices.Add(rowDescriptions[i].Identifier);
             }
             List<int> foundRowInternalIndices = new List<int>(tableRowCount);
 
@@ -123,48 +123,48 @@ namespace GDX
                     switch (columnDescriptions[j].Type)
                     {
                         case Serializable.SerializableTypes.String:
-                            table.SetString(internalIndex, columnDescriptions[j].InternalIndex, columnString);
+                            table.SetString(internalIndex, columnDescriptions[j].Identifier, columnString);
                             break;
                         case Serializable.SerializableTypes.Char:
-                            table.SetChar(internalIndex, columnDescriptions[j].InternalIndex, columnString[0]);
+                            table.SetChar(internalIndex, columnDescriptions[j].Identifier, columnString[0]);
                             break;
                         case Serializable.SerializableTypes.Bool:
-                            table.SetBool(internalIndex, columnDescriptions[j].InternalIndex, bool.Parse(columnString));
+                            table.SetBool(internalIndex, columnDescriptions[j].Identifier, bool.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.SByte:
-                            table.SetSByte(internalIndex, columnDescriptions[j].InternalIndex,
+                            table.SetSByte(internalIndex, columnDescriptions[j].Identifier,
                                 sbyte.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Byte:
-                            table.SetByte(internalIndex, columnDescriptions[j].InternalIndex, byte.Parse(columnString));
+                            table.SetByte(internalIndex, columnDescriptions[j].Identifier, byte.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Short:
-                            table.SetShort(internalIndex, columnDescriptions[j].InternalIndex,
+                            table.SetShort(internalIndex, columnDescriptions[j].Identifier,
                                 short.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.UShort:
-                            table.SetUShort(internalIndex, columnDescriptions[j].InternalIndex,
+                            table.SetUShort(internalIndex, columnDescriptions[j].Identifier,
                                 ushort.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Int:
-                            table.SetInt(internalIndex, columnDescriptions[j].InternalIndex, int.Parse(columnString));
+                            table.SetInt(internalIndex, columnDescriptions[j].Identifier, int.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.UInt:
-                            table.SetUInt(internalIndex, columnDescriptions[j].InternalIndex, uint.Parse(columnString));
+                            table.SetUInt(internalIndex, columnDescriptions[j].Identifier, uint.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Long:
-                            table.SetLong(internalIndex, columnDescriptions[j].InternalIndex, long.Parse(columnString));
+                            table.SetLong(internalIndex, columnDescriptions[j].Identifier, long.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.ULong:
-                            table.SetULong(internalIndex, columnDescriptions[j].InternalIndex,
+                            table.SetULong(internalIndex, columnDescriptions[j].Identifier,
                                 ulong.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Float:
-                            table.SetFloat(internalIndex, columnDescriptions[j].InternalIndex,
+                            table.SetFloat(internalIndex, columnDescriptions[j].Identifier,
                                 float.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Double:
-                            table.SetDouble(internalIndex, columnDescriptions[j].InternalIndex,
+                            table.SetDouble(internalIndex, columnDescriptions[j].Identifier,
                                 double.Parse(columnString));
                             break;
                     }
@@ -211,7 +211,7 @@ namespace GDX
             for (int r = 0; r < rowCount; r++)
             {
                 TableBase.RowDescription rowDescription = table.GetRowDescription(r);
-                generator.Append($"{rowDescription.InternalIndex}, {MakeCommaSeperatedValue(rowDescription.Name)}");
+                generator.Append($"{rowDescription.Identifier}, {MakeCommaSeperatedValue(rowDescription.Name)}");
                 for (int c = 0; c < columnCount; c++)
                 {
                     TableBase.ColumnDescription columnDescription = table.GetColumnDescription(c);
@@ -219,128 +219,128 @@ namespace GDX
                     switch (columnDescription.Type)
                     {
                         case Serializable.SerializableTypes.String:
-                            generator.Append(MakeCommaSeperatedValue(table.GetString(rowDescription.InternalIndex,
-                                columnDescription.InternalIndex)));
+                            generator.Append(MakeCommaSeperatedValue(table.GetString(rowDescription.Identifier,
+                                columnDescription.Identifier)));
                             break;
                         case Serializable.SerializableTypes.Char:
                             generator.Append(MakeCommaSeperatedValue(table
-                                .GetChar(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString()));
+                                .GetChar(rowDescription.Identifier, columnDescription.Identifier).ToString()));
                             break;
                         case Serializable.SerializableTypes.Bool:
                             generator.Append(table
-                                .GetBool(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetBool(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.SByte:
                             generator.Append(table
-                                .GetSByte(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetSByte(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Byte:
                             generator.Append(table
-                                .GetByte(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetByte(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Short:
                             generator.Append(table
-                                .GetShort(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetShort(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.UShort:
                             generator.Append(table
-                                .GetUShort(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetUShort(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Int:
                             generator.Append(table
-                                .GetInt(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetInt(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.UInt:
                             generator.Append(table
-                                .GetUInt(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetUInt(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Long:
                             generator.Append(table
-                                .GetLong(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetLong(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.ULong:
                             generator.Append(table
-                                .GetULong(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetULong(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Float:
                             generator.Append(table
-                                .GetFloat(rowDescription.InternalIndex, columnDescription.InternalIndex)
+                                .GetFloat(rowDescription.Identifier, columnDescription.Identifier)
                                 .ToString(CultureInfo.InvariantCulture));
                             break;
                         case Serializable.SerializableTypes.Double:
                             generator.Append(table
-                                .GetDouble(rowDescription.InternalIndex, columnDescription.InternalIndex)
+                                .GetDouble(rowDescription.Identifier, columnDescription.Identifier)
                                 .ToString(CultureInfo.InvariantCulture));
                             break;
                         case Serializable.SerializableTypes.Vector2:
                             generator.Append(table
-                                .GetUShort(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetUShort(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Vector3:
                             generator.Append(table
-                                .GetVector3(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetVector3(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Vector4:
                             generator.Append(table
-                                .GetVector4(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetVector4(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Vector2Int:
                             generator.Append(table
-                                .GetVector2Int(rowDescription.InternalIndex, columnDescription.InternalIndex)
+                                .GetVector2Int(rowDescription.Identifier, columnDescription.Identifier)
                                 .ToString());
                             break;
                         case Serializable.SerializableTypes.Vector3Int:
                             generator.Append(table
-                                .GetVector3Int(rowDescription.InternalIndex, columnDescription.InternalIndex)
+                                .GetVector3Int(rowDescription.Identifier, columnDescription.Identifier)
                                 .ToString());
                             break;
                         case Serializable.SerializableTypes.Quaternion:
                             generator.Append(table
-                                .GetQuaternion(rowDescription.InternalIndex, columnDescription.InternalIndex)
+                                .GetQuaternion(rowDescription.Identifier, columnDescription.Identifier)
                                 .ToString());
                             break;
                         case Serializable.SerializableTypes.Rect:
                             generator.Append(table
-                                .GetRect(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetRect(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.RectInt:
                             generator.Append(table
-                                .GetRectInt(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetRectInt(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Color:
                             generator.Append(table
-                                .GetColor(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetColor(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.LayerMask:
                             generator.Append(table
-                                .GetLayerMask(rowDescription.InternalIndex, columnDescription.InternalIndex)
+                                .GetLayerMask(rowDescription.Identifier, columnDescription.Identifier)
                                 .ToString());
                             break;
                         case Serializable.SerializableTypes.Bounds:
                             generator.Append(table
-                                .GetBounds(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetBounds(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.BoundsInt:
                             generator.Append(table
-                                .GetBoundsInt(rowDescription.InternalIndex, columnDescription.InternalIndex)
+                                .GetBoundsInt(rowDescription.Identifier, columnDescription.Identifier)
                                 .ToString());
                             break;
                         case Serializable.SerializableTypes.Hash128:
                             generator.Append(table
-                                .GetHash128(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetHash128(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Gradient:
                             generator.Append(table
-                                .GetGradient(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetGradient(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.AnimationCurve:
                             generator.Append(table
-                                .GetAnimationCurve(rowDescription.InternalIndex, columnDescription.InternalIndex)
+                                .GetAnimationCurve(rowDescription.Identifier, columnDescription.Identifier)
                                 .ToString());
                             break;
                         case Serializable.SerializableTypes.Object:
                             generator.Append(table
-                                .GetObject(rowDescription.InternalIndex, columnDescription.InternalIndex).ToString());
+                                .GetObject(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                     }
                 }

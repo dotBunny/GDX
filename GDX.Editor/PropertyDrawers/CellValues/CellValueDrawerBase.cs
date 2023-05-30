@@ -254,7 +254,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         {
             if (arg >= 0)
             {
-                m_RowInternalIndex = m_RowDescriptions[arg].InternalIndex;
+                m_RowInternalIndex = m_RowDescriptions[arg].Identifier;
                 //m_Breadcrumbs.Add(new Label(m_RowDescriptions[arg].Name));
                 DetectDrawerMode();
                 return "Updating ...";
@@ -267,7 +267,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         {
             if (arg >= 0)
             {
-                m_ColumnInternalIndex = m_ColumnDescriptions[arg].InternalIndex;
+                m_ColumnInternalIndex = m_ColumnDescriptions[arg].Identifier;
                 //m_Breadcrumbs.Add(new Label(m_ColumnDescriptions[arg].Name));
 
                 // Apply Properties

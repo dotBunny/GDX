@@ -63,7 +63,7 @@ namespace GDX.Editor.Windows.Tables
             // Add row header column ahead of actual columns
             m_ColumnDescriptions.Add(new TableBase.ColumnDescription
             {
-                Name = "RowName", InternalIndex = -1, Type = Serializable.SerializableTypes.String
+                Name = "RowName", Identifier = -1, Type = Serializable.SerializableTypes.String
             });
             m_ColumnDescriptions.AddRange(table.GetAllColumnDescriptions());
 
@@ -88,7 +88,7 @@ namespace GDX.Editor.Windows.Tables
             for (int i = 1; i < columnCount; i++)
             {
                 TableBase.ColumnDescription columnDescription = m_ColumnDescriptions[i];
-                int columnIndex = columnDescription.InternalIndex;
+                int columnIndex = columnDescription.Identifier;
 
                 // We embed the column stable index
                 Column column = new Column
@@ -350,7 +350,7 @@ namespace GDX.Editor.Windows.Tables
             }
 
             TableBase.RowDescription selectedItem = (TableBase.RowDescription)m_MultiColumnListView.selectedItem;
-            return selectedItem.InternalIndex;
+            return selectedItem.Identifier;
         }
 
         void BindRowHeader(VisualElement cell, int row)
@@ -402,7 +402,7 @@ namespace GDX.Editor.Windows.Tables
                 m_ColumnDescriptions[foundIndex] = new TableBase.ColumnDescription
                 {
                     Name = newName,
-                    InternalIndex = m_ColumnDescriptions[foundIndex].InternalIndex,
+                    Identifier = m_ColumnDescriptions[foundIndex].Identifier,
                     Type = m_ColumnDescriptions[foundIndex].Type
                 };
                 m_TableViewColumns[foundIndex].title = newName;
