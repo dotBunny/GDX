@@ -120,11 +120,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
             fieldLabelContainer.Add(m_FieldLabel);
 
-            // Add spacer
-            fieldLabelContainer.Add(new VisualElement { name = "gdx-cell-value-spacer" });
-
             m_TableButton = new Button(TableLinkStatusClicked) { name = "gdx-cell-value-table" };
-            fieldLabelContainer.Add(m_TableButton);
+            m_FieldLabel.parent.Add(m_TableButton);
 
             m_Container.Add(fieldLabelContainer);
 
