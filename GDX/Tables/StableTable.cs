@@ -122,7 +122,6 @@ namespace GDX.Tables
             }
 
             RowDescription[] returnArray = new RowDescription[RowCount];
-            string empty = string.Empty;
             for (int i = 0; i < RowCount; i++)
             {
                 returnArray[i].InternalIndex = RowDenseIndexToIDMap[i];

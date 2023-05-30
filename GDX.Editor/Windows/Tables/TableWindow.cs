@@ -19,6 +19,7 @@ namespace GDX.Editor.Windows.Tables
         TableWindowToolbar m_Toolbar;
         TableWindowView m_View;
         TableCache.ICellValueChangedCallbackReceiver m_ICellValueChangedCallbackReceiverImplementation;
+        bool m_Bound = false;
 
         void OnEnable()
         {
@@ -37,7 +38,7 @@ namespace GDX.Editor.Windows.Tables
             // Catch domain reload and rebind/relink window
             if (m_TargetTable != null)
             {
-                BindTable(m_TargetTable);
+                BindTable(m_TargetTable, true);
             }
 
             EditorApplication.delayCall += CheckForNoTable;
@@ -45,11 +46,18 @@ namespace GDX.Editor.Windows.Tables
 
         void OnDestroy()
         {
-            if (m_TargetTable != null)
+            if (m_Bound)
             {
-                AssetDatabase.SaveAssetIfDirty(m_TargetTable);
+                TableCache.UnregisterColumnChanged(this, m_TableTicket);
+                TableCache.UnregisterRowChanged(this, m_TableTicket);
+                TableCache.UnregisterCellValueChanged(this, m_TableTicket);
+                TableCache.UnregisterUsage(m_TableTicket);
             }
 
+            if (m_TargetTable != null)
+            {
+                Save();
+            }
             TableWindowProvider.UnregisterTableWindow(this);
         }
 
@@ -97,6 +105,11 @@ namespace GDX.Editor.Windows.Tables
             return m_TargetTable;
         }
 
+        public int GetTableTicket()
+        {
+            return m_TableTicket;
+        }
+
         internal TableWindowToolbar GetToolbar()
         {
             return m_Toolbar;
@@ -107,12 +120,6 @@ namespace GDX.Editor.Windows.Tables
             return m_View;
         }
 
-        public int GetTableTicket()
-        {
-            return m_TableTicket;
-        }
-
-
         void CheckForNoTable()
         {
             if (m_TargetTable == null)
@@ -121,18 +128,57 @@ namespace GDX.Editor.Windows.Tables
             }
         }
 
+        public void Save(bool skipDialog = false)
+        {
+            // We're not dirty, or were in batch mode
+            if (!EditorUtility.IsDirty(m_TargetTable) || Application.isBatchMode)
+            {
+                return;
+            }
 
-        public void BindTable(TableBase table)
+
+            if (skipDialog || EditorUtility.DisplayDialog($"Save {m_TargetTable.GetDisplayName()}", "There are changes made to the table (in memory) which have not been saved to disk. Would you like to write those changes to disk now?", "Yes", "No"))
+            {
+                AssetDatabase.SaveAssetIfDirty(m_TargetTable);
+                m_Toolbar.UpdateSaveButton();
+            }
+        }
+
+
+        public void BindTable(TableBase table, bool fromDomainReload = false)
         {
             m_TargetTable = table;
-            m_TableTicket = TableCache.RegisterTable(table);
+            m_TableTicket = fromDomainReload ? TableCache.RegisterTable(table, m_TableTicket) : TableCache.RegisterTable(table);
+
             TableWindowProvider.RegisterTableWindow(this, m_TargetTable);
 
             RebindTable();
 
+            if (m_Bound)
+            {
+                TableCache.UnregisterColumnChanged(this, m_TableTicket);
+                TableCache.UnregisterRowChanged(this, m_TableTicket);
+                TableCache.UnregisterCellValueChanged(this, m_TableTicket);
+
+                // We need to handle not unregistering things when on domain reload so that the count doesnt go negative.
+                if (!fromDomainReload)
+                {
+                    TableCache.UnregisterUsage(m_TableTicket);
+                }
+            }
+
             TableCache.RegisterColumnChanged(this, m_TableTicket);
             TableCache.RegisterRowChanged(this, m_TableTicket);
             TableCache.RegisterCellValueChanged(this, m_TableTicket);
+            TableCache.RegisterUsage(m_TableTicket);
+
+            m_Bound = true;
+            m_Toolbar?.UpdateSaveButton();
+        }
+
+        public bool IsBound()
+        {
+            return m_Bound;
         }
 
         public void RebindTable()
@@ -160,19 +206,23 @@ namespace GDX.Editor.Windows.Tables
         public void OnColumnDefinitionChange()
         {
             RebindTable();
+            m_Toolbar.UpdateSaveButton();
         }
 
         /// <inheritdoc />
         public void OnCellValueChanged(int rowInternalIndex, int columnInternalIndex)
         {
             // We can do better then this, what if cells actually had more awareness
+            // TODO: @matt Need to do better here
             m_View.RefreshItems();
+            m_Toolbar.UpdateSaveButton();
         }
 
         /// <inheritdoc />
         public void OnRowDefinitionChange()
         {
             m_View.RebuildRowData();
+            m_Toolbar.UpdateSaveButton();
         }
     }
 #endif

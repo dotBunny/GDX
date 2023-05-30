@@ -144,6 +144,9 @@ namespace GDX.Editor.Windows.Tables
 
         public void RemoveSelectedRow()
         {
+            object selectedItem = m_TableWindow.GetView().GetMultiColumnListView().selectedItem;
+            if (selectedItem == null) return;
+
             TableBase.RowDescription selectedRow =
                 (TableBase.RowDescription)m_TableWindow.GetView().GetMultiColumnListView().selectedItem;
             RegisterUndo($"Remove Row ({selectedRow.Name})");
@@ -199,6 +202,7 @@ namespace GDX.Editor.Windows.Tables
             table.SetColumnName(name, internalIndex);
 
             TableCache.NotifyOfColumnChange(table, m_TableWindow);
+            m_TableWindow.GetToolbar().UpdateSaveButton();
             return true;
         }
 
@@ -217,6 +221,7 @@ namespace GDX.Editor.Windows.Tables
 
             table.SetFlag(TableBase.Flags.EnableUndo, enableUndo);
             EditorUtility.SetDirty(m_TableWindow.GetTable());
+            m_TableWindow.GetToolbar().UpdateSaveButton();
             return true;
         }
 

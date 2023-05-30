@@ -5,8 +5,6 @@
 using System;
 using System.Collections.Generic;
 using GDX.Tables;
-using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor.Windows.Tables
@@ -26,10 +24,6 @@ namespace GDX.Editor.Windows.Tables
         readonly MultiColumnListView m_MultiColumnListView;
         readonly Length m_NumericMinWidth = new Length(50, LengthUnit.Pixel);
 
-        readonly Dictionary<int, ContextualMenuManipulator> m_RowContextMenus =
-            new Dictionary<int, ContextualMenuManipulator>();
-
-        VisualElement m_RootElement;
         readonly Columns m_TableViewColumns;
         readonly VisualElement m_TableViewHeader;
         readonly Length m_ToggleMinWidth = new Length(25, LengthUnit.Pixel);
@@ -38,7 +32,7 @@ namespace GDX.Editor.Windows.Tables
         readonly Length m_Vector4MinWidth = new Length(200, LengthUnit.Pixel);
 
 
-        readonly TableWindow parentWindow;
+        readonly TableWindow m_TableWindow;
 
         float m_DesiredRowHeight = 27f;
 
@@ -51,13 +45,11 @@ namespace GDX.Editor.Windows.Tables
         {
             m_RowDescriptions.Clear();
             m_ColumnDescriptions.Clear();
-            m_RowContextMenus.Clear();
         }
 
         public TableWindowView(VisualElement rootElement, TableWindow window)
         {
-            m_RootElement = rootElement;
-            parentWindow = window;
+            m_TableWindow = window;
 
             // Remove previous
             if (rootElement.childCount == 2)
@@ -66,7 +58,7 @@ namespace GDX.Editor.Windows.Tables
             }
 
             TableBase table = window.GetTable();
-            int tableTicket = TableCache.GetTicket(table);
+            int tableTicket = window.GetTableTicket();
 
             // Add row header column ahead of actual columns
             m_ColumnDescriptions.Add(new TableBase.ColumnDescription
@@ -81,16 +73,18 @@ namespace GDX.Editor.Windows.Tables
             int columnCount = m_ColumnDescriptions.Count;
             Length columnSizePercentage = Length.Percent(100f / columnCount);
 
+
+            // Create our "Row Name" column
             m_TableViewColumns.Insert(0,
                 new Column
                 {
                     makeCell = TableWindowCells.MakeRowHeader,
                     bindCell = BindRowHeader,
-                    unbindCell = UnbindRowHeader,
-                    destroyCell = DestroyCell,
                     name = "RowName",
                     title = "Row Name"
                 });
+
+            // Creat our other columns
             for (int i = 1; i < columnCount; i++)
             {
                 TableBase.ColumnDescription columnDescription = m_ColumnDescriptions[i];
@@ -103,6 +97,7 @@ namespace GDX.Editor.Windows.Tables
                     title = columnDescription.Name,
                     width = columnSizePercentage,
                     resizable = true,
+                    unbindCell = UnbindCell,
                     destroyCell = DestroyCell
                 };
 
@@ -295,6 +290,12 @@ namespace GDX.Editor.Windows.Tables
             RebuildRowData();
         }
 
+        void UnbindCell(VisualElement cell, int row)
+        {
+            TableWindowCells.CellData data = (TableWindowCells.CellData)cell.userData;
+            data.CellValue = null;
+        }
+
         void DestroyCell(VisualElement cell)
         {
             cell.userData = null;
@@ -320,11 +321,6 @@ namespace GDX.Editor.Windows.Tables
         //         Debug.Log($"{sortedColumn.columnName}  {sortedColumn.direction.ToString()}");
         //     }
         // }
-
-        public int GetRowDescriptionIndex(int row)
-        {
-            return m_RowDescriptions[row].InternalIndex;
-        }
 
         public MultiColumnListView GetMultiColumnListView()
         {
@@ -362,48 +358,7 @@ namespace GDX.Editor.Windows.Tables
             Label label = (Label)cell;
             TableBase.RowDescription description = m_RowDescriptions[row];
             label.text = description.Name;
-
-            // Make the context menu effect the entirety of the row, this is a bit brittle as it relies on the actual
-            // layout of the UXML document to be the same across versions.
-//            label.parent.parent.AddManipulator(GetOrCreateManipulatorForRow(description.InternalIndex));
         }
-
-        void UnbindRowHeader(VisualElement cell, int row)
-        {
-            if (row >= m_RowDescriptions.Count)
-            {
-                // Unbinding last row, this happens as the row updates after the actual data is removed.
-                return;
-            }
-
-            Label label = (Label)cell;
-
-            TableBase.RowDescription description = m_RowDescriptions[row];
-            if (m_RowContextMenus.TryGetValue(description.InternalIndex, out ContextualMenuManipulator manipulator))
-            {
-                label.parent.parent.RemoveManipulator(manipulator);
-            }
-        }
-
-        ContextualMenuManipulator GetOrCreateManipulatorForRow(int internalIndex)
-        {
-            if (m_RowContextMenus.TryGetValue(internalIndex, out ContextualMenuManipulator forRow))
-            {
-                return forRow;
-            }
-
-            ContextualMenuManipulator menuManipulator = new ContextualMenuManipulator(evt =>
-            {
-                evt.menu.AppendSeparator();
-                evt.menu.AppendAction("Rename",
-                    a => parentWindow.GetController().ShowRenameRowDialog(internalIndex));
-                evt.menu.AppendAction("Remove",
-                    a => parentWindow.GetController().ShowRemoveRowDialog(internalIndex));
-            });
-            m_RowContextMenus.Add(internalIndex, menuManipulator);
-            return menuManipulator;
-        }
-
 
         internal Serializable.SerializableTypes GetColumnType(int internalIndex)
         {
@@ -456,13 +411,13 @@ namespace GDX.Editor.Windows.Tables
 
         internal void RebuildRowData()
         {
-            TableBase table = parentWindow.GetTable();
+            TableBase table = m_TableWindow.GetTable();
             m_RowDescriptions.Clear();
             if (table.GetRowCount() > 0)
             {
                 m_RowDescriptions.AddRange(table.GetAllRowDescriptions());
             }
-            EditorApplication.delayCall += RefreshItems;
+            m_MultiColumnListView.Rebuild();
         }
 
         void AppendColumnContextMenu(ContextualMenuPopulateEvent evt, Column column)
@@ -471,7 +426,6 @@ namespace GDX.Editor.Windows.Tables
             {
                 return;
             }
-
             int indexOfSplit = column.name.IndexOf("_", StringComparison.Ordinal);
             if (indexOfSplit != -1)
             {
@@ -479,9 +433,9 @@ namespace GDX.Editor.Windows.Tables
                 int internalIndex = int.Parse(columnInteger);
                 evt.menu.AppendSeparator();
                 evt.menu.AppendAction("Rename",
-                    a => parentWindow.GetController().ShowRenameColumnDialog(internalIndex));
+                    a => m_TableWindow.GetController().ShowRenameColumnDialog(internalIndex));
                 evt.menu.AppendAction("Remove",
-                    a => parentWindow.GetController().ShowRemoveColumnDialog(internalIndex), CanRemoveColumn);
+                    a => m_TableWindow.GetController().ShowRemoveColumnDialog(internalIndex), CanRemoveColumn);
             }
         }
 
@@ -499,7 +453,7 @@ namespace GDX.Editor.Windows.Tables
 
         DropdownMenuAction.Status CanRemoveColumn(DropdownMenuAction action)
         {
-            return parentWindow.GetTable().GetColumnCount() > 1
+            return m_TableWindow.GetTable().GetColumnCount() > 1
                 ? DropdownMenuAction.Status.Normal
                 : DropdownMenuAction.Status.Disabled;
         }

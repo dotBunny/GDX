@@ -20,9 +20,11 @@ namespace GDX.Editor
             new Dictionary<int, List<IRowDefinitionChangeCallbackReceiver>>(5);
 
         static int s_TableTicketHead;
+
         static readonly Dictionary<int, TableBase> k_TableTicketToTable = new Dictionary<int, TableBase>(5);
         static readonly Dictionary<TableBase, int> k_TableToTableTicket = new Dictionary<TableBase, int>(5);
-        static readonly Dictionary<TableBase, int> k_TableUsageCounters = new Dictionary<TableBase, int>(5);
+
+        static readonly Dictionary<int, int> k_TableUsageCounters = new Dictionary<int, int>(5);
 
         public static void RegisterCellValueChanged(ICellValueChangedCallbackReceiver callback, TableBase table)
         {
@@ -42,7 +44,10 @@ namespace GDX.Editor
                     new List<ICellValueChangedCallbackReceiver>());
             }
 
-            k_CellValueChangeCallbackReceivers[tableTicket].Add(callback);
+            if (!k_CellValueChangeCallbackReceivers[tableTicket].Contains(callback))
+            {
+                k_CellValueChangeCallbackReceivers[tableTicket].Add(callback);
+            }
         }
 
         public static void UnregisterCellValueChanged(ICellValueChangedCallbackReceiver callback, TableBase table)
@@ -71,7 +76,10 @@ namespace GDX.Editor
                     new List<IRowDefinitionChangeCallbackReceiver>());
             }
 
-            k_RowChangeCallbackReceivers[tableTicket].Add(callback);
+            if (!k_RowChangeCallbackReceivers[tableTicket].Contains(callback))
+            {
+                k_RowChangeCallbackReceivers[tableTicket].Add(callback);
+            }
         }
 
         public static void UnregisterRowChanged(IRowDefinitionChangeCallbackReceiver callback, int tableTicket)
@@ -115,7 +123,10 @@ namespace GDX.Editor
                     new List<IColumnDefinitionChangeCallbackReceiver>());
             }
 
-            k_ColumnChangeCallbackReceivers[tableTicket].Add(callback);
+            if (!k_ColumnChangeCallbackReceivers[tableTicket].Contains(callback))
+            {
+                k_ColumnChangeCallbackReceivers[tableTicket].Add(callback);
+            }
         }
 
         public static void UnregisterColumnChanged(IColumnDefinitionChangeCallbackReceiver callback, int tableTicket)
@@ -192,51 +203,70 @@ namespace GDX.Editor
             return k_TableTicketToTable.TryGetValue(ticket, out TableBase table) ? table : null;
         }
 
-        public static int GetTicket(TableBase table)
+        static int GetTicket(TableBase table)
         {
-            return k_TableToTableTicket.TryGetValue(table, out int ticket) ? ticket : -1;
+            return k_TableToTableTicket.TryGetValue(table, out int registerTable) ? registerTable: -1;
         }
 
-        public static void UnregisterTable(TableBase table)
+        public static int RegisterTable(TableBase table, int forcedTicket = -1)
         {
-            if (table == null)
+            // This is the scenario where we need to rebuild after domain reload
+            if (forcedTicket != -1)
             {
-                return;
-            }
-
-            int ticket = GetTicket(table);
-
-            if (ticket != -1)
-            {
-                k_TableUsageCounters[table]--;
-                if (k_TableUsageCounters[table] == 0)
+                k_TableTicketToTable[forcedTicket] = table;
+                k_TableToTableTicket[table] = forcedTicket;
+#if UNITY_2022_2_OR_NEWER
+                k_TableUsageCounters.TryAdd(forcedTicket, 0);
+#else
+                if (!k_TableUsageCounters.ContainsKey(forcedTicket))
                 {
-                    k_TableToTableTicket.Remove(table);
-                    k_TableTicketToTable.Remove(ticket);
-                    k_TableUsageCounters.Remove(table);
+                    k_TableUsageCounters[forcedTicket] = 0;
                 }
-            }
-        }
+#endif
 
-        public static int RegisterTable(TableBase table)
-        {
-            int ticket = GetTicket(table);
-            if (ticket != -1)
+
+                if (forcedTicket >= s_TableTicketHead)
+                {
+                    s_TableTicketHead = forcedTicket + 1;
+                }
+
+                return forcedTicket;
+            }
+
+            if (k_TableToTableTicket.TryGetValue(table, out int registerTable))
             {
-                k_TableUsageCounters[table]++;
-                return ticket;
+                return registerTable;
             }
 
             // Register table
             int head = s_TableTicketHead;
             k_TableTicketToTable.Add(head, table);
             k_TableToTableTicket.Add(table, head);
-            k_TableUsageCounters.Add(table, 1);
+            k_TableUsageCounters.Add(head, 0);
 
             // Increment our next head
             s_TableTicketHead++;
             return head;
         }
+
+        public static void RegisterUsage(int tableTicket)
+        {
+            k_TableUsageCounters[tableTicket]++;
+        }
+        public static void UnregisterUsage(int tableTicket)
+        {
+            if (k_TableUsageCounters.ContainsKey(tableTicket))
+            {
+                k_TableUsageCounters[tableTicket]--;
+                if (k_TableUsageCounters[tableTicket] <= 0)
+                {
+                    k_TableToTableTicket.Remove(k_TableTicketToTable[tableTicket]);
+                    k_TableTicketToTable.Remove(tableTicket);
+                    k_TableUsageCounters.Remove(tableTicket);
+                }
+            }
+        }
+
 
         public interface ICellValueChangedCallbackReceiver
         {

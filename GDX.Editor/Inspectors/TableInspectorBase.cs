@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using GDX.Editor.Windows.Tables;
 using GDX.Tables;
 #if UNITY_2022_2_OR_NEWER
@@ -18,20 +19,30 @@ namespace GDX.Editor.Inspectors
         const string k_ButtonText = "Open Table";
 
         VisualElement m_RootElement;
-        int m_tableTicket;
+        int m_TableTicket;
+        bool m_Bound;
 
-        void OnDestroy()
+        void OnDisable()
         {
-            TableCache.UnregisterColumnChanged(this, m_tableTicket);
-            TableCache.UnregisterRowChanged(this, m_tableTicket);
+            if (!m_Bound)
+            {
+                return;
+            }
+
+            TableCache.UnregisterColumnChanged(this, m_TableTicket);
+            TableCache.UnregisterRowChanged(this, m_TableTicket);
+            TableCache.UnregisterUsage(m_TableTicket);
         }
+
 
         /// <inheritdoc />
         public override VisualElement CreateInspectorGUI()
         {
             TableBase table = (TableBase)target;
 
-            m_tableTicket = TableCache.RegisterTable(table);
+            m_TableTicket = TableCache.RegisterTable(table);
+
+
             m_RootElement = new VisualElement();
 
             Label dataLabel = new Label { name = "gdx-table-inspector-data" };
@@ -43,8 +54,10 @@ namespace GDX.Editor.Inspectors
 
             UpdateInspector();
 
-            TableCache.RegisterColumnChanged(this, m_tableTicket);
-            TableCache.RegisterRowChanged(this, m_tableTicket);
+            TableCache.RegisterColumnChanged(this, m_TableTicket);
+            TableCache.RegisterRowChanged(this, m_TableTicket);
+            TableCache.RegisterUsage(m_TableTicket);
+            m_Bound = true;
 
             return m_RootElement;
         }

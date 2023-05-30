@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using GDX.Editor.Inspectors;
 using GDX.Tables;
 using UnityEditor;
 using UnityEditor.Callbacks;
@@ -17,9 +16,7 @@ namespace GDX.Editor.Windows.Tables
     {
         public const string UndoPrefix = "Table:";
 
-        static readonly Dictionary<TableBase, TableWindow> k_TableWindowMap = new Dictionary<TableBase, TableWindow>();
-
-        static readonly Dictionary<TableWindow, int> k_TableWindowToTicket = new Dictionary<TableWindow, int>(5);
+        static readonly Dictionary<TableBase, TableWindow> k_TableToTableWindow = new Dictionary<TableBase, TableWindow>();
         static readonly Dictionary<int, TableWindow> k_TicketToTableWindow = new Dictionary<int, TableWindow>(5);
 
 
@@ -30,16 +27,6 @@ namespace GDX.Editor.Windows.Tables
             return k_TicketToTableWindow.TryGetValue(tableTicket, out TableWindow tableWindow) ? tableWindow : null;
         }
 
-        internal static int GetTableWindowTicket(TableWindow tableWindow)
-        {
-            return k_TableWindowToTicket.TryGetValue(tableWindow, out int ticket) ? ticket : -1;
-        }
-
-        internal static TableWindow GetTableWindow(TableBase table)
-        {
-            return k_TableWindowMap.TryGetValue(table, out TableWindow window) ? window : null;
-        }
-
         static void UndoRedoEvent(in UndoRedoInfo undo)
         {
             if (!undo.undoName.StartsWith("Table:", StringComparison.InvariantCultureIgnoreCase))
@@ -48,23 +35,18 @@ namespace GDX.Editor.Windows.Tables
             }
 
             // Update windows / inspectors
-            foreach (KeyValuePair<TableBase, TableWindow> kvp in k_TableWindowMap)
+            foreach (KeyValuePair<TableBase, TableWindow> kvp in k_TableToTableWindow)
             {
                 TableCache.NotifyOfColumnChange(kvp.Key);
             }
         }
 
-        internal static int RegisterTableWindow(TableWindow tableWindow, TableBase table)
+        internal static void RegisterTableWindow(TableWindow tableWindow, TableBase table)
         {
-            int ticket = GetTableWindowTicket(tableWindow);
-            k_TableWindowMap[table] = tableWindow;
-            if (ticket != -1)
-            {
-                return ticket;
-            }
-            ticket = TableCache.RegisterTable(table);
-            k_TicketToTableWindow.Add(ticket, tableWindow);
-            k_TableWindowToTicket.Add(tableWindow, ticket);
+
+            int ticket = tableWindow.GetTableTicket();
+            k_TableToTableWindow[table] = tableWindow;
+            k_TicketToTableWindow[ticket] = tableWindow;
 
             // We're only going to subscribe for undo events when the table window is open and we have support
             if (!s_SubscribedForUndo && table.GetFlag(TableBase.Flags.EnableUndo))
@@ -72,30 +54,24 @@ namespace GDX.Editor.Windows.Tables
                 Undo.undoRedoEvent += UndoRedoEvent;
                 s_SubscribedForUndo = true;
             }
-
-            return ticket;
         }
 
         internal static void UnregisterTableWindow(TableWindow tableWindow)
         {
-            int tableWindowTicket = GetTableWindowTicket(tableWindow);
-            TableBase table = tableWindow.GetTable();
-
-            k_TableWindowToTicket.Remove(tableWindow);
+            int tableWindowTicket = tableWindow.GetTableTicket();
             k_TicketToTableWindow.Remove(tableWindowTicket);
 
+            TableBase table = tableWindow.GetTable();
             if (table != null)
             {
-                k_TableWindowMap.Remove(table);
+                k_TableToTableWindow.Remove(table);
             }
 
-            if (k_TableWindowToTicket.Count == 0 && s_SubscribedForUndo)
+            if (k_TicketToTableWindow.Count == 0 && s_SubscribedForUndo)
             {
                 Undo.undoRedoEvent -= UndoRedoEvent;
                 s_SubscribedForUndo = false;
             }
-
-            TableCache.UnregisterTable(table);
         }
 
         [OnOpenAsset(1)]
@@ -113,12 +89,17 @@ namespace GDX.Editor.Windows.Tables
 
         public static TableWindow OpenAsset(TableBase table)
         {
-            TableWindow tableWindow = GetTableWindow(table);
+            TableWindow tableWindow = GetTableWindow(TableCache.RegisterTable(table));
             if (tableWindow == null)
             {
                 tableWindow = EditorWindow.CreateWindow<TableWindow>();
             }
-            tableWindow.BindTable(table);
+
+            if (!tableWindow.IsBound())
+            {
+                tableWindow.BindTable(table);
+            }
+
             tableWindow.Show();
             tableWindow.Focus();
 
