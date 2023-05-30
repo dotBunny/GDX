@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
-using GDX.Collections.Generic;
 using GDX.Tables;
 using UnityEditor;
 
@@ -11,14 +10,14 @@ namespace GDX.Editor
 {
     public static class TableCache
     {
-        static readonly IntKeyDictionary<List<ICellValueChangedCallbackReceiver>> k_CellValueChangeCallbackReceivers =
-            new IntKeyDictionary<List<ICellValueChangedCallbackReceiver>>(5);
+        static readonly Dictionary<int, List<ICellValueChangedCallbackReceiver>> k_CellValueChangeCallbackReceivers =
+            new Dictionary<int, List<ICellValueChangedCallbackReceiver>>(5);
 
-        static readonly IntKeyDictionary<List<IColumnDefinitionChangeCallbackReceiver>> k_ColumnChangeCallbackReceivers =
-            new IntKeyDictionary<List<IColumnDefinitionChangeCallbackReceiver>>(5);
+        static readonly Dictionary<int, List<IColumnDefinitionChangeCallbackReceiver>> k_ColumnChangeCallbackReceivers =
+            new Dictionary<int, List<IColumnDefinitionChangeCallbackReceiver>>(5);
 
-        static readonly IntKeyDictionary<List<IRowDefinitionChangeCallbackReceiver>> k_RowChangeCallbackReceivers =
-            new IntKeyDictionary<List<IRowDefinitionChangeCallbackReceiver>>(5);
+        static readonly Dictionary<int, List<IRowDefinitionChangeCallbackReceiver>> k_RowChangeCallbackReceivers =
+            new Dictionary<int, List<IRowDefinitionChangeCallbackReceiver>>(5);
 
         static int s_TableTicketHead;
         static readonly Dictionary<int, TableBase> k_TableTicketToTable = new Dictionary<int, TableBase>(5);
@@ -39,7 +38,7 @@ namespace GDX.Editor
 
             if (!k_CellValueChangeCallbackReceivers.ContainsKey(tableTicket))
             {
-                k_CellValueChangeCallbackReceivers.AddWithUniqueCheck(tableTicket,
+                k_CellValueChangeCallbackReceivers.Add(tableTicket,
                     new List<ICellValueChangedCallbackReceiver>());
             }
 
@@ -48,14 +47,14 @@ namespace GDX.Editor
 
         public static void UnregisterCellValueChanged(ICellValueChangedCallbackReceiver callback, TableBase table)
         {
-            RegisterCellValueChanged(callback, GetTicket(table));
+            UnregisterCellValueChanged(callback, GetTicket(table));
         }
 
         public static void UnregisterCellValueChanged(ICellValueChangedCallbackReceiver callback, int tableTicket)
         {
-            if (k_CellValueChangeCallbackReceivers.ContainsKey(tableTicket))
+            if (k_CellValueChangeCallbackReceivers.TryGetValue(tableTicket, out List<ICellValueChangedCallbackReceiver> receiver))
             {
-                k_CellValueChangeCallbackReceivers[tableTicket].Remove(callback);
+                receiver.Remove(callback);
             }
         }
 
@@ -68,7 +67,7 @@ namespace GDX.Editor
 
             if (!k_RowChangeCallbackReceivers.ContainsKey(tableTicket))
             {
-                k_RowChangeCallbackReceivers.AddWithUniqueCheck(tableTicket,
+                k_RowChangeCallbackReceivers.Add(tableTicket,
                     new List<IRowDefinitionChangeCallbackReceiver>());
             }
 
@@ -77,9 +76,9 @@ namespace GDX.Editor
 
         public static void UnregisterRowChanged(IRowDefinitionChangeCallbackReceiver callback, int tableTicket)
         {
-            if (k_RowChangeCallbackReceivers.ContainsKey(tableTicket))
+            if (k_RowChangeCallbackReceivers.TryGetValue(tableTicket, out List<IRowDefinitionChangeCallbackReceiver> receiver))
             {
-                k_RowChangeCallbackReceivers[tableTicket].Remove(callback);
+                receiver.Remove(callback);
             }
         }
 
@@ -112,7 +111,7 @@ namespace GDX.Editor
 
             if (!k_ColumnChangeCallbackReceivers.ContainsKey(tableTicket))
             {
-                k_ColumnChangeCallbackReceivers.AddWithUniqueCheck(tableTicket,
+                k_ColumnChangeCallbackReceivers.Add(tableTicket,
                     new List<IColumnDefinitionChangeCallbackReceiver>());
             }
 
@@ -121,9 +120,9 @@ namespace GDX.Editor
 
         public static void UnregisterColumnChanged(IColumnDefinitionChangeCallbackReceiver callback, int tableTicket)
         {
-            if (k_ColumnChangeCallbackReceivers.ContainsKey(tableTicket))
+            if (k_ColumnChangeCallbackReceivers.TryGetValue(tableTicket, out List<IColumnDefinitionChangeCallbackReceiver> receiver))
             {
-                k_ColumnChangeCallbackReceivers[tableTicket].Remove(callback);
+                receiver.Remove(callback);
             }
         }
 

@@ -12,12 +12,9 @@ using UnityEngine.UIElements;
 namespace GDX.Editor.Inspectors
 {
 #if UNITY_2022_2_OR_NEWER
-    public abstract class TableInspectorBase : UnityEditor.Editor, TableCache.IColumnDefinitionChangeCallbackReceiver, TableCache.IRowDefinitionChangeCallbackReceiver
-#else
-    public abstract class TableInspectorBase : UnityEditor.Editor
-#endif
+    public abstract class TableInspectorBase : UnityEditor.Editor, TableCache.IColumnDefinitionChangeCallbackReceiver,
+        TableCache.IRowDefinitionChangeCallbackReceiver
     {
-#if UNITY_2022_2_OR_NEWER
         const string k_ButtonText = "Open Table";
 
         VisualElement m_RootElement;
@@ -45,7 +42,9 @@ namespace GDX.Editor.Inspectors
             m_RootElement.Add(button);
 
             UpdateInspector();
+
             TableCache.RegisterColumnChanged(this, m_tableTicket);
+            TableCache.RegisterRowChanged(this, m_tableTicket);
 
             return m_RootElement;
         }
@@ -78,13 +77,15 @@ namespace GDX.Editor.Inspectors
         {
             UpdateInspector();
         }
+    }
 #else
+    public class TableInspectorBase : UnityEditor.Editor
+    {
         /// <inheritdoc />
         public override void OnInspectorGUI()
         {
             UnityEngine.GUILayout.Label("Editing an TableBase is unsupported on this version of Unity.");
         }
-#endif
-
     }
+#endif
 }
