@@ -87,7 +87,6 @@ namespace GDX.Editor.Windows.Tables
                     makeCell = TableWindowCells.MakeRowHeader,
                     bindCell = BindRowHeader,
                     unbindCell = UnbindRowHeader,
-                    destroyCell = DestroyCell,
                     name = "RowName",
                     title = "Row Name"
                 });
@@ -103,6 +102,7 @@ namespace GDX.Editor.Windows.Tables
                     title = columnDescription.Name,
                     width = columnSizePercentage,
                     resizable = true,
+                    unbindCell = UnbindCell,
                     destroyCell = DestroyCell
                 };
 
@@ -295,6 +295,12 @@ namespace GDX.Editor.Windows.Tables
             RebuildRowData();
         }
 
+        void UnbindCell(VisualElement cell, int row)
+        {
+            TableWindowCells.CellData data = (TableWindowCells.CellData)cell.userData;
+            data.CellValue = null;
+        }
+
         void DestroyCell(VisualElement cell)
         {
             cell.userData = null;
@@ -323,6 +329,11 @@ namespace GDX.Editor.Windows.Tables
 
         public int GetRowDescriptionIndex(int row)
         {
+            // if (m_RowDescriptions.Count == row)
+            // {
+            //     m_RowDescriptions.Add(parentWindow.GetTable().GetRowDescription(row - 1));
+            // }
+
             return m_RowDescriptions[row].InternalIndex;
         }
 
@@ -462,6 +473,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 m_RowDescriptions.AddRange(table.GetAllRowDescriptions());
             }
+            //RefreshItems();
             EditorApplication.delayCall += RefreshItems;
         }
 

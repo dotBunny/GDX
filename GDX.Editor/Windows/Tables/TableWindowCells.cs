@@ -666,8 +666,11 @@ namespace GDX.Editor.Windows.Tables
         internal static VisualElement MakeStringCell(int table, int column)
         {
             TextField newField =
-                new TextField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new TextField(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
@@ -675,17 +678,20 @@ namespace GDX.Editor.Windows.Tables
         {
             TextField newField = new TextField(null, 1, false, false, ' ')
             {
-                name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}"
+                name = k_CellFieldName,
+                style = { maxWidth = m_StyleLength25 },
+                userData = new CellData { TableTicket = table, ColumnID = column }
             };
-            newField.style.maxWidth = m_StyleLength25;
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
             return newField;
         }
 
         internal static VisualElement MakeBoolCell(int table, int column)
         {
-            Toggle newField = new Toggle(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+            Toggle newField = new Toggle(null)
+            {
+                name = k_CellFieldName,
+                userData = new CellData { TableTicket = table, ColumnID = column }
+            };
             return newField;
         }
 
@@ -693,11 +699,11 @@ namespace GDX.Editor.Windows.Tables
         {
             SliderInt newField = new SliderInt(sbyte.MinValue, sbyte.MaxValue)
             {
-                name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}",
+                name = k_CellFieldName,
                 showInputField = true,
-                label = null
+                label = null,
+                userData = new CellData { TableTicket = table, ColumnID = column }
             };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
             return newField;
         }
 
@@ -705,11 +711,11 @@ namespace GDX.Editor.Windows.Tables
         {
             SliderInt newField = new SliderInt(byte.MinValue, byte.MaxValue)
             {
-                name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}",
+                name = k_CellFieldName,
                 showInputField = true,
-                label = null
+                label = null,
+                userData = new CellData { TableTicket = table, ColumnID = column }
             };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
             return newField;
         }
 
@@ -717,11 +723,11 @@ namespace GDX.Editor.Windows.Tables
         {
             SliderInt newField = new SliderInt(short.MinValue, short.MaxValue)
             {
-                name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}",
+                name = k_CellFieldName,
                 showInputField = true,
-                label = null
+                label = null,
+                userData = new CellData { TableTicket = table, ColumnID = column }
             };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
             return newField;
         }
 
@@ -729,19 +735,22 @@ namespace GDX.Editor.Windows.Tables
         {
             SliderInt newField = new SliderInt(ushort.MinValue, ushort.MaxValue)
             {
-                name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}",
+                name = k_CellFieldName,
                 showInputField = true,
-                label = null
+                label = null,
+                userData = new CellData { TableTicket = table, ColumnID = column }
             };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
             return newField;
         }
 
         internal static VisualElement MakeIntCell(int table, int column)
         {
             IntegerField newField =
-                new IntegerField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new IntegerField(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
@@ -749,16 +758,22 @@ namespace GDX.Editor.Windows.Tables
         {
             //TODO: Crunches
             IntegerField newField =
-                new IntegerField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new IntegerField(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
         internal static VisualElement MakeLongCell(int table, int column)
         {
             LongField newField =
-                new LongField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new LongField(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
@@ -766,152 +781,208 @@ namespace GDX.Editor.Windows.Tables
         {
             //TODO: Crunches
             LongField newField =
-                new LongField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new LongField(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
         internal static VisualElement MakeFloatCell(int table, int column)
         {
             FloatField newField =
-                new FloatField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new FloatField(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
         internal static VisualElement MakeDoubleCell(int table, int column)
         {
             DoubleField newField =
-                new DoubleField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new DoubleField(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
         internal static VisualElement MakeVector2Cell(int table, int column)
         {
             Vector2Field newField =
-                new Vector2Field(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new Vector2Field(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
         internal static VisualElement MakeVector3Cell(int table, int column)
         {
             Vector3Field newField =
-                new Vector3Field(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new Vector3Field(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
         internal static VisualElement MakeVector4Cell(int table, int column)
         {
             Vector4Field newField =
-                new Vector4Field(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new Vector4Field(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
         internal static VisualElement MakeVector2IntCell(int table, int column)
         {
             Vector2IntField newField =
-                new Vector2IntField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new Vector2IntField(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
         internal static VisualElement MakeVector3IntCell(int table, int column)
         {
             Vector3IntField newField =
-                new Vector3IntField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new Vector3IntField(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
         internal static VisualElement MakeQuaternionCell(int table, int column)
         {
             Vector4Field newField =
-                new Vector4Field(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new Vector4Field(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
         internal static VisualElement MakeRectCell(int table, int column)
         {
             RectField newField =
-                new RectField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new RectField(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
         internal static VisualElement MakeRectIntCell(int table, int column)
         {
             RectIntField newField =
-                new RectIntField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new RectIntField(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
         internal static VisualElement MakeColorCell(int table, int column)
         {
             ColorField newField =
-                new ColorField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new ColorField(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
         internal static VisualElement MakeLayerMaskCell(int table, int column)
         {
             LayerMaskField newField =
-                new LayerMaskField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new LayerMaskField(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
         internal static VisualElement MakeBoundsCell(int table, int column)
         {
             BoundsField newField =
-                new BoundsField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new BoundsField(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
         internal static VisualElement MakeBoundsIntCell(int table, int column)
         {
             BoundsIntField newField =
-                new BoundsIntField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new BoundsIntField(null)
+                    {
+                        name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    };
             return newField;
         }
 
         internal static VisualElement MakeHash128Cell(int table, int column)
         {
             Hash128Field newField =
-                new Hash128Field(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new Hash128Field(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
         internal static VisualElement MakeGradientCell(int table, int column)
         {
             GradientField newField =
-                new GradientField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new GradientField(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
         internal static VisualElement MakeAnimationCurveCell(int table, int column)
         {
             CurveField newField =
-                new CurveField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new CurveField(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
         internal static VisualElement MakeObjectCell(int table, int column)
         {
             ObjectField newField =
-                new ObjectField(null) { name = $"{k_CellFieldName}_{table.ToString()}_{column.ToString()}" };
-            newField.userData = new CellData { TableTicket = table, ColumnID = column };
+                new ObjectField(null)
+                {
+                    name = k_CellFieldName,
+                    userData = new CellData { TableTicket = table, ColumnID = column }
+                };
             return newField;
         }
 
@@ -920,7 +991,7 @@ namespace GDX.Editor.Windows.Tables
             return new Label { name = k_RowHeaderFieldName };
         }
 
-        class CellData
+        public class CellData
         {
             public object CellValue;
             public int ColumnID;
