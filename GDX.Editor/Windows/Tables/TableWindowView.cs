@@ -426,7 +426,6 @@ namespace GDX.Editor.Windows.Tables
             {
                 return;
             }
-
             int indexOfSplit = column.name.IndexOf("_", StringComparison.Ordinal);
             if (indexOfSplit != -1)
             {

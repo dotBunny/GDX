@@ -199,6 +199,7 @@ namespace GDX.Editor.Windows.Tables
             table.SetColumnName(name, internalIndex);
 
             TableCache.NotifyOfColumnChange(table, m_TableWindow);
+            m_TableWindow.GetToolbar().UpdateSaveButton();
             return true;
         }
 
@@ -217,6 +218,7 @@ namespace GDX.Editor.Windows.Tables
 
             table.SetFlag(TableBase.Flags.EnableUndo, enableUndo);
             EditorUtility.SetDirty(m_TableWindow.GetTable());
+            m_TableWindow.GetToolbar().UpdateSaveButton();
             return true;
         }
 

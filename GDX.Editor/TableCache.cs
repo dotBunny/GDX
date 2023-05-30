@@ -42,7 +42,10 @@ namespace GDX.Editor
                     new List<ICellValueChangedCallbackReceiver>());
             }
 
-            k_CellValueChangeCallbackReceivers[tableTicket].Add(callback);
+            if (!k_CellValueChangeCallbackReceivers[tableTicket].Contains(callback))
+            {
+                k_CellValueChangeCallbackReceivers[tableTicket].Add(callback);
+            }
         }
 
         public static void UnregisterCellValueChanged(ICellValueChangedCallbackReceiver callback, TableBase table)
@@ -71,7 +74,10 @@ namespace GDX.Editor
                     new List<IRowDefinitionChangeCallbackReceiver>());
             }
 
-            k_RowChangeCallbackReceivers[tableTicket].Add(callback);
+            if (!k_RowChangeCallbackReceivers[tableTicket].Contains(callback))
+            {
+                k_RowChangeCallbackReceivers[tableTicket].Add(callback);
+            }
         }
 
         public static void UnregisterRowChanged(IRowDefinitionChangeCallbackReceiver callback, int tableTicket)
@@ -115,7 +121,10 @@ namespace GDX.Editor
                     new List<IColumnDefinitionChangeCallbackReceiver>());
             }
 
-            k_ColumnChangeCallbackReceivers[tableTicket].Add(callback);
+            if (!k_ColumnChangeCallbackReceivers[tableTicket].Contains(callback))
+            {
+                k_ColumnChangeCallbackReceivers[tableTicket].Add(callback);
+            }
         }
 
         public static void UnregisterColumnChanged(IColumnDefinitionChangeCallbackReceiver callback, int tableTicket)

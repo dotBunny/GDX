@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.Tables;
+using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
@@ -15,6 +16,7 @@ namespace GDX.Editor.Windows.Tables
         readonly Toolbar m_Toolbar;
         readonly ToolbarMenu m_ToolbarColumnMenu;
         readonly ToolbarButton m_ToolbarHelpButton;
+        readonly ToolbarButton m_ToolbarSaveButton;
         readonly ToolbarMenu m_ToolbarInterchangeMenu;
         readonly ToolbarMenu m_ToolbarRowMenu;
         readonly ToolbarButton m_ToolbarSettingsButton;
@@ -47,12 +49,18 @@ namespace GDX.Editor.Windows.Tables
             m_ToolbarInterchangeMenu.menu.AppendAction("Import from CSV",
                 _ => { m_ParentWindow.GetController().ShowImportDialog(); }, CanInterchange);
 
+            m_ToolbarSaveButton = m_Toolbar.Q<ToolbarButton>("gdx-table-toolbar-save");
+            m_ToolbarSaveButton.text = string.Empty;
+            m_ToolbarSaveButton.clicked += Save;
+            m_ToolbarSaveButton.SetEnabled(false);
+
             m_ToolbarSettingsButton = m_Toolbar.Q<ToolbarButton>("gdx-table-toolbar-settings");
             m_ToolbarSettingsButton.text = string.Empty;
             m_ToolbarSettingsButton.clicked += ShowSettings;
             m_ToolbarHelpButton = m_Toolbar.Q<ToolbarButton>("gdx-table-toolbar-help");
             m_ToolbarHelpButton.text = string.Empty;
             m_ToolbarHelpButton.clicked += OpenHelp;
+
         }
 
         internal void SetFocusable(bool state)
@@ -99,6 +107,11 @@ namespace GDX.Editor.Windows.Tables
             m_ParentWindow.GetController().ShowRemoveRowDialog(selectedItem.InternalIndex);
         }
 
+        void Save()
+        {
+            m_ParentWindow.Save();
+        }
+
         void ShowSettings()
         {
             m_ParentWindow.GetController().ShowSettings();
@@ -107,6 +120,11 @@ namespace GDX.Editor.Windows.Tables
         void OpenHelp()
         {
             m_ParentWindow.GetController().OpenHelp();
+        }
+
+        public void UpdateSaveButton()
+        {
+            m_ToolbarSaveButton?.SetEnabled(EditorUtility.IsDirty(m_ParentWindow.GetTable()));
         }
     }
 #endif
