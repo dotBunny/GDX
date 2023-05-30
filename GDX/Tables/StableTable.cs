@@ -1686,12 +1686,13 @@ namespace GDX.Tables
             ref int[] denseIndicesOfType = ref ColumnDenseIndexToIDMap[(int)typeIndex].TArray;
             int sparseIndexToSwap = denseIndicesOfType[lastIndex];
 
+            ColumnIDToDenseIndexMap[sparseIndexToSwap].ColumnDenseIndex = columnLocation;
             ref ColumnEntry sparseIndexToFree = ref ColumnIDToDenseIndexMap[columnID];
             sparseIndexToFree.ColumnType = Serializable.SerializableTypes.Invalid;
             sparseIndexToFree.ColumnDenseIndex = ColumnEntriesFreeListHead;
+
             ColumnEntriesFreeListHead = columnID;
 
-            ColumnIDToDenseIndexMap[sparseIndexToSwap].ColumnDenseIndex = columnLocation;
             denseIndicesOfType[columnLocation] = sparseIndexToSwap;
             Array.Resize(ref denseIndicesOfType, lastIndex);
 
@@ -1706,6 +1707,8 @@ namespace GDX.Tables
                 SortedOrderToColumnIDMap[i - 1] = currentColumnID;
                 ColumnIDToSortOrderMap[currentColumnID] = i - 1;
             }
+
+            ColumnIDToSortOrderMap[columnID] = -1;
 
             Array.Resize(ref SortedOrderToColumnIDMap, CombinedColumnCount - 1);
 
