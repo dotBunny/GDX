@@ -20,6 +20,11 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         {
             m_CellValue = new ObjectCellValue(m_Table, m_RowInternalIndex, m_ColumnInternalIndex);
             ObjectField newField = new ObjectField(null) { name = k_CellFieldName };
+
+            string qualifiedType = m_Table.GetTypeNameForObjectColumn(m_ColumnInternalIndex);
+            newField.objectType = (!string.IsNullOrEmpty(qualifiedType) ? System.Type.GetType(qualifiedType) : typeof(UnityEngine.Object)) ??
+                                  typeof(UnityEngine.Object);
+
             newField.SetValueWithoutNotify(m_CellValue.Get());
             newField.RegisterValueChangedCallback(e =>
             {

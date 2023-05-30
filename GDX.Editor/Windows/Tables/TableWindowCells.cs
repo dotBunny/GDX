@@ -4,6 +4,7 @@
 
 using GDX.Tables;
 using GDX.Tables.CellValues;
+using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -621,6 +622,10 @@ namespace GDX.Editor.Windows.Tables
 
             ObjectCellValue cellValue =
                 new ObjectCellValue(table, table.GetRowDescription(row).InternalIndex, map.ColumnID);
+
+            string qualifiedType = table.GetTypeNameForObjectColumn(map.ColumnID);
+            field.objectType = (!string.IsNullOrEmpty(qualifiedType) ? System.Type.GetType(qualifiedType) : typeof(Object)) ??
+                               typeof(Object);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());

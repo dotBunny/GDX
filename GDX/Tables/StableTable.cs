@@ -277,6 +277,8 @@ namespace GDX.Tables
             return AllColumnNames[(int)columnEntry.ColumnType][columnEntry.ColumnDenseIndex];
         }
 
+
+
         public override void SetRowName(string rowName, int row)
         {
             AssertRowIDValid(row);
@@ -982,11 +984,17 @@ namespace GDX.Tables
             return SetCell(row, column, ref AllObjectRefColumns, value);
         }
 
-        public void SetTypeNameForObjectColumn<T>(int columnID) where T : Object
+        public override void SetTypeNameForObjectColumn(int columnID, string assemblyQualifiedName)
         {
             AssertObjectColumnIDValid(columnID);
             int denseIndex = ColumnIDToDenseIndexMap[columnID].ColumnDenseIndex;
-            AllObjectRefTypeNames[denseIndex] = typeof(T).AssemblyQualifiedName;
+            AllObjectRefTypeNames[denseIndex] = assemblyQualifiedName;
+        }
+        public override string GetTypeNameForObjectColumn(int columnID)
+        {
+            AssertObjectColumnIDValid(columnID);
+            int denseIndex = ColumnIDToDenseIndexMap[columnID].ColumnDenseIndex;
+            return AllObjectRefTypeNames[denseIndex];
         }
 
         // Get

@@ -2,8 +2,10 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using GDX.Tables;
+using UnityEditor;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor.Windows.Tables
@@ -11,6 +13,10 @@ namespace GDX.Editor.Windows.Tables
 #if UNITY_2022_2_OR_NEWER
     class TableWindowOverlay
     {
+        const string ValidClass = "valid";
+        const string WarningClass = "warning";
+        const string ErrorClass = "error";
+
         public enum ConfirmationState
         {
             Invalid,
@@ -36,6 +42,8 @@ namespace GDX.Editor.Windows.Tables
         readonly VisualElement m_AddColumnOverlay;
         readonly PopupField<int> m_AddColumnType;
         readonly TextField m_AddColumnFilter;
+        readonly VisualElement m_AddColumnFilterStatus;
+
         readonly Button m_AddRowAddButton;
         readonly Button m_AddRowCancelButton;
         readonly TextField m_AddRowName;
@@ -83,13 +91,20 @@ namespace GDX.Editor.Windows.Tables
             {
                 typeValues.Add(i);
             }
-
             m_AddColumnType =
                 new PopupField<int>(typeValues, 0, Serializable.GetSerializableTypesLabel,
                     Serializable.GetSerializableTypesLabel) { label = "Type", name = "gdx-table-column-type" };
+            m_AddColumnType.RegisterValueChangedCallback(e =>
+            {
+                UpdateAddColumnBasedOnType(e.newValue);
+            });
             m_AddColumnOverlay.Insert(columnNameIndex + 1, m_AddColumnType);
+
             m_AddColumnFilter = m_AddColumnOverlay.Q<TextField>("gdx-table-column-filter");
-            m_AddColumnFilter.AddToClassList("hidden");
+            m_AddColumnFilter.AddToClassList(ResourcesProvider.HiddenClass);
+            m_AddColumnFilter.RegisterValueChangedCallback(e => { ValidateAssemblyQualifiedName(e.newValue); });
+            m_AddColumnFilterStatus = m_AddColumnOverlay.Q<VisualElement>("gdx-table-add-column-filter-status");
+            m_AddColumnFilterStatus.AddToClassList(ResourcesProvider.HiddenClass);
 
             m_AddColumnAddButton = m_AddColumnOverlay.Q<Button>("gdx-table-column-add");
             m_AddColumnAddButton.clicked += SubmitAddColumn;
@@ -148,6 +163,50 @@ namespace GDX.Editor.Windows.Tables
             SetState(OverlayState.Confirmation, stableIndex);
         }
 
+        void UpdateAddColumnBasedOnType(int type)
+        {
+            if ((Serializable.SerializableTypes)type == Serializable.SerializableTypes.Object)
+            {
+                m_AddColumnFilter.SetValueWithoutNotify(string.Empty);
+                m_AddColumnFilter.RemoveFromClassList(ResourcesProvider.HiddenClass);
+                m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
+            }
+            else
+            {
+                m_AddColumnFilter.AddToClassList(ResourcesProvider.HiddenClass);
+                m_AddColumnFilterStatus.AddToClassList(ResourcesProvider.HiddenClass);
+            }
+        }
+
+        void ValidateAssemblyQualifiedName(string newValue)
+        {
+
+            TypeCache.GetTypesDerivedFrom(typeof(UnityEngine.Object));
+
+            if (string.IsNullOrEmpty(newValue))
+            {
+                m_AddColumnFilterStatus.AddToClassList(WarningClass);
+                m_AddColumnFilterStatus.RemoveFromClassList(ValidClass);
+                m_AddColumnFilterStatus.RemoveFromClassList(ErrorClass);
+            }
+            else
+            {
+                System.Type newType = System.Type.GetType(newValue);
+                if (newType != null)
+                {
+                    m_AddColumnFilterStatus.AddToClassList(ValidClass);
+                    m_AddColumnFilterStatus.RemoveFromClassList(WarningClass);
+                    m_AddColumnFilterStatus.RemoveFromClassList(ErrorClass);
+                }
+                else
+                {
+                    m_AddColumnFilterStatus.AddToClassList(ErrorClass);
+                    m_AddColumnFilterStatus.RemoveFromClassList(WarningClass);
+                    m_AddColumnFilterStatus.RemoveFromClassList(ValidClass);
+                }
+            }
+        }
+
         internal void SetState(OverlayState state, int stableIndex = -1, string previousValue = null)
         {
             m_CachedIndex = stableIndex;
@@ -158,7 +217,6 @@ namespace GDX.Editor.Windows.Tables
             {
                 m_TableWindow.GetToolbar().SetFocusable(true);
                 m_RootElement.focusable = false;
-
 
                 if (view?.GetMultiColumnListView() != null)
                 {
@@ -182,8 +240,10 @@ namespace GDX.Editor.Windows.Tables
                     m_RootElement.style.display = DisplayStyle.Flex;
                     m_AddColumnOverlay.style.display = DisplayStyle.Flex;
                     m_AddColumnName.SetValueWithoutNotify($"Column_{Core.Random.NextInteger(1, 9999).ToString()}");
+                    m_AddColumnType?.SetValueWithoutNotify(0);
+                    UpdateAddColumnBasedOnType(0);
+                    ValidateAssemblyQualifiedName(string.Empty);
                     m_AddColumnAddButton.Focus();
-
                     // Don't allow cancel if we dont have column
                     m_AddColumnCancelButton.SetEnabled(m_TableWindow.GetTable().GetColumnCount() > 0);
                     break;
@@ -253,7 +313,7 @@ namespace GDX.Editor.Windows.Tables
             }
 
             if (m_TableWindow.GetController()
-                .AddColumn(m_AddColumnName.text, (Serializable.SerializableTypes)m_AddColumnType.value))
+                .AddColumn(m_AddColumnName.text, (Serializable.SerializableTypes)m_AddColumnType.value, m_AddColumnFilter.value))
             {
                 SetOverlayStateHidden();
             }

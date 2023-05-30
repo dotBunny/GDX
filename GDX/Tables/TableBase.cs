@@ -51,6 +51,8 @@ namespace GDX.Tables
         public abstract void SetAllColumnDescriptionsOrder(ColumnDescription[] orderedColumns);
         public abstract void SetColumnName(string columnName, int column);
         public abstract string GetColumnName(int column);
+        public abstract void SetTypeNameForObjectColumn(int columnID, string assemblyQualifiedName);
+        public abstract string GetTypeNameForObjectColumn(int columnID);
         public abstract void SetRowName(string rowName, int row);
         public abstract string GetRowName(int row);
         public abstract string GetString(int row, int column);

@@ -101,12 +101,21 @@ namespace GDX.Editor.Windows.Tables
             Application.OpenURL($"{PackageProvider.GetDocumentationBaseUri()}/manual/features/tables.html");
         }
 
-        public bool AddColumn(string name, Serializable.SerializableTypes type, int orderedIndex = -1)
+        public bool AddColumn(string name, Serializable.SerializableTypes type, string secondary = null, int orderedIndex = -1)
         {
             RegisterUndo($"Add Column ({name})");
 
             TableBase table = m_TableWindow.GetTable();
-            table.AddColumn(type, name, orderedIndex);
+            int columnIndex = table.AddColumn(type, name, orderedIndex);
+            if (!string.IsNullOrEmpty(secondary))
+            {
+                System.Type newType = System.Type.GetType(secondary);
+                if (newType != null)
+                {
+                    table.SetTypeNameForObjectColumn(columnIndex, secondary);
+                }
+            }
+
             TableCache.NotifyOfColumnChange(table);
             return true;
         }
