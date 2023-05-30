@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Collections.Generic;
 using GDX.Tables;
 using UnityEditor;
@@ -13,6 +12,8 @@ namespace GDX.Editor.Windows.Tables
 #if UNITY_2022_2_OR_NEWER
     class TableWindowOverlay
     {
+        const string DefaultObjectType = "UnityEngine.Object, UnityEngine";
+
         const string ValidClass = "valid";
         const string WarningClass = "warning";
         const string ErrorClass = "error";
@@ -167,7 +168,7 @@ namespace GDX.Editor.Windows.Tables
         {
             if ((Serializable.SerializableTypes)type == Serializable.SerializableTypes.Object)
             {
-                m_AddColumnFilter.SetValueWithoutNotify(string.Empty);
+                m_AddColumnFilter.value = DefaultObjectType;
                 m_AddColumnFilter.RemoveFromClassList(ResourcesProvider.HiddenClass);
                 m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
             }
@@ -242,7 +243,6 @@ namespace GDX.Editor.Windows.Tables
                     m_AddColumnName.SetValueWithoutNotify($"Column_{Core.Random.NextInteger(1, 9999).ToString()}");
                     m_AddColumnType?.SetValueWithoutNotify(0);
                     UpdateAddColumnBasedOnType(0);
-                    ValidateAssemblyQualifiedName(string.Empty);
                     m_AddColumnAddButton.Focus();
                     // Don't allow cancel if we dont have column
                     m_AddColumnCancelButton.SetEnabled(m_TableWindow.GetTable().GetColumnCount() > 0);
