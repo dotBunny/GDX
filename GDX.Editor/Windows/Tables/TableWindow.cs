@@ -107,12 +107,6 @@ namespace GDX.Editor.Windows.Tables
             return m_View;
         }
 
-        public int GetTableTicket()
-        {
-            return m_TableTicket;
-        }
-
-
         void CheckForNoTable()
         {
             if (m_TargetTable == null)
@@ -166,14 +160,14 @@ namespace GDX.Editor.Windows.Tables
         public void OnCellValueChanged(int rowInternalIndex, int columnInternalIndex)
         {
             // We can do better then this, what if cells actually had more awareness
+            // TODO: @matt Need to do better here
             m_View.RefreshItems();
         }
 
         /// <inheritdoc />
         public void OnRowDefinitionChange()
         {
-            RebindTable();
-            //m_View.RebuildRowData();
+            m_View.RebuildRowData();
         }
     }
 #endif

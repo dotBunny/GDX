@@ -27,7 +27,7 @@ namespace GDX.Editor.Windows.Tables
 
             StringCellValue cellValue =
                 new StringCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -49,7 +49,7 @@ namespace GDX.Editor.Windows.Tables
 
             CharCellValue cellValue =
                 new CharCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -71,7 +71,7 @@ namespace GDX.Editor.Windows.Tables
 
             BoolCellValue cellValue =
                 new BoolCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -93,7 +93,7 @@ namespace GDX.Editor.Windows.Tables
 
             SByteCellValue cellValue =
                 new SByteCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -115,7 +115,7 @@ namespace GDX.Editor.Windows.Tables
 
             ByteCellValue cellValue =
                 new ByteCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -137,7 +137,7 @@ namespace GDX.Editor.Windows.Tables
 
             ShortCellValue cellValue =
                 new ShortCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -159,7 +159,7 @@ namespace GDX.Editor.Windows.Tables
 
             UShortCellValue cellValue =
                 new UShortCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -181,7 +181,7 @@ namespace GDX.Editor.Windows.Tables
 
             IntCellValue cellValue =
                 new IntCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -203,7 +203,7 @@ namespace GDX.Editor.Windows.Tables
 
             UIntCellValue cellValue =
                 new UIntCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -225,7 +225,7 @@ namespace GDX.Editor.Windows.Tables
 
             LongCellValue cellValue =
                 new LongCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -247,7 +247,7 @@ namespace GDX.Editor.Windows.Tables
 
             ULongCellValue cellValue =
                 new ULongCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -269,7 +269,7 @@ namespace GDX.Editor.Windows.Tables
 
             FloatCellValue cellValue =
                 new FloatCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -291,7 +291,7 @@ namespace GDX.Editor.Windows.Tables
 
             DoubleCellValue cellValue =
                 new DoubleCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -313,7 +313,7 @@ namespace GDX.Editor.Windows.Tables
 
             Vector2CellValue cellValue =
                 new Vector2CellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -335,7 +335,7 @@ namespace GDX.Editor.Windows.Tables
 
             Vector3CellValue cellValue =
                 new Vector3CellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -357,7 +357,7 @@ namespace GDX.Editor.Windows.Tables
 
             Vector4CellValue cellValue =
                 new Vector4CellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -379,7 +379,7 @@ namespace GDX.Editor.Windows.Tables
 
             Vector2IntCellValue cellValue =
                 new Vector2IntCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -401,7 +401,7 @@ namespace GDX.Editor.Windows.Tables
 
             Vector3IntCellValue cellValue =
                 new Vector3IntCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -423,7 +423,7 @@ namespace GDX.Editor.Windows.Tables
 
             QuaternionCellValue cellValue =
                 new QuaternionCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -450,7 +450,7 @@ namespace GDX.Editor.Windows.Tables
 
             RectCellValue cellValue =
                 new RectCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -472,7 +472,7 @@ namespace GDX.Editor.Windows.Tables
 
             RectIntCellValue cellValue =
                 new RectIntCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -494,7 +494,7 @@ namespace GDX.Editor.Windows.Tables
 
             ColorCellValue cellValue =
                 new ColorCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -516,7 +516,7 @@ namespace GDX.Editor.Windows.Tables
 
             LayerMaskCellValue cellValue =
                 new LayerMaskCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -538,7 +538,7 @@ namespace GDX.Editor.Windows.Tables
 
             BoundsCellValue cellValue =
                 new BoundsCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -560,7 +560,7 @@ namespace GDX.Editor.Windows.Tables
 
             BoundsIntCellValue cellValue =
                 new BoundsIntCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -582,7 +582,7 @@ namespace GDX.Editor.Windows.Tables
 
             Hash128CellValue cellValue =
                 new Hash128CellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -604,7 +604,7 @@ namespace GDX.Editor.Windows.Tables
 
             GradientCellValue cellValue =
                 new GradientCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -626,7 +626,7 @@ namespace GDX.Editor.Windows.Tables
 
             AnimationCurveCellValue cellValue =
                 new AnimationCurveCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
@@ -648,7 +648,7 @@ namespace GDX.Editor.Windows.Tables
 
             ObjectCellValue cellValue =
                 new ObjectCellValue(TableCache.GetTable(map.TableTicket),
-                    TableWindowProvider.GetTableWindow(map.TableTicket).GetView().GetRowDescriptionIndex(row),
+                    TableCache.GetTable(map.TableTicket).GetRowDescription(row).InternalIndex,
                     map.ColumnID);
 
             map.CellValue = cellValue;
