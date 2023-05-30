@@ -130,10 +130,12 @@ namespace GDX.Editor.Windows.Tables
 
         public void Save(bool skipDialog = false)
         {
-            if (!EditorUtility.IsDirty(m_TargetTable))
+            // We're not dirty, or were in batch mode
+            if (!EditorUtility.IsDirty(m_TargetTable) || Application.isBatchMode)
             {
                 return;
             }
+
 
             if (skipDialog || EditorUtility.DisplayDialog($"Save {m_TargetTable.GetDisplayName()}", "There are changes made to the table (in memory) which have not been saved to disk. Would you like to write those changes to disk now?", "Yes", "No"))
             {

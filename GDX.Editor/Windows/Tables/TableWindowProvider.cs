@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using GDX.Editor.Inspectors;
 using GDX.Tables;
 using UnityEditor;
 using UnityEditor.Callbacks;

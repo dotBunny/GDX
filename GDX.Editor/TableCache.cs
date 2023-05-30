@@ -210,7 +210,7 @@ namespace GDX.Editor
 
         public static int RegisterTable(TableBase table, int forcedTicket = -1)
         {
-            // This is the scenario where we need to rebuild after domain relaod
+            // This is the scenario where we need to rebuild after domain reload
             if (forcedTicket != -1)
             {
                 k_TableTicketToTable[forcedTicket] = table;
@@ -221,6 +221,7 @@ namespace GDX.Editor
                 {
                     s_TableTicketHead = forcedTicket + 1;
                 }
+
                 return forcedTicket;
             }
 
