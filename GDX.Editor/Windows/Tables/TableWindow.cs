@@ -172,7 +172,8 @@ namespace GDX.Editor.Windows.Tables
         /// <inheritdoc />
         public void OnRowDefinitionChange()
         {
-            m_View.RebuildRowData();
+            RebindTable();
+            //m_View.RebuildRowData();
         }
     }
 #endif

@@ -81,6 +81,8 @@ namespace GDX.Editor.Windows.Tables
             int columnCount = m_ColumnDescriptions.Count;
             Length columnSizePercentage = Length.Percent(100f / columnCount);
 
+
+            // Create our "Row Name" column
             m_TableViewColumns.Insert(0,
                 new Column
                 {
@@ -90,6 +92,8 @@ namespace GDX.Editor.Windows.Tables
                     name = "RowName",
                     title = "Row Name"
                 });
+
+            // Creat our other columns
             for (int i = 1; i < columnCount; i++)
             {
                 TableBase.ColumnDescription columnDescription = m_ColumnDescriptions[i];
@@ -370,6 +374,12 @@ namespace GDX.Editor.Windows.Tables
 
         void BindRowHeader(VisualElement cell, int row)
         {
+            if (row >= m_RowDescriptions.Count)
+            {
+                // Unbinding last row, this happens as the row updates after the actual data is removed.
+                return;
+            }
+
             Label label = (Label)cell;
             TableBase.RowDescription description = m_RowDescriptions[row];
             label.text = description.Name;
@@ -473,8 +483,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 m_RowDescriptions.AddRange(table.GetAllRowDescriptions());
             }
-            //RefreshItems();
-            EditorApplication.delayCall += RefreshItems;
+            RefreshItems();
         }
 
         void AppendColumnContextMenu(ContextualMenuPopulateEvent evt, Column column)
