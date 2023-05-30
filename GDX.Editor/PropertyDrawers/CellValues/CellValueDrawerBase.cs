@@ -43,6 +43,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         SerializedProperty m_SerializedProperty;
 
         protected TableBase m_Table;
+        protected int m_TableTicket;
         protected VisualElement m_CellElement;
         Button m_TableButton;
         SerializedProperty m_TableProperty;
@@ -476,6 +477,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                 return;
             }
 
+            m_TableTicket = TableCache.RegisterTable(m_Table);
+            TableCache.RegisterUsage(m_TableTicket);
             TableCache.RegisterCellValueChanged(this, m_Table);
             m_HasRegisteredForCallbacks = true;
         }
@@ -484,7 +487,9 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         {
             if (m_HasRegisteredForCallbacks)
             {
+
                 TableCache.UnregisterCellValueChanged(this, m_Table);
+                TableCache.UnregisterUsage(m_TableTicket);
             }
         }
 

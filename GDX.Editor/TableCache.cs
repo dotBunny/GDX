@@ -205,6 +205,7 @@ namespace GDX.Editor
 
         static int GetTicket(TableBase table)
         {
+            if (table == null) return -1;
             return k_TableToTableTicket.TryGetValue(table, out int registerTable) ? registerTable: -1;
         }
 
