@@ -20,9 +20,11 @@ namespace GDX.Editor
             new Dictionary<int, List<IRowDefinitionChangeCallbackReceiver>>(5);
 
         static int s_TableTicketHead;
+
         static readonly Dictionary<int, TableBase> k_TableTicketToTable = new Dictionary<int, TableBase>(5);
         static readonly Dictionary<TableBase, int> k_TableToTableTicket = new Dictionary<TableBase, int>(5);
-        static readonly Dictionary<TableBase, int> k_TableUsageCounters = new Dictionary<TableBase, int>(5);
+
+        static readonly Dictionary<int, int> k_TableUsageCounters = new Dictionary<int, int>(5);
 
         public static void RegisterCellValueChanged(ICellValueChangedCallbackReceiver callback, TableBase table)
         {
@@ -201,51 +203,61 @@ namespace GDX.Editor
             return k_TableTicketToTable.TryGetValue(ticket, out TableBase table) ? table : null;
         }
 
-        public static int GetTicket(TableBase table)
+        static int GetTicket(TableBase table)
         {
-            return k_TableToTableTicket.TryGetValue(table, out int ticket) ? ticket : -1;
+            return k_TableToTableTicket.TryGetValue(table, out int registerTable) ? registerTable: -1;
         }
 
-        public static void UnregisterTable(TableBase table)
+        public static int RegisterTable(TableBase table, int forcedTicket = -1)
         {
-            if (table == null)
+            // This is the scenario where we need to rebuild after domain relaod
+            if (forcedTicket != -1)
             {
-                return;
-            }
+                k_TableTicketToTable[forcedTicket] = table;
+                k_TableToTableTicket[table] = forcedTicket;
+                k_TableUsageCounters.TryAdd(forcedTicket, 0);
 
-            int ticket = GetTicket(table);
-
-            if (ticket != -1)
-            {
-                k_TableUsageCounters[table]--;
-                if (k_TableUsageCounters[table] == 0)
+                if (forcedTicket >= s_TableTicketHead)
                 {
-                    k_TableToTableTicket.Remove(table);
-                    k_TableTicketToTable.Remove(ticket);
-                    k_TableUsageCounters.Remove(table);
+                    s_TableTicketHead = forcedTicket + 1;
                 }
+                return forcedTicket;
             }
-        }
 
-        public static int RegisterTable(TableBase table)
-        {
-            int ticket = GetTicket(table);
-            if (ticket != -1)
+            if (k_TableToTableTicket.TryGetValue(table, out int registerTable))
             {
-                k_TableUsageCounters[table]++;
-                return ticket;
+                return registerTable;
             }
 
             // Register table
             int head = s_TableTicketHead;
             k_TableTicketToTable.Add(head, table);
             k_TableToTableTicket.Add(table, head);
-            k_TableUsageCounters.Add(table, 1);
+            k_TableUsageCounters.Add(head, 0);
 
             // Increment our next head
             s_TableTicketHead++;
             return head;
         }
+
+        public static void RegisterUsage(int tableTicket)
+        {
+            k_TableUsageCounters[tableTicket]++;
+        }
+        public static void UnregisterUsage(int tableTicket)
+        {
+            if (k_TableUsageCounters.ContainsKey(tableTicket))
+            {
+                k_TableUsageCounters[tableTicket]--;
+                if (k_TableUsageCounters[tableTicket] <= 0)
+                {
+                    k_TableToTableTicket.Remove(k_TableTicketToTable[tableTicket]);
+                    k_TableTicketToTable.Remove(tableTicket);
+                    k_TableUsageCounters.Remove(tableTicket);
+                }
+            }
+        }
+
 
         public interface ICellValueChangedCallbackReceiver
         {

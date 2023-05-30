@@ -58,7 +58,7 @@ namespace GDX.Editor.Windows.Tables
             }
 
             TableBase table = window.GetTable();
-            int tableTicket = TableCache.GetTicket(table);
+            int tableTicket = window.GetTableTicket();
 
             // Add row header column ahead of actual columns
             m_ColumnDescriptions.Add(new TableBase.ColumnDescription

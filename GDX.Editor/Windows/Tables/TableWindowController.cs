@@ -144,6 +144,9 @@ namespace GDX.Editor.Windows.Tables
 
         public void RemoveSelectedRow()
         {
+            object selectedItem = m_TableWindow.GetView().GetMultiColumnListView().selectedItem;
+            if (selectedItem == null) return;
+
             TableBase.RowDescription selectedRow =
                 (TableBase.RowDescription)m_TableWindow.GetView().GetMultiColumnListView().selectedItem;
             RegisterUndo($"Remove Row ({selectedRow.Name})");
