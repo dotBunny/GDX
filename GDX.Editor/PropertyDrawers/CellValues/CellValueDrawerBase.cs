@@ -16,8 +16,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         const string k_MessageClickToUnlock = "Click to unlock for editting.";
         const string k_MessageClickToLock = "Click to lock data.";
         const string k_MessageNoTableSelected = "No table selected.";
-        const string k_PropertyRow = "Row";
-        const string k_PropertyColumn = "Column";
+        const string k_PropertyRow = "RowIdentifier";
+        const string k_PropertyColumn = "ColumnIdentifier";
         const string k_PropertyTable = "Table";
 
         const string k_StyleClassLinked = "linked";
