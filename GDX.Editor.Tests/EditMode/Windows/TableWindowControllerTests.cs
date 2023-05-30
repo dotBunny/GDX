@@ -80,6 +80,34 @@ namespace GDX.Editor.Windows
             Assert.That(m_TestTable.GetRowCount() == 1);
             Assert.That(m_TestTable.GetRowName(rowDescription.InternalIndex) == "Test_Row");
         }
+
+        [Test]
+        [Category(Core.TestCategory)]
+        public void AddRemove_RemoveColumn_Count()
+        {
+            m_TableWindowController.AddColumn("A", Serializable.SerializableTypes.String);
+            m_TableWindowController.AddColumn("B", Serializable.SerializableTypes.String);
+            m_TableWindowController.AddColumn("C", Serializable.SerializableTypes.Bounds);
+            m_TableWindowController.AddColumn("D", Serializable.SerializableTypes.String);
+            m_TableWindowController.AddRowDefault();
+            m_TableWindowController.AddRowDefault();
+            m_TableWindowController.AddRowDefault();
+            m_TableWindowController.AddColumn("E", Serializable.SerializableTypes.Bounds);
+            m_TableWindowController.RemoveColumn(m_TestTable.GetColumnDescription(3).InternalIndex); // remove D
+            m_TableWindowController.RemoveColumn(m_TestTable.GetColumnDescription(3).InternalIndex); // remove E
+            m_TableWindowController.AddColumn("E", Serializable.SerializableTypes.Bounds);
+            m_TableWindowController.AddColumn("D", Serializable.SerializableTypes.String);
+            m_TableWindowController.RemoveColumn(m_TestTable.GetColumnDescription(3).InternalIndex); // remove E
+            m_TableWindowController.AddColumn("E", Serializable.SerializableTypes.Bounds);
+            m_TableWindowController.AddColumn("F", Serializable.SerializableTypes.String);
+            m_TableWindowController.AddColumn("G", Serializable.SerializableTypes.String);
+            m_TableWindowController.AddRowDefault();
+            m_TableWindowController.AddRowDefault();
+            m_TableWindowController.RemoveColumn(m_TestTable.GetColumnDescription(4).InternalIndex); // remove E
+
+            Assert.That(m_TestTable.GetColumnCount() == 6, $"Expected 6, found {m_TestTable.GetColumnCount()}");
+        }
+
     }
 }
 #endif
