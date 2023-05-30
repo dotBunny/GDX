@@ -215,7 +215,15 @@ namespace GDX.Editor
             {
                 k_TableTicketToTable[forcedTicket] = table;
                 k_TableToTableTicket[table] = forcedTicket;
+#if UNITY_2022_2_OR_NEWER
                 k_TableUsageCounters.TryAdd(forcedTicket, 0);
+#else
+                if (!k_TableUsageCounters.ContainsKey(forcedTicket))
+                {
+                    k_TableUsageCounters[forcedTicket] = 0;
+                }
+#endif
+
 
                 if (forcedTicket >= s_TableTicketHead)
                 {
