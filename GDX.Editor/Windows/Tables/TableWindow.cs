@@ -147,6 +147,8 @@ namespace GDX.Editor.Windows.Tables
                 return;
             }
 
+            m_View?.Destroy();
+
             // Build our view out
             m_View = new TableWindowView(rootVisualElement[0], this);
 
@@ -163,6 +165,7 @@ namespace GDX.Editor.Windows.Tables
         /// <inheritdoc />
         public void OnCellValueChanged(int rowInternalIndex, int columnInternalIndex)
         {
+            // We can do better then this, what if cells actually had more awareness
             m_View.RefreshItems();
         }
 

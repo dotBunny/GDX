@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using GDX.Tables;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -43,7 +44,14 @@ namespace GDX.Editor.Windows.Tables
 
         ~TableWindowView()
         {
-            m_RootElement.Remove(m_MultiColumnListView);
+            Destroy();
+        }
+
+        public void Destroy()
+        {
+            m_RowDescriptions.Clear();
+            m_ColumnDescriptions.Clear();
+            m_RowContextMenus.Clear();
         }
 
         public TableWindowView(VisualElement rootElement, TableWindow window)
@@ -79,6 +87,7 @@ namespace GDX.Editor.Windows.Tables
                     makeCell = TableWindowCells.MakeRowHeader,
                     bindCell = BindRowHeader,
                     unbindCell = UnbindRowHeader,
+                    destroyCell = DestroyCell,
                     name = "RowName",
                     title = "Row Name"
                 });
@@ -93,7 +102,8 @@ namespace GDX.Editor.Windows.Tables
                     name = $"Column_{columnIndex}",
                     title = columnDescription.Name,
                     width = columnSizePercentage,
-                    resizable = true
+                    resizable = true,
+                    destroyCell = DestroyCell
                 };
 
                 // Customize column based on type
@@ -265,7 +275,7 @@ namespace GDX.Editor.Windows.Tables
             // Create MCLV
             m_MultiColumnListView = new MultiColumnListView(m_TableViewColumns)
             {
-                sortingEnabled = true,
+                sortingEnabled = false,
                 name = "gdx-table-view",
                 selectionType = SelectionType.Single,
                 itemsSource = m_RowDescriptions,
@@ -275,7 +285,7 @@ namespace GDX.Editor.Windows.Tables
             };
             m_MultiColumnListView.style.height = new StyleLength(new Length(100f, LengthUnit.Percent));
             m_MultiColumnListView.headerContextMenuPopulateEvent += AppendColumnContextMenu;
-            m_MultiColumnListView.columnSortingChanged += SortItems;
+            //m_MultiColumnListView.columnSortingChanged += SortItems;
 
             rootElement.Insert(1, m_MultiColumnListView);
 
@@ -283,6 +293,11 @@ namespace GDX.Editor.Windows.Tables
             m_TableViewHeader = m_MultiColumnListView.Q<VisualElement>(null, "unity-multi-column-header");
 
             RebuildRowData();
+        }
+
+        void DestroyCell(VisualElement cell)
+        {
+            cell.userData = null;
         }
 
         public void SetDesiredRowHeightMultiplier(float neededHeight)
@@ -298,21 +313,16 @@ namespace GDX.Editor.Windows.Tables
             m_MultiColumnListView.RefreshItems();
         }
 
-        void SortItems()
-        {
-            foreach (SortColumnDescription sortedColumn in m_MultiColumnListView.sortedColumns)
-            {
-                Debug.Log($"{sortedColumn.columnName}  {sortedColumn.direction.ToString()}");
-            }
-        }
+        // void SortItems()
+        // {
+        //     foreach (SortColumnDescription sortedColumn in m_MultiColumnListView.sortedColumns)
+        //     {
+        //         Debug.Log($"{sortedColumn.columnName}  {sortedColumn.direction.ToString()}");
+        //     }
+        // }
 
         public int GetRowDescriptionIndex(int row)
         {
-            if (row >= m_RowDescriptions.Count)
-            {
-                Debug.Log($"Get k_RowDescriptions @ {row} (needs to be one less!) count:{m_RowDescriptions.Count}");
-            }
-
             return m_RowDescriptions[row].InternalIndex;
         }
 
@@ -452,7 +462,7 @@ namespace GDX.Editor.Windows.Tables
             {
                 m_RowDescriptions.AddRange(table.GetAllRowDescriptions());
             }
-            m_MultiColumnListView.RefreshItems();
+            EditorApplication.delayCall += RefreshItems;
         }
 
         void AppendColumnContextMenu(ContextualMenuPopulateEvent evt, Column column)
