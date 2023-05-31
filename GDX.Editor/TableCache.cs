@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
-using GDX.Tables;
+using GDX.DataTables;
 using UnityEditor;
 
 namespace GDX.Editor
@@ -21,14 +21,14 @@ namespace GDX.Editor
 
         static int s_TableTicketHead;
 
-        static readonly Dictionary<int, TableBase> k_TableTicketToTable = new Dictionary<int, TableBase>(5);
-        static readonly Dictionary<TableBase, int> k_TableToTableTicket = new Dictionary<TableBase, int>(5);
+        static readonly Dictionary<int, DataTableObject> k_TableTicketToTable = new Dictionary<int, DataTableObject>(5);
+        static readonly Dictionary<DataTableObject, int> k_TableToTableTicket = new Dictionary<DataTableObject, int>(5);
 
         static readonly Dictionary<int, int> k_TableUsageCounters = new Dictionary<int, int>(5);
 
-        public static void RegisterCellValueChanged(ICellValueChangedCallbackReceiver callback, TableBase table)
+        public static void RegisterCellValueChanged(ICellValueChangedCallbackReceiver callback, DataTableObject dataTable)
         {
-            RegisterCellValueChanged(callback, GetTicket(table));
+            RegisterCellValueChanged(callback, GetTicket(dataTable));
         }
 
         public static void RegisterCellValueChanged(ICellValueChangedCallbackReceiver callback, int tableTicket)
@@ -50,9 +50,9 @@ namespace GDX.Editor
             }
         }
 
-        public static void UnregisterCellValueChanged(ICellValueChangedCallbackReceiver callback, TableBase table)
+        public static void UnregisterCellValueChanged(ICellValueChangedCallbackReceiver callback, DataTableObject dataTable)
         {
-            UnregisterCellValueChanged(callback, GetTicket(table));
+            UnregisterCellValueChanged(callback, GetTicket(dataTable));
         }
 
         public static void UnregisterCellValueChanged(ICellValueChangedCallbackReceiver callback, int tableTicket)
@@ -90,9 +90,9 @@ namespace GDX.Editor
             }
         }
 
-        public static void NotifyOfRowChange(TableBase table, IRowDefinitionChangeCallbackReceiver ignore = null)
+        public static void NotifyOfRowChange(DataTableObject dataTable, IRowDefinitionChangeCallbackReceiver ignore = null)
         {
-            NotifyOfRowChange(GetTicket(table), ignore);
+            NotifyOfRowChange(GetTicket(dataTable), ignore);
         }
 
         public static void NotifyOfRowChange(int tableTicket, IRowDefinitionChangeCallbackReceiver ignore = null)
@@ -137,9 +137,9 @@ namespace GDX.Editor
             }
         }
 
-        public static void NotifyOfColumnChange(TableBase table, IColumnDefinitionChangeCallbackReceiver ignore = null)
+        public static void NotifyOfColumnChange(DataTableObject dataTable, IColumnDefinitionChangeCallbackReceiver ignore = null)
         {
-            NotifyOfColumnChange(GetTicket(table), ignore);
+            NotifyOfColumnChange(GetTicket(dataTable), ignore);
         }
 
         public static void NotifyOfColumnChange(int tableTicket, IColumnDefinitionChangeCallbackReceiver ignore = null)
@@ -157,9 +157,9 @@ namespace GDX.Editor
             EditorUtility.SetDirty(k_TableTicketToTable[tableTicket]);
         }
 
-        public static void NotifyOfCellValueChange(TableBase table, int rowInternalIndex, int columnInternalIndex, ICellValueChangedCallbackReceiver ignore = null)
+        public static void NotifyOfCellValueChange(DataTableObject dataTable, int rowInternalIndex, int columnInternalIndex, ICellValueChangedCallbackReceiver ignore = null)
         {
-            NotifyOfCellValueChange(GetTicket(table), rowInternalIndex, columnInternalIndex, ignore);
+            NotifyOfCellValueChange(GetTicket(dataTable), rowInternalIndex, columnInternalIndex, ignore);
         }
 
         public static void NotifyOfCellValueChange(int tableTicket, int rowInternalIndex, int columnInternalIndex, ICellValueChangedCallbackReceiver ignore = null)
@@ -182,7 +182,7 @@ namespace GDX.Editor
             List<AssetDatabaseReference> returnList = new List<AssetDatabaseReference>(5);
 
             // Get derived types
-            TypeCache.TypeCollection tableTypeCollection = TypeCache.GetTypesDerivedFrom<TableBase>();
+            TypeCache.TypeCollection tableTypeCollection = TypeCache.GetTypesDerivedFrom<DataTableObject>();
             int count = tableTypeCollection.Count;
             for (int i = 0; i < count; i++)
             {
@@ -198,24 +198,24 @@ namespace GDX.Editor
             return returnList.ToArray();
         }
 
-        public static TableBase GetTable(int ticket)
+        public static DataTableObject GetTable(int ticket)
         {
-            return k_TableTicketToTable.TryGetValue(ticket, out TableBase table) ? table : null;
+            return k_TableTicketToTable.TryGetValue(ticket, out DataTableObject table) ? table : null;
         }
 
-        static int GetTicket(TableBase table)
+        static int GetTicket(DataTableObject dataTable)
         {
-            if (table == null) return -1;
-            return k_TableToTableTicket.TryGetValue(table, out int registerTable) ? registerTable: -1;
+            if (dataTable == null) return -1;
+            return k_TableToTableTicket.TryGetValue(dataTable, out int registerTable) ? registerTable: -1;
         }
 
-        public static int RegisterTable(TableBase table, int forcedTicket = -1)
+        public static int RegisterTable(DataTableObject dataTable, int forcedTicket = -1)
         {
             // This is the scenario where we need to rebuild after domain reload
             if (forcedTicket != -1)
             {
-                k_TableTicketToTable[forcedTicket] = table;
-                k_TableToTableTicket[table] = forcedTicket;
+                k_TableTicketToTable[forcedTicket] = dataTable;
+                k_TableToTableTicket[dataTable] = forcedTicket;
 #if UNITY_2022_2_OR_NEWER
                 k_TableUsageCounters.TryAdd(forcedTicket, 0);
 #else
@@ -234,15 +234,15 @@ namespace GDX.Editor
                 return forcedTicket;
             }
 
-            if (k_TableToTableTicket.TryGetValue(table, out int registerTable))
+            if (k_TableToTableTicket.TryGetValue(dataTable, out int registerTable))
             {
                 return registerTable;
             }
 
             // Register table
             int head = s_TableTicketHead;
-            k_TableTicketToTable.Add(head, table);
-            k_TableToTableTicket.Add(table, head);
+            k_TableTicketToTable.Add(head, dataTable);
+            k_TableToTableTicket.Add(dataTable, head);
             k_TableUsageCounters.Add(head, 0);
 
             // Increment our next head

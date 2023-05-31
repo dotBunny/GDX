@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
-using GDX.Tables;
-using GDX.Tables.CellValues;
+using GDX.DataTables;
+using GDX.DataTables.CellValues;
 using UnityEngine;
 using TextGenerator = GDX.Developer.TextGenerator;
 
@@ -64,7 +64,7 @@ namespace GDX
             return returnStrings.ToArray();
         }
 
-        public static bool UpdateFromCommaSeperatedValues(this TableBase table, string filePath)
+        public static bool UpdateFromCommaSeperatedValues(this DataTableObject dataTable, string filePath)
         {
             if (!File.Exists(filePath))
             {
@@ -73,9 +73,9 @@ namespace GDX
             }
 
             string[] fileContent = File.ReadAllLines(filePath);
-            int tableRowCount = table.GetRowCount();
-            int tableColumnCount = table.GetColumnCount();
-            TableBase.ColumnDescription[] columnDescriptions = table.GetAllColumnDescriptions();
+            int tableRowCount = dataTable.GetRowCount();
+            int tableColumnCount = dataTable.GetColumnCount();
+            DataTableObject.ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
 
             // Test Columns
             string[] columnTest = ParseCommaSeperatedValues(fileContent[0]);
@@ -87,7 +87,7 @@ namespace GDX
 
             // Build a list of previous row ID, so we know what was removed
             List<int> previousRowInternalIndices = new List<int>(tableRowCount);
-            TableBase.RowDescription[] rowDescriptions = table.GetAllRowDescriptions();
+            DataTableObject.RowDescription[] rowDescriptions = dataTable.GetAllRowDescriptions();
             int rowDescriptionsLength = rowDescriptions.Length;
             for (int i = 0; i < rowDescriptionsLength; i++)
             {
@@ -108,7 +108,7 @@ namespace GDX
                     }
 
                     // Create new row
-                    internalIndex = table.AddRow(rowName);
+                    internalIndex = dataTable.AddRow(rowName);
                 }
                 else
                 {
@@ -123,48 +123,48 @@ namespace GDX
                     switch (columnDescriptions[j].Type)
                     {
                         case Serializable.SerializableTypes.String:
-                            table.SetString(internalIndex, columnDescriptions[j].Identifier, columnString);
+                            dataTable.SetString(internalIndex, columnDescriptions[j].Identifier, columnString);
                             break;
                         case Serializable.SerializableTypes.Char:
-                            table.SetChar(internalIndex, columnDescriptions[j].Identifier, columnString[0]);
+                            dataTable.SetChar(internalIndex, columnDescriptions[j].Identifier, columnString[0]);
                             break;
                         case Serializable.SerializableTypes.Bool:
-                            table.SetBool(internalIndex, columnDescriptions[j].Identifier, bool.Parse(columnString));
+                            dataTable.SetBool(internalIndex, columnDescriptions[j].Identifier, bool.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.SByte:
-                            table.SetSByte(internalIndex, columnDescriptions[j].Identifier,
+                            dataTable.SetSByte(internalIndex, columnDescriptions[j].Identifier,
                                 sbyte.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Byte:
-                            table.SetByte(internalIndex, columnDescriptions[j].Identifier, byte.Parse(columnString));
+                            dataTable.SetByte(internalIndex, columnDescriptions[j].Identifier, byte.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Short:
-                            table.SetShort(internalIndex, columnDescriptions[j].Identifier,
+                            dataTable.SetShort(internalIndex, columnDescriptions[j].Identifier,
                                 short.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.UShort:
-                            table.SetUShort(internalIndex, columnDescriptions[j].Identifier,
+                            dataTable.SetUShort(internalIndex, columnDescriptions[j].Identifier,
                                 ushort.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Int:
-                            table.SetInt(internalIndex, columnDescriptions[j].Identifier, int.Parse(columnString));
+                            dataTable.SetInt(internalIndex, columnDescriptions[j].Identifier, int.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.UInt:
-                            table.SetUInt(internalIndex, columnDescriptions[j].Identifier, uint.Parse(columnString));
+                            dataTable.SetUInt(internalIndex, columnDescriptions[j].Identifier, uint.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Long:
-                            table.SetLong(internalIndex, columnDescriptions[j].Identifier, long.Parse(columnString));
+                            dataTable.SetLong(internalIndex, columnDescriptions[j].Identifier, long.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.ULong:
-                            table.SetULong(internalIndex, columnDescriptions[j].Identifier,
+                            dataTable.SetULong(internalIndex, columnDescriptions[j].Identifier,
                                 ulong.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Float:
-                            table.SetFloat(internalIndex, columnDescriptions[j].Identifier,
+                            dataTable.SetFloat(internalIndex, columnDescriptions[j].Identifier,
                                 float.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Double:
-                            table.SetDouble(internalIndex, columnDescriptions[j].Identifier,
+                            dataTable.SetDouble(internalIndex, columnDescriptions[j].Identifier,
                                 double.Parse(columnString));
                             break;
                     }
@@ -184,20 +184,20 @@ namespace GDX
             int indicesToRemove = previousRowInternalIndices.Count;
             for(int i = 0; i < indicesToRemove; i++)
             {
-                table.RemoveRow(previousRowInternalIndices[i]);
+                dataTable.RemoveRow(previousRowInternalIndices[i]);
             }
 
             return true;
         }
 
-        public static void ExportToCommaSeperatedValues(this TableBase table, string filePath)
+        public static void ExportToCommaSeperatedValues(this DataTableObject dataTable, string filePath)
         {
-            int rowCount = table.GetRowCount();
-            int columnCount = table.GetColumnCount();
+            int rowCount = dataTable.GetRowCount();
+            int columnCount = dataTable.GetColumnCount();
             TextGenerator generator = new TextGenerator();
 
             // Build first line
-            TableBase.ColumnDescription[] columnDescriptions = table.GetAllColumnDescriptions();
+            DataTableObject.ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
             generator.Append("Row ID, Row Name");
             for (int i = 0; i < columnCount; i++)
             {
@@ -210,136 +210,136 @@ namespace GDX
             // Build lines for rows
             for (int r = 0; r < rowCount; r++)
             {
-                TableBase.RowDescription rowDescription = table.GetRowDescription(r);
+                DataTableObject.RowDescription rowDescription = dataTable.GetRowDescription(r);
                 generator.Append($"{rowDescription.Identifier}, {MakeCommaSeperatedValue(rowDescription.Name)}");
                 for (int c = 0; c < columnCount; c++)
                 {
-                    TableBase.ColumnDescription columnDescription = table.GetColumnDescription(c);
+                    DataTableObject.ColumnDescription columnDescription = dataTable.GetColumnDescription(c);
                     generator.Append(", ");
                     switch (columnDescription.Type)
                     {
                         case Serializable.SerializableTypes.String:
-                            generator.Append(MakeCommaSeperatedValue(table.GetString(rowDescription.Identifier,
+                            generator.Append(MakeCommaSeperatedValue(dataTable.GetString(rowDescription.Identifier,
                                 columnDescription.Identifier)));
                             break;
                         case Serializable.SerializableTypes.Char:
-                            generator.Append(MakeCommaSeperatedValue(table
+                            generator.Append(MakeCommaSeperatedValue(dataTable
                                 .GetChar(rowDescription.Identifier, columnDescription.Identifier).ToString()));
                             break;
                         case Serializable.SerializableTypes.Bool:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetBool(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.SByte:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetSByte(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Byte:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetByte(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Short:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetShort(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.UShort:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetUShort(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Int:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetInt(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.UInt:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetUInt(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Long:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetLong(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.ULong:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetULong(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Float:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetFloat(rowDescription.Identifier, columnDescription.Identifier)
                                 .ToString(CultureInfo.InvariantCulture));
                             break;
                         case Serializable.SerializableTypes.Double:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetDouble(rowDescription.Identifier, columnDescription.Identifier)
                                 .ToString(CultureInfo.InvariantCulture));
                             break;
                         case Serializable.SerializableTypes.Vector2:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetUShort(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Vector3:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetVector3(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Vector4:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetVector4(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Vector2Int:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetVector2Int(rowDescription.Identifier, columnDescription.Identifier)
                                 .ToString());
                             break;
                         case Serializable.SerializableTypes.Vector3Int:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetVector3Int(rowDescription.Identifier, columnDescription.Identifier)
                                 .ToString());
                             break;
                         case Serializable.SerializableTypes.Quaternion:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetQuaternion(rowDescription.Identifier, columnDescription.Identifier)
                                 .ToString());
                             break;
                         case Serializable.SerializableTypes.Rect:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetRect(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.RectInt:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetRectInt(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Color:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetColor(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.LayerMask:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetLayerMask(rowDescription.Identifier, columnDescription.Identifier)
                                 .ToString());
                             break;
                         case Serializable.SerializableTypes.Bounds:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetBounds(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.BoundsInt:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetBoundsInt(rowDescription.Identifier, columnDescription.Identifier)
                                 .ToString());
                             break;
                         case Serializable.SerializableTypes.Hash128:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetHash128(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.Gradient:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetGradient(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                         case Serializable.SerializableTypes.AnimationCurve:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetAnimationCurve(rowDescription.Identifier, columnDescription.Identifier)
                                 .ToString());
                             break;
                         case Serializable.SerializableTypes.Object:
-                            generator.Append(table
+                            generator.Append(dataTable
                                 .GetObject(rowDescription.Identifier, columnDescription.Identifier).ToString());
                             break;
                     }
@@ -352,177 +352,177 @@ namespace GDX
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static StringCellValue GetStringCellValue(this TableBase table, int rowID, int columnID)
+        public static StringCellValue GetStringCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new StringCellValue(table, rowID, columnID);
+            return new StringCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static BoolCellValue GetBoolCellValue(this TableBase table, int rowID, int columnID)
+        public static BoolCellValue GetBoolCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new BoolCellValue(table, rowID, columnID);
+            return new BoolCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static CharCellValue GetCharCellValue(this TableBase table, int rowID, int columnID)
+        public static CharCellValue GetCharCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new CharCellValue(table, rowID, columnID);
+            return new CharCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static SByteCellValue GetSByteCellValue(this TableBase table, int rowID, int columnID)
+        public static SByteCellValue GetSByteCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new SByteCellValue(table, rowID, columnID);
+            return new SByteCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ByteCellValue GetByteCellValue(this TableBase table, int rowID, int columnID)
+        public static ByteCellValue GetByteCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new ByteCellValue(table, rowID, columnID);
+            return new ByteCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ShortCellValue GetShortCellValue(this TableBase table, int rowID, int columnID)
+        public static ShortCellValue GetShortCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new ShortCellValue(table, rowID, columnID);
+            return new ShortCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UShortCellValue GetUShortCellValue(this TableBase table, int rowID, int columnID)
+        public static UShortCellValue GetUShortCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new UShortCellValue(table, rowID, columnID);
+            return new UShortCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IntCellValue GetIntCellValue(this TableBase table, int rowID, int columnID)
+        public static IntCellValue GetIntCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new IntCellValue(table, rowID, columnID);
+            return new IntCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UIntCellValue GetUIntCellValue(this TableBase table, int rowID, int columnID)
+        public static UIntCellValue GetUIntCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new UIntCellValue(table, rowID, columnID);
+            return new UIntCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static LongCellValue GetLongCellValue(this TableBase table, int rowID, int columnID)
+        public static LongCellValue GetLongCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new LongCellValue(table, rowID, columnID);
+            return new LongCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ULongCellValue GetULongCellValue(this TableBase table, int rowID, int columnID)
+        public static ULongCellValue GetULongCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new ULongCellValue(table, rowID, columnID);
+            return new ULongCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static FloatCellValue GetFloatCellValue(this TableBase table, int rowID, int columnID)
+        public static FloatCellValue GetFloatCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new FloatCellValue(table, rowID, columnID);
+            return new FloatCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DoubleCellValue GetDoubleCellValue(this TableBase table, int rowID, int columnID)
+        public static DoubleCellValue GetDoubleCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new DoubleCellValue(table, rowID, columnID);
+            return new DoubleCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2CellValue GetVector2CellValue(this TableBase table, int rowID, int columnID)
+        public static Vector2CellValue GetVector2CellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new Vector2CellValue(table, rowID, columnID);
+            return new Vector2CellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector3CellValue GetVector3CellValue(this TableBase table, int rowID, int columnID)
+        public static Vector3CellValue GetVector3CellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new Vector3CellValue(table, rowID, columnID);
+            return new Vector3CellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector4CellValue GetVector4CellValue(this TableBase table, int rowID, int columnID)
+        public static Vector4CellValue GetVector4CellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new Vector4CellValue(table, rowID, columnID);
+            return new Vector4CellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2IntCellValue GetVector2IntCellValue(this TableBase table, int rowID, int columnID)
+        public static Vector2IntCellValue GetVector2IntCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new Vector2IntCellValue(table, rowID, columnID);
+            return new Vector2IntCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector3IntCellValue GetVector3IntCellValue(this TableBase table, int rowID, int columnID)
+        public static Vector3IntCellValue GetVector3IntCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new Vector3IntCellValue(table, rowID, columnID);
+            return new Vector3IntCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static QuaternionCellValue GetQuaternionCellValue(this TableBase table, int rowID, int columnID)
+        public static QuaternionCellValue GetQuaternionCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new QuaternionCellValue(table, rowID, columnID);
+            return new QuaternionCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static RectCellValue GetRectCellValue(this TableBase table, int rowID, int columnID)
+        public static RectCellValue GetRectCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new RectCellValue(table, rowID, columnID);
+            return new RectCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static RectIntCellValue GetRectIntCellValue(this TableBase table, int rowID, int columnID)
+        public static RectIntCellValue GetRectIntCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new RectIntCellValue(table, rowID, columnID);
+            return new RectIntCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ColorCellValue GetColorCellValue(this TableBase table, int rowID, int columnID)
+        public static ColorCellValue GetColorCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new ColorCellValue(table, rowID, columnID);
+            return new ColorCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static LayerMaskCellValue GetLayerMaskCellValue(this TableBase table, int rowID, int columnID)
+        public static LayerMaskCellValue GetLayerMaskCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new LayerMaskCellValue(table, rowID, columnID);
+            return new LayerMaskCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static BoundsCellValue GetBoundsCellValue(this TableBase table, int rowID, int columnID)
+        public static BoundsCellValue GetBoundsCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new BoundsCellValue(table, rowID, columnID);
+            return new BoundsCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static BoundsIntCellValue GetBoundsIntCellValue(this TableBase table, int rowID, int columnID)
+        public static BoundsIntCellValue GetBoundsIntCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new BoundsIntCellValue(table, rowID, columnID);
+            return new BoundsIntCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Hash128CellValue GetHash128CellValue(this TableBase table, int rowID, int columnID)
+        public static Hash128CellValue GetHash128CellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new Hash128CellValue(table, rowID, columnID);
+            return new Hash128CellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GradientCellValue GetGradientCellValue(this TableBase table, int rowID, int columnID)
+        public static GradientCellValue GetGradientCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new GradientCellValue(table, rowID, columnID);
+            return new GradientCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static AnimationCurveCellValue GetAnimationCurveCellValue(this TableBase table, int rowID, int columnID)
+        public static AnimationCurveCellValue GetAnimationCurveCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new AnimationCurveCellValue(table, rowID, columnID);
+            return new AnimationCurveCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ObjectCellValue GetObjectCellValue(this TableBase table, int rowID, int columnID)
+        public static ObjectCellValue GetObjectCellValue(this DataTableObject dataTable, int rowID, int columnID)
         {
-            return new ObjectCellValue(table, rowID, columnID);
+            return new ObjectCellValue(dataTable, rowID, columnID);
         }
     }
 }

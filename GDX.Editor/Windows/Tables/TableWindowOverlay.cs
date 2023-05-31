@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
-using GDX.Tables;
+using GDX.DataTables;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -279,7 +279,7 @@ namespace GDX.Editor.Windows.Tables
                     m_SettingsOverlay.style.display = DisplayStyle.Flex;
                     m_SettingsDisplayName.SetValueWithoutNotify(m_TableWindow.GetTable().GetDisplayName());
                     m_SettingsSupportUndoToggle.SetValueWithoutNotify(m_TableWindow.GetTable()
-                        .GetFlag(TableBase.Flags.EnableUndo));
+                        .GetFlag(DataTableObject.Flags.EnableUndo));
                     break;
                 default:
                     m_RootElement.style.display = DisplayStyle.None;

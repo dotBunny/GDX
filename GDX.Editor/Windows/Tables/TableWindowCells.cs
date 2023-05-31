@@ -2,8 +2,8 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Tables;
-using GDX.Tables.CellValues;
+using GDX.DataTables;
+using GDX.DataTables.CellValues;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -25,10 +25,10 @@ namespace GDX.Editor.Windows.Tables
         {
             TextField field = (TextField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             StringCellValue cellValue =
-                new StringCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new StringCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -37,7 +37,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 StringCellValue local = (StringCellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -46,10 +46,10 @@ namespace GDX.Editor.Windows.Tables
         {
             TextField field = (TextField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             CharCellValue cellValue =
-                new CharCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new CharCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe().ToString());
@@ -58,7 +58,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 CharCellValue local = (CharCellValue)localMap.CellValue;
                 local.Set(e.newValue[0]);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -67,10 +67,10 @@ namespace GDX.Editor.Windows.Tables
         {
             Toggle field = (Toggle)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             BoolCellValue cellValue =
-                new BoolCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new BoolCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -79,7 +79,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 BoolCellValue local = (BoolCellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -88,10 +88,10 @@ namespace GDX.Editor.Windows.Tables
         {
             SliderInt field = (SliderInt)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             SByteCellValue cellValue =
-                new SByteCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new SByteCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -100,7 +100,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 SByteCellValue local = (SByteCellValue)localMap.CellValue;
                 local.Set((sbyte)e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -109,10 +109,10 @@ namespace GDX.Editor.Windows.Tables
         {
             SliderInt field = (SliderInt)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             ByteCellValue cellValue =
-                new ByteCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new ByteCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -121,7 +121,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 ByteCellValue local = (ByteCellValue)localMap.CellValue;
                 local.Set((byte)e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -130,10 +130,10 @@ namespace GDX.Editor.Windows.Tables
         {
             SliderInt field = (SliderInt)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             ShortCellValue cellValue =
-                new ShortCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new ShortCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -142,7 +142,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 ShortCellValue local = (ShortCellValue)localMap.CellValue;
                 local.Set((short)e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -151,10 +151,10 @@ namespace GDX.Editor.Windows.Tables
         {
             SliderInt field = (SliderInt)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             UShortCellValue cellValue =
-                new UShortCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new UShortCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -163,7 +163,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 UShortCellValue local = (UShortCellValue)localMap.CellValue;
                 local.Set((ushort)e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -172,10 +172,10 @@ namespace GDX.Editor.Windows.Tables
         {
             IntegerField field = (IntegerField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             IntCellValue cellValue =
-                new IntCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new IntCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -184,7 +184,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 IntCellValue local = (IntCellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -193,10 +193,10 @@ namespace GDX.Editor.Windows.Tables
         {
             IntegerField field = (IntegerField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             UIntCellValue cellValue =
-                new UIntCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new UIntCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify((int)cellValue.GetUnsafe());
@@ -205,7 +205,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 UIntCellValue local = (UIntCellValue)localMap.CellValue;
                 local.Set((uint)e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -214,10 +214,10 @@ namespace GDX.Editor.Windows.Tables
         {
             LongField field = (LongField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             LongCellValue cellValue =
-                new LongCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new LongCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -226,7 +226,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 LongCellValue local = (LongCellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -235,10 +235,10 @@ namespace GDX.Editor.Windows.Tables
         {
             LongField field = (LongField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             ULongCellValue cellValue =
-                new ULongCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new ULongCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify((long)cellValue.GetUnsafe());
@@ -247,7 +247,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 ULongCellValue local = (ULongCellValue)localMap.CellValue;
                 local.Set((ulong)e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -256,10 +256,10 @@ namespace GDX.Editor.Windows.Tables
         {
             FloatField field = (FloatField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             FloatCellValue cellValue =
-                new FloatCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new FloatCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -268,7 +268,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 FloatCellValue local = (FloatCellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -277,10 +277,10 @@ namespace GDX.Editor.Windows.Tables
         {
             DoubleField field = (DoubleField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             DoubleCellValue cellValue =
-                new DoubleCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new DoubleCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -289,7 +289,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 DoubleCellValue local = (DoubleCellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -298,10 +298,10 @@ namespace GDX.Editor.Windows.Tables
         {
             Vector2Field field = (Vector2Field)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             Vector2CellValue cellValue =
-                new Vector2CellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new Vector2CellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -310,7 +310,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 Vector2CellValue local = (Vector2CellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -319,10 +319,10 @@ namespace GDX.Editor.Windows.Tables
         {
             Vector3Field field = (Vector3Field)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             Vector3CellValue cellValue =
-                new Vector3CellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new Vector3CellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -331,7 +331,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 Vector3CellValue local = (Vector3CellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -340,10 +340,10 @@ namespace GDX.Editor.Windows.Tables
         {
             Vector4Field field = (Vector4Field)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             Vector4CellValue cellValue =
-                new Vector4CellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new Vector4CellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -352,7 +352,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 Vector4CellValue local = (Vector4CellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -361,10 +361,10 @@ namespace GDX.Editor.Windows.Tables
         {
             Vector2IntField field = (Vector2IntField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             Vector2IntCellValue cellValue =
-                new Vector2IntCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new Vector2IntCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -373,7 +373,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 Vector2IntCellValue local = (Vector2IntCellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -382,10 +382,10 @@ namespace GDX.Editor.Windows.Tables
         {
             Vector3IntField field = (Vector3IntField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             Vector3IntCellValue cellValue =
-                new Vector3IntCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new Vector3IntCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -394,7 +394,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 Vector3IntCellValue local = (Vector3IntCellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -403,10 +403,10 @@ namespace GDX.Editor.Windows.Tables
         {
             Vector4Field field = (Vector4Field)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             QuaternionCellValue cellValue =
-                new QuaternionCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new QuaternionCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             // Figure it out
@@ -420,7 +420,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 QuaternionCellValue local = (QuaternionCellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -429,10 +429,10 @@ namespace GDX.Editor.Windows.Tables
         {
             RectField field = (RectField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             RectCellValue cellValue =
-                new RectCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new RectCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -441,7 +441,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 RectCellValue local = (RectCellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -450,10 +450,10 @@ namespace GDX.Editor.Windows.Tables
         {
             RectIntField field = (RectIntField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             RectIntCellValue cellValue =
-                new RectIntCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new RectIntCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -462,7 +462,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 RectIntCellValue local = (RectIntCellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -471,10 +471,10 @@ namespace GDX.Editor.Windows.Tables
         {
             ColorField field = (ColorField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             ColorCellValue cellValue =
-                new ColorCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new ColorCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -483,7 +483,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 ColorCellValue local = (ColorCellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -492,10 +492,10 @@ namespace GDX.Editor.Windows.Tables
         {
             LayerMaskField field = (LayerMaskField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             LayerMaskCellValue cellValue =
-                new LayerMaskCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new LayerMaskCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -504,7 +504,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 LayerMaskCellValue local = (LayerMaskCellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -513,10 +513,10 @@ namespace GDX.Editor.Windows.Tables
         {
             BoundsField field = (BoundsField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             BoundsCellValue cellValue =
-                new BoundsCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new BoundsCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -525,7 +525,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 BoundsCellValue local = (BoundsCellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -534,10 +534,10 @@ namespace GDX.Editor.Windows.Tables
         {
             BoundsIntField field = (BoundsIntField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             BoundsIntCellValue cellValue =
-                new BoundsIntCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new BoundsIntCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -546,7 +546,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 BoundsIntCellValue local = (BoundsIntCellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -555,10 +555,10 @@ namespace GDX.Editor.Windows.Tables
         {
             Hash128Field field = (Hash128Field)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             Hash128CellValue cellValue =
-                new Hash128CellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new Hash128CellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -567,7 +567,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 Hash128CellValue local = (Hash128CellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -576,10 +576,10 @@ namespace GDX.Editor.Windows.Tables
         {
             GradientField field = (GradientField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             GradientCellValue cellValue =
-                new GradientCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new GradientCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -588,7 +588,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 GradientCellValue local = (GradientCellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -597,10 +597,10 @@ namespace GDX.Editor.Windows.Tables
         {
             CurveField field = (CurveField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             AnimationCurveCellValue cellValue =
-                new AnimationCurveCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new AnimationCurveCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -609,7 +609,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 AnimationCurveCellValue local = (AnimationCurveCellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }
@@ -618,12 +618,12 @@ namespace GDX.Editor.Windows.Tables
         {
             ObjectField field = (ObjectField)cell;
             CellData map = (CellData)field.userData;
-            TableBase table = TableCache.GetTable(map.TableTicket);
+            DataTableObject dataTable = TableCache.GetTable(map.TableTicket);
 
             ObjectCellValue cellValue =
-                new ObjectCellValue(table, table.GetRowDescription(row).Identifier, map.ColumnID);
+                new ObjectCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
-            string qualifiedType = table.GetTypeNameForObjectColumn(map.ColumnID);
+            string qualifiedType = dataTable.GetTypeNameForObjectColumn(map.ColumnID);
             field.objectType = (!string.IsNullOrEmpty(qualifiedType) ? System.Type.GetType(qualifiedType) : typeof(Object)) ??
                                typeof(Object);
 
@@ -634,7 +634,7 @@ namespace GDX.Editor.Windows.Tables
                 CellData localMap = (CellData)field.userData;
                 ObjectCellValue local = (ObjectCellValue)localMap.CellValue;
                 local.Set(e.newValue);
-                TableCache.NotifyOfCellValueChange(local.Table, local.RowIdentifier, local.ColumnIdentifier,
+                TableCache.NotifyOfCellValueChange(local.DataTable, local.RowIdentifier, local.ColumnIdentifier,
                     TableWindowProvider.GetTableWindow(localMap.TableTicket));
             });
         }

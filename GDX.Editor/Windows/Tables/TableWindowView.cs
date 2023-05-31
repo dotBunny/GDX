@@ -4,7 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using GDX.Tables;
+using GDX.DataTables;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor.Windows.Tables
@@ -15,9 +15,9 @@ namespace GDX.Editor.Windows.Tables
 
         static StyleLength m_StyleLength25 = new StyleLength(new Length(25, LengthUnit.Pixel));
         static StyleLength m_StyleLength275 = new StyleLength(new Length(275, LengthUnit.Pixel));
-        readonly List<TableBase.RowDescription> m_RowDescriptions = new List<TableBase.RowDescription>();
+        readonly List<DataTableObject.RowDescription> m_RowDescriptions = new List<DataTableObject.RowDescription>();
         readonly Length m_BoundsMinWidth = new Length(200, LengthUnit.Pixel);
-        readonly List<TableBase.ColumnDescription> m_ColumnDescriptions = new List<TableBase.ColumnDescription>();
+        readonly List<DataTableObject.ColumnDescription> m_ColumnDescriptions = new List<DataTableObject.ColumnDescription>();
 
         readonly Length m_GenericMinWidth = new Length(75, LengthUnit.Pixel);
         readonly Length m_HashMinWidth = new Length(260, LengthUnit.Pixel);
@@ -57,15 +57,15 @@ namespace GDX.Editor.Windows.Tables
                 rootElement.RemoveAt(1);
             }
 
-            TableBase table = window.GetTable();
+            DataTableObject dataTable = window.GetTable();
             int tableTicket = window.GetTableTicket();
 
             // Add row header column ahead of actual columns
-            m_ColumnDescriptions.Add(new TableBase.ColumnDescription
+            m_ColumnDescriptions.Add(new DataTableObject.ColumnDescription
             {
                 Name = "RowName", Identifier = -1, Type = Serializable.SerializableTypes.String
             });
-            m_ColumnDescriptions.AddRange(table.GetAllColumnDescriptions());
+            m_ColumnDescriptions.AddRange(dataTable.GetAllColumnDescriptions());
 
             // Generate columns for MCLV
             m_TableViewColumns = new Columns { reorderable = true, resizable = true };
@@ -87,7 +87,7 @@ namespace GDX.Editor.Windows.Tables
             // Creat our other columns
             for (int i = 1; i < columnCount; i++)
             {
-                TableBase.ColumnDescription columnDescription = m_ColumnDescriptions[i];
+                DataTableObject.ColumnDescription columnDescription = m_ColumnDescriptions[i];
                 int columnIndex = columnDescription.Identifier;
 
                 // We embed the column stable index
@@ -349,14 +349,14 @@ namespace GDX.Editor.Windows.Tables
                 return -1;
             }
 
-            TableBase.RowDescription selectedItem = (TableBase.RowDescription)m_MultiColumnListView.selectedItem;
+            DataTableObject.RowDescription selectedItem = (DataTableObject.RowDescription)m_MultiColumnListView.selectedItem;
             return selectedItem.Identifier;
         }
 
         void BindRowHeader(VisualElement cell, int row)
         {
             Label label = (Label)cell;
-            TableBase.RowDescription description = m_RowDescriptions[row];
+            DataTableObject.RowDescription description = m_RowDescriptions[row];
             label.text = description.Name;
         }
 
@@ -399,7 +399,7 @@ namespace GDX.Editor.Windows.Tables
 
             if (foundIndex != -1)
             {
-                m_ColumnDescriptions[foundIndex] = new TableBase.ColumnDescription
+                m_ColumnDescriptions[foundIndex] = new DataTableObject.ColumnDescription
                 {
                     Name = newName,
                     Identifier = m_ColumnDescriptions[foundIndex].Identifier,
@@ -411,11 +411,11 @@ namespace GDX.Editor.Windows.Tables
 
         internal void RebuildRowData()
         {
-            TableBase table = m_TableWindow.GetTable();
+            DataTableObject dataTable = m_TableWindow.GetTable();
             m_RowDescriptions.Clear();
-            if (table.GetRowCount() > 0)
+            if (dataTable.GetRowCount() > 0)
             {
-                m_RowDescriptions.AddRange(table.GetAllRowDescriptions());
+                m_RowDescriptions.AddRange(dataTable.GetAllRowDescriptions());
             }
             m_MultiColumnListView.Rebuild();
         }

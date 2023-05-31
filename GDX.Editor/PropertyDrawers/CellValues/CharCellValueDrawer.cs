@@ -2,7 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Tables.CellValues;
+using GDX.DataTables.CellValues;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -17,7 +17,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         /// <inheritdoc />
         protected override VisualElement GetCellElement()
         {
-            m_CellValue = new CharCellValue(m_Table, m_RowInternalIndex, m_ColumnInternalIndex);
+            m_CellValue = new CharCellValue(m_DataTable, m_RowInternalIndex, m_ColumnInternalIndex);
             TextField newField = new TextField(null, 1, false, false, ' ') { name = k_CellFieldName };
             newField.SetValueWithoutNotify(m_CellValue.Get().ToString());
             newField.RegisterValueChangedCallback(e =>

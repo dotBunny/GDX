@@ -1,4 +1,4 @@
-using GDX.Tables;
+using GDX.DataTables;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -13,7 +13,7 @@ namespace GDX.Editor.Windows.Tables
         TableWindowController m_Controller;
         TableWindowOverlay m_Overlay;
 
-        TableBase m_TargetTable;
+        DataTableObject m_TargetDataTable;
 
 
         TableWindowToolbar m_Toolbar;
@@ -36,9 +36,9 @@ namespace GDX.Editor.Windows.Tables
             m_Controller = new TableWindowController(this, m_Overlay);
 
             // Catch domain reload and rebind/relink window
-            if (m_TargetTable != null)
+            if (m_TargetDataTable != null)
             {
-                BindTable(m_TargetTable, true);
+                BindTable(m_TargetDataTable, true);
             }
 
             EditorApplication.delayCall += CheckForNoTable;
@@ -54,7 +54,7 @@ namespace GDX.Editor.Windows.Tables
                 TableCache.UnregisterUsage(m_TableTicket);
             }
 
-            if (m_TargetTable != null)
+            if (m_TargetDataTable != null)
             {
                 Save();
             }
@@ -100,9 +100,9 @@ namespace GDX.Editor.Windows.Tables
             return m_Controller;
         }
 
-        public TableBase GetTable()
+        public DataTableObject GetTable()
         {
-            return m_TargetTable;
+            return m_TargetDataTable;
         }
 
         public int GetTableTicket()
@@ -122,7 +122,7 @@ namespace GDX.Editor.Windows.Tables
 
         void CheckForNoTable()
         {
-            if (m_TargetTable == null)
+            if (m_TargetDataTable == null)
             {
                 Close();
             }
@@ -131,26 +131,26 @@ namespace GDX.Editor.Windows.Tables
         public void Save(bool skipDialog = false)
         {
             // We're not dirty, or were in batch mode
-            if (!EditorUtility.IsDirty(m_TargetTable) || Application.isBatchMode)
+            if (!EditorUtility.IsDirty(m_TargetDataTable) || Application.isBatchMode)
             {
                 return;
             }
 
 
-            if (skipDialog || EditorUtility.DisplayDialog($"Save {m_TargetTable.GetDisplayName()}", "There are changes made to the table (in memory) which have not been saved to disk. Would you like to write those changes to disk now?", "Yes", "No"))
+            if (skipDialog || EditorUtility.DisplayDialog($"Save {m_TargetDataTable.GetDisplayName()}", "There are changes made to the table (in memory) which have not been saved to disk. Would you like to write those changes to disk now?", "Yes", "No"))
             {
-                AssetDatabase.SaveAssetIfDirty(m_TargetTable);
+                AssetDatabase.SaveAssetIfDirty(m_TargetDataTable);
                 m_Toolbar.UpdateSaveButton();
             }
         }
 
 
-        public void BindTable(TableBase table, bool fromDomainReload = false)
+        public void BindTable(DataTableObject dataTable, bool fromDomainReload = false)
         {
-            m_TargetTable = table;
-            m_TableTicket = fromDomainReload ? TableCache.RegisterTable(table, m_TableTicket) : TableCache.RegisterTable(table);
+            m_TargetDataTable = dataTable;
+            m_TableTicket = fromDomainReload ? TableCache.RegisterTable(dataTable, m_TableTicket) : TableCache.RegisterTable(dataTable);
 
-            TableWindowProvider.RegisterTableWindow(this, m_TargetTable);
+            TableWindowProvider.RegisterTableWindow(this, m_TargetDataTable);
 
             RebindTable();
 
@@ -183,9 +183,9 @@ namespace GDX.Editor.Windows.Tables
 
         public void RebindTable()
         {
-            titleContent = new GUIContent(m_TargetTable.GetDisplayName());
+            titleContent = new GUIContent(m_TargetDataTable.GetDisplayName());
 
-            int columnCount = m_TargetTable.GetColumnCount();
+            int columnCount = m_TargetDataTable.GetColumnCount();
             if (columnCount == 0)
             {
                 m_View?.Hide();

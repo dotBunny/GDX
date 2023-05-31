@@ -5,7 +5,7 @@
 #if UNITY_2022_2_OR_NEWER
 using System.Collections;
 using GDX.Editor.Windows.Tables;
-using GDX.Tables;
+using GDX.DataTables;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -17,15 +17,15 @@ namespace GDX.Editor.Windows
     /// </summary>
     public class TableWindowControllerTests
     {
-        TableBase m_TestTable;
+        DataTableObject m_TestDataTable;
         TableWindow m_TableWindow;
         TableWindowController m_TableWindowController;
 
         [UnitySetUp]
         public IEnumerator Setup()
         {
-            m_TestTable = ScriptableObject.CreateInstance<StableTable>();
-            m_TableWindow = TableWindowProvider.OpenAsset(m_TestTable);
+            m_TestDataTable = ScriptableObject.CreateInstance<StableDataTable>();
+            m_TableWindow = TableWindowProvider.OpenAsset(m_TestDataTable);
             m_TableWindowController = m_TableWindow.GetController();
             yield return null;
         }
@@ -34,7 +34,7 @@ namespace GDX.Editor.Windows
         public IEnumerator TearDown()
         {
             m_TableWindow.Close();
-            Object.DestroyImmediate(m_TestTable);
+            Object.DestroyImmediate(m_TestDataTable);
             yield return null;
         }
 
@@ -44,7 +44,7 @@ namespace GDX.Editor.Windows
         {
             m_TableWindowController.AddColumn("Test_String", Serializable.SerializableTypes.String);
 
-            Assert.That(m_TestTable.GetColumnCount() == 1);
+            Assert.That(m_TestDataTable.GetColumnCount() == 1);
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace GDX.Editor.Windows
             m_TableWindowController.AddColumn("Test_Float", Serializable.SerializableTypes.Float);
             m_TableWindowController.AddColumn("Test_String", Serializable.SerializableTypes.String);
 
-            Assert.That(m_TestTable.GetColumnCount() == 10);
+            Assert.That(m_TestDataTable.GetColumnCount() == 10);
         }
 
         [Test]
@@ -74,11 +74,11 @@ namespace GDX.Editor.Windows
             m_TableWindowController.AddColumn("Test_Vector2", Serializable.SerializableTypes.Vector2);
 
             m_TableWindowController.AddRow("Test_Row");
-            TableBase.RowDescription rowDescription = m_TestTable.GetRowDescription(0);
+            DataTableObject.RowDescription rowDescription = m_TestDataTable.GetRowDescription(0);
 
-            Assert.That(m_TestTable.GetColumnCount() == 3);
-            Assert.That(m_TestTable.GetRowCount() == 1);
-            Assert.That(m_TestTable.GetRowName(rowDescription.Identifier) == "Test_Row");
+            Assert.That(m_TestDataTable.GetColumnCount() == 3);
+            Assert.That(m_TestDataTable.GetRowCount() == 1);
+            Assert.That(m_TestDataTable.GetRowName(rowDescription.Identifier) == "Test_Row");
         }
 
         [Test]
@@ -93,19 +93,19 @@ namespace GDX.Editor.Windows
             m_TableWindowController.AddRowDefault();
             m_TableWindowController.AddRowDefault();
             m_TableWindowController.AddColumn("E", Serializable.SerializableTypes.Bounds);
-            m_TableWindowController.RemoveColumn(m_TestTable.GetColumnDescription(3).Identifier); // remove D
-            m_TableWindowController.RemoveColumn(m_TestTable.GetColumnDescription(3).Identifier); // remove E
+            m_TableWindowController.RemoveColumn(m_TestDataTable.GetColumnDescription(3).Identifier); // remove D
+            m_TableWindowController.RemoveColumn(m_TestDataTable.GetColumnDescription(3).Identifier); // remove E
             m_TableWindowController.AddColumn("E", Serializable.SerializableTypes.Bounds);
             m_TableWindowController.AddColumn("D", Serializable.SerializableTypes.String);
-            m_TableWindowController.RemoveColumn(m_TestTable.GetColumnDescription(3).Identifier); // remove E
+            m_TableWindowController.RemoveColumn(m_TestDataTable.GetColumnDescription(3).Identifier); // remove E
             m_TableWindowController.AddColumn("E", Serializable.SerializableTypes.Bounds);
             m_TableWindowController.AddColumn("F", Serializable.SerializableTypes.String);
             m_TableWindowController.AddColumn("G", Serializable.SerializableTypes.String);
             m_TableWindowController.AddRowDefault();
             m_TableWindowController.AddRowDefault();
-            m_TableWindowController.RemoveColumn(m_TestTable.GetColumnDescription(4).Identifier); // remove E
+            m_TableWindowController.RemoveColumn(m_TestDataTable.GetColumnDescription(4).Identifier); // remove E
 
-            Assert.That(m_TestTable.GetColumnCount() == 6, $"Expected 6, found {m_TestTable.GetColumnCount()}");
+            Assert.That(m_TestDataTable.GetColumnCount() == 6, $"Expected 6, found {m_TestDataTable.GetColumnCount()}");
         }
 
     }

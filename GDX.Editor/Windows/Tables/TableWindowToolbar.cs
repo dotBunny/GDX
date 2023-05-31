@@ -2,7 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Tables;
+using GDX.DataTables;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
@@ -95,15 +95,15 @@ namespace GDX.Editor.Windows.Tables
 
         void RenameRow()
         {
-            TableBase.RowDescription selectedItem =
-                (TableBase.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
+            DataTableObject.RowDescription selectedItem =
+                (DataTableObject.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
             m_ParentWindow.GetController().ShowRenameRowDialog(selectedItem.Identifier);
         }
 
         void RemoveRow()
         {
-            TableBase.RowDescription selectedItem =
-                (TableBase.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
+            DataTableObject.RowDescription selectedItem =
+                (DataTableObject.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
             m_ParentWindow.GetController().ShowRemoveRowDialog(selectedItem.Identifier);
         }
 
