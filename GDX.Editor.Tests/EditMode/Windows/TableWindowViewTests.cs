@@ -7,7 +7,7 @@
 using System;
 using System.Collections;
 using GDX.Editor.Windows.Tables;
-using GDX.Tables;
+using GDX.DataTables;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -21,7 +21,7 @@ namespace GDX.Editor.Windows
     /// </summary>
     public class TableWindowViewTests
     {
-        TableBase m_TestTable;
+        DataTableObject m_TestDataTable;
         TableWindow m_TableWindow;
         TableWindowView m_TableWindowView;
         TableWindowController m_TableWindowController;
@@ -29,8 +29,8 @@ namespace GDX.Editor.Windows
         [UnitySetUp]
         public IEnumerator Setup()
         {
-            m_TestTable = ScriptableObject.CreateInstance<StableTable>();
-            m_TableWindow = TableWindowProvider.OpenAsset(m_TestTable);
+            m_TestDataTable = ScriptableObject.CreateInstance<StableDataTable>();
+            m_TableWindow = TableWindowProvider.OpenAsset(m_TestDataTable);
             m_TableWindowView = m_TableWindow.GetView();
             m_TableWindowController = m_TableWindow.GetController();
             yield return null;
@@ -40,28 +40,9 @@ namespace GDX.Editor.Windows
         public IEnumerator TearDown()
         {
             m_TableWindow.Close();
-            Object.DestroyImmediate(m_TestTable);
+            Object.DestroyImmediate(m_TestDataTable);
             yield return null;
         }
-
-
-
-        // [Test]
-        // [Category(Core.TestCategory)]
-        // public void ColumnHeader_Name_InternalIndexMatches()
-        // {
-        //     m_TableWindowController.AddColumn("A", Serializable.SerializableTypes.String);
-        //     m_TableWindowController.AddColumn("B", Serializable.SerializableTypes.String);
-        //     m_TableWindowController.AddColumn("C", Serializable.SerializableTypes.Bounds);
-        //     m_TableWindowController.AddColumn("D", Serializable.SerializableTypes.String);
-        //
-        //
-        //     TableBase.ColumnDescription columnDescription = m_TestTable.GetColumnDescription(3);
-        //     VisualElement columnCHeader = m_TableWindowView.GetColumnContainer()[0][3];
-        //     TableBase.ColumnDescription columnCDescription = m_TestTable.GetColumnDescription(columnCHeader.name.Split('_', StringSplitOptions.RemoveEmptyEntries)[1]);
-        //
-        //     Assert.That(columnDescription.InternalIndex == columnCDescription.InternalIndex);
-        // }
     }
 }
 #endif

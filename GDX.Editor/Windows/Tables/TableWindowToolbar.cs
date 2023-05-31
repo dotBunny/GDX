@@ -2,7 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Tables;
+using GDX.DataTables;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
@@ -74,14 +74,14 @@ namespace GDX.Editor.Windows.Tables
 
         DropdownMenuAction.Status CanAddRow(DropdownMenuAction action)
         {
-            return m_ParentWindow.GetTable().GetColumnCount() > 0
+            return m_ParentWindow.GetDataTable().GetColumnCount() > 0
                 ? DropdownMenuAction.Status.Normal
                 : DropdownMenuAction.Status.Disabled;
         }
 
         DropdownMenuAction.Status CanInterchange(DropdownMenuAction action)
         {
-            return m_ParentWindow.GetTable().GetColumnCount() > 0
+            return m_ParentWindow.GetDataTable().GetColumnCount() > 0
                 ? DropdownMenuAction.Status.Normal
                 : DropdownMenuAction.Status.Disabled;
         }
@@ -95,16 +95,16 @@ namespace GDX.Editor.Windows.Tables
 
         void RenameRow()
         {
-            TableBase.RowDescription selectedItem =
-                (TableBase.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
-            m_ParentWindow.GetController().ShowRenameRowDialog(selectedItem.InternalIndex);
+            DataTableObject.RowDescription selectedItem =
+                (DataTableObject.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
+            m_ParentWindow.GetController().ShowRenameRowDialog(selectedItem.Identifier);
         }
 
         void RemoveRow()
         {
-            TableBase.RowDescription selectedItem =
-                (TableBase.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
-            m_ParentWindow.GetController().ShowRemoveRowDialog(selectedItem.InternalIndex);
+            DataTableObject.RowDescription selectedItem =
+                (DataTableObject.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
+            m_ParentWindow.GetController().ShowRemoveRowDialog(selectedItem.Identifier);
         }
 
         void Save()
@@ -124,7 +124,7 @@ namespace GDX.Editor.Windows.Tables
 
         public void UpdateSaveButton()
         {
-            m_ToolbarSaveButton?.SetEnabled(EditorUtility.IsDirty(m_ParentWindow.GetTable()));
+            m_ToolbarSaveButton?.SetEnabled(EditorUtility.IsDirty(m_ParentWindow.GetDataTable()));
         }
     }
 #endif

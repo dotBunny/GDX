@@ -51,21 +51,18 @@
     background-size: contain;
     margin-top: 2px;
     margin-bottom: 3px;
-    margin-left: 5px;
+    margin-left: 0px;
+    margin-right: 0px;
     padding-top: 5px;
     padding-bottom: 5px;
     border-radius: 0px;
+    position: absolute;
+    right: 0px;
 }
 
 #gdx-cell-value-table:hover
 {
     background-color: var(--unity-colors-toolbar_button-background-hover);
-}
-
-#gdx-cell-value-spacer
-{
-    flex-grow: 1;
-    flex-shrink: 1;
 }
 
 .dark #gdx-cell-value-table.linked

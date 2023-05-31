@@ -4,7 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using GDX.Tables;
+using GDX.DataTables;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor.Windows.Tables
@@ -15,9 +15,9 @@ namespace GDX.Editor.Windows.Tables
 
         static StyleLength m_StyleLength25 = new StyleLength(new Length(25, LengthUnit.Pixel));
         static StyleLength m_StyleLength275 = new StyleLength(new Length(275, LengthUnit.Pixel));
-        readonly List<TableBase.RowDescription> m_RowDescriptions = new List<TableBase.RowDescription>();
+        readonly List<DataTableObject.RowDescription> m_RowDescriptions = new List<DataTableObject.RowDescription>();
         readonly Length m_BoundsMinWidth = new Length(200, LengthUnit.Pixel);
-        readonly List<TableBase.ColumnDescription> m_ColumnDescriptions = new List<TableBase.ColumnDescription>();
+        readonly List<DataTableObject.ColumnDescription> m_ColumnDescriptions = new List<DataTableObject.ColumnDescription>();
 
         readonly Length m_GenericMinWidth = new Length(75, LengthUnit.Pixel);
         readonly Length m_HashMinWidth = new Length(260, LengthUnit.Pixel);
@@ -57,15 +57,15 @@ namespace GDX.Editor.Windows.Tables
                 rootElement.RemoveAt(1);
             }
 
-            TableBase table = window.GetTable();
+            DataTableObject dataTable = window.GetDataTable();
             int tableTicket = window.GetTableTicket();
 
             // Add row header column ahead of actual columns
-            m_ColumnDescriptions.Add(new TableBase.ColumnDescription
+            m_ColumnDescriptions.Add(new DataTableObject.ColumnDescription
             {
-                Name = "RowName", InternalIndex = -1, Type = Serializable.SerializableTypes.String
+                Name = "RowName", Identifier = -1, Type = Serializable.SerializableTypes.String
             });
-            m_ColumnDescriptions.AddRange(table.GetAllColumnDescriptions());
+            m_ColumnDescriptions.AddRange(dataTable.GetAllColumnDescriptions());
 
             // Generate columns for MCLV
             m_TableViewColumns = new Columns { reorderable = true, resizable = true };
@@ -87,8 +87,8 @@ namespace GDX.Editor.Windows.Tables
             // Creat our other columns
             for (int i = 1; i < columnCount; i++)
             {
-                TableBase.ColumnDescription columnDescription = m_ColumnDescriptions[i];
-                int columnIndex = columnDescription.InternalIndex;
+                DataTableObject.ColumnDescription columnDescription = m_ColumnDescriptions[i];
+                int columnIndex = columnDescription.Identifier;
 
                 // We embed the column stable index
                 Column column = new Column
@@ -342,25 +342,25 @@ namespace GDX.Editor.Windows.Tables
             m_MultiColumnListView.style.display = DisplayStyle.Flex;
         }
 
-        public int GetSelectedRowInternalIndex()
+        public int GetSelectedRowIdentifier()
         {
             if (m_MultiColumnListView.selectedItem == null)
             {
                 return -1;
             }
 
-            TableBase.RowDescription selectedItem = (TableBase.RowDescription)m_MultiColumnListView.selectedItem;
-            return selectedItem.InternalIndex;
+            DataTableObject.RowDescription selectedItem = (DataTableObject.RowDescription)m_MultiColumnListView.selectedItem;
+            return selectedItem.Identifier;
         }
 
         void BindRowHeader(VisualElement cell, int row)
         {
             Label label = (Label)cell;
-            TableBase.RowDescription description = m_RowDescriptions[row];
+            DataTableObject.RowDescription description = m_RowDescriptions[row];
             label.text = description.Name;
         }
 
-        internal Serializable.SerializableTypes GetColumnType(int internalIndex)
+        internal Serializable.SerializableTypes GetColumnType(int columnIdentifier)
         {
             int columnCount = m_TableViewColumns.Count;
             // Skip first column as its the row header
@@ -369,7 +369,7 @@ namespace GDX.Editor.Windows.Tables
                 int indexOfSplit = m_TableViewColumns[i].name.IndexOf("_", StringComparison.Ordinal);
                 string column = m_TableViewColumns[i].name.Substring(indexOfSplit + 1);
                 int columnInteger = int.Parse(column);
-                if (columnInteger == internalIndex)
+                if (columnInteger == columnIdentifier)
                 {
                     return m_ColumnDescriptions[i].Type;
                 }
@@ -378,7 +378,7 @@ namespace GDX.Editor.Windows.Tables
             return Serializable.SerializableTypes.Invalid;
         }
 
-        internal void UpdateColumnData(int internalIndex, string newName)
+        internal void UpdateColumnData(int columnIdentifier, string newName)
         {
             // Figure out index of target
             int columnCount = m_TableViewColumns.Count;
@@ -390,7 +390,7 @@ namespace GDX.Editor.Windows.Tables
                 int indexOfSplit = m_TableViewColumns[i].name.IndexOf("_", StringComparison.Ordinal);
                 string column = m_TableViewColumns[i].name.Substring(indexOfSplit + 1);
                 int columnInteger = int.Parse(column);
-                if (columnInteger == internalIndex)
+                if (columnInteger == columnIdentifier)
                 {
                     foundIndex = i;
                     break;
@@ -399,10 +399,10 @@ namespace GDX.Editor.Windows.Tables
 
             if (foundIndex != -1)
             {
-                m_ColumnDescriptions[foundIndex] = new TableBase.ColumnDescription
+                m_ColumnDescriptions[foundIndex] = new DataTableObject.ColumnDescription
                 {
                     Name = newName,
-                    InternalIndex = m_ColumnDescriptions[foundIndex].InternalIndex,
+                    Identifier = m_ColumnDescriptions[foundIndex].Identifier,
                     Type = m_ColumnDescriptions[foundIndex].Type
                 };
                 m_TableViewColumns[foundIndex].title = newName;
@@ -411,11 +411,11 @@ namespace GDX.Editor.Windows.Tables
 
         internal void RebuildRowData()
         {
-            TableBase table = m_TableWindow.GetTable();
+            DataTableObject dataTable = m_TableWindow.GetDataTable();
             m_RowDescriptions.Clear();
-            if (table.GetRowCount() > 0)
+            if (dataTable.GetRowCount() > 0)
             {
-                m_RowDescriptions.AddRange(table.GetAllRowDescriptions());
+                m_RowDescriptions.AddRange(dataTable.GetAllRowDescriptions());
             }
             m_MultiColumnListView.Rebuild();
         }
@@ -430,12 +430,12 @@ namespace GDX.Editor.Windows.Tables
             if (indexOfSplit != -1)
             {
                 string columnInteger = column.name.Substring(indexOfSplit + 1);
-                int internalIndex = int.Parse(columnInteger);
+                int columnIdentifier = int.Parse(columnInteger);
                 evt.menu.AppendSeparator();
                 evt.menu.AppendAction("Rename",
-                    a => m_TableWindow.GetController().ShowRenameColumnDialog(internalIndex));
+                    a => m_TableWindow.GetController().ShowRenameColumnDialog(columnIdentifier));
                 evt.menu.AppendAction("Remove",
-                    a => m_TableWindow.GetController().ShowRemoveColumnDialog(internalIndex), CanRemoveColumn);
+                    a => m_TableWindow.GetController().ShowRemoveColumnDialog(columnIdentifier), CanRemoveColumn);
             }
         }
 
@@ -453,7 +453,7 @@ namespace GDX.Editor.Windows.Tables
 
         DropdownMenuAction.Status CanRemoveColumn(DropdownMenuAction action)
         {
-            return m_TableWindow.GetTable().GetColumnCount() > 1
+            return m_TableWindow.GetDataTable().GetColumnCount() > 1
                 ? DropdownMenuAction.Status.Normal
                 : DropdownMenuAction.Status.Disabled;
         }

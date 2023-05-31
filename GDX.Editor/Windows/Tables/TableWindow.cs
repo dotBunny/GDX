@@ -1,4 +1,4 @@
-using GDX.Tables;
+using GDX.DataTables;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -13,7 +13,7 @@ namespace GDX.Editor.Windows.Tables
         TableWindowController m_Controller;
         TableWindowOverlay m_Overlay;
 
-        TableBase m_TargetTable;
+        DataTableObject m_DataTable;
 
 
         TableWindowToolbar m_Toolbar;
@@ -36,9 +36,9 @@ namespace GDX.Editor.Windows.Tables
             m_Controller = new TableWindowController(this, m_Overlay);
 
             // Catch domain reload and rebind/relink window
-            if (m_TargetTable != null)
+            if (m_DataTable != null)
             {
-                BindTable(m_TargetTable, true);
+                BindTable(m_DataTable, true);
             }
 
             EditorApplication.delayCall += CheckForNoTable;
@@ -54,7 +54,7 @@ namespace GDX.Editor.Windows.Tables
                 TableCache.UnregisterUsage(m_TableTicket);
             }
 
-            if (m_TargetTable != null)
+            if (m_DataTable != null)
             {
                 Save();
             }
@@ -100,9 +100,9 @@ namespace GDX.Editor.Windows.Tables
             return m_Controller;
         }
 
-        public TableBase GetTable()
+        public DataTableObject GetDataTable()
         {
-            return m_TargetTable;
+            return m_DataTable;
         }
 
         public int GetTableTicket()
@@ -122,7 +122,7 @@ namespace GDX.Editor.Windows.Tables
 
         void CheckForNoTable()
         {
-            if (m_TargetTable == null)
+            if (m_DataTable == null)
             {
                 Close();
             }
@@ -131,26 +131,26 @@ namespace GDX.Editor.Windows.Tables
         public void Save(bool skipDialog = false)
         {
             // We're not dirty, or were in batch mode
-            if (!EditorUtility.IsDirty(m_TargetTable) || Application.isBatchMode)
+            if (!EditorUtility.IsDirty(m_DataTable) || Application.isBatchMode)
             {
                 return;
             }
 
 
-            if (skipDialog || EditorUtility.DisplayDialog($"Save {m_TargetTable.GetDisplayName()}", "There are changes made to the table (in memory) which have not been saved to disk. Would you like to write those changes to disk now?", "Yes", "No"))
+            if (skipDialog || EditorUtility.DisplayDialog($"Save {m_DataTable.GetDisplayName()}", "There are changes made to the table (in memory) which have not been saved to disk. Would you like to write those changes to disk now?", "Yes", "No"))
             {
-                AssetDatabase.SaveAssetIfDirty(m_TargetTable);
+                AssetDatabase.SaveAssetIfDirty(m_DataTable);
                 m_Toolbar.UpdateSaveButton();
             }
         }
 
 
-        public void BindTable(TableBase table, bool fromDomainReload = false)
+        public void BindTable(DataTableObject dataTable, bool fromDomainReload = false)
         {
-            m_TargetTable = table;
-            m_TableTicket = fromDomainReload ? TableCache.RegisterTable(table, m_TableTicket) : TableCache.RegisterTable(table);
+            m_DataTable = dataTable;
+            m_TableTicket = fromDomainReload ? TableCache.RegisterTable(dataTable, m_TableTicket) : TableCache.RegisterTable(dataTable);
 
-            TableWindowProvider.RegisterTableWindow(this, m_TargetTable);
+            TableWindowProvider.RegisterTableWindow(this, m_DataTable);
 
             RebindTable();
 
@@ -183,9 +183,9 @@ namespace GDX.Editor.Windows.Tables
 
         public void RebindTable()
         {
-            titleContent = new GUIContent(m_TargetTable.GetDisplayName());
+            titleContent = new GUIContent(m_DataTable.GetDisplayName());
 
-            int columnCount = m_TargetTable.GetColumnCount();
+            int columnCount = m_DataTable.GetColumnCount();
             if (columnCount == 0)
             {
                 m_View?.Hide();
@@ -210,7 +210,7 @@ namespace GDX.Editor.Windows.Tables
         }
 
         /// <inheritdoc />
-        public void OnCellValueChanged(int rowInternalIndex, int columnInternalIndex)
+        public void OnCellValueChanged(int rowIdentifier, int columnIdentifier)
         {
             // We can do better then this, what if cells actually had more awareness
             // TODO: @matt Need to do better here

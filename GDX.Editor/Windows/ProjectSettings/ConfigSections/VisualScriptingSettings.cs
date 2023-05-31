@@ -113,14 +113,14 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
             Button buttonFoldout = categoryInstance.Q<Button>("button-foldout");
             buttonFoldout.clicked += () =>
             {
-                buttonFoldout.ToggleInClassList("expanded");
-                if (buttonFoldout.ClassListContains("expanded"))
+                buttonFoldout.ToggleInClassList(ResourcesProvider.ExpandedClass);
+                if (buttonFoldout.ClassListContains(ResourcesProvider.ExpandedClass))
                 {
-                    elementTypeContainer.RemoveFromClassList("hidden");
+                    elementTypeContainer.RemoveFromClassList(ResourcesProvider.HiddenClass);
                 }
                 else
                 {
-                    elementTypeContainer.AddToClassList("hidden");
+                    elementTypeContainer.AddToClassList(ResourcesProvider.HiddenClass);
                 }
             };
 

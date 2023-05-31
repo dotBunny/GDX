@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
-using GDX.Tables;
+using GDX.DataTables;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -16,9 +16,9 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         const string k_MessageClickToUnlock = "Click to unlock for editting.";
         const string k_MessageClickToLock = "Click to lock data.";
         const string k_MessageNoTableSelected = "No table selected.";
-        const string k_PropertyRow = "Row";
-        const string k_PropertyColumn = "Column";
-        const string k_PropertyTable = "Table";
+        const string k_PropertyRow = "RowIdentifier";
+        const string k_PropertyColumn = "ColumnIdentifier";
+        const string k_PropertyTable = "DataTable";
 
         const string k_StyleClassLinked = "linked";
         const string k_StyleClassUnlinked = "unlinked";
@@ -28,21 +28,22 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         protected const string k_CellFieldName = "gdx-table-inspector-field";
 
 
-        TableBase.ColumnDescription[] m_ColumnDescriptions;
-        protected int m_ColumnInternalIndex = -1;
+        DataTableObject.ColumnDescription[] m_ColumnDescriptions;
+        protected int m_ColumnIdentifier = -1;
         SerializedProperty m_ColumnProperty;
 
         VisualElement m_Container;
         Label m_FieldLabel;
 
         bool m_IsUnlocked;
-        TableBase.RowDescription[] m_RowDescriptions;
-        protected int m_RowInternalIndex = -1;
+        DataTableObject.RowDescription[] m_RowDescriptions;
+        protected int m_RowIdentifier = -1;
         SerializedProperty m_RowProperty;
 
         SerializedProperty m_SerializedProperty;
 
-        protected TableBase m_Table;
+        protected DataTableObject m_DataTable;
+        protected int m_TableTicket;
         protected VisualElement m_CellElement;
         Button m_TableButton;
         SerializedProperty m_TableProperty;
@@ -81,11 +82,11 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             m_ColumnProperty = m_SerializedProperty.FindPropertyRelative(k_PropertyColumn);
 
             // Load Data
-            m_Table = (TableBase)m_TableProperty.objectReferenceValue;
-            if (m_Table != null)
+            m_DataTable = (DataTableObject)m_TableProperty.objectReferenceValue;
+            if (m_DataTable != null)
             {
-                m_RowInternalIndex = m_RowProperty.intValue;
-                m_ColumnInternalIndex = m_ColumnProperty.intValue;
+                m_RowIdentifier = m_RowProperty.intValue;
+                m_ColumnIdentifier = m_ColumnProperty.intValue;
             }
 
             // Build our base level inspector
@@ -119,11 +120,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
             fieldLabelContainer.Add(m_FieldLabel);
 
-            // Add spacer
-            fieldLabelContainer.Add(new VisualElement { name = "gdx-cell-value-spacer" });
-
             m_TableButton = new Button(TableLinkStatusClicked) { name = "gdx-cell-value-table" };
-            fieldLabelContainer.Add(m_TableButton);
+            m_FieldLabel.parent.Add(m_TableButton);
 
             m_Container.Add(fieldLabelContainer);
 
@@ -142,31 +140,31 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         void UpdateTableLinkStatus()
         {
-            if (m_Table != null && m_RowInternalIndex != -1 && m_ColumnInternalIndex != -1)
+            if (m_DataTable != null && m_RowIdentifier != -1 && m_ColumnIdentifier != -1)
             {
                 m_TableButton.AddToClassList(k_StyleClassLinked);
                 m_TableButton.RemoveFromClassList(k_StyleClassUnlinked);
                 m_TableButton.tooltip =
-                    $"Table: {m_Table.GetDisplayName()}\nRow: {m_Table.GetRowName(m_RowInternalIndex)} ({m_RowInternalIndex})\nColumn: {m_Table.GetColumnName(m_ColumnInternalIndex)} ({m_ColumnInternalIndex})\nData Version: {GetDataVersion()}\n\nClick to reset link.";
+                    $"Table: {m_DataTable.GetDisplayName()}\nRow: {m_DataTable.GetRowName(m_RowIdentifier)} ({m_RowIdentifier})\nColumn: {m_DataTable.GetColumnName(m_ColumnIdentifier)} ({m_ColumnIdentifier})\nData Version: {GetDataVersion()}\n\nClick to reset link.";
             }
             else
             {
                 m_TableButton.RemoveFromClassList(k_StyleClassLinked);
                 m_TableButton.AddToClassList(k_StyleClassUnlinked);
 
-                if (m_Table == null)
+                if (m_DataTable == null)
                 {
                     m_TableButton.tooltip = k_MessageNoTableSelected;
                 }
-                else if (m_RowInternalIndex == -1)
+                else if (m_RowIdentifier == -1)
                 {
                     m_TableButton.tooltip =
-                        $"Table: {m_Table.GetDisplayName()}\nRow: None selected.\n\nClick to reset link.";
+                        $"Table: {m_DataTable.GetDisplayName()}\nRow: None selected.\n\nClick to reset link.";
                 }
-                else if (m_ColumnInternalIndex == -1)
+                else if (m_ColumnIdentifier == -1)
                 {
                     m_TableButton.tooltip =
-                        $"Table: {m_Table.GetDisplayName()}\nRow: {m_Table.GetRowName(m_RowInternalIndex)} ({m_RowInternalIndex})\nColumn: None selected.\n\nClick to reset link.";
+                        $"Table: {m_DataTable.GetDisplayName()}\nRow: {m_DataTable.GetRowName(m_RowIdentifier)} ({m_RowIdentifier})\nColumn: None selected.\n\nClick to reset link.";
                 }
                 else
                 {
@@ -177,18 +175,18 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         void TableLinkStatusClicked()
         {
-            m_Table = null;
-            m_RowInternalIndex = -1;
-            m_ColumnInternalIndex = -1;
+            m_DataTable = null;
+            m_RowIdentifier = -1;
+            m_ColumnIdentifier = -1;
             SetDisplayMode(DisplayMode.SelectTable);
         }
 
         void ApplySettings()
         {
-            m_TableProperty.objectReferenceValue = m_Table;
-            m_TableProperty.objectReferenceInstanceIDValue = m_Table.GetInstanceID();
-            m_RowProperty.intValue = m_RowInternalIndex;
-            m_ColumnProperty.intValue = m_ColumnInternalIndex;
+            m_TableProperty.objectReferenceValue = m_DataTable;
+            m_TableProperty.objectReferenceInstanceIDValue = m_DataTable.GetInstanceID();
+            m_RowProperty.intValue = m_RowIdentifier;
+            m_ColumnProperty.intValue = m_ColumnIdentifier;
 
             m_SerializedProperty.serializedObject.ApplyModifiedProperties();
             EditorUtility.SetDirty(m_SerializedProperty.serializedObject.targetObject);
@@ -197,19 +195,19 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         void DetectDrawerMode()
         {
             // If we dont have a table we need to select one
-            if (m_Table == null && m_RowInternalIndex == -1 && m_ColumnInternalIndex == -1)
+            if (m_DataTable == null && m_RowIdentifier == -1 && m_ColumnIdentifier == -1)
             {
                 SetDisplayMode(DisplayMode.SelectTable);
             }
-            else if (m_Table != null && m_RowInternalIndex == -1)
+            else if (m_DataTable != null && m_RowIdentifier == -1)
             {
                 SetDisplayMode(DisplayMode.SelectRow);
             }
-            else if (m_Table != null && m_RowInternalIndex != -1 && m_ColumnInternalIndex == -1)
+            else if (m_DataTable != null && m_RowIdentifier != -1 && m_ColumnIdentifier == -1)
             {
                 SetDisplayMode(DisplayMode.SelectColumn);
             }
-            else if (m_Table != null && m_RowInternalIndex != -1 && m_ColumnInternalIndex != -1)
+            else if (m_DataTable != null && m_RowIdentifier != -1 && m_ColumnIdentifier != -1)
             {
                 SetDisplayMode(DisplayMode.DisplayValue);
             }
@@ -221,7 +219,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         protected void NotifyOfChange()
         {
-            TableCache.NotifyOfCellValueChange(m_Table, m_RowInternalIndex, m_ColumnInternalIndex, this);
+            TableCache.NotifyOfCellValueChange(m_DataTable, m_RowIdentifier, m_ColumnIdentifier, this);
         }
 
         string FormatTableSelectionItem(int arg)
@@ -243,7 +241,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         {
             if (arg >= 0)
             {
-                m_Table = (TableBase)m_Tables[arg].GetOrLoadAsset();
+                m_DataTable = (DataTableObject)m_Tables[arg].GetOrLoadAsset();
                 //m_Breadcrumbs.Add(new Label(m_Tables[arg].GetFileNameWithoutExtension()));
                 DetectDrawerMode();
                 return m_Tables[arg].GetPathWithoutExtension();
@@ -256,7 +254,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         {
             if (arg >= 0)
             {
-                m_RowInternalIndex = m_RowDescriptions[arg].InternalIndex;
+                m_RowIdentifier = m_RowDescriptions[arg].Identifier;
                 //m_Breadcrumbs.Add(new Label(m_RowDescriptions[arg].Name));
                 DetectDrawerMode();
                 return "Updating ...";
@@ -269,7 +267,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         {
             if (arg >= 0)
             {
-                m_ColumnInternalIndex = m_ColumnDescriptions[arg].InternalIndex;
+                m_ColumnIdentifier = m_ColumnDescriptions[arg].Identifier;
                 //m_Breadcrumbs.Add(new Label(m_ColumnDescriptions[arg].Name));
 
                 // Apply Properties
@@ -303,14 +301,14 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         VisualElement MakeSelectRowElement()
         {
-            if (m_Table.GetRowCount() == 0)
+            if (m_DataTable.GetRowCount() == 0)
             {
-                Debug.LogWarning($"The selected table '{m_Table.GetDisplayName()}' has no row data.");
+                Debug.LogWarning($"The selected table '{m_DataTable.GetDisplayName()}' has no row data.");
                 return null;
             }
 
             // Get table rows
-            m_RowDescriptions = m_Table.GetAllRowDescriptions();
+            m_RowDescriptions = m_DataTable.GetAllRowDescriptions();
             int rowCount = m_RowDescriptions.Length;
             List<int> choices = new List<int>(rowCount + 1) { -1 };
             if (rowCount > 0)
@@ -326,7 +324,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         VisualElement MakeSelectColumnElement()
         {
-            if (m_RowInternalIndex == -1 || m_Table == null || m_Table.GetColumnCount() == 0)
+            if (m_RowIdentifier == -1 || m_DataTable == null || m_DataTable.GetColumnCount() == 0)
             {
                 Debug.LogWarning("An error occured when trying to select a column. Please try again.");
                 return null;
@@ -336,11 +334,11 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             m_RowDescriptions = null;
 
             // Get table columns
-            TableBase.ColumnDescription[] allColumns = m_Table.GetAllColumnDescriptions();
+            DataTableObject.ColumnDescription[] allColumns = m_DataTable.GetAllColumnDescriptions();
             int allColumnCount = allColumns.Length;
             Serializable.SerializableTypes requiredType = GetSupportedType();
-            List<TableBase.ColumnDescription> validColumns =
-                new List<TableBase.ColumnDescription>(allColumns.Length);
+            List<DataTableObject.ColumnDescription> validColumns =
+                new List<DataTableObject.ColumnDescription>(allColumns.Length);
 
             for (int i = 0; i < allColumnCount; i++)
             {
@@ -355,7 +353,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             int columnCount = m_ColumnDescriptions.Length;
             if (columnCount == 0)
             {
-                Debug.LogWarning($"No columns of {requiredType} are found in the table '{m_Table.GetDisplayName()}'.");
+                Debug.LogWarning($"No columns of {requiredType} are found in the table '{m_DataTable.GetDisplayName()}'.");
                 return null;
             }
 
@@ -370,7 +368,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         VisualElement MakeCellValueElement()
         {
-            if (m_ColumnInternalIndex != -1)
+            if (m_ColumnIdentifier != -1)
             {
                 m_RowDescriptions = null;
                 m_ColumnDescriptions = null;
@@ -471,12 +469,14 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         void RegisterForCallback()
         {
-            if (m_Table == null || m_HasRegisteredForCallbacks)
+            if (m_DataTable == null || m_HasRegisteredForCallbacks)
             {
                 return;
             }
 
-            TableCache.RegisterCellValueChanged(this, m_Table);
+            m_TableTicket = TableCache.RegisterTable(m_DataTable);
+            TableCache.RegisterUsage(m_TableTicket);
+            TableCache.RegisterCellValueChanged(this, m_DataTable);
             m_HasRegisteredForCallbacks = true;
         }
 
@@ -484,14 +484,16 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         {
             if (m_HasRegisteredForCallbacks)
             {
-                TableCache.UnregisterCellValueChanged(this, m_Table);
+
+                TableCache.UnregisterCellValueChanged(this, m_DataTable);
+                TableCache.UnregisterUsage(m_TableTicket);
             }
         }
 
         /// <inheritdoc />
-        public void OnCellValueChanged(int rowInternalIndex, int columnInternalIndex)
+        public void OnCellValueChanged(int rowIdentifier, int columnIdentifier)
         {
-            if (m_RowInternalIndex == rowInternalIndex && m_ColumnInternalIndex == columnInternalIndex)
+            if (m_RowIdentifier == rowIdentifier && m_ColumnIdentifier == columnIdentifier)
             {
                 UpdateValue();
             }

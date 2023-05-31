@@ -4,7 +4,7 @@
 
 using System;
 using GDX.Editor.Windows.Tables;
-using GDX.Tables;
+using GDX.DataTables;
 #if UNITY_2022_2_OR_NEWER
 using System.Collections.Generic;
 using UnityEngine.UIElements;
@@ -38,9 +38,9 @@ namespace GDX.Editor.Inspectors
         /// <inheritdoc />
         public override VisualElement CreateInspectorGUI()
         {
-            TableBase table = (TableBase)target;
+            DataTableObject dataTable = (DataTableObject)target;
 
-            m_TableTicket = TableCache.RegisterTable(table);
+            m_TableTicket = TableCache.RegisterTable(dataTable);
 
 
             m_RootElement = new VisualElement();
@@ -64,19 +64,19 @@ namespace GDX.Editor.Inspectors
 
         void UpdateInspector()
         {
-            TableBase table = (TableBase)target;
+            DataTableObject dataTable = (DataTableObject)target;
             Label dataLabel = m_RootElement.Q<Label>("gdx-table-inspector-data");
 
-            int columnCount = table.GetColumnCount();
-            int rowCount = table.GetRowCount();
+            int columnCount = dataTable.GetColumnCount();
+            int rowCount = dataTable.GetRowCount();
 
             dataLabel.text = $"{rowCount.ToString()} Rows with {columnCount.ToString()} Columns.";
         }
 
         void OpenTargetAsset()
         {
-            TableBase table = (TableBase)target;
-            TableWindowProvider.OpenAsset(table);
+            DataTableObject dataTable = (DataTableObject)target;
+            TableWindowProvider.OpenAsset(dataTable);
         }
 
         /// <inheritdoc />
