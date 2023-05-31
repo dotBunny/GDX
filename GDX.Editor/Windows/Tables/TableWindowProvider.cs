@@ -61,7 +61,7 @@ namespace GDX.Editor.Windows.Tables
             int tableWindowTicket = tableWindow.GetTableTicket();
             k_TicketToTableWindow.Remove(tableWindowTicket);
 
-            DataTableObject dataTable = tableWindow.GetTable();
+            DataTableObject dataTable = tableWindow.GetDataTable();
             if (dataTable != null)
             {
                 k_TableToTableWindow.Remove(dataTable);

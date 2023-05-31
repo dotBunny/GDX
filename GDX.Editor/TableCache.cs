@@ -157,12 +157,12 @@ namespace GDX.Editor
             EditorUtility.SetDirty(k_TableTicketToTable[tableTicket]);
         }
 
-        public static void NotifyOfCellValueChange(DataTableObject dataTable, int rowInternalIndex, int columnInternalIndex, ICellValueChangedCallbackReceiver ignore = null)
+        public static void NotifyOfCellValueChange(DataTableObject dataTable, int rowIdentifier, int columnIdentifier, ICellValueChangedCallbackReceiver ignore = null)
         {
-            NotifyOfCellValueChange(GetTicket(dataTable), rowInternalIndex, columnInternalIndex, ignore);
+            NotifyOfCellValueChange(GetTicket(dataTable), rowIdentifier, columnIdentifier, ignore);
         }
 
-        public static void NotifyOfCellValueChange(int tableTicket, int rowInternalIndex, int columnInternalIndex, ICellValueChangedCallbackReceiver ignore = null)
+        public static void NotifyOfCellValueChange(int tableTicket, int rowIdentifier, int columnIdentifier, ICellValueChangedCallbackReceiver ignore = null)
         {
             int count = k_CellValueChangeCallbackReceivers[tableTicket].Count;
             for (int i = 0; i < count; i++)
@@ -170,7 +170,7 @@ namespace GDX.Editor
                 ICellValueChangedCallbackReceiver callback = k_CellValueChangeCallbackReceivers[tableTicket][i];
                 if (callback != ignore)
                 {
-                    callback.OnCellValueChanged(rowInternalIndex, columnInternalIndex);
+                    callback.OnCellValueChanged(rowIdentifier, columnIdentifier);
                 }
             }
 
@@ -271,7 +271,7 @@ namespace GDX.Editor
 
         public interface ICellValueChangedCallbackReceiver
         {
-            void OnCellValueChanged(int rowInternalIndex, int columnInternalIndex);
+            void OnCellValueChanged(int rowIdentifier, int columnIdentifier);
         }
 
         public interface IColumnDefinitionChangeCallbackReceiver

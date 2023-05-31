@@ -18,7 +18,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         /// <inheritdoc />
         protected override VisualElement GetCellElement()
         {
-            m_CellValue = new QuaternionCellValue(m_DataTable, m_RowInternalIndex, m_ColumnInternalIndex);
+            m_CellValue = new QuaternionCellValue(m_DataTable, m_RowIdentifier, m_ColumnIdentifier);
             Vector4Field newField = new Vector4Field(null) { name = k_CellFieldName };
 
             Quaternion localQuaternion = m_CellValue.Get();

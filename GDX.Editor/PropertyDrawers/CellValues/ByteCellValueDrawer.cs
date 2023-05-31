@@ -17,7 +17,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         /// <inheritdoc />
         protected override VisualElement GetCellElement()
         {
-            m_CellValue = new ByteCellValue(m_DataTable, m_RowInternalIndex, m_ColumnInternalIndex);
+            m_CellValue = new ByteCellValue(m_DataTable, m_RowIdentifier, m_ColumnIdentifier);
             SliderInt newField = new SliderInt(byte.MinValue, byte.MaxValue)
             {
                 name = k_CellFieldName, showInputField = true, label = null

@@ -18,7 +18,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         /// <inheritdoc />
         protected override VisualElement GetCellElement()
         {
-            m_CellValue = new AnimationCurveCellValue(m_DataTable, m_RowInternalIndex, m_ColumnInternalIndex);
+            m_CellValue = new AnimationCurveCellValue(m_DataTable, m_RowIdentifier, m_ColumnIdentifier);
             CurveField newField = new CurveField(null) { name = k_CellFieldName };
             newField.SetValueWithoutNotify(m_CellValue.Get());
             newField.RegisterValueChangedCallback(e =>

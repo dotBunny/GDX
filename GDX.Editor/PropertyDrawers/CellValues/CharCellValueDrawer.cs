@@ -17,7 +17,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         /// <inheritdoc />
         protected override VisualElement GetCellElement()
         {
-            m_CellValue = new CharCellValue(m_DataTable, m_RowInternalIndex, m_ColumnInternalIndex);
+            m_CellValue = new CharCellValue(m_DataTable, m_RowIdentifier, m_ColumnIdentifier);
             TextField newField = new TextField(null, 1, false, false, ' ') { name = k_CellFieldName };
             newField.SetValueWithoutNotify(m_CellValue.Get().ToString());
             newField.RegisterValueChangedCallback(e =>

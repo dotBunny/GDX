@@ -17,7 +17,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         /// <inheritdoc />
         protected override VisualElement GetCellElement()
         {
-            m_CellValue = new ULongCellValue(m_DataTable, m_RowInternalIndex, m_ColumnInternalIndex);
+            m_CellValue = new ULongCellValue(m_DataTable, m_RowIdentifier, m_ColumnIdentifier);
             // TODO: crushes
             LongField newField = new LongField(null) { name = k_CellFieldName };
             newField.SetValueWithoutNotify((int)m_CellValue.Get());

@@ -18,10 +18,10 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         /// <inheritdoc />
         protected override VisualElement GetCellElement()
         {
-            m_CellValue = new ObjectCellValue(m_DataTable, m_RowInternalIndex, m_ColumnInternalIndex);
+            m_CellValue = new ObjectCellValue(m_DataTable, m_RowIdentifier, m_ColumnIdentifier);
             ObjectField newField = new ObjectField(null) { name = k_CellFieldName };
 
-            string qualifiedType = m_DataTable.GetTypeNameForObjectColumn(m_ColumnInternalIndex);
+            string qualifiedType = m_DataTable.GetTypeNameForObjectColumn(m_ColumnIdentifier);
             newField.objectType = (!string.IsNullOrEmpty(qualifiedType) ? System.Type.GetType(qualifiedType) : typeof(UnityEngine.Object)) ??
                                   typeof(UnityEngine.Object);
 

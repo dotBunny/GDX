@@ -74,14 +74,14 @@ namespace GDX.Editor.Windows.Tables
 
         DropdownMenuAction.Status CanAddRow(DropdownMenuAction action)
         {
-            return m_ParentWindow.GetTable().GetColumnCount() > 0
+            return m_ParentWindow.GetDataTable().GetColumnCount() > 0
                 ? DropdownMenuAction.Status.Normal
                 : DropdownMenuAction.Status.Disabled;
         }
 
         DropdownMenuAction.Status CanInterchange(DropdownMenuAction action)
         {
-            return m_ParentWindow.GetTable().GetColumnCount() > 0
+            return m_ParentWindow.GetDataTable().GetColumnCount() > 0
                 ? DropdownMenuAction.Status.Normal
                 : DropdownMenuAction.Status.Disabled;
         }
@@ -124,7 +124,7 @@ namespace GDX.Editor.Windows.Tables
 
         public void UpdateSaveButton()
         {
-            m_ToolbarSaveButton?.SetEnabled(EditorUtility.IsDirty(m_ParentWindow.GetTable()));
+            m_ToolbarSaveButton?.SetEnabled(EditorUtility.IsDirty(m_ParentWindow.GetDataTable()));
         }
     }
 #endif

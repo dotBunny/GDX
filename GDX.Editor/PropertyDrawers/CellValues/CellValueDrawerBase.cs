@@ -29,7 +29,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
 
         DataTableObject.ColumnDescription[] m_ColumnDescriptions;
-        protected int m_ColumnInternalIndex = -1;
+        protected int m_ColumnIdentifier = -1;
         SerializedProperty m_ColumnProperty;
 
         VisualElement m_Container;
@@ -37,7 +37,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         bool m_IsUnlocked;
         DataTableObject.RowDescription[] m_RowDescriptions;
-        protected int m_RowInternalIndex = -1;
+        protected int m_RowIdentifier = -1;
         SerializedProperty m_RowProperty;
 
         SerializedProperty m_SerializedProperty;
@@ -85,8 +85,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             m_DataTable = (DataTableObject)m_TableProperty.objectReferenceValue;
             if (m_DataTable != null)
             {
-                m_RowInternalIndex = m_RowProperty.intValue;
-                m_ColumnInternalIndex = m_ColumnProperty.intValue;
+                m_RowIdentifier = m_RowProperty.intValue;
+                m_ColumnIdentifier = m_ColumnProperty.intValue;
             }
 
             // Build our base level inspector
@@ -140,12 +140,12 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         void UpdateTableLinkStatus()
         {
-            if (m_DataTable != null && m_RowInternalIndex != -1 && m_ColumnInternalIndex != -1)
+            if (m_DataTable != null && m_RowIdentifier != -1 && m_ColumnIdentifier != -1)
             {
                 m_TableButton.AddToClassList(k_StyleClassLinked);
                 m_TableButton.RemoveFromClassList(k_StyleClassUnlinked);
                 m_TableButton.tooltip =
-                    $"Table: {m_DataTable.GetDisplayName()}\nRow: {m_DataTable.GetRowName(m_RowInternalIndex)} ({m_RowInternalIndex})\nColumn: {m_DataTable.GetColumnName(m_ColumnInternalIndex)} ({m_ColumnInternalIndex})\nData Version: {GetDataVersion()}\n\nClick to reset link.";
+                    $"Table: {m_DataTable.GetDisplayName()}\nRow: {m_DataTable.GetRowName(m_RowIdentifier)} ({m_RowIdentifier})\nColumn: {m_DataTable.GetColumnName(m_ColumnIdentifier)} ({m_ColumnIdentifier})\nData Version: {GetDataVersion()}\n\nClick to reset link.";
             }
             else
             {
@@ -156,15 +156,15 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                 {
                     m_TableButton.tooltip = k_MessageNoTableSelected;
                 }
-                else if (m_RowInternalIndex == -1)
+                else if (m_RowIdentifier == -1)
                 {
                     m_TableButton.tooltip =
                         $"Table: {m_DataTable.GetDisplayName()}\nRow: None selected.\n\nClick to reset link.";
                 }
-                else if (m_ColumnInternalIndex == -1)
+                else if (m_ColumnIdentifier == -1)
                 {
                     m_TableButton.tooltip =
-                        $"Table: {m_DataTable.GetDisplayName()}\nRow: {m_DataTable.GetRowName(m_RowInternalIndex)} ({m_RowInternalIndex})\nColumn: None selected.\n\nClick to reset link.";
+                        $"Table: {m_DataTable.GetDisplayName()}\nRow: {m_DataTable.GetRowName(m_RowIdentifier)} ({m_RowIdentifier})\nColumn: None selected.\n\nClick to reset link.";
                 }
                 else
                 {
@@ -176,8 +176,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         void TableLinkStatusClicked()
         {
             m_DataTable = null;
-            m_RowInternalIndex = -1;
-            m_ColumnInternalIndex = -1;
+            m_RowIdentifier = -1;
+            m_ColumnIdentifier = -1;
             SetDisplayMode(DisplayMode.SelectTable);
         }
 
@@ -185,8 +185,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         {
             m_TableProperty.objectReferenceValue = m_DataTable;
             m_TableProperty.objectReferenceInstanceIDValue = m_DataTable.GetInstanceID();
-            m_RowProperty.intValue = m_RowInternalIndex;
-            m_ColumnProperty.intValue = m_ColumnInternalIndex;
+            m_RowProperty.intValue = m_RowIdentifier;
+            m_ColumnProperty.intValue = m_ColumnIdentifier;
 
             m_SerializedProperty.serializedObject.ApplyModifiedProperties();
             EditorUtility.SetDirty(m_SerializedProperty.serializedObject.targetObject);
@@ -195,19 +195,19 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         void DetectDrawerMode()
         {
             // If we dont have a table we need to select one
-            if (m_DataTable == null && m_RowInternalIndex == -1 && m_ColumnInternalIndex == -1)
+            if (m_DataTable == null && m_RowIdentifier == -1 && m_ColumnIdentifier == -1)
             {
                 SetDisplayMode(DisplayMode.SelectTable);
             }
-            else if (m_DataTable != null && m_RowInternalIndex == -1)
+            else if (m_DataTable != null && m_RowIdentifier == -1)
             {
                 SetDisplayMode(DisplayMode.SelectRow);
             }
-            else if (m_DataTable != null && m_RowInternalIndex != -1 && m_ColumnInternalIndex == -1)
+            else if (m_DataTable != null && m_RowIdentifier != -1 && m_ColumnIdentifier == -1)
             {
                 SetDisplayMode(DisplayMode.SelectColumn);
             }
-            else if (m_DataTable != null && m_RowInternalIndex != -1 && m_ColumnInternalIndex != -1)
+            else if (m_DataTable != null && m_RowIdentifier != -1 && m_ColumnIdentifier != -1)
             {
                 SetDisplayMode(DisplayMode.DisplayValue);
             }
@@ -219,7 +219,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         protected void NotifyOfChange()
         {
-            TableCache.NotifyOfCellValueChange(m_DataTable, m_RowInternalIndex, m_ColumnInternalIndex, this);
+            TableCache.NotifyOfCellValueChange(m_DataTable, m_RowIdentifier, m_ColumnIdentifier, this);
         }
 
         string FormatTableSelectionItem(int arg)
@@ -254,7 +254,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         {
             if (arg >= 0)
             {
-                m_RowInternalIndex = m_RowDescriptions[arg].Identifier;
+                m_RowIdentifier = m_RowDescriptions[arg].Identifier;
                 //m_Breadcrumbs.Add(new Label(m_RowDescriptions[arg].Name));
                 DetectDrawerMode();
                 return "Updating ...";
@@ -267,7 +267,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         {
             if (arg >= 0)
             {
-                m_ColumnInternalIndex = m_ColumnDescriptions[arg].Identifier;
+                m_ColumnIdentifier = m_ColumnDescriptions[arg].Identifier;
                 //m_Breadcrumbs.Add(new Label(m_ColumnDescriptions[arg].Name));
 
                 // Apply Properties
@@ -324,7 +324,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         VisualElement MakeSelectColumnElement()
         {
-            if (m_RowInternalIndex == -1 || m_DataTable == null || m_DataTable.GetColumnCount() == 0)
+            if (m_RowIdentifier == -1 || m_DataTable == null || m_DataTable.GetColumnCount() == 0)
             {
                 Debug.LogWarning("An error occured when trying to select a column. Please try again.");
                 return null;
@@ -368,7 +368,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         VisualElement MakeCellValueElement()
         {
-            if (m_ColumnInternalIndex != -1)
+            if (m_ColumnIdentifier != -1)
             {
                 m_RowDescriptions = null;
                 m_ColumnDescriptions = null;
@@ -491,9 +491,9 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         }
 
         /// <inheritdoc />
-        public void OnCellValueChanged(int rowInternalIndex, int columnInternalIndex)
+        public void OnCellValueChanged(int rowIdentifier, int columnIdentifier)
         {
-            if (m_RowInternalIndex == rowInternalIndex && m_ColumnInternalIndex == columnInternalIndex)
+            if (m_RowIdentifier == rowIdentifier && m_ColumnIdentifier == columnIdentifier)
             {
                 UpdateValue();
             }

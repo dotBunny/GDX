@@ -57,7 +57,7 @@ namespace GDX.Editor.Windows.Tables
                 rootElement.RemoveAt(1);
             }
 
-            DataTableObject dataTable = window.GetTable();
+            DataTableObject dataTable = window.GetDataTable();
             int tableTicket = window.GetTableTicket();
 
             // Add row header column ahead of actual columns
@@ -342,7 +342,7 @@ namespace GDX.Editor.Windows.Tables
             m_MultiColumnListView.style.display = DisplayStyle.Flex;
         }
 
-        public int GetSelectedRowInternalIndex()
+        public int GetSelectedRowIdentifier()
         {
             if (m_MultiColumnListView.selectedItem == null)
             {
@@ -360,7 +360,7 @@ namespace GDX.Editor.Windows.Tables
             label.text = description.Name;
         }
 
-        internal Serializable.SerializableTypes GetColumnType(int internalIndex)
+        internal Serializable.SerializableTypes GetColumnType(int columnIdentifier)
         {
             int columnCount = m_TableViewColumns.Count;
             // Skip first column as its the row header
@@ -369,7 +369,7 @@ namespace GDX.Editor.Windows.Tables
                 int indexOfSplit = m_TableViewColumns[i].name.IndexOf("_", StringComparison.Ordinal);
                 string column = m_TableViewColumns[i].name.Substring(indexOfSplit + 1);
                 int columnInteger = int.Parse(column);
-                if (columnInteger == internalIndex)
+                if (columnInteger == columnIdentifier)
                 {
                     return m_ColumnDescriptions[i].Type;
                 }
@@ -378,7 +378,7 @@ namespace GDX.Editor.Windows.Tables
             return Serializable.SerializableTypes.Invalid;
         }
 
-        internal void UpdateColumnData(int internalIndex, string newName)
+        internal void UpdateColumnData(int columnIdentifier, string newName)
         {
             // Figure out index of target
             int columnCount = m_TableViewColumns.Count;
@@ -390,7 +390,7 @@ namespace GDX.Editor.Windows.Tables
                 int indexOfSplit = m_TableViewColumns[i].name.IndexOf("_", StringComparison.Ordinal);
                 string column = m_TableViewColumns[i].name.Substring(indexOfSplit + 1);
                 int columnInteger = int.Parse(column);
-                if (columnInteger == internalIndex)
+                if (columnInteger == columnIdentifier)
                 {
                     foundIndex = i;
                     break;
@@ -411,7 +411,7 @@ namespace GDX.Editor.Windows.Tables
 
         internal void RebuildRowData()
         {
-            DataTableObject dataTable = m_TableWindow.GetTable();
+            DataTableObject dataTable = m_TableWindow.GetDataTable();
             m_RowDescriptions.Clear();
             if (dataTable.GetRowCount() > 0)
             {
@@ -430,12 +430,12 @@ namespace GDX.Editor.Windows.Tables
             if (indexOfSplit != -1)
             {
                 string columnInteger = column.name.Substring(indexOfSplit + 1);
-                int internalIndex = int.Parse(columnInteger);
+                int columnIdentifier = int.Parse(columnInteger);
                 evt.menu.AppendSeparator();
                 evt.menu.AppendAction("Rename",
-                    a => m_TableWindow.GetController().ShowRenameColumnDialog(internalIndex));
+                    a => m_TableWindow.GetController().ShowRenameColumnDialog(columnIdentifier));
                 evt.menu.AppendAction("Remove",
-                    a => m_TableWindow.GetController().ShowRemoveColumnDialog(internalIndex), CanRemoveColumn);
+                    a => m_TableWindow.GetController().ShowRemoveColumnDialog(columnIdentifier), CanRemoveColumn);
             }
         }
 
@@ -453,7 +453,7 @@ namespace GDX.Editor.Windows.Tables
 
         DropdownMenuAction.Status CanRemoveColumn(DropdownMenuAction action)
         {
-            return m_TableWindow.GetTable().GetColumnCount() > 1
+            return m_TableWindow.GetDataTable().GetColumnCount() > 1
                 ? DropdownMenuAction.Status.Normal
                 : DropdownMenuAction.Status.Disabled;
         }

@@ -97,7 +97,7 @@ namespace GDX
 
             for (int i = 1; i < fileContent.Length; i++)
             {
-                int internalIndex = -1;
+                int rowIdentifier = -1;
                 string[] rowStrings = ParseCommaSeperatedValues(fileContent[i]);
                 if (string.IsNullOrEmpty(rowStrings[0]))
                 {
@@ -108,14 +108,14 @@ namespace GDX
                     }
 
                     // Create new row
-                    internalIndex = dataTable.AddRow(rowName);
+                    rowIdentifier = dataTable.AddRow(rowName);
                 }
                 else
                 {
-                    internalIndex = int.Parse(rowStrings[0]);
+                    rowIdentifier = int.Parse(rowStrings[0]);
                 }
 
-                foundRowInternalIndices.Add(internalIndex);
+                foundRowInternalIndices.Add(rowIdentifier);
 
                 for (int j = 0; j < tableColumnCount; j++)
                 {
@@ -123,48 +123,48 @@ namespace GDX
                     switch (columnDescriptions[j].Type)
                     {
                         case Serializable.SerializableTypes.String:
-                            dataTable.SetString(internalIndex, columnDescriptions[j].Identifier, columnString);
+                            dataTable.SetString(rowIdentifier, columnDescriptions[j].Identifier, columnString);
                             break;
                         case Serializable.SerializableTypes.Char:
-                            dataTable.SetChar(internalIndex, columnDescriptions[j].Identifier, columnString[0]);
+                            dataTable.SetChar(rowIdentifier, columnDescriptions[j].Identifier, columnString[0]);
                             break;
                         case Serializable.SerializableTypes.Bool:
-                            dataTable.SetBool(internalIndex, columnDescriptions[j].Identifier, bool.Parse(columnString));
+                            dataTable.SetBool(rowIdentifier, columnDescriptions[j].Identifier, bool.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.SByte:
-                            dataTable.SetSByte(internalIndex, columnDescriptions[j].Identifier,
+                            dataTable.SetSByte(rowIdentifier, columnDescriptions[j].Identifier,
                                 sbyte.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Byte:
-                            dataTable.SetByte(internalIndex, columnDescriptions[j].Identifier, byte.Parse(columnString));
+                            dataTable.SetByte(rowIdentifier, columnDescriptions[j].Identifier, byte.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Short:
-                            dataTable.SetShort(internalIndex, columnDescriptions[j].Identifier,
+                            dataTable.SetShort(rowIdentifier, columnDescriptions[j].Identifier,
                                 short.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.UShort:
-                            dataTable.SetUShort(internalIndex, columnDescriptions[j].Identifier,
+                            dataTable.SetUShort(rowIdentifier, columnDescriptions[j].Identifier,
                                 ushort.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Int:
-                            dataTable.SetInt(internalIndex, columnDescriptions[j].Identifier, int.Parse(columnString));
+                            dataTable.SetInt(rowIdentifier, columnDescriptions[j].Identifier, int.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.UInt:
-                            dataTable.SetUInt(internalIndex, columnDescriptions[j].Identifier, uint.Parse(columnString));
+                            dataTable.SetUInt(rowIdentifier, columnDescriptions[j].Identifier, uint.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Long:
-                            dataTable.SetLong(internalIndex, columnDescriptions[j].Identifier, long.Parse(columnString));
+                            dataTable.SetLong(rowIdentifier, columnDescriptions[j].Identifier, long.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.ULong:
-                            dataTable.SetULong(internalIndex, columnDescriptions[j].Identifier,
+                            dataTable.SetULong(rowIdentifier, columnDescriptions[j].Identifier,
                                 ulong.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Float:
-                            dataTable.SetFloat(internalIndex, columnDescriptions[j].Identifier,
+                            dataTable.SetFloat(rowIdentifier, columnDescriptions[j].Identifier,
                                 float.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Double:
-                            dataTable.SetDouble(internalIndex, columnDescriptions[j].Identifier,
+                            dataTable.SetDouble(rowIdentifier, columnDescriptions[j].Identifier,
                                 double.Parse(columnString));
                             break;
                     }

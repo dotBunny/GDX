@@ -245,7 +245,7 @@ namespace GDX.Editor.Windows.Tables
                     UpdateAddColumnBasedOnType(0);
                     m_AddColumnAddButton.Focus();
                     // Don't allow cancel if we dont have column
-                    m_AddColumnCancelButton.SetEnabled(m_TableWindow.GetTable().GetColumnCount() > 0);
+                    m_AddColumnCancelButton.SetEnabled(m_TableWindow.GetDataTable().GetColumnCount() > 0);
                     break;
                 case OverlayState.AddRow:
                     m_RootElement.style.display = DisplayStyle.Flex;
@@ -277,8 +277,8 @@ namespace GDX.Editor.Windows.Tables
                 case OverlayState.Settings:
                     m_RootElement.style.display = DisplayStyle.Flex;
                     m_SettingsOverlay.style.display = DisplayStyle.Flex;
-                    m_SettingsDisplayName.SetValueWithoutNotify(m_TableWindow.GetTable().GetDisplayName());
-                    m_SettingsSupportUndoToggle.SetValueWithoutNotify(m_TableWindow.GetTable()
+                    m_SettingsDisplayName.SetValueWithoutNotify(m_TableWindow.GetDataTable().GetDisplayName());
+                    m_SettingsSupportUndoToggle.SetValueWithoutNotify(m_TableWindow.GetDataTable()
                         .GetFlag(DataTableObject.Flags.EnableUndo));
                     break;
                 default:

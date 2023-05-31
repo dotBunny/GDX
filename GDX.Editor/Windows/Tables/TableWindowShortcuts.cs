@@ -49,7 +49,7 @@ namespace GDX.Editor.Windows.Tables
             TableWindow table = (TableWindow)EditorWindow.focusedWindow;
             if (table != null)
             {
-                table.GetController().ShowRemoveRowDialog(table.GetView().GetSelectedRowInternalIndex());
+                table.GetController().ShowRemoveRowDialog(table.GetView().GetSelectedRowIdentifier());
             }
         }
 
