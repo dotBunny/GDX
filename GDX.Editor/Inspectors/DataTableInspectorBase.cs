@@ -6,7 +6,6 @@ using System;
 using GDX.Editor.Windows.DataTables;
 using GDX.DataTables;
 #if UNITY_2022_2_OR_NEWER
-using System.Collections.Generic;
 using UnityEngine.UIElements;
 #endif
 
@@ -92,12 +91,12 @@ namespace GDX.Editor.Inspectors
         }
     }
 #else
-    public class TableInspectorBase : UnityEditor.Editor
+    public class DataTableInspectorBase : UnityEditor.Editor
     {
         /// <inheritdoc />
         public override void OnInspectorGUI()
         {
-            UnityEngine.GUILayout.Label("Editing an TableBase is unsupported on this version of Unity.");
+            UnityEngine.GUILayout.Label("Editing an DataTableBase is unsupported on this version of Unity.");
         }
     }
 #endif
