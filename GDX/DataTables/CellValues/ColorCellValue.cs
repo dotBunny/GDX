@@ -13,16 +13,37 @@ namespace GDX.DataTables.CellValues
     [Serializable]
     public struct ColorCellValue
     {
+        /// <summary>
+        ///     The cached struct of the referenced <see cref="DataTable"/> cell.
+        /// </summary>
         Color m_CachedValue;
+        /// <summary>
+        ///     The cached <see cref="DataTable"/> version found when last updating <see cref="m_CachedValue"/>.
+        /// </summary>
         ulong m_TableVersion;
 #pragma warning disable IDE1006
         // ReSharper disable InconsistentNaming
+        /// <summary>
+        ///     The <see cref="DataTableObject" /> polled for cell data.
+        /// </summary>
         public DataTableObject DataTable;
+        /// <summary>
+        ///     The unique column identifier used when accessing the <see cref="DataTable"/>.
+        /// </summary>
         public int ColumnIdentifier;
+        /// <summary>
+        ///     The unique row identifier used when accessing the <see cref="DataTable"/>.
+        /// </summary>
         public int RowIdentifier;
         // ReSharper enable InconsistentNaming
 #pragma warning restore IDE1006
 
+        /// <summary>
+        ///     Creates a <see cref="ColorCellValue" />.
+        /// </summary>
+        /// <param name="dataTable">The referenced <see cref="DataTableObject" />.</param>
+        /// <param name="rowIdentifier">The unique row identifier to use when polling the <paramref name="dataTable" />.</param>
+        /// <param name="columnIdentifier">The unique column identifier to use when polling the <paramref name="dataTable" />.</param>
         public ColorCellValue(DataTableObject dataTable, int rowIdentifier, int columnIdentifier)
         {
             DataTable = dataTable;
