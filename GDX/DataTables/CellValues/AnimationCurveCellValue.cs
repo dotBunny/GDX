@@ -17,6 +17,7 @@ namespace GDX.DataTables.CellValues
         ///     The cached object of the referenced <see cref="DataTable" /> cell.
         /// </summary>
         AnimationCurve m_CachedValue;
+
         /// <summary>
         ///     The cached <see cref="DataTable" /> version found when last updating <see cref="m_CachedValue" />.
         /// </summary>

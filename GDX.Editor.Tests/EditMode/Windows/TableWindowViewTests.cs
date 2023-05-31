@@ -6,7 +6,7 @@
 
 using System;
 using System.Collections;
-using GDX.Editor.Windows.Tables;
+using GDX.Editor.Windows.DataTables;
 using GDX.DataTables;
 using NUnit.Framework;
 using UnityEngine;
@@ -22,7 +22,7 @@ namespace GDX.Editor.Windows
     public class TableWindowViewTests
     {
         DataTableObject m_TestDataTable;
-        TableWindow m_TableWindow;
+        DataTableWindow m_DataTableWindow;
         TableWindowView m_TableWindowView;
         TableWindowController m_TableWindowController;
 
@@ -30,16 +30,16 @@ namespace GDX.Editor.Windows
         public IEnumerator Setup()
         {
             m_TestDataTable = ScriptableObject.CreateInstance<StableDataTable>();
-            m_TableWindow = TableWindowProvider.OpenAsset(m_TestDataTable);
-            m_TableWindowView = m_TableWindow.GetView();
-            m_TableWindowController = m_TableWindow.GetController();
+            m_DataTableWindow = TableWindowProvider.OpenAsset(m_TestDataTable);
+            m_TableWindowView = m_DataTableWindow.GetView();
+            m_TableWindowController = m_DataTableWindow.GetController();
             yield return null;
         }
 
         [UnityTearDown]
         public IEnumerator TearDown()
         {
-            m_TableWindow.Close();
+            m_DataTableWindow.Close();
             Object.DestroyImmediate(m_TestDataTable);
             yield return null;
         }

@@ -4,12 +4,12 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GDX.Editor.Windows.Tables
+namespace GDX.Editor.Windows.DataTables
 {
 #if UNITY_2022_2_OR_NEWER
-    public class TableWindow : EditorWindow, TableCache.IColumnDefinitionChangeCallbackReceiver, TableCache.ICellValueChangedCallbackReceiver, TableCache.IRowDefinitionChangeCallbackReceiver
+    public class DataTableWindow : EditorWindow, TableCache.IColumnDefinitionChangeCallbackReceiver, TableCache.ICellValueChangedCallbackReceiver, TableCache.IRowDefinitionChangeCallbackReceiver
     {
-        int m_TableTicket;
+        int m_DataTableTicket;
         TableWindowController m_Controller;
         TableWindowOverlay m_Overlay;
 
@@ -48,10 +48,10 @@ namespace GDX.Editor.Windows.Tables
         {
             if (m_Bound)
             {
-                TableCache.UnregisterColumnChanged(this, m_TableTicket);
-                TableCache.UnregisterRowChanged(this, m_TableTicket);
-                TableCache.UnregisterCellValueChanged(this, m_TableTicket);
-                TableCache.UnregisterUsage(m_TableTicket);
+                TableCache.UnregisterColumnChanged(this, m_DataTableTicket);
+                TableCache.UnregisterRowChanged(this, m_DataTableTicket);
+                TableCache.UnregisterCellValueChanged(this, m_DataTableTicket);
+                TableCache.UnregisterUsage(m_DataTableTicket);
             }
 
             if (m_DataTable != null)
@@ -105,9 +105,9 @@ namespace GDX.Editor.Windows.Tables
             return m_DataTable;
         }
 
-        public int GetTableTicket()
+        public int GetDataTableTicket()
         {
-            return m_TableTicket;
+            return m_DataTableTicket;
         }
 
         internal TableWindowToolbar GetToolbar()
@@ -148,7 +148,7 @@ namespace GDX.Editor.Windows.Tables
         public void BindTable(DataTableObject dataTable, bool fromDomainReload = false)
         {
             m_DataTable = dataTable;
-            m_TableTicket = fromDomainReload ? TableCache.RegisterTable(dataTable, m_TableTicket) : TableCache.RegisterTable(dataTable);
+            m_DataTableTicket = fromDomainReload ? TableCache.RegisterTable(dataTable, m_DataTableTicket) : TableCache.RegisterTable(dataTable);
 
             TableWindowProvider.RegisterTableWindow(this, m_DataTable);
 
@@ -156,21 +156,21 @@ namespace GDX.Editor.Windows.Tables
 
             if (m_Bound)
             {
-                TableCache.UnregisterColumnChanged(this, m_TableTicket);
-                TableCache.UnregisterRowChanged(this, m_TableTicket);
-                TableCache.UnregisterCellValueChanged(this, m_TableTicket);
+                TableCache.UnregisterColumnChanged(this, m_DataTableTicket);
+                TableCache.UnregisterRowChanged(this, m_DataTableTicket);
+                TableCache.UnregisterCellValueChanged(this, m_DataTableTicket);
 
                 // We need to handle not unregistering things when on domain reload so that the count doesnt go negative.
                 if (!fromDomainReload)
                 {
-                    TableCache.UnregisterUsage(m_TableTicket);
+                    TableCache.UnregisterUsage(m_DataTableTicket);
                 }
             }
 
-            TableCache.RegisterColumnChanged(this, m_TableTicket);
-            TableCache.RegisterRowChanged(this, m_TableTicket);
-            TableCache.RegisterCellValueChanged(this, m_TableTicket);
-            TableCache.RegisterUsage(m_TableTicket);
+            TableCache.RegisterColumnChanged(this, m_DataTableTicket);
+            TableCache.RegisterRowChanged(this, m_DataTableTicket);
+            TableCache.RegisterCellValueChanged(this, m_DataTableTicket);
+            TableCache.RegisterUsage(m_DataTableTicket);
 
             m_Bound = true;
             m_Toolbar?.UpdateSaveButton();

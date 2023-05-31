@@ -4,9 +4,8 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using GDX.Collections.Generic;
 
-namespace GDX
+namespace GDX.Collections.Generic
 {
     /// <summary>
     ///     <see cref="GDX.Collections.Generic.SimpleList{T}" /> Based Extension Methods

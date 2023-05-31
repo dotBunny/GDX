@@ -9,22 +9,22 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 using Object = UnityEngine.Object;
 
-namespace GDX.Editor.Windows.Tables
+namespace GDX.Editor.Windows.DataTables
 {
 #if UNITY_2022_2_OR_NEWER
     public static class TableWindowProvider
     {
         public const string UndoPrefix = "Table:";
 
-        static readonly Dictionary<DataTableObject, TableWindow> k_TableToTableWindow = new Dictionary<DataTableObject, TableWindow>();
-        static readonly Dictionary<int, TableWindow> k_TicketToTableWindow = new Dictionary<int, TableWindow>(5);
+        static readonly Dictionary<DataTableObject, DataTableWindow> k_TableToTableWindow = new Dictionary<DataTableObject, DataTableWindow>();
+        static readonly Dictionary<int, DataTableWindow> k_TicketToTableWindow = new Dictionary<int, DataTableWindow>(5);
 
 
         static bool s_SubscribedForUndo;
 
-        internal static TableWindow GetTableWindow(int tableTicket)
+        internal static DataTableWindow GetTableWindow(int tableTicket)
         {
-            return k_TicketToTableWindow.TryGetValue(tableTicket, out TableWindow tableWindow) ? tableWindow : null;
+            return k_TicketToTableWindow.TryGetValue(tableTicket, out DataTableWindow tableWindow) ? tableWindow : null;
         }
 
         static void UndoRedoEvent(in UndoRedoInfo undo)
@@ -35,18 +35,18 @@ namespace GDX.Editor.Windows.Tables
             }
 
             // Update windows / inspectors
-            foreach (KeyValuePair<DataTableObject, TableWindow> kvp in k_TableToTableWindow)
+            foreach (KeyValuePair<DataTableObject, DataTableWindow> kvp in k_TableToTableWindow)
             {
                 TableCache.NotifyOfColumnChange(kvp.Key);
             }
         }
 
-        internal static void RegisterTableWindow(TableWindow tableWindow, DataTableObject dataTable)
+        internal static void RegisterTableWindow(DataTableWindow dataTableWindow, DataTableObject dataTable)
         {
 
-            int ticket = tableWindow.GetTableTicket();
-            k_TableToTableWindow[dataTable] = tableWindow;
-            k_TicketToTableWindow[ticket] = tableWindow;
+            int ticket = dataTableWindow.GetDataTableTicket();
+            k_TableToTableWindow[dataTable] = dataTableWindow;
+            k_TicketToTableWindow[ticket] = dataTableWindow;
 
             // We're only going to subscribe for undo events when the table window is open and we have support
             if (!s_SubscribedForUndo && dataTable.GetFlag(DataTableObject.Flags.EnableUndo))
@@ -56,12 +56,12 @@ namespace GDX.Editor.Windows.Tables
             }
         }
 
-        internal static void UnregisterTableWindow(TableWindow tableWindow)
+        internal static void UnregisterTableWindow(DataTableWindow dataTableWindow)
         {
-            int tableWindowTicket = tableWindow.GetTableTicket();
+            int tableWindowTicket = dataTableWindow.GetDataTableTicket();
             k_TicketToTableWindow.Remove(tableWindowTicket);
 
-            DataTableObject dataTable = tableWindow.GetDataTable();
+            DataTableObject dataTable = dataTableWindow.GetDataTable();
             if (dataTable != null)
             {
                 k_TableToTableWindow.Remove(dataTable);
@@ -87,23 +87,23 @@ namespace GDX.Editor.Windows.Tables
             return false;
         }
 
-        public static TableWindow OpenAsset(DataTableObject dataTable)
+        public static DataTableWindow OpenAsset(DataTableObject dataTable)
         {
-            TableWindow tableWindow = GetTableWindow(TableCache.RegisterTable(dataTable));
-            if (tableWindow == null)
+            DataTableWindow dataTableWindow = GetTableWindow(TableCache.RegisterTable(dataTable));
+            if (dataTableWindow == null)
             {
-                tableWindow = EditorWindow.CreateWindow<TableWindow>();
+                dataTableWindow = EditorWindow.CreateWindow<DataTableWindow>();
             }
 
-            if (!tableWindow.IsBound())
+            if (!dataTableWindow.IsBound())
             {
-                tableWindow.BindTable(dataTable);
+                dataTableWindow.BindTable(dataTable);
             }
 
-            tableWindow.Show();
-            tableWindow.Focus();
+            dataTableWindow.Show();
+            dataTableWindow.Focus();
 
-            return tableWindow;
+            return dataTableWindow;
         }
     }
 #endif

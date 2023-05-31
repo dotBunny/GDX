@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using GDX.Editor.Windows.Tables;
+using GDX.Editor.Windows.DataTables;
 using GDX.DataTables;
 #if UNITY_2022_2_OR_NEWER
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using UnityEngine.UIElements;
 namespace GDX.Editor.Inspectors
 {
 #if UNITY_2022_2_OR_NEWER
-    public abstract class TableInspectorBase : UnityEditor.Editor, TableCache.IColumnDefinitionChangeCallbackReceiver,
+    public abstract class DataTableInspectorBase : UnityEditor.Editor, TableCache.IColumnDefinitionChangeCallbackReceiver,
         TableCache.IRowDefinitionChangeCallbackReceiver
     {
         const string k_ButtonText = "Open Table";

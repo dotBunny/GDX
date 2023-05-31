@@ -6,14 +6,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
-using GDX.DataTables;
 using GDX.DataTables.CellValues;
 using UnityEngine;
 using TextGenerator = GDX.Developer.TextGenerator;
 
-namespace GDX
+namespace GDX.DataTables
 {
-    public static class TableExtensions
+    public static class DataTableExtensions
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static string MakeCommaSeperatedValue(string content)

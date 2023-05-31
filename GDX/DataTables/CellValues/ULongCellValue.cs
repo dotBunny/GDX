@@ -13,11 +13,12 @@ namespace GDX.DataTables.CellValues
     public struct ULongCellValue
     {
         /// <summary>
-        ///     The cached value of the referenced <see cref="DataTable"/> cell.
+        ///     The cached value of the referenced <see cref="DataTable" /> cell.
         /// </summary>
         ulong m_CachedValue;
+
         /// <summary>
-        ///     The cached <see cref="DataTable"/> version found when last updating <see cref="m_CachedValue"/>.
+        ///     The cached <see cref="DataTable" /> version found when last updating <see cref="m_CachedValue" />.
         /// </summary>
         ulong m_TableVersion;
 #pragma warning disable IDE1006
@@ -26,12 +27,14 @@ namespace GDX.DataTables.CellValues
         ///     The <see cref="DataTableObject" /> polled for cell data.
         /// </summary>
         public DataTableObject DataTable;
+
         /// <summary>
-        ///     The unique column identifier used when accessing the <see cref="DataTable"/>.
+        ///     The unique column identifier used when accessing the <see cref="DataTable" />.
         /// </summary>
         public int ColumnIdentifier;
+
         /// <summary>
-        ///     The unique row identifier used when accessing the <see cref="DataTable"/>.
+        ///     The unique row identifier used when accessing the <see cref="DataTable" />.
         /// </summary>
         public int RowIdentifier;
         // ReSharper enable InconsistentNaming

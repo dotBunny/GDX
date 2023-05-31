@@ -4,22 +4,20 @@
 
 using GDX.DataTables;
 using GDX.DataTables.CellValues;
-using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace GDX.Editor.Windows.Tables
+namespace GDX.Editor.Windows.DataTables
 {
 #if UNITY_2022_2_OR_NEWER
-    static class TableWindowCells
+    static class DataTableWindowCells
     {
         internal const float k_DoubleHeight = 50f;
-
         const string k_RowHeaderFieldName = "gdx-table-row-header";
         const string k_CellFieldName = "gdx-table-field";
 
-        static readonly StyleLength m_StyleLength25 = new StyleLength(new Length(25, LengthUnit.Pixel));
+        static readonly StyleLength k_StyleLength25 = new StyleLength(new Length(25, LengthUnit.Pixel));
 
         internal static void BindStringCell(VisualElement cell, int row)
         {
@@ -654,7 +652,7 @@ namespace GDX.Editor.Windows.Tables
             TextField newField = new TextField(null, 1, false, false, ' ')
             {
                 name = k_CellFieldName,
-                style = { maxWidth = m_StyleLength25 },
+                style = { maxWidth = k_StyleLength25 },
                 userData = new CellData { TableTicket = table, ColumnID = column }
             };
             return newField;

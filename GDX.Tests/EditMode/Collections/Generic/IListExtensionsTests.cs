@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace GDX
+namespace GDX.Collections.Generic
 {
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="IListExtensions" />
@@ -67,7 +67,7 @@ namespace GDX
         public void ContainsItem_StringArray_FindsItem()
         {
             string[] mockObject = new string[] {TestLiterals.Foo, TestLiterals.Bar, TestLiterals.Seed};
-            bool evaluate = mockObject.ContainsItem(TestLiterals.Bar);
+            bool evaluate = ArrayExtensions.ContainsItem(mockObject, TestLiterals.Bar);
 
             Assert.IsTrue(evaluate);
         }

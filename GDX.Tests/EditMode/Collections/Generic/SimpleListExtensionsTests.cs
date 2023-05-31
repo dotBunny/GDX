@@ -3,10 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using GDX.Collections.Generic;
 using NUnit.Framework;
 
-namespace GDX
+namespace GDX.Collections.Generic
 {
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="SimpleListExtensions" />

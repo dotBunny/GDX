@@ -7,17 +7,17 @@ using GDX.DataTables;
 using UnityEditor;
 using UnityEngine;
 
-namespace GDX.Editor.Windows.Tables
+namespace GDX.Editor.Windows.DataTables
 {
 #if UNITY_2022_2_OR_NEWER
     public class TableWindowController
     {
         readonly TableWindowOverlay m_Overlay;
-        readonly TableWindow m_TableWindow;
+        readonly DataTableWindow m_DataTableWindow;
 
-        internal TableWindowController(TableWindow window, TableWindowOverlay overlay)
+        internal TableWindowController(DataTableWindow window, TableWindowOverlay overlay)
         {
-            m_TableWindow = window;
+            m_DataTableWindow = window;
             m_Overlay = overlay;
         }
 
@@ -28,19 +28,19 @@ namespace GDX.Editor.Windows.Tables
 
         public void ShowImportDialog()
         {
-            string openPath = EditorUtility.OpenFilePanel($"Import CSV into {m_TableWindow.titleContent.text}",
+            string openPath = EditorUtility.OpenFilePanel($"Import CSV into {m_DataTableWindow.titleContent.text}",
                 Application.dataPath,
                 "csv");
 
             if (!string.IsNullOrEmpty(openPath))
             {
-                if (EditorUtility.DisplayDialog($"Replace '{m_TableWindow.titleContent.text}' Content",
+                if (EditorUtility.DisplayDialog($"Replace '{m_DataTableWindow.titleContent.text}' Content",
                         "Are you sure you want to replace your tables content with the imported CSV content?\n\nThe structural format of the CSV needs to match the column structure of the existing table; reference types will not replace the data in the existing cells at that location. Make sure the first row contains the column names, and that you have not reordered the rows or columns.",
                         "Yes", "No"))
                 {
-                    if (m_TableWindow.GetDataTable().UpdateFromCommaSeperatedValues(openPath))
+                    if (m_DataTableWindow.GetDataTable().UpdateFromCommaSeperatedValues(openPath))
                     {
-                        m_TableWindow.RebindTable();
+                        m_DataTableWindow.RebindTable();
                     }
                 }
             }
@@ -48,14 +48,14 @@ namespace GDX.Editor.Windows.Tables
 
         public void ShowExportDialog()
         {
-            string savePath = EditorUtility.SaveFilePanel($"Export {m_TableWindow.titleContent.text} to CSV",
+            string savePath = EditorUtility.SaveFilePanel($"Export {m_DataTableWindow.titleContent.text} to CSV",
                 Application.dataPath,
-                m_TableWindow.GetDataTable().name, "csv");
+                m_DataTableWindow.GetDataTable().name, "csv");
 
             if (savePath != null)
             {
-                m_TableWindow.GetDataTable().ExportToCommaSeperatedValues(savePath);
-                Debug.Log($"'{m_TableWindow.GetDataTable().GetDisplayName()}' was exported to CSV at {savePath}");
+                m_DataTableWindow.GetDataTable().ExportToCommaSeperatedValues(savePath);
+                Debug.Log($"'{m_DataTableWindow.GetDataTable().GetDisplayName()}' was exported to CSV at {savePath}");
             }
         }
 
@@ -67,27 +67,27 @@ namespace GDX.Editor.Windows.Tables
         public void ShowRenameRowDialog(int rowIdentifier)
         {
             m_Overlay.SetState(TableWindowOverlay.OverlayState.RenameRow, rowIdentifier,
-                m_TableWindow.GetDataTable().GetRowName(rowIdentifier));
+                m_DataTableWindow.GetDataTable().GetRowName(rowIdentifier));
         }
 
         public void ShowRenameColumnDialog(int columnIdentifier)
         {
             m_Overlay.SetState(TableWindowOverlay.OverlayState.RenameColumn, columnIdentifier,
-                m_TableWindow.GetDataTable().GetColumnName(columnIdentifier));
+                m_DataTableWindow.GetDataTable().GetColumnName(columnIdentifier));
         }
 
         public void ShowRemoveColumnDialog(int columnIdentifier)
         {
             m_Overlay.SetConfirmationState(TableWindowOverlay.ConfirmationState.RemoveColumn, columnIdentifier,
                 "Remove Column",
-                $"Are you sure you wish to delete column '{m_TableWindow.GetDataTable().GetColumnName(columnIdentifier)}'?");
+                $"Are you sure you wish to delete column '{m_DataTableWindow.GetDataTable().GetColumnName(columnIdentifier)}'?");
         }
 
         public void ShowRemoveRowDialog(int rowIdentifier)
         {
             m_Overlay.SetConfirmationState(TableWindowOverlay.ConfirmationState.RemoveRow, rowIdentifier,
                 "Remove Row",
-                $"Are you sure you wish to delete row '{m_TableWindow.GetDataTable().GetRowName(rowIdentifier)}'?");
+                $"Are you sure you wish to delete row '{m_DataTableWindow.GetDataTable().GetRowName(rowIdentifier)}'?");
         }
 
         public void ShowSettings()
@@ -105,7 +105,7 @@ namespace GDX.Editor.Windows.Tables
         {
             RegisterUndo($"Add Column ({name})");
 
-            DataTableObject dataTable = m_TableWindow.GetDataTable();
+            DataTableObject dataTable = m_DataTableWindow.GetDataTable();
             int columnIndex = dataTable.AddColumn(type, name, orderedIndex);
             if (!string.IsNullOrEmpty(secondary))
             {
@@ -122,7 +122,7 @@ namespace GDX.Editor.Windows.Tables
 
         public bool AddRow(string name, int orderedIndex = -1)
         {
-            DataTableObject dataTable = m_TableWindow.GetDataTable();
+            DataTableObject dataTable = m_DataTableWindow.GetDataTable();
             if (dataTable.GetColumnCount() == 0)
             {
                 return false;
@@ -137,7 +137,7 @@ namespace GDX.Editor.Windows.Tables
 
         public void AddRowDefault()
         {
-            DataTableObject dataTable = m_TableWindow.GetDataTable();
+            DataTableObject dataTable = m_DataTableWindow.GetDataTable();
             if (dataTable.GetColumnCount() == 0)
             {
                 return;
@@ -153,20 +153,20 @@ namespace GDX.Editor.Windows.Tables
 
         public void RemoveSelectedRow()
         {
-            object selectedItem = m_TableWindow.GetView().GetMultiColumnListView().selectedItem;
+            object selectedItem = m_DataTableWindow.GetView().GetMultiColumnListView().selectedItem;
             if (selectedItem == null) return;
 
             DataTableObject.RowDescription selectedRow =
-                (DataTableObject.RowDescription)m_TableWindow.GetView().GetMultiColumnListView().selectedItem;
+                (DataTableObject.RowDescription)m_DataTableWindow.GetView().GetMultiColumnListView().selectedItem;
             RegisterUndo($"Remove Row ({selectedRow.Name})");
-            m_TableWindow.GetDataTable().RemoveRow(selectedRow.Identifier);
+            m_DataTableWindow.GetDataTable().RemoveRow(selectedRow.Identifier);
 
-            TableCache.NotifyOfRowChange(m_TableWindow.GetDataTable());
+            TableCache.NotifyOfRowChange(m_DataTableWindow.GetDataTable());
         }
 
         public bool RemoveColumn(int columnIdentifier)
         {
-            DataTableObject dataTable = m_TableWindow.GetDataTable();
+            DataTableObject dataTable = m_DataTableWindow.GetDataTable();
             if (dataTable.GetColumnCount() <= 1)
             {
                 return false;
@@ -174,7 +174,7 @@ namespace GDX.Editor.Windows.Tables
 
             RegisterUndo($"Remove Column ({dataTable.GetColumnName(columnIdentifier)})");
 
-            dataTable.RemoveColumn(m_TableWindow.GetView().GetColumnType(columnIdentifier), columnIdentifier);
+            dataTable.RemoveColumn(m_DataTableWindow.GetView().GetColumnType(columnIdentifier), columnIdentifier);
 
             TableCache.NotifyOfColumnChange(dataTable);
             return true;
@@ -182,7 +182,7 @@ namespace GDX.Editor.Windows.Tables
 
         public bool RemoveRow(int rowIdentifier)
         {
-            DataTableObject dataTable = m_TableWindow.GetDataTable();
+            DataTableObject dataTable = m_DataTableWindow.GetDataTable();
             RegisterUndo($"Remove Row ({dataTable.GetRowName(rowIdentifier)})");
             dataTable.RemoveRow(rowIdentifier);
 
@@ -192,7 +192,7 @@ namespace GDX.Editor.Windows.Tables
 
         public bool RenameRow(int rowIdentifier, string name)
         {
-            DataTableObject dataTable = m_TableWindow.GetDataTable();
+            DataTableObject dataTable = m_DataTableWindow.GetDataTable();
             RegisterUndo($"Rename Row ({name})");
             dataTable.SetRowName(name, rowIdentifier);
 
@@ -202,22 +202,22 @@ namespace GDX.Editor.Windows.Tables
 
         public bool RenameColumn(int columnIdentifier, string name)
         {
-            DataTableObject dataTable = m_TableWindow.GetDataTable();
+            DataTableObject dataTable = m_DataTableWindow.GetDataTable();
             RegisterUndo($"Rename Column ({name})");
 
             // Update column data in place
-            m_TableWindow.GetView().UpdateColumnData(columnIdentifier, name);
+            m_DataTableWindow.GetView().UpdateColumnData(columnIdentifier, name);
 
             dataTable.SetColumnName(name, columnIdentifier);
 
-            TableCache.NotifyOfColumnChange(dataTable, m_TableWindow);
-            m_TableWindow.GetToolbar().UpdateSaveButton();
+            TableCache.NotifyOfColumnChange(dataTable, m_DataTableWindow);
+            m_DataTableWindow.GetToolbar().UpdateSaveButton();
             return true;
         }
 
         public bool SetTableSettings(string displayName, bool enableUndo)
         {
-            DataTableObject dataTable = m_TableWindow.GetDataTable();
+            DataTableObject dataTable = m_DataTableWindow.GetDataTable();
             RegisterUndo("Table Settings");
 
             // Check if there is a change
@@ -225,24 +225,24 @@ namespace GDX.Editor.Windows.Tables
             if (tableDisplayName != displayName)
             {
                 dataTable.SetDisplayName(displayName);
-                m_TableWindow.titleContent = new GUIContent(displayName);
+                m_DataTableWindow.titleContent = new GUIContent(displayName);
             }
 
             dataTable.SetFlag(DataTableObject.Flags.EnableUndo, enableUndo);
-            EditorUtility.SetDirty(m_TableWindow.GetDataTable());
-            m_TableWindow.GetToolbar().UpdateSaveButton();
+            EditorUtility.SetDirty(m_DataTableWindow.GetDataTable());
+            m_DataTableWindow.GetToolbar().UpdateSaveButton();
             return true;
         }
 
         public void AutoResizeColumns()
         {
-            Reflection.InvokeMethod(m_TableWindow.GetView().GetColumnContainer(), "ResizeToFit");
+            Reflection.InvokeMethod(m_DataTableWindow.GetView().GetColumnContainer(), "ResizeToFit");
         }
 
         void RegisterUndo(string name)
         {
-            ScriptableObject scriptableObject = m_TableWindow.GetDataTable();
-            if (scriptableObject != null && m_TableWindow.GetDataTable().GetFlag(DataTableObject.Flags.EnableUndo))
+            ScriptableObject scriptableObject = m_DataTableWindow.GetDataTable();
+            if (scriptableObject != null && m_DataTableWindow.GetDataTable().GetFlag(DataTableObject.Flags.EnableUndo))
             {
                 Undo.RegisterCompleteObjectUndo(scriptableObject, $"{TableWindowProvider.UndoPrefix} {name}");
             }

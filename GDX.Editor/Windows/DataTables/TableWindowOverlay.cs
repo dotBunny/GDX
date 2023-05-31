@@ -7,7 +7,7 @@ using GDX.DataTables;
 using UnityEditor;
 using UnityEngine.UIElements;
 
-namespace GDX.Editor.Windows.Tables
+namespace GDX.Editor.Windows.DataTables
 {
 #if UNITY_2022_2_OR_NEWER
     class TableWindowOverlay
@@ -70,18 +70,18 @@ namespace GDX.Editor.Windows.Tables
         readonly VisualElement m_SettingsOverlay;
         readonly Button m_SettingsSaveButton;
         readonly Toggle m_SettingsSupportUndoToggle;
-        readonly TableWindow m_TableWindow;
+        readonly DataTableWindow m_DataTableWindow;
         int m_CachedIndex;
         ConfirmationState m_ConfirmationState;
 
         OverlayState m_CurrentState;
 
 
-        internal TableWindowOverlay(VisualElement element, TableWindow window)
+        internal TableWindowOverlay(VisualElement element, DataTableWindow window)
         {
             // Cache a few things
             m_RootElement = element;
-            m_TableWindow = window;
+            m_DataTableWindow = window;
 
             // Bind our column adding overlay
             m_AddColumnOverlay = m_RootElement.Q<VisualElement>("gdx-table-add-column");
@@ -213,10 +213,10 @@ namespace GDX.Editor.Windows.Tables
             m_CachedIndex = stableIndex;
 
             // Handle focus
-            TableWindowView view = m_TableWindow.GetView();
+            TableWindowView view = m_DataTableWindow.GetView();
             if (state == OverlayState.Hide)
             {
-                m_TableWindow.GetToolbar().SetFocusable(true);
+                m_DataTableWindow.GetToolbar().SetFocusable(true);
                 m_RootElement.focusable = false;
 
                 if (view?.GetMultiColumnListView() != null)
@@ -226,7 +226,7 @@ namespace GDX.Editor.Windows.Tables
             }
             else
             {
-                m_TableWindow.GetToolbar().SetFocusable(false);
+                m_DataTableWindow.GetToolbar().SetFocusable(false);
                 if (view?.GetMultiColumnListView() != null)
                 {
                     view.GetMultiColumnListView().focusable = false;
@@ -245,7 +245,7 @@ namespace GDX.Editor.Windows.Tables
                     UpdateAddColumnBasedOnType(0);
                     m_AddColumnAddButton.Focus();
                     // Don't allow cancel if we dont have column
-                    m_AddColumnCancelButton.SetEnabled(m_TableWindow.GetDataTable().GetColumnCount() > 0);
+                    m_AddColumnCancelButton.SetEnabled(m_DataTableWindow.GetDataTable().GetColumnCount() > 0);
                     break;
                 case OverlayState.AddRow:
                     m_RootElement.style.display = DisplayStyle.Flex;
@@ -277,8 +277,8 @@ namespace GDX.Editor.Windows.Tables
                 case OverlayState.Settings:
                     m_RootElement.style.display = DisplayStyle.Flex;
                     m_SettingsOverlay.style.display = DisplayStyle.Flex;
-                    m_SettingsDisplayName.SetValueWithoutNotify(m_TableWindow.GetDataTable().GetDisplayName());
-                    m_SettingsSupportUndoToggle.SetValueWithoutNotify(m_TableWindow.GetDataTable()
+                    m_SettingsDisplayName.SetValueWithoutNotify(m_DataTableWindow.GetDataTable().GetDisplayName());
+                    m_SettingsSupportUndoToggle.SetValueWithoutNotify(m_DataTableWindow.GetDataTable()
                         .GetFlag(DataTableObject.Flags.EnableUndo));
                     break;
                 default:
@@ -288,9 +288,9 @@ namespace GDX.Editor.Windows.Tables
                     m_RenameOverlay.style.display = DisplayStyle.None;
                     m_ConfirmationOverlay.style.display = DisplayStyle.None;
                     m_SettingsOverlay.style.display = DisplayStyle.None;
-                    if (m_TableWindow.GetView()?.GetMultiColumnListView() != null)
+                    if (m_DataTableWindow.GetView()?.GetMultiColumnListView() != null)
                     {
-                        m_TableWindow.GetView()?.GetMultiColumnListView().Focus();
+                        m_DataTableWindow.GetView()?.GetMultiColumnListView().Focus();
                     }
 
                     m_ConfirmationState = ConfirmationState.Invalid;
@@ -312,7 +312,7 @@ namespace GDX.Editor.Windows.Tables
                 return;
             }
 
-            if (m_TableWindow.GetController()
+            if (m_DataTableWindow.GetController()
                 .AddColumn(m_AddColumnName.text, (Serializable.SerializableTypes)m_AddColumnType.value, m_AddColumnFilter.value))
             {
                 SetOverlayStateHidden();
@@ -326,7 +326,7 @@ namespace GDX.Editor.Windows.Tables
                 return;
             }
 
-            if (m_TableWindow.GetController().AddRow(m_AddRowName.text))
+            if (m_DataTableWindow.GetController().AddRow(m_AddRowName.text))
             {
                 SetOverlayStateHidden();
             }
@@ -337,14 +337,14 @@ namespace GDX.Editor.Windows.Tables
             switch (m_CurrentState)
             {
                 case OverlayState.RenameColumn:
-                    if (m_TableWindow.GetController().RenameColumn(m_CachedIndex, m_RenameName.text))
+                    if (m_DataTableWindow.GetController().RenameColumn(m_CachedIndex, m_RenameName.text))
                     {
                         SetOverlayStateHidden();
                     }
 
                     break;
                 case OverlayState.RenameRow:
-                    if (m_TableWindow.GetController().RenameRow(m_CachedIndex, m_RenameName.text))
+                    if (m_DataTableWindow.GetController().RenameRow(m_CachedIndex, m_RenameName.text))
                     {
                         SetOverlayStateHidden();
                     }
@@ -358,14 +358,14 @@ namespace GDX.Editor.Windows.Tables
             switch (m_ConfirmationState)
             {
                 case ConfirmationState.RemoveRow:
-                    if (m_TableWindow.GetController().RemoveRow(m_CachedIndex))
+                    if (m_DataTableWindow.GetController().RemoveRow(m_CachedIndex))
                     {
                         SetOverlayStateHidden();
                     }
 
                     break;
                 case ConfirmationState.RemoveColumn:
-                    if (m_TableWindow.GetController().RemoveColumn(m_CachedIndex))
+                    if (m_DataTableWindow.GetController().RemoveColumn(m_CachedIndex))
                     {
                         SetOverlayStateHidden();
                     }
@@ -381,7 +381,7 @@ namespace GDX.Editor.Windows.Tables
                 return;
             }
 
-            if (m_TableWindow.GetController()
+            if (m_DataTableWindow.GetController()
                 .SetTableSettings(m_SettingsDisplayName.text, m_SettingsSupportUndoToggle.value))
             {
                 SetOverlayStateHidden();

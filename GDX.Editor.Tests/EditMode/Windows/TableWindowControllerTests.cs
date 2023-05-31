@@ -4,7 +4,7 @@
 
 #if UNITY_2022_2_OR_NEWER
 using System.Collections;
-using GDX.Editor.Windows.Tables;
+using GDX.Editor.Windows.DataTables;
 using GDX.DataTables;
 using NUnit.Framework;
 using UnityEngine;
@@ -18,22 +18,22 @@ namespace GDX.Editor.Windows
     public class TableWindowControllerTests
     {
         DataTableObject m_TestDataTable;
-        TableWindow m_TableWindow;
+        DataTableWindow m_DataTableWindow;
         TableWindowController m_TableWindowController;
 
         [UnitySetUp]
         public IEnumerator Setup()
         {
             m_TestDataTable = ScriptableObject.CreateInstance<StableDataTable>();
-            m_TableWindow = TableWindowProvider.OpenAsset(m_TestDataTable);
-            m_TableWindowController = m_TableWindow.GetController();
+            m_DataTableWindow = TableWindowProvider.OpenAsset(m_TestDataTable);
+            m_TableWindowController = m_DataTableWindow.GetController();
             yield return null;
         }
 
         [UnityTearDown]
         public IEnumerator TearDown()
         {
-            m_TableWindow.Close();
+            m_DataTableWindow.Close();
             Object.DestroyImmediate(m_TestDataTable);
             yield return null;
         }

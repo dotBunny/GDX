@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace GDX
+namespace GDX.Collections.Generic
 {
     /// <summary>
     ///     <see cref="System.Collections.Generic.IList{T}" /> Based Extension Methods

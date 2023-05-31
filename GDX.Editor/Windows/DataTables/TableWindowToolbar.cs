@@ -7,12 +7,12 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-namespace GDX.Editor.Windows.Tables
+namespace GDX.Editor.Windows.DataTables
 {
 #if UNITY_2022_2_OR_NEWER
     class TableWindowToolbar
     {
-        readonly TableWindow m_ParentWindow;
+        readonly DataTableWindow m_ParentWindow;
         readonly Toolbar m_Toolbar;
         readonly ToolbarMenu m_ToolbarColumnMenu;
         readonly ToolbarButton m_ToolbarHelpButton;
@@ -21,7 +21,7 @@ namespace GDX.Editor.Windows.Tables
         readonly ToolbarMenu m_ToolbarRowMenu;
         readonly ToolbarButton m_ToolbarSettingsButton;
 
-        internal TableWindowToolbar(Toolbar toolbar, TableWindow window)
+        internal TableWindowToolbar(Toolbar toolbar, DataTableWindow window)
         {
             m_Toolbar = toolbar;
             m_ParentWindow = window;
