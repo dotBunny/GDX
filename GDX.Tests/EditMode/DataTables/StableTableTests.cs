@@ -6,7 +6,7 @@ using System;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace GDX.Tables
+namespace GDX.DataTables
 {
     public class StableTableTests
     {
@@ -14,7 +14,7 @@ namespace GDX.Tables
         [Category(Core.TestCategory)]
         public void StableTable_CreateEmpty_RowCountsZero()
         {
-            StableTable table = ScriptableObject.CreateInstance<StableTable>();
+            StableDataTable table = ScriptableObject.CreateInstance<StableDataTable>();
 
             bool evaluate = table.GetColumnCount() == 0 && table.GetRowCount() == 0;
 
@@ -25,7 +25,7 @@ namespace GDX.Tables
         [Category(Core.TestCategory)]
         public void StableTable_CreateEmpty_NullDescriptionArrays()
         {
-            StableTable table = ScriptableObject.CreateInstance<StableTable>();
+            StableDataTable table = ScriptableObject.CreateInstance<StableDataTable>();
 
             bool evaluate = table.GetAllColumnDescriptions() == null && table.GetAllRowDescriptions() == null;
 
@@ -36,7 +36,7 @@ namespace GDX.Tables
         [Category(Core.TestCategory)]
         public void StableTable_CellAccess_ValidColumnNames()
         {
-            StableTable table = ScriptableObject.CreateInstance<StableTable>();
+            StableDataTable table = ScriptableObject.CreateInstance<StableDataTable>();
 
             int[] allColumnIDs = new int[Serializable.SerializableTypesCount];
 
@@ -75,7 +75,7 @@ namespace GDX.Tables
         [Category(Core.TestCategory)]
         public void StableTable_CellAccess_ValidRowNames()
         {
-            StableTable table = ScriptableObject.CreateInstance<StableTable>();
+            StableDataTable table = ScriptableObject.CreateInstance<StableDataTable>();
 
             int[] allRowIDs = new int[10];
 
@@ -114,7 +114,7 @@ namespace GDX.Tables
         [Category(Core.TestCategory)]
         public void StableTable_CellAccess_ValidCellValues()
         {
-            StableTable table = ScriptableObject.CreateInstance<StableTable>();
+            StableDataTable table = ScriptableObject.CreateInstance<StableDataTable>();
 
             int[] allColumnIDs = new int[Serializable.SerializableTypesCount];
 
@@ -343,7 +343,7 @@ namespace GDX.Tables
         //[UnityEditor.MenuItem("Tools/Blargh")]
         static void StableTable_STUFF()
         {
-            StableTable table = ScriptableObject.CreateInstance<StableTable>();
+            StableDataTable table = ScriptableObject.CreateInstance<StableDataTable>();
 
             System.Collections.Generic.List<int> ids = new System.Collections.Generic.List<int>();
             System.Collections.Generic.HashSet<int> toRemoveList = new System.Collections.Generic.HashSet<int>();
@@ -400,7 +400,7 @@ namespace GDX.Tables
                     foreach(int randomIndex in toRemoveList)
                     {
                         PrintTable(table);
-                        int internalIndex = descriptions[randomIndex].InternalIndex;
+                        int internalIndex = descriptions[randomIndex].Identifier;
                         Debug.Log("Remove " + internalIndex);
                         
                         if (!ids.Contains(internalIndex))
@@ -449,7 +449,7 @@ namespace GDX.Tables
                         foreach (int randomIndex in toRemoveList)
                         {
                             PrintTable(table);
-                            int internalIndex = descriptions[randomIndex].InternalIndex;
+                            int internalIndex = descriptions[randomIndex].Identifier;
                             Debug.Log("Remove " + internalIndex);
                             if (!ids.Contains(internalIndex))
                             {
@@ -474,7 +474,7 @@ namespace GDX.Tables
             Assert.IsTrue(true);
         }
 
-        static void PrintTable(StableTable table)
+        static void PrintTable(StableDataTable table)
         {
             var allColumnDescriptions = table.GetAllColumnDescriptions();
 
@@ -482,28 +482,28 @@ namespace GDX.Tables
 
             for (int i = 0; i < allColumnDescriptions.Length; i++)
             {
-                allColumnDescriptionsString += allColumnDescriptions[i].InternalIndex + ",";
+                allColumnDescriptionsString += allColumnDescriptions[i].Identifier + ",";
             }
 
-            string allIDsString = "allIDsToSorted(" + table.ColumnIDToSortOrderMap.Length + "): ";
+            string allIDsString = "allIDsToSorted(" + table.m_ColumnIdentifierToSortOrderMap.Length + "): ";
 
-            for (int i = 0; i < table.ColumnIDToSortOrderMap.Length; i++)
+            for (int i = 0; i < table.m_ColumnIdentifierToSortOrderMap.Length; i++)
             {
-                allIDsString += table.ColumnIDToSortOrderMap[i] + ",";
+                allIDsString += table.m_ColumnIdentifierToSortOrderMap[i] + ",";
             }
 
-            string sortedOrderToIDMapString = "sortedIDs(" + table.SortedOrderToColumnIDMap.Length + "): ";
-            for (int i = 0; i < table.SortedOrderToColumnIDMap.Length; i++)
+            string sortedOrderToIDMapString = "sortedIDs(" + table.m_SortedOrderToColumnIdentifierMap.Length + "): ";
+            for (int i = 0; i < table.m_SortedOrderToColumnIdentifierMap.Length; i++)
             {
-                sortedOrderToIDMapString += table.SortedOrderToColumnIDMap[i] + ",";
+                sortedOrderToIDMapString += table.m_SortedOrderToColumnIdentifierMap[i] + ",";
             }
 
-            string columnIDs = "allIDs(" + table.ColumnIDToDenseIndexMap.Length + "): ";
+            string columnIDs = "allIDs(" + table.m_ColumnIdentifierToDenseIndexMap.Length + "): ";
             string columnIDVals = "allIDsVals: ";
-            for (int i = 0; i < table.ColumnIDToDenseIndexMap.Length; i++)
+            for (int i = 0; i < table.m_ColumnIdentifierToDenseIndexMap.Length; i++)
             {
-                columnIDs += (table.ColumnIDToDenseIndexMap[i].ColumnType == Serializable.SerializableTypes.Invalid ? "0" : "1") + ",";
-                columnIDVals += table.ColumnIDToDenseIndexMap[i].ColumnDenseIndex + ",";
+                columnIDs += (table.m_ColumnIdentifierToDenseIndexMap[i].ColumnType == Serializable.SerializableTypes.Invalid ? "0" : "1") + ",";
+                columnIDVals += table.m_ColumnIdentifierToDenseIndexMap[i].ColumnDenseIndex + ",";
             }
             Debug.Log(allColumnDescriptionsString + System.Environment.NewLine + allIDsString + System.Environment.NewLine + sortedOrderToIDMapString + System.Environment.NewLine + columnIDs + System.Environment.NewLine + columnIDVals);
         }
