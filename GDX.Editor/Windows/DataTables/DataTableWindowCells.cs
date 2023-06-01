@@ -220,7 +220,7 @@ namespace GDX.Editor.Windows.DataTables
 #if UNITY_2022_3_OR_NEWER
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
 #else
-            field.SetValueWithoutNotify((uint)cellValue.GetUnsafe());
+            field.SetValueWithoutNotify((int)cellValue.GetUnsafe());
 #endif
             field.RegisterValueChangedCallback(e =>
             {
@@ -279,7 +279,7 @@ namespace GDX.Editor.Windows.DataTables
 #if UNITY_2022_3_OR_NEWER
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
 #else
-            field.SetValueWithoutNotify((ulong)cellValue.GetUnsafe());
+            field.SetValueWithoutNotify((long)cellValue.GetUnsafe());
 #endif
             field.RegisterValueChangedCallback(e =>
             {
