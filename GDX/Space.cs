@@ -129,6 +129,6 @@ namespace GDX
                 _ => Quaternion.identity,
             };
         }
-#endif
+#endif // !UNITY_DOTSRUNTIME
     }
 }

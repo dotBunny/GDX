@@ -35,14 +35,14 @@ namespace GDX
         ///     The icon/type of message being displayed.
         /// </summary>
         public readonly MessageBoxType MessageType;
-#endif
+#endif // UNITY_EDITOR
         // ReSharper disable UnusedParameter.Local
         public InspectorMessageBoxAttribute(string message, MessageBoxType messageType = MessageBoxType.Info)
         {
 #if UNITY_EDITOR
             Message = message;
             MessageType = messageType;
-#endif
+#endif // UNITY_EDITOR
         }
         // ReSharper enable UnusedParameter.Local
     }

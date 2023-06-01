@@ -13,7 +13,7 @@ namespace GDX
         public const string String = "String";
         public const string Char = "Character";
         public const string Bool = "Boolean";
-        public const string SByte = "Byte";
+        public const string SByte = "Signed Byte";
         public const string Byte = "Unsigned Byte";
         public const string Short = "Short";
         public const string UShort = "Unsigned Short";

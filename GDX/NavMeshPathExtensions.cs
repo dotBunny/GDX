@@ -144,4 +144,4 @@ namespace GDX
     }
 }
 
-#endif
+#endif // GDX_AI && !UNITY_DOTSRUNTIME

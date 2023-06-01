@@ -220,7 +220,7 @@ namespace GDX.Mathematics
                 {
                     throw new IndexOutOfRangeException("The index must be between[0...1]");
                 }
-#endif
+#endif // ENABLE_UNITY_COLLECTIONS_CHECKS
                 fixed (Byte2* array = &this)
                 {
                     return ((byte*)array)[index];
@@ -233,7 +233,7 @@ namespace GDX.Mathematics
                 {
                     throw new IndexOutOfRangeException("The index must be between[0...1]");
                 }
-#endif
+#endif // ENABLE_UNITY_COLLECTIONS_CHECKS
                 fixed (byte* array = &X)
                 {
                     array[index] = value;

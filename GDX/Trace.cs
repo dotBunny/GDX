@@ -88,7 +88,7 @@ namespace GDX
             {
                 return;
             }
-#endif
+#endif // UNITY_EDITOR || DEVELOPMENT_BUILD
 
             // Build output content
             if (traceObject is Exception traceException)
@@ -112,7 +112,7 @@ namespace GDX
             {
                 return;
             }
-#endif
+#endif // UNITY_EDITOR || DEVELOPMENT_BUILD
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD || DEBUG
             // Figure out what path to take based on the level
@@ -146,7 +146,7 @@ namespace GDX
                     break;
 
             }
-#endif
+#endif // UNITY_EDITOR || DEVELOPMENT_BUILD || DEBUG
         }
     }
 }

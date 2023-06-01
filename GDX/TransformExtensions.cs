@@ -129,7 +129,7 @@ namespace GDX
             StringBuilder stringBuilder = new StringBuilder();
 #if UNITY_EDITOR
             Transform originalTransform = targetTransform;
-#endif
+#endif // UNITY_EDITOR
             while (targetTransform != null)
             {
                 stringBuilder.Insert(0, targetTransform.name);
@@ -140,7 +140,7 @@ namespace GDX
             if (originalTransform &&
                 UnityEditor.EditorUtility.IsPersistent(originalTransform))
                 stringBuilder.Append(" [P]");
-#endif
+#endif // UNITY_EDITOR
             return stringBuilder.ToString();
         }
     }

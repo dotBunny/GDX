@@ -122,7 +122,7 @@ namespace GDX.Collections.Pooling
             }
 #else
             Destroy(s_BuilderObject);
-#endif
+#endif // UNITY_EDITOR
             s_BuilderObject = null;
         }
 
@@ -161,4 +161,4 @@ namespace GDX.Collections.Pooling
         }
     }
 }
-#endif
+#endif // !UNITY_DOTSRUNTIME

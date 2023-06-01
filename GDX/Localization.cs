@@ -188,7 +188,7 @@ namespace GDX
                 default:
                     return Language.Default;
             }
-#endif
+#endif // UNITY_DOTSRUNTIME
         }
 
         /// <summary>

@@ -359,7 +359,7 @@ namespace GDX.Developer
             {
 #if UNITY_EDITOR
                 Debug.LogWarning("Finalized. You must invalidate the batch before adding anything.");
-#endif
+#endif // UNITY_EDITOR
                 return -1;
             }
 
@@ -595,7 +595,7 @@ namespace GDX.Developer
 
 #if UNITY_EDITOR
             batchMesh.name = $"P_Line_Mesh_{material.name}_{token}";
-#endif
+#endif // UNITY_EDITOR
             m_DrawCommands.AddWithExpandCheck(token, new DrawCommand(batchMesh, material));
             return token;
         }
@@ -622,7 +622,7 @@ namespace GDX.Developer
 
 #if UNITY_EDITOR
             mesh.name = $"P_Mesh_{material.name}_{token}";
-#endif
+#endif // UNITY_EDITOR
 
             m_DrawCommands.AddWithExpandCheck(token, new DrawCommand(mesh, material, ref matrix));
             return token;
@@ -666,7 +666,7 @@ namespace GDX.Developer
 #if UNITY_EDITOR
             Debug.LogWarning(
                 "A set of lines have been added to the MergedDraw where the Material hash code that was provided has not previously been used/registered. Using the default line material instead.");
-#endif
+#endif // UNITY_EDITOR
             // Ensure default material
             m_Materials.AddWithExpandCheck(s_LineMaterial);
             return s_LineMaterial;

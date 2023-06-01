@@ -1233,4 +1233,4 @@ namespace GDX.Collections
         }
     }
 }
-#endif
+#endif // GDX_UNSAFE_COLLECTIONS

@@ -220,4 +220,4 @@ namespace GDX.Developer.Reports
         }
     }
 }
-#endif
+#endif // !UNITY_DOTSRUNTIME

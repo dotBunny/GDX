@@ -459,7 +459,7 @@ namespace GDX.Collections.Pooling
                 }
 #else
                 Object.Destroy(unityObject, 0f);
-#endif
+#endif // UNITY_EDITOR
 
             }
 
@@ -507,4 +507,4 @@ namespace GDX.Collections.Pooling
         }
     }
 }
-#endif
+#endif // !UNITY_DOTSRUNTIME

@@ -206,7 +206,7 @@ namespace GDX.Developer
         const uint k_InputStructureSize = 40;
 #else
         const uint k_InputStructureSize = 36;
-#endif
+#endif // UNITY_64
 
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
         [DllImport("user32.dll", SetLastError = true)]
@@ -225,7 +225,7 @@ namespace GDX.Developer
             Debug.LogWarning("InputProxy::MapVirtualKey is not supported on this platform.");
             return 0;
         }
-#endif
+#endif // UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Synthesize(KeyboardInput keyboardInput)

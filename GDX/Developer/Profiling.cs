@@ -12,7 +12,7 @@ using System.IO;
 using Unity.Profiling.Memory;
 #else
 using UnityEngine.Profiling.Memory.Experimental;
-#endif
+#endif // UNITY_2022_2_OR_NEWER
 
 namespace GDX.Developer
 {
@@ -126,4 +126,4 @@ namespace GDX.Developer
         }
     }
 }
-#endif
+#endif // !UNITY_DOTSRUNTIME

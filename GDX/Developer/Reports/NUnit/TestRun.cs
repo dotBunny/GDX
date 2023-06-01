@@ -33,7 +33,7 @@ namespace GDX.Developer.Reports.NUnit
         {
 #if !UNITY_DOTSRUNTIME
             EngineVersion = UnityEngine.Application.unityVersion;
-#endif
+#endif // !UNITY_DOTSRUNTIME
 
             // Process the underlying suite of tests
             TestSuite.Process(passedResult, failedResult, inconclusiveResult, skippedResult);

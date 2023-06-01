@@ -41,7 +41,7 @@ namespace GDX.Threading
 
 #if !UNITY_EDITOR
             Trace.Output(Trace.TraceLevel.Info, "GDX runtime task scheduler activated.");
-#endif
+#endif // !UNITY_EDITOR
 
             PlayerLoopSystem systemRoot = PlayerLoop.GetCurrentPlayerLoop();
             systemRoot.AddSubSystemToFirstSubSystemOfType(
@@ -90,7 +90,7 @@ namespace GDX.Threading
                 Trace.Output(Trace.TraceLevel.Warning,
                     "Tick rate set whilst TaskDirectorSystem has been configured off.");
             }
-#endif
+#endif // UNITY_EDITOR
 
             // If for some reason the tick rate is set at runtime
 #if !UNITY_EDITOR
@@ -102,7 +102,7 @@ namespace GDX.Threading
             {
                 RemoveFromPlayerLoop();
             }
-#endif
+#endif // !UNITY_EDITOR
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace GDX.Threading
                     "Unable to tick Task Director from PlayerLoop outside of PlayMode.");
                 return;
             }
-#endif
+#endif // UNITY_EDITOR
 
             s_TimeSinceLastTick += Time.deltaTime;
             if (s_TimeSinceLastTick < s_TickRate)

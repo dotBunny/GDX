@@ -106,7 +106,7 @@ namespace GDX
             return 1;
 #else
             return 0;
-#endif
+#endif // UNITY_XBOXONE && !UNITY_EDITOR
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace GDX
                         Directory.GetCurrentDirectory();
 #else
                         Application.persistentDataPath;
-#endif
+#endif // UNITY_EDITOR
                 }
 
                 // Cleanup the folder pathing
@@ -233,9 +233,9 @@ namespace GDX
             return true;
 #else
             return Application.isFocused;
-#endif
+#endif // UNITY_XBOXONE && !UNITY_EDITOR
         }
-#endif
+#endif // !UNITY_DOTSRUNTIME
 
         /// <summary>
         /// Is it safe to write to the indicated <paramref name="filePath"/>?
@@ -268,6 +268,6 @@ namespace GDX
         {
             return SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null;
         }
-#endif
+#endif // !UNITY_DOTSRUNTIME
     }
 }

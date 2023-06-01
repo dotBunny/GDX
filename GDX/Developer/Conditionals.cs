@@ -18,7 +18,7 @@ namespace GDX.Developer
         public const bool HasAddressablesPackage = true;
 #else
         public const bool HasAddressablesPackage = false;
-#endif
+#endif // GDX_ADDRESSABLES
 
         /// <summary>
         ///     Is a compatible version of the Platforms package present in the project?
@@ -27,7 +27,7 @@ namespace GDX.Developer
         public const bool HasPlatformsPackage = true;
 #else
         public const bool HasPlatformsPackage = false;
-#endif
+#endif // GDX_PLATFORMS
 
 
         /// <summary>
@@ -37,6 +37,6 @@ namespace GDX.Developer
         public const bool HasVisualScriptingPackage = true;
 #else
         public const bool HasVisualScriptingPackage = false;
-#endif
+#endif // GDX_VISUALSCRIPTING
     }
 }

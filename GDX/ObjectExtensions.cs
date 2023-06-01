@@ -32,7 +32,7 @@ namespace GDX
             }
 #else
             Object.Destroy(targetObject, delay);
-#endif
+#endif // UNITY_EDITOR
         }
     }
 }

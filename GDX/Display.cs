@@ -54,7 +54,7 @@ namespace GDX
                     UnityEngine.PS4.Utility.VideoOutDeviceCapability.BT2020_PQ) != 0);
 #else
             return SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.DefaultHDR);
-#endif
+#endif // UNITY_PS4
         }
 
         /// <summary>
@@ -77,9 +77,9 @@ namespace GDX
             return UnityEngine.XboxOne.Graphics.displayInHDR;
 #else
             return SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.DefaultHDR);
-#endif
+#endif // UNITY_PS4
         }
 
-#endif
+#endif // !UNITY_DOTSRUNTIME
     }
 }

@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace GDX.Collections.Generic
 {
@@ -71,7 +70,7 @@ namespace GDX.Collections.Generic
         {
 #if UNITY_EDITOR
             m_IsSerializable = IsSerializableType(typeof(TKey)) && IsSerializableType(typeof(TValue));
-#endif
+#endif // UNITY_EDITOR
         }
 
         /// <summary>
@@ -118,11 +117,11 @@ namespace GDX.Collections.Generic
                 }
                 else
                 {
-#endif
+#endif // UNITY_EDITOR
                     Add(m_SerializedKeys[i], m_SerializedValues[i]);
 #if UNITY_EDITOR
                 }
-#endif
+#endif // UNITY_EDITOR
             }
 
             // Remove any data cached so that references are not held.
@@ -202,4 +201,4 @@ namespace GDX.Collections.Generic
         }
     }
 }
-#endif
+#endif // !UNITY_DOTSRUNTIME

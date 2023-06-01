@@ -49,4 +49,4 @@ namespace GDX.Developer.Reports.Resource.Objects
         }
     }
 }
-#endif
+#endif // !UNITY_DOTSRUNTIME

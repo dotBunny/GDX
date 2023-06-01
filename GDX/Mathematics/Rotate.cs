@@ -33,6 +33,6 @@ namespace GDX.Mathematics
             rotatedAngle = math.min(rotatedAngle, rotatedAmount);
             return targetQuaternion * Quaternion.AngleAxis(rotatedAngle, axis);
         }
-#endif
+#endif // !UNITY_DOTSRUNTIME
     }
 }

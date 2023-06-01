@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using GDX.Mathematics.Random;
 #if UNITY_EDITOR
 using UnityEditor;
-#endif
+#endif // UNITY_EDITOR
 
 namespace GDX
 {
@@ -86,7 +86,7 @@ namespace GDX
         [InitializeOnLoadMethod]
 #else
         [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.AfterAssembliesLoaded)]
-#endif
+#endif // UNITY_EDITOR
         public static void InitializeOnMainThread()
         {
             if (s_InitializedMainThread)
