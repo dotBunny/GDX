@@ -28,7 +28,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         protected const string k_CellFieldName = "gdx-table-inspector-field";
 
 
-        DataTableObject.ColumnDescription[] m_ColumnDescriptions;
+        DataTableBase.ColumnDescription[] m_ColumnDescriptions;
         protected int m_ColumnIdentifier = -1;
         SerializedProperty m_ColumnProperty;
 
@@ -36,13 +36,13 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         Label m_FieldLabel;
 
         bool m_IsUnlocked;
-        DataTableObject.RowDescription[] m_RowDescriptions;
+        DataTableBase.RowDescription[] m_RowDescriptions;
         protected int m_RowIdentifier = -1;
         SerializedProperty m_RowProperty;
 
         SerializedProperty m_SerializedProperty;
 
-        protected DataTableObject m_DataTable;
+        protected DataTableBase m_DataTable;
         protected int m_TableTicket;
         protected VisualElement m_CellElement;
         Button m_TableButton;
@@ -81,7 +81,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             m_ColumnProperty = m_SerializedProperty.FindPropertyRelative(k_PropertyColumn);
 
             // Load Data
-            m_DataTable = (DataTableObject)m_TableProperty.objectReferenceValue;
+            m_DataTable = (DataTableBase)m_TableProperty.objectReferenceValue;
             if (m_DataTable != null)
             {
                 m_RowIdentifier = m_RowProperty.intValue;
@@ -240,7 +240,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         {
             if (arg >= 0)
             {
-                m_DataTable = (DataTableObject)m_Tables[arg].GetOrLoadAsset();
+                m_DataTable = (DataTableBase)m_Tables[arg].GetOrLoadAsset();
                 DetectDrawerMode();
                 return m_Tables[arg].GetPathWithoutExtension();
             }
@@ -330,11 +330,11 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             m_RowDescriptions = null;
 
             // Get table columns
-            DataTableObject.ColumnDescription[] allColumns = m_DataTable.GetAllColumnDescriptions();
+            DataTableBase.ColumnDescription[] allColumns = m_DataTable.GetAllColumnDescriptions();
             int allColumnCount = allColumns.Length;
             Serializable.SerializableTypes requiredType = GetSupportedType();
-            List<DataTableObject.ColumnDescription> validColumns =
-                new List<DataTableObject.ColumnDescription>(allColumns.Length);
+            List<DataTableBase.ColumnDescription> validColumns =
+                new List<DataTableBase.ColumnDescription>(allColumns.Length);
 
             for (int i = 0; i < allColumnCount; i++)
             {

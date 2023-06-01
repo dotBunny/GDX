@@ -13,7 +13,7 @@ namespace GDX.Editor.Windows.DataTables
         DataTableWindowController m_Controller;
         DataTableWindowOverlay m_Overlay;
 
-        DataTableObject m_DataTable;
+        DataTableBase m_DataTable;
 
 
         DataTableWindowToolbar m_Toolbar;
@@ -100,7 +100,7 @@ namespace GDX.Editor.Windows.DataTables
             return m_Controller;
         }
 
-        public DataTableObject GetDataTable()
+        public DataTableBase GetDataTable()
         {
             return m_DataTable;
         }
@@ -145,7 +145,7 @@ namespace GDX.Editor.Windows.DataTables
         }
 
 
-        public void BindTable(DataTableObject dataTable, bool fromDomainReload = false)
+        public void BindTable(DataTableBase dataTable, bool fromDomainReload = false)
         {
             m_DataTable = dataTable;
             m_DataTableTicket = fromDomainReload ? DataTableTracker.RegisterTable(dataTable, m_DataTableTicket) : DataTableTracker.RegisterTable(dataTable);

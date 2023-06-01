@@ -11,7 +11,7 @@ namespace GDX.DataTables
 {
     [CreateAssetMenu(menuName = "GDX/Stable Table", fileName = "GDXStableTable")]
     [Serializable]
-    public class StableDataTable : DataTableObject
+    public class StableDataTable : DataTableBase
     {
         internal static string UnityObjectString = typeof(Object).AssemblyQualifiedName;
 

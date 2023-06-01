@@ -7,6 +7,9 @@ using UnityEditor;
 
 namespace GDX.Editor.Inspectors
 {
+    /// <summary>
+    ///     Adds a custom inspector to <see cref="StableDataTable"/>s.
+    /// </summary>
     [CustomEditor(typeof(StableDataTable))]
     public class StableDataTableInspector : DataTableInspectorBase
     {

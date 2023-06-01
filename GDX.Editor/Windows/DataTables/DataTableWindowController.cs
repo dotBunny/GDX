@@ -105,7 +105,7 @@ namespace GDX.Editor.Windows.DataTables
         {
             RegisterUndo($"Add Column ({name})");
 
-            DataTableObject dataTable = m_DataTableWindow.GetDataTable();
+            DataTableBase dataTable = m_DataTableWindow.GetDataTable();
             int columnIdentifier = dataTable.AddColumn(type, name, orderedIndex);
             if (!string.IsNullOrEmpty(secondary))
             {
@@ -122,7 +122,7 @@ namespace GDX.Editor.Windows.DataTables
 
         public bool AddRow(string name, int orderedIndex = -1)
         {
-            DataTableObject dataTable = m_DataTableWindow.GetDataTable();
+            DataTableBase dataTable = m_DataTableWindow.GetDataTable();
 
             if (dataTable.GetColumnCount() == 0)
             {
@@ -138,7 +138,7 @@ namespace GDX.Editor.Windows.DataTables
 
         public void AddRowDefault()
         {
-            DataTableObject dataTable = m_DataTableWindow.GetDataTable();
+            DataTableBase dataTable = m_DataTableWindow.GetDataTable();
             if (dataTable.GetColumnCount() == 0)
             {
                 return;
@@ -157,8 +157,8 @@ namespace GDX.Editor.Windows.DataTables
             object selectedItem = m_DataTableWindow.GetView().GetMultiColumnListView().selectedItem;
             if (selectedItem == null) return;
 
-            DataTableObject.RowDescription selectedRow =
-                (DataTableObject.RowDescription)m_DataTableWindow.GetView().GetMultiColumnListView().selectedItem;
+            DataTableBase.RowDescription selectedRow =
+                (DataTableBase.RowDescription)m_DataTableWindow.GetView().GetMultiColumnListView().selectedItem;
             RegisterUndo($"Remove Row ({selectedRow.Name})");
 
             m_DataTableWindow.GetDataTable().RemoveRow(selectedRow.Identifier);
@@ -168,7 +168,7 @@ namespace GDX.Editor.Windows.DataTables
 
         public bool RemoveColumn(int columnIdentifier)
         {
-            DataTableObject dataTable = m_DataTableWindow.GetDataTable();
+            DataTableBase dataTable = m_DataTableWindow.GetDataTable();
             if (dataTable.GetColumnCount() <= 1)
             {
                 return false;
@@ -184,7 +184,7 @@ namespace GDX.Editor.Windows.DataTables
 
         public bool RemoveRow(int rowIdentifier)
         {
-            DataTableObject dataTable = m_DataTableWindow.GetDataTable();
+            DataTableBase dataTable = m_DataTableWindow.GetDataTable();
             RegisterUndo($"Remove Row ({dataTable.GetRowName(rowIdentifier)})");
             dataTable.RemoveRow(rowIdentifier);
 
@@ -194,7 +194,7 @@ namespace GDX.Editor.Windows.DataTables
 
         public bool RenameRow(int rowIdentifier, string name)
         {
-            DataTableObject dataTable = m_DataTableWindow.GetDataTable();
+            DataTableBase dataTable = m_DataTableWindow.GetDataTable();
             RegisterUndo($"Rename Row ({name})");
             dataTable.SetRowName(name, rowIdentifier);
 
@@ -204,7 +204,7 @@ namespace GDX.Editor.Windows.DataTables
 
         public bool RenameColumn(int columnIdentifier, string name)
         {
-            DataTableObject dataTable = m_DataTableWindow.GetDataTable();
+            DataTableBase dataTable = m_DataTableWindow.GetDataTable();
             RegisterUndo($"Rename Column ({name})");
 
             // Update column data in place
@@ -219,7 +219,7 @@ namespace GDX.Editor.Windows.DataTables
 
         public bool SetTableSettings(string displayName, bool enableUndo)
         {
-            DataTableObject dataTable = m_DataTableWindow.GetDataTable();
+            DataTableBase dataTable = m_DataTableWindow.GetDataTable();
             RegisterUndo("Table Settings");
 
             // Check if there is a change
@@ -230,7 +230,7 @@ namespace GDX.Editor.Windows.DataTables
                 m_DataTableWindow.titleContent = new GUIContent(displayName);
             }
 
-            dataTable.SetFlag(DataTableObject.Settings.EnableUndo, enableUndo);
+            dataTable.SetFlag(DataTableBase.Settings.EnableUndo, enableUndo);
             EditorUtility.SetDirty(m_DataTableWindow.GetDataTable());
             m_DataTableWindow.GetToolbar().UpdateSaveButton();
             return true;
@@ -244,7 +244,7 @@ namespace GDX.Editor.Windows.DataTables
         void RegisterUndo(string name)
         {
             ScriptableObject scriptableObject = m_DataTableWindow.GetDataTable();
-            if (scriptableObject != null && m_DataTableWindow.GetDataTable().GetFlag(DataTableObject.Settings.EnableUndo))
+            if (scriptableObject != null && m_DataTableWindow.GetDataTable().GetFlag(DataTableBase.Settings.EnableUndo))
             {
                 Undo.RegisterCompleteObjectUndo(scriptableObject, $"{DataTableWindowProvider.UndoPrefix} {name}");
             }

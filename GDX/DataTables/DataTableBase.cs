@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace GDX.DataTables
 {
-    public abstract class DataTableObject : ScriptableObject
+    public abstract class DataTableBase : ScriptableObject
     {
         public enum Settings
         {

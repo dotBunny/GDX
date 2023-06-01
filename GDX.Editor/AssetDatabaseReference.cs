@@ -33,22 +33,10 @@ namespace GDX.Editor
             Guid = guid;
         }
 
-        public Object GetAsset()
-        {
-            if (m_LoadedAsset.TryGetTarget(out Object target))
-            {
-                return target;
-            }
-            return null;
-        }
         public Object GetOrLoadAsset()
         {
-            return AssetDatabase.LoadAssetAtPath(GetAssetPath(), Type);
-        }
-
-        public Object LoadAsset()
-        {
-            return AssetDatabase.LoadAssetAtPath(GetAssetPath(), Type);
+            m_LoadedAsset ??= new WeakReference<Object>(AssetDatabase.LoadAssetAtPath(GetAssetPath(), Type));
+            return m_LoadedAsset.TryGetTarget(out Object target) ? target : null;
         }
 
         public string GetFileExtension(bool forceUpdate = false)

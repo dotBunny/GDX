@@ -15,9 +15,9 @@ namespace GDX.Editor.Windows.DataTables
 
         static StyleLength m_StyleLength25 = new StyleLength(new Length(25, LengthUnit.Pixel));
         static StyleLength m_StyleLength275 = new StyleLength(new Length(275, LengthUnit.Pixel));
-        readonly List<DataTableObject.RowDescription> m_RowDescriptions = new List<DataTableObject.RowDescription>();
+        readonly List<DataTableBase.RowDescription> m_RowDescriptions = new List<DataTableBase.RowDescription>();
         readonly Length m_BoundsMinWidth = new Length(200, LengthUnit.Pixel);
-        readonly List<DataTableObject.ColumnDescription> m_ColumnDescriptions = new List<DataTableObject.ColumnDescription>();
+        readonly List<DataTableBase.ColumnDescription> m_ColumnDescriptions = new List<DataTableBase.ColumnDescription>();
 
         readonly Length m_GenericMinWidth = new Length(75, LengthUnit.Pixel);
         readonly Length m_HashMinWidth = new Length(260, LengthUnit.Pixel);
@@ -57,11 +57,11 @@ namespace GDX.Editor.Windows.DataTables
                 rootElement.RemoveAt(1);
             }
 
-            DataTableObject dataTable = window.GetDataTable();
+            DataTableBase dataTable = window.GetDataTable();
             int tableTicket = window.GetDataTableTicket();
 
             // Add row header column ahead of actual columns
-            m_ColumnDescriptions.Add(new DataTableObject.ColumnDescription
+            m_ColumnDescriptions.Add(new DataTableBase.ColumnDescription
             {
                 Name = "RowName", Identifier = -1, Type = Serializable.SerializableTypes.String
             });
@@ -87,7 +87,7 @@ namespace GDX.Editor.Windows.DataTables
             // Creat our other columns
             for (int i = 1; i < columnCount; i++)
             {
-                DataTableObject.ColumnDescription columnDescription = m_ColumnDescriptions[i];
+                DataTableBase.ColumnDescription columnDescription = m_ColumnDescriptions[i];
                 int columnIndex = columnDescription.Identifier;
 
                 // We embed the column stable index
@@ -349,14 +349,14 @@ namespace GDX.Editor.Windows.DataTables
                 return -1;
             }
 
-            DataTableObject.RowDescription selectedItem = (DataTableObject.RowDescription)m_MultiColumnListView.selectedItem;
+            DataTableBase.RowDescription selectedItem = (DataTableBase.RowDescription)m_MultiColumnListView.selectedItem;
             return selectedItem.Identifier;
         }
 
         void BindRowHeader(VisualElement cell, int row)
         {
             Label label = (Label)cell;
-            DataTableObject.RowDescription description = m_RowDescriptions[row];
+            DataTableBase.RowDescription description = m_RowDescriptions[row];
             label.text = description.Name;
         }
 
@@ -399,7 +399,7 @@ namespace GDX.Editor.Windows.DataTables
 
             if (foundIndex != -1)
             {
-                m_ColumnDescriptions[foundIndex] = new DataTableObject.ColumnDescription
+                m_ColumnDescriptions[foundIndex] = new DataTableBase.ColumnDescription
                 {
                     Name = newName,
                     Identifier = m_ColumnDescriptions[foundIndex].Identifier,
@@ -411,7 +411,7 @@ namespace GDX.Editor.Windows.DataTables
 
         internal void RebuildRowData()
         {
-            DataTableObject dataTable = m_DataTableWindow.GetDataTable();
+            DataTableBase dataTable = m_DataTableWindow.GetDataTable();
             m_RowDescriptions.Clear();
             if (dataTable.GetRowCount() > 0)
             {

@@ -16,7 +16,7 @@ namespace GDX.Editor.Windows.DataTables
     {
         public const string UndoPrefix = "Table:";
 
-        static readonly Dictionary<DataTableObject, DataTableWindow> k_TableToTableWindow = new Dictionary<DataTableObject, DataTableWindow>();
+        static readonly Dictionary<DataTableBase, DataTableWindow> k_TableToTableWindow = new Dictionary<DataTableBase, DataTableWindow>();
         static readonly Dictionary<int, DataTableWindow> k_TicketToTableWindow = new Dictionary<int, DataTableWindow>(5);
 
 
@@ -42,7 +42,7 @@ namespace GDX.Editor.Windows.DataTables
             }
         }
 
-        internal static void RegisterTableWindow(DataTableWindow dataTableWindow, DataTableObject dataTable)
+        internal static void RegisterTableWindow(DataTableWindow dataTableWindow, DataTableBase dataTable)
         {
 
             int ticket = dataTableWindow.GetDataTableTicket();
@@ -50,7 +50,7 @@ namespace GDX.Editor.Windows.DataTables
             k_TicketToTableWindow[ticket] = dataTableWindow;
 
             // We're only going to subscribe for undo events when the table window is open and we have support
-            if (!s_SubscribedForUndo && dataTable.GetFlag(DataTableObject.Settings.EnableUndo))
+            if (!s_SubscribedForUndo && dataTable.GetFlag(DataTableBase.Settings.EnableUndo))
             {
                 Undo.undoRedoEvent += UndoRedoEvent;
                 s_SubscribedForUndo = true;
@@ -62,7 +62,7 @@ namespace GDX.Editor.Windows.DataTables
             int tableWindowTicket = dataTableWindow.GetDataTableTicket();
             k_TicketToTableWindow.Remove(tableWindowTicket);
 
-            DataTableObject dataTable = dataTableWindow.GetDataTable();
+            DataTableBase dataTable = dataTableWindow.GetDataTable();
             if (dataTable != null)
             {
                 k_TableToTableWindow.Remove(dataTable);
@@ -79,7 +79,7 @@ namespace GDX.Editor.Windows.DataTables
         public static bool OnOpenAssetTable(int instanceID, int line)
         {
             Object unityObject = EditorUtility.InstanceIDToObject(instanceID);
-            if (unityObject is DataTableObject table)
+            if (unityObject is DataTableBase table)
             {
                 OpenAsset(table);
                 return true;
@@ -88,7 +88,7 @@ namespace GDX.Editor.Windows.DataTables
             return false;
         }
 
-        public static DataTableWindow OpenAsset(DataTableObject dataTable)
+        public static DataTableWindow OpenAsset(DataTableBase dataTable)
         {
             DataTableWindow dataTableWindow = GetTableWindow(DataTableTracker.RegisterTable(dataTable));
             if (dataTableWindow == null)
@@ -119,7 +119,7 @@ namespace GDX.Editor.Windows.DataTables
             EditorUtility.FocusProjectWindow();
             Selection.activeObject = asset;
 
-            asset.SetFlag(DataTableObject.Settings.EnableUndo, true);
+            asset.SetFlag(DataTableBase.Settings.EnableUndo, true);
 
             asset.AddColumn(Serializable.SerializableTypes.String, "String");
             asset.AddRow("0");

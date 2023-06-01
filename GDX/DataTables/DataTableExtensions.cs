@@ -63,7 +63,7 @@ namespace GDX.DataTables
             return returnStrings.ToArray();
         }
 
-        public static bool UpdateFromCommaSeperatedValues(this DataTableObject dataTable, string filePath)
+        public static bool UpdateFromCommaSeperatedValues(this DataTableBase dataTable, string filePath)
         {
             if (!File.Exists(filePath))
             {
@@ -74,7 +74,7 @@ namespace GDX.DataTables
             string[] fileContent = File.ReadAllLines(filePath);
             int tableRowCount = dataTable.GetRowCount();
             int tableColumnCount = dataTable.GetColumnCount();
-            DataTableObject.ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
+            DataTableBase.ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
 
             // Test Columns
             string[] columnTest = ParseCommaSeperatedValues(fileContent[0]);
@@ -86,7 +86,7 @@ namespace GDX.DataTables
 
             // Build a list of previous row ID, so we know what was removed
             List<int> previousRowInternalIndices = new List<int>(tableRowCount);
-            DataTableObject.RowDescription[] rowDescriptions = dataTable.GetAllRowDescriptions();
+            DataTableBase.RowDescription[] rowDescriptions = dataTable.GetAllRowDescriptions();
             int rowDescriptionsLength = rowDescriptions.Length;
             for (int i = 0; i < rowDescriptionsLength; i++)
             {
@@ -189,14 +189,14 @@ namespace GDX.DataTables
             return true;
         }
 
-        public static void ExportToCommaSeperatedValues(this DataTableObject dataTable, string filePath)
+        public static void ExportToCommaSeperatedValues(this DataTableBase dataTable, string filePath)
         {
             int rowCount = dataTable.GetRowCount();
             int columnCount = dataTable.GetColumnCount();
             TextGenerator generator = new TextGenerator();
 
             // Build first line
-            DataTableObject.ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
+            DataTableBase.ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
             generator.Append("Row ID, Row Name");
             for (int i = 0; i < columnCount; i++)
             {
@@ -209,11 +209,11 @@ namespace GDX.DataTables
             // Build lines for rows
             for (int r = 0; r < rowCount; r++)
             {
-                DataTableObject.RowDescription rowDescription = dataTable.GetRowDescription(r);
+                DataTableBase.RowDescription rowDescription = dataTable.GetRowDescription(r);
                 generator.Append($"{rowDescription.Identifier}, {MakeCommaSeperatedValue(rowDescription.Name)}");
                 for (int c = 0; c < columnCount; c++)
                 {
-                    DataTableObject.ColumnDescription columnDescription = dataTable.GetColumnDescription(c);
+                    DataTableBase.ColumnDescription columnDescription = dataTable.GetColumnDescription(c);
                     generator.Append(", ");
                     switch (columnDescription.Type)
                     {
@@ -351,175 +351,175 @@ namespace GDX.DataTables
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static StringCellValue GetStringCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static StringCellValue GetStringCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new StringCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static BoolCellValue GetBoolCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static BoolCellValue GetBoolCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new BoolCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static CharCellValue GetCharCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static CharCellValue GetCharCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new CharCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static SByteCellValue GetSByteCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static SByteCellValue GetSByteCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new SByteCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ByteCellValue GetByteCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static ByteCellValue GetByteCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new ByteCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ShortCellValue GetShortCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static ShortCellValue GetShortCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new ShortCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UShortCellValue GetUShortCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static UShortCellValue GetUShortCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new UShortCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IntCellValue GetIntCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static IntCellValue GetIntCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new IntCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UIntCellValue GetUIntCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static UIntCellValue GetUIntCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new UIntCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static LongCellValue GetLongCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static LongCellValue GetLongCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new LongCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ULongCellValue GetULongCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static ULongCellValue GetULongCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new ULongCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static FloatCellValue GetFloatCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static FloatCellValue GetFloatCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new FloatCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DoubleCellValue GetDoubleCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static DoubleCellValue GetDoubleCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new DoubleCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2CellValue GetVector2CellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static Vector2CellValue GetVector2CellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new Vector2CellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector3CellValue GetVector3CellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static Vector3CellValue GetVector3CellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new Vector3CellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector4CellValue GetVector4CellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static Vector4CellValue GetVector4CellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new Vector4CellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2IntCellValue GetVector2IntCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static Vector2IntCellValue GetVector2IntCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new Vector2IntCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector3IntCellValue GetVector3IntCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static Vector3IntCellValue GetVector3IntCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new Vector3IntCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static QuaternionCellValue GetQuaternionCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static QuaternionCellValue GetQuaternionCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new QuaternionCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static RectCellValue GetRectCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static RectCellValue GetRectCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new RectCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static RectIntCellValue GetRectIntCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static RectIntCellValue GetRectIntCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new RectIntCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ColorCellValue GetColorCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static ColorCellValue GetColorCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new ColorCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static LayerMaskCellValue GetLayerMaskCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static LayerMaskCellValue GetLayerMaskCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new LayerMaskCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static BoundsCellValue GetBoundsCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static BoundsCellValue GetBoundsCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new BoundsCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static BoundsIntCellValue GetBoundsIntCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static BoundsIntCellValue GetBoundsIntCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new BoundsIntCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Hash128CellValue GetHash128CellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static Hash128CellValue GetHash128CellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new Hash128CellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GradientCellValue GetGradientCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static GradientCellValue GetGradientCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new GradientCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static AnimationCurveCellValue GetAnimationCurveCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static AnimationCurveCellValue GetAnimationCurveCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new AnimationCurveCellValue(dataTable, rowID, columnID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ObjectCellValue GetObjectCellValue(this DataTableObject dataTable, int rowID, int columnID)
+        public static ObjectCellValue GetObjectCellValue(this DataTableBase dataTable, int rowID, int columnID)
         {
             return new ObjectCellValue(dataTable, rowID, columnID);
         }

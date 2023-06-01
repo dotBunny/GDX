@@ -17,7 +17,7 @@ namespace GDX.Editor.Windows
     /// </summary>
     public class TableWindowControllerTests
     {
-        DataTableObject m_TestDataTable;
+        DataTableBase m_TestDataTable;
         DataTableWindow m_DataTableWindow;
         DataTableWindowController m_DataTableWindowController;
 
@@ -74,7 +74,7 @@ namespace GDX.Editor.Windows
             m_DataTableWindowController.AddColumn("Test_Vector2", Serializable.SerializableTypes.Vector2);
 
             m_DataTableWindowController.AddRow("Test_Row");
-            DataTableObject.RowDescription rowDescription = m_TestDataTable.GetRowDescription(0);
+            DataTableBase.RowDescription rowDescription = m_TestDataTable.GetRowDescription(0);
 
             Assert.That(m_TestDataTable.GetColumnCount() == 3);
             Assert.That(m_TestDataTable.GetRowCount() == 1);

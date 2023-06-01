@@ -279,7 +279,7 @@ namespace GDX.Editor.Windows.DataTables
                     m_SettingsOverlay.style.display = DisplayStyle.Flex;
                     m_SettingsDisplayName.SetValueWithoutNotify(m_DataTableWindow.GetDataTable().GetDisplayName());
                     m_SettingsSupportUndoToggle.SetValueWithoutNotify(m_DataTableWindow.GetDataTable()
-                        .GetFlag(DataTableObject.Settings.EnableUndo));
+                        .GetFlag(DataTableBase.Settings.EnableUndo));
                     break;
                 default:
                     m_RootElement.style.display = DisplayStyle.None;

@@ -18,7 +18,7 @@ namespace GDX.Editor.Windows
     /// </summary>
     public class TableWindowViewTests
     {
-        DataTableObject m_TestDataTable;
+        DataTableBase m_TestDataTable;
         DataTableWindow m_DataTableWindow;
         DataTableWindowView m_DataTableWindowView;
         DataTableWindowController m_DataTableWindowController;

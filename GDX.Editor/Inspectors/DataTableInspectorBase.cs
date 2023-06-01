@@ -48,7 +48,7 @@ namespace GDX.Editor.Inspectors
         /// <inheritdoc />
         public override VisualElement CreateInspectorGUI()
         {
-            DataTableObject dataTable = (DataTableObject)target;
+            DataTableBase dataTable = (DataTableBase)target;
 
             m_TableTicket = DataTableTracker.RegisterTable(dataTable);
             m_RootElement = new VisualElement();
@@ -94,10 +94,10 @@ namespace GDX.Editor.Inspectors
 
         void UpdateInspector()
         {
-            DataTableObject dataTable = (DataTableObject)target;
+            DataTableBase dataTable = (DataTableBase)target;
 
-            DataTableObject.RowDescription[] rowDescriptions = dataTable.GetAllRowDescriptions();
-            DataTableObject.ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
+            DataTableBase.RowDescription[] rowDescriptions = dataTable.GetAllRowDescriptions();
+            DataTableBase.ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
 
             int rowCount = rowDescriptions.Length;
             int columnCount = columnDescriptions.Length;
@@ -129,7 +129,7 @@ namespace GDX.Editor.Inspectors
 
         void OpenTargetAsset()
         {
-            DataTableObject dataTable = (DataTableObject)target;
+            DataTableBase dataTable = (DataTableBase)target;
             DataTableWindowProvider.OpenAsset(dataTable);
             UpdateInspector();
         }
