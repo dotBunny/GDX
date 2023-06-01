@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 namespace GDX.Editor.Windows.DataTables
 {
 #if UNITY_2022_2_OR_NEWER
-    class TableWindowOverlay
+    class DataTableWindowOverlay
     {
         const string DefaultObjectType = "UnityEngine.Object, UnityEngine";
 
@@ -77,7 +77,7 @@ namespace GDX.Editor.Windows.DataTables
         OverlayState m_CurrentState;
 
 
-        internal TableWindowOverlay(VisualElement element, DataTableWindow window)
+        internal DataTableWindowOverlay(VisualElement element, DataTableWindow window)
         {
             // Cache a few things
             m_RootElement = element;
@@ -213,7 +213,7 @@ namespace GDX.Editor.Windows.DataTables
             m_CachedIndex = stableIndex;
 
             // Handle focus
-            TableWindowView view = m_DataTableWindow.GetView();
+            DataTableWindowView view = m_DataTableWindow.GetView();
             if (state == OverlayState.Hide)
             {
                 m_DataTableWindow.GetToolbar().SetFocusable(true);
@@ -279,7 +279,7 @@ namespace GDX.Editor.Windows.DataTables
                     m_SettingsOverlay.style.display = DisplayStyle.Flex;
                     m_SettingsDisplayName.SetValueWithoutNotify(m_DataTableWindow.GetDataTable().GetDisplayName());
                     m_SettingsSupportUndoToggle.SetValueWithoutNotify(m_DataTableWindow.GetDataTable()
-                        .GetFlag(DataTableObject.Flags.EnableUndo));
+                        .GetFlag(DataTableObject.Settings.EnableUndo));
                     break;
                 default:
                     m_RootElement.style.display = DisplayStyle.None;

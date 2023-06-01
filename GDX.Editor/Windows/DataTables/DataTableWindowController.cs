@@ -10,12 +10,12 @@ using UnityEngine;
 namespace GDX.Editor.Windows.DataTables
 {
 #if UNITY_2022_2_OR_NEWER
-    public class TableWindowController
+    public class DataTableWindowController
     {
-        readonly TableWindowOverlay m_Overlay;
+        readonly DataTableWindowOverlay m_Overlay;
         readonly DataTableWindow m_DataTableWindow;
 
-        internal TableWindowController(DataTableWindow window, TableWindowOverlay overlay)
+        internal DataTableWindowController(DataTableWindow window, DataTableWindowOverlay overlay)
         {
             m_DataTableWindow = window;
             m_Overlay = overlay;
@@ -23,7 +23,7 @@ namespace GDX.Editor.Windows.DataTables
 
         public void ShowAddRowDialog()
         {
-            m_Overlay.SetState(TableWindowOverlay.OverlayState.AddRow);
+            m_Overlay.SetState(DataTableWindowOverlay.OverlayState.AddRow);
         }
 
         public void ShowImportDialog()
@@ -61,38 +61,38 @@ namespace GDX.Editor.Windows.DataTables
 
         public void ShowAddColumnDialog()
         {
-            m_Overlay.SetState(TableWindowOverlay.OverlayState.AddColumn);
+            m_Overlay.SetState(DataTableWindowOverlay.OverlayState.AddColumn);
         }
 
         public void ShowRenameRowDialog(int rowIdentifier)
         {
-            m_Overlay.SetState(TableWindowOverlay.OverlayState.RenameRow, rowIdentifier,
+            m_Overlay.SetState(DataTableWindowOverlay.OverlayState.RenameRow, rowIdentifier,
                 m_DataTableWindow.GetDataTable().GetRowName(rowIdentifier));
         }
 
         public void ShowRenameColumnDialog(int columnIdentifier)
         {
-            m_Overlay.SetState(TableWindowOverlay.OverlayState.RenameColumn, columnIdentifier,
+            m_Overlay.SetState(DataTableWindowOverlay.OverlayState.RenameColumn, columnIdentifier,
                 m_DataTableWindow.GetDataTable().GetColumnName(columnIdentifier));
         }
 
         public void ShowRemoveColumnDialog(int columnIdentifier)
         {
-            m_Overlay.SetConfirmationState(TableWindowOverlay.ConfirmationState.RemoveColumn, columnIdentifier,
+            m_Overlay.SetConfirmationState(DataTableWindowOverlay.ConfirmationState.RemoveColumn, columnIdentifier,
                 "Remove Column",
                 $"Are you sure you wish to delete column '{m_DataTableWindow.GetDataTable().GetColumnName(columnIdentifier)}'?");
         }
 
         public void ShowRemoveRowDialog(int rowIdentifier)
         {
-            m_Overlay.SetConfirmationState(TableWindowOverlay.ConfirmationState.RemoveRow, rowIdentifier,
+            m_Overlay.SetConfirmationState(DataTableWindowOverlay.ConfirmationState.RemoveRow, rowIdentifier,
                 "Remove Row",
                 $"Are you sure you wish to delete row '{m_DataTableWindow.GetDataTable().GetRowName(rowIdentifier)}'?");
         }
 
         public void ShowSettings()
         {
-            m_Overlay.SetState(TableWindowOverlay.OverlayState.Settings);
+            m_Overlay.SetState(DataTableWindowOverlay.OverlayState.Settings);
         }
 
         public void OpenHelp()
@@ -106,32 +106,33 @@ namespace GDX.Editor.Windows.DataTables
             RegisterUndo($"Add Column ({name})");
 
             DataTableObject dataTable = m_DataTableWindow.GetDataTable();
-            int columnIndex = dataTable.AddColumn(type, name, orderedIndex);
+            int columnIdentifier = dataTable.AddColumn(type, name, orderedIndex);
             if (!string.IsNullOrEmpty(secondary))
             {
                 System.Type newType = System.Type.GetType(secondary);
                 if (newType != null)
                 {
-                    dataTable.SetTypeNameForObjectColumn(columnIndex, secondary);
+                    dataTable.SetTypeNameForObjectColumn(columnIdentifier, secondary);
                 }
             }
 
-            DataTableTracker.NotifyOfColumnChange(dataTable);
+            DataTableTracker.NotifyOfColumnChange(m_DataTableWindow.GetDataTableTicket(), columnIdentifier);
             return true;
         }
 
         public bool AddRow(string name, int orderedIndex = -1)
         {
             DataTableObject dataTable = m_DataTableWindow.GetDataTable();
+
             if (dataTable.GetColumnCount() == 0)
             {
                 return false;
             }
 
             RegisterUndo($"Add Row ({name})");
-            dataTable.AddRow(name, orderedIndex);
+            int rowIdentifier = dataTable.AddRow(name, orderedIndex);
 
-            DataTableTracker.NotifyOfRowChange(dataTable);
+            DataTableTracker.NotifyOfRowChange(m_DataTableWindow.GetDataTableTicket(), rowIdentifier);
             return true;
         }
 
@@ -144,11 +145,11 @@ namespace GDX.Editor.Windows.DataTables
             }
 
             RegisterUndo("Add Default Row");
-            dataTable.AddRow($"Row_{Core.Random.NextInteger(1, 9999).ToString()}");
+            int rowIdentifier = dataTable.AddRow($"Row_{Core.Random.NextInteger(1, 9999).ToString()}");
 
             m_Overlay.SetOverlayStateHidden();
 
-            DataTableTracker.NotifyOfRowChange(dataTable);
+            DataTableTracker.NotifyOfRowChange(m_DataTableWindow.GetDataTableTicket(), rowIdentifier);
         }
 
         public void RemoveSelectedRow()
@@ -159,9 +160,10 @@ namespace GDX.Editor.Windows.DataTables
             DataTableObject.RowDescription selectedRow =
                 (DataTableObject.RowDescription)m_DataTableWindow.GetView().GetMultiColumnListView().selectedItem;
             RegisterUndo($"Remove Row ({selectedRow.Name})");
+
             m_DataTableWindow.GetDataTable().RemoveRow(selectedRow.Identifier);
 
-            DataTableTracker.NotifyOfRowChange(m_DataTableWindow.GetDataTable());
+            DataTableTracker.NotifyOfRowChange(m_DataTableWindow.GetDataTableTicket(), selectedRow.Identifier);
         }
 
         public bool RemoveColumn(int columnIdentifier)
@@ -176,7 +178,7 @@ namespace GDX.Editor.Windows.DataTables
 
             dataTable.RemoveColumn(m_DataTableWindow.GetView().GetColumnType(columnIdentifier), columnIdentifier);
 
-            DataTableTracker.NotifyOfColumnChange(dataTable);
+            DataTableTracker.NotifyOfColumnChange(m_DataTableWindow.GetDataTableTicket(), columnIdentifier);
             return true;
         }
 
@@ -186,7 +188,7 @@ namespace GDX.Editor.Windows.DataTables
             RegisterUndo($"Remove Row ({dataTable.GetRowName(rowIdentifier)})");
             dataTable.RemoveRow(rowIdentifier);
 
-            DataTableTracker.NotifyOfRowChange(dataTable);
+            DataTableTracker.NotifyOfRowChange(m_DataTableWindow.GetDataTableTicket(), rowIdentifier);
             return true;
         }
 
@@ -196,7 +198,7 @@ namespace GDX.Editor.Windows.DataTables
             RegisterUndo($"Rename Row ({name})");
             dataTable.SetRowName(name, rowIdentifier);
 
-            DataTableTracker.NotifyOfRowChange(dataTable);
+            DataTableTracker.NotifyOfRowChange(m_DataTableWindow.GetDataTableTicket(), rowIdentifier);
             return true;
         }
 
@@ -210,7 +212,7 @@ namespace GDX.Editor.Windows.DataTables
 
             dataTable.SetColumnName(name, columnIdentifier);
 
-            DataTableTracker.NotifyOfColumnChange(dataTable, m_DataTableWindow);
+            DataTableTracker.NotifyOfColumnChange(m_DataTableWindow.GetDataTableTicket(), columnIdentifier,  m_DataTableWindow);
             m_DataTableWindow.GetToolbar().UpdateSaveButton();
             return true;
         }
@@ -228,7 +230,7 @@ namespace GDX.Editor.Windows.DataTables
                 m_DataTableWindow.titleContent = new GUIContent(displayName);
             }
 
-            dataTable.SetFlag(DataTableObject.Flags.EnableUndo, enableUndo);
+            dataTable.SetFlag(DataTableObject.Settings.EnableUndo, enableUndo);
             EditorUtility.SetDirty(m_DataTableWindow.GetDataTable());
             m_DataTableWindow.GetToolbar().UpdateSaveButton();
             return true;
@@ -242,9 +244,9 @@ namespace GDX.Editor.Windows.DataTables
         void RegisterUndo(string name)
         {
             ScriptableObject scriptableObject = m_DataTableWindow.GetDataTable();
-            if (scriptableObject != null && m_DataTableWindow.GetDataTable().GetFlag(DataTableObject.Flags.EnableUndo))
+            if (scriptableObject != null && m_DataTableWindow.GetDataTable().GetFlag(DataTableObject.Settings.EnableUndo))
             {
-                Undo.RegisterCompleteObjectUndo(scriptableObject, $"{TableWindowProvider.UndoPrefix} {name}");
+                Undo.RegisterCompleteObjectUndo(scriptableObject, $"{DataTableWindowProvider.UndoPrefix} {name}");
             }
         }
     }

@@ -104,15 +104,15 @@ namespace GDX.DataTables
         }
 
         /// <inheritdoc />
-        public override bool GetFlag(Flags flag)
+        public override bool GetFlag(Settings setting)
         {
-            return m_SettingsFlags[(byte)flag];
+            return m_SettingsFlags[(byte)setting];
         }
 
         /// <inheritdoc />
-        public override void SetFlag(Flags flag, bool toggle)
+        public override void SetFlag(Settings setting, bool toggle)
         {
-            m_SettingsFlags[(byte)flag] = toggle;
+            m_SettingsFlags[(byte)setting] = toggle;
         }
 
         /// <inheritdoc />

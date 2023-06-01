@@ -12,7 +12,7 @@ using Object = UnityEngine.Object;
 namespace GDX.Editor.Windows.DataTables
 {
 #if UNITY_2022_2_OR_NEWER
-    public static class TableWindowProvider
+    public static class DataTableWindowProvider
     {
         public const string UndoPrefix = "Table:";
 
@@ -35,9 +35,10 @@ namespace GDX.Editor.Windows.DataTables
             }
 
             // Update windows / inspectors
-            foreach (KeyValuePair<DataTableObject, DataTableWindow> kvp in k_TableToTableWindow)
+            foreach (KeyValuePair<int, DataTableWindow> kvp in k_TicketToTableWindow)
             {
-                DataTableTracker.NotifyOfColumnChange(kvp.Key);
+                // TODO: Maybe we should make an undo subscribe event?
+                DataTableTracker.NotifyOfColumnChange(kvp.Key, -1);
             }
         }
 
@@ -49,7 +50,7 @@ namespace GDX.Editor.Windows.DataTables
             k_TicketToTableWindow[ticket] = dataTableWindow;
 
             // We're only going to subscribe for undo events when the table window is open and we have support
-            if (!s_SubscribedForUndo && dataTable.GetFlag(DataTableObject.Flags.EnableUndo))
+            if (!s_SubscribedForUndo && dataTable.GetFlag(DataTableObject.Settings.EnableUndo))
             {
                 Undo.undoRedoEvent += UndoRedoEvent;
                 s_SubscribedForUndo = true;
@@ -117,6 +118,8 @@ namespace GDX.Editor.Windows.DataTables
 
             EditorUtility.FocusProjectWindow();
             Selection.activeObject = asset;
+
+            asset.SetFlag(DataTableObject.Settings.EnableUndo, true);
 
             asset.AddColumn(Serializable.SerializableTypes.String, "String");
             asset.AddRow("0");

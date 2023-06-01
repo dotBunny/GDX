@@ -10,14 +10,14 @@ namespace GDX.Editor.Windows.DataTables
     public class DataTableWindow : EditorWindow, DataTableTracker.IColumnDefinitionChangeCallbackReceiver, DataTableTracker.ICellValueChangedCallbackReceiver, DataTableTracker.IRowDefinitionChangeCallbackReceiver
     {
         int m_DataTableTicket;
-        TableWindowController m_Controller;
-        TableWindowOverlay m_Overlay;
+        DataTableWindowController m_Controller;
+        DataTableWindowOverlay m_Overlay;
 
         DataTableObject m_DataTable;
 
 
-        TableWindowToolbar m_Toolbar;
-        TableWindowView m_View;
+        DataTableWindowToolbar m_Toolbar;
+        DataTableWindowView m_View;
         DataTableTracker.ICellValueChangedCallbackReceiver m_ICellValueChangedCallbackReceiverImplementation;
         bool m_Bound = false;
 
@@ -31,9 +31,9 @@ namespace GDX.Editor.Windows.DataTables
             rootVisualElement.RegisterCallback<KeyDownEvent>(OnKeyboardEvent);
 
             // Build out our window controls
-            m_Toolbar = new TableWindowToolbar(rootVisualElement.Q<Toolbar>("gdx-table-toolbar"), this);
-            m_Overlay = new TableWindowOverlay(rootVisualElement.Q<VisualElement>("gdx-table-overlay"), this);
-            m_Controller = new TableWindowController(this, m_Overlay);
+            m_Toolbar = new DataTableWindowToolbar(rootVisualElement.Q<Toolbar>("gdx-table-toolbar"), this);
+            m_Overlay = new DataTableWindowOverlay(rootVisualElement.Q<VisualElement>("gdx-table-overlay"), this);
+            m_Controller = new DataTableWindowController(this, m_Overlay);
 
             // Catch domain reload and rebind/relink window
             if (m_DataTable != null)
@@ -51,21 +51,21 @@ namespace GDX.Editor.Windows.DataTables
                 DataTableTracker.UnregisterColumnChanged(this, m_DataTableTicket);
                 DataTableTracker.UnregisterRowChanged(this, m_DataTableTicket);
                 DataTableTracker.UnregisterCellValueChanged(this, m_DataTableTicket);
-                DataTableTracker.UnregisterUsage(m_DataTableTicket);
+                DataTableTracker.RemoveUsage(m_DataTableTicket);
             }
 
             if (m_DataTable != null)
             {
                 Save();
             }
-            TableWindowProvider.UnregisterTableWindow(this);
+            DataTableWindowProvider.UnregisterTableWindow(this);
         }
 
         void OnKeyboardEvent(KeyDownEvent evt)
         {
-            TableWindowOverlay.OverlayState state = m_Overlay.GetPrimaryState();
+            DataTableWindowOverlay.OverlayState state = m_Overlay.GetPrimaryState();
             // Escape to cancel overlay
-            if (evt.keyCode == KeyCode.Escape && state != TableWindowOverlay.OverlayState.Hide)
+            if (evt.keyCode == KeyCode.Escape && state != DataTableWindowOverlay.OverlayState.Hide)
             {
                 m_Overlay.SetOverlayStateHidden();
             }
@@ -75,27 +75,27 @@ namespace GDX.Editor.Windows.DataTables
             {
                 switch (state)
                 {
-                    case TableWindowOverlay.OverlayState.AddColumn:
+                    case DataTableWindowOverlay.OverlayState.AddColumn:
                         m_Overlay.SubmitAddColumn();
                         break;
-                    case TableWindowOverlay.OverlayState.AddRow:
+                    case DataTableWindowOverlay.OverlayState.AddRow:
                         m_Overlay.SubmitAddRow();
                         break;
-                    case TableWindowOverlay.OverlayState.RenameRow:
-                    case TableWindowOverlay.OverlayState.RenameColumn:
+                    case DataTableWindowOverlay.OverlayState.RenameRow:
+                    case DataTableWindowOverlay.OverlayState.RenameColumn:
                         m_Overlay.SubmitRename();
                         break;
-                    case TableWindowOverlay.OverlayState.Settings:
+                    case DataTableWindowOverlay.OverlayState.Settings:
                         m_Overlay.SubmitSettings();
                         break;
-                    case TableWindowOverlay.OverlayState.Confirmation:
+                    case DataTableWindowOverlay.OverlayState.Confirmation:
                         m_Overlay.SubmitConfirmation();
                         break;
                 }
             }
         }
 
-        public TableWindowController GetController()
+        public DataTableWindowController GetController()
         {
             return m_Controller;
         }
@@ -110,12 +110,12 @@ namespace GDX.Editor.Windows.DataTables
             return m_DataTableTicket;
         }
 
-        internal TableWindowToolbar GetToolbar()
+        internal DataTableWindowToolbar GetToolbar()
         {
             return m_Toolbar;
         }
 
-        public TableWindowView GetView()
+        public DataTableWindowView GetView()
         {
             return m_View;
         }
@@ -150,7 +150,7 @@ namespace GDX.Editor.Windows.DataTables
             m_DataTable = dataTable;
             m_DataTableTicket = fromDomainReload ? DataTableTracker.RegisterTable(dataTable, m_DataTableTicket) : DataTableTracker.RegisterTable(dataTable);
 
-            TableWindowProvider.RegisterTableWindow(this, m_DataTable);
+            DataTableWindowProvider.RegisterTableWindow(this, m_DataTable);
 
             RebindTable();
 
@@ -163,14 +163,14 @@ namespace GDX.Editor.Windows.DataTables
                 // We need to handle not unregistering things when on domain reload so that the count doesnt go negative.
                 if (!fromDomainReload)
                 {
-                    DataTableTracker.UnregisterUsage(m_DataTableTicket);
+                    DataTableTracker.RemoveUsage(m_DataTableTicket);
                 }
             }
 
             DataTableTracker.RegisterColumnChanged(this, m_DataTableTicket);
             DataTableTracker.RegisterRowChanged(this, m_DataTableTicket);
             DataTableTracker.RegisterCellValueChanged(this, m_DataTableTicket);
-            DataTableTracker.RegisterUsage(m_DataTableTicket);
+            DataTableTracker.AddUsage(m_DataTableTicket);
 
             m_Bound = true;
             m_Toolbar?.UpdateSaveButton();
@@ -196,14 +196,14 @@ namespace GDX.Editor.Windows.DataTables
             m_View?.Destroy();
 
             // Build our view out
-            m_View = new TableWindowView(rootVisualElement[0], this);
+            m_View = new DataTableWindowView(rootVisualElement[0], this);
 
             // Next frame resize things
             EditorApplication.delayCall += m_Controller.AutoResizeColumns;
         }
 
         /// <inheritdoc />
-        public void OnColumnDefinitionChange()
+        public void OnColumnDefinitionChange(int columnIdentifier)
         {
             RebindTable();
             m_Toolbar.UpdateSaveButton();
@@ -219,7 +219,7 @@ namespace GDX.Editor.Windows.DataTables
         }
 
         /// <inheritdoc />
-        public void OnRowDefinitionChange()
+        public void OnRowDefinitionChange(int rowIdentifier)
         {
             m_View.RebuildRowData();
             m_Toolbar.UpdateSaveButton();

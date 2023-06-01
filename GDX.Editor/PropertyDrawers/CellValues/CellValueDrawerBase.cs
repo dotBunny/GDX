@@ -218,7 +218,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         protected void NotifyOfChange()
         {
-            DataTableTracker.NotifyOfCellValueChange(m_DataTable, m_RowIdentifier, m_ColumnIdentifier, this);
+            DataTableTracker.NotifyOfCellValueChange(m_TableTicket, m_RowIdentifier, m_ColumnIdentifier, this);
         }
 
         string FormatTableSelectionItem(int arg)
@@ -471,7 +471,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             }
 
             m_TableTicket = DataTableTracker.RegisterTable(m_DataTable);
-            DataTableTracker.RegisterUsage(m_TableTicket);
+            DataTableTracker.AddUsage(m_TableTicket);
             DataTableTracker.RegisterCellValueChanged(this, m_TableTicket);
             m_HasRegisteredForCallbacks = true;
         }
@@ -484,7 +484,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             }
 
             DataTableTracker.UnregisterCellValueChanged(this, m_TableTicket);
-            DataTableTracker.UnregisterUsage(m_TableTicket);
+            DataTableTracker.RemoveUsage(m_TableTicket);
         }
 
         /// <inheritdoc />

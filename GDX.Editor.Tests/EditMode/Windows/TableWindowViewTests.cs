@@ -14,22 +14,22 @@ using Object = UnityEngine.Object;
 namespace GDX.Editor.Windows
 {
     /// <summary>
-    ///     A collection of unit tests to validate functionality of the <see cref="TableWindowView" />.
+    ///     A collection of unit tests to validate functionality of the <see cref="DataTableWindowView" />.
     /// </summary>
     public class TableWindowViewTests
     {
         DataTableObject m_TestDataTable;
         DataTableWindow m_DataTableWindow;
-        TableWindowView m_TableWindowView;
-        TableWindowController m_TableWindowController;
+        DataTableWindowView m_DataTableWindowView;
+        DataTableWindowController m_DataTableWindowController;
 
         [UnitySetUp]
         public IEnumerator Setup()
         {
             m_TestDataTable = ScriptableObject.CreateInstance<StableDataTable>();
-            m_DataTableWindow = TableWindowProvider.OpenAsset(m_TestDataTable);
-            m_TableWindowView = m_DataTableWindow.GetView();
-            m_TableWindowController = m_DataTableWindow.GetController();
+            m_DataTableWindow = DataTableWindowProvider.OpenAsset(m_TestDataTable);
+            m_DataTableWindowView = m_DataTableWindow.GetView();
+            m_DataTableWindowController = m_DataTableWindow.GetController();
             yield return null;
         }
 

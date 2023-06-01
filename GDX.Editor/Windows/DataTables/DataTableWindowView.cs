@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 namespace GDX.Editor.Windows.DataTables
 {
 #if UNITY_2022_2_OR_NEWER
-    public class TableWindowView
+    public class DataTableWindowView
     {
 
         static StyleLength m_StyleLength25 = new StyleLength(new Length(25, LengthUnit.Pixel));
@@ -36,7 +36,7 @@ namespace GDX.Editor.Windows.DataTables
 
         float m_DesiredRowHeight = 27f;
 
-        ~TableWindowView()
+        ~DataTableWindowView()
         {
             Destroy();
         }
@@ -47,7 +47,7 @@ namespace GDX.Editor.Windows.DataTables
             m_ColumnDescriptions.Clear();
         }
 
-        public TableWindowView(VisualElement rootElement, DataTableWindow window)
+        public DataTableWindowView(VisualElement rootElement, DataTableWindow window)
         {
             m_DataTableWindow = window;
 

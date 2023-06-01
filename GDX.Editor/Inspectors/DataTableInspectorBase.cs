@@ -42,7 +42,7 @@ namespace GDX.Editor.Inspectors
 
             DataTableTracker.UnregisterColumnChanged(this, m_TableTicket);
             DataTableTracker.UnregisterRowChanged(this, m_TableTicket);
-            DataTableTracker.UnregisterUsage(m_TableTicket);
+            DataTableTracker.RemoveUsage(m_TableTicket);
         }
 
         /// <inheritdoc />
@@ -84,7 +84,7 @@ namespace GDX.Editor.Inspectors
 
             DataTableTracker.RegisterColumnChanged(this, m_TableTicket);
             DataTableTracker.RegisterRowChanged(this, m_TableTicket);
-            DataTableTracker.RegisterUsage(m_TableTicket);
+            DataTableTracker.AddUsage(m_TableTicket);
             m_Bound = true;
 
             UpdateInspector();
@@ -130,18 +130,18 @@ namespace GDX.Editor.Inspectors
         void OpenTargetAsset()
         {
             DataTableObject dataTable = (DataTableObject)target;
-            TableWindowProvider.OpenAsset(dataTable);
+            DataTableWindowProvider.OpenAsset(dataTable);
             UpdateInspector();
         }
 
         /// <inheritdoc />
-        public void OnColumnDefinitionChange()
+        public void OnColumnDefinitionChange(int columnIdentifier)
         {
             UpdateInspector();
         }
 
         /// <inheritdoc />
-        public void OnRowDefinitionChange()
+        public void OnRowDefinitionChange(int rowIdentifier)
         {
             UpdateInspector();
         }

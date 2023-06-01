@@ -9,7 +9,7 @@ using UnityEngine;
 namespace GDX.Editor.Windows.DataTables
 {
 #if UNITY_2022_2_OR_NEWER
-    static class TableWindowShortcuts
+    static class DataTableWindowShortcuts
     {
         [GDXShortcut("Add Row", KeyCode.Equals, ShortcutModifiers.Control, typeof(DataTableWindow))]
         internal static void AddRow()

@@ -8,7 +8,7 @@ namespace GDX.DataTables
 {
     public abstract class DataTableObject : ScriptableObject
     {
-        public enum Flags
+        public enum Settings
         {
             EnableUndo = 0
         }
@@ -33,8 +33,8 @@ namespace GDX.DataTables
 
         public abstract string GetDisplayName();
         public abstract void SetDisplayName(string displayName);
-        public abstract bool GetFlag(Flags flag);
-        public abstract void SetFlag(Flags flag, bool toggle);
+        public abstract bool GetFlag(Settings setting);
+        public abstract void SetFlag(Settings setting, bool toggle);
         public abstract RowDescription[] GetAllRowDescriptions();
         public abstract RowDescription GetRowDescription(string name);
         public abstract RowDescription GetRowDescription(int order);
