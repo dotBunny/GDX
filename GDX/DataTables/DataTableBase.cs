@@ -142,6 +142,13 @@ namespace GDX.DataTables
         public abstract ColumnDescription GetColumnDescription(int order);
 
         /// <summary>
+        ///     Get the specified row's order.
+        /// </summary>
+        /// <param name="rowIdentifier">The unique row identifier.</param>
+        /// <returns>The row's order/position.</returns>
+        public abstract int GetRowOrder(int rowIdentifier);
+
+        /// <summary>
         ///     Set the specified row's order.
         /// </summary>
         /// <param name="rowIdentifier">The unique row identifier.</param>
@@ -153,6 +160,13 @@ namespace GDX.DataTables
         /// </summary>
         /// <param name="orderedRowIdentifiers">An array of row unique identifiers, in the order to be set.</param>
         public abstract void SetAllRowOrders(int[] orderedRowIdentifiers);
+
+        /// <summary>
+        ///     Set the specified column's order.
+        /// </summary>
+        /// <param name="columnIdentifier">The unique column identifier.</param>
+        /// <returns>The column's order/position.</returns>
+        public abstract int GetColumnOrder(int columnIdentifier);
 
         /// <summary>
         ///     Set the specified column's order.

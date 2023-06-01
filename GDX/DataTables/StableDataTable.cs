@@ -1481,6 +1481,12 @@ namespace GDX.DataTables
         // SetOrder
 
         /// <inheritdoc />
+        public override int GetColumnOrder(int columnIdentifier)
+        {
+            return m_ColumnIdentifierToSortOrderMap[columnIdentifier];
+        }
+
+        /// <inheritdoc />
         public override void SetColumnOrder(int columnIdentifier, int newSortOrder)
         {
             AssertColumnIdentifierValid(columnIdentifier);
@@ -1508,6 +1514,12 @@ namespace GDX.DataTables
                 m_SortedOrderToColumnIdentifierMap[i] = columnID;
                 m_ColumnIdentifierToSortOrderMap[columnID] = i;
             }
+        }
+
+        /// <inheritdoc />
+        public override int GetRowOrder(int rowIdentifier)
+        {
+            return m_RowIdentifierToDenseIndexMap[rowIdentifier];
         }
 
         /// <inheritdoc />
