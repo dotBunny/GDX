@@ -6,14 +6,21 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
-using GDX.DataTables.CellValues;
 using UnityEngine;
 using TextGenerator = GDX.Developer.TextGenerator;
 
 namespace GDX.DataTables
 {
+    /// <summary>
+    ///     <see cref="DataTableBase" /> Based Extension Methods
+    /// </summary
     public static class DataTableExtensions
     {
+        /// <summary>
+        ///     Make a CSV safe version of the provided content.
+        /// </summary>
+        /// <param name="content">The content which needs to be made safe for CSV.</param>
+        /// <returns>A CSV safe value string.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static string MakeCommaSeperatedValue(string content)
         {
@@ -32,16 +39,21 @@ namespace GDX.DataTables
             return content.IndexOf(',') != -1 ? $"\"{content}\"" : content;
         }
 
-        static string[] ParseCommaSeperatedValues(string content)
+        /// <summary>
+        ///     Parse a given <paramref name="line" /> into seperated values.
+        /// </summary>
+        /// <param name="line">The CSV line.</param>
+        /// <returns>An array of string values.</returns>
+        static string[] ParseCommaSeperatedValues(string line)
         {
             List<string> returnStrings = new List<string>();
             int lastIndex = -1;
             int currentIndex = 0;
             bool isQuoted = false;
-            int length = content.Length;
-            while(currentIndex < length)
+            int length = line.Length;
+            while (currentIndex < length)
             {
-                switch(content[currentIndex])
+                switch (line[currentIndex])
                 {
                     case '"':
                         isQuoted = !isQuoted;
@@ -49,21 +61,38 @@ namespace GDX.DataTables
                     case ',':
                         if (!isQuoted)
                         {
-                            returnStrings.Add(content.Substring(lastIndex + 1, (currentIndex - lastIndex)).Trim(' ', ','));
+                            returnStrings.Add(line.Substring(lastIndex + 1, currentIndex - lastIndex).Trim(' ', ','));
                             lastIndex = currentIndex;
                         }
+
                         break;
                 }
+
                 currentIndex++;
             }
-            if (lastIndex != content.Length - 1)
+
+            if (lastIndex != line.Length - 1)
             {
-                returnStrings.Add(content.Substring(lastIndex+1).Trim());
+                returnStrings.Add(line.Substring(lastIndex + 1).Trim());
             }
+
             return returnStrings.ToArray();
         }
 
-        public static bool UpdateFromCommaSeperatedValues(this DataTableBase dataTable, string filePath)
+        /// <summary>
+        ///     Update the <see cref="DataTableBase" /> with the CSV data found in the given file.
+        /// </summary>
+        /// <remarks>
+        ///     It's important that the Row Identifier column remains unchanged, no structural changes have occured, and
+        ///     no changes of column order were made. Object references will be maintained during update, only values will
+        ///     be updated.
+        /// </remarks>
+        /// <param name="dataTable">The target <see cref="DataTableBase" /> to apply changes to.</param>
+        /// <param name="filePath">The path to the CSV file to read.</param>
+        /// <param name="removeRowIfNotFound">Should rows that are not found in the CSV content be removed?</param>
+        /// <returns>Was this operation successful?</returns>
+        public static bool UpdateFromCommaSeperatedValues(this DataTableBase dataTable, string filePath,
+            bool removeRowIfNotFound = true)
         {
             if (!File.Exists(filePath))
             {
@@ -71,7 +100,24 @@ namespace GDX.DataTables
                 return false;
             }
 
-            string[] fileContent = File.ReadAllLines(filePath);
+            return UpdateFromCommaSeperatedValues(dataTable, File.ReadAllLines(filePath), removeRowIfNotFound);
+        }
+
+        /// <summary>
+        ///     Update the <see cref="DataTableBase" /> with the CSV data found in the given file.
+        /// </summary>
+        /// <remarks>
+        ///     It's important that the Row Identifier column remains unchanged, no structural changes have occured, and
+        ///     no changes of column order were made. Object references will be maintained during update, only values will
+        ///     be updated.
+        /// </remarks>
+        /// <param name="dataTable">The target <see cref="DataTableBase" /> to apply changes to.</param>
+        /// <param name="fileContent">An array of CSV lines.</param>
+        /// <param name="removeRowIfNotFound">Should rows that are not found in the CSV content be removed?</param>
+        /// <returns>Was this operation successful?</returns>
+        public static bool UpdateFromCommaSeperatedValues(this DataTableBase dataTable, string[] fileContent,
+            bool removeRowIfNotFound = true)
+        {
             int tableRowCount = dataTable.GetRowCount();
             int tableColumnCount = dataTable.GetColumnCount();
             ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
@@ -80,7 +126,8 @@ namespace GDX.DataTables
             string[] columnTest = ParseCommaSeperatedValues(fileContent[0]);
             if (columnTest.Length != tableColumnCount + 2)
             {
-                Debug.LogError($"The importing data has {columnTest.Length} columns where {tableColumnCount + 2} was expected.");
+                Debug.LogError(
+                    $"The importing data has {columnTest.Length} columns where {tableColumnCount + 2} was expected.");
                 return false;
             }
 
@@ -92,15 +139,17 @@ namespace GDX.DataTables
             {
                 previousRowInternalIndices.Add(rowDescriptions[i].Identifier);
             }
+
             List<int> foundRowInternalIndices = new List<int>(tableRowCount);
 
             for (int i = 1; i < fileContent.Length; i++)
             {
                 int rowIdentifier = -1;
                 string[] rowStrings = ParseCommaSeperatedValues(fileContent[i]);
+                string rowName = string.Empty;
                 if (string.IsNullOrEmpty(rowStrings[0]))
                 {
-                    string rowName = rowStrings[1];
+                    rowName = rowStrings[1];
                     if (string.IsNullOrEmpty(rowName))
                     {
                         rowName = "Unnamed";
@@ -112,9 +161,12 @@ namespace GDX.DataTables
                 else
                 {
                     rowIdentifier = int.Parse(rowStrings[0]);
+                    rowName = rowStrings[1];
                 }
 
                 foundRowInternalIndices.Add(rowIdentifier);
+
+                dataTable.SetRowName(rowIdentifier, rowName);
 
                 for (int j = 0; j < tableColumnCount; j++)
                 {
@@ -128,14 +180,16 @@ namespace GDX.DataTables
                             dataTable.SetChar(rowIdentifier, columnDescriptions[j].Identifier, columnString[0]);
                             break;
                         case Serializable.SerializableTypes.Bool:
-                            dataTable.SetBool(rowIdentifier, columnDescriptions[j].Identifier, bool.Parse(columnString));
+                            dataTable.SetBool(rowIdentifier, columnDescriptions[j].Identifier,
+                                bool.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.SByte:
                             dataTable.SetSByte(rowIdentifier, columnDescriptions[j].Identifier,
                                 sbyte.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Byte:
-                            dataTable.SetByte(rowIdentifier, columnDescriptions[j].Identifier, byte.Parse(columnString));
+                            dataTable.SetByte(rowIdentifier, columnDescriptions[j].Identifier,
+                                byte.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Short:
                             dataTable.SetShort(rowIdentifier, columnDescriptions[j].Identifier,
@@ -149,10 +203,12 @@ namespace GDX.DataTables
                             dataTable.SetInt(rowIdentifier, columnDescriptions[j].Identifier, int.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.UInt:
-                            dataTable.SetUInt(rowIdentifier, columnDescriptions[j].Identifier, uint.Parse(columnString));
+                            dataTable.SetUInt(rowIdentifier, columnDescriptions[j].Identifier,
+                                uint.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.Long:
-                            dataTable.SetLong(rowIdentifier, columnDescriptions[j].Identifier, long.Parse(columnString));
+                            dataTable.SetLong(rowIdentifier, columnDescriptions[j].Identifier,
+                                long.Parse(columnString));
                             break;
                         case Serializable.SerializableTypes.ULong:
                             dataTable.SetULong(rowIdentifier, columnDescriptions[j].Identifier,
@@ -171,24 +227,38 @@ namespace GDX.DataTables
             }
 
             // Remove indices that were not found any more?
-            int foundIndicesCount = foundRowInternalIndices.Count;
-            for (int i = 0; i < foundIndicesCount; i++)
+            if (removeRowIfNotFound)
             {
-                if (previousRowInternalIndices.Contains(foundRowInternalIndices[i]))
+                int foundIndicesCount = foundRowInternalIndices.Count;
+                for (int i = 0; i < foundIndicesCount; i++)
                 {
-                    previousRowInternalIndices.Remove(foundRowInternalIndices[i]);
+                    if (previousRowInternalIndices.Contains(foundRowInternalIndices[i]))
+                    {
+                        previousRowInternalIndices.Remove(foundRowInternalIndices[i]);
+                    }
                 }
-            }
 
-            int indicesToRemove = previousRowInternalIndices.Count;
-            for(int i = 0; i < indicesToRemove; i++)
-            {
-                dataTable.RemoveRow(previousRowInternalIndices[i]);
+                int indicesToRemove = previousRowInternalIndices.Count;
+                for (int i = 0; i < indicesToRemove; i++)
+                {
+                    dataTable.RemoveRow(previousRowInternalIndices[i]);
+                }
             }
 
             return true;
         }
 
+        /// <summary>
+        ///     Export the data found in the <see cref="DataTableBase" /> to a CSV file.
+        /// </summary>
+        /// <remarks>
+        ///     The data is able to be imported via
+        ///     <see cref="UpdateFromCommaSeperatedValues(GDX.DataTables.DataTableBase,string,bool)" />,
+        ///     however there is a requirement that the structure of the table does not change, nor does the column order. The Row
+        ///     Identifier will be used to match up rows, with an option to create new rows.
+        /// </remarks>
+        /// <param name="dataTable">The target <see cref="DataTableBase" /> to export data from.</param>
+        /// <param name="filePath">The absolute path where to write the data in CSV format.</param>
         public static void ExportToCommaSeperatedValues(this DataTableBase dataTable, string filePath)
         {
             int rowCount = dataTable.GetRowCount();
@@ -197,7 +267,7 @@ namespace GDX.DataTables
 
             // Build first line
             ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
-            generator.Append("Row ID, Row Name");
+            generator.Append("Row Identifier, Row Name");
             for (int i = 0; i < columnCount; i++)
             {
                 generator.Append(", ");
@@ -348,180 +418,6 @@ namespace GDX.DataTables
             }
 
             File.WriteAllText(filePath, generator.ToString());
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static StringCellValue GetStringCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new StringCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static BoolCellValue GetBoolCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new BoolCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static CharCellValue GetCharCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new CharCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static SByteCellValue GetSByteCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new SByteCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ByteCellValue GetByteCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new ByteCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ShortCellValue GetShortCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new ShortCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UShortCellValue GetUShortCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new UShortCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IntCellValue GetIntCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new IntCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UIntCellValue GetUIntCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new UIntCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static LongCellValue GetLongCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new LongCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ULongCellValue GetULongCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new ULongCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static FloatCellValue GetFloatCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new FloatCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DoubleCellValue GetDoubleCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new DoubleCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2CellValue GetVector2CellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new Vector2CellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector3CellValue GetVector3CellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new Vector3CellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector4CellValue GetVector4CellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new Vector4CellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2IntCellValue GetVector2IntCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new Vector2IntCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector3IntCellValue GetVector3IntCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new Vector3IntCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static QuaternionCellValue GetQuaternionCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new QuaternionCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static RectCellValue GetRectCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new RectCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static RectIntCellValue GetRectIntCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new RectIntCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ColorCellValue GetColorCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new ColorCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static LayerMaskCellValue GetLayerMaskCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new LayerMaskCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static BoundsCellValue GetBoundsCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new BoundsCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static BoundsIntCellValue GetBoundsIntCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new BoundsIntCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Hash128CellValue GetHash128CellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new Hash128CellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GradientCellValue GetGradientCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new GradientCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static AnimationCurveCellValue GetAnimationCurveCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new AnimationCurveCellValue(dataTable, rowID, columnID);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ObjectCellValue GetObjectCellValue(this DataTableBase dataTable, int rowID, int columnID)
-        {
-            return new ObjectCellValue(dataTable, rowID, columnID);
         }
     }
 }

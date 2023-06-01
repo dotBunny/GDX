@@ -23,7 +23,19 @@ Underneath this folder are empty Unity projects used to test what including the 
 ### Projects
 
 #### GDX_Development
-Located in `Projects\GDX_Development`, this is the **primary** development project that should be used when contributing to the project. Unit tests can be ran from the Unity Editor and this project is used in [Automation](/manual/contributing/automation.html) as well.
+Located in `Projects\GDX_Development`, this is the **primary** development project that should be used when contributing to the project. Unit tests can be ran from the Unity Editor and this project is used in [Automation](/manual/contributing/automation.html) as well. 
+
+The project includes a root menu item addition (of its namesake) to the Unity editor which allows build and BVT testing to be driven from the editor (on Windows).
+
+##### BVT
+
+The **Build Vertification Test** suite allows for tests to be run in builds and validated across numerous platforms. These are meant to run without any other dependencies and therefore appropriate for actual runtime deployment. The `Bootstrap` MonoBehaviour file drives this in our builds asynchronously.
+
+##### Demo
+
+This is where content lives that is used in our _discovery_ videos about `GDX`.
+
+
 
 #### GDX_Entities
 This project has been rather dormant whilst we await a proper Entities 1.0 release cycle. It will change as things become publicly available.
