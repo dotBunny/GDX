@@ -4,14 +4,11 @@
 
 #if UNITY_2022_2_OR_NEWER
 
-using System;
 using System.Collections;
 using GDX.Editor.Windows.DataTables;
 using GDX.DataTables;
-using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
-using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
 namespace GDX.Editor.Windows
@@ -45,4 +42,4 @@ namespace GDX.Editor.Windows
         }
     }
 }
-#endif
+#endif // UNITY_2022_2_OR_NEWER

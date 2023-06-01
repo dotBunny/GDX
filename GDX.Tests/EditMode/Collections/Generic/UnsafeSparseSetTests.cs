@@ -555,4 +555,4 @@ namespace GDX.Collections.Generic
         }
     }
 }
-#endif
+#endif // GDX_UNSAFE_COLLECTIONS

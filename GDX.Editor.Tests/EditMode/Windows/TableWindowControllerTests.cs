@@ -110,4 +110,4 @@ namespace GDX.Editor.Windows
 
     }
 }
-#endif
+#endif // UNITY_2022_2_OR_NEWER
