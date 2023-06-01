@@ -388,5 +388,5 @@ namespace GDX.Editor.Windows.DataTables
             }
         }
     }
-#endif
+#endif // UNITY_2022_2_OR_NEWER
 }

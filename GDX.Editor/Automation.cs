@@ -307,7 +307,7 @@ namespace GDX.Editor
                 }
 #else
                 // Linux Support?
-#endif
+#endif // UNITY_EDITOR_WIN
             }
 
             CodeEditor.CurrentEditor.SyncAll();

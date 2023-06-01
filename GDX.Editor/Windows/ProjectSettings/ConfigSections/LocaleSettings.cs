@@ -6,8 +6,7 @@ using UnityEngine.UIElements;
 
 #if !UNITY_2022_1_OR_NEWER
 using UnityEditor.UIElements;
-#endif
-
+#endif // !UNITY_2022_1_OR_NEWER
 
 namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 {

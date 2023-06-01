@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Unity.VisualScripting;
-#endif
+#endif // GDX_VISUALSCRIPTING
 
 using UnityEngine.UIElements;
 
@@ -180,7 +180,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         public void BindSectionContent(VisualElement rootElement)
         {
         }
-#endif
+#endif // GDX_VISUALSCRIPTING
 
 
 
@@ -199,7 +199,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
                     BoltCore.Configuration.typeOptions.Add(type);
                 }
             }
-#endif
+#endif // GDX_VISUALSCRIPTING
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
             BoltCore.Configuration.Save();
 
             Codebase.UpdateSettings();
-#endif
+#endif // GDX_VISUALSCRIPTING
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
                 }
             }
             return true;
-#endif
+#endif // !GDX_VISUALSCRIPTING
         }
 
         /// <summary>
@@ -262,7 +262,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
                     BoltCore.Configuration.typeOptions.Remove(type);
                 }
             }
-#endif
+#endif // GDX_VISUALSCRIPTING
         }
 
         public bool GetDefaultVisibility()

@@ -127,5 +127,5 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarSaveButton?.SetEnabled(EditorUtility.IsDirty(m_ParentWindow.GetDataTable()));
         }
     }
-#endif
+#endif // UNITY_2022_2_OR_NEWER
 }

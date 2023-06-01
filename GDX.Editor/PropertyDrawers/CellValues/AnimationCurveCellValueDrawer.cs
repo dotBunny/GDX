@@ -48,5 +48,5 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             return AnimationCurveCellValue.GetSupportedType();
         }
     }
-#endif
+#endif // UNITY_2022_2_OR_NEWER
 }

@@ -507,7 +507,7 @@ namespace GDX.Editor.Windows.ProjectSettings
             k_ConfigSections[TracesSettings.SectionIndex] ??= new TracesSettings();
 #if GDX_VISUALSCRIPTING
             k_ConfigSections[VisualScriptingSettings.SectionIndex] ??= new VisualScriptingSettings();
-#endif
+#endif // GDX_VISUALSCRIPTING
 
 
             // Prewarm Section Elements

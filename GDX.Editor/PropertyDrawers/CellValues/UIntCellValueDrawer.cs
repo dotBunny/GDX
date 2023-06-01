@@ -18,11 +18,20 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         protected override VisualElement GetCellElement()
         {
             m_CellValue = new UIntCellValue(m_DataTable, m_RowIdentifier, m_ColumnIdentifier);
+#if UNITY_2022_3_OR_NEWER
             UnsignedIntegerField newField = new UnsignedIntegerField(null) { name = k_CellFieldName };
             newField.SetValueWithoutNotify(m_CellValue.Get());
+#else
+            IntegerField newField = new IntegerField(null) { name = k_CellFieldName };
+            newField.SetValueWithoutNotify((int)m_CellValue.Get());
+#endif // UNITY_2022_3_OR_NEWER
             newField.RegisterValueChangedCallback(e =>
             {
+#if UNITY_2022_3_OR_NEWER
                 m_CellValue.Set(e.newValue);
+#else
+                m_CellValue.Set((int)e.newValue);
+#endif // UNITY_2022_3_OR_NEWER
                 NotifyOfChange();
             });
             return newField;
@@ -31,8 +40,13 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         /// <inheritdoc />
         protected override void UpdateValue()
         {
+#if UNITY_2022_3_OR_NEWER
             UnsignedIntegerField cellField = (UnsignedIntegerField)m_CellElement;
             cellField.SetValueWithoutNotify(m_CellValue.Get());
+#else
+            IntegerField cellField = (IntegerField)m_CellElement;
+            cellField.SetValueWithoutNotify((int)m_CellValue.Get());
+#endif
         }
 
         /// <inheritdoc />
@@ -47,5 +61,5 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             return UIntCellValue.GetSupportedType();
         }
     }
-#endif
+#endif // UNITY_2022_2_OR_NEWER
 }

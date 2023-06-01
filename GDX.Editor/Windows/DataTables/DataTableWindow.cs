@@ -225,5 +225,5 @@ namespace GDX.Editor.Windows.DataTables
             m_Toolbar.UpdateSaveButton();
         }
     }
-#endif
+#endif // UNITY_2022_2_OR_NEWER
 }

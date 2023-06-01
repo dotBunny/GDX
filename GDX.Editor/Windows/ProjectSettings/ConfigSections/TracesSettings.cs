@@ -9,7 +9,7 @@ using Toggle = UnityEngine.UIElements.Toggle;
 #if !GDX_MASKFIELD
 using UnityEngine.UI;
 using System.Reflection;
-#endif
+#endif // !GDX_MASKFIELD
 
 namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 {
@@ -105,7 +105,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
             m_MaskDevelopment.choicesMasks = k_TraceValues;
 #else
             SetMaskFieldValues(m_MaskDevelopment);
-#endif
+#endif // GDX_MASKFIELD
             m_MaskDevelopment.value = (int)ProjectSettingsProvider.WorkingConfig.TraceDevelopmentLevels;
             m_MaskDevelopment.RegisterValueChangedCallback(evt =>
             {
@@ -128,7 +128,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
             m_MaskDebug.choicesMasks = k_TraceValues;
 #else
             SetMaskFieldValues(m_MaskDebug);
-#endif
+#endif // GDX_MASKFIELD
             m_MaskDebug.value = (int)ProjectSettingsProvider.WorkingConfig.TraceDebugLevels;
             m_MaskDebug.RegisterValueChangedCallback(evt =>
             {
@@ -151,7 +151,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
             m_MaskRelease.choicesMasks = k_TraceValues;
 #else
             SetMaskFieldValues(m_MaskRelease);
-#endif
+#endif // GDX_MASKFIELD
             m_MaskRelease.value = (int)ProjectSettingsProvider.WorkingConfig.TraceReleaseLevels;
             m_MaskRelease.RegisterValueChangedCallback(evt =>
             {
@@ -184,7 +184,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
                 choiceMaskProperty.SetValue(maskField, s_TraceValues, null);
             }
         }
-#endif
+#endif // !GDX_MASKFIELD
 
         public bool GetDefaultVisibility()
         {

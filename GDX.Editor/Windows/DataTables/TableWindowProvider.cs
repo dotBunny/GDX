@@ -108,6 +108,7 @@ namespace GDX.Editor.Windows.DataTables
 
 #if GDX_TOOLS
         [MenuItem("Tools/GDX/Create StableTable Example", false)]
+#endif // GDX_TOOLS
         public static void CreateStableTableExample()
         {
             StableDataTable asset = UnityEngine.ScriptableObject.CreateInstance<StableDataTable>();
@@ -178,7 +179,6 @@ namespace GDX.Editor.Windows.DataTables
 
             OpenAsset(asset);
         }
-#endif
     }
-#endif
+#endif // UNITY_2022_2_OR_NEWER
 }

@@ -3,11 +3,12 @@
 // See the LICENSE file in the project root for more information.
 
 using UnityEditor;
-using UnityEngine;
 #if UNITY_2022_2_OR_NEWER
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
-#endif
+#else
+using UnityEngine;
+#endif // UNITY_2022_2_OR_NEWER
 
 namespace GDX.Editor.PropertyDrawers
 {
@@ -44,6 +45,6 @@ namespace GDX.Editor.PropertyDrawers
             EditorGUI.PropertyField(position, property, label);
             GUI.enabled = true;
         }
-#endif
+#endif // UNITY_2022_2_OR_NEWER
     }
 }

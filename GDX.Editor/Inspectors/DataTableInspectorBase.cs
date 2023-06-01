@@ -2,13 +2,12 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using GDX.Editor.Windows.DataTables;
 using GDX.DataTables;
 #if UNITY_2022_2_OR_NEWER
 using System.Text;
 using UnityEngine.UIElements;
-#endif
+#endif // UNITY_2022_2_OR_NEWER
 
 namespace GDX.Editor.Inspectors
 {
@@ -156,5 +155,5 @@ namespace GDX.Editor.Inspectors
             UnityEngine.GUILayout.Label("Editing an DataTableBase is unsupported on this version of Unity.");
         }
     }
-#endif
+#endif // UNITY_2022_2_OR_NEWER
 }

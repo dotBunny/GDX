@@ -516,5 +516,5 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             m_ValueContainer = null;
         }
     }
-#endif
+#endif // UNITY_2022_2_OR_NEWER
 }

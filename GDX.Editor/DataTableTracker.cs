@@ -267,7 +267,7 @@ namespace GDX.Editor
                 {
                     k_TableUsageCounters[forcedTicket] = 0;
                 }
-#endif
+#endif // UNITY_2022_2_OR_NEWER
 
 
                 if (forcedTicket >= s_TableTicketHead)

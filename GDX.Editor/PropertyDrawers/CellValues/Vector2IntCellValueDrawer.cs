@@ -47,5 +47,5 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             return Vector2IntCellValue.GetSupportedType();
         }
     }
-#endif
+#endif // UNITY_2022_2_OR_NEWER
 }

@@ -12,7 +12,7 @@ namespace GDX.Editor
     {
 #if GDX_TOOLS
         [UnityEditor.MenuItem("Tools/GDX/Developer/Output Resource Audit", false, 100)]
-#endif
+#endif // GDX_TOOLS
         static void ManagedMemoryReport()
         {
             string outputPath =

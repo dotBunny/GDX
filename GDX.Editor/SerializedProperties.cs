@@ -5,7 +5,7 @@ using System.Reflection;
 using UnityEditor;
 #if !UNITY_2022_1_OR_NEWER
 using UnityEngine;
-#endif
+#endif // !UNITY_2022_1_OR_NEWER
 
 namespace GDX.Editor
 {
@@ -66,11 +66,11 @@ namespace GDX.Editor
                     return property.managedReferenceValue;
                 case SerializedPropertyType.Hash128:
                     return property.hash128Value;
-#endif
+#endif // UNITY_2021_1_OR_NEWER
                 default:
                     return null;
             }
-#endif
+#endif // UNITY_2022_1_OR_NEWER
         }
         public static void SetValue(this SerializedProperty property, object value)
         {
@@ -144,9 +144,9 @@ namespace GDX.Editor
                 case SerializedPropertyType.Hash128:
                     property.hash128Value = (Hash128)value;
                     break;
-#endif
+#endif // UNITY_2021_1_OR_NEWER
             }
-#endif
+#endif // UNITY_2022_1_OR_NEWER
         }
     }
 }

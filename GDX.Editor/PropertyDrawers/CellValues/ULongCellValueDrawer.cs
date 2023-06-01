@@ -18,11 +18,21 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         protected override VisualElement GetCellElement()
         {
             m_CellValue = new ULongCellValue(m_DataTable, m_RowIdentifier, m_ColumnIdentifier);
+#if UNITY_2022_3_OR_NEWER
             UnsignedLongField newField = new UnsignedLongField(null) { name = k_CellFieldName };
             newField.SetValueWithoutNotify(m_CellValue.Get());
+#else
+            LongField newField = new LongField(null) { name = k_CellFieldName };
+            newField.SetValueWithoutNotify((long)m_CellValue.Get());
+#endif // UNITY_2022_3_OR_NEWER
+
             newField.RegisterValueChangedCallback(e =>
             {
+#if UNITY_2022_3_OR_NEWER
                 m_CellValue.Set(e.newValue);
+#else
+                m_CellValue.Set((long)e.newValue);
+#endif // UNITY_2022_3_OR_NEWER
                 NotifyOfChange();
             });
             return newField;
@@ -31,8 +41,14 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         /// <inheritdoc />
         protected override void UpdateValue()
         {
+#if UNITY_2022_3_OR_NEWER
             UnsignedLongField cellField = (UnsignedLongField)m_CellElement;
             cellField.SetValueWithoutNotify(m_CellValue.Get());
+#else
+            LongField cellField = (LongField)m_CellElement;
+            cellField.SetValueWithoutNotify((long)m_CellValue.Get());
+#endif // UNITY_2022_3_OR_NEWER
+
         }
 
         /// <inheritdoc />
@@ -47,5 +63,5 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             return ULongCellValue.GetSupportedType();
         }
     }
-#endif
+#endif // UNITY_2022_2_OR_NEWER
 }

@@ -164,7 +164,7 @@ namespace GDX.Editor
                 $"{UpdateProvider.LocalPackage.PackageAssetPath}/GDX.Editor/UIElements/GDXStylesUnity2020.uss");
 
             return s_SharedStyleSheetOverride;
-#endif
+#endif // UNITY_2021_1_OR_NEWER
         }
 
         /// <summary>

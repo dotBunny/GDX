@@ -50,5 +50,5 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             return ByteCellValue.GetSupportedType();
         }
     }
-#endif
+#endif // UNITY_2022_2_OR_NEWER
 }

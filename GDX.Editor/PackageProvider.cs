@@ -492,7 +492,7 @@ namespace GDX.Editor
                 out string[] defines);
 #else
             PlayerSettings.GetScriptingDefineSymbolsForGroup(group, out string[] defines);
-#endif
+#endif // UNITY_2023_1_OR_NEWER
 
             bool changes = false;
             SimpleList<string> lazyDefines = new SimpleList<string>(defines, defines.Length);
@@ -530,7 +530,7 @@ namespace GDX.Editor
                 PlayerSettings.SetScriptingDefineSymbols(UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(group), lazyDefines.Array);
 #else
                 PlayerSettings.SetScriptingDefineSymbolsForGroup(group, lazyDefines.Array);
-#endif
+#endif // UNITY_2023_1_OR_NEWER
             }
 
             return changes;
