@@ -26,11 +26,6 @@ namespace GDX.DataTables
         }
 
         /// <summary>
-        ///     The assembly qualified name for <see cref="UnityEngine.Object" />
-        /// </summary>
-        protected static readonly string UnityObjectName = typeof(Object).AssemblyQualifiedName;
-
-        /// <summary>
         ///     Add a column.
         /// </summary>
         /// <param name="columnType">The type of data being stored in the column.</param>

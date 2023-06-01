@@ -27,6 +27,11 @@ namespace GDX
         public const BindingFlags PublicStaticFlags = BindingFlags.Static | BindingFlags.Public;
 
         /// <summary>
+        ///     The assembly qualified name for <see cref="UnityEngine.Object" />
+        /// </summary>
+        public static readonly string UnityObjectName = typeof(UnityEngine.Object).AssemblyQualifiedName;
+
+        /// <summary>
         ///     Returns the default value for a given type.
         /// </summary>
         /// <param name="type">A qualified type.</param>

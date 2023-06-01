@@ -12,11 +12,9 @@ namespace GDX.Editor.Windows.DataTables
 #if UNITY_2022_2_OR_NEWER
     class DataTableWindowOverlay
     {
-        const string DefaultObjectType = "UnityEngine.Object, UnityEngine";
-
-        const string ValidClass = "valid";
-        const string WarningClass = "warning";
-        const string ErrorClass = "error";
+        const string k_ValidClass = "valid";
+        const string k_WarningClass = "warning";
+        const string k_ErrorClass = "error";
 
         public enum ConfirmationState
         {
@@ -168,7 +166,7 @@ namespace GDX.Editor.Windows.DataTables
         {
             if ((Serializable.SerializableTypes)type == Serializable.SerializableTypes.Object)
             {
-                m_AddColumnFilter.value = DefaultObjectType;
+                m_AddColumnFilter.value = Reflection.UnityObjectName;
                 m_AddColumnFilter.RemoveFromClassList(ResourcesProvider.HiddenClass);
                 m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
             }
@@ -186,24 +184,24 @@ namespace GDX.Editor.Windows.DataTables
 
             if (string.IsNullOrEmpty(newValue))
             {
-                m_AddColumnFilterStatus.AddToClassList(WarningClass);
-                m_AddColumnFilterStatus.RemoveFromClassList(ValidClass);
-                m_AddColumnFilterStatus.RemoveFromClassList(ErrorClass);
+                m_AddColumnFilterStatus.AddToClassList(k_WarningClass);
+                m_AddColumnFilterStatus.RemoveFromClassList(k_ValidClass);
+                m_AddColumnFilterStatus.RemoveFromClassList(k_ErrorClass);
             }
             else
             {
                 System.Type newType = System.Type.GetType(newValue);
                 if (newType != null)
                 {
-                    m_AddColumnFilterStatus.AddToClassList(ValidClass);
-                    m_AddColumnFilterStatus.RemoveFromClassList(WarningClass);
-                    m_AddColumnFilterStatus.RemoveFromClassList(ErrorClass);
+                    m_AddColumnFilterStatus.AddToClassList(k_ValidClass);
+                    m_AddColumnFilterStatus.RemoveFromClassList(k_WarningClass);
+                    m_AddColumnFilterStatus.RemoveFromClassList(k_ErrorClass);
                 }
                 else
                 {
-                    m_AddColumnFilterStatus.AddToClassList(ErrorClass);
-                    m_AddColumnFilterStatus.RemoveFromClassList(WarningClass);
-                    m_AddColumnFilterStatus.RemoveFromClassList(ValidClass);
+                    m_AddColumnFilterStatus.AddToClassList(k_ErrorClass);
+                    m_AddColumnFilterStatus.RemoveFromClassList(k_WarningClass);
+                    m_AddColumnFilterStatus.RemoveFromClassList(k_ValidClass);
                 }
             }
         }

@@ -16,7 +16,6 @@ namespace GDX.Editor.Windows.DataTables
     {
         public const string UndoPrefix = "Table:";
 
-        static readonly Dictionary<DataTableBase, DataTableWindow> k_TableToTableWindow = new Dictionary<DataTableBase, DataTableWindow>();
         static readonly Dictionary<int, DataTableWindow> k_TicketToTableWindow = new Dictionary<int, DataTableWindow>(5);
 
 
@@ -46,7 +45,6 @@ namespace GDX.Editor.Windows.DataTables
         {
 
             int ticket = dataTableWindow.GetDataTableTicket();
-            k_TableToTableWindow[dataTable] = dataTableWindow;
             k_TicketToTableWindow[ticket] = dataTableWindow;
 
             // We're only going to subscribe for undo events when the table window is open and we have support
@@ -61,13 +59,6 @@ namespace GDX.Editor.Windows.DataTables
         {
             int tableWindowTicket = dataTableWindow.GetDataTableTicket();
             k_TicketToTableWindow.Remove(tableWindowTicket);
-
-            DataTableBase dataTable = dataTableWindow.GetDataTable();
-            if (dataTable != null)
-            {
-                k_TableToTableWindow.Remove(dataTable);
-            }
-
             if (k_TicketToTableWindow.Count == 0 && s_SubscribedForUndo)
             {
                 Undo.undoRedoEvent -= UndoRedoEvent;

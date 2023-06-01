@@ -12,9 +12,6 @@ namespace GDX.Editor.Windows.DataTables
 #if UNITY_2022_2_OR_NEWER
     public class DataTableWindowView
     {
-
-        static StyleLength m_StyleLength25 = new StyleLength(new Length(25, LengthUnit.Pixel));
-        static StyleLength m_StyleLength275 = new StyleLength(new Length(275, LengthUnit.Pixel));
         readonly List<RowDescription> m_RowDescriptions = new List<RowDescription>();
         readonly Length m_BoundsMinWidth = new Length(200, LengthUnit.Pixel);
         readonly List<ColumnDescription> m_ColumnDescriptions = new List<ColumnDescription>();
@@ -30,7 +27,6 @@ namespace GDX.Editor.Windows.DataTables
         readonly Length m_Vector2MinWidth = new Length(100, LengthUnit.Pixel);
         readonly Length m_Vector3MinWidth = new Length(150, LengthUnit.Pixel);
         readonly Length m_Vector4MinWidth = new Length(200, LengthUnit.Pixel);
-
 
         readonly DataTableWindow m_DataTableWindow;
 
@@ -67,7 +63,7 @@ namespace GDX.Editor.Windows.DataTables
             });
             m_ColumnDescriptions.AddRange(dataTable.GetAllColumnDescriptions());
 
-            // Generate columns for MCLV
+            // Generate columns for MultiColumnListView
             m_TableViewColumns = new Columns { reorderable = true, resizable = true };
 
             int columnCount = m_ColumnDescriptions.Count;
@@ -267,7 +263,7 @@ namespace GDX.Editor.Windows.DataTables
                 m_TableViewColumns.Add(column);
             }
 
-            // Create MCLV
+            // Create MultiColumnListView
             m_MultiColumnListView = new MultiColumnListView(m_TableViewColumns)
             {
                 sortingEnabled = false,
@@ -276,9 +272,9 @@ namespace GDX.Editor.Windows.DataTables
                 itemsSource = m_RowDescriptions,
                 showAlternatingRowBackgrounds = AlternatingRowBackground.ContentOnly,
                 virtualizationMethod = CollectionVirtualizationMethod.FixedHeight,
-                fixedItemHeight = m_DesiredRowHeight
+                fixedItemHeight = m_DesiredRowHeight,
+                style = { height = new StyleLength(new Length(100f, LengthUnit.Percent)) }
             };
-            m_MultiColumnListView.style.height = new StyleLength(new Length(100f, LengthUnit.Percent));
             m_MultiColumnListView.headerContextMenuPopulateEvent += AppendColumnContextMenu;
             //m_MultiColumnListView.columnSortingChanged += SortItems;
 
@@ -301,7 +297,7 @@ namespace GDX.Editor.Windows.DataTables
             cell.userData = null;
         }
 
-        public void SetDesiredRowHeightMultiplier(float neededHeight)
+        void SetDesiredRowHeightMultiplier(float neededHeight)
         {
             if (neededHeight > m_DesiredRowHeight)
             {
@@ -433,9 +429,9 @@ namespace GDX.Editor.Windows.DataTables
                 int columnIdentifier = int.Parse(columnInteger);
                 evt.menu.AppendSeparator();
                 evt.menu.AppendAction("Rename",
-                    a => m_DataTableWindow.GetController().ShowRenameColumnDialog(columnIdentifier));
+                    _ => m_DataTableWindow.GetController().ShowRenameColumnDialog(columnIdentifier));
                 evt.menu.AppendAction("Remove",
-                    a => m_DataTableWindow.GetController().ShowRemoveColumnDialog(columnIdentifier), CanRemoveColumn);
+                    _ => m_DataTableWindow.GetController().ShowRemoveColumnDialog(columnIdentifier), CanRemoveColumn);
             }
         }
 

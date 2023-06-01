@@ -1637,7 +1637,7 @@ namespace GDX.DataTables
         {
             int nameArrayLength = m_AllObjectRefTypeNames?.Length ?? 0;
             Array.Resize(ref m_AllObjectRefTypeNames, nameArrayLength + 1);
-            m_AllObjectRefTypeNames[nameArrayLength] = UnityObjectName;
+            m_AllObjectRefTypeNames[nameArrayLength] = Reflection.UnityObjectName;
         }
 
         internal void RemoveTypeNameEntryForUnityObjectColumn(int columnDenseIndex)

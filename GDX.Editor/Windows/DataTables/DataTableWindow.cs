@@ -19,7 +19,7 @@ namespace GDX.Editor.Windows.DataTables
         DataTableWindowToolbar m_Toolbar;
         DataTableWindowView m_View;
         DataTableTracker.ICellValueChangedCallbackReceiver m_ICellValueChangedCallbackReceiverImplementation;
-        bool m_Bound = false;
+        bool m_Bound;
 
         void OnEnable()
         {
