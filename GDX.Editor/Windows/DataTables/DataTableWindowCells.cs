@@ -217,7 +217,11 @@ namespace GDX.Editor.Windows.DataTables
                 new UIntCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
+#if UNITY_2022_3_OR_NEWER
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
+#else
+            field.SetValueWithoutNotify((uint)cellValue.GetUnsafe());
+#endif
             field.RegisterValueChangedCallback(e =>
             {
                 CellData localMap = (CellData)field.userData;
@@ -271,7 +275,12 @@ namespace GDX.Editor.Windows.DataTables
                 new ULongCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
+
+#if UNITY_2022_3_OR_NEWER
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
+#else
+            field.SetValueWithoutNotify((ulong)cellValue.GetUnsafe());
+#endif
             field.RegisterValueChangedCallback(e =>
             {
                 CellData localMap = (CellData)field.userData;
