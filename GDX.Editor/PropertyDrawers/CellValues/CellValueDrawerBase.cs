@@ -50,9 +50,6 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         AssetDatabaseReference[] m_Tables;
         VisualElement m_ValueContainer;
-        DataTableTracker.ICellValueChangedCallbackReceiver m_ICellValueChangedCallbackReceiverImplementation;
-
-
 
         protected abstract Serializable.SerializableTypes GetSupportedType();
 
@@ -73,6 +70,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         /// <returns>A disabled visual element.</returns>
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
+            Selection.selectionChanged += Cleanup;
 
             // Cache base reference
             m_SerializedProperty = property;
@@ -267,7 +265,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             if (arg >= 0)
             {
                 m_ColumnIdentifier = m_ColumnDescriptions[arg].Identifier;
-                
+
                 // Apply Properties
                 ApplySettings();
 
@@ -496,6 +494,26 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             {
                 UpdateValue();
             }
+        }
+
+        void Cleanup()
+        {
+            UnregisterForCallback();
+
+            // Ensure no references are kept
+            m_ColumnDescriptions = null;
+            m_ColumnProperty = null;
+            m_Container = null;
+            m_FieldLabel = null;
+            m_RowDescriptions = null;
+            m_RowProperty = null;
+            m_SerializedProperty = null;
+            m_DataTable = null;
+            m_CellElement = null;
+            m_TableButton = null;
+            m_TableProperty = null;
+            m_Tables = null;
+            m_ValueContainer = null;
         }
     }
 #endif
