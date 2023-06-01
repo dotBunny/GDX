@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 namespace GDX.Editor.Windows.DataTables
 {
 #if UNITY_2022_2_OR_NEWER
-    public class DataTableWindow : EditorWindow, TableCache.IColumnDefinitionChangeCallbackReceiver, TableCache.ICellValueChangedCallbackReceiver, TableCache.IRowDefinitionChangeCallbackReceiver
+    public class DataTableWindow : EditorWindow, DataTableTracker.IColumnDefinitionChangeCallbackReceiver, DataTableTracker.ICellValueChangedCallbackReceiver, DataTableTracker.IRowDefinitionChangeCallbackReceiver
     {
         int m_DataTableTicket;
         TableWindowController m_Controller;
@@ -18,7 +18,7 @@ namespace GDX.Editor.Windows.DataTables
 
         TableWindowToolbar m_Toolbar;
         TableWindowView m_View;
-        TableCache.ICellValueChangedCallbackReceiver m_ICellValueChangedCallbackReceiverImplementation;
+        DataTableTracker.ICellValueChangedCallbackReceiver m_ICellValueChangedCallbackReceiverImplementation;
         bool m_Bound = false;
 
         void OnEnable()
@@ -48,10 +48,10 @@ namespace GDX.Editor.Windows.DataTables
         {
             if (m_Bound)
             {
-                TableCache.UnregisterColumnChanged(this, m_DataTableTicket);
-                TableCache.UnregisterRowChanged(this, m_DataTableTicket);
-                TableCache.UnregisterCellValueChanged(this, m_DataTableTicket);
-                TableCache.UnregisterUsage(m_DataTableTicket);
+                DataTableTracker.UnregisterColumnChanged(this, m_DataTableTicket);
+                DataTableTracker.UnregisterRowChanged(this, m_DataTableTicket);
+                DataTableTracker.UnregisterCellValueChanged(this, m_DataTableTicket);
+                DataTableTracker.UnregisterUsage(m_DataTableTicket);
             }
 
             if (m_DataTable != null)
@@ -148,7 +148,7 @@ namespace GDX.Editor.Windows.DataTables
         public void BindTable(DataTableObject dataTable, bool fromDomainReload = false)
         {
             m_DataTable = dataTable;
-            m_DataTableTicket = fromDomainReload ? TableCache.RegisterTable(dataTable, m_DataTableTicket) : TableCache.RegisterTable(dataTable);
+            m_DataTableTicket = fromDomainReload ? DataTableTracker.RegisterTable(dataTable, m_DataTableTicket) : DataTableTracker.RegisterTable(dataTable);
 
             TableWindowProvider.RegisterTableWindow(this, m_DataTable);
 
@@ -156,21 +156,21 @@ namespace GDX.Editor.Windows.DataTables
 
             if (m_Bound)
             {
-                TableCache.UnregisterColumnChanged(this, m_DataTableTicket);
-                TableCache.UnregisterRowChanged(this, m_DataTableTicket);
-                TableCache.UnregisterCellValueChanged(this, m_DataTableTicket);
+                DataTableTracker.UnregisterColumnChanged(this, m_DataTableTicket);
+                DataTableTracker.UnregisterRowChanged(this, m_DataTableTicket);
+                DataTableTracker.UnregisterCellValueChanged(this, m_DataTableTicket);
 
                 // We need to handle not unregistering things when on domain reload so that the count doesnt go negative.
                 if (!fromDomainReload)
                 {
-                    TableCache.UnregisterUsage(m_DataTableTicket);
+                    DataTableTracker.UnregisterUsage(m_DataTableTicket);
                 }
             }
 
-            TableCache.RegisterColumnChanged(this, m_DataTableTicket);
-            TableCache.RegisterRowChanged(this, m_DataTableTicket);
-            TableCache.RegisterCellValueChanged(this, m_DataTableTicket);
-            TableCache.RegisterUsage(m_DataTableTicket);
+            DataTableTracker.RegisterColumnChanged(this, m_DataTableTicket);
+            DataTableTracker.RegisterRowChanged(this, m_DataTableTicket);
+            DataTableTracker.RegisterCellValueChanged(this, m_DataTableTicket);
+            DataTableTracker.RegisterUsage(m_DataTableTicket);
 
             m_Bound = true;
             m_Toolbar?.UpdateSaveButton();

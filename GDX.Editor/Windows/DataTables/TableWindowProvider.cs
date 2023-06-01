@@ -37,7 +37,7 @@ namespace GDX.Editor.Windows.DataTables
             // Update windows / inspectors
             foreach (KeyValuePair<DataTableObject, DataTableWindow> kvp in k_TableToTableWindow)
             {
-                TableCache.NotifyOfColumnChange(kvp.Key);
+                DataTableTracker.NotifyOfColumnChange(kvp.Key);
             }
         }
 
@@ -89,7 +89,7 @@ namespace GDX.Editor.Windows.DataTables
 
         public static DataTableWindow OpenAsset(DataTableObject dataTable)
         {
-            DataTableWindow dataTableWindow = GetTableWindow(TableCache.RegisterTable(dataTable));
+            DataTableWindow dataTableWindow = GetTableWindow(DataTableTracker.RegisterTable(dataTable));
             if (dataTableWindow == null)
             {
                 dataTableWindow = EditorWindow.CreateWindow<DataTableWindow>();

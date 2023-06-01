@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 namespace GDX.Editor.PropertyDrawers.CellValues
 {
 #if UNITY_2022_2_OR_NEWER
-    public abstract class CellValueDrawerBase : PropertyDrawer, TableCache.ICellValueChangedCallbackReceiver
+    public abstract class CellValueDrawerBase : PropertyDrawer, DataTableTracker.ICellValueChangedCallbackReceiver
     {
         const string k_MessageClickToUnlock = "Click to unlock for editting.";
         const string k_MessageClickToLock = "Click to lock data.";
@@ -50,7 +50,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         AssetDatabaseReference[] m_Tables;
         VisualElement m_ValueContainer;
-        TableCache.ICellValueChangedCallbackReceiver m_ICellValueChangedCallbackReceiverImplementation;
+        DataTableTracker.ICellValueChangedCallbackReceiver m_ICellValueChangedCallbackReceiverImplementation;
 
 
 
@@ -73,6 +73,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         /// <returns>A disabled visual element.</returns>
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
+
             // Cache base reference
             m_SerializedProperty = property;
 
@@ -219,7 +220,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         protected void NotifyOfChange()
         {
-            TableCache.NotifyOfCellValueChange(m_DataTable, m_RowIdentifier, m_ColumnIdentifier, this);
+            DataTableTracker.NotifyOfCellValueChange(m_DataTable, m_RowIdentifier, m_ColumnIdentifier, this);
         }
 
         string FormatTableSelectionItem(int arg)
@@ -242,7 +243,6 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             if (arg >= 0)
             {
                 m_DataTable = (DataTableObject)m_Tables[arg].GetOrLoadAsset();
-                //m_Breadcrumbs.Add(new Label(m_Tables[arg].GetFileNameWithoutExtension()));
                 DetectDrawerMode();
                 return m_Tables[arg].GetPathWithoutExtension();
             }
@@ -255,7 +255,6 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             if (arg >= 0)
             {
                 m_RowIdentifier = m_RowDescriptions[arg].Identifier;
-                //m_Breadcrumbs.Add(new Label(m_RowDescriptions[arg].Name));
                 DetectDrawerMode();
                 return "Updating ...";
             }
@@ -268,8 +267,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             if (arg >= 0)
             {
                 m_ColumnIdentifier = m_ColumnDescriptions[arg].Identifier;
-                //m_Breadcrumbs.Add(new Label(m_ColumnDescriptions[arg].Name));
-
+                
                 // Apply Properties
                 ApplySettings();
 
@@ -282,7 +280,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         VisualElement MakeSelectTableElement()
         {
-            m_Tables = TableCache.FindTables();
+            m_Tables = DataTableTracker.FindTables();
             int count = m_Tables.Length;
 
             // Create choices list, cause we uses lists for these things
@@ -474,20 +472,21 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                 return;
             }
 
-            m_TableTicket = TableCache.RegisterTable(m_DataTable);
-            TableCache.RegisterUsage(m_TableTicket);
-            TableCache.RegisterCellValueChanged(this, m_DataTable);
+            m_TableTicket = DataTableTracker.RegisterTable(m_DataTable);
+            DataTableTracker.RegisterUsage(m_TableTicket);
+            DataTableTracker.RegisterCellValueChanged(this, m_TableTicket);
             m_HasRegisteredForCallbacks = true;
         }
 
         void UnregisterForCallback()
         {
-            if (m_HasRegisteredForCallbacks)
+            if (!m_HasRegisteredForCallbacks)
             {
-
-                TableCache.UnregisterCellValueChanged(this, m_DataTable);
-                TableCache.UnregisterUsage(m_TableTicket);
+                return;
             }
+
+            DataTableTracker.UnregisterCellValueChanged(this, m_TableTicket);
+            DataTableTracker.UnregisterUsage(m_TableTicket);
         }
 
         /// <inheritdoc />

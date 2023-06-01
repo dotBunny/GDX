@@ -18,12 +18,11 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         protected override VisualElement GetCellElement()
         {
             m_CellValue = new UIntCellValue(m_DataTable, m_RowIdentifier, m_ColumnIdentifier);
-            // TODO: crushes
-            IntegerField newField = new IntegerField(null) { name = k_CellFieldName };
-            newField.SetValueWithoutNotify((int)m_CellValue.Get());
+            UnsignedIntegerField newField = new UnsignedIntegerField(null) { name = k_CellFieldName };
+            newField.SetValueWithoutNotify(m_CellValue.Get());
             newField.RegisterValueChangedCallback(e =>
             {
-                m_CellValue.Set((uint)e.newValue);
+                m_CellValue.Set(e.newValue);
                 NotifyOfChange();
             });
             return newField;
@@ -32,8 +31,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         /// <inheritdoc />
         protected override void UpdateValue()
         {
-            IntegerField cellField = (IntegerField)m_CellElement;
-            cellField.SetValueWithoutNotify((int)m_CellValue.Get());
+            UnsignedIntegerField cellField = (UnsignedIntegerField)m_CellElement;
+            cellField.SetValueWithoutNotify(m_CellValue.Get());
         }
 
         /// <inheritdoc />

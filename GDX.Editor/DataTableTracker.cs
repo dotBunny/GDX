@@ -8,8 +8,16 @@ using UnityEditor;
 
 namespace GDX.Editor
 {
-    public static class TableCache
+    public static class DataTableTracker
     {
+        public struct DataTableTrackerStats
+        {
+            public int CellValueChanged;
+            public int ColumnDefinitionChange;
+            public int RowDefinitionChange;
+            public int Usages;
+        }
+
         static readonly Dictionary<int, List<ICellValueChangedCallbackReceiver>> k_CellValueChangeCallbackReceivers =
             new Dictionary<int, List<ICellValueChangedCallbackReceiver>>(5);
 
@@ -26,7 +34,31 @@ namespace GDX.Editor
 
         static readonly Dictionary<int, int> k_TableUsageCounters = new Dictionary<int, int>(5);
 
-        public static void RegisterCellValueChanged(ICellValueChangedCallbackReceiver callback, DataTableObject dataTable)
+        public static DataTableTrackerStats GetStats(int tableTicket)
+        {
+            DataTableTrackerStats stats = new DataTableTrackerStats();
+            if (k_CellValueChangeCallbackReceivers.TryGetValue(tableTicket, out List<ICellValueChangedCallbackReceiver> cellChange))
+            {
+                stats.CellValueChanged = cellChange.Count;
+            }
+            if (k_ColumnChangeCallbackReceivers.TryGetValue(tableTicket, out List<IColumnDefinitionChangeCallbackReceiver> columnChange))
+            {
+                stats.ColumnDefinitionChange = columnChange.Count;
+            }
+            if (k_RowChangeCallbackReceivers.TryGetValue(tableTicket, out List<IRowDefinitionChangeCallbackReceiver> rowChange))
+            {
+                stats.RowDefinitionChange = rowChange.Count;
+            }
+
+            if (k_TableUsageCounters.TryGetValue(tableTicket, out int usageCount))
+            {
+                stats.Usages = usageCount;
+            }
+            return stats;
+        }
+
+        public static void RegisterCellValueChanged(ICellValueChangedCallbackReceiver callback,
+            DataTableObject dataTable)
         {
             RegisterCellValueChanged(callback, GetTicket(dataTable));
         }
@@ -50,14 +82,16 @@ namespace GDX.Editor
             }
         }
 
-        public static void UnregisterCellValueChanged(ICellValueChangedCallbackReceiver callback, DataTableObject dataTable)
+        public static void UnregisterCellValueChanged(ICellValueChangedCallbackReceiver callback,
+            DataTableObject dataTable)
         {
             UnregisterCellValueChanged(callback, GetTicket(dataTable));
         }
 
         public static void UnregisterCellValueChanged(ICellValueChangedCallbackReceiver callback, int tableTicket)
         {
-            if (k_CellValueChangeCallbackReceivers.TryGetValue(tableTicket, out List<ICellValueChangedCallbackReceiver> receiver))
+            if (k_CellValueChangeCallbackReceivers.TryGetValue(tableTicket,
+                    out List<ICellValueChangedCallbackReceiver> receiver))
             {
                 receiver.Remove(callback);
             }
@@ -84,13 +118,15 @@ namespace GDX.Editor
 
         public static void UnregisterRowChanged(IRowDefinitionChangeCallbackReceiver callback, int tableTicket)
         {
-            if (k_RowChangeCallbackReceivers.TryGetValue(tableTicket, out List<IRowDefinitionChangeCallbackReceiver> receiver))
+            if (k_RowChangeCallbackReceivers.TryGetValue(tableTicket,
+                    out List<IRowDefinitionChangeCallbackReceiver> receiver))
             {
                 receiver.Remove(callback);
             }
         }
 
-        public static void NotifyOfRowChange(DataTableObject dataTable, IRowDefinitionChangeCallbackReceiver ignore = null)
+        public static void NotifyOfRowChange(DataTableObject dataTable,
+            IRowDefinitionChangeCallbackReceiver ignore = null)
         {
             NotifyOfRowChange(GetTicket(dataTable), ignore);
         }
@@ -131,13 +167,15 @@ namespace GDX.Editor
 
         public static void UnregisterColumnChanged(IColumnDefinitionChangeCallbackReceiver callback, int tableTicket)
         {
-            if (k_ColumnChangeCallbackReceivers.TryGetValue(tableTicket, out List<IColumnDefinitionChangeCallbackReceiver> receiver))
+            if (k_ColumnChangeCallbackReceivers.TryGetValue(tableTicket,
+                    out List<IColumnDefinitionChangeCallbackReceiver> receiver))
             {
                 receiver.Remove(callback);
             }
         }
 
-        public static void NotifyOfColumnChange(DataTableObject dataTable, IColumnDefinitionChangeCallbackReceiver ignore = null)
+        public static void NotifyOfColumnChange(DataTableObject dataTable,
+            IColumnDefinitionChangeCallbackReceiver ignore = null)
         {
             NotifyOfColumnChange(GetTicket(dataTable), ignore);
         }
@@ -157,12 +195,14 @@ namespace GDX.Editor
             EditorUtility.SetDirty(k_TableTicketToTable[tableTicket]);
         }
 
-        public static void NotifyOfCellValueChange(DataTableObject dataTable, int rowIdentifier, int columnIdentifier, ICellValueChangedCallbackReceiver ignore = null)
+        public static void NotifyOfCellValueChange(DataTableObject dataTable, int rowIdentifier, int columnIdentifier,
+            ICellValueChangedCallbackReceiver ignore = null)
         {
             NotifyOfCellValueChange(GetTicket(dataTable), rowIdentifier, columnIdentifier, ignore);
         }
 
-        public static void NotifyOfCellValueChange(int tableTicket, int rowIdentifier, int columnIdentifier, ICellValueChangedCallbackReceiver ignore = null)
+        public static void NotifyOfCellValueChange(int tableTicket, int rowIdentifier, int columnIdentifier,
+            ICellValueChangedCallbackReceiver ignore = null)
         {
             int count = k_CellValueChangeCallbackReceivers[tableTicket].Count;
             for (int i = 0; i < count; i++)
@@ -205,8 +245,12 @@ namespace GDX.Editor
 
         static int GetTicket(DataTableObject dataTable)
         {
-            if (dataTable == null) return -1;
-            return k_TableToTableTicket.TryGetValue(dataTable, out int registerTable) ? registerTable: -1;
+            if (dataTable == null)
+            {
+                return -1;
+            }
+
+            return k_TableToTableTicket.TryGetValue(dataTable, out int registerTable) ? registerTable : -1;
         }
 
         public static int RegisterTable(DataTableObject dataTable, int forcedTicket = -1)
@@ -254,6 +298,7 @@ namespace GDX.Editor
         {
             k_TableUsageCounters[tableTicket]++;
         }
+
         public static void UnregisterUsage(int tableTicket)
         {
             if (k_TableUsageCounters.ContainsKey(tableTicket))

@@ -119,12 +119,22 @@ namespace GDX.DataTables
             public string Name;
             public int Identifier;
             public Serializable.SerializableTypes Type;
+
+            public override string ToString()
+            {
+                return $"{Name} [{Serializable.GetSerializableTypesLabel((int)Type)}]";
+            }
         }
 
         public struct RowDescription
         {
             public string Name;
             public int Identifier;
+
+            public override string ToString()
+            {
+                return Name;
+            }
         }
     }
 }

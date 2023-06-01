@@ -116,7 +116,7 @@ namespace GDX.Editor.Windows.DataTables
                 }
             }
 
-            TableCache.NotifyOfColumnChange(dataTable);
+            DataTableTracker.NotifyOfColumnChange(dataTable);
             return true;
         }
 
@@ -131,7 +131,7 @@ namespace GDX.Editor.Windows.DataTables
             RegisterUndo($"Add Row ({name})");
             dataTable.AddRow(name, orderedIndex);
 
-            TableCache.NotifyOfRowChange(dataTable);
+            DataTableTracker.NotifyOfRowChange(dataTable);
             return true;
         }
 
@@ -148,7 +148,7 @@ namespace GDX.Editor.Windows.DataTables
 
             m_Overlay.SetOverlayStateHidden();
 
-            TableCache.NotifyOfRowChange(dataTable);
+            DataTableTracker.NotifyOfRowChange(dataTable);
         }
 
         public void RemoveSelectedRow()
@@ -161,7 +161,7 @@ namespace GDX.Editor.Windows.DataTables
             RegisterUndo($"Remove Row ({selectedRow.Name})");
             m_DataTableWindow.GetDataTable().RemoveRow(selectedRow.Identifier);
 
-            TableCache.NotifyOfRowChange(m_DataTableWindow.GetDataTable());
+            DataTableTracker.NotifyOfRowChange(m_DataTableWindow.GetDataTable());
         }
 
         public bool RemoveColumn(int columnIdentifier)
@@ -176,7 +176,7 @@ namespace GDX.Editor.Windows.DataTables
 
             dataTable.RemoveColumn(m_DataTableWindow.GetView().GetColumnType(columnIdentifier), columnIdentifier);
 
-            TableCache.NotifyOfColumnChange(dataTable);
+            DataTableTracker.NotifyOfColumnChange(dataTable);
             return true;
         }
 
@@ -186,7 +186,7 @@ namespace GDX.Editor.Windows.DataTables
             RegisterUndo($"Remove Row ({dataTable.GetRowName(rowIdentifier)})");
             dataTable.RemoveRow(rowIdentifier);
 
-            TableCache.NotifyOfRowChange(dataTable);
+            DataTableTracker.NotifyOfRowChange(dataTable);
             return true;
         }
 
@@ -196,7 +196,7 @@ namespace GDX.Editor.Windows.DataTables
             RegisterUndo($"Rename Row ({name})");
             dataTable.SetRowName(name, rowIdentifier);
 
-            TableCache.NotifyOfRowChange(dataTable);
+            DataTableTracker.NotifyOfRowChange(dataTable);
             return true;
         }
 
@@ -210,7 +210,7 @@ namespace GDX.Editor.Windows.DataTables
 
             dataTable.SetColumnName(name, columnIdentifier);
 
-            TableCache.NotifyOfColumnChange(dataTable, m_DataTableWindow);
+            DataTableTracker.NotifyOfColumnChange(dataTable, m_DataTableWindow);
             m_DataTableWindow.GetToolbar().UpdateSaveButton();
             return true;
         }

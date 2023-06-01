@@ -1,0 +1,34 @@
+﻿#gdx-datatable-inspector-name
+{
+    margin-top: 20px;
+    -unity-font-style: normal;
+}
+.gdx-datatable-inspector-label
+{
+    padding-bottom: 1px;
+    margin-bottom: 2px;
+    -unity-font-style: bold;
+}
+.gdx-datatable-inspector-description
+{
+    padding-left: 5px;
+    margin-bottom: 5px;
+    white-space: normal;
+}
+#gdx-datatable-inspector-rows-label
+{
+    margin-top: 10px;
+}
+
+#gdx-datatable-inspector-open
+{
+    margin-top: 10px;
+}
+
+#gdx-datatable-inspector-tracker-label
+{
+    margin-top: 20px;
+}
+#gdx-datatable-inspector-tracker
+{
+}
