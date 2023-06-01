@@ -31,7 +31,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 #if UNITY_2022_3_OR_NEWER
                 m_CellValue.Set(e.newValue);
 #else
-                m_CellValue.Set((long)e.newValue);
+                m_CellValue.Set((ulong)e.newValue);
 #endif // UNITY_2022_3_OR_NEWER
                 NotifyOfChange();
             });

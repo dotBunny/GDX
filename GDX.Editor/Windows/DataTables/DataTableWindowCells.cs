@@ -205,7 +205,11 @@ namespace GDX.Editor.Windows.DataTables
 
         internal static void BindUIntCell(VisualElement cell, int row)
         {
+#if UNITY_2022_3_OR_NEWER
             UnsignedIntegerField field = (UnsignedIntegerField)cell;
+#else
+            IntegerField field = (IntegerField)cell;
+#endif
             CellData map = (CellData)field.userData;
             DataTableObject dataTable = DataTableTracker.GetTable(map.TableTicket);
 
@@ -219,7 +223,11 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 UIntCellValue local = (UIntCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+#if UNITY_2022_3_OR_NEWER
+                local.Set(e.newValue);
+#else
                 local.Set((uint)e.newValue);
+#endif
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
                 window.GetToolbar().UpdateSaveButton();
@@ -251,7 +259,11 @@ namespace GDX.Editor.Windows.DataTables
 
         internal static void BindULongCell(VisualElement cell, int row)
         {
+#if UNITY_2022_3_OR_NEWER
             UnsignedLongField field = (UnsignedLongField)cell;
+#else
+            LongField field = (LongField)cell;
+#endif
             CellData map = (CellData)field.userData;
             DataTableObject dataTable = DataTableTracker.GetTable(map.TableTicket);
 
@@ -265,7 +277,11 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 ULongCellValue local = (ULongCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+#if UNITY_2022_3_OR_NEWER
+                local.Set(e.newValue);
+#else
                 local.Set((ulong)e.newValue);
+#endif
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
                 window.GetToolbar().UpdateSaveButton();
