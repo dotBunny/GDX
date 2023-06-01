@@ -28,7 +28,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         protected const string k_CellFieldName = "gdx-table-inspector-field";
 
 
-        DataTableBase.ColumnDescription[] m_ColumnDescriptions;
+        ColumnDescription[] m_ColumnDescriptions;
         protected int m_ColumnIdentifier = -1;
         SerializedProperty m_ColumnProperty;
 
@@ -36,7 +36,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         Label m_FieldLabel;
 
         bool m_IsUnlocked;
-        DataTableBase.RowDescription[] m_RowDescriptions;
+        RowDescription[] m_RowDescriptions;
         protected int m_RowIdentifier = -1;
         SerializedProperty m_RowProperty;
 
@@ -330,11 +330,11 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             m_RowDescriptions = null;
 
             // Get table columns
-            DataTableBase.ColumnDescription[] allColumns = m_DataTable.GetAllColumnDescriptions();
+            ColumnDescription[] allColumns = m_DataTable.GetAllColumnDescriptions();
             int allColumnCount = allColumns.Length;
             Serializable.SerializableTypes requiredType = GetSupportedType();
-            List<DataTableBase.ColumnDescription> validColumns =
-                new List<DataTableBase.ColumnDescription>(allColumns.Length);
+            List<ColumnDescription> validColumns =
+                new List<ColumnDescription>(allColumns.Length);
 
             for (int i = 0; i < allColumnCount; i++)
             {

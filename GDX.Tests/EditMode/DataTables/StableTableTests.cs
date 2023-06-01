@@ -57,7 +57,7 @@ namespace GDX.DataTables
             {
                 int columnID = allColumnIDs[i];
                 string iToStringModified = ((Serializable.SerializableTypes)i).ToString() + "mod";
-                table.SetColumnName(iToStringModified, columnID);
+                table.SetColumnName(columnID, iToStringModified);
             }
 
             bool areSetNamesSet = true;
@@ -96,7 +96,7 @@ namespace GDX.DataTables
             {
                 int rowID = allRowIDs[i];
                 string iToStringModified = i.ToString() + "mod";
-                table.SetRowName(iToStringModified, rowID);
+                table.SetRowName(rowID, iToStringModified);
             }
 
             bool areSetNamesSet = true;
@@ -402,7 +402,7 @@ namespace GDX.DataTables
                         PrintTable(table);
                         int internalIndex = descriptions[randomIndex].Identifier;
                         Debug.Log("Remove " + internalIndex);
-                        
+
                         if (!ids.Contains(internalIndex))
                         {
                             throw new Exception("table contains ID not tracked: " + internalIndex);

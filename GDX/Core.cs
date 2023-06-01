@@ -25,6 +25,9 @@ namespace GDX
         // ReSharper disable once RedundantArrayCreationExpression, HeapView.ObjectAllocation.Evident
         public static readonly object[] EmptyObjectArray = new object[] { };
 
+        /// <summary>
+        ///     The main threads identifier.
+        /// </summary>
         public static int MainThreadID = -1;
 
         /// <summary>

@@ -74,7 +74,7 @@ namespace GDX.Editor.Windows
             m_DataTableWindowController.AddColumn("Test_Vector2", Serializable.SerializableTypes.Vector2);
 
             m_DataTableWindowController.AddRow("Test_Row");
-            DataTableBase.RowDescription rowDescription = m_TestDataTable.GetRowDescription(0);
+            RowDescription rowDescription = m_TestDataTable.GetRowDescription(0);
 
             Assert.That(m_TestDataTable.GetColumnCount() == 3);
             Assert.That(m_TestDataTable.GetRowCount() == 1);

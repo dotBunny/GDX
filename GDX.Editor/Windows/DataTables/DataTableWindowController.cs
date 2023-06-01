@@ -157,8 +157,8 @@ namespace GDX.Editor.Windows.DataTables
             object selectedItem = m_DataTableWindow.GetView().GetMultiColumnListView().selectedItem;
             if (selectedItem == null) return;
 
-            DataTableBase.RowDescription selectedRow =
-                (DataTableBase.RowDescription)m_DataTableWindow.GetView().GetMultiColumnListView().selectedItem;
+            RowDescription selectedRow =
+                (RowDescription)m_DataTableWindow.GetView().GetMultiColumnListView().selectedItem;
             RegisterUndo($"Remove Row ({selectedRow.Name})");
 
             m_DataTableWindow.GetDataTable().RemoveRow(selectedRow.Identifier);
@@ -196,7 +196,7 @@ namespace GDX.Editor.Windows.DataTables
         {
             DataTableBase dataTable = m_DataTableWindow.GetDataTable();
             RegisterUndo($"Rename Row ({name})");
-            dataTable.SetRowName(name, rowIdentifier);
+            dataTable.SetRowName(rowIdentifier, name);
 
             DataTableTracker.NotifyOfRowChange(m_DataTableWindow.GetDataTableTicket(), rowIdentifier);
             return true;
@@ -210,7 +210,7 @@ namespace GDX.Editor.Windows.DataTables
             // Update column data in place
             m_DataTableWindow.GetView().UpdateColumnData(columnIdentifier, name);
 
-            dataTable.SetColumnName(name, columnIdentifier);
+            dataTable.SetColumnName(columnIdentifier, name);
 
             DataTableTracker.NotifyOfColumnChange(m_DataTableWindow.GetDataTableTicket(), columnIdentifier,  m_DataTableWindow);
             m_DataTableWindow.GetToolbar().UpdateSaveButton();

@@ -74,7 +74,7 @@ namespace GDX.DataTables
             string[] fileContent = File.ReadAllLines(filePath);
             int tableRowCount = dataTable.GetRowCount();
             int tableColumnCount = dataTable.GetColumnCount();
-            DataTableBase.ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
+            ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
 
             // Test Columns
             string[] columnTest = ParseCommaSeperatedValues(fileContent[0]);
@@ -86,7 +86,7 @@ namespace GDX.DataTables
 
             // Build a list of previous row ID, so we know what was removed
             List<int> previousRowInternalIndices = new List<int>(tableRowCount);
-            DataTableBase.RowDescription[] rowDescriptions = dataTable.GetAllRowDescriptions();
+            RowDescription[] rowDescriptions = dataTable.GetAllRowDescriptions();
             int rowDescriptionsLength = rowDescriptions.Length;
             for (int i = 0; i < rowDescriptionsLength; i++)
             {
@@ -196,7 +196,7 @@ namespace GDX.DataTables
             TextGenerator generator = new TextGenerator();
 
             // Build first line
-            DataTableBase.ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
+            ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
             generator.Append("Row ID, Row Name");
             for (int i = 0; i < columnCount; i++)
             {
@@ -209,11 +209,11 @@ namespace GDX.DataTables
             // Build lines for rows
             for (int r = 0; r < rowCount; r++)
             {
-                DataTableBase.RowDescription rowDescription = dataTable.GetRowDescription(r);
+                RowDescription rowDescription = dataTable.GetRowDescription(r);
                 generator.Append($"{rowDescription.Identifier}, {MakeCommaSeperatedValue(rowDescription.Name)}");
                 for (int c = 0; c < columnCount; c++)
                 {
-                    DataTableBase.ColumnDescription columnDescription = dataTable.GetColumnDescription(c);
+                    ColumnDescription columnDescription = dataTable.GetColumnDescription(c);
                     generator.Append(", ");
                     switch (columnDescription.Type)
                     {

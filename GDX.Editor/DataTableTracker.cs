@@ -447,12 +447,12 @@ namespace GDX.Editor
 
         /// <summary>
         ///     An interface describing the functionality needed for an object to get a callback when a
-        ///     <see cref="DataTableBase.ColumnDescription" /> changes in a <see cref="DataTableBase" />.
+        ///     <see cref="ColumnDescription" /> changes in a <see cref="DataTableBase" />.
         /// </summary>
         public interface IColumnDefinitionChangeCallbackReceiver
         {
             /// <summary>
-            ///     A <see cref="DataTableBase.ColumnDescription" /> change has occured.
+            ///     A <see cref="ColumnDescription" /> change has occured.
             /// </summary>
             /// <param name="columnIdentifier">The affected column's unique identifier.</param>
             void OnColumnDefinitionChange(int columnIdentifier);
@@ -460,12 +460,12 @@ namespace GDX.Editor
 
         /// <summary>
         ///     An interface describing the functionality needed for an object to get a callback when a
-        ///     <see cref="DataTableBase.RowDescription" /> changes in a <see cref="DataTableBase" />.
+        ///     <see cref="RowDescription" /> changes in a <see cref="DataTableBase" />.
         /// </summary>
         public interface IRowDefinitionChangeCallbackReceiver
         {
             /// <summary>
-            ///     A <see cref="DataTableBase.RowDescription" /> change has occured.
+            ///     A <see cref="RowDescription" /> change has occured.
             /// </summary>
             /// <param name="rowIdentifier">The affected row's unique identifier.</param>
             void OnRowDefinitionChange(int rowIdentifier);

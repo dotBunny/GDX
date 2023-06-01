@@ -15,9 +15,9 @@ namespace GDX.Editor.Windows.DataTables
 
         static StyleLength m_StyleLength25 = new StyleLength(new Length(25, LengthUnit.Pixel));
         static StyleLength m_StyleLength275 = new StyleLength(new Length(275, LengthUnit.Pixel));
-        readonly List<DataTableBase.RowDescription> m_RowDescriptions = new List<DataTableBase.RowDescription>();
+        readonly List<RowDescription> m_RowDescriptions = new List<RowDescription>();
         readonly Length m_BoundsMinWidth = new Length(200, LengthUnit.Pixel);
-        readonly List<DataTableBase.ColumnDescription> m_ColumnDescriptions = new List<DataTableBase.ColumnDescription>();
+        readonly List<ColumnDescription> m_ColumnDescriptions = new List<ColumnDescription>();
 
         readonly Length m_GenericMinWidth = new Length(75, LengthUnit.Pixel);
         readonly Length m_HashMinWidth = new Length(260, LengthUnit.Pixel);
@@ -61,7 +61,7 @@ namespace GDX.Editor.Windows.DataTables
             int tableTicket = window.GetDataTableTicket();
 
             // Add row header column ahead of actual columns
-            m_ColumnDescriptions.Add(new DataTableBase.ColumnDescription
+            m_ColumnDescriptions.Add(new ColumnDescription
             {
                 Name = "RowName", Identifier = -1, Type = Serializable.SerializableTypes.String
             });
@@ -87,7 +87,7 @@ namespace GDX.Editor.Windows.DataTables
             // Creat our other columns
             for (int i = 1; i < columnCount; i++)
             {
-                DataTableBase.ColumnDescription columnDescription = m_ColumnDescriptions[i];
+                ColumnDescription columnDescription = m_ColumnDescriptions[i];
                 int columnIndex = columnDescription.Identifier;
 
                 // We embed the column stable index
@@ -349,14 +349,14 @@ namespace GDX.Editor.Windows.DataTables
                 return -1;
             }
 
-            DataTableBase.RowDescription selectedItem = (DataTableBase.RowDescription)m_MultiColumnListView.selectedItem;
+            RowDescription selectedItem = (RowDescription)m_MultiColumnListView.selectedItem;
             return selectedItem.Identifier;
         }
 
         void BindRowHeader(VisualElement cell, int row)
         {
             Label label = (Label)cell;
-            DataTableBase.RowDescription description = m_RowDescriptions[row];
+            RowDescription description = m_RowDescriptions[row];
             label.text = description.Name;
         }
 
@@ -399,7 +399,7 @@ namespace GDX.Editor.Windows.DataTables
 
             if (foundIndex != -1)
             {
-                m_ColumnDescriptions[foundIndex] = new DataTableBase.ColumnDescription
+                m_ColumnDescriptions[foundIndex] = new ColumnDescription
                 {
                     Name = newName,
                     Identifier = m_ColumnDescriptions[foundIndex].Identifier,

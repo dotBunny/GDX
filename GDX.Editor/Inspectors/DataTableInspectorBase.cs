@@ -96,8 +96,8 @@ namespace GDX.Editor.Inspectors
         {
             DataTableBase dataTable = (DataTableBase)target;
 
-            DataTableBase.RowDescription[] rowDescriptions = dataTable.GetAllRowDescriptions();
-            DataTableBase.ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
+            RowDescription[] rowDescriptions = dataTable.GetAllRowDescriptions();
+            ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
 
             int rowCount = rowDescriptions.Length;
             int columnCount = columnDescriptions.Length;

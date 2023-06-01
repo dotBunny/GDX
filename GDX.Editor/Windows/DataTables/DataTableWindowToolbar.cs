@@ -95,15 +95,15 @@ namespace GDX.Editor.Windows.DataTables
 
         void RenameRow()
         {
-            DataTableBase.RowDescription selectedItem =
-                (DataTableBase.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
+            RowDescription selectedItem =
+                (RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
             m_ParentWindow.GetController().ShowRenameRowDialog(selectedItem.Identifier);
         }
 
         void RemoveRow()
         {
-            DataTableBase.RowDescription selectedItem =
-                (DataTableBase.RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
+            RowDescription selectedItem =
+                (RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
             m_ParentWindow.GetController().ShowRemoveRowDialog(selectedItem.Identifier);
         }
 
