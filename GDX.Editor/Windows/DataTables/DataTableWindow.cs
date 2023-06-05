@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 namespace GDX.Editor.Windows.DataTables
 {
 #if UNITY_2022_2_OR_NEWER
-    public class DataTableWindow : EditorWindow, DataTableTracker.IColumnDefinitionChangeCallbackReceiver, DataTableTracker.ICellValueChangedCallbackReceiver, DataTableTracker.IRowDefinitionChangeCallbackReceiver
+    public class DataTableWindow : EditorWindow, DataTableTracker.IStructuralChangeCallbackReceiver, DataTableTracker.ICellValueChangedCallbackReceiver, DataTableTracker.IUndoRedoEventCallbackReceiver
     {
         int m_DataTableTicket;
         DataTableWindowController m_Controller;
@@ -48,9 +48,9 @@ namespace GDX.Editor.Windows.DataTables
         {
             if (m_Bound)
             {
-                DataTableTracker.UnregisterColumnChanged(this, m_DataTableTicket);
-                DataTableTracker.UnregisterRowChanged(this, m_DataTableTicket);
+                DataTableTracker.UnregisterStructuralChanged(this, m_DataTableTicket);
                 DataTableTracker.UnregisterCellValueChanged(this, m_DataTableTicket);
+                DataTableTracker.UnregisterUndoRedoEvent(this, m_DataTableTicket);
                 DataTableTracker.RemoveUsage(m_DataTableTicket);
             }
 
@@ -148,7 +148,7 @@ namespace GDX.Editor.Windows.DataTables
         public void BindTable(DataTableBase dataTable, bool fromDomainReload = false)
         {
             m_DataTable = dataTable;
-            m_DataTableTicket = fromDomainReload ? DataTableTracker.RegisterTable(dataTable, m_DataTableTicket) : DataTableTracker.RegisterTable(dataTable);
+            m_DataTableTicket = fromDomainReload ? DataTableTracker.RegisterTableAfterReload(dataTable, m_DataTableTicket) : DataTableTracker.RegisterTable(dataTable);
 
             DataTableWindowProvider.RegisterTableWindow(this, m_DataTable);
 
@@ -156,9 +156,9 @@ namespace GDX.Editor.Windows.DataTables
 
             if (m_Bound)
             {
-                DataTableTracker.UnregisterColumnChanged(this, m_DataTableTicket);
-                DataTableTracker.UnregisterRowChanged(this, m_DataTableTicket);
+                DataTableTracker.UnregisterStructuralChanged(this, m_DataTableTicket);
                 DataTableTracker.UnregisterCellValueChanged(this, m_DataTableTicket);
+                DataTableTracker.UnregisterUndoRedoEvent(this, m_DataTableTicket);
 
                 // We need to handle not unregistering things when on domain reload so that the count doesnt go negative.
                 if (!fromDomainReload)
@@ -167,9 +167,9 @@ namespace GDX.Editor.Windows.DataTables
                 }
             }
 
-            DataTableTracker.RegisterColumnChanged(this, m_DataTableTicket);
-            DataTableTracker.RegisterRowChanged(this, m_DataTableTicket);
+            DataTableTracker.RegisterStructuralChanged(this, m_DataTableTicket);
             DataTableTracker.RegisterCellValueChanged(this, m_DataTableTicket);
+            DataTableTracker.RegisterUndoRedoEvent(this, m_DataTableTicket);
             DataTableTracker.AddUsage(m_DataTableTicket);
 
             m_Bound = true;
@@ -223,6 +223,36 @@ namespace GDX.Editor.Windows.DataTables
         {
             m_View.RebuildRowData();
             m_Toolbar.UpdateSaveButton();
+        }
+
+        public void OnSettingsChange()
+        {
+            titleContent = new GUIContent(m_DataTable.GetDisplayName());
+        }
+
+        public void OnUndoRedoRowDefinitionChange(int rowIdentifier)
+        {
+            m_View.RebuildRowData();
+            m_Toolbar.UpdateSaveButton();
+        }
+
+        public void OnUndoRedoColumnDefinitionChange(int columnIdentifier)
+        {
+            RebindTable();
+            m_Toolbar.UpdateSaveButton();
+        }
+
+        public void OnUndoRedoCellValueChanged(int rowIdentifier, int columnIdentifier)
+        {
+            // We can do better then this, what if cells actually had more awareness
+            // TODO: @matt Need to do better here
+            m_View.RefreshItems();
+            m_Toolbar.UpdateSaveButton();
+        }
+
+        public void OnUndoRedoSettingsChanged()
+        {
+            titleContent = new GUIContent(m_DataTable.GetDisplayName());
         }
     }
 #endif // UNITY_2022_2_OR_NEWER

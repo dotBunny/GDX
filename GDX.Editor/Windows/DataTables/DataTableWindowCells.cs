@@ -35,6 +35,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 StringCellValue local = (StringCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -58,6 +59,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 CharCellValue local = (CharCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue[0]);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -82,6 +84,7 @@ namespace GDX.Editor.Windows.DataTables
                 BoolCellValue local = (BoolCellValue)localMap.CellValue;
                 local.Set(e.newValue);
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
                 window.GetToolbar().UpdateSaveButton();
@@ -104,6 +107,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 SByteCellValue local = (SByteCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set((sbyte)e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -127,6 +131,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 ByteCellValue local = (ByteCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set((byte)e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -150,6 +155,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 ShortCellValue local = (ShortCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set((short)e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -173,6 +179,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 UShortCellValue local = (UShortCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set((ushort)e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -196,6 +203,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 IntCellValue local = (IntCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -227,6 +235,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 UIntCellValue local = (UIntCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
 #if UNITY_2022_3_OR_NEWER
                 local.Set(e.newValue);
 #else
@@ -254,6 +263,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 LongCellValue local = (LongCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -286,6 +296,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 ULongCellValue local = (ULongCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
 #if UNITY_2022_3_OR_NEWER
                 local.Set(e.newValue);
 #else
@@ -313,6 +324,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 FloatCellValue local = (FloatCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -336,6 +348,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 DoubleCellValue local = (DoubleCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -359,6 +372,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 Vector2CellValue local = (Vector2CellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -382,6 +396,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 Vector3CellValue local = (Vector3CellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -405,6 +420,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 Vector4CellValue local = (Vector4CellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -428,6 +444,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 Vector2IntCellValue local = (Vector2IntCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -451,6 +468,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 Vector3IntCellValue local = (Vector3IntCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -479,6 +497,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 QuaternionCellValue local = (QuaternionCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -502,6 +521,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 RectCellValue local = (RectCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -525,6 +545,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 RectIntCellValue local = (RectIntCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -548,6 +569,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 ColorCellValue local = (ColorCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -571,6 +593,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 LayerMaskCellValue local = (LayerMaskCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -594,6 +617,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 BoundsCellValue local = (BoundsCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -617,6 +641,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 BoundsIntCellValue local = (BoundsIntCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -640,6 +665,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 Hash128CellValue local = (Hash128CellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -663,6 +689,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 GradientCellValue local = (GradientCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -686,6 +713,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 AnimationCurveCellValue local = (AnimationCurveCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -713,6 +741,7 @@ namespace GDX.Editor.Windows.DataTables
                 CellData localMap = (CellData)field.userData;
                 ObjectCellValue local = (ObjectCellValue)localMap.CellValue;
                 DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
@@ -725,7 +754,7 @@ namespace GDX.Editor.Windows.DataTables
             TextField newField =
                 new TextField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column },
                 };
             return newField;
         }

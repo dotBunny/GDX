@@ -16,8 +16,7 @@ namespace GDX.Editor.Inspectors
     /// </summary>
 #if UNITY_2022_2_OR_NEWER
     public abstract class DataTableInspectorBase : UnityEditor.Editor,
-        DataTableTracker.IColumnDefinitionChangeCallbackReceiver,
-        DataTableTracker.IRowDefinitionChangeCallbackReceiver
+        DataTableTracker.IStructuralChangeCallbackReceiver, DataTableTracker.IUndoRedoEventCallbackReceiver
     {
         /// <summary>
         ///     The text string used by the open button.
@@ -56,9 +55,8 @@ namespace GDX.Editor.Inspectors
             {
                 return;
             }
-
-            DataTableTracker.UnregisterColumnChanged(this, m_TableTicket);
-            DataTableTracker.UnregisterRowChanged(this, m_TableTicket);
+            DataTableTracker.UnregisterStructuralChanged(this, m_TableTicket);
+            DataTableTracker.UnregisterUndoRedoEvent(this, m_TableTicket);
             DataTableTracker.RemoveUsage(m_TableTicket);
         }
 
@@ -72,6 +70,11 @@ namespace GDX.Editor.Inspectors
         public void OnRowDefinitionChange(int rowIdentifier)
         {
             UpdateInspector();
+        }
+
+        public void OnSettingsChange()
+        {
+            //throw new System.NotImplementedException();
         }
 
         /// <inheritdoc />
@@ -112,8 +115,8 @@ namespace GDX.Editor.Inspectors
             m_RootElement.Add(m_DataTableTrackerLabel);
             m_RootElement.Add(m_DataTableTracker);
 
-            DataTableTracker.RegisterColumnChanged(this, m_TableTicket);
-            DataTableTracker.RegisterRowChanged(this, m_TableTicket);
+            DataTableTracker.RegisterStructuralChanged(this, m_TableTicket);
+            DataTableTracker.RegisterUndoRedoEvent(this, m_TableTicket);
             DataTableTracker.AddUsage(m_TableTicket);
             m_Bound = true;
 
@@ -137,7 +140,6 @@ namespace GDX.Editor.Inspectors
             int columnCount = columnDescriptions.Length;
 
             m_DataTableLabel.text = dataTable.GetDisplayName();
-            m_RowLabel.text = $"Rows ({rowCount})";
 
             m_RowLabel.text = $"Rows ({rowCount})";
             StringBuilder content = new StringBuilder(100);
@@ -170,7 +172,7 @@ namespace GDX.Editor.Inspectors
 
             DataTableTracker.DataTableTrackerStats stats = DataTableTracker.GetStats(m_TableTicket);
             m_DataTableTracker.text =
-                $"{stats.Usages} Usages\n{stats.CellValueChanged} Cell Monitors\n{stats.ColumnDefinitionChange} Column Monitors\n{stats.RowDefinitionChange} Row Monitors";
+                $"{stats.Usages} Usages\n{stats.CellValueChanged} Cell Monitors\n{stats.StructuralChange} Structural Monitors";
         }
 
         /// <summary>
@@ -180,6 +182,26 @@ namespace GDX.Editor.Inspectors
         {
             DataTableBase dataTable = (DataTableBase)target;
             DataTableWindowProvider.OpenAsset(dataTable);
+            UpdateInspector();
+        }
+
+        public void OnUndoRedoRowDefinitionChange(int rowIdentifier)
+        {
+            UpdateInspector();
+        }
+
+        public void OnUndoRedoColumnDefinitionChange(int columnIdentifier)
+        {
+            UpdateInspector();
+        }
+
+        public void OnUndoRedoCellValueChanged(int rowIdentifier, int columnIdentifier)
+        {
+
+        }
+
+        public void OnUndoRedoSettingsChanged()
+        {
             UpdateInspector();
         }
     }

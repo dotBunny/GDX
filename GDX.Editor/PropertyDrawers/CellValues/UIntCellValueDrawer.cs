@@ -27,6 +27,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 #endif // UNITY_2022_3_OR_NEWER
             newField.RegisterValueChangedCallback(e =>
             {
+                DataTableTracker.RecordCellValueUndo(m_TableTicket, m_RowIdentifier, m_ColumnIdentifier);
 #if UNITY_2022_3_OR_NEWER
                 m_CellValue.Set(e.newValue);
 #else

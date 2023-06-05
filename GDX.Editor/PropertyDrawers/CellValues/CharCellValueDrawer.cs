@@ -22,6 +22,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             newField.SetValueWithoutNotify(m_CellValue.Get().ToString());
             newField.RegisterValueChangedCallback(e =>
             {
+                DataTableTracker.RecordCellValueUndo(m_TableTicket, m_RowIdentifier, m_ColumnIdentifier);
                 m_CellValue.Set(e.newValue[0]);
                 NotifyOfChange();
             });

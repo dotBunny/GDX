@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 namespace GDX.Editor.PropertyDrawers.CellValues
 {
 #if UNITY_2022_2_OR_NEWER
-    public abstract class CellValueDrawerBase : PropertyDrawer, DataTableTracker.ICellValueChangedCallbackReceiver
+    public abstract class CellValueDrawerBase : PropertyDrawer, DataTableTracker.ICellValueChangedCallbackReceiver, DataTableTracker.IUndoRedoEventCallbackReceiver
     {
         const string k_MessageClickToUnlock = "Click to unlock for editting.";
         const string k_MessageClickToLock = "Click to lock data.";
@@ -26,7 +26,6 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         const string k_StyleClassUnlocked = "unlocked";
 
         protected const string k_CellFieldName = "gdx-table-inspector-field";
-
 
         ColumnDescription[] m_ColumnDescriptions;
         protected int m_ColumnIdentifier = -1;
@@ -238,14 +237,15 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         string OnTableSelected(int arg)
         {
-            if (arg >= 0)
+            if (arg < 0)
             {
-                m_DataTable = (DataTableBase)m_Tables[arg].GetOrLoadAsset();
-                DetectDrawerMode();
-                return m_Tables[arg].GetPathWithoutExtension();
+                return "Select Table";
             }
 
-            return "Select Table";
+            m_DataTable = (DataTableBase)m_Tables[arg].GetOrLoadAsset();
+            DetectDrawerMode();
+            return m_Tables[arg].GetPathWithoutExtension();
+
         }
 
         string OnRowSelected(int arg)
@@ -473,6 +473,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             m_TableTicket = DataTableTracker.RegisterTable(m_DataTable);
             DataTableTracker.AddUsage(m_TableTicket);
             DataTableTracker.RegisterCellValueChanged(this, m_TableTicket);
+            DataTableTracker.RegisterUndoRedoEvent(this, m_TableTicket);
             m_HasRegisteredForCallbacks = true;
         }
 
@@ -484,6 +485,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             }
 
             DataTableTracker.UnregisterCellValueChanged(this, m_TableTicket);
+            DataTableTracker.UnregisterUndoRedoEvent(this, m_TableTicket);
             DataTableTracker.RemoveUsage(m_TableTicket);
         }
 
@@ -514,6 +516,34 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             m_TableProperty = null;
             m_Tables = null;
             m_ValueContainer = null;
+        }
+
+        public void OnUndoRedoRowDefinitionChange(int rowIdentifier)
+        {
+            if (rowIdentifier == m_RowIdentifier)
+            {
+                DetectDrawerMode();
+            }
+        }
+
+        public void OnUndoRedoColumnDefinitionChange(int columnIdentifier)
+        {
+            if (columnIdentifier == m_ColumnIdentifier)
+            {
+                DetectDrawerMode();
+            }
+        }
+
+        public void OnUndoRedoCellValueChanged(int rowIdentifier, int columnIdentifier)
+        {
+            if (rowIdentifier == m_RowIdentifier && columnIdentifier == m_ColumnIdentifier)
+            {
+                UpdateValue();
+            }
+        }
+
+        public void OnUndoRedoSettingsChanged()
+        {
         }
     }
 #endif // UNITY_2022_2_OR_NEWER
