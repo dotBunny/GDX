@@ -412,12 +412,15 @@ namespace GDX.Editor
             if (!s_SubscribedToUndo && dataTable.GetFlag(DataTableBase.Settings.EnableUndo))
             {
                 Undo.undoRedoEvent += OnUndoRedoEvent;
+                AssemblyReloadEvents.beforeAssemblyReload += ClearAllUndoData;
                 s_SubscribedToUndo = true;
             }
 #endif
 
             return head;
         }
+
+
 
         /// <summary>
         ///     Registers a <see cref="DataTableBase" /> for use after a domain reload or undo/redo.
@@ -572,6 +575,18 @@ namespace GDX.Editor
         }
 
 #if UNITY_2022_2_OR_NEWER
+
+        /// <summary>
+        ///     Clear all undo data saved in the undo history
+        /// </summary>
+        static void ClearAllUndoData()
+        {
+            foreach (DataTableBase table in k_TableToTableTicket.Keys)
+            {
+                //Undo.ClearUndo(table);
+            }
+        }
+
         /// <summary>
         ///     The event fired when Unity performs an undo/redo.
         /// </summary>

@@ -1,3 +1,4 @@
+using GDX.Collections.Generic;
 using GDX.DataTables;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -14,12 +15,10 @@ namespace GDX.Editor.Windows.DataTables
         DataTableWindowOverlay m_Overlay;
 
         DataTableBase m_DataTable;
-
-
         DataTableWindowToolbar m_Toolbar;
         DataTableWindowView m_View;
-        DataTableTracker.ICellValueChangedCallbackReceiver m_ICellValueChangedCallbackReceiverImplementation;
         bool m_Bound;
+
 
         void OnEnable()
         {
@@ -193,7 +192,9 @@ namespace GDX.Editor.Windows.DataTables
                 return;
             }
 
+
             m_View?.Destroy();
+
 
             // Build our view out
             m_View = new DataTableWindowView(rootVisualElement[0], this);
@@ -212,9 +213,8 @@ namespace GDX.Editor.Windows.DataTables
         /// <inheritdoc />
         public void OnCellValueChanged(int rowIdentifier, int columnIdentifier)
         {
-            // We can do better then this, what if cells actually had more awareness
-            // TODO: @matt Need to do better here
-            m_View.RefreshItems();
+            int orderedIndex = m_DataTable.GetRowOrder(rowIdentifier);
+            m_View.GetMultiColumnListView().RefreshItem(orderedIndex);
             m_Toolbar.UpdateSaveButton();
         }
 
@@ -244,9 +244,8 @@ namespace GDX.Editor.Windows.DataTables
 
         public void OnUndoRedoCellValueChanged(int rowIdentifier, int columnIdentifier)
         {
-            // We can do better then this, what if cells actually had more awareness
-            // TODO: @matt Need to do better here
-            m_View.RefreshItems();
+            int orderedIndex = m_DataTable.GetRowOrder(rowIdentifier);
+            m_View.GetMultiColumnListView().RefreshItem(orderedIndex);
             m_Toolbar.UpdateSaveButton();
         }
 
