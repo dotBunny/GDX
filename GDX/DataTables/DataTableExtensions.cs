@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.UIElements;
 using TextGenerator = GDX.Developer.TextGenerator;
 
 namespace GDX.DataTables
@@ -418,6 +419,33 @@ namespace GDX.DataTables
             }
 
             File.WriteAllText(filePath, generator.ToString());
+        }
+
+        /// <summary>
+        ///     Sort a <see cref="DataTableBase"/> rows based on the provided sorting parameters
+        /// </summary>
+        /// <param name="dataTable">The target <see cref="DataTableBase"/>.</param>
+        /// <param name="columnIdentifiers">The column identifiers to use in order of priority.</param>
+        /// <param name="types">The types of the given columns.</param>
+        /// <param name="directions">The direction which the column should be used to calculate order.</param>
+        /// <returns>The updated data version of the <see cref="DataTableBase"/>.</returns>
+        public static ulong SortByColumns(this DataTableBase dataTable, int[] columnIdentifiers,
+            Serializable.SerializableTypes[] types, SortDirection[] directions)
+        {
+            int rowCount = dataTable.GetRowCount();
+            int columnCount = dataTable.GetColumnCount();
+            int sortedColumnCount = columnIdentifiers.Length;
+
+            if (columnIdentifiers.Length != types.Length || types.Length != directions.Length)
+            {
+                Debug.LogError("Unable to sort, all arrays much have same length.");
+                return dataTable.GetDataVersion();
+            }
+
+            // TODO: @matt Sort
+
+
+            return dataTable.GetDataVersion();
         }
     }
 }

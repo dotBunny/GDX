@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using GDX.Collections.Generic;
 using GDX.DataTables;
 using UnityEngine.UIElements;
 
@@ -29,6 +30,9 @@ namespace GDX.Editor.Windows.DataTables
         readonly Length m_Vector4MinWidth = new Length(200, LengthUnit.Pixel);
 
         readonly DataTableWindow m_DataTableWindow;
+
+        readonly StringKeyDictionary<int> m_ColumnIdentifierCache;
+        readonly StringKeyDictionary<Serializable.SerializableTypes> m_ColumnTypeCache;
 
         float m_DesiredRowHeight = 27f;
 
@@ -68,7 +72,8 @@ namespace GDX.Editor.Windows.DataTables
 
             int columnCount = m_ColumnDescriptions.Count;
             Length columnSizePercentage = Length.Percent(100f / columnCount);
-
+            m_ColumnIdentifierCache = new StringKeyDictionary<int>(columnCount);
+            m_ColumnTypeCache = new StringKeyDictionary<Serializable.SerializableTypes>(columnCount);
 
             // Create our "Row Name" column
             m_TableViewColumns.Insert(0,
@@ -79,6 +84,8 @@ namespace GDX.Editor.Windows.DataTables
                     name = "RowName",
                     title = "Row Name"
                 });
+            m_ColumnIdentifierCache.AddUnchecked(m_TableViewColumns[0].name, -1);
+            m_ColumnTypeCache.AddUnchecked(m_TableViewColumns[0].name, Serializable.SerializableTypes.String);
 
             // Creat our other columns
             for (int i = 1; i < columnCount; i++)
@@ -96,6 +103,8 @@ namespace GDX.Editor.Windows.DataTables
                     unbindCell = UnbindCell,
                     destroyCell = DestroyCell
                 };
+                m_ColumnIdentifierCache.AddUnchecked(column.name, columnDescription.Identifier);
+                m_ColumnTypeCache.AddUnchecked(column.name, columnDescription.Type);
 
                 // Customize column based on type
                 switch (columnDescription.Type)
@@ -105,6 +114,7 @@ namespace GDX.Editor.Windows.DataTables
                         column.bindCell = DataTableWindowCells.BindStringCell;
                         column.sortable = true;
                         column.minWidth = m_GenericMinWidth;
+
                         break;
                     case Serializable.SerializableTypes.Char:
                         column.makeCell += () => DataTableWindowCells.MakeCharCell(tableTicket, columnIndex);
@@ -266,7 +276,7 @@ namespace GDX.Editor.Windows.DataTables
             // Create MultiColumnListView
             m_MultiColumnListView = new MultiColumnListView(m_TableViewColumns)
             {
-                sortingEnabled = false,
+                sortingEnabled = true,
                 name = "gdx-table-view",
                 selectionType = SelectionType.Single,
                 itemsSource = m_RowDescriptions,
@@ -276,7 +286,7 @@ namespace GDX.Editor.Windows.DataTables
                 style = { height = new StyleLength(new Length(100f, LengthUnit.Percent)) }
             };
             m_MultiColumnListView.headerContextMenuPopulateEvent += AppendColumnContextMenu;
-            //m_MultiColumnListView.columnSortingChanged += SortItems;
+            m_MultiColumnListView.columnSortingChanged += SortItems;
 
             rootElement.Insert(1, m_MultiColumnListView);
 
@@ -310,13 +320,25 @@ namespace GDX.Editor.Windows.DataTables
             m_MultiColumnListView.RefreshItems();
         }
 
-        // void SortItems()
-        // {
-        //     foreach (SortColumnDescription sortedColumn in m_MultiColumnListView.sortedColumns)
-        //     {
-        //         Debug.Log($"{sortedColumn.columnName}  {sortedColumn.direction.ToString()}");
-        //     }
-        // }
+        void SortItems()
+        {
+            List<int> sortedColumnIdentifiers = new List<int>(m_ColumnDescriptions.Count);
+            List<SortDirection> sortedColumnDirections = new List<SortDirection>(m_ColumnDescriptions.Count);
+            List<Serializable.SerializableTypes> sortedColumnTypes =
+                new List<Serializable.SerializableTypes>(m_ColumnDescriptions.Count);
+
+            foreach (SortColumnDescription sortedColumn in m_MultiColumnListView.sortedColumns)
+            {
+                sortedColumnIdentifiers.Add(m_ColumnIdentifierCache[sortedColumn.columnName]);
+                sortedColumnDirections.Add(sortedColumn.direction);
+                sortedColumnTypes.Add(m_ColumnTypeCache[sortedColumn.columnName]);
+            }
+
+            m_DataTableWindow.GetDataTable()
+                .SortByColumns(sortedColumnIdentifiers.ToArray(), sortedColumnTypes.ToArray(),
+                    sortedColumnDirections.ToArray());
+            RefreshItems();
+        }
 
         public MultiColumnListView GetMultiColumnListView()
         {
