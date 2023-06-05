@@ -276,8 +276,14 @@ namespace GDX.Editor.Windows.DataTables
                     m_RootElement.style.display = DisplayStyle.Flex;
                     m_SettingsOverlay.style.display = DisplayStyle.Flex;
                     m_SettingsDisplayName.SetValueWithoutNotify(m_DataTableWindow.GetDataTable().GetDisplayName());
+#if UNITY_2022_2_OR_NEWER
                     m_SettingsSupportUndoToggle.SetValueWithoutNotify(m_DataTableWindow.GetDataTable()
                         .GetFlag(DataTableBase.Settings.EnableUndo));
+#else
+                    m_SettingsSupportUndoToggle.SetEnabled(false);
+                    m_SettingsSupportUndoToggle.SetValueWithoutNotify(false);
+                    m_SettingsSupportUndoToggle.tooltip = "Unsupported before Unity 2022.2";
+#endif
                     break;
                 default:
                     m_RootElement.style.display = DisplayStyle.None;

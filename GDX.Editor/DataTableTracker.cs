@@ -408,11 +408,13 @@ namespace GDX.Editor
             // Increment our next head
             s_TableTicketHead++;
 
+#if UNITY_2022_2_OR_NEWER
             if (!s_SubscribedToUndo && dataTable.GetFlag(DataTableBase.Settings.EnableUndo))
             {
                 Undo.undoRedoEvent += OnUndoRedoEvent;
                 s_SubscribedToUndo = true;
             }
+#endif
 
             return head;
         }
@@ -569,6 +571,7 @@ namespace GDX.Editor
             return returnList.ToArray();
         }
 
+#if UNITY_2022_2_OR_NEWER
         /// <summary>
         ///     The event fired when Unity performs an undo/redo.
         /// </summary>
@@ -647,6 +650,7 @@ namespace GDX.Editor
                 }
             }
         }
+#endif
 
         /// <summary>
         ///     A <see cref="DataTableTracker" /> based set of stats.
