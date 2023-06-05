@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Collections.Generic;
 using GDX.DataTables;
 using UnityEditor;
@@ -12,7 +11,8 @@ using UnityEngine.UIElements;
 namespace GDX.Editor.PropertyDrawers.CellValues
 {
 #if UNITY_2022_2_OR_NEWER
-    public abstract class CellValueDrawerBase : PropertyDrawer, DataTableTracker.ICellValueChangedCallbackReceiver, DataTableTracker.IUndoRedoEventCallbackReceiver
+    public abstract class CellValueDrawerBase : PropertyDrawer, DataTableTracker.ICellValueChangedCallbackReceiver,
+        DataTableTracker.IUndoRedoEventCallbackReceiver
     {
         const string k_MessageClickToUnlock = "Click to unlock for editting.";
         const string k_MessageClickToLock = "Click to lock data.";
@@ -27,13 +27,18 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         const string k_StyleClassUnlocked = "unlocked";
 
         protected const string k_CellFieldName = "gdx-table-inspector-field";
+        protected VisualElement m_CellElement;
 
         ColumnDescription[] m_ColumnDescriptions;
         protected int m_ColumnIdentifier = -1;
         SerializedProperty m_ColumnProperty;
 
         VisualElement m_Container;
+
+        protected DataTableBase m_DataTable;
         Label m_FieldLabel;
+
+        bool m_HasRegisteredForCallbacks;
 
         bool m_IsUnlocked;
         RowDescription[] m_RowDescriptions;
@@ -41,15 +46,53 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         SerializedProperty m_RowProperty;
 
         SerializedProperty m_SerializedProperty;
-
-        protected DataTableBase m_DataTable;
-        protected int m_TableTicket;
-        protected VisualElement m_CellElement;
         Button m_TableButton;
         SerializedProperty m_TableProperty;
 
         AssetDatabaseReference[] m_Tables;
+        protected int m_TableTicket;
         VisualElement m_ValueContainer;
+
+        /// <inheritdoc />
+        public void OnCellValueChanged(int rowIdentifier, int columnIdentifier)
+        {
+            if (m_RowIdentifier == rowIdentifier && m_ColumnIdentifier == columnIdentifier)
+            {
+                UpdateValue();
+                m_CellElement.MarkDirtyRepaint();
+            }
+        }
+
+        public void OnUndoRedoRowDefinitionChange(int rowIdentifier)
+        {
+            if (rowIdentifier == m_RowIdentifier)
+            {
+                DetectDrawerMode();
+                m_CellElement.MarkDirtyRepaint();
+            }
+        }
+
+        public void OnUndoRedoColumnDefinitionChange(int columnIdentifier)
+        {
+            if (columnIdentifier == m_ColumnIdentifier)
+            {
+                DetectDrawerMode();
+                m_CellElement.MarkDirtyRepaint();
+            }
+        }
+
+        public void OnUndoRedoCellValueChanged(int rowIdentifier, int columnIdentifier)
+        {
+            if (rowIdentifier == m_RowIdentifier && columnIdentifier == m_ColumnIdentifier)
+            {
+                UpdateValue();
+                m_CellElement.MarkDirtyRepaint();
+            }
+        }
+
+        public void OnUndoRedoSettingsChanged()
+        {
+        }
 
         protected abstract Serializable.SerializableTypes GetSupportedType();
 
@@ -128,7 +171,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             DetectDrawerMode();
 
             // Our new destroy!
-            m_Container.RegisterCallback<DetachFromPanelEvent>(_ => Cleanup());
+            m_Container.RegisterCallback<DetachFromPanelEvent>(_ => Unbind());
 
             return m_Container;
         }
@@ -242,7 +285,6 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             m_DataTable = (DataTableBase)m_Tables[arg].GetOrLoadAsset();
             DetectDrawerMode();
             return m_Tables[arg].GetPathWithoutExtension();
-
         }
 
         string OnRowSelected(int arg)
@@ -346,7 +388,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             int columnCount = m_ColumnDescriptions.Length;
             if (columnCount == 0)
             {
-                Debug.LogWarning($"No columns of {requiredType} are found in the table '{m_DataTable.GetDisplayName()}'.");
+                Debug.LogWarning(
+                    $"No columns of {requiredType} are found in the table '{m_DataTable.GetDisplayName()}'.");
                 return null;
             }
 
@@ -449,17 +492,6 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             UpdateTableLinkStatus();
         }
 
-
-        enum DisplayMode
-        {
-            SelectTable,
-            SelectRow,
-            SelectColumn,
-            DisplayValue
-        }
-
-        bool m_HasRegisteredForCallbacks;
-
         void RegisterForCallback()
         {
             if (m_DataTable == null || m_HasRegisteredForCallbacks)
@@ -474,31 +506,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             m_HasRegisteredForCallbacks = true;
         }
 
-        void UnregisterForCallback()
-        {
-            if (!m_HasRegisteredForCallbacks)
-            {
-                return;
-            }
-
-            DataTableTracker.UnregisterCellValueChanged(this, m_TableTicket);
-            DataTableTracker.UnregisterUndoRedoEvent(this, m_TableTicket);
-            DataTableTracker.RemoveUsage(m_TableTicket);
-
-            m_HasRegisteredForCallbacks = false;
-        }
-
-        /// <inheritdoc />
-        public void OnCellValueChanged(int rowIdentifier, int columnIdentifier)
-        {
-            if (m_RowIdentifier == rowIdentifier && m_ColumnIdentifier == columnIdentifier)
-            {
-                UpdateValue();
-                m_CellElement.MarkDirtyRepaint();
-            }
-        }
-
-        void Cleanup()
+        void Unbind()
         {
             UnregisterForCallback();
 
@@ -518,35 +526,26 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             m_ValueContainer = null;
         }
 
-        public void OnUndoRedoRowDefinitionChange(int rowIdentifier)
+        void UnregisterForCallback()
         {
-            if (rowIdentifier == m_RowIdentifier)
+            if (!m_HasRegisteredForCallbacks)
             {
-                DetectDrawerMode();
-                m_CellElement.MarkDirtyRepaint();
+                return;
             }
+
+            DataTableTracker.UnregisterCellValueChanged(this, m_TableTicket);
+            DataTableTracker.UnregisterUndoRedoEvent(this, m_TableTicket);
+            DataTableTracker.RemoveUsage(m_TableTicket);
+
+            m_HasRegisteredForCallbacks = false;
         }
 
-        public void OnUndoRedoColumnDefinitionChange(int columnIdentifier)
+        enum DisplayMode
         {
-            if (columnIdentifier == m_ColumnIdentifier)
-            {
-                DetectDrawerMode();
-                m_CellElement.MarkDirtyRepaint();
-            }
-        }
-
-        public void OnUndoRedoCellValueChanged(int rowIdentifier, int columnIdentifier)
-        {
-            if (rowIdentifier == m_RowIdentifier && columnIdentifier == m_ColumnIdentifier)
-            {
-                UpdateValue();
-                m_CellElement.MarkDirtyRepaint();
-            }
-        }
-
-        public void OnUndoRedoSettingsChanged()
-        {
+            SelectTable,
+            SelectRow,
+            SelectColumn,
+            DisplayValue
         }
     }
 #endif // UNITY_2022_2_OR_NEWER

@@ -24,7 +24,7 @@ namespace GDX.Editor.Inspectors
         const string k_ButtonText = "Open Table";
 
         /// <summary>
-        ///     Is the bound/subscribed to the <see cref="DataTableTracker"/>.
+        ///     Is the bound/subscribed to the <see cref="DataTableTracker" />.
         /// </summary>
         bool m_Bound;
 
@@ -39,26 +39,9 @@ namespace GDX.Editor.Inspectors
         Label m_RowLabel;
 
         /// <summary>
-        /// Cached version of the <see cref="DataTableBase"/> ticket from <see cref="m_DataTableTracker"/>.
+        ///     Cached version of the <see cref="DataTableBase" /> ticket from <see cref="m_DataTableTracker" />.
         /// </summary>
         int m_TableTicket;
-
-        /// <summary>
-        ///     Unity driven event when the inspector is disabled.
-        /// </summary>
-        /// <remarks>
-        ///     Callbacks are unregistered and the usage is removed from the <see cref="DataTableTracker" />.
-        /// </remarks>
-        void OnDisable()
-        {
-            if (!m_Bound)
-            {
-                return;
-            }
-            DataTableTracker.UnregisterStructuralChanged(this, m_TableTicket);
-            DataTableTracker.UnregisterUndoRedoEvent(this, m_TableTicket);
-            DataTableTracker.RemoveUsage(m_TableTicket);
-        }
 
         /// <inheritdoc />
         public void OnColumnDefinitionChange(int columnIdentifier)
@@ -75,6 +58,43 @@ namespace GDX.Editor.Inspectors
         public void OnSettingsChange()
         {
             //throw new System.NotImplementedException();
+        }
+
+        public void OnUndoRedoRowDefinitionChange(int rowIdentifier)
+        {
+            UpdateInspector();
+        }
+
+        public void OnUndoRedoColumnDefinitionChange(int columnIdentifier)
+        {
+            UpdateInspector();
+        }
+
+        public void OnUndoRedoCellValueChanged(int rowIdentifier, int columnIdentifier)
+        {
+        }
+
+        public void OnUndoRedoSettingsChanged()
+        {
+            UpdateInspector();
+        }
+
+        /// <summary>
+        ///     Unity driven event when the inspector is disabled.
+        /// </summary>
+        /// <remarks>
+        ///     Callbacks are unregistered and the usage is removed from the <see cref="DataTableTracker" />.
+        /// </remarks>
+        void Unbind()
+        {
+            if (!m_Bound)
+            {
+                return;
+            }
+
+            DataTableTracker.UnregisterStructuralChanged(this, m_TableTicket);
+            DataTableTracker.UnregisterUndoRedoEvent(this, m_TableTicket);
+            DataTableTracker.RemoveUsage(m_TableTicket);
         }
 
         /// <inheritdoc />
@@ -121,6 +141,8 @@ namespace GDX.Editor.Inspectors
             m_Bound = true;
 
             UpdateInspector();
+
+            m_RootElement.RegisterCallback<DetachFromPanelEvent>(_ => Unbind());
 
             return m_RootElement;
         }
@@ -182,26 +204,6 @@ namespace GDX.Editor.Inspectors
         {
             DataTableBase dataTable = (DataTableBase)target;
             DataTableWindowProvider.OpenAsset(dataTable);
-            UpdateInspector();
-        }
-
-        public void OnUndoRedoRowDefinitionChange(int rowIdentifier)
-        {
-            UpdateInspector();
-        }
-
-        public void OnUndoRedoColumnDefinitionChange(int columnIdentifier)
-        {
-            UpdateInspector();
-        }
-
-        public void OnUndoRedoCellValueChanged(int rowIdentifier, int columnIdentifier)
-        {
-
-        }
-
-        public void OnUndoRedoSettingsChanged()
-        {
             UpdateInspector();
         }
     }
