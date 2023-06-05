@@ -18,10 +18,12 @@ namespace GDX.Editor
     /// </remarks>
     public static class DataTableTracker
     {
+#if UNITY_2022_2_OR_NEWER
         /// <summary>
         ///     Is the tracker subscribed to Undo events.
         /// </summary>
         static bool s_SubscribedToUndo;
+#endif
 
         /// <summary>
         ///     The registered <see cref="ICellValueChangedCallbackReceiver" />s by <see cref="DataTableBase" /> ticket.
@@ -412,7 +414,6 @@ namespace GDX.Editor
             if (!s_SubscribedToUndo && dataTable.GetFlag(DataTableBase.Settings.EnableUndo))
             {
                 Undo.undoRedoEvent += OnUndoRedoEvent;
-                AssemblyReloadEvents.beforeAssemblyReload += ClearAllUndoData;
                 s_SubscribedToUndo = true;
             }
 #endif
@@ -454,6 +455,14 @@ namespace GDX.Editor
             {
                 s_TableTicketHead = tableTicket + 1;
             }
+
+#if UNITY_2022_2_OR_NEWER
+            if (!s_SubscribedToUndo && dataTable.GetFlag(DataTableBase.Settings.EnableUndo))
+            {
+                Undo.undoRedoEvent += OnUndoRedoEvent;
+                s_SubscribedToUndo = true;
+            }
+#endif
             return tableTicket;
 
         }
@@ -502,7 +511,11 @@ namespace GDX.Editor
                 return;
             }
 
-            k_TableToTableTicket.Remove(k_TableTicketToTable[tableTicket]);
+            DataTableBase table = k_TableTicketToTable[tableTicket];
+#if UNITY_2022_2_OR_NEWER
+            Undo.ClearUndo(table);
+#endif
+            k_TableToTableTicket.Remove(table);
             k_TableTicketToTable.Remove(tableTicket);
             k_TableUsageCounters.Remove(tableTicket);
         }
@@ -575,18 +588,6 @@ namespace GDX.Editor
         }
 
 #if UNITY_2022_2_OR_NEWER
-
-        /// <summary>
-        ///     Clear all undo data saved in the undo history
-        /// </summary>
-        static void ClearAllUndoData()
-        {
-            foreach (DataTableBase table in k_TableToTableTicket.Keys)
-            {
-                //Undo.ClearUndo(table);
-            }
-        }
-
         /// <summary>
         ///     The event fired when Unity performs an undo/redo.
         /// </summary>
@@ -598,10 +599,6 @@ namespace GDX.Editor
                 return;
             }
 
-            // 0: Header
-            // 1: Ticket
-            // 2: Type
-            // 3: Identifier
             string[] chunks = undo.undoName.Split(' ', 6, StringSplitOptions.RemoveEmptyEntries);
 
             // Only if we have a good ticket

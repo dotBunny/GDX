@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using GDX.DataTables;
 using UnityEditor;
@@ -57,11 +58,6 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         protected abstract ulong GetDataVersion();
 
-        ~CellValueDrawerBase()
-        {
-            UnregisterForCallback();
-        }
-
         /// <summary>
         ///     Overrides the method to make a UIElements based GUI for the property.
         /// </summary>
@@ -69,8 +65,6 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         /// <returns>A disabled visual element.</returns>
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            Selection.selectionChanged += Cleanup;
-
             // Cache base reference
             m_SerializedProperty = property;
 
@@ -132,6 +126,9 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
             // Determine what view should be shown based on available data
             DetectDrawerMode();
+
+            // Our new destroy!
+            m_Container.RegisterCallback<DetachFromPanelEvent>(_ => Cleanup());
 
             return m_Container;
         }
@@ -461,7 +458,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             DisplayValue
         }
 
-        bool m_HasRegisteredForCallbacks = false;
+        bool m_HasRegisteredForCallbacks;
 
         void RegisterForCallback()
         {
@@ -487,6 +484,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             DataTableTracker.UnregisterCellValueChanged(this, m_TableTicket);
             DataTableTracker.UnregisterUndoRedoEvent(this, m_TableTicket);
             DataTableTracker.RemoveUsage(m_TableTicket);
+
+            m_HasRegisteredForCallbacks = false;
         }
 
         /// <inheritdoc />
@@ -495,6 +494,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             if (m_RowIdentifier == rowIdentifier && m_ColumnIdentifier == columnIdentifier)
             {
                 UpdateValue();
+                m_CellElement.MarkDirtyRepaint();
             }
         }
 
@@ -523,6 +523,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             if (rowIdentifier == m_RowIdentifier)
             {
                 DetectDrawerMode();
+                m_CellElement.MarkDirtyRepaint();
             }
         }
 
@@ -531,6 +532,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             if (columnIdentifier == m_ColumnIdentifier)
             {
                 DetectDrawerMode();
+                m_CellElement.MarkDirtyRepaint();
             }
         }
 
@@ -539,6 +541,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             if (rowIdentifier == m_RowIdentifier && columnIdentifier == m_ColumnIdentifier)
             {
                 UpdateValue();
+                m_CellElement.MarkDirtyRepaint();
             }
         }
 
