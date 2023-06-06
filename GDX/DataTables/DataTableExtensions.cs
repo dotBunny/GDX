@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -280,11 +281,11 @@ namespace GDX.DataTables
             // Build lines for rows
             for (int r = 0; r < rowCount; r++)
             {
-                RowDescription rowDescription = dataTable.GetRowDescription(r);
+                RowDescription rowDescription = dataTable.GetRowDescriptionByOrder(r);
                 generator.Append($"{rowDescription.Identifier}, {MakeCommaSeperatedValue(rowDescription.Name)}");
                 for (int c = 0; c < columnCount; c++)
                 {
-                    ColumnDescription columnDescription = dataTable.GetColumnDescription(c);
+                    ColumnDescription columnDescription = dataTable.GetColumnDescriptionByOrder(c);
                     generator.Append(", ");
                     switch (columnDescription.Type)
                     {
@@ -421,31 +422,87 @@ namespace GDX.DataTables
             File.WriteAllText(filePath, generator.ToString());
         }
 
+#if UNITY_2022_2_OR_NEWER
+        static List<RowDescription> Sort(ref RowDescription[] originalRows, int originalRowCount,
+            int originalRowStartIndex, List<RowDescription> sortedRows, int[] columnIdentifiers,
+            ref Serializable.SerializableTypes[] columnTypes, int[] directions, int columIdentifierIndex = 0)
+        {
+            switch (columnTypes[columIdentifierIndex])
+            {
+                case Serializable.SerializableTypes.Float:
+                    sortedRows = SortByFloat(ref originalRows, originalRowCount, originalRowStartIndex, ref sortedRows,
+                        columnIdentifiers, ref columnTypes, directions, columIdentifierIndex);
+                    break;
+            }
+            return sortedRows;
+        }
+
+        static List<RowDescription> SortByFloat(ref RowDescription[] originalRows, int originalRowCount,
+            int originalRowStartIndex, ref List<RowDescription> sortedRows, int[] columnIdentifiers,
+            ref Serializable.SerializableTypes[] columnTypes, int[] directions, int columIdentifierIndex = 0)
+        {
+            return sortedRows;
+        }
+
         /// <summary>
         ///     Sort a <see cref="DataTableBase"/> rows based on the provided sorting parameters
         /// </summary>
         /// <param name="dataTable">The target <see cref="DataTableBase"/>.</param>
         /// <param name="columnIdentifiers">The column identifiers to use in order of priority.</param>
-        /// <param name="types">The types of the given columns.</param>
+        /// <param name="columnTypes">The types of the given columns.</param>
         /// <param name="directions">The direction which the column should be used to calculate order.</param>
         /// <returns>The updated data version of the <see cref="DataTableBase"/>.</returns>
         public static ulong SortByColumns(this DataTableBase dataTable, int[] columnIdentifiers,
-            Serializable.SerializableTypes[] types, SortDirection[] directions)
+            Serializable.SerializableTypes[] columnTypes, SortDirection[] directions)
         {
-            int rowCount = dataTable.GetRowCount();
-            int columnCount = dataTable.GetColumnCount();
-            int sortedColumnCount = columnIdentifiers.Length;
-
-            if (columnIdentifiers.Length != types.Length || types.Length != directions.Length)
+            if (columnIdentifiers.Length != columnTypes.Length || columnTypes.Length != directions.Length)
             {
                 Debug.LogError("Unable to sort, all arrays much have same length.");
                 return dataTable.GetDataVersion();
             }
 
-            // TODO: @matt Sort
+            int rowCount = dataTable.GetRowCount();
+            if (rowCount <= 1) return dataTable.GetDataVersion();
 
+            // Get our original ordered rows
+            RowDescription[] originalRows = dataTable.GetAllRowDescriptions();
+            List<RowDescription> sortedRows = new List<RowDescription>(rowCount) { originalRows[0] };
 
+            // We need to prepare our directions betters
+            int directionLength = directions.Length;
+            int[] newDirections = new int[directions.Length];
+            for(int i = 0; i < directionLength; i++)
+            {
+                if (directions[i] == SortDirection.Ascending)
+                {
+                    newDirections[i] = 1;
+                }
+                else
+                {
+                    newDirections[i] = 0;
+                }
+            }
+
+            // Recursive sort GO!
+            sortedRows = Sort(ref originalRows, rowCount, 1, sortedRows, columnIdentifiers, ref columnTypes,
+                newDirections, 0);
+
+            int sortedOrderCount = sortedRows.Count;
+            if (sortedOrderCount == rowCount)
+            {
+                int[] sortedIdentifiers = new int [sortedOrderCount];
+                for (int i = 0; i < sortedOrderCount; i++)
+                {
+                    sortedIdentifiers[i] = sortedRows[i].Identifier;
+                }
+                dataTable.SetAllRowOrders(sortedIdentifiers);
+            }
+            else
+            {
+                Debug.LogError("Sorted count did not match the original count. An issue must of occured.");
+            }
             return dataTable.GetDataVersion();
         }
+#endif
     }
 }
