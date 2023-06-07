@@ -5,14 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.1.0] - 2023-07-01
+## [4.0.0] - 2023-07-01
 
-***"Dinner Table"***
-> This release introduces some functionality while shoring existing features with fixes and unit testing. We are starting to work more on visibility and discoverability. Also, we are recommending the use of `2020.2` or newer moving forward. While we support older versions, much of the new development being done requires `2022.2` or newer.
+***"Going Bold"***
+> After almost a year of no public updates (the `dev` branch was bustling), the release of `4.0.0` comes with significant changes and a continued effort to improve unit test coverage and discoverability. The package remains tested against `2020.3` and `2021.3`; however, we strongly recommend transitioning to `2022.3` or newer to unlock additional functionality.
 
 ### Added
 
-- New toggle added to Project Settings -> GDX -> Environment, ensuring that GDX shaders included are always included in a build. This is encompasses the shaders necessary to draw the `DebugDraw` commands.
+- `GDX.Experimental` namespace to encapsulate code and features actively being iterated until they meet the shipping bar.
+- New toggle added to Project Settings -> GDX -> Environment, ensuring that GDX shaders included are always included in a build. This encompasses the shaders necessary to draw the `DebugDraw` commands (_Experimental_).
 - `TaskDirector` to assist with `TaskBase` based scheduling of the thread pool, configurable in GDX project preferences.
 - `EditorTaskDirectorSystem` and `TaskDirectorSystem` to automatically tick the `TaskDirector` in appropriate modes.
 - Boilerplate in `PlayerLoopSystemExtensions` to make modifying the PlayerLoop much simpler.
@@ -20,7 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FirstIndexOf()` and `LastIndexOf()` methods added to `ArrayExtensions` constrained to `IEquatable` for easier string comparison.
 - `FirstIndexOf()`, `FirstIndexOfItem()`, `FirstIndexOfValue()`, `LastIndexOf()`, `LastIndexOfItem()`, `LastIndexOfValue()` methods added to `SimpleListExtensions`.
 - `Contains()` to `SimpleListExtensions` constrained to `IEquatable`.
-- `StableTable` implementation of new `TableBase` with full suite of supporting references `*CellValue`. _Requires Unity 2022.2 or newer_.
+- `StableTable` implementation of new `TableBase` with full suite of supporting references `*CellValue`.
+- Spreadsheet-like editing experience for `DataTableBase` inheriting objects (_Unity 2022.2+_)
 
 ### Changed
 
