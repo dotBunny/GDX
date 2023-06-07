@@ -74,7 +74,7 @@ namespace GDX.Editor.Windows
             m_DataTableWindowController.AddColumn("Test_Vector2", Serializable.SerializableTypes.Vector2);
 
             m_DataTableWindowController.AddRow("Test_Row");
-            RowDescription rowDescription = m_TestDataTable.GetRowDescription(0);
+            RowDescription rowDescription = m_TestDataTable.GetRowDescriptionByOrder(0);
 
             Assert.That(m_TestDataTable.GetColumnCount() == 3);
             Assert.That(m_TestDataTable.GetRowCount() == 1);
@@ -93,17 +93,17 @@ namespace GDX.Editor.Windows
             m_DataTableWindowController.AddRowDefault();
             m_DataTableWindowController.AddRowDefault();
             m_DataTableWindowController.AddColumn("E", Serializable.SerializableTypes.Bounds);
-            m_DataTableWindowController.RemoveColumn(m_TestDataTable.GetColumnDescription(3).Identifier); // remove D
-            m_DataTableWindowController.RemoveColumn(m_TestDataTable.GetColumnDescription(3).Identifier); // remove E
+            m_DataTableWindowController.RemoveColumn(m_TestDataTable.GetColumnDescriptionByOrder(3).Identifier); // remove D
+            m_DataTableWindowController.RemoveColumn(m_TestDataTable.GetColumnDescriptionByOrder(3).Identifier); // remove E
             m_DataTableWindowController.AddColumn("E", Serializable.SerializableTypes.Bounds);
             m_DataTableWindowController.AddColumn("D", Serializable.SerializableTypes.String);
-            m_DataTableWindowController.RemoveColumn(m_TestDataTable.GetColumnDescription(3).Identifier); // remove E
+            m_DataTableWindowController.RemoveColumn(m_TestDataTable.GetColumnDescriptionByOrder(3).Identifier); // remove E
             m_DataTableWindowController.AddColumn("E", Serializable.SerializableTypes.Bounds);
             m_DataTableWindowController.AddColumn("F", Serializable.SerializableTypes.String);
             m_DataTableWindowController.AddColumn("G", Serializable.SerializableTypes.String);
             m_DataTableWindowController.AddRowDefault();
             m_DataTableWindowController.AddRowDefault();
-            m_DataTableWindowController.RemoveColumn(m_TestDataTable.GetColumnDescription(4).Identifier); // remove E
+            m_DataTableWindowController.RemoveColumn(m_TestDataTable.GetColumnDescriptionByOrder(4).Identifier); // remove E
 
             Assert.That(m_TestDataTable.GetColumnCount() == 6, $"Expected 6, found {m_TestDataTable.GetColumnCount()}");
         }

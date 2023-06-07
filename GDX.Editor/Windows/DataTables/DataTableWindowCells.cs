@@ -26,7 +26,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             StringCellValue cellValue =
-                new StringCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new StringCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -50,7 +50,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             CharCellValue cellValue =
-                new CharCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new CharCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe().ToString());
@@ -74,7 +74,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             BoolCellValue cellValue =
-                new BoolCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new BoolCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -98,7 +98,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             SByteCellValue cellValue =
-                new SByteCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new SByteCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -122,7 +122,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             ByteCellValue cellValue =
-                new ByteCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new ByteCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -146,7 +146,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             ShortCellValue cellValue =
-                new ShortCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new ShortCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -170,7 +170,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             UShortCellValue cellValue =
-                new UShortCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new UShortCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -194,7 +194,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             IntCellValue cellValue =
-                new IntCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new IntCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -222,7 +222,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             UIntCellValue cellValue =
-                new UIntCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new UIntCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
 #if UNITY_2022_3_OR_NEWER
@@ -254,7 +254,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             LongCellValue cellValue =
-                new LongCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new LongCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -282,7 +282,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             ULongCellValue cellValue =
-                new ULongCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new ULongCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
 
@@ -315,7 +315,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             FloatCellValue cellValue =
-                new FloatCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new FloatCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -339,7 +339,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             DoubleCellValue cellValue =
-                new DoubleCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new DoubleCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -363,7 +363,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             Vector2CellValue cellValue =
-                new Vector2CellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new Vector2CellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -387,7 +387,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             Vector3CellValue cellValue =
-                new Vector3CellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new Vector3CellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -411,7 +411,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             Vector4CellValue cellValue =
-                new Vector4CellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new Vector4CellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -435,7 +435,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             Vector2IntCellValue cellValue =
-                new Vector2IntCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new Vector2IntCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -459,7 +459,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             Vector3IntCellValue cellValue =
-                new Vector3IntCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new Vector3IntCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -483,7 +483,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             QuaternionCellValue cellValue =
-                new QuaternionCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new QuaternionCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             // Figure it out
@@ -512,7 +512,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             RectCellValue cellValue =
-                new RectCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new RectCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -536,7 +536,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             RectIntCellValue cellValue =
-                new RectIntCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new RectIntCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -560,7 +560,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             ColorCellValue cellValue =
-                new ColorCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new ColorCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -584,7 +584,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             LayerMaskCellValue cellValue =
-                new LayerMaskCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new LayerMaskCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -608,7 +608,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             BoundsCellValue cellValue =
-                new BoundsCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new BoundsCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -632,7 +632,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             BoundsIntCellValue cellValue =
-                new BoundsIntCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new BoundsIntCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -656,7 +656,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             Hash128CellValue cellValue =
-                new Hash128CellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new Hash128CellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -680,7 +680,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             GradientCellValue cellValue =
-                new GradientCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new GradientCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -704,7 +704,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             AnimationCurveCellValue cellValue =
-                new AnimationCurveCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new AnimationCurveCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -728,7 +728,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             ObjectCellValue cellValue =
-                new ObjectCellValue(dataTable, dataTable.GetRowDescription(row).Identifier, map.ColumnID);
+                new ObjectCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
             string qualifiedType = dataTable.GetTypeNameForObjectColumn(map.ColumnID);
             field.objectType = (!string.IsNullOrEmpty(qualifiedType) ? System.Type.GetType(qualifiedType) : typeof(Object)) ??

@@ -117,11 +117,18 @@ namespace GDX.DataTables
         public abstract RowDescription[] GetAllRowDescriptions();
 
         /// <summary>
+        ///     Get a <see cref="RowDescription" /> describing a row.
+        /// </summary>
+        /// <param name="rowIdentifier">The unique row identifier.</param>
+        /// <returns>A <see cref="RowDescription" /> for the target row.</returns>
+        public abstract RowDescription GetRowDescription(int rowIdentifier);
+
+        /// <summary>
         ///     Get a <see cref="RowDescription" /> describing a row in the specified position.
         /// </summary>
         /// <param name="order">The ordered index/position.</param>
         /// <returns>A <see cref="RowDescription" /> for the target row.</returns>
-        public abstract RowDescription GetRowDescription(int order);
+        public abstract RowDescription GetRowDescriptionByOrder(int order);
 
         /// <summary>
         ///     Get all columns' <see cref="ColumnDescription" />; ordered.
@@ -132,9 +139,16 @@ namespace GDX.DataTables
         /// <summary>
         ///     Get a <see cref="ColumnDescription" /> describing a column in the specified position.
         /// </summary>
+        /// <param name="columnIdentifier">The unique column identifier.</param>
+        /// <returns>A <see cref="ColumnDescription" /> for the target column.</returns>
+        public abstract ColumnDescription GetColumnDescription(int columnIdentifier);
+
+        /// <summary>
+        ///     Get a <see cref="ColumnDescription" /> describing a column in the specified position.
+        /// </summary>
         /// <param name="order">The ordered index/position.</param>
         /// <returns>A <see cref="ColumnDescription" /> for the target column.</returns>
-        public abstract ColumnDescription GetColumnDescription(int order);
+        public abstract ColumnDescription GetColumnDescriptionByOrder(int order);
 
         /// <summary>
         ///     Get the specified row's order.

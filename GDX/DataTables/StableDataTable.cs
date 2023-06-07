@@ -136,13 +136,41 @@ namespace GDX.DataTables
         }
 
         /// <inheritdoc />
-        public override RowDescription GetRowDescription(int order)
+        public override RowDescription GetRowDescription(int rowIdentifier)
+        {
+            RowDescription returnRowDescription = new RowDescription();
+
+            int rowDenseIndex = m_RowIdentifierToDenseIndexMap[rowIdentifier];
+
+            returnRowDescription.Identifier = rowIdentifier;
+            returnRowDescription.Name = m_RowNames[rowDenseIndex];
+            returnRowDescription.SortOrder = rowDenseIndex;
+
+            return returnRowDescription;
+        }
+
+        /// <inheritdoc />
+        public override RowDescription GetRowDescriptionByOrder(int order)
         {
             return new RowDescription { Identifier = m_RowDenseIndexToIDMap[order], Name = m_RowNames[order], SortOrder = order};
         }
 
         /// <inheritdoc />
-        public override ColumnDescription GetColumnDescription(int order)
+        public override ColumnDescription GetColumnDescription(int columnIdentifier)
+        {
+            ColumnDescription returnColumnDescription = new ColumnDescription();
+
+            ref ColumnEntry columnEntry = ref m_ColumnIdentifierToDenseIndexMap[columnIdentifier];
+
+            returnColumnDescription.Identifier = columnIdentifier;
+            returnColumnDescription.Name = m_AllColumnNames[(int)columnEntry.ColumnType][columnEntry.ColumnDenseIndex];
+            returnColumnDescription.SortOrder = m_ColumnIdentifierToSortOrderMap[columnIdentifier];
+
+            return returnColumnDescription;
+        }
+
+        /// <inheritdoc />
+        public override ColumnDescription GetColumnDescriptionByOrder(int order)
         {
             int idAtOrderedIndex = m_SortedOrderToColumnIdentifierMap[order];
             ref ColumnEntry columnEntry = ref m_ColumnIdentifierToDenseIndexMap[idAtOrderedIndex];
@@ -247,17 +275,17 @@ namespace GDX.DataTables
             return m_RowNames[rowDenseIndex];
         }
 
-        public ref string GetRowNameRef(int row)
+        public ref string GetRowNameRef(int rowIdentifier)
         {
-            AssertRowIdentifierValid(row);
-            int rowDenseIndex = m_RowIdentifierToDenseIndexMap[row];
+            AssertRowIdentifierValid(rowIdentifier);
+            int rowDenseIndex = m_RowIdentifierToDenseIndexMap[rowIdentifier];
             return ref m_RowNames[rowDenseIndex];
         }
 
-        public ref string GetColumnNameRef(int columnID)
+        public ref string GetColumnNameRef(int columnIdentifier)
         {
-            AssertColumnIdentifierValid(columnID);
-            ref ColumnEntry columnEntry = ref m_ColumnIdentifierToDenseIndexMap[columnID];
+            AssertColumnIdentifierValid(columnIdentifier);
+            ref ColumnEntry columnEntry = ref m_ColumnIdentifierToDenseIndexMap[columnIdentifier];
             return ref m_AllColumnNames[(int)columnEntry.ColumnType][columnEntry.ColumnDenseIndex];
         }
 
