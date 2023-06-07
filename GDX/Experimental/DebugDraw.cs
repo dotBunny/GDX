@@ -4,7 +4,7 @@
 
 using GDX.Collections.Generic;
 
-namespace GDX.Developer
+namespace GDX.Experimental
 {
     /// <summary>
     ///     A debug draw system useful in both the editor and at runtime.
