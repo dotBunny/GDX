@@ -204,7 +204,7 @@ namespace GDX.DataTables
         public abstract void SetTypeNameForColumn(int columnIdentifier, string assemblyQualifiedName);
 
         /// <summary>
-        ///     Get the type's assembly qualified name for the specified <see cref="UnityEngine.Object" /> column.
+        ///     Get the type's assembly qualified name for the specified column.
         /// </summary>
         /// <param name="columnIdentifier">The unique column identifier.</param>
         /// <returns>An assembly qualified name.</returns>
