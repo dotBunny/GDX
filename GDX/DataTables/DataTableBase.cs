@@ -137,7 +137,8 @@ namespace GDX.DataTables
         public abstract ColumnDescription[] GetAllColumnDescriptions();
 
         /// <summary>
-        ///     Get a <see cref="ColumnDescription" /> describing a column in the specified position.
+        ///     Get a <see cref="ColumnDescription" /> describing a colum
+        /// n in the specified position.
         /// </summary>
         /// <param name="columnIdentifier">The unique column identifier.</param>
         /// <returns>A <see cref="ColumnDescription" /> for the target column.</returns>
@@ -191,7 +192,7 @@ namespace GDX.DataTables
         public abstract void SetAllColumnOrders(int[] orderedColumnIdentifiers);
 
         /// <summary>
-        ///     Set the type's assembly qualified name for the specified <see cref="UnityEngine.Object" /> column.
+        ///     Set the type's assembly qualified name for the specified column.
         /// </summary>
         /// <remarks>
         ///     More info can be found at
@@ -200,14 +201,14 @@ namespace GDX.DataTables
         /// </remarks>
         /// <param name="columnIdentifier">The unique column identifier.</param>
         /// <param name="assemblyQualifiedName">The assembly qualified name.</param>
-        public abstract void SetTypeNameForObjectColumn(int columnIdentifier, string assemblyQualifiedName);
+        public abstract void SetTypeNameForColumn(int columnIdentifier, string assemblyQualifiedName);
 
         /// <summary>
         ///     Get the type's assembly qualified name for the specified <see cref="UnityEngine.Object" /> column.
         /// </summary>
         /// <param name="columnIdentifier">The unique column identifier.</param>
         /// <returns>An assembly qualified name.</returns>
-        public abstract string GetTypeNameForObjectColumn(int columnIdentifier);
+        public abstract string GetTypeNameForColumn(int columnIdentifier);
 
         /// <summary>
         ///     Set the user-friendly name of the identified column.

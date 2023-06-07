@@ -111,7 +111,7 @@ namespace GDX.Editor.Windows.DataTables
                 System.Type newType = System.Type.GetType(secondary);
                 if (newType != null)
                 {
-                    dataTable.SetTypeNameForObjectColumn(columnIdentifier, secondary);
+                    dataTable.SetTypeNameForColumn(columnIdentifier, secondary);
                 }
             }
 

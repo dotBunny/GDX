@@ -730,7 +730,7 @@ namespace GDX.Editor.Windows.DataTables
             ObjectCellValue cellValue =
                 new ObjectCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
 
-            string qualifiedType = dataTable.GetTypeNameForObjectColumn(map.ColumnID);
+            string qualifiedType = dataTable.GetTypeNameForColumn(map.ColumnID);
             field.objectType = (!string.IsNullOrEmpty(qualifiedType) ? System.Type.GetType(qualifiedType) : typeof(Object)) ??
                                typeof(Object);
 

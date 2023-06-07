@@ -1022,7 +1022,7 @@ namespace GDX.DataTables
         }
 
         /// <inheritdoc />
-        public override void SetTypeNameForObjectColumn(int columnIdentifier, string assemblyQualifiedName)
+        public override void SetTypeNameForColumn(int columnIdentifier, string assemblyQualifiedName)
         {
             AssertObjectColumnIDValid(columnIdentifier);
             int denseIndex = m_ColumnIdentifierToDenseIndexMap[columnIdentifier].ColumnDenseIndex;
@@ -1030,7 +1030,7 @@ namespace GDX.DataTables
         }
 
         /// <inheritdoc />
-        public override string GetTypeNameForObjectColumn(int columnIdentifier)
+        public override string GetTypeNameForColumn(int columnIdentifier)
         {
             AssertObjectColumnIDValid(columnIdentifier);
             int denseIndex = m_ColumnIdentifierToDenseIndexMap[columnIdentifier].ColumnDenseIndex;
