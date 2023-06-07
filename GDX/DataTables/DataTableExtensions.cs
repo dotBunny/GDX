@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
+using GDX.DataTables.ColumnSorters;
 using UnityEngine;
 using UnityEngine.UIElements;
 using TextGenerator = GDX.Developer.TextGenerator;
@@ -423,35 +424,41 @@ namespace GDX.DataTables
         }
 
 #if UNITY_2022_2_OR_NEWER
-        static List<RowDescription> Sort(ref RowDescription[] originalRows, int originalRowCount,
-            int originalRowStartIndex, List<RowDescription> sortedRows, int[] columnIdentifiers,
-            ref Serializable.SerializableTypes[] columnTypes, int[] directions, int columIdentifierIndex = 0)
+
+        static IComparer<RowDescription> GetComparer(Serializable.SerializableTypes type, DataTableBase dataTable,
+            int rowCount, int columnIdentifier, int direction, bool supportMultiSort = false)
         {
-            switch (columnTypes[columIdentifierIndex])
+            switch (type)
             {
                 case Serializable.SerializableTypes.Float:
-                    sortedRows = SortByFloat(ref originalRows, originalRowCount, originalRowStartIndex, ref sortedRows,
-                        columnIdentifiers, ref columnTypes, directions, columIdentifierIndex);
-                    break;
+                    return new FloatColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
+                case Serializable.SerializableTypes.Int:
+                    return new IntColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
+                case Serializable.SerializableTypes.String:
+                    return new StringColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
+                case Serializable.SerializableTypes.Bool:
+                    return new BoolColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
+                case Serializable.SerializableTypes.Double:
+                    return new DoubleColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
+                case Serializable.SerializableTypes.Long:
+                    return new LongColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
+                case Serializable.SerializableTypes.ULong:
+                    return new ULongColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
+                case Serializable.SerializableTypes.UInt:
+                    return new UIntColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
             }
-            return sortedRows;
-        }
 
-        static List<RowDescription> SortByFloat(ref RowDescription[] originalRows, int originalRowCount,
-            int originalRowStartIndex, ref List<RowDescription> sortedRows, int[] columnIdentifiers,
-            ref Serializable.SerializableTypes[] columnTypes, int[] directions, int columIdentifierIndex = 0)
-        {
-            return sortedRows;
+            return null;
         }
 
         /// <summary>
-        ///     Sort a <see cref="DataTableBase"/> rows based on the provided sorting parameters
+        ///     Sort a <see cref="DataTableBase" /> rows based on the provided sorting parameters
         /// </summary>
-        /// <param name="dataTable">The target <see cref="DataTableBase"/>.</param>
+        /// <param name="dataTable">The target <see cref="DataTableBase" />.</param>
         /// <param name="columnIdentifiers">The column identifiers to use in order of priority.</param>
         /// <param name="columnTypes">The types of the given columns.</param>
         /// <param name="directions">The direction which the column should be used to calculate order.</param>
-        /// <returns>The updated data version of the <see cref="DataTableBase"/>.</returns>
+        /// <returns>The updated data version of the <see cref="DataTableBase" />.</returns>
         public static ulong SortByColumns(this DataTableBase dataTable, int[] columnIdentifiers,
             Serializable.SerializableTypes[] columnTypes, SortDirection[] directions)
         {
@@ -461,46 +468,69 @@ namespace GDX.DataTables
                 return dataTable.GetDataVersion();
             }
 
+            bool multiSort = columnIdentifiers.Length > 1;
+
+
             int rowCount = dataTable.GetRowCount();
-            if (rowCount <= 1) return dataTable.GetDataVersion();
+            if (rowCount <= 1 || columnIdentifiers.Length == 0)
+            {
+                return dataTable.GetDataVersion();
+            }
 
             // Get our original ordered rows
-            RowDescription[] originalRows = dataTable.GetAllRowDescriptions();
-            List<RowDescription> sortedRows = new List<RowDescription>(rowCount) { originalRows[0] };
+            RowDescription[] rows = dataTable.GetAllRowDescriptions();
 
-            // We need to prepare our directions betters
-            int directionLength = directions.Length;
-            int[] newDirections = new int[directions.Length];
-            for(int i = 0; i < directionLength; i++)
+            // Primary Sort Pass
+            List<int> needAdditionalSortingIdentifiers = new List<int>(rowCount);
+            IComparer<RowDescription> primaryComparer = GetComparer(columnTypes[0], dataTable, rowCount,
+                columnIdentifiers[0], (int)directions[0], multiSort);
+            Array.Sort(rows, 0, rowCount, primaryComparer);
+
+            // Multi column support
+            if (multiSort)
             {
-                if (directions[i] == SortDirection.Ascending)
+                ColumnSorterBase primarySorter = (ColumnSorterBase)primaryComparer;
+                needAdditionalSortingIdentifiers.AddRange(primarySorter.EqualIdentifiers);
+                if (needAdditionalSortingIdentifiers.Count > 0)
                 {
-                    newDirections[i] = 1;
-                }
-                else
-                {
-                    newDirections[i] = 0;
+                    // We have additional sorting to be done and have additional sorter options
+                    Debug.Log("Needs additional sorting based on similar guys");
+                    int sorterIndex = 1;
+
+                    // Iterate till we have nothing to do
+                    while (needAdditionalSortingIdentifiers.Count > 0 && sorterIndex < columnIdentifiers.Length)
+                    {
+                        // Build list
+                        // need to figure out start index, and the length to sort
+
+                        // Clear the scratch pad now that we've created our actual indices
+                        needAdditionalSortingIdentifiers.Clear();
+
+                        // Loop over created ones
+
+                        // Next sorter it appears
+                        sorterIndex++;
+                    }
                 }
             }
 
-            // Recursive sort GO!
-            sortedRows = Sort(ref originalRows, rowCount, 1, sortedRows, columnIdentifiers, ref columnTypes,
-                newDirections, 0);
-
-            int sortedOrderCount = sortedRows.Count;
+            // Create sorted list for actual data table consumption
+            int sortedOrderCount = rows.Length;
             if (sortedOrderCount == rowCount)
             {
                 int[] sortedIdentifiers = new int [sortedOrderCount];
                 for (int i = 0; i < sortedOrderCount; i++)
                 {
-                    sortedIdentifiers[i] = sortedRows[i].Identifier;
+                    sortedIdentifiers[i] = rows[i].Identifier;
                 }
+
                 dataTable.SetAllRowOrders(sortedIdentifiers);
             }
             else
             {
                 Debug.LogError("Sorted count did not match the original count. An issue must of occured.");
             }
+
             return dataTable.GetDataVersion();
         }
 #endif

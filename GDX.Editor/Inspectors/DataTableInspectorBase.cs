@@ -154,43 +154,58 @@ namespace GDX.Editor.Inspectors
         void UpdateInspector()
         {
             DataTableBase dataTable = (DataTableBase)target;
-
-            RowDescription[] rowDescriptions = dataTable.GetAllRowDescriptions();
-            ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
-
-            int rowCount = rowDescriptions.Length;
-            int columnCount = columnDescriptions.Length;
+            StringBuilder content = new StringBuilder(100);
 
             m_DataTableLabel.text = dataTable.GetDisplayName();
 
-            m_RowLabel.text = $"Rows ({rowCount})";
-            StringBuilder content = new StringBuilder(100);
-            int rowCountMinusOne = rowCount - 1;
-            for (int i = 0; i < rowCount; i++)
+            if (dataTable.GetRowCount() == 0)
             {
-                content.Append(rowDescriptions[i]);
-
-                if (i < rowCountMinusOne)
-                {
-                    content.Append(", ");
-                }
+                m_RowLabel.text = "No Rows";
+                m_RowDescription.text = string.Empty;
             }
+            else
+            {
+                RowDescription[] rowDescriptions = dataTable.GetAllRowDescriptions();
+                int rowCount = rowDescriptions.Length;
+                m_RowLabel.text = $"Rows ({rowCount})";
+                int rowCountMinusOne = rowCount - 1;
+                for (int i = 0; i < rowCount; i++)
+                {
+                    content.Append(rowDescriptions[i]);
 
-            m_RowDescription.text = content.ToString();
+                    if (i < rowCountMinusOne)
+                    {
+                        content.Append(", ");
+                    }
+                }
+                m_RowDescription.text = content.ToString();
+            }
             content.Clear();
 
-            m_ColumnLabel.text = $"Columns ({columnCount})";
-            int columnCountMinusOne = columnCount - 1;
-            for (int i = 0; i < columnCount; i++)
+            if (dataTable.GetColumnCount() == 0)
             {
-                content.Append(columnDescriptions[i]);
-                if (i < columnCountMinusOne)
+                m_ColumnLabel.text = "No Columns";
+                m_ColumnDescription.text = string.Empty;
+            }
+            else
+            {
+                ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
+                int columnCount = columnDescriptions.Length;
+
+                m_ColumnLabel.text = $"Columns ({columnCount})";
+                int columnCountMinusOne = columnCount - 1;
+                for (int i = 0; i < columnCount; i++)
                 {
-                    content.Append(", ");
+                    content.Append(columnDescriptions[i]);
+                    if (i < columnCountMinusOne)
+                    {
+                        content.Append(", ");
+                    }
                 }
+
+                m_ColumnDescription.text = content.ToString();
             }
 
-            m_ColumnDescription.text = content.ToString();
 
             DataTableTracker.DataTableTrackerStats stats = DataTableTracker.GetStats(m_TableTicket);
             m_DataTableTracker.text =

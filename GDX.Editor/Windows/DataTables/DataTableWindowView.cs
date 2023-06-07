@@ -114,7 +114,6 @@ namespace GDX.Editor.Windows.DataTables
                         column.bindCell = DataTableWindowCells.BindStringCell;
                         column.sortable = true;
                         column.minWidth = m_GenericMinWidth;
-
                         break;
                     case Serializable.SerializableTypes.Char:
                         column.makeCell += () => DataTableWindowCells.MakeCharCell(tableTicket, columnIndex);
@@ -141,12 +140,10 @@ namespace GDX.Editor.Windows.DataTables
                         column.makeCell += () => DataTableWindowCells.MakeShortCell(tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindShortCell;
                         column.minWidth = m_NumericMinWidth;
-                        column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.UShort:
                         column.makeCell += () => DataTableWindowCells.MakeUShortCell(tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindUShortCell;
-                        column.sortable = true;
                         column.minWidth = m_NumericMinWidth;
                         break;
                     case Serializable.SerializableTypes.Int:
@@ -250,7 +247,6 @@ namespace GDX.Editor.Windows.DataTables
                     case Serializable.SerializableTypes.Hash128:
                         column.makeCell += () => DataTableWindowCells.MakeHash128Cell(tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindHash128Cell;
-                        column.sortable = false;
                         column.minWidth = m_HashMinWidth;
                         break;
                     case Serializable.SerializableTypes.Gradient:
@@ -334,10 +330,12 @@ namespace GDX.Editor.Windows.DataTables
                 sortedColumnTypes.Add(m_ColumnTypeCache[sortedColumn.columnName]);
             }
 
+            DataTableTracker.RecordRowDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), -1, "Reordered Rows");
             m_DataTableWindow.GetDataTable()
                 .SortByColumns(sortedColumnIdentifiers.ToArray(), sortedColumnTypes.ToArray(),
                     sortedColumnDirections.ToArray());
-            RefreshItems();
+
+            RebuildRowData();
         }
 
         public MultiColumnListView GetMultiColumnListView()
