@@ -448,6 +448,7 @@ namespace GDX.DataTables
                     return new UIntColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
             }
 
+            Debug.LogError($"Unable to find sorter for requested column type [{type.GetLabel()}].");
             return null;
         }
 
@@ -484,6 +485,10 @@ namespace GDX.DataTables
             List<int> needAdditionalSortingIdentifiers = new List<int>(rowCount);
             IComparer<RowDescription> primaryComparer = GetComparer(columnTypes[0], dataTable, rowCount,
                 columnIdentifiers[0], (int)directions[0], multiSort);
+            if (primaryComparer == null)
+            {
+                return dataTable.GetDataVersion();
+            }
             Array.Sort(rows, 0, rowCount, primaryComparer);
 
             // Multi column support
@@ -506,6 +511,7 @@ namespace GDX.DataTables
                         // Clear the scratch pad now that we've created our actual indices
                         needAdditionalSortingIdentifiers.Clear();
 
+                        // Check for null compare type (move to next)
                         // Loop over created ones
 
                         // Next sorter it appears
