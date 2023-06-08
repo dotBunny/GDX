@@ -1647,6 +1647,7 @@ namespace GDX.DataTables
 
                 newNames[i] = m_RowNames[oldRowIndex];
             }
+            m_RowNames = newNames;
 
             for (int i = 0; i < orderedRowIdentifiers.Length; i++)
             {
