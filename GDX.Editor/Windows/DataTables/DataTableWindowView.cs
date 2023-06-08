@@ -83,7 +83,7 @@ namespace GDX.Editor.Windows.DataTables
                     bindCell = BindRowHeader,
                     name = "RowName",
                     title = "Row Name",
-                    sortable = false
+                    sortable = true
                 });
             m_ColumnIdentifierCache.AddUnchecked(m_TableViewColumns[0].name, -1);
             m_ColumnTypeCache.AddUnchecked(m_TableViewColumns[0].name, Serializable.SerializableTypes.String);

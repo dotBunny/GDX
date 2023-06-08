@@ -428,6 +428,10 @@ namespace GDX.DataTables
         static IComparer<RowDescription> GetComparer(Serializable.SerializableTypes type, DataTableBase dataTable,
             int rowCount, int columnIdentifier, int direction, bool supportMultiSort = false)
         {
+            if (columnIdentifier == -1 && type == Serializable.SerializableTypes.String)
+                return new RowNameColumnSorter(dataTable, rowCount, -1, direction, supportMultiSort);
+
+            // Default sorters
             switch (type)
             {
                 case Serializable.SerializableTypes.Float:
@@ -479,6 +483,7 @@ namespace GDX.DataTables
             }
 
             // Get our original ordered rows
+            // TODO: maybe this should be unsorted? and we copy it ?
             RowDescription[] rows = dataTable.GetAllRowDescriptions();
 
             // Primary Sort Pass
@@ -499,20 +504,60 @@ namespace GDX.DataTables
                 if (needAdditionalSortingIdentifiers.Count > 0)
                 {
                     // We have additional sorting to be done and have additional sorter options
-                    Debug.Log("Needs additional sorting based on similar guys");
                     int sorterIndex = 1;
 
                     // Iterate till we have nothing to do
                     while (needAdditionalSortingIdentifiers.Count > 0 && sorterIndex < columnIdentifiers.Length)
                     {
+                        int currentSortingCount = needAdditionalSortingIdentifiers.Count;
+
                         // Build list
-                        // need to figure out start index, and the length to sort
+                        List<int> startIndex = new List<int>(currentSortingCount);
+                        List<int> stopIndex = new List<int>(currentSortingCount);
+                        bool insideOfRange = false;
+                        for (int i = 0; i < rowCount; i++)
+                        {
+                            ref RowDescription currentRow = ref rows[i];
+
+                            if (needAdditionalSortingIdentifiers.Contains(currentRow.Identifier) && !insideOfRange)
+                            {
+                                startIndex.Add(i);
+                                insideOfRange = true;
+                                continue;
+                            }
+
+                            if (insideOfRange && !needAdditionalSortingIdentifiers.Contains(currentRow.Identifier))
+                            {
+                                stopIndex.Add(i - 1);
+                                insideOfRange = false;
+                                continue;
+                            }
+                        }
+
+                        // If the last item
+                        if (insideOfRange)
+                        {
+                            stopIndex.Add(rowCount - 1);
+                        }
 
                         // Clear the scratch pad now that we've created our actual indices
                         needAdditionalSortingIdentifiers.Clear();
 
-                        // Check for null compare type (move to next)
-                        // Loop over created ones
+                        int indexCount = startIndex.Count;
+                        for (int i = 0; i < indexCount; i++)
+                        {
+                            int length = (stopIndex[i] - startIndex[i]) + 1;
+                            IComparer<RowDescription> secondaryComparer = GetComparer(columnTypes[sorterIndex], dataTable, length,
+                                columnIdentifiers[sorterIndex], (int)directions[sorterIndex], multiSort);
+
+                            if (secondaryComparer == null)
+                            {
+                                break;
+                            }
+                            Array.Sort(rows, startIndex[i], length, secondaryComparer);
+                            ColumnSorterBase secondarySorter = (ColumnSorterBase)secondaryComparer;
+                            needAdditionalSortingIdentifiers.AddRange(secondarySorter.EqualIdentifiers);
+                        }
 
                         // Next sorter it appears
                         sorterIndex++;
