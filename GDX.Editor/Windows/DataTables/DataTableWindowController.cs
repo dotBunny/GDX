@@ -111,7 +111,7 @@ namespace GDX.Editor.Windows.DataTables
                 System.Type newType = System.Type.GetType(secondary);
                 if (newType != null)
                 {
-                    dataTable.SetTypeNameForObjectColumn(columnIdentifier, secondary);
+                    dataTable.SetTypeNameForColumn(columnIdentifier, secondary);
                 }
             }
 
@@ -149,6 +149,45 @@ namespace GDX.Editor.Windows.DataTables
             m_Overlay.SetOverlayStateHidden();
 
             DataTableTracker.NotifyOfRowChange(m_DataTableWindow.GetDataTableTicket(), rowIdentifier);
+        }
+
+        public bool MoveColumnRight(int columnIdentifier)
+        {
+            DataTableBase dataTable = m_DataTableWindow.GetDataTable();
+            if (dataTable.GetColumnCount() <= 1)
+            {
+                return false;
+            }
+
+            int currentOrder = dataTable.GetColumnOrder(columnIdentifier);
+            if(currentOrder < (dataTable.GetColumnCount() - 1))
+            {
+                DataTableTracker.RecordColumnDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), columnIdentifier, "Move Column Right");
+                dataTable.SetColumnOrder(columnIdentifier, currentOrder + 1);
+                DataTableTracker.NotifyOfColumnChange(m_DataTableWindow.GetDataTableTicket(), columnIdentifier);
+                return true;
+            }
+            return false;
+
+        }
+
+        public bool MoveColumnLeft(int columnIdentifier)
+        {
+            DataTableBase dataTable = m_DataTableWindow.GetDataTable();
+            if (dataTable.GetColumnCount() <= 1)
+            {
+                return false;
+            }
+
+            int currentOrder = dataTable.GetColumnOrder(columnIdentifier);
+            if (currentOrder > 0)
+            {
+                DataTableTracker.RecordColumnDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), columnIdentifier, "Move Column Left");
+                dataTable.SetColumnOrder(columnIdentifier, currentOrder - 1);
+                DataTableTracker.NotifyOfColumnChange(m_DataTableWindow.GetDataTableTicket(), columnIdentifier);
+                return true;
+            }
+            return false;
         }
 
         public void RemoveSelectedRow()
@@ -212,7 +251,6 @@ namespace GDX.Editor.Windows.DataTables
             dataTable.SetColumnName(columnIdentifier, name);
 
             DataTableTracker.NotifyOfColumnChange(m_DataTableWindow.GetDataTableTicket(), columnIdentifier,  m_DataTableWindow);
-            m_DataTableWindow.GetToolbar().UpdateSaveButton();
             return true;
         }
 
@@ -230,7 +268,6 @@ namespace GDX.Editor.Windows.DataTables
 
             dataTable.SetFlag(DataTableBase.Settings.EnableUndo, enableUndo);
             EditorUtility.SetDirty(m_DataTableWindow.GetDataTable());
-            m_DataTableWindow.GetToolbar().UpdateSaveButton();
 
             DataTableTracker.NotifyOfSettingsChange(m_DataTableWindow.GetDataTableTicket());
             return true;
@@ -239,6 +276,12 @@ namespace GDX.Editor.Windows.DataTables
         public void AutoResizeColumns()
         {
             Reflection.InvokeMethod(m_DataTableWindow.GetView().GetColumnContainer(), "ResizeToFit");
+        }
+
+        // Double delays the auto resize call
+        public void DelayedAutoResizeColumns()
+        {
+            EditorApplication.delayCall += AutoResizeColumns;
         }
     }
 #endif // UNITY_2022_2_OR_NEWER

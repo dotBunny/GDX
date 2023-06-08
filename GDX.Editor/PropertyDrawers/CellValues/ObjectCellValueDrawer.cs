@@ -21,7 +21,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             m_CellValue = new ObjectCellValue(m_DataTable, m_RowIdentifier, m_ColumnIdentifier);
             ObjectField newField = new ObjectField(null) { name = k_CellFieldName };
 
-            string qualifiedType = m_DataTable.GetTypeNameForObjectColumn(m_ColumnIdentifier);
+            string qualifiedType = m_DataTable.GetTypeNameForColumn(m_ColumnIdentifier);
             newField.objectType = (!string.IsNullOrEmpty(qualifiedType) ? System.Type.GetType(qualifiedType) : typeof(UnityEngine.Object)) ??
                                   typeof(UnityEngine.Object);
 

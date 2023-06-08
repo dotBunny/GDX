@@ -26,7 +26,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             StringCellValue cellValue =
-                new StringCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new StringCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -39,7 +39,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -50,7 +49,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             CharCellValue cellValue =
-                new CharCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new CharCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe().ToString());
@@ -63,7 +62,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue[0]);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -74,7 +72,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             BoolCellValue cellValue =
-                new BoolCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new BoolCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -87,7 +85,6 @@ namespace GDX.Editor.Windows.DataTables
                 DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -98,7 +95,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             SByteCellValue cellValue =
-                new SByteCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new SByteCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -111,7 +108,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set((sbyte)e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -122,7 +118,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             ByteCellValue cellValue =
-                new ByteCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new ByteCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -135,7 +131,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set((byte)e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -146,7 +141,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             ShortCellValue cellValue =
-                new ShortCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new ShortCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -159,7 +154,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set((short)e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -170,7 +164,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             UShortCellValue cellValue =
-                new UShortCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new UShortCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -183,7 +177,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set((ushort)e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -194,7 +187,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             IntCellValue cellValue =
-                new IntCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new IntCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -207,7 +200,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -222,7 +214,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             UIntCellValue cellValue =
-                new UIntCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new UIntCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
 #if UNITY_2022_3_OR_NEWER
@@ -243,7 +235,6 @@ namespace GDX.Editor.Windows.DataTables
 #endif
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -254,7 +245,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             LongCellValue cellValue =
-                new LongCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new LongCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -267,7 +258,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -282,7 +272,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             ULongCellValue cellValue =
-                new ULongCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new ULongCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
 
@@ -304,7 +294,6 @@ namespace GDX.Editor.Windows.DataTables
 #endif
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -315,7 +304,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             FloatCellValue cellValue =
-                new FloatCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new FloatCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -328,7 +317,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -339,7 +327,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             DoubleCellValue cellValue =
-                new DoubleCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new DoubleCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -352,7 +340,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -363,7 +350,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             Vector2CellValue cellValue =
-                new Vector2CellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new Vector2CellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -376,7 +363,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -387,7 +373,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             Vector3CellValue cellValue =
-                new Vector3CellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new Vector3CellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -400,7 +386,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -411,7 +396,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             Vector4CellValue cellValue =
-                new Vector4CellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new Vector4CellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -424,7 +409,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -435,7 +419,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             Vector2IntCellValue cellValue =
-                new Vector2IntCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new Vector2IntCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -448,7 +432,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -459,7 +442,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             Vector3IntCellValue cellValue =
-                new Vector3IntCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new Vector3IntCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -472,7 +455,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -483,7 +465,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             QuaternionCellValue cellValue =
-                new QuaternionCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new QuaternionCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             // Figure it out
@@ -501,7 +483,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -512,7 +493,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             RectCellValue cellValue =
-                new RectCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new RectCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -525,7 +506,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -536,7 +516,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             RectIntCellValue cellValue =
-                new RectIntCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new RectIntCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -549,7 +529,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -560,7 +539,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             ColorCellValue cellValue =
-                new ColorCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new ColorCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -573,7 +552,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -584,7 +562,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             LayerMaskCellValue cellValue =
-                new LayerMaskCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new LayerMaskCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -597,7 +575,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -608,7 +585,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             BoundsCellValue cellValue =
-                new BoundsCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new BoundsCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -621,7 +598,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -632,7 +608,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             BoundsIntCellValue cellValue =
-                new BoundsIntCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new BoundsIntCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -645,7 +621,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -656,7 +631,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             Hash128CellValue cellValue =
-                new Hash128CellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new Hash128CellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -669,7 +644,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -680,7 +654,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             GradientCellValue cellValue =
-                new GradientCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new GradientCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -693,7 +667,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -704,7 +677,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             AnimationCurveCellValue cellValue =
-                new AnimationCurveCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new AnimationCurveCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -717,7 +690,6 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
@@ -728,9 +700,9 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             ObjectCellValue cellValue =
-                new ObjectCellValue(dataTable, dataTable.GetRowDescriptionByOrder(row).Identifier, map.ColumnID);
+                new ObjectCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
 
-            string qualifiedType = dataTable.GetTypeNameForObjectColumn(map.ColumnID);
+            string qualifiedType = dataTable.GetTypeNameForColumn(map.ColumnID);
             field.objectType = (!string.IsNullOrEmpty(qualifiedType) ? System.Type.GetType(qualifiedType) : typeof(Object)) ??
                                typeof(Object);
 
@@ -745,304 +717,303 @@ namespace GDX.Editor.Windows.DataTables
                 local.Set(e.newValue);
                 DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
                     window);
-                window.GetToolbar().UpdateSaveButton();
             });
         }
 
-        internal static VisualElement MakeStringCell(int table, int column)
+        internal static VisualElement MakeStringCell(DataTableWindowView view, int table, int column)
         {
             TextField newField =
                 new TextField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column },
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view },
                 };
             return newField;
         }
 
-        internal static VisualElement MakeCharCell(int table, int column)
+        internal static VisualElement MakeCharCell(DataTableWindowView view, int table, int column)
         {
             TextField newField = new TextField(null, 1, false, false, ' ')
             {
                 name = k_CellFieldName,
                 style = { maxWidth = k_StyleLength25 },
-                userData = new CellData { TableTicket = table, ColumnID = column }
+                userData = new CellData { TableTicket = table, ColumnID = column, View = view }
             };
             return newField;
         }
 
-        internal static VisualElement MakeBoolCell(int table, int column)
+        internal static VisualElement MakeBoolCell(DataTableWindowView view, int table, int column)
         {
             Toggle newField = new Toggle(null)
             {
-                name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
             };
             return newField;
         }
 
-        internal static VisualElement MakeSByteCell(int table, int column)
+        internal static VisualElement MakeSByteCell(DataTableWindowView view, int table, int column)
         {
             SliderInt newField = new SliderInt(sbyte.MinValue, sbyte.MaxValue)
             {
                 name = k_CellFieldName,
                 showInputField = true,
                 label = null,
-                userData = new CellData { TableTicket = table, ColumnID = column }
+                userData = new CellData { TableTicket = table, ColumnID = column, View = view }
             };
             return newField;
         }
 
-        internal static VisualElement MakeByteCell(int table, int column)
+        internal static VisualElement MakeByteCell(DataTableWindowView view, int table, int column)
         {
             SliderInt newField = new SliderInt(byte.MinValue, byte.MaxValue)
             {
                 name = k_CellFieldName,
                 showInputField = true,
                 label = null,
-                userData = new CellData { TableTicket = table, ColumnID = column }
+                userData = new CellData { TableTicket = table, ColumnID = column, View = view }
             };
             return newField;
         }
 
-        internal static VisualElement MakeShortCell(int table, int column)
+        internal static VisualElement MakeShortCell(DataTableWindowView view, int table, int column)
         {
             SliderInt newField = new SliderInt(short.MinValue, short.MaxValue)
             {
                 name = k_CellFieldName,
                 showInputField = true,
                 label = null,
-                userData = new CellData { TableTicket = table, ColumnID = column }
+                userData = new CellData { TableTicket = table, ColumnID = column, View = view }
             };
             return newField;
         }
 
-        internal static VisualElement MakeUShortCell(int table, int column)
+        internal static VisualElement MakeUShortCell(DataTableWindowView view, int table, int column)
         {
             SliderInt newField = new SliderInt(ushort.MinValue, ushort.MaxValue)
             {
                 name = k_CellFieldName,
                 showInputField = true,
                 label = null,
-                userData = new CellData { TableTicket = table, ColumnID = column }
+                userData = new CellData { TableTicket = table, ColumnID = column, View = view }
             };
             return newField;
         }
 
-        internal static VisualElement MakeIntCell(int table, int column)
+        internal static VisualElement MakeIntCell(DataTableWindowView view, int table, int column)
         {
             IntegerField newField =
                 new IntegerField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeUIntCell(int table, int column)
+        internal static VisualElement MakeUIntCell(DataTableWindowView view, int table, int column)
         {
             UnsignedIntegerField newField =
                 new UnsignedIntegerField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeLongCell(int table, int column)
+        internal static VisualElement MakeLongCell(DataTableWindowView view, int table, int column)
         {
             LongField newField =
                 new LongField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeULongCell(int table, int column)
+        internal static VisualElement MakeULongCell(DataTableWindowView view, int table, int column)
         {
             UnsignedLongField newField =
                 new UnsignedLongField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeFloatCell(int table, int column)
+        internal static VisualElement MakeFloatCell(DataTableWindowView view, int table, int column)
         {
             FloatField newField =
                 new FloatField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeDoubleCell(int table, int column)
+        internal static VisualElement MakeDoubleCell(DataTableWindowView view, int table, int column)
         {
             DoubleField newField =
                 new DoubleField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeVector2Cell(int table, int column)
+        internal static VisualElement MakeVector2Cell(DataTableWindowView view, int table, int column)
         {
             Vector2Field newField =
                 new Vector2Field(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeVector3Cell(int table, int column)
+        internal static VisualElement MakeVector3Cell(DataTableWindowView view, int table, int column)
         {
             Vector3Field newField =
                 new Vector3Field(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeVector4Cell(int table, int column)
+        internal static VisualElement MakeVector4Cell(DataTableWindowView view, int table, int column)
         {
             Vector4Field newField =
                 new Vector4Field(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeVector2IntCell(int table, int column)
+        internal static VisualElement MakeVector2IntCell(DataTableWindowView view, int table, int column)
         {
             Vector2IntField newField =
                 new Vector2IntField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeVector3IntCell(int table, int column)
+        internal static VisualElement MakeVector3IntCell(DataTableWindowView view, int table, int column)
         {
             Vector3IntField newField =
                 new Vector3IntField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeQuaternionCell(int table, int column)
+        internal static VisualElement MakeQuaternionCell(DataTableWindowView view, int table, int column)
         {
             Vector4Field newField =
                 new Vector4Field(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeRectCell(int table, int column)
+        internal static VisualElement MakeRectCell(DataTableWindowView view, int table, int column)
         {
             RectField newField =
                 new RectField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeRectIntCell(int table, int column)
+        internal static VisualElement MakeRectIntCell(DataTableWindowView view, int table, int column)
         {
             RectIntField newField =
                 new RectIntField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeColorCell(int table, int column)
+        internal static VisualElement MakeColorCell(DataTableWindowView view, int table, int column)
         {
             ColorField newField =
                 new ColorField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeLayerMaskCell(int table, int column)
+        internal static VisualElement MakeLayerMaskCell(DataTableWindowView view, int table, int column)
         {
             LayerMaskField newField =
                 new LayerMaskField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeBoundsCell(int table, int column)
+        internal static VisualElement MakeBoundsCell(DataTableWindowView view, int table, int column)
         {
             BoundsField newField =
                 new BoundsField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeBoundsIntCell(int table, int column)
+        internal static VisualElement MakeBoundsIntCell(DataTableWindowView view, int table, int column)
         {
             BoundsIntField newField =
                 new BoundsIntField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeHash128Cell(int table, int column)
+        internal static VisualElement MakeHash128Cell(DataTableWindowView view, int table, int column)
         {
             Hash128Field newField =
                 new Hash128Field(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeGradientCell(int table, int column)
+        internal static VisualElement MakeGradientCell(DataTableWindowView view, int table, int column)
         {
             GradientField newField =
                 new GradientField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeAnimationCurveCell(int table, int column)
+        internal static VisualElement MakeAnimationCurveCell(DataTableWindowView view, int table, int column)
         {
             CurveField newField =
                 new CurveField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
 
-        internal static VisualElement MakeObjectCell(int table, int column)
+        internal static VisualElement MakeObjectCell(DataTableWindowView view, int table, int column)
         {
             ObjectField newField =
                 new ObjectField(null)
                 {
-                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column }
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view }
                 };
             return newField;
         }
@@ -1054,6 +1025,7 @@ namespace GDX.Editor.Windows.DataTables
 
         public class CellData
         {
+            public DataTableWindowView View;
             public object CellValue;
             public int ColumnID;
             public int TableTicket;

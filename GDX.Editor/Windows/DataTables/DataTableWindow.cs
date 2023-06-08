@@ -139,7 +139,6 @@ namespace GDX.Editor.Windows.DataTables
             if (skipDialog || EditorUtility.DisplayDialog($"Save {m_DataTable.GetDisplayName()}", "There are changes made to the table (in memory) which have not been saved to disk. Would you like to write those changes to disk now?", "Yes", "No"))
             {
                 AssetDatabase.SaveAssetIfDirty(m_DataTable);
-                m_Toolbar.UpdateSaveButton();
             }
         }
 
@@ -172,7 +171,6 @@ namespace GDX.Editor.Windows.DataTables
             DataTableTracker.AddUsage(m_DataTableTicket);
 
             m_Bound = true;
-            m_Toolbar?.UpdateSaveButton();
         }
 
         public bool IsBound()
@@ -200,14 +198,13 @@ namespace GDX.Editor.Windows.DataTables
             m_View = new DataTableWindowView(rootVisualElement[0], this);
 
             // Next frame resize things
-            EditorApplication.delayCall += m_Controller.AutoResizeColumns;
+            EditorApplication.delayCall += m_Controller.DelayedAutoResizeColumns;
         }
 
         /// <inheritdoc />
         public void OnColumnDefinitionChange(int columnIdentifier)
         {
             RebindTable();
-            m_Toolbar.UpdateSaveButton();
         }
 
         /// <inheritdoc />
@@ -215,14 +212,12 @@ namespace GDX.Editor.Windows.DataTables
         {
             int orderedIndex = m_DataTable.GetRowOrder(rowIdentifier);
             m_View.GetMultiColumnListView().RefreshItem(orderedIndex);
-            m_Toolbar.UpdateSaveButton();
         }
 
         /// <inheritdoc />
         public void OnRowDefinitionChange(int rowIdentifier)
         {
             m_View.RebuildRowData();
-            m_Toolbar.UpdateSaveButton();
         }
 
         public void OnSettingsChange()
@@ -233,20 +228,17 @@ namespace GDX.Editor.Windows.DataTables
         public void OnUndoRedoRowDefinitionChange(int rowIdentifier)
         {
             m_View.RebuildRowData();
-            m_Toolbar.UpdateSaveButton();
         }
 
         public void OnUndoRedoColumnDefinitionChange(int columnIdentifier)
         {
             RebindTable();
-            m_Toolbar.UpdateSaveButton();
         }
 
         public void OnUndoRedoCellValueChanged(int rowIdentifier, int columnIdentifier)
         {
             int orderedIndex = m_DataTable.GetRowOrder(rowIdentifier);
             m_View.GetMultiColumnListView().RefreshItem(orderedIndex);
-            m_Toolbar.UpdateSaveButton();
         }
 
         public void OnUndoRedoSettingsChanged()

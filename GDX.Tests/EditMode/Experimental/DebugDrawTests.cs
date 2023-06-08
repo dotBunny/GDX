@@ -4,7 +4,7 @@
 
 using NUnit.Framework;
 
-namespace GDX.Developer
+namespace GDX.Experimental
 {
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="DebugDraw" />

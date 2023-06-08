@@ -5,7 +5,7 @@
 using UnityEngine;
 using Unity.Mathematics;
 
-namespace GDX.Developer
+namespace GDX.Experimental
 {
     public static class DebugDrawShapes
     {
