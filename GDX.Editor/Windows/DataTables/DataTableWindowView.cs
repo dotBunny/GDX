@@ -102,7 +102,7 @@ namespace GDX.Editor.Windows.DataTables
                 {
                     name = $"Column_{columnIndex}",
                     title = columnDescription.Name,
-                    width = columnSizePercentage,
+                    width = columnSizePercentage, // baseline
                     resizable = true,
                     unbindCell = UnbindCell,
                     destroyCell = DestroyCell
@@ -350,13 +350,19 @@ namespace GDX.Editor.Windows.DataTables
         {
             DataTableTracker.RecordSettingsUndo(m_DataTableWindow.GetDataTableTicket());
 
+            int sortedOrderCount = m_RowDescriptions.Count;
+            int[] sortedIdentifiers = new int [sortedOrderCount];
+            for (int i = 0; i < sortedOrderCount; i++)
+            {
+                sortedIdentifiers[i] = m_RowDescriptions[i].Identifier;
+            }
+
             m_DataTableWindow.GetDataTable()
-                .SetAllRowOrders(DataTableExtensions.CreateIdentifierArray(m_RowDescriptions.ToArray()));
+                .SetAllRowOrders(sortedIdentifiers);
 
             DataTableTracker.NotifyOfSettingsChange(m_DataTableWindow.GetDataTableTicket(), m_DataTableWindow);
 
             RebuildRowData();
-
         }
 
         int m_SortedColumnCount;
@@ -504,17 +510,50 @@ namespace GDX.Editor.Windows.DataTables
                 string columnInteger = column.name.Substring(indexOfSplit + 1);
                 int columnIdentifier = int.Parse(columnInteger);
                 evt.menu.AppendSeparator();
+
                 evt.menu.AppendAction("Rename",
                     _ => m_DataTableWindow.GetController().ShowRenameColumnDialog(columnIdentifier));
                 evt.menu.AppendAction("Remove",
                     _ => m_DataTableWindow.GetController().ShowRemoveColumnDialog(columnIdentifier), CanRemoveColumn);
                 evt.menu.AppendAction("Move Left",
-                    _ => m_DataTableWindow.GetController().MoveColumnLeft(columnIdentifier));
+                    _ => m_DataTableWindow.GetController().MoveColumnLeft(columnIdentifier),
+                    _ => CanMoveColumnLeft(columnIdentifier));
                 evt.menu.AppendAction("Move Right",
-                    _ => m_DataTableWindow.GetController().MoveColumnRight(columnIdentifier));
+                    _ => m_DataTableWindow.GetController().MoveColumnRight(columnIdentifier),
+                    _ => CanMoveColumnRight(columnIdentifier));
+
+                evt.menu.AppendSeparator();
+
+                evt.menu.AppendAction("Clear Sorting",
+                    _ => { m_DataTableWindow.GetView().GetMultiColumnListView().sortColumnDescriptions.Clear(); },
+                    m_DataTableWindow.GetToolbar().CanCommitSorting);
 
             }
         }
+
+        DropdownMenuAction.Status CanMoveColumnLeft(int columnIdentifier)
+        {
+            DataTableBase dataTable = m_DataTableWindow.GetDataTable();
+            if (dataTable.GetColumnCount() <= 1)
+            {
+                return DropdownMenuAction.Status.Disabled;
+            }
+            int currentOrder = dataTable.GetColumnOrder(columnIdentifier);
+            return currentOrder > 0 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
+        }
+
+        DropdownMenuAction.Status CanMoveColumnRight(int columnIdentifier)
+        {
+            DataTableBase dataTable = m_DataTableWindow.GetDataTable();
+            int columnCount = dataTable.GetColumnCount();
+            if (columnCount <= 1)
+            {
+                return DropdownMenuAction.Status.Disabled;
+            }
+            int currentOrder = dataTable.GetColumnOrder(columnIdentifier);
+            return currentOrder < (columnCount - 1) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
+        }
+
 
         // void MakeRowContextMenu(VisualElement element, int stableRowID)
         // {

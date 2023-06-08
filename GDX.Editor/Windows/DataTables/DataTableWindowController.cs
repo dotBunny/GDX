@@ -277,6 +277,12 @@ namespace GDX.Editor.Windows.DataTables
         {
             Reflection.InvokeMethod(m_DataTableWindow.GetView().GetColumnContainer(), "ResizeToFit");
         }
+
+        // Double delays the auto resize call
+        public void DelayedAutoResizeColumns()
+        {
+            EditorApplication.delayCall += AutoResizeColumns;
+        }
     }
 #endif // UNITY_2022_2_OR_NEWER
 }

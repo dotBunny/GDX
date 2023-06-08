@@ -85,7 +85,7 @@ namespace GDX.Editor.Windows.DataTables
         }
 
 
-        DropdownMenuAction.Status CanCommitSorting(DropdownMenuAction action)
+        public DropdownMenuAction.Status CanCommitSorting(DropdownMenuAction action)
         {
             return m_ParentWindow.GetView().HasSortedColumns()
                 ? DropdownMenuAction.Status.Normal

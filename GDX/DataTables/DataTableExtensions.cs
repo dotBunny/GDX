@@ -564,17 +564,6 @@ namespace GDX.DataTables
             }
             return rows;
         }
-
-        public static int[] CreateIdentifierArray(RowDescription[] rows)
-        {
-            int sortedOrderCount = rows.Length;
-            int[] sortedIdentifiers = new int [sortedOrderCount];
-            for (int i = 0; i < sortedOrderCount; i++)
-            {
-                sortedIdentifiers[i] = rows[i].Identifier;
-            }
-            return sortedIdentifiers;
-        }
 #endif
     }
 }

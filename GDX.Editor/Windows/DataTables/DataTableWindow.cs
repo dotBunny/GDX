@@ -198,7 +198,7 @@ namespace GDX.Editor.Windows.DataTables
             m_View = new DataTableWindowView(rootVisualElement[0], this);
 
             // Next frame resize things
-            EditorApplication.delayCall += m_Controller.AutoResizeColumns;
+            EditorApplication.delayCall += m_Controller.DelayedAutoResizeColumns;
         }
 
         /// <inheritdoc />
