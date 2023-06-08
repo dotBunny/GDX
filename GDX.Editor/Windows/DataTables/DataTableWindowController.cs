@@ -251,7 +251,6 @@ namespace GDX.Editor.Windows.DataTables
             dataTable.SetColumnName(columnIdentifier, name);
 
             DataTableTracker.NotifyOfColumnChange(m_DataTableWindow.GetDataTableTicket(), columnIdentifier,  m_DataTableWindow);
-            m_DataTableWindow.GetToolbar().UpdateSaveButton();
             return true;
         }
 
@@ -269,7 +268,6 @@ namespace GDX.Editor.Windows.DataTables
 
             dataTable.SetFlag(DataTableBase.Settings.EnableUndo, enableUndo);
             EditorUtility.SetDirty(m_DataTableWindow.GetDataTable());
-            m_DataTableWindow.GetToolbar().UpdateSaveButton();
 
             DataTableTracker.NotifyOfSettingsChange(m_DataTableWindow.GetDataTableTicket());
             return true;

@@ -114,177 +114,177 @@ namespace GDX.Editor.Windows.DataTables
                 switch (columnDescription.Type)
                 {
                     case Serializable.SerializableTypes.String:
-                        column.makeCell += () => DataTableWindowCells.MakeStringCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeStringCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindStringCell;
                         column.minWidth = m_GenericMinWidth;
                         column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.Char:
-                        column.makeCell += () => DataTableWindowCells.MakeCharCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeCharCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindCharCell;
                         column.minWidth = m_ToggleMinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Bool:
-                        column.makeCell += () => DataTableWindowCells.MakeBoolCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeBoolCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindBoolCell;
                         column.minWidth = m_ToggleMinWidth;
                         column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.SByte:
-                        column.makeCell += () => DataTableWindowCells.MakeSByteCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeSByteCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindSByteCell;
                         column.minWidth = m_NumericMinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Byte:
-                        column.makeCell += () => DataTableWindowCells.MakeByteCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeByteCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindByteCell;
                         column.minWidth = m_NumericMinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Short:
-                        column.makeCell += () => DataTableWindowCells.MakeShortCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeShortCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindShortCell;
                         column.minWidth = m_NumericMinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.UShort:
-                        column.makeCell += () => DataTableWindowCells.MakeUShortCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeUShortCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindUShortCell;
                         column.minWidth = m_NumericMinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Int:
-                        column.makeCell += () => DataTableWindowCells.MakeIntCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeIntCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindIntCell;
                         column.minWidth = m_NumericMinWidth;
                         column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.UInt:
-                        column.makeCell += () => DataTableWindowCells.MakeUIntCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeUIntCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindUIntCell;
                         column.minWidth = m_NumericMinWidth;
                         column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.Long:
-                        column.makeCell += () => DataTableWindowCells.MakeLongCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeLongCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindLongCell;
                         column.minWidth = m_NumericMinWidth;
                         column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.ULong:
-                        column.makeCell += () => DataTableWindowCells.MakeULongCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeULongCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindULongCell;
                         column.minWidth = m_NumericMinWidth;
                         column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.Float:
-                        column.makeCell += () => DataTableWindowCells.MakeFloatCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeFloatCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindFloatCell;
                         column.minWidth = m_NumericMinWidth;
                         column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.Double:
-                        column.makeCell += () => DataTableWindowCells.MakeDoubleCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeDoubleCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindDoubleCell;
                         column.minWidth = m_NumericMinWidth;
                         column.sortable = true;
                         break;
                     case Serializable.SerializableTypes.Vector2:
-                        column.makeCell += () => DataTableWindowCells.MakeVector2Cell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeVector2Cell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindVector2Cell;
                         column.minWidth = m_Vector2MinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Vector3:
-                        column.makeCell += () => DataTableWindowCells.MakeVector3Cell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeVector3Cell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindVector3Cell;
                         column.minWidth = m_Vector3MinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Vector4:
-                        column.makeCell += () => DataTableWindowCells.MakeVector4Cell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeVector4Cell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindVector4Cell;
                         column.minWidth = m_Vector4MinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Vector2Int:
-                        column.makeCell += () => DataTableWindowCells.MakeVector2IntCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeVector2IntCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindVector2IntCell;
                         column.minWidth = m_Vector2MinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Vector3Int:
-                        column.makeCell += () => DataTableWindowCells.MakeVector3IntCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeVector3IntCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindVector3IntCell;
                         column.minWidth = m_Vector3MinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Quaternion:
-                        column.makeCell += () => DataTableWindowCells.MakeQuaternionCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeQuaternionCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindQuaternionCell;
                         column.minWidth = m_Vector4MinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Rect:
-                        column.makeCell += () => DataTableWindowCells.MakeRectCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeRectCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindRectCell;
                         column.minWidth = m_Vector2MinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.RectInt:
-                        column.makeCell += () => DataTableWindowCells.MakeRectIntCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeRectIntCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindRectIntCell;
                         column.minWidth = m_Vector2MinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Color:
-                        column.makeCell += () => DataTableWindowCells.MakeColorCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeColorCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindColorCell;
                         column.minWidth = m_GenericMinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.LayerMask:
-                        column.makeCell += () => DataTableWindowCells.MakeLayerMaskCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeLayerMaskCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindLayerMaskCell;
                         column.minWidth = m_GenericMinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Bounds:
-                        column.makeCell += () => DataTableWindowCells.MakeBoundsCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeBoundsCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindBoundsCell;
                         column.minWidth = m_BoundsMinWidth;
                         SetDesiredRowHeightMultiplier(DataTableWindowCells.k_DoubleHeight);
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.BoundsInt:
-                        column.makeCell += () => DataTableWindowCells.MakeBoundsIntCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeBoundsIntCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindBoundsIntCell;
                         column.minWidth = m_BoundsMinWidth;
                         SetDesiredRowHeightMultiplier(DataTableWindowCells.k_DoubleHeight);
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Hash128:
-                        column.makeCell += () => DataTableWindowCells.MakeHash128Cell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeHash128Cell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindHash128Cell;
                         column.minWidth = m_HashMinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Gradient:
-                        column.makeCell += () => DataTableWindowCells.MakeGradientCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeGradientCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindGradientCell;
                         column.minWidth = m_GenericMinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.AnimationCurve:
-                        column.makeCell += () => DataTableWindowCells.MakeAnimationCurveCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeAnimationCurveCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindAnimationCurveCell;
                         column.minWidth = m_GenericMinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Object:
-                        column.makeCell += () => DataTableWindowCells.MakeObjectCell(tableTicket, columnIndex);
+                        column.makeCell += () => DataTableWindowCells.MakeObjectCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindObjectCell;
                         column.minWidth = m_GenericMinWidth;
                         column.sortable = false;
@@ -318,6 +318,10 @@ namespace GDX.Editor.Windows.DataTables
             RebuildRowData();
         }
 
+        public RowDescription GetRowDescriptionBySortedOrder(int row)
+        {
+            return m_RowDescriptions[row];
+        }
         void UnbindCell(VisualElement cell, int row)
         {
             DataTableWindowCells.CellData data = (DataTableWindowCells.CellData)cell.userData;
@@ -342,6 +346,25 @@ namespace GDX.Editor.Windows.DataTables
             m_MultiColumnListView.RefreshItems();
         }
 
+        public void CommitSorting()
+        {
+            DataTableTracker.RecordSettingsUndo(m_DataTableWindow.GetDataTableTicket());
+
+            m_DataTableWindow.GetDataTable()
+                .SetAllRowOrders(DataTableExtensions.CreateIdentifierArray(m_RowDescriptions.ToArray()));
+
+            DataTableTracker.NotifyOfSettingsChange(m_DataTableWindow.GetDataTableTicket(), m_DataTableWindow);
+
+            RebuildRowData();
+
+        }
+
+        int m_SortedColumnCount;
+
+        public bool HasSortedColumns()
+        {
+            return m_SortedColumnCount > 0;
+        }
         void SortItems()
         {
             List<int> sortedColumnIdentifiers = new List<int>(m_ColumnDescriptions.Count);
@@ -349,19 +372,22 @@ namespace GDX.Editor.Windows.DataTables
             List<Serializable.SerializableTypes> sortedColumnTypes =
                 new List<Serializable.SerializableTypes>(m_ColumnDescriptions.Count);
 
+            m_SortedColumnCount = 0;
             foreach (SortColumnDescription sortedColumn in m_MultiColumnListView.sortedColumns)
             {
                 sortedColumnIdentifiers.Add(m_ColumnIdentifierCache[sortedColumn.columnName]);
                 sortedColumnDirections.Add(sortedColumn.direction);
                 sortedColumnTypes.Add(m_ColumnTypeCache[sortedColumn.columnName]);
+                m_SortedColumnCount++;
             }
 
-            DataTableTracker.RecordRowDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), -1, "Reordered Rows");
-            m_DataTableWindow.GetDataTable()
-                .SortByColumns(sortedColumnIdentifiers.ToArray(), sortedColumnTypes.ToArray(),
-                    sortedColumnDirections.ToArray());
+            m_RowDescriptions.Clear();
+            m_RowDescriptions.AddRange(
+                m_DataTableWindow.GetDataTable()
+                    .SortByColumns(sortedColumnIdentifiers.ToArray(), sortedColumnTypes.ToArray(),
+                        sortedColumnDirections.ToArray()));
 
-            RebuildRowData();
+            m_MultiColumnListView.RefreshItems();
         }
 
         public MultiColumnListView GetMultiColumnListView()
@@ -459,6 +485,10 @@ namespace GDX.Editor.Windows.DataTables
             {
                 m_RowDescriptions.AddRange(dataTable.GetAllRowDescriptions());
             }
+
+            m_MultiColumnListView.ClearSelection();
+            m_MultiColumnListView.sortColumnDescriptions.Clear();
+
             m_MultiColumnListView.Rebuild();
         }
 

@@ -457,20 +457,22 @@ namespace GDX.DataTables
         }
 
         /// <summary>
-        ///     Sort a <see cref="DataTableBase" /> rows based on the provided sorting parameters
+        ///     Sort a <see cref="DataTableBase" /> rows based on the provided sorting parameters.
         /// </summary>
         /// <param name="dataTable">The target <see cref="DataTableBase" />.</param>
         /// <param name="columnIdentifiers">The column identifiers to use in order of priority.</param>
         /// <param name="columnTypes">The types of the given columns.</param>
         /// <param name="directions">The direction which the column should be used to calculate order.</param>
-        /// <returns>The updated data version of the <see cref="DataTableBase" />.</returns>
-        public static ulong SortByColumns(this DataTableBase dataTable, int[] columnIdentifiers,
+        /// <returns>A sorted array of <see cref="RowDescription"/>, or null.</returns>
+        public static RowDescription[] SortByColumns(this DataTableBase dataTable, int[] columnIdentifiers,
             Serializable.SerializableTypes[] columnTypes, SortDirection[] directions)
         {
+            RowDescription[] rows = dataTable.GetAllRowDescriptions();
+
             if (columnIdentifiers.Length != columnTypes.Length || columnTypes.Length != directions.Length)
             {
                 Debug.LogError("Unable to sort, all arrays much have same length.");
-                return dataTable.GetDataVersion();
+                return rows;
             }
 
             bool multiSort = columnIdentifiers.Length > 1;
@@ -479,12 +481,8 @@ namespace GDX.DataTables
             int rowCount = dataTable.GetRowCount();
             if (rowCount <= 1 || columnIdentifiers.Length == 0)
             {
-                return dataTable.GetDataVersion();
+                return rows;
             }
-
-            // Get our original ordered rows
-            // TODO: maybe this should be unsorted? and we copy it ?
-            RowDescription[] rows = dataTable.GetAllRowDescriptions();
 
             // Primary Sort Pass
             List<int> needAdditionalSortingIdentifiers = new List<int>(rowCount);
@@ -492,7 +490,7 @@ namespace GDX.DataTables
                 columnIdentifiers[0], (int)directions[0], multiSort);
             if (primaryComparer == null)
             {
-                return dataTable.GetDataVersion();
+                return rows;
             }
             Array.Sort(rows, 0, rowCount, primaryComparer);
 
@@ -564,25 +562,18 @@ namespace GDX.DataTables
                     }
                 }
             }
+            return rows;
+        }
 
-            // Create sorted list for actual data table consumption
+        public static int[] CreateIdentifierArray(RowDescription[] rows)
+        {
             int sortedOrderCount = rows.Length;
-            if (sortedOrderCount == rowCount)
+            int[] sortedIdentifiers = new int [sortedOrderCount];
+            for (int i = 0; i < sortedOrderCount; i++)
             {
-                int[] sortedIdentifiers = new int [sortedOrderCount];
-                for (int i = 0; i < sortedOrderCount; i++)
-                {
-                    sortedIdentifiers[i] = rows[i].Identifier;
-                }
-
-                dataTable.SetAllRowOrders(sortedIdentifiers);
+                sortedIdentifiers[i] = rows[i].Identifier;
             }
-            else
-            {
-                Debug.LogError("Sorted count did not match the original count. An issue must of occured.");
-            }
-
-            return dataTable.GetDataVersion();
+            return sortedIdentifiers;
         }
 #endif
     }
