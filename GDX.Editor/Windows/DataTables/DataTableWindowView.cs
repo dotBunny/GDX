@@ -88,6 +88,9 @@ namespace GDX.Editor.Windows.DataTables
             m_ColumnIdentifierCache.AddUnchecked(m_TableViewColumns[0].name, -1);
             m_ColumnTypeCache.AddUnchecked(m_TableViewColumns[0].name, Serializable.SerializableTypes.String);
 
+            // Don't allow for drag and drop of columns (? cant seem to get an event here)
+            m_TableViewColumns[0].collection.reorderable = false;
+
             // Creat our other columns
             for (int i = 1; i < columnCount; i++)
             {
@@ -301,7 +304,8 @@ namespace GDX.Editor.Windows.DataTables
                 showAlternatingRowBackgrounds = AlternatingRowBackground.ContentOnly,
                 virtualizationMethod = CollectionVirtualizationMethod.FixedHeight,
                 fixedItemHeight = m_DesiredRowHeight,
-                style = { height = new StyleLength(new Length(100f, LengthUnit.Percent)) }
+                style = { height = new StyleLength(new Length(100f, LengthUnit.Percent)) },
+                reorderable =  false
             };
             m_MultiColumnListView.headerContextMenuPopulateEvent += AppendColumnContextMenu;
             m_MultiColumnListView.columnSortingChanged += SortItems;
@@ -474,6 +478,11 @@ namespace GDX.Editor.Windows.DataTables
                     _ => m_DataTableWindow.GetController().ShowRenameColumnDialog(columnIdentifier));
                 evt.menu.AppendAction("Remove",
                     _ => m_DataTableWindow.GetController().ShowRemoveColumnDialog(columnIdentifier), CanRemoveColumn);
+                evt.menu.AppendAction("Move Left",
+                    _ => m_DataTableWindow.GetController().MoveColumnLeft(columnIdentifier));
+                evt.menu.AppendAction("Move Right",
+                    _ => m_DataTableWindow.GetController().MoveColumnRight(columnIdentifier));
+
             }
         }
 
@@ -488,6 +497,13 @@ namespace GDX.Editor.Windows.DataTables
         //             a => parentWindow.GetController().ShowRemoveRowDialog(stableRowID));
         //     }));
         // }
+
+        DropdownMenuAction.Status CanMoveColumnLeft(DropdownMenuAction action)
+        {
+            return m_DataTableWindow.GetDataTable().GetColumnCount() > 1
+                ? DropdownMenuAction.Status.Normal
+                : DropdownMenuAction.Status.Disabled;
+        }
 
         DropdownMenuAction.Status CanRemoveColumn(DropdownMenuAction action)
         {

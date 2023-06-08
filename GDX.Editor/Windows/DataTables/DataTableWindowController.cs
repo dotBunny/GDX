@@ -151,6 +151,45 @@ namespace GDX.Editor.Windows.DataTables
             DataTableTracker.NotifyOfRowChange(m_DataTableWindow.GetDataTableTicket(), rowIdentifier);
         }
 
+        public bool MoveColumnRight(int columnIdentifier)
+        {
+            DataTableBase dataTable = m_DataTableWindow.GetDataTable();
+            if (dataTable.GetColumnCount() <= 1)
+            {
+                return false;
+            }
+
+            int currentOrder = dataTable.GetColumnOrder(columnIdentifier);
+            if(currentOrder < (dataTable.GetColumnCount() - 1))
+            {
+                DataTableTracker.RecordColumnDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), columnIdentifier, "Move Column Right");
+                dataTable.SetColumnOrder(columnIdentifier, currentOrder + 1);
+                DataTableTracker.NotifyOfColumnChange(m_DataTableWindow.GetDataTableTicket(), columnIdentifier);
+                return true;
+            }
+            return false;
+
+        }
+
+        public bool MoveColumnLeft(int columnIdentifier)
+        {
+            DataTableBase dataTable = m_DataTableWindow.GetDataTable();
+            if (dataTable.GetColumnCount() <= 1)
+            {
+                return false;
+            }
+
+            int currentOrder = dataTable.GetColumnOrder(columnIdentifier);
+            if (currentOrder > 0)
+            {
+                DataTableTracker.RecordColumnDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), columnIdentifier, "Move Column Left");
+                dataTable.SetColumnOrder(columnIdentifier, currentOrder - 1);
+                DataTableTracker.NotifyOfColumnChange(m_DataTableWindow.GetDataTableTicket(), columnIdentifier);
+                return true;
+            }
+            return false;
+        }
+
         public void RemoveSelectedRow()
         {
             object selectedItem = m_DataTableWindow.GetView().GetMultiColumnListView().selectedItem;
