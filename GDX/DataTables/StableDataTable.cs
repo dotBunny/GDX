@@ -1558,13 +1558,19 @@ namespace GDX.DataTables
 
             int oldSortOrder = m_RowIdentifierToDenseIndexMap[rowIdentifier];
             int iterDirection = newSortOrder > oldSortOrder ? 1 : -1;
+            string rowName = m_RowNames[oldSortOrder];
 
             for (int i = oldSortOrder; i != newSortOrder; i += iterDirection)
             {
                 int rowIDAt = m_RowDenseIndexToIDMap[i + iterDirection];
                 m_RowIdentifierToDenseIndexMap[rowIDAt] = i;
-                m_RowDenseIndexToIDMap[i] = m_RowDenseIndexToIDMap[i + iterDirection];
+                m_RowDenseIndexToIDMap[i] = rowIDAt;
+                m_RowNames[i] = m_RowNames[i + iterDirection];
             }
+
+            m_RowDenseIndexToIDMap[newSortOrder] = rowIdentifier;
+            m_RowIdentifierToDenseIndexMap[rowIdentifier] = newSortOrder;
+            m_RowNames[newSortOrder] = rowName;
 
             SetRowOrderForColumns(m_AllStringColumns, oldSortOrder, newSortOrder);
             SetRowOrderForColumns(m_AllBoolColumns, oldSortOrder, newSortOrder);
@@ -1631,6 +1637,16 @@ namespace GDX.DataTables
             ReSortRows(m_AllGradientColumns, orderedRowIdentifiers);
             ReSortRows(m_AllAnimationCurveColumns, orderedRowIdentifiers);
             ReSortRows(m_AllObjectRefColumns, orderedRowIdentifiers);
+
+            int namesCount = m_RowNames?.Length ?? 0;
+            string[] newNames = new string[namesCount];
+            for (int i = 0; i < namesCount; i++)
+            {
+                int rowID = orderedRowIdentifiers[i];
+                int oldRowIndex = m_RowIdentifierToDenseIndexMap[rowID];
+
+                newNames[i] = m_RowNames[oldRowIndex];
+            }
 
             for (int i = 0; i < orderedRowIdentifiers.Length; i++)
             {
@@ -1894,10 +1910,14 @@ namespace GDX.DataTables
             {
                 T[] column = columns[i].TArray;
 
+                T value = column[oldSortOrder];
+
                 for (int j = oldSortOrder; j != newSortOrder; j += iterDirection)
                 {
                     column[j] = column[j + iterDirection];
                 }
+
+                column[newSortOrder] = value;
             }
         }
 
