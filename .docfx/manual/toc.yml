@@ -8,8 +8,8 @@
   items:
   - name: Serializable Dictionary
     href: features\serializable-dictionary.md
-  - name: Tables
-    href: features\tables.md
+  - name: Data Tables
+    href: features\data-tables.md
 - name: Requirements
   href: requirements.md
 - name: Contributing

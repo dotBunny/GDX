@@ -97,7 +97,7 @@ namespace GDX.Editor.Windows.DataTables
         public void OpenHelp()
         {
             GUIUtility.hotControl = 0;
-            Application.OpenURL($"{PackageProvider.GetDocumentationBaseUri()}/manual/features/tables.html");
+            Application.OpenURL($"{PackageProvider.GetDocumentationBaseUri()}/manual/features/data-tables.html");
         }
 
         public bool AddColumn(string name, Serializable.SerializableTypes type, string secondary = null, int orderedIndex = -1)
