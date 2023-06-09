@@ -109,7 +109,7 @@ namespace GDX.DataTables.CellValues
             m_CachedValue = newValue;
             if (updateTable)
             {
-                m_TableVersion = DataTable.SetFloat(RowIdentifier, ColumnIdentifier, newValue);
+                m_TableVersion = DataTable.SetEnumInt(RowIdentifier, ColumnIdentifier, newValue);
             }
         }
 

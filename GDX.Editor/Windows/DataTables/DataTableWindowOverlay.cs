@@ -164,16 +164,22 @@ namespace GDX.Editor.Windows.DataTables
 
         void UpdateAddColumnBasedOnType(int type)
         {
-            if ((Serializable.SerializableTypes)type == Serializable.SerializableTypes.Object)
+            switch ((Serializable.SerializableTypes)type)
             {
-                m_AddColumnFilter.value = Reflection.UnityObjectName;
-                m_AddColumnFilter.RemoveFromClassList(ResourcesProvider.HiddenClass);
-                m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
-            }
-            else
-            {
-                m_AddColumnFilter.AddToClassList(ResourcesProvider.HiddenClass);
-                m_AddColumnFilterStatus.AddToClassList(ResourcesProvider.HiddenClass);
+                case Serializable.SerializableTypes.EnumInt:
+                    m_AddColumnFilter.value = "GDX.Serializable.SerializableTypes";
+                    m_AddColumnFilter.RemoveFromClassList(ResourcesProvider.HiddenClass);
+                    m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
+                    break;
+                case Serializable.SerializableTypes.Object:
+                    m_AddColumnFilter.value = Reflection.UnityObjectName;
+                    m_AddColumnFilter.RemoveFromClassList(ResourcesProvider.HiddenClass);
+                    m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
+                    break;
+                default:
+                    m_AddColumnFilter.AddToClassList(ResourcesProvider.HiddenClass);
+                    m_AddColumnFilterStatus.AddToClassList(ResourcesProvider.HiddenClass);
+                    break;
             }
         }
 

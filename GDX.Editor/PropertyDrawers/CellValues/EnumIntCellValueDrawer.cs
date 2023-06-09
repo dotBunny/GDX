@@ -22,6 +22,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             m_CellValue = new EnumIntCellValue(m_DataTable, m_RowIdentifier, m_ColumnIdentifier);
             EnumField newField = new EnumField(null, null) { name = k_CellFieldName };
 
+
             string qualifiedType = m_DataTable.GetTypeNameForColumn(m_ColumnIdentifier);
             // newField.objectType = (!string.IsNullOrEmpty(qualifiedType) ? System.Type.GetType(qualifiedType) : typeof(UnityEngine.Object)) ??
             //                       typeof(UnityEngine.Object);
