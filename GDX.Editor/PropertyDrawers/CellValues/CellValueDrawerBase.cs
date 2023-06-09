@@ -272,7 +272,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         string FormatColumnSelectionItem(int arg)
         {
-            return arg == -1 ? "Select Row" : m_ColumnDescriptions[arg].Name;
+            return arg == -1 ? "Select Column" : m_ColumnDescriptions[arg].Name;
         }
 
         string OnTableSelected(int arg)
