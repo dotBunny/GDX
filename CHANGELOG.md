@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FirstIndexOf()` and `LastIndexOf()` methods added to `ArrayExtensions` constrained to `IEquatable` for easier string comparison.
 - `FirstIndexOf()`, `FirstIndexOfItem()`, `FirstIndexOfValue()`, `LastIndexOf()`, `LastIndexOfItem()`, `LastIndexOfValue()` methods added to `SimpleListExtensions`.
 - `Contains()` to `SimpleListExtensions` constrained to `IEquatable`.
+- `WaitFor` program flow helper.
+- `AssetDatabaseReference` weak-reference objects with helpers.
+- `EditorPrefsCache` to cache editor preference accessing.
 - `StableTable` implementation of new `TableBase` with full suite of supporting references `*CellValue`.
 - Spreadsheet-like editing experience for `DataTableBase` inheriting objects (_Unity 2022.2+_)
 
@@ -30,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `SimpleListManagedPool` events renamed for consistency to `destroyedItem`, `returnedItem`, `spawnedItem`, `tearingDown`.
 - Explicit callout that `SerializableDictionary` does not support custom struct keys.
 - Addressables package version dependency increased to `1.18.19`.
+- Internal config variable names clarified, including now a config format version number.
+- Reworked internal stylesheets to be segmented and more efficient.
 
 ### Fixed
 

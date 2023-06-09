@@ -1,7 +1,7 @@
 ﻿#gdx-datatable-inspector-name
 {
     margin-top: 20px;
-    -unity-font-style: normal;
+    -unity-font-style: bold-and-italic;
 }
 .gdx-datatable-inspector-label
 {
@@ -15,9 +15,27 @@
     margin-bottom: 5px;
     white-space: normal;
 }
+
+.gdx-datatable-inspector-row
+{
+    flex-direction: row;
+}
+.gdx-datatable-inspector-row Button
+{
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
 #gdx-datatable-inspector-rows-label
 {
-    margin-top: 10px;
+    margin-top: 20px;
+}
+
+#gdx-datatable-inspector-interchange-label
+{
+    padding-bottom: 1px;
+    margin-top: 20px;
+    -unity-font-style: bold;
 }
 
 #gdx-datatable-inspector-open

@@ -9,7 +9,7 @@ using Object = UnityEngine.Object;
 
 namespace GDX.DataTables
 {
-    [CreateAssetMenu(menuName = "GDX/Stable Table", fileName = "GDXStableTable")]
+    [CreateAssetMenu(menuName = "GDX/Stable Data Table", fileName = "GDXStableDataTable")]
     [Serializable]
     public class StableDataTable : DataTableBase
     {

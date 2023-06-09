@@ -4,6 +4,8 @@
 
 using GDX.DataTables;
 using GDX.Editor.Windows.DataTables;
+using UnityEditor;
+using UnityEngine;
 #if UNITY_2022_2_OR_NEWER
 using System.Text;
 using UnityEngine.UIElements;
@@ -19,11 +21,6 @@ namespace GDX.Editor.Inspectors
         DataTableTracker.IStructuralChangeCallbackReceiver, DataTableTracker.IUndoRedoEventCallbackReceiver
     {
         /// <summary>
-        ///     The text string used by the open button.
-        /// </summary>
-        const string k_ButtonText = "Open Table";
-
-        /// <summary>
         ///     Is the bound/subscribed to the <see cref="DataTableTracker" />.
         /// </summary>
         bool m_Bound;
@@ -34,6 +31,9 @@ namespace GDX.Editor.Inspectors
         Label m_DataTableTracker;
         Label m_DataTableTrackerLabel;
         Button m_OpenAssetButton;
+        Label m_InterchangeLabel;
+        Button m_ExportToCommaSeperatedValuesButton;
+        Button m_ImportFromCommaSeperatedValuesButton;
         VisualElement m_RootElement;
         Label m_RowDescription;
         Label m_RowLabel;
@@ -120,7 +120,13 @@ namespace GDX.Editor.Inspectors
             m_ColumnDescription.AddToClassList("gdx-datatable-inspector-description");
 
             m_OpenAssetButton =
-                new Button(OpenTargetAsset) { text = k_ButtonText, name = "gdx-datatable-inspector-open" };
+                new Button(OpenTargetAsset) { text = "Open Table", name = "gdx-datatable-inspector-open" };
+
+            m_InterchangeLabel = new Label("Interchange") { name = "gdx-datatable-inspector-interchange-label" };
+            m_ExportToCommaSeperatedValuesButton =
+                new Button(ExportToCommaSeperatedValues) { text = "Export (CSV)", name = "gdx-datatable-inspector-export-csv" };
+            m_ImportFromCommaSeperatedValuesButton =
+                new Button(ImportFromCommaSeperatedValues) { text = "Import (CSV)", name = "gdx-datatable-inspector-import-csv" };
 
             m_DataTableTrackerLabel = new Label("Tracker") { name = "gdx-datatable-inspector-tracker-label" };
             m_DataTableTrackerLabel.AddToClassList("gdx-datatable-inspector-label");
@@ -132,6 +138,14 @@ namespace GDX.Editor.Inspectors
             m_RootElement.Add(m_ColumnLabel);
             m_RootElement.Add(m_ColumnDescription);
             m_RootElement.Add(m_OpenAssetButton);
+
+            m_RootElement.Add(m_InterchangeLabel);
+            VisualElement csvRow = new VisualElement();
+            csvRow.AddToClassList("gdx-datatable-inspector-row");
+            csvRow.Add(m_ExportToCommaSeperatedValuesButton);
+            csvRow.Add(m_ImportFromCommaSeperatedValuesButton);
+            m_RootElement.Add(csvRow);
+
             m_RootElement.Add(m_DataTableTrackerLabel);
             m_RootElement.Add(m_DataTableTracker);
 
@@ -182,7 +196,8 @@ namespace GDX.Editor.Inspectors
             }
             content.Clear();
 
-            if (dataTable.GetColumnCount() == 0)
+            int columnCount = dataTable.GetColumnCount();
+            if (columnCount == 0)
             {
                 m_ColumnLabel.text = "No Columns";
                 m_ColumnDescription.text = string.Empty;
@@ -190,8 +205,6 @@ namespace GDX.Editor.Inspectors
             else
             {
                 ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
-                int columnCount = columnDescriptions.Length;
-
                 m_ColumnLabel.text = $"Columns ({columnCount})";
                 int columnCountMinusOne = columnCount - 1;
                 for (int i = 0; i < columnCount; i++)
@@ -210,6 +223,10 @@ namespace GDX.Editor.Inspectors
             DataTableTracker.DataTableTrackerStats stats = DataTableTracker.GetStats(m_TableTicket);
             m_DataTableTracker.text =
                 $"{stats.Usages} Usages\n{stats.CellValueChanged} Cell Monitors\n{stats.StructuralChange} Structural Monitors";
+
+
+            m_ExportToCommaSeperatedValuesButton.SetEnabled(columnCount > 0);
+            m_ImportFromCommaSeperatedValuesButton.SetEnabled(columnCount > 0);
         }
 
         /// <summary>
@@ -220,6 +237,49 @@ namespace GDX.Editor.Inspectors
             DataTableBase dataTable = (DataTableBase)target;
             DataTableWindowProvider.OpenAsset(dataTable);
             UpdateInspector();
+        }
+
+        void ExportToCommaSeperatedValues()
+        {
+            ShowExportDialogForTable((DataTableBase)target);
+        }
+
+        void ImportFromCommaSeperatedValues()
+        {
+            ShowImportDialogForTable((DataTableBase)target);
+        }
+
+        public static void ShowExportDialogForTable(DataTableBase dataTable)
+        {
+            string savePath = EditorUtility.SaveFilePanel($"Export {dataTable.GetDisplayName()} to CSV",
+                Application.dataPath,
+                dataTable.name, "csv");
+
+            if (!string.IsNullOrEmpty(savePath))
+            {
+                dataTable.ExportToCommaSeperatedValues(savePath);
+                Debug.Log($"'{dataTable.GetDisplayName()}' was exported to CSV at {savePath}");
+            }
+        }
+
+        public static void ShowImportDialogForTable(DataTableBase dataTable)
+        {
+             string openPath = EditorUtility.OpenFilePanel($"Import CSV into {dataTable.GetDisplayName()}",
+                            Application.dataPath,
+                            "csv");
+
+            if (!string.IsNullOrEmpty(openPath))
+            {
+                if (EditorUtility.DisplayDialog($"Replace '{dataTable.GetDisplayName()}' Content",
+                        "Are you sure you want to replace your tables content with the imported CSV content?\n\nThe structural format of the CSV needs to match the column structure of the existing table; reference types will not replace the data in the existing cells at that location. Make sure the first row contains the column names, and that you have not reordered the rows or columns.",
+                        "Yes", "No"))
+                {
+                    if (dataTable.UpdateFromCommaSeperatedValues(openPath))
+                    {
+                        DataTableTracker.NotifyOfColumnChange(DataTableTracker.GetTicket(dataTable), -1);
+                    }
+                }
+            }
         }
     }
 #else

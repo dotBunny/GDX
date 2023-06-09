@@ -4,9 +4,9 @@ The `GDX` package can be dropped into any compatible [Unity](http://unity3d.com)
 
 ## Unity Versions
 
-The suggested minimum Unity version for using `GDX` is Unity `2022.2`; internal development is done on `2022.2`.
+The suggested minimum Unity version for using `GDX` is Unity `2022.2`; internal development is done on `2022.3`.
 
-Compatibility is automatically tested against Unity's **L**ong **T**erm **S**upport releases `2020.3` and `2021.3`, as well as the current `2022.2` and `2023.2` releases. While we do our best to support features across all versions of Unity, there are cases where we are unable to support older legacy LTS versions of Unity.
+Compatibility is automatically tested against Unity's **L**ong **T**erm **S**upport releases `2020.3`,`2021.3` and `2022.3`, as well as the current `2023.2` release. While we do our best to support features across all versions of Unity, there are cases where we are unable to support older legacy LTS versions of Unity.
 
 `GDX` utilizes assembly definition version defines to gate feature sets and employs specific coding patterns that may not be available in previous versions of Unity.
 

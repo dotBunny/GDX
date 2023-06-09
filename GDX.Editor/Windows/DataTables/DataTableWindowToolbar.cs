@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.DataTables;
+using GDX.Editor.Inspectors;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
@@ -30,9 +31,9 @@ namespace GDX.Editor.Windows.DataTables
                 _ => { m_ParentWindow.Save(); }, CanSave);
             m_ToolbarTableMenu.menu.AppendSeparator();
             m_ToolbarTableMenu.menu.AppendAction("Export to CSV",
-                _ => { m_ParentWindow.GetController().ShowExportDialog(); }, CanInterchange);
+                _ => {DataTableInspectorBase.ShowExportDialogForTable(m_ParentWindow.GetDataTable()); }, CanInterchange);
             m_ToolbarTableMenu.menu.AppendAction("Import from CSV",
-                _ => { m_ParentWindow.GetController().ShowImportDialog(); }, CanInterchange);
+                _ => { DataTableInspectorBase.ShowImportDialogForTable(m_ParentWindow.GetDataTable()); }, CanInterchange);
             m_ToolbarTableMenu.menu.AppendSeparator();
             m_ToolbarTableMenu.menu.AppendAction("Settings",
                 _ => { m_ParentWindow.GetController().ShowSettings(); });

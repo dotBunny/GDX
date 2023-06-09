@@ -141,6 +141,8 @@ namespace GDX.Editor.Windows.DataTables
             asset.AddRow("27");
             asset.AddColumn(Serializable.SerializableTypes.Object, "Object");
             asset.AddRow("28");
+            asset.AddColumn(Serializable.SerializableTypes.EnumInt, "EnumInt");
+            asset.AddRow("29");
 
             OpenAsset(asset);
         }

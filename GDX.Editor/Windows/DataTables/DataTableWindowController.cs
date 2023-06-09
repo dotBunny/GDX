@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.DataTables;
+using GDX.Editor.Inspectors;
 using UnityEditor;
 using UnityEngine;
 
@@ -23,39 +24,6 @@ namespace GDX.Editor.Windows.DataTables
         public void ShowAddRowDialog()
         {
             m_Overlay.SetState(DataTableWindowOverlay.OverlayState.AddRow);
-        }
-
-        public void ShowImportDialog()
-        {
-            string openPath = EditorUtility.OpenFilePanel($"Import CSV into {m_DataTableWindow.titleContent.text}",
-                Application.dataPath,
-                "csv");
-
-            if (!string.IsNullOrEmpty(openPath))
-            {
-                if (EditorUtility.DisplayDialog($"Replace '{m_DataTableWindow.titleContent.text}' Content",
-                        "Are you sure you want to replace your tables content with the imported CSV content?\n\nThe structural format of the CSV needs to match the column structure of the existing table; reference types will not replace the data in the existing cells at that location. Make sure the first row contains the column names, and that you have not reordered the rows or columns.",
-                        "Yes", "No"))
-                {
-                    if (m_DataTableWindow.GetDataTable().UpdateFromCommaSeperatedValues(openPath))
-                    {
-                        m_DataTableWindow.RebindTable();
-                    }
-                }
-            }
-        }
-
-        public void ShowExportDialog()
-        {
-            string savePath = EditorUtility.SaveFilePanel($"Export {m_DataTableWindow.titleContent.text} to CSV",
-                Application.dataPath,
-                m_DataTableWindow.GetDataTable().name, "csv");
-
-            if (savePath != null)
-            {
-                m_DataTableWindow.GetDataTable().ExportToCommaSeperatedValues(savePath);
-                Debug.Log($"'{m_DataTableWindow.GetDataTable().GetDisplayName()}' was exported to CSV at {savePath}");
-            }
         }
 
         public void ShowAddColumnDialog()
