@@ -14,13 +14,10 @@ namespace GDX.Editor.Windows.DataTables
     {
         readonly DataTableWindow m_ParentWindow;
         readonly Toolbar m_Toolbar;
-        readonly ToolbarMenu m_ToolbarFileMenu;
         readonly ToolbarMenu m_ToolbarColumnMenu;
         readonly ToolbarButton m_ToolbarHelpButton;
-        readonly ToolbarButton m_ToolbarSortingButton;
-        readonly ToolbarMenu m_ToolbarInterchangeMenu;
         readonly ToolbarMenu m_ToolbarRowMenu;
-        readonly ToolbarButton m_ToolbarSettingsButton;
+        readonly ToolbarMenu m_ToolbarTableMenu;
 
         internal DataTableWindowToolbar(Toolbar toolbar, DataTableWindow window)
         {
@@ -28,14 +25,17 @@ namespace GDX.Editor.Windows.DataTables
             m_ParentWindow = window;
 
             // Create our File menu
-            m_ToolbarFileMenu = m_Toolbar.Q<ToolbarMenu>("gdx-table-toolbar-file");
-            m_ToolbarFileMenu.menu.AppendAction("Save",
+            m_ToolbarTableMenu = m_Toolbar.Q<ToolbarMenu>("gdx-table-toolbar-table");
+            m_ToolbarTableMenu.menu.AppendAction("Write To Disk",
                 _ => { m_ParentWindow.Save(); }, CanSave);
-            m_ToolbarFileMenu.menu.AppendSeparator();
-            m_ToolbarFileMenu.menu.AppendAction("Export to CSV",
+            m_ToolbarTableMenu.menu.AppendSeparator();
+            m_ToolbarTableMenu.menu.AppendAction("Export to CSV",
                 _ => { m_ParentWindow.GetController().ShowExportDialog(); }, CanInterchange);
-            m_ToolbarFileMenu.menu.AppendAction("Import from CSV",
+            m_ToolbarTableMenu.menu.AppendAction("Import from CSV",
                 _ => { m_ParentWindow.GetController().ShowImportDialog(); }, CanInterchange);
+            m_ToolbarTableMenu.menu.AppendSeparator();
+            m_ToolbarTableMenu.menu.AppendAction("Settings",
+                _ => { m_ParentWindow.GetController().ShowSettings(); });
 
             // Create our Col
             m_ToolbarColumnMenu = m_Toolbar.Q<ToolbarMenu>("gdx-table-toolbar-column");
@@ -51,34 +51,38 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarRowMenu.menu.AppendAction("Add (Default)",
                 _ => { m_ParentWindow.GetController().AddRowDefault(); }, CanAddRow);
             m_ToolbarRowMenu.menu.AppendSeparator();
-            m_ToolbarRowMenu.menu.AppendAction("Rename Selected", _ => { RenameRow(); }, CanOperateOnRow);
-            m_ToolbarRowMenu.menu.AppendAction("Remove Selected", _ => { RemoveRow(); }, CanOperateOnRow);
+            m_ToolbarRowMenu.menu.AppendAction("Rename Selected", _ =>
+            {
+                RowDescription selectedItem =
+                    (RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
+                m_ParentWindow.GetController().ShowRenameRowDialog(selectedItem.Identifier);
+            }, CanOperateOnRow);
+            m_ToolbarRowMenu.menu.AppendAction("Remove Selected", _ =>
+            {
+                RowDescription selectedItem =
+                    (RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
+                m_ParentWindow.GetController().ShowRemoveRowDialog(selectedItem.Identifier);
+            }, CanOperateOnRow);
             m_ToolbarRowMenu.menu.AppendSeparator();
             m_ToolbarRowMenu.menu.AppendAction("Commit Order",
                 _ => { m_ParentWindow.GetView().CommitOrder(); }, CanCommitOrder);
             m_ToolbarRowMenu.menu.AppendAction("Reset Order",
                 _ => { m_ParentWindow.GetView().RebuildRowData(); }, CanCommitOrder);
 
-            m_ToolbarSettingsButton = m_Toolbar.Q<ToolbarButton>("gdx-table-toolbar-settings");
-            m_ToolbarSettingsButton.text = string.Empty;
-            m_ToolbarSettingsButton.clicked += ShowSettings;
-
             m_ToolbarHelpButton = m_Toolbar.Q<ToolbarButton>("gdx-table-toolbar-help");
             m_ToolbarHelpButton.text = string.Empty;
             m_ToolbarHelpButton.clicked += OpenHelp;
-
         }
 
         internal void SetFocusable(bool state)
         {
             m_Toolbar.focusable = state;
 
-            m_ToolbarFileMenu.focusable = state;
+            m_ToolbarTableMenu.focusable = state;
             m_ToolbarColumnMenu.focusable = state;
             m_ToolbarRowMenu.focusable = state;
 
             m_ToolbarHelpButton.focusable = state;
-            m_ToolbarSettingsButton.focusable = state;
         }
 
 
@@ -88,6 +92,7 @@ namespace GDX.Editor.Windows.DataTables
                 ? DropdownMenuAction.Status.Normal
                 : DropdownMenuAction.Status.Disabled;
         }
+
         public DropdownMenuAction.Status HasSortedColumns(DropdownMenuAction action)
         {
             return m_ParentWindow.GetView().HasSortedColumns()
@@ -101,6 +106,7 @@ namespace GDX.Editor.Windows.DataTables
                 ? DropdownMenuAction.Status.Normal
                 : DropdownMenuAction.Status.Disabled;
         }
+
         DropdownMenuAction.Status CanAddRow(DropdownMenuAction action)
         {
             return m_ParentWindow.GetDataTable().GetColumnCount() > 0
@@ -122,35 +128,9 @@ namespace GDX.Editor.Windows.DataTables
                 : DropdownMenuAction.Status.Disabled;
         }
 
-        void RenameRow()
-        {
-            RowDescription selectedItem =
-                (RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
-            m_ParentWindow.GetController().ShowRenameRowDialog(selectedItem.Identifier);
-        }
-
-        void RemoveRow()
-        {
-            RowDescription selectedItem =
-                (RowDescription)m_ParentWindow.GetView().GetMultiColumnListView().selectedItem;
-            m_ParentWindow.GetController().ShowRemoveRowDialog(selectedItem.Identifier);
-        }
-
-
-        void ShowSettings()
-        {
-            m_ParentWindow.GetController().ShowSettings();
-        }
-
         void OpenHelp()
         {
             m_ParentWindow.GetController().OpenHelp();
-        }
-
-        void ClearSortedColumns()
-        {
-
-            m_ParentWindow.GetView().RefreshItems();
         }
     }
 #endif // UNITY_2022_2_OR_NEWER
