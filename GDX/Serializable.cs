@@ -74,7 +74,9 @@ namespace GDX
             Object,
             EnumInt
         }
-        public const int SerializableTypesCount = 30;
+
+        // TODO: @adam change this to 30 once EnumInt implemented
+        public const int SerializableTypesCount = 29;
 
         public static string GetLabel(this SerializableTypes serializableType)
         {
