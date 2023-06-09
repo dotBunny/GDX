@@ -549,13 +549,6 @@ namespace GDX.Editor.Windows.DataTables
                 evt.menu.AppendAction("Move Right",
                     _ => m_DataTableWindow.GetController().MoveColumnRight(columnIdentifier),
                     _ => CanMoveColumnRight(columnIdentifier));
-
-                evt.menu.AppendSeparator();
-
-                evt.menu.AppendAction("Reset Order",
-                    _ => { m_DataTableWindow.GetView().RebuildRowData(); },
-                    m_DataTableWindow.GetToolbar().CanCommitOrder);
-
             }
         }
 
