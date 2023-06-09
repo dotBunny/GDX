@@ -152,7 +152,10 @@ namespace GDX.DataTables
         /// <inheritdoc />
         public override RowDescription GetRowDescriptionByOrder(int order)
         {
-            return new RowDescription { Identifier = m_RowDenseIndexToIDMap[order], Name = m_RowNames[order], SortOrder = order};
+            return new RowDescription
+            {
+                Identifier = m_RowDenseIndexToIDMap[order], Name = m_RowNames[order], SortOrder = order
+            };
         }
 
         /// <inheritdoc />
@@ -205,7 +208,6 @@ namespace GDX.DataTables
                 returnArray[i] = new ColumnDescription
                 {
                     Name = name, Identifier = columnID, Type = entryForID.ColumnType, SortOrder = i
-
                 };
             }
 
@@ -878,6 +880,13 @@ namespace GDX.DataTables
         }
 
         /// <inheritdoc />
+        public override ulong SetEnumInt(int rowIdentifier, int columnIdentifier, int newValue)
+        {
+            // TODO: @adam
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
         public override ulong SetShort(int rowIdentifier, int columnIdentifier, short newValue)
         {
             return SetCell(rowIdentifier, columnIdentifier, ref m_AllShortColumns, newValue);
@@ -1054,6 +1063,13 @@ namespace GDX.DataTables
         public override char GetChar(int rowIdentifier, int columnIdentifier)
         {
             return GetCell(rowIdentifier, columnIdentifier, ref m_AllCharColumns);
+        }
+
+        /// <inheritdoc />
+        public override int GetEnumInt(int rowIdentifier, int columnIdentifier)
+        {
+            // TODO: @adam
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
@@ -1647,6 +1663,7 @@ namespace GDX.DataTables
 
                 newNames[i] = m_RowNames[oldRowIndex];
             }
+
             m_RowNames = newNames;
 
             for (int i = 0; i < orderedRowIdentifiers.Length; i++)

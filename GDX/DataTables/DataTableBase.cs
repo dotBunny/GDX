@@ -137,8 +137,7 @@ namespace GDX.DataTables
         public abstract ColumnDescription[] GetAllColumnDescriptions();
 
         /// <summary>
-        ///     Get a <see cref="ColumnDescription" /> describing a colum
-        /// n in the specified position.
+        ///     Get a <see cref="ColumnDescription" /> describing a column in the specified position.
         /// </summary>
         /// <param name="columnIdentifier">The unique column identifier.</param>
         /// <returns>A <see cref="ColumnDescription" /> for the target column.</returns>
@@ -261,6 +260,14 @@ namespace GDX.DataTables
         /// <param name="columnIdentifier">The unique column identifier.</param>
         /// <returns>A <see cref="char" /> value.</returns>
         public abstract char GetChar(int rowIdentifier, int columnIdentifier);
+
+        /// <summary>
+        ///     Get am <see cref="int" /> value of an enumeration from the specified cell.
+        /// </summary>
+        /// <param name="rowIdentifier">The unique row identifier.</param>
+        /// <param name="columnIdentifier">The unique column identifier.</param>
+        /// <returns>An integer value for the enumeration</returns>
+        public abstract int GetEnumInt(int rowIdentifier, int columnIdentifier);
 
         /// <summary>
         ///     Get a <see cref="sbyte" /> value from the specified cell.
@@ -514,6 +521,15 @@ namespace GDX.DataTables
         /// <param name="newValue">The updated value.</param>
         /// <returns>The <see cref="DataTableBase" />'s updated data version.</returns>
         public abstract ulong SetByte(int rowIdentifier, int columnIdentifier, byte newValue);
+
+        /// <summary>
+        ///     Sets the specified cell's enumeration value.
+        /// </summary>
+        /// <param name="rowIdentifier">The unique row identifier.</param>
+        /// <param name="columnIdentifier">The unique column identifier.</param>
+        /// <param name="newValue">The updated value.</param>
+        /// <returns>The <see cref="DataTableBase" />'s updated data version.</returns>
+        public abstract ulong SetEnumInt(int rowIdentifier, int columnIdentifier, int newValue);
 
         /// <summary>
         ///     Sets the specified cell's <see cref="short" /> value.

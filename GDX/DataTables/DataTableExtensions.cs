@@ -464,7 +464,7 @@ namespace GDX.DataTables
         /// <param name="columnTypes">The types of the given columns.</param>
         /// <param name="directions">The direction which the column should be used to calculate order.</param>
         /// <returns>A sorted array of <see cref="RowDescription"/>, or null.</returns>
-        public static RowDescription[] SortByColumns(this DataTableBase dataTable, int[] columnIdentifiers,
+        public static RowDescription[] GetAllRowDescriptionsSortedByColumns(this DataTableBase dataTable, int[] columnIdentifiers,
             Serializable.SerializableTypes[] columnTypes, SortDirection[] directions)
         {
             RowDescription[] rows = dataTable.GetAllRowDescriptions();

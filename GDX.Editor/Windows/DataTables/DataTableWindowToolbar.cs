@@ -29,13 +29,8 @@ namespace GDX.Editor.Windows.DataTables
 
             // Create our File menu
             m_ToolbarFileMenu = m_Toolbar.Q<ToolbarMenu>("gdx-table-toolbar-file");
-            m_ToolbarFileMenu.menu.AppendAction("Settings",
-                _ => { ShowSettings(); });
-            m_ToolbarFileMenu.menu.AppendSeparator();
             m_ToolbarFileMenu.menu.AppendAction("Save",
-                _ => { Save(); }, CanSave);
-            m_ToolbarFileMenu.menu.AppendAction("Commit Sorting",
-                _ => { CommitSorting(); }, CanCommitSorting);
+                _ => { m_ParentWindow.Save(); }, CanSave);
             m_ToolbarFileMenu.menu.AppendSeparator();
             m_ToolbarFileMenu.menu.AppendAction("Export to CSV",
                 _ => { m_ParentWindow.GetController().ShowExportDialog(); }, CanInterchange);
@@ -49,8 +44,6 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarColumnMenu.menu.AppendSeparator();
             m_ToolbarColumnMenu.menu.AppendAction("Resize To Fit",
                 _ => { m_ParentWindow.GetController().AutoResizeColumns(); });
-            m_ToolbarColumnMenu.menu.AppendAction("Clear Sorting",
-                _ => { m_ParentWindow.GetView().GetMultiColumnListView().sortColumnDescriptions.Clear(); }, CanCommitSorting);
 
             m_ToolbarRowMenu = m_Toolbar.Q<ToolbarMenu>("gdx-table-toolbar-row");
             m_ToolbarRowMenu.menu.AppendAction("Add", _ => { m_ParentWindow.GetController().ShowAddRowDialog(); },
@@ -60,7 +53,11 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarRowMenu.menu.AppendSeparator();
             m_ToolbarRowMenu.menu.AppendAction("Rename Selected", _ => { RenameRow(); }, CanOperateOnRow);
             m_ToolbarRowMenu.menu.AppendAction("Remove Selected", _ => { RemoveRow(); }, CanOperateOnRow);
-
+            m_ToolbarRowMenu.menu.AppendSeparator();
+            m_ToolbarRowMenu.menu.AppendAction("Commit Order",
+                _ => { m_ParentWindow.GetView().CommitOrder(); }, CanCommitOrder);
+            m_ToolbarRowMenu.menu.AppendAction("Reset Order",
+                _ => { m_ParentWindow.GetView().RebuildRowData(); }, CanCommitOrder);
 
             m_ToolbarSettingsButton = m_Toolbar.Q<ToolbarButton>("gdx-table-toolbar-settings");
             m_ToolbarSettingsButton.text = string.Empty;
@@ -85,7 +82,13 @@ namespace GDX.Editor.Windows.DataTables
         }
 
 
-        public DropdownMenuAction.Status CanCommitSorting(DropdownMenuAction action)
+        public DropdownMenuAction.Status CanCommitOrder(DropdownMenuAction action)
+        {
+            return m_ParentWindow.GetView().HasSortedColumns() || m_ParentWindow.GetView().HasManualRows()
+                ? DropdownMenuAction.Status.Normal
+                : DropdownMenuAction.Status.Disabled;
+        }
+        public DropdownMenuAction.Status HasSortedColumns(DropdownMenuAction action)
         {
             return m_ParentWindow.GetView().HasSortedColumns()
                 ? DropdownMenuAction.Status.Normal
@@ -133,15 +136,6 @@ namespace GDX.Editor.Windows.DataTables
             m_ParentWindow.GetController().ShowRemoveRowDialog(selectedItem.Identifier);
         }
 
-        void CommitSorting()
-        {
-            m_ParentWindow.GetView().CommitSorting();
-        }
-
-        void Save()
-        {
-            m_ParentWindow.Save();
-        }
 
         void ShowSettings()
         {
@@ -151,6 +145,12 @@ namespace GDX.Editor.Windows.DataTables
         void OpenHelp()
         {
             m_ParentWindow.GetController().OpenHelp();
+        }
+
+        void ClearSortedColumns()
+        {
+
+            m_ParentWindow.GetView().RefreshItems();
         }
     }
 #endif // UNITY_2022_2_OR_NEWER

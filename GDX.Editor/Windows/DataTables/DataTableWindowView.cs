@@ -83,7 +83,8 @@ namespace GDX.Editor.Windows.DataTables
                     bindCell = BindRowHeader,
                     name = "RowName",
                     title = "Row Name",
-                    sortable = true
+                    sortable = true,
+                    optional = false
                 });
             m_ColumnIdentifierCache.AddUnchecked(m_TableViewColumns[0].name, -1);
             m_ColumnTypeCache.AddUnchecked(m_TableViewColumns[0].name, Serializable.SerializableTypes.String);
@@ -116,6 +117,12 @@ namespace GDX.Editor.Windows.DataTables
                     case Serializable.SerializableTypes.String:
                         column.makeCell += () => DataTableWindowCells.MakeStringCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindStringCell;
+                        column.minWidth = m_GenericMinWidth;
+                        column.sortable = true;
+                        break;
+                    case Serializable.SerializableTypes.EnumInt:
+                        column.makeCell += () => DataTableWindowCells.MakeEnumIntCell(this, tableTicket, columnIndex);
+                        column.bindCell = DataTableWindowCells.BindEnumIntCell;
                         column.minWidth = m_GenericMinWidth;
                         column.sortable = true;
                         break;
@@ -305,10 +312,12 @@ namespace GDX.Editor.Windows.DataTables
                 virtualizationMethod = CollectionVirtualizationMethod.FixedHeight,
                 fixedItemHeight = m_DesiredRowHeight,
                 style = { height = new StyleLength(new Length(100f, LengthUnit.Percent)) },
-                reorderable =  false
+                reorderable =  true,
+                reorderMode = ListViewReorderMode.Simple
             };
             m_MultiColumnListView.headerContextMenuPopulateEvent += AppendColumnContextMenu;
             m_MultiColumnListView.columnSortingChanged += SortItems;
+            m_MultiColumnListView.itemIndexChanged += OnRowsReordered;
 
             rootElement.Insert(1, m_MultiColumnListView);
 
@@ -317,6 +326,7 @@ namespace GDX.Editor.Windows.DataTables
 
             RebuildRowData();
         }
+
 
         public RowDescription GetRowDescriptionBySortedOrder(int row)
         {
@@ -346,7 +356,7 @@ namespace GDX.Editor.Windows.DataTables
             m_MultiColumnListView.RefreshItems();
         }
 
-        public void CommitSorting()
+        public void CommitOrder()
         {
             DataTableTracker.RecordSettingsUndo(m_DataTableWindow.GetDataTableTicket());
 
@@ -360,16 +370,24 @@ namespace GDX.Editor.Windows.DataTables
             m_DataTableWindow.GetDataTable()
                 .SetAllRowOrders(sortedIdentifiers);
 
+
             DataTableTracker.NotifyOfSettingsChange(m_DataTableWindow.GetDataTableTicket(), m_DataTableWindow);
 
             RebuildRowData();
         }
 
         int m_SortedColumnCount;
+        bool m_HasMadeManualRowOrderChanges = false;
+
 
         public bool HasSortedColumns()
         {
             return m_SortedColumnCount > 0;
+        }
+
+        public bool HasManualRows()
+        {
+            return m_HasMadeManualRowOrderChanges;
         }
         void SortItems()
         {
@@ -387,14 +405,22 @@ namespace GDX.Editor.Windows.DataTables
                 m_SortedColumnCount++;
             }
 
+            // Remove old descriptions
             m_RowDescriptions.Clear();
+
+            // Replace with sorted descriptions
             m_RowDescriptions.AddRange(
                 m_DataTableWindow.GetDataTable()
-                    .SortByColumns(sortedColumnIdentifiers.ToArray(), sortedColumnTypes.ToArray(),
+                    .GetAllRowDescriptionsSortedByColumns(sortedColumnIdentifiers.ToArray(), sortedColumnTypes.ToArray(),
                         sortedColumnDirections.ToArray()));
 
             m_MultiColumnListView.RefreshItems();
         }
+        void OnRowsReordered(int oldIndex, int newIndex)
+        {
+            m_HasMadeManualRowOrderChanges = true;
+        }
+
 
         public MultiColumnListView GetMultiColumnListView()
         {
@@ -485,6 +511,8 @@ namespace GDX.Editor.Windows.DataTables
 
         internal void RebuildRowData()
         {
+            m_HasMadeManualRowOrderChanges = false;
+
             DataTableBase dataTable = m_DataTableWindow.GetDataTable();
             m_RowDescriptions.Clear();
             if (dataTable.GetRowCount() > 0)
@@ -524,9 +552,9 @@ namespace GDX.Editor.Windows.DataTables
 
                 evt.menu.AppendSeparator();
 
-                evt.menu.AppendAction("Clear Sorting",
-                    _ => { m_DataTableWindow.GetView().GetMultiColumnListView().sortColumnDescriptions.Clear(); },
-                    m_DataTableWindow.GetToolbar().CanCommitSorting);
+                evt.menu.AppendAction("Reset Order",
+                    _ => { m_DataTableWindow.GetView().RebuildRowData(); },
+                    m_DataTableWindow.GetToolbar().CanCommitOrder);
 
             }
         }
@@ -552,26 +580,6 @@ namespace GDX.Editor.Windows.DataTables
             }
             int currentOrder = dataTable.GetColumnOrder(columnIdentifier);
             return currentOrder < (columnCount - 1) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
-        }
-
-
-        // void MakeRowContextMenu(VisualElement element, int stableRowID)
-        // {
-        //     element.AddManipulator(new ContextualMenuManipulator(evt =>
-        //     {
-        //         evt.menu.AppendSeparator();
-        //         evt.menu.AppendAction("Rename",
-        //             a => parentWindow.GetController().ShowRenameRowDialog(stableRowID));
-        //         evt.menu.AppendAction("Remove",
-        //             a => parentWindow.GetController().ShowRemoveRowDialog(stableRowID));
-        //     }));
-        // }
-
-        DropdownMenuAction.Status CanMoveColumnLeft(DropdownMenuAction action)
-        {
-            return m_DataTableWindow.GetDataTable().GetColumnCount() > 1
-                ? DropdownMenuAction.Status.Normal
-                : DropdownMenuAction.Status.Disabled;
         }
 
         DropdownMenuAction.Status CanRemoveColumn(DropdownMenuAction action)

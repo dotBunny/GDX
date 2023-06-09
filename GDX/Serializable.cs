@@ -39,6 +39,7 @@ namespace GDX
         public const string Gradient = "Gradient";
         public const string AnimationCurve = "AnimationCurve";
         public const string Object = "Object";
+        public const string EnumInt = "Enum (Integer)";
 
         public enum SerializableTypes
         {
@@ -71,9 +72,10 @@ namespace GDX
             Hash128,
             Gradient,
             AnimationCurve,
-            Object
+            Object,
+            EnumInt
         }
-        public const int SerializableTypesCount = 29;
+        public const int SerializableTypesCount = 30;
 
         public static string GetLabel(this SerializableTypes serializableType)
         {
@@ -139,6 +141,9 @@ namespace GDX
                     return AnimationCurve;
                 case SerializableTypes.Object:
                     return Object;
+                case SerializableTypes.EnumInt:
+                    return EnumInt;
+
             }
             return Invalid;
         }

@@ -720,10 +720,47 @@ namespace GDX.Editor.Windows.DataTables
             });
         }
 
+        internal static void BindEnumIntCell(VisualElement cell, int row)
+        {
+            EnumField field = (EnumField)cell;
+            CellData map = (CellData)field.userData;
+            DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
+
+            EnumIntCellValue cellValue =
+                new EnumIntCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+
+            string qualifiedType = dataTable.GetTypeNameForColumn(map.ColumnID);
+            // field.objectType = (!string.IsNullOrEmpty(qualifiedType) ? System.Type.GetType(qualifiedType) : typeof(Object)) ??
+            //                    typeof(Object);
+
+            map.CellValue = cellValue;
+            //field.SetValueWithoutNotify(cellValue.GetUnsafe());
+            field.RegisterValueChangedCallback(e =>
+            {
+                CellData localMap = (CellData)field.userData;
+                ObjectCellValue local = (ObjectCellValue)localMap.CellValue;
+                DataTableWindow window = DataTableWindowProvider.GetTableWindow(localMap.TableTicket);
+                DataTableTracker.RecordCellValueUndo(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier);
+                //local.Set(e.newValue);
+                DataTableTracker.NotifyOfCellValueChange(localMap.TableTicket, local.RowIdentifier, local.ColumnIdentifier,
+                    window);
+            });
+        }
+
         internal static VisualElement MakeStringCell(DataTableWindowView view, int table, int column)
         {
             TextField newField =
                 new TextField(null)
+                {
+                    name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view },
+                };
+            return newField;
+        }
+
+        internal static VisualElement MakeEnumIntCell(DataTableWindowView view, int table, int column)
+        {
+            EnumField newField =
+                new EnumField(null)
                 {
                     name = k_CellFieldName, userData = new CellData { TableTicket = table, ColumnID = column, View = view },
                 };
