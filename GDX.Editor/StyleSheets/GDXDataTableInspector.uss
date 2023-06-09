@@ -1,12 +1,12 @@
 ﻿#gdx-datatable-inspector-name
 {
-    margin-top: 20px;
+    margin-top: 15px;
     -unity-font-style: bold-and-italic;
 }
 .gdx-datatable-inspector-label
 {
     padding-bottom: 1px;
-    margin-bottom: 2px;
+    margin-top: 15px;
     -unity-font-style: bold;
 }
 .gdx-datatable-inspector-description
@@ -26,27 +26,15 @@
     flex-shrink: 1;
 }
 
-#gdx-datatable-inspector-rows-label
-{
-    margin-top: 20px;
-}
-
-#gdx-datatable-inspector-interchange-label
-{
-    padding-bottom: 1px;
-    margin-top: 20px;
-    -unity-font-style: bold;
-}
-
-#gdx-datatable-inspector-open
-{
-    margin-top: 10px;
-}
-
-#gdx-datatable-inspector-tracker-label
-{
-    margin-top: 20px;
-}
-#gdx-datatable-inspector-tracker
-{
+#gdx-datatable-refresh {
+    border-width: 1px;
+    padding: 0;
+    flex-shrink: 0;
+    flex-grow: 0;
+    position: absolute;
+    top: -47px;
+    right: 45px;
+    padding-left: 5px;
+    padding-right: 5px;
+    height: 18px;
 }

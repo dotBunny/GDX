@@ -120,6 +120,12 @@ form#search
 {
     text-align: left;
 }
+
+img {
+    max-width:100% !important;
+    height:auto;
+}
+
 @media only screen and (max-width: 768px) {
     .toc .nav > li, .toc .nav > li >a {
         display: block;

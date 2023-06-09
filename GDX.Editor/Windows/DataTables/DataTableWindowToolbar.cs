@@ -30,9 +30,9 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarTableMenu.menu.AppendAction("Write To Disk",
                 _ => { m_ParentWindow.Save(); }, CanSave);
             m_ToolbarTableMenu.menu.AppendSeparator();
-            m_ToolbarTableMenu.menu.AppendAction("Export to CSV",
+            m_ToolbarTableMenu.menu.AppendAction("Export (CSV)",
                 _ => {DataTableInspectorBase.ShowExportDialogForTable(m_ParentWindow.GetDataTable()); }, CanInterchange);
-            m_ToolbarTableMenu.menu.AppendAction("Import from CSV",
+            m_ToolbarTableMenu.menu.AppendAction("Import (CSV)",
                 _ => { DataTableInspectorBase.ShowImportDialogForTable(m_ParentWindow.GetDataTable()); }, CanInterchange);
             m_ToolbarTableMenu.menu.AppendSeparator();
             m_ToolbarTableMenu.menu.AppendAction("Settings",

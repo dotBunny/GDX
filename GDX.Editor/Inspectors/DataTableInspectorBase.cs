@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.DataTables;
-using GDX.Editor.Windows.DataTables;
 using UnityEditor;
 using UnityEngine;
 #if UNITY_2022_2_OR_NEWER
@@ -30,6 +29,7 @@ namespace GDX.Editor.Inspectors
         Label m_DataTableLabel;
         Label m_DataTableTracker;
         Label m_DataTableTrackerLabel;
+        Button m_DataTableTrackerRefreshButton;
         Button m_OpenAssetButton;
         Label m_InterchangeLabel;
         Button m_ExportToCommaSeperatedValuesButton;
@@ -104,6 +104,10 @@ namespace GDX.Editor.Inspectors
 
             m_TableTicket = DataTableTracker.RegisterTable(dataTable);
             m_RootElement = new VisualElement();
+            m_DataTableTrackerRefreshButton =
+                new Button(UpdateInspector) { text = "Refresh", name = "gdx-datatable-refresh" };
+            m_RootElement.Add(m_DataTableTrackerRefreshButton);
+
             ResourcesProvider.SetupSharedStylesheets(m_RootElement);
             ResourcesProvider.SetupStylesheet("GDXDataTableInspector", m_RootElement);
 
@@ -119,18 +123,19 @@ namespace GDX.Editor.Inspectors
             m_ColumnDescription = new Label { name = "gdx-datatable-inspector-columns-description" };
             m_ColumnDescription.AddToClassList("gdx-datatable-inspector-description");
 
-            m_OpenAssetButton =
-                new Button(OpenTargetAsset) { text = "Open Table", name = "gdx-datatable-inspector-open" };
-
             m_InterchangeLabel = new Label("Interchange") { name = "gdx-datatable-inspector-interchange-label" };
+            m_InterchangeLabel.AddToClassList("gdx-datatable-inspector-label");
             m_ExportToCommaSeperatedValuesButton =
                 new Button(ExportToCommaSeperatedValues) { text = "Export (CSV)", name = "gdx-datatable-inspector-export-csv" };
             m_ImportFromCommaSeperatedValuesButton =
                 new Button(ImportFromCommaSeperatedValues) { text = "Import (CSV)", name = "gdx-datatable-inspector-import-csv" };
 
             m_DataTableTrackerLabel = new Label("Tracker") { name = "gdx-datatable-inspector-tracker-label" };
+
+
             m_DataTableTrackerLabel.AddToClassList("gdx-datatable-inspector-label");
             m_DataTableTracker = new Label { name = "gdx-datatable-inspector-tracker" };
+
 
             m_RootElement.Add(m_DataTableLabel);
             m_RootElement.Add(m_RowLabel);
@@ -227,16 +232,6 @@ namespace GDX.Editor.Inspectors
 
             m_ExportToCommaSeperatedValuesButton.SetEnabled(columnCount > 0);
             m_ImportFromCommaSeperatedValuesButton.SetEnabled(columnCount > 0);
-        }
-
-        /// <summary>
-        ///     Open the target <see cref="DataTableBase" /> in a <see cref="DataTableWindow" />.
-        /// </summary>
-        void OpenTargetAsset()
-        {
-            DataTableBase dataTable = (DataTableBase)target;
-            DataTableWindowProvider.OpenAsset(dataTable);
-            UpdateInspector();
         }
 
         void ExportToCommaSeperatedValues()
