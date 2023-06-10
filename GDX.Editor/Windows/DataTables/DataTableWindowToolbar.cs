@@ -31,9 +31,13 @@ namespace GDX.Editor.Windows.DataTables
                 _ => { m_ParentWindow.Save(); }, CanSave);
             m_ToolbarTableMenu.menu.AppendSeparator();
             m_ToolbarTableMenu.menu.AppendAction("Export (CSV)",
-                _ => {DataTableInspectorBase.ShowExportDialogForTable(m_ParentWindow.GetDataTable()); }, CanInterchange);
+                _ => {DataTableInspectorBase.ShowExportDialogForTable(DataTableExtensions.InterchangeFormat.CVS, m_ParentWindow.GetDataTable()); }, CanInterchange);
             m_ToolbarTableMenu.menu.AppendAction("Import (CSV)",
-                _ => { DataTableInspectorBase.ShowImportDialogForTable(m_ParentWindow.GetDataTable()); }, CanInterchange);
+                _ => { DataTableInspectorBase.ShowImportDialogForTable(DataTableExtensions.InterchangeFormat.CVS, m_ParentWindow.GetDataTable()); }, CanInterchange);
+            m_ToolbarTableMenu.menu.AppendAction("Export (JSON)",
+                _ => {DataTableInspectorBase.ShowExportDialogForTable(DataTableExtensions.InterchangeFormat.JSON, m_ParentWindow.GetDataTable()); }, CanInterchange);
+            m_ToolbarTableMenu.menu.AppendAction("Import (JSON)",
+                _ => { DataTableInspectorBase.ShowImportDialogForTable(DataTableExtensions.InterchangeFormat.JSON, m_ParentWindow.GetDataTable()); }, CanInterchange);
             m_ToolbarTableMenu.menu.AppendSeparator();
             m_ToolbarTableMenu.menu.AppendAction("Settings",
                 _ => { m_ParentWindow.GetController().ShowSettings(); });

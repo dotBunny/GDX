@@ -16,239 +16,25 @@ namespace GDX.DataTables
 {
     /// <summary>
     ///     <see cref="DataTableBase" /> Based Extension Methods
-    /// </summary
+    /// </summary>
     public static class DataTableExtensions
     {
-        /// <summary>
-        ///     Make a CSV safe version of the provided content.
-        /// </summary>
-        /// <param name="content">The content which needs to be made safe for CSV.</param>
-        /// <returns>A CSV safe value string.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static string MakeCommaSeperatedValue(string content)
+        public enum InterchangeFormat
         {
-            if (content == null)
-            {
-                return string.Empty;
-            }
-
-            // Double quote quotes
-            if (content.IndexOf('"') != -1)
-            {
-                content = content.Replace("\"", "\"\"");
-            }
-
-            // Ensure quotes for commas
-            return content.IndexOf(',') != -1 ? $"\"{content}\"" : content;
+            CVS,
+            JSON
         }
 
-        /// <summary>
-        ///     Parse a given <paramref name="line" /> into seperated values.
-        /// </summary>
-        /// <param name="line">The CSV line.</param>
-        /// <returns>An array of string values.</returns>
-        static string[] ParseCommaSeperatedValues(string line)
+        public static void Export(this DataTableBase dataTable, InterchangeFormat format, string filePath)
         {
-            List<string> returnStrings = new List<string>();
-            int lastIndex = -1;
-            int currentIndex = 0;
-            bool isQuoted = false;
-            int length = line.Length;
-            while (currentIndex < length)
+            if (format == InterchangeFormat.JSON)
             {
-                switch (line[currentIndex])
-                {
-                    case '"':
-                        isQuoted = !isQuoted;
-                        break;
-                    case ',':
-                        if (!isQuoted)
-                        {
-                            returnStrings.Add(line.Substring(lastIndex + 1, currentIndex - lastIndex).Trim(' ', ','));
-                            lastIndex = currentIndex;
-                        }
-
-                        break;
-                }
-
-                currentIndex++;
+                ExportToJavaScriptObjectNotation(dataTable, filePath);
             }
-
-            if (lastIndex != line.Length - 1)
+            else
             {
-                returnStrings.Add(line.Substring(lastIndex + 1).Trim());
+                ExportToCommaSeperatedValues(dataTable, filePath);
             }
-
-            return returnStrings.ToArray();
-        }
-
-        /// <summary>
-        ///     Update the <see cref="DataTableBase" /> with the CSV data found in the given file.
-        /// </summary>
-        /// <remarks>
-        ///     It's important that the Row Identifier column remains unchanged, no structural changes have occured, and
-        ///     no changes of column order were made. Object references will be maintained during update, only values will
-        ///     be updated.
-        /// </remarks>
-        /// <param name="dataTable">The target <see cref="DataTableBase" /> to apply changes to.</param>
-        /// <param name="filePath">The path to the CSV file to read.</param>
-        /// <param name="removeRowIfNotFound">Should rows that are not found in the CSV content be removed?</param>
-        /// <returns>Was this operation successful?</returns>
-        public static bool UpdateFromCommaSeperatedValues(this DataTableBase dataTable, string filePath,
-            bool removeRowIfNotFound = true)
-        {
-            if (!File.Exists(filePath))
-            {
-                Debug.LogError($"Unable to find {filePath}.");
-                return false;
-            }
-
-            return UpdateFromCommaSeperatedValues(dataTable, File.ReadAllLines(filePath), removeRowIfNotFound);
-        }
-
-        /// <summary>
-        ///     Update the <see cref="DataTableBase" /> with the CSV data found in the given file.
-        /// </summary>
-        /// <remarks>
-        ///     It's important that the Row Identifier column remains unchanged, no structural changes have occured, and
-        ///     no changes of column order were made. Object references will be maintained during update, only values will
-        ///     be updated.
-        /// </remarks>
-        /// <param name="dataTable">The target <see cref="DataTableBase" /> to apply changes to.</param>
-        /// <param name="fileContent">An array of CSV lines.</param>
-        /// <param name="removeRowIfNotFound">Should rows that are not found in the CSV content be removed?</param>
-        /// <returns>Was this operation successful?</returns>
-        public static bool UpdateFromCommaSeperatedValues(this DataTableBase dataTable, string[] fileContent,
-            bool removeRowIfNotFound = true)
-        {
-            int tableRowCount = dataTable.GetRowCount();
-            int tableColumnCount = dataTable.GetColumnCount();
-            ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
-
-            // Test Columns
-            string[] columnTest = ParseCommaSeperatedValues(fileContent[0]);
-            if (columnTest.Length != tableColumnCount + 2)
-            {
-                Debug.LogError(
-                    $"The importing data has {columnTest.Length} columns where {tableColumnCount + 2} was expected.");
-                return false;
-            }
-
-            // Build a list of previous row ID, so we know what was removed
-            List<int> previousRowInternalIndices = new List<int>(tableRowCount);
-            RowDescription[] rowDescriptions = dataTable.GetAllRowDescriptions();
-            int rowDescriptionsLength = rowDescriptions.Length;
-            for (int i = 0; i < rowDescriptionsLength; i++)
-            {
-                previousRowInternalIndices.Add(rowDescriptions[i].Identifier);
-            }
-
-            List<int> foundRowInternalIndices = new List<int>(tableRowCount);
-
-            for (int i = 1; i < fileContent.Length; i++)
-            {
-                int rowIdentifier = -1;
-                string[] rowStrings = ParseCommaSeperatedValues(fileContent[i]);
-                string rowName = string.Empty;
-                if (string.IsNullOrEmpty(rowStrings[0]))
-                {
-                    rowName = rowStrings[1];
-                    if (string.IsNullOrEmpty(rowName))
-                    {
-                        rowName = "Unnamed";
-                    }
-
-                    // Create new row
-                    rowIdentifier = dataTable.AddRow(rowName);
-                }
-                else
-                {
-                    rowIdentifier = int.Parse(rowStrings[0]);
-                    rowName = rowStrings[1];
-                }
-
-                foundRowInternalIndices.Add(rowIdentifier);
-
-                dataTable.SetRowName(rowIdentifier, rowName);
-
-                for (int j = 0; j < tableColumnCount; j++)
-                {
-                    string columnString = rowStrings[j + 2];
-                    switch (columnDescriptions[j].Type)
-                    {
-                        case Serializable.SerializableTypes.String:
-                            dataTable.SetString(rowIdentifier, columnDescriptions[j].Identifier, columnString);
-                            break;
-                        case Serializable.SerializableTypes.Char:
-                            dataTable.SetChar(rowIdentifier, columnDescriptions[j].Identifier, columnString[0]);
-                            break;
-                        case Serializable.SerializableTypes.Bool:
-                            dataTable.SetBool(rowIdentifier, columnDescriptions[j].Identifier,
-                                bool.Parse(columnString));
-                            break;
-                        case Serializable.SerializableTypes.SByte:
-                            dataTable.SetSByte(rowIdentifier, columnDescriptions[j].Identifier,
-                                sbyte.Parse(columnString));
-                            break;
-                        case Serializable.SerializableTypes.Byte:
-                            dataTable.SetByte(rowIdentifier, columnDescriptions[j].Identifier,
-                                byte.Parse(columnString));
-                            break;
-                        case Serializable.SerializableTypes.Short:
-                            dataTable.SetShort(rowIdentifier, columnDescriptions[j].Identifier,
-                                short.Parse(columnString));
-                            break;
-                        case Serializable.SerializableTypes.UShort:
-                            dataTable.SetUShort(rowIdentifier, columnDescriptions[j].Identifier,
-                                ushort.Parse(columnString));
-                            break;
-                        case Serializable.SerializableTypes.Int:
-                            dataTable.SetInt(rowIdentifier, columnDescriptions[j].Identifier, int.Parse(columnString));
-                            break;
-                        case Serializable.SerializableTypes.UInt:
-                            dataTable.SetUInt(rowIdentifier, columnDescriptions[j].Identifier,
-                                uint.Parse(columnString));
-                            break;
-                        case Serializable.SerializableTypes.Long:
-                            dataTable.SetLong(rowIdentifier, columnDescriptions[j].Identifier,
-                                long.Parse(columnString));
-                            break;
-                        case Serializable.SerializableTypes.ULong:
-                            dataTable.SetULong(rowIdentifier, columnDescriptions[j].Identifier,
-                                ulong.Parse(columnString));
-                            break;
-                        case Serializable.SerializableTypes.Float:
-                            dataTable.SetFloat(rowIdentifier, columnDescriptions[j].Identifier,
-                                float.Parse(columnString));
-                            break;
-                        case Serializable.SerializableTypes.Double:
-                            dataTable.SetDouble(rowIdentifier, columnDescriptions[j].Identifier,
-                                double.Parse(columnString));
-                            break;
-                    }
-                }
-            }
-
-            // Remove indices that were not found any more?
-            if (removeRowIfNotFound)
-            {
-                int foundIndicesCount = foundRowInternalIndices.Count;
-                for (int i = 0; i < foundIndicesCount; i++)
-                {
-                    if (previousRowInternalIndices.Contains(foundRowInternalIndices[i]))
-                    {
-                        previousRowInternalIndices.Remove(foundRowInternalIndices[i]);
-                    }
-                }
-
-                int indicesToRemove = previousRowInternalIndices.Count;
-                for (int i = 0; i < indicesToRemove; i++)
-                {
-                    dataTable.RemoveRow(previousRowInternalIndices[i]);
-                }
-            }
-
-            return true;
         }
 
         /// <summary>
@@ -423,41 +209,278 @@ namespace GDX.DataTables
             File.WriteAllText(filePath, generator.ToString());
         }
 
-#if UNITY_2022_2_OR_NEWER
-
-        static IComparer<RowDescription> GetComparer(Serializable.SerializableTypes type, DataTableBase dataTable,
-            int rowCount, int columnIdentifier, int direction, bool supportMultiSort = false)
+        public static void ExportToJavaScriptObjectNotation(this DataTableBase dataTable, string filePath)
         {
-            if (columnIdentifier == -1 && type == Serializable.SerializableTypes.String)
-                return new RowNameColumnSorter(dataTable, rowCount, -1, direction, supportMultiSort);
 
-            // Default sorters
-            switch (type)
+        }
+
+        public static bool UpdateFrom(this DataTableBase dataTable, InterchangeFormat format, string filePath)
+        {
+
+            if (format == InterchangeFormat.JSON)
             {
-                case Serializable.SerializableTypes.Float:
-                    return new FloatColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
-                case Serializable.SerializableTypes.Int:
-                    return new IntColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
-                case Serializable.SerializableTypes.String:
-                    return new StringColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
-                case Serializable.SerializableTypes.Bool:
-                    return new BoolColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
-                case Serializable.SerializableTypes.Double:
-                    return new DoubleColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
-                case Serializable.SerializableTypes.Long:
-                    return new LongColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
-                case Serializable.SerializableTypes.ULong:
-                    return new ULongColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
-                case Serializable.SerializableTypes.UInt:
-                    return new UIntColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
+                return UpdateFromJavaScriptObjectNotation(dataTable, filePath);
+            }
+            else
+            {
+                return UpdateFromCommaSeperatedValues(dataTable, filePath);
+            }
+        }
+
+
+        /// <summary>
+        ///     Update the <see cref="DataTableBase" /> with the CSV data found in the given file.
+        /// </summary>
+        /// <remarks>
+        ///     It's important that the Row Identifier column remains unchanged, no structural changes have occured, and
+        ///     no changes of column order were made. Object references will be maintained during update, only values will
+        ///     be updated.
+        /// </remarks>
+        /// <param name="dataTable">The target <see cref="DataTableBase" /> to apply changes to.</param>
+        /// <param name="filePath">The path to the CSV file to read.</param>
+        /// <param name="removeRowIfNotFound">Should rows that are not found in the CSV content be removed?</param>
+        /// <returns>Was this operation successful?</returns>
+        public static bool UpdateFromCommaSeperatedValues(this DataTableBase dataTable, string filePath,
+            bool removeRowIfNotFound = true)
+        {
+            if (!File.Exists(filePath))
+            {
+                Debug.LogError($"Unable to find {filePath}.");
+                return false;
             }
 
-            Debug.LogError($"Unable to find sorter for requested column type [{type.GetLabel()}].");
-            return null;
+            return UpdateFromCommaSeperatedValues(dataTable, File.ReadAllLines(filePath), removeRowIfNotFound);
         }
 
         /// <summary>
-        ///     Sort a <see cref="DataTableBase" /> rows based on the provided sorting parameters.
+        ///     Update the <see cref="DataTableBase" /> with the CSV data found in the given file.
+        /// </summary>
+        /// <remarks>
+        ///     It's important that the Row Identifier column remains unchanged, no structural changes have occured, and
+        ///     no changes of column order were made. Object references will be maintained during update, only values will
+        ///     be updated.
+        /// </remarks>
+        /// <param name="dataTable">The target <see cref="DataTableBase" /> to apply changes to.</param>
+        /// <param name="fileContent">An array of CSV lines.</param>
+        /// <param name="removeRowIfNotFound">Should rows that are not found in the CSV content be removed?</param>
+        /// <returns>Was this operation successful?</returns>
+        public static bool UpdateFromCommaSeperatedValues(this DataTableBase dataTable, string[] fileContent,
+            bool removeRowIfNotFound = true)
+        {
+            int tableRowCount = dataTable.GetRowCount();
+            int tableColumnCount = dataTable.GetColumnCount();
+            ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
+
+            // Test Columns
+            string[] columnTest = ParseCommaSeperatedValues(fileContent[0]);
+            if (columnTest.Length != tableColumnCount + 2)
+            {
+                Debug.LogError(
+                    $"The importing data has {columnTest.Length} columns where {tableColumnCount + 2} was expected.");
+                return false;
+            }
+
+            // Build a list of previous row ID, so we know what was removed
+            List<int> previousRowInternalIndices = new List<int>(tableRowCount);
+            RowDescription[] rowDescriptions = dataTable.GetAllRowDescriptions();
+            int rowDescriptionsLength = rowDescriptions.Length;
+            for (int i = 0; i < rowDescriptionsLength; i++)
+            {
+                previousRowInternalIndices.Add(rowDescriptions[i].Identifier);
+            }
+
+            List<int> foundRowInternalIndices = new List<int>(tableRowCount);
+
+            for (int i = 1; i < fileContent.Length; i++)
+            {
+                int rowIdentifier = -1;
+                string[] rowStrings = ParseCommaSeperatedValues(fileContent[i]);
+                string rowName = string.Empty;
+                if (string.IsNullOrEmpty(rowStrings[0]))
+                {
+                    rowName = rowStrings[1];
+                    if (string.IsNullOrEmpty(rowName))
+                    {
+                        rowName = "Unnamed";
+                    }
+
+                    // Create new row
+                    rowIdentifier = dataTable.AddRow(rowName);
+                }
+                else
+                {
+                    rowIdentifier = int.Parse(rowStrings[0]);
+                    rowName = rowStrings[1];
+                }
+
+                foundRowInternalIndices.Add(rowIdentifier);
+
+                dataTable.SetRowName(rowIdentifier, rowName);
+
+                for (int j = 0; j < tableColumnCount; j++)
+                {
+                    string columnString = rowStrings[j + 2];
+                    switch (columnDescriptions[j].Type)
+                    {
+                        case Serializable.SerializableTypes.String:
+                            dataTable.SetString(rowIdentifier, columnDescriptions[j].Identifier, columnString);
+                            break;
+                        case Serializable.SerializableTypes.Char:
+                            dataTable.SetChar(rowIdentifier, columnDescriptions[j].Identifier, columnString[0]);
+                            break;
+                        case Serializable.SerializableTypes.Bool:
+                            dataTable.SetBool(rowIdentifier, columnDescriptions[j].Identifier,
+                                bool.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.SByte:
+                            dataTable.SetSByte(rowIdentifier, columnDescriptions[j].Identifier,
+                                sbyte.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.Byte:
+                            dataTable.SetByte(rowIdentifier, columnDescriptions[j].Identifier,
+                                byte.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.Short:
+                            dataTable.SetShort(rowIdentifier, columnDescriptions[j].Identifier,
+                                short.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.UShort:
+                            dataTable.SetUShort(rowIdentifier, columnDescriptions[j].Identifier,
+                                ushort.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.Int:
+                            dataTable.SetInt(rowIdentifier, columnDescriptions[j].Identifier, int.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.UInt:
+                            dataTable.SetUInt(rowIdentifier, columnDescriptions[j].Identifier,
+                                uint.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.Long:
+                            dataTable.SetLong(rowIdentifier, columnDescriptions[j].Identifier,
+                                long.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.ULong:
+                            dataTable.SetULong(rowIdentifier, columnDescriptions[j].Identifier,
+                                ulong.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.Float:
+                            dataTable.SetFloat(rowIdentifier, columnDescriptions[j].Identifier,
+                                float.Parse(columnString));
+                            break;
+                        case Serializable.SerializableTypes.Double:
+                            dataTable.SetDouble(rowIdentifier, columnDescriptions[j].Identifier,
+                                double.Parse(columnString));
+                            break;
+                    }
+                }
+            }
+
+            // Remove indices that were not found any more?
+            if (removeRowIfNotFound)
+            {
+                int foundIndicesCount = foundRowInternalIndices.Count;
+                for (int i = 0; i < foundIndicesCount; i++)
+                {
+                    if (previousRowInternalIndices.Contains(foundRowInternalIndices[i]))
+                    {
+                        previousRowInternalIndices.Remove(foundRowInternalIndices[i]);
+                    }
+                }
+
+                int indicesToRemove = previousRowInternalIndices.Count;
+                for (int i = 0; i < indicesToRemove; i++)
+                {
+                    dataTable.RemoveRow(previousRowInternalIndices[i]);
+                }
+            }
+
+            return true;
+        }
+
+        public static bool UpdateFromJavaScriptObjectNotation(this DataTableBase dataTable, string filePath,
+            bool removeRowIfNotFound = true)
+        {
+            if (!File.Exists(filePath))
+            {
+                Debug.LogError($"Unable to find {filePath}.");
+                return false;
+            }
+
+            return UpdateFromJavaScriptObjectNotation(dataTable, File.ReadAllLines(filePath), removeRowIfNotFound);
+        }
+        public static bool UpdateFromJavaScriptObjectNotation(this DataTableBase dataTable, string[] fileContent,
+            bool removeRowIfNotFound = true)
+        {
+            return true;
+        }
+
+         /// <summary>
+        ///     Make a CSV safe version of the provided content.
+        /// </summary>
+        /// <param name="content">The content which needs to be made safe for CSV.</param>
+        /// <returns>A CSV safe value string.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static string MakeCommaSeperatedValue(string content)
+        {
+            if (content == null)
+            {
+                return string.Empty;
+            }
+
+            // Double quote quotes
+            if (content.IndexOf('"') != -1)
+            {
+                content = content.Replace("\"", "\"\"");
+            }
+
+            // Ensure quotes for commas
+            return content.IndexOf(',') != -1 ? $"\"{content}\"" : content;
+        }
+
+        /// <summary>
+        ///     Parse a given <paramref name="line" /> into seperated values.
+        /// </summary>
+        /// <param name="line">The CSV line.</param>
+        /// <returns>An array of string values.</returns>
+        static string[] ParseCommaSeperatedValues(string line)
+        {
+            List<string> returnStrings = new List<string>();
+            int lastIndex = -1;
+            int currentIndex = 0;
+            bool isQuoted = false;
+            int length = line.Length;
+            while (currentIndex < length)
+            {
+                switch (line[currentIndex])
+                {
+                    case '"':
+                        isQuoted = !isQuoted;
+                        break;
+                    case ',':
+                        if (!isQuoted)
+                        {
+                            returnStrings.Add(line.Substring(lastIndex + 1, currentIndex - lastIndex).Trim(' ', ','));
+                            lastIndex = currentIndex;
+                        }
+
+                        break;
+                }
+
+                currentIndex++;
+            }
+
+            if (lastIndex != line.Length - 1)
+            {
+                returnStrings.Add(line.Substring(lastIndex + 1).Trim());
+            }
+
+            return returnStrings.ToArray();
+        }
+
+#if UNITY_2022_2_OR_NEWER
+
+        /// <summary>
+        ///     Sort <see cref="DataTableBase" /> rows based on the provided sorting parameters.
         /// </summary>
         /// <param name="dataTable">The target <see cref="DataTableBase" />.</param>
         /// <param name="columnIdentifiers">The column identifiers to use in order of priority.</param>
@@ -563,6 +586,47 @@ namespace GDX.DataTables
                 }
             }
             return rows;
+        }
+
+         /// <summary>
+        ///     Get the appropriate <see cref="IComparer{T}"/> for a <see cref="DataTableBase"/> column.
+        /// </summary>
+        /// <param name="type">The <see cref="Serializable.SerializableTypes"/> of the column.</param>
+        /// <param name="dataTable">The target <see cref="DataTableBase"/> the column belongs to.</param>
+        /// <param name="rowCount">The number of values to be sorted. This is only used to help pre-size an internal counter used for multi-sort.</param>
+        /// <param name="columnIdentifier">The identifier of the column being sorted.</param>
+        /// <param name="direction">The direction to sort.</param>
+        /// <param name="supportMultiSort">Should the extra multi-sort work be done?</param>
+        /// <returns>A qualified <see cref="IComparer{T}"/> for the column.</returns>
+        static IComparer<RowDescription> GetComparer(Serializable.SerializableTypes type, DataTableBase dataTable,
+            int rowCount, int columnIdentifier, int direction, bool supportMultiSort = false)
+        {
+            if (columnIdentifier == -1 && type == Serializable.SerializableTypes.String)
+                return new RowNameColumnSorter(dataTable, rowCount, -1, direction, supportMultiSort);
+
+            // Default sorters
+            switch (type)
+            {
+                case Serializable.SerializableTypes.Float:
+                    return new FloatColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
+                case Serializable.SerializableTypes.Int:
+                    return new IntColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
+                case Serializable.SerializableTypes.String:
+                    return new StringColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
+                case Serializable.SerializableTypes.Bool:
+                    return new BoolColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
+                case Serializable.SerializableTypes.Double:
+                    return new DoubleColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
+                case Serializable.SerializableTypes.Long:
+                    return new LongColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
+                case Serializable.SerializableTypes.ULong:
+                    return new ULongColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
+                case Serializable.SerializableTypes.UInt:
+                    return new UIntColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
+            }
+
+            Debug.LogError($"Unable to find sorter for requested column type [{type.GetLabel()}].");
+            return null;
         }
 #endif
     }

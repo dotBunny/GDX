@@ -34,6 +34,8 @@ namespace GDX.Editor.Inspectors
         Label m_InterchangeLabel;
         Button m_ExportToCommaSeperatedValuesButton;
         Button m_ImportFromCommaSeperatedValuesButton;
+        Button m_ExportToJavaScriptObjectNotationButton;
+        Button m_ImportFromJavaScriptObjectNotationButton;
         VisualElement m_RootElement;
         Label m_RowDescription;
         Label m_RowLabel;
@@ -129,6 +131,10 @@ namespace GDX.Editor.Inspectors
                 new Button(ExportToCommaSeperatedValues) { text = "Export (CSV)", name = "gdx-datatable-inspector-export-csv" };
             m_ImportFromCommaSeperatedValuesButton =
                 new Button(ImportFromCommaSeperatedValues) { text = "Import (CSV)", name = "gdx-datatable-inspector-import-csv" };
+            m_ExportToJavaScriptObjectNotationButton =
+                new Button(ExportToJavaScriptNotationObjects) { text = "Export (JSON)", name = "gdx-datatable-inspector-export-json" };
+            m_ImportFromJavaScriptObjectNotationButton =
+                new Button(ImportFromJavaScriptNotationObject) { text = "Import (JSON)", name = "gdx-datatable-inspector-import-json" };
 
             m_DataTableTrackerLabel = new Label("Tracker") { name = "gdx-datatable-inspector-tracker-label" };
 
@@ -145,11 +151,18 @@ namespace GDX.Editor.Inspectors
             m_RootElement.Add(m_OpenAssetButton);
 
             m_RootElement.Add(m_InterchangeLabel);
-            VisualElement csvRow = new VisualElement();
-            csvRow.AddToClassList("gdx-datatable-inspector-row");
-            csvRow.Add(m_ExportToCommaSeperatedValuesButton);
-            csvRow.Add(m_ImportFromCommaSeperatedValuesButton);
-            m_RootElement.Add(csvRow);
+
+            VisualElement firstRow = new VisualElement();
+            firstRow.AddToClassList("gdx-datatable-inspector-row");
+            firstRow.Add(m_ExportToCommaSeperatedValuesButton);
+            firstRow.Add(m_ExportToJavaScriptObjectNotationButton);
+            m_RootElement.Add(firstRow);
+
+            VisualElement secondRow = new VisualElement();
+            secondRow.AddToClassList("gdx-datatable-inspector-row");
+            secondRow.Add(m_ImportFromCommaSeperatedValuesButton);
+            secondRow.Add(m_ImportFromJavaScriptObjectNotationButton);
+            m_RootElement.Add(secondRow);
 
             m_RootElement.Add(m_DataTableTrackerLabel);
             m_RootElement.Add(m_DataTableTracker);
@@ -236,43 +249,73 @@ namespace GDX.Editor.Inspectors
 
         void ExportToCommaSeperatedValues()
         {
-            ShowExportDialogForTable((DataTableBase)target);
+            ShowExportDialogForTable(DataTableExtensions.InterchangeFormat.CVS, (DataTableBase)target);
         }
 
         void ImportFromCommaSeperatedValues()
         {
-            ShowImportDialogForTable((DataTableBase)target);
+            ShowImportDialogForTable(DataTableExtensions.InterchangeFormat.CVS, (DataTableBase)target);
+        }
+        void ExportToJavaScriptNotationObjects()
+        {
+            ShowExportDialogForTable(DataTableExtensions.InterchangeFormat.JSON, (DataTableBase)target);
         }
 
-        public static void ShowExportDialogForTable(DataTableBase dataTable)
+        void ImportFromJavaScriptNotationObject()
         {
-            string savePath = EditorUtility.SaveFilePanel($"Export {dataTable.GetDisplayName()} to CSV",
+            ShowImportDialogForTable(DataTableExtensions.InterchangeFormat.JSON, (DataTableBase)target);
+        }
+
+
+        public static void ShowExportDialogForTable(DataTableExtensions.InterchangeFormat format, DataTableBase dataTable)
+        {
+            string formatString = format.ToString();
+            string savePath = EditorUtility.SaveFilePanel($"Export {dataTable.GetDisplayName()} to {formatString}",
                 Application.dataPath,
-                dataTable.name, "csv");
+                dataTable.name, formatString.ToLower());
 
             if (!string.IsNullOrEmpty(savePath))
             {
-                dataTable.ExportToCommaSeperatedValues(savePath);
-                Debug.Log($"'{dataTable.GetDisplayName()}' was exported to CSV at {savePath}");
+                if (format == DataTableExtensions.InterchangeFormat.CVS)
+                {
+                    dataTable.ExportToCommaSeperatedValues(savePath);
+                }
+                else
+                {
+                    dataTable.ExportToJavaScriptObjectNotation(savePath);
+                }
+
+                Debug.Log($"'{dataTable.GetDisplayName()}' was exported to {formatString} at {savePath}");
             }
         }
 
-        public static void ShowImportDialogForTable(DataTableBase dataTable)
+        public static void ShowImportDialogForTable(DataTableExtensions.InterchangeFormat format, DataTableBase dataTable)
         {
-             string openPath = EditorUtility.OpenFilePanel($"Import CSV into {dataTable.GetDisplayName()}",
-                            Application.dataPath,
-                            "csv");
+            string formatString = format.ToString();
+             string openPath = EditorUtility.OpenFilePanel($"Import {formatString} into {dataTable.GetDisplayName()}",
+                            Application.dataPath, formatString.ToLower());
 
             if (!string.IsNullOrEmpty(openPath))
             {
                 if (EditorUtility.DisplayDialog($"Replace '{dataTable.GetDisplayName()}' Content",
-                        "Are you sure you want to replace your tables content with the imported CSV content?\n\nThe structural format of the CSV needs to match the column structure of the existing table; reference types will not replace the data in the existing cells at that location. Make sure the first row contains the column names, and that you have not reordered the rows or columns.",
+                        $"Are you sure you want to replace your tables content with the imported {formatString} content?\n\nThe structural format of the {formatString} needs to match the column structure of the existing table; reference types will not replace the data in the existing cells at that location. Make sure the first row contains the column names, and that you have not altered columns.",
                         "Yes", "No"))
                 {
-                    if (dataTable.UpdateFromCommaSeperatedValues(openPath))
+                    if (format == DataTableExtensions.InterchangeFormat.CVS)
                     {
-                        DataTableTracker.NotifyOfColumnChange(DataTableTracker.GetTicket(dataTable), -1);
+                        if (dataTable.UpdateFromCommaSeperatedValues(openPath))
+                        {
+                            DataTableTracker.NotifyOfColumnChange(DataTableTracker.GetTicket(dataTable), -1);
+                        }
                     }
+                    else
+                    {
+                        if (dataTable.UpdateFromJavaScriptObjectNotation(openPath))
+                        {
+                            DataTableTracker.NotifyOfColumnChange(DataTableTracker.GetTicket(dataTable), -1);
+                        }
+                    }
+
                 }
             }
         }
