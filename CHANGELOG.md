@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extension-based classes now live in the namespace they extend from.
 - Reworked the project settings window to now include some of the recent changelog for visibility.
 - `SimpleListManagedPool` events renamed for consistency to `destroyedItem`, `returnedItem`, `spawnedItem`, `tearingDown`.
 - Explicit callout that `SerializableDictionary` does not support custom struct keys.
