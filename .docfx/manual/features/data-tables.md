@@ -123,21 +123,14 @@ One of the design pillars for the DataTable feature was ensuring the data consum
    public StringCellValue Name;
 ```
 
-Then in the object's inspector, an easy-to-use property drawer is created. When unset, the user is presented with a dropdown of all available tables in the project to select from.
+Then in the object's inspector, an easy-to-use property drawer is created. 
 
-![Table Selection](/images/manual/features/data-table/drawer-select-table.png)
+![Drawer Selection](/images/manual/features/data-table/drawer-process.gif)
 
-A new dropdown is generated with the row names to choose from upon selecting a table.
+When unset, the user is presented with a dropdown of all available tables in the project to select from. A new dropdown is generated with the row names to choose from upon selecting a table. After selecting a row, the type-specific columns of data appear for selection. After all that, the selected data is presented in a locked field. 
 
-![Row Selection](/images/manual/features/data-table/drawer-select-row.png)
-
-After selecting a row, the type-specific columns of data appear for selection.
-
-![Column Selection](/images/manual/features/data-table/drawer-select-column.png)
-
-After all that, the selected data is presented in a locked field. Clicking the lock icon will allow editing the data in the table directly (_seen below_). When Unity serializes this object, only the connection information is serialized.
-
-![Data Linked](/images/manual/features/data-table/drawer-select-edit.png)
+By default, values are locked from editing in this view.
+Clicking the lock icon will allow editing the data in the table directly. When Unity serializes this object, only the connection information is serialized.
 
 > [!TIP]
 > Clicking the link icon at any time will break all connection information.
