@@ -45,7 +45,9 @@ namespace GDX.DataTables
         [SerializeField] internal ArrayHolder<Gradient>[] m_AllGradientColumns;
         [SerializeField] internal ArrayHolder<AnimationCurve>[] m_AllAnimationCurveColumns;
         [SerializeField] internal ArrayHolder<Object>[] m_AllObjectRefColumns;
+        [SerializeField] internal ArrayHolder<int>[] m_AllEnumIntColumns;
         [SerializeField] internal string[] m_AllObjectRefTypeNames;
+        [SerializeField] internal string[] m_AllEnumIntTypeNames;
 
         /// <summary>
         ///     Contains the name of each column of each type. Ordered by Serializable.SerializableTypes
@@ -62,9 +64,8 @@ namespace GDX.DataTables
         [SerializeField] internal int[] m_ColumnIdentifierToSortOrderMap;
         [SerializeField] internal int[] m_SortedOrderToColumnIdentifierMap;
 
-        // TODO @adam move with other block
         [SerializeField]
-        ArrayHolder<int>[] m_ColumnDenseIndexToIDMap = new ArrayHolder<int>[Serializable.SerializableTypesCount];
+        internal ArrayHolder<int>[] m_ColumnDenseIndexToIDMap = new ArrayHolder<int>[Serializable.SerializableTypesCount];
 
         [SerializeField] internal int m_ColumnEntriesFreeListHead;
         [SerializeField] internal int m_CombinedColumnCount;
@@ -731,6 +732,10 @@ namespace GDX.DataTables
                     return AddColumnInternal(columnName, ref m_AllObjectRefColumns,
                         Serializable.SerializableTypes.Object,
                         insertAtColumnIdentifier);
+                case Serializable.SerializableTypes.EnumInt:
+                    return AddColumnInternal(columnName, ref m_AllEnumIntColumns,
+                        Serializable.SerializableTypes.EnumInt,
+                        insertAtColumnIdentifier);
             }
 
             return -1;
@@ -843,6 +848,10 @@ namespace GDX.DataTables
                     break;
                 case Serializable.SerializableTypes.Object:
                     RemoveColumnInternal(ref m_AllObjectRefColumns, Serializable.SerializableTypes.Object,
+                        columnIdentifier);
+                    break;
+                case Serializable.SerializableTypes.EnumInt:
+                    RemoveColumnInternal(ref m_AllEnumIntColumns, Serializable.SerializableTypes.EnumInt,
                         columnIdentifier);
                     break;
             }
@@ -1033,17 +1042,38 @@ namespace GDX.DataTables
         /// <inheritdoc />
         public override void SetTypeNameForColumn(int columnIdentifier, string assemblyQualifiedName)
         {
-            AssertObjectColumnIDValid(columnIdentifier);
-            int denseIndex = m_ColumnIdentifierToDenseIndexMap[columnIdentifier].ColumnDenseIndex;
-            m_AllObjectRefTypeNames[denseIndex] = assemblyQualifiedName;
+            ref ColumnEntry entry = ref m_ColumnIdentifierToDenseIndexMap[columnIdentifier];
+
+            if (entry.ColumnType == Serializable.SerializableTypes.Object)
+            {
+                m_AllObjectRefTypeNames[entry.ColumnDenseIndex] = assemblyQualifiedName;
+            }
+            else if (entry.ColumnType == Serializable.SerializableTypes.EnumInt)
+            {
+                m_AllEnumIntTypeNames[entry.ColumnDenseIndex] = assemblyQualifiedName;
+            }
+            else
+            {
+                throw new NotSupportedException("Type name overloads are only supported for types inheriting from UnityEngine.Object or from System.Enum");
+            }
         }
 
         /// <inheritdoc />
         public override string GetTypeNameForColumn(int columnIdentifier)
         {
-            AssertObjectColumnIDValid(columnIdentifier);
-            int denseIndex = m_ColumnIdentifierToDenseIndexMap[columnIdentifier].ColumnDenseIndex;
-            return m_AllObjectRefTypeNames[denseIndex];
+            ref ColumnEntry entry = ref m_ColumnIdentifierToDenseIndexMap[columnIdentifier];
+            int denseIndex = entry.ColumnDenseIndex;
+
+            if (entry.ColumnType == Serializable.SerializableTypes.Object)
+            {
+                return m_AllObjectRefTypeNames[entry.ColumnDenseIndex];
+            }
+            else if(entry.ColumnType == Serializable.SerializableTypes.EnumInt)
+            {
+                return m_AllEnumIntTypeNames[entry.ColumnDenseIndex];
+            }
+
+            throw new NotSupportedException("Type name overloads are only supported for types inheriting from UnityEngine.Object or from System.Enum");
         }
 
         // Get
@@ -1695,27 +1725,18 @@ namespace GDX.DataTables
 
         // Internal
 
-        internal void AddTypeNameEntryForUnityObjectColumn()
+        internal void AddTypeNameEntry(ref string[] typeNames, string defaultString)
         {
-            int nameArrayLength = m_AllObjectRefTypeNames?.Length ?? 0;
-            Array.Resize(ref m_AllObjectRefTypeNames, nameArrayLength + 1);
-            m_AllObjectRefTypeNames[nameArrayLength] = Reflection.UnityObjectName;
+            int nameArrayLength = typeNames?.Length ?? 0;
+            Array.Resize(ref typeNames, nameArrayLength + 1);
+            typeNames[nameArrayLength] = defaultString;
         }
 
-        internal void RemoveTypeNameEntryForUnityObjectColumn(int columnDenseIndex)
+        internal void RemoveTypeNameEntry(int columnDenseIndex, ref string[] typeNames)
         {
-            int nameArrayLength = m_AllObjectRefTypeNames?.Length ?? 0;
-            m_AllObjectRefTypeNames[columnDenseIndex] = m_AllObjectRefTypeNames[nameArrayLength];
-            Array.Resize(ref m_AllObjectRefTypeNames, nameArrayLength - 1);
-        }
-
-        internal void AssertObjectColumnIDValid(int columnID)
-        {
-            AssertColumnIdentifierValid(columnID);
-            if (m_ColumnIdentifierToDenseIndexMap[columnID].ColumnType != Serializable.SerializableTypes.Object)
-            {
-                throw new ArgumentException("Column ID must correspond to a UnityEngine.Object column.");
-            }
+            int nameArrayLength = typeNames?.Length ?? 0;
+            typeNames[columnDenseIndex] = typeNames[nameArrayLength];
+            Array.Resize(ref typeNames, nameArrayLength - 1);
         }
 
         internal int AddColumnInternal<T>(string columnName, ref ArrayHolder<T>[] allColumnsOfType,
@@ -1783,7 +1804,12 @@ namespace GDX.DataTables
 
             if (typeIndex == Serializable.SerializableTypes.Object)
             {
-                AddTypeNameEntryForUnityObjectColumn();
+                AddTypeNameEntry(ref m_AllObjectRefTypeNames, "UnityEngine.Object");
+            }
+
+            if (typeIndex == Serializable.SerializableTypes.EnumInt)
+            {
+                AddTypeNameEntry(ref m_AllEnumIntTypeNames, "System.Int32");
             }
 
             m_ColumnIdentifierToSortOrderMap[columnID] = insertAtSortedIndex;
@@ -1826,7 +1852,12 @@ namespace GDX.DataTables
 
             if (typeIndex == Serializable.SerializableTypes.Object)
             {
-                RemoveTypeNameEntryForUnityObjectColumn(columnLocation);
+                RemoveTypeNameEntry(columnLocation, ref m_AllObjectRefTypeNames);
+            }
+
+            if (typeIndex == Serializable.SerializableTypes.EnumInt)
+            {
+                RemoveTypeNameEntry(columnLocation, ref m_AllObjectRefTypeNames);
             }
 
             for (int i = columnOrder + 1; i < m_CombinedColumnCount; i++)

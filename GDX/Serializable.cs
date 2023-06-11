@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -75,8 +75,7 @@ namespace GDX
             EnumInt
         }
 
-        // TODO: @adam change this to 30 once EnumInt implemented
-        public const int SerializableTypesCount = 29;
+        public const int SerializableTypesCount = 30;
 
         public static string GetLabel(this SerializableTypes serializableType)
         {
