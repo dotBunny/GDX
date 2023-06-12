@@ -1890,7 +1890,7 @@ namespace GDX.DataTables
 
             if (typeIndex == Serializable.SerializableTypes.EnumInt)
             {
-                RemoveTypeNameEntry(columnLocation, ref m_AllObjectRefTypeNames);
+                RemoveTypeNameEntry(columnLocation, ref m_AllEnumIntTypeNames);
             }
 
             for (int i = columnOrder + 1; i < m_CombinedColumnCount; i++)
