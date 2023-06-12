@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using GDX.Collections;
 using UnityEngine;
 
 namespace GDX.DataTables
@@ -16,19 +15,19 @@ namespace GDX.DataTables
     [Serializable]
     public class DataTableJson
     {
-        [Serializable]
-        public class DataTableJsonRow
-        {
-            public int Identifier = -1;
-            public string Name;
-            public string[] Data;
-            public DataTableJsonRow(int columns)
-            {
-                Data = new string[columns];
-            }
-        }
+        /// <summary>
+        ///     The column names.
+        /// </summary>
         public string[] Headers;
+
+        /// <summary>
+        ///     The column types.
+        /// </summary>
         public string[] Types;
+
+        /// <summary>
+        ///     The row data.
+        /// </summary>
         public DataTableJsonRow[] Rows;
 
         /// <summary>
@@ -60,7 +59,10 @@ namespace GDX.DataTables
             {
                 RowDescription rowDescription = rowDescriptions[i];
 
-                Rows[i] = new DataTableJsonRow(columnCount) { Identifier = rowDescription.Identifier, Name = rowDescription.Name };
+                Rows[i] = new DataTableJsonRow(columnCount)
+                {
+                    Identifier = rowDescription.Identifier, Name = rowDescription.Name
+                };
 
                 for (int c = 0; c < columnCount; c++)
                 {
@@ -72,11 +74,24 @@ namespace GDX.DataTables
             }
         }
 
+        /// <summary>
+        ///     Creates the JavaScript Object Notation string for the object.
+        /// </summary>
+        /// <returns>A JSON <see cref="string" />.</returns>
         public override string ToString()
         {
             return JsonUtility.ToJson(this);
         }
 
+        /// <summary>
+        ///     Update the target <paramref name="dataTable" /> based on the data found in the <see cref="DataTableJson" />
+        /// </summary>
+        /// <param name="dataTable">The <see cref="DataTableBase" /> to update.</param>
+        /// <param name="removeRowIfNotFound">
+        ///     Should rows not found in the <see cref="DataTableJson" /> be removed from the
+        ///     <see cref="DataTableBase" />.
+        /// </param>
+        /// <returns>Was this operation successful?</returns>
         public bool Update(DataTableBase dataTable, bool removeRowIfNotFound = true)
         {
             int tableRowCount = dataTable.GetRowCount();
@@ -155,9 +170,38 @@ namespace GDX.DataTables
             return true;
         }
 
+        /// <summary>
+        ///     Create a <see cref="DataTableJson" /> object based on the provided JSON.
+        /// </summary>
+        /// <param name="jsonContent">A JSON-compliant<see cref="string" /> to parse.</param>
+        /// <returns>A <see cref="DataTableJson" /> object.</returns>
         public static DataTableJson Create(string jsonContent)
         {
             return JsonUtility.FromJson<DataTableJson>(jsonContent);
+        }
+
+        [Serializable]
+        public class DataTableJsonRow
+        {
+            /// <summary>
+            ///     The unique row identifier.
+            /// </summary>
+            public int Identifier = -1;
+
+            /// <summary>
+            ///     The row's user-friendly name.
+            /// </summary>
+            public string Name;
+
+            /// <summary>
+            ///     The row's data.
+            /// </summary>
+            public string[] Data;
+
+            public DataTableJsonRow(int columns)
+            {
+                Data = new string[columns];
+            }
         }
     }
 }

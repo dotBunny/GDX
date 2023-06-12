@@ -32,6 +32,12 @@ namespace GDX
         public static readonly string UnityObjectName = typeof(UnityEngine.Object).AssemblyQualifiedName;
 
         /// <summary>
+        ///     The assembly qualified name for <see cref="Serializable.SerializableTypes" />
+        /// </summary>
+        public static readonly string SerializedTypesName =
+            typeof(Serializable.SerializableTypes).AssemblyQualifiedName;
+
+        /// <summary>
         ///     Returns the default value for a given type.
         /// </summary>
         /// <param name="type">A qualified type.</param>

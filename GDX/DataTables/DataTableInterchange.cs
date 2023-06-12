@@ -11,14 +11,26 @@ using TextGenerator = GDX.Developer.TextGenerator;
 
 namespace GDX.DataTables
 {
+    /// <summary>
+    ///     Data translation functionality for <see cref="DataTableBase"/>.
+    /// </summary>
     public static class DataTableInterchange
     {
+        /// <summary>
+        ///     Supported interchange formats.
+        /// </summary>
         public enum Format
         {
             CommaSeperatedValues,
             JavaScriptObjectNotation
         }
 
+        /// <summary>
+        ///     Export the content of a given <see cref="DataTableBase"/> to a target format.
+        /// </summary>
+        /// <param name="dataTable">The <see cref="DataTableBase"/></param>
+        /// <param name="format"></param>
+        /// <param name="filePath"></param>
         public static void Export(DataTableBase dataTable, Format format, string filePath)
         {
             if (format == Format.JavaScriptObjectNotation)

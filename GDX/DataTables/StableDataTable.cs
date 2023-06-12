@@ -891,8 +891,7 @@ namespace GDX.DataTables
         /// <inheritdoc />
         public override ulong SetEnumInt(int rowIdentifier, int columnIdentifier, int newValue)
         {
-            // TODO: @adam
-            throw new NotImplementedException();
+            return SetCell(rowIdentifier, columnIdentifier, ref m_AllEnumIntColumns, newValue);
         }
 
         /// <inheritdoc />
@@ -1098,8 +1097,7 @@ namespace GDX.DataTables
         /// <inheritdoc />
         public override int GetEnumInt(int rowIdentifier, int columnIdentifier)
         {
-            // TODO: @adam
-            throw new NotImplementedException();
+            return GetCell(rowIdentifier, columnIdentifier, ref m_AllEnumIntColumns);
         }
 
         /// <inheritdoc />

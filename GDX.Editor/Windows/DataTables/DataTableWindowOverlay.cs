@@ -167,7 +167,7 @@ namespace GDX.Editor.Windows.DataTables
             switch ((Serializable.SerializableTypes)type)
             {
                 case Serializable.SerializableTypes.EnumInt:
-                    m_AddColumnFilter.value = "GDX.Serializable.SerializableTypes";
+                    m_AddColumnFilter.value = Reflection.SerializedTypesName;
                     m_AddColumnFilter.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     break;

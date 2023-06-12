@@ -18,6 +18,11 @@ namespace GDX.DataTables.CellValues
         int m_CachedValue;
 
         /// <summary>
+        ///     A cached type for reference at runtime.
+        /// </summary>
+        Type m_CachedType;
+
+        /// <summary>
         ///     The cached <see cref="DataTable" /> version found when last updating <see cref="m_CachedValue" />.
         /// </summary>
         ulong m_TableVersion;
@@ -53,6 +58,7 @@ namespace GDX.DataTables.CellValues
             ColumnIdentifier = columnIdentifier;
             m_TableVersion = 0;
             m_CachedValue = default;
+            m_CachedType = null;
             Get();
         }
 
@@ -64,7 +70,7 @@ namespace GDX.DataTables.CellValues
         ///     the cached reference if necessary.
         /// </remarks>
         /// <returns>A <see cref="float" /> value.</returns>
-        public float Get()
+        public int Get()
         {
             if (m_TableVersion == DataTable.GetDataVersion())
             {
@@ -74,6 +80,22 @@ namespace GDX.DataTables.CellValues
             m_CachedValue = DataTable.GetEnumInt(RowIdentifier, ColumnIdentifier);
             m_TableVersion = DataTable.GetDataVersion();
             return m_CachedValue;
+        }
+
+        /// <summary>
+        /// Get the <see cref="Enum"/> value of the <see cref="DataTableBase"/> cell's value.
+        /// </summary>
+        /// <remarks>Values are stored as <see cref="int"/>, there are some cases where having the <see cref="Enum"/> could be useful.</remarks>
+        /// <returns>The transposed value.</returns>
+        public Enum GetEnum()
+        {
+            m_CachedType ??= Type.GetType(DataTable.GetTypeNameForColumn(ColumnIdentifier));
+
+            if (m_CachedType != null)
+            {
+                return (Enum)Enum.Parse(m_CachedType, Get().ToString());
+            }
+            return null;
         }
 
         /// <summary>
