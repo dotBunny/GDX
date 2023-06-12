@@ -75,10 +75,45 @@ namespace GDX.DataTables
 #pragma warning restore IDE1006
 
 
+        /// <summary>
+        ///     Version of internal structure format.
+        /// </summary>
+        /// <remarks>Bump this if you make a change that requires resizing of arrays.</remarks>
+        [SerializeField] internal int m_StructureVersion = 1;
+
         /// <inheritdoc />
         public override ulong GetDataVersion()
         {
             return m_DataVersion;
+        }
+
+        /// <inheritdoc />
+        public override int GetStructureVersion()
+        {
+            return m_StructureVersion;
+        }
+
+        /// <inheritdoc />
+        public override int GetStructureCurrentVersion()
+        {
+            return 1;
+        }
+
+        public override bool Migrate(int currentVersion)
+        {
+            switch (m_StructureVersion)
+            {
+                case 0:
+                    // Pre EnumInt
+                    if (currentVersion >= 0)
+                    {
+                        Array.Resize(ref m_AllColumnNames, 30);
+                        Array.Resize(ref m_ColumnDenseIndexToIDMap, 30);
+                    }
+                    m_StructureVersion = currentVersion;
+                    break;
+            }
+            return (m_StructureVersion == currentVersion);
         }
 
         /// <inheritdoc />

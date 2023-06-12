@@ -168,6 +168,22 @@ namespace GDX.Editor.Inspectors
             DataTableTracker.AddUsage(m_TableTicket);
             m_Bound = true;
 
+            int currentStructureVersion = dataTable.GetStructureCurrentVersion();
+            int tableStructureVersion = dataTable.GetStructureVersion();
+
+            if (currentStructureVersion != tableStructureVersion)
+            {
+                if (dataTable.Migrate(currentStructureVersion))
+                {
+                    Debug.Log($"Migrated {dataTable.GetDisplayName()} from Structure version {tableStructureVersion.ToString()} to version {currentStructureVersion.ToString()}.");
+                    AssetDatabase.SaveAssetIfDirty(dataTable);
+                }
+                else
+                {
+                    Debug.LogWarning($"Attempted to migrate {dataTable.GetDisplayName()} from Structure version {tableStructureVersion.ToString()} to version {currentStructureVersion.ToString()}.");
+                }
+            }
+
             UpdateInspector();
 
             m_RootElement.RegisterCallback<DetachFromPanelEvent>(_ => Unbind());

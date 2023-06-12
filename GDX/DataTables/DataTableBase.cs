@@ -73,6 +73,28 @@ namespace GDX.DataTables
         public abstract ulong GetDataVersion();
 
         /// <summary>
+        ///     Get the internally stored structure version for the <see cref="DataTableBase"/>.
+        /// </summary>
+        /// <remarks>
+        ///     Think of this as format version, if the internals change and the table needs to be updated this is the indicator for old data.
+        /// </remarks>
+        /// <returns>The structure version number.</returns>
+        public abstract int GetStructureVersion();
+
+        /// <summary>
+        ///     Get the current structure version for the <see cref="DataTableBase"/> class itself.
+        /// </summary>
+        /// <returns>The structure version number.</returns>
+        public abstract int GetStructureCurrentVersion();
+
+        /// <summary>
+        ///     Applies migration logic used to upgrade previous implementations of a <see cref="DataTableBase"/>.
+        /// </summary>
+        /// <param name="currentVersion">The current version of a <see cref="DataTableBase"/> format.</param>
+        /// <returns>Was the migration successful?</returns>
+        public abstract bool Migrate(int currentVersion);
+
+        /// <summary>
         ///     Returns the number of columns in the <see cref="!:ITable" />.
         /// </summary>
         /// <returns>A count of columns.</returns>
