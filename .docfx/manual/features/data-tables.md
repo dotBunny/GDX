@@ -33,7 +33,7 @@ Clicking the **Open** button will open an editing window focused on the selected
 
 ### Interchange
 
-The DataTableBase allows for interchange between formats, export and non-destructive table data import. What this means in practice is that you can export an already-built table and make changes in whatever editing program a user desires. Those changes can then be re-imported back into Unity, maintaining existing references (an example being an object column referencing prefabs).
+The DataTableBase allows for interchange between formats (CSV & JSON); export and non-destructive table data import. What this means in practice is that you can export an already-built table and make changes in whatever editing program a user desires. Those changes can then be re-imported back into Unity, maintaining existing references (an example being an object column referencing prefabs).
 
 > [!WARNING]
 > It is important to note that the column structure (order and types) cannot change in the imported data. The row identifiers will be used to match up rows, updating where appropriate, creating when necessary, and removing when no longer found.

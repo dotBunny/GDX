@@ -33,7 +33,7 @@ namespace GDX.DataTables
         /// <returns>A user-friendly string representation of the <see cref="ColumnDescription"/>.</returns>
         public override string ToString()
         {
-            return $"{Name} [{Serializable.GetSerializableTypesLabel((int)Type)}]";
+            return $"{Name} [{Serializable.GetLabelFromTypeValue((int)Type)}]";
         }
     }
 }

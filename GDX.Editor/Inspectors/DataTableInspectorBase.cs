@@ -33,9 +33,8 @@ namespace GDX.Editor.Inspectors
         Button m_OpenAssetButton;
         Label m_InterchangeLabel;
         Button m_ExportToCommaSeperatedValuesButton;
-        Button m_ImportFromCommaSeperatedValuesButton;
+        Button m_ImportButton;
         Button m_ExportToJavaScriptObjectNotationButton;
-        Button m_ImportFromJavaScriptObjectNotationButton;
         VisualElement m_RootElement;
         Label m_RowDescription;
         Label m_RowLabel;
@@ -129,12 +128,10 @@ namespace GDX.Editor.Inspectors
             m_InterchangeLabel.AddToClassList("gdx-datatable-inspector-label");
             m_ExportToCommaSeperatedValuesButton =
                 new Button(ExportToCommaSeperatedValues) { text = "Export (CSV)", name = "gdx-datatable-inspector-export-csv" };
-            m_ImportFromCommaSeperatedValuesButton =
-                new Button(ImportFromCommaSeperatedValues) { text = "Import (CSV)", name = "gdx-datatable-inspector-import-csv" };
+            m_ImportButton =
+                new Button(Import) { text = "Import", name = "gdx-datatable-inspector-import" };
             m_ExportToJavaScriptObjectNotationButton =
                 new Button(ExportToJavaScriptNotationObjects) { text = "Export (JSON)", name = "gdx-datatable-inspector-export-json" };
-            m_ImportFromJavaScriptObjectNotationButton =
-                new Button(ImportFromJavaScriptNotationObject) { text = "Import (JSON)", name = "gdx-datatable-inspector-import-json" };
 
             m_DataTableTrackerLabel = new Label("Tracker") { name = "gdx-datatable-inspector-tracker-label" };
 
@@ -160,8 +157,7 @@ namespace GDX.Editor.Inspectors
 
             VisualElement secondRow = new VisualElement();
             secondRow.AddToClassList("gdx-datatable-inspector-row");
-            secondRow.Add(m_ImportFromCommaSeperatedValuesButton);
-            secondRow.Add(m_ImportFromJavaScriptObjectNotationButton);
+            secondRow.Add(m_ImportButton);
             m_RootElement.Add(secondRow);
 
             m_RootElement.Add(m_DataTableTrackerLabel);
@@ -244,78 +240,90 @@ namespace GDX.Editor.Inspectors
 
 
             m_ExportToCommaSeperatedValuesButton.SetEnabled(columnCount > 0);
-            m_ImportFromCommaSeperatedValuesButton.SetEnabled(columnCount > 0);
+            m_ImportButton.SetEnabled(columnCount > 0);
         }
 
         void ExportToCommaSeperatedValues()
         {
-            ShowExportDialogForTable(DataTableExtensions.InterchangeFormat.CVS, (DataTableBase)target);
+            ShowExportDialogForTable(DataTableInterchange.Format.CommaSeperatedValues, (DataTableBase)target);
         }
 
-        void ImportFromCommaSeperatedValues()
+        void Import()
         {
-            ShowImportDialogForTable(DataTableExtensions.InterchangeFormat.CVS, (DataTableBase)target);
+            ShowImportDialogForTable((DataTableBase)target);
         }
+
         void ExportToJavaScriptNotationObjects()
         {
-            ShowExportDialogForTable(DataTableExtensions.InterchangeFormat.JSON, (DataTableBase)target);
-        }
-
-        void ImportFromJavaScriptNotationObject()
-        {
-            ShowImportDialogForTable(DataTableExtensions.InterchangeFormat.JSON, (DataTableBase)target);
+            ShowExportDialogForTable(DataTableInterchange.Format.JavaScriptObjectNotation, (DataTableBase)target);
         }
 
 
-        public static void ShowExportDialogForTable(DataTableExtensions.InterchangeFormat format, DataTableBase dataTable)
+        public static void ShowExportDialogForTable(DataTableInterchange.Format format, DataTableBase dataTable)
         {
-            string formatString = format.ToString();
-            string savePath = EditorUtility.SaveFilePanel($"Export {dataTable.GetDisplayName()} to {formatString}",
-                Application.dataPath,
-                dataTable.name, formatString.ToLower());
+
+            string savePath;
+            if (format == DataTableInterchange.Format.CommaSeperatedValues)
+            {
+                savePath = EditorUtility.SaveFilePanel($"Export {dataTable.GetDisplayName()} to CSV",
+                    Application.dataPath,
+                    dataTable.name, "csv");
+            }
+            else
+            {
+                savePath = EditorUtility.SaveFilePanel($"Export {dataTable.GetDisplayName()} to JSON",
+                    Application.dataPath,
+                    dataTable.name, "json");
+            }
+
 
             if (!string.IsNullOrEmpty(savePath))
             {
-                if (format == DataTableExtensions.InterchangeFormat.CVS)
+                if (format == DataTableInterchange.Format.CommaSeperatedValues)
                 {
-                    dataTable.ExportToCommaSeperatedValues(savePath);
+                    DataTableInterchange.Export(dataTable, DataTableInterchange.Format.CommaSeperatedValues, savePath);
                 }
                 else
                 {
-                    dataTable.ExportToJavaScriptObjectNotation(savePath);
+                    DataTableInterchange.Export(dataTable, DataTableInterchange.Format.JavaScriptObjectNotation,
+                        savePath);
                 }
-
-                Debug.Log($"'{dataTable.GetDisplayName()}' was exported to {formatString} at {savePath}");
+                Debug.Log($"'{dataTable.GetDisplayName()}' was exported to {savePath}.");
             }
         }
 
-        public static void ShowImportDialogForTable(DataTableExtensions.InterchangeFormat format, DataTableBase dataTable)
+        public static void ShowImportDialogForTable(DataTableBase dataTable)
         {
-            string formatString = format.ToString();
-             string openPath = EditorUtility.OpenFilePanel($"Import {formatString} into {dataTable.GetDisplayName()}",
-                            Application.dataPath, formatString.ToLower());
+            string openPath = EditorUtility.OpenFilePanelWithFilters($"Import into {dataTable.GetDisplayName()}",
+                Application.dataPath, new[] { "JSON", "json", "CSV", "csv" });
 
-            if (!string.IsNullOrEmpty(openPath))
+            if (string.IsNullOrEmpty(openPath))
             {
-                if (EditorUtility.DisplayDialog($"Replace '{dataTable.GetDisplayName()}' Content",
-                        $"Are you sure you want to replace your tables content with the imported {formatString} content?\n\nThe structural format of the {formatString} needs to match the column structure of the existing table; reference types will not replace the data in the existing cells at that location. Make sure the first row contains the column names, and that you have not altered columns.",
-                        "Yes", "No"))
-                {
-                    if (format == DataTableExtensions.InterchangeFormat.CVS)
-                    {
-                        if (dataTable.UpdateFromCommaSeperatedValues(openPath))
-                        {
-                            DataTableTracker.NotifyOfColumnChange(DataTableTracker.GetTicket(dataTable), -1);
-                        }
-                    }
-                    else
-                    {
-                        if (dataTable.UpdateFromJavaScriptObjectNotation(openPath))
-                        {
-                            DataTableTracker.NotifyOfColumnChange(DataTableTracker.GetTicket(dataTable), -1);
-                        }
-                    }
+                return;
+            }
 
+            string extension = System.IO.Path.GetExtension(openPath).ToLower();
+            DataTableInterchange.Format format;
+            switch (extension)
+            {
+                case ".csv":
+                    format = DataTableInterchange.Format.CommaSeperatedValues;
+                    break;
+                case ".json":
+                    format = DataTableInterchange.Format.JavaScriptObjectNotation;
+                    break;
+                default:
+                    Debug.LogError($"Unrecognized format extension '{extension}'.");
+                    return;
+            }
+
+            if (EditorUtility.DisplayDialog($"Replace '{dataTable.GetDisplayName()}' Content",
+                    $"Are you sure you want to replace your tables content with the imported content?\n\nThe structural format of the content needs to match the column structure of the existing table; reference types will not replace the data in the existing cells at that location. Make sure the first row contains the column names, and that you have not altered columns.",
+                    "Yes", "No"))
+            {
+                if (DataTableInterchange.Import(dataTable, format, openPath))
+                {
+                    DataTableTracker.NotifyOfColumnChange(DataTableTracker.GetTicket(dataTable), -1);
                 }
             }
         }

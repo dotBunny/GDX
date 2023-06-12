@@ -26,6 +26,11 @@
     flex-shrink: 1;
 }
 
+#gdx-datatable-inspector-import
+{
+    margin-top: 5px;
+}
+
 #gdx-datatable-refresh {
     border-width: 1px;
     padding: 0;

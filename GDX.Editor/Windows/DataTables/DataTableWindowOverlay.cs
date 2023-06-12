@@ -91,8 +91,8 @@ namespace GDX.Editor.Windows.DataTables
                 typeValues.Add(i);
             }
             m_AddColumnType =
-                new PopupField<int>(typeValues, 0, Serializable.GetSerializableTypesLabel,
-                    Serializable.GetSerializableTypesLabel) { label = "Type", name = "gdx-table-column-type" };
+                new PopupField<int>(typeValues, 0, Serializable.GetLabelFromTypeValue,
+                    Serializable.GetLabelFromTypeValue) { label = "Type", name = "gdx-table-column-type" };
             m_AddColumnType.RegisterValueChangedCallback(e =>
             {
                 UpdateAddColumnBasedOnType(e.newValue);

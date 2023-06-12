@@ -11,7 +11,7 @@ namespace GDX.Collections
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]
-    public  struct ArrayHolder<T>
+    public struct ArrayHolder<T>
     {
         public T[] TArray;
 
