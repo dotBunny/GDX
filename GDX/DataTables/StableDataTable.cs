@@ -1768,7 +1768,7 @@ namespace GDX.DataTables
         internal void RemoveTypeNameEntry(int columnDenseIndex, ref string[] typeNames)
         {
             int nameArrayLength = typeNames?.Length ?? 0;
-            typeNames[columnDenseIndex] = typeNames[nameArrayLength];
+            typeNames[columnDenseIndex] = typeNames[nameArrayLength - 1];
             Array.Resize(ref typeNames, nameArrayLength - 1);
         }
 
