@@ -21,5 +21,13 @@ namespace GDX.Editor
             Trace.Output(Trace.TraceLevel.Info, $"Resource Audit written to {outputPath}.");
             Application.OpenURL(outputPath);
         }
+
+#if GDX_TOOLS
+        [UnityEditor.MenuItem("Tools/GDX/Developer/Force Reserialize Assets", false, 100)]
+#endif // GDX_TOOLS
+        static void ForceReserializeAssets()
+        {
+            UnityEditor.AssetDatabase.ForceReserializeAssets();
+        }
     }
 }
