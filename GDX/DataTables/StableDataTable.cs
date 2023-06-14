@@ -400,6 +400,7 @@ namespace GDX.DataTables
             InsertRowsOfTypeInternal(ref m_AllGradientColumns, insertAt, 1);
             InsertRowsOfTypeInternal(ref m_AllAnimationCurveColumns, insertAt, 1);
             InsertRowsOfTypeInternal(ref m_AllObjectRefColumns, insertAt, 1);
+            InsertRowsOfTypeInternal(ref m_AllEnumIntColumns, insertAt, 1);
 
             ++m_RowCount;
             m_DataVersion++;
@@ -507,6 +508,7 @@ namespace GDX.DataTables
             InsertRowsOfTypeInternal(ref m_AllGradientColumns, insertAt, numberOfNewRows);
             InsertRowsOfTypeInternal(ref m_AllAnimationCurveColumns, insertAt, numberOfNewRows);
             InsertRowsOfTypeInternal(ref m_AllObjectRefColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref m_AllEnumIntColumns, insertAt, numberOfNewRows);
 
             m_RowCount += numberOfNewRows;
             m_DataVersion++;
@@ -611,6 +613,7 @@ namespace GDX.DataTables
             InsertRowsOfTypeInternal(ref m_AllGradientColumns, insertAt, numberOfNewRows);
             InsertRowsOfTypeInternal(ref m_AllAnimationCurveColumns, insertAt, numberOfNewRows);
             InsertRowsOfTypeInternal(ref m_AllObjectRefColumns, insertAt, numberOfNewRows);
+            InsertRowsOfTypeInternal(ref m_AllEnumIntColumns, insertAt, numberOfNewRows);
 
             m_RowCount += numberOfNewRows;
             m_DataVersion++;
@@ -663,6 +666,7 @@ namespace GDX.DataTables
             DeleteRowsOfTypeInternal(ref m_AllGradientColumns, rowDenseIndex, 1);
             DeleteRowsOfTypeInternal(ref m_AllAnimationCurveColumns, rowDenseIndex, 1);
             DeleteRowsOfTypeInternal(ref m_AllObjectRefColumns, rowDenseIndex, 1);
+            DeleteRowsOfTypeInternal(ref m_AllEnumIntColumns, rowDenseIndex, 1);
 
             --m_RowCount;
             m_DataVersion++;
@@ -1680,6 +1684,7 @@ namespace GDX.DataTables
             SetRowOrderForColumns(m_AllGradientColumns, oldSortOrder, newSortOrder);
             SetRowOrderForColumns(m_AllAnimationCurveColumns, oldSortOrder, newSortOrder);
             SetRowOrderForColumns(m_AllObjectRefColumns, oldSortOrder, newSortOrder);
+            SetRowOrderForColumns(m_AllEnumIntColumns, oldSortOrder, newSortOrder);
         }
 
         /// <inheritdoc />
@@ -1716,6 +1721,7 @@ namespace GDX.DataTables
             ReSortRows(m_AllGradientColumns, orderedRowIdentifiers);
             ReSortRows(m_AllAnimationCurveColumns, orderedRowIdentifiers);
             ReSortRows(m_AllObjectRefColumns, orderedRowIdentifiers);
+            ReSortRows(m_AllEnumIntColumns, orderedRowIdentifiers);
 
             int namesCount = m_RowNames?.Length ?? 0;
             string[] newNames = new string[namesCount];
