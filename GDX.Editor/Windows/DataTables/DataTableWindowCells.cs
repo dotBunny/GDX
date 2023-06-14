@@ -28,7 +28,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             StringCellValue cellValue =
-                new StringCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new StringCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -52,7 +52,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             CharCellValue cellValue =
-                new CharCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new CharCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe().ToString());
@@ -76,7 +76,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             BoolCellValue cellValue =
-                new BoolCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new BoolCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -100,7 +100,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             SByteCellValue cellValue =
-                new SByteCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new SByteCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -124,7 +124,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             ByteCellValue cellValue =
-                new ByteCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new ByteCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -148,7 +148,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             ShortCellValue cellValue =
-                new ShortCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new ShortCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -172,7 +172,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             UShortCellValue cellValue =
-                new UShortCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new UShortCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -196,7 +196,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             IntCellValue cellValue =
-                new IntCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new IntCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -224,7 +224,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             UIntCellValue cellValue =
-                new UIntCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new UIntCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
 #if UNITY_2022_3_OR_NEWER
@@ -256,7 +256,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             LongCellValue cellValue =
-                new LongCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new LongCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -284,7 +284,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             ULongCellValue cellValue =
-                new ULongCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new ULongCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
 
@@ -317,7 +317,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             FloatCellValue cellValue =
-                new FloatCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new FloatCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -341,7 +341,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             DoubleCellValue cellValue =
-                new DoubleCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new DoubleCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -365,7 +365,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             Vector2CellValue cellValue =
-                new Vector2CellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new Vector2CellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -389,7 +389,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             Vector3CellValue cellValue =
-                new Vector3CellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new Vector3CellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -413,7 +413,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             Vector4CellValue cellValue =
-                new Vector4CellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new Vector4CellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -438,7 +438,7 @@ namespace GDX.Editor.Windows.DataTables
 
             Vector2IntCellValue cellValue =
                 new Vector2IntCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier,
-                    map.ColumnID);
+                    map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -463,7 +463,7 @@ namespace GDX.Editor.Windows.DataTables
 
             Vector3IntCellValue cellValue =
                 new Vector3IntCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier,
-                    map.ColumnID);
+                    map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -488,7 +488,7 @@ namespace GDX.Editor.Windows.DataTables
 
             QuaternionCellValue cellValue =
                 new QuaternionCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier,
-                    map.ColumnID);
+                    map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             // Figure it out
@@ -517,7 +517,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             RectCellValue cellValue =
-                new RectCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new RectCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -541,7 +541,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             RectIntCellValue cellValue =
-                new RectIntCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new RectIntCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -565,7 +565,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             ColorCellValue cellValue =
-                new ColorCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new ColorCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -590,7 +590,7 @@ namespace GDX.Editor.Windows.DataTables
 
             LayerMaskCellValue cellValue =
                 new LayerMaskCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier,
-                    map.ColumnID);
+                    map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -614,7 +614,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             BoundsCellValue cellValue =
-                new BoundsCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new BoundsCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -639,7 +639,7 @@ namespace GDX.Editor.Windows.DataTables
 
             BoundsIntCellValue cellValue =
                 new BoundsIntCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier,
-                    map.ColumnID);
+                    map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -663,7 +663,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             Hash128CellValue cellValue =
-                new Hash128CellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new Hash128CellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -687,7 +687,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             GradientCellValue cellValue =
-                new GradientCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new GradientCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -712,7 +712,7 @@ namespace GDX.Editor.Windows.DataTables
 
             AnimationCurveCellValue cellValue =
                 new AnimationCurveCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier,
-                    map.ColumnID);
+                    map.ColumnIdentifier);
 
             map.CellValue = cellValue;
             field.SetValueWithoutNotify(cellValue.GetUnsafe());
@@ -736,9 +736,9 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             ObjectCellValue cellValue =
-                new ObjectCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new ObjectCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
-            string qualifiedType = dataTable.GetTypeNameForColumn(map.ColumnID);
+            string qualifiedType = dataTable.GetTypeNameForColumn(map.ColumnIdentifier);
             field.objectType = (!string.IsNullOrEmpty(qualifiedType) ? Type.GetType(qualifiedType) : typeof(Object)) ??
                                typeof(Object);
 
@@ -764,7 +764,7 @@ namespace GDX.Editor.Windows.DataTables
             DataTableBase dataTable = DataTableTracker.GetTable(map.TableTicket);
 
             EnumIntCellValue cellValue =
-                new EnumIntCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnID);
+                new EnumIntCellValue(dataTable, map.View.GetRowDescriptionBySortedOrder(row).Identifier, map.ColumnIdentifier);
 
             field.Init(cellValue.GetEnum());
 
@@ -791,7 +791,7 @@ namespace GDX.Editor.Windows.DataTables
                 new TextField(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -802,7 +802,7 @@ namespace GDX.Editor.Windows.DataTables
             {
                 name = k_CellFieldName,
                 label = null,
-                userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
             };
             return newField;
         }
@@ -813,7 +813,7 @@ namespace GDX.Editor.Windows.DataTables
             {
                 name = k_CellFieldName,
                 style = { maxWidth = k_StyleLength25 },
-                userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
             };
             return newField;
         }
@@ -823,7 +823,7 @@ namespace GDX.Editor.Windows.DataTables
             Toggle newField = new Toggle(null)
             {
                 name = k_CellFieldName,
-                userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
             };
             return newField;
         }
@@ -835,7 +835,7 @@ namespace GDX.Editor.Windows.DataTables
                 name = k_CellFieldName,
                 showInputField = true,
                 label = null,
-                userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
             };
             return newField;
         }
@@ -847,7 +847,7 @@ namespace GDX.Editor.Windows.DataTables
                 name = k_CellFieldName,
                 showInputField = true,
                 label = null,
-                userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
             };
             return newField;
         }
@@ -859,7 +859,7 @@ namespace GDX.Editor.Windows.DataTables
                 name = k_CellFieldName,
                 showInputField = true,
                 label = null,
-                userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
             };
             return newField;
         }
@@ -871,7 +871,7 @@ namespace GDX.Editor.Windows.DataTables
                 name = k_CellFieldName,
                 showInputField = true,
                 label = null,
-                userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
             };
             return newField;
         }
@@ -882,7 +882,7 @@ namespace GDX.Editor.Windows.DataTables
                 new IntegerField(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -893,7 +893,7 @@ namespace GDX.Editor.Windows.DataTables
                 new UnsignedIntegerField(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -904,7 +904,7 @@ namespace GDX.Editor.Windows.DataTables
                 new LongField(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -915,7 +915,7 @@ namespace GDX.Editor.Windows.DataTables
                 new UnsignedLongField(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -926,7 +926,7 @@ namespace GDX.Editor.Windows.DataTables
                 new FloatField(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -937,7 +937,7 @@ namespace GDX.Editor.Windows.DataTables
                 new DoubleField(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -948,7 +948,7 @@ namespace GDX.Editor.Windows.DataTables
                 new Vector2Field(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -959,7 +959,7 @@ namespace GDX.Editor.Windows.DataTables
                 new Vector3Field(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -970,7 +970,7 @@ namespace GDX.Editor.Windows.DataTables
                 new Vector4Field(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -981,7 +981,7 @@ namespace GDX.Editor.Windows.DataTables
                 new Vector2IntField(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -992,7 +992,7 @@ namespace GDX.Editor.Windows.DataTables
                 new Vector3IntField(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -1003,7 +1003,7 @@ namespace GDX.Editor.Windows.DataTables
                 new Vector4Field(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -1014,7 +1014,7 @@ namespace GDX.Editor.Windows.DataTables
                 new RectField(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -1025,7 +1025,7 @@ namespace GDX.Editor.Windows.DataTables
                 new RectIntField(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -1036,7 +1036,7 @@ namespace GDX.Editor.Windows.DataTables
                 new ColorField(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -1047,7 +1047,7 @@ namespace GDX.Editor.Windows.DataTables
                 new LayerMaskField(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -1058,7 +1058,7 @@ namespace GDX.Editor.Windows.DataTables
                 new BoundsField(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -1069,7 +1069,7 @@ namespace GDX.Editor.Windows.DataTables
                 new BoundsIntField(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -1080,7 +1080,7 @@ namespace GDX.Editor.Windows.DataTables
                 new Hash128Field(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -1091,7 +1091,7 @@ namespace GDX.Editor.Windows.DataTables
                 new GradientField(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -1102,7 +1102,7 @@ namespace GDX.Editor.Windows.DataTables
                 new CurveField(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -1113,7 +1113,7 @@ namespace GDX.Editor.Windows.DataTables
                 new ObjectField(null)
                 {
                     name = k_CellFieldName,
-                    userData = new CellData { TableTicket = table, ColumnID = column, View = view }
+                    userData = new CellData { TableTicket = table, ColumnIdentifier = column, View = view }
                 };
             return newField;
         }
@@ -1126,7 +1126,7 @@ namespace GDX.Editor.Windows.DataTables
         public class CellData
         {
             public object CellValue;
-            public int ColumnID;
+            public int ColumnIdentifier;
             public int TableTicket;
             public DataTableWindowView View;
         }
