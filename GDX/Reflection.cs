@@ -72,6 +72,16 @@ namespace GDX
         }
 
         /// <summary>
+        ///     Returns a short form, non-versioned qualified name for the type.
+        /// </summary>
+        /// <param name="type">The <see cref="System.Type"/> to generate the qualified name for.</param>
+        /// <returns>A qualified name</returns>
+        public static string GetTypeQualifiedName(Type type)
+        {
+            return $"{type.FullName}, {type.Assembly.GetName().Name}";
+        }
+
+        /// <summary>
         ///     Invokes a known static method.
         /// </summary>
         /// <param name="type">The explicit type of the static class.</param>

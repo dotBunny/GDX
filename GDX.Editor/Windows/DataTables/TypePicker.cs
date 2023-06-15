@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using GDX.Collections.Generic;
+using NUnit.Framework.Internal;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -23,9 +24,9 @@ namespace GDX.Editor.Windows.DataTables
         VisualElement m_RootElement;
 
         // Working data sets for the list view
-        SimpleList<Type> m_AllTypes;
-        SimpleList<string> m_SearchArtifacts;
+        SimpleList<string> m_TypeQualifiedNames;
         SimpleList<string> m_DisplayName;
+        SimpleList<string> m_Namespace;
         List<int> m_FilteredTypes;
 
         Action m_OnSelected;
@@ -34,7 +35,7 @@ namespace GDX.Editor.Windows.DataTables
 
         string m_LastQuery;
 
-        int m_AllTypesCount;
+        int m_TypeCount;
 
         public void SetType(Type baseType, bool includeBaseType = true)
         {
@@ -45,34 +46,33 @@ namespace GDX.Editor.Windows.DataTables
                 count++;
             }
 
-            m_AllTypes = new SimpleList<Type>(count);
-            m_SearchArtifacts = new SimpleList<string>(count);
+            m_TypeQualifiedNames = new SimpleList<string>(count);
             m_DisplayName = new SimpleList<string>(count);
+            m_Namespace = new SimpleList<string>(count);
             foreach (Type type in collection)
             {
                 // Only show public things
                 if (!type.IsPublic) continue;
 
-                m_AllTypes.AddUnchecked(type);
-                m_SearchArtifacts.AddUnchecked(type.AssemblyQualifiedName.ToLower());
-                m_DisplayName.AddUnchecked(type.FullName);
+                m_TypeQualifiedNames.AddUnchecked(Reflection.GetTypeQualifiedName(type));
+                m_DisplayName.AddUnchecked(type.Name);
+                m_Namespace.AddUnchecked(type.Namespace);
             }
-
 
             if (includeBaseType)
             {
-                m_AllTypes.AddUnchecked(baseType);
-                m_SearchArtifacts.AddUnchecked(baseType.AssemblyQualifiedName.ToLower());
-                m_DisplayName.AddUnchecked(baseType.FullName);
+                m_TypeQualifiedNames.AddUnchecked(Reflection.GetTypeQualifiedName(baseType));
+                m_DisplayName.AddUnchecked(baseType.Name);
+                m_Namespace.AddUnchecked(baseType.Namespace);
             }
 
-            m_AllTypes.Compact();
-            m_AllTypesCount = m_AllTypes.Count;
-            m_SearchArtifacts.Compact();
+            m_TypeQualifiedNames.Compact();
+            m_TypeCount = m_TypeQualifiedNames.Count;
             m_DisplayName.Compact();
+            m_Namespace.Compact();
 
-            m_FilteredTypes = new List<int>(m_AllTypesCount);
-            for (int i = 0; i < m_AllTypesCount; i++)
+            m_FilteredTypes = new List<int>(m_TypeCount);
+            for (int i = 0; i < m_TypeCount; i++)
             {
                 m_FilteredTypes.Add(i);
             }
@@ -95,7 +95,7 @@ namespace GDX.Editor.Windows.DataTables
                 showBoundCollectionSize = false,
                 showFoldoutHeader = false,
                 selectionType = SelectionType.Single,
-                fixedItemHeight = 16f,
+                fixedItemHeight = 38f,
             };
             m_ListView.selectedIndicesChanged += SelectedItem;
             m_ListView.makeItem += MakeItem;
@@ -132,14 +132,9 @@ namespace GDX.Editor.Windows.DataTables
         {
 
             if (m_ListView.selectedIndex == -1) return;
-            m_Field.SetValueWithoutNotify(CreateNonVersionedQualifiedName(m_AllTypes.Array[m_FilteredTypes[m_ListView.selectedIndex]]));
+            m_Field.SetValueWithoutNotify(m_TypeQualifiedNames.Array[m_FilteredTypes[m_ListView.selectedIndex]]);
             m_OnSelected?.Invoke();
             Hide();
-        }
-
-        string CreateNonVersionedQualifiedName(Type type)
-        {
-            return type.AssemblyQualifiedName;
         }
 
         public void ScheduleSizeUpdate()
@@ -164,24 +159,28 @@ namespace GDX.Editor.Windows.DataTables
 
             float available = contentContainer.resolvedStyle.height - resolvedStyle.top - 20f;
             style.maxHeight = 300;
-
-
         }
 
         VisualElement MakeItem()
         {
-            return new Label();
-
+            VisualElement container = new VisualElement();
+            container.AddToClassList("gdx-picker-item");
+            container.Add(new Label() { name = "gdx-picker-item-title" });
+            container.Add(new Label() { name = "gdx-picker-item-description" });
+            return container;
         }
         void DestroyItem(VisualElement obj)
         {
             //throw new NotImplementedException();
         }
 
-        void BindItem(VisualElement arg1, int arg2)
+        void BindItem(VisualElement container, int index)
         {
-            Label label = (Label)arg1;
-            label.text = m_DisplayName.Array[m_FilteredTypes[arg2]];
+
+            Label title = (Label)container[0];
+            title.text = m_DisplayName.Array[m_FilteredTypes[index]];
+            Label description = (Label)container[1];
+            description.text = m_Namespace.Array[m_FilteredTypes[index]];
         }
 
         void UpdatePickerData(ChangeEvent<string> evt)
@@ -195,9 +194,9 @@ namespace GDX.Editor.Windows.DataTables
             m_FilteredTypes.Clear();
 
             // TODO We should cache the artifacts and only search already sorted, need to bind to clear them somehow
-            for (int i = 0; i < m_AllTypesCount; i++)
+            for (int i = 0; i < m_TypeCount; i++)
             {
-                if (m_SearchArtifacts.Array[i].Contains(token))
+                if (m_TypeQualifiedNames.Array[i].Contains(token, StringComparison.InvariantCultureIgnoreCase))
                 {
                     m_FilteredTypes.Add(i);
                 }

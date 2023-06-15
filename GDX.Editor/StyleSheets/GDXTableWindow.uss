@@ -120,3 +120,15 @@
 {
     border-color: rgb(236,236,236);
 }
+#gdx-picker-item-title
+{
+    margin-top: 3px;
+    margin-left: 3px;
+    -unity-font-style: bold;
+}
+#gdx-picker-item-description
+{
+    -unity-font-style: italic;
+    margin-left: 5px;
+    margin-top: 2px;
+}
