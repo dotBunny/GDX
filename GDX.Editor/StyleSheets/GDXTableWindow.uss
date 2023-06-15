@@ -110,3 +110,8 @@
 #gdx-table-add-column-filter-status.error {
     background-image: resource('Icons/lightMeter/redLight.png');
 }
+
+.gdx-picker
+{
+
+}

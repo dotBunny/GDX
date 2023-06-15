@@ -42,6 +42,7 @@ namespace GDX.Editor.Windows.DataTables
         readonly PopupField<int> m_AddColumnType;
         readonly TextField m_AddColumnFilter;
         readonly VisualElement m_AddColumnFilterStatus;
+        readonly TypePicker m_AddColumnFilterPicker;
 
         readonly Button m_AddRowAddButton;
         readonly Button m_AddRowCancelButton;
@@ -101,7 +102,11 @@ namespace GDX.Editor.Windows.DataTables
 
             m_AddColumnFilter = m_AddColumnOverlay.Q<TextField>("gdx-table-column-filter");
             m_AddColumnFilter.AddToClassList(ResourcesProvider.HiddenClass);
-            m_AddColumnFilter.RegisterValueChangedCallback(e => { ValidateAssemblyQualifiedName(e.newValue); });
+            m_AddColumnFilter.RegisterValueChangedCallback(e =>
+            {
+                ValidateAssemblyQualifiedName(e.newValue);
+            });
+            m_AddColumnFilterPicker = new TypePicker(m_AddColumnFilter);
             m_AddColumnFilterStatus = m_AddColumnOverlay.Q<VisualElement>("gdx-table-add-column-filter-status");
             m_AddColumnFilterStatus.AddToClassList(ResourcesProvider.HiddenClass);
 
@@ -170,15 +175,20 @@ namespace GDX.Editor.Windows.DataTables
                     m_AddColumnFilter.value = Reflection.SerializedTypesName;
                     m_AddColumnFilter.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
+                    m_AddColumnFilterPicker.RemoveFromClassList(ResourcesProvider.HiddenClass);
+                    m_AddColumnFilterPicker.SetBaseType(typeof(System.Enum));
                     break;
                 case Serializable.SerializableTypes.Object:
                     m_AddColumnFilter.value = Reflection.UnityObjectName;
                     m_AddColumnFilter.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
+                    m_AddColumnFilterPicker.RemoveFromClassList(ResourcesProvider.HiddenClass);
+                    m_AddColumnFilterPicker.SetBaseType(typeof(UnityEngine.Object));
                     break;
                 default:
                     m_AddColumnFilter.AddToClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterStatus.AddToClassList(ResourcesProvider.HiddenClass);
+                    m_AddColumnFilterPicker.AddToClassList(ResourcesProvider.HiddenClass);
                     break;
             }
         }
