@@ -176,14 +176,14 @@ namespace GDX.Editor.Windows.DataTables
                     m_AddColumnFilter.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterPicker.RemoveFromClassList(ResourcesProvider.HiddenClass);
-                    m_AddColumnFilterPicker.SetBaseType(typeof(System.Enum));
+                    m_AddColumnFilterPicker.SetType(typeof(System.Enum));
                     break;
                 case Serializable.SerializableTypes.Object:
                     m_AddColumnFilter.value = Reflection.UnityObjectName;
                     m_AddColumnFilter.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterPicker.RemoveFromClassList(ResourcesProvider.HiddenClass);
-                    m_AddColumnFilterPicker.SetBaseType(typeof(UnityEngine.Object));
+                    m_AddColumnFilterPicker.SetType(typeof(UnityEngine.Object));
                     break;
                 default:
                     m_AddColumnFilter.AddToClassList(ResourcesProvider.HiddenClass);

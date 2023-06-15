@@ -113,5 +113,11 @@
 
 .gdx-picker
 {
+    position: absolute;
+    top: 16px;
+    width: 100%;
+}
+.gdx-picker-list
+{
 
 }
