@@ -106,7 +106,7 @@ namespace GDX.Editor.Windows.DataTables
             {
                 ValidateAssemblyQualifiedName(e.newValue);
             });
-            m_AddColumnFilterPicker = new TypePicker(m_AddColumnFilter);
+            m_AddColumnFilterPicker = new TypePicker(m_AddColumnFilter, m_AddColumnOverlay, m_RootElement, ValidateAssemblyQualifiedNameInPlace);
             m_AddColumnFilterStatus = m_AddColumnOverlay.Q<VisualElement>("gdx-table-add-column-filter-status");
             m_AddColumnFilterStatus.AddToClassList(ResourcesProvider.HiddenClass);
 
@@ -177,6 +177,7 @@ namespace GDX.Editor.Windows.DataTables
                     m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterPicker.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterPicker.SetType(typeof(System.Enum));
+                    m_AddColumnFilterPicker.ScheduleSizeUpdate();
                     break;
                 case Serializable.SerializableTypes.Object:
                     m_AddColumnFilter.value = Reflection.UnityObjectName;
@@ -184,6 +185,7 @@ namespace GDX.Editor.Windows.DataTables
                     m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterPicker.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterPicker.SetType(typeof(UnityEngine.Object));
+                    m_AddColumnFilterPicker.ScheduleSizeUpdate();
                     break;
                 default:
                     m_AddColumnFilter.AddToClassList(ResourcesProvider.HiddenClass);
@@ -193,11 +195,12 @@ namespace GDX.Editor.Windows.DataTables
             }
         }
 
+        void ValidateAssemblyQualifiedNameInPlace()
+        {
+            ValidateAssemblyQualifiedName(m_AddColumnFilter.text);
+        }
         void ValidateAssemblyQualifiedName(string newValue)
         {
-
-            TypeCache.GetTypesDerivedFrom(typeof(UnityEngine.Object));
-
             if (string.IsNullOrEmpty(newValue))
             {
                 m_AddColumnFilterStatus.AddToClassList(k_WarningClass);
