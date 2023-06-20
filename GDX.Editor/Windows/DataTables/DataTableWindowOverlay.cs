@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using GDX.DataTables;
+using GDX.Editor.VisualElements;
 using UnityEditor;
 using UnityEngine.UIElements;
 

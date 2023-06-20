@@ -5,37 +5,76 @@
 using System;
 using System.Collections.Generic;
 using GDX.Collections.Generic;
-using NUnit.Framework.Internal;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 #if UNITY_2022_2_OR_NEWER
 
-namespace GDX.Editor.Windows.DataTables
+namespace GDX.Editor.VisualElements
 {
     public class TypePicker : VisualElement
     {
+        readonly TextField m_Field;
+        readonly ListView m_ListView;
+        readonly Action m_OnSelected;
+        readonly VisualElement m_RootElement;
+        readonly VisualElement m_TextInput;
+        readonly VisualElement m_TextLabel;
 
-        TextField m_Field;
-        VisualElement m_TextLabel;
-        VisualElement m_TextInput;
-        ListView m_ListView;
-        VisualElement m_RootElement;
+        SimpleList<string> m_DisplayName;
+        List<int> m_FilteredTypes;
+        string m_LastQuery;
+        SimpleList<string> m_Namespace;
+        int m_TypeCount;
 
         // Working data sets for the list view
         SimpleList<string> m_TypeQualifiedNames;
-        SimpleList<string> m_DisplayName;
-        SimpleList<string> m_Namespace;
-        List<int> m_FilteredTypes;
 
-        Action m_OnSelected;
+        public TypePicker(TextField textField, VisualElement lastChildOfElement, VisualElement rootElement,
+            Action onSelected = null)
+        {
+            m_Field = textField;
+            m_RootElement = rootElement;
+            m_OnSelected = onSelected;
+
+            ResourcesProvider.SetupSharedStylesheets(m_RootElement);
+            ResourcesProvider.SetupStylesheet("GDXTypePicker", m_RootElement);
+            ResourcesProvider.CheckTheme(m_RootElement);
+
+            AddToClassList("gdx-picker");
+
+            m_ListView = new ListView(m_FilteredTypes)
+            {
+                name = "gdx-type-list",
+                showAddRemoveFooter = false,
+                reorderable = false,
+                showBorder = true,
+                showAlternatingRowBackgrounds = AlternatingRowBackground.All,
+                showBoundCollectionSize = false,
+                showFoldoutHeader = false,
+                selectionType = SelectionType.Single,
+                fixedItemHeight = 38f
+            };
+            m_ListView.selectedIndicesChanged += SelectedItem;
+            m_ListView.makeItem += MakeItem;
+            m_ListView.bindItem += BindItem;
+
+            m_ListView.AddToClassList("gdx-picker-list");
+            Add(m_ListView);
 
 
+            m_TextLabel = m_Field[0];
+            m_TextInput = m_Field[1];
 
-        string m_LastQuery;
+            int index = 0;
+            if (lastChildOfElement.childCount > 0)
+            {
+                index = lastChildOfElement.childCount;
+            }
 
-        int m_TypeCount;
+            lastChildOfElement.Insert(index, this);
+            textField.RegisterValueChangedCallback(UpdatePickerData);
+        }
 
         public void SetType(Type baseType, bool includeBaseType = true)
         {
@@ -52,7 +91,10 @@ namespace GDX.Editor.Windows.DataTables
             foreach (Type type in collection)
             {
                 // Only show public things
-                if (!type.IsPublic) continue;
+                if (!type.IsPublic)
+                {
+                    continue;
+                }
 
                 m_TypeQualifiedNames.AddUnchecked(Reflection.GetTypeQualifiedName(type));
                 m_DisplayName.AddUnchecked(type.Name);
@@ -78,46 +120,6 @@ namespace GDX.Editor.Windows.DataTables
             }
         }
 
-        public TypePicker(TextField textField, VisualElement lastChildOfElement, VisualElement rootElement, Action onSelected = null)
-        {
-            m_Field = textField;
-            m_RootElement = rootElement;
-            m_OnSelected = onSelected;
-            AddToClassList("gdx-picker");
-
-            m_ListView = new ListView(m_FilteredTypes)
-            {
-                name = "gdx-type-list",
-                showAddRemoveFooter = false,
-                reorderable = false,
-                showBorder = true,
-                showAlternatingRowBackgrounds = AlternatingRowBackground.All,
-                showBoundCollectionSize = false,
-                showFoldoutHeader = false,
-                selectionType = SelectionType.Single,
-                fixedItemHeight = 38f,
-            };
-            m_ListView.selectedIndicesChanged += SelectedItem;
-            m_ListView.makeItem += MakeItem;
-            m_ListView.bindItem += BindItem;
-            m_ListView.destroyItem += DestroyItem;
-
-            m_ListView.AddToClassList("gdx-picker-list");
-            Add(m_ListView);
-
-
-            m_TextLabel = m_Field[0];
-            m_TextInput = m_Field[1];
-
-            int index = 0;
-            if (lastChildOfElement.childCount > 0)
-            {
-                index = lastChildOfElement.childCount;
-            }
-            lastChildOfElement.Insert(index, this);
-            textField.RegisterValueChangedCallback(UpdatePickerData);
-        }
-
         void Hide()
         {
             style.display = DisplayStyle.None;
@@ -130,8 +132,11 @@ namespace GDX.Editor.Windows.DataTables
 
         void SelectedItem(IEnumerable<int> selectedIndices)
         {
+            if (m_ListView.selectedIndex == -1)
+            {
+                return;
+            }
 
-            if (m_ListView.selectedIndex == -1) return;
             m_Field.SetValueWithoutNotify(m_TypeQualifiedNames.Array[m_FilteredTypes[m_ListView.selectedIndex]]);
             m_OnSelected?.Invoke();
             Hide();
@@ -157,6 +162,7 @@ namespace GDX.Editor.Windows.DataTables
             style.maxWidth = inputWidth;
             style.minWidth = inputWidth;
 
+            // TODO: #GDX-113
             float available = contentContainer.resolvedStyle.height - resolvedStyle.top - 20f;
             style.maxHeight = 300;
         }
@@ -165,18 +171,13 @@ namespace GDX.Editor.Windows.DataTables
         {
             VisualElement container = new VisualElement();
             container.AddToClassList("gdx-picker-item");
-            container.Add(new Label() { name = "gdx-picker-item-title" });
-            container.Add(new Label() { name = "gdx-picker-item-description" });
+            container.Add(new Label { name = "gdx-picker-item-title" });
+            container.Add(new Label { name = "gdx-picker-item-description" });
             return container;
-        }
-        void DestroyItem(VisualElement obj)
-        {
-            //throw new NotImplementedException();
         }
 
         void BindItem(VisualElement container, int index)
         {
-
             Label title = (Label)container[0];
             title.text = m_DisplayName.Array[m_FilteredTypes[index]];
             Label description = (Label)container[1];
