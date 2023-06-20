@@ -254,8 +254,8 @@ namespace GDX.Editor.Inspectors
             m_DataTableTracker.text =
                 $"{stats.Usages} Usages\n{stats.CellValueChanged} Cell Monitors\n{stats.StructuralChange} Structural Monitors";
 
-
             m_ExportToCommaSeperatedValuesButton.SetEnabled(columnCount > 0);
+            m_ExportToJavaScriptObjectNotationButton.SetEnabled(columnCount > 0);
             m_ImportButton.SetEnabled(columnCount > 0);
         }
 
