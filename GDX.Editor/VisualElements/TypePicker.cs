@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using GDX.Collections.Generic;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 #if UNITY_2022_2_OR_NEWER
@@ -41,6 +42,10 @@ namespace GDX.Editor.VisualElements
             ResourcesProvider.SetupStylesheet("GDXTypePicker", m_RootElement);
             ResourcesProvider.CheckTheme(m_RootElement);
 
+            m_Field.RegisterCallback<KeyDownEvent>(OnKeyboardEvent);
+            m_Field.RegisterCallback<DetachFromPanelEvent>(Unbind);
+
+
             AddToClassList("gdx-picker");
 
             m_ListView = new ListView(m_FilteredTypes)
@@ -74,6 +79,22 @@ namespace GDX.Editor.VisualElements
 
             lastChildOfElement.Insert(index, this);
             textField.RegisterValueChangedCallback(UpdatePickerData);
+        }
+
+        void OnKeyboardEvent(KeyDownEvent evt)
+        {
+            // Escape to cancel overlay
+            if (style.display == DisplayStyle.Flex && evt.keyCode == KeyCode.Escape)
+            {
+                Hide();
+            }
+        }
+
+
+        void Unbind(DetachFromPanelEvent evt)
+        {
+            m_Field.UnregisterCallback<DetachFromPanelEvent>(Unbind);
+            m_Field.UnregisterCallback<KeyDownEvent>(OnKeyboardEvent);
         }
 
         public void SetType(Type baseType, bool includeBaseType = true)
@@ -123,11 +144,15 @@ namespace GDX.Editor.VisualElements
         void Hide()
         {
             style.display = DisplayStyle.None;
+
+            // Unbind escape
         }
 
         void Show()
         {
             style.display = DisplayStyle.Flex;
+
+            // Bind escape // need to block table
         }
 
         void SelectedItem(IEnumerable<int> selectedIndices)

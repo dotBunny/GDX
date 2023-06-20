@@ -45,6 +45,8 @@ namespace GDX.Editor.Windows.DataTables
 
         void OnDestroy()
         {
+            rootVisualElement.UnregisterCallback<KeyDownEvent>(OnKeyboardEvent);
+
             if (m_Bound)
             {
                 DataTableTracker.UnregisterStructuralChanged(this, m_DataTableTicket);
@@ -64,7 +66,8 @@ namespace GDX.Editor.Windows.DataTables
         {
             DataTableWindowOverlay.OverlayState state = m_Overlay.GetPrimaryState();
             // Escape to cancel overlay
-            if (evt.keyCode == KeyCode.Escape && state != DataTableWindowOverlay.OverlayState.Hide)
+            if (evt.keyCode == KeyCode.Escape && state != DataTableWindowOverlay.OverlayState.Hide
+                                              && m_DataTable.GetColumnCount() > 0)
             {
                 m_Overlay.SetOverlayStateHidden();
             }

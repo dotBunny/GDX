@@ -80,14 +80,18 @@ namespace GDX.Editor.Inspectors
             UpdateInspector();
         }
 
+
         /// <summary>
         ///     Unity driven event when the inspector is disabled.
         /// </summary>
         /// <remarks>
         ///     Callbacks are unregistered and the usage is removed from the <see cref="DataTableTracker" />.
         /// </remarks>
-        void Unbind()
+        /// <param name="evt">The detach event.</param>
+        void Unbind(DetachFromPanelEvent evt)
         {
+            m_RootElement.UnregisterCallback<DetachFromPanelEvent>(Unbind);
+
             if (!m_Bound)
             {
                 return;
@@ -186,10 +190,12 @@ namespace GDX.Editor.Inspectors
 
             UpdateInspector();
 
-            m_RootElement.RegisterCallback<DetachFromPanelEvent>(_ => Unbind());
+            m_RootElement.RegisterCallback<DetachFromPanelEvent>(Unbind);
 
             return m_RootElement;
         }
+
+
 
         /// <summary>
         ///     Update the inspectors information about the <see cref="DataTableBase" />.

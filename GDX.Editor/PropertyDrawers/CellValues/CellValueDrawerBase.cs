@@ -171,7 +171,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             DetectDrawerMode();
 
             // Our new destroy!
-            m_Container.RegisterCallback<DetachFromPanelEvent>(_ => Unbind());
+            m_Container.RegisterCallback<DetachFromPanelEvent>(Unbind);
 
             return m_Container;
         }
@@ -506,8 +506,11 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             m_HasRegisteredForCallbacks = true;
         }
 
-        void Unbind()
+
+        void Unbind(DetachFromPanelEvent evt)
         {
+            m_Container.UnregisterCallback<DetachFromPanelEvent>(Unbind);
+
             UnregisterForCallback();
 
             // Ensure no references are kept
