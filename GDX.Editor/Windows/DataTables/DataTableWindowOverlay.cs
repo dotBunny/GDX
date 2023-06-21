@@ -188,6 +188,7 @@ namespace GDX.Editor.Windows.DataTables
                     m_AddColumnFilterPicker.ScheduleUpdateSizeAndPosition();
                     break;
                 default:
+                    m_AddColumnFilter.value = null;
                     m_AddColumnFilter.AddToClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterStatus.AddToClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterPicker.AddToClassList(ResourcesProvider.HiddenClass);
