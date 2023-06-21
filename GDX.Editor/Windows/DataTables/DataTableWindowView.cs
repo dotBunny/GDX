@@ -409,10 +409,13 @@ namespace GDX.Editor.Windows.DataTables
             m_RowDescriptions.Clear();
 
             // Replace with sorted descriptions
-            m_RowDescriptions.AddRange(
-                m_DataTableWindow.GetDataTable()
-                    .GetAllRowDescriptionsSortedByColumns(sortedColumnIdentifiers.ToArray(), sortedColumnTypes.ToArray(),
-                        sortedColumnDirections.ToArray()));
+            RowDescription[] rows = m_DataTableWindow.GetDataTable()
+                .GetAllRowDescriptionsSortedByColumns(sortedColumnIdentifiers.ToArray(), sortedColumnTypes.ToArray(),
+                    sortedColumnDirections.ToArray());
+            if (rows != null)
+            {
+                m_RowDescriptions.AddRange(rows);
+            }
 
             m_MultiColumnListView.RefreshItems();
         }

@@ -327,6 +327,8 @@ namespace GDX.DataTables
                     return new ULongColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
                 case Serializable.SerializableTypes.UInt:
                     return new UIntColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
+                case Serializable.SerializableTypes.EnumInt:
+                    return new EnumIntColumnSorter(dataTable, rowCount, columnIdentifier, direction, supportMultiSort);
             }
 
             Debug.LogError($"Unable to find sorter for requested column type [{type.GetLabel()}].");

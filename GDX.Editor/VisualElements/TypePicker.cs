@@ -9,10 +9,9 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-#if UNITY_2022_2_OR_NEWER
-
 namespace GDX.Editor.VisualElements
 {
+#if UNITY_2022_2_OR_NEWER
     public class TypePicker : VisualElement
     {
         readonly TextField m_Field;
@@ -25,6 +24,7 @@ namespace GDX.Editor.VisualElements
         SimpleList<string> m_DisplayName;
         List<int> m_FilteredTypes;
         string m_LastQuery;
+        bool m_Listening;
         SimpleList<string> m_Namespace;
         int m_TypeCount;
 
@@ -41,10 +41,6 @@ namespace GDX.Editor.VisualElements
             ResourcesProvider.SetupSharedStylesheets(m_RootElement);
             ResourcesProvider.SetupStylesheet("GDXTypePicker", m_RootElement);
             ResourcesProvider.CheckTheme(m_RootElement);
-
-            m_Field.RegisterCallback<KeyDownEvent>(OnKeyboardEvent);
-            m_Field.RegisterCallback<DetachFromPanelEvent>(Unbind);
-
 
             AddToClassList("gdx-picker");
 
@@ -79,6 +75,14 @@ namespace GDX.Editor.VisualElements
 
             lastChildOfElement.Insert(index, this);
             textField.RegisterValueChangedCallback(UpdatePickerData);
+
+            m_Field.RegisterCallback<DetachFromPanelEvent>(Unbind);
+            m_Field.RegisterCallback<KeyDownEvent>(OnKeyboardEvent);
+        }
+
+        void OnGeometryChanged(GeometryChangedEvent evt)
+        {
+            UpdateSizeAndPosition();
         }
 
         void OnKeyboardEvent(KeyDownEvent evt)
@@ -90,16 +94,26 @@ namespace GDX.Editor.VisualElements
             }
         }
 
+        void OnMouseLeaveWindowEvent(MouseLeaveWindowEvent evt)
+        {
+            if (style.display == DisplayStyle.Flex)
+            {
+                Hide();
+            }
+        }
 
         void Unbind(DetachFromPanelEvent evt)
         {
-            m_Field.UnregisterCallback<DetachFromPanelEvent>(Unbind);
+            Hide();
+
             m_Field.UnregisterCallback<KeyDownEvent>(OnKeyboardEvent);
+            m_Field.UnregisterCallback<DetachFromPanelEvent>(Unbind);
         }
 
         public void SetType(Type baseType, bool includeBaseType = true)
         {
             TypeCache.TypeCollection collection = TypeCache.GetTypesDerivedFrom(baseType);
+
             int count = collection.Count;
             if (includeBaseType)
             {
@@ -112,7 +126,7 @@ namespace GDX.Editor.VisualElements
             foreach (Type type in collection)
             {
                 // Only show public things
-                if (!type.IsPublic)
+                if (type.IsNotPublic)
                 {
                     continue;
                 }
@@ -143,16 +157,28 @@ namespace GDX.Editor.VisualElements
 
         void Hide()
         {
-            style.display = DisplayStyle.None;
+            if (style.display != DisplayStyle.Flex)
+            {
+                return;
+            }
 
-            // Unbind escape
+            m_RootElement.UnregisterCallback<MouseLeaveWindowEvent>(OnMouseLeaveWindowEvent);
+            m_RootElement.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+
+            style.display = DisplayStyle.None;
         }
 
         void Show()
         {
-            style.display = DisplayStyle.Flex;
+            if (style.display == DisplayStyle.Flex)
+            {
+                return;
+            }
 
-            // Bind escape // need to block table
+            m_RootElement.RegisterCallback<MouseLeaveWindowEvent>(OnMouseLeaveWindowEvent);
+            m_RootElement.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+
+            style.display = DisplayStyle.Flex;
         }
 
         void SelectedItem(IEnumerable<int> selectedIndices)
@@ -178,18 +204,14 @@ namespace GDX.Editor.VisualElements
             style.left = m_TextLabel.resolvedStyle.width + 5;
             style.top = m_Field.layout.yMin + m_TextInput.resolvedStyle.height + 5;
 
-
-            //m_RootElement.
-
             // Make sure it doesnt exceed its length
             float inputWidth = m_TextInput.resolvedStyle.width;
             style.width = inputWidth;
             style.maxWidth = inputWidth;
             style.minWidth = inputWidth;
 
-            // TODO: #GDX-113
-            float available = contentContainer.resolvedStyle.height - resolvedStyle.top - 20f;
-            style.maxHeight = 300;
+            // Make sure we dont exceed our container
+            style.maxHeight = m_RootElement.resolvedStyle.height - m_Field.worldBound.yMin - 25f;;
         }
 
         VisualElement MakeItem()
@@ -244,6 +266,6 @@ namespace GDX.Editor.VisualElements
             }
         }
     }
+#endif // UNITY_2022_2_OR_NEWER
 }
 
-#endif // UNITY_2022_2_OR_NEWER
