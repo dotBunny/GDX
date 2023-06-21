@@ -225,6 +225,13 @@ namespace GDX.Editor.VisualElements
                 return;
             }
 
+            if (evt.newValue == null)
+            {
+                m_FilteredTypes.Clear();
+                Hide();
+                return;
+            }
+
             string token = evt.newValue.ToLower();
             m_FilteredTypes.Clear();
 
