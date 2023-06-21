@@ -1,4 +1,3 @@
-using GDX.Collections.Generic;
 using GDX.DataTables;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -10,7 +9,15 @@ namespace GDX.Editor.Windows.DataTables
 #if UNITY_2022_2_OR_NEWER
     public class DataTableWindow : EditorWindow, DataTableTracker.IStructuralChangeCallbackReceiver, DataTableTracker.ICellValueChangedCallbackReceiver, DataTableTracker.IUndoRedoEventCallbackReceiver
     {
+        /// <summary>
+        ///     Cached version of the <see cref="DataTableBase"/> ticket.
+        /// </summary>
+        /// <remarks>
+        ///     This is used to support the Reload function and to help survive domain reload.
+        /// </remarks>
+        [SerializeField]
         int m_DataTableTicket;
+
         DataTableWindowController m_Controller;
         DataTableWindowOverlay m_Overlay;
 
@@ -19,8 +26,7 @@ namespace GDX.Editor.Windows.DataTables
         DataTableWindowView m_View;
         bool m_Bound;
 
-
-        void OnEnable()
+        void CreateGUI()
         {
             ResourcesProvider.SetupSharedStylesheets(rootVisualElement);
             ResourcesProvider.SetupStylesheet("GDXTableWindow", rootVisualElement);
@@ -126,6 +132,12 @@ namespace GDX.Editor.Windows.DataTables
         {
             if (m_DataTable == null)
             {
+                m_DataTable = DataTableTracker.GetTable(m_DataTableTicket);
+                if (m_DataTable != null)
+                {
+                    BindTable(m_DataTable, true);
+                    return;
+                }
                 Close();
             }
         }
