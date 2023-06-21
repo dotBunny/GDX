@@ -9,11 +9,12 @@ A robust implementation of a data table type similar to [Unreal Engines](https:/
 
 Type coverage is very much related to how and what Unity will be able to serialize inside the backing `ScriptableObject`. Out of the box, you can use:
 
-Values | Structs
-| --- | --- |
-| `string`, `char`, `bool`, `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `float`, `double` | `Vector2`, `Vector3`, `Vector4`,  `Vector2Int`,  `Vector3Int`, `Quaternion`, `Rect`, `RectInt`, `Color`, `LayerMask`, `Bounds`, `BoundsInt`, `Hash128`, `Gradient`, `AnimationCurve`
+Values | Structs | Special
+| --- | --- | --- |
+| `string`, `char`, `bool`, `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `float`, `double` | `Vector2`, `Vector3`, `Vector4`,  `Vector2Int`,  `Vector3Int`, `Quaternion`, `Rect`, `RectInt`, `Color`, `LayerMask`, `Bounds`, `BoundsInt`, `Hash128`, `Gradient`, `AnimationCurve` | `Object`, `EnumInt` |
 
-Usage of `Object` (`UnityEngine.Object`) and `EnumInt` types require additional information to be provided when creating a new column. A filter field will be visible when adding a column of these types asking for a fully qualified name of the desired type; this allows editing fields to isolate types.
+> [!NOTE]
+> Usage of `Object` (`UnityEngine.Object`) and `EnumInt` types require additional information to be provided when creating a new column. A filter field will be visible when adding a column of these types asking for a fully qualified name of the desired type; this allows editing fields to isolate types. As you type a picker will appear with `public` results from the `TypeCache`.
 
 ## Creating
 
@@ -138,3 +139,10 @@ Clicking the lock icon will allow editing the data in the table directly. When U
 All `*CellValue` structs have `Get()` and `GetUnsafe()` methods which return the value stored in the linked Data Table. 
 
 The safer `Get()` method checks the cached DataTable version number, updating the locally cached value before returning the cached value. The `GetUnsafe()` method returns the cached value without any checks; thus it is **required** that the first time a value is accessd, the `Get()` method is used. 
+
+## Undo Support
+
+In the DataTable settings, there is a toggle to turn on the Undo/Redo feature in Unity for a specific table. This will allow Unity's internal serialization system to move back and forth between changes made to the DataTable. However, this has a performance cost as the data serializes with each registered state.
+
+> [!WARNING]
+> This is very experimental as a feature; use it at your own risk.

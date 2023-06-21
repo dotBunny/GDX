@@ -14,10 +14,10 @@ namespace GDX.Editor.VisualElements
 #if UNITY_2022_2_OR_NEWER
     public class TypePicker : VisualElement
     {
+        readonly VisualElement m_ContainerElement;
         readonly TextField m_Field;
         readonly ListView m_ListView;
         readonly Action m_OnSelected;
-        readonly VisualElement m_RootElement;
         readonly VisualElement m_TextInput;
         readonly VisualElement m_TextLabel;
 
@@ -31,16 +31,16 @@ namespace GDX.Editor.VisualElements
         // Working data sets for the list view
         SimpleList<string> m_TypeQualifiedNames;
 
-        public TypePicker(TextField textField, VisualElement lastChildOfElement, VisualElement rootElement,
+        public TypePicker(TextField textField, VisualElement lastChildOfElement, VisualElement containerElement,
             Action onSelected = null)
         {
             m_Field = textField;
-            m_RootElement = rootElement;
+            m_ContainerElement = containerElement;
             m_OnSelected = onSelected;
 
-            ResourcesProvider.SetupSharedStylesheets(m_RootElement);
-            ResourcesProvider.SetupStylesheet("GDXTypePicker", m_RootElement);
-            ResourcesProvider.CheckTheme(m_RootElement);
+            ResourcesProvider.SetupSharedStylesheets(m_ContainerElement);
+            ResourcesProvider.SetupStylesheet("GDXTypePicker", m_ContainerElement);
+            ResourcesProvider.CheckTheme(m_ContainerElement);
 
             AddToClassList("gdx-picker");
 
@@ -56,7 +56,7 @@ namespace GDX.Editor.VisualElements
                 selectionType = SelectionType.Single,
                 fixedItemHeight = 38f
             };
-            m_ListView.selectedIndicesChanged += SelectedItem;
+            m_ListView.selectedIndicesChanged += OnSelectedIndicesChanged;
             m_ListView.makeItem += MakeItem;
             m_ListView.bindItem += BindItem;
 
@@ -74,40 +74,31 @@ namespace GDX.Editor.VisualElements
             }
 
             lastChildOfElement.Insert(index, this);
-            textField.RegisterValueChangedCallback(UpdatePickerData);
+            textField.RegisterValueChangedCallback(OnValueChange);
 
-            m_Field.RegisterCallback<DetachFromPanelEvent>(Unbind);
-            m_Field.RegisterCallback<KeyDownEvent>(OnKeyboardEvent);
+            m_Field.RegisterCallback<DetachFromPanelEvent>(OnFieldDetachFromPanelEvent);
+            m_Field.RegisterCallback<KeyDownEvent>(OnFieldKeyboardEvent);
+
+            style.display = DisplayStyle.None;
         }
 
-        void OnGeometryChanged(GeometryChangedEvent evt)
+        public void Hide()
         {
-            UpdateSizeAndPosition();
-        }
-
-        void OnKeyboardEvent(KeyDownEvent evt)
-        {
-            // Escape to cancel overlay
-            if (style.display == DisplayStyle.Flex && evt.keyCode == KeyCode.Escape)
+            if (style.display != DisplayStyle.Flex)
             {
-                Hide();
+                return;
             }
+
+            m_ContainerElement.UnregisterCallback<MouseLeaveWindowEvent>(OnContainerMouseLeaveWindowEvent);
+            m_ContainerElement.UnregisterCallback<GeometryChangedEvent>(OnContainerGeometryChanged);
+            m_ContainerElement.UnregisterCallback<MouseDownEvent>(OnContainerMouseDownEvent);
+
+            style.display = DisplayStyle.None;
         }
 
-        void OnMouseLeaveWindowEvent(MouseLeaveWindowEvent evt)
+        public void ScheduleUpdateSizeAndPosition()
         {
-            if (style.display == DisplayStyle.Flex)
-            {
-                Hide();
-            }
-        }
-
-        void Unbind(DetachFromPanelEvent evt)
-        {
-            Hide();
-
-            m_Field.UnregisterCallback<KeyDownEvent>(OnKeyboardEvent);
-            m_Field.UnregisterCallback<DetachFromPanelEvent>(Unbind);
+            schedule.Execute(UpdateSizeAndPosition);
         }
 
         public void SetType(Type baseType, bool includeBaseType = true)
@@ -155,33 +146,67 @@ namespace GDX.Editor.VisualElements
             }
         }
 
-        void Hide()
-        {
-            if (style.display != DisplayStyle.Flex)
-            {
-                return;
-            }
-
-            m_RootElement.UnregisterCallback<MouseLeaveWindowEvent>(OnMouseLeaveWindowEvent);
-            m_RootElement.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
-
-            style.display = DisplayStyle.None;
-        }
-
-        void Show()
+        public void Show()
         {
             if (style.display == DisplayStyle.Flex)
             {
                 return;
             }
 
-            m_RootElement.RegisterCallback<MouseLeaveWindowEvent>(OnMouseLeaveWindowEvent);
-            m_RootElement.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+            m_ContainerElement.RegisterCallback<MouseLeaveWindowEvent>(OnContainerMouseLeaveWindowEvent);
+            m_ContainerElement.RegisterCallback<GeometryChangedEvent>(OnContainerGeometryChanged);
+            m_ContainerElement.RegisterCallback<MouseDownEvent>(OnContainerMouseDownEvent);
 
             style.display = DisplayStyle.Flex;
         }
 
-        void SelectedItem(IEnumerable<int> selectedIndices)
+        void BindItem(VisualElement container, int index)
+        {
+            Label title = (Label)container[0];
+            title.text = m_DisplayName.Array[m_FilteredTypes[index]];
+            Label description = (Label)container[1];
+            description.text = m_Namespace.Array[m_FilteredTypes[index]];
+        }
+
+        void OnContainerGeometryChanged(GeometryChangedEvent evt)
+        {
+            UpdateSizeAndPosition();
+        }
+
+        void OnContainerMouseDownEvent(MouseDownEvent evt)
+        {
+            if (style.display == DisplayStyle.Flex)
+            {
+                Hide();
+            }
+        }
+
+        void OnContainerMouseLeaveWindowEvent(MouseLeaveWindowEvent evt)
+        {
+            if (style.display == DisplayStyle.Flex)
+            {
+                Hide();
+            }
+        }
+
+        void OnFieldDetachFromPanelEvent(DetachFromPanelEvent evt)
+        {
+            Hide();
+
+            m_Field.UnregisterCallback<KeyDownEvent>(OnFieldKeyboardEvent);
+            m_Field.UnregisterCallback<DetachFromPanelEvent>(OnFieldDetachFromPanelEvent);
+        }
+
+        void OnFieldKeyboardEvent(KeyDownEvent evt)
+        {
+            // Escape to cancel overlay
+            if (style.display == DisplayStyle.Flex && evt.keyCode == KeyCode.Escape)
+            {
+                Hide();
+            }
+        }
+
+        void OnSelectedIndicesChanged(IEnumerable<int> selectedIndices)
         {
             if (m_ListView.selectedIndex == -1)
             {
@@ -193,45 +218,7 @@ namespace GDX.Editor.VisualElements
             Hide();
         }
 
-        public void ScheduleSizeUpdate()
-        {
-            schedule.Execute(UpdateSizeAndPosition);
-        }
-
-        public void UpdateSizeAndPosition()
-        {
-            // Put to the corner of the input
-            style.left = m_TextLabel.resolvedStyle.width + 5;
-            style.top = m_Field.layout.yMin + m_TextInput.resolvedStyle.height + 5;
-
-            // Make sure it doesnt exceed its length
-            float inputWidth = m_TextInput.resolvedStyle.width;
-            style.width = inputWidth;
-            style.maxWidth = inputWidth;
-            style.minWidth = inputWidth;
-
-            // Make sure we dont exceed our container
-            style.maxHeight = m_RootElement.resolvedStyle.height - m_Field.worldBound.yMin - 25f;;
-        }
-
-        VisualElement MakeItem()
-        {
-            VisualElement container = new VisualElement();
-            container.AddToClassList("gdx-picker-item");
-            container.Add(new Label { name = "gdx-picker-item-title" });
-            container.Add(new Label { name = "gdx-picker-item-description" });
-            return container;
-        }
-
-        void BindItem(VisualElement container, int index)
-        {
-            Label title = (Label)container[0];
-            title.text = m_DisplayName.Array[m_FilteredTypes[index]];
-            Label description = (Label)container[1];
-            description.text = m_Namespace.Array[m_FilteredTypes[index]];
-        }
-
-        void UpdatePickerData(ChangeEvent<string> evt)
+        void OnValueChange(ChangeEvent<string> evt)
         {
             if (evt.newValue == m_LastQuery)
             {
@@ -262,10 +249,34 @@ namespace GDX.Editor.VisualElements
             else
             {
                 Show();
-                ScheduleSizeUpdate();
+                ScheduleUpdateSizeAndPosition();
             }
+        }
+
+        void UpdateSizeAndPosition()
+        {
+            // Put to the corner of the input
+            style.left = m_TextLabel.resolvedStyle.width + 5;
+            style.top = m_Field.layout.yMin + m_TextInput.resolvedStyle.height + 5;
+
+            // Make sure it doesnt exceed its length
+            float inputWidth = m_TextInput.resolvedStyle.width;
+            style.width = inputWidth;
+            style.maxWidth = inputWidth;
+            style.minWidth = inputWidth;
+
+            // Make sure we dont exceed our container
+            style.maxHeight = m_ContainerElement.resolvedStyle.height - m_Field.worldBound.yMin - 25f;
+        }
+
+        static VisualElement MakeItem()
+        {
+            VisualElement container = new VisualElement();
+            container.AddToClassList("gdx-picker-item");
+            container.Add(new Label { name = "gdx-picker-item-title" });
+            container.Add(new Label { name = "gdx-picker-item-description" });
+            return container;
         }
     }
 #endif // UNITY_2022_2_OR_NEWER
 }
-

@@ -177,7 +177,7 @@ namespace GDX.Editor.Windows.DataTables
                     m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterPicker.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterPicker.SetType(typeof(System.Enum));
-                    m_AddColumnFilterPicker.ScheduleSizeUpdate();
+                    m_AddColumnFilterPicker.ScheduleUpdateSizeAndPosition();
                     break;
                 case Serializable.SerializableTypes.Object:
                     m_AddColumnFilter.value = Reflection.UnityObjectName;
@@ -185,12 +185,13 @@ namespace GDX.Editor.Windows.DataTables
                     m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterPicker.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterPicker.SetType(typeof(UnityEngine.Object));
-                    m_AddColumnFilterPicker.ScheduleSizeUpdate();
+                    m_AddColumnFilterPicker.ScheduleUpdateSizeAndPosition();
                     break;
                 default:
                     m_AddColumnFilter.AddToClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterStatus.AddToClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterPicker.AddToClassList(ResourcesProvider.HiddenClass);
+                    m_AddColumnFilterPicker.Hide();
                     break;
             }
         }
