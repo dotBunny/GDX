@@ -50,7 +50,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         SerializedProperty m_TableProperty;
 
         AssetDatabaseReference[] m_Tables;
-        protected int m_TableTicket;
+        protected int m_TableTicket = -1;
         VisualElement m_ValueContainer;
 
         /// <inheritdoc />

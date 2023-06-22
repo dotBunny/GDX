@@ -42,7 +42,7 @@ namespace GDX.Editor.Inspectors
         /// <summary>
         ///     Cached version of the <see cref="DataTableBase" /> ticket from <see cref="m_DataTableTracker" />.
         /// </summary>
-        int m_TableTicket;
+        int m_TableTicket = -1;
 
         /// <inheritdoc />
         public void OnColumnDefinitionChange(int columnIdentifier)

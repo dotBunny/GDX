@@ -1126,8 +1126,8 @@ namespace GDX.Editor.Windows.DataTables
         public class CellData
         {
             public object CellValue;
-            public int ColumnIdentifier;
-            public int TableTicket;
+            public int ColumnIdentifier = -1;
+            public int TableTicket = -1;
             public DataTableWindowView View;
         }
     }

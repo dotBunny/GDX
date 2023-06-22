@@ -16,7 +16,7 @@ namespace GDX.Editor.Windows.DataTables
         ///     This is used to support the Reload function and to help survive domain reload.
         /// </remarks>
         [SerializeField]
-        int m_DataTableTicket;
+        int m_DataTableTicket = -1;
 
         DataTableWindowController m_Controller;
         DataTableWindowOverlay m_Overlay;
