@@ -17,6 +17,7 @@ namespace GDX.Editor.Windows.DataTables
         readonly Toolbar m_Toolbar;
         readonly ToolbarMenu m_ToolbarColumnMenu;
         readonly ToolbarButton m_ToolbarHelpButton;
+        readonly VisualElement m_ToolbarReferencesOnlyStatus;
         readonly ToolbarMenu m_ToolbarRowMenu;
         readonly ToolbarMenu m_ToolbarTableMenu;
 
@@ -81,6 +82,10 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarRowMenu.menu.AppendAction("Reset Order",
                 _ => { m_ParentWindow.GetView().RebuildRowData(); }, CanCommitOrder);
 
+            m_ToolbarReferencesOnlyStatus = m_Toolbar.Q<VisualElement>("gdx-table-toolbar-references");
+            m_ToolbarReferencesOnlyStatus.style.display = DisplayStyle.None;
+            m_ToolbarReferencesOnlyStatus.tooltip = "The table is currently in References Only mode, this can be changed in it's settings.";
+
             m_ToolbarHelpButton = m_Toolbar.Q<ToolbarButton>("gdx-table-toolbar-help");
             m_ToolbarHelpButton.text = string.Empty;
             m_ToolbarHelpButton.clicked += OpenHelp;
@@ -142,6 +147,11 @@ namespace GDX.Editor.Windows.DataTables
         void OpenHelp()
         {
             m_ParentWindow.GetController().OpenHelp();
+        }
+
+        public void UpdateForSettings()
+        {
+            m_ToolbarReferencesOnlyStatus.style.display = m_ParentWindow.GetDataTable().GetFlag(DataTableBase.Settings.ReferenceOnlyMode) ? DisplayStyle.Flex : DisplayStyle.None;
         }
     }
 #endif // UNITY_2022_2_OR_NEWER

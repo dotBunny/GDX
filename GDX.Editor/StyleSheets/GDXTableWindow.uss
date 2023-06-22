@@ -92,6 +92,24 @@
     background-image: resource('Icons/_Help.png');
 }
 
+#gdx-table-toolbar-references {
+    width: 12px;
+    height: 12px;
+    border-width: 0;
+    background-color: rgba(0,0,0,0);
+    -unity-slice-top: 0;
+    -unity-slice-bottom: 0;
+    -unity-background-scale-mode: scale-and-crop;
+    background-size: contain;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-left: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 0px;
+    background-image: resource('Icons/LockIcon-On.png');
+}
+
 #gdx-table-add-column-filter-status
 {
     flex-grow: 0;

@@ -213,6 +213,9 @@ namespace GDX.Editor.Windows.DataTables
 
             // Next frame resize things
             EditorApplication.delayCall += m_Controller.DelayedAutoResizeColumns;
+
+            // Update for settings
+            m_Toolbar.UpdateForSettings();
         }
 
         /// <inheritdoc />
@@ -238,6 +241,7 @@ namespace GDX.Editor.Windows.DataTables
         {
             titleContent = new GUIContent(m_DataTable.GetDisplayName());
             m_View.RefreshItems();
+            m_Toolbar.UpdateForSettings();
         }
 
         public void OnUndoRedoRowDefinitionChange(int rowIdentifier)
