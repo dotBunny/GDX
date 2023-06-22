@@ -9,9 +9,9 @@ A robust implementation of a data table type similar to [Unreal Engines](https:/
 
 Type coverage is very much related to how and what Unity will be able to serialize inside the backing `ScriptableObject`. Out of the box, you can use:
 
-Values | Structs | Special
-| --- | --- | --- |
-| `string`, `char`, `bool`, `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `float`, `double` | `Vector2`, `Vector3`, `Vector4`,  `Vector2Int`,  `Vector3Int`, `Quaternion`, `Rect`, `RectInt`, `Color`, `LayerMask`, `Bounds`, `BoundsInt`, `Hash128`, `Gradient`, `AnimationCurve` | `Object`, `EnumInt` |
+Values | Structs | Classes | Special
+--- | --- | --- | ---
+`string`, `char`, `bool`, `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `float`, `double` | `Vector2`, `Vector3`, `Vector4`,  `Vector2Int`,  `Vector3Int`, `Quaternion`, `Rect`, `RectInt`, `Color`, `LayerMask`, `Bounds`, `BoundsInt` | `AnimationCurve`, `Gradient`, `Hash128`, `Object` | `EnumInt` |
 
 Usage of `Object` (`UnityEngine.Object`) and `EnumInt` types require additional information to be provided when creating a new column. A filter field will be visible when adding a column of these types asking for a fully qualified name of the desired type; this allows editing fields to isolate types. As you type a picker will appear with `public` results from Unity's `TypeCache`.
 

@@ -88,11 +88,11 @@ namespace GDX.DataTables
                 case Serializable.SerializableTypes.Hash128:
                     return dataTable.GetHash128(rowIdentifier, columnIdentifier).ToString();
                 case Serializable.SerializableTypes.Gradient:
-                    return dataTable.GetGradient(rowIdentifier, columnIdentifier).ToString();
+                    return dataTable.GetGradient(rowIdentifier, columnIdentifier)?.ToString();
                 case Serializable.SerializableTypes.AnimationCurve:
-                    return dataTable.GetAnimationCurve(rowIdentifier, columnIdentifier).ToString();
+                    return dataTable.GetAnimationCurve(rowIdentifier, columnIdentifier)?.ToString();
                 case Serializable.SerializableTypes.Object:
-                    return dataTable.GetObject(rowIdentifier, columnIdentifier).ToString();
+                    return dataTable.GetObject(rowIdentifier, columnIdentifier)?.ToString();
                 case Serializable.SerializableTypes.EnumInt:
                     return dataTable.GetEnumInt(rowIdentifier, columnIdentifier).ToString();
             }
