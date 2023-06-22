@@ -416,5 +416,18 @@ namespace GDX
             return GetTypeFromHashCode(label.GetStableHashCode());
         }
 
+        public static bool IsReferenceType(this SerializableTypes type)
+        {
+            switch (type)
+            {
+                case SerializableTypes.Gradient:
+                case SerializableTypes.AnimationCurve:
+                case SerializableTypes.Object:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
     }
 }

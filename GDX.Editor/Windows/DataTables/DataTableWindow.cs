@@ -237,6 +237,7 @@ namespace GDX.Editor.Windows.DataTables
         public void OnSettingsChange()
         {
             titleContent = new GUIContent(m_DataTable.GetDisplayName());
+            m_View.RefreshItems();
         }
 
         public void OnUndoRedoRowDefinitionChange(int rowIdentifier)

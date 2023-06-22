@@ -15,6 +15,8 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         DataTableTracker.IUndoRedoEventCallbackReceiver
     {
         const string k_MessageClickToUnlock = "Click to unlock for editting.";
+        const string k_MessageClickToUnlockReferenceModeOnly = "Currently the table is locked in reference only editing mode.";
+
         const string k_MessageClickToLock = "Click to lock data.";
         const string k_MessageNoTableSelected = "No table selected.";
         const string k_PropertyRow = "RowIdentifier";
@@ -421,7 +423,15 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                 {
                     m_CellElement.SetEnabled(false);
                     lockButton.AddToClassList(k_StyleClassLocked);
-                    lockButton.tooltip = k_MessageClickToUnlock;
+                    if (m_DataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode) &&
+                        !GetSupportedType().IsReferenceType())
+                    {
+                        lockButton.tooltip = k_MessageClickToUnlockReferenceModeOnly;
+                    }
+                    else
+                    {
+                        lockButton.tooltip = k_MessageClickToUnlock;
+                    }
                 }
                 else
                 {
@@ -441,6 +451,12 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         void OnLockButtonClicked()
         {
+            if (m_DataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode) &&
+                !GetSupportedType().IsReferenceType())
+            {
+                return;
+            }
+
             m_IsUnlocked = !m_IsUnlocked;
             SetDisplayMode(DisplayMode.DisplayValue);
         }
