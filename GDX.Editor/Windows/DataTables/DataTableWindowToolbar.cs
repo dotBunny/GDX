@@ -28,7 +28,7 @@ namespace GDX.Editor.Windows.DataTables
             // Create our File menu
             m_ToolbarTableMenu = m_Toolbar.Q<ToolbarMenu>("gdx-table-toolbar-table");
             m_ToolbarTableMenu.menu.AppendAction("Write To Disk",
-                _ => { m_ParentWindow.Save(); }, CanSave);
+                _ => { m_ParentWindow.Save(true); }, CanSave);
             m_ToolbarTableMenu.menu.AppendSeparator();
             m_ToolbarTableMenu.menu.AppendAction("Export (CSV) ...",
                 _ =>

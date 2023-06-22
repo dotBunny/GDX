@@ -145,11 +145,10 @@ namespace GDX.Editor.Windows.DataTables
         public void Save(bool skipDialog = false)
         {
             // We're not dirty, or were in batch mode
-            if (!EditorUtility.IsDirty(m_DataTable) || Application.isBatchMode)
+            if (!EditorUtility.IsDirty(m_DataTable) || Application.isBatchMode || TestMonitor.IsTesting)
             {
                 return;
             }
-
 
             if (skipDialog || EditorUtility.DisplayDialog($"Save {m_DataTable.GetDisplayName()}", "There are changes made to the table (in memory) which have not been saved to disk. Would you like to write those changes to disk now?", "Yes", "No"))
             {
