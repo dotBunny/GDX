@@ -25,6 +25,7 @@ namespace GDX.Editor.VisualElements
         List<int> m_FilteredTypes;
         string m_LastQuery;
         bool m_Listening;
+        bool m_HasEntered;
         SimpleList<string> m_Namespace;
         int m_TypeCount;
 
@@ -90,9 +91,13 @@ namespace GDX.Editor.VisualElements
                 return;
             }
 
+            m_HasEntered = false;
+
             m_ContainerElement.UnregisterCallback<MouseLeaveWindowEvent>(OnContainerMouseLeaveWindowEvent);
             m_ContainerElement.UnregisterCallback<GeometryChangedEvent>(OnContainerGeometryChanged);
             m_ContainerElement.UnregisterCallback<MouseDownEvent>(OnContainerMouseDownEvent);
+            UnregisterCallback<MouseEnterEvent>(OnMouseEnterEvent);
+            UnregisterCallback<MouseLeaveEvent>(OnMouseLeaveEvent);
 
             style.display = DisplayStyle.None;
         }
@@ -163,11 +168,27 @@ namespace GDX.Editor.VisualElements
                 return;
             }
 
+            m_HasEntered = false;
             m_ContainerElement.RegisterCallback<MouseLeaveWindowEvent>(OnContainerMouseLeaveWindowEvent);
             m_ContainerElement.RegisterCallback<GeometryChangedEvent>(OnContainerGeometryChanged);
             m_ContainerElement.RegisterCallback<MouseDownEvent>(OnContainerMouseDownEvent);
 
+            RegisterCallback<MouseEnterEvent>(OnMouseEnterEvent);
+            RegisterCallback<MouseLeaveEvent>(OnMouseLeaveEvent);
+
             style.display = DisplayStyle.Flex;
+        }
+
+        void OnMouseEnterEvent(MouseEnterEvent evt)
+        {
+            m_HasEntered = true;
+        }
+        void OnMouseLeaveEvent(MouseLeaveEvent evt)
+        {
+            if (m_HasEntered)
+            {
+                Hide();
+            }
         }
 
         void BindItem(VisualElement container, int index)

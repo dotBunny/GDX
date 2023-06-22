@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.DataTables;
-using GDX.Editor.Inspectors;
 using UnityEditor;
 using UnityEngine;
 
@@ -222,7 +221,7 @@ namespace GDX.Editor.Windows.DataTables
             return true;
         }
 
-        public bool SetTableSettings(string displayName, bool enableUndo)
+        public bool SetTableSettings(string displayName, bool enableUndo, bool supportReferenceOnlyMode)
         {
             DataTableBase dataTable = m_DataTableWindow.GetDataTable();
             DataTableTracker.RecordSettingsUndo(m_DataTableWindow.GetDataTableTicket());
@@ -235,6 +234,7 @@ namespace GDX.Editor.Windows.DataTables
             }
 
             dataTable.SetFlag(DataTableBase.Settings.EnableUndo, enableUndo);
+            dataTable.SetFlag(DataTableBase.Settings.ReferenceOnlyMode, supportReferenceOnlyMode);
             EditorUtility.SetDirty(m_DataTableWindow.GetDataTable());
 
             DataTableTracker.NotifyOfSettingsChange(m_DataTableWindow.GetDataTableTicket());

@@ -3,8 +3,8 @@ uid: features
 ---
 # Features
 
-> [!NOTE]
-> Below is an overview of *some of* the notable features contained within the `GDX` runtime package. For a more thorough list of functionality, explore the [API documentation](/api/GDX.html) directly.
+> [!TIP]
+> Over time `GDX` has grown into a robust set of functionality; with that comes the much larger problem of discoverability. There are too many things to cover in the list on this page. We are working on this problem by building key _feature_ sub-pages to highlight functionality. It is in no way meant to be encompassing the entire package. For a more thorough list of functionality, explore the [API documentation](/api/GDX.html) directly.
 
 ## Extending APIs
 

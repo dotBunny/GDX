@@ -40,6 +40,7 @@
             <ui:Label tabindex="-1" text="Table Settings" display-tooltip-when-elided="true" class="gdx-table-overlay-title" />
             <ui:TextField picking-mode="Ignore" label="Display Name" value="MyColumn" name="gdx-table-display-name" />
             <ui:Toggle label="Support Undo" name="gdx-table-flag-undo" />
+            <ui:Toggle label="References Only" name="gdx-table-flag-referencesonly" />
             <ui:VisualElement name="VisualElement" class="gdx-table-overlay-buttons">
                 <ui:Button text="Cancel" display-tooltip-when-elided="true" name="gdx-table-settings-cancel" enable-rich-text="false" tabindex="2" />
                 <ui:Button text="Save" display-tooltip-when-elided="true" name="gdx-table-settings-save" enable-rich-text="false" tabindex="1" />

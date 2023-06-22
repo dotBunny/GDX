@@ -69,6 +69,7 @@ namespace GDX.Editor.Windows.DataTables
         readonly VisualElement m_SettingsOverlay;
         readonly Button m_SettingsSaveButton;
         readonly Toggle m_SettingsSupportUndoToggle;
+        readonly Toggle m_SettingsReferenceOnlyModeToggle;
         readonly DataTableWindow m_DataTableWindow;
         int m_CachedIndex;
         ConfirmationState m_ConfirmationState;
@@ -145,6 +146,7 @@ namespace GDX.Editor.Windows.DataTables
             m_SettingsOverlay = m_RootElement.Q<VisualElement>("gdx-table-settings");
             m_SettingsDisplayName = m_SettingsOverlay.Q<TextField>("gdx-table-display-name");
             m_SettingsSupportUndoToggle = m_SettingsOverlay.Q<Toggle>("gdx-table-flag-undo");
+            m_SettingsReferenceOnlyModeToggle = m_SettingsOverlay.Q<Toggle>("gdx-table-flag-referencesonly");
             m_SettingsSaveButton = m_SettingsOverlay.Q<Button>("gdx-table-settings-save");
             m_SettingsSaveButton.clicked += SubmitSettings;
             m_SettingsCancelButton = m_SettingsOverlay.Q<Button>("gdx-table-settings-cancel");
@@ -302,6 +304,8 @@ namespace GDX.Editor.Windows.DataTables
 #if UNITY_2022_2_OR_NEWER
                     m_SettingsSupportUndoToggle.SetValueWithoutNotify(m_DataTableWindow.GetDataTable()
                         .GetFlag(DataTableBase.Settings.EnableUndo));
+                    m_SettingsReferenceOnlyModeToggle.SetValueWithoutNotify(m_DataTableWindow.GetDataTable()
+                        .GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
 #else
                     m_SettingsSupportUndoToggle.SetEnabled(false);
                     m_SettingsSupportUndoToggle.SetValueWithoutNotify(false);
@@ -409,7 +413,10 @@ namespace GDX.Editor.Windows.DataTables
             }
 
             if (m_DataTableWindow.GetController()
-                .SetTableSettings(m_SettingsDisplayName.text, m_SettingsSupportUndoToggle.value))
+                .SetTableSettings(
+                    m_SettingsDisplayName.text,
+                    m_SettingsSupportUndoToggle.value,
+                    m_SettingsReferenceOnlyModeToggle.value))
             {
                 SetOverlayStateHidden();
             }

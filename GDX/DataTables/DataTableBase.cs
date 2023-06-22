@@ -22,7 +22,12 @@ namespace GDX.DataTables
             /// <summary>
             ///     Does the <see cref="DataTableBase" /> support Unity's undo feature?
             /// </summary>
-            EnableUndo = 0
+            EnableUndo = 0,
+            /// <summary>
+            ///     Prefer to not allow changes to data, only references.
+            /// </summary>
+            /// <remarks>This is useful for when the source of truth of the data lives in an outside source.</remarks>
+            ReferenceOnlyMode = 1
         }
 
         /// <summary>
