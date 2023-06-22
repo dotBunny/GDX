@@ -4,18 +4,17 @@
 
 #if UNITY_2022_2_OR_NEWER
 using System.Collections;
-using GDX.Editor.Windows.DataTables;
 using GDX.DataTables;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace GDX.Editor.Windows
+namespace GDX.Editor.Windows.DataTables
 {
     /// <summary>
     ///     A collection of unit tests to validate functionality of the <see cref="DataTableWindowController" />.
     /// </summary>
-    public class TableWindowControllerTests
+    public class DataTableWindowControllerTests
     {
         DataTableBase m_TestDataTable;
         DataTableWindow m_DataTableWindow;

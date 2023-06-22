@@ -14,7 +14,6 @@ namespace GDX.Editor.Inspectors
     [CustomEditor(typeof(StableDataTable))]
     public class StableDataTableInspector : DataTableInspectorBase
     {
-
 #if UNITY_2022_2_OR_NEWER
 #if GDX_TOOLS
         [MenuItem("Tools/GDX/Create StableTable Example", false)]
@@ -25,74 +24,78 @@ namespace GDX.Editor.Inspectors
             AssetDatabase.CreateAsset(asset, "Assets/StableTableExample.asset");
             AssetDatabase.SaveAssets();
 
+            BuildExample(asset);
+
             EditorUtility.FocusProjectWindow();
             Selection.activeObject = asset;
 
-            asset.SetFlag(DataTableBase.Settings.EnableUndo, true);
-
-            asset.AddColumn(Serializable.SerializableTypes.String, "String");
-            asset.AddRow("0");
-            asset.AddColumn(Serializable.SerializableTypes.Char, "Char");
-            asset.AddRow("1");
-            asset.AddColumn(Serializable.SerializableTypes.Bool, "Bool");
-            asset.AddRow("2");
-            asset.AddColumn(Serializable.SerializableTypes.SByte, "SByte");
-            asset.AddRow("3");
-            asset.AddColumn(Serializable.SerializableTypes.Byte, "Byte");
-            asset.AddRow("4");
-            asset.AddColumn(Serializable.SerializableTypes.Short, "Short");
-            asset.AddRow("5");
-            asset.AddColumn(Serializable.SerializableTypes.UShort, "UShort");
-            asset.AddRow("6");
-            asset.AddColumn(Serializable.SerializableTypes.Int, "Int");
-            asset.AddRow("7");
-            asset.AddColumn(Serializable.SerializableTypes.UInt, "UInt");
-            asset.AddRow("8");
-            asset.AddColumn(Serializable.SerializableTypes.Long, "Long");
-            asset.AddRow("9");
-            asset.AddColumn(Serializable.SerializableTypes.ULong, "ULong");
-            asset.AddRow("10");
-            asset.AddColumn(Serializable.SerializableTypes.Float, "Float");
-            asset.AddRow("11");
-            asset.AddColumn(Serializable.SerializableTypes.Double, "Double");
-            asset.AddRow("12");
-            asset.AddColumn(Serializable.SerializableTypes.Vector2, "Vector2");
-            asset.AddRow("13");
-            asset.AddColumn(Serializable.SerializableTypes.Vector3, "Vector3");
-            asset.AddRow("14");
-            asset.AddColumn(Serializable.SerializableTypes.Vector4, "Vector4");
-            asset.AddRow("15");
-            asset.AddColumn(Serializable.SerializableTypes.Vector2Int, "Vector2Int");
-            asset.AddRow("16");
-            asset.AddColumn(Serializable.SerializableTypes.Vector3Int, "Vector3Int");
-            asset.AddRow("17");
-            asset.AddColumn(Serializable.SerializableTypes.Quaternion, "Quaternion");
-            asset.AddRow("18");
-            asset.AddColumn(Serializable.SerializableTypes.Rect, "Rect");
-            asset.AddRow("19");
-            asset.AddColumn(Serializable.SerializableTypes.RectInt, "RectInt");
-            asset.AddRow("20");
-            asset.AddColumn(Serializable.SerializableTypes.Color, "Color");
-            asset.AddRow("21");
-            asset.AddColumn(Serializable.SerializableTypes.LayerMask, "LayerMask");
-            asset.AddRow("22");
-            asset.AddColumn(Serializable.SerializableTypes.Bounds, "Bounds");
-            asset.AddRow("23");
-            asset.AddColumn(Serializable.SerializableTypes.BoundsInt, "BoundsInt");
-            asset.AddRow("24");
-            asset.AddColumn(Serializable.SerializableTypes.Hash128, "Hash128");
-            asset.AddRow("25");
-            asset.AddColumn(Serializable.SerializableTypes.Gradient, "Gradient");
-            asset.AddRow("26");
-            asset.AddColumn(Serializable.SerializableTypes.AnimationCurve, "AnimationCurve");
-            asset.AddRow("27");
-            asset.AddColumn(Serializable.SerializableTypes.Object, "Object");
-            asset.AddRow("28");
-            int enumID = asset.AddColumn(Serializable.SerializableTypes.EnumInt, "EnumInt");
-            asset.SetTypeNameForColumn(enumID, Reflection.SerializedTypesName);
-            asset.AddRow("29");
-
             DataTableWindowProvider.OpenAsset(asset);
+        }
+
+        public static void BuildExample(StableDataTable table)
+        {
+            table.SetFlag(DataTableBase.Settings.EnableUndo, true);
+            table.AddColumn(Serializable.SerializableTypes.String, "String");
+            table.AddRow("0");
+            table.AddColumn(Serializable.SerializableTypes.Char, "Char");
+            table.AddRow("1");
+            table.AddColumn(Serializable.SerializableTypes.Bool, "Bool");
+            table.AddRow("2");
+            table.AddColumn(Serializable.SerializableTypes.SByte, "SByte");
+            table.AddRow("3");
+            table.AddColumn(Serializable.SerializableTypes.Byte, "Byte");
+            table.AddRow("4");
+            table.AddColumn(Serializable.SerializableTypes.Short, "Short");
+            table.AddRow("5");
+            table.AddColumn(Serializable.SerializableTypes.UShort, "UShort");
+            table.AddRow("6");
+            table.AddColumn(Serializable.SerializableTypes.Int, "Int");
+            table.AddRow("7");
+            table.AddColumn(Serializable.SerializableTypes.UInt, "UInt");
+            table.AddRow("8");
+            table.AddColumn(Serializable.SerializableTypes.Long, "Long");
+            table.AddRow("9");
+            table.AddColumn(Serializable.SerializableTypes.ULong, "ULong");
+            table.AddRow("10");
+            table.AddColumn(Serializable.SerializableTypes.Float, "Float");
+            table.AddRow("11");
+            table.AddColumn(Serializable.SerializableTypes.Double, "Double");
+            table.AddRow("12");
+            table.AddColumn(Serializable.SerializableTypes.Vector2, "Vector2");
+            table.AddRow("13");
+            table.AddColumn(Serializable.SerializableTypes.Vector3, "Vector3");
+            table.AddRow("14");
+            table.AddColumn(Serializable.SerializableTypes.Vector4, "Vector4");
+            table.AddRow("15");
+            table.AddColumn(Serializable.SerializableTypes.Vector2Int, "Vector2Int");
+            table.AddRow("16");
+            table.AddColumn(Serializable.SerializableTypes.Vector3Int, "Vector3Int");
+            table.AddRow("17");
+            table.AddColumn(Serializable.SerializableTypes.Quaternion, "Quaternion");
+            table.AddRow("18");
+            table.AddColumn(Serializable.SerializableTypes.Rect, "Rect");
+            table.AddRow("19");
+            table.AddColumn(Serializable.SerializableTypes.RectInt, "RectInt");
+            table.AddRow("20");
+            table.AddColumn(Serializable.SerializableTypes.Color, "Color");
+            table.AddRow("21");
+            table.AddColumn(Serializable.SerializableTypes.LayerMask, "LayerMask");
+            table.AddRow("22");
+            table.AddColumn(Serializable.SerializableTypes.Bounds, "Bounds");
+            table.AddRow("23");
+            table.AddColumn(Serializable.SerializableTypes.BoundsInt, "BoundsInt");
+            table.AddRow("24");
+            table.AddColumn(Serializable.SerializableTypes.Hash128, "Hash128");
+            table.AddRow("25");
+            table.AddColumn(Serializable.SerializableTypes.Gradient, "Gradient");
+            table.AddRow("26");
+            table.AddColumn(Serializable.SerializableTypes.AnimationCurve, "AnimationCurve");
+            table.AddRow("27");
+            table.AddColumn(Serializable.SerializableTypes.Object, "Object");
+            table.AddRow("28");
+            int enumID = table.AddColumn(Serializable.SerializableTypes.EnumInt, "EnumInt");
+            table.SetTypeNameForColumn(enumID, Reflection.SerializedTypesName);
+            table.AddRow("29");
         }
 #endif // UNITY_2022_2_OR_NEWER
     }
