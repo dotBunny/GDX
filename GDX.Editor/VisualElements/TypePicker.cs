@@ -30,7 +30,7 @@ namespace GDX.Editor.VisualElements
 
         // Working data sets for the list view
         SimpleList<string> m_TypeQualifiedNames;
-        SimpleList<string> m_TypeQualifiedNamesUpperCase;
+        SimpleList<string> m_TypeFullNames;
 
         public TypePicker(TextField textField, VisualElement lastChildOfElement, VisualElement containerElement,
             Action onSelected = null)
@@ -113,7 +113,7 @@ namespace GDX.Editor.VisualElements
             }
 
             m_TypeQualifiedNames = new SimpleList<string>(count);
-            m_TypeQualifiedNamesUpperCase = new SimpleList<string>(count);
+            m_TypeFullNames = new SimpleList<string>(count);
             m_DisplayName = new SimpleList<string>(count);
             m_Namespace = new SimpleList<string>(count);
             foreach (Type type in collection)
@@ -130,7 +130,7 @@ namespace GDX.Editor.VisualElements
                 }
 
                 m_TypeQualifiedNames.AddUnchecked(Reflection.GetTypeQualifiedName(type));
-                m_TypeQualifiedNamesUpperCase.AddUnchecked(type.FullName.ToUpper());
+                m_TypeFullNames.AddUnchecked(type.FullName.ToUpper());
                 m_DisplayName.AddUnchecked(type.Name);
                 m_Namespace.AddUnchecked(type.Namespace);
             }
@@ -138,13 +138,13 @@ namespace GDX.Editor.VisualElements
             if (includeBaseType && baseType.FullName != null)
             {
                 m_TypeQualifiedNames.AddUnchecked(Reflection.GetTypeQualifiedName(baseType));
-                m_TypeQualifiedNamesUpperCase.AddUnchecked(baseType.FullName.ToUpper());
+                m_TypeFullNames.AddUnchecked(baseType.FullName.ToUpper());
                 m_DisplayName.AddUnchecked(baseType.Name);
                 m_Namespace.AddUnchecked(baseType.Namespace);
             }
 
             m_TypeQualifiedNames.Compact();
-            m_TypeQualifiedNamesUpperCase.Compact();
+            m_TypeFullNames.Compact();
             m_TypeCount = m_TypeQualifiedNames.Count;
             m_DisplayName.Compact();
             m_Namespace.Compact();
@@ -252,7 +252,7 @@ namespace GDX.Editor.VisualElements
                 {
 
                     // We use ordinal because we already have adjusted the case
-                    if (m_TypeQualifiedNamesUpperCase.Array[m_FilteredTypes[i]].IndexOf(token, StringComparison.Ordinal) == -1)
+                    if (m_TypeFullNames.Array[m_FilteredTypes[i]].IndexOf(token, StringComparison.Ordinal) == -1)
                     {
                         m_FilteredTypes.RemoveAt(i);
                     }
@@ -264,7 +264,7 @@ namespace GDX.Editor.VisualElements
                 m_FilteredTypes.Clear();
                 for (int i = 0; i < m_TypeCount; i++)
                 {
-                    if (m_TypeQualifiedNamesUpperCase.Array[i].IndexOf(token, StringComparison.Ordinal) != -1)
+                    if (m_TypeFullNames.Array[i].IndexOf(token, StringComparison.Ordinal) != -1)
                     {
                         m_FilteredTypes.Add(i);
                     }
