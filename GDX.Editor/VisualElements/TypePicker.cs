@@ -124,20 +124,21 @@ namespace GDX.Editor.VisualElements
                     continue;
                 }
 
-                string qualifiedName = Reflection.GetTypeQualifiedName(type);
-                m_TypeQualifiedNames.AddUnchecked(qualifiedName);
-                m_TypeQualifiedNamesUpperCase.AddUnchecked(qualifiedName.ToUpper());
+                if (type.FullName == null)
+                {
+                    continue;
+                }
 
+                m_TypeQualifiedNames.AddUnchecked(Reflection.GetTypeQualifiedName(type));
+                m_TypeQualifiedNamesUpperCase.AddUnchecked(type.FullName.ToUpper());
                 m_DisplayName.AddUnchecked(type.Name);
                 m_Namespace.AddUnchecked(type.Namespace);
             }
 
-            if (includeBaseType)
+            if (includeBaseType && baseType.FullName != null)
             {
-                string qualifiedBaseTypeName = Reflection.GetTypeQualifiedName(baseType);
-                m_TypeQualifiedNames.AddUnchecked(qualifiedBaseTypeName);
-                m_TypeQualifiedNamesUpperCase.AddUnchecked(qualifiedBaseTypeName.ToUpper());
-
+                m_TypeQualifiedNames.AddUnchecked(Reflection.GetTypeQualifiedName(baseType));
+                m_TypeQualifiedNamesUpperCase.AddUnchecked(baseType.FullName.ToUpper());
                 m_DisplayName.AddUnchecked(baseType.Name);
                 m_Namespace.AddUnchecked(baseType.Namespace);
             }
