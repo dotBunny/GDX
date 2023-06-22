@@ -1843,12 +1843,12 @@ namespace GDX.DataTables
 
             if (typeIndex == Serializable.SerializableTypes.Object)
             {
-                AddTypeNameEntry(ref m_AllObjectRefTypeNames, "UnityEngine.Object");
+                AddTypeNameEntry(ref m_AllObjectRefTypeNames, Reflection.UnityObjectName);
             }
 
             if (typeIndex == Serializable.SerializableTypes.EnumInt)
             {
-                AddTypeNameEntry(ref m_AllEnumIntTypeNames, "System.Int32");
+                AddTypeNameEntry(ref m_AllEnumIntTypeNames, Reflection.SerializedTypesName);
             }
 
             m_ColumnIdentifierToSortOrderMap[columnID] = insertAtSortedIndex;
