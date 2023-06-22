@@ -233,14 +233,28 @@ namespace GDX.Editor.VisualElements
             }
 
             string token = evt.newValue.ToLower();
-            m_FilteredTypes.Clear();
 
-            // TODO We should cache the artifacts and only search already sorted, need to bind to clear them somehow
-            for (int i = 0; i < m_TypeCount; i++)
+            // Optimized search
+            if (evt.previousValue != null && evt.newValue.StartsWith(evt.previousValue))
             {
-                if (m_TypeQualifiedNames.Array[i].Contains(token, StringComparison.InvariantCultureIgnoreCase))
+                for (int i = m_FilteredTypes.Count - 1; i >= 0; i--)
                 {
-                    m_FilteredTypes.Add(i);
+                    if (!m_TypeQualifiedNames.Array[i].Contains(token, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        m_FilteredTypes.Remove(i);
+                    }
+                }
+            }
+            else
+            {
+                // Full search
+                m_FilteredTypes.Clear();
+                for (int i = 0; i < m_TypeCount; i++)
+                {
+                    if (m_TypeQualifiedNames.Array[i].Contains(token, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        m_FilteredTypes.Add(i);
+                    }
                 }
             }
 
