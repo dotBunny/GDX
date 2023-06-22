@@ -172,7 +172,8 @@ namespace GDX.Editor.Windows.DataTables
             switch ((Serializable.SerializableTypes)type)
             {
                 case Serializable.SerializableTypes.EnumInt:
-                    m_AddColumnFilter.value = Reflection.SerializedTypesName;
+                    m_AddColumnFilter.SetValueWithoutNotify(Reflection.SerializedTypesName);
+                    ValidateAssemblyQualifiedNameInPlace();
                     m_AddColumnFilter.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterPicker.RemoveFromClassList(ResourcesProvider.HiddenClass);
@@ -180,7 +181,8 @@ namespace GDX.Editor.Windows.DataTables
                     m_AddColumnFilterPicker.ScheduleUpdateSizeAndPosition();
                     break;
                 case Serializable.SerializableTypes.Object:
-                    m_AddColumnFilter.value = Reflection.UnityObjectName;
+                    m_AddColumnFilter.SetValueWithoutNotify(Reflection.UnityObjectName);
+                    ValidateAssemblyQualifiedNameInPlace();
                     m_AddColumnFilter.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterPicker.RemoveFromClassList(ResourcesProvider.HiddenClass);

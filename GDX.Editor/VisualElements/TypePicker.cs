@@ -30,6 +30,7 @@ namespace GDX.Editor.VisualElements
 
         // Working data sets for the list view
         SimpleList<string> m_TypeQualifiedNames;
+        SimpleList<string> m_TypeQualifiedNamesUpperCase;
 
         public TypePicker(TextField textField, VisualElement lastChildOfElement, VisualElement containerElement,
             Action onSelected = null)
@@ -112,6 +113,7 @@ namespace GDX.Editor.VisualElements
             }
 
             m_TypeQualifiedNames = new SimpleList<string>(count);
+            m_TypeQualifiedNamesUpperCase = new SimpleList<string>(count);
             m_DisplayName = new SimpleList<string>(count);
             m_Namespace = new SimpleList<string>(count);
             foreach (Type type in collection)
@@ -122,19 +124,26 @@ namespace GDX.Editor.VisualElements
                     continue;
                 }
 
-                m_TypeQualifiedNames.AddUnchecked(Reflection.GetTypeQualifiedName(type));
+                string qualifiedName = Reflection.GetTypeQualifiedName(type);
+                m_TypeQualifiedNames.AddUnchecked(qualifiedName);
+                m_TypeQualifiedNamesUpperCase.AddUnchecked(qualifiedName.ToUpper());
+
                 m_DisplayName.AddUnchecked(type.Name);
                 m_Namespace.AddUnchecked(type.Namespace);
             }
 
             if (includeBaseType)
             {
-                m_TypeQualifiedNames.AddUnchecked(Reflection.GetTypeQualifiedName(baseType));
+                string qualifiedBaseTypeName = Reflection.GetTypeQualifiedName(baseType);
+                m_TypeQualifiedNames.AddUnchecked(qualifiedBaseTypeName);
+                m_TypeQualifiedNamesUpperCase.AddUnchecked(qualifiedBaseTypeName.ToUpper());
+
                 m_DisplayName.AddUnchecked(baseType.Name);
                 m_Namespace.AddUnchecked(baseType.Namespace);
             }
 
             m_TypeQualifiedNames.Compact();
+            m_TypeQualifiedNamesUpperCase.Compact();
             m_TypeCount = m_TypeQualifiedNames.Count;
             m_DisplayName.Compact();
             m_Namespace.Compact();
@@ -162,10 +171,12 @@ namespace GDX.Editor.VisualElements
 
         void BindItem(VisualElement container, int index)
         {
+            int filteredIndex = m_FilteredTypes[index];
             Label title = (Label)container[0];
-            title.text = m_DisplayName.Array[m_FilteredTypes[index]];
+            title.text = m_DisplayName.Array[filteredIndex];
+            title.tooltip = m_TypeQualifiedNames.Array[filteredIndex];
             Label description = (Label)container[1];
-            description.text = m_Namespace.Array[m_FilteredTypes[index]];
+            description.text = m_Namespace.Array[filteredIndex];
         }
 
         void OnContainerGeometryChanged(GeometryChangedEvent evt)
@@ -232,16 +243,18 @@ namespace GDX.Editor.VisualElements
                 return;
             }
 
-            string token = evt.newValue.ToLower();
+            string token = evt.newValue.ToUpper();
 
             // Optimized search
             if (evt.previousValue != null && evt.newValue.StartsWith(evt.previousValue))
             {
                 for (int i = m_FilteredTypes.Count - 1; i >= 0; i--)
                 {
-                    if (!m_TypeQualifiedNames.Array[i].Contains(token, StringComparison.InvariantCultureIgnoreCase))
+
+                    // We use ordinal because we already have adjusted the case
+                    if (m_TypeQualifiedNamesUpperCase.Array[m_FilteredTypes[i]].IndexOf(token, StringComparison.Ordinal) == -1)
                     {
-                        m_FilteredTypes.Remove(i);
+                        m_FilteredTypes.RemoveAt(i);
                     }
                 }
             }
@@ -251,7 +264,7 @@ namespace GDX.Editor.VisualElements
                 m_FilteredTypes.Clear();
                 for (int i = 0; i < m_TypeCount; i++)
                 {
-                    if (m_TypeQualifiedNames.Array[i].Contains(token, StringComparison.InvariantCultureIgnoreCase))
+                    if (m_TypeQualifiedNamesUpperCase.Array[i].IndexOf(token, StringComparison.Ordinal) != -1)
                     {
                         m_FilteredTypes.Add(i);
                     }
@@ -261,6 +274,7 @@ namespace GDX.Editor.VisualElements
             m_ListView.selectedIndex = -1;
             m_ListView.itemsSource = m_FilteredTypes;
             m_ListView.RefreshItems();
+
             m_LastQuery = evt.newValue;
 
             if (m_FilteredTypes.Count == 0)
