@@ -174,7 +174,6 @@ namespace GDX.Editor.VisualElements
             int filteredIndex = m_FilteredTypes[index];
             Label title = (Label)container[0];
             title.text = m_DisplayName.Array[filteredIndex];
-            title.tooltip = m_TypeQualifiedNames.Array[filteredIndex];
             Label description = (Label)container[1];
             description.text = m_Namespace.Array[filteredIndex];
         }
