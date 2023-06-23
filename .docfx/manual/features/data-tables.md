@@ -48,6 +48,9 @@ Table information is tracked in the editor via a reference counting mechanism. T
 
 Bringing a spreadsheet-like editing experience to DataTables, this window allows for a designer or developer to quickly work on the structure or data of a DataTable in a familiar and expected experience. A unique-to-asset window will appear by double-clicking a DataTable asset or clicking the **Open** button while inspecting it.
 
+> [!INFO]
+> A lock icon may be on the toolbar's right side indicating that the Data Table has been put in **References Only* mode, allowing for editing of only Unity-specific references.
+
 ### Shortcuts
 
 Some default shortcuts are bound to the Table Window, modelled after existing expected behaviours.
