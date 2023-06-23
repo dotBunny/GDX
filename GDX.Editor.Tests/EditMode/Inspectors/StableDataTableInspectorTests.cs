@@ -22,13 +22,19 @@ namespace GDX.Editor.Inspectors
         public void BuildExample_NoUnexpectedLogs()
         {
             StableDataTable table = null;
+            DataTableMetaData meta = null;
             try
             {
                 table = ScriptableObject.CreateInstance<StableDataTable>();
+                meta = ScriptableObject.CreateInstance<DataTableMetaData>();
+
+                table.metaData = meta;
+
                 StableDataTableInspector.BuildExample(table);
             }
             finally
             {
+                Object.DestroyImmediate(meta);
                 Object.DestroyImmediate(table);
             }
 

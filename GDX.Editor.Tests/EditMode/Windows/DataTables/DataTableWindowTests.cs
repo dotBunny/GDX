@@ -18,6 +18,7 @@ namespace GDX.Editor.Windows.DataTables
     public class DataTableWindowTests
     {
         DataTableBase m_TestDataTable;
+        DataTableMetaData m_TestTableMeta;
         DataTableWindow m_DataTableWindow;
         DataTableWindowController m_DataTableWindowController;
 
@@ -25,6 +26,9 @@ namespace GDX.Editor.Windows.DataTables
         public IEnumerator Setup()
         {
             m_TestDataTable = ScriptableObject.CreateInstance<StableDataTable>();
+            m_TestTableMeta = ScriptableObject.CreateInstance<DataTableMetaData>();
+            m_TestDataTable.metaData = m_TestTableMeta;
+
             StableDataTableInspector.BuildExample((StableDataTable)m_TestDataTable);
             m_DataTableWindow = DataTableWindowProvider.OpenAsset(m_TestDataTable);
             m_DataTableWindowController = m_DataTableWindow.GetController();
@@ -35,6 +39,8 @@ namespace GDX.Editor.Windows.DataTables
         public IEnumerator TearDown()
         {
             m_DataTableWindow.Close();
+
+            Object.DestroyImmediate(m_TestTableMeta);
             Object.DestroyImmediate(m_TestDataTable);
             yield return null;
         }

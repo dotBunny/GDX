@@ -35,7 +35,7 @@ namespace GDX.DataTables
         ///     A reference to the author-time meta information which will not be included at runtime.
         /// </summary>
         [FormerlySerializedAs("m_Meta")] [SerializeField]
-        protected DataTableMetaData metaData;
+        internal DataTableMetaData metaData;
 
         /// <summary>
         ///     Add a column.

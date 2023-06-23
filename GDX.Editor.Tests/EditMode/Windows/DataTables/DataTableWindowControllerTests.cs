@@ -24,6 +24,8 @@ namespace GDX.Editor.Windows.DataTables
         public IEnumerator Setup()
         {
             m_TestDataTable = ScriptableObject.CreateInstance<StableDataTable>();
+            m_TestDataTable.metaData = ScriptableObject.CreateInstance<DataTableMetaData>();
+
             m_DataTableWindow = DataTableWindowProvider.OpenAsset(m_TestDataTable);
             m_DataTableWindowController = m_DataTableWindow.GetController();
             yield return null;
@@ -33,6 +35,7 @@ namespace GDX.Editor.Windows.DataTables
         public IEnumerator TearDown()
         {
             m_DataTableWindow.Close();
+            Object.DestroyImmediate(m_TestDataTable.metaData);
             Object.DestroyImmediate(m_TestDataTable);
             yield return null;
         }
