@@ -114,7 +114,7 @@ namespace GDX.DataTables
         /// <returns>The associated metadata for the <see cref="DataTableBase" />.</returns>
         public DataTableMetaData GetMetaData()
         {
-#if UNITY_EDITOR && UNITY_2022_2_OR_NEWER
+#if UNITY_EDITOR && UNITY_2021_3_OR_NEWER
             if (m_MetaData == null)
             {
                 // When the asset is created, a pseudo asset sits until a filename is chosen, its not on disk,

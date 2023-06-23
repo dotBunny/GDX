@@ -16,7 +16,7 @@ namespace GDX.DataTables
     /// </remarks>
     public class DataTableMetaData : ScriptableObject
     {
-#if UNITY_2022_2_OR_NEWER
+#if UNITY_2021_3_OR_NEWER
 
 #pragma warning disable IDE1006
         // ReSharper disable InconsistentNaming
