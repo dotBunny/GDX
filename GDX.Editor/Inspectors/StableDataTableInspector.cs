@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System.Data.Common;
 using GDX.DataTables;
 using GDX.Editor.Windows.DataTables;
 using UnityEditor;
@@ -34,7 +35,7 @@ namespace GDX.Editor.Inspectors
 
         public static void BuildExample(StableDataTable table)
         {
-            table.SetFlag(DataTableBase.Settings.EnableUndo, true);
+            table.GetMeta().AllowUndo = true;
             int typeCount = Serializable.SerializableTypesCount;
             for (int i = 0; i < typeCount; i++)
             {

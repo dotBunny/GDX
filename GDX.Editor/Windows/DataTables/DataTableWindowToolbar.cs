@@ -151,7 +151,7 @@ namespace GDX.Editor.Windows.DataTables
 
         public void UpdateForSettings()
         {
-            m_ToolbarReferencesOnlyStatus.style.display = m_ParentWindow.GetDataTable().GetFlag(DataTableBase.Settings.ReferenceOnlyMode) ? DisplayStyle.Flex : DisplayStyle.None;
+            m_ToolbarReferencesOnlyStatus.style.display = m_ParentWindow.GetDataTable().GetMeta().ReferencesOnlyMode ? DisplayStyle.Flex : DisplayStyle.None;
         }
     }
 #endif // UNITY_2022_2_OR_NEWER

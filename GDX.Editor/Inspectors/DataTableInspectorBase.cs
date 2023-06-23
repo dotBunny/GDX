@@ -105,7 +105,18 @@ namespace GDX.Editor.Inspectors
         /// <inheritdoc />
         public override VisualElement CreateInspectorGUI()
         {
+
             DataTableBase dataTable = (DataTableBase)target;
+
+            // This is for when it is being created, we do not want to show anything until they have saved to disk the first time.
+            if (!EditorUtility.IsPersistent(target))
+            {
+                return new TextElement()
+                {
+                    text = "A DataTable must be present on disk before this inspector will populate.",
+                    style = { unityFontStyleAndWeight = FontStyle.Italic }
+                };
+            }
 
             m_TableTicket = DataTableTracker.RegisterTable(dataTable);
             m_RootElement = new VisualElement();
@@ -179,12 +190,12 @@ namespace GDX.Editor.Inspectors
             {
                 if (dataTable.Migrate(currentStructureVersion))
                 {
-                    Debug.Log($"Migrated {dataTable.GetDisplayName()} from Structure version {tableStructureVersion.ToString()} to version {currentStructureVersion.ToString()}.");
+                    Debug.Log($"Migrated {dataTable.GetMeta().DisplayName} from Structure version {tableStructureVersion.ToString()} to version {currentStructureVersion.ToString()}.");
                     AssetDatabase.SaveAssetIfDirty(dataTable);
                 }
                 else
                 {
-                    Debug.LogWarning($"Attempted to migrate {dataTable.GetDisplayName()} from Structure version {tableStructureVersion.ToString()} to version {currentStructureVersion.ToString()}.");
+                    Debug.LogWarning($"Attempted to migrate {dataTable.GetMeta().DisplayName} from Structure version {tableStructureVersion.ToString()} to version {currentStructureVersion.ToString()}.");
                 }
             }
 
@@ -206,7 +217,7 @@ namespace GDX.Editor.Inspectors
             DataTableBase dataTable = (DataTableBase)target;
             StringBuilder content = new StringBuilder(100);
 
-            m_DataTableLabel.text = dataTable.GetDisplayName();
+            m_DataTableLabel.text = dataTable.GetMeta().DisplayName;
 
             if (dataTable.GetRowCount() == 0)
             {
@@ -287,13 +298,13 @@ namespace GDX.Editor.Inspectors
             string savePath;
             if (format == DataTableInterchange.Format.CommaSeperatedValues)
             {
-                savePath = EditorUtility.SaveFilePanel($"Export {dataTable.GetDisplayName()} to CSV",
+                savePath = EditorUtility.SaveFilePanel($"Export {dataTable.GetMeta().DisplayName} to CSV",
                     Application.dataPath,
                     dataTable.name, "csv");
             }
             else
             {
-                savePath = EditorUtility.SaveFilePanel($"Export {dataTable.GetDisplayName()} to JSON",
+                savePath = EditorUtility.SaveFilePanel($"Export {dataTable.GetMeta().DisplayName} to JSON",
                     Application.dataPath,
                     dataTable.name, "json");
             }
@@ -310,13 +321,13 @@ namespace GDX.Editor.Inspectors
                     DataTableInterchange.Export(dataTable, DataTableInterchange.Format.JavaScriptObjectNotation,
                         savePath);
                 }
-                Debug.Log($"'{dataTable.GetDisplayName()}' was exported to {savePath}.");
+                Debug.Log($"'{dataTable.GetMeta().DisplayName}' was exported to {savePath}.");
             }
         }
 
         public static void ShowImportDialogForTable(DataTableBase dataTable)
         {
-            string openPath = EditorUtility.OpenFilePanelWithFilters($"Import into {dataTable.GetDisplayName()}",
+            string openPath = EditorUtility.OpenFilePanelWithFilters($"Import into {dataTable.GetMeta().DisplayName}",
                 Application.dataPath, new[] { "JSON", "json", "CSV", "csv" });
 
             if (string.IsNullOrEmpty(openPath))
@@ -339,7 +350,7 @@ namespace GDX.Editor.Inspectors
                     return;
             }
 
-            if (EditorUtility.DisplayDialog($"Replace '{dataTable.GetDisplayName()}' Content",
+            if (EditorUtility.DisplayDialog($"Replace '{dataTable.GetMeta().DisplayName}' Content",
                     $"Are you sure you want to replace your tables content with the imported content?\n\nThe structural format of the content needs to match the column structure of the existing table; reference types will not replace the data in the existing cells at that location. Make sure the first row contains the column names, and that you have not altered columns.",
                     "Yes", "No"))
             {

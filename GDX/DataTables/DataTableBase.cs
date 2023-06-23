@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace GDX.DataTables
 {
@@ -29,6 +30,12 @@ namespace GDX.DataTables
             /// <remarks>This is useful for when the source of truth of the data lives in an outside source.</remarks>
             ReferenceOnlyMode = 1
         }
+
+        /// <summary>
+        ///     A reference to the author-time meta information which will not be included at runtime.
+        /// </summary>
+        [FormerlySerializedAs("m_Meta")] [SerializeField]
+        protected DataTableMetaData metaData;
 
         /// <summary>
         ///     Add a column.
@@ -112,30 +119,42 @@ namespace GDX.DataTables
         public abstract int GetRowCount();
 
         /// <summary>
-        ///     Get the user-assigned display name for the <see cref="DataTableBase" />.
+        ///     Gets/creates the meta sub object used to store author-time information with the data table.
         /// </summary>
         /// <returns></returns>
-        public abstract string GetDisplayName();
+        public DataTableMetaData GetMeta()
+        {
+#if UNITY_EDITOR
+            if (metaData == null)
+            {
+                // When the asset is created, a pseudo asset sits until a filename is chosen, its not on disk,
+                // So we dont want to do anything because nothing is real at the time.
+                if (!UnityEditor.EditorUtility.IsPersistent(this))
+                {
+                    return null;
+                }
 
-        /// <summary>
-        ///     Set the user-assigned display name for the <see cref="DataTableBase" />.
-        /// </summary>
-        /// <param name="displayName"></param>
-        public abstract void SetDisplayName(string displayName);
+                // Now we can make the meta object
+                DataTableMetaData metaDataInstance = CreateInstance<DataTableMetaData>();
 
-        /// <summary>
-        ///     Get the given flag status based on the provided <see cref="Settings" /> index.
-        /// </summary>
-        /// <param name="setting">The desired index to check.</param>
-        /// <returns>The true/false status of the requested setting.</returns>
-        public abstract bool GetFlag(Settings setting);
+                metaData = metaDataInstance;
+                metaData.name = "DataTableMetaData_EditorOnly";
+                metaData.hideFlags = HideFlags.DontSaveInBuild | HideFlags.HideInHierarchy | HideFlags.NotEditable | HideFlags.HideInInspector;
 
-        /// <summary>
-        ///     Set the given flag status based on the provided <see cref="Settings" /> index.
-        /// </summary>
-        /// <param name="setting">The desired index to set.</param>
-        /// <param name="toggle">The new value of the flag.</param>
-        public abstract void SetFlag(Settings setting, bool toggle);
+                UnityEditor.AssetDatabase.AddObjectToAsset(metaDataInstance, this);
+
+                UnityEditor.EditorUtility.SetDirty(metaData);
+                UnityEditor.AssetDatabase.SaveAssetIfDirty(metaData);
+
+                UnityEditor.EditorUtility.SetDirty(this);
+                UnityEditor.AssetDatabase.SaveAssetIfDirty(this);
+
+            }
+            return metaData;
+#else
+            return null;
+#endif
+        }
 
         /// <summary>
         ///     Get all rows' <see cref="RowDescription" />; ordered.

@@ -150,7 +150,7 @@ namespace GDX.Editor.Windows.DataTables
                 return;
             }
 
-            if (skipDialog || EditorUtility.DisplayDialog($"Save {m_DataTable.GetDisplayName()}", "There are changes made to the table (in memory) which have not been saved to disk. Would you like to write those changes to disk now?", "Yes", "No"))
+            if (skipDialog || EditorUtility.DisplayDialog($"Save {m_DataTable.GetMeta().DisplayName}", "There are changes made to the table (in memory) which have not been saved to disk. Would you like to write those changes to disk now?", "Yes", "No"))
             {
                 AssetDatabase.SaveAssetIfDirty(m_DataTable);
             }
@@ -194,7 +194,7 @@ namespace GDX.Editor.Windows.DataTables
 
         public void RebindTable()
         {
-            titleContent = new GUIContent(m_DataTable.GetDisplayName());
+            titleContent = new GUIContent(m_DataTable.GetMeta().DisplayName);
 
             int columnCount = m_DataTable.GetColumnCount();
             if (columnCount == 0)
@@ -239,7 +239,7 @@ namespace GDX.Editor.Windows.DataTables
 
         public void OnSettingsChange()
         {
-            titleContent = new GUIContent(m_DataTable.GetDisplayName());
+            titleContent = new GUIContent(m_DataTable.GetMeta().DisplayName);
             m_View.RefreshItems();
             m_Toolbar.UpdateForSettings();
         }
@@ -262,7 +262,7 @@ namespace GDX.Editor.Windows.DataTables
 
         public void OnUndoRedoSettingsChanged()
         {
-            titleContent = new GUIContent(m_DataTable.GetDisplayName());
+            titleContent = new GUIContent(m_DataTable.GetMeta().DisplayName);
         }
     }
 #endif // UNITY_2022_2_OR_NEWER

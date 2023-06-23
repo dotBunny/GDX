@@ -300,12 +300,12 @@ namespace GDX.Editor.Windows.DataTables
                 case OverlayState.Settings:
                     m_RootElement.style.display = DisplayStyle.Flex;
                     m_SettingsOverlay.style.display = DisplayStyle.Flex;
-                    m_SettingsDisplayName.SetValueWithoutNotify(m_DataTableWindow.GetDataTable().GetDisplayName());
+                    m_SettingsDisplayName.SetValueWithoutNotify(m_DataTableWindow.GetDataTable().GetMeta().DisplayName);
 #if UNITY_2022_2_OR_NEWER
                     m_SettingsSupportUndoToggle.SetValueWithoutNotify(m_DataTableWindow.GetDataTable()
-                        .GetFlag(DataTableBase.Settings.EnableUndo));
+                        .GetMeta().AllowUndo);
                     m_SettingsReferenceOnlyModeToggle.SetValueWithoutNotify(m_DataTableWindow.GetDataTable()
-                        .GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+                        .GetMeta().ReferencesOnlyMode);
 #else
                     m_SettingsSupportUndoToggle.SetEnabled(false);
                     m_SettingsSupportUndoToggle.SetValueWithoutNotify(false);

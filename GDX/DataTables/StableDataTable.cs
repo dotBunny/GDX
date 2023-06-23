@@ -15,7 +15,6 @@ namespace GDX.DataTables
     {
 #pragma warning disable IDE1006
         // ReSharper disable InconsistentNaming
-        [SerializeField] internal string m_DisplayName = "GDXStableTable";
         [SerializeField] internal ArrayHolder<string>[] m_AllStringColumns;
         [SerializeField] internal ArrayHolder<bool>[] m_AllBoolColumns;
         [SerializeField] internal ArrayHolder<char>[] m_AllCharColumns;
@@ -70,7 +69,7 @@ namespace GDX.DataTables
         [SerializeField] internal int m_ColumnEntriesFreeListHead;
         [SerializeField] internal int m_CombinedColumnCount;
         [SerializeField] internal ulong m_DataVersion = 1;
-        [SerializeField] internal BitArray8 m_SettingsFlags;
+
         // ReSharper enable InconsistentNaming
 #pragma warning restore IDE1006
 
@@ -126,30 +125,6 @@ namespace GDX.DataTables
         public override int GetRowCount()
         {
             return m_RowCount;
-        }
-
-        /// <inheritdoc />
-        public override string GetDisplayName()
-        {
-            return m_DisplayName;
-        }
-
-        /// <inheritdoc />
-        public override void SetDisplayName(string displayName)
-        {
-            m_DisplayName = displayName;
-        }
-
-        /// <inheritdoc />
-        public override bool GetFlag(Settings setting)
-        {
-            return m_SettingsFlags[(byte)setting];
-        }
-
-        /// <inheritdoc />
-        public override void SetFlag(Settings setting, bool toggle)
-        {
-            m_SettingsFlags[(byte)setting] = toggle;
         }
 
         /// <inheritdoc />

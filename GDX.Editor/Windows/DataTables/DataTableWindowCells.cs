@@ -42,7 +42,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindCharCell(VisualElement cell, int row)
@@ -67,7 +67,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindBoolCell(VisualElement cell, int row)
@@ -92,7 +92,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindSByteCell(VisualElement cell, int row)
@@ -117,7 +117,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindByteCell(VisualElement cell, int row)
@@ -142,7 +142,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindShortCell(VisualElement cell, int row)
@@ -167,7 +167,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindUShortCell(VisualElement cell, int row)
@@ -192,7 +192,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindIntCell(VisualElement cell, int row)
@@ -217,7 +217,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindUIntCell(VisualElement cell, int row)
@@ -254,7 +254,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindLongCell(VisualElement cell, int row)
@@ -279,7 +279,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindULongCell(VisualElement cell, int row)
@@ -317,7 +317,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindFloatCell(VisualElement cell, int row)
@@ -342,7 +342,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindDoubleCell(VisualElement cell, int row)
@@ -367,7 +367,8 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
+
         }
 
         internal static void BindVector2Cell(VisualElement cell, int row)
@@ -392,7 +393,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindVector3Cell(VisualElement cell, int row)
@@ -417,7 +418,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindVector4Cell(VisualElement cell, int row)
@@ -442,7 +443,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindVector2IntCell(VisualElement cell, int row)
@@ -468,7 +469,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindVector3IntCell(VisualElement cell, int row)
@@ -494,7 +495,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindQuaternionCell(VisualElement cell, int row)
@@ -525,7 +526,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindRectCell(VisualElement cell, int row)
@@ -550,7 +551,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindRectIntCell(VisualElement cell, int row)
@@ -575,7 +576,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindColorCell(VisualElement cell, int row)
@@ -600,7 +601,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindLayerMaskCell(VisualElement cell, int row)
@@ -626,7 +627,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindBoundsCell(VisualElement cell, int row)
@@ -651,7 +652,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindBoundsIntCell(VisualElement cell, int row)
@@ -677,7 +678,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static void BindHash128Cell(VisualElement cell, int row)
@@ -807,7 +808,7 @@ namespace GDX.Editor.Windows.DataTables
                     local.ColumnIdentifier,
                     window);
             });
-            //field.SetEnabled(!dataTable.GetFlag(DataTableBase.Settings.ReferenceOnlyMode));
+            //field.SetEnabled(!dataTable.GetMeta().ReferencesOnlyMode);
         }
 
         internal static VisualElement MakeStringCell(DataTableWindowView view, int table, int column)

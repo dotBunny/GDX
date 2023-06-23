@@ -246,7 +246,7 @@ namespace GDX.Editor
             }
 
             DataTableBase table = k_TableTicketToTable[tableTicket];
-            if (!table.GetFlag(DataTableBase.Settings.EnableUndo))
+            if (!table.GetMeta().AllowUndo)
                 return;
 
             Undo.RegisterCompleteObjectUndo(table, $"DataTable {tableTicket} Cell {rowIdentifier} {columnIdentifier} - Value Changed");
@@ -267,7 +267,7 @@ namespace GDX.Editor
             }
 
             DataTableBase table = k_TableTicketToTable[tableTicket];
-            if (!table.GetFlag(DataTableBase.Settings.EnableUndo))
+            if (!table.GetMeta().AllowUndo)
                 return;
 
             if (string.IsNullOrEmpty(actionDescription))
@@ -301,7 +301,7 @@ namespace GDX.Editor
             }
 
             DataTableBase table = k_TableTicketToTable[tableTicket];
-            if (!table.GetFlag(DataTableBase.Settings.EnableUndo))
+            if (!table.GetMeta().AllowUndo)
                 return;
 
             if (string.IsNullOrEmpty(actionDescription))
@@ -333,7 +333,7 @@ namespace GDX.Editor
             }
 
             DataTableBase table = k_TableTicketToTable[tableTicket];
-            if (!table.GetFlag(DataTableBase.Settings.EnableUndo))
+            if (!table.GetMeta().AllowUndo)
                 return;
 
             Undo.RegisterCompleteObjectUndo(table, $"DataTable {tableTicket} - Settings Changed");
@@ -411,7 +411,7 @@ namespace GDX.Editor
             s_TableTicketHead++;
 
 #if UNITY_2022_2_OR_NEWER
-            if (!s_SubscribedToUndo && dataTable.GetFlag(DataTableBase.Settings.EnableUndo))
+            if (!s_SubscribedToUndo && dataTable.GetMeta().AllowUndo)
             {
                 Undo.undoRedoEvent += OnUndoRedoEvent;
                 s_SubscribedToUndo = true;
@@ -457,7 +457,7 @@ namespace GDX.Editor
             }
 
 #if UNITY_2022_2_OR_NEWER
-            if (!s_SubscribedToUndo && dataTable.GetFlag(DataTableBase.Settings.EnableUndo))
+            if (!s_SubscribedToUndo && dataTable.GetMeta().AllowUndo)
             {
                 Undo.undoRedoEvent += OnUndoRedoEvent;
                 s_SubscribedToUndo = true;
