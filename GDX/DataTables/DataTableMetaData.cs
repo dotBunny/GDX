@@ -16,6 +16,8 @@ namespace GDX.DataTables
     /// </remarks>
     public class DataTableMetaData : ScriptableObject
     {
+#if UNITY_2022_2_OR_NEWER
+
 #pragma warning disable IDE1006
         // ReSharper disable InconsistentNaming
 
@@ -24,7 +26,8 @@ namespace GDX.DataTables
         /// </summary>
         public string AssetRelativePath = null;
 
-        public System.DateTime SyncTimestamp;
+        public DateTime SyncTimestamp;
+
         public ulong SyncDataVersion;
 
         /// <summary>
@@ -52,7 +55,6 @@ namespace GDX.DataTables
 
         // ReSharper enable InconsistentNaming
 #pragma warning restore IDE1006
-
 
         public string GetAbsoluteSourceOfTruth()
         {
@@ -104,5 +106,6 @@ namespace GDX.DataTables
         {
             return SyncFormat != DataTableInterchange.Format.Invalid && AssetRelativePath != null;
         }
+#endif // UNITY_2022_2_OR_NEWER
     }
 }
