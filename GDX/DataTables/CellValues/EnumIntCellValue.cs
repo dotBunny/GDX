@@ -13,14 +13,14 @@ namespace GDX.DataTables.CellValues
     public struct EnumIntCellValue
     {
         /// <summary>
-        ///     The cached value of the referenced <see cref="DataTable" /> cell.
-        /// </summary>
-        int m_CachedValue;
-
-        /// <summary>
         ///     A cached type for reference at runtime.
         /// </summary>
         Type m_CachedType;
+
+        /// <summary>
+        ///     The cached value of the referenced <see cref="DataTable" /> cell.
+        /// </summary>
+        int m_CachedValue;
 
         /// <summary>
         ///     The cached <see cref="DataTable" /> version found when last updating <see cref="m_CachedValue" />.
@@ -83,9 +83,12 @@ namespace GDX.DataTables.CellValues
         }
 
         /// <summary>
-        /// Get the <see cref="Enum"/> value of the <see cref="DataTableBase"/> cell's value.
+        ///     Get the <see cref="Enum" /> value of the <see cref="DataTableBase" /> cell's value.
         /// </summary>
-        /// <remarks>Values are stored as <see cref="int"/>, there are some cases where having the <see cref="Enum"/> could be useful.</remarks>
+        /// <remarks>
+        ///     Values are stored as <see cref="int" />, there are some cases where having the <see cref="Enum" /> could be
+        ///     useful.
+        /// </remarks>
         /// <returns>The transposed value.</returns>
         public Enum GetEnum()
         {
@@ -95,6 +98,7 @@ namespace GDX.DataTables.CellValues
             {
                 return (Enum)Enum.Parse(m_CachedType, Get().ToString());
             }
+
             return null;
         }
 

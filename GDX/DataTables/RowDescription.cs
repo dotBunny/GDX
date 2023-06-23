@@ -5,7 +5,7 @@
 namespace GDX.DataTables
 {
     /// <summary>
-    ///     A description of a row in a <see cref="DataTableBase"/>.
+    ///     A description of a row in a <see cref="DataTableBase" />.
     /// </summary>
     public struct RowDescription
     {
@@ -27,7 +27,7 @@ namespace GDX.DataTables
         /// <summary>
         ///     Generates a custom string based on the row.
         /// </summary>
-        /// <returns>A user-friendly string representation of the <see cref="RowDescription"/>.</returns>
+        /// <returns>A user-friendly string representation of the <see cref="RowDescription" />.</returns>
         public override string ToString()
         {
             return Name;

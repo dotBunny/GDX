@@ -8,9 +8,9 @@ namespace GDX.DataTables.ColumnSorters
 {
     abstract class ColumnSorterBase
     {
-        public readonly List<int> EqualIdentifiers;
         protected readonly int ColumnIdentifier;
         protected readonly DataTableBase DataTable;
+        public readonly List<int> EqualIdentifiers;
         readonly int m_SortDirection;
         readonly bool m_SupportMultiSort;
 

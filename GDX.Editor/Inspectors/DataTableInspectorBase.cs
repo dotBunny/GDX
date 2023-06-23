@@ -190,12 +190,12 @@ namespace GDX.Editor.Inspectors
             {
                 if (dataTable.Migrate(currentStructureVersion))
                 {
-                    Debug.Log($"Migrated {dataTable.GetMeta().DisplayName} from Structure version {tableStructureVersion.ToString()} to version {currentStructureVersion.ToString()}.");
+                    Debug.Log($"Migrated {dataTable.GetMetaData().DisplayName} from Structure version {tableStructureVersion.ToString()} to version {currentStructureVersion.ToString()}.");
                     AssetDatabase.SaveAssetIfDirty(dataTable);
                 }
                 else
                 {
-                    Debug.LogWarning($"Attempted to migrate {dataTable.GetMeta().DisplayName} from Structure version {tableStructureVersion.ToString()} to version {currentStructureVersion.ToString()}.");
+                    Debug.LogWarning($"Attempted to migrate {dataTable.GetMetaData().DisplayName} from Structure version {tableStructureVersion.ToString()} to version {currentStructureVersion.ToString()}.");
                 }
             }
 
@@ -217,7 +217,7 @@ namespace GDX.Editor.Inspectors
             DataTableBase dataTable = (DataTableBase)target;
             StringBuilder content = new StringBuilder(100);
 
-            m_DataTableLabel.text = dataTable.GetMeta().DisplayName;
+            m_DataTableLabel.text = dataTable.GetMetaData().DisplayName;
 
             if (dataTable.GetRowCount() == 0)
             {
@@ -298,13 +298,13 @@ namespace GDX.Editor.Inspectors
             string savePath;
             if (format == DataTableInterchange.Format.CommaSeperatedValues)
             {
-                savePath = EditorUtility.SaveFilePanel($"Export {dataTable.GetMeta().DisplayName} to CSV",
+                savePath = EditorUtility.SaveFilePanel($"Export {dataTable.GetMetaData().DisplayName} to CSV",
                     Application.dataPath,
                     dataTable.name, "csv");
             }
             else
             {
-                savePath = EditorUtility.SaveFilePanel($"Export {dataTable.GetMeta().DisplayName} to JSON",
+                savePath = EditorUtility.SaveFilePanel($"Export {dataTable.GetMetaData().DisplayName} to JSON",
                     Application.dataPath,
                     dataTable.name, "json");
             }
@@ -321,13 +321,13 @@ namespace GDX.Editor.Inspectors
                     DataTableInterchange.Export(dataTable, DataTableInterchange.Format.JavaScriptObjectNotation,
                         savePath);
                 }
-                Debug.Log($"'{dataTable.GetMeta().DisplayName}' was exported to {savePath}.");
+                Debug.Log($"'{dataTable.GetMetaData().DisplayName}' was exported to {savePath}.");
             }
         }
 
         public static void ShowImportDialogForTable(DataTableBase dataTable)
         {
-            string openPath = EditorUtility.OpenFilePanelWithFilters($"Import into {dataTable.GetMeta().DisplayName}",
+            string openPath = EditorUtility.OpenFilePanelWithFilters($"Import into {dataTable.GetMetaData().DisplayName}",
                 Application.dataPath, new[] { "JSON", "json", "CSV", "csv" });
 
             if (string.IsNullOrEmpty(openPath))
@@ -350,7 +350,7 @@ namespace GDX.Editor.Inspectors
                     return;
             }
 
-            if (EditorUtility.DisplayDialog($"Replace '{dataTable.GetMeta().DisplayName}' Content",
+            if (EditorUtility.DisplayDialog($"Replace '{dataTable.GetMetaData().DisplayName}' Content",
                     $"Are you sure you want to replace your tables content with the imported content?\n\nThe structural format of the content needs to match the column structure of the existing table; reference types will not replace the data in the existing cells at that location. Make sure the first row contains the column names, and that you have not altered columns.",
                     "Yes", "No"))
             {

@@ -2,8 +2,8 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace GDX.DataTables
 {
@@ -16,26 +16,14 @@ namespace GDX.DataTables
     public abstract class DataTableBase : ScriptableObject
     {
         /// <summary>
-        ///     A collection of indices that can be passed to <see cref="DataTableBase.SetFlag" /> to toggle settings.
+        ///     A reference to the author-time metadata which will not be included at runtime.
         /// </summary>
-        public enum Settings
-        {
-            /// <summary>
-            ///     Does the <see cref="DataTableBase" /> support Unity's undo feature?
-            /// </summary>
-            EnableUndo = 0,
-            /// <summary>
-            ///     Prefer to not allow changes to data, only references.
-            /// </summary>
-            /// <remarks>This is useful for when the source of truth of the data lives in an outside source.</remarks>
-            ReferenceOnlyMode = 1
-        }
+#pragma warning disable IDE1006
+        // ReSharper disable InconsistentNaming
+        [SerializeField] internal DataTableMetaData m_MetaData;
 
-        /// <summary>
-        ///     A reference to the author-time meta information which will not be included at runtime.
-        /// </summary>
-        [FormerlySerializedAs("m_Meta")] [SerializeField]
-        internal DataTableMetaData metaData;
+        // ReSharper enable InconsistentNaming
+#pragma warning restore IDE1006
 
         /// <summary>
         ///     Add a column.
@@ -85,24 +73,25 @@ namespace GDX.DataTables
         public abstract ulong GetDataVersion();
 
         /// <summary>
-        ///     Get the internally stored structure version for the <see cref="DataTableBase"/>.
+        ///     Get the internally stored structure version for the <see cref="DataTableBase" />.
         /// </summary>
         /// <remarks>
-        ///     Think of this as format version, if the internals change and the table needs to be updated this is the indicator for old data.
+        ///     Think of this as format version, if the internals change and the table needs to be updated this is the indicator
+        ///     for old data.
         /// </remarks>
         /// <returns>The structure version number.</returns>
         public abstract int GetStructureVersion();
 
         /// <summary>
-        ///     Get the current structure version for the <see cref="DataTableBase"/> class itself.
+        ///     Get the current structure version for the <see cref="DataTableBase" /> class itself.
         /// </summary>
         /// <returns>The structure version number.</returns>
         public abstract int GetStructureCurrentVersion();
 
         /// <summary>
-        ///     Applies migration logic used to upgrade previous implementations of a <see cref="DataTableBase"/>.
+        ///     Applies migration logic used to upgrade previous implementations of a <see cref="DataTableBase" />.
         /// </summary>
-        /// <param name="currentVersion">The current version of a <see cref="DataTableBase"/> format.</param>
+        /// <param name="currentVersion">The current version of a <see cref="DataTableBase" /> format.</param>
         /// <returns>Was the migration successful?</returns>
         public abstract bool Migrate(int currentVersion);
 
@@ -119,17 +108,18 @@ namespace GDX.DataTables
         public abstract int GetRowCount();
 
         /// <summary>
-        ///     Gets/creates the meta sub object used to store author-time information with the data table.
+        ///     Gets/creates the metadata sub-object used to store author-time information with the data table.
         /// </summary>
-        /// <returns></returns>
-        public DataTableMetaData GetMeta()
+        /// <remarks>This is only available in the editor. It will always return null at runtime.</remarks>
+        /// <returns>The associated metadata for the <see cref="DataTableBase" />.</returns>
+        public DataTableMetaData GetMetaData()
         {
 #if UNITY_EDITOR
-            if (metaData == null)
+            if (m_MetaData == null)
             {
                 // When the asset is created, a pseudo asset sits until a filename is chosen, its not on disk,
                 // So we dont want to do anything because nothing is real at the time.
-                if (!UnityEditor.EditorUtility.IsPersistent(this))
+                if (!EditorUtility.IsPersistent(this))
                 {
                     return null;
                 }
@@ -137,20 +127,21 @@ namespace GDX.DataTables
                 // Now we can make the meta object
                 DataTableMetaData metaDataInstance = CreateInstance<DataTableMetaData>();
 
-                metaData = metaDataInstance;
-                metaData.name = "DataTableMetaData_EditorOnly";
-                metaData.hideFlags = HideFlags.DontSaveInBuild | HideFlags.HideInHierarchy | HideFlags.NotEditable | HideFlags.HideInInspector;
+                m_MetaData = metaDataInstance;
+                m_MetaData.name = "DataTableMetaData_EditorOnly";
+                m_MetaData.hideFlags = HideFlags.DontSaveInBuild | HideFlags.HideInHierarchy | HideFlags.NotEditable |
+                                       HideFlags.HideInInspector;
 
-                UnityEditor.AssetDatabase.AddObjectToAsset(metaDataInstance, this);
+                AssetDatabase.AddObjectToAsset(metaDataInstance, this);
 
-                UnityEditor.EditorUtility.SetDirty(metaData);
-                UnityEditor.AssetDatabase.SaveAssetIfDirty(metaData);
+                EditorUtility.SetDirty(m_MetaData);
+                AssetDatabase.SaveAssetIfDirty(m_MetaData);
 
-                UnityEditor.EditorUtility.SetDirty(this);
-                UnityEditor.AssetDatabase.SaveAssetIfDirty(this);
-
+                EditorUtility.SetDirty(this);
+                AssetDatabase.SaveAssetIfDirty(this);
             }
-            return metaData;
+
+            return m_MetaData;
 #else
             return null;
 #endif

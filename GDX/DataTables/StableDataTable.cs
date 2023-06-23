@@ -15,6 +15,7 @@ namespace GDX.DataTables
     {
 #pragma warning disable IDE1006
         // ReSharper disable InconsistentNaming
+
         [SerializeField] internal ArrayHolder<string>[] m_AllStringColumns;
         [SerializeField] internal ArrayHolder<bool>[] m_AllBoolColumns;
         [SerializeField] internal ArrayHolder<char>[] m_AllCharColumns;
@@ -63,8 +64,8 @@ namespace GDX.DataTables
         [SerializeField] internal int[] m_ColumnIdentifierToSortOrderMap;
         [SerializeField] internal int[] m_SortedOrderToColumnIdentifierMap;
 
-        [SerializeField]
-        internal ArrayHolder<int>[] m_ColumnDenseIndexToIDMap = new ArrayHolder<int>[Serializable.SerializableTypesCount];
+        [SerializeField] internal ArrayHolder<int>[] m_ColumnDenseIndexToIDMap =
+            new ArrayHolder<int>[Serializable.SerializableTypesCount];
 
         [SerializeField] internal int m_ColumnEntriesFreeListHead;
         [SerializeField] internal int m_CombinedColumnCount;
@@ -109,10 +110,12 @@ namespace GDX.DataTables
                         Array.Resize(ref m_AllColumnNames, 30);
                         Array.Resize(ref m_ColumnDenseIndexToIDMap, 30);
                     }
+
                     m_StructureVersion = currentVersion;
                     break;
             }
-            return (m_StructureVersion == currentVersion);
+
+            return m_StructureVersion == currentVersion;
         }
 
         /// <inheritdoc />
@@ -1067,7 +1070,8 @@ namespace GDX.DataTables
             }
             else
             {
-                throw new NotSupportedException("Type name overloads are only supported for types inheriting from UnityEngine.Object or from System.Enum");
+                throw new NotSupportedException(
+                    "Type name overloads are only supported for types inheriting from UnityEngine.Object or from System.Enum");
             }
         }
 
@@ -1081,12 +1085,14 @@ namespace GDX.DataTables
             {
                 return m_AllObjectRefTypeNames[entry.ColumnDenseIndex];
             }
-            else if(entry.ColumnType == Serializable.SerializableTypes.EnumInt)
+
+            if (entry.ColumnType == Serializable.SerializableTypes.EnumInt)
             {
                 return m_AllEnumIntTypeNames[entry.ColumnDenseIndex];
             }
 
-            throw new NotSupportedException("Type name overloads are only supported for types inheriting from UnityEngine.Object or from System.Enum");
+            throw new NotSupportedException(
+                "Type name overloads are only supported for types inheriting from UnityEngine.Object or from System.Enum");
         }
 
         // Get

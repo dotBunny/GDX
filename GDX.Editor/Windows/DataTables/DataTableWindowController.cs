@@ -227,10 +227,10 @@ namespace GDX.Editor.Windows.DataTables
             DataTableTracker.RecordSettingsUndo(m_DataTableWindow.GetDataTableTicket());
 
             // Check if there is a change
-            DataTableMetaData metaData = dataTable.GetMeta();
+            DataTableMetaData metaData = dataTable.GetMetaData();
 
             metaData.DisplayName = displayName;
-            metaData.AllowUndo = enableUndo;
+            metaData.SupportsUndo = enableUndo;
             metaData.ReferencesOnlyMode = supportReferenceOnlyMode;
 
             EditorUtility.SetDirty(m_DataTableWindow.GetDataTable());

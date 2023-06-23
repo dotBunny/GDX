@@ -185,7 +185,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                 m_TableButton.AddToClassList(k_StyleClassLinked);
                 m_TableButton.RemoveFromClassList(k_StyleClassUnlinked);
                 m_TableButton.tooltip =
-                    $"Table: {m_DataTable.GetMeta().DisplayName}\nRow: {m_DataTable.GetRowName(m_RowIdentifier)} ({m_RowIdentifier})\nColumn: {m_DataTable.GetColumnName(m_ColumnIdentifier)} ({m_ColumnIdentifier})\nData Version: {GetDataVersion()}\n\nClick to reset link.";
+                    $"Table: {m_DataTable.GetMetaData().DisplayName}\nRow: {m_DataTable.GetRowName(m_RowIdentifier)} ({m_RowIdentifier})\nColumn: {m_DataTable.GetColumnName(m_ColumnIdentifier)} ({m_ColumnIdentifier})\nData Version: {GetDataVersion()}\n\nClick to reset link.";
             }
             else
             {
@@ -199,12 +199,12 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                 else if (m_RowIdentifier == -1)
                 {
                     m_TableButton.tooltip =
-                        $"Table: {m_DataTable.GetMeta().DisplayName}\nRow: None selected.\n\nClick to reset link.";
+                        $"Table: {m_DataTable.GetMetaData().DisplayName}\nRow: None selected.\n\nClick to reset link.";
                 }
                 else if (m_ColumnIdentifier == -1)
                 {
                     m_TableButton.tooltip =
-                        $"Table: {m_DataTable.GetMeta().DisplayName}\nRow: {m_DataTable.GetRowName(m_RowIdentifier)} ({m_RowIdentifier})\nColumn: None selected.\n\nClick to reset link.";
+                        $"Table: {m_DataTable.GetMetaData().DisplayName}\nRow: {m_DataTable.GetRowName(m_RowIdentifier)} ({m_RowIdentifier})\nColumn: None selected.\n\nClick to reset link.";
                 }
                 else
                 {
@@ -340,7 +340,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         {
             if (m_DataTable.GetRowCount() == 0)
             {
-                Debug.LogWarning($"The selected table '{m_DataTable.GetMeta().DisplayName}' has no row data.");
+                Debug.LogWarning($"The selected table '{m_DataTable.GetMetaData().DisplayName}' has no row data.");
                 return null;
             }
 
@@ -391,7 +391,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             if (columnCount == 0)
             {
                 Debug.LogWarning(
-                    $"No columns of {requiredType} are found in the table '{m_DataTable.GetMeta().DisplayName}'.");
+                    $"No columns of {requiredType} are found in the table '{m_DataTable.GetMetaData().DisplayName}'.");
                 return null;
             }
 
@@ -423,7 +423,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
                 {
                     m_CellElement.SetEnabled(false);
                     lockButton.AddToClassList(k_StyleClassLocked);
-                    if (m_DataTable.GetMeta().ReferencesOnlyMode &&
+                    if (m_DataTable.GetMetaData().ReferencesOnlyMode &&
                         !GetSupportedType().IsReferenceType())
                     {
                         lockButton.tooltip = k_MessageClickToUnlockReferenceModeOnly;
@@ -451,7 +451,7 @@ namespace GDX.Editor.PropertyDrawers.CellValues
 
         void OnLockButtonClicked()
         {
-            if (m_DataTable.GetMeta().ReferencesOnlyMode &&
+            if (m_DataTable.GetMetaData().ReferencesOnlyMode &&
                 !GetSupportedType().IsReferenceType())
             {
                 return;

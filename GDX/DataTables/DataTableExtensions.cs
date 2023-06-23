@@ -17,7 +17,7 @@ namespace GDX.DataTables
     public static class DataTableExtensions
     {
         /// <summary>
-        ///     Get the value of a cell in a <see cref="DataTableBase"/>, as a <see cref="string" />.
+        ///     Get the value of a cell in a <see cref="DataTableBase" />, as a <see cref="string" />.
         /// </summary>
         /// <param name="dataTable">The target Data Table to query for the value.</param>
         /// <param name="rowIdentifier">The unique row identifier.</param>
@@ -101,7 +101,7 @@ namespace GDX.DataTables
         }
 
         /// <summary>
-        ///     Set the value of a cell in a <see cref="DataTableBase"/> from a <see cref="string" /> value.
+        ///     Set the value of a cell in a <see cref="DataTableBase" /> from a <see cref="string" /> value.
         /// </summary>
         /// <param name="dataTable">The target Data Table to set a value for.</param>
         /// <param name="rowIdentifier">The unique row identifier.</param>
