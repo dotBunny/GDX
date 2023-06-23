@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using GDX.DataTables;
 using GDX.Editor.Inspectors;
 using UnityEditor;
@@ -19,6 +20,7 @@ namespace GDX.Editor.Windows.DataTables
         readonly ToolbarButton m_ToolbarHelpButton;
         readonly VisualElement m_ToolbarReferencesOnlyStatus;
         readonly ToolbarMenu m_ToolbarRowMenu;
+        readonly ToolbarButton m_ToolbarSyncButton;
         readonly ToolbarMenu m_ToolbarTableMenu;
 
         internal DataTableWindowToolbar(Toolbar toolbar, DataTableWindow window)
@@ -82,6 +84,10 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarRowMenu.menu.AppendAction("Reset Order",
                 _ => { m_ParentWindow.GetView().RebuildRowData(); }, CanCommitOrder);
 
+            m_ToolbarSyncButton = m_Toolbar.Q<ToolbarButton>("gdx-table-toolbar-sync");
+            m_ToolbarSyncButton.style.display = DisplayStyle.None;
+            m_ToolbarSyncButton.clicked += OnSyncClicked;
+
             m_ToolbarReferencesOnlyStatus = m_Toolbar.Q<VisualElement>("gdx-table-toolbar-references");
             m_ToolbarReferencesOnlyStatus.style.display = DisplayStyle.None;
             m_ToolbarReferencesOnlyStatus.tooltip = "The table is currently in References Only mode, this can be changed in it's settings.";
@@ -91,6 +97,45 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarHelpButton.clicked += OpenHelp;
         }
 
+        void OnSyncClicked()
+        {
+            DataTableMetaData metaData = m_ParentWindow.GetDataTable().GetMetaData();
+
+            string filePath = metaData.GetAbsoluteSourceOfTruth();
+            switch (metaData.SyncFormat)
+            {
+                case DataTableInterchange.Format.CommaSeperatedValues:
+                case DataTableInterchange.Format.JavaScriptObjectNotation:
+                    if (!System.IO.File.Exists(filePath))
+                    {
+                        UnityEngine.Debug.LogError($"The source of truth cannot be found at {filePath}.");
+                        return;
+                    }
+
+                    DateTime lastWriteTime = System.IO.File.GetLastWriteTimeUtc(filePath);
+                    DataTableBase dataTable = m_ParentWindow.GetDataTable();
+
+                    if (lastWriteTime < metaData.SyncTimestamp || metaData.SyncDataVersion < dataTable.GetDataVersion())
+                    {
+                        // Export
+                        DataTableInterchange.Export(dataTable, metaData.SyncFormat, filePath);
+                        metaData.SyncTimestamp = System.IO.File.GetLastWriteTimeUtc(filePath);
+                        metaData.SyncDataVersion = dataTable.GetDataVersion();
+                        EditorUtility.SetDirty(metaData);
+                    }
+                    if (metaData.SyncTimestamp < lastWriteTime)
+                    {
+                        // Import
+                        DataTableInterchange.Import(dataTable, metaData.SyncFormat, filePath);
+                        DataTableTracker.NotifyOfRowChange(m_ParentWindow.GetDataTableTicket(), -1);
+                        metaData.SyncTimestamp = lastWriteTime;
+                        metaData.SyncDataVersion = dataTable.GetDataVersion();
+                        EditorUtility.SetDirty(metaData);
+                    }
+                    break;
+            }
+        }
+
         internal void SetFocusable(bool state)
         {
             m_Toolbar.focusable = state;
@@ -98,6 +143,7 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarTableMenu.focusable = state;
             m_ToolbarColumnMenu.focusable = state;
             m_ToolbarRowMenu.focusable = state;
+            m_ToolbarSyncButton.focusable = state;
 
             m_ToolbarHelpButton.focusable = state;
         }
@@ -151,7 +197,10 @@ namespace GDX.Editor.Windows.DataTables
 
         public void UpdateForSettings()
         {
-            m_ToolbarReferencesOnlyStatus.style.display = m_ParentWindow.GetDataTable().GetMetaData().ReferencesOnlyMode ? DisplayStyle.Flex : DisplayStyle.None;
+            DataTableMetaData metaData = m_ParentWindow.GetDataTable().GetMetaData();
+
+            m_ToolbarSyncButton.style.display = metaData.HasSourceOfTruth() ? DisplayStyle.Flex : DisplayStyle.None;
+            m_ToolbarReferencesOnlyStatus.style.display = metaData.ReferencesOnlyMode ? DisplayStyle.Flex : DisplayStyle.None;
         }
     }
 #endif // UNITY_2022_2_OR_NEWER

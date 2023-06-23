@@ -119,12 +119,19 @@
     -unity-background-scale-mode: scale-to-fit;
 }
 
+#gdx-table-source-status
+{
+    width: 22px;
+}
+
+#gdx-table-source-status.valid,
 #gdx-table-add-column-filter-status.valid {
     background-image: resource('Icons/lightMeter/greenLight.png');
 }
-#gdx-table-add-column-filter-status.warning{
+#gdx-table-add-column-filter-status.warning {
     background-image: resource('Icons/lightMeter/orangeLight.png');
 }
-#gdx-table-add-column-filter-status.error {
+#gdx-table-source-status.error,
+#gdx-table-add-column-filter-status.error{
     background-image: resource('Icons/lightMeter/redLight.png');
 }

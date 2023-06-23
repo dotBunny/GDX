@@ -221,17 +221,17 @@ namespace GDX.Editor.Windows.DataTables
             return true;
         }
 
-        public bool SetTableSettings(string displayName, bool enableUndo, bool supportReferenceOnlyMode)
+        public bool SetTableSettings(string displayName, string sourceOfTruth, bool enableUndo, bool supportReferenceOnlyMode)
         {
             DataTableBase dataTable = m_DataTableWindow.GetDataTable();
             DataTableTracker.RecordSettingsUndo(m_DataTableWindow.GetDataTableTicket());
 
             // Check if there is a change
             DataTableMetaData metaData = dataTable.GetMetaData();
-
             metaData.DisplayName = displayName;
             metaData.SupportsUndo = enableUndo;
             metaData.ReferencesOnlyMode = supportReferenceOnlyMode;
+            metaData.SetSourceOfTruth(sourceOfTruth); // this will validate again
 
             EditorUtility.SetDirty(m_DataTableWindow.GetDataTable());
 

@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -21,6 +22,7 @@ namespace GDX.DataTables
         /// </summary>
         public enum Format
         {
+            Invalid = -1,
             CommaSeperatedValues,
             JavaScriptObjectNotation
         }
@@ -46,6 +48,29 @@ namespace GDX.DataTables
             }
         }
 
+        public static Format GetFormatFromContent(string fileContent)
+        {
+            if (fileContent.StartsWith("{\"Headers\":["))
+            {
+                return Format.JavaScriptObjectNotation;
+            }
+            if (fileContent.StartsWith("Row Identifier, Row Name,"))
+            {
+                return Format.CommaSeperatedValues;
+            }
+
+            return Format.Invalid;
+        }
+        public static Format GetFormatFromFile(string filePath)
+        {
+            using FileStream fileStream = new FileStream(filePath, FileMode.Open);
+            const int k_HeaderSize = 25;
+
+            byte[] chunk = new byte[k_HeaderSize];
+            int read =  fileStream.Read(chunk, 0, k_HeaderSize);
+            return read == k_HeaderSize ? GetFormatFromContent(Encoding.ASCII.GetString(chunk, 0, k_HeaderSize)) : Format.Invalid;
+        }
+
         /// <summary>
         ///     Update the <see cref="DataTableBase" /> with the data found in the given file.
         /// </summary>
@@ -68,13 +93,23 @@ namespace GDX.DataTables
                 return false;
             }
 
+            bool importStatus = false;
+
             if (format == Format.JavaScriptObjectNotation)
             {
                 DataTableJson jsonObject = DataTableJson.Create(File.ReadAllText(filePath));
-                return jsonObject.Update(dataTable, removeRowIfNotFound);
+                if (jsonObject != null)
+                {
+                    importStatus = jsonObject.Update(dataTable, removeRowIfNotFound);
+                }
+
+            }
+            else if (format == Format.CommaSeperatedValues)
+            {
+                importStatus = ImportCommaSeperatedValues(dataTable, File.ReadAllLines(filePath), removeRowIfNotFound);
             }
 
-            return ImportCommaSeperatedValues(dataTable, File.ReadAllLines(filePath), removeRowIfNotFound);
+            return importStatus;
         }
 
         /// <summary>

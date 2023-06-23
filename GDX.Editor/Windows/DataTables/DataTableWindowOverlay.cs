@@ -3,8 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
+using System.Data;
 using GDX.DataTables;
 using GDX.Editor.VisualElements;
+using UnityEditor;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor.Windows.DataTables
@@ -68,8 +70,14 @@ namespace GDX.Editor.Windows.DataTables
 
         readonly VisualElement m_SettingsOverlay;
         readonly Button m_SettingsSaveButton;
+        readonly Toggle m_SettingsSupportAutoSyncToggle;
         readonly Toggle m_SettingsSupportUndoToggle;
         readonly Toggle m_SettingsReferenceOnlyModeToggle;
+
+        readonly VisualElement m_SettingsSourceStatus;
+        readonly TextField m_SettingsSource;
+        readonly Button m_SettingsSourceButton;
+
         readonly DataTableWindow m_DataTableWindow;
         int m_CachedIndex;
         ConfirmationState m_ConfirmationState;
@@ -107,7 +115,7 @@ namespace GDX.Editor.Windows.DataTables
             {
                 ValidateAssemblyQualifiedName(e.newValue);
             });
-            m_AddColumnFilterPicker = new TypePicker(m_AddColumnFilter, m_AddColumnOverlay, m_RootElement, ValidateAssemblyQualifiedNameInPlace);
+            m_AddColumnFilterPicker = new TypePicker(m_AddColumnFilter, m_AddColumnOverlay, m_RootElement, ValidateAssemblyQualifiedName);
             m_AddColumnFilterStatus = m_AddColumnOverlay.Q<VisualElement>("gdx-table-add-column-filter-status");
             m_AddColumnFilterStatus.AddToClassList(ResourcesProvider.HiddenClass);
 
@@ -146,7 +154,18 @@ namespace GDX.Editor.Windows.DataTables
             m_SettingsOverlay = m_RootElement.Q<VisualElement>("gdx-table-settings");
             m_SettingsDisplayName = m_SettingsOverlay.Q<TextField>("gdx-table-display-name");
             m_SettingsSupportUndoToggle = m_SettingsOverlay.Q<Toggle>("gdx-table-flag-undo");
+            m_SettingsSupportAutoSyncToggle = m_SettingsOverlay.Q<Toggle>("gdx-table-flag-autosync");
             m_SettingsReferenceOnlyModeToggle = m_SettingsOverlay.Q<Toggle>("gdx-table-flag-referencesonly");
+
+            m_SettingsSource = m_SettingsOverlay.Q<TextField>("gdx-table-source");
+            m_SettingsSource.RegisterValueChangedCallback(e =>
+            {
+                ValidateSourceStatus(e.newValue);
+            });
+            m_SettingsSourceStatus = m_SettingsOverlay.Q<VisualElement>("gdx-table-source-status");
+            m_SettingsSourceButton = m_SettingsOverlay.Q<Button>("gdx-table-source-select");
+            m_SettingsSourceButton.clicked += OnSettingsSourceButtonClicked;
+
             m_SettingsSaveButton = m_SettingsOverlay.Q<Button>("gdx-table-settings-save");
             m_SettingsSaveButton.clicked += SubmitSettings;
             m_SettingsCancelButton = m_SettingsOverlay.Q<Button>("gdx-table-settings-cancel");
@@ -154,6 +173,24 @@ namespace GDX.Editor.Windows.DataTables
 
             // Ensure state of everything
             SetState(OverlayState.Hide);
+        }
+
+        void OnSettingsSourceButtonClicked()
+        {
+            string openPath = EditorUtility.OpenFilePanelWithFilters($"Sync {m_DataTableWindow.GetDataTable().GetMetaData().DisplayName} With …",
+                UnityEngine.Application.dataPath, new[] { "JSON", "json", "CSV", "csv" });
+            if (string.IsNullOrEmpty(openPath) || !System.IO.File.Exists(openPath))
+            {
+                return;
+            }
+
+            string uri = DataTableMetaData.MakeSourceOfTruthUri(openPath);
+            if (DataTableMetaData.ValidateSourceOfTruth(uri) != DataTableInterchange.Format.Invalid)
+            {
+                m_SettingsSource.SetValueWithoutNotify(uri);
+                m_SettingsSourceStatus.AddToClassList(k_ValidClass);
+                m_SettingsSourceStatus.RemoveFromClassList(k_ErrorClass);
+            }
         }
 
         public OverlayState GetPrimaryState()
@@ -175,7 +212,7 @@ namespace GDX.Editor.Windows.DataTables
             {
                 case Serializable.SerializableTypes.EnumInt:
                     m_AddColumnFilter.SetValueWithoutNotify(Reflection.SerializedTypesName);
-                    ValidateAssemblyQualifiedNameInPlace();
+                    ValidateAssemblyQualifiedName();
                     m_AddColumnFilter.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterPicker.RemoveFromClassList(ResourcesProvider.HiddenClass);
@@ -184,7 +221,7 @@ namespace GDX.Editor.Windows.DataTables
                     break;
                 case Serializable.SerializableTypes.Object:
                     m_AddColumnFilter.SetValueWithoutNotify(Reflection.UnityObjectName);
-                    ValidateAssemblyQualifiedNameInPlace();
+                    ValidateAssemblyQualifiedName();
                     m_AddColumnFilter.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterPicker.RemoveFromClassList(ResourcesProvider.HiddenClass);
@@ -201,7 +238,21 @@ namespace GDX.Editor.Windows.DataTables
             }
         }
 
-        void ValidateAssemblyQualifiedNameInPlace()
+        void ValidateSourceStatus(string newValue)
+        {
+            if (DataTableMetaData.ValidateSourceOfTruth(newValue) != DataTableInterchange.Format.Invalid)
+            {
+                m_SettingsSourceStatus.AddToClassList(k_ValidClass);
+                m_SettingsSourceStatus.RemoveFromClassList(k_ErrorClass);
+            }
+            else
+            {
+                m_SettingsSourceStatus.AddToClassList(k_ErrorClass);
+                m_SettingsSourceStatus.RemoveFromClassList(k_ValidClass);
+            }
+        }
+
+        void ValidateAssemblyQualifiedName()
         {
             ValidateAssemblyQualifiedName(m_AddColumnFilter.text);
         }
@@ -300,17 +351,30 @@ namespace GDX.Editor.Windows.DataTables
                 case OverlayState.Settings:
                     m_RootElement.style.display = DisplayStyle.Flex;
                     m_SettingsOverlay.style.display = DisplayStyle.Flex;
-                    m_SettingsDisplayName.SetValueWithoutNotify(m_DataTableWindow.GetDataTable().GetMetaData().DisplayName);
+
+                    DataTableMetaData metaData = m_DataTableWindow.GetDataTable().GetMetaData();
+
+                    m_SettingsDisplayName.SetValueWithoutNotify(metaData.DisplayName);
+                    m_SettingsSource.SetValueWithoutNotify(metaData.AssetRelativePath);
+                    m_SettingsSupportAutoSyncToggle.SetValueWithoutNotify(metaData.SupportAutoSync);
 #if UNITY_2022_2_OR_NEWER
-                    m_SettingsSupportUndoToggle.SetValueWithoutNotify(m_DataTableWindow.GetDataTable()
-                        .GetMetaData().SupportsUndo);
-                    m_SettingsReferenceOnlyModeToggle.SetValueWithoutNotify(m_DataTableWindow.GetDataTable()
-                        .GetMetaData().ReferencesOnlyMode);
+                    m_SettingsSupportUndoToggle.SetValueWithoutNotify(metaData.SupportsUndo);
 #else
                     m_SettingsSupportUndoToggle.SetEnabled(false);
                     m_SettingsSupportUndoToggle.SetValueWithoutNotify(false);
                     m_SettingsSupportUndoToggle.tooltip = "Unsupported before Unity 2022.2";
 #endif
+                    m_SettingsReferenceOnlyModeToggle.SetValueWithoutNotify(metaData.ReferencesOnlyMode);
+                    if (metaData.HasSourceOfTruth())
+                    {
+                        m_SettingsSourceStatus.AddToClassList(k_ValidClass);
+                        m_SettingsSourceStatus.RemoveFromClassList(k_ErrorClass);
+                    }
+                    else
+                    {
+                        m_SettingsSourceStatus.AddToClassList(k_ErrorClass);
+                        m_SettingsSourceStatus.RemoveFromClassList(k_ValidClass);
+                    }
                     break;
                 default:
                     m_RootElement.style.display = DisplayStyle.None;
@@ -415,6 +479,7 @@ namespace GDX.Editor.Windows.DataTables
             if (m_DataTableWindow.GetController()
                 .SetTableSettings(
                     m_SettingsDisplayName.text,
+                    m_SettingsSource.text,
                     m_SettingsSupportUndoToggle.value,
                     m_SettingsReferenceOnlyModeToggle.value))
             {
