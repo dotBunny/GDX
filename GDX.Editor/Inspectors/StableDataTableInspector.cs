@@ -35,8 +35,6 @@ namespace GDX.Editor.Inspectors
 
         public static void BuildExample(StableDataTable table)
         {
-            // This ensures we have meta
-            table.GetMeta();
             table.GetMeta().AllowUndo = true;
             int typeCount = Serializable.SerializableTypesCount;
             for (int i = 0; i < typeCount; i++)
