@@ -28,7 +28,7 @@ namespace GDX.Editor.Inspectors
                 table = ScriptableObject.CreateInstance<StableDataTable>();
                 meta = ScriptableObject.CreateInstance<DataTableMetaData>();
 
-                table.metaData = meta;
+                table.m_MetaData = meta;
 
                 StableDataTableInspector.BuildExample(table);
             }

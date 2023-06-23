@@ -12,7 +12,7 @@ using TextGenerator = GDX.Developer.TextGenerator;
 namespace GDX.DataTables
 {
     /// <summary>
-    ///     Data translation functionality for <see cref="DataTableBase"/>.
+    ///     Data translation functionality for <see cref="DataTableBase" />.
     /// </summary>
     public static class DataTableInterchange
     {
@@ -26,9 +26,9 @@ namespace GDX.DataTables
         }
 
         /// <summary>
-        ///     Export the content of a given <see cref="DataTableBase"/> to a target format.
+        ///     Export the content of a given <see cref="DataTableBase" /> to a target format.
         /// </summary>
-        /// <param name="dataTable">The <see cref="DataTableBase"/></param>
+        /// <param name="dataTable">The <see cref="DataTableBase" /></param>
         /// <param name="format"></param>
         /// <param name="filePath"></param>
         public static void Export(DataTableBase dataTable, Format format, string filePath)
@@ -67,15 +67,14 @@ namespace GDX.DataTables
                 Debug.LogError($"Unable to find {filePath}.");
                 return false;
             }
+
             if (format == Format.JavaScriptObjectNotation)
             {
                 DataTableJson jsonObject = DataTableJson.Create(File.ReadAllText(filePath));
                 return jsonObject.Update(dataTable, removeRowIfNotFound);
             }
-            else
-            {
-                return ImportCommaSeperatedValues(dataTable, File.ReadAllLines(filePath), removeRowIfNotFound);
-            }
+
+            return ImportCommaSeperatedValues(dataTable, File.ReadAllLines(filePath), removeRowIfNotFound);
         }
 
         /// <summary>

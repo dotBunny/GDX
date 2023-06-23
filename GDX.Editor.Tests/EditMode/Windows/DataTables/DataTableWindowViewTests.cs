@@ -28,7 +28,7 @@ namespace GDX.Editor.Windows.DataTables
         {
             m_TestDataTable = ScriptableObject.CreateInstance<StableDataTable>();
             m_TestTableMeta = ScriptableObject.CreateInstance<DataTableMetaData>();
-            m_TestDataTable.metaData = m_TestTableMeta;
+            m_TestDataTable.m_MetaData = m_TestTableMeta;
 
             m_DataTableWindow = DataTableWindowProvider.OpenAsset(m_TestDataTable);
             m_DataTableWindowView = m_DataTableWindow.GetView();

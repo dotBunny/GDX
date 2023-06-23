@@ -15,6 +15,9 @@ namespace GDX.DataTables
     [Serializable]
     public class DataTableJson
     {
+#pragma warning disable IDE1006
+        // ReSharper disable InconsistentNaming
+
         /// <summary>
         ///     The column names.
         /// </summary>
@@ -29,6 +32,9 @@ namespace GDX.DataTables
         ///     The row data.
         /// </summary>
         public DataTableJsonRow[] Rows;
+
+        // ReSharper enable InconsistentNaming
+#pragma warning restore IDE1006
 
         /// <summary>
         ///     Create a filled out <see cref="DataTableJson" /> based on the data found in the provided

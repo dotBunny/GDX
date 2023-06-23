@@ -5,7 +5,7 @@
 namespace GDX.DataTables
 {
     /// <summary>
-    ///     A description of a column in a <see cref="DataTableBase"/>.
+    ///     A description of a column in a <see cref="DataTableBase" />.
     /// </summary>
     public struct ColumnDescription
     {
@@ -13,10 +13,12 @@ namespace GDX.DataTables
         ///     The given name of the column.
         /// </summary>
         public string Name;
+
         /// <summary>
         ///     The unique identifier for the column.
         /// </summary>
         public int Identifier;
+
         /// <summary>
         ///     The type of data stored in the column.
         /// </summary>
@@ -30,7 +32,7 @@ namespace GDX.DataTables
         /// <summary>
         ///     Generates a custom string based on the column.
         /// </summary>
-        /// <returns>A user-friendly string representation of the <see cref="ColumnDescription"/>.</returns>
+        /// <returns>A user-friendly string representation of the <see cref="ColumnDescription" />.</returns>
         public override string ToString()
         {
             return $"{Name} [{Serializable.GetLabelFromTypeValue((int)Type)}]";
