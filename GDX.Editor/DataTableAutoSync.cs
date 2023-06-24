@@ -10,6 +10,7 @@ namespace GDX.Editor
 {
     public class DataTableAutoSync
     {
+#if UNITY_2021_3_OR_NEWER
         public static void Sync(DataTableBase dataTable)
         {
             DataTableMetaData metaData = dataTable.GetMetaData();
@@ -49,5 +50,6 @@ namespace GDX.Editor
 
             }
         }
+#endif // UNITY_2021_3_OR_NEWER
     }
 }
