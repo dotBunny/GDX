@@ -99,41 +99,7 @@ namespace GDX.Editor.Windows.DataTables
 
         void OnSyncClicked()
         {
-            DataTableMetaData metaData = m_ParentWindow.GetDataTable().GetMetaData();
-
-            string filePath = metaData.GetAbsoluteSourceOfTruth();
-            switch (metaData.SyncFormat)
-            {
-                case DataTableInterchange.Format.CommaSeperatedValues:
-                case DataTableInterchange.Format.JavaScriptObjectNotation:
-                    if (!System.IO.File.Exists(filePath))
-                    {
-                        UnityEngine.Debug.LogError($"The source of truth cannot be found at {filePath}.");
-                        return;
-                    }
-
-                    DateTime lastWriteTime = System.IO.File.GetLastWriteTimeUtc(filePath);
-                    DataTableBase dataTable = m_ParentWindow.GetDataTable();
-
-                    if (lastWriteTime < metaData.SyncTimestamp || metaData.SyncDataVersion < dataTable.GetDataVersion())
-                    {
-                        // Export
-                        DataTableInterchange.Export(dataTable, metaData.SyncFormat, filePath);
-                        metaData.SyncTimestamp = System.IO.File.GetLastWriteTimeUtc(filePath);
-                        metaData.SyncDataVersion = dataTable.GetDataVersion();
-                        EditorUtility.SetDirty(metaData);
-                    }
-                    if (metaData.SyncTimestamp < lastWriteTime)
-                    {
-                        // Import
-                        DataTableInterchange.Import(dataTable, metaData.SyncFormat, filePath);
-                        DataTableTracker.NotifyOfRowChange(m_ParentWindow.GetDataTableTicket(), -1);
-                        metaData.SyncTimestamp = lastWriteTime;
-                        metaData.SyncDataVersion = dataTable.GetDataVersion();
-                        EditorUtility.SetDirty(metaData);
-                    }
-                    break;
-            }
+            DataTableAutoSync.Sync(m_ParentWindow.GetDataTable());
         }
 
         internal void SetFocusable(bool state)

@@ -26,8 +26,14 @@ namespace GDX.DataTables
         /// </summary>
         public string AssetRelativePath = null;
 
+        /// <summary>
+        ///     The timestamp the last time the data was pushed or pulled from the source of truth.
+        /// </summary>
         public DateTime SyncTimestamp;
 
+        /// <summary>
+        ///     The version data version number found the last time the data was pushed to the source of truth.
+        /// </summary>
         public ulong SyncDataVersion;
 
         /// <summary>

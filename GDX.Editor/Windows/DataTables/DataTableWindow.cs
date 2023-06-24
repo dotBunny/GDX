@@ -9,6 +9,7 @@ namespace GDX.Editor.Windows.DataTables
 #if UNITY_2022_2_OR_NEWER
     public class DataTableWindow : EditorWindow, DataTableTracker.IStructuralChangeCallbackReceiver, DataTableTracker.ICellValueChangedCallbackReceiver, DataTableTracker.IUndoRedoEventCallbackReceiver
     {
+
         /// <summary>
         ///     Cached version of the <see cref="DataTableBase"/> ticket.
         /// </summary>
@@ -192,9 +193,10 @@ namespace GDX.Editor.Windows.DataTables
             return m_Bound;
         }
 
+
         public void RebindTable()
         {
-            titleContent = new GUIContent(m_DataTable.GetMetaData().DisplayName);
+            titleContent = new GUIContent(m_DataTable.GetMetaData().DisplayName, ResourcesProvider.GetDataTableIcon());
 
             int columnCount = m_DataTable.GetColumnCount();
             if (columnCount == 0)
@@ -239,7 +241,7 @@ namespace GDX.Editor.Windows.DataTables
 
         public void OnSettingsChange()
         {
-            titleContent = new GUIContent(m_DataTable.GetMetaData().DisplayName);
+            titleContent = new GUIContent(m_DataTable.GetMetaData().DisplayName, ResourcesProvider.GetDataTableIcon());
             m_View.RefreshItems();
             m_Toolbar.UpdateForSettings();
         }
@@ -262,7 +264,7 @@ namespace GDX.Editor.Windows.DataTables
 
         public void OnUndoRedoSettingsChanged()
         {
-            titleContent = new GUIContent(m_DataTable.GetMetaData().DisplayName);
+            titleContent = new GUIContent(m_DataTable.GetMetaData().DisplayName, ResourcesProvider.GetDataTableIcon());
         }
     }
 #endif // UNITY_2022_2_OR_NEWER

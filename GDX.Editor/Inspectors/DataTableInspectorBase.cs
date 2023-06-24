@@ -30,7 +30,6 @@ namespace GDX.Editor.Inspectors
         Label m_DataTableTracker;
         Label m_DataTableTrackerLabel;
         Button m_DataTableTrackerRefreshButton;
-        Button m_OpenAssetButton;
         Label m_InterchangeLabel;
         Button m_ExportToCommaSeperatedValuesButton;
         Button m_ImportButton;
@@ -160,7 +159,7 @@ namespace GDX.Editor.Inspectors
             m_RootElement.Add(m_RowDescription);
             m_RootElement.Add(m_ColumnLabel);
             m_RootElement.Add(m_ColumnDescription);
-            m_RootElement.Add(m_OpenAssetButton);
+
 
             m_RootElement.Add(m_InterchangeLabel);
 

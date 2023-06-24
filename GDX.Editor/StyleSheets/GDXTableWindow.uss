@@ -135,3 +135,13 @@
 #gdx-table-add-column-filter-status.error{
     background-image: resource('Icons/lightMeter/redLight.png');
 }
+
+.push
+{
+    background-image: resource('Icons/Update-Available.png');
+}
+.pull
+{
+    background-image: resource('Icons/Download-Available.png');
+
+}

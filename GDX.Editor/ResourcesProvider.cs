@@ -37,6 +37,11 @@ namespace GDX.Editor
         static Texture2D s_CompanyLogo;
 
         /// <summary>
+        ///     The DataTable icon.
+        /// </summary>
+        static Texture2D s_DataTableIcon;
+
+        /// <summary>
         ///     A collection of queried <see cref="StyleSheet"/> keyed by their search.
         /// </summary>
         static StringKeyDictionary<StyleSheet> s_StyleSheets = new StringKeyDictionary<StyleSheet>(10);
@@ -94,6 +99,26 @@ namespace GDX.Editor
                 s_Banner.LoadImage(bytes);
             }
             return s_Banner;
+        }
+
+        /// <summary>
+        ///     Returns an instance of the DataTable icon.
+        /// </summary>
+        /// <returns>An image loaded from disk, if not cached.</returns>
+        public static Texture2D GetDataTableIcon()
+        {
+            if (s_DataTableIcon != null) return s_DataTableIcon;
+
+            string imagePath = Path.Combine(
+                Path.GetDirectoryName(UpdateProvider.LocalPackage.PackageManifestPath),
+                ".docfx","images", "manual", "features", "data-table", "data-table-window-icon.png" );
+            if (File.Exists(imagePath))
+            {
+                byte[] bytes = File.ReadAllBytes(imagePath);
+                s_DataTableIcon = new Texture2D(88, 128, TextureFormat.RGBA32, false);
+                s_DataTableIcon.LoadImage(bytes);
+            }
+            return s_DataTableIcon;
         }
 
         /// <summary>
