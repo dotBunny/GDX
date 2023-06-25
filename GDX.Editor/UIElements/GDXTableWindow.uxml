@@ -4,9 +4,10 @@
             <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" text="Table" name="gdx-table-toolbar-table" enable-rich-text="false" />
             <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" text="Columns" name="gdx-table-toolbar-column" enable-rich-text="false" />
             <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" name="gdx-table-toolbar-row" text="Rows" enable-rich-text="false" />
-            <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" name="gdx-table-toolbar-source" text="Source" enable-rich-text="false" />
             <uie:ToolbarSpacer style="flex-grow: 1;" />
-            <ui:VisualElement display-tooltip-when-elided="true" name="gdx-table-toolbar-references" class="gdx-table-toolbar-context-button" />
+            <ui:VisualElement display-tooltip-when-elided="true" name="gdx-table-toolbar-source-pull" class="gdx-table-toolbar-notification" />
+            <ui:VisualElement display-tooltip-when-elided="true" name="gdx-table-toolbar-references" class="gdx-table-toolbar-notification" />
+            <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" name="gdx-table-toolbar-source" text="Source" enable-rich-text="false" />
             <uie:ToolbarButton text="Help" display-tooltip-when-elided="true" name="gdx-table-toolbar-help" class="gdx-table-toolbar-context-button" tooltip="Help on DataTables!" />
         </uie:Toolbar>
     </ui:VisualElement>

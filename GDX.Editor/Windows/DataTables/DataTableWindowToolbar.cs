@@ -18,6 +18,7 @@ namespace GDX.Editor.Windows.DataTables
         readonly Toolbar m_Toolbar;
         readonly ToolbarMenu m_ToolbarColumnMenu;
         readonly ToolbarButton m_ToolbarHelpButton;
+        readonly VisualElement m_ToolbarSourceStatus;
         readonly VisualElement m_ToolbarReferencesOnlyStatus;
         readonly ToolbarMenu m_ToolbarRowMenu;
         readonly ToolbarMenu m_ToolbarSourceMenu;
@@ -91,6 +92,9 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarSourceMenu.menu.AppendAction("Push",
                 _ => { DataTableInspectorBase.SourcePush(m_ParentWindow.GetDataTable()); });
 
+            m_ToolbarSourceStatus = m_Toolbar.Q<VisualElement>("gdx-table-toolbar-source-pull");
+            m_ToolbarSourceStatus.style.display = DisplayStyle.None;
+            m_ToolbarSourceStatus.tooltip = "The source of truth has been detected as newer then your local data.";
 
             m_ToolbarReferencesOnlyStatus = m_Toolbar.Q<VisualElement>("gdx-table-toolbar-references");
             m_ToolbarReferencesOnlyStatus.style.display = DisplayStyle.None;
@@ -166,6 +170,7 @@ namespace GDX.Editor.Windows.DataTables
         public void UpdateForSettings()
         {
             DataTableMetaData metaData = m_ParentWindow.GetDataTable().GetMetaData();
+
             m_ToolbarSourceMenu.style.display = metaData.HasSourceOfTruth() ? DisplayStyle.Flex : DisplayStyle.None;
             m_ToolbarReferencesOnlyStatus.style.display = metaData.ReferencesOnlyMode ? DisplayStyle.Flex : DisplayStyle.None;
         }

@@ -92,7 +92,8 @@
     background-image: resource('Icons/_Help.png');
 }
 
-#gdx-table-toolbar-references {
+.gdx-table-toolbar-notification
+{
     width: 12px;
     height: 12px;
     border-width: 0;
@@ -103,11 +104,26 @@
     background-size: contain;
     margin-top: 3px;
     margin-bottom: 3px;
-    margin-left: 5px;
+    margin-left: 0px;
+    margin-right: 5px;
     padding-top: 5px;
     padding-bottom: 5px;
+    padding-left: 0px;
+    padding-right: 0px;
     border-radius: 0px;
+    flex-shrink: 0;
+}
+#gdx-table-toolbar-references {
     background-image: resource('Icons/LockIcon-On.png');
+}
+
+.light #gdx-table-toolbar-source-pull
+{
+    background-image: resource('Icons/PackageManager/Light/Update-Available.png');
+}
+.dark #gdx-table-toolbar-source-pull
+{
+    background-image: resource('Icons/PackageManager/Dark/Update-Available.png');
 }
 
 #gdx-table-add-column-filter-status
@@ -134,14 +150,4 @@
 #gdx-table-source-status.error,
 #gdx-table-add-column-filter-status.error{
     background-image: resource('Icons/lightMeter/redLight.png');
-}
-
-.push
-{
-    background-image: resource('Icons/Update-Available.png');
-}
-.pull
-{
-    background-image: resource('Icons/Download-Available.png');
-
 }

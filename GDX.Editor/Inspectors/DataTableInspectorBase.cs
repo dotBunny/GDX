@@ -132,7 +132,6 @@ namespace GDX.Editor.Inspectors
             ResourcesProvider.SetupStylesheet("GDXDataTableInspector", m_RootElement);
 
             m_DataTableLabel = new Label { name = "gdx-datatable-inspector-name" };
-
             m_RowLabel = new Label("Rows") { name = "gdx-datatable-inspector-rows-label" };
             m_RowLabel.AddToClassList("gdx-datatable-inspector-label");
             m_RowDescription = new Label("") { name = "gdx-datatable-inspector-rows-description" };
@@ -169,6 +168,7 @@ namespace GDX.Editor.Inspectors
 
 
             m_RootElement.Add(m_DataTableLabel);
+
             m_RootElement.Add(m_RowLabel);
             m_RootElement.Add(m_RowDescription);
             m_RootElement.Add(m_ColumnLabel);
@@ -246,6 +246,7 @@ namespace GDX.Editor.Inspectors
             StringBuilder content = new StringBuilder(100);
 
             m_DataTableLabel.text = dataTable.GetMetaData().DisplayName;
+            m_DataTableLabel.tooltip = $"Data Version: {dataTable.GetDataVersion().ToString()}\nStructure Version: {dataTable.GetStructureVersion().ToString()}";
 
             if (dataTable.GetRowCount() == 0)
             {
