@@ -109,9 +109,21 @@ namespace GDX.Editor
         {
             if (s_DataTableIcon != null) return s_DataTableIcon;
 
-            string imagePath = Path.Combine(
-                Path.GetDirectoryName(UpdateProvider.LocalPackage.PackageManifestPath),
-                ".docfx","images", "manual", "features", "data-table", "data-table-window-icon.png" );
+            // Different icons based on theme
+            string imagePath = null;
+            if (EditorGUIUtility.isProSkin)
+            {
+                imagePath = Path.Combine(
+                    Path.GetDirectoryName(UpdateProvider.LocalPackage.PackageManifestPath),
+                    ".docfx","images", "manual", "features", "data-table", "data-table-window-icon-dark.png" );
+            }
+            else
+            {
+                imagePath = Path.Combine(
+                    Path.GetDirectoryName(UpdateProvider.LocalPackage.PackageManifestPath),
+                    ".docfx","images", "manual", "features", "data-table", "data-table-window-icon-light.png" );
+            }
+
             if (File.Exists(imagePath))
             {
                 byte[] bytes = File.ReadAllBytes(imagePath);

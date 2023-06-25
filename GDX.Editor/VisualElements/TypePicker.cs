@@ -40,11 +40,10 @@ namespace GDX.Editor.VisualElements
             m_ContainerElement = containerElement;
             m_OnSelected = onSelected;
 
-            ResourcesProvider.SetupSharedStylesheets(m_ContainerElement);
-            ResourcesProvider.SetupStylesheet("GDXTypePicker", m_ContainerElement);
-            ResourcesProvider.CheckTheme(m_ContainerElement);
-
             AddToClassList("gdx-picker");
+            ResourcesProvider.SetupSharedStylesheets(this);
+            ResourcesProvider.SetupStylesheet("GDXTypePicker", this);
+            ResourcesProvider.CheckTheme(this);
 
             m_ListView = new ListView(m_FilteredTypes)
             {

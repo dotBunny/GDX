@@ -5,9 +5,9 @@
             <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" text="Columns" name="gdx-table-toolbar-column" enable-rich-text="false" />
             <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" name="gdx-table-toolbar-row" text="Rows" enable-rich-text="false" />
             <uie:ToolbarSpacer style="flex-grow: 1;" />
-            <ui:VisualElement display-tooltip-when-elided="true" name="gdx-table-toolbar-source-pull" class="gdx-table-toolbar-notification" />
+            <ui:VisualElement display-tooltip-when-elided="true" name="gdx-table-toolbar-binding-pull" class="gdx-table-toolbar-notification" />
             <ui:VisualElement display-tooltip-when-elided="true" name="gdx-table-toolbar-references" class="gdx-table-toolbar-notification" />
-            <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" name="gdx-table-toolbar-source" text="Source" enable-rich-text="false" />
+            <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" name="gdx-table-toolbar-binding" text="Binding" enable-rich-text="false" />
             <uie:ToolbarButton text="Help" display-tooltip-when-elided="true" name="gdx-table-toolbar-help" class="gdx-table-toolbar-context-button" tooltip="Help on DataTables!" />
         </uie:Toolbar>
     </ui:VisualElement>
@@ -42,9 +42,9 @@
         <ui:VisualElement name="gdx-table-settings" class="gdx-table-overlay">
             <ui:Label tabindex="-1" text="Table Settings" display-tooltip-when-elided="true" class="gdx-table-overlay-title" />
             <ui:TextField picking-mode="Ignore" label="Display Name" value="MyColumn" name="gdx-table-display-name" multiline="false" />
-                <ui:TextField picking-mode="Ignore" label="Source Of Truth" name="gdx-table-source" multiline="false">
-                    <ui:Button text="…" name="gdx-table-source-select" enable-rich-text="true" />
-                    <ui:VisualElement name="gdx-table-source-status" />
+                <ui:TextField picking-mode="Ignore" label="Binding" name="gdx-table-binding" multiline="false">
+                    <ui:Button text="…" name="gdx-table-binding-select" enable-rich-text="true" />
+                    <ui:VisualElement name="gdx-table-binding-status" />
                 </ui:TextField>
             <ui:Toggle label="Support Undo" name="gdx-table-flag-undo" />
             <ui:Toggle label="References Only" name="gdx-table-flag-referencesonly" />

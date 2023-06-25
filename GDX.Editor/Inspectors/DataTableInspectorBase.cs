@@ -31,10 +31,11 @@ namespace GDX.Editor.Inspectors
         Label m_DataTableTracker;
         Label m_DataTableTrackerLabel;
         Button m_DataTableTrackerRefreshButton;
-        Label m_SourceLabel;
-        Label m_SourceDescription;
-        Button m_SourcePullButton;
-        Button m_SourcePushButton;
+        Label m_BindingLabel;
+        Label m_BindingDescription;
+        Button m_BindingPullButton;
+        Button m_BindingPushButton;
+        VisualElement m_BindingRow;
         Label m_InterchangeLabel;
         Button m_ExportToCommaSeperatedValuesButton;
         Button m_ImportButton;
@@ -152,13 +153,13 @@ namespace GDX.Editor.Inspectors
                 new Button(ExportToJavaScriptNotationObjects) { text = "Export (JSON)", name = "gdx-datatable-inspector-export-json" };
 
 
-            m_SourceLabel = new Label("Source Of Truth") { name = "gdx-datatable-inspector-sync-label" };
-            m_SourceLabel.AddToClassList("gdx-datatable-inspector-label");
-            m_SourceDescription = new Label("") { name = "gdx-datatable-inspector-sync-description" };
-            m_SourceDescription.AddToClassList("gdx-datatable-inspector-description");
+            m_BindingLabel = new Label("Data Binding") { name = "gdx-datatable-inspector-binding-label" };
+            m_BindingLabel.AddToClassList("gdx-datatable-inspector-label");
+            m_BindingDescription = new Label("") { name = "gdx-datatable-inspector-sync-description" };
+            m_BindingDescription.AddToClassList("gdx-datatable-inspector-description");
 
-            m_SourcePullButton = new Button(OnPushButton) { text = "Push", name = "gdx-datatable-inspector-source-push" };
-            m_SourcePushButton = new Button(OnPullButton) { text = "Pull", name = "gdx-datatable-inspector-source-pull" };
+            m_BindingPullButton = new Button(OnPushButton) { text = "Push", name = "gdx-datatable-inspector-binding-push" };
+            m_BindingPushButton = new Button(OnPullButton) { text = "Pull", name = "gdx-datatable-inspector-binding-pull" };
 
 
 
@@ -174,13 +175,13 @@ namespace GDX.Editor.Inspectors
             m_RootElement.Add(m_ColumnLabel);
             m_RootElement.Add(m_ColumnDescription);
 
-            m_RootElement.Add(m_SourceLabel);
-            m_RootElement.Add(m_SourceDescription);
-            VisualElement sourceRow = new VisualElement();
-            sourceRow.AddToClassList("gdx-datatable-inspector-row");
-            sourceRow.Add(m_SourcePullButton);
-            sourceRow.Add(m_SourcePushButton);
-            m_RootElement.Add(sourceRow);
+            m_RootElement.Add(m_BindingLabel);
+            m_RootElement.Add(m_BindingDescription);
+            m_BindingRow = new VisualElement();
+            m_BindingRow.AddToClassList("gdx-datatable-inspector-row");
+            m_BindingRow.Add(m_BindingPullButton);
+            m_BindingRow.Add(m_BindingPushButton);
+            m_RootElement.Add(m_BindingRow);
 
             m_RootElement.Add(m_InterchangeLabel);
 
@@ -228,11 +229,11 @@ namespace GDX.Editor.Inspectors
 
         void OnPushButton()
         {
-            SourcePush(target as DataTableBase);
+            BindingPush(target as DataTableBase);
         }
         void OnPullButton()
         {
-            SourcePull(target as DataTableBase);
+            BindingPull(target as DataTableBase);
         }
 
 
@@ -306,17 +307,15 @@ namespace GDX.Editor.Inspectors
 
             DataTableMetaData metaData = dataTable.GetMetaData();
 
-            if (metaData.HasSourceOfTruth())
+            if (metaData.HasBinding())
             {
-                m_SourceDescription.text = metaData.AssetRelativePath;
-                m_SourcePullButton.SetEnabled(true);
-                m_SourcePushButton.SetEnabled(true);
+                m_BindingDescription.text = metaData.BindingUri;
+                m_BindingRow.style.display = DisplayStyle.Flex;
             }
             else
             {
-                m_SourceDescription.text = "No source of truth set.";
-                m_SourcePullButton.SetEnabled(false);
-                m_SourcePushButton.SetEnabled(false);
+                m_BindingDescription.text = "No binding has been set for this Data Table.";
+                m_BindingRow.style.display = DisplayStyle.None;
             }
         }
 
@@ -410,43 +409,43 @@ namespace GDX.Editor.Inspectors
             }
         }
 
-        public static void SourcePull(DataTableBase dataTable)
+        public static void BindingPull(DataTableBase dataTable)
         {
             DataTableMetaData metaData = dataTable.GetMetaData();
-            string filePath =  System.IO.Path.Combine(Application.dataPath, metaData.AssetRelativePath);
-            switch (metaData.SyncFormat)
+            string filePath =  System.IO.Path.Combine(Application.dataPath, metaData.BindingUri);
+            switch (metaData.BindingFormat)
             {
                 case DataTableInterchange.Format.CommaSeperatedValues:
                 case DataTableInterchange.Format.JavaScriptObjectNotation:
 
                     if (metaData.SupportsUndo)
                     {
-                        Undo.RegisterCompleteObjectUndo(dataTable, $"DataTable {DataTableTracker.GetTicket(dataTable)} - Source Import");
+                        Undo.RegisterCompleteObjectUndo(dataTable, $"DataTable {DataTableTracker.GetTicket(dataTable)} - Binding Import");
                     }
-                    DataTableInterchange.Import(dataTable, metaData.SyncFormat, filePath);
+                    DataTableInterchange.Import(dataTable, metaData.BindingFormat, filePath);
                     DataTableTracker.NotifyOfRowChange(DataTableTracker.GetTicket(dataTable), -1);
 
-                    metaData.SyncTimestamp = System.IO.File.GetLastWriteTimeUtc(filePath);;
-                    metaData.SyncDataVersion = dataTable.GetDataVersion();
+                    metaData.BindingTimestamp = System.IO.File.GetLastWriteTimeUtc(filePath);;
+                    metaData.BindingDataVersion = dataTable.GetDataVersion();
                     EditorUtility.SetDirty(metaData);
                     break;
             }
         }
 
-        public static void SourcePush(DataTableBase dataTable)
+        public static void BindingPush(DataTableBase dataTable)
         {
             DataTableMetaData metaData = dataTable.GetMetaData();
-            string filePath =  System.IO.Path.Combine(Application.dataPath, metaData.AssetRelativePath);
-            switch (metaData.SyncFormat)
+            string filePath =  System.IO.Path.Combine(Application.dataPath, metaData.BindingUri);
+            switch (metaData.BindingFormat)
             {
                 case DataTableInterchange.Format.CommaSeperatedValues:
                 case DataTableInterchange.Format.JavaScriptObjectNotation:
 
                     // Check the timestamps as a sanity check.
                     DateTime currentTimestamp = System.IO.File.GetLastWriteTimeUtc(filePath);
-                    if (currentTimestamp > metaData.SyncTimestamp)
+                    if (currentTimestamp > metaData.BindingTimestamp)
                     {
-                        if (!EditorUtility.DisplayDialog($"Overwrite '{metaData.AssetRelativePath}'?",
+                        if (!EditorUtility.DisplayDialog($"Overwrite '{metaData.BindingUri}'?",
                                 $"The files timestamp is newer then the last known sync timestamp which means the file could have newer data which you will stomp. Are you sure you want to do this?",
                                 "Yes", "No"))
                         {
@@ -454,9 +453,9 @@ namespace GDX.Editor.Inspectors
                         }
                     }
 
-                    DataTableInterchange.Export(dataTable, metaData.SyncFormat, filePath);
-                    metaData.SyncTimestamp = System.IO.File.GetLastWriteTimeUtc(filePath);;
-                    metaData.SyncDataVersion = dataTable.GetDataVersion();
+                    DataTableInterchange.Export(dataTable, metaData.BindingFormat, filePath);
+                    metaData.BindingTimestamp = System.IO.File.GetLastWriteTimeUtc(filePath);;
+                    metaData.BindingDataVersion = dataTable.GetDataVersion();
                     EditorUtility.SetDirty(metaData);
                     break;
             }

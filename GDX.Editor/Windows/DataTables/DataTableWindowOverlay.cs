@@ -73,9 +73,9 @@ namespace GDX.Editor.Windows.DataTables
         readonly Toggle m_SettingsSupportUndoToggle;
         readonly Toggle m_SettingsReferenceOnlyModeToggle;
 
-        readonly VisualElement m_SettingsSourceStatus;
-        readonly TextField m_SettingsSource;
-        readonly Button m_SettingsSourceButton;
+        readonly VisualElement m_SettingsBindingStatus;
+        readonly TextField m_SettingsBinding;
+        readonly Button m_SettingsBindingButton;
 
         readonly DataTableWindow m_DataTableWindow;
         int m_CachedIndex;
@@ -155,14 +155,14 @@ namespace GDX.Editor.Windows.DataTables
             m_SettingsSupportUndoToggle = m_SettingsOverlay.Q<Toggle>("gdx-table-flag-undo");
             m_SettingsReferenceOnlyModeToggle = m_SettingsOverlay.Q<Toggle>("gdx-table-flag-referencesonly");
 
-            m_SettingsSource = m_SettingsOverlay.Q<TextField>("gdx-table-source");
-            m_SettingsSource.RegisterValueChangedCallback(e =>
+            m_SettingsBinding = m_SettingsOverlay.Q<TextField>("gdx-table-binding");
+            m_SettingsBinding.RegisterValueChangedCallback(e =>
             {
                 ValidateSourceStatus(e.newValue);
             });
-            m_SettingsSourceStatus = m_SettingsOverlay.Q<VisualElement>("gdx-table-source-status");
-            m_SettingsSourceButton = m_SettingsOverlay.Q<Button>("gdx-table-source-select");
-            m_SettingsSourceButton.clicked += OnSettingsSourceButtonClicked;
+            m_SettingsBindingStatus = m_SettingsOverlay.Q<VisualElement>("gdx-table-binding-status");
+            m_SettingsBindingButton = m_SettingsOverlay.Q<Button>("gdx-table-binding-select");
+            m_SettingsBindingButton.clicked += OnSettingsBindingButtonClicked;
 
             m_SettingsSaveButton = m_SettingsOverlay.Q<Button>("gdx-table-settings-save");
             m_SettingsSaveButton.clicked += SubmitSettings;
@@ -173,7 +173,7 @@ namespace GDX.Editor.Windows.DataTables
             SetState(OverlayState.Hide);
         }
 
-        void OnSettingsSourceButtonClicked()
+        void OnSettingsBindingButtonClicked()
         {
             string openPath = EditorUtility.OpenFilePanelWithFilters($"Sync {m_DataTableWindow.GetDataTable().GetMetaData().DisplayName} With …",
                 UnityEngine.Application.dataPath, new[] { "JSON", "json", "CSV", "csv" });
@@ -182,12 +182,12 @@ namespace GDX.Editor.Windows.DataTables
                 return;
             }
 
-            string uri = DataTableMetaData.MakeSourceOfTruthUri(openPath);
-            if (DataTableMetaData.ValidateSourceOfTruth(uri) != DataTableInterchange.Format.Invalid)
+            string uri = DataTableMetaData.CreateBinding(openPath);
+            if (DataTableMetaData.ValidateBinding(uri) != DataTableInterchange.Format.Invalid)
             {
-                m_SettingsSource.SetValueWithoutNotify(uri);
-                m_SettingsSourceStatus.AddToClassList(k_ValidClass);
-                m_SettingsSourceStatus.RemoveFromClassList(k_ErrorClass);
+                m_SettingsBinding.SetValueWithoutNotify(uri);
+                m_SettingsBindingStatus.AddToClassList(k_ValidClass);
+                m_SettingsBindingStatus.RemoveFromClassList(k_ErrorClass);
             }
         }
 
@@ -238,15 +238,15 @@ namespace GDX.Editor.Windows.DataTables
 
         void ValidateSourceStatus(string newValue)
         {
-            if (DataTableMetaData.ValidateSourceOfTruth(newValue) != DataTableInterchange.Format.Invalid)
+            if (DataTableMetaData.ValidateBinding(newValue) != DataTableInterchange.Format.Invalid)
             {
-                m_SettingsSourceStatus.AddToClassList(k_ValidClass);
-                m_SettingsSourceStatus.RemoveFromClassList(k_ErrorClass);
+                m_SettingsBindingStatus.AddToClassList(k_ValidClass);
+                m_SettingsBindingStatus.RemoveFromClassList(k_ErrorClass);
             }
             else
             {
-                m_SettingsSourceStatus.AddToClassList(k_ErrorClass);
-                m_SettingsSourceStatus.RemoveFromClassList(k_ValidClass);
+                m_SettingsBindingStatus.AddToClassList(k_ErrorClass);
+                m_SettingsBindingStatus.RemoveFromClassList(k_ValidClass);
             }
         }
 
@@ -353,7 +353,7 @@ namespace GDX.Editor.Windows.DataTables
                     DataTableMetaData metaData = m_DataTableWindow.GetDataTable().GetMetaData();
 
                     m_SettingsDisplayName.SetValueWithoutNotify(metaData.DisplayName);
-                    m_SettingsSource.SetValueWithoutNotify(metaData.AssetRelativePath);
+                    m_SettingsBinding.SetValueWithoutNotify(metaData.BindingUri);
 #if UNITY_2022_2_OR_NEWER
                     m_SettingsSupportUndoToggle.SetValueWithoutNotify(metaData.SupportsUndo);
 #else
@@ -362,15 +362,15 @@ namespace GDX.Editor.Windows.DataTables
                     m_SettingsSupportUndoToggle.tooltip = "Unsupported before Unity 2022.2";
 #endif
                     m_SettingsReferenceOnlyModeToggle.SetValueWithoutNotify(metaData.ReferencesOnlyMode);
-                    if (metaData.HasSourceOfTruth())
+                    if (metaData.HasBinding())
                     {
-                        m_SettingsSourceStatus.AddToClassList(k_ValidClass);
-                        m_SettingsSourceStatus.RemoveFromClassList(k_ErrorClass);
+                        m_SettingsBindingStatus.AddToClassList(k_ValidClass);
+                        m_SettingsBindingStatus.RemoveFromClassList(k_ErrorClass);
                     }
                     else
                     {
-                        m_SettingsSourceStatus.AddToClassList(k_ErrorClass);
-                        m_SettingsSourceStatus.RemoveFromClassList(k_ValidClass);
+                        m_SettingsBindingStatus.AddToClassList(k_ErrorClass);
+                        m_SettingsBindingStatus.RemoveFromClassList(k_ValidClass);
                     }
                     break;
                 default:
@@ -476,7 +476,7 @@ namespace GDX.Editor.Windows.DataTables
             if (m_DataTableWindow.GetController()
                 .SetTableSettings(
                     m_SettingsDisplayName.text,
-                    m_SettingsSource.text,
+                    m_SettingsBinding.text,
                     m_SettingsSupportUndoToggle.value,
                     m_SettingsReferenceOnlyModeToggle.value))
             {

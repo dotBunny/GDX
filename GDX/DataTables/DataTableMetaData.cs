@@ -4,6 +4,7 @@
 
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace GDX.DataTables
 {
@@ -20,24 +21,27 @@ namespace GDX.DataTables
         // ReSharper disable InconsistentNaming
 
         /// <summary>
-        ///     A path to a `source of truth` file relative to the asset folder.
+        ///     A `source of truth` binding for the data found in the <see cref="DataTableBase"/>.
         /// </summary>
-        public string AssetRelativePath = null;
+        /// <remarks>
+        ///     On-disk bindings are relative to the asset folder.
+        /// </remarks>
+        public string BindingUri = null;
 
         /// <summary>
-        ///     The timestamp last gotten from the source of truth.
+        ///     The timestamp last gotten from the binding.
         /// </summary>
-        public DateTime SyncTimestamp;
+        public DateTime BindingTimestamp;
 
         /// <summary>
-        ///     The version data version number found the last time the data was pushed to the source of truth.
+        ///     The data version number used the last time data was pushed to the binding.
         /// </summary>
-        public ulong SyncDataVersion;
+        public ulong BindingDataVersion;
 
         /// <summary>
         ///     What format of data is the sync done with.
         /// </summary>
-        public DataTableInterchange.Format SyncFormat = DataTableInterchange.Format.Invalid;
+        public DataTableInterchange.Format BindingFormat = DataTableInterchange.Format.Invalid;
 
         /// <summary>
         ///     The user-friendly name used throughout the author-time experience for the <see cref="DataTableBase" />.
@@ -46,7 +50,7 @@ namespace GDX.DataTables
 
         /// <summary>
         ///     Locks out fields on the <see cref="DataTableBase" /> which are not reference based.
-        ///     This is useful for when a dataset is being driven by a different source of truth.
+        ///     This is useful for when a dataset is being driven by a binding.
         /// </summary>
         public bool ReferencesOnlyMode;
 
@@ -58,21 +62,21 @@ namespace GDX.DataTables
         // ReSharper enable InconsistentNaming
 #pragma warning restore IDE1006
 
-        public void SetSourceOfTruth(string uri)
+        public void SetBinding(string uri)
         {
-            DataTableInterchange.Format format = ValidateSourceOfTruth(uri);
+            DataTableInterchange.Format format = ValidateBinding(uri);
             if(format != DataTableInterchange.Format.Invalid)
             {
-                AssetRelativePath = uri;
-                SyncFormat = format;
+                BindingUri = uri;
+                BindingFormat = format;
             }
             else
             {
-                AssetRelativePath = null;
-                SyncFormat = DataTableInterchange.Format.Invalid;
+                BindingUri = null;
+                BindingFormat = DataTableInterchange.Format.Invalid;
             }
         }
-        public static DataTableInterchange.Format ValidateSourceOfTruth(string uri)
+        public static DataTableInterchange.Format ValidateBinding(string uri)
         {
             if (uri == null) return DataTableInterchange.Format.Invalid;
 
@@ -87,7 +91,7 @@ namespace GDX.DataTables
             return DataTableInterchange.Format.Invalid;
         }
 
-        public static string MakeSourceOfTruthUri(string uri)
+        public static string CreateBinding(string uri)
         {
             // Handle file path
             if (System.IO.File.Exists(uri))
@@ -97,9 +101,9 @@ namespace GDX.DataTables
             return null;
         }
 
-        public bool HasSourceOfTruth()
+        public bool HasBinding()
         {
-            return SyncFormat != DataTableInterchange.Format.Invalid && AssetRelativePath != null;
+            return BindingFormat != DataTableInterchange.Format.Invalid && BindingUri != null;
         }
     }
 }

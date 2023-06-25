@@ -18,10 +18,10 @@ namespace GDX.Editor.Windows.DataTables
         readonly Toolbar m_Toolbar;
         readonly ToolbarMenu m_ToolbarColumnMenu;
         readonly ToolbarButton m_ToolbarHelpButton;
-        readonly VisualElement m_ToolbarSourceStatus;
+        readonly VisualElement m_ToolbarBindingStatus;
         readonly VisualElement m_ToolbarReferencesOnlyStatus;
         readonly ToolbarMenu m_ToolbarRowMenu;
-        readonly ToolbarMenu m_ToolbarSourceMenu;
+        readonly ToolbarMenu m_ToolbarBindingMenu;
         readonly ToolbarMenu m_ToolbarTableMenu;
 
         internal DataTableWindowToolbar(Toolbar toolbar, DataTableWindow window)
@@ -85,16 +85,16 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarRowMenu.menu.AppendAction("Reset Order",
                 _ => { m_ParentWindow.GetView().RebuildRowData(); }, CanCommitOrder);
 
-            m_ToolbarSourceMenu = m_Toolbar.Q<ToolbarMenu>("gdx-table-toolbar-source");
-            m_ToolbarSourceMenu.style.display = DisplayStyle.None;
-            m_ToolbarSourceMenu.menu.AppendAction("Pull",
-                _ => { DataTableInspectorBase.SourcePull(m_ParentWindow.GetDataTable()); });
-            m_ToolbarSourceMenu.menu.AppendAction("Push",
-                _ => { DataTableInspectorBase.SourcePush(m_ParentWindow.GetDataTable()); });
+            m_ToolbarBindingMenu = m_Toolbar.Q<ToolbarMenu>("gdx-table-toolbar-binding");
+            m_ToolbarBindingMenu.style.display = DisplayStyle.None;
+            m_ToolbarBindingMenu.menu.AppendAction("Pull",
+                _ => { DataTableInspectorBase.BindingPull(m_ParentWindow.GetDataTable()); });
+            m_ToolbarBindingMenu.menu.AppendAction("Push",
+                _ => { DataTableInspectorBase.BindingPush(m_ParentWindow.GetDataTable()); });
 
-            m_ToolbarSourceStatus = m_Toolbar.Q<VisualElement>("gdx-table-toolbar-source-pull");
-            m_ToolbarSourceStatus.style.display = DisplayStyle.None;
-            m_ToolbarSourceStatus.tooltip = "The source of truth has been detected as newer then your local data.";
+            m_ToolbarBindingStatus = m_Toolbar.Q<VisualElement>("gdx-table-toolbar-binding-pull");
+            m_ToolbarBindingStatus.style.display = DisplayStyle.None;
+            m_ToolbarBindingStatus.tooltip = "The binding has been detected as newer then your local data.";
 
             m_ToolbarReferencesOnlyStatus = m_Toolbar.Q<VisualElement>("gdx-table-toolbar-references");
             m_ToolbarReferencesOnlyStatus.style.display = DisplayStyle.None;
@@ -113,7 +113,7 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarTableMenu.focusable = state;
             m_ToolbarColumnMenu.focusable = state;
             m_ToolbarRowMenu.focusable = state;
-            m_ToolbarSourceMenu.focusable = state;
+            m_ToolbarBindingMenu.focusable = state;
 
             m_ToolbarHelpButton.focusable = state;
         }
@@ -171,7 +171,7 @@ namespace GDX.Editor.Windows.DataTables
         {
             DataTableMetaData metaData = m_ParentWindow.GetDataTable().GetMetaData();
 
-            m_ToolbarSourceMenu.style.display = metaData.HasSourceOfTruth() ? DisplayStyle.Flex : DisplayStyle.None;
+            m_ToolbarBindingMenu.style.display = metaData.HasBinding() ? DisplayStyle.Flex : DisplayStyle.None;
             m_ToolbarReferencesOnlyStatus.style.display = metaData.ReferencesOnlyMode ? DisplayStyle.Flex : DisplayStyle.None;
         }
     }

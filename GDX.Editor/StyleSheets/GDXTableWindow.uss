@@ -53,13 +53,31 @@
 #gdx-table-overlay
 {
     flex-grow: 1;
-    background-color: rgba(14, 14, 14, 0.95);
     position: absolute;
     width: 100%;
     height: 100%;
     visibility: visible;
     display: flex;
 }
+
+.light #gdx-table-overlay
+{
+    background-color: rgba(14, 14, 14, 0.7372549);
+}
+.dark #gdx-table-overlay
+{
+    background-color: rgba(14, 14, 14, 0.90);
+}
+
+.light #gdx-table-overlay
+{
+    color: #e0e0e0;
+}
+.light #gdx-table-overlay Label
+{
+    color: #e0e0e0;
+}
+
 .gdx-table-overlay
 {
     flex-direction: column;
@@ -117,11 +135,11 @@
     background-image: resource('Icons/LockIcon-On.png');
 }
 
-.light #gdx-table-toolbar-source-pull
+.light #gdx-table-toolbar-binding-pull
 {
     background-image: resource('Icons/PackageManager/Light/Update-Available.png');
 }
-.dark #gdx-table-toolbar-source-pull
+.dark #gdx-table-toolbar-binding-pull
 {
     background-image: resource('Icons/PackageManager/Dark/Update-Available.png');
 }
@@ -135,19 +153,19 @@
     -unity-background-scale-mode: scale-to-fit;
 }
 
-#gdx-table-source-status
+#gdx-table-binding-status
 {
     width: 22px;
 }
 
-#gdx-table-source-status.valid,
+#gdx-table-binding-status.valid,
 #gdx-table-add-column-filter-status.valid {
     background-image: resource('Icons/lightMeter/greenLight.png');
 }
 #gdx-table-add-column-filter-status.warning {
     background-image: resource('Icons/lightMeter/orangeLight.png');
 }
-#gdx-table-source-status.error,
+#gdx-table-binding-status.error,
 #gdx-table-add-column-filter-status.error{
     background-image: resource('Icons/lightMeter/redLight.png');
 }
