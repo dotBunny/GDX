@@ -4,6 +4,7 @@
 
 using System;
 using GDX.DataTables;
+using GDX.DataTables.DataBindings;
 using GDX.Editor.Inspectors;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -37,14 +38,14 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarTableMenu.menu.AppendAction("Export (CSV) ...",
                 _ =>
                 {
-                    DataTableInspectorBase.ShowExportDialogForTable(DataTableInterchange.Format.CommaSeperatedValues,
+                    DataTableInspectorBase.ShowExportDialogForTable(DataBindingProvider.Format.CommaSeperatedValues,
                         m_ParentWindow.GetDataTable());
                 }, CanInterchange);
             m_ToolbarTableMenu.menu.AppendAction("Export (JSON) ...",
                 _ =>
                 {
                     DataTableInspectorBase.ShowExportDialogForTable(
-                        DataTableInterchange.Format.JavaScriptObjectNotation, m_ParentWindow.GetDataTable());
+                        DataBindingProvider.Format.JavaScriptObjectNotation, m_ParentWindow.GetDataTable());
                 }, CanInterchange);
             m_ToolbarTableMenu.menu.AppendAction("Import ...",
                 _ => { DataTableInspectorBase.ShowImportDialogForTable(m_ParentWindow.GetDataTable()); },

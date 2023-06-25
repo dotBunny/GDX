@@ -4,6 +4,7 @@
 
 using System;
 using System.IO;
+using GDX.DataTables.DataBindings;
 using UnityEngine;
 
 namespace GDX.DataTables
@@ -41,7 +42,7 @@ namespace GDX.DataTables
         /// <summary>
         ///     What format of data is the sync done with.
         /// </summary>
-        public DataTableInterchange.Format BindingFormat = DataTableInterchange.Format.Invalid;
+        public DataBindingProvider.Format BindingFormat = DataBindingProvider.Format.Invalid;
 
         /// <summary>
         ///     The user-friendly name used throughout the author-time experience for the <see cref="DataTableBase" />.
@@ -65,8 +66,8 @@ namespace GDX.DataTables
 #if UNITY_2021_3_OR_NEWER
         public void SetBinding(string uri)
         {
-            DataTableInterchange.Format format = ValidateBinding(uri);
-            if (format != DataTableInterchange.Format.Invalid)
+            DataBindingProvider.Format format = ValidateBinding(uri);
+            if (format != DataBindingProvider.Format.Invalid)
             {
                 BindingUri = uri;
                 BindingFormat = format;
@@ -74,26 +75,30 @@ namespace GDX.DataTables
             else
             {
                 BindingUri = null;
-                BindingFormat = DataTableInterchange.Format.Invalid;
+                BindingFormat = DataBindingProvider.Format.Invalid;
             }
         }
 
-        public static DataTableInterchange.Format ValidateBinding(string uri)
+        public static DataBindingProvider.Format ValidateBinding(string uri)
         {
             if (uri == null)
             {
-                return DataTableInterchange.Format.Invalid;
+                return DataBindingProvider.Format.Invalid;
             }
 
             string filePath = Path.Combine(Application.dataPath, uri);
             if (File.Exists(filePath))
             {
-                return DataTableInterchange.GetFormatFromFile(filePath);
+                return DataBindingProvider.GetFormatFromFile(filePath);
             }
 
-            // Validate online?
+            // Use custom hint check
+            if (DataBindingProvider.CustomFormat != null && DataBindingProvider.CustomFormat.FoundUriHint(uri))
+            {
+                return DataBindingProvider.Format.Custom;
+            }
 
-            return DataTableInterchange.Format.Invalid;
+            return DataBindingProvider.Format.Invalid;
         }
 
         public static string CreateBinding(string uri)
@@ -109,7 +114,7 @@ namespace GDX.DataTables
 
         public bool HasBinding()
         {
-            return BindingFormat != DataTableInterchange.Format.Invalid && BindingUri != null;
+            return BindingFormat != DataBindingProvider.Format.Invalid && BindingUri != null;
         }
 
 #endif // UNITY_2021_3_OR_NEWER

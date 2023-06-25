@@ -6,14 +6,17 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GDX.DataTables
+namespace GDX.DataTables.DataBindings
 {
     /// <summary>
     ///     A serializable object used during import and export of <see cref="DataTableBase"/> based data.
     /// </summary>
     [Serializable]
-    public class DataTableTransfer
+    public class SerializableTable
     {
+#pragma warning disable IDE1006
+        // ReSharper disable InconsistentNaming
+
         /// <summary>
         ///     The version of the data at the point of export.
         /// </summary>
@@ -37,20 +40,23 @@ namespace GDX.DataTables
         /// <summary>
         ///     The row data.
         /// </summary>
-        public DataTableTransferRow[] Rows;
+        public SerializableRow[] Rows;
+
+        // ReSharper enable InconsistentNaming
+#pragma warning restore IDE1006
 
         /// <summary>
-        ///     Creates a new empty <see cref="DataTableTransfer" />.
+        ///     Creates a new empty <see cref="SerializableTable" />.
         /// </summary>
-        public DataTableTransfer()
+        public SerializableTable()
         {
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DataTableTransfer" /> from a <see cref="DataTableBase" />.
+        ///     Creates a new <see cref="SerializableTable" /> from a <see cref="DataTableBase" />.
         /// </summary>
         /// <param name="dataTable">Populate the data set from this target.</param>
-        public DataTableTransfer(DataTableBase dataTable)
+        public SerializableTable(DataTableBase dataTable)
         {
             ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
             int columnCount = columnDescriptions.Length;
@@ -71,13 +77,13 @@ namespace GDX.DataTables
             RowDescription[] rowDescriptions = dataTable.GetAllRowDescriptions();
             int rowCount = rowDescriptions.Length;
 
-            Rows = new DataTableTransferRow[rowCount];
+            Rows = new SerializableRow[rowCount];
 
             for (int i = 0; i < rowCount; i++)
             {
                 RowDescription rowDescription = rowDescriptions[i];
 
-                Rows[i] = new DataTableTransferRow(columnCount)
+                Rows[i] = new SerializableRow(columnCount)
                 {
                     Identifier = rowDescription.Identifier, Name = rowDescription.Name
                 };
@@ -93,11 +99,11 @@ namespace GDX.DataTables
         }
 
         /// <summary>
-        ///     Update the target <paramref name="dataTable" /> based on the data found in the <see cref="DataTableTransfer" />
+        ///     Update the target <paramref name="dataTable" /> based on the data found in the <see cref="SerializableTable" />
         /// </summary>
         /// <param name="dataTable">The <see cref="DataTableBase" /> to update.</param>
         /// <param name="removeRowIfNotFound">
-        ///     Should rows not found in the <see cref="DataTableTransfer" /> be removed from the
+        ///     Should rows not found in the <see cref="SerializableTable" /> be removed from the
         ///     <see cref="DataTableBase" />.
         /// </param>
         /// <returns>Was this operation successful?</returns>
@@ -129,7 +135,7 @@ namespace GDX.DataTables
 
             for (int i = 0; i < fileRowCount; i++)
             {
-                int rowIdentifier = -1;
+                int rowIdentifier;
                 string rowName;
                 if (Rows[i].Identifier == -1)
                 {
@@ -177,37 +183,6 @@ namespace GDX.DataTables
             }
 
             return true;
-        }
-
-        /// <summary>
-        ///     A serializable representation of a row of data from a <see cref="DataTableBase"/>.
-        /// </summary>
-        [Serializable]
-        public class DataTableTransferRow
-        {
-            /// <summary>
-            ///     The unique row identifier.
-            /// </summary>
-            public int Identifier = -1;
-
-            /// <summary>
-            ///     The row's user-friendly name.
-            /// </summary>
-            public string Name;
-
-            /// <summary>
-            ///     The row's data.
-            /// </summary>
-            public string[] Data;
-
-            /// <summary>
-            ///     Create a new serializable row.
-            /// </summary>
-            /// <param name="columns">The number of columns in that row.</param>
-            public DataTableTransferRow(int columns)
-            {
-                Data = new string[columns];
-            }
         }
     }
 }

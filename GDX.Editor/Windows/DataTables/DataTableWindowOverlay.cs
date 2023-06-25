@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using System.Data;
 using GDX.DataTables;
+using GDX.DataTables.DataBindings;
 using GDX.Editor.VisualElements;
 using UnityEditor;
 using UnityEngine.UIElements;
@@ -183,7 +184,7 @@ namespace GDX.Editor.Windows.DataTables
             }
 
             string uri = DataTableMetaData.CreateBinding(openPath);
-            if (DataTableMetaData.ValidateBinding(uri) != DataTableInterchange.Format.Invalid)
+            if (DataTableMetaData.ValidateBinding(uri) != DataBindingProvider.Format.Invalid)
             {
                 m_SettingsBinding.SetValueWithoutNotify(uri);
                 m_SettingsBindingStatus.AddToClassList(k_ValidClass);
@@ -238,7 +239,7 @@ namespace GDX.Editor.Windows.DataTables
 
         void ValidateSourceStatus(string newValue)
         {
-            if (DataTableMetaData.ValidateBinding(newValue) != DataTableInterchange.Format.Invalid)
+            if (DataTableMetaData.ValidateBinding(newValue) != DataBindingProvider.Format.Invalid)
             {
                 m_SettingsBindingStatus.AddToClassList(k_ValidClass);
                 m_SettingsBindingStatus.RemoveFromClassList(k_ErrorClass);
