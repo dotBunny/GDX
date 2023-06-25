@@ -9,15 +9,11 @@ using UnityEngine;
 namespace GDX.DataTables
 {
     /// <summary>
-    ///     A structure used to represent serialized <see cref="DataTableBase" /> data.
+    ///     A serializable object used during import and export of <see cref="DataTableBase"/> based data.
     /// </summary>
-    /// <remarks>Used for import and exporting at both author and runtime.</remarks>
     [Serializable]
-    public class DataTableJson
+    public class DataTableTransfer
     {
-#pragma warning disable IDE1006
-        // ReSharper disable InconsistentNaming
-
         /// <summary>
         ///     The version of the data at the point of export.
         /// </summary>
@@ -41,17 +37,20 @@ namespace GDX.DataTables
         /// <summary>
         ///     The row data.
         /// </summary>
-        public DataTableJsonRow[] Rows;
-
-        // ReSharper enable InconsistentNaming
-#pragma warning restore IDE1006
+        public DataTableTransferRow[] Rows;
 
         /// <summary>
-        ///     Create a filled out <see cref="DataTableJson" /> based on the data found in the provided
-        ///     <see cref="DataTableBase" />.
+        ///     Creates a new empty <see cref="DataTableTransfer" />.
         /// </summary>
-        /// <param name="dataTable">The target Data Table to fill with.</param>
-        public DataTableJson(DataTableBase dataTable)
+        public DataTableTransfer()
+        {
+        }
+
+        /// <summary>
+        ///     Creates a new <see cref="DataTableTransfer" /> from a <see cref="DataTableBase" />.
+        /// </summary>
+        /// <param name="dataTable">Populate the data set from this target.</param>
+        public DataTableTransfer(DataTableBase dataTable)
         {
             ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
             int columnCount = columnDescriptions.Length;
@@ -72,13 +71,13 @@ namespace GDX.DataTables
             RowDescription[] rowDescriptions = dataTable.GetAllRowDescriptions();
             int rowCount = rowDescriptions.Length;
 
-            Rows = new DataTableJsonRow[rowCount];
+            Rows = new DataTableTransferRow[rowCount];
 
             for (int i = 0; i < rowCount; i++)
             {
                 RowDescription rowDescription = rowDescriptions[i];
 
-                Rows[i] = new DataTableJsonRow(columnCount)
+                Rows[i] = new DataTableTransferRow(columnCount)
                 {
                     Identifier = rowDescription.Identifier, Name = rowDescription.Name
                 };
@@ -94,20 +93,11 @@ namespace GDX.DataTables
         }
 
         /// <summary>
-        ///     Creates the JavaScript Object Notation string for the object.
-        /// </summary>
-        /// <returns>A JSON <see cref="string" />.</returns>
-        public override string ToString()
-        {
-            return JsonUtility.ToJson(this);
-        }
-
-        /// <summary>
-        ///     Update the target <paramref name="dataTable" /> based on the data found in the <see cref="DataTableJson" />
+        ///     Update the target <paramref name="dataTable" /> based on the data found in the <see cref="DataTableTransfer" />
         /// </summary>
         /// <param name="dataTable">The <see cref="DataTableBase" /> to update.</param>
         /// <param name="removeRowIfNotFound">
-        ///     Should rows not found in the <see cref="DataTableJson" /> be removed from the
+        ///     Should rows not found in the <see cref="DataTableTransfer" /> be removed from the
         ///     <see cref="DataTableBase" />.
         /// </param>
         /// <returns>Was this operation successful?</returns>
@@ -190,17 +180,10 @@ namespace GDX.DataTables
         }
 
         /// <summary>
-        ///     Create a <see cref="DataTableJson" /> object based on the provided JSON.
+        ///     A serializable representation of a row of data from a <see cref="DataTableBase"/>.
         /// </summary>
-        /// <param name="jsonContent">A JSON-compliant<see cref="string" /> to parse.</param>
-        /// <returns>A <see cref="DataTableJson" /> object.</returns>
-        public static DataTableJson Create(string jsonContent)
-        {
-            return JsonUtility.FromJson<DataTableJson>(jsonContent);
-        }
-
         [Serializable]
-        public class DataTableJsonRow
+        public class DataTableTransferRow
         {
             /// <summary>
             ///     The unique row identifier.
@@ -217,7 +200,11 @@ namespace GDX.DataTables
             /// </summary>
             public string[] Data;
 
-            public DataTableJsonRow(int columns)
+            /// <summary>
+            ///     Create a new serializable row.
+            /// </summary>
+            /// <param name="columns">The number of columns in that row.</param>
+            public DataTableTransferRow(int columns)
             {
                 Data = new string[columns];
             }

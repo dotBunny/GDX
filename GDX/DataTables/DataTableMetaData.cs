@@ -3,8 +3,8 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.IO;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace GDX.DataTables
 {
@@ -21,12 +21,12 @@ namespace GDX.DataTables
         // ReSharper disable InconsistentNaming
 
         /// <summary>
-        ///     A `source of truth` binding for the data found in the <see cref="DataTableBase"/>.
+        ///     A `source of truth` binding for the data found in the <see cref="DataTableBase" />.
         /// </summary>
         /// <remarks>
         ///     On-disk bindings are relative to the asset folder.
         /// </remarks>
-        public string BindingUri = null;
+        public string BindingUri;
 
         /// <summary>
         ///     The timestamp last gotten from the binding.
@@ -62,10 +62,11 @@ namespace GDX.DataTables
         // ReSharper enable InconsistentNaming
 #pragma warning restore IDE1006
 
+#if UNITY_2021_3_OR_NEWER
         public void SetBinding(string uri)
         {
             DataTableInterchange.Format format = ValidateBinding(uri);
-            if(format != DataTableInterchange.Format.Invalid)
+            if (format != DataTableInterchange.Format.Invalid)
             {
                 BindingUri = uri;
                 BindingFormat = format;
@@ -76,12 +77,16 @@ namespace GDX.DataTables
                 BindingFormat = DataTableInterchange.Format.Invalid;
             }
         }
+
         public static DataTableInterchange.Format ValidateBinding(string uri)
         {
-            if (uri == null) return DataTableInterchange.Format.Invalid;
+            if (uri == null)
+            {
+                return DataTableInterchange.Format.Invalid;
+            }
 
-            string filePath = System.IO.Path.Combine(Application.dataPath, uri);
-            if (System.IO.File.Exists(filePath))
+            string filePath = Path.Combine(Application.dataPath, uri);
+            if (File.Exists(filePath))
             {
                 return DataTableInterchange.GetFormatFromFile(filePath);
             }
@@ -94,10 +99,11 @@ namespace GDX.DataTables
         public static string CreateBinding(string uri)
         {
             // Handle file path
-            if (System.IO.File.Exists(uri))
+            if (File.Exists(uri))
             {
-                return System.IO.Path.GetRelativePath(Application.dataPath, uri);
+                return Path.GetRelativePath(Application.dataPath, uri);
             }
+
             return null;
         }
 
@@ -105,5 +111,7 @@ namespace GDX.DataTables
         {
             return BindingFormat != DataTableInterchange.Format.Invalid && BindingUri != null;
         }
+
+#endif // UNITY_2021_3_OR_NEWER
     }
 }

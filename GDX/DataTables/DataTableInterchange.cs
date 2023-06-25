@@ -35,16 +35,15 @@ namespace GDX.DataTables
         /// <param name="filePath"></param>
         public static void Export(DataTableBase dataTable, Format format, string filePath)
         {
+            DataTableTransfer dataTableTransfer = new DataTableTransfer(dataTable);
+
             if (format == Format.JavaScriptObjectNotation)
             {
-                DataTableJson json = new DataTableJson(dataTable);
-
-                // TODO: do we want to set encoding?
-                File.WriteAllText(filePath, json.ToString(), new UTF8Encoding());
+                File.WriteAllText(filePath, JsonUtility.ToJson(dataTableTransfer), new UTF8Encoding());
             }
-            else
+            else if (format == Format.CommaSeperatedValues)
             {
-                ExportCommaSeperatedValues(dataTable, filePath);
+                File.WriteAllText(filePath, ToCommaSeperatedValues(dataTableTransfer), new UTF8Encoding());
             }
         }
 
@@ -54,6 +53,7 @@ namespace GDX.DataTables
             {
                 return Format.JavaScriptObjectNotation;
             }
+
             if (fileContent.StartsWith("Row Identifier, Row Name,"))
             {
                 return Format.CommaSeperatedValues;
@@ -61,14 +61,17 @@ namespace GDX.DataTables
 
             return Format.Invalid;
         }
+
         public static Format GetFormatFromFile(string filePath)
         {
             using FileStream fileStream = new FileStream(filePath, FileMode.Open);
             const int k_HeaderSize = 25;
 
             byte[] chunk = new byte[k_HeaderSize];
-            int read =  fileStream.Read(chunk, 0, k_HeaderSize);
-            return read == k_HeaderSize ? GetFormatFromContent(Encoding.ASCII.GetString(chunk, 0, k_HeaderSize)) : Format.Invalid;
+            int read = fileStream.Read(chunk, 0, k_HeaderSize);
+            return read == k_HeaderSize
+                ? GetFormatFromContent(Encoding.ASCII.GetString(chunk, 0, k_HeaderSize))
+                : Format.Invalid;
         }
 
         /// <summary>
@@ -93,180 +96,138 @@ namespace GDX.DataTables
                 return false;
             }
 
-            bool importStatus = false;
-
+            DataTableTransfer dataTableTransfer = null;
             if (format == Format.JavaScriptObjectNotation)
             {
-                DataTableJson jsonObject = DataTableJson.Create(File.ReadAllText(filePath));
-                if (jsonObject != null)
-                {
-                    importStatus = jsonObject.Update(dataTable, removeRowIfNotFound);
-                }
-
+                dataTableTransfer = JsonUtility.FromJson<DataTableTransfer>(File.ReadAllText(filePath));
             }
             else if (format == Format.CommaSeperatedValues)
             {
-                importStatus = ImportCommaSeperatedValues(dataTable, File.ReadAllLines(filePath), removeRowIfNotFound);
+                dataTableTransfer = FromCommaSeperatedValues(File.ReadAllLines(filePath));
             }
 
-            return importStatus;
+            return dataTableTransfer != null && dataTableTransfer.Update(dataTable, removeRowIfNotFound);
         }
 
         /// <summary>
-        ///     Update the <see cref="DataTableBase" /> with the CSV data found in the given file.
+        ///     Creates a <see cref="DataTableTransfer" /> from a CSV files contents.
         /// </summary>
-        /// <remarks>
-        ///     It's important that the Row Identifier column remains unchanged, no structural changes have occured, and
-        ///     no changes of column order were made. Object references will be maintained during update, only values will
-        ///     be updated.
-        /// </remarks>
-        /// <param name="dataTable">The target <see cref="DataTableBase" /> to apply changes to.</param>
-        /// <param name="fileContent">An array of CSV lines.</param>
-        /// <param name="removeRowIfNotFound">Should rows that are not found in the CSV content be removed?</param>
-        /// <returns>Was this operation successful?</returns>
-        static bool ImportCommaSeperatedValues(DataTableBase dataTable, string[] fileContent,
-            bool removeRowIfNotFound = true)
+        /// <param name="fileContent">An array of lines from a csv file.</param>
+        /// <returns>An object if it successfully parses, or null if it fails.</returns>
+        static DataTableTransfer FromCommaSeperatedValues(string[] fileContent)
         {
-            int tableRowCount = dataTable.GetRowCount();
-            int tableColumnCount = dataTable.GetColumnCount();
-            ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
-
-            // Test Columns
-            string[] columnTest = ParseCommaSeperatedValues(fileContent[0]);
-            if (columnTest.Length != tableColumnCount + 2)
+            try
             {
-                Debug.LogError(
-                    $"The importing data has {columnTest.Length} columns where {tableColumnCount + 2} was expected.");
-                return false;
-            }
+                DataTableTransfer returnData = new DataTableTransfer();
 
-            // Build a list of previous row ID, so we know what was removed
-            List<int> previousRowInternalIndices = new List<int>(tableRowCount);
-            RowDescription[] rowDescriptions = dataTable.GetAllRowDescriptions();
-            int rowDescriptionsLength = rowDescriptions.Length;
-            for (int i = 0; i < rowDescriptionsLength; i++)
+                int rowCount = fileContent.Length - 2;
+                if (rowCount <= 0)
+                {
+                    return null;
+                }
+
+                // Build headers
+                string[] headers = ParseCommaSeperatedValues(fileContent[0]);
+                int actualHeaderCount = headers.Length - 2;
+                returnData.Headers = new string[actualHeaderCount];
+                Array.Copy(headers, 2, returnData.Headers, 0, actualHeaderCount);
+
+                // Build types plus additional packed versions
+                string[] types = ParseCommaSeperatedValues(fileContent[1]);
+                int actualTypesCount = types.Length - 2;
+                returnData.Types = new string[actualTypesCount];
+                returnData.DataVersion = ulong.Parse(types[0]);
+                returnData.StructureVersion = int.Parse(types[1]);
+                Array.Copy(types, 2, returnData.Types, 0, actualTypesCount);
+
+                // Extract rows
+                returnData.Rows = new DataTableTransfer.DataTableTransferRow[rowCount];
+                int rowIndex = 0;
+                for (int i = 2; i < fileContent.Length; i++)
+                {
+                    string[] rowData = ParseCommaSeperatedValues(fileContent[i]);
+
+                    DataTableTransfer.DataTableTransferRow transferRow =
+                        new DataTableTransfer.DataTableTransferRow(actualTypesCount)
+                        {
+                            Identifier = int.Parse(rowData[0]),
+                            Name = rowData[1],
+                            Data = new string[actualTypesCount]
+                        };
+                    Array.Copy(rowData, 2, transferRow.Data, 0, actualTypesCount);
+
+                    returnData.Rows[rowIndex] = transferRow;
+                    rowIndex++;
+                }
+
+                // Return our built object from CSV
+                return returnData;
+            }
+            catch (Exception e)
             {
-                previousRowInternalIndices.Add(rowDescriptions[i].Identifier);
+                Debug.LogWarning($"Unable to parse provided CVS\n{e.Message}");
+                return null;
             }
-
-            List<int> foundRowInternalIndices = new List<int>(tableRowCount);
-
-            // Our first two lines are just informational
-            for (int i = 2; i < fileContent.Length; i++)
-            {
-                int rowIdentifier;
-                string[] rowStrings = ParseCommaSeperatedValues(fileContent[i]);
-                string rowName;
-                if (string.IsNullOrEmpty(rowStrings[0]))
-                {
-                    rowName = rowStrings[1];
-                    if (string.IsNullOrEmpty(rowName))
-                    {
-                        rowName = "Unnamed";
-                    }
-
-                    // Create new row
-                    rowIdentifier = dataTable.AddRow(rowName);
-                }
-                else
-                {
-                    rowIdentifier = int.Parse(rowStrings[0]);
-                    rowName = rowStrings[1];
-                }
-
-                foundRowInternalIndices.Add(rowIdentifier);
-
-                dataTable.SetRowName(rowIdentifier, rowName);
-
-                for (int j = 0; j < tableColumnCount; j++)
-                {
-                    dataTable.SetCellValueFromString(rowIdentifier, columnDescriptions[j].Identifier, rowStrings[j + 2],
-                        columnDescriptions[j].Type);
-                }
-            }
-
-            // Remove indices that were not found any more?
-            if (removeRowIfNotFound)
-            {
-                int foundIndicesCount = foundRowInternalIndices.Count;
-                for (int i = 0; i < foundIndicesCount; i++)
-                {
-                    if (previousRowInternalIndices.Contains(foundRowInternalIndices[i]))
-                    {
-                        previousRowInternalIndices.Remove(foundRowInternalIndices[i]);
-                    }
-                }
-
-                int indicesToRemove = previousRowInternalIndices.Count;
-                for (int i = 0; i < indicesToRemove; i++)
-                {
-                    dataTable.RemoveRow(previousRowInternalIndices[i]);
-                }
-            }
-
-            return true;
         }
 
         /// <summary>
-        ///     Export the data found in the <see cref="DataTableBase" /> to a CSV file.
+        ///     Creates the content for a Comma Seperated Values file from a <see cref="DataTableTransfer" />.
         /// </summary>
-        /// <remarks>
-        ///     The data is able to be imported via <see cref="Import" />,
-        ///     however there is a requirement that the structure of the table does not change, nor does the column order. The Row
-        ///     Identifier will be used to match up rows, with an option to create new rows.
-        /// </remarks>
-        /// <param name="dataTable">The target <see cref="DataTableBase" /> to export data from.</param>
-        /// <param name="filePath">The absolute path where to write the data in CSV format.</param>
-        static void ExportCommaSeperatedValues(DataTableBase dataTable, string filePath)
+        /// <param name="dataTableTransfer">The target to create the file from.</param>
+        /// <returns>The content of the file.</returns>
+        static string ToCommaSeperatedValues(DataTableTransfer dataTableTransfer)
         {
-            int rowCount = dataTable.GetRowCount();
-            int columnCount = dataTable.GetColumnCount();
+            int rowCount = dataTableTransfer.Rows.Length;
+            int columnCount = dataTableTransfer.Types.Length;
+
             TextGenerator generator = new TextGenerator();
 
             // Build first line
-            ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
             generator.Append("Row Identifier, Row Name");
             for (int i = 0; i < columnCount; i++)
             {
                 generator.Append(", ");
-                generator.Append(columnDescriptions[i].Name);
+                generator.Append(dataTableTransfer.Headers[i]);
             }
 
-            // Build type line (with extra data packed)
             generator.NextLine();
-            generator.Append($"{dataTable.GetDataVersion()}, {dataTable.GetStructureVersion()}");
+
+            // Build info line
+            generator.Append(
+                $"{dataTableTransfer.DataVersion.ToString()}, {dataTableTransfer.StructureVersion.ToString()}");
             for (int i = 0; i < columnCount; i++)
             {
                 generator.Append(", ");
-                generator.Append(columnDescriptions[i].Type.GetLabel());
+                generator.Append(dataTableTransfer.Types[i]);
             }
+
+            generator.NextLine();
 
             // Build lines for rows
             for (int r = 0; r < rowCount; r++)
             {
-                RowDescription rowDescription = dataTable.GetRowDescriptionByOrder(r);
-                generator.Append($"{rowDescription.Identifier}, {MakeCommaSeperatedValue(rowDescription.Name)}");
+                DataTableTransfer.DataTableTransferRow transferRow = dataTableTransfer.Rows[r];
+
+                generator.Append($"{transferRow.Identifier.ToString()}, {MakeCommaSeperatedValue(transferRow.Name)}");
                 for (int c = 0; c < columnCount; c++)
                 {
-                    ColumnDescription columnDescription = dataTable.GetColumnDescriptionByOrder(c);
                     generator.Append(", ");
-                    if (columnDescription.Type == Serializable.SerializableTypes.String ||
-                        columnDescription.Type == Serializable.SerializableTypes.Char)
+
+                    if (dataTableTransfer.Types[c] == Serializable.SerializableTypes.String.GetLabel() ||
+                        dataTableTransfer.Types[c] == Serializable.SerializableTypes.Char.GetLabel())
                     {
-                        generator.Append(MakeCommaSeperatedValue(dataTable.GetCellValueAsString(
-                            rowDescription.Identifier, columnDescription.Identifier, columnDescription.Type)));
+                        generator.Append(MakeCommaSeperatedValue(transferRow.Data[c]));
                     }
                     else
                     {
-                        generator.Append(dataTable.GetCellValueAsString(rowDescription.Identifier,
-                            columnDescription.Identifier, columnDescription.Type));
+                        generator.Append(transferRow.Data[c]);
                     }
                 }
 
                 generator.NextLine();
             }
 
-            File.WriteAllText(filePath, generator.ToString());
+            return generator.ToString();
         }
 
         /// <summary>
