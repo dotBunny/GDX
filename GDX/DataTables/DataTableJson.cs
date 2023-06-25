@@ -19,6 +19,16 @@ namespace GDX.DataTables
         // ReSharper disable InconsistentNaming
 
         /// <summary>
+        ///     The version of the data at the point of export.
+        /// </summary>
+        public ulong DataVersion;
+
+        /// <summary>
+        ///     The structural version of the data at the point of export.
+        /// </summary>
+        public int StructureVersion;
+
+        /// <summary>
         ///     The column names.
         /// </summary>
         public string[] Headers;
@@ -45,6 +55,9 @@ namespace GDX.DataTables
         {
             ColumnDescription[] columnDescriptions = dataTable.GetAllColumnDescriptions();
             int columnCount = columnDescriptions.Length;
+
+            DataVersion = dataTable.GetDataVersion();
+            StructureVersion = dataTable.GetStructureVersion();
 
             // Build Headers
             Headers = new string[columnCount];

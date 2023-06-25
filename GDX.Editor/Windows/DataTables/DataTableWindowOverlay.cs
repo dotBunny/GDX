@@ -70,7 +70,6 @@ namespace GDX.Editor.Windows.DataTables
 
         readonly VisualElement m_SettingsOverlay;
         readonly Button m_SettingsSaveButton;
-        readonly Toggle m_SettingsSupportAutoSyncToggle;
         readonly Toggle m_SettingsSupportUndoToggle;
         readonly Toggle m_SettingsReferenceOnlyModeToggle;
 
@@ -154,7 +153,6 @@ namespace GDX.Editor.Windows.DataTables
             m_SettingsOverlay = m_RootElement.Q<VisualElement>("gdx-table-settings");
             m_SettingsDisplayName = m_SettingsOverlay.Q<TextField>("gdx-table-display-name");
             m_SettingsSupportUndoToggle = m_SettingsOverlay.Q<Toggle>("gdx-table-flag-undo");
-            m_SettingsSupportAutoSyncToggle = m_SettingsOverlay.Q<Toggle>("gdx-table-flag-autosync");
             m_SettingsReferenceOnlyModeToggle = m_SettingsOverlay.Q<Toggle>("gdx-table-flag-referencesonly");
 
             m_SettingsSource = m_SettingsOverlay.Q<TextField>("gdx-table-source");
@@ -356,7 +354,6 @@ namespace GDX.Editor.Windows.DataTables
 
                     m_SettingsDisplayName.SetValueWithoutNotify(metaData.DisplayName);
                     m_SettingsSource.SetValueWithoutNotify(metaData.AssetRelativePath);
-                    m_SettingsSupportAutoSyncToggle.SetValueWithoutNotify(metaData.SupportAutoSync);
 #if UNITY_2022_2_OR_NEWER
                     m_SettingsSupportUndoToggle.SetValueWithoutNotify(metaData.SupportsUndo);
 #else

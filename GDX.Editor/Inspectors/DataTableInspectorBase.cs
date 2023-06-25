@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using GDX.DataTables;
 using UnityEditor;
 using UnityEngine;
@@ -30,6 +31,10 @@ namespace GDX.Editor.Inspectors
         Label m_DataTableTracker;
         Label m_DataTableTrackerLabel;
         Button m_DataTableTrackerRefreshButton;
+        Label m_SourceLabel;
+        Label m_SourceDescription;
+        Button m_SourcePullButton;
+        Button m_SourcePushButton;
         Label m_InterchangeLabel;
         Button m_ExportToCommaSeperatedValuesButton;
         Button m_ImportButton;
@@ -147,9 +152,18 @@ namespace GDX.Editor.Inspectors
             m_ExportToJavaScriptObjectNotationButton =
                 new Button(ExportToJavaScriptNotationObjects) { text = "Export (JSON)", name = "gdx-datatable-inspector-export-json" };
 
+
+            m_SourceLabel = new Label("Source Of Truth") { name = "gdx-datatable-inspector-sync-label" };
+            m_SourceLabel.AddToClassList("gdx-datatable-inspector-label");
+            m_SourceDescription = new Label("") { name = "gdx-datatable-inspector-sync-description" };
+            m_SourceDescription.AddToClassList("gdx-datatable-inspector-description");
+
+            m_SourcePullButton = new Button(OnPushButton) { text = "Push", name = "gdx-datatable-inspector-source-push" };
+            m_SourcePushButton = new Button(OnPullButton) { text = "Pull", name = "gdx-datatable-inspector-source-pull" };
+
+
+
             m_DataTableTrackerLabel = new Label("Tracker") { name = "gdx-datatable-inspector-tracker-label" };
-
-
             m_DataTableTrackerLabel.AddToClassList("gdx-datatable-inspector-label");
             m_DataTableTracker = new Label { name = "gdx-datatable-inspector-tracker" };
 
@@ -160,6 +174,13 @@ namespace GDX.Editor.Inspectors
             m_RootElement.Add(m_ColumnLabel);
             m_RootElement.Add(m_ColumnDescription);
 
+            m_RootElement.Add(m_SourceLabel);
+            m_RootElement.Add(m_SourceDescription);
+            VisualElement sourceRow = new VisualElement();
+            sourceRow.AddToClassList("gdx-datatable-inspector-row");
+            sourceRow.Add(m_SourcePullButton);
+            sourceRow.Add(m_SourcePushButton);
+            m_RootElement.Add(sourceRow);
 
             m_RootElement.Add(m_InterchangeLabel);
 
@@ -205,6 +226,14 @@ namespace GDX.Editor.Inspectors
             return m_RootElement;
         }
 
+        void OnPushButton()
+        {
+            SourcePush(target as DataTableBase);
+        }
+        void OnPullButton()
+        {
+            SourcePull(target as DataTableBase);
+        }
 
 
         /// <summary>
@@ -273,6 +302,21 @@ namespace GDX.Editor.Inspectors
             m_ExportToCommaSeperatedValuesButton.SetEnabled(columnCount > 0);
             m_ExportToJavaScriptObjectNotationButton.SetEnabled(columnCount > 0);
             m_ImportButton.SetEnabled(columnCount > 0);
+
+            DataTableMetaData metaData = dataTable.GetMetaData();
+
+            if (metaData.HasSourceOfTruth())
+            {
+                m_SourceDescription.text = metaData.AssetRelativePath;
+                m_SourcePullButton.SetEnabled(true);
+                m_SourcePushButton.SetEnabled(true);
+            }
+            else
+            {
+                m_SourceDescription.text = "No source of truth set.";
+                m_SourcePullButton.SetEnabled(false);
+                m_SourcePushButton.SetEnabled(false);
+            }
         }
 
         void ExportToCommaSeperatedValues()
@@ -353,10 +397,67 @@ namespace GDX.Editor.Inspectors
                     $"Are you sure you want to replace your tables content with the imported content?\n\nThe structural format of the content needs to match the column structure of the existing table; reference types will not replace the data in the existing cells at that location. Make sure the first row contains the column names, and that you have not altered columns.",
                     "Yes", "No"))
             {
+                if (dataTable.GetMetaData().SupportsUndo)
+                {
+                    Undo.RegisterCompleteObjectUndo(dataTable, $"DataTable {DataTableTracker.GetTicket(dataTable)} - Import");
+                }
+
                 if (DataTableInterchange.Import(dataTable, format, openPath))
                 {
                     DataTableTracker.NotifyOfColumnChange(DataTableTracker.GetTicket(dataTable), -1);
                 }
+            }
+        }
+
+        public static void SourcePull(DataTableBase dataTable)
+        {
+            DataTableMetaData metaData = dataTable.GetMetaData();
+            string filePath =  System.IO.Path.Combine(Application.dataPath, metaData.AssetRelativePath);
+            switch (metaData.SyncFormat)
+            {
+                case DataTableInterchange.Format.CommaSeperatedValues:
+                case DataTableInterchange.Format.JavaScriptObjectNotation:
+
+                    if (metaData.SupportsUndo)
+                    {
+                        Undo.RegisterCompleteObjectUndo(dataTable, $"DataTable {DataTableTracker.GetTicket(dataTable)} - Source Import");
+                    }
+                    DataTableInterchange.Import(dataTable, metaData.SyncFormat, filePath);
+                    DataTableTracker.NotifyOfRowChange(DataTableTracker.GetTicket(dataTable), -1);
+
+                    metaData.SyncTimestamp = System.IO.File.GetLastWriteTimeUtc(filePath);;
+                    metaData.SyncDataVersion = dataTable.GetDataVersion();
+                    EditorUtility.SetDirty(metaData);
+                    break;
+            }
+        }
+
+        public static void SourcePush(DataTableBase dataTable)
+        {
+            DataTableMetaData metaData = dataTable.GetMetaData();
+            string filePath =  System.IO.Path.Combine(Application.dataPath, metaData.AssetRelativePath);
+            switch (metaData.SyncFormat)
+            {
+                case DataTableInterchange.Format.CommaSeperatedValues:
+                case DataTableInterchange.Format.JavaScriptObjectNotation:
+
+                    // Check the timestamps as a sanity check.
+                    DateTime currentTimestamp = System.IO.File.GetLastWriteTimeUtc(filePath);
+                    if (currentTimestamp > metaData.SyncTimestamp)
+                    {
+                        if (!EditorUtility.DisplayDialog($"Overwrite '{metaData.AssetRelativePath}'?",
+                                $"The files timestamp is newer then the last known sync timestamp which means the file could have newer data which you will stomp. Are you sure you want to do this?",
+                                "Yes", "No"))
+                        {
+                            return;
+                        }
+                    }
+
+                    DataTableInterchange.Export(dataTable, metaData.SyncFormat, filePath);
+                    metaData.SyncTimestamp = System.IO.File.GetLastWriteTimeUtc(filePath);;
+                    metaData.SyncDataVersion = dataTable.GetDataVersion();
+                    EditorUtility.SetDirty(metaData);
+                    break;
             }
         }
     }

@@ -20,7 +20,7 @@ namespace GDX.Editor.Windows.DataTables
         readonly ToolbarButton m_ToolbarHelpButton;
         readonly VisualElement m_ToolbarReferencesOnlyStatus;
         readonly ToolbarMenu m_ToolbarRowMenu;
-        readonly ToolbarButton m_ToolbarSyncButton;
+        readonly ToolbarMenu m_ToolbarSourceMenu;
         readonly ToolbarMenu m_ToolbarTableMenu;
 
         internal DataTableWindowToolbar(Toolbar toolbar, DataTableWindow window)
@@ -84,9 +84,13 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarRowMenu.menu.AppendAction("Reset Order",
                 _ => { m_ParentWindow.GetView().RebuildRowData(); }, CanCommitOrder);
 
-            m_ToolbarSyncButton = m_Toolbar.Q<ToolbarButton>("gdx-table-toolbar-sync");
-            m_ToolbarSyncButton.style.display = DisplayStyle.None;
-            m_ToolbarSyncButton.clicked += OnSyncClicked;
+            m_ToolbarSourceMenu = m_Toolbar.Q<ToolbarMenu>("gdx-table-toolbar-source");
+            m_ToolbarSourceMenu.style.display = DisplayStyle.None;
+            m_ToolbarSourceMenu.menu.AppendAction("Pull",
+                _ => { DataTableInspectorBase.SourcePull(m_ParentWindow.GetDataTable()); });
+            m_ToolbarSourceMenu.menu.AppendAction("Push",
+                _ => { DataTableInspectorBase.SourcePush(m_ParentWindow.GetDataTable()); });
+
 
             m_ToolbarReferencesOnlyStatus = m_Toolbar.Q<VisualElement>("gdx-table-toolbar-references");
             m_ToolbarReferencesOnlyStatus.style.display = DisplayStyle.None;
@@ -97,10 +101,6 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarHelpButton.clicked += OpenHelp;
         }
 
-        void OnSyncClicked()
-        {
-            DataTableAutoSync.Sync(m_ParentWindow.GetDataTable());
-        }
 
         internal void SetFocusable(bool state)
         {
@@ -109,7 +109,7 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarTableMenu.focusable = state;
             m_ToolbarColumnMenu.focusable = state;
             m_ToolbarRowMenu.focusable = state;
-            m_ToolbarSyncButton.focusable = state;
+            m_ToolbarSourceMenu.focusable = state;
 
             m_ToolbarHelpButton.focusable = state;
         }
@@ -130,7 +130,9 @@ namespace GDX.Editor.Windows.DataTables
 
         DropdownMenuAction.Status CanSave(DropdownMenuAction action)
         {
-            return EditorUtility.IsDirty(m_ParentWindow.GetDataTable())
+            DataTableBase dataTable = m_ParentWindow.GetDataTable();
+            DataTableMetaData metaData = dataTable.GetMetaData();
+            return EditorUtility.IsDirty(dataTable) || EditorUtility.IsDirty(metaData)
                 ? DropdownMenuAction.Status.Normal
                 : DropdownMenuAction.Status.Disabled;
         }
@@ -164,8 +166,7 @@ namespace GDX.Editor.Windows.DataTables
         public void UpdateForSettings()
         {
             DataTableMetaData metaData = m_ParentWindow.GetDataTable().GetMetaData();
-
-            m_ToolbarSyncButton.style.display = metaData.HasSourceOfTruth() ? DisplayStyle.Flex : DisplayStyle.None;
+            m_ToolbarSourceMenu.style.display = metaData.HasSourceOfTruth() ? DisplayStyle.Flex : DisplayStyle.None;
             m_ToolbarReferencesOnlyStatus.style.display = metaData.ReferencesOnlyMode ? DisplayStyle.Flex : DisplayStyle.None;
         }
     }

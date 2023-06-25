@@ -50,7 +50,7 @@ namespace GDX.DataTables
 
         public static Format GetFormatFromContent(string fileContent)
         {
-            if (fileContent.StartsWith("{\"Headers\":["))
+            if (fileContent.StartsWith("{\"DataVersion\":"))
             {
                 return Format.JavaScriptObjectNotation;
             }
@@ -151,7 +151,8 @@ namespace GDX.DataTables
 
             List<int> foundRowInternalIndices = new List<int>(tableRowCount);
 
-            for (int i = 1; i < fileContent.Length; i++)
+            // Our first two lines are just informational
+            for (int i = 2; i < fileContent.Length; i++)
             {
                 int rowIdentifier;
                 string[] rowStrings = ParseCommaSeperatedValues(fileContent[i]);
@@ -231,7 +232,14 @@ namespace GDX.DataTables
                 generator.Append(columnDescriptions[i].Name);
             }
 
+            // Build type line (with extra data packed)
             generator.NextLine();
+            generator.Append($"{dataTable.GetDataVersion()}, {dataTable.GetStructureVersion()}");
+            for (int i = 0; i < columnCount; i++)
+            {
+                generator.Append(", ");
+                generator.Append(columnDescriptions[i].Type.GetLabel());
+            }
 
             // Build lines for rows
             for (int r = 0; r < rowCount; r++)

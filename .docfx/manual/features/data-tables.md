@@ -1,5 +1,7 @@
 # Data Tables
 
+![Data Tables](/images/manual/features/data-table/data-table-logo.png)
+
 A robust implementation of a data table type similar to [Unreal Engines](https://docs.unrealengine.com/5.2/en-US/data-driven-gameplay-elements-in-unreal-engine/). _It's every game designers dream come true!_
 
 > [!NOTE]

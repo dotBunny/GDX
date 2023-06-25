@@ -16,8 +16,6 @@ namespace GDX.DataTables
     /// </remarks>
     public class DataTableMetaData : ScriptableObject
     {
-#if UNITY_2021_3_OR_NEWER
-
 #pragma warning disable IDE1006
         // ReSharper disable InconsistentNaming
 
@@ -27,7 +25,7 @@ namespace GDX.DataTables
         public string AssetRelativePath = null;
 
         /// <summary>
-        ///     The timestamp the last time the data was pushed or pulled from the source of truth.
+        ///     The timestamp last gotten from the source of truth.
         /// </summary>
         public DateTime SyncTimestamp;
 
@@ -52,8 +50,6 @@ namespace GDX.DataTables
         /// </summary>
         public bool ReferencesOnlyMode;
 
-        public bool SupportAutoSync;
-
         /// <summary>
         ///     EXPERIMENTAL! Supports undo/redo operations on the <see cref="DataTableBase" />.
         /// </summary>
@@ -61,11 +57,6 @@ namespace GDX.DataTables
 
         // ReSharper enable InconsistentNaming
 #pragma warning restore IDE1006
-
-        public string GetAbsoluteSourceOfTruth()
-        {
-            return System.IO.Path.Combine(Application.dataPath, AssetRelativePath);
-        }
 
         public void SetSourceOfTruth(string uri)
         {
@@ -103,8 +94,6 @@ namespace GDX.DataTables
             {
                 return System.IO.Path.GetRelativePath(Application.dataPath, uri);
             }
-
-            // TODO: will we use this to
             return null;
         }
 
@@ -112,6 +101,5 @@ namespace GDX.DataTables
         {
             return SyncFormat != DataTableInterchange.Format.Invalid && AssetRelativePath != null;
         }
-#endif // UNITY_2022_2_OR_NEWER
     }
 }

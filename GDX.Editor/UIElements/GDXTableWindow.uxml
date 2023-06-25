@@ -4,10 +4,10 @@
             <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" text="Table" name="gdx-table-toolbar-table" enable-rich-text="false" />
             <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" text="Columns" name="gdx-table-toolbar-column" enable-rich-text="false" />
             <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" name="gdx-table-toolbar-row" text="Rows" enable-rich-text="false" />
-            <uie:ToolbarButton tabindex="-1" text="Sync" display-tooltip-when-elided="true" name="gdx-table-toolbar-sync" enable-rich-text="false" />
+            <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" name="gdx-table-toolbar-source" text="Source" enable-rich-text="false" />
             <uie:ToolbarSpacer style="flex-grow: 1;" />
             <ui:VisualElement display-tooltip-when-elided="true" name="gdx-table-toolbar-references" class="gdx-table-toolbar-context-button" />
-            <uie:ToolbarButton text="Help" display-tooltip-when-elided="true" name="gdx-table-toolbar-help" class="gdx-table-toolbar-context-button" />
+            <uie:ToolbarButton text="Help" display-tooltip-when-elided="true" name="gdx-table-toolbar-help" class="gdx-table-toolbar-context-button" tooltip="Help on DataTables!" />
         </uie:Toolbar>
     </ui:VisualElement>
     <ui:VisualElement name="gdx-table-overlay">
@@ -45,7 +45,6 @@
                     <ui:Button text="…" name="gdx-table-source-select" enable-rich-text="true" />
                     <ui:VisualElement name="gdx-table-source-status" />
                 </ui:TextField>
-            <ui:Toggle label="Support AutoSync" name="gdx-table-flag-autosync" />
             <ui:Toggle label="Support Undo" name="gdx-table-flag-undo" />
             <ui:Toggle label="References Only" name="gdx-table-flag-referencesonly" />
             <ui:VisualElement name="VisualElement" class="gdx-table-overlay-buttons">

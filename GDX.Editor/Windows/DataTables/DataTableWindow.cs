@@ -154,6 +154,7 @@ namespace GDX.Editor.Windows.DataTables
             if (skipDialog || EditorUtility.DisplayDialog($"Save {m_DataTable.GetMetaData().DisplayName}", "There are changes made to the table (in memory) which have not been saved to disk. Would you like to write those changes to disk now?", "Yes", "No"))
             {
                 AssetDatabase.SaveAssetIfDirty(m_DataTable);
+                AssetDatabase.SaveAssetIfDirty(m_DataTable.GetMetaData());
             }
         }
 
