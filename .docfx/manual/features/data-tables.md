@@ -35,16 +35,46 @@ Clicking the **Open** button will open an editing window focused on the selected
 
 ### Interchange
 
-The DataTableBase allows for interchange between formats (CSV & JSON out-of-the-box); export and non-destructive table data import. What this means in practice is that you can export an already-built table and make changes in whatever editing program a user desires. Those changes can then be re-imported back into Unity, maintaining existing references (an example being an object column referencing prefabs).
+The DataTableBase allows for data-interchange between formats ([CSV](https://en.wikipedia.org/wiki/Comma-separated_values) & [JSON](https://www.json.org/json-en.html) out-of-the-box), export and non-destructive table data import. What this means in practice is that you can export an already-built table and make changes in whatever editing program a user desires. Those changes can then be re-imported back into Unity, maintaining existing references (an example being an object column referencing prefabs).
 
 > [!WARNING]
 > It is important to note that the column structure (order and types) cannot change in the imported data. The row identifiers will be used to match up rows, updating where appropriate, creating when necessary, and removing when no longer found.
 
-#### What about Excel and Google Sheets?
+#### Excel / Google Sheets
 
 Yes, absolutely!
 
-However, you will need to do a bit of legwork to get there. When we ship `GDX` we try to think about a lean-and-mean approach. Adding the libraries necessary to interact with those types easily would add a certain level of bloat to the package. We have modelled our existing [JSON](xref:GDX.DataTables.DataBindings.JavaScriptObjectNotationFormat) and [CSV](xref:GDX.DataTables.DataBindings.CommaSeperatedValueFormat) formats to demonstrate how easy it is to add a new format to bind too.
+However, you will need to do a bit of legwork to get there. When we ship `GDX` we try to think about a lean-and-mean approach. Adding the libraries necessary to interact with those types easily would add a certain level of bloat to the package. We have modelled our existing [JSON](xref:GDX.DataTables.DataBindings.JavaScriptObjectNotationFormat) and [CSV](xref:GDX.DataTables.DataBindings.CommaSeperatedValueFormat) formats to demonstrate how to build custom formats.
+
+```csharp
+   class ExcelFormat : FormatBase
+   {      
+      #if UNITY_EDITOR        
+      [UnityEditor.InitializeOnLoadMethod]
+      #else
+      [UnityEngine.RuntimeInitializeOnLoadMethod]
+      #endif        
+      static void RegisterFormat()
+      {
+         // Ensure the format is registered for usage
+         DataBindingProvider.RegisterFormat(new ExcelFormat());
+      }
+
+      // Fill out other overrides ...
+
+      public override SerializableTable Pull(string uri, ulong currentDataVersion, int currentStructuralVersion)
+      {                        
+         // Open excel file with OpenXML SDK            
+         // Read cells and put into new             
+      }
+
+      public override bool Push(string uri, SerializableTable serializableTable)
+      {
+         // Open excel file with OpenXML SDK
+         // Itterate through simplified table data and put into cells
+      }
+   }
+```
 
 ### Tracker
 
@@ -131,7 +161,19 @@ While the order of rows in the table window is virtual (until committed), the or
 One of the design pillars for the DataTable feature was ensuring the data consumption was intuitive, both from a designer's standpoint and a developer's. A developer can create a cache-friendly reference to a cell by type:
 
 ```csharp
-   public StringCellValue Name;
+   public FloatCellValue BaseHealth;
+
+   void Awake()
+   {
+      // Check data version and fill
+      Health = BaseHealth.Get();
+   }
+
+   void OnRespawn()
+   {
+      // Reset without checking data version
+      Health = BaseHealth.GetUnsafe();
+   }
 ```
 
 Then in the object's inspector, an easy-to-use property drawer is created. 

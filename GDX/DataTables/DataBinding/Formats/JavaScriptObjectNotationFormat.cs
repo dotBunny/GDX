@@ -16,6 +16,8 @@ namespace GDX.DataTables.DataBindings
     {
         public JavaScriptObjectNotationFormat()
         {
+            // We can register the format this way because we automatically include these formats in the
+            // DataBindingsProvider as private members.
             DataBindingProvider.RegisterFormat(this);
         }
 
