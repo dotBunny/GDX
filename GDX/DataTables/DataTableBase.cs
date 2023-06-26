@@ -20,10 +20,14 @@ namespace GDX.DataTables
         /// </summary>
 #pragma warning disable IDE1006
         // ReSharper disable InconsistentNaming
+#if UNITY_EDITOR
         [SerializeField] internal DataTableMetaData m_MetaData;
-
+#else
+        internal DataTableMetaData m_MetaData;
+#endif // UNITY_EDITOR
         // ReSharper enable InconsistentNaming
 #pragma warning restore IDE1006
+
 
         /// <summary>
         ///     Add a column.
