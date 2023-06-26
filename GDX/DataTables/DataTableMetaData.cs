@@ -59,6 +59,7 @@ namespace GDX.DataTables
 #pragma warning restore IDE1006
 
 #if UNITY_2021_3_OR_NEWER
+
         public void SetBinding(string uri)
         {
             if (ValidateBinding(uri) != null)

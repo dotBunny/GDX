@@ -71,7 +71,7 @@ However, you will need to do a bit of legwork to get there. When we ship `GDX` w
       public override bool Push(string uri, SerializableTable serializableTable)
       {
          // Open excel file with OpenXML SDK
-         // Itterate through simplified table data and put into cells
+         // Iterate through simplified table data and put into cells
       }
    }
 ```
