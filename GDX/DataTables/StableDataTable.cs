@@ -9,6 +9,8 @@ using Object = UnityEngine.Object;
 
 namespace GDX.DataTables
 {
+
+    [HelpURL("https://gdx.dotbunny.com/manual/features/data-tables.html")]
     [CreateAssetMenu(menuName = "GDX/Stable Data Table", fileName = "GDXStableDataTable")]
     [Serializable]
     public class StableDataTable : DataTableBase

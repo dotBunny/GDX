@@ -66,6 +66,6 @@ namespace GDX.Editor
             Object selectedObject = UnityEditor.Selection.activeObject;
             return selectedObject != null && UnityEditor.AssetDatabase.Contains(selectedObject);
         }
-    }
 #endif // UNITY_2022_2_OR_NEWER
+    }
 }
