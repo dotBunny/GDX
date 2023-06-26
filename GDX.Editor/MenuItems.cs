@@ -29,5 +29,43 @@ namespace GDX.Editor
         {
             UnityEditor.AssetDatabase.ForceReserializeAssets();
         }
+
+#if UNITY_2022_2_OR_NEWER
+#if GDX_TOOLS
+        [UnityEditor.MenuItem("Assets/Find References In Project", false, 25)]
+#endif // GDX_TOOLS
+        static void FindReferencesInProject()
+        {
+            // Check providers
+            bool hasDependencies = false;
+            foreach (UnityEditor.Search.ISearchDatabase database in UnityEditor.Search.SearchService.EnumerateDatabases())
+            {
+                if (database.indexingOptions.HasFlags(UnityEditor.Search.IndexingOptions.Dependencies))
+                {
+                    hasDependencies = true;
+                    break;
+                }
+            }
+            if (!hasDependencies)
+            {
+                Debug.LogWarning(
+                    "You are searching for dependencies, but currently none of your Search Databases are configured with dependency indexing.\n" +
+                    "You need to configure this option in the Search Index Manager.");
+                return;
+            }
+
+            UnityEditor.Search.SearchContext context =
+                UnityEditor.Search.SearchService.CreateContext(
+                    $"ref=\"{UnityEditor.AssetDatabase.GetAssetPath(UnityEditor.Selection.activeObject)}\"");
+            UnityEditor.Search.SearchService.ShowWindow(context);
+        }
+
+        [UnityEditor.MenuItem("Assets/Find References In Project", true, 25)]
+        static bool FindReferencesInProjectValidate()
+        {
+            Object selectedObject = UnityEditor.Selection.activeObject;
+            return selectedObject != null && UnityEditor.AssetDatabase.Contains(selectedObject);
+        }
     }
+#endif // UNITY_2022_2_OR_NEWER
 }
