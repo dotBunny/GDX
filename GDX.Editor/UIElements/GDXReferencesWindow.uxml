@@ -1,9 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <ui:VisualElement name="gdx-references" style="flex-direction: column; height: 100%; width: 100%;">
-        <uie:Toolbar name="gdx-references-toolbar" style="width: 100%;">
-            <uie:ObjectField name="gdx-references-toolbar-object" style="flex-grow: 1;" />
-            <uie:ToolbarButton text="Find" display-tooltip-when-elided="true" name="gdx-references-toolbar-find" enable-rich-text="false" />
-        </uie:Toolbar>
-        <ui:ListView focusable="true" name="gdx-references-list" />
-    </ui:VisualElement>
-</ui:UXML>
