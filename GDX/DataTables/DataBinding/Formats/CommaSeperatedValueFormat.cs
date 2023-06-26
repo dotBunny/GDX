@@ -12,93 +12,84 @@ using TextGenerator = GDX.Developer.TextGenerator;
 
 namespace GDX.DataTables.DataBindings
 {
-    public class CommaSeperatedValueFormat : FormatBase
+    /// <summary>
+    /// A comma-seperated values format.
+    /// </summary>
+    class CommaSeperatedValueFormat : FormatBase
     {
-        public override SerializableTable Pull(string uri, ulong currentDataVersion, int currentStructuralVersion)
+        public CommaSeperatedValueFormat()
         {
-            if (uri == null || !File.Exists(uri)) return null;
-            if (!File.Exists(uri)) return null;
-            return Parse(File.ReadAllLines(uri));
+            DataBindingProvider.RegisterFormat(this);
         }
 
-        public override bool Push(string uri, SerializableTable serializableTable)
+        ~CommaSeperatedValueFormat()
         {
-            if (uri == null) return false;
-            File.WriteAllText(uri, Generate(serializableTable), new UTF8Encoding());
-            return true;
+            DataBindingProvider.UnregisterFormat(this);
         }
 
+        /// <inheritdoc />
         public override DateTime GetBindingTimestamp(string uri)
         {
             return File.GetLastWriteTimeUtc(Path.Combine(Application.dataPath, uri));
         }
 
-        public override bool FoundUriHint(string uri)
+        /// <inheritdoc />
+        public override string GetFilePreferredExtension()
         {
-            return uri.EndsWith("CSV", StringComparison.OrdinalIgnoreCase);
+            return "csv";
         }
 
-        public static bool IsHeader(string header)
+        /// <inheritdoc />
+        public override string GetFriendlyName()
+        {
+            return "CSV";
+        }
+
+        /// <inheritdoc />
+        public override bool IsFileHeader(string header)
         {
             return header.StartsWith("Row Identifier, Row Name,", StringComparison.OrdinalIgnoreCase);
         }
 
-        /// <summary>
-        ///     Creates a <see cref="SerializableTable" /> from a CSV files contents.
-        /// </summary>
-        /// <param name="fileContent">An array of lines from a csv file.</param>
-        /// <returns>An object if it successfully parses, or null if it fails.</returns>
-        static SerializableTable Parse(string[] fileContent)
+        /// <inheritdoc />
+        public override string[] GetImportDialogExtensions()
         {
-            try
+            return new [] { GetFriendlyName(), GetFilePreferredExtension() };
+        }
+
+        /// <inheritdoc />
+        public override bool IsOnDiskFormat()
+        {
+            return true;
+        }
+
+        /// <inheritdoc />
+        public override bool IsUri(string uri)
+        {
+            return uri.EndsWith(GetFilePreferredExtension(), StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <inheritdoc />
+        public override SerializableTable Pull(string uri, ulong currentDataVersion, int currentStructuralVersion)
+        {
+            if (uri == null || !File.Exists(uri))
             {
-                SerializableTable returnSerializableTable = new SerializableTable();
-
-                int rowCount = fileContent.Length - 2;
-                if (rowCount <= 0)
-                {
-                    return null;
-                }
-
-                // Build headers
-                string[] headers = ParseCommaSeperatedValues(fileContent[0]);
-                int actualHeaderCount = headers.Length - 2;
-                returnSerializableTable.Headers = new string[actualHeaderCount];
-                Array.Copy(headers, 2, returnSerializableTable.Headers, 0, actualHeaderCount);
-
-                // Build types plus additional packed versions
-                string[] types = ParseCommaSeperatedValues(fileContent[1]);
-                int actualTypesCount = types.Length - 2;
-                returnSerializableTable.Types = new string[actualTypesCount];
-                returnSerializableTable.DataVersion = ulong.Parse(types[0]);
-                returnSerializableTable.StructureVersion = int.Parse(types[1]);
-                Array.Copy(types, 2, returnSerializableTable.Types, 0, actualTypesCount);
-
-                // Extract rows
-                returnSerializableTable.Rows = new SerializableRow[rowCount];
-                int rowIndex = 0;
-                for (int i = 2; i < fileContent.Length; i++)
-                {
-                    string[] rowData = ParseCommaSeperatedValues(fileContent[i]);
-
-                    SerializableRow transferRow = new SerializableRow(actualTypesCount)
-                    {
-                        Identifier = int.Parse(rowData[0]), Name = rowData[1], Data = new string[actualTypesCount]
-                    };
-                    Array.Copy(rowData, 2, transferRow.Data, 0, actualTypesCount);
-
-                    returnSerializableTable.Rows[rowIndex] = transferRow;
-                    rowIndex++;
-                }
-
-                // Return our built object from CSV
-                return returnSerializableTable;
-            }
-            catch (Exception e)
-            {
-                Debug.LogWarning($"Unable to parse provided CVS\n{e.Message}");
                 return null;
             }
+
+            return Parse(File.ReadAllLines(uri));
+        }
+
+        /// <inheritdoc />
+        public override bool Push(string uri, SerializableTable serializableTable)
+        {
+            if (uri == null)
+            {
+                return false;
+            }
+
+            File.WriteAllText(uri, Generate(serializableTable), new UTF8Encoding());
+            return File.Exists(uri);
         }
 
         /// <summary>
@@ -182,6 +173,64 @@ namespace GDX.DataTables.DataBindings
 
             // Ensure quotes for commas
             return content.IndexOf(',') != -1 ? $"\"{content}\"" : content;
+        }
+
+        /// <summary>
+        ///     Creates a <see cref="SerializableTable" /> from a CSV files contents.
+        /// </summary>
+        /// <param name="fileContent">An array of lines from a csv file.</param>
+        /// <returns>An object if it successfully parses, or null if it fails.</returns>
+        static SerializableTable Parse(string[] fileContent)
+        {
+            try
+            {
+                SerializableTable returnSerializableTable = new SerializableTable();
+
+                int rowCount = fileContent.Length - 2;
+                if (rowCount <= 0)
+                {
+                    return null;
+                }
+
+                // Build headers
+                string[] headers = ParseCommaSeperatedValues(fileContent[0]);
+                int actualHeaderCount = headers.Length - 2;
+                returnSerializableTable.Headers = new string[actualHeaderCount];
+                Array.Copy(headers, 2, returnSerializableTable.Headers, 0, actualHeaderCount);
+
+                // Build types plus additional packed versions
+                string[] types = ParseCommaSeperatedValues(fileContent[1]);
+                int actualTypesCount = types.Length - 2;
+                returnSerializableTable.Types = new string[actualTypesCount];
+                returnSerializableTable.DataVersion = ulong.Parse(types[0]);
+                returnSerializableTable.StructureVersion = int.Parse(types[1]);
+                Array.Copy(types, 2, returnSerializableTable.Types, 0, actualTypesCount);
+
+                // Extract rows
+                returnSerializableTable.Rows = new SerializableRow[rowCount];
+                int rowIndex = 0;
+                for (int i = 2; i < fileContent.Length; i++)
+                {
+                    string[] rowData = ParseCommaSeperatedValues(fileContent[i]);
+
+                    SerializableRow transferRow = new SerializableRow(actualTypesCount)
+                    {
+                        Identifier = int.Parse(rowData[0]), Name = rowData[1], Data = new string[actualTypesCount]
+                    };
+                    Array.Copy(rowData, 2, transferRow.Data, 0, actualTypesCount);
+
+                    returnSerializableTable.Rows[rowIndex] = transferRow;
+                    rowIndex++;
+                }
+
+                // Return our built object from CSV
+                return returnSerializableTable;
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"Unable to parse provided CVS\n{e.Message}");
+                return null;
+            }
         }
 
         /// <summary>

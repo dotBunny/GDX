@@ -2,9 +2,9 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using UnityEngine;
 
 namespace GDX.DataTables.DataBindings
 {
@@ -13,52 +13,34 @@ namespace GDX.DataTables.DataBindings
     /// </summary>
     public static class DataBindingProvider
     {
-        public static FormatBase CustomFormat;
-
-        /// <summary>
-        ///     Supported interchange formats.
-        /// </summary>
-        public enum Format
-        {
-            Invalid = -1,
-            CommaSeperatedValues,
-            JavaScriptObjectNotation,
-            Custom
-        }
+        static readonly List<FormatBase> k_KnownFormats = new List<FormatBase>(3);
+        static readonly CommaSeperatedValueFormat k_CommaSeperatedValueFormat = new CommaSeperatedValueFormat();
+        static readonly JavaScriptObjectNotationFormat k_JavaScriptObjectNotationFormat =
+            new JavaScriptObjectNotationFormat();
 
         /// <summary>
         ///     Export the content of a given <see cref="DataTableBase" /> to a target format.
         /// </summary>
         /// <param name="dataTable">The <see cref="DataTableBase" /></param>
-        /// <param name="format">The desired format to export as.</param>
         /// <param name="uri">The output path/uri where to send the data, absolute if on disk</param>
-        public static void Export(DataTableBase dataTable, Format format, string uri)
+        /// <param name="jsonFallback">If the format cannot be determined by the uri, fallback to JSON.</param>
+        public static void Export(DataTableBase dataTable, string uri, bool jsonFallback = true)
         {
             SerializableTable serializableTable = new SerializableTable(dataTable);
-            FormatBase binding = null;
-            switch (format)
+            FormatBase format = GetFormatFromUri(uri);
+            if (format == null && jsonFallback)
             {
-                case Format.CommaSeperatedValues:
-                    binding = new CommaSeperatedValueFormat();
-                    break;
-                case Format.JavaScriptObjectNotation:
-                    binding = new JavaScriptObjectNotationFormat();
-                    break;
-                case Format.Custom:
-                    if (CustomFormat == null)
-                    {
-                        Debug.LogWarning("Unable to push changes as a custom format is being used, without a provider.");
-                    }
-                    else
-                    {
-                        binding = CustomFormat;
-                    }
-                    break;
+                format = k_JavaScriptObjectNotationFormat;
             }
-            binding?.Push(uri, serializableTable);
+            format?.Push(uri, serializableTable);
         }
 
-        public static Format GetFormatFromFile(string filePath)
+        public static FormatBase[] GetFormats()
+        {
+            return k_KnownFormats.ToArray();
+        }
+
+        public static FormatBase GetFormatFromFile(string filePath)
         {
             using FileStream fileStream = new FileStream(filePath, FileMode.Open);
             const int k_HeaderSize = 25;
@@ -67,26 +49,47 @@ namespace GDX.DataTables.DataBindings
             int read = fileStream.Read(chunk, 0, k_HeaderSize);
             return read == k_HeaderSize
                 ? GetFormatFromFileHeader(Encoding.ASCII.GetString(chunk, 0, k_HeaderSize))
-                : Format.Invalid;
+                : null;
         }
 
-        static Format GetFormatFromFileHeader(string header)
+        static FormatBase GetFormatFromFileHeader(string header)
         {
-            if (JavaScriptObjectNotationFormat.IsHeader(header))
+            for (int i = 0; i < k_KnownFormats.Count; i++)
             {
-                return Format.JavaScriptObjectNotation;
+                if (k_KnownFormats[i].IsFileHeader(header))
+                {
+                    return k_KnownFormats[i];
+                }
             }
-            if (CommaSeperatedValueFormat.IsHeader(header))
+            return null;
+        }
+
+        public static FormatBase GetFormatFromUri(string uri)
+        {
+            for (int i = 0; i < k_KnownFormats.Count; i++)
             {
-                return Format.CommaSeperatedValues;
+                if (k_KnownFormats[i].IsUri(uri))
+                {
+                    return k_KnownFormats[i];
+                }
             }
+            return null;
+        }
 
-            if (CustomFormat != null)
+        public static string[] GetImportDialogExtensions()
+        {
+            List<string> returnData = new List<string>(4);
+            returnData.Add("Auto");
+            returnData.Add("*");
+            for (int i = 0; i < k_KnownFormats.Count; i++)
             {
-
+                string[] extensions = k_KnownFormats[i].GetImportDialogExtensions();
+                if (extensions != null)
+                {
+                    returnData.AddRange(extensions);
+                }
             }
-
-            return Format.Invalid;
+            return returnData.ToArray();
         }
 
         /// <summary>
@@ -98,36 +101,37 @@ namespace GDX.DataTables.DataBindings
         ///     be updated.
         /// </remarks>
         /// <param name="dataTable">The target <see cref="DataTableBase" /> to apply changes to.</param>
-        /// <param name="format">The file format.</param>
         /// <param name="uri">The resource path to load data from, absolute if on disk.</param>
         /// <param name="removeRowIfNotFound">Should rows that are not found in the file content be removed?</param>
+        /// <param name="jsonFallback">If the importer is unable to determine the format based on the URI, fallback to assuming its JSON.</param>
         /// <returns>Was the import successful?</returns>
-        public static bool Import(DataTableBase dataTable, Format format, string uri,
-            bool removeRowIfNotFound = true)
+        public static bool Import(DataTableBase dataTable, string uri, bool removeRowIfNotFound = true,
+            bool jsonFallback = true)
         {
             SerializableTable serializableTable = null;
-            FormatBase binding = null;
-
-            if (format == Format.JavaScriptObjectNotation)
+            FormatBase format = GetFormatFromUri(uri);
+            if (format == null && jsonFallback)
             {
-                binding = new JavaScriptObjectNotationFormat();
+                format = k_JavaScriptObjectNotationFormat;
             }
-            else if (format == Format.CommaSeperatedValues)
+            if (format != null)
             {
-                binding = new CommaSeperatedValueFormat();
+                serializableTable = format.Pull(uri, dataTable.GetDataVersion(), dataTable.GetStructureVersion());
             }
-            else if (format == Format.Custom && CustomFormat != null)
-            {
-                binding = CustomFormat;
-            }
-
-            if (binding != null)
-            {
-                serializableTable = binding.Pull(uri, dataTable.GetDataVersion(), dataTable.GetStructureVersion());
-            }
-
             return serializableTable != null && serializableTable.Update(dataTable, removeRowIfNotFound);
         }
 
+        public static void RegisterFormat(FormatBase format)
+        {
+            if (!k_KnownFormats.Contains(format))
+            {
+                k_KnownFormats.Add(format);
+            }
+        }
+
+        public static void UnregisterFormat(FormatBase format)
+        {
+            k_KnownFormats.Remove(format);
+        }
     }
 }

@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using GDX.DataTables;
 using GDX.DataTables.DataBindings;
 using GDX.Editor.Inspectors;
@@ -35,18 +34,24 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarTableMenu.menu.AppendAction("Write To Disk",
                 _ => { m_ParentWindow.Save(true); }, CanSave);
             m_ToolbarTableMenu.menu.AppendSeparator();
-            m_ToolbarTableMenu.menu.AppendAction("Export (CSV) ...",
-                _ =>
+
+            // Dynamic export
+            FormatBase[] formats = DataBindingProvider.GetFormats();
+            int formatCount = formats.Length;
+            for (int i = 0; i < formatCount; i++)
+            {
+                FormatBase format = formats[i];
+                if (format.IsOnDiskFormat())
                 {
-                    DataTableInspectorBase.ShowExportDialogForTable(DataBindingProvider.Format.CommaSeperatedValues,
-                        m_ParentWindow.GetDataTable());
-                }, CanInterchange);
-            m_ToolbarTableMenu.menu.AppendAction("Export (JSON) ...",
-                _ =>
-                {
-                    DataTableInspectorBase.ShowExportDialogForTable(
-                        DataBindingProvider.Format.JavaScriptObjectNotation, m_ParentWindow.GetDataTable());
-                }, CanInterchange);
+                    m_ToolbarTableMenu.menu.AppendAction($"Export {format.GetFriendlyName()} ...",
+                        _ =>
+                        {
+                            DataTableInspectorBase.ShowExportDialogForTable(m_ParentWindow.GetDataTable(),
+                                format.GetFriendlyName(), format.GetFilePreferredExtension());
+                        }, CanInterchange);
+                }
+            }
+
             m_ToolbarTableMenu.menu.AppendAction("Import ...",
                 _ => { DataTableInspectorBase.ShowImportDialogForTable(m_ParentWindow.GetDataTable()); },
                 CanInterchange);
@@ -93,6 +98,7 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarBindingMenu.menu.AppendAction("Push",
                 _ => { DataTableInspectorBase.BindingPush(m_ParentWindow.GetDataTable()); });
 
+            // TODO: ?
             m_ToolbarBindingStatus = m_Toolbar.Q<VisualElement>("gdx-table-toolbar-binding-pull");
             m_ToolbarBindingStatus.style.display = DisplayStyle.None;
             m_ToolbarBindingStatus.tooltip = "The binding has been detected as newer then your local data.";

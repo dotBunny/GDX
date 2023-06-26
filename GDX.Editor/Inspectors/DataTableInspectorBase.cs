@@ -39,9 +39,8 @@ namespace GDX.Editor.Inspectors
         Button m_BindingPushButton;
         VisualElement m_BindingRow;
         Label m_InterchangeLabel;
-        Button m_ExportToCommaSeperatedValuesButton;
+        VisualElement m_ExportContainer;
         Button m_ImportButton;
-        Button m_ExportToJavaScriptObjectNotationButton;
         VisualElement m_RootElement;
         Label m_RowDescription;
         Label m_RowLabel;
@@ -147,13 +146,13 @@ namespace GDX.Editor.Inspectors
 
             m_InterchangeLabel = new Label("Interchange") { name = "gdx-datatable-inspector-interchange-label" };
             m_InterchangeLabel.AddToClassList("gdx-datatable-inspector-label");
-            m_ExportToCommaSeperatedValuesButton =
-                new Button(ExportToCommaSeperatedValues) { text = "Export (CSV)", name = "gdx-datatable-inspector-export-csv" };
-            m_ImportButton =
-                new Button(Import) { text = "Import", name = "gdx-datatable-inspector-import" };
-            m_ExportToJavaScriptObjectNotationButton =
-                new Button(ExportToJavaScriptNotationObjects) { text = "Export (JSON)", name = "gdx-datatable-inspector-export-json" };
+            m_ExportContainer = new VisualElement() { name = "gdx-datatable-inspector-interchange-export" };
 
+            m_ImportButton =
+                new Button(() =>
+                {
+                    ShowImportDialogForTable((DataTableBase)target);
+                }) { text = "Import", name = "gdx-datatable-inspector-import" };
 
             m_BindingLabel = new Label("Data Binding") { name = "gdx-datatable-inspector-binding-label" };
             m_BindingLabel.AddToClassList("gdx-datatable-inspector-label");
@@ -187,16 +186,27 @@ namespace GDX.Editor.Inspectors
 
             m_RootElement.Add(m_InterchangeLabel);
 
-            VisualElement firstRow = new VisualElement();
-            firstRow.AddToClassList("gdx-datatable-inspector-row");
-            firstRow.Add(m_ExportToCommaSeperatedValuesButton);
-            firstRow.Add(m_ExportToJavaScriptObjectNotationButton);
-            m_RootElement.Add(firstRow);
 
-            VisualElement secondRow = new VisualElement();
-            secondRow.AddToClassList("gdx-datatable-inspector-row");
-            secondRow.Add(m_ImportButton);
-            m_RootElement.Add(secondRow);
+            // Dynamic export
+            FormatBase[] formats = DataBindingProvider.GetFormats();
+            int formatCount = formats.Length;
+            for (int i = 0; i < formatCount; i++)
+            {
+                FormatBase format = formats[i];
+                if (format.IsOnDiskFormat())
+                {
+                    m_ExportContainer.Add(new Button(() =>
+                    {
+                        ShowExportDialogForTable((DataTableBase)target, format.GetFriendlyName(),
+                            format.GetFilePreferredExtension());
+                    }) { text = $"Export ({format.GetFriendlyName()})" });
+                }
+            }
+
+            m_RootElement.Add(m_ExportContainer);
+
+
+            m_RootElement.Add(m_ImportButton);
 
             m_RootElement.Add(m_DataTableTrackerLabel);
             m_RootElement.Add(m_DataTableTracker);
@@ -303,8 +313,7 @@ namespace GDX.Editor.Inspectors
             m_DataTableTracker.text =
                 $"{stats.Usages} Usages\n{stats.CellValueChanged} Cell Monitors\n{stats.StructuralChange} Structural Monitors";
 
-            m_ExportToCommaSeperatedValuesButton.SetEnabled(columnCount > 0);
-            m_ExportToJavaScriptObjectNotationButton.SetEnabled(columnCount > 0);
+            m_ExportContainer.SetEnabled(columnCount > 0);
             m_ImportButton.SetEnabled(columnCount > 0);
 
             DataTableMetaData metaData = dataTable.GetMetaData();
@@ -321,51 +330,15 @@ namespace GDX.Editor.Inspectors
             }
         }
 
-        void ExportToCommaSeperatedValues()
+        public static void ShowExportDialogForTable(DataTableBase dataTable, string friendlyName, string extension)
         {
-            ShowExportDialogForTable(DataBindingProvider.Format.CommaSeperatedValues, (DataTableBase)target);
-        }
-
-        void Import()
-        {
-            ShowImportDialogForTable((DataTableBase)target);
-        }
-
-        void ExportToJavaScriptNotationObjects()
-        {
-            ShowExportDialogForTable(DataBindingProvider.Format.JavaScriptObjectNotation, (DataTableBase)target);
-        }
-
-
-        public static void ShowExportDialogForTable(DataBindingProvider.Format format, DataTableBase dataTable)
-        {
-
-            string savePath;
-            if (format == DataBindingProvider.Format.CommaSeperatedValues)
-            {
-                savePath = EditorUtility.SaveFilePanel($"Export {dataTable.GetMetaData().DisplayName} to CSV",
-                    Application.dataPath,
-                    dataTable.name, "csv");
-            }
-            else
-            {
-                savePath = EditorUtility.SaveFilePanel($"Export {dataTable.GetMetaData().DisplayName} to JSON",
-                    Application.dataPath,
-                    dataTable.name, "json");
-            }
-
+           string savePath =  EditorUtility.SaveFilePanel($"Export {dataTable.GetMetaData().DisplayName} to {friendlyName}",
+                     Application.dataPath,
+                     dataTable.name, extension);
 
             if (!string.IsNullOrEmpty(savePath))
             {
-                if (format == DataBindingProvider.Format.CommaSeperatedValues)
-                {
-                    DataBindingProvider.Export(dataTable, DataBindingProvider.Format.CommaSeperatedValues, savePath);
-                }
-                else
-                {
-                    DataBindingProvider.Export(dataTable, DataBindingProvider.Format.JavaScriptObjectNotation,
-                        savePath);
-                }
+                DataBindingProvider.Export(dataTable, savePath);
                 Debug.Log($"'{dataTable.GetMetaData().DisplayName}' was exported to {savePath}.");
             }
         }
@@ -373,27 +346,11 @@ namespace GDX.Editor.Inspectors
         public static void ShowImportDialogForTable(DataTableBase dataTable)
         {
             string openPath = EditorUtility.OpenFilePanelWithFilters($"Import into {dataTable.GetMetaData().DisplayName}",
-                Application.dataPath, new[] { "JSON", "json", "CSV", "csv" });
-
+                Application.dataPath, DataBindingProvider.GetImportDialogExtensions());
 
             if (string.IsNullOrEmpty(openPath))
             {
                 return;
-            }
-
-            string extension = System.IO.Path.GetExtension(openPath).ToLower();
-            DataBindingProvider.Format format;
-            switch (extension)
-            {
-                case ".csv":
-                    format = DataBindingProvider.Format.CommaSeperatedValues;
-                    break;
-                case ".json":
-                    format = DataBindingProvider.Format.JavaScriptObjectNotation;
-                    break;
-                default:
-                    Debug.LogError($"Unrecognized format extension '{extension}'.");
-                    return;
             }
 
             if (EditorUtility.DisplayDialog($"Replace '{dataTable.GetMetaData().DisplayName}' Content",
@@ -405,7 +362,7 @@ namespace GDX.Editor.Inspectors
                     Undo.RegisterCompleteObjectUndo(dataTable, $"DataTable {DataTableTracker.GetTicket(dataTable)} - Import");
                 }
 
-                if (DataBindingProvider.Import(dataTable, format, openPath))
+                if (DataBindingProvider.Import(dataTable, openPath))
                 {
                     DataTableTracker.NotifyOfColumnChange(DataTableTracker.GetTicket(dataTable), -1);
                 }
@@ -419,39 +376,25 @@ namespace GDX.Editor.Inspectors
         public static void BindingPull(DataTableBase dataTable)
         {
             DataTableMetaData metaData = dataTable.GetMetaData();
-            FormatBase format = null;
-            string bindingPath = null;
-
-            switch (metaData.BindingFormat)
-            {
-                case DataBindingProvider.Format.CommaSeperatedValues:
-                    format = new CommaSeperatedValueFormat();
-                    bindingPath = Path.GetFullPath(Path.Combine(Application.dataPath, metaData.BindingUri));
-                    break;
-                case DataBindingProvider.Format.JavaScriptObjectNotation:
-                    format = new JavaScriptObjectNotationFormat();
-                    bindingPath = Path.GetFullPath(Path.Combine(Application.dataPath, metaData.BindingUri));
-                    break;
-                case DataBindingProvider.Format.Custom:
-                    format = DataBindingProvider.CustomFormat;
-                    bindingPath = metaData.BindingUri;
-                    break;
-            }
-
+            FormatBase format = DataBindingProvider.GetFormatFromUri(metaData.BindingUri);
             if (format == null) return;
+
+            string uri = format.IsOnDiskFormat()
+                ? Path.GetFullPath(Path.Combine(Application.dataPath, metaData.BindingUri))
+                : metaData.BindingUri;
 
             if (metaData.SupportsUndo)
             {
-                Undo.RegisterCompleteObjectUndo(dataTable, $"DataTable {DataTableTracker.GetTicket(dataTable)} - Binding Import");
+                Undo.RegisterCompleteObjectUndo(dataTable, $"DataTable {DataTableTracker.GetTicket(dataTable).ToString()} - Binding Import");
             }
 
             SerializableTable serializableTable =
-                format.Pull(bindingPath, dataTable.GetDataVersion(), dataTable.GetStructureVersion());
+                format.Pull(uri, dataTable.GetDataVersion(), dataTable.GetStructureVersion());
 
             if (serializableTable != null &&  serializableTable.Update(dataTable))
             {
                 DataTableTracker.NotifyOfRowChange(DataTableTracker.GetTicket(dataTable), -1);
-                metaData.BindingTimestamp = format.GetBindingTimestamp(bindingPath);
+                metaData.BindingTimestamp = format.GetBindingTimestamp(uri);
                 metaData.BindingDataVersion = dataTable.GetDataVersion();
                 EditorUtility.SetDirty(metaData);
             }
@@ -460,40 +403,26 @@ namespace GDX.Editor.Inspectors
         public static void BindingPush(DataTableBase dataTable)
         {
             DataTableMetaData metaData = dataTable.GetMetaData();
-            FormatBase format = null;
-            string bindingPath = null;
-
-            switch (metaData.BindingFormat)
-            {
-                case DataBindingProvider.Format.CommaSeperatedValues:
-                    format = new CommaSeperatedValueFormat();
-                    bindingPath = Path.GetFullPath(Path.Combine(Application.dataPath, metaData.BindingUri));
-                    break;
-                case DataBindingProvider.Format.JavaScriptObjectNotation:
-                    format = new JavaScriptObjectNotationFormat();
-                    bindingPath = Path.GetFullPath(Path.Combine(Application.dataPath, metaData.BindingUri));
-                    break;
-                case DataBindingProvider.Format.Custom:
-                    format = DataBindingProvider.CustomFormat;
-                    bindingPath = metaData.BindingUri;
-                    break;
-            }
-
+            FormatBase format = DataBindingProvider.GetFormatFromUri(metaData.BindingUri);
             if (format == null) return;
-            DateTime currentTimestamp = format.GetBindingTimestamp(bindingPath);
+
+            string uri = format.IsOnDiskFormat()
+                ? Path.GetFullPath(Path.Combine(Application.dataPath, metaData.BindingUri))
+                : metaData.BindingUri;
+
+            DateTime currentTimestamp = format.GetBindingTimestamp(uri);
             if (currentTimestamp > metaData.BindingTimestamp)
             {
                 if (!EditorUtility.DisplayDialog($"Overwrite '{metaData.BindingUri}'?",
-                        $"The files timestamp is newer then the last known sync timestamp which means the file could have newer data which you will stomp. Are you sure you want to do this?",
+                        $"The bindings timestamp is newer then the last known sync timestamp which means the file could have newer data which you will stomp. Are you sure you want to do this?",
                         "Yes", "No"))
                 {
                     return;
                 }
             }
-
-            if (format.Push(bindingPath, new SerializableTable(dataTable)))
+            if (format.Push(uri, new SerializableTable(dataTable)))
             {
-                metaData.BindingTimestamp = format.GetBindingTimestamp(bindingPath);
+                metaData.BindingTimestamp = format.GetBindingTimestamp(uri);
                 metaData.BindingDataVersion = dataTable.GetDataVersion();
                 EditorUtility.SetDirty(metaData);
             }

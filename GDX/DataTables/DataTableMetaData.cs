@@ -40,11 +40,6 @@ namespace GDX.DataTables
         public ulong BindingDataVersion;
 
         /// <summary>
-        ///     What format of data is the sync done with.
-        /// </summary>
-        public DataBindingProvider.Format BindingFormat = DataBindingProvider.Format.Invalid;
-
-        /// <summary>
         ///     The user-friendly name used throughout the author-time experience for the <see cref="DataTableBase" />.
         /// </summary>
         public string DisplayName = "GDX DataTable";
@@ -66,24 +61,21 @@ namespace GDX.DataTables
 #if UNITY_2021_3_OR_NEWER
         public void SetBinding(string uri)
         {
-            DataBindingProvider.Format format = ValidateBinding(uri);
-            if (format != DataBindingProvider.Format.Invalid)
+            if (ValidateBinding(uri) != null)
             {
                 BindingUri = uri;
-                BindingFormat = format;
             }
             else
             {
                 BindingUri = null;
-                BindingFormat = DataBindingProvider.Format.Invalid;
             }
         }
 
-        public static DataBindingProvider.Format ValidateBinding(string uri)
+        public static FormatBase ValidateBinding(string uri)
         {
             if (uri == null)
             {
-                return DataBindingProvider.Format.Invalid;
+                return null;
             }
 
             string filePath = Path.Combine(Application.dataPath, uri);
@@ -92,29 +84,22 @@ namespace GDX.DataTables
                 return DataBindingProvider.GetFormatFromFile(filePath);
             }
 
-            // Use custom hint check
-            if (DataBindingProvider.CustomFormat != null && DataBindingProvider.CustomFormat.FoundUriHint(uri))
-            {
-                return DataBindingProvider.Format.Custom;
-            }
-
-            return DataBindingProvider.Format.Invalid;
+            return DataBindingProvider.GetFormatFromUri(uri);
         }
 
         public static string CreateBinding(string uri)
         {
-            // Handle file path
+            // Convert to relative path, given this is stored in the Unity project we will need it in this form.
             if (File.Exists(uri))
             {
                 return Path.GetRelativePath(Application.dataPath, uri);
             }
-
-            return null;
+            return uri;
         }
 
         public bool HasBinding()
         {
-            return BindingFormat != DataBindingProvider.Format.Invalid && BindingUri != null;
+            return BindingUri != null;
         }
 
 #endif // UNITY_2021_3_OR_NEWER

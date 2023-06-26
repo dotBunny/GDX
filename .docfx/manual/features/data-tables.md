@@ -35,10 +35,16 @@ Clicking the **Open** button will open an editing window focused on the selected
 
 ### Interchange
 
-The DataTableBase allows for interchange between formats (CSV & JSON); export and non-destructive table data import. What this means in practice is that you can export an already-built table and make changes in whatever editing program a user desires. Those changes can then be re-imported back into Unity, maintaining existing references (an example being an object column referencing prefabs).
+The DataTableBase allows for interchange between formats (CSV & JSON out-of-the-box); export and non-destructive table data import. What this means in practice is that you can export an already-built table and make changes in whatever editing program a user desires. Those changes can then be re-imported back into Unity, maintaining existing references (an example being an object column referencing prefabs).
 
 > [!WARNING]
 > It is important to note that the column structure (order and types) cannot change in the imported data. The row identifiers will be used to match up rows, updating where appropriate, creating when necessary, and removing when no longer found.
+
+#### What about Excel and Google Sheets?
+
+Yes, absolutely!
+
+However, you will need to do a bit of legwork to get there. When we ship `GDX` we try to think about a lean-and-mean approach. Adding the libraries necessary to interact with those types easily would add a certain level of bloat to the package. We have modelled our existing [JSON](xref:GDX.DataTables.DataBindings.JavaScriptObjectNotationFormat) and [CSV](xref:GDX.DataTables.DataBindings.CommaSeperatedValueFormat) formats to demonstrate how easy it is to add a new format to bind too.
 
 ### Tracker
 

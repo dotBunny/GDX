@@ -177,14 +177,14 @@ namespace GDX.Editor.Windows.DataTables
         void OnSettingsBindingButtonClicked()
         {
             string openPath = EditorUtility.OpenFilePanelWithFilters($"Sync {m_DataTableWindow.GetDataTable().GetMetaData().DisplayName} With …",
-                UnityEngine.Application.dataPath, new[] { "JSON", "json", "CSV", "csv" });
+                UnityEngine.Application.dataPath, DataBindingProvider.GetImportDialogExtensions());
             if (string.IsNullOrEmpty(openPath) || !System.IO.File.Exists(openPath))
             {
                 return;
             }
 
             string uri = DataTableMetaData.CreateBinding(openPath);
-            if (DataTableMetaData.ValidateBinding(uri) != DataBindingProvider.Format.Invalid)
+            if (DataTableMetaData.ValidateBinding(uri) != null)
             {
                 m_SettingsBinding.SetValueWithoutNotify(uri);
                 m_SettingsBindingStatus.AddToClassList(k_ValidClass);
@@ -239,7 +239,7 @@ namespace GDX.Editor.Windows.DataTables
 
         void ValidateSourceStatus(string newValue)
         {
-            if (DataTableMetaData.ValidateBinding(newValue) != DataBindingProvider.Format.Invalid)
+            if (DataTableMetaData.ValidateBinding(newValue) != null)
             {
                 m_SettingsBindingStatus.AddToClassList(k_ValidClass);
                 m_SettingsBindingStatus.RemoveFromClassList(k_ErrorClass);
