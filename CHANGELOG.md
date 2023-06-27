@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `WaitFor` program flow helper.
 - `AssetDatabaseReference` weak-reference objects with helpers.
 - `EditorPrefsCache` to cache editor preference accessing.
-- `StableTable` implementation of new `TableBase` with full suite of supporting references `*CellValue`.
+- `StableDataTable` implementation of new `DataTableBase` with full suite of supporting references `*CellValue`.
 - Spreadsheet-like editing experience for `DataTableBase` inheriting objects (_Unity 2022.2+_)
 
 ### Changed
