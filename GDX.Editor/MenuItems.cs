@@ -18,7 +18,7 @@ namespace GDX.Editor
             string outputPath =
  Platform.GetUniqueOutputFilePath("GDX_ManagedMemory_", ".log", Config.PlatformCacheFolder);
             File.WriteAllLines(outputPath,  Developer.Reports.ResourcesAuditReport.GetAll().Output());
-            Trace.Output(Trace.TraceLevel.Info, $"Resource Audit written to {outputPath}.");
+            Log.Info($"Resource Audit written to {outputPath}.");
             Application.OpenURL(outputPath);
         }
 

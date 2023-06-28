@@ -370,7 +370,7 @@ namespace GDX.Editor
             catch (Exception e)
             {
                 // We will end up here if the formulated Uri is bad.
-                Trace.Output(Trace.TraceLevel.Warning, e.Message);
+                Log.Exception(e);
                 return;
             }
             finally

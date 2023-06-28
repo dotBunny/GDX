@@ -113,7 +113,8 @@ namespace GDX.Collections.Generic
                 // If the key is already in the dataset what do we do?
                 if (ContainsKey(m_SerializedKeys[i]))
                 {
-                    Trace.Output(Trace.TraceLevel.Error, "A duplicate key has been detected in the serialized dictionary, the item has been removed.\nYou can undo your last action to restore the previous state.");
+                    Log.Error(
+                        "A duplicate key has been detected in the serialized dictionary, the item has been removed.\nYou can undo your last action to restore the previous state.");
                 }
                 else
                 {
@@ -162,7 +163,7 @@ namespace GDX.Collections.Generic
         {
             if (keyArray.Length != valueArray.Length)
             {
-                Trace.Output(Trace.TraceLevel.Error,"The provided array lengths must match.");
+                Log.Error("The provided array lengths must match.");
                 return;
             }
 

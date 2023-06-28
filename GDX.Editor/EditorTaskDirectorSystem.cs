@@ -69,8 +69,7 @@ namespace GDX.Editor
 #if UNITY_EDITOR
             if (s_TickRate >= 0 && !Config.EditorTaskDirectorSystem)
             {
-                Trace.Output(Trace.TraceLevel.Warning,
-                    "Tick rate set whilst EditorTaskDirectorSystem has been configured off.");
+                Log.Warning("Tick rate set whilst EditorTaskDirectorSystem has been configured off.");
             }
 #endif // UNITY_EDITOR
             SubscribeToEditorApplicationUpdate(tickRate >= 0);
