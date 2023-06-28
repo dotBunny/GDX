@@ -11,7 +11,7 @@ using UnityEngine;
 namespace GDX.Developer
 {
     /// <summary>
-    ///
+    ///     A windows-based input simulator.
     /// </summary>
     /// <remarks>
     ///     This is NOT supported in batch mode operation of the editor.
