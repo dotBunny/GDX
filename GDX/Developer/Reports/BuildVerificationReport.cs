@@ -1,6 +1,7 @@
 ﻿using GDX.Developer.Reports.NUnit;
 using System.IO;
 using GDX.Collections.Generic;
+using GDX.Experimental;
 using Debug = UnityEngine.Debug;
 
 namespace GDX.Developer.Reports
@@ -27,11 +28,13 @@ namespace GDX.Developer.Reports
             TestCase test = s_Report.AddDurationResult(identifier, duration, condition, failMessage);
             if (test.Result == NUnitReport.PassedString)
             {
-                Debug.Log($"[BVT] {test.Name}: {test.Result}");
+
+                ManagedLog.Info($"{test.Name}: {test.Result}", ManagedLog.Test);
             }
             else
             {
-                Debug.LogError($"[BVT] {test.Name}: {test.Result}, {test.Message}");
+                ManagedLog.Info($"{test.Name}: {test.Result}, {test.Message}", ManagedLog.Test);
+
             }
             return test;
         }
@@ -45,14 +48,14 @@ namespace GDX.Developer.Reports
         public static TestCase Skip(string identifier, string skipMessage)
         {
             TestCase test = s_Report.AddSkippedTest(identifier, skipMessage);
-            Debug.Log($"[BVT] {test.Name}: {test.Result}");
+            ManagedLog.Info($"{test.Name}: {test.Result}", ManagedLog.Test);
             return test;
         }
 
         public static void Panic(string panicMessage)
         {
             s_PanicMessages.AddWithExpandCheck(panicMessage);
-            Debug.LogError($"[BVT] PANIC! {panicMessage}");
+            ManagedLog.Error($"PANIC! {panicMessage}", ManagedLog.Test);
         }
     }
 }

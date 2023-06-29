@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using GDX.Experimental;
 using GDX.Threading;
 using Unity.Mathematics;
 using UnityEditor;
@@ -69,7 +70,7 @@ namespace GDX.Editor
 #if UNITY_EDITOR
             if (s_TickRate >= 0 && !Config.EditorTaskDirectorSystem)
             {
-                Log.Warning("Tick rate set whilst EditorTaskDirectorSystem has been configured off.");
+                ManagedLog.Warning("Tick rate set whilst EditorTaskDirectorSystem has been configured off.");
             }
 #endif // UNITY_EDITOR
             SubscribeToEditorApplicationUpdate(tickRate >= 0);

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading.Tasks;
 using GDX.Collections.Generic;
+using GDX.Experimental;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -46,14 +47,14 @@ namespace GDX.Developer.Reports.BuildVerification
         {
             if (!testScene.IsValid())
             {
-                Log.Warning($"[BVT] Invalid scene {testScene.BuildIndex.ToString()}.");
+                ManagedLog.Warning($"Invalid scene {testScene.BuildIndex.ToString()}.", ManagedLog.Test);
                 Reset();
                 return;
             }
 
             Stopwatch timeoutTimer = new Stopwatch();
 
-            Log.Info($"[BVT] Load {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
+            ManagedLog.Info($"Load {testScene.ScenePath} ({testScene.BuildIndex.ToString()})", ManagedLog.Test);
             AsyncOperation loadOperation = SceneManager.LoadSceneAsync(testScene.BuildIndex, LoadSceneMode.Additive);
             timeoutTimer.Restart();
             if (loadOperation != null)
@@ -66,7 +67,7 @@ namespace GDX.Developer.Reports.BuildVerification
                     }
                     else
                     {
-                        Log.Error($"[BVT] Failed to load {testScene.ScenePath} ({testScene.BuildIndex.ToString()}).");
+                        ManagedLog.Error($"Failed to load {testScene.ScenePath} ({testScene.BuildIndex.ToString()}).", ManagedLog.Test);
                         Reset();
                         return;
                     }
@@ -74,7 +75,7 @@ namespace GDX.Developer.Reports.BuildVerification
             }
 
             // Wait for next update - super important around integration of loaded content
-            Log.Info("[BVT] Waiting at least frame ...");
+            ManagedLog.Info("Waiting at least frame ...", ManagedLog.Test);
             float loadCurrentTime = Time.time;
             while (Time.time == loadCurrentTime)
             {
@@ -91,7 +92,7 @@ namespace GDX.Developer.Reports.BuildVerification
                 }
                 else
                 {
-                    Log.Warning($"[BVT] Test run timed out after {(timeoutTimer.ElapsedMilliseconds/1000f).ToString(CultureInfo.CurrentCulture)} seconds.");
+                    ManagedLog.Warning($"Test run timed out after {(timeoutTimer.ElapsedMilliseconds/1000f).ToString(CultureInfo.CurrentCulture)} seconds.", ManagedLog.Test);
                     for (int i = 0; i < s_KnownTest.Count; i++)
                     {
                         BuildVerificationReport.Assert(s_KnownTest.Array[i].GetIdentifier(), false, "Test timed out.");
@@ -101,14 +102,14 @@ namespace GDX.Developer.Reports.BuildVerification
                 }
             }
 
-            Log.Info("[BVT] Waiting at least frame ...");
+            ManagedLog.Info("Waiting at least frame ...", ManagedLog.Test);
             float testCurrentTime = Time.time;
             while (Time.time == testCurrentTime)
             {
                 await Task.Delay(SafeDelayTime);
             }
 
-            Log.Info($"[BVT] Unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
+            ManagedLog.Info($"Unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()})", ManagedLog.Test);
             AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(testScene.BuildIndex, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
             timeoutTimer.Restart();
             if (unloadOperation != null)
@@ -121,7 +122,7 @@ namespace GDX.Developer.Reports.BuildVerification
                     }
                     else
                     {
-                        Log.Error($"[BVT] Failed to unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()}).");
+                        ManagedLog.Error($"Failed to unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()}).", ManagedLog.Test);
                         Reset();
                         return;
                     }
@@ -129,7 +130,7 @@ namespace GDX.Developer.Reports.BuildVerification
             }
 
             // Wait for next update - super important around unloading
-            Log.Info("[BVT] Waiting at least frame ...");
+            ManagedLog.Info("Waiting at least frame ...", ManagedLog.Test);
             float unloadCurrentTime = Time.time;
             while (Time.time == unloadCurrentTime)
             {
@@ -139,7 +140,7 @@ namespace GDX.Developer.Reports.BuildVerification
             // Make sure we remove all registered as a safety precaution / will also stop the timer
             Reset();
 
-            Log.Info($"[BVT] Test scene {testScene.ScenePath} ({testScene.BuildIndex.ToString()}) execution finished.");
+            ManagedLog.Info($"Test scene {testScene.ScenePath} ({testScene.BuildIndex.ToString()}) execution finished.", ManagedLog.Test);
         }
 
 

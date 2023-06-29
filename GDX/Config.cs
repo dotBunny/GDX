@@ -18,7 +18,7 @@ namespace GDX
         /// <summary>
         ///     A reference number to what version the config was generated based off of.
         /// </summary>
-        public const int FormatVersion = 1;
+        public const int FormatVersion = 2;
 
         /// <summary>
         ///     The asset database relative path of the GDX config override file.
@@ -182,48 +182,48 @@ namespace GDX
         public static float TaskDirectorSystemTickRate = k_TaskDirectorSystemTickRate;
         const float k_TaskDirectorSystemTickRate = 0.1f;
 
-        /// <summary>
-        ///     What is the level of traces which should be processed and logged by GDX in debug builds?
-        /// </summary>
-        [OriginalValue(k_TraceDebugLevels)]
-        public static Trace.TraceLevel TraceDebugLevels = k_TraceDebugLevels;
-        const Trace.TraceLevel k_TraceDebugLevels = Trace.TraceLevel.Warning |
-                                                           Trace.TraceLevel.Assertion |
-                                                           Trace.TraceLevel.Error |
-                                                           Trace.TraceLevel.Exception;
-
-        /// <summary>
-        ///     Should GDX based traces output to the Unity console in debug builds?
-        /// </summary>
-        [OriginalValue(k_TraceDebugOutputToUnityConsole)]
-        public static bool TraceDebugOutputToUnityConsole = k_TraceDebugOutputToUnityConsole;
-        const bool k_TraceDebugOutputToUnityConsole = true;
-
-        /// <summary>
-        ///     What is the level of traces which should be processed and logged by GDX in the editor or development builds?
-        /// </summary>
-        [OriginalValue(k_TraceDevelopmentLevels)]
-        public static Trace.TraceLevel TraceDevelopmentLevels = k_TraceDevelopmentLevels;
-        const Trace.TraceLevel k_TraceDevelopmentLevels = Trace.TraceLevel.Log |
-                                                                 Trace.TraceLevel.Warning |
-                                                                 Trace.TraceLevel.Error |
-                                                                 Trace.TraceLevel.Exception |
-                                                                 Trace.TraceLevel.Assertion |
-                                                                 Trace.TraceLevel.Fatal;
-
-        /// <summary>
-        ///     Should GDX based traces output to the Unity console in the editor or development builds?
-        /// </summary>
-        [OriginalValue(k_TraceDevelopmentOutputToUnityConsole)]
-        public static bool TraceDevelopmentOutputToUnityConsole = k_TraceDevelopmentOutputToUnityConsole;
-        const bool k_TraceDevelopmentOutputToUnityConsole = true;
-
-        /// <summary>
-        ///     What is the level of traces which should be processed and logged by GDX in release builds?
-        /// </summary>
-        [OriginalValue(k_TraceReleaseLevels)]
-        public static Trace.TraceLevel TraceReleaseLevels = k_TraceReleaseLevels;
-        const Trace.TraceLevel k_TraceReleaseLevels = Trace.TraceLevel.Fatal;
+        // /// <summary>
+        // ///     What is the level of traces which should be processed and logged by GDX in debug builds?
+        // /// </summary>
+        // [OriginalValue(k_TraceDebugLevels)]
+        // public static Trace.TraceLevel TraceDebugLevels = k_TraceDebugLevels;
+        // const Trace.TraceLevel k_TraceDebugLevels = Trace.TraceLevel.Warning |
+        //                                                    Trace.TraceLevel.Assertion |
+        //                                                    Trace.TraceLevel.Error |
+        //                                                    Trace.TraceLevel.Exception;
+        //
+        // /// <summary>
+        // ///     Should GDX based traces output to the Unity console in debug builds?
+        // /// </summary>
+        // [OriginalValue(k_TraceDebugOutputToUnityConsole)]
+        // public static bool TraceDebugOutputToUnityConsole = k_TraceDebugOutputToUnityConsole;
+        // const bool k_TraceDebugOutputToUnityConsole = true;
+        //
+        // /// <summary>
+        // ///     What is the level of traces which should be processed and logged by GDX in the editor or development builds?
+        // /// </summary>
+        // [OriginalValue(k_TraceDevelopmentLevels)]
+        // public static Trace.TraceLevel TraceDevelopmentLevels = k_TraceDevelopmentLevels;
+        // const Trace.TraceLevel k_TraceDevelopmentLevels = Trace.TraceLevel.Log |
+        //                                                          Trace.TraceLevel.Warning |
+        //                                                          Trace.TraceLevel.Error |
+        //                                                          Trace.TraceLevel.Exception |
+        //                                                          Trace.TraceLevel.Assertion |
+        //                                                          Trace.TraceLevel.Fatal;
+        //
+        // /// <summary>
+        // ///     Should GDX based traces output to the Unity console in the editor or development builds?
+        // /// </summary>
+        // [OriginalValue(k_TraceDevelopmentOutputToUnityConsole)]
+        // public static bool TraceDevelopmentOutputToUnityConsole = k_TraceDevelopmentOutputToUnityConsole;
+        // const bool k_TraceDevelopmentOutputToUnityConsole = true;
+        //
+        // /// <summary>
+        // ///     What is the level of traces which should be processed and logged by GDX in release builds?
+        // /// </summary>
+        // [OriginalValue(k_TraceReleaseLevels)]
+        // public static Trace.TraceLevel TraceReleaseLevels = k_TraceReleaseLevels;
+        // const Trace.TraceLevel k_TraceReleaseLevels = Trace.TraceLevel.Fatal;
 
         /// <summary>
         ///     Should GDX check for updates at editor time?

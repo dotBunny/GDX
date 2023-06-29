@@ -4,6 +4,7 @@
 
 using System;
 using System.IO;
+using GDX.Experimental;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
@@ -107,7 +108,7 @@ namespace GDX.Editor.Build
             }
             catch (Exception e)
             {
-                Log.Exception(e);
+                ManagedLog.Exception(e);
             }
         }
     }

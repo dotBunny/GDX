@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using GDX.Developer;
+using GDX.Experimental;
 using GDX.IO.Compression;
 using UnityEditor;
 using UnityEngine;
@@ -370,7 +371,7 @@ namespace GDX.Editor
             catch (Exception e)
             {
                 // We will end up here if the formulated Uri is bad.
-                Log.Exception(e);
+                ManagedLog.Exception(e);
                 return;
             }
             finally

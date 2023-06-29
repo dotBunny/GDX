@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using GDX.Collections.Generic;
+using GDX.Experimental;
 
 namespace GDX.Collections.Pooling
 {
@@ -126,7 +127,7 @@ namespace GDX.Collections.Pooling
             }
             else
             {
-               Log.Error(
+               ManagedLog.Error(
                     "A managed pool attempted to register itself with the ManagedPools, but the provided key is already in use.");
             }
         }
@@ -168,7 +169,7 @@ namespace GDX.Collections.Pooling
                 k_Pools.Remove(removeKeyBuffer.Array[r]);
             }
 
-            Log.Info($"[PoolSystem::TearDown] Removed {removeCount.ToString()}/{poolCount.ToString()}");
+            ManagedLog.Info($"[PoolSystem::TearDown] Removed {removeCount.ToString()}/{poolCount.ToString()}");
         }
 
         /// <summary>

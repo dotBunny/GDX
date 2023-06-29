@@ -89,16 +89,16 @@ namespace GDX.Editor
             AddToGenerator(code, configFields, nameof(Config.PlatformCacheFolder),
                 rhs.PlatformCacheFolder);
 
-            AddToGenerator(code, configFields, nameof(Config.TraceDebugLevels),
-                rhs.TraceDebugLevels);
-            AddToGenerator(code, configFields, nameof(Config.TraceDebugOutputToUnityConsole),
-                rhs.TraceDebugOutputToUnityConsole);
-            AddToGenerator(code, configFields, nameof(Config.TraceDevelopmentLevels),
-                rhs.TraceDevelopmentLevels);
-            AddToGenerator(code, configFields, nameof(Config.TraceDevelopmentOutputToUnityConsole),
-                rhs.TraceDevelopmentOutputToUnityConsole);
-            AddToGenerator(code, configFields, nameof(Config.TraceReleaseLevels),
-                rhs.TraceReleaseLevels);
+            // AddToGenerator(code, configFields, nameof(Config.TraceDebugLevels),
+            //     rhs.TraceDebugLevels);
+            // AddToGenerator(code, configFields, nameof(Config.TraceDebugOutputToUnityConsole),
+            //     rhs.TraceDebugOutputToUnityConsole);
+            // AddToGenerator(code, configFields, nameof(Config.TraceDevelopmentLevels),
+            //     rhs.TraceDevelopmentLevels);
+            // AddToGenerator(code, configFields, nameof(Config.TraceDevelopmentOutputToUnityConsole),
+            //     rhs.TraceDevelopmentOutputToUnityConsole);
+            // AddToGenerator(code, configFields, nameof(Config.TraceReleaseLevels),
+            //     rhs.TraceReleaseLevels);
 
             AddToGenerator(code, configFields, nameof(Config.UpdateProviderCheckForUpdates),
                 rhs.UpdateProviderCheckForUpdates);
@@ -134,46 +134,46 @@ namespace GDX.Editor
             code.AppendLine($"{k_CoreConfigPath}.{member} = \"{rhs}\";");
         }
 
-        static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, Trace.TraceLevel rhs)
-        {
-            Trace.TraceLevel lhs = OriginalValueAttribute.GetValue<Trace.TraceLevel>(
-                GetFirstFieldInfoByName(configFields, member));
-
-            if (lhs == rhs) return;
-
-            StringBuilder maskBuilder = new StringBuilder();
-            if (rhs.HasFlags(Trace.TraceLevel.Info))
-            {
-                maskBuilder.Append(" Trace.TraceLevel.Info |");
-            }
-            if (rhs.HasFlags(Trace.TraceLevel.Log))
-            {
-                maskBuilder.Append(" Trace.TraceLevel.Log |");
-            }
-            if (rhs.HasFlags(Trace.TraceLevel.Warning))
-            {
-                maskBuilder.Append(" Trace.TraceLevel.Warning |");
-            }
-            if (rhs.HasFlags(Trace.TraceLevel.Error))
-            {
-                maskBuilder.Append(" Trace.TraceLevel.Error |");
-            }
-            if (rhs.HasFlags(Trace.TraceLevel.Exception))
-            {
-                maskBuilder.Append(" Trace.TraceLevel.Exception |");
-            }
-            if (rhs.HasFlags(Trace.TraceLevel.Assertion))
-            {
-                maskBuilder.Append(" Trace.TraceLevel.Assertion |");
-            }
-            if (rhs.HasFlags(Trace.TraceLevel.Fatal))
-            {
-                maskBuilder.Append(" Trace.TraceLevel.Fatal |");
-            }
-
-            string masks = maskBuilder.ToString().Trim();
-            code.AppendLine($"{k_CoreConfigPath}.{member} = {masks.Substring(0,masks.Length - 2)};");
-        }
+        // static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, Trace.TraceLevel rhs)
+        // {
+        //     Trace.TraceLevel lhs = OriginalValueAttribute.GetValue<Trace.TraceLevel>(
+        //         GetFirstFieldInfoByName(configFields, member));
+        //
+        //     if (lhs == rhs) return;
+        //
+        //     StringBuilder maskBuilder = new StringBuilder();
+        //     if (rhs.HasFlags(Trace.TraceLevel.Info))
+        //     {
+        //         maskBuilder.Append(" Trace.TraceLevel.Info |");
+        //     }
+        //     if (rhs.HasFlags(Trace.TraceLevel.Log))
+        //     {
+        //         maskBuilder.Append(" Trace.TraceLevel.Log |");
+        //     }
+        //     if (rhs.HasFlags(Trace.TraceLevel.Warning))
+        //     {
+        //         maskBuilder.Append(" Trace.TraceLevel.Warning |");
+        //     }
+        //     if (rhs.HasFlags(Trace.TraceLevel.Error))
+        //     {
+        //         maskBuilder.Append(" Trace.TraceLevel.Error |");
+        //     }
+        //     if (rhs.HasFlags(Trace.TraceLevel.Exception))
+        //     {
+        //         maskBuilder.Append(" Trace.TraceLevel.Exception |");
+        //     }
+        //     if (rhs.HasFlags(Trace.TraceLevel.Assertion))
+        //     {
+        //         maskBuilder.Append(" Trace.TraceLevel.Assertion |");
+        //     }
+        //     if (rhs.HasFlags(Trace.TraceLevel.Fatal))
+        //     {
+        //         maskBuilder.Append(" Trace.TraceLevel.Fatal |");
+        //     }
+        //
+        //     string masks = maskBuilder.ToString().Trim();
+        //     code.AppendLine($"{k_CoreConfigPath}.{member} = {masks.Substring(0,masks.Length - 2)};");
+        // }
 
         static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, Localization.Language rhs)
         {

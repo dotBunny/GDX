@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.Profiling;
 using System.IO;
+using GDX.Experimental;
 #if UNITY_2022_2_OR_NEWER
 using Unity.Profiling.Memory;
 #else
@@ -75,7 +76,7 @@ namespace GDX.Developer
             string path = Path.Combine(outputFolder, prefix != null ? $"{k_MemoryCaptureFilePrefix}{prefix}-{DateTime.Now:GDX.Platform.FilenameTimestampFormat}.snap" :
                 $"{k_MemoryCaptureFilePrefix}{DateTime.Now:GDX.Platform.FilenameTimestampFormat}.raw");
             MemoryProfiler.TakeSnapshot(path, finishCallback, captureFlags);
-            Log.Info($"[MemorySnapshot] {path}");
+            ManagedLog.Info($"[MemorySnapshot] {path}");
         }
 
         /// <summary>
@@ -109,7 +110,7 @@ namespace GDX.Developer
             }
 
             string path = Path.Combine(outputFolder, prefix != null ? $"{k_ProfileFilePrefix}{prefix}-{Platform.FilenameTimestampFormat}.raw" : $"{k_ProfileFilePrefix}{Platform.FilenameTimestampFormat}.raw");
-            Log.Info($"[Profiling Started] {path}");
+            ManagedLog.Info($"[Profiling Started] {path}");
             Profiler.logFile = path;
             Profiler.enableBinaryLog = true;
             Profiler.enabled = true;
@@ -120,7 +121,7 @@ namespace GDX.Developer
         /// </summary>
         public static void StopProfiling()
         {
-            Log.Info($"[Profiling Stopped] {Profiler.logFile}");
+            ManagedLog.Info($"[Profiling Stopped] {Profiler.logFile}");
             Profiler.enabled = false;
             Profiler.logFile = "";
         }

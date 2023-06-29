@@ -5,6 +5,7 @@
 using System;
 using System.IO;
 using GDX.Developer;
+using GDX.Experimental;
 using UnityEditor;
 using UnityEngine;
 using TextGenerator = GDX.Developer.TextGenerator;
@@ -148,7 +149,7 @@ namespace GDX.Editor.Build
             }
             catch (Exception e)
             {
-                Log.Exception(e);
+                ManagedLog.Exception(e);
             }
         }
 

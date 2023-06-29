@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using GDX.Experimental;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -82,7 +83,7 @@ namespace GDX.Editor
         {
             if (window == null)
             {
-                Log.Warning("No window was passed to be captured.");
+                ManagedLog.Warning("No window was passed to be captured.");
                 return null;
             }
 
@@ -96,7 +97,7 @@ namespace GDX.Editor
 
             if (width == 0 || height == 0)
             {
-                Log.Error($"The acquired window has a size of {width.ToString()}x{height.ToString()}.");
+                ManagedLog.Error($"The acquired window has a size of {width.ToString()}x{height.ToString()}.");
                 return null;
             }
 
@@ -149,7 +150,7 @@ namespace GDX.Editor
         {
             if (EditorWindow.focusedWindow == null)
             {
-                Log.Info("No editor window is focused.");
+                ManagedLog.Info("No editor window is focused.");
                 return false;
             }
 
@@ -234,14 +235,14 @@ namespace GDX.Editor
             // helper at the end to make sure to close of the profiling session.
             if (!UnityEngine.Profiling.Profiler.enabled)
             {
-               Log.Warning("Unity was not profiling.");
+               ManagedLog.Warning("Unity was not profiling.");
             }
             else
             {
                 UnityEngine.Profiling.Profiler.enabled = false;
                 if (UnityEngine.Profiling.Profiler.logFile != null)
                 {
-                    Log.Info($"Profile stopped: {UnityEngine.Profiling.Profiler.logFile}");
+                    ManagedLog.Info($"Profile stopped: {UnityEngine.Profiling.Profiler.logFile}");
                 }
             }
 
@@ -256,14 +257,14 @@ namespace GDX.Editor
         /// </summary>
         public static void GenerateProjectFiles()
         {
-            Log.Info("Syncing Project Files ...");
+            ManagedLog.Info("Syncing Project Files ...");
 
             AssetDatabase.Refresh();
 
             // We haven't actually opened up Unity on this machine, so no editor has been set
             if (string.IsNullOrEmpty(CodeEditor.CurrentEditorInstallation))
             {
-                Log.Info("Setting CodeEditor.CurrentEditorInstallation ...");
+                ManagedLog.Info("Setting CodeEditor.CurrentEditorInstallation ...");
 
 #if UNITY_EDITOR_WIN
                 string[] paths = {
@@ -321,7 +322,7 @@ namespace GDX.Editor
             // We will cause an exception if there is no device, so return early.
             if (Platform.IsHeadless())
             {
-                Log.Warning("No graphics device, unable to acquire GameView.");
+                ManagedLog.Warning("No graphics device, unable to acquire GameView.");
                 return null;
             }
 
@@ -343,7 +344,7 @@ namespace GDX.Editor
 
             if (returnWindow == null)
             {
-                Log.Error("Unable to get editor window for Game View");
+                ManagedLog.Error("Unable to get editor window for Game View");
             }
 
             return returnWindow;
