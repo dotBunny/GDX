@@ -77,7 +77,7 @@ namespace GDX.Developer
             string path = Path.Combine(outputFolder, prefix != null ? $"{k_MemoryCaptureFilePrefix}{prefix}-{DateTime.Now:GDX.Platform.FilenameTimestampFormat}.snap" :
                 $"{k_MemoryCaptureFilePrefix}{DateTime.Now:GDX.Platform.FilenameTimestampFormat}.raw");
             MemoryProfiler.TakeSnapshot(path, finishCallback, captureFlags);
-            ManagedLog.Info(0, $"[MemorySnapshot] {path}");
+            ManagedLog.Info(LogCategory.GDX, $"[MemorySnapshot] {path}");
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace GDX.Developer
             }
 
             string path = Path.Combine(outputFolder, prefix != null ? $"{k_ProfileFilePrefix}{prefix}-{Platform.FilenameTimestampFormat}.raw" : $"{k_ProfileFilePrefix}{Platform.FilenameTimestampFormat}.raw");
-            ManagedLog.Info(0, $"[Profiling Started] {path}");
+            ManagedLog.Info(LogCategory.GDX, $"[Profiling Started] {path}");
             Profiler.logFile = path;
             Profiler.enableBinaryLog = true;
             Profiler.enabled = true;
@@ -122,7 +122,7 @@ namespace GDX.Developer
         /// </summary>
         public static void StopProfiling()
         {
-            ManagedLog.Info(0, $"[Profiling Stopped] {Profiler.logFile}");
+            ManagedLog.Info(LogCategory.GDX, $"[Profiling Stopped] {Profiler.logFile}");
             Profiler.enabled = false;
             Profiler.logFile = "";
         }

@@ -128,7 +128,7 @@ namespace GDX.Collections.Pooling
             }
             else
             {
-               ManagedLog.Error(0, "A managed pool attempted to register itself with the ManagedPools, but the provided key is already in use.");
+               ManagedLog.Error(LogCategory.GDX, "A managed pool attempted to register itself with the ManagedPools, but the provided key is already in use.");
             }
         }
 
@@ -169,7 +169,7 @@ namespace GDX.Collections.Pooling
                 k_Pools.Remove(removeKeyBuffer.Array[r]);
             }
 
-            ManagedLog.Info(0, $"[PoolSystem::TearDown] Removed {removeCount.ToString()}/{poolCount.ToString()}");
+            ManagedLog.Info(LogCategory.GDX, $"[PoolSystem::TearDown] Removed {removeCount.ToString()}/{poolCount.ToString()}");
         }
 
         /// <summary>
