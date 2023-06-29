@@ -7,6 +7,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using GDX.Experimental;
+using GDX.Experimental.Logging;
 
 namespace GDX.IO.Compression
 {
@@ -86,7 +87,7 @@ namespace GDX.IO.Compression
                 int readByteCount = sourceStream.Read(readBuffer, 0, 12);
                 if (readByteCount != 12)
                 {
-                    ManagedLog.Error($"Unable to read filesize from header. {readByteCount.ToString()} read, expected 12.");
+                    ManagedLog.Error(0, $"Unable to read filesize from header. {readByteCount.ToString()} read, expected 12.");
                     break;
                 }
                 long fileSize = Convert.ToInt64(Encoding.UTF8.GetString(readBuffer, 0, 12).Trim('\0').Trim(), 8);
@@ -112,8 +113,7 @@ namespace GDX.IO.Compression
                     readByteCount = sourceStream.Read(fileContentBuffer, 0, newFileContentBufferLength);
                     if (readByteCount != newFileContentBufferLength)
                     {
-                        ManagedLog.Warning(
-                            $"Read file size of {readByteCount.ToString()} does not match the expected {newFileContentBufferLength.ToString()} byte size.");
+                        ManagedLog.Warning(0, $"Read file size of {readByteCount.ToString()} does not match the expected {newFileContentBufferLength.ToString()} byte size.");
                     }
                     newFileStream.Write(fileContentBuffer, 0, newFileContentBufferLength);
                 }

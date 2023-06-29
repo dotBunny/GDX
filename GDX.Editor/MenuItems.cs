@@ -4,6 +4,7 @@
 
 using System.IO;
 using GDX.Experimental;
+using GDX.Experimental.Logging;
 using UnityEngine;
 
 namespace GDX.Editor
@@ -19,7 +20,7 @@ namespace GDX.Editor
             string outputPath =
  Platform.GetUniqueOutputFilePath("GDX_ManagedMemory_", ".log", Config.PlatformCacheFolder);
             File.WriteAllLines(outputPath,  Developer.Reports.ResourcesAuditReport.GetAll().Output());
-            ManagedLog.Info($"Resource Audit written to {outputPath}.");
+            ManagedLog.Info(0, $"Resource Audit written to {outputPath}.");
             Application.OpenURL(outputPath);
         }
 

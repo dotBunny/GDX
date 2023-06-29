@@ -4,8 +4,10 @@
 
 using System;
 using System.Collections;
+using System.Text.RegularExpressions;
 using System.Threading;
 using GDX.Editor;
+using GDX.Experimental.Logging;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -207,8 +209,11 @@ namespace GDX.Threading
         {
             Config.TaskDirectorSystem = false;
             TaskDirectorSystem.SetTickRate(1);
-            LogAssert.Expect(LogType.Warning,
-            "[GDX] Tick rate set whilst TaskDirectorSystem has been configured off.");
+
+            LogEntry lastLog = ManagedLog.GetLastEntry();
+            Assert.IsTrue(
+                lastLog.Level == LogLevel.Warning &&
+                lastLog.Message == "Tick rate set whilst TaskDirectorSystem has been configured off.");
         }
 
         [Test]
@@ -217,8 +222,12 @@ namespace GDX.Threading
         {
             Reflection.InvokeStaticMethod("GDX.Threading.TaskDirectorSystem", "PlayerLoopTick", null,
                 Reflection.PrivateStaticFlags);
-            LogAssert.Expect(LogType.Warning,
-                "[GDX] Unable to tick Task Director from PlayerLoop outside of PlayMode.");
+
+            LogEntry lastLog = ManagedLog.GetLastEntry();
+            Assert.IsTrue(
+                lastLog.Level == LogLevel.Warning &&
+                lastLog.Message ==
+                "Unable to tick Task Director from PlayerLoop outside of PlayMode.");
         }
 
         class CallbackTestTask : TaskBase

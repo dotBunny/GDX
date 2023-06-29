@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.Experimental;
+using GDX.Experimental.Logging;
 using GDX.Threading;
 using Unity.Mathematics;
 using UnityEditor;
@@ -70,7 +71,7 @@ namespace GDX.Editor
 #if UNITY_EDITOR
             if (s_TickRate >= 0 && !Config.EditorTaskDirectorSystem)
             {
-                ManagedLog.Warning("Tick rate set whilst EditorTaskDirectorSystem has been configured off.");
+                ManagedLog.Warning(0, "Tick rate set whilst EditorTaskDirectorSystem has been configured off.");
             }
 #endif // UNITY_EDITOR
             SubscribeToEditorApplicationUpdate(tickRate >= 0);

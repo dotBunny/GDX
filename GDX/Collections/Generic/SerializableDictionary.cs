@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using GDX.Experimental;
+using GDX.Experimental.Logging;
 using UnityEngine;
 
 namespace GDX.Collections.Generic
@@ -114,8 +115,7 @@ namespace GDX.Collections.Generic
                 // If the key is already in the dataset what do we do?
                 if (ContainsKey(m_SerializedKeys[i]))
                 {
-                    ManagedLog.Error(
-                        "A duplicate key has been detected in the serialized dictionary, the item has been removed.\nYou can undo your last action to restore the previous state.");
+                    ManagedLog.Error(0, "A duplicate key has been detected in the serialized dictionary, the item has been removed.\nYou can undo your last action to restore the previous state.");
                 }
                 else
                 {
@@ -164,7 +164,7 @@ namespace GDX.Collections.Generic
         {
             if (keyArray.Length != valueArray.Length)
             {
-                ManagedLog.Error("The provided array lengths must match.");
+                ManagedLog.Error(0, "The provided array lengths must match.");
                 return;
             }
 

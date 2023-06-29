@@ -5,6 +5,7 @@
 using System;
 using GDX.Collections.Generic;
 using GDX.Experimental;
+using GDX.Experimental.Logging;
 using UnityEngine;
 
 namespace GDX.Collections.Pooling
@@ -223,7 +224,7 @@ namespace GDX.Collections.Pooling
                 object returnItem = InItems.Array[targetIndex];
                 if (returnItem == null)
                 {
-                    ManagedLog.Warning($"[ListObjectPool->Get] A null object was pulled from a pool ({m_Key.ToString()}).");
+                    ManagedLog.Warning(0, $"[ListObjectPool->Get] A null object was pulled from a pool ({m_Key.ToString()}).");
                     InCachedCount--;
                     return null;
                 }
@@ -247,8 +248,7 @@ namespace GDX.Collections.Pooling
                 object returnItem = m_OutItems.Array[0];
                 if (returnItem == null)
                 {
-                    ManagedLog.Warning(
-                        $"[ListObjectPool->Get] A null object was returned to the object pool ({m_Key.ToString()}).");
+                    ManagedLog.Warning(0, $"[ListObjectPool->Get] A null object was returned to the object pool ({m_Key.ToString()}).");
                     return null;
                 }
 
@@ -261,8 +261,7 @@ namespace GDX.Collections.Pooling
                 return returnItem;
             }
 
-            ManagedLog.Warning(
-                $"[ListObjectPool->Get] Hit maximum object cap of {m_MaximumObjects.ToString()} for object pool ({m_Key.ToString()}).");
+            ManagedLog.Warning(0, $"[ListObjectPool->Get] Hit maximum object cap of {m_MaximumObjects.ToString()} for object pool ({m_Key.ToString()}).");
             return null;
         }
 

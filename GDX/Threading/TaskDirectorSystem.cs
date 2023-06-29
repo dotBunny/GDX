@@ -5,6 +5,7 @@
 using System;
 using System.Diagnostics;
 using GDX.Experimental;
+using GDX.Experimental.Logging;
 using UnityEngine;
 using UnityEngine.LowLevel;
 using UnityEngine.PlayerLoop;
@@ -89,7 +90,7 @@ namespace GDX.Threading
 #if UNITY_EDITOR
             if (s_TickRate >= 0 && !Config.TaskDirectorSystem)
             {
-                ManagedLog.Warning("Tick rate set whilst TaskDirectorSystem has been configured off.", ManagedLog.GDX);
+                ManagedLog.Warning(LogCategory.GDX, "Tick rate set whilst TaskDirectorSystem has been configured off.");
             }
 #endif // UNITY_EDITOR
 
@@ -135,7 +136,7 @@ namespace GDX.Threading
 #if UNITY_EDITOR
             if (!Application.isPlaying)
             {
-                ManagedLog.Warning("Unable to tick Task Director from PlayerLoop outside of PlayMode.", ManagedLog.GDX);
+                ManagedLog.Warning(LogCategory.GDX, "Unable to tick Task Director from PlayerLoop outside of PlayMode.");
                 return;
             }
 #endif // UNITY_EDITOR
