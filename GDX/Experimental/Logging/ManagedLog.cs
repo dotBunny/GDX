@@ -21,12 +21,9 @@ namespace GDX.Experimental.Logging
     {
         static BitArray64 s_EchoToUnityBuiltIn = new BitArray64(uint.MaxValue);
         static BitArray64 s_EchoToConsoleBuiltIn = new BitArray64(uint.MaxValue);
-
-        static readonly object m_Lock = new object();
+        static readonly object k_Lock = new object();
         static uint s_TicketHead;
 
-        // TODO ? categories to echo?
-        // TODO ? categories to console
         static IntKeyDictionary<string> s_CustomCategories = new IntKeyDictionary<string>(10);
         static ConcurrentCircularBuffer<LogEntry> s_Buffer = new ConcurrentCircularBuffer<LogEntry>(1000);
 
@@ -63,6 +60,50 @@ namespace GDX.Experimental.Logging
             s_CustomCategories.TryRemove(identifier);
             s_EchoToConsoleBuiltIn[(byte)identifier] = true;
             s_EchoToUnityBuiltIn[(byte)identifier] = true;
+        }
+
+        public static LogEntry[] GetEntriesByCategory(int identifier)
+        {
+            int count = s_Buffer.Count;
+            SimpleList<LogEntry> entries = new SimpleList<LogEntry>(count);
+            for (int i = 0; i < count; i++)
+            {
+                if (s_Buffer[i].Identifier == identifier)
+                {
+                    entries.AddUnchecked(s_Buffer[i]);
+                }
+            }
+            entries.Compact();
+            return entries.Array;
+        }
+        public static LogEntry[] GetEntriesByParent(int identifier)
+        {
+            int count = s_Buffer.Count;
+            SimpleList<LogEntry> entries = new SimpleList<LogEntry>(count);
+            for (int i = 0; i < count; i++)
+            {
+                if (s_Buffer[i].ParentIdentifier == identifier)
+                {
+                    entries.AddUnchecked(s_Buffer[i]);
+                }
+            }
+            entries.Compact();
+            return entries.Array;
+        }
+        public static LogEntry[] GetEntriesBySearch(string search)
+        {
+            int count = s_Buffer.Count;
+            SimpleList<LogEntry> entries = new SimpleList<LogEntry>(count);
+            for (int i = 0; i < count; i++)
+            {
+                if (s_Buffer[i].Message.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                    s_Buffer[i].SourceFilePath.Contains(search, StringComparison.OrdinalIgnoreCase))
+                {
+                    entries.AddUnchecked(s_Buffer[i]);
+                }
+            }
+            entries.Compact();
+            return entries.Array;
         }
 
         public static string GetCategoryLabel(int category)
@@ -108,6 +149,7 @@ namespace GDX.Experimental.Logging
         {
             s_EchoToUnityBuiltIn[(byte)identifier] = output;
         }
+
         public static void SetBufferSize(long byteAllocation)
         {
             s_Buffer = new ConcurrentCircularBuffer<LogEntry>((int)(byteAllocation /
@@ -519,7 +561,7 @@ namespace GDX.Experimental.Logging
 
         static uint NextTicket()
         {
-            lock (m_Lock)
+            lock (k_Lock)
             {
                 s_TicketHead++;
 
