@@ -90,14 +90,15 @@ namespace GDX.Experimental.Logging
             entries.Compact();
             return entries.Array;
         }
+
         public static LogEntry[] GetEntriesBySearch(string search)
         {
             int count = s_Buffer.Count;
             SimpleList<LogEntry> entries = new SimpleList<LogEntry>(count);
             for (int i = 0; i < count; i++)
             {
-                if (s_Buffer[i].Message.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                    s_Buffer[i].SourceFilePath.Contains(search, StringComparison.OrdinalIgnoreCase))
+                if (s_Buffer[i].Message.IndexOf(search, StringComparison.OrdinalIgnoreCase) != -1 ||
+                    s_Buffer[i].SourceFilePath.IndexOf(search, StringComparison.OrdinalIgnoreCase) != -1)
                 {
                     entries.AddUnchecked(s_Buffer[i]);
                 }
