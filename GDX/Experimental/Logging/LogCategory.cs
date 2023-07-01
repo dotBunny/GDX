@@ -6,7 +6,9 @@ namespace GDX.Experimental.Logging
 {
     public static class LogCategory
     {
-        internal const int k_CategoryThreshold = 32;
+        public const string UndefinedLabel = "Undefined";
+        public const int MinimumIdentifier = 32;
+        public const int MaximumIdentifier = 63;
         public const int Default = 0;
         public const int GDX = 1;
         public const int Platform = 2;

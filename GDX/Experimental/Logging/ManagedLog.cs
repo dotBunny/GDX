@@ -36,11 +36,11 @@ namespace GDX.Experimental.Logging
         }
         public static void RegisterCategory(int identifier, string name, bool outputToUnity = true, bool outputToConsole = false)
         {
-            if (identifier <= LogCategory.k_CategoryThreshold)
+            if (identifier <= LogCategory.MinimumIdentifier)
             {
-                Error(LogCategory.GDX, $"Unable to register category {identifier.ToString()}:{name} as identifier below threshold {LogCategory.k_CategoryThreshold.ToString()}.");
+                Error(LogCategory.GDX, $"Unable to register category {identifier.ToString()}:{name} as identifier below threshold {LogCategory.MinimumIdentifier.ToString()}.");
             }
-            else if (identifier >= 64)
+            else if (identifier > LogCategory.MaximumIdentifier)
             {
                 Error(LogCategory.GDX, $"Unable to register category {identifier.ToString()}:{name} as identifier exceeds maximum allow categories (64).");
             }
@@ -59,7 +59,7 @@ namespace GDX.Experimental.Logging
 
         public static void UnregisterCategory(int identifier)
         {
-            if (identifier <= LogCategory.k_CategoryThreshold) return;
+            if (identifier <= LogCategory.MinimumIdentifier) return;
             s_CustomCategories.TryRemove(identifier);
             s_EchoToConsoleBuiltIn[(byte)identifier] = true;
             s_EchoToUnityBuiltIn[(byte)identifier] = true;
@@ -67,7 +67,7 @@ namespace GDX.Experimental.Logging
 
         public static string GetCategoryLabel(int category)
         {
-            if (category <= LogCategory.k_CategoryThreshold)
+            if (category <= LogCategory.MinimumIdentifier)
             {
                 switch (category)
                 {
@@ -88,11 +88,11 @@ namespace GDX.Experimental.Logging
                     case LogCategory.Test:
                         return "Test";
                     default:
-                        return "Undefined";
+                        return LogCategory.UndefinedLabel;
                 }
             }
 
-            return s_CustomCategories.TryGetValue(category, out string customCategory) ? customCategory : "Undefined";
+            return s_CustomCategories.TryGetValue(category, out string customCategory) ? customCategory : LogCategory.UndefinedLabel;
         }
 
         public static void SetConsoleOutput(int identifier, bool output)

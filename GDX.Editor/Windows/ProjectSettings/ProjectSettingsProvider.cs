@@ -26,12 +26,10 @@ namespace GDX.Editor.Windows.ProjectSettings
     [HideFromDocFX]
     public static class ProjectSettingsProvider
     {
-
-
         /// <summary>
         ///     The expected number of sections to be available in the project settings.
         /// </summary>
-        const int k_SectionCount = 10;
+        const int k_SectionCount = 9;
 
         /// <summary>
         ///     The currently known search string of the Project Settings window.
@@ -98,7 +96,6 @@ namespace GDX.Editor.Windows.ProjectSettings
         /// </summary>
         static readonly SimpleList<VisualElement>[] k_SearchSectionElementMap = new SimpleList<VisualElement>[]
         {
-            new SimpleList<VisualElement>(10),
             new SimpleList<VisualElement>(10),
             new SimpleList<VisualElement>(10),
             new SimpleList<VisualElement>(10),
@@ -504,7 +501,6 @@ namespace GDX.Editor.Windows.ProjectSettings
             k_ConfigSections[PlatformSettings.SectionIndex] ??= new PlatformSettings();
             k_ConfigSections[LocaleSettings.SectionIndex] ??= new LocaleSettings();
             k_ConfigSections[TaskDirectorSettings.SectionIndex] ??= new TaskDirectorSettings();
-            k_ConfigSections[TracesSettings.SectionIndex] ??= new TracesSettings();
 #if GDX_VISUALSCRIPTING
             k_ConfigSections[VisualScriptingSettings.SectionIndex] ??= new VisualScriptingSettings();
 #endif // GDX_VISUALSCRIPTING

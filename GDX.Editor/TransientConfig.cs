@@ -127,31 +127,6 @@ namespace GDX.Editor
         /// </summary>
         public float TaskDirectorSystemTickRate;
 
-        // /// <summary>
-        // ///     What is the level of traces which should be processed and logged by GDX in debug builds?
-        // /// </summary>
-        // public Trace.TraceLevel TraceDebugLevels;
-        //
-        // /// <summary>
-        // ///     Should GDX based traces output to the Unity console in debug builds?
-        // /// </summary>
-        // public bool TraceDebugOutputToUnityConsole;
-        //
-        // /// <summary>
-        // ///     What is the level of traces which should be processed and logged by GDX in the editor or development builds?
-        // /// </summary>
-        // public Trace.TraceLevel TraceDevelopmentLevels;
-        //
-        // /// <summary>
-        // ///     Should GDX based traces output to the Unity console in the editor or development builds?
-        // /// </summary>
-        // public bool TraceDevelopmentOutputToUnityConsole;
-        //
-        // /// <summary>
-        // ///     What is the level of traces which should be processed and logged by GDX in release builds?
-        // /// </summary>
-        // public Trace.TraceLevel TraceReleaseLevels;
-
         /// <summary>
         ///     Should GDX check for updates at editor time?
         /// </summary>
@@ -182,11 +157,6 @@ namespace GDX.Editor
             LocalizationSetDefaultCulture = Config.LocalizationSetDefaultCulture;
             PlatformAutomationFolder = Config.PlatformAutomationFolder;
             PlatformCacheFolder = Config.PlatformCacheFolder;
-            // TraceDebugLevels = Config.TraceDebugLevels;
-            // TraceDebugOutputToUnityConsole = Config.TraceDebugOutputToUnityConsole;
-            // TraceDevelopmentLevels = Config.TraceDevelopmentLevels;
-            // TraceDevelopmentOutputToUnityConsole = Config.TraceDevelopmentOutputToUnityConsole;
-            // TraceReleaseLevels = Config.TraceReleaseLevels;
             UpdateProviderCheckForUpdates = Config.UpdateProviderCheckForUpdates;
         }
 
@@ -211,11 +181,6 @@ namespace GDX.Editor
                    Math.Abs(TaskDirectorSystemTickRate - Config.TaskDirectorSystemTickRate) < Platform.FloatTolerance &&
                    EditorTaskDirectorSystem == Config.EditorTaskDirectorSystem &&
                    Math.Abs(EditorTaskDirectorSystemTickRate - Config.EditorTaskDirectorSystemTickRate) < Platform.DoubleTolerance &&
-                   // TraceDevelopmentLevels == Config.TraceDevelopmentLevels &&
-                   // TraceDebugLevels == Config.TraceDebugLevels &&
-                   // TraceReleaseLevels == Config.TraceReleaseLevels &&
-                   // TraceDevelopmentOutputToUnityConsole == Config.TraceDevelopmentOutputToUnityConsole &&
-                   // TraceDebugOutputToUnityConsole == Config.TraceDebugOutputToUnityConsole &&
                    LocalizationSetDefaultCulture == Config.LocalizationSetDefaultCulture &&
                    LocalizationDefaultCulture == Config.LocalizationDefaultCulture &&
                    ConfigOutputPath == Config.ConfigOutputPath &&

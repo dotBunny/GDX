@@ -342,30 +342,6 @@ Button.gdx-small-button {
     width: 150px;
 }
 
-#gdx-trace-table #label-trace {
-    width: 155px;
-}
-
-#gdx-trace-table #label-flags {
-    flex-grow: 1;
-    max-width: 150px;
-}
-
-#gdx-trace-table VisualElement.unity-base-popup-field__input {
-    flex-grow: 1;
-    max-width: 150px;
-}
-
-#gdx-trace-table #label-console {
-    margin-left: 8px;
-    width: 100px;
-}
-
-#gdx-trace-table Toggle {
-    margin-left: 10px;
-    width: 100px;
-}
-
 #gdx-visual-scripting-category #button-foldout {
     margin-top: 2px;
     background-color: rgba(0, 0, 0, 0);
@@ -485,12 +461,6 @@ Button.gdx-small-button {
     border-left-width: 2px;
     padding-left: 3px;
     border-left-color: var(--color-primary);
-}
-
-#gdx-trace-table Toggle.search-item {
-    margin-left: 5px;
-    border-left-width: 0;
-    padding-left: 0;
 }
 
 .gdx-changelog-h1 {

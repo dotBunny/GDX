@@ -45,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- `Trace` has been removed, replaced with `ManagedLog` (_Experimental_).
+- `Trace` has been removed, replaced with `ManagedLog` (_Experimental_), there is no longer a preferences section for it. Given that categories are set through code, so is the output options.
 - Removed portability tests based on depreciation of tool.
 - Reliance on `jobs` package.
 - Any usage of `AssetDatabase.FindAssets()`
