@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.0.0] - 2023-07-01
+## [4.0.0] - 2023-07-02
 
 ***"Going Bold"***
 > After almost a year of no public updates (the `dev` branch was bustling), the release of `4.0.0` comes with significant changes and a continued effort to improve unit test coverage and discoverability. The package remains tested against `2020.3` and `2021.3`; however, we strongly recommend transitioning to `2022.3` or newer to unlock additional functionality.

@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace GDX.Experimental.Logging
 {
@@ -29,6 +30,7 @@ namespace GDX.Experimental.Logging
             return  $"{Message}\n\t@ {SourceFilePath}:{SourceLineNumber.ToString()}";
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static string LogLevelToLabel(LogLevel level)
         {
             switch (level)

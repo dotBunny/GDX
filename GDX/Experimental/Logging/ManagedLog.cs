@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using GDX.Collections;
@@ -15,103 +14,111 @@ using Object = UnityEngine.Object;
 namespace GDX.Experimental.Logging
 {
     /// <summary>
-    ///     A logging system that lives in managed-space.
+    ///     A managed-only categorized hierarchical logging solution.
     /// </summary>
     public static class ManagedLog
     {
-        static BitArray64 s_EchoToUnityBuiltIn = new BitArray64(uint.MaxValue);
-        static BitArray64 s_EchoToConsoleBuiltIn = new BitArray64(uint.MaxValue);
-        static readonly object k_Lock = new object();
-        static uint s_TicketHead;
-
-        static IntKeyDictionary<string> s_CustomCategories = new IntKeyDictionary<string>(10);
+        /// <summary>
+        ///     A ring buffer structure of <see cref="LogEntry" />s.
+        /// </summary>
         static ConcurrentCircularBuffer<LogEntry> s_Buffer = new ConcurrentCircularBuffer<LogEntry>(1000);
 
+        /// <summary>
+        ///     An index of labels per category.
+        /// </summary>
+        static IntKeyDictionary<string> s_CustomCategories = new IntKeyDictionary<string>(10);
+
+        /// <summary>
+        ///     A flag structure containing if a category should output to the system console.
+        /// </summary>
+        static BitArray64 s_EchoToConsole = new BitArray64(uint.MaxValue);
+
+        /// <summary>
+        ///     A flag structure containing if a category should output to the Unity log handler.
+        /// </summary>
+        static BitArray64 s_EchoToUnity = new BitArray64(uint.MaxValue);
+
+        /// <summary>
+        ///     The next identifier used when creating a new <see cref="LogEntry" />.
+        /// </summary>
+        static uint s_IdentifierHead;
+
+        /// <summary>
+        ///     Thread-safety management object.
+        /// </summary>
+        static readonly object k_Lock = new object();
+
+        /// <summary>
+        ///     Clears the internal buffer of <see cref="LogEntry" />s.
+        /// </summary>
         public static void Clear()
         {
             s_Buffer.Clear();
         }
-        public static void RegisterCategory(int identifier, string name, bool outputToUnity = true, bool outputToConsole = false)
+
+        /// <summary>
+        ///     Registers a category identifier for logging purposes.
+        /// </summary>
+        /// <param name="categoryIdentifier">
+        ///     The designated identifier, must fall within a valid range. See
+        ///     <see cref="LogCategory.MinimumIdentifier" /> and <see cref="LogCategory.MaximumIdentifier" />
+        /// </param>
+        /// <param name="name">The category's name.</param>
+        /// <param name="outputToUnity">Should this category output to Unity's log handler?</param>
+        /// <param name="outputToConsole">Should this category output to the Console.</param>
+        public static void RegisterCategory(int categoryIdentifier, string name, bool outputToUnity = true,
+            bool outputToConsole = false)
         {
-            if (identifier <= LogCategory.MinimumIdentifier)
+            if (categoryIdentifier <= LogCategory.MinimumIdentifier)
             {
-                Error(LogCategory.GDX, $"Unable to register category {identifier.ToString()}:{name} as identifier below threshold {LogCategory.MinimumIdentifier.ToString()}.");
+                Error(LogCategory.GDX,
+                    $"Unable to register category {categoryIdentifier.ToString()}:{name} as identifier below threshold {LogCategory.MinimumIdentifier.ToString()}.");
             }
-            else if (identifier > LogCategory.MaximumIdentifier)
+            else if (categoryIdentifier > LogCategory.MaximumIdentifier)
             {
-                Error(LogCategory.GDX, $"Unable to register category {identifier.ToString()}:{name} as identifier exceeds maximum allow categories (64).");
+                Error(LogCategory.GDX,
+                    $"Unable to register category {categoryIdentifier.ToString()}:{name} as identifier exceeds maximum allow categories (64).");
             }
 
-            if (s_CustomCategories.ContainsKey(identifier))
+            if (s_CustomCategories.ContainsKey(categoryIdentifier))
             {
-                Error(LogCategory.GDX, $"Unable to register category {identifier.ToString()}:{name} as identifier already in use.");
+                Error(LogCategory.GDX,
+                    $"Unable to register category {categoryIdentifier.ToString()}:{name} as identifier already in use.");
             }
             else
             {
-                s_CustomCategories.AddWithExpandCheck(identifier, name);
-                s_EchoToConsoleBuiltIn[(byte)identifier] = outputToConsole;
-                s_EchoToUnityBuiltIn[(byte)identifier] = outputToUnity;
+                s_CustomCategories.AddWithExpandCheck(categoryIdentifier, name);
+                s_EchoToConsole[(byte)categoryIdentifier] = outputToConsole;
+                s_EchoToUnity[(byte)categoryIdentifier] = outputToUnity;
             }
         }
 
-        public static void UnregisterCategory(int identifier)
+        /// <summary>
+        ///     Unregisters a category identifier.
+        /// </summary>
+        /// <param name="categoryIdentifier"></param>
+        public static void UnregisterCategory(int categoryIdentifier)
         {
-            if (identifier <= LogCategory.MinimumIdentifier) return;
-            s_CustomCategories.TryRemove(identifier);
-            s_EchoToConsoleBuiltIn[(byte)identifier] = true;
-            s_EchoToUnityBuiltIn[(byte)identifier] = true;
+            if (categoryIdentifier <= LogCategory.MinimumIdentifier)
+            {
+                return;
+            }
+
+            s_CustomCategories.TryRemove(categoryIdentifier);
+            s_EchoToConsole[(byte)categoryIdentifier] = true;
+            s_EchoToUnity[(byte)categoryIdentifier] = true;
         }
 
-        public static LogEntry[] GetEntriesByCategory(int identifier)
+        /// <summary>
+        ///     Gets the name of a category.
+        /// </summary>
+        /// <param name="categoryIdentifier">The category to evaluate.</param>
+        /// <returns>The label for the category.</returns>
+        public static string GetCategoryLabel(int categoryIdentifier)
         {
-            int count = s_Buffer.Count;
-            SimpleList<LogEntry> entries = new SimpleList<LogEntry>(count);
-            for (int i = 0; i < count; i++)
+            if (categoryIdentifier <= LogCategory.MinimumIdentifier)
             {
-                if (s_Buffer[i].Identifier == identifier)
-                {
-                    entries.AddUnchecked(s_Buffer[i]);
-                }
-            }
-            entries.Compact();
-            return entries.Array;
-        }
-        public static LogEntry[] GetEntriesByParent(int identifier)
-        {
-            int count = s_Buffer.Count;
-            SimpleList<LogEntry> entries = new SimpleList<LogEntry>(count);
-            for (int i = 0; i < count; i++)
-            {
-                if (s_Buffer[i].ParentIdentifier == identifier)
-                {
-                    entries.AddUnchecked(s_Buffer[i]);
-                }
-            }
-            entries.Compact();
-            return entries.Array;
-        }
-
-        public static LogEntry[] GetEntriesBySearch(string search)
-        {
-            int count = s_Buffer.Count;
-            SimpleList<LogEntry> entries = new SimpleList<LogEntry>(count);
-            for (int i = 0; i < count; i++)
-            {
-                if (s_Buffer[i].Message.IndexOf(search, StringComparison.OrdinalIgnoreCase) != -1 ||
-                    s_Buffer[i].SourceFilePath.IndexOf(search, StringComparison.OrdinalIgnoreCase) != -1)
-                {
-                    entries.AddUnchecked(s_Buffer[i]);
-                }
-            }
-            entries.Compact();
-            return entries.Array;
-        }
-
-        public static string GetCategoryLabel(int category)
-        {
-            if (category <= LogCategory.MinimumIdentifier)
-            {
-                switch (category)
+                switch (categoryIdentifier)
                 {
                     case LogCategory.GDX:
                         return "GDX";
@@ -134,51 +141,152 @@ namespace GDX.Experimental.Logging
                 }
             }
 
-            return s_CustomCategories.TryGetValue(category, out string customCategory) ? customCategory : LogCategory.UndefinedLabel;
+            return s_CustomCategories.TryGetValue(categoryIdentifier, out string customCategory)
+                ? customCategory
+                : LogCategory.UndefinedLabel;
         }
 
-        public static void SetConsoleOutput(int identifier, bool output)
+        /// <summary>
+        ///     Gets an array of <see cref="LogEntry" /> based on category.
+        /// </summary>
+        /// <param name="categoryIdentifier">The category identifier to filter by.</param>
+        /// <returns>An array of filtered <see cref="LogEntry" />.</returns>
+        public static LogEntry[] GetEntriesByCategory(int categoryIdentifier)
         {
-            s_EchoToConsoleBuiltIn[(byte)identifier] = output;
+            int count = s_Buffer.Count;
+            SimpleList<LogEntry> entries = new SimpleList<LogEntry>(count);
+            for (int i = 0; i < count; i++)
+            {
+                if (s_Buffer[i].Identifier == categoryIdentifier)
+                {
+                    entries.AddUnchecked(s_Buffer[i]);
+                }
+            }
+
+            entries.Compact();
+            return entries.Array;
         }
 
+        /// <summary>
+        ///     Gets an array of <see cref="LogEntry" /> based on parent identifier.
+        /// </summary>
+        /// <param name="parentIdentifier">The parent identifier to filter by.</param>
+        /// <returns>An array of filtered <see cref="LogEntry" />.</returns>
+        public static LogEntry[] GetEntriesByParent(int parentIdentifier)
+        {
+            int count = s_Buffer.Count;
+            SimpleList<LogEntry> entries = new SimpleList<LogEntry>(count);
+            for (int i = 0; i < count; i++)
+            {
+                if (s_Buffer[i].ParentIdentifier == parentIdentifier)
+                {
+                    entries.AddUnchecked(s_Buffer[i]);
+                }
+            }
+
+            entries.Compact();
+            return entries.Array;
+        }
+
+        /// <summary>
+        ///     Gets an array of <see cref="LogEntry" /> based on contents.
+        /// </summary>
+        /// <param name="searchQuery">The text query to search for.</param>
+        /// <returns>An array of filtered <see cref="LogEntry" />.</returns>
+        public static LogEntry[] GetEntriesBySearch(string searchQuery)
+        {
+            int count = s_Buffer.Count;
+            SimpleList<LogEntry> entries = new SimpleList<LogEntry>(count);
+            for (int i = 0; i < count; i++)
+            {
+                if (s_Buffer[i].Message.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) != -1 ||
+                    s_Buffer[i].SourceFilePath.IndexOf(searchQuery, StringComparison.OrdinalIgnoreCase) != -1)
+                {
+                    entries.AddUnchecked(s_Buffer[i]);
+                }
+            }
+
+            entries.Compact();
+            return entries.Array;
+        }
+
+        /// <summary>
+        ///     Get the last <see cref="LogEntry" /> added to the backing buffer.
+        /// </summary>
+        /// <returns>The last log entry.</returns>
         public static LogEntry GetLastEntry()
         {
             return s_Buffer.GetBack();
         }
-        public static void SetUnityOutput(int identifier, bool output)
-        {
-            s_EchoToUnityBuiltIn[(byte)identifier] = output;
-        }
 
-        public static void SetBufferSize(long byteAllocation)
+        /// <summary>
+        ///     Sets the size of the internal <see cref="ConcurrentCircularBuffer{T}" /> based on a specific memory size
+        ///     allocation.
+        /// </summary>
+        /// <param name="byteAllocation">The size in bytes to use for the internal buffer.</param>
+        public static void SetBufferSizeByAllocation(long byteAllocation)
         {
             s_Buffer = new ConcurrentCircularBuffer<LogEntry>((int)(byteAllocation /
                                                                     Marshal.SizeOf(
                                                                         typeof(LogEntry))));
         }
 
-        public static void SetBufferCount(int numberOfLogEntries)
+        /// <summary>
+        ///     Sets the size of the internal <see cref="ConcurrentCircularBuffer{T}" /> to be a specific number of entries.
+        /// </summary>
+        /// <param name="numberOfLogEntries">The number of <see cref="LogEntry" /> to size the buffer too.</param>
+        public static void SetBufferSizeByCount(int numberOfLogEntries)
         {
             s_Buffer = new ConcurrentCircularBuffer<LogEntry>(numberOfLogEntries);
         }
 
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static uint Debug(int category, object debugObject, uint associativeIdentifier = 0,
-            [CallerMemberName] string memberName = "",
-            [CallerFilePath] string sourceFilePath = "",
-            [CallerLineNumber] int sourceLineNumber = 0)
+        /// <summary>
+        ///     Set if a category should output to the system console.
+        /// </summary>
+        /// <param name="categoryIdentifier">The unique category identifier.</param>
+        /// <param name="output">Should the log entry be outputted to the console?</param>
+        public static void SetConsoleOutput(int categoryIdentifier, bool output)
         {
-            LogEntry newEntry = NewEntry(LogLevel.Debug, category, debugObject.ToString(),
-                associativeIdentifier, memberName, sourceFilePath, sourceLineNumber);
+            s_EchoToConsole[(byte)categoryIdentifier] = output;
+        }
 
-            if (s_EchoToConsoleBuiltIn[(byte)category])
+        /// <summary>
+        ///     Set if a category should output to the unity logger.
+        /// </summary>
+        /// <param name="categoryIdentifier">The unique category identifier.</param>
+        /// <param name="output">Should the log entry be outputted to the unity logger?</param>
+        public static void SetUnityOutput(int categoryIdentifier, bool output)
+        {
+            s_EchoToUnity[(byte)categoryIdentifier] = output;
+        }
+
+        /// <summary>
+        ///     Log a debug message.
+        /// </summary>
+        /// <param name="category">The category identifier.</param>
+        /// <param name="message">The <see cref="LogEntry" /> message.</param>
+        /// <param name="parentIdentifier">
+        ///     The optional parent <see cref="LogEntry" />'s Identifier, if this event is meant to be
+        ///     associated with another.
+        /// </param>
+        /// <returns>The created <see cref="LogEntry" />'s Identifier.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static uint Debug(int category, string message, uint parentIdentifier = 0,
+                // ReSharper disable InvalidXmlDocComment
+                [CallerMemberName] string memberName = "",
+                [CallerFilePath] string sourceFilePath = "",
+                [CallerLineNumber] int sourceLineNumber = 0)
+            // ReSharper restore InvalidXmlDocComment
+        {
+            LogEntry newEntry = NewEntry(LogLevel.Debug, category, message,
+                parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
+
+            if (s_EchoToConsole[(byte)category])
             {
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnityBuiltIn[(byte)category])
+            if (s_EchoToUnity[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Log,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -187,22 +295,36 @@ namespace GDX.Experimental.Logging
             return newEntry.Identifier;
         }
 
+        /// <summary>
+        ///     Log a debug message with context.
+        /// </summary>
+        /// <remarks>The context-based versions of logging are slower.</remarks>
+        /// <param name="category">The category identifier.</param>
+        /// <param name="message">The <see cref="LogEntry" /> message.</param>
+        /// <param name="contextObject">A Unity-based context object.</param>
+        /// <param name="parentIdentifier">
+        ///     The optional parent <see cref="LogEntry" />'s Identifier, if this event is meant to be
+        ///     associated with another.
+        /// </param>
+        /// <returns>The created <see cref="LogEntry" />'s Identifier.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static uint DebugWithContext(int category, object debugObject, Object contextObject = null,
-            uint associativeIdentifier = 0,
-            [CallerMemberName] string memberName = "",
-            [CallerFilePath] string sourceFilePath = "",
-            [CallerLineNumber] int sourceLineNumber = 0)
+        public static uint DebugWithContext(int category, string message, Object contextObject = null,
+                uint parentIdentifier = 0,
+                // ReSharper disable InvalidXmlDocComment
+                [CallerMemberName] string memberName = "",
+                [CallerFilePath] string sourceFilePath = "",
+                [CallerLineNumber] int sourceLineNumber = 0)
+            // ReSharper restore InvalidXmlDocComment
         {
-            LogEntry newEntry = NewEntry(LogLevel.Debug, category, debugObject.ToString(),
-                associativeIdentifier, memberName, sourceFilePath, sourceLineNumber);
+            LogEntry newEntry = NewEntry(LogLevel.Debug, category, message,
+                parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
 
-            if (s_EchoToConsoleBuiltIn[(byte)category])
+            if (s_EchoToConsole[(byte)category])
             {
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnityBuiltIn[(byte)category])
+            if (s_EchoToUnity[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Log,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput(), contextObject);
@@ -211,21 +333,33 @@ namespace GDX.Experimental.Logging
             return newEntry.Identifier;
         }
 
+        /// <summary>
+        ///     Log some information.
+        /// </summary>
+        /// <param name="category">The category identifier.</param>
+        /// <param name="message">The <see cref="LogEntry" /> message.</param>
+        /// <param name="parentIdentifier">
+        ///     The optional parent <see cref="LogEntry" />'s Identifier, if this event is meant to be
+        ///     associated with another.
+        /// </param>
+        /// <returns>The created <see cref="LogEntry" />'s Identifier.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static uint Info(int category, object infoObject, uint associativeIdentifier = 0,
-            [CallerMemberName] string memberName = "",
-            [CallerFilePath] string sourceFilePath = "",
-            [CallerLineNumber] int sourceLineNumber = 0)
+        public static uint Info(int category, string message, uint parentIdentifier = 0,
+                // ReSharper disable InvalidXmlDocComment
+                [CallerMemberName] string memberName = "",
+                [CallerFilePath] string sourceFilePath = "",
+                [CallerLineNumber] int sourceLineNumber = 0)
+            // ReSharper restore InvalidXmlDocComment
         {
-            LogEntry newEntry = NewEntry(LogLevel.Info, category, infoObject.ToString(),
-                associativeIdentifier, memberName, sourceFilePath, sourceLineNumber);
+            LogEntry newEntry = NewEntry(LogLevel.Info, category, message,
+                parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
 
-            if (s_EchoToConsoleBuiltIn[(byte)category])
+            if (s_EchoToConsole[(byte)category])
             {
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnityBuiltIn[(byte)category])
+            if (s_EchoToUnity[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(
                     LogType.Log,
@@ -236,22 +370,36 @@ namespace GDX.Experimental.Logging
             return newEntry.Identifier;
         }
 
+        /// <summary>
+        ///     Log some information with context.
+        /// </summary>
+        /// <remarks>The context-based versions of logging are slower.</remarks>
+        /// <param name="category">The category identifier.</param>
+        /// <param name="message">The <see cref="LogEntry" /> message.</param>
+        /// <param name="contextObject">A Unity-based context object.</param>
+        /// <param name="parentIdentifier">
+        ///     The optional parent <see cref="LogEntry" />'s Identifier, if this event is meant to be
+        ///     associated with another.
+        /// </param>
+        /// <returns>The created <see cref="LogEntry" />'s Identifier.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static uint InfoWithContext(int category, object infoObject, Object contextObject = null,
-            uint associativeIdentifier = 0,
-            [CallerMemberName] string memberName = "",
-            [CallerFilePath] string sourceFilePath = "",
-            [CallerLineNumber] int sourceLineNumber = 0)
+        public static uint InfoWithContext(int category, string message, Object contextObject = null,
+                uint parentIdentifier = 0,
+                // ReSharper disable InvalidXmlDocComment
+                [CallerMemberName] string memberName = "",
+                [CallerFilePath] string sourceFilePath = "",
+                [CallerLineNumber] int sourceLineNumber = 0)
+            // ReSharper restore InvalidXmlDocComment
         {
-            LogEntry newEntry = NewEntry(LogLevel.Info, category, infoObject.ToString(),
-                associativeIdentifier, memberName, sourceFilePath, sourceLineNumber);
+            LogEntry newEntry = NewEntry(LogLevel.Info, category, message,
+                parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
 
-            if (s_EchoToConsoleBuiltIn[(byte)category])
+            if (s_EchoToConsole[(byte)category])
             {
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnityBuiltIn[(byte)category])
+            if (s_EchoToUnity[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(
                     LogType.Log,
@@ -262,21 +410,33 @@ namespace GDX.Experimental.Logging
             return newEntry.Identifier;
         }
 
+        /// <summary>
+        ///     Log a warning.
+        /// </summary>
+        /// <param name="category">The category identifier.</param>
+        /// <param name="message">The <see cref="LogEntry" /> message.</param>
+        /// <param name="parentIdentifier">
+        ///     The optional parent <see cref="LogEntry" />'s Identifier, if this event is meant to be
+        ///     associated with another.
+        /// </param>
+        /// <returns>The created <see cref="LogEntry" />'s Identifier.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static uint Warning(int category, object warningObject, uint associativeIdentifier = 0,
-            [CallerMemberName] string memberName = "",
-            [CallerFilePath] string sourceFilePath = "",
-            [CallerLineNumber] int sourceLineNumber = 0)
+        public static uint Warning(int category, string message, uint parentIdentifier = 0,
+                // ReSharper disable InvalidXmlDocComment
+                [CallerMemberName] string memberName = "",
+                [CallerFilePath] string sourceFilePath = "",
+                [CallerLineNumber] int sourceLineNumber = 0)
+            // ReSharper restore InvalidXmlDocComment
         {
             LogEntry newEntry = NewEntry(LogLevel.Warning, category,
-                warningObject.ToString(), associativeIdentifier, memberName, sourceFilePath, sourceLineNumber);
+                message, parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
 
-            if (s_EchoToConsoleBuiltIn[(byte)category])
+            if (s_EchoToConsole[(byte)category])
             {
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnityBuiltIn[(byte)category])
+            if (s_EchoToUnity[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Warning,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -285,22 +445,36 @@ namespace GDX.Experimental.Logging
             return newEntry.Identifier;
         }
 
+        /// <summary>
+        ///     Log a warning with context.
+        /// </summary>
+        /// <remarks>The context-based versions of logging are slower.</remarks>
+        /// <param name="category">The category identifier.</param>
+        /// <param name="message">The <see cref="LogEntry" /> message.</param>
+        /// <param name="contextObject">A Unity-based context object.</param>
+        /// <param name="parentIdentifier">
+        ///     The optional parent <see cref="LogEntry" />'s Identifier, if this event is meant to be
+        ///     associated with another.
+        /// </param>
+        /// <returns>The created <see cref="LogEntry" />'s Identifier.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static uint WarningWithContext(int category, object warningObject, Object contextObject = null,
-            uint associativeIdentifier = 0,
-            [CallerMemberName] string memberName = "",
-            [CallerFilePath] string sourceFilePath = "",
-            [CallerLineNumber] int sourceLineNumber = 0)
+        public static uint WarningWithContext(int category, string message, Object contextObject = null,
+                uint parentIdentifier = 0,
+                // ReSharper disable InvalidXmlDocComment
+                [CallerMemberName] string memberName = "",
+                [CallerFilePath] string sourceFilePath = "",
+                [CallerLineNumber] int sourceLineNumber = 0)
+            // ReSharper restore InvalidXmlDocComment
         {
             LogEntry newEntry = NewEntry(LogLevel.Warning, category,
-                warningObject.ToString(), associativeIdentifier, memberName, sourceFilePath, sourceLineNumber);
+                message, parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
 
-            if (s_EchoToConsoleBuiltIn[(byte)category])
+            if (s_EchoToConsole[(byte)category])
             {
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnityBuiltIn[(byte)category])
+            if (s_EchoToUnity[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Warning,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput(), contextObject);
@@ -309,21 +483,33 @@ namespace GDX.Experimental.Logging
             return newEntry.Identifier;
         }
 
+        /// <summary>
+        ///     Log an error.
+        /// </summary>
+        /// <param name="category">The category identifier.</param>
+        /// <param name="message">The <see cref="LogEntry" /> message.</param>
+        /// <param name="parentIdentifier">
+        ///     The optional parent <see cref="LogEntry" />'s Identifier, if this event is meant to be
+        ///     associated with another.
+        /// </param>
+        /// <returns>The created <see cref="LogEntry" />'s Identifier.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static uint Error(int category, object errorObject, uint associativeIdentifier = 0,
-            [CallerMemberName] string memberName = "",
-            [CallerFilePath] string sourceFilePath = "",
-            [CallerLineNumber] int sourceLineNumber = 0)
+        public static uint Error(int category, string message, uint parentIdentifier = 0,
+                // ReSharper disable InvalidXmlDocComment
+                [CallerMemberName] string memberName = "",
+                [CallerFilePath] string sourceFilePath = "",
+                [CallerLineNumber] int sourceLineNumber = 0)
+            // ReSharper restore InvalidXmlDocComment
         {
             LogEntry newEntry = NewEntry(LogLevel.Error, category,
-                errorObject.ToString(), associativeIdentifier, memberName, sourceFilePath, sourceLineNumber);
+                message, parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
 
-            if (s_EchoToConsoleBuiltIn[(byte)category])
+            if (s_EchoToConsole[(byte)category])
             {
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnityBuiltIn[(byte)category])
+            if (s_EchoToUnity[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Error,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -332,22 +518,36 @@ namespace GDX.Experimental.Logging
             return newEntry.Identifier;
         }
 
+        /// <summary>
+        ///     Log an error with context.
+        /// </summary>
+        /// <remarks>The context-based versions of logging are slower.</remarks>
+        /// <param name="category">The category identifier.</param>
+        /// <param name="message">The <see cref="LogEntry" /> message.</param>
+        /// <param name="contextObject">A Unity-based context object.</param>
+        /// <param name="parentIdentifier">
+        ///     The optional parent <see cref="LogEntry" />'s Identifier, if this event is meant to be
+        ///     associated with another.
+        /// </param>
+        /// <returns>The created <see cref="LogEntry" />'s Identifier.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static uint ErrorWithContext(int category, object errorObject, Object contextObject = null,
-            uint associativeIdentifier = 0,
-            [CallerMemberName] string memberName = "",
-            [CallerFilePath] string sourceFilePath = "",
-            [CallerLineNumber] int sourceLineNumber = 0)
+        public static uint ErrorWithContext(int category, string message, Object contextObject = null,
+                uint parentIdentifier = 0,
+                // ReSharper disable InvalidXmlDocComment
+                [CallerMemberName] string memberName = "",
+                [CallerFilePath] string sourceFilePath = "",
+                [CallerLineNumber] int sourceLineNumber = 0)
+            // ReSharper restore InvalidXmlDocComment
         {
             LogEntry newEntry = NewEntry(LogLevel.Error, category,
-                errorObject.ToString(), associativeIdentifier, memberName, sourceFilePath, sourceLineNumber);
+                message, parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
 
-            if (s_EchoToConsoleBuiltIn[(byte)category])
+            if (s_EchoToConsole[(byte)category])
             {
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnityBuiltIn[(byte)category])
+            if (s_EchoToUnity[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Error,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput(), contextObject);
@@ -356,21 +556,33 @@ namespace GDX.Experimental.Logging
             return newEntry.Identifier;
         }
 
+        /// <summary>
+        ///     Log an exception.
+        /// </summary>
+        /// <param name="category">The category identifier.</param>
+        /// <param name="exception">The exception object.</param>
+        /// <param name="parentIdentifier">
+        ///     The optional parent <see cref="LogEntry" />'s Identifier, if this event is meant to be
+        ///     associated with another.
+        /// </param>
+        /// <returns>The created <see cref="LogEntry" />'s Identifier.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static uint Exception(int category, Exception exceptionObject, uint associativeIdentifier = 0,
-            [CallerMemberName] string memberName = "",
-            [CallerFilePath] string sourceFilePath = "",
-            [CallerLineNumber] int sourceLineNumber = 0)
+        public static uint Exception(int category, Exception exception, uint parentIdentifier = 0,
+                // ReSharper disable InvalidXmlDocComment
+                [CallerMemberName] string memberName = "",
+                [CallerFilePath] string sourceFilePath = "",
+                [CallerLineNumber] int sourceLineNumber = 0)
+            // ReSharper restore InvalidXmlDocComment
         {
             LogEntry newEntry = NewEntry(LogLevel.Exception, category,
-                exceptionObject, associativeIdentifier, memberName, sourceFilePath, sourceLineNumber);
+                exception, parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
 
-            if (s_EchoToConsoleBuiltIn[(byte)category])
+            if (s_EchoToConsole[(byte)category])
             {
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnityBuiltIn[(byte)category])
+            if (s_EchoToUnity[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Exception,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -379,23 +591,36 @@ namespace GDX.Experimental.Logging
             return newEntry.Identifier;
         }
 
+        /// <summary>
+        ///     Log an exception with context,
+        /// </summary>
+        /// <param name="category">The category identifier.</param>
+        /// <param name="exception">The exception object.</param>
+        /// <param name="contextObject">A Unity-based context object.</param>
+        /// <param name="parentIdentifier">
+        ///     The optional parent <see cref="LogEntry" />'s Identifier, if this event is meant to be
+        ///     associated with another.
+        /// </param>
+        /// <returns>The created <see cref="LogEntry" />'s Identifier.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static uint ExceptionWithContext(int category,
-            Exception exceptionObject,
-            Object contextObject = null, uint associativeIdentifier = 0,
-            [CallerMemberName] string memberName = "",
-            [CallerFilePath] string sourceFilePath = "",
-            [CallerLineNumber] int sourceLineNumber = 0)
+                Exception exception,
+                Object contextObject = null, uint parentIdentifier = 0,
+                // ReSharper disable InvalidXmlDocComment
+                [CallerMemberName] string memberName = "",
+                [CallerFilePath] string sourceFilePath = "",
+                [CallerLineNumber] int sourceLineNumber = 0)
+            // ReSharper restore InvalidXmlDocComment
         {
             LogEntry newEntry = NewEntry(LogLevel.Exception, category,
-                exceptionObject, associativeIdentifier, memberName, sourceFilePath, sourceLineNumber);
+                exception, parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
 
-            if (s_EchoToConsoleBuiltIn[(byte)category])
+            if (s_EchoToConsole[(byte)category])
             {
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnityBuiltIn[(byte)category])
+            if (s_EchoToUnity[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Exception,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput(), contextObject);
@@ -404,21 +629,33 @@ namespace GDX.Experimental.Logging
             return newEntry.Identifier;
         }
 
+        /// <summary>
+        ///     Log an assertion failure.
+        /// </summary>
+        /// <param name="category">The category identifier.</param>
+        /// <param name="message">The <see cref="LogEntry" /> message.</param>
+        /// <param name="parentIdentifier">
+        ///     The optional parent <see cref="LogEntry" />'s Identifier, if this event is meant to be
+        ///     associated with another.
+        /// </param>
+        /// <returns>The created <see cref="LogEntry" />'s Identifier.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static uint Assertion(int category, object assertionObject, uint associativeIdentifier = 0,
-            [CallerMemberName] string memberName = "",
-            [CallerFilePath] string sourceFilePath = "",
-            [CallerLineNumber] int sourceLineNumber = 0)
+        public static uint Assertion(int category, string message, uint parentIdentifier = 0,
+                // ReSharper disable InvalidXmlDocComment
+                [CallerMemberName] string memberName = "",
+                [CallerFilePath] string sourceFilePath = "",
+                [CallerLineNumber] int sourceLineNumber = 0)
+            // ReSharper restore InvalidXmlDocComment
         {
             LogEntry newEntry = NewEntry(LogLevel.Assertion, category,
-                assertionObject.ToString(), associativeIdentifier, memberName, sourceFilePath, sourceLineNumber);
+                message, parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
 
-            if (s_EchoToConsoleBuiltIn[(byte)category])
+            if (s_EchoToConsole[(byte)category])
             {
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnityBuiltIn[(byte)category])
+            if (s_EchoToUnity[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Assert,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -427,22 +664,36 @@ namespace GDX.Experimental.Logging
             return newEntry.Identifier;
         }
 
+        /// <summary>
+        ///     Log an assertion failure with context.
+        /// </summary>
+        /// <remarks>The context-based versions of logging are slower.</remarks>
+        /// <param name="category">The category identifier.</param>
+        /// <param name="message">The <see cref="LogEntry" /> message.</param>
+        /// <param name="contextObject">A Unity-based context object.</param>
+        /// <param name="parentIdentifier">
+        ///     The optional parent <see cref="LogEntry" />'s Identifier, if this event is meant to be
+        ///     associated with another.
+        /// </param>
+        /// <returns>The created <see cref="LogEntry" />'s Identifier.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static uint AssertionWithContext(int category, object assertionObject, Object contextObject = null,
-            uint associativeIdentifier = 0,
-            [CallerMemberName] string memberName = "",
-            [CallerFilePath] string sourceFilePath = "",
-            [CallerLineNumber] int sourceLineNumber = 0)
+        public static uint AssertionWithContext(int category, string message, Object contextObject = null,
+                uint parentIdentifier = 0,
+                // ReSharper disable InvalidXmlDocComment
+                [CallerMemberName] string memberName = "",
+                [CallerFilePath] string sourceFilePath = "",
+                [CallerLineNumber] int sourceLineNumber = 0)
+            // ReSharper restore InvalidXmlDocComment
         {
             LogEntry newEntry = NewEntry(LogLevel.Assertion, category,
-                assertionObject.ToString(), associativeIdentifier, memberName, sourceFilePath, sourceLineNumber);
+                message, parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
 
-            if (s_EchoToConsoleBuiltIn[(byte)category])
+            if (s_EchoToConsole[(byte)category])
             {
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnityBuiltIn[(byte)category])
+            if (s_EchoToUnity[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Assert,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput(), contextObject);
@@ -451,21 +702,37 @@ namespace GDX.Experimental.Logging
             return newEntry.Identifier;
         }
 
+        /// <summary>
+        ///     Logs a fatal event and forces Unity to crash.
+        /// </summary>
+        /// <remarks>
+        ///     The crash ensures that we stop a cascade of problems, allowing for back tracing. The context object based
+        ///     methods should no be the preferred method of logging as they require a main-thread lock internally inside of Unity.
+        /// </remarks>
+        /// <param name="category">The category identifier to associate this event with.</param>
+        /// <param name="message"></param>
+        /// <param name="parentIdentifier">
+        ///     The parent <see cref="LogEntry" />'s Identifier, if this event is meant to be
+        ///     associated with another.
+        /// </param>
+        /// <returns>The newly created <see cref="LogEntry" />'s Identifier.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static uint Fatal(int category, object fatalObject, uint associativeIdentifier = 0,
-            [CallerMemberName] string memberName = "",
-            [CallerFilePath] string sourceFilePath = "",
-            [CallerLineNumber] int sourceLineNumber = 0)
+        public static uint Fatal(int category, string message, uint parentIdentifier = 0,
+                // ReSharper disable InvalidXmlDocComment
+                [CallerMemberName] string memberName = "",
+                [CallerFilePath] string sourceFilePath = "",
+                [CallerLineNumber] int sourceLineNumber = 0)
+            // ReSharper restore InvalidXmlDocComment
         {
             LogEntry newEntry = NewEntry(LogLevel.Fatal, category,
-                fatalObject.ToString(), associativeIdentifier, memberName, sourceFilePath, sourceLineNumber);
+                message, parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
 
-            if (s_EchoToConsoleBuiltIn[(byte)category])
+            if (s_EchoToConsole[(byte)category])
             {
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnityBuiltIn[(byte)category])
+            if (s_EchoToUnity[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Error,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -476,22 +743,39 @@ namespace GDX.Experimental.Logging
             return newEntry.Identifier;
         }
 
+        /// <summary>
+        ///     Logs a fatal event and forces Unity to crash.
+        /// </summary>
+        /// <remarks>
+        ///     The crash ensures that we stop a cascade of problems, allowing for back tracing. The context object based
+        ///     methods should no be the preferred method of logging as they require a main-thread lock internally inside of Unity.
+        /// </remarks>
+        /// <param name="category">The category identifier to associate this event with.</param>
+        /// <param name="message"></param>
+        /// <param name="contextObject">A unity-based context object.</param>
+        /// <param name="parentIdentifier">
+        ///     The parent <see cref="LogEntry" />'s Identifier, if this event is meant to be
+        ///     associated with another.
+        /// </param>
+        /// <returns>The newly created <see cref="LogEntry" />'s Identifier.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static uint FatalWithContext(int category, object fatalObject, Object contextObject = null,
-            uint associativeIdentifier = 0,
-            [CallerMemberName] string memberName = "",
-            [CallerFilePath] string sourceFilePath = "",
-            [CallerLineNumber] int sourceLineNumber = 0)
+        public static uint FatalWithContext(int category, string message, Object contextObject = null,
+                uint parentIdentifier = 0,
+                // ReSharper disable InvalidXmlDocComment
+                [CallerMemberName] string memberName = "",
+                [CallerFilePath] string sourceFilePath = "",
+                [CallerLineNumber] int sourceLineNumber = 0)
+            // ReSharper restore InvalidXmlDocComment
         {
             LogEntry newEntry = NewEntry(LogLevel.Fatal, category,
-                fatalObject.ToString(), associativeIdentifier, memberName, sourceFilePath, sourceLineNumber);
+                message, parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
 
-            if (s_EchoToConsoleBuiltIn[(byte)category])
+            if (s_EchoToConsole[(byte)category])
             {
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnityBuiltIn[(byte)category])
+            if (s_EchoToUnity[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Error,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput(), contextObject);
@@ -502,23 +786,52 @@ namespace GDX.Experimental.Logging
             return newEntry.Identifier;
         }
 
+        /// <summary>
+        ///     Logs the current stack trace.
+        /// </summary>
+        /// <remarks>Pulled from <see cref="Environment.StackTrace " />.</remarks>
+        /// <param name="category">The category identifier to associate this event with.</param>
+        /// <param name="parentIdentifier">
+        ///     The parent <see cref="LogEntry" />'s Identifier, if this event is meant to be
+        ///     associated with another.
+        /// </param>
+        /// <returns>The newly created <see cref="LogEntry" />'s Identifier.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static uint Trace(int category = 0, uint associativeIdentifier = 0,
-            [CallerMemberName] string memberName = "",
-            [CallerFilePath] string sourceFilePath = "",
-            [CallerLineNumber] int sourceLineNumber = 0)
+        public static uint Trace(int category = 0, uint parentIdentifier = 0,
+                // ReSharper disable InvalidXmlDocComment
+                [CallerMemberName] string memberName = "",
+                [CallerFilePath] string sourceFilePath = "",
+                [CallerLineNumber] int sourceLineNumber = 0)
+            // ReSharper restore InvalidXmlDocComment
         {
             LogEntry newEntry = NewEntry(LogLevel.Trace, category,
-                Environment.StackTrace, associativeIdentifier, memberName, sourceFilePath, sourceLineNumber);
+                Environment.StackTrace, parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
 
-            if (s_EchoToConsoleBuiltIn[(byte)category])
+            if (s_EchoToConsole[(byte)category])
             {
                 Console.WriteLine(newEntry.ToConsoleOutput());
+            }
+
+            if (s_EchoToUnity[(byte)category])
+            {
+                UnityEngine.Debug.unityLogger.Log(LogType.Assert,
+                    GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
             }
 
             return newEntry.Identifier;
         }
 
+        /// <summary>
+        ///     Creates and adds a new log entry to the <see cref="s_Buffer" />.
+        /// </summary>
+        /// <param name="level">The type/level of message being emitted.</param>
+        /// <param name="category">The category of the message being emitted.</param>
+        /// <param name="message">The content.</param>
+        /// <param name="parentIdentifier">The parent <see cref="LogEntry" />'s Identifier.</param>
+        /// <param name="memberName">The invoking member's name.</param>
+        /// <param name="sourceFilePath">The source file where the member is found.</param>
+        /// <param name="sourceLineNumber">The line number in the source file where the member is invoking the emit.</param>
+        /// <returns>The newly created <see cref="LogEntry" />'s Identifier.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static LogEntry NewEntry(LogLevel level, int category, string message, uint parentIdentifier = 0u,
             string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0)
@@ -527,7 +840,7 @@ namespace GDX.Experimental.Logging
             {
                 Timestamp = DateTime.UtcNow,
                 Level = level,
-                Identifier = NextTicket(),
+                Identifier = NextIdentifier(),
                 CategoryIdentifier = category,
                 ParentIdentifier = parentIdentifier,
                 Message = message,
@@ -539,6 +852,17 @@ namespace GDX.Experimental.Logging
             return newEntry;
         }
 
+        /// <summary>
+        ///     Creates and adds a new log entry to the <see cref="s_Buffer" /> from a <see cref="System.Exception" />.
+        /// </summary>
+        /// <param name="level">The type/level of message being emitted.</param>
+        /// <param name="category">The category of the message being emitted.</param>
+        /// <param name="exception">The emitted exception.</param>
+        /// <param name="parentIdentifier">The parent <see cref="LogEntry" />'s Identifier.</param>
+        /// <param name="memberName">The invoking member's name.</param>
+        /// <param name="sourceFilePath">The source file where the member is found.</param>
+        /// <param name="sourceLineNumber">The line number in the source file where the member is invoking the emit.</param>
+        /// <returns>The newly created <see cref="LogEntry" />'s Identifier.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static LogEntry NewEntry(LogLevel level, int category, Exception exception, uint parentIdentifier = 0u,
             string memberName = "", string sourceFilePath = "", int sourceLineNumber = 0)
@@ -547,7 +871,7 @@ namespace GDX.Experimental.Logging
             {
                 Timestamp = DateTime.UtcNow,
                 Level = level,
-                Identifier = NextTicket(),
+                Identifier = NextIdentifier(),
                 CategoryIdentifier = category,
                 ParentIdentifier = parentIdentifier,
                 Message = exception.Message,
@@ -560,19 +884,24 @@ namespace GDX.Experimental.Logging
             return newEntry;
         }
 
-        static uint NextTicket()
+        /// <summary>
+        ///     Get the next identifier to use for a log entry
+        /// </summary>
+        /// <remarks>This will eventually roll over.</remarks>
+        /// <returns>An unsigned integer representing a pseudo-unique log entry identifier.</returns>
+        static uint NextIdentifier()
         {
             lock (k_Lock)
             {
-                s_TicketHead++;
+                s_IdentifierHead++;
 
                 // We need to ensure this never hits it in rollover
-                if (s_TicketHead == 0)
+                if (s_IdentifierHead == 0)
                 {
-                    s_TicketHead++;
+                    s_IdentifierHead++;
                 }
 
-                return ++s_TicketHead;
+                return ++s_IdentifierHead;
             }
         }
     }
