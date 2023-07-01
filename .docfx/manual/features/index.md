@@ -44,7 +44,7 @@ Highlight | Description
 
 A game designer's dream comes true for Unity, plain and simple. We've built an extensive system allowing an expected workflow to fit in with the traditional Unity development pipeline. While we don't ship directly with a Microsoft Excel or Google Sheets integration, the format framework is extensible and can easily have any data source.
 
-> [!INFO]
+> [!NOTE]
 > We are looking into ways to ship Excel support out of the box, but you have to create the new Format for now (*hint: use [OpenXML](https://github.com/dotnet/Open-XML-SDK)*).
 
 ## [GDX.Developer](xref:GDX.Developer)
@@ -64,7 +64,8 @@ While the purpose of `GDX` is to provide battle-tested code to developers, this 
 
 Highlight | Description
 :-- | :--
-DebugDraw | 
+[DebugDraw](xref:GDX.Experimental.DebugDraw) | A state-based optimized line drawing solution for debugging information at authoring and runtime.
+[ManagedLog](xref:GDX.Experimental.Logging.ManagedLog)  | A managed-only categorized hierarchical logging solution.
 
 ## [GDX.IO](xref:GDX.IO)
 
@@ -84,7 +85,7 @@ Highlight | Description
 
 ## [GDX.Rendering](xref:GDX.Rendering)
 
-Just ignore this one; honestly, it's got nothing of value outside of a tiny bit of functionality we rely on for other parts of the package. What? We're telling you the truth :)
+Just ignore this one; honestly, it's got nothing of value outside of a tiny bit of functionality we rely on for other parts of the package. What? We're telling you the truth.
 
 ## [GDX.Threading](xref:GDX.Threading)
 
@@ -92,6 +93,6 @@ Optimizing for concurrency and utilization is complex; GDX provides some excitin
 
 Highlight | Description
 :-- | :--
-TaskDirector |
-WaitFor |
-WaitWhile |
+TaskDirector | Off-thread task management system with main-thread execution hooks.
+WaitFor | Execution flow management *waiting* paradigm.
+WaitWhile | Execution flow management *while* paradigm.
