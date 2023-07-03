@@ -1,11 +1,16 @@
-// Copyright (c) 2020-2022 dotBunny Inc.
+#if GDX_UNSAFE_COLLECTIONS
+// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 using System.Runtime.CompilerServices;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using Unity.Jobs;
 using Unity.Jobs.LowLevel.Unsafe;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using Unity.Burst;
 
 namespace GDX.Collections
 {
@@ -13,10 +18,15 @@ namespace GDX.Collections
     ///     An adapter collection for external data arrays that allows constant-time insertion, deletion, and lookup by
     ///     handle, as well as array-like iteration.
     /// </summary>
-    public unsafe struct UnsafeSparseSet : System.IDisposable
+    [DebuggerDisplay("Count = {Count}, Length = {Length}, IsCreated = {IsCreated}, IsEmpty = {IsEmpty}")]
+    [DebuggerTypeProxy(typeof(UnsafeSparseSetDebugView))]
+    [StructLayout(LayoutKind.Sequential)]
+    [BurstCompatible(GenericTypeArguments = new[] { typeof(int) })]
+    public unsafe struct UnsafeSparseSet : INativeDisposable
     {
         public const int MinimumCapacity = JobsUtility.CacheLineSize / (sizeof(int) * 2);
 
+        [NativeDisableUnsafePtrRestriction]
         public void* Data;
         /// <summary>
         ///     Holds references to the sparse array for swapping indices.
@@ -57,7 +67,19 @@ namespace GDX.Collections
         public AllocatorManager.AllocatorHandle Allocator;
 
         /// <summary>
-        ///     Create a <see cref="NativeArraySparseSet" /> with an <paramref name="initialCapacity" />.
+        /// Whether this Sparse Set has been allocated (and not yet deallocated).
+        /// </summary>
+        /// <value>True if this list has been allocated (and not yet deallocated).</value>
+        public bool IsCreated { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { return Data != null; } }
+
+        /// <summary>
+        /// Whether the Sparse Set is empty.
+        /// </summary>
+        /// <value>True if the Sparse Set is empty or has not been constructed.</value>
+        public bool IsEmpty { [MethodImpl(MethodImplOptions.AggressiveInlining)] get { return !IsCreated || Length == 0; } }
+
+        /// <summary>
+        ///     Create an <see cref="UnsafeSparseSet" /> with an <paramref name="initialCapacity" />.
         /// </summary>
         /// <param name="initialCapacity">The initial capacity of the sparse and dense int arrays.</param>
         /// <param name="allocator">The <see cref="AllocatorManager.AllocatorHandle" /> type to use.</param>
@@ -86,7 +108,7 @@ namespace GDX.Collections
         }
 
         /// <summary>
-        ///     Create a <see cref="NativeArraySparseSet" /> with an <paramref name="initialCapacity" />.
+        ///     Create an <see cref="UnsafeSparseSet" /> with an <paramref name="initialCapacity" />.
         /// </summary>
         /// <param name="initialCapacity">The initial capacity of the sparse and dense int arrays.</param>
         /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
@@ -1024,6 +1046,9 @@ namespace GDX.Collections
             }
         }
 
+        /// <summary>
+        /// Disposes the memory of this Sparse Set.
+        /// </summary>
         public void Dispose()
         {
             if (Data != null)
@@ -1033,14 +1058,179 @@ namespace GDX.Collections
                 Length = 0;
                 Count = 0;
                 FreeIndex = 0;
-                Allocator = default;
+                Allocator = Unity.Collections.Allocator.Invalid;
             }
         }
 
+        /// <summary>
+        /// Creates and schedules a job that disposes the memory of this Sparse Set.
+        /// </summary>
+        /// <param name="inputDeps">The dependency for the new job.</param>
+        /// <returns>The handle of the new job. The job depends upon `inputDeps` and frees the memory of this Sparse Set.</returns>
+        [NotBurstCompatible /* This is not burst compatible because of IJob's use of a static IntPtr. Should switch to IJobBurstSchedulable in the future */]
+        public JobHandle Dispose(JobHandle inputDeps)
+        {
+            if (CollectionHelper.ShouldDeallocate(Allocator))
+            {
+                var jobHandle = new DisposeUnsafeSparseSetJob { Ptr = Data, Capacity = Length, Allocator = Allocator }.Schedule(inputDeps);
+
+                Data = null;
+                Length = 0;
+                Count = 0;
+                FreeIndex = 0;
+                Allocator = Unity.Collections.Allocator.Invalid;
+
+                return jobHandle;
+            }
+
+            Data = null;
+            Length = 0;
+            Count = 0;
+            FreeIndex = 0;
+            Allocator = Unity.Collections.Allocator.Invalid;
+
+            return inputDeps;
+        }
+
+        /// <summary>
+        /// Creates and schedules a job that disposes the memory of this Sparse Set.
+        /// </summary>
+        /// <param name="inputDeps">The dependency for the new job.</param>
+        /// <returns>The handle of the new job. The job depends upon `inputDeps` and frees the memory of this Sparse Set.</returns>
+        [NotBurstCompatible /* This is not burst compatible because of IJob's use of a static IntPtr. Should switch to IJobBurstSchedulable in the future */]
+        public JobHandle Dispose(JobHandle inputDeps, ref ulong* versionArray)
+        {
+            if (CollectionHelper.ShouldDeallocate(Allocator))
+            {
+                var jobHandle = new DisposeUnsafeSparseSetAndVersionArrayJob { Ptr = Data, VersionArrayPtr = versionArray, Capacity = Length, Allocator = Allocator }.Schedule(inputDeps);
+
+                Data = null;
+                Length = 0;
+                Count = 0;
+                FreeIndex = 0;
+                Allocator = Unity.Collections.Allocator.Invalid;
+                versionArray = null;
+
+                return jobHandle;
+            }
+
+            Data = null;
+            Length = 0;
+            Count = 0;
+            FreeIndex = 0;
+            Allocator = Unity.Collections.Allocator.Invalid;
+            versionArray = null;
+
+            return inputDeps;
+        }
+
+        /// <summary>
+        /// Disposes the memory of the version array for this Sparse Set.
+        /// </summary>
+        /// <param name="versionArray">The pointer of the versionArray to dispose of.</param>
         public void DisposeVersionArray(ref ulong* versionArray)
         {
             Allocator.Free(versionArray, sizeof(ulong), JobsUtility.CacheLineSize, Length);
             versionArray = null;
         }
+
+        /// <summary>
+        /// Creates and schedules a job that disposes the memory of this Sparse Set.
+        /// </summary>
+        /// <param name="inputDeps">The dependency for the new job.</param>
+        /// <returns>The handle of the new job. The job depends upon `inputDeps` and disposes the memory of this Sparse Set.</returns>
+        [NotBurstCompatible /* This is not burst compatible because of IJob's use of a static IntPtr. Should switch to IJobBurstSchedulable in the future */]
+        public JobHandle DisposeVersionArray(JobHandle inputDeps, ref ulong* versionArray)
+        {
+            if (CollectionHelper.ShouldDeallocate(Allocator))
+            {
+                var jobHandle = new DisposeUnsafeVersionArrayJob { Ptr = versionArray, Capacity = Length, Allocator = Allocator }.Schedule(inputDeps);
+
+                versionArray = null;
+
+                return jobHandle;
+            }
+
+            versionArray = null;
+
+            return inputDeps;
+        }
+    }
+
+    [BurstCompile]
+    internal unsafe struct DisposeUnsafeSparseSetJob : IJob
+    {
+        [NativeDisableUnsafePtrRestriction]
+        public void* Ptr;
+        public int Capacity;
+        public AllocatorManager.AllocatorHandle Allocator;
+
+        public void Execute()
+        {
+            Allocator.Free(Ptr, UnsafeUtility.SizeOf<int>(), JobsUtility.CacheLineSize, Capacity * 2);
+        }
+    }
+
+    [BurstCompile]
+    internal unsafe struct DisposeUnsafeVersionArrayJob : IJob
+    {
+        [NativeDisableUnsafePtrRestriction]
+        public void* Ptr;
+        public int Capacity;
+        public AllocatorManager.AllocatorHandle Allocator;
+
+        public void Execute()
+        {
+            Allocator.Free(Ptr, UnsafeUtility.SizeOf<ulong>(), JobsUtility.CacheLineSize, Capacity);
+        }
+    }
+
+    [BurstCompile]
+    internal unsafe struct DisposeUnsafeSparseSetAndVersionArrayJob : IJob
+    {
+        [NativeDisableUnsafePtrRestriction]
+        public void* Ptr;
+        [NativeDisableUnsafePtrRestriction]
+        public void* VersionArrayPtr;
+        public int Capacity;
+        public AllocatorManager.AllocatorHandle Allocator;
+
+        public void Execute()
+        {
+            Allocator.Free(Ptr, UnsafeUtility.SizeOf<int>(), JobsUtility.CacheLineSize, Capacity * 2);
+            Allocator.Free(VersionArrayPtr, UnsafeUtility.SizeOf<ulong>(), JobsUtility.CacheLineSize, Capacity);
+        }
+    }
+
+    public struct SparseDenseIndexPair
+    {
+        public int SparseIndex;
+        public int DenseIndex;
+    }
+
+    internal sealed class UnsafeSparseSetDebugView
+    {
+        UnsafeSparseSet Data;
+
+        public UnsafeSparseSetDebugView(UnsafeSparseSet data)
+        {
+            Data = data;
+        }
+
+        public unsafe SparseDenseIndexPair[] Items
+        {
+            get
+            {
+                SparseDenseIndexPair[] result = new SparseDenseIndexPair[Data.Count];
+
+                for (var i = 0; i < Data.Count; ++i)
+                {
+                    result[i] = new SparseDenseIndexPair() { DenseIndex = i, SparseIndex = Data.DenseArray[i] };
+                }
+
+                return result;
+            }
+        }
     }
 }
+#endif // GDX_UNSAFE_COLLECTIONS

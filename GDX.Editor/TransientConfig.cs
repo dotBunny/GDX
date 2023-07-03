@@ -1,6 +1,8 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+﻿// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
+
+using System;
 
 namespace GDX.Editor
 {
@@ -18,62 +20,82 @@ namespace GDX.Editor
         /// <summary>
         ///     Ensure that there is an assembly definition wrapping the generated content.
         /// </summary>
-        public bool DeveloperBuildInfoAssemblyDefinition;
+        public bool BuildInfoAssemblyDefinition;
 
         /// <summary>
         ///     The argument key for the build's changelist to be passed to the BuildInfoGenerator.
         /// </summary>
-        public string DeveloperBuildInfoBuildChangelistArgument;
+        public string BuildInfoBuildChangelistArgument;
 
         /// <summary>
         ///     The argument key for the build description to be passed to the BuildInfoGenerator.
         /// </summary>
-        public string DeveloperBuildInfoBuildDescriptionArgument;
+        public string BuildInfoBuildDescriptionArgument;
 
         /// <summary>
         ///     The argument key for the build number to be passed to the BuildInfoGenerator.
         /// </summary>
-        public string DeveloperBuildInfoBuildNumberArgument;
+        public string BuildInfoBuildNumberArgument;
 
         /// <summary>
         ///     The argument key for the build's stream to be passed to the BuildInfoGenerator.
         /// </summary>
-        public string DeveloperBuildInfoBuildStreamArgument;
+        public string BuildInfoBuildStreamArgument;
 
         /// <summary>
         ///     The argument key for the build's task to be passed to the BuildInfoGenerator.
         /// </summary>
-        public string DeveloperBuildInfoBuildTaskArgument;
+        public string BuildInfoBuildTaskArgument;
 
         /// <summary>
         ///     Should the BuildInfo file be written during builds?
         /// </summary>
-        public bool DeveloperBuildInfoEnabled;
+        public bool BuildInfo;
 
         /// <summary>
         ///     The namespace where the BuildInfo should be placed.
         /// </summary>
-        public string DeveloperBuildInfoNamespace;
+        public string BuildInfoNamespace;
 
         /// <summary>
         ///     The path to output the BuildInfo file.
         /// </summary>
-        public string DeveloperBuildInfoPath;
+        public string BuildInfoOutputPath;
 
         /// <summary>
         ///     What should be used to denote arguments in the command line?
         /// </summary>
-        public string DeveloperCommandLineParserArgumentPrefix;
+        public string CommandLineParserArgumentPrefix;
 
         /// <summary>
         ///     What should be used to split arguments from their values in the command line?
         /// </summary>
-        public string DeveloperCommandLineParserArgumentSplit;
+        public string CommandLineParserArgumentSplit;
+
+        /// <summary>
+        ///     Should the Editor Task Director tick the Task Director.
+        /// </summary>
+        public bool EditorTaskDirectorSystem;
+
+        /// <summary>
+        ///     How often should the editor task director tick trigger the task director to tick?
+        /// </summary>
+        public double EditorTaskDirectorSystemTickRate;
+
+        /// <summary>
+        ///     Should GDX make sure that it's shaders are always included in builds.
+        /// </summary>
+        public bool EnvironmentAlwaysIncludeShaders;
 
         /// <summary>
         ///     Should a GDX scripting define symbol be added to all target build groups.
         /// </summary>
         public bool EnvironmentScriptingDefineSymbol;
+
+        /// <summary>
+        ///     Should the GDX tools menu be added in the editor?
+        /// </summary>
+        public bool EnvironmentToolsMenu;
 
         /// <summary>
         ///     The language to set the default thread culture too.
@@ -96,29 +118,14 @@ namespace GDX.Editor
         public string PlatformCacheFolder;
 
         /// <summary>
-        ///     What is the level of traces which should be processed and logged by GDX in debug builds?
+        ///     Should the Task Director System be added to the player loop during playmode.
         /// </summary>
-        public Trace.TraceLevel TraceDebugLevels;
+        public bool TaskDirectorSystem;
 
         /// <summary>
-        ///     Should GDX based traces output to the Unity console in debug builds?
+        ///     How often should the task director tick in playmode?
         /// </summary>
-        public bool TraceDebugOutputToUnityConsole;
-
-        /// <summary>
-        ///     What is the level of traces which should be processed and logged by GDX in the editor or development builds?
-        /// </summary>
-        public Trace.TraceLevel TraceDevelopmentLevels;
-
-        /// <summary>
-        ///     Should GDX based traces output to the Unity console in the editor or development builds?
-        /// </summary>
-        public bool TraceDevelopmentOutputToUnityConsole;
-
-        /// <summary>
-        ///     What is the level of traces which should be processed and logged by GDX in release builds?
-        /// </summary>
-        public Trace.TraceLevel TraceReleaseLevels;
+        public float TaskDirectorSystemTickRate;
 
         /// <summary>
         ///     Should GDX check for updates at editor time?
@@ -128,50 +135,52 @@ namespace GDX.Editor
         public TransientConfig()
         {
             ConfigOutputPath = Config.ConfigOutputPath;
-            DeveloperBuildInfoAssemblyDefinition = Config.DeveloperBuildInfoAssemblyDefinition;
-            DeveloperBuildInfoBuildChangelistArgument = Config.DeveloperBuildInfoBuildChangelistArgument;
-            DeveloperBuildInfoBuildDescriptionArgument = Config.DeveloperBuildInfoBuildDescriptionArgument;
-            DeveloperBuildInfoBuildNumberArgument = Config.DeveloperBuildInfoBuildNumberArgument;
-            DeveloperBuildInfoBuildStreamArgument = Config.DeveloperBuildInfoBuildStreamArgument;
-            DeveloperBuildInfoBuildTaskArgument = Config.DeveloperBuildInfoBuildTaskArgument;
-            DeveloperBuildInfoEnabled = Config.DeveloperBuildInfoEnabled;
-            DeveloperBuildInfoNamespace = Config.DeveloperBuildInfoNamespace;
-            DeveloperBuildInfoPath = Config.DeveloperBuildInfoPath;
-            DeveloperCommandLineParserArgumentPrefix = Config.DeveloperCommandLineParserArgumentPrefix;
-            DeveloperCommandLineParserArgumentSplit = Config.DeveloperCommandLineParserArgumentSplit;
+            BuildInfoAssemblyDefinition = Config.BuildInfoAssemblyDefinition;
+            BuildInfoBuildChangelistArgument = Config.BuildInfoBuildChangelistArgument;
+            BuildInfoBuildDescriptionArgument = Config.BuildInfoBuildDescriptionArgument;
+            BuildInfoBuildNumberArgument = Config.BuildInfoBuildNumberArgument;
+            BuildInfoBuildStreamArgument = Config.BuildInfoBuildStreamArgument;
+            BuildInfoBuildTaskArgument = Config.BuildInfoBuildTaskArgument;
+            BuildInfo = Config.BuildInfo;
+            BuildInfoNamespace = Config.BuildInfoNamespace;
+            BuildInfoOutputPath = Config.BuildInfoOutputPath;
+            CommandLineParserArgumentPrefix = Config.CommandLineParserArgumentPrefix;
+            CommandLineParserArgumentSplit = Config.CommandLineParserArgumentSplit;
+            EnvironmentAlwaysIncludeShaders = Config.EnvironmentAlwaysIncludeShaders;
+            EditorTaskDirectorSystem = Config.EditorTaskDirectorSystem;
+            EditorTaskDirectorSystemTickRate = Config.EditorTaskDirectorSystemTickRate;
             EnvironmentScriptingDefineSymbol = Config.EnvironmentScriptingDefineSymbol;
+            EnvironmentToolsMenu = Config.EnvironmentToolsMenu;
+            TaskDirectorSystem = Config.TaskDirectorSystem;
+            TaskDirectorSystemTickRate = Config.TaskDirectorSystemTickRate;
             LocalizationDefaultCulture = Config.LocalizationDefaultCulture;
             LocalizationSetDefaultCulture = Config.LocalizationSetDefaultCulture;
             PlatformAutomationFolder = Config.PlatformAutomationFolder;
             PlatformCacheFolder = Config.PlatformCacheFolder;
-            TraceDebugLevels = Config.TraceDebugLevels;
-            TraceDebugOutputToUnityConsole = Config.TraceDebugOutputToUnityConsole;
-            TraceDevelopmentLevels = Config.TraceDevelopmentLevels;
-            TraceDevelopmentOutputToUnityConsole = Config.TraceDevelopmentOutputToUnityConsole;
-            TraceReleaseLevels = Config.TraceReleaseLevels;
             UpdateProviderCheckForUpdates = Config.UpdateProviderCheckForUpdates;
         }
 
         public bool HasChanges()
         {
             return UpdateProviderCheckForUpdates == Config.UpdateProviderCheckForUpdates &&
-                   DeveloperCommandLineParserArgumentPrefix == Config.DeveloperCommandLineParserArgumentPrefix &&
-                   DeveloperCommandLineParserArgumentSplit == Config.DeveloperCommandLineParserArgumentSplit &&
-                   DeveloperBuildInfoAssemblyDefinition == Config.DeveloperBuildInfoAssemblyDefinition &&
-                   DeveloperBuildInfoEnabled == Config.DeveloperBuildInfoEnabled &&
-                   DeveloperBuildInfoPath == Config.DeveloperBuildInfoPath &&
-                   DeveloperBuildInfoNamespace == Config.DeveloperBuildInfoNamespace &&
-                   DeveloperBuildInfoBuildNumberArgument == Config.DeveloperBuildInfoBuildNumberArgument &&
-                   DeveloperBuildInfoBuildDescriptionArgument == Config.DeveloperBuildInfoBuildDescriptionArgument &&
-                   DeveloperBuildInfoBuildChangelistArgument == Config.DeveloperBuildInfoBuildChangelistArgument &&
-                   DeveloperBuildInfoBuildTaskArgument == Config.DeveloperBuildInfoBuildTaskArgument &&
-                   DeveloperBuildInfoBuildStreamArgument == Config.DeveloperBuildInfoBuildStreamArgument &&
+                   CommandLineParserArgumentPrefix == Config.CommandLineParserArgumentPrefix &&
+                   CommandLineParserArgumentSplit == Config.CommandLineParserArgumentSplit &&
+                   BuildInfoAssemblyDefinition == Config.BuildInfoAssemblyDefinition &&
+                   BuildInfo == Config.BuildInfo &&
+                   BuildInfoOutputPath == Config.BuildInfoOutputPath &&
+                   BuildInfoNamespace == Config.BuildInfoNamespace &&
+                   BuildInfoBuildNumberArgument == Config.BuildInfoBuildNumberArgument &&
+                   BuildInfoBuildDescriptionArgument == Config.BuildInfoBuildDescriptionArgument &&
+                   BuildInfoBuildChangelistArgument == Config.BuildInfoBuildChangelistArgument &&
+                   BuildInfoBuildTaskArgument == Config.BuildInfoBuildTaskArgument &&
+                   BuildInfoBuildStreamArgument == Config.BuildInfoBuildStreamArgument &&
                    EnvironmentScriptingDefineSymbol == Config.EnvironmentScriptingDefineSymbol &&
-                   TraceDevelopmentLevels == Config.TraceDevelopmentLevels &&
-                   TraceDebugLevels == Config.TraceDebugLevels &&
-                   TraceReleaseLevels == Config.TraceReleaseLevels &&
-                   TraceDevelopmentOutputToUnityConsole == Config.TraceDevelopmentOutputToUnityConsole &&
-                   TraceDebugOutputToUnityConsole == Config.TraceDebugOutputToUnityConsole &&
+                   EnvironmentToolsMenu == Config.EnvironmentToolsMenu &&
+                   EnvironmentAlwaysIncludeShaders == Config.EnvironmentAlwaysIncludeShaders &&
+                   TaskDirectorSystem == Config.TaskDirectorSystem &&
+                   Math.Abs(TaskDirectorSystemTickRate - Config.TaskDirectorSystemTickRate) < Platform.FloatTolerance &&
+                   EditorTaskDirectorSystem == Config.EditorTaskDirectorSystem &&
+                   Math.Abs(EditorTaskDirectorSystemTickRate - Config.EditorTaskDirectorSystemTickRate) < Platform.DoubleTolerance &&
                    LocalizationSetDefaultCulture == Config.LocalizationSetDefaultCulture &&
                    LocalizationDefaultCulture == Config.LocalizationDefaultCulture &&
                    ConfigOutputPath == Config.ConfigOutputPath &&

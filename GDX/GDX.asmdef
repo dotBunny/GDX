@@ -37,6 +37,11 @@
             "name": "com.unity.entities",
             "expression": "0.18.0",
             "define": "GDX_ENTITIES"
+        },
+        {
+            "name": "com.unity.collections",
+            "expression": "[1.2,2.0)",
+            "define": "GDX_UNSAFE_COLLECTIONS"
         }
     ],
     "noEngineReferences": false

@@ -21,6 +21,11 @@ namespace GDX.Collections.Generic
         /// <returns>A prime number.</returns>
         public static int GetPrime(int minimum)
         {
+            if (s_PrimesLength == 0)
+            {
+                SetDefaultPrimes();
+            }
+
             for (int i = 0; i < s_PrimesLength; i++)
             {
                 int prime = s_Primes[i];

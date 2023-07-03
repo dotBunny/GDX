@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+﻿// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -23,6 +23,8 @@ namespace GDX.Editor
             code.PushIndent();
             code.AppendLine($"public class {Core.OverrideClass}");
             code.PushIndent();
+            code.AppendLine($"public const int FormatVersion = {Config.FormatVersion};");
+            code.AppendLine();
             code.AppendLine("[UnityEngine.Scripting.Preserve]");
             code.AppendLine($"public static void {Core.OverrideMethod}()");
             code.PushIndent();
@@ -32,139 +34,115 @@ namespace GDX.Editor
             // Cache the field list so that we can quickly grab parts
             FieldInfo[] configFields = config.GetFields();
 
-            OriginalValueAttribute.GetValue<string>(configFields[2]);
+            // You can think of these as transfer functions, we have to be explicit, but I've created as much
+            // boilerplate around it that its really easy.
+            AddToGenerator(code, configFields, nameof(Config.ConfigOutputPath), rhs.ConfigOutputPath);
 
-            // The below indexes correspond to the field order of GDX.Config, if any changes happen there
-            // for order, these need to be updated. Opted to use reflection in this spot because it has
-            // very little performance impact and it avoided having to add another assembly visible tag.
+            AddToGenerator(code,configFields, nameof(Config.BuildInfo),
+                rhs.BuildInfo);
+            AddToGenerator(code, configFields, nameof(Config.BuildInfoAssemblyDefinition),
+                rhs.BuildInfoAssemblyDefinition);
+            AddToGenerator(code, configFields, nameof(Config.BuildInfoBuildChangelistArgument),
+                rhs.BuildInfoBuildChangelistArgument);
+            AddToGenerator(code, configFields, nameof(Config.BuildInfoBuildDescriptionArgument),
+                rhs.BuildInfoBuildDescriptionArgument);
+            AddToGenerator(code, configFields, nameof(Config.BuildInfoBuildNumberArgument),
+                rhs.BuildInfoBuildNumberArgument);
+            AddToGenerator(code, configFields, nameof(Config.BuildInfoBuildStreamArgument),
+                rhs.BuildInfoBuildStreamArgument);
+            AddToGenerator(code, configFields, nameof(Config.BuildInfoBuildTaskArgument),
+                rhs.BuildInfoBuildTaskArgument);
+            AddToGenerator(code, configFields, nameof(Config.BuildInfoNamespace),
+                rhs.BuildInfoNamespace);
+            AddToGenerator(code, configFields, nameof(Config.BuildInfoOutputPath),
+                rhs.BuildInfoOutputPath);
 
-            AddToGenerator(code, "ConfigOutputPath",
-                OriginalValueAttribute.GetValue<string>(configFields[0]),
-                rhs.ConfigOutputPath);
-            AddToGenerator(code, "DeveloperBuildInfoAssemblyDefinition",
-                OriginalValueAttribute.GetValue<bool>(configFields[1]),
-                rhs.DeveloperBuildInfoAssemblyDefinition);
-            AddToGenerator(code, "DeveloperBuildInfoBuildChangelistArgument",
-                OriginalValueAttribute.GetValue<string>(configFields[2]),
-                rhs.DeveloperBuildInfoBuildChangelistArgument);
-            AddToGenerator(code, "DeveloperBuildInfoBuildDescriptionArgument",
-                OriginalValueAttribute.GetValue<string>(configFields[3]),
-                rhs.DeveloperBuildInfoBuildDescriptionArgument);
-            AddToGenerator(code, "DeveloperBuildInfoBuildNumberArgument",
-                OriginalValueAttribute.GetValue<string>(configFields[4]),
-                rhs.DeveloperBuildInfoBuildNumberArgument);
-            AddToGenerator(code, "DeveloperBuildInfoBuildStreamArgument",
-                OriginalValueAttribute.GetValue<string>(configFields[5]),
-                rhs.DeveloperBuildInfoBuildStreamArgument);
-            AddToGenerator(code, "DeveloperBuildInfoBuildTaskArgument",
-                OriginalValueAttribute.GetValue<string>(configFields[6]),
-                rhs.DeveloperBuildInfoBuildTaskArgument);
-            AddToGenerator(code, "DeveloperBuildInfoEnabled",
-                OriginalValueAttribute.GetValue<bool>(configFields[7]),
-                rhs.DeveloperBuildInfoEnabled);
-            AddToGenerator(code, "DeveloperBuildInfoNamespace",
-                OriginalValueAttribute.GetValue<string>(configFields[8]),
-                rhs.DeveloperBuildInfoNamespace);
-            AddToGenerator(code, "DeveloperBuildInfoPath",
-                OriginalValueAttribute.GetValue<string>(configFields[9]),
-                rhs.DeveloperBuildInfoPath);
-            AddToGenerator(code, "DeveloperCommandLineParserArgumentPrefix",
-                OriginalValueAttribute.GetValue<string>(configFields[10]),
-                rhs.DeveloperCommandLineParserArgumentPrefix);
-            AddToGenerator(code, "DeveloperCommandLineParserArgumentSplit",
-                OriginalValueAttribute.GetValue<string>(configFields[11]),
-                rhs.DeveloperCommandLineParserArgumentSplit);
-            AddToGenerator(code, "EnvironmentScriptingDefineSymbol",
-                OriginalValueAttribute.GetValue<bool>(configFields[12]),
+            AddToGenerator(code, configFields, nameof(Config.CommandLineParserArgumentPrefix),
+                rhs.CommandLineParserArgumentPrefix);
+            AddToGenerator(code, configFields, nameof(Config.CommandLineParserArgumentSplit),
+                rhs.CommandLineParserArgumentSplit);
+
+            AddToGenerator(code, configFields, nameof(Config.EditorTaskDirectorSystem),
+                rhs.EditorTaskDirectorSystem);
+            AddToGenerator(code, configFields, nameof(Config.EditorTaskDirectorSystemTickRate),
+                rhs.EditorTaskDirectorSystemTickRate);
+
+            AddToGenerator(code, configFields, nameof(Config.EnvironmentAlwaysIncludeShaders),
+                rhs.EnvironmentAlwaysIncludeShaders);
+            AddToGenerator(code, configFields, nameof(Config.EnvironmentScriptingDefineSymbol),
                 rhs.EnvironmentScriptingDefineSymbol);
-            AddToGenerator(code, "LocalizationDefaultCulture",
-                OriginalValueAttribute.GetValue<Localization.Language>(configFields[13]),
+            AddToGenerator(code, configFields, nameof(Config.EnvironmentToolsMenu),
+                rhs.EnvironmentToolsMenu);
+
+            AddToGenerator(code, configFields, nameof(Config.TaskDirectorSystem),
+                rhs.TaskDirectorSystem);
+            AddToGenerator(code, configFields, nameof(Config.TaskDirectorSystemTickRate),
+                rhs.TaskDirectorSystemTickRate);
+
+            AddToGenerator(code, configFields, nameof(Config.LocalizationDefaultCulture),
                 rhs.LocalizationDefaultCulture);
-            AddToGenerator(code, "LocalizationSetDefaultCulture",
-                OriginalValueAttribute.GetValue<bool>(configFields[14]),
+            AddToGenerator(code, configFields, nameof(Config.LocalizationSetDefaultCulture),
                 rhs.LocalizationSetDefaultCulture);
-            AddToGenerator(code, "PlatformAutomationFolder",
-                OriginalValueAttribute.GetValue<string>(configFields[15]),
+
+            AddToGenerator(code, configFields, nameof(Config.PlatformAutomationFolder),
                 rhs.PlatformAutomationFolder);
-            AddToGenerator(code, "PlatformCacheFolder",
-                OriginalValueAttribute.GetValue<string>(configFields[16]),
+            AddToGenerator(code, configFields, nameof(Config.PlatformCacheFolder),
                 rhs.PlatformCacheFolder);
-            AddToGenerator(code, "TraceDebugLevels",
-                OriginalValueAttribute.GetValue<Trace.TraceLevel>(configFields[17]),
-                rhs.TraceDebugLevels);
-            AddToGenerator(code, "TraceDebugOutputToUnityConsole",
-                OriginalValueAttribute.GetValue<bool>(configFields[18]),
-                rhs.TraceDebugOutputToUnityConsole);
-            AddToGenerator(code, "TraceDevelopmentLevels",
-                OriginalValueAttribute.GetValue<Trace.TraceLevel>(configFields[19]),
-                rhs.TraceDevelopmentLevels);
-            AddToGenerator(code, "TraceDevelopmentOutputToUnityConsole",
-                OriginalValueAttribute.GetValue<bool>(configFields[20]),
-                rhs.TraceDevelopmentOutputToUnityConsole);
-            AddToGenerator(code, "TraceReleaseLevels",
-                OriginalValueAttribute.GetValue<Trace.TraceLevel>(configFields[21]),
-                rhs.TraceReleaseLevels);
-            AddToGenerator(code, "UpdateProviderCheckForUpdates",
-                OriginalValueAttribute.GetValue<bool>(configFields[22]),
+
+            AddToGenerator(code, configFields, nameof(Config.UpdateProviderCheckForUpdates),
                 rhs.UpdateProviderCheckForUpdates);
 
             return code.ToString();
         }
 
-        static void AddToGenerator(Developer.TextGenerator code, string member, bool lhs, bool rhs)
+        static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, bool rhs)
         {
+            bool lhs = OriginalValueAttribute.GetValue<bool>(GetFirstFieldInfoByName(configFields, member));
             if (lhs == rhs) return;
             code.AppendLine(rhs ? $"{k_CoreConfigPath}.{member} = true;" : $"{k_CoreConfigPath}.{member} = false;");
         }
 
-        static void AddToGenerator(Developer.TextGenerator code, string member, string lhs, string rhs)
+        static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, double rhs)
         {
+            double lhs = OriginalValueAttribute.GetValue<double>(GetFirstFieldInfoByName(configFields, member));
+            if (Math.Abs(lhs - rhs) < Platform.DoubleTolerance) return;
+            code.AppendLine($"{k_CoreConfigPath}.{member} = {rhs}d;");
+        }
+
+        static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, float rhs)
+        {
+            float lhs = OriginalValueAttribute.GetValue<float>(GetFirstFieldInfoByName(configFields, member));
+            if (Math.Abs(lhs - rhs) < Platform.DoubleTolerance) return;
+            code.AppendLine($"{k_CoreConfigPath}.{member} = {rhs}f;");
+        }
+
+        static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, string rhs)
+        {
+            string lhs = OriginalValueAttribute.GetValue<string>(GetFirstFieldInfoByName(configFields, member));
             if (lhs == rhs) return;
             code.AppendLine($"{k_CoreConfigPath}.{member} = \"{rhs}\";");
         }
 
-        static void AddToGenerator(Developer.TextGenerator code, string member, Trace.TraceLevel lhs, Trace.TraceLevel rhs)
+        static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, Localization.Language rhs)
         {
-            if (lhs == rhs) return;
+            Localization.Language lhs = OriginalValueAttribute.GetValue<Localization.Language>(
+                GetFirstFieldInfoByName(configFields, member));
 
-            StringBuilder maskBuilder = new StringBuilder();
-            if (rhs.HasFlags(Trace.TraceLevel.Info))
-            {
-                maskBuilder.Append(" Trace.TraceLevel.Info |");
-            }
-            if (rhs.HasFlags(Trace.TraceLevel.Log))
-            {
-                maskBuilder.Append(" Trace.TraceLevel.Log |");
-            }
-            if (rhs.HasFlags(Trace.TraceLevel.Warning))
-            {
-                maskBuilder.Append(" Trace.TraceLevel.Warning |");
-            }
-            if (rhs.HasFlags(Trace.TraceLevel.Error))
-            {
-                maskBuilder.Append(" Trace.TraceLevel.Error |");
-            }
-            if (rhs.HasFlags(Trace.TraceLevel.Exception))
-            {
-                maskBuilder.Append(" Trace.TraceLevel.Exception |");
-            }
-            if (rhs.HasFlags(Trace.TraceLevel.Assertion))
-            {
-                maskBuilder.Append(" Trace.TraceLevel.Assertion |");
-            }
-            if (rhs.HasFlags(Trace.TraceLevel.Fatal))
-            {
-                maskBuilder.Append(" Trace.TraceLevel.Fatal |");
-            }
-
-            string masks = maskBuilder.ToString().Trim();
-            code.AppendLine($"{k_CoreConfigPath}.{member} = {masks.Substring(0,masks.Length - 2)};");
-        }
-
-        static void AddToGenerator(Developer.TextGenerator code, string member, Localization.Language lhs, Localization.Language rhs)
-        {
             if (lhs == rhs) return;
             code.AppendLine($"{k_CoreConfigPath}.{member} = Localization.Language.{rhs.ToString()};");
+        }
+
+        static FieldInfo GetFirstFieldInfoByName(FieldInfo[] configFields, string name)
+        {
+            int count = configFields.Length;
+            for (int i = 0; i < count; i++)
+            {
+                if (configFields[i].Name == name)
+                {
+                    return configFields[i];
+                }
+            }
+            return null;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+﻿// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -98,7 +98,28 @@ namespace GDX
         /// <summary>
         ///     Find the first index of <paramref name="targetItem" /> in <paramref name="targetArray" />.
         /// </summary>
-        /// <remarks>Ignores equality check and end up comparing object pointers.</remarks>
+        /// <remarks>This will work for <see cref="string"/> comparisons.</remarks>
+        /// <param name="targetArray">The array which to look in.</param>
+        /// <param name="targetItem">The object to be found.</param>
+        /// <typeparam name="T">The type of the array.</typeparam>
+        /// <returns>The index of <paramref name="targetItem" /> in <paramref name="targetArray" />, or -1 if not found.</returns>
+        public static int FirstIndexOf<T>(this T[] targetArray, T targetItem) where T : IEquatable<T>
+        {
+            int length = targetArray.Length;
+            for (int i = 0; i < length; i++)
+            {
+                if (targetArray[i].Equals(targetItem))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        /// <summary>
+        ///     Find the first index of <paramref name="targetItem" /> in <paramref name="targetArray" />.
+        /// </summary>
+        /// <remarks>Ignores equality check and end up comparing object pointers. Do NOT use this for <see cref="string"/> types.</remarks>
         /// <param name="targetArray">The array which to look in.</param>
         /// <param name="targetItem">The object to be found.</param>
         /// <typeparam name="T">The type of the array.</typeparam>
@@ -129,6 +150,28 @@ namespace GDX
             for (int i = 0; i < length; i++)
             {
                 if (targetArray[i].Equals(targetValue))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        ///     Find the last index of <paramref name="targetItem" /> in <paramref name="targetArray" />.
+        /// </summary>
+        /// <remarks>This will work for <see cref="string"/> comparisons.</remarks>
+        /// <param name="targetArray">The array which to look in.</param>
+        /// <param name="targetItem">The object to be found.</param>
+        /// <typeparam name="T">The type of the array.</typeparam>
+        /// <returns>The index of <paramref name="targetItem" /> in <paramref name="targetArray" />, or -1 if not found.</returns>
+        public static int LastIndexOf<T>(this T[] targetArray, T targetItem) where T : IEquatable<T>
+        {
+            int length = targetArray.Length;
+            for (int i = length - 1; i >= 0; i--)
+            {
+                if (targetArray[i].Equals(targetItem))
                 {
                     return i;
                 }

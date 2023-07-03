@@ -5,6 +5,8 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using GDX.Developer;
+using GDX.Experimental;
+using GDX.Experimental.Logging;
 using GDX.IO.Compression;
 using UnityEditor;
 using UnityEngine;
@@ -66,7 +68,7 @@ namespace GDX.Editor
             }
 
             // Should we check for updates?
-            DateTime targetDate = GetLastChecked().AddDays(ProjectSettings.AutomaticUpdatesSettings.UpdateDayCountSetting);
+            DateTime targetDate = GetLastChecked().AddDays(Windows.ProjectSettings.ConfigSections.AutomaticUpdatesSettings.UpdateDayCountSetting);
             if (DateTime.Now >= targetDate)
             {
                 CheckForUpdates();
@@ -188,6 +190,55 @@ namespace GDX.Editor
         }
 
         /// <summary>
+        ///     Get the local changelog path.
+        /// </summary>
+        /// <returns>A full path if it exists, otherwise null.</returns>
+        public static string GetLocalChangelogPath()
+        {
+            string filePath = Path.Combine(
+                Path.GetDirectoryName(
+                    LocalPackage.PackageManifestPath) ??
+                string.Empty, "CHANGELOG.md" );
+
+            return File.Exists(filePath) ? filePath : null;
+        }
+
+        /// <summary>
+        ///     Get some or all of the version information from the local changelog.
+        /// </summary>
+        /// <param name="versionLimit">
+        ///     An optional limit to the number of versions worth of information to return.
+        /// </param>
+        /// <returns>The changelog lines corresponding to the versions.</returns>
+        public static string[] GetLocalChangelog(int versionLimit = -1)
+        {
+            string path = GetLocalChangelogPath();
+            if (path != null)
+            {
+                string[] lines = File.ReadAllLines(path);
+                int lineCount = lines.Length;
+                int versionCount = 0;
+                List<string> returnLines = new List<string>(100);
+                for (int i = 7; i < lineCount; i++)
+                {
+                    string line = lines[i];
+                    if (line.StartsWith("## "))
+                    {
+                        versionCount++;
+                    }
+
+                    if (versionLimit > 0 && versionCount > versionLimit)
+                    {
+                        return returnLines.ToArray();
+                    }
+                    returnLines.Add(line);
+                }
+                return returnLines.ToArray();
+            }
+            return null;
+        }
+
+        /// <summary>
         ///     Gets the last time that we checked for an update to the package.
         /// </summary>
         public static DateTime GetLastChecked()
@@ -199,6 +250,20 @@ namespace GDX.Editor
             }
 
             return lastTime;
+        }
+
+        /// <summary>
+        ///     Get the path to the local license file.
+        /// </summary>
+        /// <returns>A full path if it exists, otherwise null.</returns>
+        public static string GetLocalLicensePath()
+        {
+            string filePath = Path.Combine(
+                Path.GetDirectoryName(
+                    LocalPackage.PackageManifestPath) ??
+                string.Empty, "LICENSE" );
+
+            return File.Exists(filePath) ? filePath : null;
         }
 
         /// <summary>
@@ -307,7 +372,7 @@ namespace GDX.Editor
             catch (Exception e)
             {
                 // We will end up here if the formulated Uri is bad.
-                Trace.Output(Trace.TraceLevel.Warning, e.Message);
+                ManagedLog.Exception(0, e);
                 return;
             }
             finally

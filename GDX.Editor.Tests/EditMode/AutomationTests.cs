@@ -1,10 +1,11 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+﻿// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 using System.Collections;
 using System.IO;
 using GDX.Jobs.ParallelFor;
+using GDX.Threading;
 using NUnit.Framework;
 using Unity.Collections;
 using Unity.Jobs;
@@ -14,6 +15,9 @@ using UnityEngine.TestTools;
 
 namespace GDX.Editor
 {
+    /// <summary>
+    ///     A simple unit test to validate the behaviour of <see cref="Automation"/>.
+    /// </summary>
     public class AutomationTests
     {
         [Test]
@@ -41,7 +45,6 @@ namespace GDX.Editor
         {
             EditorApplication.ExecuteMenuItem("Window/General/Game");
 
-            Texture2D targetTexture = null;
             EditorWindow gameView = Automation.GetGameView();
 
             Assert.IsTrue(gameView != null, "Expected game view reference.");
@@ -50,7 +53,7 @@ namespace GDX.Editor
             Assert.IsTrue(gameView.hasFocus, "Game view doesn't think it has focus.");
 
             Assert.IsTrue(EditorWindow.focusedWindow == gameView, "Expected game view to be focused.");
-            targetTexture = Automation.CaptureFocusedEditorWindow();
+            Texture2D targetTexture = Automation.CaptureFocusedEditorWindow();
 
             Assert.IsTrue(targetTexture != null, "Returned texture is null.");
         }
@@ -96,13 +99,13 @@ namespace GDX.Editor
         {
             EditorWindow sceneViewA = Automation.GetWindow<SceneView>();
             sceneViewA.Focus();
-            yield return new Developer.WaitForMilliseconds(500).While();
+            yield return WaitFor.GetEnumerator(500);
             Texture2D screenshotA = Automation.CaptureEditorWindow(sceneViewA);
             sceneViewA.Close();
 
             EditorWindow sceneViewB = Automation.GetWindow<SceneView>();
             sceneViewB.Focus();
-            yield return new Developer.WaitForMilliseconds(500).While();
+            yield return WaitFor.GetEnumerator(500);
             Texture2D screenshotB = Automation.CaptureEditorWindow(sceneViewB);
             sceneViewB.Close();
 

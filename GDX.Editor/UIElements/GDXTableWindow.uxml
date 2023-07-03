@@ -1,0 +1,65 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement name="gdx-table" style="flex-direction: column; height: 100%; width: 100%;">
+        <uie:Toolbar name="gdx-table-toolbar" style="width: 100%;">
+            <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" text="Table" name="gdx-table-toolbar-table" enable-rich-text="false" />
+            <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" text="Columns" name="gdx-table-toolbar-column" enable-rich-text="false" />
+            <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" name="gdx-table-toolbar-row" text="Rows" enable-rich-text="false" />
+            <uie:ToolbarSpacer style="flex-grow: 1;" />
+            <ui:VisualElement display-tooltip-when-elided="true" name="gdx-table-toolbar-binding-pull" class="gdx-table-toolbar-notification" />
+            <ui:VisualElement display-tooltip-when-elided="true" name="gdx-table-toolbar-references" class="gdx-table-toolbar-notification" />
+            <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" name="gdx-table-toolbar-binding" text="Binding" enable-rich-text="false" />
+            <uie:ToolbarButton text="Help" display-tooltip-when-elided="true" name="gdx-table-toolbar-help" class="gdx-table-toolbar-context-button" tooltip="Help on DataTables!" />
+        </uie:Toolbar>
+    </ui:VisualElement>
+    <ui:VisualElement name="gdx-table-overlay">
+        <ui:VisualElement name="gdx-table-add-column" class="gdx-table-overlay">
+            <ui:Label tabindex="-1" text="Add Column" display-tooltip-when-elided="true" class="gdx-table-overlay-title" />
+            <ui:TextField picking-mode="Ignore" label="Name" value="MyColumn" name="gdx-table-column-name" multiline="false"/>
+            <ui:TextField picking-mode="Ignore" label="Filter" value="" name="gdx-table-column-filter" multiline="false">
+                <ui:VisualElement name="gdx-table-add-column-filter-status" />
+            </ui:TextField>
+            <ui:VisualElement name="VisualElement" class="gdx-table-overlay-buttons">
+                <ui:Button text="Cancel" display-tooltip-when-elided="true" name="gdx-table-column-cancel" enable-rich-text="false" tabindex="2" />
+                <ui:Button text="Add" display-tooltip-when-elided="true" name="gdx-table-column-add" enable-rich-text="false" tabindex="1" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="gdx-table-add-row" class="gdx-table-overlay">
+            <ui:Label tabindex="-1" text="Add Row" display-tooltip-when-elided="true" class="gdx-table-overlay-title" />
+            <ui:TextField picking-mode="Ignore" label="Name" value="MyRow" name="gdx-table-row-name" multiline="false" />
+            <ui:VisualElement name="VisualElement" class="gdx-table-overlay-buttons">
+                <ui:Button text="Cancel" display-tooltip-when-elided="true" name="gdx-table-row-cancel" enable-rich-text="false" tabindex="2" />
+                <ui:Button text="Add" display-tooltip-when-elided="true" name="gdx-table-row-add" enable-rich-text="false" tabindex="1" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="gdx-table-rename" class="gdx-table-overlay">
+            <ui:Label name="gdx-table-rename-title" tabindex="-1" text="Rename What?" display-tooltip-when-elided="true" class="gdx-table-overlay-title" />
+            <ui:TextField picking-mode="Ignore" label="Name" name="gdx-table-rename-name" multiline="false" />
+            <ui:VisualElement name="VisualElement" class="gdx-table-overlay-buttons">
+                <ui:Button text="Cancel" display-tooltip-when-elided="true" name="gdx-table-rename-cancel" enable-rich-text="false" tabindex="2" />
+                <ui:Button text="Rename" display-tooltip-when-elided="true" name="gdx-table-rename-accept" enable-rich-text="false" tabindex="1" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="gdx-table-settings" class="gdx-table-overlay">
+            <ui:Label tabindex="-1" text="Table Settings" display-tooltip-when-elided="true" class="gdx-table-overlay-title" />
+            <ui:TextField picking-mode="Ignore" label="Display Name" value="MyColumn" name="gdx-table-display-name" multiline="false" />
+                <ui:TextField picking-mode="Ignore" label="Binding" name="gdx-table-binding" multiline="false">
+                    <ui:Button text="…" name="gdx-table-binding-select" enable-rich-text="true" />
+                    <ui:VisualElement name="gdx-table-binding-status" />
+                </ui:TextField>
+            <ui:Toggle label="Support Undo" name="gdx-table-flag-undo" />
+            <ui:Toggle label="References Only" name="gdx-table-flag-referencesonly" />
+            <ui:VisualElement name="VisualElement" class="gdx-table-overlay-buttons">
+                <ui:Button text="Cancel" display-tooltip-when-elided="true" name="gdx-table-settings-cancel" enable-rich-text="false" tabindex="2" />
+                <ui:Button text="Save" display-tooltip-when-elided="true" name="gdx-table-settings-save" enable-rich-text="false" tabindex="1" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="gdx-table-confirmation" class="gdx-table-overlay">
+            <ui:Label tabindex="-1" text="Remove 5 Rows" display-tooltip-when-elided="true" name="gdx-confirmation-title" class="gdx-table-overlay-title" />
+            <ui:Label tabindex="-1" text="Are you sure?" display-tooltip-when-elided="true" name="gdx-confirmation-message" />
+            <ui:VisualElement name="VisualElement" class="gdx-table-overlay-buttons">
+                <ui:Button text="Cancel" display-tooltip-when-elided="true" name="gdx-table-confirmation-cancel" enable-rich-text="false" tabindex="2" />
+                <ui:Button text="Accept" display-tooltip-when-elided="true" name="gdx-table-confirmation-accept" enable-rich-text="false" tabindex="1" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

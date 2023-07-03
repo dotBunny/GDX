@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2022 dotBunny Inc.
+// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -373,7 +373,7 @@ namespace GDX.Editor.PropertyDrawers
 #else
                 Rect keyIconRect = new Rect(position.x, position.y + topOffset, 17,
                     EditorGUIUtility.singleLineHeight);
-#endif
+#endif // UNITY_2021_1_OR_NEWER
                 EditorGUI.LabelField(keyIconRect, Content.IconKey);
 
                 // Draw Key Property
@@ -807,5 +807,5 @@ namespace GDX.Editor.PropertyDrawers
             }
         }
     }
-#endif
+#endif // !UNITY_DOTSRUNTIME
 }

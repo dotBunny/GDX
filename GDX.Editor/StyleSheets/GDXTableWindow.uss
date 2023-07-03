@@ -1,0 +1,171 @@
+﻿
+#gdx-table #unity-multi-column-header-column-title
+{
+    -unity-font-style: bold;
+}
+#gdx-table-row-header
+{
+    height: 100%;
+    width: 100%;
+    -unity-text-align: upper-left;
+    padding-left: 10px;
+    padding-top: 5px;
+    -unity-font-style: bold-and-italic;
+}
+
+#gdx-table-field
+{
+    flex-grow: 1;
+    flex-shrink: 1;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    -unity-text-align: upper-left;
+}
+
+#gdx-table-field .unity-base-field__input
+{
+    height: 20px;
+}
+#gdx-table-field .unity-composite-field__input
+{
+    height: 22px;
+}
+
+#gdx-table-toolbar .unity-toolbar-menu__text
+{
+    padding-right: 5px;
+}
+
+.gdx-table-toolbar-context-button
+{
+    border-width: 0;
+    padding: 0;
+    padding-left: 25px;
+    width: 22px;
+    -unity-slice-top: 0;
+    -unity-slice-bottom: 0;
+    -unity-background-scale-mode: scale-and-crop;
+    background-size: contain;
+    border-left-width: 1px;
+    flex-shrink: 0;
+}
+
+#gdx-table-overlay
+{
+    flex-grow: 1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    visibility: visible;
+    display: flex;
+}
+
+.light #gdx-table-overlay
+{
+    background-color: rgba(14, 14, 14, 0.7372549);
+}
+.dark #gdx-table-overlay
+{
+    background-color: rgba(14, 14, 14, 0.90);
+}
+
+.light #gdx-table-overlay
+{
+    color: #e0e0e0;
+}
+.light #gdx-table-overlay Label
+{
+    color: #e0e0e0;
+}
+
+.gdx-table-overlay
+{
+    flex-direction: column;
+    top: 35%;
+    flex-grow: 0;
+    margin-left: 30%;
+    margin-right: 30%;
+    visibility: visible;
+    display: none;
+}
+.gdx-table-overlay-title
+{
+    font-size: 16px;
+    -unity-font-style: bold;
+}
+.gdx-table-overlay-buttons
+{
+    flex-grow: 1;
+    flex-direction: row-reverse;
+    top: 10px;
+}
+
+.dark #gdx-table-toolbar-help {
+    cursor: link;
+    background-image: resource('Icons/d__Help.png');
+}
+
+.light #gdx-table-toolbar-help {
+    cursor: link;
+    background-image: resource('Icons/_Help.png');
+}
+
+.gdx-table-toolbar-notification
+{
+    width: 12px;
+    height: 12px;
+    border-width: 0;
+    background-color: rgba(0,0,0,0);
+    -unity-slice-top: 0;
+    -unity-slice-bottom: 0;
+    -unity-background-scale-mode: scale-and-crop;
+    background-size: contain;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-left: 0px;
+    margin-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 0px;
+    padding-right: 0px;
+    border-radius: 0px;
+    flex-shrink: 0;
+}
+#gdx-table-toolbar-references {
+    background-image: resource('Icons/LockIcon-On.png');
+}
+
+.light #gdx-table-toolbar-binding-pull
+{
+    background-image: resource('Icons/PackageManager/Light/Update-Available.png');
+}
+.dark #gdx-table-toolbar-binding-pull
+{
+    background-image: resource('Icons/PackageManager/Dark/Update-Available.png');
+}
+
+#gdx-table-add-column-filter-status
+{
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+#gdx-table-binding-status
+{
+    width: 22px;
+}
+
+#gdx-table-binding-status.valid,
+#gdx-table-add-column-filter-status.valid {
+    background-image: resource('Icons/lightMeter/greenLight.png');
+}
+#gdx-table-add-column-filter-status.warning {
+    background-image: resource('Icons/lightMeter/orangeLight.png');
+}
+#gdx-table-binding-status.error,
+#gdx-table-add-column-filter-status.error{
+    background-image: resource('Icons/lightMeter/redLight.png');
+}

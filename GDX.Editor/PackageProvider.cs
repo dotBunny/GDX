@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2022 dotBunny Inc.
+// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -6,9 +6,12 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using GDX.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Application = UnityEngine.Application;
+using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace GDX.Editor
 {
@@ -18,6 +21,15 @@ namespace GDX.Editor
     [HideFromDocFX]
     public class PackageProvider
     {
+        /// <summary>
+        ///     The public URI of the package's development documentation.
+        /// </summary>
+        public const string DevDocumentationUri = "https://gdx-dev.dotbunny.com/";
+
+        /// <summary>
+        ///     The public URI of the package's documentation.
+        /// </summary>
+        public const string MainDocumentationUri = "https://gdx.dotbunny.com/";
         /// <summary>
         ///     Reference to the Unity package name for GDX.
         /// </summary>
@@ -96,11 +108,13 @@ namespace GDX.Editor
         public readonly InstallationType InstallationMethod;
 
         /// <summary>
-        ///     Asset database path to the root of the package.
+        ///     Unity's own information about the package.
         /// </summary>
-        /// <remarks>
-        ///     This is useful for situations where you need to provide an asset database relative path.
-        /// </remarks>
+        public readonly PackageInfo PackageManagerInfo;
+
+        /// <summary>
+        ///     Asset database base path of package.
+        /// </summary>
         public readonly string PackageAssetPath;
 
         /// <summary>
@@ -121,36 +135,41 @@ namespace GDX.Editor
         {
             EditorApplication.delayCall += DelayCall;
 
-            // Find Local Definition
-            // ReSharper disable once StringLiteralTypo
-            string[] editorAssemblyDefinition = AssetDatabase.FindAssets("GDX.Editor t:asmdef");
-            if (editorAssemblyDefinition.Length > 0)
+            PackageManagerInfo = PackageInfo.FindForAssembly(Assembly.GetAssembly(typeof(PackageProvider)));
+            if (PackageManagerInfo != null)
             {
-                // Establish package root path
-                PackageAssetPath =
-                    Path.Combine(
-                        Path.GetDirectoryName(AssetDatabase.GUIDToAssetPath(editorAssemblyDefinition[0])) ??
-                        string.Empty, "..");
-
-                // Build the package manifest path
-                PackageManifestPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6),
-                    PackageAssetPath ?? string.Empty, "package.json");
-
-                // Make sure the file exists
-                if (!File.Exists(PackageManifestPath))
+                // Fast route
+                PackageAssetPath = PackageManagerInfo.assetPath;
+                PackageManifestPath = Path.Combine(PackageManagerInfo.resolvedPath, "package.json");
+            }
+            else
+            {
+                // Slow fallback for in project extraction
+                string[] editorAssemblyDefinition = AssetDatabase.FindAssets("GDX.Editor t:asmdef");
+                if (editorAssemblyDefinition.Length > 0)
                 {
-                    return;
-                }
+                    PackageAssetPath =
+                        Path.Combine(
+                            Path.GetDirectoryName(AssetDatabase.GUIDToAssetPath(editorAssemblyDefinition[0])) ??
+                            string.Empty, "..");
 
-                // Lets try and parse the package JSON
-                try
-                {
-                    Definition = JsonUtility.FromJson<PackageDefinition>(File.ReadAllText(PackageManifestPath));
+                    PackageManifestPath = Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - 6),
+                        PackageAssetPath ?? string.Empty, "package.json");
                 }
-                catch (Exception)
-                {
-                    // Don't go any further if there is an error
-                }
+            }
+
+            if (PackageManifestPath == null || !File.Exists(PackageManifestPath))
+            {
+                return;
+            }
+
+            try
+            {
+                Definition = JsonUtility.FromJson<PackageDefinition>(File.ReadAllText(PackageManifestPath));
+            }
+            catch (Exception)
+            {
+                // Don't go any further if there is an error
             }
 
             // It didn't actually parse correctly so lets just stop right now.
@@ -167,50 +186,68 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        ///     Ensure that the GDX define is present across all viable platforms.
+        ///     Ensure that the GDX based shaders are always included in builds.
         /// </summary>
-        public static void EnsureScriptingDefineSymbol()
+        /// <remarks>
+        ///     Useful to ensure that the default materials used by the <see cref="GDX.Developer.DebugDraw" /> are added
+        ///     to the build.
+        /// </remarks>
+        public static void EnsureAlwaysIncludeShaders()
         {
-            // Create a list of all the build targets
-            Array buildTargets = Enum.GetValues(typeof(BuildTargetGroup));
-            int buildTargetsCount = buildTargets.Length;
+            GraphicsSettings graphicsSettings =
+                AssetDatabase.LoadAssetAtPath<GraphicsSettings>("ProjectSettings/GraphicsSettings.asset");
+            SerializedObject serializedObject = new SerializedObject(graphicsSettings);
+            SerializedProperty alreadyIncludedShaders = serializedObject.FindProperty("m_AlwaysIncludedShaders");
 
-            // Iterate over them all - skipping unknown
-            for (int i = 1; i < buildTargetsCount; i++)
+            Shader[] gdxShaders = Rendering.ShaderProvider.GetProvidedShaders();
+            int gdxShaderCount = gdxShaders.Length;
+            int alreadyCount = alreadyIncludedShaders.arraySize;
+
+            bool altered = false;
+
+            // Loop through all GDX shaders
+            for (int i = 0; i < gdxShaderCount; i++)
             {
-                // Get our object
-                object target = buildTargets.GetValue(i);
-
-                // Cast back
-                BuildTargetGroup group = (BuildTargetGroup)target;
-                Type enumType =  group.GetType();
-
-                // Check if we can find an ObsoleteAttribute
-                FieldInfo fieldInfo = enumType.GetField(Enum.GetName(enumType, target));
-                Attribute foundAttribute = fieldInfo.GetCustomAttribute(typeof(ObsoleteAttribute), false);
-
-                // It doesnt have one, so we should assume we can update the scripting defines for this target.
-                if (foundAttribute != null)
+                bool foundShader = false;
+                for (int j = 0; j < alreadyCount; j++)
                 {
-                    continue;
+                    SerializedProperty element = alreadyIncludedShaders.GetArrayElementAtIndex(j);
+                    if (gdxShaders[i] == element.objectReferenceValue)
+                    {
+                        foundShader = true;
+                        break;
+                    }
                 }
 
-                PlayerSettings.GetScriptingDefineSymbolsForGroup(group, out string[] defines);
-                int location = defines.FirstIndexOfItem("GDX");
-
-                // Found
-                if (location != -1)
+                if (!foundShader)
                 {
-                    continue;
+                    alreadyIncludedShaders.InsertArrayElementAtIndex(alreadyCount);
+                    SerializedProperty newElement = alreadyIncludedShaders.GetArrayElementAtIndex(alreadyCount);
+                    newElement.objectReferenceValue = gdxShaders[i];
+                    alreadyCount++;
+                    altered = true;
                 }
-
-                // Add to it!
-                int oldLength = defines.Length;
-                string[] newDefines = new string[oldLength + 1];
-                Array.Copy(defines, newDefines, oldLength);
-                newDefines[oldLength] = "GDX";
-                PlayerSettings.SetScriptingDefineSymbolsForGroup(group, newDefines);
             }
+
+            if (altered)
+            {
+                serializedObject.ApplyModifiedProperties();
+                AssetDatabase.SaveAssets();
+            }
+        }
+
+        /// <summary>
+        ///     Get the documentation base URI based on what branch the local package is detected as.
+        /// </summary>
+        /// <returns>A URI to the GDX documentation.</returns>
+        public static string GetDocumentationBaseUri()
+        {
+            if (UpdateProvider.LocalPackage != null && UpdateProvider.LocalPackage.SourceTag != null &&
+                UpdateProvider.LocalPackage.SourceTag.StartsWith("dev"))
+            {
+                return DevDocumentationUri;
+            }
+            return MainDocumentationUri;
         }
 
         /// <summary>
@@ -394,15 +431,109 @@ namespace GDX.Editor
         }
 
         /// <summary>
+        ///     Ensure that the GDX define is present across all viable platforms.
+        /// </summary>
+        public static void UpdateScriptingDefineSymbols()
+        {
+            // Create a list of all the build targets
+            Array buildTargets = Enum.GetValues(typeof(BuildTargetGroup));
+
+            // Iterate over them all - skipping unknown
+            int buildTargetsCount = buildTargets.Length;
+            int changeCount = 0;
+            for (int i = 1; i < buildTargetsCount; i++)
+            {
+                if (UpdateScriptingDefineSymbolsForBuildTargetGroup((BuildTargetGroup)buildTargets.GetValue(i)))
+                {
+                    changeCount++;
+                }
+            }
+
+            if (changeCount > 0)
+            {
+                EditorApplication.ExecuteMenuItem("File/Save Project");
+            }
+        }
+
+        /// <summary>
         /// Execute delayed logic that won't interfere with a current import process.
         /// </summary>
         static void DelayCall()
         {
-            // Make sure that the project has the GDX preprocessor added
-            if (Config.EnvironmentScriptingDefineSymbol)
+            // Check our scripting defines
+            UpdateScriptingDefineSymbols();
+
+            if (Config.EnvironmentAlwaysIncludeShaders)
             {
-                EnsureScriptingDefineSymbol();
+                EnsureAlwaysIncludeShaders();
             }
+        }
+
+        /// <summary>
+        ///     Update an given <see cref="BuildTargetGroup"/>'s scripting defines.
+        /// </summary>
+        /// <param name="group">The target build group to alter.</param>
+        static bool UpdateScriptingDefineSymbolsForBuildTargetGroup(BuildTargetGroup group)
+        {
+            Type enumType =  group.GetType();
+
+            // Check if we can find an ObsoleteAttribute
+            FieldInfo fieldInfo = enumType.GetField(Enum.GetName(enumType, group));
+            Attribute foundAttribute = fieldInfo.GetCustomAttribute(typeof(ObsoleteAttribute), false);
+
+            // It doesnt have one, so we should assume we can update the scripting defines for this target.
+            if (foundAttribute != null)
+            {
+                return false;
+            }
+
+#if UNITY_2023_1_OR_NEWER
+            PlayerSettings.GetScriptingDefineSymbols(UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(group),
+                out string[] defines);
+#else
+            PlayerSettings.GetScriptingDefineSymbolsForGroup(group, out string[] defines);
+#endif // UNITY_2023_1_OR_NEWER
+
+            bool changes = false;
+            SimpleList<string> lazyDefines = new SimpleList<string>(defines, defines.Length);
+
+            // Check for GDX
+            int symbolLocation = lazyDefines.FirstIndexOf("GDX");
+            if (Config.EnvironmentScriptingDefineSymbol && symbolLocation == -1)
+            {
+                lazyDefines.AddWithExpandCheck("GDX");
+                changes = true;
+            }
+            else if (!Config.EnvironmentScriptingDefineSymbol && symbolLocation != -1)
+            {
+                lazyDefines.RemoveAtSwapBack(symbolLocation);
+                changes = true;
+            }
+
+            // Check for GDX Tools Menu
+            int toolsLocation = lazyDefines.FirstIndexOf("GDX_TOOLS");
+            if (Config.EnvironmentToolsMenu && toolsLocation == -1)
+            {
+                lazyDefines.AddWithExpandCheck("GDX_TOOLS");
+                changes = true;
+            }
+            else if (!Config.EnvironmentToolsMenu && toolsLocation != -1)
+            {
+                lazyDefines.RemoveAtSwapBack(toolsLocation);
+                changes = true;
+            }
+
+            if (changes && lazyDefines.Array != null)
+            {
+                lazyDefines.Compact();
+#if UNITY_2023_1_OR_NEWER
+                PlayerSettings.SetScriptingDefineSymbols(UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(group), lazyDefines.Array);
+#else
+                PlayerSettings.SetScriptingDefineSymbolsForGroup(group, lazyDefines.Array);
+#endif // UNITY_2023_1_OR_NEWER
+            }
+
+            return changes;
         }
 
         /// <summary>

@@ -1,9 +1,12 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+﻿// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 using System;
 using GDX.Collections.Generic;
+using GDX.Experimental;
+using GDX.Experimental.Logging;
+using UnityEngine;
 
 namespace GDX.Collections.Pooling
 {
@@ -80,6 +83,11 @@ namespace GDX.Collections.Pooling
         public readonly object ContainerObject;
 
         /// <summary>
+        ///     An <c>event</c> invoked when an item is destroyed by the <see cref="SimpleListManagedPool" />.
+        /// </summary>
+        public Action<object> destroyedItem;
+
+        /// <summary>
         ///     A collection of items that are currently contained in the pool for use when spawning items upon request.
         /// </summary>
         public SimpleList<object> InItems;
@@ -95,24 +103,19 @@ namespace GDX.Collections.Pooling
         public BitArray8 Flags;
 
         /// <summary>
-        ///     A <c>delegate</c> call made when an item is destroyed by the <see cref="SimpleListManagedPool" />.
+        ///     An <c>event</c> invoked when an item is returned to the <see cref="SimpleListManagedPool" />.
         /// </summary>
-        public Action<object> OnDestroyItem;
+        public Action<SimpleListManagedPool, object> returnedItem;
 
         /// <summary>
-        ///     A <c>delegate</c> call made when an item is returned to the <see cref="SimpleListManagedPool" />.
+        ///     An <c>event</c> invoked when an item is spawned from the <see cref="SimpleListManagedPool" />.
         /// </summary>
-        public Action<SimpleListManagedPool, object> OnReturnedToPool;
+        public Action<SimpleListManagedPool, object> spawnedItem;
 
         /// <summary>
-        ///     A <c>delegate</c> call made when an item is spawned from the <see cref="SimpleListManagedPool" />.
+        ///     An <c>event</c> invoked when a pool is tearing down, before the items are pooled.
         /// </summary>
-        public Action<SimpleListManagedPool, object> OnSpawnedFromPool;
-
-        /// <summary>
-        ///     A <c>delegate</c> call made when a pool is tearing down, before the items are pooled.
-        /// </summary>
-        public Action<SimpleListManagedPool> OnTearDown;
+        public Action<SimpleListManagedPool> tearingDown;
 
         /// <summary>
         ///     Create a <see cref="SimpleListManagedPool" />.
@@ -221,8 +224,7 @@ namespace GDX.Collections.Pooling
                 object returnItem = InItems.Array[targetIndex];
                 if (returnItem == null)
                 {
-                    Trace.Output(Trace.TraceLevel.Warning,
-                        $"[ListObjectPool->Get] A null object was pulled from a pool ({m_Key.ToString()}).");
+                    ManagedLog.Warning(LogCategory.GDX, $"[ListObjectPool->Get] A null object was pulled from a pool ({m_Key.ToString()}).");
                     InCachedCount--;
                     return null;
                 }
@@ -235,7 +237,7 @@ namespace GDX.Collections.Pooling
 
                 if (triggerOnSpawnedFromPool)
                 {
-                    OnSpawnedFromPool?.Invoke(this, returnItem);
+                    spawnedItem?.Invoke(this, returnItem);
                 }
 
                 return returnItem;
@@ -246,22 +248,20 @@ namespace GDX.Collections.Pooling
                 object returnItem = m_OutItems.Array[0];
                 if (returnItem == null)
                 {
-                    Trace.Output(Trace.TraceLevel.Warning,
-                        $"[ListObjectPool->Get] A null object was returned to the object pool ({m_Key.ToString()}).");
+                    ManagedLog.Warning(LogCategory.GDX, $"[ListObjectPool->Get] A null object was returned to the object pool ({m_Key.ToString()}).");
                     return null;
                 }
 
-                OnReturnedToPool?.Invoke(this, returnItem);
+                returnedItem?.Invoke(this, returnItem);
                 if (triggerOnSpawnedFromPool)
                 {
-                    OnSpawnedFromPool?.Invoke(this, returnItem);
+                    spawnedItem?.Invoke(this, returnItem);
                 }
 
                 return returnItem;
             }
 
-            Trace.Output(Trace.TraceLevel.Warning,
-                $"[ListObjectPool->Get] Hit maximum object cap of {m_MaximumObjects.ToString()} for object pool ({m_Key.ToString()}).");
+            ManagedLog.Warning(LogCategory.GDX, $"[ListObjectPool->Get] Hit maximum object cap of {m_MaximumObjects.ToString()} for object pool ({m_Key.ToString()}).");
             return null;
         }
 
@@ -330,7 +330,7 @@ namespace GDX.Collections.Pooling
         public void Return(object item)
         {
             // Do we have the interface call?
-            OnReturnedToPool?.Invoke(this, item);
+            returnedItem?.Invoke(this, item);
 
             int outCount = m_OutItems.Count;
             for (int i = 0; i < outCount; i++)
@@ -375,7 +375,7 @@ namespace GDX.Collections.Pooling
             for (int i = 0; i < removeCount; i++)
             {
                 // Trigger specific logic, like Object.Destroy
-                OnDestroyItem?.Invoke(InItems.Array[i]);
+                destroyedItem?.Invoke(InItems.Array[i]);
 
                 // Dereferencing
                 InItems.RemoveAt(i);
@@ -386,7 +386,7 @@ namespace GDX.Collections.Pooling
         /// <inheritdoc />
         public void TearDown()
         {
-            OnTearDown?.Invoke(this);
+            tearingDown?.Invoke(this);
 
             // Return all items to the pool
             for (int i = OutCachedCount - 1; i >= 0; i--)
@@ -406,7 +406,7 @@ namespace GDX.Collections.Pooling
             {
                 if (InItems.Array[i] != null)
                 {
-                    OnDestroyItem?.Invoke(InItems.Array[i]);
+                    destroyedItem?.Invoke(InItems.Array[i]);
                 }
             }
             InItems.Clear();

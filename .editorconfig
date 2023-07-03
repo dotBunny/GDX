@@ -38,6 +38,10 @@ resharper_simplify_string_interpolation_highlighting=none
 # Depending on where GDX is added it can throw namespace issues
 resharper_check_namespace_highlighting=none
 
+# For loops preferred
+resharper_for_can_be_converted_to_foreach_highlighting=none
+
+
 # Visual Studio Solution files (why!! TAB why!!)
 [*.sln]
 indent_style = tab
@@ -200,7 +204,7 @@ dotnet_naming_rule.members_should_be_pascal_case.style = pascal_case_style
 dotnet_naming_symbols.all_members.applicable_kinds = *
 dotnet_naming_style.pascal_case_style.capitalization = pascal_case
 
-file_header_template = Copyright (c) 2020-2022 dotBunny Inc.\ndotBunny licenses this file to you under the BSL-1.0 license.\nSee the LICENSE file in the project root for more information.
+file_header_template = Copyright (c) 2020-2023 dotBunny Inc.\ndotBunny licenses this file to you under the BSL-1.0 license.\nSee the LICENSE file in the project root for more information.
 
 # CSharp code style settings:
 
@@ -277,5 +281,6 @@ csharp_style_prefer_switch_expression = false
 
 # Unsupported features with Unity 2020
 csharp_style_implicit_object_creation_when_type_is_apparent = false
+resharper_object_creation_when_type_evident = explicitly_typed
 csharp_style_prefer_not_pattern = false
 csharp_style_prefer_range_operator = false

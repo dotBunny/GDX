@@ -1,7 +1,8 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+﻿// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using UnityEditor;
 using UnityEditor.TestTools.TestRunner.Api;
@@ -12,12 +13,16 @@ namespace GDX.Editor
 {
     class TestMonitor : ICallbacks
     {
+        public static bool IsTesting;
+
         string m_CachedTempFolder;
         bool m_IsMonitoredTestRun;
 
         /// <inheritdoc />
         public void RunStarted(ITestAdaptor testsToRun)
         {
+            IsTesting = true;
+
             // We are only going to monitor GDX tests
             m_IsMonitoredTestRun = testsToRun.FullName == "GDX";
             if (!m_IsMonitoredTestRun)
@@ -43,8 +48,11 @@ namespace GDX.Editor
         }
 
         /// <inheritdoc />
+        [ExcludeFromCodeCoverage]
         public void RunFinished(ITestResultAdaptor result)
         {
+            IsTesting = false;
+
             // We only really want to do this for GDX tests
             if (m_IsMonitoredTestRun && Application.isBatchMode)
             {

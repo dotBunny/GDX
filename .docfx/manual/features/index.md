@@ -3,115 +3,95 @@ uid: features
 ---
 # Features
 
-> [!NOTE]
-> Below is an overview of *some of* the notable features contained within the `GDX` runtime package. For a more thorough list of functionality, explore the [API documentation](/api/GDX.html) directly.
+Over time `GDX` has grown into a robust set of functionality; with that comes the much larger problem of discoverability. There are too many things to cover in a list on this page (*hence we removed it*). We are working on this problem by building key *feature* sub-pages to highlight functionality; thus, this page only encompasses part of the package. 
 
-## Extending APIs
+> [!TIP]
+> For a more thorough list of functionality, explore the [API documentation](/api/GDX.html) directly.
 
-At the root of the `GDX` namespace are static extension and utility classes that build the foundation for the framework, providing missing functionality to numerous types inside the Unity API.
+Looking at the GDX runtime namespace, we can extract highlights from each area to get you thinking. Not going to dive into the authoring namespace; for now.
 
-### C Sharp
+## [GDX](xref:GDX)
 
-Extension | Description
-:--- | :---
-[Array](xref:GDX.ArrayExtensions) | A bunch of `Array` operations which are commonly used by other methods. For example getting the last or first index of an item or value in an `Array`.
-[Byte](xref:GDX.ByteExtensions) | Contains a simple non-allocating extension method to get a stable hash code from an array of `bytes` as well as an optimized comparison method.
-[Enum](xref:GDX.EnumExtensions) | Useful functionality around `Flags`
-[IList](xref:GDX.IListExtensions) | A common set of methods for `IList` implementing collections allowing for optimized value and item checks, as well as some extras.
+The root of all ~~evil~~ awesomeness? Numerous extension classes live at the core, matching and extending Unity's types. We also have a standard set of utilities that live here as well.
+
+Highlight | Description
+:-- | :--
+[ArrayExtensions](xref:GDX.ArrayExtensions) | A bunch of `Array` operations which are commonly used by other methods. For example getting the last or first index of an item or value in an `Array`.
+[EnumExtensions](xref:GDX.EnumExtensions) | Useful functionality around `Flags`
+[IList](xref:GDX.Collections.Generic.IListExtensions) | A common set of methods for `IList` implementing collections allowing for optimized value and item checks, as well as some extras.
+[PlayerLoopSystemExtensions](xref:GDX.PlayerLoopSystemExtensions) | A helpful set of tools for manipulating Unity's `PlayerLoop`.
+[Reflection](xref:GDX.Reflection) | It makes reflection a little less painful to utilize; it still has the same performance problems.
 [String](xref:GDX.StringExtensions) | A vast collection of extension methods covering a wide range from encryption to hash codes, to simply finding content an existing `string`.
 
-### GDX
+## [GDX.Collections](xref:GDX.Collections)
 
-Extension | Description
-:--- | :---
-[Array2D](xref:GDX.Array2DExtensions) | A small amount of functionality around manipulating data contained within an `Array2D`.
-[SimpleList](xref:GDX.SimpleListExtensions) | A slightly less performant set of functionality for a `SimpleList`.
-
-### Unity
-
-Extension | Description
-:--- | :---
-[Addressables](xref:GDX.AddressablesExtensions) | A collection of useful spawning and management functionality built on top of the `com.unity.addressables` package. For example identifying if a `AssetReference` is valid and able to be instantiated.
-[BoxCollider](xref:GDX.BoxColliderExtensions) | Find out if a position is contained within a `BoxCollider`.
-[Camera](xref:GDX.CameraExtensions) | Methods to force a specific `Camera` to render to specific outputs.
-[CapsuleCollider](xref:GDX.CapsuleColliderExtensions) | Simple helper for finding out which way a `CapsuleCollider` is oriented.
-[GameObject](xref:GDX.GameObjectExtensions) | Numerous methods meant to replace commonly implemented functionality around the component system and scene operations.
-[Mesh](xref:GDX.MeshExtensions) | A helper to calculate the approximate volume of a mesh.
-[MonoBehaviour](xref:GDX.MonoBehaviourExtensions) | A small set of wrapped functionality for component based operations.
-[NavMeshPath](xref:GDX.NavMeshPathExtensions) | Some helpful functions when trying to build out AI logic.
-[Rigidbody](xref:GDX.RigidbodyExtensions) | A method for determining the moment of inertia.
-[Transform](xref:GDX.TransformExtensions) | Some useful functionality when it comes to working with `Transform`.
-[Vector2](xref:GDX.Vector2Extensions) | Additional functionality for common calculations done with `Vector2`.
-[Vector3](xref:GDX.Vector3Extensions) | Additional functionality for common calculations done with `Vector3`.
-
-## Optimized Collections
-
-Located in the `GDX.Collections` namespace is an extensive group of `struct`s and `class`es designed for performance-sensitive environments.
+We've found that the collections that ship with Unity and .Net don't live up to our desired performance characteristics. `GDX` provides various collection types to meet the performance criteria needs of demanding environments. 
 
 > [!WARNING]
-> It is important to note that many of the structures backing data, indices, counts, etc., are publicly accessible. This is meant for advanced usage; change at runtime at your own risk.
+> It is important to note that many structures backing data, indices, counts, etc., are publicly accessible for advanced usage. Change at runtime at your own risk.
 
-Type | Description | Base
-:--- | :--- | ---
-Bit Arrays | A selection of sized [8](xref:GDX.Collections.BitArray8), [16](xref:GDX.Collections.BitArray16), [32](xref:GDX.Collections.BitArray32), [64](xref:GDX.Collections.BitArray64), [128](xref:GDX.Collections.BitArray128), [256](xref:GDX.Collections.BitArray256) and [512](xref:GDX.Collections.BitArray512) index accessed bit arrays. | `struct`
-[Free List](xref:GDX.Collections.FreeList) | An array where indices are allocated from and stored in an in-place linked list. | `struct`
-[Native Sparse Set](xref:GDX.Collections.NativeSparseSet) | A [Sparse Set](xref:GDX.Collections.NativeSparseSet), backed by two `NativeArray`. | `struct`
-[Sparse Set](xref:GDX.Collections.NativeSparseSet) | An adapter collection for external data arrays that allows constant-time insertion, deletion, and lookup by handle, as well as array-like iteration. | `struct`
+Highlight | Description
+:-- | :--
+[FreeList](xref:GDX.Collections.FreeList) | An array where indices are allocated from and stored in an in-place linked list.
+[IntKeyDictionary](xref:GDX.Collections.Generic.IntKeyDictionary`1) | An optimzed `Dictionary<int, T>` replacement.
+[SerializableDictionary](xref:GDX.Collections.Generic.SerializableDictionary`2) | A dictionary that can be serialized by Unity into its native YAML format. Usage of the editor side property drawer **requires Unity 2020.1+**.
+[SimpleList](xref:GDX.Collections.Generic.SimpleList`1) | An optimized `List` replacement.
+[StringKeyDictionary](xref:GDX.Collections.Generic.StringKeyDictionary`1) | An optimzed `Dictionary<string, T>` replacement.
+[SparseSet](xref:GDX.Collections.SparseSet) | An adapter collection for external data arrays that allows constant-time insertion, deletion, and lookup by handle, as well as array-like iteration.
 
-### Generic
+## [GDX.DataTables](xref:GDX.DataTables)
 
-Type | Description | Base
-:--- | :--- | ---
-[2D Array](xref:GDX.Collections.Generic.Array2D`1) | A 2-dimension array backed by a singular array. | `struct`
-[Circular Buffer](xref:GDX.Collections.Generic.CircularBuffer`1) | A sized buffer which loops back over itself as elements are filled. | `class`
-[Native 2D Array](xref:GDX.Collections.Generic.NativeArray2D`1) | A 2-dimension `NativeArray` with a `xy` based accessor. | `struct`
-[Native Uniform 3D Array](xref:GDX.Collections.Generic.NativeUniformArray3D`1) | A 3-dimension `NativeArray` where all axis are the same length. Numerous accessors available, including a `xyz` based. | `struct`
-[Serializable Dictionary](xref:GDX.Collections.Generic.SerializableDictionary`2) | A dictionary that can be serialized by Unity into its native YAML format. Usage of the editor side property drawer **requires Unity 2020.1+**. | `class`
-[Simple List](xref:GDX.Collections.Generic.SimpleList`1) | An optimized `List` replacement. | `struct`
-[String Key Dictionary](xref:GDX.Collections.Generic.StringKeyDictionary`1) | An optimzed `Dictionary<string, T>` replacement. | `struct`
+A game designer's dream comes true for Unity, plain and simple. We've built an extensive system allowing an expected workflow to fit in with the traditional Unity development pipeline. While we don't ship directly with a Microsoft Excel or Google Sheets integration, the format framework is extensible and can easily have any data source.
 
-### Pooling
+> [!NOTE]
+> We are looking into ways to ship Excel support out of the box, but you have to create the new Format for now (*hint: use [OpenXML](https://github.com/dotnet/Open-XML-SDK)*).
 
-Type | Description | Base
-:--- | :--- | ---
-[Array Pool](xref:GDX.Collections.Pooling.ArrayPool`1) | An object pool for arrays with power-of-two lengths. | `struct`
-[SimpleList Managed Pool](xref:GDX.Collections.Pooling.SimpleListManagedPool) | A basic implementation of an [IManagedPool](xref:GDX.Collections.Pooling.IManagedPool) backed by a `SimpleList`, usable by the [ManagedPoolBuilder](xref:GDX.Collections.Pooling.ManagedPoolBuilder).
+## [GDX.Developer](xref:GDX.Developer)
 
-## Helpful Utilities
+A toolbox of various functionality that developers tend to rely on while making a game but should not show up in a gold master build; however often does.
 
-Everyone loves static utility classes, and naturally `GDX` has a bunch of them to help fill out some commonly used functionality spread out across its namespace.
+Highlight | Description
+:-- | :--
+[InputProxy](xref:GDX.Developer.InputProxy) | A way to simulate hardware input on windows based machines, think automated testing.
+[ResourceAuditReport](xref:GDX.Developer.Reports.ResourcesAuditReport) | A reporting mechanism for outputting managed objects at runtime as well as  differences between captures.
+[TextGenerator](xref:GDX.Developer.TextGenerator) | A text file generator allowing for easy formatting and unwinding.
 
-Utility | Description
-:--- | :---
-[Display](xref:GDX.Display) | Simplified querying of display capabilities.
-[Localization](xref:GDX.Localization) | ISO language based formatting functionality.
-[Memory](xref:GDX.Memory) | Specific functionality to ensure the heap is kept as small as possible.
-[Platform](xref:GDX.Platform) | A bunch of Hardware and I/O related methods.
-[Profiling](xref:GDX.Developer.Profiling) | A wrapper for Unity's builtin profiler with file management.
-[Range](xref:GDX.Mathematics.Range) | Simplified logic for picking values within a range.
-[Reflection](xref:GDX.Reflection) | Collection of methods to help with language level reflection.
-[Rotate](xref:GDX.Mathematics.Rotate) | A set of functionality to extend on Unity's rotation based methods.
-[Smooth](xref:GDX.Mathematics.Smooth) | Some fancy smoothing functions.
 
-## Developer Toolbox
+## [GDX.Experimental](xref:GDX.Experimental)
 
-The missing or upgraded development process functionality.
+While the purpose of `GDX` is to provide battle-tested code to developers, this section of the namespace can be considered the battleground where that happens with games in development. Often we work alongside other developers to create new features for `GDX`; this is where they live and get tested. The API is bound to change, and there are bound to be bugs, yet there is nothing but glory for the adventuresome contributors.
 
-Feature | Description
-:--- | :---
-[Build Info Writer](xref:GDX.Editor.Build.BuildInfoProvider) | A system which latches on to the build pipeline to write a configurable `BuildInfo` class containing a passed set of parameters from commandline arguments.
-[Build Verification Report](xref:GDX.Developer.Reports.BuildVerificationReport) | A framework for build verification tests without the need for build-specific instrumentation and inclusion of additional libraries.
-[Command Line Parser](xref:GDX.Developer.CommandLineParser) | A configurable command line parameter parsing system which can be queried at runtime (and in special cases during editor automation) for flags and key-value-pair data.
-[Managed Resource Audit](xref:GDX.Developer.Reports.ResourcesAuditReport) | A reporting mechanism for outputting managed objects at runtime as well as  differences between captures.
-[NUnit Report](xref:GDX.Developer.Reports.NUnitReport) | An abstraction of the NUnit report format allowing for generating of arbitrary reports that can be captured by different systems.
-[Text Generator](xref:GDX.Developer.TextGenerator) | A text file generator allowing for easy formatting and unwinding.
+Highlight | Description
+:-- | :--
+[DebugDraw](xref:GDX.Experimental.DebugDraw) | A state-based optimized line drawing solution for debugging information at authoring and runtime.
+[ManagedLog](xref:GDX.Experimental.Logging.ManagedLog)  | A managed-only categorized hierarchical logging solution.
 
-## Miscellaneous
+## [GDX.IO](xref:GDX.IO)
 
-A few other notable inclusions which have been found useful.
+Not the most glorious chunks of code, we fill a gap of some commonly expected operations with different file streams or, more importantly, what to do with massive files.
 
-Feature | Description
-:--- | :---
-[Coalesce Stream](xref:GDX.IO.CoalesceStream) | An infinitely sized `Stream`.
-[Tarball Support](xref:GDX.IO.Compression.TarFile) | A native method to inflate `.tar` and `.tar.gz` files. Used internally in the `GDX` package to handle upgrades from [GitHub](https://github.com/dotBunny/GDX/releases).
+## GDX.Jobs
+
+We have found a small but mighty group of jobs we repeatedly reuse when building out systems in Unity. While small, they are still titans in their ways.
+
+## [GDX.Mathematics](xref:GDX.Mathematics)
+
+A series of helper functionality used throughout GDX itself. They are excellent standalone additions when it comes to everyday math operations. Nothing glorious; they provide solutions to repetitively created functions.
+
+Highlight | Description
+:-- | :--
 [WELL1024a](xref:GDX.Mathematics.Random.WELL1024a) | A deterministic random number generator.
+
+## [GDX.Rendering](xref:GDX.Rendering)
+
+Just ignore this one; honestly, it's got nothing of value outside of a tiny bit of functionality we rely on for other parts of the package. What? We're telling you the truth.
+
+## [GDX.Threading](xref:GDX.Threading)
+
+Optimizing for concurrency and utilization is complex; GDX provides some exciting systems to move stuff off of the main thread while respecting Unity's main-thread operation. It took a while to bring some of this functionality to GDX; however, it played a heavy role in the initial reasoning for creating GDX as we kept having to make similar systems for numerous titles.
+
+Highlight | Description
+:-- | :--
+TaskDirector | Off-thread task management system with main-thread execution hooks.
+WaitFor | Execution flow management *waiting* paradigm.
+WaitWhile | Execution flow management *while* paradigm.

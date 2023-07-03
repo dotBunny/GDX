@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+﻿// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -106,7 +106,7 @@ namespace GDX
             return 1;
 #else
             return 0;
-#endif
+#endif // UNITY_XBOXONE && !UNITY_EDITOR
         }
 
         /// <summary>
@@ -137,15 +137,23 @@ namespace GDX
             if (s_OutputFolder != null && string.IsNullOrEmpty(folderName)) return s_OutputFolder;
             if (s_OutputFolder == null)
             {
-                s_OutputFolder = Developer.CommandLineParser.Arguments.ContainsKey("GDX_OUTPUT_FOLDER") ?
-                    Developer.CommandLineParser.Arguments["GDX_OUTPUT_FOLDER"] :
+                if (Developer.CommandLineParser.Arguments.ContainsKey("GDX_OUTPUT_FOLDER"))
+                {
+                    // Assign and remove quotes
+                    s_OutputFolder = Developer.CommandLineParser.Arguments["GDX_OUTPUT_FOLDER"]
+                        .Replace("\"","");
+                }
+                else
+                {
+                    s_OutputFolder =
 #if UNITY_EDITOR
-                    Path.Combine(Application.dataPath, "..");
+                        Path.Combine(Application.dataPath, "..");
 #elif UNITY_DOTSRUNTIME
-                    Directory.GetCurrentDirectory();
+                        Directory.GetCurrentDirectory();
 #else
-                    Application.persistentDataPath;
-#endif
+                        Application.persistentDataPath;
+#endif // UNITY_EDITOR
+                }
 
                 // Cleanup the folder pathing
                 s_OutputFolder = Path.GetFullPath(s_OutputFolder);
@@ -225,9 +233,9 @@ namespace GDX
             return true;
 #else
             return Application.isFocused;
-#endif
+#endif // UNITY_XBOXONE && !UNITY_EDITOR
         }
-#endif
+#endif // !UNITY_DOTSRUNTIME
 
         /// <summary>
         /// Is it safe to write to the indicated <paramref name="filePath"/>?
@@ -260,6 +268,6 @@ namespace GDX
         {
             return SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null;
         }
-#endif
+#endif // !UNITY_DOTSRUNTIME
     }
 }

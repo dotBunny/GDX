@@ -8,11 +8,15 @@
   items:
   - name: Serializable Dictionary
     href: features\serializable-dictionary.md
+  - name: Data Tables
+    href: features\data-tables.md
 - name: Requirements
   href: requirements.md
 - name: Contributing
   href: contributing\index.md
   items:
+    - name: Bootstrap
+      href: contributing\bootstrap.md
     - name: Coding Standard
       href: contributing\coding-standard.md
     - name: Automation
@@ -25,8 +29,8 @@
   href: policy\index.md
   items:
     - name: Code Of Conduct
-      href: contributing\code-of-conduct.md
+      href: policy\code-of-conduct.md
     - name: Security
-      href: security.md
+      href: policy\security.md
 - name: FAQ
   href: faq.md

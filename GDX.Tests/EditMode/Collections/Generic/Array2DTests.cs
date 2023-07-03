@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+﻿// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -20,10 +20,8 @@ namespace GDX.Collections.Generic
 
             mockArray.AddColumns(1);
 
-            bool evaluate = mockArray.ColumnCount == 4 &&
-                            mockArray.Array.Length == pre + 2;
-
-            Assert.IsTrue(evaluate);
+            Assert.That(mockArray.ColumnCount, Is.EqualTo(4));
+            Assert.That(mockArray.Array.Length, Is.EqualTo(pre+2));
         }
 
         [Test]
@@ -35,10 +33,8 @@ namespace GDX.Collections.Generic
 
             mockArray.AddRows(1);
 
-            bool evaluate = mockArray.RowCount == 3 &&
-                            mockArray.Array.Length == pre + 4;
-
-            Assert.IsTrue(evaluate);
+            Assert.That(mockArray.RowCount, Is.EqualTo(3));
+            Assert.That(mockArray.Array.Length, Is.EqualTo(pre+4));
         }
 
         [Test]
@@ -47,11 +43,7 @@ namespace GDX.Collections.Generic
         {
             Array2D<int> mockArray = new Array2D<int>(2, 4) {[1, 0] = 0, [1, 1] = 1, [1, 2] = 2, [1, 3] = 3};
 
-            int columnIndex = mockArray.GetColumnIndex(5);
-
-            bool evaluate = columnIndex == 1;
-
-            Assert.IsTrue(evaluate);
+            Assert.That(mockArray.GetColumnIndex(5), Is.EqualTo(1));
         }
 
         [Test]
@@ -60,11 +52,7 @@ namespace GDX.Collections.Generic
         {
             Array2D<int> mockArray = new Array2D<int>(2, 4) {[1, 0] = 0, [1, 1] = 1, [1, 2] = 2, [1, 3] = 3};
 
-            int rowIndex = mockArray.GetRowIndex(5);
-
-            bool evaluate = rowIndex == 1;
-
-            Assert.IsTrue(evaluate);
+            Assert.That(mockArray.GetRowIndex(5), Is.EqualTo(1));
         }
 
         [Test]
@@ -72,16 +60,12 @@ namespace GDX.Collections.Generic
         public void ReverseColumns_MockDataEven_ValuesReversed()
         {
             Array2D<int> mockArray = new Array2D<int>(2, 4) {[1, 0] = 0, [1, 1] = 1, [1, 2] = 2, [1, 3] = 3};
-
-
             mockArray.ReverseColumns();
 
-            bool evaluate = mockArray[1, 0] == 3 &&
-                            mockArray[1, 1] == 2 &&
-                            mockArray[1, 2] == 1 &&
-                            mockArray[1, 3] == 0;
-
-            Assert.IsTrue(evaluate);
+            Assert.That(mockArray[1, 0], Is.EqualTo(3));
+            Assert.That(mockArray[1, 1], Is.EqualTo(2));
+            Assert.That(mockArray[1, 2], Is.EqualTo(1));
+            Assert.That(mockArray[1, 3], Is.Zero);
         }
 
         [Test]
@@ -100,13 +84,12 @@ namespace GDX.Collections.Generic
 
             mockArray.ReverseColumns();
 
-            bool evaluate = mockArray[1, 0] == 4 &&
-                            mockArray[1, 1] == 3 &&
-                            mockArray[1, 2] == 2 &&
-                            mockArray[1, 3] == 1 &&
-                            mockArray[1, 4] == 0;
+            Assert.That(mockArray[1, 0], Is.EqualTo(4));
+            Assert.That(mockArray[1, 1], Is.EqualTo(3));
+            Assert.That(mockArray[1, 2], Is.EqualTo(2));
 
-            Assert.IsTrue(evaluate);
+            Assert.That(mockArray[1, 3], Is.EqualTo(1));
+            Assert.That(mockArray[1, 4], Is.EqualTo(0));
         }
 
         [Test]

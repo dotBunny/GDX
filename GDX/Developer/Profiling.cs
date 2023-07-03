@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2022 dotBunny Inc.
+// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -8,7 +8,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.Profiling;
 using System.IO;
+using GDX.Experimental;
+using GDX.Experimental.Logging;
+#if UNITY_2022_2_OR_NEWER
+using Unity.Profiling.Memory;
+#else
 using UnityEngine.Profiling.Memory.Experimental;
+#endif // UNITY_2022_2_OR_NEWER
 
 namespace GDX.Developer
 {
@@ -71,7 +77,7 @@ namespace GDX.Developer
             string path = Path.Combine(outputFolder, prefix != null ? $"{k_MemoryCaptureFilePrefix}{prefix}-{DateTime.Now:GDX.Platform.FilenameTimestampFormat}.snap" :
                 $"{k_MemoryCaptureFilePrefix}{DateTime.Now:GDX.Platform.FilenameTimestampFormat}.raw");
             MemoryProfiler.TakeSnapshot(path, finishCallback, captureFlags);
-            Trace.Output(Trace.TraceLevel.Info, $"[MemorySnapshot] {path}");
+            ManagedLog.Info(LogCategory.GDX, $"[MemorySnapshot] {path}");
         }
 
         /// <summary>
@@ -105,7 +111,7 @@ namespace GDX.Developer
             }
 
             string path = Path.Combine(outputFolder, prefix != null ? $"{k_ProfileFilePrefix}{prefix}-{Platform.FilenameTimestampFormat}.raw" : $"{k_ProfileFilePrefix}{Platform.FilenameTimestampFormat}.raw");
-            Trace.Output(Trace.TraceLevel.Info, $"[Profiling Started] {path}");
+            ManagedLog.Info(LogCategory.GDX, $"[Profiling Started] {path}");
             Profiler.logFile = path;
             Profiler.enableBinaryLog = true;
             Profiler.enabled = true;
@@ -116,10 +122,10 @@ namespace GDX.Developer
         /// </summary>
         public static void StopProfiling()
         {
-            Trace.Output(Trace.TraceLevel.Info, $"[Profiling Stopped] {Profiler.logFile}");
+            ManagedLog.Info(LogCategory.GDX, $"[Profiling Stopped] {Profiler.logFile}");
             Profiler.enabled = false;
             Profiler.logFile = "";
         }
     }
 }
-#endif
+#endif // !UNITY_DOTSRUNTIME

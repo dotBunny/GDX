@@ -1,5 +1,4 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="GDXStylesShared.uss?fileID=7433441132597879392&amp;guid=34b47b84721834846b8a57c64984100a&amp;type=3#GDXStyles" />
     <ui:VisualElement name="gdx-command-line-processor" class="gdx-project-settings-section-content">
         <ui:VisualElement class="gdx-fixed-vertical-spacer-10" />
         <ui:TextField picking-mode="Ignore" label="Argument Prefix" name="text-argument-prefix" is-delayed="true" tooltip="The prefix used to denote arguments in the command line." />

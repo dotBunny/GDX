@@ -1,21 +1,20 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+﻿// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GDX.Collections.Generic;
 using GDX.Mathematics.Random;
 #if UNITY_EDITOR
 using UnityEditor;
-#endif
+#endif // UNITY_EDITOR
 
 namespace GDX
 {
+    [UnityEngine.Scripting.Preserve]
     public static class Core
     {
         public const string OverrideClass = "CustomConfig";
-
         public const string OverrideMethod = "Init";
         public const string PerformanceCategory = "GDX.Performance";
         public const string TestCategory = "GDX.Tests";
@@ -25,6 +24,11 @@ namespace GDX
         /// </summary>
         // ReSharper disable once RedundantArrayCreationExpression, HeapView.ObjectAllocation.Evident
         public static readonly object[] EmptyObjectArray = new object[] { };
+
+        /// <summary>
+        ///     The main threads identifier.
+        /// </summary>
+        public static int MainThreadID = -1;
 
         /// <summary>
         ///     A pseudorandom number generated seeded with <see cref="StartTicks"/>.
@@ -59,7 +63,7 @@ namespace GDX
             // Initialize a random provider
             Random = new WELL1024a((uint)StartTicks);
 
-            DictionaryPrimes.SetDefaultPrimes();
+            //DictionaryPrimes.SetDefaultPrimes();
 
             // ReSharper disable UnusedParameter.Local
             AppDomain.CurrentDomain.DomainUnload += (sender, args) =>
@@ -72,11 +76,20 @@ namespace GDX
         /// <summary>
         ///     Main-thread initializer.
         /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         It might be important to call this function if you are using GDX related configurations inside of
+        ///         another <see cref="UnityEngine.RuntimeInitializeOnLoadMethod"/> decorated static method.
+        ///     </para>
+        ///     <para>
+        ///         An example of this sort of usage is in the <see cref="GDX.Threading.TaskDirectorSystem"/>.
+        ///     </para>
+        /// </remarks>
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
 #else
         [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.AfterAssembliesLoaded)]
-#endif
+#endif // UNITY_EDITOR
         public static void InitializeOnMainThread()
         {
             if (s_InitializedMainThread)
@@ -84,10 +97,11 @@ namespace GDX
                 return;
             }
 
+            MainThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
+
             Localization.SetDefaultCulture();
 
             s_InitializedMainThread = true;
         }
-
     }
 }

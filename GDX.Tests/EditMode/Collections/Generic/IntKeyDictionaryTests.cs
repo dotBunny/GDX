@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2022 dotBunny Inc.
+// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -54,8 +54,10 @@ namespace GDX.Collections.Generic
         [Category(Core.TestCategory)]
         public void IndexerAdd_CheckExists()
         {
-            IntKeyDictionary<string> dictionary = new IntKeyDictionary<string>(16);
-            dictionary[0] = TestLiterals.Bar;
+            IntKeyDictionary<string> dictionary = new IntKeyDictionary<string>(16)
+            {
+                [0] = TestLiterals.Bar
+            };
 
             string storedValue = dictionary[0];
 

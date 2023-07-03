@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2022 dotBunny Inc.
+// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -215,6 +215,18 @@ namespace GDX.Collections.Generic
         {
             System.Array.Clear(Array, 0, Count);
             Count = 0;
+        }
+
+        /// <summary>
+        ///     Shrink/compact the backing <see cref="Array"/> so there is no unused space.
+        /// </summary>
+        public void Compact()
+        {
+            int arrayLength = Array.Length;
+            if (Count < arrayLength)
+            {
+                System.Array.Resize(ref Array, Count);
+            }
         }
 
         /// <summary>

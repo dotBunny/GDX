@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+﻿// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -35,7 +35,7 @@ namespace GDX
             // Tell Unity to clean up any assets that it no longer wants to have loaded
 #if !UNITY_DOTSRUNTIME
             Resources.UnloadUnusedAssets();
-#endif
+#endif // !UNITY_DOTSRUNTIME
 
             // Fire off second pass collection
             GC.WaitForPendingFinalizers();
@@ -62,6 +62,6 @@ namespace GDX
             GC.WaitForPendingFinalizers();
             GC.Collect();
         }
-#endif
+#endif // !UNITY_DOTSRUNTIME
     }
 }

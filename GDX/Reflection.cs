@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+﻿// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -25,6 +25,17 @@ namespace GDX
         ///     <see cref="BindingFlags"/> for a public static.
         /// </summary>
         public const BindingFlags PublicStaticFlags = BindingFlags.Static | BindingFlags.Public;
+
+        /// <summary>
+        ///     The assembly qualified name for <see cref="UnityEngine.Object" />
+        /// </summary>
+        public static readonly string UnityObjectName = typeof(UnityEngine.Object).AssemblyQualifiedName;
+
+        /// <summary>
+        ///     The assembly qualified name for <see cref="Serializable.SerializableTypes" />
+        /// </summary>
+        public static readonly string SerializedTypesName =
+            typeof(Serializable.SerializableTypes).AssemblyQualifiedName;
 
         /// <summary>
         ///     Returns the default value for a given type.
@@ -61,6 +72,16 @@ namespace GDX
         }
 
         /// <summary>
+        ///     Returns a short form, non-versioned qualified name for the type.
+        /// </summary>
+        /// <param name="type">The <see cref="System.Type"/> to generate the qualified name for.</param>
+        /// <returns>A qualified name</returns>
+        public static string GetTypeQualifiedName(Type type)
+        {
+            return $"{type.FullName}, {type.Assembly.GetName().Name}";
+        }
+
+        /// <summary>
         ///     Invokes a known static method.
         /// </summary>
         /// <param name="type">The explicit type of the static class.</param>
@@ -81,6 +102,22 @@ namespace GDX
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        ///     Invoke a known private method on an object.
+        /// </summary>
+        /// <param name="targetObject">The ambiguous object to invoke a method on.</param>
+        /// <param name="method">The name of the method to invoke.</param>
+        /// <param name="parameters">Any parameters that should be passed to the method?</param>
+        /// <param name="flags">The <paramref name="method"/>'s access flags.</param>
+        /// <returns>An <see cref="object"/> of the return value. This can be null.</returns>
+        public static object InvokeMethod(object targetObject, string method, object[] parameters = null,
+            BindingFlags flags = PrivateFieldFlags)
+        {
+            Type targetType = targetObject.GetType();
+            MethodInfo targetMethod = targetType.GetMethod(method, flags);
+            return targetMethod != null ? targetMethod.Invoke(targetObject, parameters ?? Core.EmptyObjectArray) : null;
         }
 
         /// <summary>

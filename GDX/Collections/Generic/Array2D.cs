@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2022 dotBunny Inc.
+// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -85,13 +85,7 @@ namespace GDX.Collections.Generic
         public void AddRows(int numberOfNewRows)
         {
             int newArrayCount = RowCount + numberOfNewRows;
-            T[] newArray = new T[newArrayCount * ColumnCount];
-            for (int i = 0; i < Array.Length; i++)
-            {
-                newArray[i] = Array[i];
-            }
-
-            Array = newArray;
+            System.Array.Resize(ref Array, newArrayCount * ColumnCount);
             RowCount = newArrayCount;
         }
 

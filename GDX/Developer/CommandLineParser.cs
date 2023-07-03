@@ -45,9 +45,9 @@ namespace GDX.Developer
                 Flags.Clear();
             }
 
-            string argumentPrefix = Config.DeveloperCommandLineParserArgumentPrefix;
+            string argumentPrefix = Config.CommandLineParserArgumentPrefix;
             int prefixLength = argumentPrefix.Length;
-            string argumentSplit = Config.DeveloperCommandLineParserArgumentSplit;
+            string argumentSplit = Config.CommandLineParserArgumentSplit;
             int argumentLength = argumentArray.Length;
             for (int i = 0; i < argumentLength; i++)
             {

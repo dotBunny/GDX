@@ -26,11 +26,6 @@
     ],
     "versionDefines": [
         {
-            "name": "com.unity.platforms",
-            "expression": "0.9.0",
-            "define": "GDX_PLATFORMS"
-        },
-        {
             "name": "com.unity.visualscripting",
             "expression": "1.5.2",
             "define": "GDX_VISUALSCRIPTING"

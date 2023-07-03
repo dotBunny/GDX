@@ -1,0 +1,91 @@
+﻿
+#gdx-cell-value-container
+{
+    padding-right: 2px;
+    max-width: 58%;
+}
+.gdx-cell-field-inspector
+{
+    flex-grow: 1;
+}
+#gdx-cell-value-lock
+{
+    width: 12px;
+    height: 12px;
+    border-width: 0;
+    background-color: rgba(0,0,0,0);
+    -unity-slice-top: 0;
+    -unity-slice-bottom: 0;
+    -unity-background-scale-mode: scale-and-crop;
+    background-size: contain;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-left: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 0px;
+}
+
+#gdx-cell-value-lock:hover
+{
+    background-color: var(--unity-colors-toolbar_button-background-hover);
+}
+#gdx-cell-value-lock.locked
+{
+    background-image: resource('Icons/LockIcon-On.png');
+}
+#gdx-cell-value-lock.unlocked
+{
+    background-image: resource('Icons/LockIcon.png');
+}
+
+#gdx-cell-value-table
+{
+    width: 16px;
+    height: 16px;
+    border-width: 0;
+    background-color: rgba(0,0,0,0);
+    -unity-slice-top: 0;
+    -unity-slice-bottom: 0;
+    -unity-background-scale-mode: scale-and-crop;
+    background-size: contain;
+    margin-top: 2px;
+    margin-bottom: 3px;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 0px;
+    position: absolute;
+    right: 0px;
+}
+
+#gdx-cell-value-table:hover
+{
+    background-color: var(--unity-colors-toolbar_button-background-hover);
+}
+
+.dark #gdx-cell-value-table.linked
+{
+    background-image: resource('Icons/d_Linked.png');
+}
+
+.dark #gdx-cell-value-table.unlinked
+{
+    background-image: resource('Icons/d_Unlinked.png');
+}
+
+.light #gdx-cell-value-table.linked
+{
+    background-image: resource('Icons/Linked.png');
+}
+
+.light #gdx-cell-value-table.unlinked
+{
+    background-image: resource('Icons/Unlinked.png');
+}
+
+#gdx-cell-value-table.error
+{
+    background-image: resource('Icons/Error.png');
+}

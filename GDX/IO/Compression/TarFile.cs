@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+﻿// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -6,6 +6,8 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using GDX.Experimental;
+using GDX.Experimental.Logging;
 
 namespace GDX.IO.Compression
 {
@@ -85,8 +87,7 @@ namespace GDX.IO.Compression
                 int readByteCount = sourceStream.Read(readBuffer, 0, 12);
                 if (readByteCount != 12)
                 {
-                    Trace.Output(Trace.TraceLevel.Error,
-                        $"Unable to read filesize from header. {readByteCount.ToString()} read, expected 12.");
+                    ManagedLog.Error(LogCategory.GDX, $"Unable to read filesize from header. {readByteCount.ToString()} read, expected 12.");
                     break;
                 }
                 long fileSize = Convert.ToInt64(Encoding.UTF8.GetString(readBuffer, 0, 12).Trim('\0').Trim(), 8);
@@ -112,8 +113,7 @@ namespace GDX.IO.Compression
                     readByteCount = sourceStream.Read(fileContentBuffer, 0, newFileContentBufferLength);
                     if (readByteCount != newFileContentBufferLength)
                     {
-                        Trace.Output(Trace.TraceLevel.Warning,
-                            $"Read file size of {readByteCount.ToString()} does not match the expected {newFileContentBufferLength.ToString()} byte size.");
+                        ManagedLog.Warning(LogCategory.GDX, $"Read file size of {readByteCount.ToString()} does not match the expected {newFileContentBufferLength.ToString()} byte size.");
                     }
                     newFileStream.Write(fileContentBuffer, 0, newFileContentBufferLength);
                 }

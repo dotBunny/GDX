@@ -5,6 +5,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - 2023-07-02
+
+***"Going Bold"***
+> After almost a year of no public updates (the `dev` branch was bustling), the release of `4.0.0` comes with significant changes and a continued effort to improve unit test coverage and discoverability. The package remains tested against `2020.3` and `2021.3`; however, we strongly recommend transitioning to `2022.3` or newer to unlock additional functionality.
+
+### Added
+
+- `GDX.Experimental` namespace to encapsulate code and features actively being iterated until they meet the shipping bar.
+- New toggle added to Project Settings -> GDX -> Environment, ensuring that GDX shaders included are always included in a build. This encompasses the shaders necessary to draw the `DebugDraw` commands (_Experimental_).
+- `TaskDirector` to assist with `TaskBase` based scheduling of the thread pool, configurable in GDX project preferences.
+- `EditorTaskDirectorSystem` and `TaskDirectorSystem` to automatically tick the `TaskDirector` in appropriate modes.
+- Boilerplate in `PlayerLoopSystemExtensions` to make modifying the PlayerLoop much simpler.
+- `Compact()` added to `SimpleList` utilizing a properly sized version of the backing array.
+- `FirstIndexOf()` and `LastIndexOf()` methods added to `ArrayExtensions` constrained to `IEquatable` for easier string comparison.
+- `FirstIndexOf()`, `FirstIndexOfItem()`, `FirstIndexOfValue()`, `LastIndexOf()`, `LastIndexOfItem()`, `LastIndexOfValue()` methods added to `SimpleListExtensions`.
+- `Contains()` to `SimpleListExtensions` constrained to `IEquatable`.
+- `WaitFor` program flow helper.
+- `AssetDatabaseReference` weak-reference objects with helpers.
+- `EditorPrefsCache` to cache editor preference accessing.
+- `StableDataTable` implementation of new `DataTableBase` with full suite of supporting references `*CellValue`.
+- Spreadsheet-like editing experience for `DataTableBase` inheriting objects (_Unity 2022.2+_)
+
+### Changed
+
+- Extension-based classes now live in the namespace they extend from.
+- Reworked the project settings window to now include some of the recent changelog for visibility.
+- `SimpleListManagedPool` events renamed for consistency to `destroyedItem`, `returnedItem`, `spawnedItem`, `tearingDown`.
+- Explicit callout that `SerializableDictionary` does not support custom struct keys.
+- Addressables package version dependency increased to `1.18.19`.
+- Internal config variable names clarified, including now a config format version number.
+- Reworked internal stylesheets to be segmented and more efficient.
+
+### Fixed
+
+- `StringKeyDictionary` and `IntKeyDictionary` can now be initialized with capacities as static fields.
+- Bolt changes in Unity 2022 causing Project Settings from being able to load properly.
+- `TransformExtensions::GetFirstComponentInChildrenComplex()` will now properly handle the recursive compare of objects appropriately.
+
+### Removed
+
+- `Trace` has been removed, replaced with `ManagedLog` (_Experimental_), there is no longer a preferences section for it. Given that categories are set through code, so is the output options.
+- Removed portability tests based on depreciation of tool.
+- Reliance on `jobs` package.
+- Any usage of `AssetDatabase.FindAssets()`
+
 ## [3.0.1] - 2022-07-12
 
 ***"3D Arrays"***
@@ -14,7 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - New `Array3D` and `NativeArray3D` flattened 3D arrays.
 
-### Changes
+### Changed
 
 - `BitArray8`, `BitArray16`, `BitArray32`, `BitArray64` have been marked `Serializable`.
 
@@ -49,7 +94,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Package's project settings were rebuilt to use `UIElement`s instead of `IMGUI` with added searchability.
 - `Smooth::HalfLifeToSmoothingFactor()` no longer defaults elapsed time to `Time.deltaTime`
 - The visual scripting module detects the package based installation available in `Unity 2021` and forward. If you wish to have support in `Unity 2020.3` via the Asset Store you will need to add a scripting define symbol of `GDX_VISUALSCRIPTING` to your project.
-- All internal `Dictionary<string, value>` have been replaced with `StringKeyDictionary<value>`
+- All internal `Dictionary<string,value>` have been replaced with `StringKeyDictionary<value>`
 - `BuildInfoProvider` now uses a `TextGenerator` for codegen.
 - `Platform::GetOutputFolder()` supports being overridden via command-line argument `GDX_OUTPUT_FOLDER`.
 - Internal members of `SerializableDictionary` have been renamed, `FormerlySerializedAs` attribute has been used to hopefully upgrade content.
@@ -64,7 +109,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved `TransientReference` into the `GDX.Developer` namespace.
 - `Byte2` accessor throws `IndexOutOfRangeException` when using `ENABLE_UNITY_COLLECTIONS_CHECKS`.
 
-### Fixed  
+### Fixed
 
 - `Platform::IsFocused()` now returns the proper focus state on desktop platforms.
 - `TransformExtensions::DestroyChildren()` no longer has issues with child counts.
@@ -374,7 +419,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 > A DocFX generated [site](https://gdx.dotbunny.com/) is now being stood up by our internal CI when a new commit is made to the `main` branch.
 ### Added
 
-- A proper [**Getting Started**](https://gdx.dotbunny.com/manual/getting-started/index.html) section to the manual
+- A proper [Getting Started](https://gdx.dotbunny.com/manual/getting-started/index.html) section to the manual
 
 ### Changed
 

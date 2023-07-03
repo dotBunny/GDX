@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2022 dotBunny Inc.
+// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -220,7 +220,7 @@ namespace GDX.Mathematics
                 {
                     throw new IndexOutOfRangeException("The index must be between[0...1]");
                 }
-#endif
+#endif // ENABLE_UNITY_COLLECTIONS_CHECKS
                 fixed (Byte2* array = &this)
                 {
                     return ((byte*)array)[index];
@@ -233,7 +233,7 @@ namespace GDX.Mathematics
                 {
                     throw new IndexOutOfRangeException("The index must be between[0...1]");
                 }
-#endif
+#endif // ENABLE_UNITY_COLLECTIONS_CHECKS
                 fixed (byte* array = &X)
                 {
                     array[index] = value;

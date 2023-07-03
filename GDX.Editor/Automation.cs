@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2022 dotBunny Inc.
+﻿// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -6,6 +6,8 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using GDX.Experimental;
+using GDX.Experimental.Logging;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -82,7 +84,7 @@ namespace GDX.Editor
         {
             if (window == null)
             {
-                Trace.Output(Trace.TraceLevel.Warning, "No window was passed to be captured.");
+                ManagedLog.Warning(0, "No window was passed to be captured.");
                 return null;
             }
 
@@ -96,7 +98,7 @@ namespace GDX.Editor
 
             if (width == 0 || height == 0)
             {
-                Trace.Output(Trace.TraceLevel.Error, $"The acquired window has a size of {width.ToString()}x{height.ToString()}.");
+                ManagedLog.Error(0, $"The acquired window has a size of {width.ToString()}x{height.ToString()}.");
                 return null;
             }
 
@@ -149,7 +151,7 @@ namespace GDX.Editor
         {
             if (EditorWindow.focusedWindow == null)
             {
-                Trace.Output(Trace.TraceLevel.Info, "No editor window is focused.");
+                ManagedLog.Info(0, "No editor window is focused.");
                 return false;
             }
 
@@ -234,15 +236,14 @@ namespace GDX.Editor
             // helper at the end to make sure to close of the profiling session.
             if (!UnityEngine.Profiling.Profiler.enabled)
             {
-                Trace.Output(Trace.TraceLevel.Warning, "Unity was not profiling.");
+               ManagedLog.Warning(0, "Unity was not profiling.");
             }
             else
             {
                 UnityEngine.Profiling.Profiler.enabled = false;
                 if (UnityEngine.Profiling.Profiler.logFile != null)
                 {
-                    Trace.Output(Trace.TraceLevel.Info,
-                        $"Profile stopped: {UnityEngine.Profiling.Profiler.logFile}");
+                    ManagedLog.Info(0, $"Profile stopped: {UnityEngine.Profiling.Profiler.logFile}");
                 }
             }
 
@@ -257,14 +258,14 @@ namespace GDX.Editor
         /// </summary>
         public static void GenerateProjectFiles()
         {
-            Trace.Output(Trace.TraceLevel.Info, "Syncing Project Files ...");
+            ManagedLog.Info(0, "Syncing Project Files ...");
 
             AssetDatabase.Refresh();
 
             // We haven't actually opened up Unity on this machine, so no editor has been set
             if (string.IsNullOrEmpty(CodeEditor.CurrentEditorInstallation))
             {
-                Trace.Output(Trace.TraceLevel.Info, "Setting CodeEditor.CurrentEditorInstallation ...");
+                ManagedLog.Info(0, "Setting CodeEditor.CurrentEditorInstallation ...");
 
 #if UNITY_EDITOR_WIN
                 string[] paths = {
@@ -307,7 +308,7 @@ namespace GDX.Editor
                 }
 #else
                 // Linux Support?
-#endif
+#endif // UNITY_EDITOR_WIN
             }
 
             CodeEditor.CurrentEditor.SyncAll();
@@ -322,7 +323,7 @@ namespace GDX.Editor
             // We will cause an exception if there is no device, so return early.
             if (Platform.IsHeadless())
             {
-                Trace.Output(Trace.TraceLevel.Warning,"No graphics device, unable to acquire GameView.");
+                ManagedLog.Warning(0, "No graphics device, unable to acquire GameView.");
                 return null;
             }
 
@@ -344,7 +345,7 @@ namespace GDX.Editor
 
             if (returnWindow == null)
             {
-                Trace.Output(Trace.TraceLevel.Error, "Unable to get editor window for Game View");
+                ManagedLog.Error(0, "Unable to get editor window for Game View");
             }
 
             return returnWindow;
@@ -353,44 +354,30 @@ namespace GDX.Editor
         /// <summary>
         /// Get the existing or open a new window with the indicated size / flags.
         /// </summary>
-        /// <remarks>This will undock a window.  It is important to wait for the window to paint itself.</remarks>
+        /// <remarks>Maintains old behaviour.</remarks>
         /// <param name="shouldMaximize">Should the window be maximized?</param>
         /// <param name="width">The desired window pixel width.</param>
         /// <param name="height">The desired window pixel height.</param>
         /// <typeparam name="T">The type of the window requested.</typeparam>
         /// <returns>The instantiated window, or null.</returns>
-        public static T GetWindow<T>(bool shouldMaximize = false, int width = 800, int height = 600) where T : EditorWindow
+        public static T GetWindow<T>(bool shouldMaximize = false, int width = 800, int height = 600)
+            where T : EditorWindow
         {
-            T window = EditorWindow.GetWindowWithRect<T>(new Rect(0, 0, width, height), false, typeof(T).ToString(), true);
+            return GetWindow<T>(new EditorWindowExtensions.EditorWindowSetup(false, true, shouldMaximize, true, width, height, true));
+        }
 
-            if (window != null)
+        public static T GetWindow<T>(EditorWindowExtensions.EditorWindowSetup setup) where T : EditorWindow
+        {
+            T window;
+            if (setup.UseExisting && EditorWindow.HasOpenInstances<T>())
             {
-                // Enforce the size of the window through setting its position. It's not great but works.
-                window.position = new Rect(0, 0, width, height);
-                window.Show(true);
-
-                // Do we want it to me maximized?
-                if (shouldMaximize)
-                {
-                    window.maximized = true;
-                }
-
-                // Lets do it proper
-                window.Repaint();
-
-                // We need to force some internal repainting without having the API surface area to do so.
-                // We'll exploit reflection a bit to get around this for now.
-                MethodInfo repaintMethod = window.GetType().GetMethod("RepaintImmediately",
-                    BindingFlags.NonPublic | BindingFlags.Instance);
-
-                // The exact sequence is frustrating and I'm not entirely sure that it will cover the dreaded white
-                // screen that happens from time to time, but as we expanded out the number of steps we haven't seen
-                // a fail yet from testing.
-                if (repaintMethod != null)
-                {
-                    repaintMethod.Invoke(window, Core.EmptyObjectArray);
-                }
+                window = EditorWindow.GetWindow<T>(typeof(T).ToString());
             }
+            else
+            {
+                window = EditorWindow.CreateWindow<T>(typeof(T).ToString());
+            }
+            window.ApplySetup(setup);
             return window;
         }
 
@@ -428,7 +415,7 @@ namespace GDX.Editor
                     MethodInfo loadMethod = windowLayout.GetMethod("LoadWindowLayout", new[] {typeof(string), typeof(bool), typeof(bool), typeof(bool)});
                     if (loadMethod != null)
                     {
-                        loadMethod.Invoke(null,new object[]{LayoutStashPath(), false, false, true});
+                        loadMethod.Invoke(null,new object[]{path, false, false, true});
                     }
                 }
                 Platform.ForceDeleteFile(path);

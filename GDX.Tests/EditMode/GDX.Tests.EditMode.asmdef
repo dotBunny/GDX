@@ -3,6 +3,7 @@
     "rootNamespace": "GDX",
     "references": [
         "GDX",
+        "GDX.Editor",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Unity.PerformanceTesting",
@@ -34,6 +35,11 @@
             "name": "com.unity.test-framework.performance",
             "expression": "2.0.0",
             "define": "GDX_PERFORMANCETESTING"
+        },
+        {
+            "name": "com.unity.collections",
+            "expression": "[1.2,2.0)",
+            "define": "GDX_UNSAFE_COLLECTIONS"
         }
     ],
     "noEngineReferences": false

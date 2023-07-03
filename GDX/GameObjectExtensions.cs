@@ -1,9 +1,10 @@
-// Copyright (c) 2020-2022 dotBunny Inc.
+// Copyright (c) 2020-2023 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 #if !UNITY_DOTSRUNTIME
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -26,6 +27,7 @@ namespace GDX
         /// </param>
         /// <param name="destroyInactive">Should inactive <see cref="GameObject" /> be destroyed as well?</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ExcludeFromCodeCoverage]
         public static void DestroyChildren(this GameObject targetGameObject, bool deactivateBeforeDestroy = true,
             bool destroyInactive = true)
         {
@@ -63,6 +65,7 @@ namespace GDX
         /// <returns>The first found <see cref="Component" />.</returns>
         public static T GetFirstComponentInChildrenComplex<T>(this GameObject targetGameObject,
             bool includeInactive = false, bool lookInChildrenFirst = false, int maxLevelsOfRecursion = -1)
+            where T : Component
         {
             // Make sure we have nothing to return if necessary.
             T returnComponent;
@@ -108,10 +111,11 @@ namespace GDX
         /// <param name="targetGameObject">The <see cref="GameObject" /> which to derive a path from.</param>
         /// <returns>A created path <see cref="System.String" />.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ExcludeFromCodeCoverage]
         public static string GetScenePath(this GameObject targetGameObject)
         {
             return targetGameObject.transform.GetScenePath();
         }
     }
 }
-#endif
+#endif // !UNITY_DOTSRUNTIME
