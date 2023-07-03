@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.DataTables;
-using GDX.DataTables.DataBindings;
+using GDX.DataTables.DataBinding;
 using GDX.Editor.Inspectors;
 using UnityEditor;
 using UnityEditor.UIElements;

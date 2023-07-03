@@ -44,7 +44,7 @@ The DataTableBase allows for data-interchange between formats ([CSV](https://en.
 
 Yes, absolutely!
 
-However, you will need to do a bit of legwork to get there. When we ship `GDX` we try to think about a lean-and-mean approach. Adding the libraries necessary to interact with those types easily would add a certain level of bloat to the package. We have modelled our existing [JSON](xref:GDX.DataTables.DataBindings.JavaScriptObjectNotationFormat) and [CSV](xref:GDX.DataTables.DataBindings.CommaSeperatedValueFormat) formats to demonstrate how to build custom formats.
+However, you will need to do a bit of legwork to get there. When we ship `GDX` we try to think about a lean-and-mean approach. Adding the libraries necessary to interact with those types easily would add a certain level of bloat to the package. We have modelled our existing [JSON](xref:GDX.DataTables.DataBinding.Formats.JavaScriptObjectNotationFormat) and [CSV](xref:GDX.DataTables.DataBinding.Formats.CommaSeperatedValueFormat) formats to demonstrate how to build custom formats.
 
 ```csharp
    class ExcelFormat : FormatBase

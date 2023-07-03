@@ -4,7 +4,7 @@
 
 using System;
 using System.IO;
-using GDX.DataTables.DataBindings;
+using GDX.DataTables.DataBinding;
 using UnityEngine;
 
 namespace GDX.DataTables

@@ -4,7 +4,7 @@
 
 using System;
 using GDX.DataTables;
-using GDX.DataTables.DataBindings;
+using GDX.DataTables.DataBinding;
 using UnityEditor;
 using UnityEngine;
 #if UNITY_2022_2_OR_NEWER

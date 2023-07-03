@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using System.Data;
 using GDX.DataTables;
-using GDX.DataTables.DataBindings;
+using GDX.DataTables.DataBinding;
 using GDX.Editor.VisualElements;
 using UnityEditor;
 using UnityEngine.UIElements;

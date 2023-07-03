@@ -5,8 +5,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using GDX.DataTables.DataBinding.Formats;
 
-namespace GDX.DataTables.DataBindings
+namespace GDX.DataTables.DataBinding
 {
     /// <summary>
     ///     Data translation functionality for <see cref="DataTableBase" />.

@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GDX.DataTables.DataBindings
+namespace GDX.DataTables.DataBinding
 {
     /// <summary>
     ///     A serializable object used during import and export of <see cref="DataTableBase"/> based data.

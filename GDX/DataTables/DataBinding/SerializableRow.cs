@@ -4,7 +4,7 @@
 
 using System;
 
-namespace GDX.DataTables.DataBindings
+namespace GDX.DataTables.DataBinding
 {
     /// <summary>
     ///     A serializable representation of a row of data from a <see cref="DataTableBase"/>.

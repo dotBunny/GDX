@@ -18,11 +18,10 @@ Highlight | Description
 :-- | :--
 [ArrayExtensions](xref:GDX.ArrayExtensions) | A bunch of `Array` operations which are commonly used by other methods. For example getting the last or first index of an item or value in an `Array`.
 [EnumExtensions](xref:GDX.EnumExtensions) | Useful functionality around `Flags`
-[IList](xref:GDX.IListExtensions) | A common set of methods for `IList` implementing collections allowing for optimized value and item checks, as well as some extras.
+[IList](xref:GDX.Collections.Generic.IListExtensions) | A common set of methods for `IList` implementing collections allowing for optimized value and item checks, as well as some extras.
 [PlayerLoopSystemExtensions](xref:GDX.PlayerLoopSystemExtensions) | A helpful set of tools for manipulating Unity's `PlayerLoop`.
 [Reflection](xref:GDX.Reflection) | It makes reflection a little less painful to utilize; it still has the same performance problems.
 [String](xref:GDX.StringExtensions) | A vast collection of extension methods covering a wide range from encryption to hash codes, to simply finding content an existing `string`.
-[Trace](xref:GDX.Trace) | Our take on categorized cross-platform logging.
 
 ## [GDX.Collections](xref:GDX.Collections)
 
@@ -71,7 +70,7 @@ Highlight | Description
 
 Not the most glorious chunks of code, we fill a gap of some commonly expected operations with different file streams or, more importantly, what to do with massive files.
 
-## [GDX.Jobs](xref:GDX.Jobs)
+## GDX.Jobs
 
 We have found a small but mighty group of jobs we repeatedly reuse when building out systems in Unity. While small, they are still titans in their ways.
 

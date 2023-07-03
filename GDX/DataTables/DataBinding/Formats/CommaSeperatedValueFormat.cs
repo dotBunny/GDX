@@ -10,7 +10,7 @@ using System.Text;
 using UnityEngine;
 using TextGenerator = GDX.Developer.TextGenerator;
 
-namespace GDX.DataTables.DataBindings
+namespace GDX.DataTables.DataBinding.Formats
 {
     /// <summary>
     /// A comma-seperated values format.

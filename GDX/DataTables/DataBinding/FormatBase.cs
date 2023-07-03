@@ -4,7 +4,7 @@
 
 using System;
 
-namespace GDX.DataTables.DataBindings
+namespace GDX.DataTables.DataBinding
 {
     /// <summary>
     ///     A custom binding to be used with a <see cref="DataTableBase"/>.

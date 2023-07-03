@@ -7,7 +7,7 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 
-namespace GDX.DataTables.DataBindings
+namespace GDX.DataTables.DataBinding.Formats
 {
     /// <summary>
     /// A JavaScript Object Notation format.
