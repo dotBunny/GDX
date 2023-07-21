@@ -67,6 +67,7 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarColumnMenu.menu.AppendAction("Resize To Fit",
                 _ => { m_ParentWindow.GetController().AutoResizeColumns(); });
 
+
             m_ToolbarRowMenu = m_Toolbar.Q<ToolbarMenu>("gdx-table-toolbar-row");
             m_ToolbarRowMenu.menu.AppendAction("Add", _ => { m_ParentWindow.GetController().ShowAddRowDialog(); },
                 CanAddRow);
@@ -90,6 +91,14 @@ namespace GDX.Editor.Windows.DataTables
                 _ => { m_ParentWindow.GetView().CommitOrder(); }, CanCommitOrder);
             m_ToolbarRowMenu.menu.AppendAction("Reset Order",
                 _ => { m_ParentWindow.GetView().RebuildRowData(); }, CanCommitOrder);
+            m_ToolbarRowMenu.menu.AppendSeparator();
+            m_ToolbarRowMenu.menu.AppendAction("Copy Row Identifier",
+                _ =>
+                {
+                    int identifier = m_ParentWindow.GetView().GetSelectedRowIdentifier();
+                    UnityEngine.GUIUtility.systemCopyBuffer = identifier.ToString();
+                    UnityEngine.Debug.Log($"Copied row identifier '{identifier.ToString()}' to clipboard.");
+                }, HasRowSelected);
 
             m_ToolbarBindingMenu = m_Toolbar.Q<ToolbarMenu>("gdx-table-toolbar-binding");
             m_ToolbarBindingMenu.style.display = DisplayStyle.None;
@@ -98,7 +107,6 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarBindingMenu.menu.AppendAction("Push",
                 _ => { DataTableInspectorBase.BindingPush(m_ParentWindow.GetDataTable()); });
 
-            // TODO: ?
             m_ToolbarBindingStatus = m_Toolbar.Q<VisualElement>("gdx-table-toolbar-binding-pull");
             m_ToolbarBindingStatus.style.display = DisplayStyle.None;
             m_ToolbarBindingStatus.tooltip = "The binding has been detected as newer then your local data.";
@@ -125,6 +133,12 @@ namespace GDX.Editor.Windows.DataTables
             m_ToolbarHelpButton.focusable = state;
         }
 
+        public DropdownMenuAction.Status HasRowSelected(DropdownMenuAction action)
+        {
+            return m_ParentWindow.GetView().GetSelectedRowIdentifier() != -1
+                ? DropdownMenuAction.Status.Normal
+                : DropdownMenuAction.Status.Disabled;
+        }
         public DropdownMenuAction.Status CanCommitOrder(DropdownMenuAction action)
         {
             return m_ParentWindow.GetView().HasSortedColumns() || m_ParentWindow.GetView().HasManualRows()

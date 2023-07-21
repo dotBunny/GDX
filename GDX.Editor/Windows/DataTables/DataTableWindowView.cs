@@ -552,6 +552,14 @@ namespace GDX.Editor.Windows.DataTables
                 evt.menu.AppendAction("Move Right",
                     _ => m_DataTableWindow.GetController().MoveColumnRight(columnIdentifier),
                     _ => CanMoveColumnRight(columnIdentifier));
+                evt.menu.AppendSeparator();
+                evt.menu.AppendAction($"Copy Identifier ({columnIdentifier.ToString()})",
+                    _ =>
+                    {
+                        UnityEngine.GUIUtility.systemCopyBuffer = columnIdentifier.ToString();
+                        UnityEngine.Debug.Log(
+                            $"Copied column identifier '{columnIdentifier.ToString()}' to clipboard.");
+                    });
             }
         }
 
