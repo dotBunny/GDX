@@ -53,7 +53,11 @@ namespace GDX.Editor.Build
             bool buildFailed = false;
             BuildReport buildReport = null;
             bool shouldRestoreScriptingImplementation = false;
+#if UNITY_2021_3_OR_NEWER
             NamedBuildTarget buildTarget = NamedBuildTarget.FromBuildTargetGroup(definition.PlayerOptions.targetGroup);
+#else
+            BuildTargetGroup buildTarget = definition.PlayerOptions.targetGroup;
+#endif
             ScriptingImplementation previousScriptingImplementation = PlayerSettings.GetScriptingBackend(buildTarget);
 
             try
