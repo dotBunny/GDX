@@ -11,7 +11,7 @@ namespace GDX.Editor.Build
     ///     A process step for the legacy build pipeline in Unity which ensures, if enabled that the GDX scripting
     ///     define symbol is present for the target.
     /// </summary>
-    public class ScriptingDefinesBuildProcessor  : IPreprocessBuildWithReport
+    public class ScriptingDefinesBuildProcessor : IPreprocessBuildWithReport
     {
         /// <summary>
         ///     The priority for the processor to be executed, before defaults.

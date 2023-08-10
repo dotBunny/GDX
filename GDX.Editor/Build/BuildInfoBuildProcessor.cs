@@ -4,7 +4,6 @@
 
 using System;
 using System.IO;
-using GDX.Experimental;
 using GDX.Experimental.Logging;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
@@ -69,12 +68,6 @@ namespace GDX.Editor.Build
     public class BuildInfoBuildProcessor : IPreprocessBuildWithReport, IPostprocessBuildWithReport
     {
         /// <summary>
-        ///     The priority for the processor to be executed, before defaults.
-        /// </summary>
-        /// <value>The numerical value used to sort callbacks, lowest to highest.</value>
-        public int callbackOrder => -42;
-
-        /// <summary>
         ///     Restores the default <c>BuildInfo</c> after a build process finishes.
         /// </summary>
         /// <param name="report">Build process reported information.</param>
@@ -87,6 +80,12 @@ namespace GDX.Editor.Build
 
             BuildInfoProvider.WriteDefaultFile();
         }
+
+        /// <summary>
+        ///     The priority for the processor to be executed, before defaults.
+        /// </summary>
+        /// <value>The numerical value used to sort callbacks, lowest to highest.</value>
+        public int callbackOrder => -42;
 
         /// <summary>
         ///     Writes out <c>BuildInfo</c> prior to build.
