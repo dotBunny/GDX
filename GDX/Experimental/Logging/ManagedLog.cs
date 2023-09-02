@@ -18,6 +18,8 @@ namespace GDX.Experimental.Logging
     /// </summary>
     public static class ManagedLog
     {
+        // TODO : buffer that flushes to disk log as well
+        
         /// <summary>
         ///     A ring buffer structure of <see cref="LogEntry" />s.
         /// </summary>
@@ -36,7 +38,7 @@ namespace GDX.Experimental.Logging
         /// <summary>
         ///     A flag structure containing if a category should output to the Unity log handler.
         /// </summary>
-        static BitArray64 s_EchoToUnity = new BitArray64(uint.MaxValue);
+        static BitArray64 s_EchoToLogger = new BitArray64(uint.MaxValue);
 
         /// <summary>
         ///     The next identifier used when creating a new <see cref="LogEntry" />.
@@ -89,7 +91,7 @@ namespace GDX.Experimental.Logging
             {
                 s_CustomCategories.AddWithExpandCheck(categoryIdentifier, name);
                 s_EchoToConsole[(byte)categoryIdentifier] = outputToConsole;
-                s_EchoToUnity[(byte)categoryIdentifier] = outputToUnity;
+                s_EchoToLogger[(byte)categoryIdentifier] = outputToUnity;
             }
         }
 
@@ -106,7 +108,7 @@ namespace GDX.Experimental.Logging
 
             s_CustomCategories.TryRemove(categoryIdentifier);
             s_EchoToConsole[(byte)categoryIdentifier] = true;
-            s_EchoToUnity[(byte)categoryIdentifier] = true;
+            s_EchoToLogger[(byte)categoryIdentifier] = true;
         }
 
         /// <summary>
@@ -257,7 +259,7 @@ namespace GDX.Experimental.Logging
         /// <param name="output">Should the log entry be outputted to the unity logger?</param>
         public static void SetUnityOutput(int categoryIdentifier, bool output)
         {
-            s_EchoToUnity[(byte)categoryIdentifier] = output;
+            s_EchoToLogger[(byte)categoryIdentifier] = output;
         }
 
         /// <summary>
@@ -276,7 +278,7 @@ namespace GDX.Experimental.Logging
                 [CallerMemberName] string memberName = "",
                 [CallerFilePath] string sourceFilePath = "",
                 [CallerLineNumber] int sourceLineNumber = 0)
-            // ReSharper restore InvalidXmlDocComment
+                // ReSharper restore InvalidXmlDocComment
         {
             LogEntry newEntry = NewEntry(LogLevel.Debug, category, message,
                 parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
@@ -286,7 +288,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnity[(byte)category])
+            if (s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Log,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -314,7 +316,7 @@ namespace GDX.Experimental.Logging
                 [CallerMemberName] string memberName = "",
                 [CallerFilePath] string sourceFilePath = "",
                 [CallerLineNumber] int sourceLineNumber = 0)
-            // ReSharper restore InvalidXmlDocComment
+                // ReSharper restore InvalidXmlDocComment
         {
             LogEntry newEntry = NewEntry(LogLevel.Debug, category, message,
                 parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
@@ -324,7 +326,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnity[(byte)category])
+            if (s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Log,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput(), contextObject);
@@ -359,7 +361,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnity[(byte)category])
+            if (s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(
                     LogType.Log,
@@ -399,7 +401,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnity[(byte)category])
+            if (s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(
                     LogType.Log,
@@ -426,7 +428,7 @@ namespace GDX.Experimental.Logging
                 [CallerMemberName] string memberName = "",
                 [CallerFilePath] string sourceFilePath = "",
                 [CallerLineNumber] int sourceLineNumber = 0)
-            // ReSharper restore InvalidXmlDocComment
+                // ReSharper restore InvalidXmlDocComment
         {
             LogEntry newEntry = NewEntry(LogLevel.Warning, category,
                 message, parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
@@ -436,7 +438,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnity[(byte)category])
+            if (s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Warning,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -474,7 +476,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnity[(byte)category])
+            if (s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Warning,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput(), contextObject);
@@ -509,7 +511,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnity[(byte)category])
+            if (s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Error,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -547,7 +549,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnity[(byte)category])
+            if (s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Error,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput(), contextObject);
@@ -582,7 +584,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnity[(byte)category])
+            if (s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Exception,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -620,7 +622,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnity[(byte)category])
+            if (s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Exception,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput(), contextObject);
@@ -655,7 +657,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnity[(byte)category])
+            if (s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Assert,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -693,7 +695,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnity[(byte)category])
+            if (s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Assert,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput(), contextObject);
@@ -732,7 +734,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnity[(byte)category])
+            if (s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Error,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -775,7 +777,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnity[(byte)category])
+            if (s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Error,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput(), contextObject);
@@ -812,7 +814,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToUnity[(byte)category])
+            if (s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Assert,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -902,6 +904,21 @@ namespace GDX.Experimental.Logging
                 }
 
                 return ++s_IdentifierHead;
+            }
+        }
+
+        class ManagedLogHandler : ILogHandler
+        {
+            /// <inheritdoc />
+            public void LogFormat(LogType logType, Object context, string format, params object[] args)
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <inheritdoc />
+            public void LogException(Exception exception, Object context)
+            {
+                throw new NotImplementedException();
             }
         }
     }
