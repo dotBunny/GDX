@@ -24,12 +24,13 @@ namespace GDX
             {
                 ref PlayerLoopSystem[] previousSubSystems = ref parentSystem.subSystemList;
                 int subSystemCount = previousSubSystems.Length;
-                parentSystem.subSystemList = new PlayerLoopSystem[subSystemCount + 1];
+                PlayerLoopSystem[] newSubSystems = new PlayerLoopSystem[subSystemCount + 1];
                 for (int i = 0; i < subSystemCount; i++)
                 {
-                    parentSystem.subSystemList[i] = previousSubSystems[i];
+                    newSubSystems[i] = previousSubSystems[i];
                 }
-                parentSystem.subSystemList[subSystemCount + 1] = subSystem;
+                newSubSystems[subSystemCount] = subSystem;
+                parentSystem.subSystemList = newSubSystems;
             }
             else
             {
@@ -182,15 +183,17 @@ namespace GDX
 
             int newIndex = 0;
             int newCount = subSystemCount - foundCount;
-            parentSystem.subSystemList = new PlayerLoopSystem[newCount];
+            PlayerLoopSystem[] newSubSystemList =  new PlayerLoopSystem[newCount];
+           
             for (int i = 0; i < newCount; i++)
             {
                 if (previousSubSystems[i].type != subSystemType)
                 {
-                    parentSystem.subSystemList[newIndex] = previousSubSystems[i];
+                    newSubSystemList[newIndex] = previousSubSystems[i];
                     newIndex++;
                 }
             }
+            parentSystem.subSystemList = newSubSystemList;
 
             return true;
 

@@ -10,7 +10,8 @@ namespace GDX.Experimental.Logging
     public struct LogEntry
     {
         public DateTime Timestamp;
-        public LogLevel Level;
+        public LogLevel Level; 
+        public ulong Tick;
         public uint Identifier;
         public uint ParentIdentifier;
         public int CategoryIdentifier;

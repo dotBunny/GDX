@@ -18,6 +18,7 @@ namespace GDX.Experimental.Logging
     /// </summary>
     public static class ManagedLog
     {
+        // TODO: we need to update the tick based on the update ? editor AND player
         // TODO : buffer that flushes to disk log as well
         
         /// <summary>
@@ -45,11 +46,13 @@ namespace GDX.Experimental.Logging
         /// </summary>
         static uint s_IdentifierHead;
 
+        static ulong s_CurrentTick;
+
         /// <summary>
         ///     Thread-safety management object.
         /// </summary>
         static readonly object k_Lock = new object();
-
+        
         /// <summary>
         ///     Clears the internal buffer of <see cref="LogEntry" />s.
         /// </summary>
@@ -68,8 +71,8 @@ namespace GDX.Experimental.Logging
         /// <param name="name">The category's name.</param>
         /// <param name="outputToUnity">Should this category output to Unity's log handler?</param>
         /// <param name="outputToConsole">Should this category output to the Console.</param>
-        public static void RegisterCategory(int categoryIdentifier, string name, bool outputToUnity = true,
-            bool outputToConsole = false)
+        public static void RegisterCategory(int categoryIdentifier, string name, bool outputToUnity = false,
+            bool outputToConsole = true)
         {
             if (categoryIdentifier <= LogCategory.MinimumIdentifier)
             {
@@ -108,7 +111,7 @@ namespace GDX.Experimental.Logging
 
             s_CustomCategories.TryRemove(categoryIdentifier);
             s_EchoToConsole[(byte)categoryIdentifier] = true;
-            s_EchoToLogger[(byte)categoryIdentifier] = true;
+            s_EchoToLogger[(byte)categoryIdentifier] = false;
         }
 
         /// <summary>
@@ -842,6 +845,7 @@ namespace GDX.Experimental.Logging
             {
                 Timestamp = DateTime.UtcNow,
                 Level = level,
+                Tick = GetTick(),
                 Identifier = NextIdentifier(),
                 CategoryIdentifier = category,
                 ParentIdentifier = parentIdentifier,
@@ -884,6 +888,18 @@ namespace GDX.Experimental.Logging
             s_Buffer.Add(newEntry);
 
             return newEntry;
+        }
+
+        static ulong GetTick()
+        {
+            return s_CurrentTick;
+        }
+
+        public static void Tick()
+        {
+            s_CurrentTick++;
+            
+            // Do we need to flush to disk?
         }
 
         /// <summary>
