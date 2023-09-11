@@ -16,6 +16,9 @@ namespace GDX.Experimental.Logging
     /// <summary>
     ///     A managed-only categorized hierarchical logging solution.
     /// </summary>
+    /// <remarks>
+    ///     This is primarily only meant for runtime usage, as the tick is pumped only in the player loop.
+    /// </remarks>
     public static class ManagedLog
     {
         // TODO : buffer that flushes to disk log as well
