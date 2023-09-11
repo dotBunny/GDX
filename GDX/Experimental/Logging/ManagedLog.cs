@@ -18,9 +18,8 @@ namespace GDX.Experimental.Logging
     /// </summary>
     public static class ManagedLog
     {
-        // TODO: we need to update the tick based on the update ? editor AND player
         // TODO : buffer that flushes to disk log as well
-        
+
         /// <summary>
         ///     A ring buffer structure of <see cref="LogEntry" />s.
         /// </summary>
@@ -48,11 +47,31 @@ namespace GDX.Experimental.Logging
 
         static ulong s_CurrentTick;
 
+        internal static bool IsUnityLogHandler = false;
+
+        static ManagedLogHandler s_ManagedLogHandler;
+
         /// <summary>
         ///     Thread-safety management object.
         /// </summary>
         static readonly object k_Lock = new object();
-        
+
+        public static void CaptureUnityLogs(bool enabled = true)
+        {
+            if (enabled && !IsUnityLogHandler)
+            {
+                if (s_ManagedLogHandler == null)
+                {
+                    s_ManagedLogHandler = new ManagedLogHandler();
+                }
+                s_ManagedLogHandler.Start();
+            }
+            else if (!enabled && IsUnityLogHandler)
+            {
+                s_ManagedLogHandler.Stop();
+            }
+        }
+
         /// <summary>
         ///     Clears the internal buffer of <see cref="LogEntry" />s.
         /// </summary>
@@ -216,6 +235,27 @@ namespace GDX.Experimental.Logging
         }
 
         /// <summary>
+        ///     Gets an array of <see cref="LogEntry" /> based on tick identifier.
+        /// </summary>
+        /// <param name="tickIdentifier">The tick identifier to filter by.</param>
+        /// <returns>An array of filtered <see cref="LogEntry" />.</returns>
+        public static LogEntry[] GetEntriesByTick(ulong tickIdentifier)
+        {
+            int count = s_Buffer.Count;
+            SimpleList<LogEntry> entries = new SimpleList<LogEntry>(count);
+            for (int i = 0; i < count; i++)
+            {
+                if (s_Buffer[i].Tick == tickIdentifier)
+                {
+                    entries.AddUnchecked(s_Buffer[i]);
+                }
+            }
+
+            entries.Compact();
+            return entries.Array;
+        }
+
+        /// <summary>
         ///     Get the last <see cref="LogEntry" /> added to the backing buffer.
         /// </summary>
         /// <returns>The last log entry.</returns>
@@ -291,7 +331,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToLogger[(byte)category])
+            if (!IsUnityLogHandler && s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Log,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -329,7 +369,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToLogger[(byte)category])
+            if (!IsUnityLogHandler && s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Log,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput(), contextObject);
@@ -364,7 +404,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToLogger[(byte)category])
+            if (!IsUnityLogHandler && s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(
                     LogType.Log,
@@ -404,7 +444,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToLogger[(byte)category])
+            if (!IsUnityLogHandler && s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(
                     LogType.Log,
@@ -441,7 +481,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToLogger[(byte)category])
+            if (!IsUnityLogHandler && s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Warning,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -479,7 +519,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToLogger[(byte)category])
+            if (!IsUnityLogHandler && s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Warning,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput(), contextObject);
@@ -514,7 +554,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToLogger[(byte)category])
+            if (!IsUnityLogHandler && s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Error,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -552,7 +592,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToLogger[(byte)category])
+            if (!IsUnityLogHandler && s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Error,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput(), contextObject);
@@ -587,7 +627,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToLogger[(byte)category])
+            if (!IsUnityLogHandler && s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Exception,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -625,7 +665,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToLogger[(byte)category])
+            if (!IsUnityLogHandler && s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Exception,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput(), contextObject);
@@ -660,7 +700,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToLogger[(byte)category])
+            if (!IsUnityLogHandler && s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Assert,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -698,7 +738,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToLogger[(byte)category])
+            if (!IsUnityLogHandler && s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Assert,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput(), contextObject);
@@ -737,7 +777,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToLogger[(byte)category])
+            if (!IsUnityLogHandler && s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Error,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -780,7 +820,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToLogger[(byte)category])
+            if (!IsUnityLogHandler && s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Error,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput(), contextObject);
@@ -817,7 +857,7 @@ namespace GDX.Experimental.Logging
                 Console.WriteLine(newEntry.ToConsoleOutput());
             }
 
-            if (s_EchoToLogger[(byte)category])
+            if (!IsUnityLogHandler && s_EchoToLogger[(byte)category])
             {
                 UnityEngine.Debug.unityLogger.Log(LogType.Assert,
                     GetCategoryLabel(newEntry.CategoryIdentifier), newEntry.ToUnityOutput());
@@ -898,7 +938,7 @@ namespace GDX.Experimental.Logging
         public static void Tick()
         {
             s_CurrentTick++;
-            
+
             // Do we need to flush to disk?
         }
 
@@ -920,21 +960,6 @@ namespace GDX.Experimental.Logging
                 }
 
                 return ++s_IdentifierHead;
-            }
-        }
-
-        class ManagedLogHandler : ILogHandler
-        {
-            /// <inheritdoc />
-            public void LogFormat(LogType logType, Object context, string format, params object[] args)
-            {
-                throw new NotImplementedException();
-            }
-
-            /// <inheritdoc />
-            public void LogException(Exception exception, Object context)
-            {
-                throw new NotImplementedException();
             }
         }
     }
