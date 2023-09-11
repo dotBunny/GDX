@@ -14,12 +14,12 @@ namespace GDX.Experimental.Logging
     public class ManagedLogSystem
     {
         // TODO: Add config var?
-        
+
         /// <summary>
         ///     Has the managed log system been added to the player loop for updating at runtime.
         /// </summary>
         static bool s_AddedToPlayerLoop;
-        
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         public static void InitializeAtRuntime()
         {
@@ -29,7 +29,7 @@ namespace GDX.Experimental.Logging
         static void AddToPlayerLoop()
         {
             if (s_AddedToPlayerLoop) return;
-            
+
             PlayerLoopSystem systemRoot = PlayerLoop.GetCurrentPlayerLoop();
             systemRoot.AddSubSystemToFirstSubSystemOfType(
                 typeof(Initialization),
@@ -42,6 +42,7 @@ namespace GDX.Experimental.Logging
         public static void PlayerLoopTick()
         {
             ManagedLog.Tick();
+
         }
     }
 }

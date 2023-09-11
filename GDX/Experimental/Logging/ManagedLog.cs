@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using GDX.Collections;
@@ -46,7 +47,7 @@ namespace GDX.Experimental.Logging
         /// <summary>
         ///     The next identifier used when creating a new <see cref="LogEntry" />.
         /// </summary>
-        static uint s_IdentifierHead;
+        public static uint Version;
 
         static ulong s_CurrentTick;
 
@@ -256,6 +257,16 @@ namespace GDX.Experimental.Logging
 
             entries.Compact();
             return entries.Array;
+        }
+
+        public static LogEntry GetEntryAt(int index)
+        {
+            return s_Buffer[index];
+        }
+
+        public static int GetEntryCount()
+        {
+            return s_Buffer.Count;
         }
 
         /// <summary>
@@ -954,15 +965,15 @@ namespace GDX.Experimental.Logging
         {
             lock (k_Lock)
             {
-                s_IdentifierHead++;
+                Version++;
 
                 // We need to ensure this never hits it in rollover
-                if (s_IdentifierHead == 0)
+                if (Version == 0)
                 {
-                    s_IdentifierHead++;
+                    Version++;
                 }
 
-                return ++s_IdentifierHead;
+                return ++Version;
             }
         }
     }

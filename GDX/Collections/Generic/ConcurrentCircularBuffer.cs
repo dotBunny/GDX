@@ -20,7 +20,7 @@ namespace GDX.Collections.Generic
         readonly object m_Lock;
 
         /// <summary>
-        ///     Internal array of backed data for the <see cref="CircularBuffer{T}" />.
+        ///     Internal array of backed data for the <see cref="ConcurrentCircularBuffer{T}" />.
         /// </summary>
         public readonly T[] Array;
 
@@ -30,7 +30,7 @@ namespace GDX.Collections.Generic
         public readonly int Capacity;
 
         /// <summary>
-        ///     The current size of occupied elements in the <see cref="CircularBuffer{T}" />.
+        ///     The current size of occupied elements in the <see cref="ConcurrentCircularBuffer{T}" />.
         /// </summary>
         /// <remarks>CAUTION! Changing this will alter the understanding of the data.</remarks>
         public int Count;
@@ -48,9 +48,9 @@ namespace GDX.Collections.Generic
         public int StartIndex;
 
         /// <summary>
-        ///     Create a <see cref="CircularBuffer{T}" /> with a <paramref name="capacity" />.
+        ///     Create a <see cref="ConcurrentCircularBuffer{T}" /> with a <paramref name="capacity" />.
         /// </summary>
-        /// <param name="capacity">The maximum number of items allowed in the <see cref="CircularBuffer{T}" /></param>
+        /// <param name="capacity">The maximum number of items allowed in the <see cref="ConcurrentCircularBuffer{T}" /></param>
         public ConcurrentCircularBuffer(int capacity)
         {
             if (capacity < 1)
@@ -69,16 +69,16 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Create a <see cref="CircularBuffer{T}" /> with a <paramref name="capacity" />, filling with
+        ///     Create a <see cref="ConcurrentCircularBuffer{T}" /> with a <paramref name="capacity" />, filling with
         ///     <paramref name="targetItems"/>.
         /// </summary>
-        /// <param name="capacity">The maximum number of items allowed in the <see cref="CircularBuffer{T}" /></param>
-        /// <param name="targetItems">An array of values to fill the <see cref="CircularBuffer{T}" /> with.</param>
+        /// <param name="capacity">The maximum number of items allowed in the <see cref="ConcurrentCircularBuffer{T}" /></param>
+        /// <param name="targetItems">An array of values to fill the <see cref="ConcurrentCircularBuffer{T}" /> with.</param>
         /// <exception cref="ArgumentException">
-        ///     Invalid number of entries provided to the <see cref="CircularBuffer{T}" />
+        ///     Invalid number of entries provided to the <see cref="ConcurrentCircularBuffer{T}" />
         ///     constructor.
         /// </exception>
-        /// <exception cref="ArgumentNullException">No items were provided to the <see cref="CircularBuffer{T}" /> constructor.</exception>
+        /// <exception cref="ArgumentNullException">No items were provided to the <see cref="ConcurrentCircularBuffer{T}" /> constructor.</exception>
         public ConcurrentCircularBuffer(int capacity, T[] targetItems)
         {
             if (capacity < 1)

@@ -3,14 +3,15 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace GDX.Experimental.Logging
 {
-    public struct LogEntry
+    public struct LogEntry : IComparable<LogEntry>, IComparer<LogEntry>
     {
         public DateTime Timestamp;
-        public LogLevel Level; 
+        public LogLevel Level;
         public ulong Tick;
         public uint Identifier;
         public uint ParentIdentifier;
@@ -29,6 +30,11 @@ namespace GDX.Experimental.Logging
         public string ToUnityOutput()
         {
             return  $"{Message}\n\t@ {SourceFilePath}:{SourceLineNumber.ToString()}";
+        }
+
+        public string GetLevelLabel()
+        {
+            return LogLevelToLabel(Level);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -55,6 +61,25 @@ namespace GDX.Experimental.Logging
             }
 
             return string.Empty;
+        }
+
+
+        public int CompareTo(LogEntry other)
+        {
+            if (Identifier > other.Identifier)
+                return 1;
+            if (Identifier < other.Identifier)
+                return -1;
+            return 0;
+        }
+
+        public int Compare(LogEntry x, LogEntry y)
+        {
+            if (x.Identifier > y.Identifier)
+                return 1;
+            if (x.Identifier < y.Identifier)
+                return -1;
+            return 0;
         }
     }
 }
