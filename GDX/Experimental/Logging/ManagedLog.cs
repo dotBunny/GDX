@@ -16,11 +16,13 @@ namespace GDX.Experimental.Logging
     /// <summary>
     ///     A managed-only categorized hierarchical logging solution.
     /// </summary>
+    /// <remarks>
+    ///     This is primarily only meant for runtime usage, as the tick is pumped only in the player loop.
+    /// </remarks>
     public static class ManagedLog
     {
-        // TODO: we need to update the tick based on the update ? editor AND player
         // TODO : buffer that flushes to disk log as well
-        
+
         /// <summary>
         ///     A ring buffer structure of <see cref="LogEntry" />s.
         /// </summary>
@@ -48,11 +50,15 @@ namespace GDX.Experimental.Logging
 
         static ulong s_CurrentTick;
 
+        // TODO: Some sort of way of capturing the unity log CaptureUnityLog? which spins up a logger.
+        // we should then not echo to the log as it will infinitely loop - hence this bool
+        static bool s_SubscribedToUnityLogger;
+
         /// <summary>
         ///     Thread-safety management object.
         /// </summary>
         static readonly object k_Lock = new object();
-        
+
         /// <summary>
         ///     Clears the internal buffer of <see cref="LogEntry" />s.
         /// </summary>
@@ -898,7 +904,7 @@ namespace GDX.Experimental.Logging
         public static void Tick()
         {
             s_CurrentTick++;
-            
+
             // Do we need to flush to disk?
         }
 
