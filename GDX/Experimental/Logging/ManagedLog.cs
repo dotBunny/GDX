@@ -23,7 +23,6 @@ namespace GDX.Experimental.Logging
     public static class ManagedLog
     {
         // TODO : buffer that flushes to disk log as well
-
         /// <summary>
         ///     A ring buffer structure of <see cref="LogEntry" />s.
         /// </summary>
@@ -135,6 +134,11 @@ namespace GDX.Experimental.Logging
             s_CustomCategories.TryRemove(categoryIdentifier);
             s_EchoToConsole[(byte)categoryIdentifier] = true;
             s_EchoToLogger[(byte)categoryIdentifier] = false;
+        }
+
+        public static int GetBufferCapacity()
+        {
+            return s_Buffer.Array.Length;
         }
 
         /// <summary>
