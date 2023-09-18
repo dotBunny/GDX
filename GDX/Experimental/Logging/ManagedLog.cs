@@ -137,6 +137,11 @@ namespace GDX.Experimental.Logging
             s_EchoToLogger[(byte)categoryIdentifier] = false;
         }
 
+        public static int GetBufferCapacity()
+        {
+            return s_Buffer.Array.Length;
+        }
+
         /// <summary>
         ///     Gets the name of a category.
         /// </summary>

@@ -36,7 +36,7 @@ namespace GDX.Editor
             }
         }
 
-#if UNITY_2022_2_OR_NEWER
+#if UNITY_2022_2_OR_NEWER && !UNITY_2023_2_OR_NEWER
 #if GDX_TOOLS
         [MenuItem("Assets/Find References In Project", false, 25)]
 #endif // GDX_TOOLS
