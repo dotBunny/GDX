@@ -49,6 +49,11 @@ namespace GDX
         public const string LocalTimestampFormat = "yyyy-MM-dd HH\\:mm\\:ss";
 
         /// <summary>
+        ///     A filename safe <see cref="DateTime.ToString(System.String)" />.
+        /// </summary>
+        public const string FilenameTimestampFormat = "yyyyMMdd_HHmmss";
+
+        /// <summary>
         ///     Creates a more human readable <see cref="string" /> of a byte size.
         /// </summary>
         /// <example>

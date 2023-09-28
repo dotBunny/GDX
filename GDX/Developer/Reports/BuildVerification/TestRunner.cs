@@ -75,6 +75,13 @@ namespace GDX.Developer.Reports.BuildVerification
                 }
             }
 
+            // Wait for all scenes to load and activate
+            while (SceneExtensions.IsSceneManagerBusy())
+            {
+                await Task.Delay(SafeDelayTime);
+            }
+
+
             // Wait for next update - super important around integration of loaded content
             ManagedLog.Info(LogCategory.Test, "Waiting at least frame ...");
             float loadCurrentTime = Time.time;

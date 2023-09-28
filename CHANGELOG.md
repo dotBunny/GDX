@@ -9,8 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Build configs
-- Copyable table ID
+- A simplified `BuildConfiguration` object with inheritance.
+- Simplified ways to access identifiers for `DataTableBase` rows and columns.
+- `SceneExtensions` extensions to provide better awareness of loading.
+- `FilenameTimestampFormat` as a `ToString` format for `DateTime`.
+
+### Changed
+
+- `TestRunner` now waits for all scenes to finish loading before proceeding with tests.
 
 ## [4.0.0] - 2023-07-02
 
