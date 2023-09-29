@@ -38,7 +38,7 @@ namespace GDX.Experimental.Logging
             {
                 Debug.unityLogger.logHandler = m_PreviousLogHandler;
                 m_PreviousLogHandler = null;
-                ManagedLog.IsUnityLogHandler = true;
+                ManagedLog.IsUnityLogHandler = false;
             }
         }
 
