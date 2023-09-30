@@ -14,9 +14,10 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
     {
         public const int SectionIndex = 4;
         public const string SectionKey = "GDX.Environment";
-        static readonly string[] k_Keywords = { "environment", "define", "symbol" };
+        static readonly string[] k_Keywords = { "environment", "define", "symbol", "console" };
         VisualElement m_RootElement;
         Toggle m_ToggleEnsureSymbol;
+        Toggle m_ToggleDeveloperConsole;
         Toggle m_ToggleToolsMenu;
         Toggle m_ToggleEnsureShaders;
 
@@ -33,6 +34,24 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         public void BindSectionContent(VisualElement rootElement)
         {
             m_RootElement = rootElement;
+
+            m_ToggleDeveloperConsole = m_RootElement.Q<Toggle>("toggle-developer-console");
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_ToggleDeveloperConsole);
+            m_ToggleDeveloperConsole.value = ProjectSettingsProvider.WorkingConfig.EnvironmentDeveloperConsole;
+            m_ToggleDeveloperConsole.RegisterValueChangedCallback(evt =>
+            {
+                ProjectSettingsProvider.WorkingConfig.EnvironmentDeveloperConsole = evt.newValue;
+                if (Config.EnvironmentDeveloperConsole != evt.newValue)
+                {
+                    m_ToggleDeveloperConsole.AddToClassList(ResourcesProvider.ChangedClass);
+                }
+                else
+                {
+                    m_ToggleDeveloperConsole.RemoveFromClassList(ResourcesProvider.ChangedClass);
+                }
+
+                ProjectSettingsProvider.UpdateForChanges();
+            });
 
             m_ToggleEnsureSymbol = m_RootElement.Q<Toggle>("toggle-ensure-symbol");
             ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_ToggleEnsureSymbol);
@@ -140,6 +159,10 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
             ProjectSettingsProvider.SetStructChangeCheck(m_ToggleEnsureSymbol,
                 Config.EnvironmentScriptingDefineSymbol,
                 ProjectSettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol);
+
+            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleDeveloperConsole,
+                Config.EnvironmentDeveloperConsole,
+                ProjectSettingsProvider.WorkingConfig.EnvironmentDeveloperConsole);
 
             ProjectSettingsProvider.SetStructChangeCheck(m_ToggleToolsMenu,
                 Config.EnvironmentToolsMenu,

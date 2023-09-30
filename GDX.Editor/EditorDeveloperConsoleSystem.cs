@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.Experimental;
-using GDX.Experimental.Logging;
 using GDX.Threading;
 using Unity.Mathematics;
 using UnityEditor;
@@ -18,60 +17,29 @@ namespace GDX.Editor
         static double s_LastTick;
 
         /// <summary>
-        ///     Is the <see cref="EditorTaskDirectorSystem"/> subscribed to <see cref="EditorApplication.update"/>?
+        ///     Is the <see cref="EditorDeveloperConsoleSystem"/> subscribed to <see cref="EditorApplication.update"/>?
         /// </summary>
         static bool s_SubscribedToEditorApplicationUpdate;
 
         /// <summary>
-        ///     How often should the <see cref="TaskDirector"/> be ticked?
+        ///     How often should the <see cref="DeveloperConsole"/> be ticked?
         /// </summary>
         /// <remarks>
         ///     This works by accumulation, when time between the last tick and current time exceeds
-        ///     <see cref="s_TickRate"/>, a tick will be triggered. Default configured in <see cref="Config"/>.
+        ///     <see cref="k_TickRate"/>, a tick will be triggered.
         /// </remarks>
-        static double s_TickRate = -1;
+        const double k_TickRate = 0.5f;
 
         /// <summary>
-        ///     Get the current tick rate used by the <see cref="EditorTaskDirectorSystem"/>.
-        /// </summary>
-        /// <returns>
-        ///     A double value representing the elapsed time necessary to trigger an update to the
-        ///     <see cref="TaskDirector"/>.
-        /// </returns>
-        public static double GetTickRate()
-        {
-            return s_TickRate;
-        }
-
-        /// <summary>
-        ///     Update the rate at which the <see cref="EditorTaskDirectorSystem"/> updates the <see cref="TaskDirector"/>.
-        /// </summary>
-        /// <remarks>
-        ///     This will not survive domain reload, please see <see cref="Config.EditorTaskDirectorSystemTickRate"/>.
-        /// </remarks>
-        /// <param name="tickRate">The new tick rate.</param>
-        public static void SetTickRate(double tickRate)
-        {
-            s_TickRate = tickRate;
-#if UNITY_EDITOR
-            if (s_TickRate >= 0 && !Config.EditorTaskDirectorSystem)
-            {
-                ManagedLog.Warning(0, "Tick rate set whilst EditorTaskDirectorSystem has been configured off.");
-            }
-#endif // UNITY_EDITOR
-            SubscribeToEditorApplicationUpdate(tickRate >= 0);
-        }
-
-        /// <summary>
-        ///     Sets up some default state for the <see cref="EditorTaskDirectorSystem"/>.
+        ///     Sets up some default state for the <see cref="EditorDeveloperConsoleSystem"/>.
         /// </summary>
         [InitializeOnLoadMethod]
         static void Initialize()
         {
             // Default tick rate if enabled
-            if (Config.EditorTaskDirectorSystem && s_TickRate < 0)
+            if (Config.EnvironmentDeveloperConsole )
             {
-                SetTickRate(Config.EditorTaskDirectorSystemTickRate);
+                SubscribeToEditorApplicationUpdate(true);
             }
 
             // Always subscribe, maybe in the future we will make a monolithic UnityHooks type system.
@@ -84,11 +52,10 @@ namespace GDX.Editor
         /// <param name="state"></param>
         static void OnPlayModeStateChanged(PlayModeStateChange state)
         {
-            //TODO Should destroy the editor console
             switch (state)
             {
                 case PlayModeStateChange.EnteredEditMode:
-                    if (s_TickRate >= 0)
+                    if (k_TickRate >= 0)
                     {
                         SubscribeToEditorApplicationUpdate(true);
                     }
@@ -104,13 +71,13 @@ namespace GDX.Editor
         /// </summary>
         /// <remarks>
         ///     Functions much like a proxy tick system where it manages the delta and eventually triggers the
-        ///     <see cref="TaskDirector.Tick"/> when the <see cref="s_TickRate"/> has been exceeded.
+        ///     <see cref="DeveloperConsole.Tick"/> when the <see cref="k_TickRate"/> has been exceeded.
         /// </remarks>
         static void OnUpdate()
         {
             // We're going to avoid ticking when the editor really is actually busy
             // It's important to check greater then due to ambiguity of the precision
-            if (s_TickRate < 0 ||
+            if (k_TickRate < 0 ||
                 EditorApplication.isCompiling ||
                 EditorApplication.isUpdating ||
                 EditorApplication.isPlaying)
@@ -122,7 +89,7 @@ namespace GDX.Editor
             float deltaTime = (float)(math.abs(s_LastTick - EditorApplication.timeSinceStartup));
 
             // Handle our tick rate, ensuring the obscure rollover case is handled
-            if (deltaTime < s_TickRate)
+            if (deltaTime < k_TickRate)
             {
                 return;
             }
@@ -139,7 +106,7 @@ namespace GDX.Editor
         /// <param name="subscribe">A true/false indication.</param>
         static void SubscribeToEditorApplicationUpdate(bool subscribe)
         {
-            if (subscribe && !s_SubscribedToEditorApplicationUpdate)// && Config.EditorTaskDirectorSystem)
+            if (subscribe && !s_SubscribedToEditorApplicationUpdate && Config.EnvironmentDeveloperConsole)
             {
                 EditorApplication.update += OnUpdate;
                 s_SubscribedToEditorApplicationUpdate = true;

@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using GDX;
 using UnityEngine;
 using UnityEngine.LowLevel;
@@ -19,11 +20,11 @@ namespace GDX.Experimental
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         public static void InitializeAtRuntime()
         {
-            AddToPlayerLoop();
-        }
+            if (!Config.EnvironmentDeveloperConsole)
+            {
+                return;
+            }
 
-        static void AddToPlayerLoop()
-        {
             if (s_AddedToPlayerLoop) return;
 
             PlayerLoopSystem systemRoot = PlayerLoop.GetCurrentPlayerLoop();

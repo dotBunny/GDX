@@ -88,6 +88,11 @@ namespace GDX.Editor
         public bool EnvironmentAlwaysIncludeShaders;
 
         /// <summary>
+        ///     Should the GDX developer console be used.
+        /// </summary>
+        public bool EnvironmentDeveloperConsole;
+
+        /// <summary>
         ///     Should a GDX scripting define symbol be added to all target build groups.
         /// </summary>
         public bool EnvironmentScriptingDefineSymbol;
@@ -150,6 +155,7 @@ namespace GDX.Editor
             EditorTaskDirectorSystem = Config.EditorTaskDirectorSystem;
             EditorTaskDirectorSystemTickRate = Config.EditorTaskDirectorSystemTickRate;
             EnvironmentScriptingDefineSymbol = Config.EnvironmentScriptingDefineSymbol;
+            EnvironmentDeveloperConsole = Config.EnvironmentDeveloperConsole;
             EnvironmentToolsMenu = Config.EnvironmentToolsMenu;
             TaskDirectorSystem = Config.TaskDirectorSystem;
             TaskDirectorSystemTickRate = Config.TaskDirectorSystemTickRate;
@@ -175,6 +181,7 @@ namespace GDX.Editor
                    BuildInfoBuildTaskArgument == Config.BuildInfoBuildTaskArgument &&
                    BuildInfoBuildStreamArgument == Config.BuildInfoBuildStreamArgument &&
                    EnvironmentScriptingDefineSymbol == Config.EnvironmentScriptingDefineSymbol &&
+                   EnvironmentDeveloperConsole == Config.EnvironmentDeveloperConsole && 
                    EnvironmentToolsMenu == Config.EnvironmentToolsMenu &&
                    EnvironmentAlwaysIncludeShaders == Config.EnvironmentAlwaysIncludeShaders &&
                    TaskDirectorSystem == Config.TaskDirectorSystem &&

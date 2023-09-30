@@ -127,6 +127,13 @@ namespace GDX
         const bool k_EnvironmentAlwaysIncludeShaders = true;
 
         /// <summary>
+        ///     Should the GDX tools menu be added in the editor?
+        /// </summary>
+        [OriginalValue(k_EnvironmentDeveloperConsole)]
+        public static bool EnvironmentDeveloperConsole = k_EnvironmentDeveloperConsole;
+        const bool k_EnvironmentDeveloperConsole = true;
+
+        /// <summary>
         ///     Should a GDX scripting define symbol be added to all target build groups.
         /// </summary>
         [OriginalValue(k_EnvironmentScriptingDefineSymbol)]
