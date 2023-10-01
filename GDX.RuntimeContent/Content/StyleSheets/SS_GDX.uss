@@ -1,5 +1,5 @@
 :root {
-    --font-awesome-solid: url('../Fonts/FONT_FontAwesome6-Solid.otf');
+    --font-awesome-mini: url('../Fonts/FONT_FontAwesome-Mini.otf');
     --corner-radius: 8px;
 }
 

@@ -347,7 +347,7 @@ namespace GDX.Experimental
         /// <summary>
         ///     Draw lines with a specific material to the buffer.
         /// </summary>
-        /// <param name="material">A <em>potentially</em> unlit material to draw the lines with. This will only be drawin</param>
+        /// <param name="material">A <em>potentially</em> unlit material to draw the lines with.</param>
         /// <param name="vertices">The vertices of the lines.</param>
         /// <param name="verticesStartIndex">The index to start at in the <paramref name="vertices" /> array.</param>
         /// <param name="verticesLength">The number of elements in the <paramref name="vertices" /> array to use.</param>

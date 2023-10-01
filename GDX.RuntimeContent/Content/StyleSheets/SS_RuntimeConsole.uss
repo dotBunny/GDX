@@ -135,7 +135,7 @@
     width: 22px;
     padding-top: 4px;
     -unity-text-align: middle-left;
-    -unity-font-definition: var(--font-awesome-solid);
+    -unity-font-definition: var(--font-awesome-mini);
     font-size: 14px;
 }
 
