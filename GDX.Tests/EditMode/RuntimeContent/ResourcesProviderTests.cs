@@ -2,27 +2,28 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using GDX.RuntimeContent;
 using NUnit.Framework;
 
-namespace GDX.Rendering
+namespace GDX.RuntimeContent
 {
     /// <summary>
-    ///     A collection of unit tests to validate functionality of the <see cref="ShaderProvider" />
+    ///     A collection of unit tests to validate functionality of the <see cref="ResourcesProvider" />
     ///     class.
     /// </summary>
-    public class ShaderProviderTests
+    public class ResourcesProviderTests
     {
         [Test]
         [Category(Core.TestCategory)]
         public void DottedLine_NotNull()
         {
-            Assert.IsTrue(ShaderProvider.DottedLine != null);
+            Assert.IsTrue(ResourceProvider.Shaders.DottedLine != null);
         }
         [Test]
         [Category(Core.TestCategory)]
         public void UnlitColor_NotNull()
         {
-            Assert.IsTrue(ShaderProvider.UnlitColor != null);
+            Assert.IsTrue(ResourceProvider.Shaders.UnlitColor != null);
         }
     }
 }

@@ -4,10 +4,9 @@
 
 using System;
 using System.Collections;
-using System.Text.RegularExpressions;
 using System.Threading;
 using GDX.Editor;
-using GDX.Experimental.Logging;
+using GDX.Logging;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;

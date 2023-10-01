@@ -5,11 +5,10 @@
 #if GDX_PERFORMANCETESTING
 using NUnit.Framework;
 using Unity.PerformanceTesting;
-using Unity.Profiling;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-namespace GDX.Experimental.Logging
+namespace GDX.Logging
 {
     public class ManagedLogPerformanceTests
     {
