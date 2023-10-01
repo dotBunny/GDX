@@ -81,7 +81,7 @@ namespace GDX.Experimental.ConsoleCommands
                 return null;
             }
 
-            ExecConsoleCommand command = new() {
+            ExecConsoleCommand command = new ExecConsoleCommand() {
                 m_FilePaths = foundFiles.ToArray(),
                 m_FilePathsCount = foundFiles.Count
             };

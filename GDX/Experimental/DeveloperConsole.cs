@@ -19,14 +19,14 @@ namespace GDX.Experimental
     public static class DeveloperConsole
     {
         static ConsoleCommandBase.ConsoleCommandLevel s_AccessLevel = ConsoleCommandBase.ConsoleCommandLevel.Developer;
-        static CircularBuffer<string> s_CommandHistory = new(50);
-        static readonly Queue<ConsoleCommandBase> s_CommandBuffer = new(50);
+        static CircularBuffer<string> s_CommandHistory = new CircularBuffer<string>(50);
+        static readonly Queue<ConsoleCommandBase> s_CommandBuffer = new Queue<ConsoleCommandBase>(50);
 
         static StringKeyDictionary<ConsoleCommandBase>
-            s_KnownCommands = new(50);
+            s_KnownCommands = new StringKeyDictionary<ConsoleCommandBase>(50);
 
         // We keep a list of the commands handy because of how frequently we need to iterate over them
-        static readonly List<string> k_KnownCommandsList = new(50);
+        static readonly List<string> k_KnownCommandsList = new List<string>(50);
 
         public static int PreviousCommandCount => s_CommandHistory.Count;
 

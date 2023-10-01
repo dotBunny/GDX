@@ -16,7 +16,7 @@ namespace GDX.Experimental.ConsoleCommands
         public override bool Evaluate(float deltaTime)
         {
             PlayerLoopSystem loop = PlayerLoop.GetCurrentPlayerLoop();
-            TextGenerator text = new();
+            TextGenerator text = new TextGenerator();
             loop.GenerateSystemTree(text);
 
             ManagedLog.Info(LogCategory.Default, text.ToString());

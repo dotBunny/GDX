@@ -48,7 +48,7 @@ namespace GDX.Experimental.ConsoleCommands
         /// <inheritdoc />
         public override ConsoleCommandBase GetInstance(string context)
         {
-            QuitConsoleCommand command = new();
+            QuitConsoleCommand command = new QuitConsoleCommand();
             if (string.IsNullOrEmpty(context))
             {
                 return command;

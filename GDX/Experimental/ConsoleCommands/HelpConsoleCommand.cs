@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using GDX.Developer;
 using GDX.Experimental.Logging;
+using UnityEngine.UI;
 
 namespace GDX.Experimental.ConsoleCommands
 {
@@ -13,8 +14,8 @@ namespace GDX.Experimental.ConsoleCommands
         /// <inheritdoc />
         public override bool Evaluate(float deltaTime)
         {
-            TextGenerator textGenerator = new();
-            List<string> sortedCommands = new(DeveloperConsole.GetCommandKeywordsCopy());
+            TextGenerator textGenerator = new TextGenerator();
+            List<string> sortedCommands = new List<string>(DeveloperConsole.GetCommandKeywordsCopy());
             sortedCommands.Sort();
             int commandCount = sortedCommands.Count;
             ConsoleCommandLevel maxAccessLevel = DeveloperConsole.GetAccessLevel();

@@ -13,7 +13,7 @@ namespace GDX.Experimental.ConsoleCommands
         /// <inheritdoc />
         public override bool Evaluate(float deltaTime)
         {
-            TextGenerator textGenerator = new();
+            TextGenerator textGenerator = new TextGenerator();
             int sceneCount = SceneManager.sceneCountInBuildSettings;
             for (int i = 0; i < sceneCount; i++)
             {
