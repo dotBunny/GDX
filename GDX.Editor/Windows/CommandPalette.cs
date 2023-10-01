@@ -92,7 +92,9 @@ namespace GDX.Editor.Windows
 
             m_TextField = rootVisualElement.Q<TextField>("gdx-command-palette-input");
             TextInputBaseField<string> textInput = m_TextField.Q<TextInputBaseField<string>>();
+#if UNITY_2022_3_OR_NEWER
             textInput.autoCorrection = false;
+#endif
 
 
             m_TextField.RegisterCallback<KeyDownEvent>(OnSubmit, TrickleDown.TrickleDown);
