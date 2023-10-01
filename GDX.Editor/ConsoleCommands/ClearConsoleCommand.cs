@@ -6,7 +6,6 @@ using System;
 using System.Reflection;
 using GDX.Developer;
 using UnityEditor;
-using Console = GDX.Developer.Console;
 
 namespace GDX.Editor.ConsoleCommands
 {
@@ -44,7 +43,7 @@ namespace GDX.Editor.ConsoleCommands
         [InitializeOnLoadMethod]
         static void RegisterCommand()
         {
-            Console.RegisterCommand(new ClearConsoleCommand());
+            Developer.Console.RegisterCommand(new ClearConsoleCommand());
         }
     }
 #endif // UNITY_2022_2_OR_NEWER
