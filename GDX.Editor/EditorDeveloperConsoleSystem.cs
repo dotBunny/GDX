@@ -9,6 +9,7 @@ using UnityEditor;
 
 namespace GDX.Editor
 {
+#if UNITY_2021_3_OR_NEWER
     public static class EditorDeveloperConsoleSystem
     {
         /// <summary>
@@ -118,4 +119,5 @@ namespace GDX.Editor
             }
         }
     }
+#endif // UNITY_2021_3_OR_NEWER
 }
