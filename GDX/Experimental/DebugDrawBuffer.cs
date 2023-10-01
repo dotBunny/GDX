@@ -166,12 +166,12 @@ namespace GDX.Experimental
             // Make sure our statics have their desired default materials atm
             if (s_LineMaterial == null)
             {
-                s_LineMaterial = new Material(RuntimeContent.ResourceProvider.Shaders.UnlitColor);
+                s_LineMaterial = new Material(RuntimeContent.ResourceProvider.GetShaders().UnlitColor);
             }
 
             if (s_DottedLineMaterial == null)
             {
-                s_DottedLineMaterial = new Material(RuntimeContent.ResourceProvider.Shaders.DottedLine);
+                s_DottedLineMaterial = new Material(RuntimeContent.ResourceProvider.GetShaders().DottedLine);
             }
         }
 
