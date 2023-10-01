@@ -8,7 +8,7 @@ using TextGenerator = GDX.Developer.TextGenerator;
 
 namespace GDX.Experimental.ConsoleCommands
 {
-#if UNITY_2022_3_OR_NEWER
+#if UNITY_2021_3_OR_NEWER
     public class PlayerLoopConsoleCommand : ConsoleCommandBase
     {
         /// <inheritdoc />
