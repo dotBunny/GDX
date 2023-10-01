@@ -17,13 +17,13 @@ namespace GDX.RuntimeContent
         [Category(Core.TestCategory)]
         public void DottedLine_NotNull()
         {
-            Assert.IsTrue(ResourceProvider.Shaders.DottedLine != null);
+            Assert.IsTrue(ResourceProvider.GetShaders().DottedLine != null);
         }
         [Test]
         [Category(Core.TestCategory)]
         public void UnlitColor_NotNull()
         {
-            Assert.IsTrue(ResourceProvider.Shaders.UnlitColor != null);
+            Assert.IsTrue(ResourceProvider.GetShaders().UnlitColor != null);
         }
     }
 }
