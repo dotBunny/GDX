@@ -4,6 +4,7 @@
 
 namespace GDX.Experimental.ConsoleCommands
 {
+#if UNITY_2021_3_OR_NEWER
     public class WaitConsoleCommand : ConsoleCommandBase
     {
         float m_WaitTime;
@@ -42,4 +43,5 @@ namespace GDX.Experimental.ConsoleCommands
             return command;
         }
     }
+#endif // UNITY_2021_3_OR_NEWER
 }

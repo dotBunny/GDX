@@ -6,6 +6,7 @@ using GDX.Experimental.Logging;
 
 namespace GDX.Experimental.ConsoleCommands
 {
+#if UNITY_2021_3_OR_NEWER
     public class VersionConsoleCommand : ConsoleCommandBase
     {
         /// <inheritdoc />
@@ -32,4 +33,5 @@ namespace GDX.Experimental.ConsoleCommands
             return "Display all versions of assemblies and libraries used by the project.";
         }
     }
+#endif // UNITY_2021_3_OR_NEWER
 }

@@ -10,6 +10,7 @@ using UnityEngine.UIElements;
 
 namespace GDX.Editor.Windows
 {
+#if UNITY_2021_3_OR_NEWER
     public class CommandPalette : EditorWindow
     {
         const int k_TargetWidth = 500;
@@ -28,7 +29,7 @@ namespace GDX.Editor.Windows
         [Shortcut("GDX/Command Palette", null, KeyCode.BackQuote, ShortcutModifiers.Control)]
         public static void Open()
         {
-            if (Application.isPlaying) return;
+            if (Application.isPlaying || !Config.EnvironmentDeveloperConsole) return;
 
             if (s_Instance == null)
             {
@@ -127,4 +128,5 @@ namespace GDX.Editor.Windows
             rootVisualElement.schedule.Execute(Close).ExecuteLater(5);
         }
     }
+#endif // UNITY_2021_3_OR_NEWER
 }

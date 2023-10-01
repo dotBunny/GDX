@@ -5,10 +5,10 @@
 using System.Collections.Generic;
 using GDX.Developer;
 using GDX.Experimental.Logging;
-using UnityEngine.UI;
 
 namespace GDX.Experimental.ConsoleCommands
 {
+#if UNITY_2021_3_OR_NEWER
     public class HelpConsoleCommand : ConsoleCommandBase
     {
         /// <inheritdoc />
@@ -62,4 +62,5 @@ namespace GDX.Experimental.ConsoleCommands
             return "Display a list of all known commands and their usage.";
         }
     }
+#endif // UNITY_2021_3_OR_NEWER
 }

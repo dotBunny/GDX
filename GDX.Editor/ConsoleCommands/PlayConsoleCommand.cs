@@ -7,6 +7,7 @@ using UnityEditor;
 
 namespace GDX.Editor.ConsoleCommands
 {
+#if UNITY_2021_3_OR_NEWER
     public class PlayConsoleCommand : ConsoleCommandBase
     {
         public override bool Evaluate(float deltaTime)
@@ -39,4 +40,5 @@ namespace GDX.Editor.ConsoleCommands
             DeveloperConsole.RegisterCommand(new PlayConsoleCommand());
         }
     }
+#endif // UNITY_2021_3_OR_NEWER
 }

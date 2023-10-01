@@ -127,12 +127,14 @@ namespace GDX
             }
 
             // Subscribe our developer console
+#if UNITY_2021_3_OR_NEWER
             if (Config.EnvironmentDeveloperConsole)
             {
                 systemRoot.AddSubSystemToFirstSubSystemOfType(
                     typeof(Initialization),
                     typeof(DeveloperConsole), DeveloperConsoleTick);
             }
+#endif // UNITY_2021_3_OR_NEWER
 
             PlayerLoop.SetPlayerLoop(systemRoot);
 
@@ -141,8 +143,10 @@ namespace GDX
 
         static void DeveloperConsoleTick()
         {
+#if UNITY_2021_3_OR_NEWER
             // We need to feed in the deltaTime, this could be the previous frames if were being honest about it
             DeveloperConsole.Tick(Time.deltaTime);
+#endif // UNITY_2021_3_OR_NEWER
         }
     }
 }

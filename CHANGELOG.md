@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- A `CommandPalette`, `DeveloperConsole` and `RuntimeConsole` requiring (_Unity 2021.3+_)
+- GDX utilizes its own `ManagedLog` system now allowing for heirarchial logging. 
 - A simplified `BuildConfiguration` object with inheritance.
 - Simplified ways to access identifiers for `DataTableBase` rows and columns.
 - `SceneExtensions` extensions to provide better awareness of loading.

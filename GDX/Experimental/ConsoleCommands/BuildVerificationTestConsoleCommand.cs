@@ -13,6 +13,8 @@ using UnityEngine.SceneManagement;
 
 namespace GDX.Experimental.ConsoleCommands
 {
+#if UNITY_2021_3_OR_NEWER
+
     public class BuildVerificationTestConsoleCommand : ConsoleCommandBase
     {
         enum State
@@ -123,4 +125,5 @@ namespace GDX.Experimental.ConsoleCommands
             return null;
         }
     }
+#endif // UNITY_2021_3_OR_NEWER
 }

@@ -12,6 +12,7 @@ using UnityEngine;
 
 namespace GDX.Experimental
 {
+#if UNITY_2021_3_OR_NEWER
     // TODO: Hint system?
     // TOOD: CVars
     // TODO: Echo
@@ -185,4 +186,5 @@ namespace GDX.Experimental
             }
         }
     }
+#endif // UNITY_2021_3_OR_NEWER
 }

@@ -7,6 +7,7 @@ using GDX.Experimental.Logging;
 
 namespace GDX.Experimental.ConsoleCommands
 {
+#if UNITY_2021_3_OR_NEWER
     public class InputKeyPressConsoleCommand : ConsoleCommandBase
     {
         InputProxy.KeyCode m_KeyCode;
@@ -56,4 +57,5 @@ namespace GDX.Experimental.ConsoleCommands
             return null;
         }
     }
+#endif // UNITY_2021_3_OR_NEWER
 }

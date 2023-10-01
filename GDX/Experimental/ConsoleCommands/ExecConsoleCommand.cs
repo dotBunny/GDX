@@ -9,6 +9,7 @@ using GDX.Experimental.Logging;
 
 namespace GDX.Experimental.ConsoleCommands
 {
+#if UNITY_2021_3_OR_NEWER
     public class ExecConsoleCommand : ConsoleCommandBase
     {
         string[] m_FilePaths;
@@ -88,4 +89,5 @@ namespace GDX.Experimental.ConsoleCommands
             return command;
         }
     }
+#endif // UNITY_2021_3_OR_NEWER
 }

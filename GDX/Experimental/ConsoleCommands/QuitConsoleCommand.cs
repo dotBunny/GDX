@@ -10,6 +10,7 @@ using UnityEngine;
 
 namespace GDX.Experimental.ConsoleCommands
 {
+#if UNITY_2021_3_OR_NEWER
     public class QuitConsoleCommand : ConsoleCommandBase
     {
         int errorCode;
@@ -59,4 +60,5 @@ namespace GDX.Experimental.ConsoleCommands
             return command;
         }
     }
+#endif // UNITY_2021_3_OR_NEWER
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace GDX.Experimental
 {
+#if UNITY_2021_3_OR_NEWER
     public abstract class ConsoleCommandBase
     {
         public enum ConsoleCommandLevel
@@ -69,4 +70,5 @@ namespace GDX.Experimental
             return this;
         }
     }
+#endif // UNITY_2021_3_OR_NEWER
 }
