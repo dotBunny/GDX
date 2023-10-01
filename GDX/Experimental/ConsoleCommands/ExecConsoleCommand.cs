@@ -25,11 +25,7 @@ namespace GDX.Experimental.ConsoleCommands
                 for (int j = 0; j < lineCount; j++)
                 {
                     string line = lines[j].Trim();
-#if UNITY_2021_3_OR_NEWER
-                    if (line.StartsWith('#'))
-#else
-                    if (line.StartsWith("#"))
-#endif
+                    if(line[0] == '#') // Skip comments
                     {
                         continue;
                     }
@@ -65,11 +61,7 @@ namespace GDX.Experimental.ConsoleCommands
         /// <inheritdoc />
         public override ConsoleCommandBase GetInstance(string context)
         {
-#if UNITY_2021_3_OR_NEWER
             string[] files = context.Split(',', StringSplitOptions.RemoveEmptyEntries);
-#else
-            string[] files = context.Split(",", StringSplitOptions.RemoveEmptyEntries);
-#endif
             int fileCount = files.Length;
             List<string> foundFiles = new List<string>(fileCount);
 

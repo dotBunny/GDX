@@ -53,10 +53,6 @@ namespace GDX.Experimental
         {
             return false;
         }
-        public virtual bool IsRuntimeOnly()
-        {
-            return false;
-        }
 
         /// <summary>
         ///     Gets the instance of the work to be added to the <see cref="DeveloperConsole"/>'s command buffer.

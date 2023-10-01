@@ -97,12 +97,7 @@ namespace GDX.Experimental
 
             // We do not split passed the command as to ensure the execution cost is passed down to the actual command
             // if subsequent args need to be processed.
-#if UNITY_2021_3_OR_NEWER
             string[] split = commandString.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
-#else
-            string[] split = commandString.Split(" ", 2, StringSplitOptions.RemoveEmptyEntries);
-#endif
-
 
             ConsoleCommandBase command = GetCommand(split[0]);
             if (command != null)
@@ -150,7 +145,6 @@ namespace GDX.Experimental
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("EXCEPTION");
                     uint parentMessageID = ManagedLog.Error(LogCategory.Default,
                         "An exception occured while processing the console command buffer. It has been flushed.");
                     ManagedLog.Exception(LogCategory.Default, e, parentMessageID);

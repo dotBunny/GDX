@@ -99,7 +99,7 @@ namespace GDX.Experimental.ConsoleCommands
         {
             BuildVerificationTestConsoleCommand command = new BuildVerificationTestConsoleCommand { m_State = State.Init };
 
-            string[] scenes = context.Split(",");
+            string[] scenes = context.Split(',');
             int sceneCount = scenes.Length;
             List<TestScene> validScenes = new List<TestScene>(sceneCount);
             for (int i = 0; i < sceneCount; i++)
