@@ -17,8 +17,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FilenameTimestampFormat` as a `ToString` format for `DateTime`.
 - `GDX.RuntimeContent` to organize runtime resources for automatic build inclusion and loading.
 
-- Font Awesome 6 Free content has been added to the `
-
 ### Changed
 
 - `TestRunner` now waits for all scenes to finish loading before proceeding with tests.
