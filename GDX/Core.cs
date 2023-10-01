@@ -11,7 +11,6 @@ using UnityEngine;
 using UnityEngine.LowLevel;
 using UnityEngine.PlayerLoop;
 using UnityEngine.Scripting;
-using Console = GDX.Developer.Console;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif // UNITY_EDITOR
@@ -158,7 +157,7 @@ namespace GDX
         {
 #if UNITY_2021_3_OR_NEWER
             // We need to feed in the deltaTime, this could be the previous frames if were being honest about it
-            Console.Tick(Time.deltaTime);
+            Developer.Console.Tick(Time.deltaTime);
 #endif // UNITY_2021_3_OR_NEWER
         }
     }
