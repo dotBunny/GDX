@@ -8,7 +8,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using GDX.Logging;
 using UnityEngine;
+#if GDX_INPUT
 using UnityEngine.InputSystem;
+#endif
 using UnityEngine.UIElements;
 
 namespace GDX.Developer

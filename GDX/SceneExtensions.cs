@@ -8,6 +8,10 @@ namespace GDX
 {
     public static class SceneExtensions
     {
+        /// <summary>
+        ///     Indicates if there are scenes unloading, loading, or scenes that have yet to be integrated and enabled.
+        /// </summary>
+        /// <returns>true/false if there is work being done.</returns>
         public static bool IsSceneManagerBusy()
         {
             int sceneCount = SceneManager.sceneCount;
