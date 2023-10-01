@@ -97,7 +97,12 @@ namespace GDX.Experimental
 
             // We do not split passed the command as to ensure the execution cost is passed down to the actual command
             // if subsequent args need to be processed.
-            string[] split = commandString.Split(' ', 2);
+#if UNITY_2021_3_OR_NEWER
+            string[] split = commandString.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+#else
+            string[] split = commandString.Split(" ", 2, StringSplitOptions.RemoveEmptyEntries);
+#endif
+
 
             ConsoleCommandBase command = GetCommand(split[0]);
             if (command != null)
