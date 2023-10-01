@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 
 namespace GDX.Editor.Windows
 {
-#if UNITY_2021_3_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
     public class CommandPalette : EditorWindow
     {
         const int k_TargetWidth = 500;
@@ -98,9 +98,7 @@ namespace GDX.Editor.Windows
 
             m_TextField = rootVisualElement.Q<TextField>("gdx-command-palette-input");
             TextInputBaseField<string> textInput = m_TextField.Q<TextInputBaseField<string>>();
-#if UNITY_2022_3_OR_NEWER
             textInput.autoCorrection = false;
-#endif
 
 
             m_TextField.RegisterCallback<KeyDownEvent>(OnSubmit, TrickleDown.TrickleDown);
@@ -133,5 +131,5 @@ namespace GDX.Editor.Windows
             rootVisualElement.schedule.Execute(Close).ExecuteLater(5);
         }
     }
-#endif // UNITY_2021_3_OR_NEWER
+#endif // UNITY_2022_2_OR_NEWER
 }

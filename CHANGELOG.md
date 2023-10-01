@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- A `CommandPalette`, (Developer)`Console` and `RuntimeConsole` requiring (_Unity 2021.3+_), example code utilizes the new InputSystem.
+- A `CommandPalette`, (Developer)`Console` and `RuntimeConsole` requiring (_Unity 2022.2+_), example code utilizes the new InputSystem.
 - GDX primarily uses own `ManagedLog` system now allowing for heirarchial logging through the framework.
 - A simplified `BuildConfiguration` object with inheritance.
 - Simplified ways to access identifiers for `DataTableBase` rows and columns.

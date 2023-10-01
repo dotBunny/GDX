@@ -7,7 +7,7 @@ using GDX.Logging;
 
 namespace GDX.Developer.ConsoleCommands
 {
-#if UNITY_2021_3_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
     public class HelpConsoleCommand : ConsoleCommandBase
     {
         /// <inheritdoc />
@@ -62,5 +62,5 @@ namespace GDX.Developer.ConsoleCommands
             return "Display a list of all known commands and their usage.";
         }
     }
-#endif // UNITY_2021_3_OR_NEWER
+#endif // UNITY_2022_2_OR_NEWER
 }

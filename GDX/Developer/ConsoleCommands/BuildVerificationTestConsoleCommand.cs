@@ -13,7 +13,7 @@ using UnityEngine.SceneManagement;
 
 namespace GDX.Developer.ConsoleCommands
 {
-#if UNITY_2021_3_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
 
     public class BuildVerificationTestConsoleCommand : ConsoleCommandBase
     {
@@ -128,5 +128,5 @@ namespace GDX.Developer.ConsoleCommands
             Output
         }
     }
-#endif // UNITY_2021_3_OR_NEWER
+#endif // UNITY_2022_2_OR_NEWER
 }

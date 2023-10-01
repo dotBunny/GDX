@@ -7,7 +7,7 @@ using UnityEngine.LowLevel;
 
 namespace GDX.Developer.ConsoleCommands
 {
-#if UNITY_2021_3_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
     public class PlayerLoopConsoleCommand : ConsoleCommandBase
     {
         /// <inheritdoc />
@@ -39,5 +39,5 @@ namespace GDX.Developer.ConsoleCommands
             return "Output a structured list of the the current systems in Unity's player loop.";
         }
     }
-#endif // UNITY_2021_3_OR_NEWER
+#endif // UNITY_2022_2_OR_NEWER
 }

@@ -15,6 +15,7 @@ using UnityEngine.UIElements;
 
 namespace GDX.Developer
 {
+#if UNITY_2022_2_OR_NEWER
     public class RuntimeConsoleController
     {
         readonly ListView m_ConsoleListView;
@@ -264,4 +265,5 @@ namespace GDX.Developer
             m_InputLabel.text = m_InputBuilder.ToString();
         }
     }
+#endif // UNITY_2022_2_OR_NEWER
 }

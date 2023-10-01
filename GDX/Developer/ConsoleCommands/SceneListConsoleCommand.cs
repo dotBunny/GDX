@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 namespace GDX.Developer.ConsoleCommands
 {
-#if UNITY_2021_3_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
     public class SceneListConsoleCommand : ConsoleCommandBase
     {
         /// <inheritdoc />
@@ -40,5 +40,5 @@ namespace GDX.Developer.ConsoleCommands
             return "Displays a list of known scenes in the build.";
         }
     }
-#endif // UNITY_2021_3_OR_NEWER
+#endif // UNITY_2022_2_OR_NEWER
 }

@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 namespace GDX.Developer.ConsoleCommands
 {
-#if UNITY_2021_3_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
     public class SceneLoadConsoleCommand : ConsoleCommandBase
     {
         Scene m_TargetScene;
@@ -61,5 +61,5 @@ namespace GDX.Developer.ConsoleCommands
             return null;
         }
     }
-#endif // UNITY_2021_3_OR_NEWER
+#endif // UNITY_2022_2_OR_NEWER
 }

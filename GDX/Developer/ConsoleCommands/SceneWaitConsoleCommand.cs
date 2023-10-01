@@ -4,7 +4,7 @@
 
 namespace GDX.Developer.ConsoleCommands
 {
-#if UNITY_2021_3_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
     public class SceneWaitConsoleCommand : ConsoleCommandBase
     {
         /// <inheritdoc />
@@ -25,5 +25,5 @@ namespace GDX.Developer.ConsoleCommands
             return "Waits for all scene actions to stabilize (loading/unloading), and all enabled.";
         }
     }
-#endif // UNITY_2021_3_OR_NEWER
+#endif // UNITY_2022_2_OR_NEWER
 }

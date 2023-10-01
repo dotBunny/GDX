@@ -9,7 +9,7 @@ using GDX.Logging;
 
 namespace GDX.Developer.ConsoleCommands
 {
-#if UNITY_2021_3_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
     public class ExecConsoleCommand : ConsoleCommandBase
     {
         string[] m_FilePaths;
@@ -91,5 +91,5 @@ namespace GDX.Developer.ConsoleCommands
             return command;
         }
     }
-#endif // UNITY_2021_3_OR_NEWER
+#endif // UNITY_2022_2_OR_NEWER
 }

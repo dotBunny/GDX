@@ -136,7 +136,7 @@ namespace GDX
             }
 
             // Subscribe our developer console
-#if UNITY_2021_3_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
             if (Config.EnvironmentDeveloperConsole)
             {
                 // Disable the built in developer console
@@ -146,7 +146,7 @@ namespace GDX
                     typeof(Initialization),
                     typeof(Console), DeveloperConsoleTick);
             }
-#endif // UNITY_2021_3_OR_NEWER
+#endif // UNITY_2022_2_OR_NEWER
 
             PlayerLoop.SetPlayerLoop(systemRoot);
 
@@ -155,10 +155,10 @@ namespace GDX
 
         static void DeveloperConsoleTick()
         {
-#if UNITY_2021_3_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
             // We need to feed in the deltaTime, this could be the previous frames if were being honest about it
             Developer.Console.Tick(Time.deltaTime);
-#endif // UNITY_2021_3_OR_NEWER
+#endif // UNITY_2022_2_OR_NEWER
         }
     }
 }

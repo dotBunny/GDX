@@ -4,7 +4,7 @@
 
 namespace GDX.Developer.ConsoleCommands
 {
-#if UNITY_2021_3_OR_NEWER
+#if UNITY_2022_2_OR_NEWER
     public class GarbageCollectionConsoleCommand : ConsoleCommandBase
     {
         /// <inheritdoc />
@@ -32,5 +32,5 @@ namespace GDX.Developer.ConsoleCommands
             return "Force garbage collection be ran for managed memory.";
         }
     }
-#endif // UNITY_2021_3_OR_NEWER
+#endif // UNITY_2022_2_OR_NEWER
 }
