@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b679fc937ef183438c59cb9ef353abd, type: 3}
   m_Name: GDX.Fonts
   m_EditorClassIdentifier: 
-  FontAwesome: {fileID: 12800000, guid: 1aa43cd22f1c87d4993ae8ba56a16ea2, type: 3}
+  FontAwesome: {fileID: 12800000, guid: 1a832279149dde54887fff8221ffdd41, type: 3}
