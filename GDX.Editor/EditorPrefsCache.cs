@@ -10,7 +10,7 @@ using UnityEngine;
 namespace GDX.Editor
 {
     /// <summary>
-    ///     A cached version of <see cref="EditorPrefs"/>, allowing for faster access.
+    ///     A cached version of <see cref="EditorPrefs" />, allowing for faster access.
     /// </summary>
     /// <remarks>
     ///     It is important to use the equivalent set methods to update the cache.
@@ -251,6 +251,5 @@ namespace GDX.Editor
                 EditorPrefs.SetString(id, setValue);
             }
         }
-
     }
 }

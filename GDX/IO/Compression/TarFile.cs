@@ -6,13 +6,12 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
-using GDX.Experimental;
-using GDX.Experimental.Logging;
+using GDX.Logging;
 
 namespace GDX.IO.Compression
 {
     /// <summary>
-    /// Provides static methods for extracting tar files and tarballs.
+    ///     Provides static methods for extracting tar files and tarballs.
     /// </summary>
     public static class TarFile
     {
@@ -62,7 +61,7 @@ namespace GDX.IO.Compression
 
 
         /// <summary>
-        ///     Extract a tar formatted <see cref="Stream"/> to the <paramref name="destinationDirectoryName" />.
+        ///     Extract a tar formatted <see cref="Stream" /> to the <paramref name="destinationDirectoryName" />.
         /// </summary>
         /// <param name="sourceStream">The <see cref="Stream" /> which to extract from.</param>
         /// <param name="destinationDirectoryName">Output directory to write the files.</param>
@@ -87,9 +86,11 @@ namespace GDX.IO.Compression
                 int readByteCount = sourceStream.Read(readBuffer, 0, 12);
                 if (readByteCount != 12)
                 {
-                    ManagedLog.Error(LogCategory.GDX, $"Unable to read filesize from header. {readByteCount.ToString()} read, expected 12.");
+                    ManagedLog.Error(LogCategory.GDX,
+                        $"Unable to read filesize from header. {readByteCount.ToString()} read, expected 12.");
                     break;
                 }
+
                 long fileSize = Convert.ToInt64(Encoding.UTF8.GetString(readBuffer, 0, 12).Trim('\0').Trim(), 8);
                 sourceStream.Seek(376L, SeekOrigin.Current);
 
@@ -113,8 +114,10 @@ namespace GDX.IO.Compression
                     readByteCount = sourceStream.Read(fileContentBuffer, 0, newFileContentBufferLength);
                     if (readByteCount != newFileContentBufferLength)
                     {
-                        ManagedLog.Warning(LogCategory.GDX, $"Read file size of {readByteCount.ToString()} does not match the expected {newFileContentBufferLength.ToString()} byte size.");
+                        ManagedLog.Warning(LogCategory.GDX,
+                            $"Read file size of {readByteCount.ToString()} does not match the expected {newFileContentBufferLength.ToString()} byte size.");
                     }
+
                     newFileStream.Write(fileContentBuffer, 0, newFileContentBufferLength);
                 }
 

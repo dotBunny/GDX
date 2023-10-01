@@ -2,7 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Experimental;
+using GDX.Developer;
 using UnityEditor;
 using UnityEditor.ShortcutManagement;
 using UnityEngine;
@@ -29,7 +29,10 @@ namespace GDX.Editor.Windows
         [Shortcut("GDX/Command Palette", null, KeyCode.BackQuote, ShortcutModifiers.Control)]
         public static void Open()
         {
-            if (Application.isPlaying || !Config.EnvironmentDeveloperConsole) return;
+            if (Application.isPlaying || !Config.EnvironmentDeveloperConsole)
+            {
+                return;
+            }
 
             if (s_Instance == null)
             {
@@ -49,7 +52,8 @@ namespace GDX.Editor.Windows
 
         void Bind()
         {
-            Label prefix = new Label {
+            Label prefix = new Label
+            {
                 name = "gdx-command-palette-caret",
                 style =
                 {
@@ -84,6 +88,7 @@ namespace GDX.Editor.Windows
                     marginTop = k_ZeroLength,
                     marginBottom = k_ZeroLength,
                     backgroundColor = new StyleColor(Color.clear)
+
                 },
                 isDelayed = true
             };
@@ -111,7 +116,7 @@ namespace GDX.Editor.Windows
                     break;
                 case KeyCode.Return:
                 case KeyCode.KeypadEnter:
-                    DeveloperConsole.QueueCommand(m_TextField.text);
+                    Console.QueueCommand(m_TextField.text);
                     DelayedClose();
                     break;
             }

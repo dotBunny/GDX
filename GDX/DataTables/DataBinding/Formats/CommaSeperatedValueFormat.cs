@@ -13,7 +13,7 @@ using TextGenerator = GDX.Developer.TextGenerator;
 namespace GDX.DataTables.DataBinding.Formats
 {
     /// <summary>
-    /// A comma-seperated values format.
+    ///     A comma-seperated values format.
     /// </summary>
     class CommaSeperatedValueFormat : FormatBase
     {
@@ -56,7 +56,7 @@ namespace GDX.DataTables.DataBinding.Formats
         /// <inheritdoc />
         public override string[] GetImportDialogExtensions()
         {
-            return new [] { GetFriendlyName(), GetFilePreferredExtension() };
+            return new[] { GetFriendlyName(), GetFilePreferredExtension() };
         }
 
         /// <inheritdoc />

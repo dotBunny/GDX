@@ -5,13 +5,14 @@
 using System;
 using System.Runtime.CompilerServices;
 using Unity.Collections;
-using Unity.Mathematics;
 using Unity.Collections.LowLevel.Unsafe;
+using Unity.Mathematics;
+
 namespace GDX.Mathematics.Random
 {
     // ReSharper disable CommentTypo
     /// <summary>
-    ///     Generates pseudorandom values based on the WELL1024a algorithm. You must <see cref="Dispose"/> manually.
+    ///     Generates pseudorandom values based on the WELL1024a algorithm. You must <see cref="Dispose" /> manually.
     /// </summary>
     /// <remarks>
     ///     Primarily based on the work of <a href="http://lomont.org/papers/2008/Lomont_PRNG_2008.pdf">Chris Lomont</a>,
@@ -143,6 +144,7 @@ namespace GDX.Mathematics.Random
             {
                 ptr[i] = restoreStatePtr[i];
             }
+
             SampleCount = restoreState.Count;
         }
 
@@ -153,7 +155,7 @@ namespace GDX.Mathematics.Random
         /// <returns></returns>
         public WellState GetState()
         {
-            return new WellState {Index = Index, State = State, Seed = OriginalSeed, Count = SampleCount};
+            return new WellState { Index = Index, State = State, Seed = OriginalSeed, Count = SampleCount };
         }
 
         /// <inheritdoc cref="IRandomProvider.NextBoolean" />
@@ -191,7 +193,7 @@ namespace GDX.Mathematics.Random
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int NextIntegerExclusive(int minValue = 0, int maxValue = int.MaxValue)
         {
-            return Range.GetInteger(Sample(), minValue + 1,  maxValue - 1);
+            return Range.GetInteger(Sample(), minValue + 1, maxValue - 1);
         }
 
         /// <inheritdoc cref="IRandomProvider.NextSingle" />
@@ -240,11 +242,6 @@ namespace GDX.Mathematics.Random
         public struct WellState
         {
             /// <summary>
-            ///     The internal state array.
-            /// </summary>
-            public NativeArray<uint> State;
-
-            /// <summary>
             ///     The seed used to originally create the <see cref="WELL1024a" />.
             /// </summary>
             public uint Seed;
@@ -258,6 +255,11 @@ namespace GDX.Mathematics.Random
             ///     The internal state index.
             /// </summary>
             public byte Index;
+
+            /// <summary>
+            ///     The internal state array.
+            /// </summary>
+            public NativeArray<uint> State;
         }
 
         /// <summary>

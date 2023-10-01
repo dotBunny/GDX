@@ -4,7 +4,7 @@
 
 using System;
 using System.IO;
-using GDX.Experimental.Logging;
+using GDX.Logging;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;

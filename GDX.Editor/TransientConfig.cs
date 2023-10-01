@@ -3,19 +3,20 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using GDX.Logging;
 
 namespace GDX.Editor
 {
     /// <summary>
     ///     A configuration that is operated on when in Project Settings.
     /// </summary>
-    /// <remarks>A non-static copy of <see cref="GDX.Config"/>.</remarks>
+    /// <remarks>A non-static copy of <see cref="GDX.Config" />.</remarks>
     public class TransientConfig
     {
         /// <summary>
-        ///     The asset database relative path of the GDX config override file.
+        ///     Should the BuildInfo file be written during builds?
         /// </summary>
-        public string ConfigOutputPath;
+        public bool BuildInfo;
 
         /// <summary>
         ///     Ensure that there is an assembly definition wrapping the generated content.
@@ -48,11 +49,6 @@ namespace GDX.Editor
         public string BuildInfoBuildTaskArgument;
 
         /// <summary>
-        ///     Should the BuildInfo file be written during builds?
-        /// </summary>
-        public bool BuildInfo;
-
-        /// <summary>
         ///     The namespace where the BuildInfo should be placed.
         /// </summary>
         public string BuildInfoNamespace;
@@ -73,6 +69,11 @@ namespace GDX.Editor
         public string CommandLineParserArgumentSplit;
 
         /// <summary>
+        ///     The asset database relative path of the GDX config override file.
+        /// </summary>
+        public string ConfigOutputPath;
+
+        /// <summary>
         ///     Should the Editor Task Director tick the Task Director.
         /// </summary>
         public bool EditorTaskDirectorSystem;
@@ -88,12 +89,17 @@ namespace GDX.Editor
         public bool EnvironmentAlwaysIncludeShaders;
 
         /// <summary>
+        ///     Should the <see cref="ManagedLog" /> automatically capture the Unity logs?
+        /// </summary>
+        public bool EnvironmentAutoCaptureUnityLogs;
+
+        /// <summary>
         ///     Should the GDX developer console be used.
         /// </summary>
         public bool EnvironmentDeveloperConsole;
 
         /// <summary>
-        ///     Should the GDX utilized the <see cref="GDX.Experimental.Logging.ManagedLog"/>.
+        ///     Should the GDX utilized the <see cref="ManagedLog" />.
         /// </summary>
         public bool EnvironmentManagedLog;
 
@@ -156,12 +162,12 @@ namespace GDX.Editor
             BuildInfoOutputPath = Config.BuildInfoOutputPath;
             CommandLineParserArgumentPrefix = Config.CommandLineParserArgumentPrefix;
             CommandLineParserArgumentSplit = Config.CommandLineParserArgumentSplit;
-            EnvironmentAlwaysIncludeShaders = Config.EnvironmentAlwaysIncludeShaders;
             EditorTaskDirectorSystem = Config.EditorTaskDirectorSystem;
             EditorTaskDirectorSystemTickRate = Config.EditorTaskDirectorSystemTickRate;
             EnvironmentScriptingDefineSymbol = Config.EnvironmentScriptingDefineSymbol;
             EnvironmentDeveloperConsole = Config.EnvironmentDeveloperConsole;
             EnvironmentManagedLog = Config.EnvironmentManagedLog;
+            EnvironmentAutoCaptureUnityLogs = Config.EnvironmentAutoCaptureUnityLogs;
             EnvironmentToolsMenu = Config.EnvironmentToolsMenu;
             TaskDirectorSystem = Config.TaskDirectorSystem;
             TaskDirectorSystemTickRate = Config.TaskDirectorSystemTickRate;
@@ -189,12 +195,13 @@ namespace GDX.Editor
                    EnvironmentScriptingDefineSymbol == Config.EnvironmentScriptingDefineSymbol &&
                    EnvironmentDeveloperConsole == Config.EnvironmentDeveloperConsole &&
                    EnvironmentManagedLog == Config.EnvironmentManagedLog &&
+                   EnvironmentAutoCaptureUnityLogs == Config.EnvironmentAutoCaptureUnityLogs &&
                    EnvironmentToolsMenu == Config.EnvironmentToolsMenu &&
-                   EnvironmentAlwaysIncludeShaders == Config.EnvironmentAlwaysIncludeShaders &&
                    TaskDirectorSystem == Config.TaskDirectorSystem &&
                    Math.Abs(TaskDirectorSystemTickRate - Config.TaskDirectorSystemTickRate) < Platform.FloatTolerance &&
                    EditorTaskDirectorSystem == Config.EditorTaskDirectorSystem &&
-                   Math.Abs(EditorTaskDirectorSystemTickRate - Config.EditorTaskDirectorSystemTickRate) < Platform.DoubleTolerance &&
+                   Math.Abs(EditorTaskDirectorSystemTickRate - Config.EditorTaskDirectorSystemTickRate) <
+                   Platform.DoubleTolerance &&
                    LocalizationSetDefaultCulture == Config.LocalizationSetDefaultCulture &&
                    LocalizationDefaultCulture == Config.LocalizationDefaultCulture &&
                    ConfigOutputPath == Config.ConfigOutputPath &&

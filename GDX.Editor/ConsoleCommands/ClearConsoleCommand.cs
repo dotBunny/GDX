@@ -4,8 +4,9 @@
 
 using System;
 using System.Reflection;
-using GDX.Experimental;
+using GDX.Developer;
 using UnityEditor;
+using Console = GDX.Developer.Console;
 
 namespace GDX.Editor.ConsoleCommands
 {
@@ -21,6 +22,7 @@ namespace GDX.Editor.ConsoleCommands
             {
                 method.Invoke(new object(), null);
             }
+
             return true;
         }
 
@@ -42,7 +44,7 @@ namespace GDX.Editor.ConsoleCommands
         [InitializeOnLoadMethod]
         static void RegisterCommand()
         {
-            DeveloperConsole.RegisterCommand(new ClearConsoleCommand());
+            Console.RegisterCommand(new ClearConsoleCommand());
         }
     }
 #endif // UNITY_2021_3_OR_NEWER

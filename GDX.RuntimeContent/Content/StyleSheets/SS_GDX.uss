@@ -1,0 +1,8 @@
+:root {
+    --font-awesome-solid: url('../Fonts/FONT_FontAwesome6-Solid.otf');
+    --corner-radius: 8px;
+}
+
+* {
+    font-size: 14px;
+}

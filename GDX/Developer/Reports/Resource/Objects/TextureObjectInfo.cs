@@ -20,12 +20,12 @@ namespace GDX.Developer.Reports.Resource.Objects
         public int Width;
 
         /// <summary>
-        /// Create a clone of this object.
+        ///     Create a clone of this object.
         /// </summary>
         /// <returns></returns>
         public override ObjectInfo Clone()
         {
-            return new TextureObjectInfo()
+            return new TextureObjectInfo
             {
                 CopyCount = CopyCount,
                 MemoryUsage = MemoryUsage,
@@ -54,7 +54,6 @@ namespace GDX.Developer.Reports.Resource.Objects
 
         public override string GetDetailedInformation(int maximumWidth)
         {
-
             // Always a width of 11
             string size = $"{Width.ToString()}x{Height.ToString()}".PadRight(11);
 
@@ -64,11 +63,13 @@ namespace GDX.Developer.Reports.Resource.Objects
             {
                 format = $"Unknown ({format})";
             }
+
             format = format.PadRight(formatWidth);
             if (format.Length > formatWidth)
             {
                 format = format.Substring(0, formatWidth);
             }
+
             return $"{size} {format} {(IsReadable ? "RW" : "")}";
         }
     }

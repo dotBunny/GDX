@@ -49,7 +49,6 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             LongField cellField = (LongField)m_CellElement;
             cellField.SetValueWithoutNotify((long)m_CellValue.Get());
 #endif // UNITY_2022_3_OR_NEWER
-
         }
 
         /// <inheritdoc />

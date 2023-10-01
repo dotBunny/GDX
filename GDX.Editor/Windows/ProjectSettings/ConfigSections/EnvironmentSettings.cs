@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using UnityEngine.UIElements;
-using Toggle = UnityEngine.UIElements.Toggle;
 
 namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 {
@@ -16,11 +15,12 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         public const string SectionKey = "GDX.Environment";
         static readonly string[] k_Keywords = { "environment", "define", "symbol", "console" };
         VisualElement m_RootElement;
-        Toggle m_ToggleEnsureSymbol;
+        Toggle m_ToggleAutoCaptureUnityLogs;
         Toggle m_ToggleDeveloperConsole;
+        Toggle m_ToggleEnsureShaders;
+        Toggle m_ToggleEnsureSymbol;
         Toggle m_ToggleManagedLog;
         Toggle m_ToggleToolsMenu;
-        Toggle m_ToggleEnsureShaders;
 
         public string[] GetSearchKeywords()
         {
@@ -50,6 +50,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
                 {
                     m_ToggleDeveloperConsole.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
+
                 UpdateForRequirements();
                 ProjectSettingsProvider.UpdateForChanges();
             });
@@ -69,6 +70,25 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
                     m_ToggleManagedLog.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
 
+                ProjectSettingsProvider.UpdateForChanges();
+            });
+
+            m_ToggleAutoCaptureUnityLogs = m_RootElement.Q<Toggle>("toggle-auto-capture-unity-logs");
+            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_ToggleAutoCaptureUnityLogs);
+            m_ToggleAutoCaptureUnityLogs.value = ProjectSettingsProvider.WorkingConfig.EnvironmentAutoCaptureUnityLogs;
+            m_ToggleAutoCaptureUnityLogs.RegisterValueChangedCallback(evt =>
+            {
+                ProjectSettingsProvider.WorkingConfig.EnvironmentAutoCaptureUnityLogs = evt.newValue;
+                if (Config.EnvironmentAutoCaptureUnityLogs != evt.newValue)
+                {
+                    m_ToggleAutoCaptureUnityLogs.AddToClassList(ResourcesProvider.ChangedClass);
+                }
+                else
+                {
+                    m_ToggleAutoCaptureUnityLogs.RemoveFromClassList(ResourcesProvider.ChangedClass);
+                }
+
+                UpdateForRequirements();
                 ProjectSettingsProvider.UpdateForChanges();
             });
 
@@ -108,30 +128,13 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 
                 ProjectSettingsProvider.UpdateForChanges();
             });
-
-            m_ToggleEnsureShaders = m_RootElement.Q<Toggle>("toggle-ensure-shaders");
-            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_ToggleEnsureShaders);
-            m_ToggleEnsureShaders.value = ProjectSettingsProvider.WorkingConfig.EnvironmentAlwaysIncludeShaders;
-            m_ToggleEnsureShaders.RegisterValueChangedCallback(evt =>
-            {
-                ProjectSettingsProvider.WorkingConfig.EnvironmentAlwaysIncludeShaders = evt.newValue;
-                if (Config.EnvironmentAlwaysIncludeShaders != evt.newValue)
-                {
-                    m_ToggleEnsureShaders.AddToClassList(ResourcesProvider.ChangedClass);
-                }
-                else
-                {
-                    m_ToggleEnsureShaders.RemoveFromClassList(ResourcesProvider.ChangedClass);
-                }
-
-                ProjectSettingsProvider.UpdateForChanges();
-            });
         }
 
         public bool GetDefaultVisibility()
         {
             return false;
         }
+
         public string GetSectionHeaderLabel()
         {
             return "Environment";
@@ -146,10 +149,12 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         {
             return SectionKey;
         }
+
         public string GetSectionHelpLink()
         {
             return null;
         }
+
         public bool GetToggleSupport()
         {
             return false;
@@ -167,7 +172,31 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 
         public void SetToggleState(VisualElement toggleElement, bool newState)
         {
+        }
 
+        public void UpdateSectionContent()
+        {
+            UpdateForRequirements();
+
+            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleEnsureSymbol,
+                Config.EnvironmentScriptingDefineSymbol,
+                ProjectSettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol);
+
+            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleManagedLog,
+                Config.EnvironmentManagedLog,
+                ProjectSettingsProvider.WorkingConfig.EnvironmentManagedLog);
+
+            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleAutoCaptureUnityLogs,
+                Config.EnvironmentAutoCaptureUnityLogs,
+                ProjectSettingsProvider.WorkingConfig.EnvironmentAutoCaptureUnityLogs);
+
+            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleDeveloperConsole,
+                Config.EnvironmentDeveloperConsole,
+                ProjectSettingsProvider.WorkingConfig.EnvironmentDeveloperConsole);
+
+            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleToolsMenu,
+                Config.EnvironmentToolsMenu,
+                ProjectSettingsProvider.WorkingConfig.EnvironmentToolsMenu);
         }
 
         void UpdateForRequirements()
@@ -179,36 +208,12 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
                 m_ToggleManagedLog.value = true;
                 m_ToggleManagedLog.SetEnabled(false);
             }
+
             if (!ProjectSettingsProvider.WorkingConfig.EnvironmentDeveloperConsole &&
                 !m_ToggleManagedLog.enabledSelf)
             {
                 m_ToggleManagedLog.SetEnabled(true);
             }
-        }
-
-        public void UpdateSectionContent()
-        {
-            UpdateForRequirements();
-
-            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleEnsureShaders,
-                Config.EnvironmentAlwaysIncludeShaders,
-                ProjectSettingsProvider.WorkingConfig.EnvironmentAlwaysIncludeShaders);
-
-            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleEnsureSymbol,
-                Config.EnvironmentScriptingDefineSymbol,
-                ProjectSettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol);
-
-            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleManagedLog,
-                Config.EnvironmentManagedLog,
-                ProjectSettingsProvider.WorkingConfig.EnvironmentManagedLog);
-
-            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleDeveloperConsole,
-                Config.EnvironmentDeveloperConsole,
-                ProjectSettingsProvider.WorkingConfig.EnvironmentDeveloperConsole);
-
-            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleToolsMenu,
-                Config.EnvironmentToolsMenu,
-                ProjectSettingsProvider.WorkingConfig.EnvironmentToolsMenu);
         }
     }
 }

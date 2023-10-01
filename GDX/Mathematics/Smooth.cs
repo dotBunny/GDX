@@ -15,7 +15,7 @@ namespace GDX.Mathematics
     {
         // ReSharper disable CommentTypo
         /// <summary>
-        ///     Smooths between <paramref name="previousValue"/> and <paramref name="targetValue"/> based on time since
+        ///     Smooths between <paramref name="previousValue" /> and <paramref name="targetValue" /> based on time since
         ///     the last sample and a given half-life.
         /// </summary>
         /// <remarks>Assumes wibbly wobbly, timey wimey.</remarks>
@@ -54,6 +54,7 @@ namespace GDX.Mathematics
             {
                 return float.NaN;
             }
+
             float count = elapsedTime / halfLife;
             return 1f - math.pow(0.5f, count);
         }

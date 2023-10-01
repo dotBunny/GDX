@@ -15,8 +15,8 @@ namespace GDX.Collections.Generic
         /// <summary>
         ///     Generate an array scaled by bilinear interpolation.
         /// </summary>
-        /// <remarks>Works with <see cref="float"/> values.</remarks>
-        /// <param name="inputArray">The existing <see cref="Array2D{T}"/> to scale.</param>
+        /// <remarks>Works with <see cref="float" /> values.</remarks>
+        /// <param name="inputArray">The existing <see cref="Array2D{T}" /> to scale.</param>
         /// <param name="scaleFactor">The multiple to scale by.</param>
         public static Array2D<float> Scale(ref this Array2D<float> inputArray, int scaleFactor = 2)
         {

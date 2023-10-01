@@ -4,7 +4,6 @@
 
 using System;
 using System.IO;
-using GDX.Developer;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -21,11 +20,11 @@ namespace GDX.Editor
         string m_FileExtension;
         string m_FileName;
         string m_FileNameWithoutExtension;
+
+        WeakReference<Object> m_LoadedAsset;
         string m_Path;
         string m_PathWithoutExtension;
         string m_TypeString;
-
-        WeakReference<Object> m_LoadedAsset;
 
         public AssetDatabaseReference(string guid, Type type = null)
         {

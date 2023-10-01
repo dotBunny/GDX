@@ -4,19 +4,21 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GDX.Experimental;
-using GDX.Experimental.Logging;
+using System.Threading;
+using GDX.Logging;
 using GDX.Mathematics.Random;
 using UnityEngine;
 using UnityEngine.LowLevel;
 using UnityEngine.PlayerLoop;
+using UnityEngine.Scripting;
+using Console = GDX.Developer.Console;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif // UNITY_EDITOR
 
 namespace GDX
 {
-    [UnityEngine.Scripting.Preserve]
+    [Preserve]
     public static class Core
     {
         public const string OverrideClass = "CustomConfig";
@@ -25,7 +27,7 @@ namespace GDX
         public const string TestCategory = "GDX.Tests";
 
         /// <summary>
-        ///     An empty <see cref="object"/> array useful when things require it.
+        ///     An empty <see cref="object" /> array useful when things require it.
         /// </summary>
         // ReSharper disable once RedundantArrayCreationExpression, HeapView.ObjectAllocation.Evident
         public static readonly object[] EmptyObjectArray = new object[] { };
@@ -36,7 +38,7 @@ namespace GDX
         public static int MainThreadID = -1;
 
         /// <summary>
-        ///     A pseudorandom number generated seeded with <see cref="StartTicks"/>.
+        ///     A pseudorandom number generated seeded with <see cref="StartTicks" />.
         /// </summary>
         /// <remarks>Useful for generic randomness where determinism is not required.</remarks>
         public static WELL1024a Random;
@@ -47,7 +49,7 @@ namespace GDX
         public static readonly long StartTicks;
 
         /// <summary>
-        ///     Has the <see cref="Core"/> main thread initialization happened?
+        ///     Has the <see cref="Core" /> main thread initialization happened?
         /// </summary>
         static bool s_InitializedMainThread;
 
@@ -86,10 +88,10 @@ namespace GDX
         /// <remarks>
         ///     <para>
         ///         It might be important to call this function if you are using GDX related configurations inside of
-        ///         another <see cref="UnityEngine.RuntimeInitializeOnLoadMethod"/> decorated static method.
+        ///         another <see cref="UnityEngine.RuntimeInitializeOnLoadMethod" /> decorated static method.
         ///     </para>
         ///     <para>
-        ///         An example of this sort of usage is in the <see cref="GDX.Threading.TaskDirectorSystem"/>.
+        ///         An example of this sort of usage is in the <see cref="GDX.Threading.TaskDirectorSystem" />.
         ///     </para>
         /// </remarks>
 #if UNITY_EDITOR
@@ -104,7 +106,7 @@ namespace GDX
                 return;
             }
 
-            MainThreadID = System.Threading.Thread.CurrentThread.ManagedThreadId;
+            MainThreadID = Thread.CurrentThread.ManagedThreadId;
 
             Localization.SetDefaultCulture();
 
@@ -114,9 +116,17 @@ namespace GDX
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         public static void InitializeAtRuntime()
         {
-            if (s_InitializedRuntime) return;
+            if (s_InitializedRuntime)
+            {
+                return;
+            }
 
             PlayerLoopSystem systemRoot = PlayerLoop.GetCurrentPlayerLoop();
+
+            if (Config.EnvironmentAutoCaptureUnityLogs)
+            {
+                ManagedLog.CaptureUnityLogs();
+            }
 
             // Subscribe our ManagedLog system
             if (Config.EnvironmentManagedLog)
@@ -130,9 +140,12 @@ namespace GDX
 #if UNITY_2021_3_OR_NEWER
             if (Config.EnvironmentDeveloperConsole)
             {
+                // Disable the built in developer console
+                Debug.developerConsoleEnabled = false;
+
                 systemRoot.AddSubSystemToFirstSubSystemOfType(
                     typeof(Initialization),
-                    typeof(DeveloperConsole), DeveloperConsoleTick);
+                    typeof(Console), DeveloperConsoleTick);
             }
 #endif // UNITY_2021_3_OR_NEWER
 
@@ -145,7 +158,7 @@ namespace GDX
         {
 #if UNITY_2021_3_OR_NEWER
             // We need to feed in the deltaTime, this could be the previous frames if were being honest about it
-            DeveloperConsole.Tick(Time.deltaTime);
+            Console.Tick(Time.deltaTime);
 #endif // UNITY_2021_3_OR_NEWER
         }
     }

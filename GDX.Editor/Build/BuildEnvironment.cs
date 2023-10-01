@@ -3,6 +3,7 @@ using System.IO;
 using GDX.Developer;
 using UnityEditor;
 using UnityEngine;
+using Console = System.Console;
 
 namespace GDX.Editor.Build
 {

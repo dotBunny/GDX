@@ -12,6 +12,7 @@ namespace GDX.Mathematics.Random
         {
             m_Random = new System.Random();
         }
+
         public RandomWrapper(int seed)
         {
             m_Random = new System.Random(seed);

@@ -4,6 +4,7 @@
 
 using System;
 using System.Reflection;
+using Object = UnityEngine.Object;
 
 namespace GDX
 {
@@ -14,22 +15,24 @@ namespace GDX
     public static class Reflection
     {
         /// <summary>
-        ///     <see cref="BindingFlags"/> for a private field.
+        ///     <see cref="BindingFlags" /> for a private field.
         /// </summary>
         public const BindingFlags PrivateFieldFlags = BindingFlags.Instance | BindingFlags.NonPublic;
+
         /// <summary>
-        ///     <see cref="BindingFlags"/> for a private static.
+        ///     <see cref="BindingFlags" /> for a private static.
         /// </summary>
         public const BindingFlags PrivateStaticFlags = BindingFlags.Static | BindingFlags.NonPublic;
+
         /// <summary>
-        ///     <see cref="BindingFlags"/> for a public static.
+        ///     <see cref="BindingFlags" /> for a public static.
         /// </summary>
         public const BindingFlags PublicStaticFlags = BindingFlags.Static | BindingFlags.Public;
 
         /// <summary>
         ///     The assembly qualified name for <see cref="UnityEngine.Object" />
         /// </summary>
-        public static readonly string UnityObjectName = typeof(UnityEngine.Object).AssemblyQualifiedName;
+        public static readonly string UnityObjectName = typeof(Object).AssemblyQualifiedName;
 
         /// <summary>
         ///     The assembly qualified name for <see cref="Serializable.SerializableTypes" />
@@ -48,6 +51,7 @@ namespace GDX
             {
                 return null;
             }
+
             return Activator.CreateInstance(type);
         }
 
@@ -55,7 +59,7 @@ namespace GDX
         ///     Returns a qualified type..
         /// </summary>
         /// <param name="type">The full name of a type.</param>
-        /// <returns>A <see cref="System.Type"/> if found.</returns>
+        /// <returns>A <see cref="System.Type" /> if found.</returns>
         public static Type GetType(string type)
         {
             Assembly[] loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -68,13 +72,14 @@ namespace GDX
                     return targetType;
                 }
             }
+
             return null;
         }
 
         /// <summary>
         ///     Returns a short form, non-versioned qualified name for the type.
         /// </summary>
-        /// <param name="type">The <see cref="System.Type"/> to generate the qualified name for.</param>
+        /// <param name="type">The <see cref="System.Type" /> to generate the qualified name for.</param>
         /// <returns>A qualified name</returns>
         public static string GetTypeQualifiedName(Type type)
         {
@@ -87,8 +92,8 @@ namespace GDX
         /// <param name="type">The explicit type of the static class.</param>
         /// <param name="method">The name of the method to invoke.</param>
         /// <param name="parameters">Any parameters that should be passed to the method?</param>
-        /// <param name="flags">The <paramref name="method"/>'s access flags.</param>
-        /// <returns>An <see cref="object"/> of the return value. This can be null.</returns>
+        /// <param name="flags">The <paramref name="method" />'s access flags.</param>
+        /// <returns>An <see cref="object" /> of the return value. This can be null.</returns>
         public static object InvokeStaticMethod(string type, string method, object[] parameters = null,
             BindingFlags flags = PublicStaticFlags)
         {
@@ -101,6 +106,7 @@ namespace GDX
                     return targetMethod.Invoke(null, parameters ?? Core.EmptyObjectArray);
                 }
             }
+
             return null;
         }
 
@@ -110,8 +116,8 @@ namespace GDX
         /// <param name="targetObject">The ambiguous object to invoke a method on.</param>
         /// <param name="method">The name of the method to invoke.</param>
         /// <param name="parameters">Any parameters that should be passed to the method?</param>
-        /// <param name="flags">The <paramref name="method"/>'s access flags.</param>
-        /// <returns>An <see cref="object"/> of the return value. This can be null.</returns>
+        /// <param name="flags">The <paramref name="method" />'s access flags.</param>
+        /// <returns>An <see cref="object" /> of the return value. This can be null.</returns>
         public static object InvokeMethod(object targetObject, string method, object[] parameters = null,
             BindingFlags flags = PrivateFieldFlags)
         {
@@ -121,7 +127,7 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Set the field or property value of a specific <paramref name="targetObject"/>, which may not be
+        ///     Set the field or property value of a specific <paramref name="targetObject" />, which may not be
         ///     normally accessible.
         /// </summary>
         /// <param name="targetObject">The instanced object which will have it's field or property value set.</param>
@@ -134,7 +140,9 @@ namespace GDX
             BindingFlags fieldFlags = PrivateFieldFlags, BindingFlags propertyFlags = PrivateFieldFlags)
         {
             if (targetObject == null)
+            {
                 return false;
+            }
 
             Type type = targetObject.GetType();
             FieldInfo f = type.GetField(name, fieldFlags);
@@ -144,7 +152,7 @@ namespace GDX
                 return true;
             }
 
-            PropertyInfo p = type.GetProperty(name,propertyFlags);
+            PropertyInfo p = type.GetProperty(name, propertyFlags);
             if (p != null)
             {
                 p.SetValue(targetObject, value);
@@ -155,10 +163,13 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Set the field value of a specific <paramref name="targetObject"/>, which may not be normally accessible.
+        ///     Set the field value of a specific <paramref name="targetObject" />, which may not be normally accessible.
         /// </summary>
-        /// <param name="targetObject">The instanced object which will have it's field value set; use a null value if this is a static field.</param>
-        /// <param name="type">The explicit type of the <paramref name="targetObject"/>.</param>
+        /// <param name="targetObject">
+        ///     The instanced object which will have it's field value set; use a null value if this is a
+        ///     static field.
+        /// </param>
+        /// <param name="type">The explicit type of the <paramref name="targetObject" />.</param>
         /// <param name="name">The field's name to set.</param>
         /// <param name="value">The value to set the field to.</param>
         /// <param name="flags">The field's access flags.</param>
@@ -175,14 +186,18 @@ namespace GDX
                     return true;
                 }
             }
+
             return false;
         }
 
         /// <summary>
-        ///     Set the property value of a specific <paramref name="targetObject"/>, which may not be normally accessible.
+        ///     Set the property value of a specific <paramref name="targetObject" />, which may not be normally accessible.
         /// </summary>
-        /// <param name="targetObject">The instanced object which will have it's property value set; use a null value if this is a static property.</param>
-        /// <param name="type">The type of the <paramref name="targetObject"/>.</param>
+        /// <param name="targetObject">
+        ///     The instanced object which will have it's property value set; use a null value if this is a
+        ///     static property.
+        /// </param>
+        /// <param name="type">The type of the <paramref name="targetObject" />.</param>
         /// <param name="name">The property's name to set.</param>
         /// <param name="value">The value to set the property to.</param>
         /// <param name="flags">The property's access flags.</param>
@@ -199,45 +214,55 @@ namespace GDX
                     return true;
                 }
             }
+
             return false;
         }
 
         /// <summary>
-        ///     Try to access the field value of a specific <paramref name="targetObject"/>, which may not be normally accessible.
+        ///     Try to access the field value of a specific <paramref name="targetObject" />, which may not be normally accessible.
         /// </summary>
         /// <remarks></remarks>
-        /// <param name="targetObject">The instanced object which will have it's field value read; use a null value if this is a static field.</param>
-        /// <param name="type">The qualified type of the <paramref name="targetObject"/>.</param>
+        /// <param name="targetObject">
+        ///     The instanced object which will have it's field value read; use a null value if this is a
+        ///     static field.
+        /// </param>
+        /// <param name="type">The qualified type of the <paramref name="targetObject" />.</param>
         /// <param name="name">The field's name to read.</param>
         /// <param name="returnValue">The returned value from the field, the default value if the field was unable to be read.</param>
         /// <param name="flags">The field's access flags.</param>
         /// <typeparam name="T">The type of data being read from the field.</typeparam>
         /// <returns>true/false if the process was successful.</returns>
-        public static bool TryGetFieldValue<T>(object targetObject, Type type, string name, out T returnValue, BindingFlags flags = PrivateFieldFlags)
+        public static bool TryGetFieldValue<T>(object targetObject, Type type, string name, out T returnValue,
+            BindingFlags flags = PrivateFieldFlags)
         {
             if (type == null)
             {
                 returnValue = default;
                 return false;
             }
+
             FieldInfo fieldInfo = type.GetField(name, flags);
             if (fieldInfo == null)
             {
                 returnValue = default;
                 return false;
             }
+
             returnValue = (T)fieldInfo.GetValue(targetObject);
             return true;
         }
 
         /// <summary>
-        ///     Try to access the field or property value of a specific <paramref name="targetObject"/>, which may not
+        ///     Try to access the field or property value of a specific <paramref name="targetObject" />, which may not
         ///     be normally accessible.
         /// </summary>
-        /// <remarks>Useful for when you really do not know the <see cref="System.Type"/>.</remarks>
+        /// <remarks>Useful for when you really do not know the <see cref="System.Type" />.</remarks>
         /// <param name="targetObject">The instanced object which will have it's field or property value read.</param>
         /// <param name="name">The field or property's name to read.</param>
-        /// <param name="returnValue">The returned value from the field or property, the default value if the property was unable to be read.</param>
+        /// <param name="returnValue">
+        ///     The returned value from the field or property, the default value if the property was unable
+        ///     to be read.
+        /// </param>
         /// <param name="fieldFlags">The field's access flags.</param>
         /// <param name="propertyFlags">The property's access flags.</param>
         /// <returns>true/false if a value was found.</returns>
@@ -258,7 +283,7 @@ namespace GDX
                 return true;
             }
 
-            PropertyInfo p = type.GetProperty(name,propertyFlags);
+            PropertyInfo p = type.GetProperty(name, propertyFlags);
             if (p != null)
             {
                 returnValue = p.GetValue(targetObject);
@@ -270,22 +295,30 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Try to get a property value from <paramref name="targetObject"/>, which may not be normally accessible.
+        ///     Try to get a property value from <paramref name="targetObject" />, which may not be normally accessible.
         /// </summary>
-        /// <param name="targetObject">The instanced object which will have it's property value read; use a null value if this is a static property.</param>
-        /// <param name="type">The explicit type of the <paramref name="targetObject"/>.</param>
+        /// <param name="targetObject">
+        ///     The instanced object which will have it's property value read; use a null value if this is a
+        ///     static property.
+        /// </param>
+        /// <param name="type">The explicit type of the <paramref name="targetObject" />.</param>
         /// <param name="name">The property's name to read.</param>
-        /// <param name="returnValue">The returned value from the property, the default value if the property was unable to be read.</param>
+        /// <param name="returnValue">
+        ///     The returned value from the property, the default value if the property was unable to be
+        ///     read.
+        /// </param>
         /// <param name="flags">The property's access flags.</param>
         /// <typeparam name="T">The type of data being read from the property.</typeparam>
         /// <returns>true/false if the process was successful.</returns>
-        public static bool TryGetPropertyValue<T>(object targetObject, Type type, string name, out T returnValue, BindingFlags flags = PrivateFieldFlags)
+        public static bool TryGetPropertyValue<T>(object targetObject, Type type, string name, out T returnValue,
+            BindingFlags flags = PrivateFieldFlags)
         {
             if (type == null)
             {
                 returnValue = default;
                 return false;
             }
+
             PropertyInfo propertyInfo = type.GetProperty(name, flags);
             if (propertyInfo == null)
             {

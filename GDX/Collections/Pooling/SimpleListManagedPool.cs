@@ -4,9 +4,7 @@
 
 using System;
 using GDX.Collections.Generic;
-using GDX.Experimental;
-using GDX.Experimental.Logging;
-using UnityEngine;
+using GDX.Logging;
 
 namespace GDX.Collections.Pooling
 {
@@ -37,6 +35,17 @@ namespace GDX.Collections.Pooling
         const int k_PrewarmPoolFlag = 3;
 
         /// <summary>
+        ///     The object which the pool is based off of, used as a model when creating new items.
+        /// </summary>
+        public readonly object BaseObject;
+
+        /// <summary>
+        ///     The object which serves as a container for all objects of the pool.
+        /// </summary>
+        /// <remarks>Used more by implementations of pools, then this base class.</remarks>
+        public readonly object ContainerObject;
+
+        /// <summary>
         ///     A defined function to create items for the pool.
         /// </summary>
         readonly Func<SimpleListManagedPool, object> m_CreateItemFunc;
@@ -57,40 +66,9 @@ namespace GDX.Collections.Pooling
         readonly int m_MinimumObjects;
 
         /// <summary>
-        ///     A collection of items that are currently considered out of the pool, that have been spawned.
-        /// </summary>
-        SimpleList<object> m_OutItems;
-
-        /// <summary>
-        ///     A cached count of the number of items contained in <see cref="InItems" />.
-        /// </summary>
-        public int InCachedCount;
-
-        /// <summary>
-        ///     A cached count of the number of items contained in <see cref="m_OutItems" />.
-        /// </summary>
-        public int OutCachedCount;
-
-        /// <summary>
-        ///     The object which the pool is based off of, used as a model when creating new items.
-        /// </summary>
-        public readonly object BaseObject;
-
-        /// <summary>
-        ///     The object which serves as a container for all objects of the pool.
-        /// </summary>
-        /// <remarks>Used more by implementations of pools, then this base class.</remarks>
-        public readonly object ContainerObject;
-
-        /// <summary>
         ///     An <c>event</c> invoked when an item is destroyed by the <see cref="SimpleListManagedPool" />.
         /// </summary>
         public Action<object> destroyedItem;
-
-        /// <summary>
-        ///     A collection of items that are currently contained in the pool for use when spawning items upon request.
-        /// </summary>
-        public SimpleList<object> InItems;
 
         /// <summary>
         ///     A <see cref="BitArray8" /> used to store pool based flags, as well as provide additional spots for implementations.
@@ -101,6 +79,26 @@ namespace GDX.Collections.Pooling
         ///     <see cref="SimpleListManagedPool" /> itself, leaving 4-7 for additional use.
         /// </remarks>
         public BitArray8 Flags;
+
+        /// <summary>
+        ///     A cached count of the number of items contained in <see cref="InItems" />.
+        /// </summary>
+        public int InCachedCount;
+
+        /// <summary>
+        ///     A collection of items that are currently contained in the pool for use when spawning items upon request.
+        /// </summary>
+        public SimpleList<object> InItems;
+
+        /// <summary>
+        ///     A collection of items that are currently considered out of the pool, that have been spawned.
+        /// </summary>
+        SimpleList<object> m_OutItems;
+
+        /// <summary>
+        ///     A cached count of the number of items contained in <see cref="m_OutItems" />.
+        /// </summary>
+        public int OutCachedCount;
 
         /// <summary>
         ///     An <c>event</c> invoked when an item is returned to the <see cref="SimpleListManagedPool" />.
@@ -188,6 +186,7 @@ namespace GDX.Collections.Pooling
                 {
                     continue;
                 }
+
                 m_OutItems.RemoveAtSwapBack(i);
                 OutCachedCount--;
                 break;
@@ -211,7 +210,8 @@ namespace GDX.Collections.Pooling
         public object Get(bool triggerOnSpawnedFromPool = true)
         {
             // Are we empty, but have refills?
-            if (InCachedCount == 0 && OutCachedCount < m_MaximumObjects || InCachedCount == 0 && Flags[k_AllowCreateMoreFlag])
+            if ((InCachedCount == 0 && OutCachedCount < m_MaximumObjects) ||
+                (InCachedCount == 0 && Flags[k_AllowCreateMoreFlag]))
             {
                 CreateItem();
             }
@@ -224,7 +224,8 @@ namespace GDX.Collections.Pooling
                 object returnItem = InItems.Array[targetIndex];
                 if (returnItem == null)
                 {
-                    ManagedLog.Warning(LogCategory.GDX, $"[ListObjectPool->Get] A null object was pulled from a pool ({m_Key.ToString()}).");
+                    ManagedLog.Warning(LogCategory.GDX,
+                        $"[ListObjectPool->Get] A null object was pulled from a pool ({m_Key.ToString()}).");
                     InCachedCount--;
                     return null;
                 }
@@ -248,7 +249,8 @@ namespace GDX.Collections.Pooling
                 object returnItem = m_OutItems.Array[0];
                 if (returnItem == null)
                 {
-                    ManagedLog.Warning(LogCategory.GDX, $"[ListObjectPool->Get] A null object was returned to the object pool ({m_Key.ToString()}).");
+                    ManagedLog.Warning(LogCategory.GDX,
+                        $"[ListObjectPool->Get] A null object was returned to the object pool ({m_Key.ToString()}).");
                     return null;
                 }
 
@@ -261,7 +263,8 @@ namespace GDX.Collections.Pooling
                 return returnItem;
             }
 
-            ManagedLog.Warning(LogCategory.GDX, $"[ListObjectPool->Get] Hit maximum object cap of {m_MaximumObjects.ToString()} for object pool ({m_Key.ToString()}).");
+            ManagedLog.Warning(LogCategory.GDX,
+                $"[ListObjectPool->Get] Hit maximum object cap of {m_MaximumObjects.ToString()} for object pool ({m_Key.ToString()}).");
             return null;
         }
 
@@ -300,6 +303,7 @@ namespace GDX.Collections.Pooling
                     return true;
                 }
             }
+
             int inCount = InItems.Count;
             for (int i = 0; i < inCount; i++)
             {
@@ -323,6 +327,7 @@ namespace GDX.Collections.Pooling
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -394,7 +399,6 @@ namespace GDX.Collections.Pooling
                 if (m_OutItems.Array[i] != null)
                 {
                     Return(m_OutItems.Array[i]);
-
                 }
             }
 
@@ -409,6 +413,7 @@ namespace GDX.Collections.Pooling
                     destroyedItem?.Invoke(InItems.Array[i]);
                 }
             }
+
             InItems.Clear();
             InCachedCount = 0;
 

@@ -6,8 +6,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading.Tasks;
 using GDX.Collections.Generic;
-using GDX.Experimental;
-using GDX.Experimental.Logging;
+using GDX.Logging;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,7 +15,6 @@ namespace GDX.Developer.Reports.BuildVerification
     public static class TestRunner
     {
         /// <summary>
-        ///
         /// </summary>
         const int SafeDelayTime = 1;
 
@@ -25,7 +23,10 @@ namespace GDX.Developer.Reports.BuildVerification
 
         public static void AddTest(SimpleTestBehaviour simpleTest)
         {
-            if (simpleTest == null) return;
+            if (simpleTest == null)
+            {
+                return;
+            }
 
             lock (s_lockKnownTests)
             {
@@ -68,7 +69,8 @@ namespace GDX.Developer.Reports.BuildVerification
                     }
                     else
                     {
-                        ManagedLog.Error(LogCategory.Test, $"Failed to load {testScene.ScenePath} ({testScene.BuildIndex.ToString()}).");
+                        ManagedLog.Error(LogCategory.Test,
+                            $"Failed to load {testScene.ScenePath} ({testScene.BuildIndex.ToString()}).");
                         Reset();
                         return;
                     }
@@ -96,15 +98,17 @@ namespace GDX.Developer.Reports.BuildVerification
             {
                 if (timeoutTimer.ElapsedMilliseconds < testScene.TestTimeout)
                 {
-                   await Task.Delay(SafeDelayTime);
+                    await Task.Delay(SafeDelayTime);
                 }
                 else
                 {
-                    ManagedLog.Warning(LogCategory.Test, $"Test run timed out after {(timeoutTimer.ElapsedMilliseconds/1000f).ToString(CultureInfo.CurrentCulture)} seconds.");
+                    ManagedLog.Warning(LogCategory.Test,
+                        $"Test run timed out after {(timeoutTimer.ElapsedMilliseconds / 1000f).ToString(CultureInfo.CurrentCulture)} seconds.");
                     for (int i = 0; i < s_KnownTest.Count; i++)
                     {
                         BuildVerificationReport.Assert(s_KnownTest.Array[i].GetIdentifier(), false, "Test timed out.");
                     }
+
                     Reset();
                     break;
                 }
@@ -118,7 +122,8 @@ namespace GDX.Developer.Reports.BuildVerification
             }
 
             ManagedLog.Info(LogCategory.Test, $"Unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
-            AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(testScene.BuildIndex, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
+            AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(testScene.BuildIndex,
+                UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
             timeoutTimer.Restart();
             if (unloadOperation != null)
             {
@@ -130,7 +135,8 @@ namespace GDX.Developer.Reports.BuildVerification
                     }
                     else
                     {
-                        ManagedLog.Error(LogCategory.Test, $"Failed to unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()}).");
+                        ManagedLog.Error(LogCategory.Test,
+                            $"Failed to unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()}).");
                         Reset();
                         return;
                     }
@@ -148,13 +154,17 @@ namespace GDX.Developer.Reports.BuildVerification
             // Make sure we remove all registered as a safety precaution / will also stop the timer
             Reset();
 
-            ManagedLog.Info(LogCategory.Test, $"Test scene {testScene.ScenePath} ({testScene.BuildIndex.ToString()}) execution finished.");
+            ManagedLog.Info(LogCategory.Test,
+                $"Test scene {testScene.ScenePath} ({testScene.BuildIndex.ToString()}) execution finished.");
         }
 
 
         public static void RemoveTest(SimpleTestBehaviour simpleTest)
         {
-            if (simpleTest == null) return;
+            if (simpleTest == null)
+            {
+                return;
+            }
 
             lock (s_lockKnownTests)
             {

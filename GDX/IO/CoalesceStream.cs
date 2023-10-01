@@ -13,11 +13,10 @@ namespace GDX.IO
     ///     A byte backed stream which combines multiple arrays acting as one uniform stream.
     /// </summary>
     /// <remarks>
-    ///     Max size being limited to <see cref="m_Length"/> type limitations.
+    ///     Max size being limited to <see cref="m_Length" /> type limitations.
     /// </remarks>
     public class CoalesceStream : Stream
     {
-
         /// <summary>
         ///     The default size of each allocated bucket array.
         /// </summary>
@@ -39,7 +38,7 @@ namespace GDX.IO
         long m_Length;
 
         /// <summary>
-        ///     Create a <see cref="CoalesceStream"/>.
+        ///     Create a <see cref="CoalesceStream" />.
         /// </summary>
         /// <param name="bucketSize">The bucket allocation size.</param>
         public CoalesceStream(int bucketSize = k_DefaultBucketSize)
@@ -49,9 +48,9 @@ namespace GDX.IO
         }
 
         /// <summary>
-        ///     Create a <see cref="CoalesceStream"/> and fill it with the data found in <paramref name="source"/>.
+        ///     Create a <see cref="CoalesceStream" /> and fill it with the data found in <paramref name="source" />.
         /// </summary>
-        /// <param name="source">An array used to prefill the <see cref="CoalesceStream"/> with.</param>
+        /// <param name="source">An array used to prefill the <see cref="CoalesceStream" /> with.</param>
         /// <param name="bucketSize">The bucket allocation size.</param>
         public CoalesceStream(byte[] source, int bucketSize = k_DefaultBucketSize)
         {
@@ -61,7 +60,7 @@ namespace GDX.IO
         }
 
         /// <summary>
-        ///     Preallocate a <see cref="CoalesceStream"/> at the desired <paramref name="length"/>.
+        ///     Preallocate a <see cref="CoalesceStream" /> at the desired <paramref name="length" />.
         /// </summary>
         /// <param name="length">The desired pre-allocated size.</param>
         /// <param name="bucketSize">The bucket allocation size.</param>
@@ -74,11 +73,12 @@ namespace GDX.IO
             {
                 m_Buckets.Add(new byte[m_BucketSize]);
             }
+
             Position = 0;
         }
 
         /// <summary>
-        ///     Preallocate a <see cref="CoalesceStream"/> at the desired <paramref name="length"/>.
+        ///     Preallocate a <see cref="CoalesceStream" /> at the desired <paramref name="length" />.
         /// </summary>
         /// <param name="length">The desired pre-allocated size.</param>
         /// <param name="bucketSize">The bucket allocation size.</param>
@@ -91,20 +91,22 @@ namespace GDX.IO
             {
                 m_Buckets.Add(new byte[m_BucketSize]);
             }
+
             Position = 0;
         }
 
         /// <summary>
-        ///     Is this <see cref="Stream"/> capable of reading?
+        ///     Is this <see cref="Stream" /> capable of reading?
         /// </summary>
         public override bool CanRead => true;
 
         /// <summary>
-        ///     Is this <see cref="Stream"/> capable of seeking?
+        ///     Is this <see cref="Stream" /> capable of seeking?
         /// </summary>
         public override bool CanSeek => true;
+
         /// <summary>
-        ///     Is this <see cref="Stream"/> capable of writing?
+        ///     Is this <see cref="Stream" /> capable of writing?
         /// </summary>
         public override bool CanWrite => true;
 
@@ -114,7 +116,7 @@ namespace GDX.IO
         public override long Length => m_Length;
 
         /// <summary>
-        ///     Get the current position in the <see cref="Stream"/>.
+        ///     Get the current position in the <see cref="Stream" />.
         /// </summary>
         public sealed override long Position { get; set; }
 
@@ -149,7 +151,7 @@ namespace GDX.IO
         ///     Flush reading and writing buffers.
         /// </summary>
         /// <remarks>
-        ///     Does nothing for the <see cref="CoalesceStream"/>.
+        ///     Does nothing for the <see cref="CoalesceStream" />.
         /// </remarks>
         [ExcludeFromCodeCoverage]
         public override void Flush()
@@ -157,17 +159,17 @@ namespace GDX.IO
         }
 
         /// <summary>
-        ///     Read from the <see cref="CoalesceStream"/> into a buffer.
+        ///     Read from the <see cref="CoalesceStream" /> into a buffer.
         /// </summary>
         /// <param name="buffer">The target buffer to write the read data into.</param>
-        /// <param name="offset">The offset position to start writing into the <paramref name="buffer"/>.</param>
-        /// <param name="count">The number of <see cref="byte"/>s to read.</param>
+        /// <param name="offset">The offset position to start writing into the <paramref name="buffer" />.</param>
+        /// <param name="count">The number of <see cref="byte" />s to read.</param>
         /// <returns>The number of bytes read.</returns>
         /// <exception cref="ArgumentOutOfRangeException">
         ///     Thrown when a negative amounts of bytes are requested, or a negative offset is provided.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when the provided <paramref name="buffer"/> is null.
+        ///     Thrown when the provided <paramref name="buffer" /> is null.
         /// </exception>
         public override int Read(byte[] buffer, int offset, int count)
         {
@@ -211,7 +213,7 @@ namespace GDX.IO
         }
 
         /// <summary>
-        /// Seek the internal position to a new location.
+        ///     Seek the internal position to a new location.
         /// </summary>
         /// <param name="offset">The value to offset the internal position by.</param>
         /// <param name="origin">The origin of the offset.</param>
@@ -237,7 +239,7 @@ namespace GDX.IO
         }
 
         /// <summary>
-        ///     Arbitrarily set the internal length of the <see cref="CoalesceStream"/>
+        ///     Arbitrarily set the internal length of the <see cref="CoalesceStream" />
         /// </summary>
         /// <param name="value">The new length value.</param>
         public sealed override void SetLength(long value)
@@ -246,11 +248,11 @@ namespace GDX.IO
         }
 
         /// <summary>
-        ///     Write into the <see cref="CoalesceStream"/> at the current position.
+        ///     Write into the <see cref="CoalesceStream" /> at the current position.
         /// </summary>
         /// <param name="buffer">The source array to read data from</param>
-        /// <param name="offset">An offset of where to start in the <paramref name="buffer"/>.</param>
-        /// <param name="count">The number of bytes to read from the <paramref name="buffer"/>.</param>
+        /// <param name="offset">An offset of where to start in the <paramref name="buffer" />.</param>
+        /// <param name="count">The number of bytes to read from the <paramref name="buffer" />.</param>
         public sealed override void Write(byte[] buffer, int offset, int count)
         {
             long initialPosition = Position;
@@ -280,7 +282,7 @@ namespace GDX.IO
         }
 
         /// <summary>
-        ///     Read a singular <see cref="byte"/> from the current position, incrementing the position.
+        ///     Read a singular <see cref="byte" /> from the current position, incrementing the position.
         /// </summary>
         /// <returns>A valid byte as an int, or -1.</returns>
         public override int ReadByte()
@@ -297,9 +299,9 @@ namespace GDX.IO
         }
 
         /// <summary>
-        ///     Write a singular <see cref="byte"/> to the <see cref="CoalesceStream"/>, incrementing the position.
+        ///     Write a singular <see cref="byte" /> to the <see cref="CoalesceStream" />, incrementing the position.
         /// </summary>
-        /// <param name="value">The <see cref="byte"/> to write to the <see cref="CoalesceStream"/>.</param>
+        /// <param name="value">The <see cref="byte" /> to write to the <see cref="CoalesceStream" />.</param>
         public override void WriteByte(byte value)
         {
             long intendedLength = Position + 1;
@@ -307,6 +309,7 @@ namespace GDX.IO
             {
                 m_Length = intendedLength;
             }
+
             Bucket[BucketOffset] = value;
             Position++;
         }

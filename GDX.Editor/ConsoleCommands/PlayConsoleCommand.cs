@@ -2,7 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Experimental;
+using GDX.Developer;
 using UnityEditor;
 
 namespace GDX.Editor.ConsoleCommands
@@ -16,6 +16,7 @@ namespace GDX.Editor.ConsoleCommands
             {
                 EditorApplication.isPlaying = true;
             }
+
             return true;
         }
 
@@ -37,7 +38,7 @@ namespace GDX.Editor.ConsoleCommands
         [InitializeOnLoadMethod]
         static void RegisterCommand()
         {
-            DeveloperConsole.RegisterCommand(new PlayConsoleCommand());
+            Console.RegisterCommand(new PlayConsoleCommand());
         }
     }
 #endif // UNITY_2021_3_OR_NEWER

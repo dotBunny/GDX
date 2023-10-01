@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.Collections.Generic;
+using GDX.RuntimeContent;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -11,10 +12,10 @@ namespace GDX.Experimental
     // TODO: Add Lifetime? - puts them in volatile?
 
     /// <summary>
-    /// An optimized method for drawing static procedural content.
+    ///     An optimized method for drawing static procedural content.
     /// </summary>
     /// <remarks>
-    ///     This still suffers from multiple SetPass calls associated with the <see cref="CommandBuffer"/>.
+    ///     This still suffers from multiple SetPass calls associated with the <see cref="CommandBuffer" />.
     ///     It should be possible in the future to using GraphicsBuffers/BatchRenderGroup once that API stabilizes.
     /// </remarks>
     public class DebugDrawBuffer
@@ -29,7 +30,7 @@ namespace GDX.Experimental
         /// </summary>
         /// <remarks>
         ///     This will be cloned when a new color value is provided and not found by
-        ///     <see cref="GetDottedLineMaterialByColor"/>.
+        ///     <see cref="GetDottedLineMaterialByColor" />.
         /// </remarks>
         static Material s_DottedLineMaterial;
 
@@ -45,13 +46,10 @@ namespace GDX.Experimental
         /// <summary>
         ///     The ordered segment index pairs used to describe a line.
         /// </summary>
-        static int[] s_LineSegmentIndices =
-        {
-            0, 1
-        };
+        static int[] s_LineSegmentIndices = { 0, 1 };
 
         /// <summary>
-        /// The associated <see cref="int"/> key with the <see cref="DebugDrawBuffer"/>.
+        ///     The associated <see cref="int" /> key with the <see cref="DebugDrawBuffer" />.
         /// </summary>
         /// <remarks>
         ///     <para>
@@ -60,20 +58,20 @@ namespace GDX.Experimental
         ///         <see cref="DebugDraw" />.
         ///     </para>
         ///     <para>
-        ///         A common pattern is to use the the <see cref="GameObject"/>'s InstanceID or an Entity Number to
+        ///         A common pattern is to use the the <see cref="GameObject" />'s InstanceID or an Entity Number to
         ///         create a unique indexer. Collisions can occur if you are not careful about how you index your
-        ///         <see cref="DebugDrawBuffer"/>.
+        ///         <see cref="DebugDrawBuffer" />.
         ///     </para>
         /// </remarks>
         public readonly int Key;
 
         /// <summary>
-        ///     The actual allocated <see cref="CommandBuffer"/> used by the <see cref="DebugDrawBuffer"/>.
+        ///     The actual allocated <see cref="CommandBuffer" /> used by the <see cref="DebugDrawBuffer" />.
         /// </summary>
         readonly CommandBuffer m_CommandBuffer;
 
         /// <summary>
-        ///     The established maximum number of vertices per meshReference for this particular <see cref="DebugDrawBuffer"/>.
+        ///     The established maximum number of vertices per meshReference for this particular <see cref="DebugDrawBuffer" />.
         /// </summary>
         /// <remarks>
         ///     Once this is set in the constructor it cannot be changed. Arbitrary meshReference adds are not effected by this
@@ -85,7 +83,7 @@ namespace GDX.Experimental
         /// </summary>
         /// <remarks>
         ///     This is used to provide a stable index in an extremely simple form. While it will eventually roll over,
-        ///     at that threshold you should be considering if multiple <see cref="DebugDrawBuffer"/> may be more
+        ///     at that threshold you should be considering if multiple <see cref="DebugDrawBuffer" /> may be more
         ///     optimal.
         /// </remarks>
         int m_CurrentToken;
@@ -99,8 +97,9 @@ namespace GDX.Experimental
         ///     An indexed dictionary of all of the draw commands to use with the buffer.
         /// </summary>
         /// <remarks>
-        ///     This includes the meshReference and an index of the material to use with that meshReference when drawing. As items are
-        ///     added, the <see cref="m_CurrentToken"/> is incremented to simulate a stable ID.
+        ///     This includes the meshReference and an index of the material to use with that meshReference when drawing. As items
+        ///     are
+        ///     added, the <see cref="m_CurrentToken" /> is incremented to simulate a stable ID.
         /// </remarks>
         IntKeyDictionary<DrawCommand> m_DrawCommands;
 
@@ -110,11 +109,11 @@ namespace GDX.Experimental
         IntKeyDictionary<int> m_LineMaterials;
 
         /// <summary>
-        ///     An ever expanding list of materials used with the <see cref="DebugDrawBuffer"/>.
+        ///     An ever expanding list of materials used with the <see cref="DebugDrawBuffer" />.
         /// </summary>
         /// <remarks>
-        ///     Both <see cref="m_DottedLineMaterials"/> and <see cref="m_LineMaterials"/> store indexes of
-        ///     <see cref="Material"/>s inside of this list.
+        ///     Both <see cref="m_DottedLineMaterials" /> and <see cref="m_LineMaterials" /> store indexes of
+        ///     <see cref="Material" />s inside of this list.
         /// </remarks>
         SimpleList<Material> m_Materials;
 
@@ -136,7 +135,7 @@ namespace GDX.Experimental
         IntKeyDictionary<int> m_WorkingTokens;
 
         /// <summary>
-        ///     Create a <see cref="DebugDrawBuffer"/>.
+        ///     Create a <see cref="DebugDrawBuffer" />.
         /// </summary>
         /// <param name="key">The internally cached key associated with this buffer.</param>
         /// <param name="initialMaterialCount">
@@ -167,23 +166,23 @@ namespace GDX.Experimental
             // Make sure our statics have their desired default materials atm
             if (s_LineMaterial == null)
             {
-                s_LineMaterial = new Material(Rendering.ShaderProvider.UnlitColor);
+                s_LineMaterial = new Material(RuntimeContent.ResourceProvider.Shaders.UnlitColor);
             }
 
             if (s_DottedLineMaterial == null)
             {
-                s_DottedLineMaterial = new Material(Rendering.ShaderProvider.DottedLine);
+                s_DottedLineMaterial = new Material(RuntimeContent.ResourceProvider.Shaders.DottedLine);
             }
         }
 
         /// <summary>
-        ///     Has the <see cref="DebugDrawBuffer"/> been converged?
+        ///     Has the <see cref="DebugDrawBuffer" /> been converged?
         /// </summary>
         /// <remarks>
-        ///     A finalized <see cref="DebugDrawBuffer"/> has had its command buffer filled with the fixed draw calls
-        ///     based on the meshes/materials outlined. If a meshReference is invalidated by <see cref="Invalidate"/>, the
-        ///     <see cref="DebugDrawBuffer"/> will become not finalized and will re-converge itself next
-        ///     <see cref="Execute"/>.
+        ///     A finalized <see cref="DebugDrawBuffer" /> has had its command buffer filled with the fixed draw calls
+        ///     based on the meshes/materials outlined. If a meshReference is invalidated by <see cref="Invalidate" />, the
+        ///     <see cref="DebugDrawBuffer" /> will become not finalized and will re-converge itself next
+        ///     <see cref="Execute" />.
         /// </remarks>
         public bool Finalized
         {
@@ -197,7 +196,10 @@ namespace GDX.Experimental
         /// </summary>
         public void Converge()
         {
-            if (Finalized) return;
+            if (Finalized)
+            {
+                return;
+            }
 
             //  Finalize each material we have something in process for
             int materialCount = m_Materials.Count;
@@ -216,7 +218,8 @@ namespace GDX.Experimental
                 int token = m_WorkingTokens[materialHashCode];
                 if (pointList.Count > 0)
                 {
-                    AddLineDrawCommand(GetMaterialByHashCode(materialHashCode), ref pointList.Array, ref segmentList.Array, token);
+                    AddLineDrawCommand(GetMaterialByHashCode(materialHashCode), ref pointList.Array,
+                        ref segmentList.Array, token);
                 }
             }
 
@@ -232,8 +235,9 @@ namespace GDX.Experimental
                 DrawCommand command = m_DrawCommands.Entries[currentIndex - 1].Value;
 
                 m_CommandBuffer.DrawMesh(command.MeshReference, command.Matrix,
-                    command.MaterialReference,0, 0);
+                    command.MaterialReference, 0, 0);
             }
+
             Finalized = true;
         }
 
@@ -243,7 +247,7 @@ namespace GDX.Experimental
         /// </summary>
         /// <remarks>
         ///     If multiple lines are being drawn it is much more performant to use
-        ///     <see cref="DrawDottedLines(UnityEngine.Color,ref UnityEngine.Vector3[],ref int[])"/>.
+        ///     <see cref="DrawDottedLines(UnityEngine.Color,ref UnityEngine.Vector3[],ref int[])" />.
         /// </remarks>
         /// <param name="color">The color which to draw the dotted line with.</param>
         /// <param name="startPoint">The start of the line in world space.</param>
@@ -251,7 +255,7 @@ namespace GDX.Experimental
         /// <returns>The dotted line's invalidation token.</returns>
         public int DrawDottedLine(Color color, Vector3 startPoint, Vector3 endPoint)
         {
-            Vector3[] points = new Vector3[] { startPoint, endPoint };
+            Vector3[] points = { startPoint, endPoint };
             return DrawDottedLines(color, ref points, 0, 2,
                 ref s_LineSegmentIndices, 0, 2);
         }
@@ -261,7 +265,7 @@ namespace GDX.Experimental
         /// </summary>
         /// <param name="color">The color which to draw the dotted lines with.</param>
         /// <param name="vertices">The vertices of the dotted lines.</param>
-        /// <param name="segments">The segment pairs based on <paramref name="vertices"/>.</param>
+        /// <param name="segments">The segment pairs based on <paramref name="vertices" />.</param>
         /// <returns>The dotted lines' invalidation token.</returns>
         public int DrawDottedLines(Color color, ref Vector3[] vertices, ref int[] segments)
         {
@@ -275,11 +279,11 @@ namespace GDX.Experimental
         /// </summary>
         /// <param name="color">The color which to draw the dotted lines with.</param>
         /// <param name="vertices">The vertices of the dotted lines.</param>
-        /// <param name="verticesStartIndex">The index to start at in the <paramref name="vertices"/> array.</param>
-        /// <param name="verticesLength">The number of elements in the <paramref name="vertices"/> array to use.</param>
-        /// <param name="segments">The segment pairs based on <paramref name="vertices"/>.</param>
-        /// <param name="segmentsStartIndex">The index to start at in the <paramref name="segments"/> array.</param>
-        /// <param name="segmentsLength">The number of elements in the <paramref name="segments"/> array to use.</param>
+        /// <param name="verticesStartIndex">The index to start at in the <paramref name="vertices" /> array.</param>
+        /// <param name="verticesLength">The number of elements in the <paramref name="vertices" /> array to use.</param>
+        /// <param name="segments">The segment pairs based on <paramref name="vertices" />.</param>
+        /// <param name="segmentsStartIndex">The index to start at in the <paramref name="segments" /> array.</param>
+        /// <param name="segmentsLength">The number of elements in the <paramref name="segments" /> array to use.</param>
         /// <returns>The dotted lines' invalidation token.</returns>
         public int DrawDottedLines(Color color,
             ref Vector3[] vertices, int verticesStartIndex, int verticesLength,
@@ -294,7 +298,7 @@ namespace GDX.Experimental
         /// </summary>
         /// <remarks>
         ///     If multiple lines are being drawn it is much more performant to use
-        ///     <see cref="DrawLines(UnityEngine.Color,ref UnityEngine.Vector3[],ref int[])"/>.
+        ///     <see cref="DrawLines(UnityEngine.Color,ref UnityEngine.Vector3[],ref int[])" />.
         /// </remarks>
         /// <param name="color">The color which to draw the line with.</param>
         /// <param name="startPoint">The start of the line in world space.</param>
@@ -302,7 +306,7 @@ namespace GDX.Experimental
         /// <returns>The line's invalidation token.</returns>
         public int DrawLine(Color color, Vector3 startPoint, Vector3 endPoint)
         {
-            Vector3[] points = new Vector3[] { startPoint, endPoint };
+            Vector3[] points = { startPoint, endPoint };
             return DrawLines(color, ref points, 0, 2,
                 ref s_LineSegmentIndices, 0, 2);
         }
@@ -312,7 +316,7 @@ namespace GDX.Experimental
         /// </summary>
         /// <param name="color">The color which to draw the lines with.</param>
         /// <param name="vertices">The vertices of the lines.</param>
-        /// <param name="segments">The segment pairs based on <paramref name="vertices"/>.</param>
+        /// <param name="segments">The segment pairs based on <paramref name="vertices" />.</param>
         /// <returns>The lines' invalidation token.</returns>
         public int DrawLines(Color color, ref Vector3[] vertices, ref int[] segments)
         {
@@ -326,11 +330,11 @@ namespace GDX.Experimental
         /// </summary>
         /// <param name="color">The color which to draw the lines with.</param>
         /// <param name="vertices">The vertices of the lines.</param>
-        /// <param name="verticesStartIndex">The index to start at in the <paramref name="vertices"/> array.</param>
-        /// <param name="verticesLength">The number of elements in the <paramref name="vertices"/> array to use.</param>
-        /// <param name="segments">The segment pairs based on <paramref name="vertices"/>.</param>
-        /// <param name="segmentsStartIndex">The index to start at in the <paramref name="segments"/> array.</param>
-        /// <param name="segmentsLength">The number of elements in the <paramref name="segments"/> array to use.</param>
+        /// <param name="verticesStartIndex">The index to start at in the <paramref name="vertices" /> array.</param>
+        /// <param name="verticesLength">The number of elements in the <paramref name="vertices" /> array to use.</param>
+        /// <param name="segments">The segment pairs based on <paramref name="vertices" />.</param>
+        /// <param name="segmentsStartIndex">The index to start at in the <paramref name="segments" /> array.</param>
+        /// <param name="segmentsLength">The number of elements in the <paramref name="segments" /> array to use.</param>
         /// <returns>The lines' invalidation token.</returns>
         public int DrawLines(Color color,
             ref Vector3[] vertices, int verticesStartIndex, int verticesLength,
@@ -345,11 +349,11 @@ namespace GDX.Experimental
         /// </summary>
         /// <param name="material">A <em>potentially</em> unlit material to draw the lines with. This will only be drawin</param>
         /// <param name="vertices">The vertices of the lines.</param>
-        /// <param name="verticesStartIndex">The index to start at in the <paramref name="vertices"/> array.</param>
-        /// <param name="verticesLength">The number of elements in the <paramref name="vertices"/> array to use.</param>
-        /// <param name="segments">The segment pairs based on <paramref name="vertices"/>.</param>
-        /// <param name="segmentsStartIndex">The index to start at in the <paramref name="segments"/> array.</param>
-        /// <param name="segmentsLength">The number of elements in the <paramref name="segments"/> array to use.</param>
+        /// <param name="verticesStartIndex">The index to start at in the <paramref name="vertices" /> array.</param>
+        /// <param name="verticesLength">The number of elements in the <paramref name="vertices" /> array to use.</param>
+        /// <param name="segments">The segment pairs based on <paramref name="vertices" />.</param>
+        /// <param name="segmentsStartIndex">The index to start at in the <paramref name="segments" /> array.</param>
+        /// <param name="segmentsLength">The number of elements in the <paramref name="segments" /> array to use.</param>
         /// <returns>The lines' invalidation token.</returns>
         public int DrawLines(Material material,
             ref Vector3[] vertices, int verticesStartIndex, int verticesLength,
@@ -428,7 +432,6 @@ namespace GDX.Experimental
 
         public int DrawRenderer(MeshRenderer renderer, MeshFilter filter)
         {
-
             Matrix4x4 matrix = renderer.localToWorldMatrix;
             return DrawMesh(renderer.sharedMaterial, filter.sharedMesh, ref matrix);
         }
@@ -443,7 +446,7 @@ namespace GDX.Experimental
         }
 
         /// <summary>
-        ///     Execute the <see cref="DebugDrawBuffer"/>, rendering its outputs to the screen.
+        ///     Execute the <see cref="DebugDrawBuffer" />, rendering its outputs to the screen.
         /// </summary>
         /// <remarks>
         ///     This will finalize the command buffer, converging all data into meshes, etc. In order to change the
@@ -460,16 +463,16 @@ namespace GDX.Experimental
         }
 
         /// <summary>
-        ///     Get the internal command buffer being used by this <see cref="DebugDrawBuffer"/>.
+        ///     Get the internal command buffer being used by this <see cref="DebugDrawBuffer" />.
         /// </summary>
-        /// <returns>A <see cref="CommandBuffer"/>.</returns>
+        /// <returns>A <see cref="CommandBuffer" />.</returns>
         public CommandBuffer GetBuffer()
         {
             return m_CommandBuffer;
         }
 
         /// <summary>
-        /// Is the given <paramref name="token"/> present in the draw commands buffer.
+        ///     Is the given <paramref name="token" /> present in the draw commands buffer.
         /// </summary>
         /// <param name="token">The token of the draw commands to check for.</param>
         /// <returns>Returns true if the token is found in the existing draw commands.</returns>
@@ -484,7 +487,7 @@ namespace GDX.Experimental
         }
 
         /// <summary>
-        ///     Invalidates a <see cref="DrawCommand"/> based on the provided token, forcing the buffer to be refilled.
+        ///     Invalidates a <see cref="DrawCommand" /> based on the provided token, forcing the buffer to be refilled.
         /// </summary>
         /// <param name="token">The token of the draw commands to invalidate.</param>
         public void Invalidate(int token)
@@ -496,7 +499,7 @@ namespace GDX.Experimental
         }
 
         /// <summary>
-        ///     Invalidates the entire <see cref="DebugDrawBuffer"/>.
+        ///     Invalidates the entire <see cref="DebugDrawBuffer" />.
         /// </summary>
         public void InvalidateAll()
         {
@@ -519,7 +522,7 @@ namespace GDX.Experimental
         /// <param name="color">The color which the line is drawn as.</param>
         public void NextLineBatch(Color color)
         {
-            NextLineBatch((GetSolidLineMaterialByColor(color)));
+            NextLineBatch(GetSolidLineMaterialByColor(color));
         }
 
         /// <summary>
@@ -539,7 +542,7 @@ namespace GDX.Experimental
             SimpleList<Vector3> pointList = m_WorkingPoints[materialHashCode];
             int token = m_WorkingTokens[materialHashCode];
 
-            if(pointList.Array.Length > 0)
+            if (pointList.Array.Length > 0)
             {
                 // Create meshReference!
                 SimpleList<int> segmentList = m_WorkingSegments[materialHashCode];
@@ -553,7 +556,7 @@ namespace GDX.Experimental
         }
 
         /// <summary>
-        ///     Resets the <see cref="DebugDrawBuffer"/>, as if it were newly created. However all fields are already
+        ///     Resets the <see cref="DebugDrawBuffer" />, as if it were newly created. However all fields are already
         ///     allocating their previous sizes.
         /// </summary>
         public void Reset()
@@ -575,11 +578,11 @@ namespace GDX.Experimental
         }
 
         /// <summary>
-        ///     Builds a line based meshReference from the given <paramref name="vertices"/> and adds it to the draw buffer.
+        ///     Builds a line based meshReference from the given <paramref name="vertices" /> and adds it to the draw buffer.
         /// </summary>
         /// <param name="material">The material to use when drawing the created meshReference.</param>
         /// <param name="vertices">The vertices of the created meshReference.</param>
-        /// <param name="segments">The segment pairs based on <paramref name="vertices"/>.</param>
+        /// <param name="segments">The segment pairs based on <paramref name="vertices" />.</param>
         /// <param name="token">Force a specific token for the meshReference. Don't use this.</param>
         /// <returns>The created meshReference's invalidation token.</returns>
         int AddLineDrawCommand(Material material, ref Vector3[] vertices, ref int[] segments, int token = -1)
@@ -600,7 +603,8 @@ namespace GDX.Experimental
             return token;
         }
 
-        int AddMeshDrawCommand(Material material, ref Vector3[] vertices, ref int[] triangles, ref Vector2[] uv0, ref Matrix4x4 matrix, int token = -1)
+        int AddMeshDrawCommand(Material material, ref Vector3[] vertices, ref int[] triangles, ref Vector2[] uv0,
+            ref Matrix4x4 matrix, int token = -1)
         {
             Mesh batchMesh = new Mesh { indexFormat = IndexFormat.UInt32 };
 
@@ -630,7 +634,7 @@ namespace GDX.Experimental
 
 
         /// <summary>
-        ///     Gets the cached dotted line material, or creates one for the given <paramref name="color"/>.
+        ///     Gets the cached dotted line material, or creates one for the given <paramref name="color" />.
         /// </summary>
         /// <param name="color">A defined draw color.</param>
         /// <returns>The qualified dotted line material of the color.</returns>
@@ -643,7 +647,7 @@ namespace GDX.Experimental
             }
 
             Material newMaterial = new Material(s_DottedLineMaterial);
-            newMaterial.SetColor(Rendering.ShaderProvider.ColorPropertyID, color);
+            newMaterial.SetColor(ShaderContent.ColorPropertyID, color);
 
             m_Materials.AddWithExpandCheck(newMaterial);
             m_DottedLineMaterials.AddWithExpandCheck(requestedHashCode, m_Materials.Count - 1);
@@ -651,7 +655,7 @@ namespace GDX.Experimental
         }
 
         /// <summary>
-        ///     Gets a material from the internal cache based on its <see cref="Material.GetHashCode"/>.
+        ///     Gets a material from the internal cache based on its <see cref="Material.GetHashCode" />.
         /// </summary>
         /// <remarks>A warning will be thrown in the editor if the material is not found.</remarks>
         /// <param name="hashCode">The integer based hash code of the material.</param>
@@ -661,7 +665,10 @@ namespace GDX.Experimental
             int count = m_Materials.Count;
             for (int i = 0; i < count; i++)
             {
-                if (m_Materials.Array[i].GetHashCode() == hashCode) return m_Materials.Array[i];
+                if (m_Materials.Array[i].GetHashCode() == hashCode)
+                {
+                    return m_Materials.Array[i];
+                }
             }
 #if UNITY_EDITOR
             Debug.LogWarning(
@@ -673,7 +680,7 @@ namespace GDX.Experimental
         }
 
         /// <summary>
-        ///     Gets the cached solid line material, or creates one for the given <paramref name="color"/>.
+        ///     Gets the cached solid line material, or creates one for the given <paramref name="color" />.
         /// </summary>
         /// <param name="color">A defined draw color.</param>
         /// <returns>The qualified line material of the color.</returns>
@@ -686,7 +693,7 @@ namespace GDX.Experimental
             }
 
             Material newMaterial = new Material(s_LineMaterial);
-            newMaterial.SetColor(Rendering.ShaderProvider.ColorPropertyID, color);
+            newMaterial.SetColor(ShaderContent.ColorPropertyID, color);
 
             m_Materials.AddWithExpandCheck(newMaterial);
             m_LineMaterials.AddWithExpandCheck(requestedHashCode, m_Materials.Count - 1);
@@ -715,6 +722,7 @@ namespace GDX.Experimental
                 MaterialReference = materialReference;
                 MeshReference = meshReference;
             }
+
             public DrawCommand(Mesh meshReference, Material materialReference, ref Matrix4x4 matrix)
             {
                 Matrix = matrix;

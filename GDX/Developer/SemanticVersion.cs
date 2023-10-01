@@ -15,7 +15,7 @@ namespace GDX.Developer
         /// <summary>
         ///     An array of <see cref="char" /> used to split versions.
         /// </summary>
-        static readonly char[] k_VersionIndicators = {'.', ',', '_', 'f'};
+        static readonly char[] k_VersionIndicators = { '.', ',', '_', 'f' };
 
         /// <summary>
         ///     Major Version.

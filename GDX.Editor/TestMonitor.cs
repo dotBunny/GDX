@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using UnityEditor;
@@ -84,7 +85,10 @@ namespace GDX.Editor
                              result.Test.Categories.ContainsValue(Core.PerformanceCategory);
 
             // If it is not a valid test we have nothing to do here
-            if (!validTest) return;
+            if (!validTest)
+            {
+                return;
+            }
 
 #if GDX_SAVE_TEST_OUTPUT
             string testFolder = Path.Combine(_cachedTempFolder, $"TEST_{result.Test.FullName}");
@@ -101,13 +105,14 @@ namespace GDX.Editor
 #else
             if (result.FailCount > 0)
             {
-                System.Console.WriteLine($"Test {result.Test.FullName} Failed.");
+                Console.WriteLine($"Test {result.Test.FullName} Failed.");
                 string testFolder = Path.Combine(m_CachedTempFolder, $"TEST_{result.Test.FullName}");
                 string[] foundFiles = Directory.GetFiles(m_CachedTempFolder, "*", SearchOption.TopDirectoryOnly);
                 if (foundFiles.Length > 0)
                 {
                     Platform.EnsureFolderHierarchyExists(testFolder);
                 }
+
                 foreach (string file in foundFiles)
                 {
                     string newFilePath = Path.Combine(testFolder, Path.GetFileName(file));

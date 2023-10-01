@@ -6,13 +6,11 @@
 
 using System;
 using System.Collections.Generic;
-using GDX.Experimental;
-using GDX.Experimental.Logging;
+using GDX.Logging;
 using UnityEngine;
 
 namespace GDX.Collections.Generic
 {
-
 #pragma warning disable IDE0049
     /// <summary>
     ///     A Unity serializable <see cref="Dictionary{TKey,TValue}" />.
@@ -38,33 +36,6 @@ namespace GDX.Collections.Generic
     [VisualScriptingCompatible(1)]
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
-#pragma warning disable IDE1006
-        // ReSharper disable InconsistentNaming
-
-        /// <summary>
-        ///     Is the dictionary completely capable of being serialized by Unity?
-        /// </summary>
-        /// <remarks>This field is determined/cached in the constructor.</remarks>
-        [SerializeField] bool m_IsSerializable;
-
-        /// <summary>
-        ///     The length of the serialized data arrays.
-        /// </summary>
-        [SerializeField] int m_SerializedLength = -1;
-
-        /// <summary>
-        ///     An array of all of the keys, in order, used to recreate the base <see cref="Dictionary{TKey,TValue}" />.
-        /// </summary>
-        [SerializeField] TKey[] m_SerializedKeys;
-
-        /// <summary>
-        ///     An array of all of the values, in order, used to recreate the base <see cref="Dictionary{TKey,TValue}" />.
-        /// </summary>
-        [SerializeField] TValue[] m_SerializedValues;
-
-        // ReSharper restore InconsistentNaming
-#pragma warning restore IDE1006
-
         /// <summary>
         ///     Type constructor.
         /// </summary>
@@ -73,6 +44,24 @@ namespace GDX.Collections.Generic
 #if UNITY_EDITOR
             m_IsSerializable = IsSerializableType(typeof(TKey)) && IsSerializableType(typeof(TValue));
 #endif // UNITY_EDITOR
+        }
+
+        /// <summary>
+        ///     Rehydrate the serialized data arrays back into a cohesive <see cref="Dictionary{TKey,TValue}" />.
+        /// </summary>
+        /// <remarks>Invoked by Unity, calls <see cref="LoadSerializedData" />.</remarks>
+        public void OnAfterDeserialize()
+        {
+            LoadSerializedData();
+        }
+
+        /// <summary>
+        ///     Build out serialized data arrays and associative data, used to rehydrate during deserialization.
+        /// </summary>
+        /// <remarks>Invoked by Unity, calls <see cref="SaveSerializedData" />.</remarks>
+        public void OnBeforeSerialize()
+        {
+            SaveSerializedData();
         }
 
         /// <summary>
@@ -115,7 +104,8 @@ namespace GDX.Collections.Generic
                 // If the key is already in the dataset what do we do?
                 if (ContainsKey(m_SerializedKeys[i]))
                 {
-                    ManagedLog.Error(LogCategory.GDX, "A duplicate key has been detected in the serialized dictionary, the item has been removed.\nYou can undo your last action to restore the previous state.");
+                    ManagedLog.Error(LogCategory.GDX,
+                        "A duplicate key has been detected in the serialized dictionary, the item has been removed.\nYou can undo your last action to restore the previous state.");
                 }
                 else
                 {
@@ -135,24 +125,6 @@ namespace GDX.Collections.Generic
             m_SerializedLength = -1;
             m_SerializedKeys = null;
             m_SerializedValues = null;
-        }
-
-        /// <summary>
-        ///     Rehydrate the serialized data arrays back into a cohesive <see cref="Dictionary{TKey,TValue}" />.
-        /// </summary>
-        /// <remarks>Invoked by Unity, calls <see cref="LoadSerializedData" />.</remarks>
-        public void OnAfterDeserialize()
-        {
-            LoadSerializedData();
-        }
-
-        /// <summary>
-        ///     Build out serialized data arrays and associative data, used to rehydrate during deserialization.
-        /// </summary>
-        /// <remarks>Invoked by Unity, calls <see cref="SaveSerializedData" />.</remarks>
-        public void OnBeforeSerialize()
-        {
-            SaveSerializedData();
         }
 
         /// <summary>
@@ -201,6 +173,32 @@ namespace GDX.Collections.Generic
                 index++;
             }
         }
+#pragma warning disable IDE1006
+        // ReSharper disable InconsistentNaming
+
+        /// <summary>
+        ///     Is the dictionary completely capable of being serialized by Unity?
+        /// </summary>
+        /// <remarks>This field is determined/cached in the constructor.</remarks>
+        [SerializeField] bool m_IsSerializable;
+
+        /// <summary>
+        ///     The length of the serialized data arrays.
+        /// </summary>
+        [SerializeField] int m_SerializedLength = -1;
+
+        /// <summary>
+        ///     An array of all of the keys, in order, used to recreate the base <see cref="Dictionary{TKey,TValue}" />.
+        /// </summary>
+        [SerializeField] TKey[] m_SerializedKeys;
+
+        /// <summary>
+        ///     An array of all of the values, in order, used to recreate the base <see cref="Dictionary{TKey,TValue}" />.
+        /// </summary>
+        [SerializeField] TValue[] m_SerializedValues;
+
+        // ReSharper restore InconsistentNaming
+#pragma warning restore IDE1006
     }
 }
 #endif // !UNITY_DOTSRUNTIME

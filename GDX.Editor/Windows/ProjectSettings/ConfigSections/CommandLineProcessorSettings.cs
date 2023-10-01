@@ -59,7 +59,6 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 
                 ProjectSettingsProvider.UpdateForChanges();
             });
-
         }
 
         public bool GetDefaultVisibility()
@@ -114,7 +113,6 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 
         public void SetToggleState(VisualElement toggleElement, bool newState)
         {
-
         }
 
         /// <inheritdoc />

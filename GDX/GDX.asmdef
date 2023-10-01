@@ -1,49 +1,50 @@
 {
-    "name": "GDX",
-    "rootNamespace": "GDX",
-    "references": [
-        "Unity.Mathematics",
-        "Unity.Burst",
-        "Unity.Collections",
-        "Unity.Addressables",
-        "Unity.ResourceManager",
-        "Unity.InputSystem"
-    ],
-    "includePlatforms": [],
-    "excludePlatforms": [],
-    "allowUnsafeCode": true,
-    "overrideReferences": false,
-    "precompiledReferences": [],
-    "autoReferenced": true,
-    "defineConstraints": [
-        "UNITY_2020_3_OR_NEWER"
-    ],
-    "versionDefines": [
-        {
-            "name": "com.unity.addressables",
-            "expression": "1.18.19",
-            "define": "GDX_ADDRESSABLES"
-        },
-        {
-            "name": "com.unity.platforms",
-            "expression": "0.9.0",
-            "define": "GDX_PLATFORMS"
-        },
-        {
-            "name": "com.unity.visualscripting",
-            "expression": "1.5.2",
-            "define": "GDX_VISUALSCRIPTING"
-        },
-        {
-            "name": "com.unity.entities",
-            "expression": "0.18.0",
-            "define": "GDX_ENTITIES"
-        },
-        {
-            "name": "com.unity.collections",
-            "expression": "[1.2,2.0)",
-            "define": "GDX_UNSAFE_COLLECTIONS"
-        }
-    ],
-    "noEngineReferences": false
+  "name": "GDX",
+  "rootNamespace": "GDX",
+  "references": [
+    "GDX.RuntimeContent",
+    "Unity.Mathematics",
+    "Unity.Burst",
+    "Unity.Collections",
+    "Unity.Addressables",
+    "Unity.ResourceManager",
+    "Unity.InputSystem"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": true,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [
+    "UNITY_2020_3_OR_NEWER"
+  ],
+  "versionDefines": [
+    {
+      "name": "com.unity.addressables",
+      "expression": "1.18.19",
+      "define": "GDX_ADDRESSABLES"
+    },
+    {
+      "name": "com.unity.platforms",
+      "expression": "0.9.0",
+      "define": "GDX_PLATFORMS"
+    },
+    {
+      "name": "com.unity.visualscripting",
+      "expression": "1.5.2",
+      "define": "GDX_VISUALSCRIPTING"
+    },
+    {
+      "name": "com.unity.entities",
+      "expression": "0.18.0",
+      "define": "GDX_ENTITIES"
+    },
+    {
+      "name": "com.unity.collections",
+      "expression": "[1.2,2.0)",
+      "define": "GDX_UNSAFE_COLLECTIONS"
+    }
+  ],
+  "noEngineReferences": false
 }

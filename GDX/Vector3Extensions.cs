@@ -5,8 +5,8 @@
 #if !UNITY_DOTSRUNTIME
 
 using System.Runtime.CompilerServices;
-using UnityEngine;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace GDX
 {
@@ -38,11 +38,10 @@ namespace GDX
                    math.abs(otherVector3.z - targetVector3.z) < math.max(
                        k_BaseMultiplier * math.max(math.abs(targetVector3.z), math.abs(otherVector3.z)),
                        moddedEpsilon);
-
         }
 
         /// <summary>
-        ///     Calculate the squared distance between two <see cref="Vector3"/>.
+        ///     Calculate the squared distance between two <see cref="Vector3" />.
         /// </summary>
         /// <remarks>
         ///     <para>Based on https://en.wikipedia.org/wiki/Euclidean_distance#Squared_Euclidean_distance.</para>
@@ -60,7 +59,7 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Get the horizontal distance between two <see cref="Vector3"/> points.
+        ///     Get the horizontal distance between two <see cref="Vector3" /> points.
         /// </summary>
         /// <remarks>Ignores the Y-axis completely.</remarks>
         /// <param name="targetVector3">Point A</param>
@@ -74,7 +73,7 @@ namespace GDX
         }
 
         /// <summary>
-        /// Calculate the distance from a <see cref="Vector3"/> to a <see cref="Ray"/>.
+        ///     Calculate the distance from a <see cref="Vector3" /> to a <see cref="Ray" />.
         /// </summary>
         /// <param name="targetVector3">The position.</param>
         /// <param name="targetRay">The line.</param>

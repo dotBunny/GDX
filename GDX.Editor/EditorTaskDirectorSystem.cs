@@ -2,8 +2,8 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Experimental;
-using GDX.Experimental.Logging;
+using System;
+using GDX.Logging;
 using GDX.Threading;
 using Unity.Mathematics;
 using UnityEditor;
@@ -13,7 +13,7 @@ namespace GDX.Editor
     // TODO: Block going into playmode when there are background tasks still
 
     /// <summary>
-    ///     An editor-only method of ticking <see cref="TaskDirector"/>.
+    ///     An editor-only method of ticking <see cref="TaskDirector" />.
     /// </summary>
     public static class EditorTaskDirectorSystem
     {
@@ -28,30 +28,30 @@ namespace GDX.Editor
         static int s_ProgressID = -1;
 
         /// <summary>
-        ///     Is the <see cref="EditorTaskDirectorSystem"/> subscribed to <see cref="EditorApplication.update"/>?
+        ///     Is the <see cref="EditorTaskDirectorSystem" /> subscribed to <see cref="EditorApplication.update" />?
         /// </summary>
         static bool s_SubscribedToEditorApplicationUpdate;
 
         /// <summary>
-        ///     How often should the <see cref="TaskDirector"/> be ticked?
+        ///     How often should the <see cref="TaskDirector" /> be ticked?
         /// </summary>
         /// <remarks>
         ///     This works by accumulation, when time between the last tick and current time exceeds
-        ///     <see cref="s_TickRate"/>, a tick will be triggered. Default configured in <see cref="Config"/>.
+        ///     <see cref="s_TickRate" />, a tick will be triggered. Default configured in <see cref="Config" />.
         /// </remarks>
         static double s_TickRate = -1;
 
         /// <summary>
-        ///     Triggered after the <see cref="EditorTaskDirectorSystem"/> has ticked.
+        ///     Triggered after the <see cref="EditorTaskDirectorSystem" /> has ticked.
         /// </summary>
-        public static System.Action ticked;
+        public static Action ticked;
 
         /// <summary>
-        ///     Get the current tick rate used by the <see cref="EditorTaskDirectorSystem"/>.
+        ///     Get the current tick rate used by the <see cref="EditorTaskDirectorSystem" />.
         /// </summary>
         /// <returns>
         ///     A double value representing the elapsed time necessary to trigger an update to the
-        ///     <see cref="TaskDirector"/>.
+        ///     <see cref="TaskDirector" />.
         /// </returns>
         public static double GetTickRate()
         {
@@ -59,10 +59,10 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        ///     Update the rate at which the <see cref="EditorTaskDirectorSystem"/> updates the <see cref="TaskDirector"/>.
+        ///     Update the rate at which the <see cref="EditorTaskDirectorSystem" /> updates the <see cref="TaskDirector" />.
         /// </summary>
         /// <remarks>
-        ///     This will not survive domain reload, please see <see cref="Config.EditorTaskDirectorSystemTickRate"/>.
+        ///     This will not survive domain reload, please see <see cref="Config.EditorTaskDirectorSystemTickRate" />.
         /// </remarks>
         /// <param name="tickRate">The new tick rate.</param>
         public static void SetTickRate(double tickRate)
@@ -78,7 +78,7 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        ///     Sets up some default state for the <see cref="EditorTaskDirectorSystem"/>.
+        ///     Sets up some default state for the <see cref="EditorTaskDirectorSystem" />.
         /// </summary>
         [InitializeOnLoadMethod]
         static void Initialize()
@@ -94,7 +94,7 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        ///     Method invoked by <see cref="EditorApplication.playModeStateChanged"/> when monitoring.
+        ///     Method invoked by <see cref="EditorApplication.playModeStateChanged" /> when monitoring.
         /// </summary>
         /// <param name="state"></param>
         static void OnPlayModeStateChanged(PlayModeStateChange state)
@@ -106,6 +106,7 @@ namespace GDX.Editor
                     {
                         SubscribeToEditorApplicationUpdate(true);
                     }
+
                     break;
                 case PlayModeStateChange.ExitingEditMode:
                     SubscribeToEditorApplicationUpdate(false);
@@ -120,11 +121,11 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        ///     Method invoked by the <see cref="EditorApplication.update"/> callback.
+        ///     Method invoked by the <see cref="EditorApplication.update" /> callback.
         /// </summary>
         /// <remarks>
         ///     Functions much like a proxy tick system where it manages the delta and eventually triggers the
-        ///     <see cref="TaskDirector.Tick"/> when the <see cref="s_TickRate"/> has been exceeded.
+        ///     <see cref="TaskDirector.Tick" /> when the <see cref="s_TickRate" /> has been exceeded.
         /// </remarks>
         static void OnUpdate()
         {
@@ -177,7 +178,7 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        ///     Sets whether the <see cref="EditorApplication.update"/> callback is subscribed too or not.
+        ///     Sets whether the <see cref="EditorApplication.update" /> callback is subscribed too or not.
         /// </summary>
         /// <param name="subscribe">A true/false indication.</param>
         static void SubscribeToEditorApplicationUpdate(bool subscribe)

@@ -6,18 +6,17 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using GDX.Experimental;
-using GDX.Experimental.Logging;
+using GDX.Logging;
+using Unity.CodeEditor;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
-using Unity.CodeEditor;
-using Application = UnityEngine.Application;
+using UnityEngine.Profiling;
 
 namespace GDX.Editor
 {
     /// <summary>
-    /// A collection of helper methods used for automation processes.
+    ///     A collection of helper methods used for automation processes.
     /// </summary>
     public static class Automation
     {
@@ -27,10 +26,10 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        /// Capture a <see cref="Texture2D"/> of the designated <see cref="EditorWindow"/>.
+        ///     Capture a <see cref="Texture2D" /> of the designated <see cref="EditorWindow" />.
         /// </summary>
-        /// <typeparam name="T">The type of <see cref="EditorWindow"/> to be captured.</typeparam>
-        /// <returns>The <see cref="Texture2D"/> captured.</returns>
+        /// <typeparam name="T">The type of <see cref="EditorWindow" /> to be captured.</typeparam>
+        /// <returns>The <see cref="Texture2D" /> captured.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Texture2D CaptureEditorWindow<T>(bool shouldCloseWindow = true) where T : EditorWindow
         {
@@ -50,16 +49,17 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        /// Capture a PNG image of the designated <see cref="EditorWindow"/>.
+        ///     Capture a PNG image of the designated <see cref="EditorWindow" />.
         /// </summary>
         /// <param name="outputPath">The absolute path for the image file.</param>
         /// <param name="shouldCloseWindow">Should the gotten window be closed after the capture?</param>
-        /// <typeparam name="T">The type of <see cref="EditorWindow"/> to be captured.</typeparam>
+        /// <typeparam name="T">The type of <see cref="EditorWindow" /> to be captured.</typeparam>
         /// <returns>true/false if the capture was successful.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #pragma warning disable IDE1006
         // ReSharper disable once InconsistentNaming
-        public static bool CaptureEditorWindowToPNG<T>(string outputPath, bool shouldCloseWindow = true) where T : EditorWindow
+        public static bool CaptureEditorWindowToPNG<T>(string outputPath, bool shouldCloseWindow = true)
+            where T : EditorWindow
 #pragma warning restore IDE1006
         {
             bool result = false;
@@ -73,13 +73,14 @@ namespace GDX.Editor
                     window.Close();
                 }
             }
+
             return result;
         }
 
         /// <summary>
-        /// Capture a <see cref="Texture2D"/> of the editor window.
+        ///     Capture a <see cref="Texture2D" /> of the editor window.
         /// </summary>
-        /// <returns>The <see cref="Texture2D"/> captured.</returns>
+        /// <returns>The <see cref="Texture2D" /> captured.</returns>
         public static Texture2D CaptureEditorWindow(EditorWindow window)
         {
             if (window == null)
@@ -109,16 +110,16 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        /// Capture a <see cref="Texture2D"/> of the focused editor window.
+        ///     Capture a <see cref="Texture2D" /> of the focused editor window.
         /// </summary>
-        /// <returns>The <see cref="Texture2D"/> captured.</returns>
+        /// <returns>The <see cref="Texture2D" /> captured.</returns>
         public static Texture2D CaptureFocusedEditorWindow()
         {
             return CaptureEditorWindow(EditorWindow.focusedWindow);
         }
 
         /// <summary>
-        /// Capture a PNG image of the provided window.
+        ///     Capture a PNG image of the provided window.
         /// </summary>
         /// <param name="window">The target window.</param>
         /// <param name="outputPath">The absolute path for the image file.</param>
@@ -134,12 +135,13 @@ namespace GDX.Editor
             {
                 return false;
             }
+
             File.WriteAllBytes(outputPath, texture.EncodeToPNG());
             return true;
         }
 
         /// <summary>
-        /// Capture a PNG image of the currently focused window.
+        ///     Capture a PNG image of the currently focused window.
         /// </summary>
         /// <param name="outputPath">The absolute path for the image file.</param>
         /// <returns>true/false if the capture was successful.</returns>
@@ -161,12 +163,13 @@ namespace GDX.Editor
             {
                 return false;
             }
+
             File.WriteAllBytes(outputPath, texture.EncodeToPNG());
             return true;
         }
 
         /// <summary>
-        /// Clear the automation temporary folder.
+        ///     Clear the automation temporary folder.
         /// </summary>
         /// <param name="deleteFolder">Should the automation folder be deleted?</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -183,6 +186,7 @@ namespace GDX.Editor
             {
                 file.Delete();
             }
+
             foreach (DirectoryInfo dir in di.GetDirectories())
             {
                 dir.Delete(true);
@@ -193,6 +197,7 @@ namespace GDX.Editor
                 Directory.Delete(path);
             }
         }
+
         // ReSharper disable CommentTypo
         /// <summary>
         ///     Stop an existing profile, this is most often used to end a command line profile of the Editor startup.
@@ -234,16 +239,16 @@ namespace GDX.Editor
         {
             // We often use this method to profile different parts of the editor during startup, so we have this little
             // helper at the end to make sure to close of the profiling session.
-            if (!UnityEngine.Profiling.Profiler.enabled)
+            if (!Profiler.enabled)
             {
-               ManagedLog.Warning(0, "Unity was not profiling.");
+                ManagedLog.Warning(0, "Unity was not profiling.");
             }
             else
             {
-                UnityEngine.Profiling.Profiler.enabled = false;
-                if (UnityEngine.Profiling.Profiler.logFile != null)
+                Profiler.enabled = false;
+                if (Profiler.logFile != null)
                 {
-                    ManagedLog.Info(0, $"Profile stopped: {UnityEngine.Profiling.Profiler.logFile}");
+                    ManagedLog.Info(0, $"Profile stopped: {Profiler.logFile}");
                 }
             }
 
@@ -254,7 +259,7 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        /// Generate the project's solution and associated project files.
+        ///     Generate the project's solution and associated project files.
         /// </summary>
         public static void GenerateProjectFiles()
         {
@@ -268,7 +273,8 @@ namespace GDX.Editor
                 ManagedLog.Info(0, "Setting CodeEditor.CurrentEditorInstallation ...");
 
 #if UNITY_EDITOR_WIN
-                string[] paths = {
+                string[] paths =
+                {
                     "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\devenv.exe",
                     "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\Common7\\IDE\\devenv.exe",
                     "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\IDE\\devenv.exe",
@@ -287,6 +293,7 @@ namespace GDX.Editor
                     {
                         continue;
                     }
+
                     CodeEditor.SetExternalScriptEditor(path);
                     break;
                 }
@@ -315,7 +322,7 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        /// Returns a reference to the first available GameView.
+        ///     Returns a reference to the first available GameView.
         /// </summary>
         /// <returns>An reference to an instance of the GameView</returns>
         public static EditorWindow GetGameView()
@@ -339,7 +346,8 @@ namespace GDX.Editor
             // Second try
             if (returnWindow == null)
             {
-                returnWindow = (EditorWindow)Reflection.InvokeStaticMethod("UnityEditor.PlayModeView", "GetRenderingView", null,
+                returnWindow = (EditorWindow)Reflection.InvokeStaticMethod("UnityEditor.PlayModeView",
+                    "GetRenderingView", null,
                     Reflection.PrivateStaticFlags);
             }
 
@@ -352,7 +360,7 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        /// Get the existing or open a new window with the indicated size / flags.
+        ///     Get the existing or open a new window with the indicated size / flags.
         /// </summary>
         /// <remarks>Maintains old behaviour.</remarks>
         /// <param name="shouldMaximize">Should the window be maximized?</param>
@@ -363,7 +371,8 @@ namespace GDX.Editor
         public static T GetWindow<T>(bool shouldMaximize = false, int width = 800, int height = 600)
             where T : EditorWindow
         {
-            return GetWindow<T>(new EditorWindowExtensions.EditorWindowSetup(false, true, shouldMaximize, true, width, height, true));
+            return GetWindow<T>(
+                new EditorWindowExtensions.EditorWindowSetup(false, true, shouldMaximize, true, width, height, true));
         }
 
         public static T GetWindow<T>(EditorWindowExtensions.EditorWindowSetup setup) where T : EditorWindow
@@ -377,12 +386,13 @@ namespace GDX.Editor
             {
                 window = EditorWindow.CreateWindow<T>(typeof(T).ToString());
             }
+
             window.ApplySetup(setup);
             return window;
         }
 
         /// <summary>
-        /// Reset the editor to a default state.
+        ///     Reset the editor to a default state.
         /// </summary>
         /// <remarks>Using this method inside of a unit test will break the runner/chain.</remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -396,10 +406,11 @@ namespace GDX.Editor
             Type windowLayout = Type.GetType("UnityEditor.WindowLayout,UnityEditor");
             if (windowLayout != null)
             {
-                MethodInfo saveMethod = windowLayout.GetMethod("SaveWindowLayout",BindingFlags.Public | BindingFlags.Static);
+                MethodInfo saveMethod =
+                    windowLayout.GetMethod("SaveWindowLayout", BindingFlags.Public | BindingFlags.Static);
                 if (saveMethod != null)
                 {
-                    saveMethod.Invoke(null,new object[]{LayoutStashPath()});
+                    saveMethod.Invoke(null, new object[] { LayoutStashPath() });
                 }
             }
         }
@@ -412,12 +423,14 @@ namespace GDX.Editor
                 Type windowLayout = Type.GetType("UnityEditor.WindowLayout,UnityEditor");
                 if (windowLayout != null)
                 {
-                    MethodInfo loadMethod = windowLayout.GetMethod("LoadWindowLayout", new[] {typeof(string), typeof(bool), typeof(bool), typeof(bool)});
+                    MethodInfo loadMethod = windowLayout.GetMethod("LoadWindowLayout",
+                        new[] { typeof(string), typeof(bool), typeof(bool), typeof(bool) });
                     if (loadMethod != null)
                     {
-                        loadMethod.Invoke(null,new object[]{path, false, false, true});
+                        loadMethod.Invoke(null, new object[] { path, false, false, true });
                     }
                 }
+
                 Platform.ForceDeleteFile(path);
             }
         }

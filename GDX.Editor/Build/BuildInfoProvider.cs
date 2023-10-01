@@ -5,7 +5,7 @@
 using System;
 using System.IO;
 using GDX.Developer;
-using GDX.Experimental.Logging;
+using GDX.Logging;
 using UnityEditor;
 using UnityEngine;
 using TextGenerator = GDX.Developer.TextGenerator;

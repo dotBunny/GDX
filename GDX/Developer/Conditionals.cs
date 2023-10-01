@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 // ReSharper disable CommentTypo, IdentifierTypo
+
 namespace GDX.Developer
 {
     /// <summary>

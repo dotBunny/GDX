@@ -14,7 +14,7 @@ namespace GDX
     public static class PlayerLoopSystemExtensions
     {
         /// <summary>
-        ///     Adds a child (sub) system to the provided <paramref name="parentSystem"/>.
+        ///     Adds a child (sub) system to the provided <paramref name="parentSystem" />.
         /// </summary>
         /// <param name="parentSystem">The parent system which a child (sub) system should be added too.</param>
         /// <param name="subSystem">The child (sub) system that is to be added to the parent.</param>
@@ -29,6 +29,7 @@ namespace GDX
                 {
                     newSubSystems[i] = previousSubSystems[i];
                 }
+
                 newSubSystems[subSystemCount] = subSystem;
                 parentSystem.subSystemList = newSubSystems;
             }
@@ -40,16 +41,19 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Adds a child (sub) system to the first found instance of a <paramref name="parentSystemType"/> system in
-        ///     <paramref name="rootSystem"/>.
+        ///     Adds a child (sub) system to the first found instance of a <paramref name="parentSystemType" /> system in
+        ///     <paramref name="rootSystem" />.
         /// </summary>
-        /// <param name="rootSystem">The root system which the <paramref name="parentSystemType"/> will be searched recursively for.</param>
-        /// <param name="parentSystemType">The system <see cref="Type"/> that will be searched for as the parent.</param>
-        /// <param name="subSystemType">The type assigned when creating the <see cref="PlayerLoopSystem"/> to be added.</param>
+        /// <param name="rootSystem">
+        ///     The root system which the <paramref name="parentSystemType" /> will be searched recursively
+        ///     for.
+        /// </param>
+        /// <param name="parentSystemType">The system <see cref="Type" /> that will be searched for as the parent.</param>
+        /// <param name="subSystemType">The type assigned when creating the <see cref="PlayerLoopSystem" /> to be added.</param>
         /// <param name="subSystemUpdateFunction">The method to invoke when the system is updated.</param>
-        /// <returns>true/false if the <paramref name="parentSystemType"/> was found, and therefore the add could occur.</returns>
+        /// <returns>true/false if the <paramref name="parentSystemType" /> was found, and therefore the add could occur.</returns>
         /// <example>
-        /// <code>
+        ///     <code>
         ///     PlayerLoopSystem systemRoot = PlayerLoop.GetCurrentPlayerLoop();
         ///     systemRoot.AddSubSystemToFirstSubSystemOfType(
         ///         typeof(Update.ScriptRunDelayedTasks),
@@ -65,12 +69,13 @@ namespace GDX
                 return false;
             }
 
-            PlayerLoopSystem newSubSystem = new PlayerLoopSystem()
+            PlayerLoopSystem newSubSystem = new PlayerLoopSystem
             {
                 updateDelegate = subSystemUpdateFunction, type = subSystemType
             };
 
-            ref PlayerLoopSystem foundParent = ref rootSystem.TryGetFirstSubSystemOfType(parentSystemType, out bool foundTargetSystem);
+            ref PlayerLoopSystem foundParent =
+                ref rootSystem.TryGetFirstSubSystemOfType(parentSystemType, out bool foundTargetSystem);
             if (!foundTargetSystem)
             {
                 return false;
@@ -82,16 +87,21 @@ namespace GDX
 
 
         /// <summary>
-        ///     Adds a child (sub) system to the first found instance of a <paramref name="parentSystemType"/> system in
-        ///     <paramref name="rootSystem"/>.
+        ///     Adds a child (sub) system to the first found instance of a <paramref name="parentSystemType" /> system in
+        ///     <paramref name="rootSystem" />.
         /// </summary>
-        /// <param name="rootSystem">The root system which the <paramref name="parentSystemType"/> will be searched recursively for.</param>
-        /// <param name="parentSystemType">The system <see cref="Type"/> that will be searched for as the parent.</param>
+        /// <param name="rootSystem">
+        ///     The root system which the <paramref name="parentSystemType" /> will be searched recursively
+        ///     for.
+        /// </param>
+        /// <param name="parentSystemType">The system <see cref="Type" /> that will be searched for as the parent.</param>
         /// <param name="subSystem">The child (sub) system that is to be added to the parent.</param>
-        /// <returns>true/false if the <paramref name="parentSystemType"/> was found, and therefore the add could occur.</returns>
-        public static bool AddSubSystemToFirstSubSystemOfType(this ref PlayerLoopSystem rootSystem, Type parentSystemType, ref PlayerLoopSystem subSystem)
+        /// <returns>true/false if the <paramref name="parentSystemType" /> was found, and therefore the add could occur.</returns>
+        public static bool AddSubSystemToFirstSubSystemOfType(this ref PlayerLoopSystem rootSystem,
+            Type parentSystemType, ref PlayerLoopSystem subSystem)
         {
-            ref PlayerLoopSystem foundParent = ref rootSystem.TryGetFirstSubSystemOfType(parentSystemType, out bool foundTargetSystem);
+            ref PlayerLoopSystem foundParent =
+                ref rootSystem.TryGetFirstSubSystemOfType(parentSystemType, out bool foundTargetSystem);
             if (!foundTargetSystem)
             {
                 return false;
@@ -102,13 +112,14 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Populates a <see cref="TextGenerator"/> with a tree-like structure that represents the
-        ///     <see cref="PlayerLoopSystem"/> found under the <paramref name="rootSystem"/>.
+        ///     Populates a <see cref="TextGenerator" /> with a tree-like structure that represents the
+        ///     <see cref="PlayerLoopSystem" /> found under the <paramref name="rootSystem" />.
         /// </summary>
         /// <param name="rootSystem">The root system which the tree should be crafted based off of.</param>
         /// <param name="generator">Optionally, provide a generator to be populated.</param>
-        /// <returns>A <see cref="TextGenerator"/> populated with the system output.</returns>
-        public static TextGenerator GenerateSystemTree(this ref PlayerLoopSystem rootSystem, TextGenerator generator = null)
+        /// <returns>A <see cref="TextGenerator" /> populated with the system output.</returns>
+        public static TextGenerator GenerateSystemTree(this ref PlayerLoopSystem rootSystem,
+            TextGenerator generator = null)
         {
             // We abuse this for recursion
             generator ??= new TextGenerator();
@@ -132,10 +143,12 @@ namespace GDX
             {
                 generator.PushIndent();
             }
+
             for (int i = 0; i < count; i++)
             {
                 GenerateSystemTree(ref rootSystem.subSystemList[i], generator);
             }
+
             if (count > 0)
             {
                 generator.PopIndent();
@@ -145,15 +158,15 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Removes all child (sub) systems of the specified <paramref name="subSystemType"/> from the provided
-        ///     <paramref name="parentSystem"/>.
+        ///     Removes all child (sub) systems of the specified <paramref name="subSystemType" /> from the provided
+        ///     <paramref name="parentSystem" />.
         /// </summary>
         /// <remarks>
         ///     This is NOT recursive, and will not effect the child (sub) systems of the child (sub) systems of the
-        ///     <paramref name="parentSystem"/>
+        ///     <paramref name="parentSystem" />
         /// </remarks>
         /// <param name="parentSystem">The parent system which the child (sub) systems should be removed from.</param>
-        /// <param name="subSystemType">The system <see cref="Type"/> that will be removed.</param>
+        /// <param name="subSystemType">The system <see cref="Type" /> that will be removed.</param>
         /// <returns>true/false, if a remove was done.</returns>
         public static bool RemoveSubSystemsOfType(this ref PlayerLoopSystem parentSystem, Type subSystemType)
         {
@@ -183,8 +196,8 @@ namespace GDX
 
             int newIndex = 0;
             int newCount = subSystemCount - foundCount;
-            PlayerLoopSystem[] newSubSystemList =  new PlayerLoopSystem[newCount];
-           
+            PlayerLoopSystem[] newSubSystemList = new PlayerLoopSystem[newCount];
+
             for (int i = 0; i < newCount; i++)
             {
                 if (previousSubSystems[i].type != subSystemType)
@@ -193,23 +206,28 @@ namespace GDX
                     newIndex++;
                 }
             }
+
             parentSystem.subSystemList = newSubSystemList;
 
             return true;
-
         }
 
         /// <summary>
-        ///     Removes all the child (sub) systems of to the first found instance of a <paramref name="parentSystemType"/> system in <paramref name="rootSystem"/>
+        ///     Removes all the child (sub) systems of to the first found instance of a <paramref name="parentSystemType" /> system
+        ///     in <paramref name="rootSystem" />
         /// </summary>
-        /// <param name="rootSystem">The root system which the <paramref name="parentSystemType"/> will be searched recursively for.</param>
-        /// <param name="parentSystemType">The system <see cref="Type"/> that will be searched for as the parent.</param>
-        /// <param name="subSystemType">The child (sub) system <see cref="Type"/> that will be removed.</param>
+        /// <param name="rootSystem">
+        ///     The root system which the <paramref name="parentSystemType" /> will be searched recursively
+        ///     for.
+        /// </param>
+        /// <param name="parentSystemType">The system <see cref="Type" /> that will be searched for as the parent.</param>
+        /// <param name="subSystemType">The child (sub) system <see cref="Type" /> that will be removed.</param>
         /// <returns>true/false, if a remove occured.</returns>
         public static bool RemoveSubSystemsOfTypeFromFirstSubSystemOfType(this ref PlayerLoopSystem rootSystem,
             Type parentSystemType, Type subSystemType)
         {
-            ref PlayerLoopSystem foundParent = ref rootSystem.TryGetFirstSubSystemOfType(parentSystemType, out bool foundTargetSystem);
+            ref PlayerLoopSystem foundParent =
+                ref rootSystem.TryGetFirstSubSystemOfType(parentSystemType, out bool foundTargetSystem);
             if (!foundTargetSystem)
             {
                 return false;
@@ -219,36 +237,39 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Replaces the first child (sub) system of the given <paramref name="rootSystem"/> of
-        ///     <paramref name="subSystemType"/> with the provided <paramref name="updatedSystem"/>.
+        ///     Replaces the first child (sub) system of the given <paramref name="rootSystem" /> of
+        ///     <paramref name="subSystemType" /> with the provided <paramref name="updatedSystem" />.
         /// </summary>
-        /// <param name="rootSystem">The root system which the <paramref name="subSystemType"/> will be searched recursively for.</param>
-        /// <param name="subSystemType">The child (sub) system <see cref="Type"/> that will be replaced.</param>
-        /// <param name="updatedSystem">The system to replace the found <paramref name="subSystemType"/> with.</param>
+        /// <param name="rootSystem">The root system which the <paramref name="subSystemType" /> will be searched recursively for.</param>
+        /// <param name="subSystemType">The child (sub) system <see cref="Type" /> that will be replaced.</param>
+        /// <param name="updatedSystem">The system to replace the found <paramref name="subSystemType" /> with.</param>
         /// <returns>true/false if the replace occured.</returns>
         public static bool ReplaceFirstSubSystemOfType(this ref PlayerLoopSystem rootSystem, Type subSystemType,
             ref PlayerLoopSystem updatedSystem)
         {
-            ref PlayerLoopSystem foundParent = ref rootSystem.TryGetFirstSystemWithSubSystemOfType(subSystemType, out bool foundTargetSystem, out int foundIndex);
+            ref PlayerLoopSystem foundParent =
+                ref rootSystem.TryGetFirstSystemWithSubSystemOfType(subSystemType, out bool foundTargetSystem,
+                    out int foundIndex);
             if (!foundTargetSystem)
             {
                 return false;
             }
+
             foundParent.subSystemList[foundIndex] = updatedSystem;
             return true;
         }
 
         /// <summary>
-        ///     Replaces all child (sub) systems of the specified <paramref name="subSystemType"/> from the provided
-        ///     <paramref name="parentSystem"/>.
+        ///     Replaces all child (sub) systems of the specified <paramref name="subSystemType" /> from the provided
+        ///     <paramref name="parentSystem" />.
         /// </summary>
         /// <remarks>
         ///     This is NOT recursive, and will not effect the child (sub) systems of the child (sub) systems of the
-        ///     <paramref name="parentSystem"/>
+        ///     <paramref name="parentSystem" />
         /// </remarks>
         /// <param name="parentSystem">The parent system which the child (sub) systems should be replaced.</param>
-        /// <param name="subSystemType">The system <see cref="Type"/> that will be replaced.</param>
-        /// <param name="updatedSystem">The system to replace the found <paramref name="subSystemType"/> with.</param>
+        /// <param name="subSystemType">The system <see cref="Type" /> that will be replaced.</param>
+        /// <param name="updatedSystem">The system to replace the found <paramref name="subSystemType" /> with.</param>
         /// <returns>true/false if any replacement occured.</returns>
         public static bool ReplaceSubSystemsOfType(this ref PlayerLoopSystem parentSystem, Type subSystemType,
             ref PlayerLoopSystem updatedSystem)
@@ -270,23 +291,25 @@ namespace GDX
                 parentSystem.subSystemList[i] = updatedSystem;
                 replaced = true;
             }
+
             return replaced;
         }
 
         /// <summary>
-        ///     Searches the provided <paramref name="rootSystem"/> child (sub) systems for the first instance of a
-        ///     <paramref name="subSystemType"/> system.
+        ///     Searches the provided <paramref name="rootSystem" /> child (sub) systems for the first instance of a
+        ///     <paramref name="subSystemType" /> system.
         /// </summary>
         /// <param name="rootSystem">
-        ///     The root system which the <paramref name="subSystemType"/> will be searched recursively for.
+        ///     The root system which the <paramref name="subSystemType" /> will be searched recursively for.
         /// </param>
-        /// <param name="subSystemType">The child (sub) system <see cref="Type"/> that will be searched for recursively.</param>
+        /// <param name="subSystemType">The child (sub) system <see cref="Type" /> that will be searched for recursively.</param>
         /// <param name="foundSubSystem">Was an appropriate system found?</param>
         /// <returns>
-        ///     The found system, or the root system. Check <paramref name="foundSubSystem"/> to determine if the system
+        ///     The found system, or the root system. Check <paramref name="foundSubSystem" /> to determine if the system
         ///     was actually found. This pattern is used to preserve the reference.
         /// </returns>
-        public static ref PlayerLoopSystem TryGetFirstSubSystemOfType(this ref PlayerLoopSystem rootSystem, Type subSystemType, out bool foundSubSystem)
+        public static ref PlayerLoopSystem TryGetFirstSubSystemOfType(this ref PlayerLoopSystem rootSystem,
+            Type subSystemType, out bool foundSubSystem)
         {
             if (rootSystem.subSystemList != null)
             {
@@ -319,18 +342,18 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Searches the provided <paramref name="rootSystem"/> child (sub) systems for the first instance of a
-        ///     <paramref name="subSystemType"/> and returns the parent system, with <paramref name="foundSystemIndex"/>
+        ///     Searches the provided <paramref name="rootSystem" /> child (sub) systems for the first instance of a
+        ///     <paramref name="subSystemType" /> and returns the parent system, with <paramref name="foundSystemIndex" />
         ///     of the found child (sub) system.
         /// </summary>
         /// <param name="rootSystem">
-        ///     The root system which the <paramref name="subSystemType"/> will be searched recursively for.
+        ///     The root system which the <paramref name="subSystemType" /> will be searched recursively for.
         /// </param>
-        /// <param name="subSystemType">The child (sub) system <see cref="Type"/> that will be searched for recursively.</param>
+        /// <param name="subSystemType">The child (sub) system <see cref="Type" /> that will be searched for recursively.</param>
         /// <param name="foundSubSystem">Was an appropriate child (sub) system found?</param>
         /// <param name="foundSystemIndex">The index of the found sub (child) system.</param>
         /// <returns>
-        ///     The found parent system, or the root system. Check <paramref name="foundSubSystem"/> to determine if the
+        ///     The found parent system, or the root system. Check <paramref name="foundSubSystem" /> to determine if the
         ///     child (sub) system was actually found. This pattern is used to preserve the reference.
         /// </returns>
         public static ref PlayerLoopSystem TryGetFirstSystemWithSubSystemOfType(this ref PlayerLoopSystem rootSystem,

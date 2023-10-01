@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System.Data.Common;
 using GDX.DataTables;
 using GDX.Editor.Windows.DataTables;
 using UnityEditor;
@@ -10,7 +9,7 @@ using UnityEditor;
 namespace GDX.Editor.Inspectors
 {
     /// <summary>
-    ///     Custom inspector for <see cref="StableDataTable"/> based on <see cref="DataTableInspectorBase" />.
+    ///     Custom inspector for <see cref="StableDataTable" /> based on <see cref="DataTableInspectorBase" />.
     /// </summary>
     [CustomEditor(typeof(StableDataTable))]
     public class StableDataTableInspector : DataTableInspectorBase

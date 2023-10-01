@@ -23,15 +23,15 @@ namespace GDX.Editor.VisualElements
 
         SimpleList<string> m_DisplayName;
         List<int> m_FilteredTypes;
+        bool m_HasEntered;
         string m_LastQuery;
         bool m_Listening;
-        bool m_HasEntered;
         SimpleList<string> m_Namespace;
         int m_TypeCount;
+        SimpleList<string> m_TypeFullNames;
 
         // Working data sets for the list view
         SimpleList<string> m_TypeQualifiedNames;
-        SimpleList<string> m_TypeFullNames;
 
         public TypePicker(TextField textField, VisualElement lastChildOfElement, VisualElement containerElement,
             Action onSelected = null)
@@ -182,6 +182,7 @@ namespace GDX.Editor.VisualElements
         {
             m_HasEntered = true;
         }
+
         void OnMouseLeaveEvent(MouseLeaveEvent evt)
         {
             if (m_HasEntered)
@@ -270,7 +271,6 @@ namespace GDX.Editor.VisualElements
             {
                 for (int i = m_FilteredTypes.Count - 1; i >= 0; i--)
                 {
-
                     // We use ordinal because we already have adjusted the case
                     if (m_TypeFullNames.Array[m_FilteredTypes[i]].IndexOf(token, StringComparison.Ordinal) == -1)
                     {

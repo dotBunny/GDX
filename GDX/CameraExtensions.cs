@@ -4,6 +4,7 @@
 
 #if !UNITY_DOTSRUNTIME
 
+using System.IO;
 using UnityEngine;
 
 namespace GDX
@@ -16,15 +17,16 @@ namespace GDX
     public static class CameraExtensions
     {
         /// <summary>
-        ///     Forces a <see cref="Camera"/> to render it's view into a texture.
+        ///     Forces a <see cref="Camera" /> to render it's view into a texture.
         /// </summary>
-        /// <param name="targetCamera">The target <see cref="Camera"/> to use.</param>
+        /// <param name="targetCamera">The target <see cref="Camera" /> to use.</param>
         /// <param name="width">The desired width of the rendered texture.</param>
         /// <param name="height">The desired height of the rendered texture.</param>
         /// <param name="depthBuffer">The desired depth of the rendered texture.</param>
-        /// <remarks>This behaves differently then using <see cref="ScreenCapture"/>.</remarks>
+        /// <remarks>This behaves differently then using <see cref="ScreenCapture" />.</remarks>
         /// <returns>The rendered view.</returns>
-        public static Texture2D RenderToTexture(this Camera targetCamera, int width = 1920, int height = 1080, int depthBuffer = 24)
+        public static Texture2D RenderToTexture(this Camera targetCamera, int width = 1920, int height = 1080,
+            int depthBuffer = 24)
         {
             // Get a temporary render texture from the pool since its gonna be rapid.
             RenderTexture screenshotRenderTexture = RenderTexture.GetTemporary(width, height, depthBuffer);
@@ -51,9 +53,9 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Forces a <see cref="Camera"/> through <see cref="RenderToTexture"/> encoding to PNG.
+        ///     Forces a <see cref="Camera" /> through <see cref="RenderToTexture" /> encoding to PNG.
         /// </summary>
-        /// <param name="targetCamera">The target <see cref="Camera"/> to use.</param>
+        /// <param name="targetCamera">The target <see cref="Camera" /> to use.</param>
         /// <param name="outputPath">The full path to output the PNG bytes.</param>
         /// <param name="width">The desired width of the rendered texture.</param>
         /// <param name="height">The desired height of the rendered texture.</param>
@@ -62,7 +64,8 @@ namespace GDX
         /// <remarks>This does not indicate if the writing of the PNG was successful.</remarks>
 #pragma warning disable IDE1006
         // ReSharper disable once InconsistentNaming
-        public static bool RenderToPNG(this Camera targetCamera, string outputPath, int width = 1920, int height = 1080, int depthBuffer = 24 )
+        public static bool RenderToPNG(this Camera targetCamera, string outputPath, int width = 1920, int height = 1080,
+            int depthBuffer = 24)
 #pragma warning restore IDE1006
         {
             Texture2D captureTexture = RenderToTexture(targetCamera, width, height, depthBuffer);
@@ -70,7 +73,8 @@ namespace GDX
             {
                 return false;
             }
-            System.IO.File.WriteAllBytes(outputPath, captureTexture.EncodeToPNG());
+
+            File.WriteAllBytes(outputPath, captureTexture.EncodeToPNG());
             return true;
         }
     }

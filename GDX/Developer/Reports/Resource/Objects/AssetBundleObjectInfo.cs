@@ -12,17 +12,17 @@ namespace GDX.Developer.Reports.Resource.Objects
     public sealed class AssetBundleObjectInfo : ObjectInfo
     {
         public new const string TypeDefinition = "GDX.Developer.Reports.Resource.Objects.AssetBundleObjectInfo,GDX";
-
-        public bool IsStreamedSceneAssetBundle;
         public int AssetCount;
 
+        public bool IsStreamedSceneAssetBundle;
+
         /// <summary>
-        /// Create a clone of this object.
+        ///     Create a clone of this object.
         /// </summary>
         /// <returns></returns>
         public override ObjectInfo Clone()
         {
-            return new AssetBundleObjectInfo()
+            return new AssetBundleObjectInfo
             {
                 CopyCount = CopyCount,
                 MemoryUsage = MemoryUsage,
@@ -30,7 +30,7 @@ namespace GDX.Developer.Reports.Resource.Objects
                 Reference = Reference,
                 TotalMemoryUsage = TotalMemoryUsage,
                 Type = Type,
-                IsStreamedSceneAssetBundle =  IsStreamedSceneAssetBundle,
+                IsStreamedSceneAssetBundle = IsStreamedSceneAssetBundle,
                 AssetCount = AssetCount
             };
         }

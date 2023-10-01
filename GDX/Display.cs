@@ -13,7 +13,7 @@ namespace GDX
     [VisualScriptingCompatible(8)]
     public static class Display
     {
- #if !UNITY_DOTSRUNTIME
+#if !UNITY_DOTSRUNTIME
         /// <summary>
         ///     <para>Returns the actual screen height being rendered on the current platform.</para>
         /// </summary>

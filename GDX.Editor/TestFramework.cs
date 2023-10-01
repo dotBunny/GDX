@@ -4,8 +4,8 @@
 
 using UnityEditor;
 using UnityEditor.SceneManagement;
-using UnityEngine;
 using UnityEditor.TestTools.TestRunner.Api;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace GDX.Editor
@@ -22,6 +22,7 @@ namespace GDX.Editor
             {
                 s_TestRunner = ScriptableObject.CreateInstance<TestRunnerApi>();
             }
+
             s_TestMonitor ??= new TestMonitor();
             s_TestRunner.RegisterCallbacks(s_TestMonitor);
         }

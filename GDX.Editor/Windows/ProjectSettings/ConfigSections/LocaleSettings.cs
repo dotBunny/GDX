@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using UnityEngine.UIElements;
-
 #if !UNITY_2022_1_OR_NEWER
 using UnityEditor.UIElements;
 #endif // !UNITY_2022_1_OR_NEWER
@@ -18,9 +17,9 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         public const int SectionIndex = 5;
         public const string SectionKey = "GDX.Localization";
         static readonly string[] k_Keywords = { "locale", "loc", "localization" };
+        EnumField m_EnumDefaultCulture;
         VisualElement m_RootElement;
         Toggle m_ToggleSetDefaultCulture;
-        EnumField m_EnumDefaultCulture;
 
         /// <inheritdoc />
         public void BindSectionContent(VisualElement rootElement)
@@ -116,7 +115,6 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 
         public void SetToggleState(VisualElement toggleElement, bool newState)
         {
-
         }
 
         /// <inheritdoc />

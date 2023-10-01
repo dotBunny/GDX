@@ -7,7 +7,7 @@ using System;
 namespace GDX.DataTables.DataBinding
 {
     /// <summary>
-    ///     A serializable representation of a row of data from a <see cref="DataTableBase"/>.
+    ///     A serializable representation of a row of data from a <see cref="DataTableBase" />.
     /// </summary>
     [Serializable]
     public class SerializableRow

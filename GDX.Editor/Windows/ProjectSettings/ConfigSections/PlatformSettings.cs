@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 {
     /// <summary>
-    ///    GDX Config Settings
+    ///     GDX Config Settings
     /// </summary>
     class PlatformSettings : IConfigSection
     {
@@ -112,7 +112,6 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 
         public void SetToggleState(VisualElement toggleElement, bool newState)
         {
-
         }
 
         /// <inheritdoc />

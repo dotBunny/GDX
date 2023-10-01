@@ -1,42 +1,63 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance"
+         engine="UnityEngine.UIElements" editor="UnityEditor.UIElements"
+         noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <ui:VisualElement name="gdx-project-settings" style="flex-grow: 1; min-width: 540px;">
-        <ui:VisualElement name="gdx-project-settings-header" class="gdx-backdrop" style="flex-direction: row; flex-shrink: 0; height: 40px; border-left-color: rgb(40, 40, 40); border-right-color: rgb(40, 40, 40); border-top-color: rgb(40, 40, 40); border-bottom-color: rgb(40, 40, 40); border-bottom-width: 1px;">
-            <ui:VisualElement class="gdx-icon-button" style="flex-direction: row; overflow: visible; width: 40px; background-color: rgb(0, 0, 0); height: 40px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: middle-center; flex-shrink: 0;">
-                <ui:Button name="gdx-extras-button" style="margin-right: 5px; height: 30px; margin-left: 5px; margin-top: 5px; margin-bottom: 5px; width: 30px; -unity-background-scale-mode: scale-to-fit;" />
+        <ui:VisualElement name="gdx-project-settings-header" class="gdx-backdrop"
+                          style="flex-direction: row; flex-shrink: 0; height: 40px; border-left-color: rgb(40, 40, 40); border-right-color: rgb(40, 40, 40); border-top-color: rgb(40, 40, 40); border-bottom-color: rgb(40, 40, 40); border-bottom-width: 1px;">
+            <ui:VisualElement class="gdx-icon-button"
+                              style="flex-direction: row; overflow: visible; width: 40px; background-color: rgb(0, 0, 0); height: 40px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; -unity-text-align: middle-center; flex-shrink: 0;">
+                <ui:Button name="gdx-extras-button"
+                           style="margin-right: 5px; height: 30px; margin-left: 5px; margin-top: 5px; margin-bottom: 5px; width: 30px; -unity-background-scale-mode: scale-to-fit;"/>
             </ui:VisualElement>
             <ui:VisualElement style="margin-top: 1px; margin-left: 4px;">
-                <ui:Label text="Game Development Extensions" display-tooltip-when-elided="true" class="gdx-big-title" style="padding-left: 0;" />
-                <ui:Label text="A battle-tested library of game-ready high-performance C# code." display-tooltip-when-elided="true" style="flex-wrap: wrap; padding-left: 3px; margin-top: -3px; -unity-font-style: italic; font-size: 10px;" />
+                <ui:Label text="Game Development Extensions" display-tooltip-when-elided="true" class="gdx-big-title"
+                          style="padding-left: 0;"/>
+                <ui:Label text="A battle-tested library of game-ready high-performance C# code."
+                          display-tooltip-when-elided="true"
+                          style="flex-wrap: wrap; padding-left: 3px; margin-top: -3px; -unity-font-style: italic; font-size: 10px;"/>
             </ui:VisualElement>
-            <ui:VisualElement style="flex-grow: 1;" />
-            <ui:VisualElement name="gdx-config-changes" style="flex-direction: row; margin-top: 6px; margin-right: 4px;">
-                <ui:Button text="Clear" display-tooltip-when-elided="true" name="button-clear-changes" tooltip="Reset working configuration to saved GDX config." class="gdx-button" />
-                <ui:Button text="Save Changes" display-tooltip-when-elided="true" name="button-save-changes" tooltip="Write out modified GDXSettings file which will overwrite GDX config settings." class="gdx-button" />
+            <ui:VisualElement style="flex-grow: 1;"/>
+            <ui:VisualElement name="gdx-config-changes"
+                              style="flex-direction: row; margin-top: 6px; margin-right: 4px;">
+                <ui:Button text="Clear" display-tooltip-when-elided="true" name="button-clear-changes"
+                           tooltip="Reset working configuration to saved GDX config." class="gdx-button"/>
+                <ui:Button text="Save Changes" display-tooltip-when-elided="true" name="button-save-changes"
+                           tooltip="Write out modified GDXSettings file which will overwrite GDX config settings."
+                           class="gdx-button"/>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:ScrollView name="gdx-project-settings-content" vertical-scroller-visibility="AlwaysVisible" style="flex-grow: 1;">
+        <ui:ScrollView name="gdx-project-settings-content" vertical-scroller-visibility="AlwaysVisible"
+                       style="flex-grow: 1;">
             <ui:VisualElement name="gdx-project-settings-info" style="flex-direction: row; min-width: 210px;">
-                <ui:VisualElement name="gdx-changelog-background" style="flex-grow: 1; flex-wrap: nowrap; flex-shrink: 1; margin-right: 10px; margin-top: 10px; margin-bottom: 10px; -unity-slice-left: 3; -unity-slice-top: 3; -unity-slice-right: 3; -unity-slice-bottom: 3;">
-                    <ui:ScrollView name="gdx-changelog" nested-interaction-kind="StopScrolling" style="flex-grow: 1; height: 250px; margin-left: 1px; margin-right: 2px; margin-top: 1px; margin-bottom: 1px;" />
+                <ui:VisualElement name="gdx-changelog-background"
+                                  style="flex-grow: 1; flex-wrap: nowrap; flex-shrink: 1; margin-right: 10px; margin-top: 10px; margin-bottom: 10px; -unity-slice-left: 3; -unity-slice-top: 3; -unity-slice-right: 3; -unity-slice-bottom: 3;">
+                    <ui:ScrollView name="gdx-changelog" nested-interaction-kind="StopScrolling"
+                                   style="flex-grow: 1; height: 250px; margin-left: 1px; margin-right: 2px; margin-top: 1px; margin-bottom: 1px;"/>
                 </ui:VisualElement>
                 <ui:VisualElement name="gdx-info-box" class="gdx-groupbox" style="width: 202px; flex-shrink: 0;">
-                    <ui:VisualElement name="gdx-banner" style="width: 181px; height: 95px; flex-shrink: 0; background-color: rgb(0, 0, 0); -unity-text-align: lower-right; border-left-color: rgb(42, 42, 42); border-right-color: rgb(42, 42, 42); border-top-color: rgb(42, 42, 42); border-bottom-color: rgb(42, 42, 42); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
-                        <ui:Label tabindex="-1" text="Unknown" display-tooltip-when-elided="true" name="gdx-version" class="gdx-backdrop" style="-unity-text-align: lower-right; width: auto; height: auto; -unity-font-style: bold; bottom: 0; position: absolute; right: 0; padding-left: 4px; padding-right: 3px; padding-top: 4px; padding-bottom: 3px; margin-bottom: 0;" />
+                    <ui:VisualElement name="gdx-banner"
+                                      style="width: 181px; height: 95px; flex-shrink: 0; background-color: rgb(0, 0, 0); -unity-text-align: lower-right; border-left-color: rgb(42, 42, 42); border-right-color: rgb(42, 42, 42); border-top-color: rgb(42, 42, 42); border-bottom-color: rgb(42, 42, 42); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;">
+                        <ui:Label tabindex="-1" text="Unknown" display-tooltip-when-elided="true" name="gdx-version"
+                                  class="gdx-backdrop"
+                                  style="-unity-text-align: lower-right; width: auto; height: auto; -unity-font-style: bold; bottom: 0; position: absolute; right: 0; padding-left: 4px; padding-right: 3px; padding-top: 4px; padding-bottom: 3px; margin-bottom: 0;"/>
                     </ui:VisualElement>
-                    <ui:VisualElement class="gdx-fixed-vertical-spacer-5" style="height: 10px;" />
+                    <ui:VisualElement class="gdx-fixed-vertical-spacer-5" style="height: 10px;"/>
                     <ui:VisualElement style="white-space: nowrap; align-items: flex-start; flex-direction: row;">
-                        <ui:Label text="-" class="gdx-bullet" />
-                        <ui:Button name="button-documentation" text="Documentation" display-tooltip-when-elided="true" class="gdx-link" />
+                        <ui:Label text="-" class="gdx-bullet"/>
+                        <ui:Button name="button-documentation" text="Documentation" display-tooltip-when-elided="true"
+                                   class="gdx-link"/>
                     </ui:VisualElement>
                     <ui:VisualElement style="white-space: nowrap; align-items: flex-start; flex-direction: row;">
-                        <ui:Label text="-" class="gdx-bullet" />
-                        <ui:Button name="button-issue" text="Report an Issue" display-tooltip-when-elided="true" class="gdx-link" />
+                        <ui:Label text="-" class="gdx-bullet"/>
+                        <ui:Button name="button-issue" text="Report an Issue" display-tooltip-when-elided="true"
+                                   class="gdx-link"/>
                     </ui:VisualElement>
                     <ui:VisualElement style="white-space: nowrap; align-items: flex-start; flex-direction: row;">
-                        <ui:Label text="-" class="gdx-bullet" />
-                        <ui:Button name="button-license" text="License" display-tooltip-when-elided="true" class="gdx-link" />
+                        <ui:Label text="-" class="gdx-bullet"/>
+                        <ui:Button name="button-license" text="License" display-tooltip-when-elided="true"
+                                   class="gdx-link"/>
                     </ui:VisualElement>
-                    <ui:VisualElement name="gdx-packages" style="flex-direction: row; flex-wrap: wrap;" />
+                    <ui:VisualElement name="gdx-packages" style="flex-direction: row; flex-wrap: wrap;"/>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:ScrollView>

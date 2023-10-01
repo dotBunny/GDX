@@ -8,11 +8,11 @@ namespace GDX.Editor.Build
 {
     public class BuildDefinition
     {
-        public ScriptingImplementation Backend;
         public readonly bool ClearPreviousBuild = true;
+        public readonly string TargetFolder;
+        public ScriptingImplementation Backend;
         public string ExecutableName;
         public BuildPlayerOptions PlayerOptions;
-        public readonly string TargetFolder;
 
         public BuildDefinition(string folderName, string executableName)
         {

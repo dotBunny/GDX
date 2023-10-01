@@ -16,11 +16,6 @@ namespace GDX
     public static class Localization
     {
         /// <summary>
-        ///     An array of strings representative for file size formats.
-        /// </summary>
-        public static readonly string[] ByteSizes = { "B", "KB", "MB", "GB", "TB" };
-
-        /// <summary>
         ///     A list of supported languages.
         /// </summary>
         /// <remarks>
@@ -52,6 +47,11 @@ namespace GDX
         ///     A filename safe <see cref="DateTime.ToString(System.String)" />.
         /// </summary>
         public const string FilenameTimestampFormat = "yyyyMMdd_HHmmss";
+
+        /// <summary>
+        ///     An array of strings representative for file size formats.
+        /// </summary>
+        public static readonly string[] ByteSizes = { "B", "KB", "MB", "GB", "TB" };
 
         /// <summary>
         ///     Creates a more human readable <see cref="string" /> of a byte size.
@@ -235,7 +235,8 @@ namespace GDX
         {
             if (Config.LocalizationSetDefaultCulture && GetSystemLanguage() == Language.Default)
             {
-                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(Config.LocalizationDefaultCulture.GetIETF_BCP47());
+                CultureInfo.DefaultThreadCurrentCulture =
+                    new CultureInfo(Config.LocalizationDefaultCulture.GetIETF_BCP47());
             }
         }
     }

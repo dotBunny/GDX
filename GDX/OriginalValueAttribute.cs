@@ -29,14 +29,17 @@ namespace GDX
         }
 
         /// <summary>
-        /// Get the original value associated with the given field.
+        ///     Get the original value associated with the given field.
         /// </summary>
-        /// <param name="field">A given <see cref="FieldInfo"/>.</param>
+        /// <param name="field">A given <see cref="FieldInfo" />.</param>
         /// <typeparam name="T">The type of data being read.</typeparam>
         /// <returns>The original value.</returns>
         public static T GetValue<T>(FieldInfo field)
         {
-            if (field == null) return default;
+            if (field == null)
+            {
+                return default;
+            }
 
             OriginalValueAttribute attribute = (OriginalValueAttribute)field
                 .GetCustomAttribute(typeof(OriginalValueAttribute), false);
@@ -45,14 +48,17 @@ namespace GDX
         }
 
         /// <summary>
-        /// Get the original value associated with the given property.
+        ///     Get the original value associated with the given property.
         /// </summary>
-        /// <param name="property">A given <see cref="PropertyInfo"/>.</param>
+        /// <param name="property">A given <see cref="PropertyInfo" />.</param>
         /// <typeparam name="T">The type of data being read.</typeparam>
         /// <returns>The original value.</returns>
         public static T GetValue<T>(PropertyInfo property)
         {
-            if (property == null) return default;
+            if (property == null)
+            {
+                return default;
+            }
 
             OriginalValueAttribute attribute = (OriginalValueAttribute)property
                 .GetCustomAttribute(typeof(OriginalValueAttribute), false);

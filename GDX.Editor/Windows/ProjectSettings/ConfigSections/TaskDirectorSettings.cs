@@ -4,7 +4,7 @@
 
 using System;
 using UnityEngine.UIElements;
-using Toggle = UnityEngine.UIElements.Toggle;
+
 namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 {
     /// <summary>
@@ -15,10 +15,10 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         public const int SectionIndex = 7;
         public const string SectionKey = "GDX.TaskDirector";
         static readonly string[] k_Keywords = { "task", "tasks" };
-        VisualElement m_RootElement;
 
         Slider m_EditorTaskDirectorTickRate;
         Toggle m_EditorTaskDirectorToggle;
+        VisualElement m_RootElement;
         Slider m_TaskDirectorTickRate;
         Toggle m_TaskDirectorToggle;
 
@@ -51,6 +51,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
                 {
                     m_TaskDirectorToggle.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
+
                 ProjectSettingsProvider.UpdateForChanges();
             });
 
@@ -68,6 +69,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
                 {
                     m_TaskDirectorTickRate.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
+
                 ProjectSettingsProvider.UpdateForChanges();
             });
 
@@ -86,12 +88,14 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
                 {
                     m_EditorTaskDirectorToggle.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
+
                 ProjectSettingsProvider.UpdateForChanges();
             });
 
             m_EditorTaskDirectorTickRate = m_RootElement.Q<Slider>("slider-editor-task-director-tick-rate");
             ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_EditorTaskDirectorTickRate);
-            m_EditorTaskDirectorTickRate.value = (float)ProjectSettingsProvider.WorkingConfig.EditorTaskDirectorSystemTickRate;
+            m_EditorTaskDirectorTickRate.value =
+                (float)ProjectSettingsProvider.WorkingConfig.EditorTaskDirectorSystemTickRate;
             m_EditorTaskDirectorTickRate.RegisterValueChangedCallback(evt =>
             {
                 ProjectSettingsProvider.WorkingConfig.EditorTaskDirectorSystemTickRate = evt.newValue;
@@ -103,6 +107,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
                 {
                     m_EditorTaskDirectorTickRate.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
+
                 ProjectSettingsProvider.UpdateForChanges();
             });
         }
@@ -111,6 +116,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         {
             return false;
         }
+
         public string GetSectionHeaderLabel()
         {
             return "Task Director";
@@ -125,10 +131,12 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         {
             return SectionKey;
         }
+
         public string GetSectionHelpLink()
         {
             return null;
         }
+
         public bool GetToggleSupport()
         {
             return false;
@@ -146,7 +154,6 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 
         public void SetToggleState(VisualElement toggleElement, bool newState)
         {
-
         }
 
         public void UpdateSectionContent()

@@ -2,10 +2,12 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using GDX.DataTables.CellValues;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace GDX.Editor.PropertyDrawers.CellValues
 {
@@ -22,8 +24,9 @@ namespace GDX.Editor.PropertyDrawers.CellValues
             ObjectField newField = new ObjectField(null) { name = k_CellFieldName };
 
             string qualifiedType = m_DataTable.GetTypeNameForColumn(m_ColumnIdentifier);
-            newField.objectType = (!string.IsNullOrEmpty(qualifiedType) ? System.Type.GetType(qualifiedType) : typeof(UnityEngine.Object)) ??
-                                  typeof(UnityEngine.Object);
+            newField.objectType =
+                (!string.IsNullOrEmpty(qualifiedType) ? Type.GetType(qualifiedType) : typeof(Object)) ??
+                typeof(Object);
 
             newField.SetValueWithoutNotify(m_CellValue.Get());
             newField.RegisterValueChangedCallback(e =>

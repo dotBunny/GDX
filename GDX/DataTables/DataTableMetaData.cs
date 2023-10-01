@@ -95,6 +95,7 @@ namespace GDX.DataTables
             {
                 return Path.GetRelativePath(Application.dataPath, uri);
             }
+
             return uri;
         }
 

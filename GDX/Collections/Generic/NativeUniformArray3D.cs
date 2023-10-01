@@ -103,7 +103,7 @@ namespace GDX.Collections.Generic
         public int3 GetFromIndex(int index)
         {
             int x = index % Stride;
-            int y =  (index - x)/Stride % Stride;
+            int y = (index - x) / Stride % Stride;
             int z = (index - x - Stride * y) / StrideSquared;
             return new int3(x, y, z);
         }

@@ -346,6 +346,7 @@ namespace GDX.Developer
                 case -873360029:
                     return KeyCode.RightControl;
             }
+
             return KeyCode.Invalid;
         }
 
@@ -504,21 +505,24 @@ namespace GDX.Developer
 
         public static bool KeyPress(KeyCode keyCode, SynthesizeMethod method = SynthesizeMethod.Native)
         {
-            return Synthesize(new[]
-            {
-                new KeyboardInput(keyCode, KeyboardFlag.KeyDown, 0, IntPtr.Zero),
-                new KeyboardInput(keyCode, KeyboardFlag.KeyUp, 0, IntPtr.Zero)
-            }, method) == 2;
+            return Synthesize(
+                new[]
+                {
+                    new KeyboardInput(keyCode, KeyboardFlag.KeyDown, 0, IntPtr.Zero),
+                    new KeyboardInput(keyCode, KeyboardFlag.KeyUp, 0, IntPtr.Zero)
+                }, method) == 2;
         }
 
-        public static bool MouseClick(int x, int y, bool virtualMode = false, SynthesizeMethod method = SynthesizeMethod.Native)
+        public static bool MouseClick(int x, int y, bool virtualMode = false,
+            SynthesizeMethod method = SynthesizeMethod.Native)
         {
-            return Synthesize(new[]
-            {
-                new MouseInput(x, y, 0, MouseFlag.Move & MouseFlag.Absolute, 0, IntPtr.Zero),
-                new MouseInput(x, y, 0, MouseFlag.LeftDown, 0, IntPtr.Zero),
-                new MouseInput(x, y, 0, MouseFlag.LeftUp, 0, IntPtr.Zero)
-            }, method) == 3;
+            return Synthesize(
+                new[]
+                {
+                    new MouseInput(x, y, 0, MouseFlag.Move & MouseFlag.Absolute, 0, IntPtr.Zero),
+                    new MouseInput(x, y, 0, MouseFlag.LeftDown, 0, IntPtr.Zero),
+                    new MouseInput(x, y, 0, MouseFlag.LeftUp, 0, IntPtr.Zero)
+                }, method) == 3;
         }
 
         /// <summary>
@@ -645,13 +649,11 @@ namespace GDX.Developer
 
             public MouseInput(int x, int y, uint data, MouseFlag flags, uint timestamp, IntPtr extraInfo)
             {
-
                 Data = data;
 
                 // Absolute on main monitor?
                 if (flags.HasFlags(MouseFlag.Absolute) && !flags.HasFlags(MouseFlag.VirtualDesk))
                 {
-
                     float widthPercent = (float)x / Screen.currentResolution.width;
                     float heightPercent = (float)y / Screen.currentResolution.height;
                     X = (int)(widthPercent * 65535);
@@ -662,6 +664,7 @@ namespace GDX.Developer
                     X = x;
                     Y = y;
                 }
+
                 Flags = (uint)flags;
                 Timestamp = timestamp;
                 ExtraInfo = extraInfo;
@@ -709,6 +712,7 @@ namespace GDX.Developer
         {
             readonly InputType Type;
             readonly InputData Data;
+
             public InputItem(InputType type, InputData data)
             {
                 Type = type;

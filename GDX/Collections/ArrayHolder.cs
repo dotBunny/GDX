@@ -7,7 +7,7 @@ using System;
 namespace GDX.Collections
 {
     /// <summary>
-    /// A struct purely created to allow for serialization of multi-dimensional arrays.
+    ///     A struct purely created to allow for serialization of multi-dimensional arrays.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]
@@ -15,12 +15,6 @@ namespace GDX.Collections
     {
         public T[] TArray;
 
-        public ref T this[int index]
-        {
-            get
-            {
-                return ref TArray[index];
-            }
-        }
+        public ref T this[int index] => ref TArray[index];
     }
 }

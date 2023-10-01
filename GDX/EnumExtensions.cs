@@ -40,7 +40,7 @@ namespace GDX
         /// <summary>
         ///     Determine if the provide flags (<paramref name="needles" />) are found in the <paramref name="haystack" />.
         /// </summary>
-        /// <remarks>Faster then <see cref="Enum.HasFlag"/>.</remarks>
+        /// <remarks>Faster then <see cref="Enum.HasFlag" />.</remarks>
         /// <param name="haystack">A predefined flag based enumeration.</param>
         /// <param name="needles">A set of flags to search for in the predefined enumeration.</param>
         /// <typeparam name="T">The enumeration's type.</typeparam>

@@ -17,7 +17,7 @@ namespace GDX.Developer.Reports.BuildVerification
         ///     Get some semblance of identifiable information for a test.
         /// </summary>
         /// <returns>
-        ///     The <see cref="string"/> identifier for the test.
+        ///     The <see cref="string" /> identifier for the test.
         /// </returns>
         string GetIdentifier();
 

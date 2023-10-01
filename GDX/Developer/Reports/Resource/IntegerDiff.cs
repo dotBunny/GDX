@@ -2,6 +2,8 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using UnityEngine;
+
 #if !UNITY_DOTSRUNTIME
 
 namespace GDX.Developer.Reports.Resource
@@ -64,12 +66,12 @@ namespace GDX.Developer.Reports.Resource
 
             if (Percentage > 0)
             {
-                return $" +{UnityEngine.Mathf.RoundToInt(Percentage).ToString()}%";
+                return $" +{Mathf.RoundToInt(Percentage).ToString()}%";
             }
 
             if (Percentage < 0)
             {
-                return $" {UnityEngine.Mathf.RoundToInt(Percentage).ToString()}%";
+                return $" {Mathf.RoundToInt(Percentage).ToString()}%";
             }
 
             return null;

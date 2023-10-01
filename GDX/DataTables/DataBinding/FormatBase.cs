@@ -7,7 +7,7 @@ using System;
 namespace GDX.DataTables.DataBinding
 {
     /// <summary>
-    ///     A custom binding to be used with a <see cref="DataTableBase"/>.
+    ///     A custom binding to be used with a <see cref="DataTableBase" />.
     /// </summary>
     public abstract class FormatBase
     {

@@ -15,7 +15,7 @@ namespace GDX.Collections.Generic
     public struct ConcurrentCircularBuffer<T>
     {
         /// <summary>
-        /// Lock pattern to ensure we aren't stepping on our toes across threads.
+        ///     Lock pattern to ensure we aren't stepping on our toes across threads.
         /// </summary>
         readonly object m_Lock;
 
@@ -70,7 +70,7 @@ namespace GDX.Collections.Generic
 
         /// <summary>
         ///     Create a <see cref="ConcurrentCircularBuffer{T}" /> with a <paramref name="capacity" />, filling with
-        ///     <paramref name="targetItems"/>.
+        ///     <paramref name="targetItems" />.
         /// </summary>
         /// <param name="capacity">The maximum number of items allowed in the <see cref="ConcurrentCircularBuffer{T}" /></param>
         /// <param name="targetItems">An array of values to fill the <see cref="ConcurrentCircularBuffer{T}" /> with.</param>
@@ -78,7 +78,10 @@ namespace GDX.Collections.Generic
         ///     Invalid number of entries provided to the <see cref="ConcurrentCircularBuffer{T}" />
         ///     constructor.
         /// </exception>
-        /// <exception cref="ArgumentNullException">No items were provided to the <see cref="ConcurrentCircularBuffer{T}" /> constructor.</exception>
+        /// <exception cref="ArgumentNullException">
+        ///     No items were provided to the <see cref="ConcurrentCircularBuffer{T}" />
+        ///     constructor.
+        /// </exception>
         public ConcurrentCircularBuffer(int capacity, T[] targetItems)
         {
             if (capacity < 1)
@@ -114,12 +117,10 @@ namespace GDX.Collections.Generic
         /// <exception cref="IndexOutOfRangeException">Provided index is out of buffers range.</exception>
         public T this[int pseudoIndex]
         {
-            get
-            {
-                return Array[
+            get =>
+                Array[
                     StartIndex +
                     (pseudoIndex < Capacity - StartIndex ? pseudoIndex : pseudoIndex - Capacity)];
-            }
             set
             {
                 lock (m_Lock)
@@ -227,6 +228,7 @@ namespace GDX.Collections.Generic
                 {
                     StartIndex = 0;
                 }
+
                 --Count;
             }
         }

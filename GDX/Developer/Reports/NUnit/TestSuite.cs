@@ -10,6 +10,9 @@ namespace GDX.Developer.Reports.NUnit
     [ExcludeFromCodeCoverage]
     public class TestSuite
     {
+        public readonly List<TestCase> TestCases = new List<TestCase>();
+
+        public readonly List<TestSuite> TestSuites = new List<TestSuite>();
         public string Type { get; set; }
         public string Id { get; set; }
         public string Name { get; set; }
@@ -29,10 +32,6 @@ namespace GDX.Developer.Reports.NUnit
         public int Skipped { get; set; }
         public int Asserts { get; set; }
         public Properties Properties { get; set; }
-
-        public readonly List<TestCase> TestCases = new List<TestCase>();
-
-        public readonly List<TestSuite> TestSuites = new List<TestSuite>();
 
         public void Process(string passedResult, string failedResult, string inconclusiveResult, string skippedResult)
         {
@@ -60,6 +59,7 @@ namespace GDX.Developer.Reports.NUnit
                     Skipped++;
                 }
             }
+
             TestCaseCount = Total;
 
             // Update children
@@ -84,10 +84,12 @@ namespace GDX.Developer.Reports.NUnit
                     passCount++;
                 }
             }
+
             foreach (TestSuite testSuite in TestSuites)
             {
                 passCount += testSuite.GetPassCount();
             }
+
             return passCount;
         }
 
@@ -101,12 +103,13 @@ namespace GDX.Developer.Reports.NUnit
                     failCount++;
                 }
             }
+
             foreach (TestSuite testSuite in TestSuites)
             {
                 failCount += testSuite.GetPassCount();
             }
+
             return failCount;
         }
     }
-
 }

@@ -2,19 +2,19 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Collections.Generic;
 using GDX.DataTables;
 using UnityEditor;
 using UnityEditor.Callbacks;
-using Object = UnityEngine.Object;
+using UnityEngine;
 
 namespace GDX.Editor.Windows.DataTables
 {
 #if UNITY_2022_2_OR_NEWER
     public static class DataTableWindowProvider
     {
-        static readonly Dictionary<int, DataTableWindow> k_TicketToTableWindow = new Dictionary<int, DataTableWindow>(5);
+        static readonly Dictionary<int, DataTableWindow>
+            k_TicketToTableWindow = new Dictionary<int, DataTableWindow>(5);
 
 
         static bool s_SubscribedForUndo;
@@ -26,7 +26,6 @@ namespace GDX.Editor.Windows.DataTables
 
         internal static void RegisterTableWindow(DataTableWindow dataTableWindow, DataTableBase dataTable)
         {
-
             int ticket = dataTableWindow.GetDataTableTicket();
             k_TicketToTableWindow[ticket] = dataTableWindow;
         }

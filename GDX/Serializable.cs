@@ -2,76 +2,12 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Runtime.CompilerServices;
 
 namespace GDX
 {
     public static class Serializable
     {
-        const string k_Invalid = "Invalid";
-        static readonly int k_InvalidHashCode = k_Invalid.GetStableHashCode();
-        const string k_String = "String";
-        static readonly int k_StringHashCode = k_String.GetStableHashCode();
-        const string k_Char = "Character";
-        static readonly int k_CharHashCode = k_Char.GetStableHashCode();
-        const string k_Bool = "Boolean";
-        static readonly int k_BoolHashCode = k_Bool.GetStableHashCode();
-        const string k_SByte = "Signed Byte";
-        static readonly int k_SByteHashCode = k_SByte.GetStableHashCode();
-        const string k_Byte = "Unsigned Byte";
-        static readonly int k_ByteHashCode = k_Byte.GetStableHashCode();
-        const string k_Short = "Short";
-        static readonly int k_ShortHashCode = k_Short.GetStableHashCode();
-        const string k_UShort = "Unsigned Short";
-        static readonly int k_UShortHashCode = k_UShort.GetStableHashCode();
-        const string k_Int = "Integer";
-        static readonly int k_IntHashCode = k_Int.GetStableHashCode();
-        const string k_UInt = "UInt";
-        static readonly int k_UIntHashCode = k_UInt.GetStableHashCode();
-        const string k_Long = "Long";
-        static readonly int k_LongHashCode = k_Long.GetStableHashCode();
-        const string k_ULong = "Unsigned Long";
-        static readonly int k_ULongHashCode = k_ULong.GetStableHashCode();
-        const string k_Float = "Float";
-        static readonly int k_FloatHashCode = k_Float.GetStableHashCode();
-        const string k_Double = "Double";
-        static readonly int k_DoubleHashCode = k_Double.GetStableHashCode();
-        const string k_Vector2 = "Vector2";
-        static readonly int k_Vector2HashCode = k_Vector2.GetStableHashCode();
-        const string k_Vector3 = "Vector3";
-        static readonly int k_Vector3HashCode = k_Vector3.GetStableHashCode();
-        const string k_Vector4 = "Vector4";
-        static readonly int k_Vector4HashCode = k_Vector4.GetStableHashCode();
-        const string k_Vector2Int = "Vector2 (Integer)";
-        static readonly int k_Vector2IntHashCode = k_Vector2Int.GetStableHashCode();
-        const string k_Vector3Int = "Vector3 (Integer)";
-        static readonly int k_Vector3IntHashCode = k_Vector3Int.GetStableHashCode();
-        const string k_Quaternion = "Quaternion";
-        static readonly int k_QuaternionHashCode = k_Quaternion.GetStableHashCode();
-        const string k_Rect = "Rectangle";
-        static readonly int k_RectHashCode = k_Rect.GetStableHashCode();
-        const string k_RectInt = "Rectangle (Integer)";
-        static readonly int k_RectIntHashCode = k_RectInt.GetStableHashCode();
-        const string k_Color = "Color";
-        static readonly int k_ColorHashCode = k_Color.GetStableHashCode();
-        const string k_LayerMask = "Layer (Mask)";
-        static readonly int k_LayerMaskHashCode = k_LayerMask.GetStableHashCode();
-        const string k_Bounds = "Bounds";
-        static readonly int k_BoundsHashCode = k_Bounds.GetStableHashCode();
-        const string k_BoundsInt = "Bounds (Integer)";
-        static readonly int k_BoundsIntHashCode = k_BoundsInt.GetStableHashCode();
-        const string k_Hash128 = "Hash128";
-        static readonly int k_Hash128HashCode = k_Hash128.GetStableHashCode();
-        const string k_Gradient = "Gradient";
-        static readonly int k_GradientHashCode = k_Gradient.GetStableHashCode();
-        const string k_AnimationCurve = "AnimationCurve";
-        static readonly int k_AnimationCurveHashCode = k_AnimationCurve.GetStableHashCode();
-        const string k_Object = "Object";
-        static readonly int k_ObjectHashCode = k_Object.GetStableHashCode();
-        const string k_EnumInt = "Enum (Integer)";
-        static readonly int k_EnumIntHashCode = k_EnumInt.GetStableHashCode();
-
         public enum SerializableTypes
         {
             Invalid = -1,
@@ -107,7 +43,70 @@ namespace GDX
             EnumInt
         }
 
+        const string k_Invalid = "Invalid";
+        const string k_String = "String";
+        const string k_Char = "Character";
+        const string k_Bool = "Boolean";
+        const string k_SByte = "Signed Byte";
+        const string k_Byte = "Unsigned Byte";
+        const string k_Short = "Short";
+        const string k_UShort = "Unsigned Short";
+        const string k_Int = "Integer";
+        const string k_UInt = "UInt";
+        const string k_Long = "Long";
+        const string k_ULong = "Unsigned Long";
+        const string k_Float = "Float";
+        const string k_Double = "Double";
+        const string k_Vector2 = "Vector2";
+        const string k_Vector3 = "Vector3";
+        const string k_Vector4 = "Vector4";
+        const string k_Vector2Int = "Vector2 (Integer)";
+        const string k_Vector3Int = "Vector3 (Integer)";
+        const string k_Quaternion = "Quaternion";
+        const string k_Rect = "Rectangle";
+        const string k_RectInt = "Rectangle (Integer)";
+        const string k_Color = "Color";
+        const string k_LayerMask = "Layer (Mask)";
+        const string k_Bounds = "Bounds";
+        const string k_BoundsInt = "Bounds (Integer)";
+        const string k_Hash128 = "Hash128";
+        const string k_Gradient = "Gradient";
+        const string k_AnimationCurve = "AnimationCurve";
+        const string k_Object = "Object";
+        const string k_EnumInt = "Enum (Integer)";
+
         public const int SerializableTypesCount = 30;
+        static readonly int k_InvalidHashCode = k_Invalid.GetStableHashCode();
+        static readonly int k_StringHashCode = k_String.GetStableHashCode();
+        static readonly int k_CharHashCode = k_Char.GetStableHashCode();
+        static readonly int k_BoolHashCode = k_Bool.GetStableHashCode();
+        static readonly int k_SByteHashCode = k_SByte.GetStableHashCode();
+        static readonly int k_ByteHashCode = k_Byte.GetStableHashCode();
+        static readonly int k_ShortHashCode = k_Short.GetStableHashCode();
+        static readonly int k_UShortHashCode = k_UShort.GetStableHashCode();
+        static readonly int k_IntHashCode = k_Int.GetStableHashCode();
+        static readonly int k_UIntHashCode = k_UInt.GetStableHashCode();
+        static readonly int k_LongHashCode = k_Long.GetStableHashCode();
+        static readonly int k_ULongHashCode = k_ULong.GetStableHashCode();
+        static readonly int k_FloatHashCode = k_Float.GetStableHashCode();
+        static readonly int k_DoubleHashCode = k_Double.GetStableHashCode();
+        static readonly int k_Vector2HashCode = k_Vector2.GetStableHashCode();
+        static readonly int k_Vector3HashCode = k_Vector3.GetStableHashCode();
+        static readonly int k_Vector4HashCode = k_Vector4.GetStableHashCode();
+        static readonly int k_Vector2IntHashCode = k_Vector2Int.GetStableHashCode();
+        static readonly int k_Vector3IntHashCode = k_Vector3Int.GetStableHashCode();
+        static readonly int k_QuaternionHashCode = k_Quaternion.GetStableHashCode();
+        static readonly int k_RectHashCode = k_Rect.GetStableHashCode();
+        static readonly int k_RectIntHashCode = k_RectInt.GetStableHashCode();
+        static readonly int k_ColorHashCode = k_Color.GetStableHashCode();
+        static readonly int k_LayerMaskHashCode = k_LayerMask.GetStableHashCode();
+        static readonly int k_BoundsHashCode = k_Bounds.GetStableHashCode();
+        static readonly int k_BoundsIntHashCode = k_BoundsInt.GetStableHashCode();
+        static readonly int k_Hash128HashCode = k_Hash128.GetStableHashCode();
+        static readonly int k_GradientHashCode = k_Gradient.GetStableHashCode();
+        static readonly int k_AnimationCurveHashCode = k_AnimationCurve.GetStableHashCode();
+        static readonly int k_ObjectHashCode = k_Object.GetStableHashCode();
+        static readonly int k_EnumIntHashCode = k_EnumInt.GetStableHashCode();
 
         public static int GetHashCode(this SerializableTypes serializableTypes)
         {
@@ -176,6 +175,7 @@ namespace GDX
                 case SerializableTypes.EnumInt:
                     return k_EnumIntHashCode;
             }
+
             return k_InvalidHashCode;
         }
 
@@ -245,8 +245,8 @@ namespace GDX
                     return k_Object;
                 case SerializableTypes.EnumInt:
                     return k_EnumInt;
-
             }
+
             return k_Invalid;
         }
 
@@ -428,6 +428,5 @@ namespace GDX
                     return false;
             }
         }
-
     }
 }

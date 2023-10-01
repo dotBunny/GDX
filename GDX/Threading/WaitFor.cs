@@ -49,7 +49,7 @@ namespace GDX.Threading
         public const int TenMinutes = 600000;
 
         /// <summary>
-        ///     Wait using an <see cref="IEnumerator"/>.
+        ///     Wait using an <see cref="IEnumerator" />.
         /// </summary>
         /// <param name="milliseconds">The number of milliseconds to wait for.</param>
         /// <returns>Yields null values.</returns>
@@ -61,6 +61,7 @@ namespace GDX.Threading
             {
                 yield return null;
             }
+
             stopwatch.Stop();
         }
 

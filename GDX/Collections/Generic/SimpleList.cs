@@ -127,7 +127,8 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Add an item to the <see cref="SimpleList{T}" />, checking if <see cref="Array" /> needs to be resized. Clears the old array on resize after copying its contents.
+        ///     Add an item to the <see cref="SimpleList{T}" />, checking if <see cref="Array" /> needs to be resized. Clears the
+        ///     old array on resize after copying its contents.
         /// </summary>
         /// <param name="item">A typed <see cref="object" /> to add.</param>
         /// <param name="pool">Pool to allocate the array from if resizing.</param>
@@ -154,7 +155,8 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Add an item to the <see cref="SimpleList{T}" />, checking if <see cref="Array" /> needs to be resized. Clears unused indices of the new array on resize.
+        ///     Add an item to the <see cref="SimpleList{T}" />, checking if <see cref="Array" /> needs to be resized. Clears
+        ///     unused indices of the new array on resize.
         /// </summary>
         /// <param name="item">A typed <see cref="object" /> to add.</param>
         /// <param name="pool">Pool to allocate the array from if resizing.</param>
@@ -181,7 +183,8 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Add an item to the <see cref="SimpleList{T}" />, checking if <see cref="Array" /> needs to be resized.  Clears old and new arrays on resize.
+        ///     Add an item to the <see cref="SimpleList{T}" />, checking if <see cref="Array" /> needs to be resized.  Clears old
+        ///     and new arrays on resize.
         /// </summary>
         /// <param name="item">A typed <see cref="object" /> to add.</param>
         /// <param name="pool">Pool to allocate the array from if resizing.</param>
@@ -218,7 +221,7 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Shrink/compact the backing <see cref="Array"/> so there is no unused space.
+        ///     Shrink/compact the backing <see cref="Array" /> so there is no unused space.
         /// </summary>
         public void Compact()
         {
@@ -309,7 +312,8 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Insert an item into the <see cref="SimpleList{T}" />, checking if <see cref="Array" /> needs to be resized. Clears the old array on resize after copying its contents.
+        ///     Insert an item into the <see cref="SimpleList{T}" />, checking if <see cref="Array" /> needs to be resized. Clears
+        ///     the old array on resize after copying its contents.
         /// </summary>
         /// <param name="item">A typed <see cref="object" /> to insert.</param>
         /// <param name="index">The index in <see cref="Array" /> to add the <paramref name="item" /> at.</param>
@@ -338,7 +342,8 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Insert an item into the <see cref="SimpleList{T}" />, checking if <see cref="Array" /> needs to be resized. Clears unused indices of the new array on resize.
+        ///     Insert an item into the <see cref="SimpleList{T}" />, checking if <see cref="Array" /> needs to be resized. Clears
+        ///     unused indices of the new array on resize.
         /// </summary>
         /// <param name="item">A typed <see cref="object" /> to insert.</param>
         /// <param name="index">The index in <see cref="Array" /> to add the <paramref name="item" /> at.</param>
@@ -367,7 +372,8 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Insert an item into the <see cref="SimpleList{T}" />, checking if <see cref="Array" /> needs to be resized. Clears old and new arrays on resize.
+        ///     Insert an item into the <see cref="SimpleList{T}" />, checking if <see cref="Array" /> needs to be resized. Clears
+        ///     old and new arrays on resize.
         /// </summary>
         /// <param name="item">A typed <see cref="object" /> to insert.</param>
         /// <param name="index">The index in <see cref="Array" /> to add the <paramref name="item" /> at.</param>
@@ -415,7 +421,8 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Remove an item from the <see cref="SimpleList{T}" /> at a specific <paramref name="index" />, swapping it with the item from the highest used index.
+        ///     Remove an item from the <see cref="SimpleList{T}" /> at a specific <paramref name="index" />, swapping it with the
+        ///     item from the highest used index.
         /// </summary>
         /// <param name="index">The target index.</param>
         public void RemoveAtSwapBack(int index)
@@ -475,7 +482,8 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Resizes the <see cref="Array" />, ensuring there are the provided number of empty spots in it. Clears the old array on resize after copying its contents.
+        ///     Resizes the <see cref="Array" />, ensuring there are the provided number of empty spots in it. Clears the old array
+        ///     on resize after copying its contents.
         /// </summary>
         /// <param name="numberToReserve">Number of desired empty spots.</param>
         /// <param name="pool">Pool to allocate the array from if resizing.</param>
@@ -498,7 +506,8 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Resizes the <see cref="Array" />, ensuring there are the provided number of empty spots in it.  Clears unused indices of the new array on resize.
+        ///     Resizes the <see cref="Array" />, ensuring there are the provided number of empty spots in it.  Clears unused
+        ///     indices of the new array on resize.
         /// </summary>
         /// <param name="numberToReserve">Number of desired empty spots.</param>
         /// <param name="pool">Pool to allocate the array from if resizing.</param>
@@ -521,7 +530,8 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Resizes the <see cref="Array" />, ensuring there are the provided number of empty spots in it. Clears old and new arrays on resize.
+        ///     Resizes the <see cref="Array" />, ensuring there are the provided number of empty spots in it. Clears old and new
+        ///     arrays on resize.
         /// </summary>
         /// <param name="numberToReserve">Number of desired empty spots.</param>
         /// <param name="pool">Pool to allocate the array from if resizing.</param>
@@ -545,7 +555,7 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Reverse the order of <see cref="Array"/>.
+        ///     Reverse the order of <see cref="Array" />.
         /// </summary>
         public void Reverse()
         {

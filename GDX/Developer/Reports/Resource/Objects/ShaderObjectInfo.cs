@@ -17,12 +17,12 @@ namespace GDX.Developer.Reports.Resource.Objects
 
 
         /// <summary>
-        /// Create a clone of this object.
+        ///     Create a clone of this object.
         /// </summary>
         /// <returns></returns>
         public override ObjectInfo Clone()
         {
-            return new ShaderObjectInfo()
+            return new ShaderObjectInfo
             {
                 CopyCount = CopyCount,
                 MemoryUsage = MemoryUsage,
@@ -44,6 +44,7 @@ namespace GDX.Developer.Reports.Resource.Objects
             PassCount = shaderAsset.passCount;
             IsSupported = shaderAsset.isSupported;
         }
+
         /// <inheritdoc />
         public override string GetDetailedInformation(int maximumWidth)
         {

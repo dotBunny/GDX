@@ -1,40 +1,40 @@
 {
-    "name": "GDX.Editor",
-    "rootNamespace": "GDX.Editor",
-    "references": [
-        "GDX",
-        "Unity.Mathematics",
-        "Unity.ScriptableBuildPipeline",
-        "Unity.ScriptableBuildPipeline.Editor",
-        "Unity.VisualScripting.Core",
-        "Unity.VisualScripting.Core.Editor",
-        "Unity.VisualScripting.Flow.Editor",
-        "Unity.Build",
-        "Unity.Build.Classic"
-    ],
-    "includePlatforms": [
-        "Editor"
-    ],
-    "excludePlatforms": [],
-    "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
-    "autoReferenced": true,
-    "defineConstraints": [
-        "!UNITY_DOTSRUNTIME",
-        "UNITY_2020_3_OR_NEWER"
-    ],
-    "versionDefines": [
-        {
-            "name": "com.unity.visualscripting",
-            "expression": "1.5.2",
-            "define": "GDX_VISUALSCRIPTING"
-        },
-        {
-            "name": "Unity",
-            "expression": "2020.3.25",
-            "define": "GDX_MASKFIELD"
-        }
-    ],
-    "noEngineReferences": false
+  "name": "GDX.Editor",
+  "rootNamespace": "GDX.Editor",
+  "references": [
+    "GDX",
+    "Unity.Mathematics",
+    "Unity.ScriptableBuildPipeline",
+    "Unity.ScriptableBuildPipeline.Editor",
+    "Unity.VisualScripting.Core",
+    "Unity.VisualScripting.Core.Editor",
+    "Unity.VisualScripting.Flow.Editor",
+    "Unity.Build",
+    "Unity.Build.Classic"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [
+    "!UNITY_DOTSRUNTIME",
+    "UNITY_2020_3_OR_NEWER"
+  ],
+  "versionDefines": [
+    {
+      "name": "com.unity.visualscripting",
+      "expression": "1.5.2",
+      "define": "GDX_VISUALSCRIPTING"
+    },
+    {
+      "name": "Unity",
+      "expression": "2020.3.25",
+      "define": "GDX_MASKFIELD"
+    }
+  ],
+  "noEngineReferences": false
 }

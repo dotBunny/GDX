@@ -39,20 +39,20 @@ namespace GDX.Developer.Reports.Resource.Sections
 
         public void Output(ResourceReportContext context, StringBuilder builder, bool detailed = true)
         {
-            builder.AppendLine(ResourceReport.CreateKeyValuePair(context,"Total Mono Heap",
+            builder.AppendLine(ResourceReport.CreateKeyValuePair(context, "Total Mono Heap",
                 MonoHeapSize.GetSizeOutput(context)));
-            builder.AppendLine(ResourceReport.CreateKeyValuePair(context,"Used Mono Heap",
+            builder.AppendLine(ResourceReport.CreateKeyValuePair(context, "Used Mono Heap",
                 MonoUsedSize.GetSizeOutput(context)));
 
             if (detailed)
             {
-                builder.AppendLine(ResourceReport.CreateKeyValuePair(context,"GFX Driver Allocated Memory",
+                builder.AppendLine(ResourceReport.CreateKeyValuePair(context, "GFX Driver Allocated Memory",
                     UnityGraphicsDriverAllocated.GetSizeOutput(context)));
-                builder.AppendLine(ResourceReport.CreateKeyValuePair(context,"Total Reserved Memory",
+                builder.AppendLine(ResourceReport.CreateKeyValuePair(context, "Total Reserved Memory",
                     UnityTotalReservedMemory.GetSizeOutput(context)));
-                builder.AppendLine(ResourceReport.CreateKeyValuePair(context,"Total Allocated Memory",
+                builder.AppendLine(ResourceReport.CreateKeyValuePair(context, "Total Allocated Memory",
                     UnityTotalAllocatedMemory.GetSizeOutput(context)));
-                builder.AppendLine(ResourceReport.CreateKeyValuePair(context,"Total Unused Reserved Memory",
+                builder.AppendLine(ResourceReport.CreateKeyValuePair(context, "Total Unused Reserved Memory",
                     UnityTotalUnusedReservedMemory.GetSizeOutput(context)));
             }
         }

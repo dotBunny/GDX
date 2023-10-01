@@ -53,7 +53,7 @@ namespace GDX.Developer
         /// <returns>1 if the same, 0 otherwise.</returns>
         public int CompareTo(object obj)
         {
-            if (obj == Target || (TransientReference) obj == this)
+            if (obj == Target || (TransientReference)obj == this)
             {
                 return 1;
             }
@@ -83,7 +83,7 @@ namespace GDX.Developer
         /// <returns>1 if the same, 0 otherwise.</returns>
         public int CompareTo(WeakReference obj)
         {
-            if (obj.Target == Target || (TransientReference) obj == this)
+            if (obj.Target == Target || (TransientReference)obj == this)
             {
                 return 1;
             }
@@ -147,9 +147,9 @@ namespace GDX.Developer
         }
 
         /// <summary>
-        ///     Return the hashcode of the <see cref="WeakReference.Target"/>.
+        ///     Return the hashcode of the <see cref="WeakReference.Target" />.
         /// </summary>
-        /// <returns>Returns the <see cref="WeakReference.Target"/>'s hash code, or -1 if null.</returns>
+        /// <returns>Returns the <see cref="WeakReference.Target" />'s hash code, or -1 if null.</returns>
         public override int GetHashCode()
         {
             if (Target == null)

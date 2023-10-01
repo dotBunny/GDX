@@ -16,6 +16,7 @@ namespace GDX.Collections.Generic
     public struct CoalesceArray<T>
     {
         const ulong k_MaxByteSize = 2147483648;
+
         /// <summary>
         ///     The internal arrays storage
         /// </summary>
@@ -27,14 +28,9 @@ namespace GDX.Collections.Generic
         readonly ulong m_BucketSize;
 
         /// <summary>
-        ///     Cached version of the bucket size, minus one used in <see cref="GetBucketLocation"/>.
+        ///     Cached version of the bucket size, minus one used in <see cref="GetBucketLocation" />.
         /// </summary>
         readonly ulong m_BucketSizeMinusOne;
-
-        /// <summary>
-        ///     The number of elements the <see cref="CoalesceArray{T}"/> is capable of holding.
-        /// </summary>
-        ulong m_Length;
 
         public CoalesceArray(ulong length)
         {
@@ -51,6 +47,7 @@ namespace GDX.Collections.Generic
             {
                 m_BucketSize = math.ceilpow2(length);
             }
+
             m_BucketSizeMinusOne = m_BucketSize - 1;
 
             // Build our empty arrays
@@ -60,6 +57,7 @@ namespace GDX.Collections.Generic
             {
                 extraArray = 1;
             }
+
             int placesToShift = math.tzcnt(m_BucketSize);
             int arrayCount = (int)(length >> placesToShift) + extraArray;
             m_Buckets = new SimpleList<T[]>(arrayCount);
@@ -68,7 +66,7 @@ namespace GDX.Collections.Generic
                 m_Buckets.Array[i] = new T[(int)m_BucketSize];
             }
 
-            m_Length = length;
+            Length = length;
         }
 
         public T this[ulong index]
@@ -88,10 +86,10 @@ namespace GDX.Collections.Generic
             }
         }
 
-        public ulong Length
-        {
-            get => m_Length;
-        }
+        /// <summary>
+        ///     The number of elements the <see cref="CoalesceArray{T}" /> is capable of holding.
+        /// </summary>
+        public ulong Length { get; private set; }
 
         public ref T[] GetBucket(int bucketIndex)
         {
@@ -120,6 +118,7 @@ namespace GDX.Collections.Generic
             {
                 extraArray = 1;
             }
+
             int arrayCount = (int)((desiredLength - remainder) / m_BucketSize) + extraArray;
             int previousCount = m_Buckets.Count;
 
@@ -131,7 +130,8 @@ namespace GDX.Collections.Generic
                 {
                     m_Buckets.AddWithExpandCheck(new T[m_BucketSize]);
                 }
-                m_Length = desiredLength;
+
+                Length = desiredLength;
                 return true;
             }
 
@@ -143,14 +143,14 @@ namespace GDX.Collections.Generic
                 {
                     m_Buckets.RemoveFromBack();
                 }
-                m_Length = desiredLength;
+
+                Length = desiredLength;
                 return true;
             }
 
             // Do nothing
-            m_Length = desiredLength;
+            Length = desiredLength;
             return false;
         }
-
     }
 }

@@ -4,8 +4,8 @@
 
 #if !UNITY_DOTSRUNTIME
 
-using UnityEngine;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace GDX
 {
@@ -38,6 +38,7 @@ namespace GDX
                 float3 p3 = vertices[triangles[i + 2]];
                 volume += math.dot(math.cross(p1, p2), p3);
             }
+
             return math.abs(volume / 6.0f);
         }
     }

@@ -8,7 +8,7 @@ using Unity.Mathematics;
 namespace GDX
 {
     /// <summary>
-    ///     A segmented collection of <see cref="char"/>.
+    ///     A segmented collection of <see cref="char" />.
     /// </summary>
     public struct SegmentedString
     {
@@ -28,7 +28,7 @@ namespace GDX
         ///         </listheader>
         ///         <item>
         ///             <term>x</term>
-        ///             <description>The start offset in <see cref="m_Characters"/> of a word.</description>
+        ///             <description>The start offset in <see cref="m_Characters" /> of a word.</description>
         ///         </item>
         ///         <item>
         ///             <term>y</term>
@@ -36,7 +36,7 @@ namespace GDX
         ///         </item>
         ///         <item>
         ///             <term>z</term>
-        ///             <description>The calculated <see cref="StringExtensions.GetStableHashCode"/> for the word.</description>
+        ///             <description>The calculated <see cref="StringExtensions.GetStableHashCode" /> for the word.</description>
         ///         </item>
         ///     </list>
         /// </remarks>
@@ -48,14 +48,14 @@ namespace GDX
         int m_Count;
 
         /// <summary>
-        ///     The calculated <see cref="StringExtensions.GetStableHashCode"/> for the entirety of <see cref="m_Characters"/>.
+        ///     The calculated <see cref="StringExtensions.GetStableHashCode" /> for the entirety of <see cref="m_Characters" />.
         /// </summary>
         int m_HashCode;
 
         /// <summary>
-        ///     Get the <see cref="m_Characters"/> array.
+        ///     Get the <see cref="m_Characters" /> array.
         /// </summary>
-        /// <returns>A <see cref="char"/> array.</returns>
+        /// <returns>A <see cref="char" /> array.</returns>
         public char[] AsCharArray()
         {
             return m_Characters;

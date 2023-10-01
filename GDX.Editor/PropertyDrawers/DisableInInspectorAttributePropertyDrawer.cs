@@ -6,6 +6,7 @@ using UnityEditor;
 #if UNITY_2022_2_OR_NEWER
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
+
 #else
 using UnityEngine;
 #endif // UNITY_2022_2_OR_NEWER
@@ -20,7 +21,7 @@ namespace GDX.Editor.PropertyDrawers
     {
 #if UNITY_2022_2_OR_NEWER
         /// <summary>
-        /// Overrides the method to make a UIElements based GUI for the property.
+        ///     Overrides the method to make a UIElements based GUI for the property.
         /// </summary>
         /// <param name="property">The SerializedProperty to make the custom GUI for.</param>
         /// <returns>A disabled visual element.</returns>

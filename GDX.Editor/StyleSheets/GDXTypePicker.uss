@@ -1,43 +1,37 @@
-﻿.gdx-picker
-{
+﻿.gdx-picker {
     position: absolute;
 
 }
 
-.gdx-picker.dark
-{
+.gdx-picker.dark {
     background-color: #1E1E1F;
 }
-.gdx-picker-list.dark
-{
-    border-color: rgb(236,236,236);
+
+.gdx-picker-list.dark {
+    border-color: rgb(236, 236, 236);
 }
 
-.gdx-picker.light
-{
-    background-color: rgb(165,165,165);
-}
-.gdx-picker-list.light
-{
-    border-color: rgb(85,85,85);
+.gdx-picker.light {
+    background-color: rgb(165, 165, 165);
 }
 
-#gdx-picker-item-title
-{
+.gdx-picker-list.light {
+    border-color: rgb(85, 85, 85);
+}
+
+#gdx-picker-item-title {
     margin-top: 3px;
     margin-left: 3px;
     -unity-font-style: bold;
 }
 
-#gdx-picker-item-description
-{
+#gdx-picker-item-description {
     -unity-font-style: italic;
     margin-left: 5px;
     margin-top: 2px;
 }
 
 .light .gdx-picker-item #gdx-picker-item-title,
-.light .gdx-picker-item #gdx-picker-item-description
-{
+.light .gdx-picker-item #gdx-picker-item-description {
     color: #1E1E1F;
 }

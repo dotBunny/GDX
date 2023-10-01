@@ -41,6 +41,7 @@ namespace GDX.Developer.Reports.Resource.Objects
 
             return new ObjectInfo();
         }
+
         public static Type GetObjectInfoType(Type targetType)
         {
             if (targetType == typeof(Texture2D) ||

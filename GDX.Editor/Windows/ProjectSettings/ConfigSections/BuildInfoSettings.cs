@@ -3,11 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 using System.IO;
+using GDX.Editor.Build;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Button = UnityEngine.UIElements.Button;
-using Toggle = UnityEngine.UIElements.Toggle;
 
 namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 {
@@ -19,23 +18,23 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         public const int SectionIndex = 1;
         public const string SectionKey = "GDX.Editor.Build.BuildInfoProvider";
         static readonly string[] k_Keywords = { "build", "info", "changelist", "stream" };
-        VisualElement m_RootElement;
-        VisualElement m_Content;
-        TextField m_TextOutputPath;
-        TextField m_TextNamespace;
-        Toggle m_ToggleAssemblyDefinition;
-        TextField m_TextNumber;
-        TextField m_TextDescription;
-        TextField m_TextChangelist;
-        TextField m_TextTask;
-        TextField m_TextStream;
         Button m_ButtonCreate;
+        VisualElement m_Content;
         VisualElement m_Notice;
+        VisualElement m_RootElement;
+        TextField m_TextChangelist;
+        TextField m_TextDescription;
+        TextField m_TextNamespace;
+        TextField m_TextNumber;
+        TextField m_TextOutputPath;
+        TextField m_TextStream;
+        TextField m_TextTask;
+        Toggle m_ToggleAssemblyDefinition;
 
         /// <summary>
         ///     Bind the Build Info content.
         /// </summary>
-        /// <param name="rootElement">The Build Info section <see cref="VisualElement"/>.</param>
+        /// <param name="rootElement">The Build Info section <see cref="VisualElement" />.</param>
         public void BindSectionContent(VisualElement rootElement)
         {
             m_RootElement = rootElement;
@@ -48,7 +47,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
             {
                 m_ButtonCreate.clicked += () =>
                 {
-                    Build.BuildInfoProvider.WriteDefaultFile();
+                    BuildInfoProvider.WriteDefaultFile();
                     AssetDatabase.ImportAsset("Assets/" + Config.BuildInfoOutputPath);
                 };
             }
@@ -222,6 +221,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         {
             return SectionKey;
         }
+
         public string GetSectionHelpLink()
         {
             return "api/GDX.Editor.Build.BuildInfoProvider.html";
@@ -231,6 +231,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         {
             return true;
         }
+
         public bool GetToggleState()
         {
             return ProjectSettingsProvider.WorkingConfig.BuildInfo;
@@ -267,19 +268,6 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
             return "GDXProjectSettingsBuildInfo";
         }
 
-        void CheckForDisabledContent()
-        {
-            m_Content?.SetEnabled(GetToggleState());
-            if (File.Exists(Path.Combine(Application.dataPath, Config.BuildInfoOutputPath)))
-            {
-                m_Notice.AddToClassList(ResourcesProvider.HiddenClass);
-            }
-            else
-            {
-                m_Notice.RemoveFromClassList(ResourcesProvider.HiddenClass);
-            }
-        }
-
         public void UpdateSectionContent()
         {
             ProjectSettingsProvider.SetClassChangeCheck(m_TextOutputPath,
@@ -313,6 +301,19 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
             ProjectSettingsProvider.SetClassChangeCheck(m_TextStream,
                 Config.BuildInfoBuildStreamArgument,
                 ProjectSettingsProvider.WorkingConfig.BuildInfoBuildStreamArgument);
+        }
+
+        void CheckForDisabledContent()
+        {
+            m_Content?.SetEnabled(GetToggleState());
+            if (File.Exists(Path.Combine(Application.dataPath, Config.BuildInfoOutputPath)))
+            {
+                m_Notice.AddToClassList(ResourcesProvider.HiddenClass);
+            }
+            else
+            {
+                m_Notice.RemoveFromClassList(ResourcesProvider.HiddenClass);
+            }
         }
     }
 }

@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Diagnostics.CodeAnalysis;
+using UnityEngine;
 
 namespace GDX.Developer.Reports.NUnit
 {
@@ -32,7 +33,7 @@ namespace GDX.Developer.Reports.NUnit
             string inconclusiveResult = "Inconclusive", string skippedResult = "Skipped")
         {
 #if !UNITY_DOTSRUNTIME
-            EngineVersion = UnityEngine.Application.unityVersion;
+            EngineVersion = Application.unityVersion;
 #endif // !UNITY_DOTSRUNTIME
 
             // Process the underlying suite of tests

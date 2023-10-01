@@ -14,6 +14,5 @@ namespace GDX
     [ExcludeFromCodeCoverage]
     public sealed class DisableInInspectorAttribute : PropertyAttribute
     {
-
     }
 }

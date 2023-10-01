@@ -5,8 +5,8 @@
 #if !UNITY_DOTSRUNTIME
 
 using System.Runtime.CompilerServices;
-using UnityEngine;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace GDX
 {
@@ -39,9 +39,9 @@ namespace GDX
         }
 
         /// <summary>
-        /// Get the slope of a <see cref="Vector2"/>.
+        ///     Get the slope of a <see cref="Vector2" />.
         /// </summary>
-        /// <param name="targetVector2">The <see cref="Vector2"/> to evaluate.</param>
+        /// <param name="targetVector2">The <see cref="Vector2" /> to evaluate.</param>
         /// <returns>The slope value.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Slope(this Vector2 targetVector2)
@@ -50,6 +50,7 @@ namespace GDX
             {
                 return 0f;
             }
+
             return targetVector2.y / targetVector2.x;
         }
 
@@ -108,7 +109,7 @@ namespace GDX
             return closestIndex;
         }
 
-         /// <summary>
+        /// <summary>
         ///     Attempt to parse a <see cref="string" /> into a <see cref="Vector2" />.
         /// </summary>
         /// <remarks>This isn't great for runtime performance, it should be used predominantly when reconstructing data.</remarks>

@@ -14,10 +14,10 @@ namespace GDX
     public static class ObjectExtensions
     {
         /// <summary>
-        ///     Destroy a <see cref="UnityEngine.Object"/> appropriately based on the current state of the Editor/Player.
+        ///     Destroy a <see cref="UnityEngine.Object" /> appropriately based on the current state of the Editor/Player.
         /// </summary>
-        /// <param name="targetObject">The target <see cref="UnityEngine.Object"/> to be destroyed.</param>
-        /// <param name="delay">How long should be waited before the <paramref name="targetObject"/> is destroyed?</param>
+        /// <param name="targetObject">The target <see cref="UnityEngine.Object" /> to be destroyed.</param>
+        /// <param name="delay">How long should be waited before the <paramref name="targetObject" /> is destroyed?</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SafeDestroy(this Object targetObject, float delay = 0f)
         {

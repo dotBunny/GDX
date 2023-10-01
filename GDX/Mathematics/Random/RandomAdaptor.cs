@@ -73,7 +73,6 @@ namespace GDX.Mathematics.Random
 
         public override double NextDouble()
         {
-
             return m_Provider.NextDouble();
         }
 

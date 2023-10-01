@@ -15,7 +15,9 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         DataTableTracker.IUndoRedoEventCallbackReceiver
     {
         const string k_MessageClickToUnlock = "Click to unlock for editting.";
-        const string k_MessageClickToUnlockReferenceModeOnly = "Currently the table is locked in reference only editing mode.";
+
+        const string k_MessageClickToUnlockReferenceModeOnly =
+            "Currently the table is locked in reference only editing mode.";
 
         const string k_MessageClickToLock = "Click to lock data.";
         const string k_MessageNoTableSelected = "No table selected.";
