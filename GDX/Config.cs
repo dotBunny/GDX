@@ -134,6 +134,13 @@ namespace GDX
         const bool k_EnvironmentDeveloperConsole = true;
 
         /// <summary>
+        ///     Should the GDX utilized the <see cref="GDX.Experimental.Logging.ManagedLog"/>.
+        /// </summary>
+        [OriginalValue(k_EnvironmentManagedLog)]
+        public static bool EnvironmentManagedLog = k_EnvironmentManagedLog;
+        const bool k_EnvironmentManagedLog = true;
+
+        /// <summary>
         ///     Should a GDX scripting define symbol be added to all target build groups.
         /// </summary>
         [OriginalValue(k_EnvironmentScriptingDefineSymbol)]

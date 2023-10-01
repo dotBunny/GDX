@@ -4,7 +4,12 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using GDX.Experimental;
+using GDX.Experimental.Logging;
 using GDX.Mathematics.Random;
+using UnityEngine;
+using UnityEngine.LowLevel;
+using UnityEngine.PlayerLoop;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif // UNITY_EDITOR
@@ -45,6 +50,8 @@ namespace GDX
         ///     Has the <see cref="Core"/> main thread initialization happened?
         /// </summary>
         static bool s_InitializedMainThread;
+
+        static bool s_InitializedRuntime;
 
         /// <summary>
         ///     Static constructor.
@@ -102,6 +109,40 @@ namespace GDX
             Localization.SetDefaultCulture();
 
             s_InitializedMainThread = true;
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        public static void InitializeAtRuntime()
+        {
+            if (s_InitializedRuntime) return;
+
+            PlayerLoopSystem systemRoot = PlayerLoop.GetCurrentPlayerLoop();
+
+            // Subscribe our ManagedLog system
+            if (Config.EnvironmentManagedLog)
+            {
+                systemRoot.AddSubSystemToFirstSubSystemOfType(
+                    typeof(Initialization),
+                    typeof(ManagedLog), ManagedLog.Tick);
+            }
+
+            // Subscribe our developer console
+            if (Config.EnvironmentDeveloperConsole)
+            {
+                systemRoot.AddSubSystemToFirstSubSystemOfType(
+                    typeof(Initialization),
+                    typeof(DeveloperConsole), DeveloperConsoleTick);
+            }
+
+            PlayerLoop.SetPlayerLoop(systemRoot);
+
+            s_InitializedRuntime = true;
+        }
+
+        static void DeveloperConsoleTick()
+        {
+            // We need to feed in the deltaTime, this could be the previous frames if were being honest about it
+            DeveloperConsole.Tick(Time.deltaTime);
         }
     }
 }

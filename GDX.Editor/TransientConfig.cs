@@ -93,6 +93,11 @@ namespace GDX.Editor
         public bool EnvironmentDeveloperConsole;
 
         /// <summary>
+        ///     Should the GDX utilized the <see cref="GDX.Experimental.Logging.ManagedLog"/>.
+        /// </summary>
+        public bool EnvironmentManagedLog;
+
+        /// <summary>
         ///     Should a GDX scripting define symbol be added to all target build groups.
         /// </summary>
         public bool EnvironmentScriptingDefineSymbol;
@@ -156,6 +161,7 @@ namespace GDX.Editor
             EditorTaskDirectorSystemTickRate = Config.EditorTaskDirectorSystemTickRate;
             EnvironmentScriptingDefineSymbol = Config.EnvironmentScriptingDefineSymbol;
             EnvironmentDeveloperConsole = Config.EnvironmentDeveloperConsole;
+            EnvironmentManagedLog = Config.EnvironmentManagedLog;
             EnvironmentToolsMenu = Config.EnvironmentToolsMenu;
             TaskDirectorSystem = Config.TaskDirectorSystem;
             TaskDirectorSystemTickRate = Config.TaskDirectorSystemTickRate;
@@ -181,7 +187,8 @@ namespace GDX.Editor
                    BuildInfoBuildTaskArgument == Config.BuildInfoBuildTaskArgument &&
                    BuildInfoBuildStreamArgument == Config.BuildInfoBuildStreamArgument &&
                    EnvironmentScriptingDefineSymbol == Config.EnvironmentScriptingDefineSymbol &&
-                   EnvironmentDeveloperConsole == Config.EnvironmentDeveloperConsole && 
+                   EnvironmentDeveloperConsole == Config.EnvironmentDeveloperConsole &&
+                   EnvironmentManagedLog == Config.EnvironmentManagedLog &&
                    EnvironmentToolsMenu == Config.EnvironmentToolsMenu &&
                    EnvironmentAlwaysIncludeShaders == Config.EnvironmentAlwaysIncludeShaders &&
                    TaskDirectorSystem == Config.TaskDirectorSystem &&
