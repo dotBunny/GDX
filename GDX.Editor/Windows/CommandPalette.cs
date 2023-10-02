@@ -10,7 +10,6 @@ using UnityEditor.Networking.PlayerConnection;
 using UnityEditor.ShortcutManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Console = GDX.Developer.Console;
 
 namespace GDX.Editor.Windows
 {
@@ -144,7 +143,7 @@ namespace GDX.Editor.Windows
                     }
                     else
                     {
-                        Console.QueueCommand(m_TextField.text);
+                        Developer.Console.QueueCommand(m_TextField.text);
                     }
 
                     DelayedClose();

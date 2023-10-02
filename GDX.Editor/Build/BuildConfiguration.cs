@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using GDX.Collections.Generic;
@@ -9,6 +10,13 @@ namespace GDX.Editor.Build
     [CreateAssetMenu(fileName = "BC_BuildConfig", menuName = "GDX/Build Configuration")]
     public class BuildConfiguration : ScriptableObject
     {
+        [Serializable]
+        public class FolderMapping
+        {
+            public string ProjectRelativePath;
+            public string BuildRelativePath;
+        }
+
         public string GetResolvedExecutableName()
         {
             List<BuildConfiguration> visitedConfigurations = new List<BuildConfiguration>();
@@ -28,6 +36,14 @@ namespace GDX.Editor.Build
             string[] scenes = GetScenesWithDependencies(visitedConfigurations);
             visitedConfigurations.Clear();
             return scenes;
+        }
+
+        public FolderMapping[] GetResolvedOverlayFolders()
+        {
+            List<BuildConfiguration> visitedConfigurations = new List<BuildConfiguration>();
+            FolderMapping[] mappings = GetOverlayFoldersWithDependencies(visitedConfigurations);
+            visitedConfigurations.Clear();
+            return mappings;
         }
 
         public string GetResolvedOutputPath()
@@ -155,6 +171,41 @@ namespace GDX.Editor.Build
             return returnedScenes.ToArray();
         }
 
+        FolderMapping[] GetOverlayFoldersWithDependencies(List<BuildConfiguration> visitedConfigurations)
+        {
+            List<FolderMapping> returnedScenes = new List<FolderMapping>();
+
+            int parentCount = Dependencies.Length;
+            for (int i = 0; i < parentCount; i++)
+            {
+                BuildConfiguration dependency = Dependencies[i];
+                if (!visitedConfigurations.Contains(dependency))
+                {
+                    visitedConfigurations.Add(dependency);
+                    returnedScenes.AddUniqueRange(dependency.GetOverlayFoldersWithDependencies(visitedConfigurations));
+                }
+            }
+
+            if (OverlayFolders != null && OverlayFolders.Length > 0)
+            {
+                returnedScenes.AddUniqueRange(OverlayFolders);
+            }
+
+            // Clean up using dirty method
+            List<string> found = new List<string>();
+            for (int i = returnedScenes.Count - 1; i >= 0; i--)
+            {
+                if (found.Contains(returnedScenes[i].ProjectRelativePath))
+                {
+                    returnedScenes.RemoveAt(i);
+                    continue;
+                }
+                found.Add(returnedScenes[i].ProjectRelativePath);
+            }
+
+            return returnedScenes.ToArray();
+        }
+
         string[] GetScriptingDefinesWithDependencies(List<BuildConfiguration> visitedConfigurations)
         {
             List<string> returnedDefines = new List<string>();
@@ -248,6 +299,9 @@ namespace GDX.Editor.Build
         public bool IgnoreSubsceneFolders = true;
 
         [Header("Compilation")] public string[] AdditionalDefines;
+
+        [Tooltip("Overlay content relative to Application.dataPath, on top of the build executable.")]
+        [Header("Extras")] public FolderMapping[] OverlayFolders;
         // ReSharper restore InconsistentNaming
 #pragma warning restore IDE1006
     }

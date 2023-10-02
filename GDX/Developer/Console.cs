@@ -17,13 +17,13 @@ namespace GDX.Developer
 #if UNITY_2022_2_OR_NEWER
     // TODO: Hint system?
     // TOOD: CVars
-    // TODO: Echo
+    // TODO: Watches
 
     public static class Console
     {
         static ConsoleCommandBase.ConsoleCommandLevel s_AccessLevel = ConsoleCommandBase.ConsoleCommandLevel.Developer;
         static CircularBuffer<string> s_CommandHistory = new CircularBuffer<string>(50);
-        static readonly Queue<ConsoleCommandBase> s_CommandBuffer = new Queue<ConsoleCommandBase>(50);
+        static readonly Queue<ConsoleCommandBase> k_CommandBuffer = new Queue<ConsoleCommandBase>(50);
 
         static StringKeyDictionary<ConsoleCommandBase>
             s_KnownCommands = new StringKeyDictionary<ConsoleCommandBase>(50);
@@ -126,7 +126,7 @@ namespace GDX.Developer
                     return false;
                 }
 
-                s_CommandBuffer.Enqueue(workUnit);
+                k_CommandBuffer.Enqueue(workUnit);
                 return true;
             }
 
@@ -141,9 +141,9 @@ namespace GDX.Developer
 
         public static void Tick(float deltaTime)
         {
-            while (s_CommandBuffer.Count > 0)
+            while (k_CommandBuffer.Count > 0)
             {
-                ConsoleCommandBase command = s_CommandBuffer.Peek();
+                ConsoleCommandBase command = k_CommandBuffer.Peek();
 
                 // We evaluate inside of a try-catch to capture the exception and flush the command buffer.
                 try
@@ -158,11 +158,11 @@ namespace GDX.Developer
                     uint parentMessageID = ManagedLog.Error(LogCategory.Default,
                         "An exception occured while processing the console command buffer. It has been flushed.");
                     ManagedLog.Exception(LogCategory.Default, e, parentMessageID);
-                    s_CommandBuffer.Clear();
+                    k_CommandBuffer.Clear();
                     break;
                 }
 
-                s_CommandBuffer.Dequeue();
+                k_CommandBuffer.Dequeue();
             }
         }
 

@@ -1,9 +1,12 @@
 using System;
 using System.IO;
+using PlasticGui.WorkspaceWindow.Items;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
+using File = UnityEngine.Windows.File;
 
 namespace GDX.Editor.Build
 {
@@ -126,6 +129,37 @@ namespace GDX.Editor.Build
             }
             finally
             {
+                // Copy our overlays into the build
+                if (!buildFailed)
+                {
+                    int count = definition.Mappings.Length;
+                    if (count > 0)
+                    {
+                        Debug.Log($"Overlaying folders ...");
+                        for (int i = 0; i < count; i++)
+                        {
+                            BuildConfiguration.FolderMapping folderMapping = definition.Mappings[i];
+                            string sourcePath = Path.Combine(Application.dataPath, folderMapping.ProjectRelativePath);
+                            string outputBasePath = Path.GetDirectoryName(definition.PlayerOptions.locationPathName);
+                            string[] sourceFiles = Directory.GetFiles(sourcePath);
+                            int sourceFilesCount = sourceFiles.Length;
+                            if (sourceFilesCount > 0)
+                            {
+                                for (int j = 0; j < sourceFilesCount; j++)
+                                {
+                                    string source = Path.GetFullPath(sourceFiles[j]);
+                                    string relativeSource = Path.GetRelativePath(sourcePath, source);
+                                    string outputPath = Path.GetFullPath(Path.Combine(outputBasePath, folderMapping.BuildRelativePath, relativeSource));
+
+                                    // Platform.EnsureFileFolderHierarchyExists(outputPath);
+                                    // System.IO.File.Copy(source, outputPath, true);
+                                    Debug.Log($"Copying {source} to {outputPath}.");
+                                }
+                            }
+                        }
+                    }
+                }
+
                 if (shouldRestoreScriptingImplementation && BuildEnvironment.ShouldRevertChanges())
                 {
                     Debug.Log($"Restoring backend to {previousScriptingImplementation}.");

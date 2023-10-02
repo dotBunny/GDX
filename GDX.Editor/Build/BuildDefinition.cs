@@ -13,6 +13,7 @@ namespace GDX.Editor.Build
         public ScriptingImplementation Backend;
         public string ExecutableName;
         public BuildPlayerOptions PlayerOptions;
+        public BuildConfiguration.FolderMapping[] Mappings;
 
         public BuildDefinition(string folderName, string executableName)
         {
@@ -73,6 +74,8 @@ namespace GDX.Editor.Build
                 scenes = buildConfig.GetResolvedScenePaths(),
                 extraScriptingDefines = buildConfig.GetResolvedScriptingDefines()
             };
+
+            Mappings = buildConfig.GetResolvedOverlayFolders();
         }
 
         public override string ToString()

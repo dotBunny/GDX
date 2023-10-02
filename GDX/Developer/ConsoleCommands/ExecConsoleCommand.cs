@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using GDX.Logging;
+using UnityEngine;
 
 namespace GDX.Developer.ConsoleCommands
 {
@@ -70,13 +71,27 @@ namespace GDX.Developer.ConsoleCommands
             for (int i = 0; i < fileCount; i++)
             {
                 string workingFile = files[i];
-                if (!File.Exists(workingFile))
+                if (File.Exists(workingFile))
                 {
-                    ManagedLog.Warning(LogCategory.Default, $"Unable to find script to execute @ {workingFile}.");
+                    foundFiles.Add(workingFile);
                     continue;
                 }
 
-                foundFiles.Add(workingFile);
+                string dataPath = System.IO.Path.Combine(Application.dataPath, workingFile);
+                if (File.Exists(dataPath))
+                {
+                    foundFiles.Add(dataPath);
+                    continue;
+                }
+
+                string persistentPath = Path.Combine(Application.persistentDataPath, workingFile);
+                if (File.Exists(persistentPath))
+                {
+                    foundFiles.Add(persistentPath);
+                    continue;
+                }
+
+                ManagedLog.Warning(LogCategory.Default, $"Unable to find script to execute @ {workingFile}.");
             }
 
             if (foundFiles.Count <= 0)
