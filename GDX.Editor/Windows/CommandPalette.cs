@@ -9,7 +9,6 @@ using UnityEditor;
 using UnityEditor.Networking.PlayerConnection;
 using UnityEditor.ShortcutManagement;
 using UnityEngine;
-using UnityEngine.Networking.PlayerConnection;
 using UnityEngine.UIElements;
 using Console = GDX.Developer.Console;
 
@@ -32,6 +31,8 @@ namespace GDX.Editor.Windows
         static readonly StyleFloat k_NoPixel = new StyleFloat(1f);
         static readonly StyleLength k_FontSize = new Length(22, LengthUnit.Pixel);
         static readonly StyleLength k_ZeroLength = 0;
+        static readonly StyleColor k_PlayerConnection = new StyleColor(new Color(1f, 0.6470588235294118f, 0.2352941176470588f));
+
 
         static CommandPalette s_Instance;
         static ConsoleTarget s_Target = ConsoleTarget.Local;
@@ -47,7 +48,8 @@ namespace GDX.Editor.Windows
                 return;
             }
 
-            s_Target = PlayerConnection.instance.isConnected ? ConsoleTarget.PlayerConnection : ConsoleTarget.Local;
+
+            s_Target = EditorConnection.instance.ConnectedPlayers.Count > 0 ? ConsoleTarget.PlayerConnection : ConsoleTarget.Local;
 
             if (s_Instance == null)
             {
@@ -107,6 +109,13 @@ namespace GDX.Editor.Windows
                 },
                 isDelayed = true
             };
+            if (s_Target == ConsoleTarget.PlayerConnection)
+            {
+                input[0].style.borderBottomColor = k_PlayerConnection;
+                input[0].style.borderLeftColor = k_PlayerConnection;
+                input[0].style.borderRightColor = k_PlayerConnection;
+                input[0].style.borderTopColor = k_PlayerConnection;
+            }
 
             input[0].Insert(0, prefix);
             rootVisualElement.Add(input);
