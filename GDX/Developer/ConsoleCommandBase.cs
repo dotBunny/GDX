@@ -2,11 +2,15 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+
 namespace GDX.Developer
 {
 #if UNITY_2022_2_OR_NEWER
     public abstract class ConsoleCommandBase
     {
+        public static Guid PlayerConnectionGuid = new Guid("5bccf3e4-1f16-4500-95c9-060e9c3d61c0");
+
         public enum ConsoleCommandLevel
         {
             Anonymous = -1,

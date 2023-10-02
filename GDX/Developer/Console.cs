@@ -4,11 +4,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using GDX.Collections.Generic;
 using GDX.Developer.ConsoleCommands;
 using GDX.Logging;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Networking.PlayerConnection;
 
 namespace GDX.Developer
 {
@@ -191,6 +193,9 @@ namespace GDX.Developer
                 QueueCommand("scene.wait");
                 QueueCommand($"exec {CommandLineParser.Arguments["exec"]}");
             }
+
+            // Register for remote connection from editor response
+            PlayerConnection.instance.Register(ConsoleCommandBase.PlayerConnectionGuid, args => QueueCommand(Encoding.UTF8.GetString(args.data)));
         }
     }
 #endif // UNITY_2022_2_OR_NEWER

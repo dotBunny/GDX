@@ -2,17 +2,29 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+using System.Text;
 using GDX.Developer;
 using UnityEditor;
+using UnityEditor.Networking.PlayerConnection;
 using UnityEditor.ShortcutManagement;
 using UnityEngine;
+using UnityEngine.Networking.PlayerConnection;
 using UnityEngine.UIElements;
+using Console = GDX.Developer.Console;
 
 namespace GDX.Editor.Windows
 {
 #if UNITY_2022_2_OR_NEWER
     public class CommandPalette : EditorWindow
     {
+        enum ConsoleTarget
+        {
+            Local,
+            PlayerConnection
+        }
+
+
         const int k_TargetWidth = 500;
         const int k_TargetHeight = 40;
 
@@ -22,6 +34,7 @@ namespace GDX.Editor.Windows
         static readonly StyleLength k_ZeroLength = 0;
 
         static CommandPalette s_Instance;
+        static ConsoleTarget s_Target = ConsoleTarget.Local;
 
         bool m_IsBound;
         TextField m_TextField;
@@ -33,6 +46,8 @@ namespace GDX.Editor.Windows
             {
                 return;
             }
+
+            s_Target = PlayerConnection.instance.isConnected ? ConsoleTarget.PlayerConnection : ConsoleTarget.Local;
 
             if (s_Instance == null)
             {
@@ -114,7 +129,15 @@ namespace GDX.Editor.Windows
                     break;
                 case KeyCode.Return:
                 case KeyCode.KeypadEnter:
-                    Console.QueueCommand(m_TextField.text);
+                    if (s_Target == ConsoleTarget.PlayerConnection)
+                    {
+                        EditorConnection.instance.Send(ConsoleCommandBase.PlayerConnectionGuid, Encoding.UTF8.GetBytes(m_TextField.text));
+                    }
+                    else
+                    {
+                        Console.QueueCommand(m_TextField.text);
+                    }
+
                     DelayedClose();
                     break;
             }

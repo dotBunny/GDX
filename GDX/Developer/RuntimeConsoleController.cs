@@ -23,7 +23,6 @@ namespace GDX.Developer
         readonly StringBuilder m_InputBuilder = new StringBuilder(1000);
         readonly Label m_InputLabel;
 
-        readonly VisualElement m_RootElement;
         int m_AutoCompleteOffset = -1;
 
         int m_CommandBufferOffset = -1;
@@ -33,12 +32,11 @@ namespace GDX.Developer
 
         public RuntimeConsoleController(VisualElement rootElement)
         {
-            m_RootElement = rootElement;
-            m_InputLabel = m_RootElement.Q<Label>("gdx-console-input");
+            m_InputLabel = rootElement.Q<Label>("gdx-console-input");
 
             // We use a very slimmed down view of the consoles logs here as it takes time to process.
-            m_ConsoleListView = m_RootElement.Q<ListView>("gdx-console-list");
-            m_ConsoleScrollView = m_RootElement.Q<ScrollView>("");
+            m_ConsoleListView = rootElement.Q<ListView>("gdx-console-list");
+            m_ConsoleScrollView = rootElement.Q<ScrollView>("");
             m_ConsoleListView.bindItem += BindItem;
             m_ConsoleListView.makeItem += MakeItem;
             m_ConsoleListView.itemsSource = new ManagedLogWrapper();
