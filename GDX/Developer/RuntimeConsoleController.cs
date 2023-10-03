@@ -19,13 +19,14 @@ namespace GDX.Developer
     public class RuntimeConsoleController
     {
         // TODO CHANGE TO A MULTICOLUMN LIST VIEW!!!!
-        
-        readonly ListView m_ConsoleListView;
+
+        readonly MultiColumnListView m_ConsoleView;
         readonly Label m_InputCaret;
-        readonly ScrollView m_ConsoleScrollView;
+        ScrollView m_ConsoleScrollView;
         readonly StringBuilder m_InputBuilder = new StringBuilder(1000);
         readonly Label m_InputLabel;
         readonly VisualElement m_ConsoleBarElement;
+        readonly VisualElement m_TableViewHeader;
         int m_FontSize = 14;
 
         int m_AutoCompleteOffset = -1;
@@ -34,7 +35,7 @@ namespace GDX.Developer
 
         uint m_CurrentVersion;
         bool m_IsSubscribedToEvents;
-        VisualElement m_RootElement;
+        readonly VisualElement m_RootElement;
 
         public RuntimeConsoleController(VisualElement rootElement)
         {
@@ -43,39 +44,106 @@ namespace GDX.Developer
             m_InputLabel = m_ConsoleBarElement.Q<Label>("gdx-console-input");
             m_InputCaret = m_ConsoleBarElement.Q<Label>("gdx-console-caret");
 
-            // We use a very slimmed down view of the consoles logs here as it takes time to process.
-            m_ConsoleListView = m_RootElement.Q<ListView>("gdx-console-list");
-            m_ConsoleScrollView = m_RootElement.Q<ScrollView>("");
-            m_ConsoleListView.bindItem += BindItem;
-            m_ConsoleListView.makeItem += MakeItem;
-            m_ConsoleListView.itemsSource = new ManagedLogWrapper();
-            m_ConsoleListView.Rebuild();
+            // Right now were using a multi column, maybe we want to go to tree for nested hierarchy?
+            m_ConsoleView = m_RootElement.Q<MultiColumnListView>("gdx-console-view");
+            m_TableViewHeader = m_ConsoleView.Q<VisualElement>(null, "unity-multi-column-header");
+
+            m_ConsoleView.reorderable = false;
+            m_ConsoleView.sortingEnabled = false;
+            m_ConsoleView.allowAdd = false;
+            m_ConsoleView.allowRemove = false;
+            m_ConsoleView.showBorder = false;
+
+            //    reorderable="false" resizable="false" sortable="false" stretchable="true"
+
+            m_ConsoleView.itemsSource = new ManagedLogWrapper();
+            m_ConsoleView.columns[0].makeCell = () =>
+                new Label { name = "gdx-console-item-timestamp", style = { fontSize = m_FontSize } };
+            m_ConsoleView.columns[1].makeCell = () =>
+                new Label { name = "gdx-console-item-level", style = { fontSize = m_FontSize } };
+            m_ConsoleView.columns[2].makeCell = () =>
+                new Label { name = "gdx-console-item-category", style = { fontSize = m_FontSize } };
+            m_ConsoleView.columns[3].makeCell = () =>
+                new Label { name = "gdx-console-item-message", style = { fontSize = m_FontSize } };
+
+            m_ConsoleView.columns[0].bindCell = (element, index) =>
+            {
+                LogEntry entry = ManagedLog.GetEntryAt(index);
+                Label label = (Label)element;
+                label.parent.ClearClassList();
+                label.parent.AddToClassList(entry.GetLevelLabel());
+                label.text = entry.Timestamp.ToString(Localization.LocalTimestampFormat);
+            };
+
+            m_ConsoleView.columns[1].bindCell = (element, index) =>
+            {
+                LogEntry entry = ManagedLog.GetEntryAt(index);
+                ((Label)element).text = LogLevelToIcon(entry.Level).ToString();;
+            };
+
+            m_ConsoleView.columns[2].bindCell = (element, index) =>
+            {
+                LogEntry entry = ManagedLog.GetEntryAt(index);
+                ((Label)element).text = ManagedLog.GetCategoryLabel(entry.CategoryIdentifier);
+            };
+
+            m_ConsoleView.columns[3].bindCell = (element, index) =>
+            {
+                LogEntry entry = ManagedLog.GetEntryAt(index);
+                ((Label)element).text = entry.Message;
+            };
+
+            // TODO this puts at risk of stripping
+            m_RootElement.schedule.Execute(() => { Reflection.InvokeMethod(m_TableViewHeader, "ResizeToFit");});
+        }
+
+        ScrollView GetScrollView()
+        {
+            if (m_ConsoleScrollView == null)
+            {
+                m_ConsoleScrollView = m_ConsoleView.Q<ScrollView>("");
+            }
+
+            return m_ConsoleScrollView;
         }
 
         public void UpdateFontSize(int fontSize)
         {
             m_FontSize = fontSize;
+
             m_ConsoleBarElement.style.height = m_FontSize + 10;
             m_InputCaret.style.fontSize = m_FontSize;
             m_InputLabel.style.fontSize = m_FontSize;
-            m_ConsoleListView.Rebuild();
+
+            m_ConsoleView.Rebuild();
+
+            // TODO: UGH!
+            Reflection.InvokeMethod(m_TableViewHeader, "ResizeToFit");
         }
 
 #if GDX_INPUT
         public void OnInputVerticalScroll(InputAction.CallbackContext obj)
         {
-            m_ConsoleScrollView.scrollOffset =
-                new Vector2(
-                    m_ConsoleScrollView.scrollOffset.x,
-                    m_ConsoleScrollView.scrollOffset.y - obj.ReadValue<float>() * 10f);
+            ScrollView scrollView = GetScrollView();
+            if (scrollView != null)
+            {
+                scrollView.scrollOffset =
+                    new Vector2(
+                        scrollView.scrollOffset.x,
+                        scrollView.scrollOffset.y - obj.ReadValue<float>() * 10f);
+            }
         }
 #else
         public void OnInputVerticalScroll(float value)
         {
-            m_ConsoleScrollView.scrollOffset =
-                new Vector2(
-                    m_ConsoleScrollView.scrollOffset.x,
-                    m_ConsoleScrollView.scrollOffset.y - value * 10f);
+            ScrollView scrollView = GetScrollView();
+            if (scrollView != null)
+            {
+                scrollView.scrollOffset =
+                    new Vector2(
+                        scrollView.scrollOffset.x,
+                        scrollView.scrollOffset.y - value * 10f);
+            }
         }
 #endif
 
@@ -226,18 +294,6 @@ namespace GDX.Developer
             return '\uf27a';
         }
 
-        static void BindItem(VisualElement element, int index)
-        {
-            LogEntry entry = ManagedLog.GetEntryAt(index);
-            element.ClearClassList();
-            element.AddToClassList(entry.GetLevelLabel());
-
-            ((Label)element[0]).text = entry.Timestamp.ToString(CultureInfo.InvariantCulture);
-            ((Label)element[1]).text = LogLevelToIcon(entry.Level).ToString();
-            ((Label)element[2]).text = ManagedLog.GetCategoryLabel(entry.CategoryIdentifier);
-            ((Label)element[3]).text = entry.Message;
-        }
-
         public void ClearInput()
         {
             m_InputBuilder.Clear();
@@ -249,8 +305,8 @@ namespace GDX.Developer
             if (ManagedLog.Version != m_CurrentVersion)
             {
                 m_CurrentVersion = ManagedLog.Version;
-                m_ConsoleListView.RefreshItems();
-                m_ConsoleListView.ScrollToItem(-1);
+                m_ConsoleView.RefreshItems();
+                m_ConsoleView.ScrollToItem(-1);
             }
         }
 
@@ -262,7 +318,7 @@ namespace GDX.Developer
             // This is bad, we have to scroll to fix things showing
             m_InputLabel.schedule.Execute(() =>
             {
-                m_ConsoleListView.ScrollToItem(-1);
+                m_ConsoleView.ScrollToItem(-1);
             });
         }
 
