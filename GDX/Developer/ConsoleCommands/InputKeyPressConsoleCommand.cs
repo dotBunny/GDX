@@ -19,9 +19,9 @@ namespace GDX.Developer.ConsoleCommands
         }
 
         /// <inheritdoc />
-        public override ConsoleCommandLevel GetAccessLevel()
+        public override Console.ConsoleAccessLevel GetAccessLevel()
         {
-            return ConsoleCommandLevel.Developer;
+            return Console.ConsoleAccessLevel.Developer;
         }
 
         /// <inheritdoc />

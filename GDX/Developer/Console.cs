@@ -4,9 +4,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using GDX.Collections.Generic;
 using GDX.Developer.ConsoleCommands;
+using GDX.Developer.ConsoleVariables;
 using GDX.Logging;
 using UnityEditor;
 using UnityEngine;
@@ -21,15 +23,27 @@ namespace GDX.Developer
 
     public static class Console
     {
-        static ConsoleCommandBase.ConsoleCommandLevel s_AccessLevel = ConsoleCommandBase.ConsoleCommandLevel.Developer;
+        public enum ConsoleAccessLevel
+        {
+            Anonymous = -1,
+            User = 0,
+            Superuser = 1,
+            Developer = 2
+        }
+
+        static ConsoleAccessLevel s_AccessLevel = ConsoleAccessLevel.Developer;
         static CircularBuffer<string> s_CommandHistory = new CircularBuffer<string>(50);
         static readonly Queue<ConsoleCommandBase> k_CommandBuffer = new Queue<ConsoleCommandBase>(50);
-
         static StringKeyDictionary<ConsoleCommandBase>
             s_KnownCommands = new StringKeyDictionary<ConsoleCommandBase>(50);
-
+        static StringKeyDictionary<ConsoleVariableBase> s_ConsoleVariables =
+            new StringKeyDictionary<ConsoleVariableBase>(
+                50);
+        static StringKeyDictionary<string> s_ConsoleVariablesSettings = new StringKeyDictionary<string>(50);
         // We keep a list of the commands handy because of how frequently we need to iterate over them
         static readonly List<string> k_KnownCommandsList = new List<string>(50);
+        static readonly List<string> k_KnownVariablesList = new List<string>(50);
+        static bool s_HasReadSettingsFile;
 
         public static int PreviousCommandCount => s_CommandHistory.Count;
 
@@ -43,15 +57,39 @@ namespace GDX.Developer
             }
         }
 
-        public static void UnregisterCommand(ConsoleCommandBase command)
+        public static void RegisterVariable(ConsoleVariableBase variable)
         {
-            string keyword = command.GetKeyword();
-
-            k_KnownCommandsList.Remove(keyword);
-            s_KnownCommands.TryRemove(command.GetKeyword());
+            string name = variable.GetName();
+            if (!s_ConsoleVariables.ContainsKey(name))
+            {
+                s_ConsoleVariables.AddWithExpandCheck(name, variable);
+                k_KnownVariablesList.Add(name);
+            }
         }
 
-        public static ConsoleCommandBase.ConsoleCommandLevel GetAccessLevel()
+        public static void UnregisterVariable(ConsoleVariableBase variable)
+        {
+            UnregisterVariable(variable.GetName());
+        }
+
+        public static void UnregisterVariable(string name)
+        {
+            k_KnownVariablesList.Remove(name);
+            s_ConsoleVariables.TryRemove(name);
+        }
+
+        public static void UnregisterCommand(ConsoleCommandBase command)
+        {
+            UnregisterCommand(command.GetKeyword());
+        }
+
+        public static void UnregisterCommand(string keyword)
+        {
+            k_KnownCommandsList.Remove(keyword);
+            s_KnownCommands.TryRemove(keyword);
+        }
+
+        public static ConsoleAccessLevel GetAccessLevel()
         {
             return s_AccessLevel;
         }
@@ -67,10 +105,22 @@ namespace GDX.Developer
             return s_KnownCommands.ContainsKey(keyword) ? s_KnownCommands[keyword] : null;
         }
 
+        public static ConsoleVariableBase GetVariable(string name)
+        {
+            return s_ConsoleVariables.ContainsKey(name) ? s_ConsoleVariables[name] : null;
+        }
+
         public static string[] GetCommandKeywordsCopy()
         {
             return k_KnownCommandsList.ToArray();
         }
+
+        public static string[] GetVariableNamesCopy()
+        {
+            return k_KnownVariablesList.ToArray();
+        }
+
+
 
         public static List<string>.Enumerator GetCommandKeywordsEnumerator()
         {
@@ -108,6 +158,7 @@ namespace GDX.Developer
             // if subsequent args need to be processed.
             string[] split = safeCommand.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
 
+            // Check if its a valid command
             ConsoleCommandBase command = GetCommand(split[0]);
             if (command != null)
             {
@@ -130,11 +181,37 @@ namespace GDX.Developer
                 return true;
             }
 
+            // Check for console variables
+            ConsoleVariableBase variable = GetVariable(split[0]);
+            if (variable != null)
+            {
+                if (split.Length > 1) // Set Value
+                {
+                    if (variable.GetAccessLevel() > s_AccessLevel)
+                    {
+                        ManagedLog.Warning(LogCategory.Default,
+                            $"Unable to set {split[0]} - A higher access level is required.");
+                        return false;
+                    }
+
+                    variable.SetValueFromString(split[1].Trim());
+                    ManagedLog.Info(LogCategory.Default,
+                        $"{variable.GetName()} is now '{variable.GetCurrentValueAsString()}'");
+                }
+                else // Echo
+                {
+                    ManagedLog.Info(LogCategory.Default,
+                        $"{variable.GetName()} is '{variable.GetCurrentValueAsString()}' [{variable.GetDefaultValueAsString()}])");
+                }
+
+                return true;
+            }
+
             ManagedLog.Warning(LogCategory.Default, $"Invalid Command: {split[0]}");
             return false;
         }
 
-        public static void SetAccessLevel(ConsoleCommandBase.ConsoleCommandLevel level)
+        public static void SetAccessLevel(ConsoleAccessLevel level)
         {
             s_AccessLevel = level;
         }
@@ -166,6 +243,11 @@ namespace GDX.Developer
             }
         }
 
+        static string GetConsoleVariableSaveFile()
+        {
+            return System.IO.Path.Combine(Platform.GetOutputFolder(), "settings.gdx");
+        }
+
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
 #endif
@@ -185,6 +267,7 @@ namespace GDX.Developer
             RegisterCommand(new InputKeyPressConsoleCommand());
             RegisterCommand(new GarbageCollectionConsoleCommand());
             RegisterCommand(new BuildVerificationTestConsoleCommand());
+            RegisterCommand(new ConsoleVariablesConsoleCommands());
 
             // We are going to look at the arguments
             if (CommandLineParser.Arguments.ContainsKey("exec"))
@@ -195,7 +278,58 @@ namespace GDX.Developer
             }
 
             // Register for remote connection from editor response
-            PlayerConnection.instance.Register(ConsoleCommandBase.PlayerConnectionGuid, args => QueueCommand(Encoding.UTF8.GetString(args.data)));
+            PlayerConnection.instance.Register(ConsoleCommandBase.PlayerConnectionGuid,
+                args => QueueCommand(Encoding.UTF8.GetString(args.data)));
+
+            UpdateFromSettingsFile();
+        }
+
+
+
+        public static bool TryGetVariableSettingsValue(string name, out string foundValue)
+        {
+            if (!s_HasReadSettingsFile)
+            {
+                UpdateFromSettingsFile();
+                s_HasReadSettingsFile = true;
+            }
+
+            if (s_ConsoleVariablesSettings.ContainsKey(name))
+            {
+                foundValue = s_ConsoleVariablesSettings[name];
+                return true;
+            }
+
+            foundValue = null;
+            return false;
+        }
+        static void UpdateFromSettingsFile()
+        {
+            // Read in the settings from the cvars saved file
+            string settingsFile = GetConsoleVariableSaveFile();
+            if (File.Exists(settingsFile))
+            {
+                string[] lines = File.ReadAllLines(settingsFile);
+                int lineCount = lines.Length;
+                for (int i = 0; i < lineCount; i++)
+                {
+                    string line = lines[i].Trim();
+                    if (line[0] == '#') // Skip comments
+                    {
+                        continue;
+                    }
+
+                    string[] split = line.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+                    if (!s_ConsoleVariablesSettings.ContainsKey(split[0]))
+                    {
+                        s_ConsoleVariablesSettings.AddWithExpandCheck(split[0], split[1]);
+                    }
+                    else
+                    {
+                        s_ConsoleVariablesSettings[split[0]] = split[1];
+                    }
+                }
+            }
         }
     }
 #endif // UNITY_2022_2_OR_NEWER

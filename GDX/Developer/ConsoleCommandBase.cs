@@ -11,13 +11,6 @@ namespace GDX.Developer
     {
         public static Guid PlayerConnectionGuid = new Guid("5bccf3e4-1f16-4500-95c9-060e9c3d61c0");
 
-        public enum ConsoleCommandLevel
-        {
-            Anonymous = -1,
-            User = 0,
-            Superuser = 1,
-            Developer = 2
-        }
 
         /// <summary>
         ///     Executes the logic for the command.
@@ -33,9 +26,9 @@ namespace GDX.Developer
         /// </summary>
         /// <remarks>Overrideable, but defaults to having user level access.</remarks>
         /// <returns>The required user access level to utilize a given command.</returns>
-        public virtual ConsoleCommandLevel GetAccessLevel()
+        public virtual Console.ConsoleAccessLevel GetAccessLevel()
         {
-            return ConsoleCommandLevel.User;
+            return Console.ConsoleAccessLevel.User;
         }
 
         public abstract string GetKeyword();

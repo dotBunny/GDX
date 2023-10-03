@@ -2,7 +2,3 @@
     --font-awesome-mini: url('../Fonts/FONT_FontAwesome-Mini.otf');
     --corner-radius: 8px;
 }
-
-* {
-    font-size: 14px;
-}

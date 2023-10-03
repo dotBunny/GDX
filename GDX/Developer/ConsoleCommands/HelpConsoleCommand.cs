@@ -17,7 +17,7 @@ namespace GDX.Developer.ConsoleCommands
             List<string> sortedCommands = new List<string>(Console.GetCommandKeywordsCopy());
             sortedCommands.Sort();
             int commandCount = sortedCommands.Count;
-            ConsoleCommandLevel maxAccessLevel = Console.GetAccessLevel();
+            Console.ConsoleAccessLevel maxAccessLevel = Console.GetAccessLevel();
             for (int i = 0; i < commandCount; i++)
             {
                 ConsoleCommandBase command = Console.GetCommand(sortedCommands[i]);
@@ -45,9 +45,9 @@ namespace GDX.Developer.ConsoleCommands
         }
 
         /// <inheritdoc />
-        public override ConsoleCommandLevel GetAccessLevel()
+        public override Console.ConsoleAccessLevel GetAccessLevel()
         {
-            return ConsoleCommandLevel.Anonymous;
+            return Console.ConsoleAccessLevel.Anonymous;
         }
 
         /// <inheritdoc />

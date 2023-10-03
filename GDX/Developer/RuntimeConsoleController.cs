@@ -22,6 +22,7 @@ namespace GDX.Developer
         readonly ScrollView m_ConsoleScrollView;
         readonly StringBuilder m_InputBuilder = new StringBuilder(1000);
         readonly Label m_InputLabel;
+        int m_FontSize = 14;
 
         int m_AutoCompleteOffset = -1;
 
@@ -29,18 +30,26 @@ namespace GDX.Developer
 
         uint m_CurrentVersion;
         bool m_IsSubscribedToEvents;
+        VisualElement m_RootElement;
 
         public RuntimeConsoleController(VisualElement rootElement)
         {
-            m_InputLabel = rootElement.Q<Label>("gdx-console-input");
+            m_RootElement = rootElement.Q<VisualElement>("gdx-console");
+            m_InputLabel = m_RootElement.Q<Label>("gdx-console-input");
 
             // We use a very slimmed down view of the consoles logs here as it takes time to process.
-            m_ConsoleListView = rootElement.Q<ListView>("gdx-console-list");
-            m_ConsoleScrollView = rootElement.Q<ScrollView>("");
+            m_ConsoleListView = m_RootElement.Q<ListView>("gdx-console-list");
+            m_ConsoleScrollView = m_RootElement.Q<ScrollView>("");
             m_ConsoleListView.bindItem += BindItem;
             m_ConsoleListView.makeItem += MakeItem;
             m_ConsoleListView.itemsSource = new ManagedLogWrapper();
             m_ConsoleListView.Rebuild();
+        }
+
+        public void UpdateFontSize(int fontSize)
+        {
+            // TODO: THIS DOESNT CHANGE IT WE WANT TO
+            m_FontSize = fontSize;
         }
 
 #if GDX_INPUT
@@ -150,6 +159,7 @@ namespace GDX.Developer
             if (m_InputBuilder.Length >= 1)
             {
                 m_InputBuilder.Remove(m_InputBuilder.Length - 1, 1);
+
                 m_InputLabel.text = m_InputBuilder.ToString();
             }
         }
