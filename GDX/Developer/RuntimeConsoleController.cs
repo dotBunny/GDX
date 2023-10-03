@@ -18,10 +18,14 @@ namespace GDX.Developer
 #if UNITY_2022_2_OR_NEWER
     public class RuntimeConsoleController
     {
+        // TODO CHANGE TO A MULTICOLUMN LIST VIEW!!!!
+        
         readonly ListView m_ConsoleListView;
+        readonly Label m_InputCaret;
         readonly ScrollView m_ConsoleScrollView;
         readonly StringBuilder m_InputBuilder = new StringBuilder(1000);
         readonly Label m_InputLabel;
+        readonly VisualElement m_ConsoleBarElement;
         int m_FontSize = 14;
 
         int m_AutoCompleteOffset = -1;
@@ -35,7 +39,9 @@ namespace GDX.Developer
         public RuntimeConsoleController(VisualElement rootElement)
         {
             m_RootElement = rootElement.Q<VisualElement>("gdx-console");
-            m_InputLabel = m_RootElement.Q<Label>("gdx-console-input");
+            m_ConsoleBarElement = rootElement.Q<VisualElement>("gdx-console-bar");
+            m_InputLabel = m_ConsoleBarElement.Q<Label>("gdx-console-input");
+            m_InputCaret = m_ConsoleBarElement.Q<Label>("gdx-console-caret");
 
             // We use a very slimmed down view of the consoles logs here as it takes time to process.
             m_ConsoleListView = m_RootElement.Q<ListView>("gdx-console-list");
@@ -48,8 +54,11 @@ namespace GDX.Developer
 
         public void UpdateFontSize(int fontSize)
         {
-            // TODO: THIS DOESNT CHANGE IT WE WANT TO
             m_FontSize = fontSize;
+            m_ConsoleBarElement.style.height = m_FontSize + 10;
+            m_InputCaret.style.fontSize = m_FontSize;
+            m_InputLabel.style.fontSize = m_FontSize;
+            m_ConsoleListView.Rebuild();
         }
 
 #if GDX_INPUT
@@ -178,10 +187,10 @@ namespace GDX.Developer
         {
             VisualElement itemBaseElement = new VisualElement { name = "gdx-console-item" };
 
-            Label timestampLabel = new Label { name = "gdx-console-item-timestamp" };
-            Label levelLabel = new Label { name = "gdx-console-item-level" };
-            Label categoryLabel = new Label { name = "gdx-console-item-category" };
-            Label messageLabel = new Label { name = "gdx-console-item-message" };
+            Label timestampLabel = new Label { name = "gdx-console-item-timestamp", style = { fontSize = m_FontSize}};
+            Label levelLabel = new Label { name = "gdx-console-item-level" , style = { fontSize = m_FontSize}};
+            Label categoryLabel = new Label { name = "gdx-console-item-category" , style = { fontSize = m_FontSize}};
+            Label messageLabel = new Label { name = "gdx-console-item-message", style = { fontSize = m_FontSize}};
 
             itemBaseElement.Add(timestampLabel);
             itemBaseElement.Add(levelLabel);

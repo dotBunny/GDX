@@ -37,17 +37,16 @@
 }
 #gdx-console-caret
 {
-    height: 20px;
-    width: 14px;
+    height: 100%;
     padding-left: 5px;
     flex-grow: 0;
-    flex-shrink: 0;
+    flex-shrink: 1;
     -unity-text-align: middle-center;
 }
 
 #gdx-console-input
 {
-    height: 20px;
+    height: 100%;
     -unity-text-align: middle-left;
     margin-left: 2px;
     flex-grow: 1;
@@ -128,7 +127,6 @@
 {
     padding-top: 2px;
     padding-left: 5px;
-    height: 22px;
     width: 130px;
     color: rgb(57,62,69);
     -unity-text-align: upper-left;
@@ -136,7 +134,6 @@
 
 #gdx-console-item-level
 {
-    height: 22px;
     width: 22px;
     padding-top: 4px;
     -unity-text-align: middle-left;
@@ -147,7 +144,6 @@
 #gdx-console-item-category
 {
     padding-top: 2px;
-    height: 22px;
     -unity-text-align: upper-left;
 }
 
