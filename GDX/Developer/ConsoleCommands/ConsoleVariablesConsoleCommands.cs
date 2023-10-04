@@ -7,6 +7,7 @@ using GDX.Logging;
 
 namespace GDX.Developer.ConsoleCommands
 {
+#if UNITY_2022_2_OR_NEWER
     public class ConsoleVariablesConsoleCommands : ConsoleCommandBase
     {
         /// <inheritdoc />
@@ -47,4 +48,5 @@ namespace GDX.Developer.ConsoleCommands
             return "Return a list of all registered console variables.";
         }
     }
+#endif // UNITY_2022_2_OR_NEWER
 }

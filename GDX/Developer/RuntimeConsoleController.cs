@@ -19,7 +19,7 @@ namespace GDX.Developer
     public class RuntimeConsoleController
     {
         // TODO CHANGE TO A MULTICOLUMN LIST VIEW!!!!
-        
+
         readonly ListView m_ConsoleListView;
         readonly Label m_InputCaret;
         readonly ScrollView m_ConsoleScrollView;
@@ -58,6 +58,7 @@ namespace GDX.Developer
             m_ConsoleBarElement.style.height = m_FontSize + 10;
             m_InputCaret.style.fontSize = m_FontSize;
             m_InputLabel.style.fontSize = m_FontSize;
+
             m_ConsoleListView.Rebuild();
         }
 
