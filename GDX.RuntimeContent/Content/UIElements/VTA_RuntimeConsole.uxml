@@ -3,14 +3,6 @@
     <Style src="../StyleSheets/SS_RuntimeConsole.uss" />
     <ui:VisualElement name="gdx-console" style="flex-grow: 1;">
         <ui:VisualElement name="gdx-console-container">
-            <ui:MultiColumnListView name="gdx-console-view">
-                <ui:Columns>
-                    <ui:Column name="gdx-console-timestamp" title="Timestamp" />
-                    <ui:Column name="gdx-console-level" title="Level" />
-                    <ui:Column name="gdx-console-item-category" title="Category" />
-                    <ui:Column name="gdx-console-item-message" title="Message" />
-                </ui:Columns>
-            </ui:MultiColumnListView>
             <ui:ListView name="gdx-console-list" allow-add="false" allow-remove="false" virtualization-method="DynamicHeight" selection-type="Single" show-bound-collection-size="false" show-alternating-row-backgrounds="None" focusable="false" />
         </ui:VisualElement>
         <ui:VisualElement name="gdx-console-bar">
