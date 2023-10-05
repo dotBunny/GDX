@@ -101,22 +101,22 @@ namespace GDX.Logging
             if (categoryIdentifier <= LogCategory.MinimumIdentifier)
             {
                 Error(LogCategory.GDX,
-                    $"Unable to register category {categoryIdentifier.ToString()}:{name} as identifier below threshold {LogCategory.MinimumIdentifier.ToString()}.");
+                    $"Unable to register category {categoryIdentifier.ToString()}:{name.ToUpper()} as identifier below threshold {LogCategory.MinimumIdentifier.ToString()}.");
             }
             else if (categoryIdentifier > LogCategory.MaximumIdentifier)
             {
                 Error(LogCategory.GDX,
-                    $"Unable to register category {categoryIdentifier.ToString()}:{name} as identifier exceeds maximum allow categories (64).");
+                    $"Unable to register category {categoryIdentifier.ToString()}:{name.ToUpper()} as identifier exceeds maximum allow categories (64).");
             }
 
             if (s_CustomCategories.ContainsKey(categoryIdentifier))
             {
                 Error(LogCategory.GDX,
-                    $"Unable to register category {categoryIdentifier.ToString()}:{name} as identifier already in use.");
+                    $"Unable to register category {categoryIdentifier.ToString()}:{name.ToUpper()} as identifier already in use.");
             }
             else
             {
-                s_CustomCategories.AddWithExpandCheck(categoryIdentifier, name);
+                s_CustomCategories.AddWithExpandCheck(categoryIdentifier, name.ToUpper());
                 if (name.Length > s_LongestCategoryLength)
                 {
                     s_LongestCategoryLength = name.Length;
@@ -165,20 +165,20 @@ namespace GDX.Logging
                 {
                     case LogCategory.GDX:
                         return "GDX";
-                    case LogCategory.Default:
-                        return "Default";
-                    case LogCategory.Platform:
-                        return "Platform";
-                    case LogCategory.Unity:
-                        return "Unity";
-                    case LogCategory.Input:
-                        return "Input";
-                    case LogCategory.Gameplay:
-                        return "Gameplay";
+                    case LogCategory.DEFAULT:
+                        return "DEFAULT";
+                    case LogCategory.PLATFORM:
+                        return "PLATFORM";
+                    case LogCategory.UNITY:
+                        return "UNITY";
+                    case LogCategory.INPUT:
+                        return "INPUT";
+                    case LogCategory.GAMEPLAY:
+                        return "GAMEPLAY";
                     case LogCategory.UI:
                         return "UI";
-                    case LogCategory.Test:
-                        return "Test";
+                    case LogCategory.TEST:
+                        return "TEST";
                     default:
                         return LogCategory.UndefinedLabel;
                 }

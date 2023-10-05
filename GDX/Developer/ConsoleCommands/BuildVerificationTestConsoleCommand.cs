@@ -41,7 +41,7 @@ namespace GDX.Developer.ConsoleCommands
 
                     if (m_TestRunner == null)
                     {
-                        ManagedLog.Error(LogCategory.Test, "The test runner was unable to run.");
+                        ManagedLog.Error(LogCategory.TEST, "The test runner was unable to run.");
                         return true;
                     }
 
@@ -62,7 +62,7 @@ namespace GDX.Developer.ConsoleCommands
 
                     string result = BuildVerificationReport.OutputReport(outputPath);
 
-                    ManagedLog.Info(LogCategory.Test,
+                    ManagedLog.Info(LogCategory.TEST,
                         File.Exists(outputPath)
                             ? $"Build checks ({result}) written to {outputPath}."
                             : $"Unable to write file to {outputPath}.");
@@ -116,7 +116,7 @@ namespace GDX.Developer.ConsoleCommands
                 return command;
             }
 
-            ManagedLog.Warning(LogCategory.Default, $"No valid scenes were able to be extracted from '{context}'.");
+            ManagedLog.Warning(LogCategory.DEFAULT, $"No valid scenes were able to be extracted from '{context}'.");
             return null;
         }
 

@@ -142,6 +142,7 @@
 {
     padding-top: 2px;
     -unity-text-align: upper-left;
+    -unity-font-style: bold;
 }
 
 #gdx-console-item-message

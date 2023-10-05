@@ -57,7 +57,7 @@ namespace GDX.Developer.ConsoleCommands
                 }
             }
 
-            ManagedLog.Warning(LogCategory.Default, $"Unable to find scene '{context}'.");
+            ManagedLog.Warning(LogCategory.DEFAULT, $"Unable to find scene '{context}'.");
             return null;
         }
     }

@@ -40,7 +40,7 @@ namespace GDX.Developer.ConsoleCommands
                 }
             }
 
-            ManagedLog.Info(LogCategory.Default, textGenerator.ToString());
+            ManagedLog.Info(LogCategory.DEFAULT, textGenerator.ToString());
             return true;
         }
 

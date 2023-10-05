@@ -12,7 +12,7 @@ namespace GDX.Developer.ConsoleCommands
         /// <inheritdoc />
         public override bool Evaluate(float deltaTime)
         {
-            ManagedLog.Info(LogCategory.Default, "TODO: Version Information");
+            ManagedLog.Info(LogCategory.DEFAULT, "TODO: Version Information");
             return true;
         }
 

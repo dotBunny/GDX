@@ -164,7 +164,7 @@ namespace GDX.Developer
             {
                 if (command.GetAccessLevel() > s_AccessLevel)
                 {
-                    ManagedLog.Warning(LogCategory.Default,
+                    ManagedLog.Warning(LogCategory.DEFAULT,
                         $"Invalid Command: {split[0]} - A higher access level is required.");
                     return false;
                 }
@@ -172,7 +172,7 @@ namespace GDX.Developer
                 ConsoleCommandBase workUnit = command.GetInstance(split.Length > 1 ? split[1].Trim() : null);
                 if (workUnit == null)
                 {
-                    ManagedLog.Warning(LogCategory.Default,
+                    ManagedLog.Warning(LogCategory.DEFAULT,
                         $"Invalid Command: {split[0]} - Unable to generate work unit.");
                     return false;
                 }
@@ -189,25 +189,25 @@ namespace GDX.Developer
                 {
                     if (variable.GetAccessLevel() > s_AccessLevel)
                     {
-                        ManagedLog.Warning(LogCategory.Default,
+                        ManagedLog.Warning(LogCategory.DEFAULT,
                             $"Unable to set {split[0]} - A higher access level is required.");
                         return false;
                     }
 
                     variable.SetValueFromString(split[1].Trim());
-                    ManagedLog.Info(LogCategory.Default,
+                    ManagedLog.Info(LogCategory.DEFAULT,
                         $"{variable.GetName()} is now '{variable.GetCurrentValueAsString()}'");
                 }
                 else // Echo
                 {
-                    ManagedLog.Info(LogCategory.Default,
+                    ManagedLog.Info(LogCategory.DEFAULT,
                         $"{variable.GetName()} is '{variable.GetCurrentValueAsString()}' [{variable.GetDefaultValueAsString()}])");
                 }
 
                 return true;
             }
 
-            ManagedLog.Warning(LogCategory.Default, $"Invalid Command: {split[0]}");
+            ManagedLog.Warning(LogCategory.DEFAULT, $"Invalid Command: {split[0]}");
             return false;
         }
 
@@ -232,9 +232,9 @@ namespace GDX.Developer
                 }
                 catch (Exception e)
                 {
-                    uint parentMessageID = ManagedLog.Error(LogCategory.Default,
+                    uint parentMessageID = ManagedLog.Error(LogCategory.DEFAULT,
                         "An exception occured while processing the console command buffer. It has been flushed.");
-                    ManagedLog.Exception(LogCategory.Default, e, parentMessageID);
+                    ManagedLog.Exception(LogCategory.DEFAULT, e, parentMessageID);
                     k_CommandBuffer.Clear();
                     break;
                 }
@@ -246,6 +246,20 @@ namespace GDX.Developer
         static string GetConsoleVariableSaveFile()
         {
             return System.IO.Path.Combine(Platform.GetOutputFolder(), "settings.gdx");
+        }
+
+        public static void SaveConsoleVariables()
+        {
+            int count = k_KnownVariablesList.Count;
+            GDX.Developer.TextGenerator textGenerator = new TextGenerator();
+            for (int i = 0; i < count; i++)
+            {
+                ConsoleVariableBase variable = s_ConsoleVariables[k_KnownVariablesList[i]];
+                if (variable.GetFlags().HasFlags(ConsoleVariableBase.ConsoleVariableFlags.Setting))
+                {
+
+                }
+            }
         }
 
 #if UNITY_EDITOR

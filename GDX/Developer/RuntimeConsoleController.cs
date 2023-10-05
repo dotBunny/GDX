@@ -70,9 +70,9 @@ namespace GDX.Developer
             m_FontSizeMultiplier = (float)m_FontSize / k_SourceFontSize;
 
             // Calculate our Category with based on the managed log longest
-            m_TimestampWidth = new StyleLength(new Length(k_SourceTimestampWidth * m_FontSizeMultiplier));
-            m_LevelWidth = new StyleLength(new Length(k_SourceLevelWidth * m_FontSizeMultiplier));
-            m_CategoryWidth = new StyleLength(new Length(ManagedLog.GetLongestCategoryLength() * (fontSize), LengthUnit.Pixel));
+            m_TimestampWidth = new StyleLength(new Length(Mathf.RoundToInt(k_SourceTimestampWidth * m_FontSizeMultiplier)));
+            m_LevelWidth = new StyleLength(new Length(Mathf.RoundToInt(k_SourceLevelWidth * m_FontSizeMultiplier)));
+            m_CategoryWidth = new StyleLength(new Length(Mathf.RoundToInt(ManagedLog.GetLongestCategoryLength() * (fontSize) / 1.5f), LengthUnit.Pixel));
 
             m_ConsoleBarElement.style.height = fontSize + 10;
             m_InputCaret.style.fontSize = fontSize;

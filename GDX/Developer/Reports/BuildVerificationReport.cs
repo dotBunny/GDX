@@ -27,11 +27,11 @@ namespace GDX.Developer.Reports
             TestCase test = s_Report.AddDurationResult(identifier, duration, condition, failMessage);
             if (test.Result == NUnitReport.PassedString)
             {
-                ManagedLog.Info(LogCategory.Test, $"{test.Name}: {test.Result}");
+                ManagedLog.Info(LogCategory.TEST, $"{test.Name}: {test.Result}");
             }
             else
             {
-                ManagedLog.Info(LogCategory.Test, $"{test.Name}: {test.Result}, {test.Message}");
+                ManagedLog.Info(LogCategory.TEST, $"{test.Name}: {test.Result}, {test.Message}");
             }
 
             return test;
@@ -46,14 +46,14 @@ namespace GDX.Developer.Reports
         public static TestCase Skip(string identifier, string skipMessage)
         {
             TestCase test = s_Report.AddSkippedTest(identifier, skipMessage);
-            ManagedLog.Info(LogCategory.Test, $"{test.Name}: {test.Result}");
+            ManagedLog.Info(LogCategory.TEST, $"{test.Name}: {test.Result}");
             return test;
         }
 
         public static void Panic(string panicMessage)
         {
             s_PanicMessages.AddWithExpandCheck(panicMessage);
-            ManagedLog.Error(LogCategory.Test, $"PANIC! {panicMessage}");
+            ManagedLog.Error(LogCategory.TEST, $"PANIC! {panicMessage}");
         }
     }
 }

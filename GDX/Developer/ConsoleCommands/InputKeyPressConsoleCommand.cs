@@ -53,7 +53,7 @@ namespace GDX.Developer.ConsoleCommands
                 return command;
             }
 
-            ManagedLog.Warning(LogCategory.Default, $"Unable to parse key from '{context}'.");
+            ManagedLog.Warning(LogCategory.DEFAULT, $"Unable to parse key from '{context}'.");
             return null;
         }
     }

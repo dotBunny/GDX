@@ -25,16 +25,16 @@ namespace GDX.Logging
                 switch (logType)
                 {
                     case LogType.Log:
-                        ManagedLog.Info(LogCategory.Unity, string.Format(format, args));
+                        ManagedLog.Info(LogCategory.UNITY, string.Format(format, args));
                         break;
                     case LogType.Error:
-                        ManagedLog.Error(LogCategory.Unity, string.Format(format, args));
+                        ManagedLog.Error(LogCategory.UNITY, string.Format(format, args));
                         break;
                     case LogType.Assert:
-                        ManagedLog.Assertion(LogCategory.Unity, string.Format(format, args));
+                        ManagedLog.Assertion(LogCategory.UNITY, string.Format(format, args));
                         break;
                     case LogType.Warning:
-                        ManagedLog.Warning(LogCategory.Unity, string.Format(format, args));
+                        ManagedLog.Warning(LogCategory.UNITY, string.Format(format, args));
                         break;
                 }
             }
@@ -43,16 +43,16 @@ namespace GDX.Logging
                 switch (logType)
                 {
                     case LogType.Log:
-                        ManagedLog.InfoWithContext(LogCategory.Unity, string.Format(format, args), context);
+                        ManagedLog.InfoWithContext(LogCategory.UNITY, string.Format(format, args), context);
                         break;
                     case LogType.Error:
-                        ManagedLog.ErrorWithContext(LogCategory.Unity, string.Format(format, args), context);
+                        ManagedLog.ErrorWithContext(LogCategory.UNITY, string.Format(format, args), context);
                         break;
                     case LogType.Assert:
-                        ManagedLog.AssertionWithContext(LogCategory.Unity, string.Format(format, args), context);
+                        ManagedLog.AssertionWithContext(LogCategory.UNITY, string.Format(format, args), context);
                         break;
                     case LogType.Warning:
-                        ManagedLog.WarningWithContext(LogCategory.Unity, string.Format(format, args), context);
+                        ManagedLog.WarningWithContext(LogCategory.UNITY, string.Format(format, args), context);
                         break;
                 }
             }
@@ -67,11 +67,11 @@ namespace GDX.Logging
         {
             if (context == null)
             {
-                ManagedLog.Exception(LogCategory.Unity, exception);
+                ManagedLog.Exception(LogCategory.UNITY, exception);
             }
             else
             {
-                ManagedLog.ExceptionWithContext(LogCategory.Unity, exception, context);
+                ManagedLog.ExceptionWithContext(LogCategory.UNITY, exception, context);
             }
 
 #if UNITY_EDITOR

@@ -17,7 +17,7 @@ namespace GDX.Developer.ConsoleCommands
             TextGenerator text = new TextGenerator();
             loop.GenerateSystemTree(text);
 
-            ManagedLog.Info(LogCategory.Default, text.ToString());
+            ManagedLog.Info(LogCategory.DEFAULT, text.ToString());
             return true;
         }
 

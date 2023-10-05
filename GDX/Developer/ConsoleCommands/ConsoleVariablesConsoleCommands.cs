@@ -32,7 +32,7 @@ namespace GDX.Developer.ConsoleCommands
                 textGenerator.AppendLine($"\tDefault: {variable.GetDefaultValueAsString()}");
             }
 
-            ManagedLog.Info(LogCategory.Default, textGenerator.ToString());
+            ManagedLog.Info(LogCategory.DEFAULT, textGenerator.ToString());
             return true;
         }
 

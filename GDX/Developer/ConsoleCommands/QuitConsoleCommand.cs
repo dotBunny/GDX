@@ -18,7 +18,7 @@ namespace GDX.Developer.ConsoleCommands
         /// <inheritdoc />
         public override bool Evaluate(float deltaTime)
         {
-            ManagedLog.Info(LogCategory.Default, $"Quitting! [{errorCode}]");
+            ManagedLog.Info(LogCategory.DEFAULT, $"Quitting! [{errorCode}]");
 #if UNITY_EDITOR
             EditorApplication.isPlaying = false;
 #else
