@@ -118,6 +118,17 @@ namespace GDX.Logging
                 s_EchoToConsole[(byte)categoryIdentifier] = outputToConsole;
                 s_EchoToLogger[(byte)categoryIdentifier] = outputToUnity;
             }
+
+            if(name.Length > s_LongestCategoryCount)
+            {
+                s_LongestCategoryCount = name.Length;
+            }
+        }
+
+        static int s_LongestCategoryCount = 8;
+        public static int GetLongestCategoryLength()
+        {
+            return s_LongestCategoryCount;
         }
 
         /// <summary>

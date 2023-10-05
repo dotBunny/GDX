@@ -6,6 +6,7 @@ using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
+using GDX.Developer.ConsoleVariables;
 using GDX.Logging;
 using UnityEngine;
 #if GDX_INPUT
@@ -26,7 +27,7 @@ namespace GDX.Developer
         readonly StringBuilder m_InputBuilder = new StringBuilder(1000);
         readonly Label m_InputLabel;
         readonly VisualElement m_ConsoleBarElement;
-        int m_FontSize = 14;
+
 
         int m_AutoCompleteOffset = -1;
 
@@ -35,6 +36,19 @@ namespace GDX.Developer
         uint m_CurrentVersion;
         bool m_IsSubscribedToEvents;
         VisualElement m_RootElement;
+
+        GUIStyle sizeCalculator = new GUIStyle();
+
+        static IntegerConsoleVariable FontSize =
+            new IntegerConsoleVariable("console.font.size", "Console's font size", 14);
+
+
+        int m_FontSize = 14;
+        int m_TimestampWidth;
+        int m_LevelWidth;
+        int m_CategoryWidth;
+
+
 
         public RuntimeConsoleController(VisualElement rootElement)
         {
@@ -50,10 +64,23 @@ namespace GDX.Developer
             m_ConsoleListView.makeItem += MakeItem;
             m_ConsoleListView.itemsSource = new ManagedLogWrapper();
             m_ConsoleListView.Rebuild();
+
+            FontSize.OnValueChanged += UpdateFontSize;
+            m_RootElement.schedule.Execute(() => { UpdateFontSize(14); });
         }
+
+
 
         public void UpdateFontSize(int fontSize)
         {
+
+            float scaleOffBase = (fontSize / 14f);
+
+            m_TimestampWidth = Mathf.RoundToInt(135 * scaleOffBase);
+            m_LevelWidth = Mathf.RoundToInt(22 * scaleOffBase);
+
+            m_CategoryWidth = Mathf.RoundToInt((((ManagedLog.GetLongestCategoryLength()-2)* fontSize)/2f) * scaleOffBase);
+
             m_FontSize = fontSize;
             m_ConsoleBarElement.style.height = m_FontSize + 10;
             m_InputCaret.style.fontSize = m_FontSize;
@@ -188,9 +215,9 @@ namespace GDX.Developer
         {
             VisualElement itemBaseElement = new VisualElement { name = "gdx-console-item" };
 
-            Label timestampLabel = new Label { name = "gdx-console-item-timestamp", style = { fontSize = m_FontSize}};
-            Label levelLabel = new Label { name = "gdx-console-item-level" , style = { fontSize = m_FontSize}};
-            Label categoryLabel = new Label { name = "gdx-console-item-category" , style = { fontSize = m_FontSize}};
+            Label timestampLabel = new Label { name = "gdx-console-item-timestamp", style = { fontSize = m_FontSize, width = m_TimestampWidth}};
+            Label levelLabel = new Label { name = "gdx-console-item-level" , style = { fontSize = m_FontSize, width = m_LevelWidth}};
+            Label categoryLabel = new Label { name = "gdx-console-item-category" , style = { fontSize = m_FontSize, width = m_CategoryWidth}};
             Label messageLabel = new Label { name = "gdx-console-item-message", style = { fontSize = m_FontSize}};
 
             itemBaseElement.Add(timestampLabel);
