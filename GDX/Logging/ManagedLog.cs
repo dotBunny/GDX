@@ -53,6 +53,8 @@ namespace GDX.Logging
 
         static ManagedLogHandler s_ManagedLogHandler;
 
+        static int s_LongestCategoryLength = 8;
+
         /// <summary>
         ///     Thread-safety management object.
         /// </summary>
@@ -115,9 +117,18 @@ namespace GDX.Logging
             else
             {
                 s_CustomCategories.AddWithExpandCheck(categoryIdentifier, name);
+                if (name.Length > s_LongestCategoryLength)
+                {
+                    s_LongestCategoryLength = name.Length;
+                }
                 s_EchoToConsole[(byte)categoryIdentifier] = outputToConsole;
                 s_EchoToLogger[(byte)categoryIdentifier] = outputToUnity;
             }
+        }
+
+        public static int GetLongestCategoryLength()
+        {
+            return s_LongestCategoryLength;
         }
 
         /// <summary>

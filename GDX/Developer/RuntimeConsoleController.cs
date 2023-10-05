@@ -18,7 +18,10 @@ namespace GDX.Developer
 #if UNITY_2022_2_OR_NEWER
     public class RuntimeConsoleController
     {
-        // TODO CHANGE TO A MULTICOLUMN LIST VIEW!!!!
+        // Maybe expose these for people messing with fonts
+        const int k_SourceFontSize = 14;
+        const int k_SourceTimestampWidth = 150;
+        const int k_SourceLevelWidth = 22;
 
         readonly ListView m_ConsoleListView;
         readonly Label m_InputCaret;
@@ -26,7 +29,7 @@ namespace GDX.Developer
         readonly StringBuilder m_InputBuilder = new StringBuilder(1000);
         readonly Label m_InputLabel;
         readonly VisualElement m_ConsoleBarElement;
-        int m_FontSize = 14;
+
 
         int m_AutoCompleteOffset = -1;
 
@@ -36,7 +39,15 @@ namespace GDX.Developer
         bool m_IsSubscribedToEvents;
         VisualElement m_RootElement;
 
-        public RuntimeConsoleController(VisualElement rootElement)
+
+        int m_FontSize = 14;
+        float m_FontSizeMultiplier = 1f;
+
+        StyleLength m_TimestampWidth = new StyleLength(new Length(k_SourceTimestampWidth, LengthUnit.Pixel));
+        StyleLength m_LevelWidth = new StyleLength(new Length(k_SourceLevelWidth, LengthUnit.Pixel));
+        StyleLength m_CategoryWidth;
+
+        public RuntimeConsoleController(VisualElement rootElement, int initialFontSize)
         {
             m_RootElement = rootElement.Q<VisualElement>("gdx-console");
             m_ConsoleBarElement = rootElement.Q<VisualElement>("gdx-console-bar");
@@ -49,15 +60,23 @@ namespace GDX.Developer
             m_ConsoleListView.bindItem += BindItem;
             m_ConsoleListView.makeItem += MakeItem;
             m_ConsoleListView.itemsSource = new ManagedLogWrapper();
-            m_ConsoleListView.Rebuild();
+
+            UpdateFontSize(initialFontSize);
         }
 
         public void UpdateFontSize(int fontSize)
         {
             m_FontSize = fontSize;
-            m_ConsoleBarElement.style.height = m_FontSize + 10;
-            m_InputCaret.style.fontSize = m_FontSize;
-            m_InputLabel.style.fontSize = m_FontSize;
+            m_FontSizeMultiplier = (float)m_FontSize / k_SourceFontSize;
+
+            // Calculate our Category with based on the managed log longest
+            m_TimestampWidth = new StyleLength(new Length(k_SourceTimestampWidth * m_FontSizeMultiplier));
+            m_LevelWidth = new StyleLength(new Length(k_SourceLevelWidth * m_FontSizeMultiplier));
+            m_CategoryWidth = new StyleLength(new Length(ManagedLog.GetLongestCategoryLength() * (fontSize), LengthUnit.Pixel));
+
+            m_ConsoleBarElement.style.height = fontSize + 10;
+            m_InputCaret.style.fontSize = fontSize;
+            m_InputLabel.style.fontSize = fontSize;
 
             m_ConsoleListView.Rebuild();
         }
@@ -188,9 +207,9 @@ namespace GDX.Developer
         {
             VisualElement itemBaseElement = new VisualElement { name = "gdx-console-item" };
 
-            Label timestampLabel = new Label { name = "gdx-console-item-timestamp", style = { fontSize = m_FontSize}};
-            Label levelLabel = new Label { name = "gdx-console-item-level" , style = { fontSize = m_FontSize}};
-            Label categoryLabel = new Label { name = "gdx-console-item-category" , style = { fontSize = m_FontSize}};
+            Label timestampLabel = new Label { name = "gdx-console-item-timestamp", style = { fontSize = m_FontSize, width = m_TimestampWidth }};
+            Label levelLabel = new Label { name = "gdx-console-item-level" , style = { fontSize = m_FontSize, width = m_LevelWidth}};
+            Label categoryLabel = new Label { name = "gdx-console-item-category" , style = { fontSize = m_FontSize, width = m_CategoryWidth }};
             Label messageLabel = new Label { name = "gdx-console-item-message", style = { fontSize = m_FontSize}};
 
             itemBaseElement.Add(timestampLabel);
