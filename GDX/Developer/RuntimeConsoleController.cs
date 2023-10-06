@@ -28,16 +28,19 @@ namespace GDX.Developer
         readonly ScrollView m_ConsoleScrollView;
         readonly StringBuilder m_InputBuilder = new StringBuilder(1000);
         readonly Label m_InputLabel;
+        readonly Label m_SuggestionLabel;
         readonly VisualElement m_ConsoleBarElement;
 
 
-        int m_AutoCompleteOffset = -1;
 
         int m_CommandBufferOffset = -1;
 
         uint m_CurrentVersion;
         bool m_IsSubscribedToEvents;
         VisualElement m_RootElement;
+
+
+
 
 
         int m_FontSize = 14;
@@ -52,6 +55,7 @@ namespace GDX.Developer
             m_RootElement = rootElement.Q<VisualElement>("gdx-console");
             m_ConsoleBarElement = rootElement.Q<VisualElement>("gdx-console-bar");
             m_InputLabel = m_ConsoleBarElement.Q<Label>("gdx-console-input");
+            m_SuggestionLabel = m_ConsoleBarElement.Q<Label>("gdx-console-suggestion");
             m_InputCaret = m_ConsoleBarElement.Q<Label>("gdx-console-caret");
 
             // We use a very slimmed down view of the consoles logs here as it takes time to process.
@@ -77,6 +81,7 @@ namespace GDX.Developer
             m_ConsoleBarElement.style.height = fontSize + 10;
             m_InputCaret.style.fontSize = fontSize;
             m_InputLabel.style.fontSize = fontSize;
+            m_SuggestionLabel.style.fontSize = fontSize;
 
             m_ConsoleListView.Rebuild();
         }
@@ -84,6 +89,7 @@ namespace GDX.Developer
 #if GDX_INPUT
         public void OnInputVerticalScroll(InputAction.CallbackContext obj)
         {
+            m_ConsoleScrollView.Focus();
             m_ConsoleScrollView.scrollOffset =
                 new Vector2(
                     m_ConsoleScrollView.scrollOffset.x,
@@ -92,6 +98,7 @@ namespace GDX.Developer
 #else
         public void OnInputVerticalScroll(float value)
         {
+            m_ConsoleScrollView.Focus();
             m_ConsoleScrollView.scrollOffset =
                 new Vector2(
                     m_ConsoleScrollView.scrollOffset.x,
@@ -119,7 +126,11 @@ namespace GDX.Developer
 
             m_InputBuilder.Clear();
             m_InputBuilder.Append(Console.GetPreviousCommand(m_CommandBufferOffset));
+
+
             m_InputLabel.text = m_InputBuilder.ToString();
+
+            ClearSuggestion();
         }
 
 #if GDX_INPUT
@@ -128,6 +139,7 @@ namespace GDX.Developer
         public void OnInputDown()
 #endif
         {
+
             int bufferCount = Console.PreviousCommandCount;
             if (bufferCount <= 0)
             {
@@ -146,6 +158,7 @@ namespace GDX.Developer
                 m_InputBuilder.Append(Console.GetPreviousCommand(m_CommandBufferOffset));
             }
 
+            m_SuggestionLabel.text = string.Empty;
             m_InputLabel.text = m_InputBuilder.ToString();
         }
 
@@ -163,6 +176,7 @@ namespace GDX.Developer
         public void OnInputRight()
 #endif
         {
+
         }
 
 #if GDX_INPUT
@@ -171,12 +185,22 @@ namespace GDX.Developer
         public void OnInputSubmit()
 #endif
         {
-            Console.QueueCommand(m_InputLabel.text);
-            m_CommandBufferOffset = -1;
-            m_AutoCompleteOffset = -1;
-            m_InputLabel.text = "";
-            m_InputBuilder.Clear();
-            m_InputLabel.text = m_InputBuilder.ToString();
+            if (m_SuggestionLabel.text != string.Empty)
+            {
+
+                m_InputBuilder.Append(m_SuggestionLabel.text);
+                m_InputLabel.text = m_InputBuilder.ToString();
+            }
+            else
+            {
+                Console.QueueCommand(m_InputLabel.text);
+                m_CommandBufferOffset = -1;
+                m_AutoCompleteOffset = 0;
+                m_InputLabel.text = "";
+                m_InputBuilder.Clear();
+                m_InputLabel.text = m_InputBuilder.ToString();
+            }
+            ClearSuggestion();
         }
 
 #if GDX_INPUT
@@ -190,8 +214,15 @@ namespace GDX.Developer
                 m_InputBuilder.Remove(m_InputBuilder.Length - 1, 1);
 
                 m_InputLabel.text = m_InputBuilder.ToString();
+
+                ResetSuggestion();
             }
         }
+
+
+        int m_AutoCompleteOffset = 0;
+        string[] m_AutoCompleteSuggestions = null;
+
 
 #if GDX_INPUT
         public void OnInputAutocomplete(InputAction.CallbackContext obj)
@@ -199,9 +230,125 @@ namespace GDX.Developer
         public void OnInputAutocomplete()
 #endif
         {
-            m_AutoCompleteOffset++;
+            string[] split = m_InputLabel.text.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+            if (split == null || split.Length == 0)
+            {
+                ClearSuggestion();
+                return;
+            }
+
+            // Check if we have a command
+            ConsoleCommandBase command = Console.GetCommand(split[0]);
+            if (command != null)
+            {
+                m_AutoCompleteSuggestions =
+                    command.GetArgumentAutoCompleteSuggestions(split.Length == 2 ? split[1] : null,
+                        m_AutoCompleteSuggestions);
+
+                if (m_AutoCompleteSuggestions == null || m_AutoCompleteSuggestions.Length == 0)
+                {
+                    ClearSuggestion();
+                }
+                else
+                {
+                    m_SuggestionLabel.text = $" {m_AutoCompleteSuggestions[m_AutoCompleteOffset]}";
+                    m_AutoCompleteOffset++;
+                    if (m_AutoCompleteOffset >= m_AutoCompleteSuggestions.Length)
+                    {
+                        m_AutoCompleteOffset = 0;
+                    }
+                }
+                return;
+            }
+
+            // Variable Search
+            ConsoleVariableBase variable = Console.GetVariable(split[0]);
+            if (variable != null)
+            {
+                m_AutoCompleteSuggestions =
+                    variable.GetArgumentAutoCompleteSuggestions(split.Length == 2 ? split[1] : null,
+                        m_AutoCompleteSuggestions);
+
+                if (m_AutoCompleteSuggestions == null || m_AutoCompleteSuggestions.Length == 0)
+                {
+                    ClearSuggestion();
+                }
+                else
+                {
+                    m_SuggestionLabel.text = $" {m_AutoCompleteSuggestions[m_AutoCompleteOffset]}";
+                    m_AutoCompleteOffset++;
+                    if (m_AutoCompleteOffset >= m_AutoCompleteSuggestions.Length)
+                    {
+                        m_AutoCompleteOffset = 0;
+                    }
+                }
+                return;
+            }
+
+            // Wide Search
+            m_AutoCompleteSuggestions = Console.GetCommandAutoCompleteSuggestions(split[0], m_AutoCompleteSuggestions);
+            if (m_AutoCompleteSuggestions == null || m_AutoCompleteSuggestions.Length == 0)
+            {
+                m_SuggestionLabel.text = string.Empty;
+                m_AutoCompleteOffset = 0;
+            }
+            else
+            {
+                // TODO : if you have a bad command and a space and a var it will get here and implode on auto
+                m_SuggestionLabel.text = m_AutoCompleteSuggestions[m_AutoCompleteOffset].Substring(m_InputLabel.text.Length);
+                m_AutoCompleteOffset++;
+                if (m_AutoCompleteOffset >= m_AutoCompleteSuggestions.Length)
+                {
+                    m_AutoCompleteOffset = 0;
+                }
+            }
         }
 
+        void ClearSuggestion()
+        {
+            m_SuggestionLabel.text = string.Empty;
+            m_AutoCompleteOffset = 0;
+            m_AutoCompleteSuggestions = null;
+        }
+        void ResetSuggestion()
+        {
+            if (m_SuggestionLabel.text != string.Empty)
+            {
+                m_AutoCompleteSuggestions = null;
+                m_AutoCompleteOffset = 0;
+#if GDX_INPUT
+                OnInputAutocomplete(new InputAction.CallbackContext());
+#else
+                OnInputAutocomplete();
+#endif
+            }
+        }
+
+#if GDX_INPUT
+        public void OnInputPageUp(InputAction.CallbackContext obj)
+#else
+        public void OnInputPageUp()
+#endif
+        {
+            m_ConsoleScrollView.Focus();
+            m_ConsoleScrollView.scrollOffset =
+                new Vector2(
+                    m_ConsoleScrollView.scrollOffset.x,
+                    m_ConsoleScrollView.scrollOffset.y + (m_ConsoleScrollView.horizontalPageSize * 100));
+        }
+
+#if GDX_INPUT
+        public void OnInputPageDown(InputAction.CallbackContext obj)
+#else
+        public void OnInputPageDown()
+#endif
+        {
+            m_ConsoleScrollView.Focus();
+            m_ConsoleScrollView.scrollOffset =
+                new Vector2(
+                    m_ConsoleScrollView.scrollOffset.x,
+                    m_ConsoleScrollView.scrollOffset.y - (m_ConsoleScrollView.horizontalPageSize * 100));
+        }
 
         VisualElement MakeItem()
         {
@@ -262,6 +409,7 @@ namespace GDX.Developer
         {
             m_InputBuilder.Clear();
             m_InputLabel.text = "";
+            ClearSuggestion();
         }
 
         public void Tick()
@@ -300,6 +448,8 @@ namespace GDX.Developer
 
             m_InputBuilder.Append(inputCharacter);
             m_InputLabel.text = m_InputBuilder.ToString();
+
+            ResetSuggestion();
         }
     }
 #endif // UNITY_2022_2_OR_NEWER

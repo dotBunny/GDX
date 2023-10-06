@@ -15,7 +15,7 @@ namespace GDX.Developer.ConsoleVariables
         public IntegerConsoleVariable(string name, string description, int defaultValue,
             ConsoleVariableFlags flags = ConsoleVariableFlags.None) : base(name, description, flags)
         {
-            if (Console.TryGetVariableSettingsValue(name, out string settingsValue) && int.TryParse(settingsValue, out int newDefaultValue))
+            if (ConsoleVariableSettings.TryGetValue(name, out string settingsValue) && int.TryParse(settingsValue, out int newDefaultValue))
             {
                 m_DefaultValue = newDefaultValue;
             }

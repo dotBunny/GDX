@@ -40,7 +40,7 @@ namespace GDX.Developer
 
         public abstract string GetHelpMessage();
 
-        public virtual string GetArgumentAutoComplete(string hint, int offset)
+        public virtual string[] GetArgumentAutoCompleteSuggestions(string hint, string[] existingSet = null)
         {
             return null;
         }

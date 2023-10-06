@@ -16,7 +16,7 @@ namespace GDX.Developer.ConsoleVariables
         public FloatConsoleVariable(string name, string description, float defaultValue,
             ConsoleVariableFlags flags = ConsoleVariableFlags.None) : base(name, description, flags)
         {
-            if (Console.TryGetVariableSettingsValue(name, out string settingsValue) && float.TryParse(settingsValue, out float newDefaultValue))
+            if (ConsoleVariableSettings.TryGetValue(name, out string settingsValue) && float.TryParse(settingsValue, out float newDefaultValue))
             {
                 m_DefaultValue = newDefaultValue;
             }

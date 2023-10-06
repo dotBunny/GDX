@@ -49,7 +49,14 @@
     height: 100%;
     -unity-text-align: middle-left;
     margin-left: 2px;
+}
+
+#gdx-console-suggestion
+{
+    height: 100%;
+    -unity-text-align: middle-left;
     flex-grow: 1;
+    color: #7c7c9f;
 }
 
 #gdx-console-list

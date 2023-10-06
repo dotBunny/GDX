@@ -16,7 +16,7 @@ namespace GDX.Developer.ConsoleVariables
         public BooleanConsoleVariable(string name, string description, bool defaultValue,
             ConsoleVariableFlags flags = ConsoleVariableFlags.None) : base(name, description, flags)
         {
-            if (Console.TryGetVariableSettingsValue(name, out string settingsValue) && bool.TryParse(settingsValue, out bool newDefaultValue))
+            if (ConsoleVariableSettings.TryGetValue(name, out string settingsValue) && bool.TryParse(settingsValue, out bool newDefaultValue))
             {
                 m_DefaultValue = newDefaultValue;
             }

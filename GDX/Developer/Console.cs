@@ -39,11 +39,9 @@ namespace GDX.Developer
         static StringKeyDictionary<ConsoleVariableBase> s_ConsoleVariables =
             new StringKeyDictionary<ConsoleVariableBase>(
                 50);
-        static StringKeyDictionary<string> s_ConsoleVariablesSettings = new StringKeyDictionary<string>(50);
-        // We keep a list of the commands handy because of how frequently we need to iterate over them
         static readonly List<string> k_KnownCommandsList = new List<string>(50);
         static readonly List<string> k_KnownVariablesList = new List<string>(50);
-        static bool s_HasReadSettingsFile;
+        static int s_HintCacheLength = 0;
 
         public static int PreviousCommandCount => s_CommandHistory.Count;
 
@@ -54,6 +52,7 @@ namespace GDX.Developer
             {
                 s_KnownCommands.AddWithExpandCheck(keyword, command);
                 k_KnownCommandsList.Add(keyword);
+                s_HintCacheLength++;
             }
         }
 
@@ -64,6 +63,7 @@ namespace GDX.Developer
             {
                 s_ConsoleVariables.AddWithExpandCheck(name, variable);
                 k_KnownVariablesList.Add(name);
+                s_HintCacheLength++;
             }
         }
 
@@ -76,6 +76,17 @@ namespace GDX.Developer
         {
             k_KnownVariablesList.Remove(name);
             s_ConsoleVariables.TryRemove(name);
+            s_HintCacheLength--;
+        }
+
+        public static bool HasVariable(string name)
+        {
+            return k_KnownVariablesList.Contains(name);
+        }
+
+        public static int GetVariableCount()
+        {
+            return k_KnownVariablesList.Count;
         }
 
         public static void UnregisterCommand(ConsoleCommandBase command)
@@ -94,10 +105,69 @@ namespace GDX.Developer
             return s_AccessLevel;
         }
 
-        public static string GetAutoComplete(string hint, int offset)
+
+        static string[] FilterStartsWith(string filter, string[] set)
         {
-            // TODO: Auto?
-            return null;
+            int count = set.Length;
+            SimpleList<string> possible = new SimpleList<string>(count);
+            for (int i = 0; i < count; i++)
+            {
+                string evalString = set[i];
+                if (evalString.StartsWith(filter))
+                {
+                    possible.AddUnchecked(evalString);
+                }
+            }
+            possible.Compact();
+            return possible.Array;
+        }
+
+        static string[] FilterContains(string filter, string[] set)
+        {
+            int count = set.Length;
+            SimpleList<string> possible = new SimpleList<string>(count);
+            for (int i = 0; i < count; i++)
+            {
+                string evalString = set[i];
+                if (evalString.Contains(filter))
+                {
+                    possible.AddUnchecked(evalString);
+                }
+            }
+            possible.Compact();
+            return possible.Array;
+        }
+
+
+        public static string[] GetCommandAutoCompleteSuggestions(string hint, string[] existingSet = null)
+        {
+            if (existingSet != null)
+            {
+                return FilterStartsWith(hint, existingSet);
+            }
+
+            SimpleList<string> possibleCommands = new SimpleList<string>(s_HintCacheLength);
+            int commandCount = k_KnownCommandsList.Count;
+            for (int i = 0; i < commandCount; i++)
+            {
+                string evalString = k_KnownCommandsList[i];
+                if (evalString.StartsWith(hint))
+                {
+                    possibleCommands.AddUnchecked(evalString);
+                }
+            }
+
+            int variableCount = k_KnownVariablesList.Count;
+            for (int i = 0; i < variableCount; i++)
+            {
+                string evalString = k_KnownVariablesList[i];
+                if (evalString.StartsWith(hint))
+                {
+                    possibleCommands.AddUnchecked(evalString);
+                }
+            }
+            possibleCommands.Compact();
+            return possibleCommands.Array;
         }
 
         public static ConsoleCommandBase GetCommand(string keyword)
@@ -243,25 +313,6 @@ namespace GDX.Developer
             }
         }
 
-        static string GetConsoleVariableSaveFile()
-        {
-            return System.IO.Path.Combine(Platform.GetOutputFolder(), "settings.gdx");
-        }
-
-        public static void SaveConsoleVariables()
-        {
-            int count = k_KnownVariablesList.Count;
-            GDX.Developer.TextGenerator textGenerator = new TextGenerator();
-            for (int i = 0; i < count; i++)
-            {
-                ConsoleVariableBase variable = s_ConsoleVariables[k_KnownVariablesList[i]];
-                if (variable.GetFlags().HasFlags(ConsoleVariableBase.ConsoleVariableFlags.Setting))
-                {
-
-                }
-            }
-        }
-
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
 #endif
@@ -295,55 +346,7 @@ namespace GDX.Developer
             PlayerConnection.instance.Register(ConsoleCommandBase.PlayerConnectionGuid,
                 args => QueueCommand(Encoding.UTF8.GetString(args.data)));
 
-            UpdateFromSettingsFile();
-        }
-
-
-
-        public static bool TryGetVariableSettingsValue(string name, out string foundValue)
-        {
-            if (!s_HasReadSettingsFile)
-            {
-                UpdateFromSettingsFile();
-                s_HasReadSettingsFile = true;
-            }
-
-            if (s_ConsoleVariablesSettings.ContainsKey(name))
-            {
-                foundValue = s_ConsoleVariablesSettings[name];
-                return true;
-            }
-
-            foundValue = null;
-            return false;
-        }
-        static void UpdateFromSettingsFile()
-        {
-            // Read in the settings from the cvars saved file
-            string settingsFile = GetConsoleVariableSaveFile();
-            if (File.Exists(settingsFile))
-            {
-                string[] lines = File.ReadAllLines(settingsFile);
-                int lineCount = lines.Length;
-                for (int i = 0; i < lineCount; i++)
-                {
-                    string line = lines[i].Trim();
-                    if (line[0] == '#') // Skip comments
-                    {
-                        continue;
-                    }
-
-                    string[] split = line.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
-                    if (!s_ConsoleVariablesSettings.ContainsKey(split[0]))
-                    {
-                        s_ConsoleVariablesSettings.AddWithExpandCheck(split[0], split[1]);
-                    }
-                    else
-                    {
-                        s_ConsoleVariablesSettings[split[0]] = split[1];
-                    }
-                }
-            }
+            ConsoleVariableSettings.UpdateFromFile();
         }
     }
 #endif // UNITY_2022_2_OR_NEWER

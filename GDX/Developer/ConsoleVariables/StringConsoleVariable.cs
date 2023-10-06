@@ -15,7 +15,7 @@ namespace GDX.Developer.ConsoleVariables
         public StringConsoleVariable(string name, string description, string defaultValue,
             ConsoleVariableFlags flags = ConsoleVariableFlags.None) : base(name, description, flags)
         {
-            m_DefaultValue = Console.TryGetVariableSettingsValue(name, out string settingsValue) ? settingsValue : defaultValue;
+            m_DefaultValue = ConsoleVariableSettings.TryGetValue(name, out string settingsValue) ? settingsValue : defaultValue;
             m_CurrentValue = CommandLineParser.Arguments.ContainsKey(name) ? CommandLineParser.Arguments[name] : defaultValue;
         }
 

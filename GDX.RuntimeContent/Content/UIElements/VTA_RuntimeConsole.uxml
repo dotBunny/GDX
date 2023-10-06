@@ -8,6 +8,7 @@
         <ui:VisualElement name="gdx-console-bar">
             <ui:Label text="$" name="gdx-console-caret" enable-rich-text="false" />
             <ui:Label name="gdx-console-input" enable-rich-text="false" />
+            <ui:Label name="gdx-console-suggestion" enable-rich-text="false" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

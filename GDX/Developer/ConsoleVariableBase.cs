@@ -53,6 +53,13 @@ namespace GDX.Developer
             Console.RegisterVariable(this);
         }
 
+        public virtual string[] GetArgumentAutoCompleteSuggestions(string hint, string[] existingSet = null)
+        {
+            string defaultValue = GetDefaultValueAsString();
+            if (hint == defaultValue) return null;
+            return new string[] { defaultValue };
+        }
+
         public string GetName()
         {
             return m_Name;

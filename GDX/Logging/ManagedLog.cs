@@ -137,11 +137,6 @@ namespace GDX.Logging
             return s_LongestCategoryCount;
         }
 
-        public static int GetLongestCategoryLength()
-        {
-            return s_LongestCategoryLength;
-        }
-
         /// <summary>
         ///     Unregisters a category identifier.
         /// </summary>
