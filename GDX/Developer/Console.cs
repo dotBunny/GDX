@@ -8,7 +8,6 @@ using System.IO;
 using System.Text;
 using GDX.Collections.Generic;
 using GDX.Developer.ConsoleCommands;
-using GDX.Developer.ConsoleVariables;
 using GDX.Logging;
 using UnityEditor;
 using UnityEngine;

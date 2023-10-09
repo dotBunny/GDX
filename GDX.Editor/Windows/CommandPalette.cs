@@ -36,8 +36,10 @@ namespace GDX.Editor.Windows
         static CommandPalette s_Instance;
         static ConsoleTarget s_Target = ConsoleTarget.Local;
 
+
         bool m_IsBound;
         TextField m_TextField;
+        Label m_Suggestion;
 
         [Shortcut("GDX/Command Palette", null, KeyCode.BackQuote, ShortcutModifiers.Control)]
         public static void Open()
@@ -85,6 +87,26 @@ namespace GDX.Editor.Windows
                 },
                 text = ">"
             };
+            m_Suggestion = new Label
+            {
+                name = "gdx-command-palette-suggestion",
+                style =
+                {
+                    height = k_OneHundredPercent,
+                    flexGrow = 1,
+                    fontSize = k_FontSize,
+                    borderBottomWidth = k_NoPixel,
+                    borderLeftWidth = k_NoPixel,
+                    borderRightWidth = k_NoPixel,
+                    borderTopWidth = k_NoPixel,
+                    marginLeft = -5,
+                    marginRight = k_ZeroLength,
+                    marginTop = k_ZeroLength,
+                    marginBottom = k_ZeroLength,
+                    color = new StyleColor(new Color(0.4862745098039216f, 0.4862745098039216f, 0.6235294117647059f)),
+                },
+                text = ""
+            };
 
             TextField input = new TextField
             {
@@ -117,6 +139,8 @@ namespace GDX.Editor.Windows
             }
 
             input[0].Insert(0, prefix);
+            input[0].Add(m_Suggestion);
+            input.Q<TextElement>("").style.flexGrow = 0;
             rootVisualElement.Add(input);
 
             m_TextField = rootVisualElement.Q<TextField>("gdx-command-palette-input");
@@ -132,21 +156,43 @@ namespace GDX.Editor.Windows
         {
             switch (evt.keyCode)
             {
+                case KeyCode.Tab:
+                    m_Suggestion.text = ConsoleAutoCompleteProvider.UpdateSuggestion(m_TextField.text)
+                        ? ConsoleAutoCompleteProvider.GetCurrentSuggestion()
+                        : string.Empty;
+                    break;
                 case KeyCode.Escape:
                     DelayedClose();
                     break;
+                case KeyCode.Backspace:
+                    if (m_TextField.text.Length >= 1 && m_Suggestion.text != string.Empty)
+                    {
+                        ConsoleAutoCompleteProvider.Reset();
+                        m_Suggestion.text = ConsoleAutoCompleteProvider.UpdateSuggestion(m_TextField.text)
+                            ? ConsoleAutoCompleteProvider.GetCurrentSuggestion()
+                            : string.Empty;
+                    }
+                    break;
                 case KeyCode.Return:
                 case KeyCode.KeypadEnter:
-                    if (s_Target == ConsoleTarget.PlayerConnection)
+                    if (m_Suggestion.text != string.Empty)
                     {
-                        EditorConnection.instance.Send(ConsoleCommandBase.PlayerConnectionGuid, Encoding.UTF8.GetBytes(m_TextField.text));
+                        m_TextField.SetValueWithoutNotify($"{m_TextField.text}{m_Suggestion.text}");
                     }
                     else
                     {
-                        Developer.Console.QueueCommand(m_TextField.text);
+                        if (s_Target == ConsoleTarget.PlayerConnection)
+                        {
+                            EditorConnection.instance.Send(ConsoleCommandBase.PlayerConnectionGuid, Encoding.UTF8.GetBytes(m_TextField.text));
+                        }
+                        else
+                        {
+                            Developer.Console.QueueCommand(m_TextField.text);
+                        }
+                        DelayedClose();
                     }
-
-                    DelayedClose();
+                    ConsoleAutoCompleteProvider.Reset();
+                    m_Suggestion.text = string.Empty;
                     break;
             }
         }

@@ -6,6 +6,7 @@ using System;
 
 namespace GDX.Developer
 {
+#if UNITY_2022_2_OR_NEWER
     public abstract class ConsoleVariableBase
     {
         public enum ConsoleVariableType
@@ -75,4 +76,5 @@ namespace GDX.Developer
             return m_Flags;
         }
     }
+#endif // UNITY_2022_2_OR_NEWER
 }

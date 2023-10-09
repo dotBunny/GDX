@@ -2,6 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using GDX.Collections.Generic;
 using GDX.Logging;
 using UnityEngine.SceneManagement;
 
@@ -15,7 +16,7 @@ namespace GDX.Developer.ConsoleCommands
         /// <inheritdoc />
         public override bool Evaluate(float deltaTime)
         {
-            SceneManager.LoadSceneAsync(m_TargetScene.buildIndex);
+            SceneManager.LoadSceneAsync(m_TargetScene.buildIndex, LoadSceneMode.Single);
             return true;
         }
 
@@ -59,6 +60,38 @@ namespace GDX.Developer.ConsoleCommands
 
             ManagedLog.Warning(LogCategory.DEFAULT, $"Unable to find scene '{context}'.");
             return null;
+        }
+
+        /// <inheritdoc />
+        public override string[] GetArgumentAutoCompleteSuggestions(string hint, string[] existingSet = null)
+        {
+            int sceneCount = SceneManager.sceneCountInBuildSettings;
+            SimpleList<string> potentialScenes = new SimpleList<string>(sceneCount);
+            if (string.IsNullOrEmpty(hint))
+            {
+                for (int i = 0; i < sceneCount; i++)
+                {
+                    Scene scene = SceneManager.GetSceneByBuildIndex(i);
+                    if (scene.IsValid())
+                    {
+                        potentialScenes.AddUnchecked(scene.name);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < sceneCount; i++)
+                {
+                    Scene scene = SceneManager.GetSceneByBuildIndex(i);
+                    if (scene.IsValid() && scene.name.StartsWith(hint))
+                    {
+                        potentialScenes.AddUnchecked(scene.name);
+                    }
+                }
+            }
+
+            potentialScenes.Compact();
+            return potentialScenes.Array;
         }
     }
 #endif // UNITY_2022_2_OR_NEWER

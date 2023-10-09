@@ -31,17 +31,11 @@ namespace GDX.Developer
         readonly Label m_SuggestionLabel;
         readonly VisualElement m_ConsoleBarElement;
 
-
-
         int m_CommandBufferOffset = -1;
 
         uint m_CurrentVersion;
         bool m_IsSubscribedToEvents;
         VisualElement m_RootElement;
-
-
-
-
 
         int m_FontSize = 14;
         float m_FontSizeMultiplier = 1f;
@@ -187,7 +181,6 @@ namespace GDX.Developer
         {
             if (m_SuggestionLabel.text != string.Empty)
             {
-
                 m_InputBuilder.Append(m_SuggestionLabel.text);
                 m_InputLabel.text = m_InputBuilder.ToString();
             }
@@ -195,7 +188,6 @@ namespace GDX.Developer
             {
                 Console.QueueCommand(m_InputLabel.text);
                 m_CommandBufferOffset = -1;
-                m_AutoCompleteOffset = 0;
                 m_InputLabel.text = "";
                 m_InputBuilder.Clear();
                 m_InputLabel.text = m_InputBuilder.ToString();
@@ -219,103 +211,27 @@ namespace GDX.Developer
             }
         }
 
-
-        int m_AutoCompleteOffset = 0;
-        string[] m_AutoCompleteSuggestions = null;
-
-
 #if GDX_INPUT
         public void OnInputAutocomplete(InputAction.CallbackContext obj)
 #else
         public void OnInputAutocomplete()
 #endif
         {
-            string[] split = m_InputLabel.text.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
-            if (split == null || split.Length == 0)
-            {
-                ClearSuggestion();
-                return;
-            }
-
-            // Check if we have a command
-            ConsoleCommandBase command = Console.GetCommand(split[0]);
-            if (command != null)
-            {
-                m_AutoCompleteSuggestions =
-                    command.GetArgumentAutoCompleteSuggestions(split.Length == 2 ? split[1] : null,
-                        m_AutoCompleteSuggestions);
-
-                if (m_AutoCompleteSuggestions == null || m_AutoCompleteSuggestions.Length == 0)
-                {
-                    ClearSuggestion();
-                }
-                else
-                {
-                    m_SuggestionLabel.text = $" {m_AutoCompleteSuggestions[m_AutoCompleteOffset]}";
-                    m_AutoCompleteOffset++;
-                    if (m_AutoCompleteOffset >= m_AutoCompleteSuggestions.Length)
-                    {
-                        m_AutoCompleteOffset = 0;
-                    }
-                }
-                return;
-            }
-
-            // Variable Search
-            ConsoleVariableBase variable = Console.GetVariable(split[0]);
-            if (variable != null)
-            {
-                m_AutoCompleteSuggestions =
-                    variable.GetArgumentAutoCompleteSuggestions(split.Length == 2 ? split[1] : null,
-                        m_AutoCompleteSuggestions);
-
-                if (m_AutoCompleteSuggestions == null || m_AutoCompleteSuggestions.Length == 0)
-                {
-                    ClearSuggestion();
-                }
-                else
-                {
-                    m_SuggestionLabel.text = $" {m_AutoCompleteSuggestions[m_AutoCompleteOffset]}";
-                    m_AutoCompleteOffset++;
-                    if (m_AutoCompleteOffset >= m_AutoCompleteSuggestions.Length)
-                    {
-                        m_AutoCompleteOffset = 0;
-                    }
-                }
-                return;
-            }
-
-            // Wide Search
-            m_AutoCompleteSuggestions = Console.GetCommandAutoCompleteSuggestions(split[0], m_AutoCompleteSuggestions);
-            if (m_AutoCompleteSuggestions == null || m_AutoCompleteSuggestions.Length == 0)
-            {
-                m_SuggestionLabel.text = string.Empty;
-                m_AutoCompleteOffset = 0;
-            }
-            else
-            {
-                // TODO : if you have a bad command and a space and a var it will get here and implode on auto
-                m_SuggestionLabel.text = m_AutoCompleteSuggestions[m_AutoCompleteOffset].Substring(m_InputLabel.text.Length);
-                m_AutoCompleteOffset++;
-                if (m_AutoCompleteOffset >= m_AutoCompleteSuggestions.Length)
-                {
-                    m_AutoCompleteOffset = 0;
-                }
-            }
+            m_SuggestionLabel.text = ConsoleAutoCompleteProvider.UpdateSuggestion(m_InputLabel.text)
+                ? ConsoleAutoCompleteProvider.GetCurrentSuggestion()
+                : string.Empty;
         }
 
         void ClearSuggestion()
         {
             m_SuggestionLabel.text = string.Empty;
-            m_AutoCompleteOffset = 0;
-            m_AutoCompleteSuggestions = null;
+            ConsoleAutoCompleteProvider.Reset();
         }
         void ResetSuggestion()
         {
             if (m_SuggestionLabel.text != string.Empty)
             {
-                m_AutoCompleteSuggestions = null;
-                m_AutoCompleteOffset = 0;
+                ConsoleAutoCompleteProvider.Reset();
 #if GDX_INPUT
                 OnInputAutocomplete(new InputAction.CallbackContext());
 #else

@@ -301,7 +301,11 @@ namespace GDX.Editor.Windows.DataTables
             // Create MultiColumnListView
             m_MultiColumnListView = new MultiColumnListView(m_TableViewColumns)
             {
+#if UNITY_2023_3_OR_NEWER
+                sortingMode = ColumnSortingMode.Custom,
+#else
                 sortingEnabled = true,
+#endif
                 name = "gdx-table-view",
                 selectionType = SelectionType.Single,
                 itemsSource = m_RowDescriptions,
