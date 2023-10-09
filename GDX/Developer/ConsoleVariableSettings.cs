@@ -8,6 +8,7 @@ using GDX.Collections.Generic;
 
 namespace GDX.Developer
 {
+#if UNITY_2022_2_OR_NEWER
     public static class ConsoleVariableSettings
     {
         static StringKeyDictionary<string> s_ParsedValues = new StringKeyDictionary<string>(50);
@@ -95,4 +96,5 @@ namespace GDX.Developer
             return Path.Combine(Platform.GetOutputFolder(), "cvars.gdx");
         }
     }
+#endif // UNITY_2022_2_OR_NEWER
 }
