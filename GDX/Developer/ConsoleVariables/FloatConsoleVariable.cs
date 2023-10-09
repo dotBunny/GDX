@@ -7,9 +7,9 @@ using System.Globalization;
 
 namespace GDX.Developer.ConsoleVariables
 {
+#if UNITY_2022_2_OR_NEWER
     public class FloatConsoleVariable : ConsoleVariableBase
     {
-#if UNITY_2022_2_OR_NEWER
         public Action<float> OnValueChanged;
         readonly float m_DefaultValue;
         float m_CurrentValue;
