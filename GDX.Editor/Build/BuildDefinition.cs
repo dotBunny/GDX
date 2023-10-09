@@ -13,6 +13,8 @@ namespace GDX.Editor.Build
         public ScriptingImplementation Backend;
         public string ExecutableName;
         public BuildPlayerOptions PlayerOptions;
+
+        /// <remarks>Only supported in Unity 2021+</remarks>
         public BuildConfiguration.FolderMapping[] Mappings;
 
         public BuildDefinition(string folderName, string executableName)

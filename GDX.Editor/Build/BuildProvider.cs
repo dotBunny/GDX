@@ -130,6 +130,7 @@ namespace GDX.Editor.Build
             finally
             {
                 // Copy our overlays into the build
+#if UNITY_2021_3_OR_NEWER
                 if (!buildFailed)
                 {
                     int count = definition.Mappings.Length;
@@ -159,6 +160,7 @@ namespace GDX.Editor.Build
                         }
                     }
                 }
+#endif // UNITY_2021_3_OR_NEWER
 
                 if (shouldRestoreScriptingImplementation && BuildEnvironment.ShouldRevertChanges())
                 {
