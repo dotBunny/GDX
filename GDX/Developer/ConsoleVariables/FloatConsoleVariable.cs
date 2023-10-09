@@ -9,6 +9,7 @@ namespace GDX.Developer.ConsoleVariables
 {
     public class FloatConsoleVariable : ConsoleVariableBase
     {
+#if UNITY_2022_2_OR_NEWER
         public Action<float> OnValueChanged;
         readonly float m_DefaultValue;
         float m_CurrentValue;
@@ -79,4 +80,5 @@ namespace GDX.Developer.ConsoleVariables
             OnValueChanged?.Invoke(m_CurrentValue);
         }
     }
+#endif // UNITY_2022_2_OR_NEWER
 }

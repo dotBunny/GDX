@@ -6,6 +6,7 @@ using System;
 
 namespace GDX.Developer.ConsoleVariables
 {
+#if UNITY_2022_2_OR_NEWER
     public class IntegerConsoleVariable : ConsoleVariableBase
     {
         public Action<int> OnValueChanged;
@@ -78,4 +79,5 @@ namespace GDX.Developer.ConsoleVariables
             OnValueChanged?.Invoke(m_CurrentValue);
         }
     }
+#endif // UNITY_2022_2_OR_NEWER
 }
