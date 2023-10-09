@@ -51,7 +51,7 @@ namespace GDX.Logging
             Profiler.BeginSample("ManagedLog_Simple_WithOutput");
                 Measure.Method(() =>
                 {
-                    ManagedLog.Info(LogCategory.Test, LogTestMessage);
+                    ManagedLog.Info(LogCategory.TEST, LogTestMessage);
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -59,7 +59,7 @@ namespace GDX.Logging
                 .Run();
             Measure.Method(() =>
                 {
-                    ManagedLog.Warning(LogCategory.Test, LogTestMessage);
+                    ManagedLog.Warning(LogCategory.TEST, LogTestMessage);
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -72,10 +72,10 @@ namespace GDX.Logging
         [Category(Core.PerformanceCategory)]
         public void ManagedLog_Simple_NoOutput()
         {
-            ManagedLog.SetUnityOutput(LogCategory.Test, false);
+            ManagedLog.SetUnityOutput(LogCategory.TEST, false);
             Measure.Method(() =>
                 {
-                    ManagedLog.Info(LogCategory.Test, LogTestMessage);
+                    ManagedLog.Info(LogCategory.TEST, LogTestMessage);
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
@@ -83,13 +83,13 @@ namespace GDX.Logging
                 .Run();
             Measure.Method(() =>
                 {
-                    ManagedLog.Warning(LogCategory.Test, LogTestMessage);
+                    ManagedLog.Warning(LogCategory.TEST, LogTestMessage);
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
                 .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_WarningGroup)
                 .Run();
-            ManagedLog.SetUnityOutput(LogCategory.Test, true);
+            ManagedLog.SetUnityOutput(LogCategory.TEST, true);
         }
     }
 }

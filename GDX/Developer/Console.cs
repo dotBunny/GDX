@@ -16,8 +16,6 @@ using UnityEngine.Networking.PlayerConnection;
 namespace GDX.Developer
 {
 #if UNITY_2022_2_OR_NEWER
-    // TODO: Hint system?
-    // TOOD: CVars
     // TODO: Watches
 
     public static class Console
