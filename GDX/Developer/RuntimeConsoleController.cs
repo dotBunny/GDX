@@ -80,31 +80,16 @@ namespace GDX.Developer
             m_ConsoleListView.Rebuild();
         }
 
-#if GDX_INPUT
-        public void OnInputVerticalScroll(InputAction.CallbackContext obj)
+        public void OnInputVerticalScroll(float delta)
         {
             m_ConsoleScrollView.Focus();
             m_ConsoleScrollView.scrollOffset =
                 new Vector2(
                     m_ConsoleScrollView.scrollOffset.x,
-                    m_ConsoleScrollView.scrollOffset.y - obj.ReadValue<float>() * 10f);
+                    m_ConsoleScrollView.scrollOffset.y - delta * 10f);
         }
-#else
-        public void OnInputVerticalScroll(float value)
-        {
-            m_ConsoleScrollView.Focus();
-            m_ConsoleScrollView.scrollOffset =
-                new Vector2(
-                    m_ConsoleScrollView.scrollOffset.x,
-                    m_ConsoleScrollView.scrollOffset.y - value * 10f);
-        }
-#endif
 
-#if GDX_INPUT
-        public void OnInputUp(InputAction.CallbackContext obj)
-#else
         public void OnInputUp()
-#endif
         {
             int bufferCount = Console.PreviousCommandCount;
             if (bufferCount <= 0)
@@ -127,11 +112,7 @@ namespace GDX.Developer
             ClearSuggestion();
         }
 
-#if GDX_INPUT
-        public void OnInputDown(InputAction.CallbackContext obj)
-#else
         public void OnInputDown()
-#endif
         {
 
             int bufferCount = Console.PreviousCommandCount;
@@ -156,28 +137,17 @@ namespace GDX.Developer
             m_InputLabel.text = m_InputBuilder.ToString();
         }
 
-#if GDX_INPUT
-        public void OnInputLeft(InputAction.CallbackContext obj)
-#else
+
         public void OnInputLeft()
-#endif
         {
         }
 
-#if GDX_INPUT
-        public void OnInputRight(InputAction.CallbackContext obj)
-#else
         public void OnInputRight()
-#endif
         {
 
         }
 
-#if GDX_INPUT
-        public void OnInputSubmit(InputAction.CallbackContext obj)
-#else
         public void OnInputSubmit()
-#endif
         {
             if (m_SuggestionLabel.text != string.Empty)
             {
@@ -195,11 +165,7 @@ namespace GDX.Developer
             ClearSuggestion();
         }
 
-#if GDX_INPUT
-        public void OnInputBackspace(InputAction.CallbackContext obj)
-#else
         public void OnInputBackspace()
-#endif
         {
             if (m_InputBuilder.Length >= 1)
             {
@@ -211,11 +177,7 @@ namespace GDX.Developer
             }
         }
 
-#if GDX_INPUT
-        public void OnInputAutocomplete(InputAction.CallbackContext obj)
-#else
         public void OnInputAutocomplete()
-#endif
         {
             m_SuggestionLabel.text = ConsoleAutoCompleteProvider.UpdateSuggestion(m_InputLabel.text)
                 ? ConsoleAutoCompleteProvider.GetCurrentSuggestion()
@@ -232,19 +194,11 @@ namespace GDX.Developer
             if (m_SuggestionLabel.text != string.Empty)
             {
                 ConsoleAutoCompleteProvider.Reset();
-#if GDX_INPUT
-                OnInputAutocomplete(new InputAction.CallbackContext());
-#else
                 OnInputAutocomplete();
-#endif
             }
         }
 
-#if GDX_INPUT
-        public void OnInputPageUp(InputAction.CallbackContext obj)
-#else
         public void OnInputPageUp()
-#endif
         {
             m_ConsoleScrollView.Focus();
             m_ConsoleScrollView.scrollOffset =
@@ -253,11 +207,8 @@ namespace GDX.Developer
                     m_ConsoleScrollView.scrollOffset.y + (m_ConsoleScrollView.horizontalPageSize * 100));
         }
 
-#if GDX_INPUT
-        public void OnInputPageDown(InputAction.CallbackContext obj)
-#else
+
         public void OnInputPageDown()
-#endif
         {
             m_ConsoleScrollView.Focus();
             m_ConsoleScrollView.scrollOffset =

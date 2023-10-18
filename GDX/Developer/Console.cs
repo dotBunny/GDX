@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using GDX.Collections.Generic;
@@ -36,6 +37,7 @@ namespace GDX.Developer
         static StringKeyDictionary<ConsoleVariableBase> s_ConsoleVariables =
             new StringKeyDictionary<ConsoleVariableBase>(
                 50);
+        static IntKeyDictionary<ConsoleWatch> s_ConsoleWatches = new IntKeyDictionary<ConsoleWatch>(50);
         static readonly List<string> k_KnownCommandsList = new List<string>(50);
         static readonly List<string> k_KnownVariablesList = new List<string>(50);
         static int s_HintCacheLength = 0;
@@ -56,13 +58,45 @@ namespace GDX.Developer
         public static void RegisterVariable(ConsoleVariableBase variable)
         {
             string name = variable.GetName();
-            if (!s_ConsoleVariables.ContainsKey(name))
+            if (s_ConsoleVariables.ContainsKey(name))
             {
-                s_ConsoleVariables.AddWithExpandCheck(name, variable);
-                k_KnownVariablesList.Add(name);
-                s_HintCacheLength++;
+                return;
             }
+
+            s_ConsoleVariables.AddWithExpandCheck(name, variable);
+            k_KnownVariablesList.Add(name);
+            s_HintCacheLength++;
         }
+
+        public static int RegisterWatch(string name, int value)
+        {
+            return RegisterWatch(name, value.ToString(CultureInfo.InvariantCulture));
+        }
+        public static int RegisterWatch(string name, float value)
+        {
+            return RegisterWatch(name, value.ToString(CultureInfo.InvariantCulture));
+        }
+
+        public static int RegisterWatch(string name, string value)
+        {
+            int hashCode = name.GetStableHashCode();
+
+            if (s_ConsoleWatches.ContainsKey(hashCode))
+            {
+                s_ConsoleWatches[hashCode].Update(value);
+            }
+            else
+            {
+                s_ConsoleWatches[hashCode] = new ConsoleWatch()
+                {
+                    DisplayText = name, DisplayValue = value, WatchID = hashCode
+                };
+            }
+            return hashCode;
+        }
+
+
+
 
         public static void UnregisterVariable(ConsoleVariableBase variable)
         {
@@ -74,6 +108,16 @@ namespace GDX.Developer
             k_KnownVariablesList.Remove(name);
             s_ConsoleVariables.TryRemove(name);
             s_HintCacheLength--;
+        }
+
+        public static void UnregisterWatch(string name)
+        {
+            UnregisterWatch(name.GetStableHashCode());
+        }
+
+        public static void UnregisterWatch(int identifier)
+        {
+            s_ConsoleWatches.TryRemove(identifier);
         }
 
         public static bool HasVariable(string name)
@@ -307,6 +351,30 @@ namespace GDX.Developer
                 }
 
                 k_CommandBuffer.Dequeue();
+            }
+        }
+
+        public static void UpdateWatch(int identifier, int value)
+        {
+            if (s_ConsoleWatches.TryGetValue(identifier, out ConsoleWatch watch))
+            {
+                watch.Update(value);
+            }
+        }
+
+        public static void UpdateWatch(int identifier, float value)
+        {
+            if (s_ConsoleWatches.TryGetValue(identifier, out ConsoleWatch watch))
+            {
+                watch.Update(value);
+            }
+        }
+
+        public static void UpdateWatch(int identifier, string value)
+        {
+            if (s_ConsoleWatches.TryGetValue(identifier, out ConsoleWatch watch))
+            {
+                watch.Update(value);
             }
         }
 
