@@ -1,12 +1,9 @@
 using System;
 using System.IO;
-using PlasticGui.WorkspaceWindow.Items;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using File = UnityEngine.Windows.File;
 
 namespace GDX.Editor.Build
 {
