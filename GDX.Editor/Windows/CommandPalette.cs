@@ -44,7 +44,7 @@ namespace GDX.Editor.Windows
         [Shortcut("GDX/Command Palette", null, KeyCode.BackQuote, ShortcutModifiers.Control)]
         public static void Open()
         {
-            if (Application.isPlaying || !Config.EnvironmentDeveloperConsole)
+            if ((Application.isPlaying && !EditorApplication.isPaused) || !Config.EnvironmentDeveloperConsole)
             {
                 return;
             }
