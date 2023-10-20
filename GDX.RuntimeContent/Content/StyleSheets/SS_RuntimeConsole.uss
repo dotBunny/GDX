@@ -2,6 +2,9 @@
 
 #gdx-console
 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
     height: 50%;
     width: 100%;
     background-color: rgba(27,29,32, 0.996);
