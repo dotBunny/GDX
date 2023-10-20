@@ -32,7 +32,7 @@ namespace GDX.Developer
                     textGenerator.AppendLine($"{variable.GetName()} {variable.GetCurrentValueAsString()}");
                 }
             }
-            File.WriteAllText(GetConsoleVariableSaveFile(), textGenerator.ToString());
+            File.WriteAllTextAsync(GetConsoleVariableSaveFile(), textGenerator.ToString());
         }
 
         public static bool TryGetValue(string name, out string foundValue)
