@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
 using GDX.Logging;
+using GDX.RuntimeContent;
 using UnityEngine;
 #if GDX_INPUT
 using UnityEngine.InputSystem;
@@ -44,10 +45,23 @@ namespace GDX.Developer
         StyleLength m_LevelWidth = new StyleLength(new Length(k_SourceLevelWidth, LengthUnit.Pixel));
         StyleLength m_CategoryWidth;
 
-        public RuntimeConsoleController(VisualElement rootElement, int initialFontSize)
+        public UIDocument Document { get; private set; }
+        public GameObject ConsoleGameObject { get; private set; }
+
+        public RuntimeConsoleController(GameObject parentGameObject, int initialFontSize)
         {
-            m_RootElement = rootElement.Q<VisualElement>("gdx-console");
-            m_ConsoleBarElement = rootElement.Q<VisualElement>("gdx-console-bar");
+            // UIDocuments do not allow multiple components per Game Object so we have to make a child object.
+            ConsoleGameObject = new GameObject("GDX_RuntimeConsole");
+            ConsoleGameObject.transform.SetParent(parentGameObject.transform, false);
+
+            // Create isolated UI document  (thanks Damian, boy do I feel stupid.)
+            Document = ConsoleGameObject.AddComponent<UIDocument>();
+            Document.sortingOrder = float.MaxValue; // Above all
+            Document.visualTreeAsset = ResourceProvider.GetUIElements().RuntimeConsole;
+
+            // Build out the required references
+            m_RootElement = Document.rootVisualElement.Q<VisualElement>("gdx-console");
+            m_ConsoleBarElement = m_RootElement.Q<VisualElement>("gdx-console-bar");
             m_InputLabel = m_ConsoleBarElement.Q<Label>("gdx-console-input");
             m_SuggestionLabel = m_ConsoleBarElement.Q<Label>("gdx-console-suggestion");
             m_InputCaret = m_ConsoleBarElement.Q<Label>("gdx-console-caret");
@@ -70,7 +84,7 @@ namespace GDX.Developer
             // Calculate our Category with based on the managed log longest
             m_TimestampWidth = new StyleLength(new Length(Mathf.RoundToInt(k_SourceTimestampWidth * m_FontSizeMultiplier)));
             m_LevelWidth = new StyleLength(new Length(Mathf.RoundToInt(k_SourceLevelWidth * m_FontSizeMultiplier)));
-            m_CategoryWidth = new StyleLength(new Length(Mathf.RoundToInt(ManagedLog.GetLongestCategoryLength() * (fontSize) / 1.5f), LengthUnit.Pixel));
+            m_CategoryWidth = new StyleLength(new Length(Mathf.RoundToInt(ManagedLog.GetLongestCategoryLength() * (fontSize) / 1.2f), LengthUnit.Pixel));
 
             m_ConsoleBarElement.style.height = fontSize + 10;
             m_InputCaret.style.fontSize = fontSize;
