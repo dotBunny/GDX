@@ -13,12 +13,15 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 #endif
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace GDX.Developer
 {
 #if UNITY_2022_2_OR_NEWER
     public class RuntimeConsoleController
     {
+        const string k_GameObjectName = "GDX_RuntimeConsole";
+
         // Maybe expose these for people messing with fonts
         const int k_SourceFontSize = 14;
         const int k_SourceTimestampWidth = 150;
@@ -50,8 +53,25 @@ namespace GDX.Developer
 
         public RuntimeConsoleController(GameObject parentGameObject, int initialFontSize)
         {
+#if UNITY_EDITOR
+
+            // Helps with domain reload, removes the old object, and recreates
+            if (parentGameObject.transform.childCount != 0)
+            {
+                int childCount = parentGameObject.transform.childCount;
+                for (int i = 0; i < childCount; i++)
+                {
+                    if (parentGameObject.transform.GetChild(i).gameObject.name == k_GameObjectName)
+                    {
+                        Object.Destroy(parentGameObject.transform.GetChild(i).gameObject);
+                        break;
+                    }
+                }
+            }
+#endif
+
             // UIDocuments do not allow multiple components per Game Object so we have to make a child object.
-            ConsoleGameObject = new GameObject("GDX_RuntimeConsole");
+            ConsoleGameObject = new GameObject(k_GameObjectName);
             ConsoleGameObject.transform.SetParent(parentGameObject.transform, false);
 
             // Create isolated UI document  (thanks Damian, boy do I feel stupid.)
