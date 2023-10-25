@@ -5,6 +5,8 @@
 using System.Collections.Generic;
 using GDX.Collections.Generic;
 using GDX.Logging;
+
+using UnityEngine.Device;
 using UnityEngine.SceneManagement;
 
 namespace GDX.Developer.ConsoleCommands
@@ -27,8 +29,16 @@ namespace GDX.Developer.ConsoleCommands
             }
             else if(!string.IsNullOrEmpty(m_EditorScenePath))
             {
-                UnityEditor.SceneManagement.EditorSceneManager.OpenScene(m_EditorScenePath,
-                    UnityEditor.SceneManagement.OpenSceneMode.Single);
+                if (UnityEditor.EditorApplication.isPlaying)
+                {
+                    UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(m_EditorScenePath,
+                        new LoadSceneParameters(LoadSceneMode.Single));
+                }
+                else
+                {
+                    UnityEditor.SceneManagement.EditorSceneManager.OpenScene(m_EditorScenePath,
+                        UnityEditor.SceneManagement.OpenSceneMode.Single);
+                }
             }
 #else
             SceneManager.LoadSceneAsync(m_TargetScene.buildIndex, LoadSceneMode.Single);
