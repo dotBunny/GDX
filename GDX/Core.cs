@@ -71,14 +71,21 @@ namespace GDX
             // Initialize a random provider
             Random = new WELL1024a((uint)StartTicks);
 
-            //DictionaryPrimes.SetDefaultPrimes();
-
             // ReSharper disable UnusedParameter.Local
+#if UNITY_EDITOR
             AppDomain.CurrentDomain.DomainUnload += (sender, args) =>
             {
-                Random.Dispose();
+                Dispose();
             };
+#else
+            Application.quitting += Dispose;
+#endif
             // ReSharper restore UnusedParameter.Local
+        }
+
+        static void Dispose()
+        {
+            Random.Dispose();
         }
 
         /// <summary>
