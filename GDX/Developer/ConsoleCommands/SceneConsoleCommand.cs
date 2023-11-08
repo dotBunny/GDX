@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using GDX.Collections.Generic;
 using GDX.Logging;
 
-using UnityEngine.Device;
 using UnityEngine.SceneManagement;
 
 namespace GDX.Developer.ConsoleCommands
