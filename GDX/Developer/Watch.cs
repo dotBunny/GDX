@@ -20,7 +20,11 @@ namespace GDX.Developer
         static int s_LongestDisplayText;
 
         public bool Enabled { get; set; }
+
         readonly string m_DisplayText;
+        string m_DisplayValue;
+        bool m_HasChangeThisPoll;
+
         readonly Func<string> m_GetValue;
 
         public Watch(string displayText, Func<string> getValue, bool enabled = true)
@@ -35,6 +39,33 @@ namespace GDX.Developer
                     s_LongestDisplayText = displayText.Length;
                 }
                 k_KnownWatches.Add(this);
+            }
+        }
+
+        public static void PollKnown()
+        {
+            lock (k_Lock)
+            {
+                int count = k_KnownWatches.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    Watch w = k_KnownWatches[i];
+
+                    // It's not turned on, so dont even bother
+                    if (!w.Enabled) continue;
+
+                    // Poll for our new value
+                    string newValue = w.m_GetValue();
+
+                    // Do we have an actual new value to update our UI with
+                    w.m_HasChangeThisPoll = (newValue != w.m_DisplayValue);
+
+                    // Only update the value if necessary
+                    if (w.m_HasChangeThisPoll)
+                    {
+                        w.m_DisplayValue = newValue;
+                    }
+                }
             }
         }
 
