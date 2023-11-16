@@ -37,12 +37,15 @@ namespace GDX.Developer
         static StringKeyDictionary<ConsoleVariableBase> s_ConsoleVariables =
             new StringKeyDictionary<ConsoleVariableBase>(
                 50);
-        static IntKeyDictionary<ConsoleWatch> s_ConsoleWatches = new IntKeyDictionary<ConsoleWatch>(50);
+
         static readonly List<string> k_KnownCommandsList = new List<string>(50);
         static readonly List<string> k_KnownVariablesList = new List<string>(50);
         static int s_HintCacheLength = 0;
 
         public static int PreviousCommandCount => s_CommandHistory.Count;
+
+        static Watch s_PreviousCommandCountWatch = new Watch("PreviousCommandCount",
+            () => PreviousCommandCount.ToString());
 
         public static void RegisterCommand(ConsoleCommandBase command)
         {
@@ -68,36 +71,6 @@ namespace GDX.Developer
             s_HintCacheLength++;
         }
 
-        public static int RegisterWatch(string name, int value)
-        {
-            return RegisterWatch(name, value.ToString(CultureInfo.InvariantCulture));
-        }
-        public static int RegisterWatch(string name, float value)
-        {
-            return RegisterWatch(name, value.ToString(CultureInfo.InvariantCulture));
-        }
-
-        public static int RegisterWatch(string name, string value)
-        {
-            int hashCode = name.GetStableHashCode();
-
-            if (s_ConsoleWatches.ContainsKey(hashCode))
-            {
-                s_ConsoleWatches[hashCode].Update(value);
-            }
-            else
-            {
-                s_ConsoleWatches[hashCode] = new ConsoleWatch()
-                {
-                    DisplayText = name, DisplayValue = value, WatchID = hashCode
-                };
-            }
-            return hashCode;
-        }
-
-
-
-
         public static void UnregisterVariable(ConsoleVariableBase variable)
         {
             UnregisterVariable(variable.GetName());
@@ -108,16 +81,6 @@ namespace GDX.Developer
             k_KnownVariablesList.Remove(name);
             s_ConsoleVariables.TryRemove(name);
             s_HintCacheLength--;
-        }
-
-        public static void UnregisterWatch(string name)
-        {
-            UnregisterWatch(name.GetStableHashCode());
-        }
-
-        public static void UnregisterWatch(int identifier)
-        {
-            s_ConsoleWatches.TryRemove(identifier);
         }
 
         public static bool HasVariable(string name)
@@ -351,30 +314,6 @@ namespace GDX.Developer
                 }
 
                 k_CommandBuffer.Dequeue();
-            }
-        }
-
-        public static void UpdateWatch(int identifier, int value)
-        {
-            if (s_ConsoleWatches.TryGetValue(identifier, out ConsoleWatch watch))
-            {
-                watch.Update(value);
-            }
-        }
-
-        public static void UpdateWatch(int identifier, float value)
-        {
-            if (s_ConsoleWatches.TryGetValue(identifier, out ConsoleWatch watch))
-            {
-                watch.Update(value);
-            }
-        }
-
-        public static void UpdateWatch(int identifier, string value)
-        {
-            if (s_ConsoleWatches.TryGetValue(identifier, out ConsoleWatch watch))
-            {
-                watch.Update(value);
             }
         }
 

@@ -10,7 +10,8 @@
     "Unity.VisualScripting.Core.Editor",
     "Unity.VisualScripting.Flow.Editor",
     "Unity.Build",
-    "Unity.Build.Classic"
+    "Unity.Build.Classic",
+    "GDX.RuntimeContent"
   ],
   "includePlatforms": [
     "Editor"
