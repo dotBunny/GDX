@@ -7,5 +7,6 @@ namespace GDX.RuntimeContent
     {
         public StyleSheet Base;
         public StyleSheet RuntimeConsole;
+        public StyleSheet Watches;
     }
 }

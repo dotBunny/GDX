@@ -15,31 +15,20 @@ namespace GDX.Developer
     /// </summary>
     public class Watch
     {
-        static readonly object k_Lock = new object();
+        public bool Enabled { get; private set; }
 
-        static readonly List<Watch> k_KnownWatches = new List<Watch>();
-        static readonly StringBuilder k_NamesBuilder = new StringBuilder();
-        static readonly StringBuilder k_ValuesBuilder = new StringBuilder();
-
-        static string s_CachedNames;
-        static bool s_CachedNamesDirty = true;
-
-        public bool Enabled { get; set; }
-
-        readonly string m_Name;
-        string m_Value;
+        internal readonly string Name;
+        internal string m_Value;
 
         readonly Func<string> m_GetValue;
 
         public Watch(string name, Func<string> getValue, bool enabled = true)
         {
-            m_Name = name;
+            Name = name;
             m_GetValue = getValue;
             Enabled = enabled;
-            lock (k_Lock)
-            {
-                k_KnownWatches.Add(this);
-            }
+            WatchProvider.Register(this);
+
         }
 
         public void SetState(bool enabled)
@@ -48,10 +37,10 @@ namespace GDX.Developer
             {
                 return;
             }
-
             Enabled = enabled;
-            s_CachedNamesDirty = true;
+            WatchProvider.SetDirty();
         }
+
         public void Poll()
         {
             // It's not turned on, so dont even bother
@@ -59,51 +48,6 @@ namespace GDX.Developer
 
             // Poll for our new value
             m_Value = m_GetValue();
-        }
-
-        public static void PollKnown()
-        {
-            lock (k_Lock)
-            {
-                int count = k_KnownWatches.Count;
-                for (int i = 0; i < count; i++)
-                {
-                    k_KnownWatches[i].Poll();
-                }
-            }
-        }
-
-        public static (string, string) GetColumns()
-        {
-            lock (k_Lock)
-            {
-                if (s_CachedNamesDirty)
-                {
-                    k_NamesBuilder.Clear();
-                }
-
-                k_ValuesBuilder.Clear();
-                int count = k_KnownWatches.Count;
-                for (int i = 0; i < count; i++)
-                {
-                    Watch watch = k_KnownWatches[i];
-                    if (!watch.Enabled) continue;
-                    if (s_CachedNamesDirty)
-                    {
-                        k_NamesBuilder.AppendLine(watch.m_Name);
-                    }
-
-                    k_ValuesBuilder.AppendLine(watch.m_Value);
-                }
-
-                if (s_CachedNamesDirty)
-                {
-                    s_CachedNames = k_NamesBuilder.ToString();
-                    s_CachedNamesDirty = false;
-                }
-
-                return (s_CachedNames, k_ValuesBuilder.ToString());
-            }
         }
     }
 #endif // UNITY_2022_2_OR_NEWER

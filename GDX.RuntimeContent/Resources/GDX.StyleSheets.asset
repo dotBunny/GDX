@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Base: {fileID: 7433441132597879392, guid: 2192fff7b3654711a52ba4dd38c2be11, type: 3}
   RuntimeConsole: {fileID: 7433441132597879392, guid: 6a920078dae78b045813f214b7d12e36, type: 3}
+  Watches: {fileID: 7433441132597879392, guid: 99c2d53b782d49c39e541be53044aa4b, type: 3}

@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bebf95bc15edbc46b9c49015826b4b4, type: 3}
   m_Name: GDX.UIElements
   m_EditorClassIdentifier: 
-  Console: {fileID: 9197481963319205126, guid: 10b88d2590894c6ea19f66c52bc7713c, type: 3}
+  RuntimeConsole: {fileID: 9197481963319205126, guid: 10b88d2590894c6ea19f66c52bc7713c, type: 3}
+  Watches: {fileID: 9197481963319205126, guid: f59a835e72f9474885485f0463e34036, type: 3}
