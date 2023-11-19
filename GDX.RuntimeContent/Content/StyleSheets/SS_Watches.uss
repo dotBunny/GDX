@@ -1,1 +1,38 @@
-﻿@import url("SS_GDX.uss");
+@import url('project://database/Packages/com.dotbunny.gdx/GDX.RuntimeContent/Content/StyleSheets/SS_GDX.uss?fileID=7433441132597879392&guid=2192fff7b3654711a52ba4dd38c2be11&type=3#SS_GDX');
+#gdx-watches {
+    position: absolute;
+    flex-shrink: 1;
+    flex-grow: 1;
+    background-color: rgb(27, 29, 32);
+    color: rgb(206, 209, 214);
+    border-width: 1px;
+    border-color: rgb(51, 55, 65);
+    border-radius: var(--corner-radius);
+}
+
+#gdx-watches.top-left {
+    top: 0;
+    left: 0;
+}
+
+#gdx-watches.top-right {
+    top: 0;
+    right: 0;
+}
+
+#gdx-watches.bottom-right {
+    bottom: 0;
+    right: 0;
+}
+
+#gdx-watches.bottom-left {
+    bottom: 0;
+    left: 0;
+}
+
+.gdx-watch {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    -unity-text-align: middle-left;
+    flex-direction: row;
+}

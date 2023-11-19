@@ -44,7 +44,7 @@ namespace GDX.Developer
 
         public static int PreviousCommandCount => s_CommandHistory.Count;
 
-        static Watch s_PreviousCommandCountWatch = new Watch("PreviousCommandCount",
+        static ValueWatch s_PreviousCommandCountWatch = new ValueWatch("PreviousCommandCount",
             () => PreviousCommandCount.ToString());
 
         public static void RegisterCommand(ConsoleCommandBase command)
