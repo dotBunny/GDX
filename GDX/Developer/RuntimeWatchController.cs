@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 
 namespace GDX.Developer
 {
-    public class WatchController
+    public class RuntimeWatchController
     {
         const string k_GameObjectName = "GDX_Watches";
 
@@ -19,7 +19,7 @@ namespace GDX.Developer
         ushort m_LastVersion;
         VisualElement m_RootElement;
 
-        public WatchController(GameObject parentGameObject, int initialFontSize)
+        public RuntimeWatchController(GameObject parentGameObject, int initialFontSize, int position)
         {
             // UIDocuments do not allow multiple components per Game Object so we have to make a child object.
             WatchesGameObject = new GameObject(k_GameObjectName);
@@ -31,11 +31,20 @@ namespace GDX.Developer
             Document.visualTreeAsset = ResourceProvider.GetUIElements().Watches;
 
             m_RootElement = Document.rootVisualElement.Q<VisualElement>("gdx-watches");
+
+            UpdateFontSize(initialFontSize);
+            UpdatePosition(position);
         }
 
         public void UpdateFontSize(int fontSize)
         {
             m_FontSize = fontSize;
+        }
+
+        public void UpdatePosition(int position)
+        {
+            Debug.Log("UPDATE POSITION" + position);
+            m_RootElement.ApplyAlignment((VisualElementStyles.Alignment)position);
         }
 
         public void Tick()
