@@ -17,9 +17,9 @@ namespace GDX.Developer
 
         int m_FontSize = 14;
         ushort m_LastVersion;
-        VisualElement m_RootElement;
+        readonly VisualElement m_RootElement;
 
-        public RuntimeWatchController(GameObject parentGameObject, int initialFontSize, int position)
+        public RuntimeWatchController(GameObject parentGameObject, int initialFontSize, int position, bool visible)
         {
             // UIDocuments do not allow multiple components per Game Object so we have to make a child object.
             WatchesGameObject = new GameObject(k_GameObjectName);
@@ -34,6 +34,7 @@ namespace GDX.Developer
 
             UpdateFontSize(initialFontSize);
             UpdatePosition(position);
+            UpdateShow(visible);
         }
 
         public void UpdateFontSize(int fontSize)
@@ -43,13 +44,23 @@ namespace GDX.Developer
 
         public void UpdatePosition(int position)
         {
-            Debug.Log("UPDATE POSITION" + position);
             m_RootElement.ApplyAlignment((VisualElementStyles.Alignment)position);
+        }
+
+        public void UpdateShow(bool show)
+        {
+            if (show)
+            {
+                m_RootElement.Show();
+            }
+            else
+            {
+                m_RootElement.Hide();
+            }
         }
 
         public void Tick()
         {
-
             WatchProvider.Poll();
 
             if (WatchProvider.Version != m_LastVersion)

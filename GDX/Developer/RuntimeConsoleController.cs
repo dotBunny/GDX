@@ -39,7 +39,7 @@ namespace GDX.Developer
 
         uint m_CurrentVersion;
         bool m_IsSubscribedToEvents;
-        VisualElement m_RootElement;
+        readonly VisualElement m_RootElement;
 
         int m_FontSize = 14;
         float m_FontSizeMultiplier = 1f;
