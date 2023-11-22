@@ -8,7 +8,7 @@ using GDX.Logging;
 namespace GDX.Developer.ConsoleCommands
 {
 #if UNITY_2022_2_OR_NEWER
-    public class ConsoleVariablesConsoleCommands : ConsoleCommandBase
+    public class ConsoleVariablesConsoleCommand : ConsoleCommandBase
     {
         /// <inheritdoc />
         public override bool Evaluate(float deltaTime)

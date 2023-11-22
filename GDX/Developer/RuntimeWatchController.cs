@@ -69,7 +69,7 @@ namespace GDX.Developer
             if (WatchProvider.Version != m_LastVersion)
             {
                 // We need to check that all of our elements are accounted for
-                VisualElement[] elements = WatchProvider.GetElements();
+                VisualElement[] elements = WatchProvider.GetActiveElements();
                 int elementCount = elements.Length;
 
                 // Clear from root

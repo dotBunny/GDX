@@ -9,9 +9,12 @@
     width: 100%;
     background-color: var(--background-99);
     color: var(--font-color);
-    border-width: 1px;
+    border-top-width: 0;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-right-width: 1px;
     border-color: var(--border-99);
-    border-radius: var(--corner-radius);
+    border-radius: 0 0 var(--corner-radius) var(--corner-radius);
 }
 
 #gdx-console > * {

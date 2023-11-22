@@ -336,7 +336,9 @@ namespace GDX.Developer
             RegisterCommand(new InputKeyPressConsoleCommand());
             RegisterCommand(new GarbageCollectionConsoleCommand());
             RegisterCommand(new BuildVerificationTestConsoleCommand());
-            RegisterCommand(new ConsoleVariablesConsoleCommands());
+            RegisterCommand(new ConsoleVariablesConsoleCommand());
+            RegisterCommand(new WatchesConsoleCommand());
+            RegisterCommand(new WatchConsoleCommand());
 
             // We are going to look at the arguments
             if (CommandLineParser.Arguments.ContainsKey("exec"))

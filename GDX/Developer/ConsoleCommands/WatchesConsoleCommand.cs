@@ -8,11 +8,40 @@ namespace GDX.Developer.ConsoleCommands
 {
     public class WatchesConsoleCommand : ConsoleCommandBase
     {
+        string m_Filter = null;
+
         public override bool Evaluate(float deltaTime)
         {
-			TextGenerator textGenerator = new TextGenerator();
+			TextGenerator enabledGenerator = new TextGenerator();
+            enabledGenerator.AppendLine("Enabled Watches");
 
-            ManagedLog.Info(LogCategory.DEFAULT, textGenerator.ToString());
+            TextGenerator disabledGenerator = new TextGenerator();
+            disabledGenerator.AppendLine("Disabled Watches");
+
+            bool isFiltering = !string.IsNullOrEmpty(m_Filter);
+
+            WatchProvider.WatchList watches = WatchProvider.GetWatchList();
+
+            for (int i = 0; i < watches.Count; i++)
+            {
+                if (isFiltering && !watches.Identfiers[i].Contains(m_Filter))
+                {
+                    continue;
+                }
+
+                if (watches.IsActive[i])
+                {
+                    enabledGenerator.AppendLine($"\t{watches.Identfiers[i]}");
+                    enabledGenerator.AppendLine($"\t\t{watches.DisplayNames[i]}");
+                }
+                else
+                {
+                    disabledGenerator.AppendLine($"\t{watches.Identfiers[i]}");
+                    disabledGenerator.AppendLine($"\t\t{watches.DisplayNames[i]}");
+                }
+            }
+            enabledGenerator.AppendLine(disabledGenerator.ToString());
+            ManagedLog.Info(LogCategory.DEFAULT, enabledGenerator.ToString());
             return true;
         }
 
@@ -23,9 +52,21 @@ namespace GDX.Developer.ConsoleCommands
         }
 
         /// <inheritdoc />
+        public override string GetHelpUsage()
+        {
+            return "watches <filter>";
+        }
+
+        /// <inheritdoc />
         public override string GetHelpMessage()
         {
-            return "Return a list of all registered watches.";
+            return "Return a list of all registered watches, with the ability to filter.";
+        }
+
+        /// <inheritdoc />
+        public override ConsoleCommandBase GetInstance(string context)
+        {
+            return new WatchesConsoleCommand { m_Filter = context };
         }
     }
 }

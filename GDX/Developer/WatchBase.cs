@@ -12,14 +12,18 @@ namespace GDX.Developer
     /// </summary>
     public abstract class WatchBase
     {
-        public readonly string Identifier;
+
+        public string Identifier { get; private set; }
+        public string BaseIdentifier { get; private set; }
+
         public readonly string DisplayName;
 
         public readonly VisualElement ContainerElement;
 
         protected WatchBase(string uniqueIdentifier, string displayName, bool enabled = true)
         {
-            Identifier = uniqueIdentifier;
+            BaseIdentifier = uniqueIdentifier;
+            Identifier = BaseIdentifier;
             DisplayName = displayName;
 
             ContainerElement = new VisualElement();
@@ -30,12 +34,18 @@ namespace GDX.Developer
 
         ~WatchBase()
         {
+            // We have to ensure when we become out of scope that we no longer registered
             WatchProvider.Unregister(this);
         }
 
         public VisualElement GetElement()
         {
             return ContainerElement;
+        }
+
+        public void SetOverrideIdentifier(uint index)
+        {
+            Identifier = $"{BaseIdentifier}.{index.ToString()}";
         }
 
         public abstract void Poll();
