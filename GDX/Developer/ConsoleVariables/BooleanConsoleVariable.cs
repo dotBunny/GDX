@@ -51,10 +51,8 @@ namespace GDX.Developer.ConsoleVariables
         /// <inheritdoc />
         public sealed override void SetValueFromString(string newValue)
         {
-            if (bool.TryParse(newValue, out m_CurrentValue))
-            {
-                OnValueChanged?.Invoke(m_CurrentValue);
-            }
+            m_CurrentValue = newValue.IsBooleanPositiveValue();
+            OnValueChanged?.Invoke(m_CurrentValue);
         }
 
         /// <inheritdoc />

@@ -7,10 +7,10 @@
     left: 0px;
     height: 50%;
     width: 100%;
-    background-color: rgba(27,29,32, 0.996);
-    color: rgb(206,209,214);
+    background-color: var(--background-99);
+    color: var(--font-color);
     border-width: 1px;
-    border-color: rgba(51,55,65,0.996);
+    border-color: var(--border-99);
     border-radius: var(--corner-radius);
 }
 

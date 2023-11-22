@@ -12,17 +12,20 @@ namespace GDX.Developer
     /// </summary>
     public abstract class WatchBase
     {
-        protected VisualElement m_ContainerElement;
-        protected bool m_Enabled;
+        public readonly string Identifier;
+        public readonly string DisplayName;
 
-        protected WatchBase(bool enabled = true)
+        public readonly VisualElement ContainerElement;
+
+        protected WatchBase(string uniqueIdentifier, string displayName, bool enabled = true)
         {
-            m_ContainerElement = new VisualElement();
-            m_ContainerElement.AddToClassList("gdx-watch");
+            Identifier = uniqueIdentifier;
+            DisplayName = displayName;
 
-            SetState(enabled);
+            ContainerElement = new VisualElement();
+            ContainerElement.AddToClassList("gdx-watch");
 
-            WatchProvider.Register(this);
+            WatchProvider.Register(this, enabled);
         }
 
         ~WatchBase()
@@ -30,15 +33,9 @@ namespace GDX.Developer
             WatchProvider.Unregister(this);
         }
 
-        public void SetState(bool enabled)
-        {
-            m_ContainerElement.style.display = enabled ? DisplayStyle.Flex : DisplayStyle.None;
-            m_Enabled = enabled;
-        }
-
         public VisualElement GetElement()
         {
-            return m_ContainerElement;
+            return ContainerElement;
         }
 
         public abstract void Poll();

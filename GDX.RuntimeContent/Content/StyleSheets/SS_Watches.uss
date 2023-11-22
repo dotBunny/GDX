@@ -3,31 +3,39 @@
     position: absolute;
     flex-shrink: 1;
     flex-grow: 1;
-    background-color: rgb(27, 29, 32);
-    color: rgb(206, 209, 214);
-    border-width: 1px;
-    border-color: rgb(51, 55, 65);
-    border-radius: var(--corner-radius);
+    background-color: var(--background-75);
+    color: var(--font-color);
+    border-color: var(--border-75);
+    border-radius: 0;
+    padding: 2px 5px;
 }
 
 #gdx-watches.top-left {
     top: 0;
     left: 0;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
 }
 
 #gdx-watches.top-right {
     top: 0;
     right: 0;
+    border-left-width: 1px;
+    border-bottom-width: 1px;
 }
 
 #gdx-watches.bottom-right {
     bottom: 0;
     right: 0;
+    border-left-width: 1px;
+    border-top-width: 1px;
 }
 
 #gdx-watches.bottom-left {
     bottom: 0;
     left: 0;
+    border-right-width: 1px;
+    border-top-width: 1px;
 }
 
 .gdx-watch {
@@ -35,4 +43,11 @@
     text-overflow: ellipsis;
     -unity-text-align: middle-left;
     flex-direction: row;
+}
+
+.gdx-watch-left {
+    -unity-text-align: middle-left;
+}
+.gdx-watch-right {
+    -unity-text-align: middle-right;
 }

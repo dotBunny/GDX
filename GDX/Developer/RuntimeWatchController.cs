@@ -2,12 +2,15 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+#if UNITY_2022_2_OR_NEWER
 using GDX.RuntimeContent;
 using UnityEngine;
 using UnityEngine.UIElements;
+#endif
 
 namespace GDX.Developer
 {
+#if UNITY_2022_2_OR_NEWER
     public class RuntimeWatchController
     {
         const string k_GameObjectName = "GDX_Watches";
@@ -80,4 +83,5 @@ namespace GDX.Developer
             }
         }
     }
+#endif // UNITY_2022_2_OR_NEWER
 }
