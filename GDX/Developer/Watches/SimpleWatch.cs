@@ -2,16 +2,18 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+#if UNITY_2022_2_OR_NEWER
+
 using System;
 using UnityEngine.UIElements;
 
 namespace GDX.Developer
 {
-#if UNITY_2022_2_OR_NEWER
+
     /// <summary>
     /// Thread-safe developer watch system.
     /// </summary>
-    public class ValueWatch : WatchBase
+    public class SimpleWatch : WatchBase
     {
         readonly Func<string> m_GetValue;
         int m_CachedHash;
@@ -19,7 +21,7 @@ namespace GDX.Developer
         readonly Label m_DisplayNameLabel;
         readonly Label m_ValueLabel;
 
-        public ValueWatch(string uniqueIdentifier, string displayName, Func<string> getValue, bool enabled = true) :
+        public SimpleWatch(string uniqueIdentifier, string displayName, Func<string> getValue, bool enabled = true) :
             base(uniqueIdentifier, displayName, enabled)
         {
             m_GetValue = getValue;
@@ -48,5 +50,6 @@ namespace GDX.Developer
             }
         }
     }
-#endif // UNITY_2022_2_OR_NEWER
 }
+
+#endif // UNITY_2022_2_OR_NEWER

@@ -12,6 +12,13 @@ namespace GDX.Developer
     /// </summary>
     public abstract class WatchBase
     {
+        public enum Sentiment
+        {
+            Default,
+            Good,
+            Warning,
+            Bad
+        }
 
         public string Identifier { get; private set; }
         public string BaseIdentifier { get; private set; }
