@@ -11,6 +11,8 @@ namespace GDX.Developer
 {
     public class IntegerWatch : WatchBase
     {
+        public delegate int GetValueCallback();
+
         readonly Func<int> m_GetValue;
         readonly Func<int, Sentiment> m_GetSentiment;
 
@@ -20,9 +22,12 @@ namespace GDX.Developer
         readonly Label m_DisplayNameLabel;
         readonly Label m_ValueLabel;
 
+
         public IntegerWatch(string uniqueIdentifier, string displayName, Func<int> getValue, Func<int, Sentiment> getSentiment, bool enabled = true) :
             base(uniqueIdentifier, displayName, enabled)
         {
+
+
             m_GetValue = getValue;
             m_GetSentiment = getSentiment;
 
@@ -31,6 +36,7 @@ namespace GDX.Developer
 
             m_ValueLabel = new Label();
             m_ValueLabel.AddToClassList("gdx-watch-right");
+            m_ValueLabel.AddToClassList("default");
 
             ContainerElement.Add(m_DisplayNameLabel);
             ContainerElement.Add(m_ValueLabel);
@@ -50,12 +56,28 @@ namespace GDX.Developer
                     switch (sentiment)
                     {
                         case Sentiment.Good:
+                            m_ValueLabel.RemoveFromClassList("warning");
+                            m_ValueLabel.RemoveFromClassList("bad");
+                            m_ValueLabel.RemoveFromClassList("default");
+                            m_ValueLabel.AddToClassList("good");
                             break;
                         case Sentiment.Warning:
+                            m_ValueLabel.RemoveFromClassList("good");
+                            m_ValueLabel.RemoveFromClassList("bad");
+                            m_ValueLabel.RemoveFromClassList("default");
+                            m_ValueLabel.AddToClassList("warning");
                             break;
                         case Sentiment.Bad:
+                            m_ValueLabel.RemoveFromClassList("good");
+                            m_ValueLabel.RemoveFromClassList("warning");
+                            m_ValueLabel.RemoveFromClassList("default");
+                            m_ValueLabel.AddToClassList("bad");
                             break;
                         default:
+                            m_ValueLabel.RemoveFromClassList("good");
+                            m_ValueLabel.RemoveFromClassList("warning");
+                            m_ValueLabel.RemoveFromClassList("bad");
+                            m_ValueLabel.AddToClassList("default");
                             break;
                     }
                     m_CachedSentiment = sentiment;

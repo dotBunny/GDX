@@ -50,4 +50,18 @@
 }
 .gdx-watch-right {
     -unity-text-align: middle-right;
+    flex-grow: 1;
+}
+
+.good {
+    color: var(--font-color-green);
+}
+.warning {
+    color: var(--font-color-yellow);
+}
+.bad{
+    color: var(--font-color-red);
+}
+.default {
+    color: var(--font-color-blue);
 }

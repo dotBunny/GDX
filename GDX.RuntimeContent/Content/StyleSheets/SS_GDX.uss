@@ -9,4 +9,8 @@
     --border-75: rgba(51,55,65,0.75);
 
     --font-color: rgb(206,209,214);
+    --font-color-red: rgb(255,0,0);
+    --font-color-green: rgb(0,255,0);
+    --font-color-yellow: rgb(255,255,0);
+    --font-color-blue: rgb(0,0,255);
 }
