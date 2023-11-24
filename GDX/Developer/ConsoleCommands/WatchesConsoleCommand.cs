@@ -6,6 +6,7 @@ using GDX.Logging;
 
 namespace GDX.Developer.ConsoleCommands
 {
+#if UNITY_2022_2_OR_NEWER
     public class WatchesConsoleCommand : ConsoleCommandBase
     {
         string m_Filter = null;
@@ -69,4 +70,5 @@ namespace GDX.Developer.ConsoleCommands
             return new WatchesConsoleCommand { m_Filter = context };
         }
     }
+#endif // UNITY_2022_2_OR_NEWER
 }
