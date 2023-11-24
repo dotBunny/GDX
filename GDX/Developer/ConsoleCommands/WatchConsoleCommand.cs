@@ -6,6 +6,7 @@ using GDX.Logging;
 
 namespace GDX.Developer.ConsoleCommands
 {
+#if UNITY_2022_2_OR_NEWER
     public class WatchConsoleCommand : ConsoleCommandBase
     {
         string m_Identifier;
@@ -48,4 +49,5 @@ namespace GDX.Developer.ConsoleCommands
             return new WatchConsoleCommand { m_Identifier = context };
         }
     }
+#endif // UNITY_2022_2_OR_NEWER
 }
