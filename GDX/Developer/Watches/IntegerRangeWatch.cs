@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 
 namespace GDX.Developer
 {
-    public class IntegerWatch : WatchBase
+    public class IntegerRangeWatch : WatchBase
     {
         readonly Func<int> m_GetValue;
         readonly Func<int, Sentiment> m_GetSentiment;
@@ -19,7 +19,7 @@ namespace GDX.Developer
 
         readonly Label m_ValueLabel;
 
-        public IntegerWatch(string uniqueIdentifier, string displayName, Func<int> getValue, Func<int, Sentiment> getSentiment, bool enabled = true) :
+        public IntegerRangeWatch(string uniqueIdentifier, string displayName, Func<int> getValue, Func<int, Sentiment> getSentiment, bool enabled = true) :
             base(uniqueIdentifier, displayName, enabled)
         {
             m_GetValue = getValue;

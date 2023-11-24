@@ -6,12 +6,11 @@
 
 using System;
 using Unity.Mathematics;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace GDX.Developer
 {
-    public class FloatWatch : WatchBase
+    public class FloatRangeWatch : WatchBase
     {
         readonly Func<float> m_GetValue;
         readonly Func<float, Sentiment> m_GetSentiment;
@@ -21,7 +20,7 @@ namespace GDX.Developer
 
         readonly Label m_ValueLabel;
 
-        public FloatWatch(string uniqueIdentifier, string displayName, Func<float> getValue, Func<float, Sentiment> getSentiment, bool enabled = true) :
+        public FloatRangeWatch(string uniqueIdentifier, string displayName, Func<float> getValue, Func<float, Sentiment> getSentiment, bool enabled = true) :
             base(uniqueIdentifier, displayName, enabled)
         {
             m_GetValue = getValue;
@@ -40,7 +39,6 @@ namespace GDX.Developer
 
         public override void Poll()
         {
-            // Poll for our new value
             float getValue = m_GetValue();
             if (math.lengthsq(getValue - m_CachedValue) != Platform.FloatTolerance)
             {

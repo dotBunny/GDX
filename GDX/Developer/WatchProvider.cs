@@ -150,6 +150,7 @@ namespace GDX.Developer
 
         public static void Poll()
         {
+            // TODO: We could make this part of the managed update and self ticking at a rate?
             lock (k_Lock)
             {
                 int count = k_KnownActiveWatches.Count;
