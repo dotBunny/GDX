@@ -2,14 +2,16 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
 namespace GDX.Developer
 {
 #if UNITY_2022_2_OR_NEWER
     /// <summary>
-    /// Thread-safe developer watch system.
+    /// Base class for static watchers.
     /// </summary>
+    [Preserve]
     public abstract class WatchBase
     {
         public enum Sentiment
@@ -56,6 +58,54 @@ namespace GDX.Developer
         }
 
         public abstract void Poll();
+
+        public static Sentiment SentimentRange(int min, int max, int value)
+        {
+            if (value < min)
+            {
+                return Sentiment.Bad;
+            }
+            return value > max ? Sentiment.Good : Sentiment.Warning;
+        }
+        public static Sentiment SentimentRangeReversed(int min, int max, int value)
+        {
+            if (value < min)
+            {
+                return Sentiment.Good;
+            }
+            return value > max ? Sentiment.Bad : Sentiment.Warning;
+        }
+
+        public static void AddSentimentToElement(VisualElement element, Sentiment sentiment)
+        {
+            switch (sentiment)
+            {
+                case Sentiment.Good:
+                    element.RemoveFromClassList("warning");
+                    element.RemoveFromClassList("bad");
+                    element.RemoveFromClassList("default");
+                    element.AddToClassList("good");
+                    break;
+                case Sentiment.Warning:
+                    element.RemoveFromClassList("good");
+                    element.RemoveFromClassList("bad");
+                    element.RemoveFromClassList("default");
+                    element.AddToClassList("warning");
+                    break;
+                case Sentiment.Bad:
+                    element.RemoveFromClassList("good");
+                    element.RemoveFromClassList("warning");
+                    element.RemoveFromClassList("default");
+                    element.AddToClassList("bad");
+                    break;
+                default:
+                    element.RemoveFromClassList("good");
+                    element.RemoveFromClassList("warning");
+                    element.RemoveFromClassList("bad");
+                    element.AddToClassList("default");
+                    break;
+            }
+        }
     }
 #endif // UNITY_2022_2_OR_NEWER
 }

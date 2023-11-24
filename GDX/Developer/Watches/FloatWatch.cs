@@ -5,21 +5,23 @@
 #if UNITY_2022_2_OR_NEWER
 
 using System;
+using Unity.Mathematics;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace GDX.Developer
 {
-    public class IntegerWatch : WatchBase
+    public class FloatWatch : WatchBase
     {
-        readonly Func<int> m_GetValue;
-        readonly Func<int, Sentiment> m_GetSentiment;
+        readonly Func<float> m_GetValue;
+        readonly Func<float, Sentiment> m_GetSentiment;
 
         Sentiment m_CachedSentiment;
-        int m_CachedValue = int.MinValue;
+        float m_CachedValue = float.MinValue;
 
         readonly Label m_ValueLabel;
 
-        public IntegerWatch(string uniqueIdentifier, string displayName, Func<int> getValue, Func<int, Sentiment> getSentiment, bool enabled = true) :
+        public FloatWatch(string uniqueIdentifier, string displayName, Func<float> getValue, Func<float, Sentiment> getSentiment, bool enabled = true) :
             base(uniqueIdentifier, displayName, enabled)
         {
             m_GetValue = getValue;
@@ -38,13 +40,15 @@ namespace GDX.Developer
 
         public override void Poll()
         {
-            int getValue = m_GetValue();
-            if (getValue != m_CachedValue)
+            // Poll for our new value
+            float getValue = m_GetValue();
+            if (math.lengthsq(getValue - m_CachedValue) != Platform.FloatTolerance)
             {
                 m_ValueLabel.text = getValue.ToString();
                 Sentiment sentiment = m_GetSentiment(getValue);
                 if (sentiment != m_CachedSentiment)
                 {
+                    // Add colors
                     AddSentimentToElement(m_ValueLabel, sentiment);
                     m_CachedSentiment = sentiment;
                     m_CachedValue = getValue;
