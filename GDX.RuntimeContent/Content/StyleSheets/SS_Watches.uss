@@ -63,5 +63,5 @@
     color: var(--font-color-red);
 }
 .default {
-    color: var(--font-color-blue);
+    color: var(--font-color);
 }

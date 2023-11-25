@@ -38,7 +38,8 @@ namespace GDX.Developer
             ContainerElement = new VisualElement();
             ContainerElement.AddToClassList("gdx-watch");
 
-            WatchProvider.Register(this, enabled);
+            WatchProvider.Register(this,
+                WatchSettings.TryGetValue(uniqueIdentifier, out bool savedValue) ? savedValue : enabled);
         }
 
         ~WatchBase()

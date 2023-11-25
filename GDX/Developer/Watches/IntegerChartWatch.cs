@@ -6,33 +6,31 @@
 
 using System;
 using GDX.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace GDX.Developer
 {
-    public class FloatChartWatch : WatchBase
+    public class IntegerChartWatch : WatchBase
     {
         CircularBuffer<float> m_ChartPercentage;
 
         int m_ValuesCount;
-        float m_MinimumValue = 0f;
-        float m_MaximumValue = 1f;
-        float m_Range;
-        float m_CachedValue = float.MinValue;
+        int m_MinimumValue = 0;
+        int m_MaximumValue = 100;
+        int m_Range;
+        int m_CachedValue = int.MinValue;
         Sentiment m_CachedSentiment = Sentiment.Default;
 
         bool m_ShowLatestValue;
-        string m_LatestValueFormat = null;
-        readonly Func<float> m_GetValue;
-        readonly Func<float, Sentiment> m_GetSentiment;
+        readonly Func<int> m_GetValue;
+        readonly Func<int, Sentiment> m_GetSentiment;
 
         readonly VisualElement m_ChartElement;
         readonly Label m_ValueLabel;
 
-        public FloatChartWatch(string uniqueIdentifier, string displayName, Func<float> getValue, Func<float, Sentiment> getSentiment,
-            float minimumValue = 0, float maximumValue = 1, int historicalCount = 250, bool showLatestValue = true, string latestValueFormat = "F2", bool enabled = true) : base(uniqueIdentifier, displayName, enabled)
+        public IntegerChartWatch(string uniqueIdentifier, string displayName, Func<int> getValue, Func<int, Sentiment> getSentiment,
+            int minimumValue = 0, int maximumValue = 100, int historicalCount = 250, bool showLatestValue = true, bool enabled = true) : base(uniqueIdentifier, displayName, enabled)
         {
             m_GetValue = getValue;
             m_GetSentiment = getSentiment;
@@ -45,7 +43,6 @@ namespace GDX.Developer
             m_Range = m_MaximumValue - m_MinimumValue;
 
             m_ShowLatestValue = showLatestValue;
-            m_LatestValueFormat = latestValueFormat;
 
             Label displayNameLabel = new Label() { text = displayName };
             displayNameLabel.AddToClassList("gdx-watch-left");
@@ -91,7 +88,7 @@ namespace GDX.Developer
 
         public override void Poll()
         {
-            float getValue = m_GetValue();
+            int getValue = m_GetValue();
             if (m_GetSentiment != null)
             {
                 m_CachedSentiment = m_GetSentiment(getValue);
@@ -113,9 +110,9 @@ namespace GDX.Developer
             m_ChartElement.MarkDirtyRepaint();
 
             // Latest Value Text
-            if (m_ShowLatestValue && math.lengthsq(getValue - m_CachedValue) != Platform.FloatTolerance)
+            if (m_ShowLatestValue && getValue != m_CachedValue)
             {
-                m_ValueLabel.text = getValue.ToString(m_LatestValueFormat);
+                m_ValueLabel.text = getValue.ToString();
                 if (m_GetSentiment != null)
                 {
                     Sentiment sentiment = m_GetSentiment(getValue);

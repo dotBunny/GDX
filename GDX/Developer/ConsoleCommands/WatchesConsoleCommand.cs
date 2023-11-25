@@ -32,13 +32,11 @@ namespace GDX.Developer.ConsoleCommands
 
                 if (watches.IsActive[i])
                 {
-                    enabledGenerator.AppendLine($"\t{watches.Identfiers[i]}");
-                    enabledGenerator.AppendLine($"\t\t{watches.DisplayNames[i]}");
+                    enabledGenerator.AppendLine($"\t{watches.Identfiers[i]} : {watches.DisplayNames[i]}");
                 }
                 else
                 {
-                    disabledGenerator.AppendLine($"\t{watches.Identfiers[i]}");
-                    disabledGenerator.AppendLine($"\t\t{watches.DisplayNames[i]}");
+                    disabledGenerator.AppendLine($"\t{watches.Identfiers[i]} : {watches.DisplayNames[i]}");
                 }
             }
             enabledGenerator.AppendLine(disabledGenerator.ToString());

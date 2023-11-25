@@ -353,6 +353,7 @@ namespace GDX.Developer
                 args => QueueCommand(Encoding.UTF8.GetString(args.data)));
 
             ConsoleVariableSettings.UpdateFromFile();
+            WatchSettings.UpdateFromFile();
         }
     }
 #endif // UNITY_2022_2_OR_NEWER
