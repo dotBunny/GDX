@@ -6,6 +6,7 @@
 
 using System;
 using GDX.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace GDX.Developer
@@ -13,20 +14,31 @@ namespace GDX.Developer
     public class FloatChartWatch : WatchBase
     {
         CircularBuffer<float> m_Values;
+        CircularBuffer<float> m_ChartPercentage;
 
         int m_ValuesCount;
+        float m_MinimumValue = 0f;
+        float m_MaximumValue = 1f;
+        float m_Range;
+
+        bool m_ShowLatestValue;
         readonly Func<float> m_GetValue;
         readonly Func<float, Sentiment> m_GetSentiment;
 
         readonly VisualElement m_ChartElement;
 
-        public FloatChartWatch(string uniqueIdentifier, string displayName, Func<float> getValue, Func<float, Sentiment> getSentiment, int historicalCount = 250, bool showLatestValue = true, bool enabled = true) : base(uniqueIdentifier, displayName, enabled)
+        public FloatChartWatch(string uniqueIdentifier, string displayName, Func<float> getValue, Func<float, Sentiment> getSentiment, float minimumValue = 0, float maximumValue = 1, int historicalCount = 250, bool showLatestValue = true, bool enabled = true) : base(uniqueIdentifier, displayName, enabled)
         {
             m_GetValue = getValue;
             m_GetSentiment = getSentiment;
 
             m_ValuesCount = historicalCount;
             m_Values = new CircularBuffer<float>(historicalCount);
+            m_ChartPercentage = new CircularBuffer<float>(historicalCount);
+            m_MinimumValue = minimumValue;
+            m_MaximumValue = maximumValue;
+            m_Range = m_MaximumValue - m_MinimumValue;
+            m_ShowLatestValue = showLatestValue;
 
             Label displayNameLabel = new Label() { text = displayName };
             displayNameLabel.AddToClassList("gdx-watch-left");
@@ -37,30 +49,47 @@ namespace GDX.Developer
             ContainerElement.Add(displayNameLabel);
             ContainerElement.Add(m_ChartElement);
 
-
             m_ChartElement.generateVisualContent = GenerateVisualContent;
         }
 
         void GenerateVisualContent(MeshGenerationContext ctx)
         {
-            // var paint2D = ctx.painter2D;
-            //
-            // paint2D.fillColor = UnityEngine.Color.white;
-            // paint2D.BeginPath();
-            // paint2D.MoveTo(p0);
-            // paint2D.LineTo(p1);
-            // paint2D.LineTo(p2);
-            // paint2D.LineTo(p3);
-            // paint2D.ClosePath();
-            // paint2D.Fill();
-            //
-            // paint2D.
+            Painter2D paint2D = ctx.painter2D;
+
+            // TODO: Sentiment? Use latest
+            paint2D.strokeColor = UnityEngine.Color.white;
+
+            float horizontalIncrement  = m_ChartElement.resolvedStyle.width / m_ValuesCount;
+            float verticalIncrement = m_ChartElement.resolvedStyle.height;
+
+            paint2D.BeginPath();
+            for (int i = 0; i < m_ValuesCount; i++)
+            {
+                paint2D.LineTo(new Vector2(horizontalIncrement * i,
+                    m_ChartPercentage[i] * verticalIncrement));
+            }
+            paint2D.Stroke();
         }
 
         public override void Poll()
         {
             float getValue = m_GetValue();
             m_Values.Add(getValue);
+
+            if (getValue <= m_MinimumValue)
+            {
+                m_ChartPercentage.Add(1f);
+            }
+            else if (getValue >= m_MaximumValue)
+            {
+                m_ChartPercentage.Add(0f);
+            }
+            else
+            {
+                m_ChartPercentage.Add((1f - (getValue - m_MinimumValue) / m_Range));
+            }
+
+            m_ChartElement.MarkDirtyRepaint();
         }
     }
 }

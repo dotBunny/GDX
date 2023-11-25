@@ -67,7 +67,23 @@ namespace GDX.Developer
             }
             return value > max ? Sentiment.Good : Sentiment.Warning;
         }
+        public static Sentiment SentimentRange(float min, float max, float value)
+        {
+            if (value < min)
+            {
+                return Sentiment.Bad;
+            }
+            return value > max ? Sentiment.Good : Sentiment.Warning;
+        }
         public static Sentiment SentimentRangeReversed(int min, int max, int value)
+        {
+            if (value < min)
+            {
+                return Sentiment.Good;
+            }
+            return value > max ? Sentiment.Bad : Sentiment.Warning;
+        }
+        public static Sentiment SentimentRangeReversed(float min, float max, float value)
         {
             if (value < min)
             {
