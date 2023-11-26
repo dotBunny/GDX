@@ -67,9 +67,19 @@ namespace GDX.Developer
             return s_KnownWatches.Count;
         }
 
+        public static bool HasActiveWatches()
+        {
+            return k_KnownActiveWatches.Count > 0;
+        }
+
         public static WatchBase GetWatch(string identifier)
         {
-            return s_KnownWatches[identifier];
+            return !s_KnownWatches.ContainsKey(identifier) ? null : s_KnownWatches[identifier];
+        }
+
+        public static bool HasWatch(string identifier)
+        {
+            return s_KnownWatches.ContainsKey(identifier);
         }
 
         public static WatchList GetWatchList()

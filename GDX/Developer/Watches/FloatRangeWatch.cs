@@ -20,8 +20,8 @@ namespace GDX.Developer
 
         readonly Label m_ValueLabel;
 
-        public FloatRangeWatch(string uniqueIdentifier, string displayName, Func<float> getValue, Func<float, Sentiment> getSentiment, bool enabled = true) :
-            base(uniqueIdentifier, displayName, enabled)
+        public FloatRangeWatch(string uniqueIdentifier, string displayName, Func<float> getValue, Func<float, Sentiment> getSentiment, bool enabled = true, int minWidth =-1, int minHeight = -1)
+            : base(uniqueIdentifier, displayName, enabled, minWidth, minHeight)
         {
             m_GetValue = getValue;
             m_GetSentiment = getSentiment;

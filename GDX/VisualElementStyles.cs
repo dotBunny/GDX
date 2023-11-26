@@ -72,6 +72,12 @@ namespace GDX
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsVisible(this VisualElement element)
+        {
+            return element.style.display == DisplayVisible;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Fullscreen(this VisualElement element)
         {
             element.style.position = PositionAbsolute;

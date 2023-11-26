@@ -21,8 +21,8 @@ namespace GDX.Developer
         readonly Label m_DisplayNameLabel;
         readonly Label m_ValueLabel;
 
-        public SimpleWatch(string uniqueIdentifier, string displayName, Func<string> getValue, bool enabled = true) :
-            base(uniqueIdentifier, displayName, enabled)
+        public SimpleWatch(string uniqueIdentifier, string displayName, Func<string> getValue, bool enabled = true, int minWidth =-1, int minHeight = -1)
+            : base(uniqueIdentifier, displayName, enabled, minWidth, minHeight)
         {
             m_GetValue = getValue;
 

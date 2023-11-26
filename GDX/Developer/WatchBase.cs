@@ -29,7 +29,7 @@ namespace GDX.Developer
 
         public readonly VisualElement ContainerElement;
 
-        protected WatchBase(string uniqueIdentifier, string displayName, bool enabled = true)
+        protected WatchBase(string uniqueIdentifier, string displayName, bool enabled = true, int minWidth =-1, int minHeight = -1)
         {
             BaseIdentifier = uniqueIdentifier;
             Identifier = BaseIdentifier;
@@ -37,6 +37,16 @@ namespace GDX.Developer
 
             ContainerElement = new VisualElement();
             ContainerElement.AddToClassList("gdx-watch");
+
+            if (minWidth != -1)
+            {
+                ContainerElement.style.minWidth = new StyleLength(new Length(minWidth, LengthUnit.Pixel));
+            }
+
+            if (minHeight != -1)
+            {
+                ContainerElement.style.minHeight = new StyleLength(new Length(minHeight, LengthUnit.Pixel));
+            }
 
             WatchProvider.Register(this,
                 WatchSettings.TryGetValue(uniqueIdentifier, out bool savedValue) ? savedValue : enabled);

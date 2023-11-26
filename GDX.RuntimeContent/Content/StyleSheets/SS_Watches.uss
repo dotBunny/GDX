@@ -40,16 +40,28 @@
 
 .gdx-watch {
     white-space: nowrap;
-    text-overflow: ellipsis;
-    -unity-text-align: middle-left;
+    -unity-text-align: upper-left;
     flex-direction: row;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.gdx-watch > Label,
+.gdx-watch-right > Label
+{
+    margin: 0;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .gdx-watch-left {
-    -unity-text-align: middle-left;
+    -unity-text-align: upper-left;
+    padding-left: 0;
+    padding-right: 5px;
+
 }
 .gdx-watch-right {
-    -unity-text-align: middle-right;
+    -unity-text-align: upper-right;
+    padding-right: 0;
     flex-grow: 1;
 }
 

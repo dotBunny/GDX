@@ -19,8 +19,8 @@ namespace GDX.Developer
 
         readonly Label m_ValueLabel;
 
-        public IntegerRangeWatch(string uniqueIdentifier, string displayName, Func<int> getValue, Func<int, Sentiment> getSentiment, bool enabled = true) :
-            base(uniqueIdentifier, displayName, enabled)
+        public IntegerRangeWatch(string uniqueIdentifier, string displayName, Func<int> getValue, Func<int, Sentiment> getSentiment, bool enabled = true, int minWidth =-1, int minHeight = -1)
+            : base(uniqueIdentifier, displayName, enabled, minWidth, minHeight)
         {
             m_GetValue = getValue;
             m_GetSentiment = getSentiment;

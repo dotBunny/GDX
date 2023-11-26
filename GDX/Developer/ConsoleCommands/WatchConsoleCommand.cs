@@ -13,10 +13,7 @@ namespace GDX.Developer.ConsoleCommands
 
         public override bool Evaluate(float deltaTime)
         {
-            WatchBase watch = WatchProvider.GetWatch(m_Identifier);
-            if (watch == null) return false;
-
-            WatchProvider.ToggleState(watch);
+            WatchProvider.ToggleState(WatchProvider.GetWatch(m_Identifier));
             return true;
         }
 
@@ -44,6 +41,14 @@ namespace GDX.Developer.ConsoleCommands
             if (string.IsNullOrEmpty(context))
             {
                 ManagedLog.Warning(LogCategory.DEFAULT, $"An identifier is required to find a watch.");
+                return null;
+            }
+
+
+            if (!WatchProvider.HasWatch(context))
+            {
+                ManagedLog.Warning(LogCategory.DEFAULT, $"Unable to find watch '{context}'.");
+                return null;
             }
 
             return new WatchConsoleCommand { m_Identifier = context };

@@ -30,7 +30,8 @@ namespace GDX.Developer
         readonly Label m_ValueLabel;
 
         public IntegerChartWatch(string uniqueIdentifier, string displayName, Func<int> getValue, Func<int, Sentiment> getSentiment,
-            int minimumValue = 0, int maximumValue = 100, int historicalCount = 250, bool showLatestValue = true, bool enabled = true) : base(uniqueIdentifier, displayName, enabled)
+            int minimumValue = 0, int maximumValue = 100, int historicalCount = 250, bool showLatestValue = true, bool enabled = true, int minWidth =-1, int minHeight = -1)
+            : base(uniqueIdentifier, displayName, enabled, minWidth, minHeight)
         {
             m_GetValue = getValue;
             m_GetSentiment = getSentiment;

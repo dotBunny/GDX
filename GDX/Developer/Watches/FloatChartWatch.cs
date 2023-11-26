@@ -32,7 +32,8 @@ namespace GDX.Developer
         readonly Label m_ValueLabel;
 
         public FloatChartWatch(string uniqueIdentifier, string displayName, Func<float> getValue, Func<float, Sentiment> getSentiment,
-            float minimumValue = 0, float maximumValue = 1, int historicalCount = 250, bool showLatestValue = true, string latestValueFormat = "F2", bool enabled = true) : base(uniqueIdentifier, displayName, enabled)
+            float minimumValue = 0, float maximumValue = 1, int historicalCount = 250, bool showLatestValue = true, string latestValueFormat = "F2", bool enabled = true, int minWidth =-1, int minHeight = -1)
+            : base(uniqueIdentifier, displayName, enabled, minWidth, minHeight)
         {
             m_GetValue = getValue;
             m_GetSentiment = getSentiment;

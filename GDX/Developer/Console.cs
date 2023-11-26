@@ -21,6 +21,7 @@ namespace GDX.Developer
 
     public static class Console
     {
+
         public enum ConsoleAccessLevel
         {
             Anonymous = -1,
@@ -43,9 +44,15 @@ namespace GDX.Developer
         static int s_HintCacheLength = 0;
 
         public static int PreviousCommandCount => s_CommandHistory.Count;
+        public static int CommandBufferCount => k_CommandBuffer.Count;
 
-        static SimpleWatch s_PreviousCommandCountWatch = new SimpleWatch("console.ppc", "PreviousCommandCount",
-            () => PreviousCommandCount.ToString());
+
+        static SimpleWatch s_BufferCountWatch = new SimpleWatch("console.command.buffer", "Buffered Commands",
+            () => CommandBufferCount.ToString(), false);
+        static SimpleWatch s_PreviousCountWatch = new SimpleWatch("console.command.previous", "Previous Commands",
+            () => PreviousCommandCount.ToString(), false);
+
+
 
         public static void RegisterCommand(ConsoleCommandBase command)
         {
