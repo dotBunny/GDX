@@ -65,6 +65,11 @@
     flex-grow: 1;
 }
 
+.inner-box
+{
+    background-color: var(--background-25);
+}
+
 .good {
     color: var(--font-color-green);
 }

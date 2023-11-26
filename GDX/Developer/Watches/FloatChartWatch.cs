@@ -53,6 +53,7 @@ namespace GDX.Developer
 
             m_ChartElement = new VisualElement();
             m_ChartElement.AddToClassList("gdx-watch-right");
+            m_ChartElement.AddToClassList("inner-box");
 
             if (showLatestValue)
             {
@@ -77,6 +78,8 @@ namespace GDX.Developer
                 Sentiment.Bad => Color.red,
                 _ => Color.white
             };
+            paint2D.lineJoin = LineJoin.Round;
+
 
             float horizontalIncrement  = m_ChartElement.resolvedStyle.width / m_ValuesCount;
             float verticalIncrement = m_ChartElement.resolvedStyle.height;

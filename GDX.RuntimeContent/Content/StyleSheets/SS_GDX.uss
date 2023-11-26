@@ -4,6 +4,7 @@
 
     --background-99: rgba(27,29,32, 0.996);
     --background-75: rgba(27,29,32, 0.75);
+    --background-25: rgba(27,29,32, 0.25);
 
     --border-99: rgba(51,55,65,0.996);
     --border-75: rgba(51,55,65,0.75);
