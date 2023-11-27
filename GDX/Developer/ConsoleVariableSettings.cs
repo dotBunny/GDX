@@ -37,7 +37,7 @@ namespace GDX.Developer
             {
                 File.WriteAllTextAsync(GetConsoleVariableSaveFile(), textGenerator.ToString());
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // ignored
             }

@@ -7,7 +7,7 @@ using GDX.Logging;
 namespace GDX.Developer.ConsoleCommands
 {
 #if UNITY_2022_2_OR_NEWER
-    public class WatchesConsoleCommand : ConsoleCommandBase
+    public class WatchListConsoleCommand : ConsoleCommandBase
     {
         string m_Filter = null;
 
@@ -47,13 +47,13 @@ namespace GDX.Developer.ConsoleCommands
         /// <inheritdoc />
         public override string GetKeyword()
         {
-            return "watches";
+            return "watch.list";
         }
 
         /// <inheritdoc />
         public override string GetHelpUsage()
         {
-            return "watches <filter>";
+            return "watch.list <filter>";
         }
 
         /// <inheritdoc />
@@ -65,7 +65,7 @@ namespace GDX.Developer.ConsoleCommands
         /// <inheritdoc />
         public override ConsoleCommandBase GetInstance(string context)
         {
-            return new WatchesConsoleCommand { m_Filter = context };
+            return new WatchListConsoleCommand { m_Filter = context };
         }
     }
 #endif // UNITY_2022_2_OR_NEWER

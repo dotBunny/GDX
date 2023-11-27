@@ -283,7 +283,7 @@ namespace GDX.Editor.Windows.ProjectSettings
                     Button buttonIssue = rootElement.Q<Button>("button-issue");
                     buttonIssue.clicked += () =>
                     {
-                        Application.OpenURL("https://dotbunny.youtrack.cloud/youtrack/issues/GDX");
+                        Application.OpenURL("https://github.com/dotBunny/GDX/issues");
                     };
                     Button buttonLicense = rootElement.Q<Button>("button-license");
                     buttonLicense.clicked += () =>

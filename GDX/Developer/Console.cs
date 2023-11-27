@@ -17,8 +17,6 @@ using UnityEngine.Networking.PlayerConnection;
 namespace GDX.Developer
 {
 #if UNITY_2022_2_OR_NEWER
-    // TODO: Watches
-
     public static class Console
     {
 
@@ -47,12 +45,8 @@ namespace GDX.Developer
         public static int CommandBufferCount => k_CommandBuffer.Count;
 
 
-        static SimpleWatch s_BufferCountWatch = new SimpleWatch("console.command.buffer", "Buffered Commands",
+        static SimpleWatch s_BufferCountWatch = new SimpleWatch("console.buffer", "Buffered Commands",
             () => CommandBufferCount.ToString(), false);
-        static SimpleWatch s_PreviousCountWatch = new SimpleWatch("console.command.previous", "Previous Commands",
-            () => PreviousCommandCount.ToString(), false);
-
-
 
         public static void RegisterCommand(ConsoleCommandBase command)
         {
@@ -344,8 +338,8 @@ namespace GDX.Developer
             RegisterCommand(new GarbageCollectionConsoleCommand());
             RegisterCommand(new BuildVerificationTestConsoleCommand());
             RegisterCommand(new ConsoleVariablesConsoleCommand());
-            RegisterCommand(new WatchesConsoleCommand());
             RegisterCommand(new WatchConsoleCommand());
+            RegisterCommand(new WatchListConsoleCommand());
 
             // We are going to look at the arguments
             if (CommandLineParser.Arguments.ContainsKey("exec"))

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - A `CommandPalette`, (Developer)`Console` and `RuntimeConsole` requiring (_Unity 2022.2+_), example code utilizes the new InputSystem.
 - GDX primarily uses own `ManagedLog` system now allowing for heirarchial logging through the framework.
+- Numerous `Watches` which provide easily visualization of static fields.
 - A simplified `BuildConfiguration` object with inheritance.
 - Simplified ways to access identifiers for `DataTableBase` rows and columns.
 - `SceneExtensions` extensions to provide better awareness of loading.
@@ -20,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - `TestRunner` now waits for all scenes to finish loading before proceeding with tests.
+- Moved issues and planning back to GitHub issues; making it easier for outside contributions.
 
 ## [4.0.0] - 2023-07-02
 

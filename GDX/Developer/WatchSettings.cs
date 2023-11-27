@@ -35,7 +35,7 @@ namespace GDX.Developer
             {
                 File.WriteAllTextAsync(GetWatchesSaveFile(), textGenerator.ToString());
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // ignored
             }

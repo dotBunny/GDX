@@ -4,6 +4,7 @@
 
 #if UNITY_2022_2_OR_NEWER
 using System.Net.Mail;
+using GDX.Developer.ConsoleVariables;
 using GDX.RuntimeContent;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -24,6 +25,10 @@ namespace GDX.Developer
         readonly VisualElement m_RootElement;
         bool m_ShouldShow = false;
 
+        static readonly BooleanConsoleVariable k_WatchesEnabled =
+            new BooleanConsoleVariable("watches.enabled", "Watches Enabled", true,
+                ConsoleVariableBase.ConsoleVariableFlags.Setting);
+
         public RuntimeWatchController(GameObject parentGameObject, int initialFontSize, int position, bool visible)
         {
             // UIDocuments do not allow multiple components per Game Object so we have to make a child object.
@@ -36,6 +41,8 @@ namespace GDX.Developer
             Document.visualTreeAsset = ResourceProvider.GetUIElements().Watches;
 
             m_RootElement = Document.rootVisualElement.Q<VisualElement>("gdx-watches");
+
+            k_WatchesEnabled.OnValueChanged += UpdateShow;
 
             UpdateFontSize(initialFontSize);
             UpdatePosition(position);
