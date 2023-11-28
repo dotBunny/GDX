@@ -26,6 +26,44 @@ namespace GDX.Editor
         }
 
         /// <summary>
+        ///     Capture a <see cref="Texture2D" /> of all open <see cref="EditorWindow" />.
+        /// </summary>
+        /// <returns>The <see cref="Texture2D" /> captured.</returns>
+        public static Texture2D CaptureAllWindows()
+        {
+            Bounds windows = GetEditorBounds();
+            int width = (int)windows.size.x;
+            int height = (int)windows.size.y;
+            Color[] screenPixels =
+                InternalEditorUtility.ReadScreenPixel(windows.min, width, height);
+
+            Texture2D texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            texture.SetPixels(screenPixels);
+            return texture;
+        }
+
+        /// <summary>
+        ///     Captures a PNG image of all open <see cref="EditorWindow" />.
+        /// </summary>
+        /// <param name="outputPath">The absolute path for the image file.</param>
+        /// <returns>true/false if the capture was successful.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#pragma warning disable IDE1006
+        // ReSharper disable once InconsistentNaming
+        public static bool CaptureAllWindowsToPNG(string outputPath)
+#pragma warning restore IDE1006
+        {
+            Texture2D texture = CaptureAllWindows();
+            if (texture == null)
+            {
+                return false;
+            }
+
+            File.WriteAllBytes(outputPath, texture.EncodeToPNG());
+            return true;
+        }
+
+        /// <summary>
         ///     Capture a <see cref="Texture2D" /> of the designated <see cref="EditorWindow" />.
         /// </summary>
         /// <typeparam name="T">The type of <see cref="EditorWindow" /> to be captured.</typeparam>
@@ -319,6 +357,22 @@ namespace GDX.Editor
             }
 
             CodeEditor.CurrentEditor.SyncAll();
+        }
+
+        /// <summary>
+        ///     Accumulate the screen space bounds of all editor windows.
+        /// </summary>
+        /// <returns>The accumulated bounds.</returns>
+        public static Bounds GetEditorBounds()
+        {
+            Bounds accumulatedBounds = new Bounds();
+            EditorWindow[] windows = Resources.FindObjectsOfTypeAll<EditorWindow>();
+            int windowCount = windows.Length;
+            for (int i = 0; i < windowCount; i++)
+            {
+                accumulatedBounds.Encapsulate(new Bounds(windows[i].position.center, windows[i].position.size));
+            }
+            return accumulatedBounds;
         }
 
         /// <summary>

@@ -342,7 +342,7 @@ namespace GDX.Developer
             RegisterCommand(new ConsoleVariablesConsoleCommand());
             RegisterCommand(new WatchConsoleCommand());
             RegisterCommand(new WatchListConsoleCommand());
-            RegisterCommand(new ScreenshotConsoleCommand());
+            RegisterCommand(new ScreenCaptureConsoleCommand());
 
             // We are going to look at the arguments
             if (CommandLineParser.Arguments.ContainsKey("exec"))
