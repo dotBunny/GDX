@@ -5,6 +5,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Threading;
 using GDX.Collections;
 using GDX.Collections.Generic;
 using UnityEngine;
@@ -18,10 +19,10 @@ namespace GDX.Logging
     /// </summary>
     /// <remarks>
     ///     This is primarily only meant for runtime usage, as the tick is pumped only in the player loop.
+    ///     When outside of playmode, messages are pumped to the editor log.
     /// </remarks>
     public static class ManagedLog
     {
-        // TODO : buffer that flushes to disk log as well
         /// <summary>
         ///     A ring buffer structure of <see cref="LogEntry" />s.
         /// </summary>
@@ -52,6 +53,8 @@ namespace GDX.Logging
         internal static bool IsUnityLogHandler = false;
 
         static ManagedLogHandler s_ManagedLogHandler;
+
+        static ManagedLogWriter s_ManagedLogWriter;
 
         static int s_LongestCategoryLength = 8;
 
@@ -929,7 +932,11 @@ namespace GDX.Logging
                 SourceFilePath = sourceFilePath,
                 SourceLineNumber = sourceLineNumber
             };
+
+            // Add one to circular, one to the write buffer
             s_Buffer.Add(newEntry);
+            s_ManagedLogWriter?.AddEntry(newEntry);
+
             return newEntry;
         }
 
@@ -960,7 +967,10 @@ namespace GDX.Logging
                 SourceFilePath = sourceFilePath,
                 SourceLineNumber = sourceLineNumber
             };
+
+            // Add one to circular, one to the write buffer
             s_Buffer.Add(newEntry);
+            s_ManagedLogWriter?.AddEntry(newEntry);
 
             return newEntry;
         }
@@ -972,9 +982,8 @@ namespace GDX.Logging
 
         public static void Tick()
         {
+            // Increment tick count
             s_CurrentTick++;
-
-            // Do we need to flush to disk?
         }
 
         /// <summary>
