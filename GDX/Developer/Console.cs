@@ -276,7 +276,7 @@ namespace GDX.Developer
                 else // Echo
                 {
                     ManagedLog.Info(LogCategory.DEFAULT,
-                        $"{variable.GetName()} is '{variable.GetCurrentValueAsString()}' [{variable.GetDefaultValueAsString()}])");
+                        $"{variable.GetName()} is '{variable.GetCurrentValueAsString()}' [{variable.GetDefaultValueAsString()}]");
                 }
 
                 return true;
@@ -326,6 +326,8 @@ namespace GDX.Developer
         {
             // We preregister a bunch of commands to be optimal
             RegisterCommand(new HelpConsoleCommand());
+            RegisterCommand(new ShowConsoleCommand());
+            RegisterCommand(new HideConsoleCommand());
             RegisterCommand(new QuitConsoleCommand());
             RegisterCommand(new ExecConsoleCommand());
             RegisterCommand(new PlayerLoopConsoleCommand());
@@ -340,6 +342,7 @@ namespace GDX.Developer
             RegisterCommand(new ConsoleVariablesConsoleCommand());
             RegisterCommand(new WatchConsoleCommand());
             RegisterCommand(new WatchListConsoleCommand());
+            RegisterCommand(new ScreenshotConsoleCommand());
 
             // We are going to look at the arguments
             if (CommandLineParser.Arguments.ContainsKey("exec"))

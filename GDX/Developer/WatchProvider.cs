@@ -140,13 +140,16 @@ namespace GDX.Developer
             }
         }
 
-        public static void Unregister(WatchBase watch)
+        public static void Unregister(WatchBase watch, bool updateState = true)
         {
             lock (k_Lock)
             {
                 if (s_KnownWatches.TryRemove(watch.Identifier))
                 {
-                    SetState(watch, false);
+                    if (updateState)
+                    {
+                        SetState(watch, false);
+                    }
                 }
 #if UNITY_EDITOR
                 else

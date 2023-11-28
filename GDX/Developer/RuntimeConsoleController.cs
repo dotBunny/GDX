@@ -6,6 +6,7 @@ using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
+using GDX.Developer.ConsoleCommands;
 using GDX.Logging;
 using GDX.RuntimeContent;
 using UnityEngine;

@@ -55,7 +55,7 @@ namespace GDX.Developer
         ~WatchBase()
         {
             // We have to ensure when we become out of scope that we no longer registered
-            WatchProvider.Unregister(this);
+            WatchProvider.Unregister(this, false);
         }
 
         public VisualElement GetElement()
