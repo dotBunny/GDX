@@ -1,16 +1,19 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using GDX.Collections.Generic;
 
 namespace GDX.Logging
 {
     public class ManagedLogWriter : IDisposable
     {
-        readonly ConcurrentBag<LogEntry> m_Buffer = new ConcurrentBag<LogEntry>();
-        readonly ConcurrentBag<LogEntry> m_BackBuffer = new ConcurrentBag<LogEntry>();
+        static readonly object k_LockBuffer = new object();
+        static readonly object k_LockBackBuffer = new object();
+
+        SimpleList<byte> m_Buffer = new SimpleList<byte>(2048);
+        SimpleList<byte> m_BackBuffer = new SimpleList<byte>(1024);
 
         readonly string m_Path;
         readonly CancellationTokenSource m_CancellationToken;
@@ -64,13 +67,26 @@ namespace GDX.Logging
 
         public void AddEntry(LogEntry entry)
         {
+            byte[] data = Encoding.UTF8.GetBytes(entry.ToConsoleOutput());
+            int byteCount = data.Length;
+
             if (m_Flushing)
             {
-                m_BackBuffer.Add(entry);
+                lock (k_LockBackBuffer)
+                {
+                    m_BackBuffer.Reserve(byteCount);
+                    Array.Copy(data, 0, m_BackBuffer.Array, m_BackBuffer.Count, byteCount);
+                    m_BackBuffer.Count += byteCount;
+                }
             }
             else
             {
-                m_Buffer.Add(entry);
+                lock (k_LockBuffer)
+                {
+                    m_Buffer.Reserve(byteCount);
+                    Array.Copy(data, 0, m_Buffer.Array, m_Buffer.Count, byteCount);
+                    m_Buffer.Count += byteCount;
+                }
             }
         }
 
