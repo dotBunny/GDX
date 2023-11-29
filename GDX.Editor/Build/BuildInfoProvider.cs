@@ -149,7 +149,7 @@ namespace GDX.Editor.Build
             }
             catch (Exception e)
             {
-                ManagedLog.Exception(0, e);
+                Debug.LogException(e);
             }
         }
 

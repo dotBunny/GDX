@@ -22,7 +22,7 @@ namespace GDX.Editor
             string outputPath =
                 Platform.GetUniqueOutputFilePath("GDX_ManagedMemory_", ".log", Config.PlatformCacheFolder);
             File.WriteAllLines(outputPath, ResourcesAuditReport.GetAll().Output());
-            ManagedLog.Info(0, $"Resource Audit written to {outputPath}.");
+            Debug.Log($"Resource Audit written to {outputPath}.");
             Application.OpenURL(outputPath);
         }
 

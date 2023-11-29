@@ -22,7 +22,7 @@ namespace GDX.Developer.ConsoleCommands
             for (int i = 0; i < m_FilePathsCount; i++)
             {
                 string[] lines = File.ReadAllLines(m_FilePaths[i]);
-                ManagedLog.Info(LogCategory.DEFAULT, $"Queueing commands found in {m_FilePaths[i]} ...");
+                Debug.Log($"Queueing commands found in {m_FilePaths[i]} ...");
                 int lineCount = lines.Length;
                 for (int j = 0; j < lineCount; j++)
                 {
@@ -34,7 +34,7 @@ namespace GDX.Developer.ConsoleCommands
 
                     if (!Console.QueueCommand(line))
                     {
-                        ManagedLog.Warning(LogCategory.DEFAULT,
+                        Debug.LogWarning(
                             $"An error occured adding command '{line}' at line #{j} in {m_FilePaths[i]}.");
                     }
                 }
@@ -91,7 +91,7 @@ namespace GDX.Developer.ConsoleCommands
                     continue;
                 }
 
-                ManagedLog.Warning(LogCategory.DEFAULT, $"Unable to find script to execute @ {workingFile}.");
+                Debug.LogWarning($"Unable to find script to execute @ {workingFile}.");
             }
 
             if (foundFiles.Count <= 0)

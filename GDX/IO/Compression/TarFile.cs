@@ -7,6 +7,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using GDX.Logging;
+using UnityEngine;
 
 namespace GDX.IO.Compression
 {
@@ -86,8 +87,7 @@ namespace GDX.IO.Compression
                 int readByteCount = sourceStream.Read(readBuffer, 0, 12);
                 if (readByteCount != 12)
                 {
-                    ManagedLog.Error(LogCategory.GDX,
-                        $"Unable to read filesize from header. {readByteCount.ToString()} read, expected 12.");
+                    Debug.LogError($"Unable to read filesize from header. {readByteCount.ToString()} read, expected 12.");
                     break;
                 }
 

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using GDX.Developer.Reports;
 using GDX.Developer.Reports.BuildVerification;
 using GDX.Logging;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace GDX.Developer.ConsoleCommands
@@ -41,7 +42,7 @@ namespace GDX.Developer.ConsoleCommands
 
                     if (m_TestRunner == null)
                     {
-                        ManagedLog.Error(LogCategory.TEST, "The test runner was unable to run.");
+                        Debug.LogError("The test runner was unable to run.");
                         return true;
                     }
 
@@ -62,8 +63,7 @@ namespace GDX.Developer.ConsoleCommands
 
                     string result = BuildVerificationReport.OutputReport(outputPath);
 
-                    ManagedLog.Info(LogCategory.TEST,
-                        File.Exists(outputPath)
+                    Debug.Log(File.Exists(outputPath)
                             ? $"Build checks ({result}) written to {outputPath}."
                             : $"Unable to write file to {outputPath}.");
                     return true;
@@ -116,7 +116,7 @@ namespace GDX.Developer.ConsoleCommands
                 return command;
             }
 
-            ManagedLog.Warning(LogCategory.DEFAULT, $"No valid scenes were able to be extracted from '{context}'.");
+            Debug.LogWarning($"No valid scenes were able to be extracted from '{context}'.");
             return null;
         }
 

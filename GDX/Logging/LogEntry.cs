@@ -5,6 +5,8 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Text;
+using GDX.Collections.Generic;
 
 namespace GDX.Logging
 {
@@ -38,7 +40,7 @@ namespace GDX.Logging
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static string LogLevelToLabel(LogLevel level)
+        public static string LogLevelToLabel(LogLevel level)
         {
             switch (level)
             {

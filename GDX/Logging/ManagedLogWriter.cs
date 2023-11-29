@@ -9,24 +9,30 @@ namespace GDX.Logging
 {
     public class ManagedLogWriter : IDisposable
     {
-        static readonly object k_LockBuffer = new object();
-        static readonly object k_LockBackBuffer = new object();
+        ExpandingArray<byte> m_Buffer = new ExpandingArray<byte>(2048);
+        ExpandingArray<byte> m_DoubleBuffer = new ExpandingArray<byte>(2048);
 
-        SimpleList<byte> m_Buffer = new SimpleList<byte>(2048);
-        SimpleList<byte> m_BackBuffer = new SimpleList<byte>(1024);
 
-        readonly string m_Path;
         readonly CancellationTokenSource m_CancellationToken;
+        readonly FileStream m_FileStream;
+
+        bool m_Switch = false;
+
+        readonly object m_LockBuffer = new object();
+        readonly object m_LockDoubleBuffer = new object();
+
         readonly int m_MillisecondDelay;
 
-        bool m_Flushing = false;
-
-        public ManagedLogWriter(string filename, int millisecondDelay = 5000)
+        public static string GetDefaultLogPath()
         {
-            m_Path = Path.Combine(Platform.GetOutputFolder(), filename);
-            m_MillisecondDelay = millisecondDelay;
+            return Path.Combine(Platform.GetOutputFolder(),
+                $"ManagedLog_{DateTime.Now.ToString(Platform.FilenameTimestampFormat)}.log");
+        }
 
-            File.WriteAllText(m_Path, "");
+        public ManagedLogWriter(string filePath, int millisecondDelay = 5000)
+        {
+            m_MillisecondDelay = millisecondDelay;
+            m_FileStream = new FileStream(filePath, FileMode.Create);
             m_CancellationToken = new CancellationTokenSource();
             Thread thread = new Thread(() =>
             {
@@ -42,50 +48,49 @@ namespace GDX.Logging
 
         public void Flush()
         {
-            // m_Flushing = true;
-            //
-            // File.AppendAllLines(m_Path,m_Buffer.);
-            // int count = m_Buffer.Count;
-            // for (int i = 0; i < count; i++)
-            // {
-            //     File.AppendAllLinesAsync()
-            // }
-            // m_Buffer.GetEnumerator()
-            //
-            // File.AppendAllLines(m_Path, );
-            // m_Buffer.Clear();
-            //
-            // m_Flushing = false;
-            //
-            // if (m_BackBuffer.Count > 0)
-            // {
-            //     m_Buffer.Add(m_BackBuffer.GetEnumerator())
-            // }
-
-
-        }
-
-        public void AddEntry(LogEntry entry)
-        {
-            byte[] data = Encoding.UTF8.GetBytes(entry.ToConsoleOutput());
-            int byteCount = data.Length;
-
-            if (m_Flushing)
+            if (m_Switch)
             {
-                lock (k_LockBackBuffer)
+                m_Switch = false;
+                lock (m_LockDoubleBuffer)
                 {
-                    m_BackBuffer.Reserve(byteCount);
-                    Array.Copy(data, 0, m_BackBuffer.Array, m_BackBuffer.Count, byteCount);
-                    m_BackBuffer.Count += byteCount;
+                    if (m_DoubleBuffer.HasData())
+                    {
+                        m_FileStream.Write(m_DoubleBuffer.GetReadOnlySpan());
+                        m_DoubleBuffer.Clear();
+                    }
                 }
             }
             else
             {
-                lock (k_LockBuffer)
+                m_Switch = true;
+                lock (m_LockBuffer)
                 {
-                    m_Buffer.Reserve(byteCount);
-                    Array.Copy(data, 0, m_Buffer.Array, m_Buffer.Count, byteCount);
-                    m_Buffer.Count += byteCount;
+                    if (m_Buffer.HasData())
+                    {
+                        m_FileStream.Write(m_Buffer.GetReadOnlySpan());
+                        m_Buffer.Clear();
+                    }
+                }
+            }
+        }
+
+        public void RecordEntry(LogEntry entry)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(
+                $"<{entry.Timestamp.ToString(Platform.TimestampFormat)}> [{ManagedLog.GetCategoryLabel(entry.CategoryIdentifier)}::{LogEntry.LogLevelToLabel(entry.Level)}] {entry.Message}\n\t@ {entry.SourceFilePath}:{entry.SourceLineNumber.ToString()}\n\r");
+
+            if (m_Switch)
+            {
+                lock (m_LockDoubleBuffer)
+                {
+                    m_DoubleBuffer.AddRange(data);
+                }
+            }
+            else
+            {
+                lock (m_LockBuffer)
+                {
+                    m_Buffer.AddRange(data);
                 }
             }
         }
@@ -99,9 +104,7 @@ namespace GDX.Logging
                     Task.Delay(m_MillisecondDelay, token);
                     Flush();
                 }
-#pragma warning disable CS0168 // Variable is declared but never used
-                catch (Exception e)
-#pragma warning restore CS0168 // Variable is declared but never used
+                catch (Exception)
                 {
                     // ignored
                 }
@@ -111,9 +114,13 @@ namespace GDX.Logging
         /// <inheritdoc />
         public void Dispose()
         {
-            Flush();
             m_CancellationToken?.Cancel();
             m_CancellationToken?.Dispose();
+
+            Flush();
+            Flush();
+
+            m_FileStream.DisposeAsync();
         }
     }
 }

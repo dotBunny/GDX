@@ -11,6 +11,7 @@ using GDX.Logging;
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace GDX.Editor
 {
@@ -375,7 +376,7 @@ namespace GDX.Editor
             catch (Exception e)
             {
                 // We will end up here if the formulated Uri is bad.
-                ManagedLog.Exception(0, e);
+                Debug.LogException(e);
                 return;
             }
             finally

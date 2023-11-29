@@ -39,6 +39,7 @@ namespace GDX.Developer
 
         static readonly List<string> k_KnownCommandsList = new List<string>(50);
         static readonly List<string> k_KnownVariablesList = new List<string>(50);
+        static CircularBuffer<LogEntry> s_LogHistory = new CircularBuffer<LogEntry>(1000);
         static int s_HintCacheLength = 0;
 
         public static int PreviousCommandCount => s_CommandHistory.Count;
@@ -239,16 +240,14 @@ namespace GDX.Developer
             {
                 if (command.GetAccessLevel() > s_AccessLevel)
                 {
-                    ManagedLog.Warning(LogCategory.DEFAULT,
-                        $"Invalid Command: {split[0]} - A higher access level is required.");
+                    Debug.LogWarning($"Invalid Command: {split[0]} - A higher access level is required.");
                     return false;
                 }
 
                 ConsoleCommandBase workUnit = command.GetInstance(split.Length > 1 ? split[1].Trim() : null);
                 if (workUnit == null)
                 {
-                    ManagedLog.Warning(LogCategory.DEFAULT,
-                        $"Invalid Command: {split[0]} - Unable to generate work unit.");
+                    Debug.LogWarning($"Invalid Command: {split[0]} - Unable to generate work unit.");
                     return false;
                 }
 
@@ -264,25 +263,22 @@ namespace GDX.Developer
                 {
                     if (variable.GetAccessLevel() > s_AccessLevel)
                     {
-                        ManagedLog.Warning(LogCategory.DEFAULT,
-                            $"Unable to set {split[0]} - A higher access level is required.");
+                        Debug.LogWarning($"Unable to set {split[0]} - A higher access level is required.");
                         return false;
                     }
 
                     variable.SetValueFromString(split[1].Trim());
-                    ManagedLog.Info(LogCategory.DEFAULT,
-                        $"{variable.GetName()} is now '{variable.GetCurrentValueAsString()}'");
+                    Debug.Log($"{variable.GetName()} is now '{variable.GetCurrentValueAsString()}'");
                 }
                 else // Echo
                 {
-                    ManagedLog.Info(LogCategory.DEFAULT,
-                        $"{variable.GetName()} is '{variable.GetCurrentValueAsString()}' [{variable.GetDefaultValueAsString()}]");
+                    Debug.Log($"{variable.GetName()} is '{variable.GetCurrentValueAsString()}' [{variable.GetDefaultValueAsString()}]");
                 }
 
                 return true;
             }
 
-            ManagedLog.Warning(LogCategory.DEFAULT, $"Invalid Command: {split[0]}");
+            Debug.LogWarning($"Invalid Command: {split[0]}");
             return false;
         }
 

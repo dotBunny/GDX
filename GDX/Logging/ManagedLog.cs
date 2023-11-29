@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -54,7 +55,7 @@ namespace GDX.Logging
 
         static ManagedLogHandler s_ManagedLogHandler;
 
-        static ManagedLogWriter s_ManagedLogWriter;
+        static readonly ManagedLogWriter k_ManagedLogWriter = new ManagedLogWriter(ManagedLogWriter.GetDefaultLogPath());
 
         static int s_LongestCategoryLength = 8;
 
@@ -62,6 +63,7 @@ namespace GDX.Logging
         ///     Thread-safety management object.
         /// </summary>
         static readonly object k_Lock = new object();
+
 
         public static void CaptureUnityLogs(bool enabled = true)
         {
@@ -620,7 +622,7 @@ namespace GDX.Logging
                 [CallerMemberName] string memberName = "",
                 [CallerFilePath] string sourceFilePath = "",
                 [CallerLineNumber] int sourceLineNumber = 0)
-            // ReSharper restore InvalidXmlDocComment
+                // ReSharper restore InvalidXmlDocComment
         {
             LogEntry newEntry = NewEntry(LogLevel.Error, category,
                 message, parentIdentifier, memberName, sourceFilePath, sourceLineNumber);
@@ -935,7 +937,7 @@ namespace GDX.Logging
 
             // Add one to circular, one to the write buffer
             s_Buffer.Add(newEntry);
-            s_ManagedLogWriter?.AddEntry(newEntry);
+            k_ManagedLogWriter.RecordEntry(newEntry);
 
             return newEntry;
         }
@@ -970,7 +972,7 @@ namespace GDX.Logging
 
             // Add one to circular, one to the write buffer
             s_Buffer.Add(newEntry);
-            s_ManagedLogWriter?.AddEntry(newEntry);
+            k_ManagedLogWriter.RecordEntry(newEntry);
 
             return newEntry;
         }
@@ -984,6 +986,12 @@ namespace GDX.Logging
         {
             // Increment tick count
             s_CurrentTick++;
+        }
+
+        public static void DoubleFlush()
+        {
+            k_ManagedLogWriter.Flush();
+            k_ManagedLogWriter.Flush();
         }
 
         /// <summary>

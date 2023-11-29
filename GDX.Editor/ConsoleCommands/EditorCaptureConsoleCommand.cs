@@ -7,6 +7,7 @@ using GDX.Developer;
 using GDX.Developer.ConsoleCommands;
 using GDX.Logging;
 using UnityEditor;
+using UnityEngine;
 
 namespace GDX.Editor.ConsoleCommands
 {
@@ -19,7 +20,7 @@ namespace GDX.Editor.ConsoleCommands
         {
             if (Automation.CaptureAllWindowsToPNG(m_FilePath))
             {
-                ManagedLog.Info(LogCategory.GDX, $"Wrote editor capture to '{m_FilePath}'.");
+                Debug.Log($"Wrote editor capture to '{m_FilePath}'.");
             }
             return true;
         }

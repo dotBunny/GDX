@@ -28,8 +28,9 @@ namespace GDX
 
         /// <summary>
         ///     A filename safe version of the timestamp format.
-        /// </summary>
+        /// </summary>s
         public const string FilenameTimestampFormat = "yyyyMMdd_HHmmss";
+        public const string TimestampFormat = "yyyy-MM-dd HH:mm:ss";
 
         static string s_OutputFolder;
 
