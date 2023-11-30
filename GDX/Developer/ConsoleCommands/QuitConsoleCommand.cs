@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Logging;
 using UnityEditor;
 #if !UNITY_EDITOR
 using UnityEngine;
@@ -13,12 +12,12 @@ namespace GDX.Developer.ConsoleCommands
 #if UNITY_2022_2_OR_NEWER
     public class QuitConsoleCommand : ConsoleCommandBase
     {
-        int errorCode;
+        int m_ErrorCode;
 
         /// <inheritdoc />
         public override bool Evaluate(float deltaTime)
         {
-            ManagedLog.Info(LogCategory.DEFAULT, $"Quitting! [{errorCode}]");
+            UnityEngine.Debug.Log($"Quitting! [{m_ErrorCode}]");
 #if UNITY_EDITOR
             EditorApplication.isPlaying = false;
 #else
@@ -56,7 +55,7 @@ namespace GDX.Developer.ConsoleCommands
             }
 
             int.TryParse(context, out int result);
-            command.errorCode = result;
+            command.m_ErrorCode = result;
             return command;
         }
     }

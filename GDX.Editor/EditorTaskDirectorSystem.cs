@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using GDX.Logging;
 using GDX.Threading;
 using Unity.Mathematics;
 using UnityEditor;

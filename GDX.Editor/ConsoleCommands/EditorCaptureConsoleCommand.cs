@@ -5,7 +5,6 @@
 using System;
 using GDX.Developer;
 using GDX.Developer.ConsoleCommands;
-using GDX.Logging;
 using UnityEditor;
 using UnityEngine;
 

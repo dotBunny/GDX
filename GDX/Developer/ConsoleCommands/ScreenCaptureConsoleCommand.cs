@@ -4,7 +4,6 @@
 
 using System;
 using System.IO;
-using GDX.Logging;
 using UnityEngine;
 
 namespace GDX.Developer.ConsoleCommands
@@ -18,7 +17,7 @@ namespace GDX.Developer.ConsoleCommands
         public override bool Evaluate(float deltaTime)
         {
             ScreenCapture.CaptureScreenshot(m_FilePath, m_SuperSize);
-            ManagedLog.Info(LogCategory.GDX, $"Wrote screen capture to '{m_FilePath}'.");
+            Debug.Log($"Wrote screen capture to '{m_FilePath}'.");
             return true;
         }
 

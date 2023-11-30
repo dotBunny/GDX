@@ -5,7 +5,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using GDX.Developer.Reports;
-using GDX.Logging;
 using UnityEditor;
 using UnityEngine;
 

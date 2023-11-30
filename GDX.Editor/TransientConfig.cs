@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using GDX.Logging;
 
 namespace GDX.Editor
 {
@@ -84,24 +83,9 @@ namespace GDX.Editor
         public double EditorTaskDirectorSystemTickRate;
 
         /// <summary>
-        ///     Should GDX make sure that it's shaders are always included in builds.
-        /// </summary>
-        public bool EnvironmentAlwaysIncludeShaders;
-
-        /// <summary>
-        ///     Should the <see cref="ManagedLog" /> automatically capture the Unity logs?
-        /// </summary>
-        public bool EnvironmentAutoCaptureUnityLogs;
-
-        /// <summary>
         ///     Should the GDX developer console be used.
         /// </summary>
         public bool EnvironmentDeveloperConsole;
-
-        /// <summary>
-        ///     Should the GDX utilized the <see cref="ManagedLog" />.
-        /// </summary>
-        public bool EnvironmentManagedLog;
 
         /// <summary>
         ///     Should a GDX scripting define symbol be added to all target build groups.
@@ -166,8 +150,6 @@ namespace GDX.Editor
             EditorTaskDirectorSystemTickRate = Config.EditorTaskDirectorSystemTickRate;
             EnvironmentScriptingDefineSymbol = Config.EnvironmentScriptingDefineSymbol;
             EnvironmentDeveloperConsole = Config.EnvironmentDeveloperConsole;
-            EnvironmentManagedLog = Config.EnvironmentManagedLog;
-            EnvironmentAutoCaptureUnityLogs = Config.EnvironmentAutoCaptureUnityLogs;
             EnvironmentToolsMenu = Config.EnvironmentToolsMenu;
             TaskDirectorSystem = Config.TaskDirectorSystem;
             TaskDirectorSystemTickRate = Config.TaskDirectorSystemTickRate;
@@ -194,8 +176,6 @@ namespace GDX.Editor
                    BuildInfoBuildStreamArgument == Config.BuildInfoBuildStreamArgument &&
                    EnvironmentScriptingDefineSymbol == Config.EnvironmentScriptingDefineSymbol &&
                    EnvironmentDeveloperConsole == Config.EnvironmentDeveloperConsole &&
-                   EnvironmentManagedLog == Config.EnvironmentManagedLog &&
-                   EnvironmentAutoCaptureUnityLogs == Config.EnvironmentAutoCaptureUnityLogs &&
                    EnvironmentToolsMenu == Config.EnvironmentToolsMenu &&
                    TaskDirectorSystem == Config.TaskDirectorSystem &&
                    Math.Abs(TaskDirectorSystemTickRate - Config.TaskDirectorSystemTickRate) < Platform.FloatTolerance &&

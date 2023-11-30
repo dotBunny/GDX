@@ -2,8 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Logging;
-
 namespace GDX.Developer.ConsoleCommands
 {
 #if UNITY_2022_2_OR_NEWER
@@ -40,7 +38,7 @@ namespace GDX.Developer.ConsoleCommands
                 }
             }
             enabledGenerator.AppendLine(disabledGenerator.ToString());
-            ManagedLog.Info(LogCategory.DEFAULT, enabledGenerator.ToString());
+            UnityEngine.Debug.Log(enabledGenerator.ToString());
             return true;
         }
 

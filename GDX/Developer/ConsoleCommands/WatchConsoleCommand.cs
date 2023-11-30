@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using GDX.Logging;
+using UnityEngine;
 
 namespace GDX.Developer.ConsoleCommands
 {
@@ -50,7 +50,7 @@ namespace GDX.Developer.ConsoleCommands
         {
             if (string.IsNullOrEmpty(context))
             {
-                ManagedLog.Warning(LogCategory.DEFAULT, $"An identifier is required to find a watch.");
+                Debug.LogWarning("An identifier is required to find a watch.");
                 return null;
             }
 
@@ -58,7 +58,7 @@ namespace GDX.Developer.ConsoleCommands
 
             if (!WatchProvider.HasWatch(split[0]))
             {
-                ManagedLog.Warning(LogCategory.DEFAULT, $"Unable to find watch '{context}'.");
+                Debug.LogWarning($"Unable to find watch '{context}'.");
                 return null;
             }
 

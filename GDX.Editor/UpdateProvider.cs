@@ -7,7 +7,6 @@ using System.Net;
 using GDX.Developer;
 using GDX.Editor.Windows.ProjectSettings.ConfigSections;
 using GDX.IO.Compression;
-using GDX.Logging;
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEngine;

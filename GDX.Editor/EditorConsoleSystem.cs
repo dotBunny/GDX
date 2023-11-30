@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using GDX.Developer;
-using GDX.Logging;
 using Unity.Mathematics;
 using UnityEditor;
 
@@ -37,11 +36,9 @@ namespace GDX.Editor
         [InitializeOnLoadMethod]
         static void Initialize()
         {
-            // Default tick rate if enabled
-            if (Config.EnvironmentDeveloperConsole)
-            {
-                SubscribeToEditorApplicationUpdate(true);
-            }
+            if (!Config.EnvironmentDeveloperConsole) return;
+
+            SubscribeToEditorApplicationUpdate(true);
 
             // Always subscribe, maybe in the future we will make a monolithic UnityHooks type system.
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
@@ -56,12 +53,6 @@ namespace GDX.Editor
             switch (state)
             {
                 case PlayModeStateChange.EnteredEditMode:
-
-                    if (Config.EnvironmentAutoCaptureUnityLogs)
-                    {
-                        ManagedLog.CaptureUnityLogs(false);
-                    }
-
                     if (k_TickRate >= 0)
                     {
                         SubscribeToEditorApplicationUpdate(true);
@@ -69,12 +60,6 @@ namespace GDX.Editor
 
                     break;
                 case PlayModeStateChange.ExitingEditMode:
-
-                    if (Config.EnvironmentAutoCaptureUnityLogs)
-                    {
-                        ManagedLog.CaptureUnityLogs();
-                    }
-
                     SubscribeToEditorApplicationUpdate(false);
                     break;
             }

@@ -76,46 +76,30 @@
     flex-direction: row;
 }
 
-#gdx-console-item.Trace
-{
-    color: #646464;
-}
-
-#gdx-console-item.Debug
-{
-    color: #646464;
-}
-
-#gdx-console-item.Info
+#gdx-console-item.log
 {
     color: rgb(206,209,214);
 }
 
-#gdx-console-item.Warning
+#gdx-console-item.warning
 {
     color: #ecdf2b;
 }
 
-#gdx-console-item.Error
+#gdx-console-item.error
 {
     color: #e80051;
 }
 
-#gdx-console-item.Exception
+#gdx-console-item.exception
 {
     color: #e80051;
 }
 
-#gdx-console-item.Assertion
+#gdx-console-item.assert
 {
     color: #e80051;
 }
-
-#gdx-console-item.Fatal
-{
-    color: #e80051;
-}
-
 
 #gdx-console-item > Label
 {
@@ -149,13 +133,6 @@
     padding-top: 4px;
     -unity-text-align: upper-left;
     -unity-font-definition: var(--font-awesome-mini);
-}
-
-#gdx-console-item-category
-{
-    padding-top: 2px;
-    -unity-text-align: upper-left;
-    -unity-font-style: bold;
 }
 
 #gdx-console-item-message

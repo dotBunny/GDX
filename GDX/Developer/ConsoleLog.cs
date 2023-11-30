@@ -2,23 +2,130 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+using UnityEngine;
+using System.Collections;
 using GDX.Collections.Generic;
-using GDX.Logging;
 
 namespace GDX.Developer
 {
-    public class ConsoleHistory
+    public class ConsoleLog : IList
     {
-        CircularBuffer<LogEntry> m_LogHistory = new CircularBuffer<LogEntry>(1000);
+        public uint Version = 0;
 
-        public static LogEntry GetEntryAt(int index)
+        ConcurrentCircularBuffer<ConsoleLogEntry> m_LogHistory = new ConcurrentCircularBuffer<ConsoleLogEntry>(1000);
+
+        public ConsoleLogEntry GetEntryAt(int index)
         {
-            return s_Buffer[index];
+            return m_LogHistory[index];
         }
 
-        public static int GetEntryCount()
+        public ConsoleLog()
         {
-            return s_Buffer.Count;
+            Application.logMessageReceivedThreaded += OnMessageReceived;
+        }
+
+        void OnMessageReceived(string message, string stacktrace, LogType type)
+        {
+            m_LogHistory.Add(new ConsoleLogEntry(type, message, stacktrace));
+            Version++;
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            int count = m_LogHistory.Count;
+            for (int i = 0; i < count; i++)
+            {
+                yield return m_LogHistory[i];
+            }
+        }
+
+        public void CopyTo(Array array, int index)
+        {
+            // Immutable
+        }
+
+        public int Count => m_LogHistory.Count;
+
+        public bool IsSynchronized => false;
+        public object SyncRoot => this;
+
+        public int Add(object value)
+        {
+            return -1;
+        }
+
+        public void Clear()
+        {
+            // Immutable
+        }
+
+        public bool Contains(object value)
+        {
+            if (value == null)
+            {
+                return false;
+            }
+
+            ConsoleLogEntry unboxed = (ConsoleLogEntry)value;
+            int count = m_LogHistory.Count;
+            for (int i = 0; i < count; i++)
+            {
+                ConsoleLogEntry currentEntry = m_LogHistory[i];
+                if (currentEntry.CompareTo(unboxed) == 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public int IndexOf(object value)
+        {
+            if (value == null)
+            {
+                return -1;
+            }
+
+            ConsoleLogEntry unboxed = (ConsoleLogEntry)value;
+            int count = m_LogHistory.Count;
+            for (int i = 0; i < count; i++)
+            {
+                ConsoleLogEntry currentEntry = m_LogHistory[i];
+                if (currentEntry.CompareTo(unboxed) == 0)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        public void Insert(int index, object value)
+        {
+            // Immutable
+        }
+
+        public void Remove(object value)
+        {
+            // Immutable
+        }
+
+        public void RemoveAt(int index)
+        {
+            // Immutable
+        }
+
+        public bool IsFixedSize => false;
+        public bool IsReadOnly => true;
+
+        public object this[int index]
+        {
+            get => m_LogHistory[index];
+            set
+            {
+            }
         }
     }
 }

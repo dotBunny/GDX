@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
-using GDX.Logging;
 
 namespace GDX.Developer.ConsoleCommands
 {
@@ -40,7 +39,7 @@ namespace GDX.Developer.ConsoleCommands
                 }
             }
 
-            ManagedLog.Info(LogCategory.DEFAULT, textGenerator.ToString());
+            UnityEngine.Debug.Log(textGenerator.ToString());
             return true;
         }
 

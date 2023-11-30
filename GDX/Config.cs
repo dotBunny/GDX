@@ -5,8 +5,6 @@
 // ReSharper disable FieldCanBeMadeReadOnly.Global
 // ReSharper disable ConvertToConstant.Global
 
-using GDX.Logging;
-
 namespace GDX
 {
     /// <summary>
@@ -36,10 +34,7 @@ namespace GDX
         const string k_CommandLineParserArgumentSplit = "=";
         const bool k_EditorTaskDirectorSystem = true;
         const double k_EditorTaskDirectorSystemTickRate = 0.5d;
-        const bool k_EnvironmentAlwaysIncludeShaders = true;
         const bool k_EnvironmentDeveloperConsole = true;
-        const bool k_EnvironmentManagedLog = true;
-        const bool k_EnvironmentAutoCaptureUnityLogs = true;
         const bool k_EnvironmentScriptingDefineSymbol = false;
         const bool k_EnvironmentToolsMenu = false;
         const Localization.Language k_LocalizationDefaultCulture = Localization.Language.English;
@@ -136,18 +131,6 @@ namespace GDX
         /// </summary>
         [OriginalValue(k_EnvironmentDeveloperConsole)]
         public static bool EnvironmentDeveloperConsole = k_EnvironmentDeveloperConsole;
-
-        /// <summary>
-        ///     Should the GDX utilized the <see cref="ManagedLog" />.
-        /// </summary>
-        [OriginalValue(k_EnvironmentManagedLog)]
-        public static bool EnvironmentManagedLog = k_EnvironmentManagedLog;
-
-        /// <summary>
-        ///     Should the <see cref="ManagedLog" /> automatically capture the Unity logs?
-        /// </summary>
-        [OriginalValue(k_EnvironmentAutoCaptureUnityLogs)]
-        public static bool EnvironmentAutoCaptureUnityLogs = k_EnvironmentAutoCaptureUnityLogs;
 
         /// <summary>
         ///     Should a GDX scripting define symbol be added to all target build groups.

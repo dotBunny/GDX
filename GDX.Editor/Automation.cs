@@ -6,7 +6,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using GDX.Logging;
 using Unity.CodeEditor;
 using UnityEditor;
 using UnityEditorInternal;

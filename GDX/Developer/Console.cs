@@ -4,12 +4,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Text;
 using GDX.Collections.Generic;
 using GDX.Developer.ConsoleCommands;
-using GDX.Logging;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking.PlayerConnection;
@@ -19,7 +16,6 @@ namespace GDX.Developer
 #if UNITY_2022_2_OR_NEWER
     public static class Console
     {
-
         public enum ConsoleAccessLevel
         {
             Anonymous = -1,
@@ -39,7 +35,8 @@ namespace GDX.Developer
 
         static readonly List<string> k_KnownCommandsList = new List<string>(50);
         static readonly List<string> k_KnownVariablesList = new List<string>(50);
-        static CircularBuffer<LogEntry> s_LogHistory = new CircularBuffer<LogEntry>(1000);
+        public static ConsoleLog Log;
+
         static int s_HintCacheLength = 0;
 
         public static int PreviousCommandCount => s_CommandHistory.Count;
@@ -303,9 +300,7 @@ namespace GDX.Developer
                 }
                 catch (Exception e)
                 {
-                    uint parentMessageID = ManagedLog.Error(LogCategory.DEFAULT,
-                        "An exception occured while processing the console command buffer. It has been flushed.");
-                    ManagedLog.Exception(LogCategory.DEFAULT, e, parentMessageID);
+                    Debug.LogException(e);
                     k_CommandBuffer.Clear();
                     break;
                 }
@@ -320,6 +315,10 @@ namespace GDX.Developer
         [RuntimeInitializeOnLoadMethod]
         static void Initialize()
         {
+            if (!Config.EnvironmentDeveloperConsole) return;
+            
+            Log = new ConsoleLog();
+
             // We preregister a bunch of commands to be optimal
             RegisterCommand(new HelpConsoleCommand());
             RegisterCommand(new ShowConsoleCommand());

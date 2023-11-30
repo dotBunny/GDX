@@ -4,7 +4,6 @@
 
 using System.Collections.Generic;
 using GDX.Collections.Generic;
-using GDX.Logging;
 using UnityEngine.UIElements;
 
 namespace GDX.Developer
@@ -127,7 +126,7 @@ namespace GDX.Developer
                     s_OverrideTicket++;
                     watch.SetOverrideIdentifier(s_OverrideTicket);
 #if UNITY_EDITOR
-                    ManagedLog.Warning(LogCategory.GDX,
+                    UnityEngine.Debug.LogWarning(
                         $"Duplicate registered watch identifier for '{watch.BaseIdentifier}' attempting @ {s_OverrideTicket.ToString()}");
 #endif
                     Register(watch, enabled);
@@ -154,8 +153,7 @@ namespace GDX.Developer
 #if UNITY_EDITOR
                 else
                 {
-                    ManagedLog.Warning(LogCategory.GDX,
-                        $"Unable to unregister '{watch.Identifier}'");
+                    UnityEngine.Debug.LogWarning($"Unable to unregister '{watch.Identifier}'");
                 }
 #endif
             }

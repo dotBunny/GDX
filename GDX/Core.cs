@@ -5,7 +5,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
-using GDX.Logging;
 using GDX.Mathematics.Random;
 using UnityEngine;
 using UnityEngine.LowLevel;
@@ -128,19 +127,6 @@ namespace GDX
             }
 
             PlayerLoopSystem systemRoot = PlayerLoop.GetCurrentPlayerLoop();
-
-            if (Config.EnvironmentAutoCaptureUnityLogs)
-            {
-                ManagedLog.CaptureUnityLogs();
-            }
-
-            // Subscribe our ManagedLog system
-            if (Config.EnvironmentManagedLog)
-            {
-                systemRoot.AddSubSystemToFirstSubSystemOfType(
-                    typeof(Initialization),
-                    typeof(ManagedLog), ManagedLog.Tick);
-            }
 
             // Subscribe our developer console
 #if UNITY_2022_2_OR_NEWER

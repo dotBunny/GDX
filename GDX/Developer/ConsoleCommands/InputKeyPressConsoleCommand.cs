@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Logging;
 
 namespace GDX.Developer.ConsoleCommands
 {
@@ -53,7 +52,7 @@ namespace GDX.Developer.ConsoleCommands
                 return command;
             }
 
-            ManagedLog.Warning(LogCategory.DEFAULT, $"Unable to parse key from '{context}'.");
+            UnityEngine.Debug.LogWarning($"Unable to parse key from '{context}'.");
             return null;
         }
     }

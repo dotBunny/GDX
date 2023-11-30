@@ -6,7 +6,6 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
-using GDX.Logging;
 using UnityEngine;
 
 namespace GDX.IO.Compression
@@ -114,7 +113,7 @@ namespace GDX.IO.Compression
                     readByteCount = sourceStream.Read(fileContentBuffer, 0, newFileContentBufferLength);
                     if (readByteCount != newFileContentBufferLength)
                     {
-                        ManagedLog.Warning(LogCategory.GDX,
+                        Debug.LogWarning(
                             $"Read file size of {readByteCount.ToString()} does not match the expected {newFileContentBufferLength.ToString()} byte size.");
                     }
 

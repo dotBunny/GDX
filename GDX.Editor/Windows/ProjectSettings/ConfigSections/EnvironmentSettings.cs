@@ -55,44 +55,6 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
                 ProjectSettingsProvider.UpdateForChanges();
             });
 
-            m_ToggleManagedLog = m_RootElement.Q<Toggle>("toggle-managed-log");
-            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_ToggleManagedLog);
-            m_ToggleManagedLog.value = ProjectSettingsProvider.WorkingConfig.EnvironmentManagedLog;
-            m_ToggleManagedLog.RegisterValueChangedCallback(evt =>
-            {
-                ProjectSettingsProvider.WorkingConfig.EnvironmentManagedLog = evt.newValue;
-                if (Config.EnvironmentManagedLog != evt.newValue)
-                {
-                    m_ToggleManagedLog.AddToClassList(ResourcesProvider.ChangedClass);
-                }
-                else
-                {
-                    m_ToggleManagedLog.RemoveFromClassList(ResourcesProvider.ChangedClass);
-                }
-
-                ProjectSettingsProvider.UpdateForChanges();
-            });
-
-            m_ToggleAutoCaptureUnityLogs = m_RootElement.Q<Toggle>("toggle-auto-capture-unity-logs");
-            ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_ToggleAutoCaptureUnityLogs);
-            m_ToggleAutoCaptureUnityLogs.value = ProjectSettingsProvider.WorkingConfig.EnvironmentAutoCaptureUnityLogs;
-            m_ToggleAutoCaptureUnityLogs.RegisterValueChangedCallback(evt =>
-            {
-                ProjectSettingsProvider.WorkingConfig.EnvironmentAutoCaptureUnityLogs = evt.newValue;
-                if (Config.EnvironmentAutoCaptureUnityLogs != evt.newValue)
-                {
-                    m_ToggleAutoCaptureUnityLogs.AddToClassList(ResourcesProvider.ChangedClass);
-                }
-                else
-                {
-                    m_ToggleAutoCaptureUnityLogs.RemoveFromClassList(ResourcesProvider.ChangedClass);
-                }
-
-                UpdateForRequirements();
-                ProjectSettingsProvider.UpdateForChanges();
-            });
-
-
             m_ToggleEnsureSymbol = m_RootElement.Q<Toggle>("toggle-ensure-symbol");
             ProjectSettingsProvider.RegisterElementForSearch(SectionIndex, m_ToggleEnsureSymbol);
             m_ToggleEnsureSymbol.value = ProjectSettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol;
@@ -181,14 +143,6 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
             ProjectSettingsProvider.SetStructChangeCheck(m_ToggleEnsureSymbol,
                 Config.EnvironmentScriptingDefineSymbol,
                 ProjectSettingsProvider.WorkingConfig.EnvironmentScriptingDefineSymbol);
-
-            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleManagedLog,
-                Config.EnvironmentManagedLog,
-                ProjectSettingsProvider.WorkingConfig.EnvironmentManagedLog);
-
-            ProjectSettingsProvider.SetStructChangeCheck(m_ToggleAutoCaptureUnityLogs,
-                Config.EnvironmentAutoCaptureUnityLogs,
-                ProjectSettingsProvider.WorkingConfig.EnvironmentAutoCaptureUnityLogs);
 
             ProjectSettingsProvider.SetStructChangeCheck(m_ToggleDeveloperConsole,
                 Config.EnvironmentDeveloperConsole,

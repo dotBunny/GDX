@@ -7,7 +7,6 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
 using GDX.Developer.ConsoleCommands;
-using GDX.Logging;
 using GDX.RuntimeContent;
 using UnityEngine;
 #if GDX_INPUT
@@ -47,7 +46,6 @@ namespace GDX.Developer
 
         StyleLength m_TimestampWidth = new StyleLength(new Length(k_SourceTimestampWidth, LengthUnit.Pixel));
         StyleLength m_LevelWidth = new StyleLength(new Length(k_SourceLevelWidth, LengthUnit.Pixel));
-        StyleLength m_CategoryWidth;
 
         public UIDocument Document { get; private set; }
         public GameObject ConsoleGameObject { get; private set; }
@@ -92,7 +90,7 @@ namespace GDX.Developer
             m_ConsoleScrollView = m_RootElement.Q<ScrollView>("");
             m_ConsoleListView.bindItem += BindItem;
             m_ConsoleListView.makeItem += MakeItem;
-            m_ConsoleListView.itemsSource = new ManagedLogWrapper();
+            m_ConsoleListView.itemsSource = Console.Log;
 
             UpdateFontSize(initialFontSize);
         }
@@ -105,8 +103,6 @@ namespace GDX.Developer
             // Calculate our Category with based on the managed log longest
             m_TimestampWidth = new StyleLength(new Length(Mathf.RoundToInt(k_SourceTimestampWidth * m_FontSizeMultiplier)));
             m_LevelWidth = new StyleLength(new Length(Mathf.RoundToInt(k_SourceLevelWidth * m_FontSizeMultiplier)));
-            m_CategoryWidth = new StyleLength(new Length(Mathf.RoundToInt(ManagedLog.GetLongestCategoryLength() * (fontSize) / 1.2f), LengthUnit.Pixel));
-
             m_ConsoleBarElement.style.height = fontSize + 10;
             m_InputCaret.style.fontSize = fontSize;
             m_InputLabel.style.fontSize = fontSize;
@@ -258,53 +254,61 @@ namespace GDX.Developer
 
             Label timestampLabel = new Label { name = "gdx-console-item-timestamp", style = { fontSize = m_FontSize, width = m_TimestampWidth }};
             Label levelLabel = new Label { name = "gdx-console-item-level" , style = { fontSize = m_FontSize, width = m_LevelWidth}};
-            Label categoryLabel = new Label { name = "gdx-console-item-category" , style = { fontSize = m_FontSize, width = m_CategoryWidth }};
             Label messageLabel = new Label { name = "gdx-console-item-message", style = { fontSize = m_FontSize}};
 
             itemBaseElement.Add(timestampLabel);
             itemBaseElement.Add(levelLabel);
-            itemBaseElement.Add(categoryLabel);
             itemBaseElement.Add(messageLabel);
 
             return itemBaseElement;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static char LogLevelToIcon(LogLevel level)
+        static char LogLevelToIcon(LogType level)
         {
             switch (level)
             {
-                case LogLevel.Trace:
-                    return '\uf3c5';
-                case LogLevel.Debug:
-                    return '\uf304';
-                case LogLevel.Info:
-                    return '\uf27a';
-                case LogLevel.Warning:
-                    return '\uf071';
-                case LogLevel.Error:
+                case LogType.Error:
                     return '\uf06a';
-                case LogLevel.Exception:
-                    return '\uf188';
-                case LogLevel.Assertion:
+                case LogType.Assert:
                     return '\uf2d3';
-                case LogLevel.Fatal:
-                    return '\uf1e2';
+                case LogType.Warning:
+                    return '\uf071';
+                case LogType.Log:
+                    return '\uf27a';
+                case LogType.Exception:
+                    return '\uf188';
             }
-
             return '\uf27a';
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static string LogLevelToClass(LogType level)
+        {
+            switch (level)
+            {
+                case LogType.Error:
+                    return "error";
+                case LogType.Assert:
+                    return "assert";
+                case LogType.Warning:
+                    return "warning";
+                case LogType.Log:
+                    return "log";
+                case LogType.Exception:
+                    return "exception";
+            }
+            return "default";
         }
 
         static void BindItem(VisualElement element, int index)
         {
-            LogEntry entry = ManagedLog.GetEntryAt(index);
-            element.ClearClassList();
-            element.AddToClassList(entry.GetLevelLabel());
 
+            ConsoleLogEntry entry = Console.Log.GetEntryAt(index);
+            element.ClearClassList();
+            element.AddToClassList(LogLevelToClass(entry.Level));
             ((Label)element[0]).text = entry.Timestamp.ToString(CultureInfo.InvariantCulture);
             ((Label)element[1]).text = LogLevelToIcon(entry.Level).ToString();
-            ((Label)element[2]).text = ManagedLog.GetCategoryLabel(entry.CategoryIdentifier);
-            ((Label)element[3]).text = entry.Message;
+            ((Label)element[2]).text = entry.Message;
         }
 
         public void ClearInput()
@@ -316,9 +320,9 @@ namespace GDX.Developer
 
         public void Tick()
         {
-            if (ManagedLog.Version != m_CurrentVersion)
+            if (Console.Log.Version != m_CurrentVersion)
             {
-                m_CurrentVersion = ManagedLog.Version;
+                m_CurrentVersion = Console.Log.Version;
                 m_ConsoleListView.RefreshItems();
                 m_ConsoleListView.ScrollToItem(-1);
             }

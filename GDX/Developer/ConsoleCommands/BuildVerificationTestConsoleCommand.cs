@@ -8,7 +8,6 @@ using System.IO;
 using System.Threading.Tasks;
 using GDX.Developer.Reports;
 using GDX.Developer.Reports.BuildVerification;
-using GDX.Logging;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

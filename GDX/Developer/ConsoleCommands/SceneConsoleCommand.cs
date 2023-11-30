@@ -4,8 +4,7 @@
 
 using System.Collections.Generic;
 using GDX.Collections.Generic;
-using GDX.Logging;
-
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace GDX.Developer.ConsoleCommands
@@ -104,7 +103,7 @@ namespace GDX.Developer.ConsoleCommands
 #endif
 
 
-            ManagedLog.Warning(LogCategory.DEFAULT, $"Unable to find scene '{context}'.");
+            Debug.LogWarning($"Unable to find scene '{context}'.");
             return null;
         }
 

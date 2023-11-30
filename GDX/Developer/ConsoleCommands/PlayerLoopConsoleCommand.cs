@@ -2,7 +2,6 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Logging;
 using UnityEngine.LowLevel;
 
 namespace GDX.Developer.ConsoleCommands
@@ -17,7 +16,7 @@ namespace GDX.Developer.ConsoleCommands
             TextGenerator text = new TextGenerator();
             loop.GenerateSystemTree(text);
 
-            ManagedLog.Info(LogCategory.DEFAULT, text.ToString());
+            UnityEngine.Debug.Log(text.ToString());
             return true;
         }
 

@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using GDX.Logging;
 using UnityEngine;
 
 namespace GDX.Developer.ConsoleCommands

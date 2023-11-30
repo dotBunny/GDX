@@ -70,9 +70,6 @@ namespace GDX.Editor
 
             AddToGenerator(code, configFields, nameof(Config.EnvironmentDeveloperConsole),
                 rhs.EnvironmentDeveloperConsole);
-            AddToGenerator(code, configFields, nameof(Config.EnvironmentManagedLog), rhs.EnvironmentManagedLog);
-            AddToGenerator(code, configFields, nameof(Config.EnvironmentAutoCaptureUnityLogs),
-                rhs.EnvironmentAutoCaptureUnityLogs);
             AddToGenerator(code, configFields, nameof(Config.EnvironmentScriptingDefineSymbol),
                 rhs.EnvironmentScriptingDefineSymbol);
             AddToGenerator(code, configFields, nameof(Config.EnvironmentToolsMenu),

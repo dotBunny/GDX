@@ -2,7 +2,7 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using GDX.Logging;
+using UnityEngine;
 
 namespace GDX.Developer.ConsoleCommands
 {
@@ -12,7 +12,7 @@ namespace GDX.Developer.ConsoleCommands
         /// <inheritdoc />
         public override bool Evaluate(float deltaTime)
         {
-            ManagedLog.Info(LogCategory.DEFAULT, "TODO: Version Information");
+            Debug.Log("TODO: Version Information");
             return true;
         }
 
