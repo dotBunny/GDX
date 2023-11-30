@@ -24,7 +24,7 @@ namespace GDX.Developer
 
         // Maybe expose these for people messing with fonts
         const int k_SourceFontSize = 14;
-        const int k_SourceTimestampWidth = 150;
+        const int k_FrameCountWidth = 100;
         const int k_SourceLevelWidth = 22;
 
         readonly ListView m_ConsoleListView;
@@ -44,7 +44,7 @@ namespace GDX.Developer
         int m_FontSize = 14;
         float m_FontSizeMultiplier = 1f;
 
-        StyleLength m_TimestampWidth = new StyleLength(new Length(k_SourceTimestampWidth, LengthUnit.Pixel));
+        StyleLength m_FrameWidth = new StyleLength(new Length(k_FrameCountWidth, LengthUnit.Pixel));
         StyleLength m_LevelWidth = new StyleLength(new Length(k_SourceLevelWidth, LengthUnit.Pixel));
 
         public UIDocument Document { get; private set; }
@@ -101,7 +101,7 @@ namespace GDX.Developer
             m_FontSizeMultiplier = (float)m_FontSize / k_SourceFontSize;
 
             // Calculate our Category with based on the managed log longest
-            m_TimestampWidth = new StyleLength(new Length(Mathf.RoundToInt(k_SourceTimestampWidth * m_FontSizeMultiplier)));
+            m_FrameWidth = new StyleLength(new Length(Mathf.RoundToInt(k_FrameCountWidth * m_FontSizeMultiplier)));
             m_LevelWidth = new StyleLength(new Length(Mathf.RoundToInt(k_SourceLevelWidth * m_FontSizeMultiplier)));
             m_ConsoleBarElement.style.height = fontSize + 10;
             m_InputCaret.style.fontSize = fontSize;
@@ -252,7 +252,7 @@ namespace GDX.Developer
         {
             VisualElement itemBaseElement = new VisualElement { name = "gdx-console-item" };
 
-            Label timestampLabel = new Label { name = "gdx-console-item-timestamp", style = { fontSize = m_FontSize, width = m_TimestampWidth }};
+            Label timestampLabel = new Label { name = "gdx-console-item-frame", style = { fontSize = m_FontSize, width = m_FrameWidth }};
             Label levelLabel = new Label { name = "gdx-console-item-level" , style = { fontSize = m_FontSize, width = m_LevelWidth}};
             Label messageLabel = new Label { name = "gdx-console-item-message", style = { fontSize = m_FontSize}};
 
@@ -302,12 +302,15 @@ namespace GDX.Developer
 
         static void BindItem(VisualElement element, int index)
         {
-
             ConsoleLogEntry entry = Console.Log.GetEntryAt(index);
             element.ClearClassList();
             element.AddToClassList(LogLevelToClass(entry.Level));
-            ((Label)element[0]).text = entry.Timestamp.ToString(CultureInfo.InvariantCulture);
+
+            ((Label)element[0]).text = entry.FrameCount;
+
             ((Label)element[1]).text = LogLevelToIcon(entry.Level).ToString();
+            ((Label)element[1]).tooltip = entry.StackTrace;
+
             ((Label)element[2]).text = entry.Message;
         }
 

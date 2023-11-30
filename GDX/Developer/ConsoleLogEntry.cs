@@ -10,14 +10,16 @@ namespace GDX.Developer
 {
     public struct ConsoleLogEntry : IComparable<ConsoleLogEntry>, IComparer<ConsoleLogEntry>
     {
-        public DateTime Timestamp;
+        public int Frame;
+        public string FrameCount;
         public LogType Level;
         public string Message;
         public string StackTrace;
 
         public ConsoleLogEntry(LogType type, string message, string stackTrace = null)
         {
-            Timestamp = DateTime.Now;
+            Frame = Time.frameCount;
+            FrameCount = Frame.ToString().PadLeft(10, '0');
             Level = type;
             Message = message;
             StackTrace = stackTrace;
@@ -26,12 +28,12 @@ namespace GDX.Developer
         public int CompareTo(ConsoleLogEntry other)
         {
 
-            if (Timestamp.Ticks > other.Timestamp.Ticks)
+            if (Frame > other.Frame)
             {
                 return 1;
             }
 
-            if (Timestamp.Ticks < other.Timestamp.Ticks)
+            if (Frame < other.Frame)
             {
                 return -1;
             }
@@ -41,12 +43,12 @@ namespace GDX.Developer
 
         public int Compare(ConsoleLogEntry x, ConsoleLogEntry y)
         {
-            if (x.Timestamp.Ticks > y.Timestamp.Ticks)
+            if (x.Frame > y.Frame)
             {
                 return 1;
             }
 
-            if (x.Timestamp.Ticks < y.Timestamp.Ticks)
+            if (x.Frame < y.Frame)
             {
                 return -1;
             }

@@ -57,7 +57,8 @@ namespace GDX.Developer
 
         public void Clear()
         {
-            // Immutable
+            m_LogHistory.Clear();
+            Version++;
         }
 
         public bool Contains(object value)

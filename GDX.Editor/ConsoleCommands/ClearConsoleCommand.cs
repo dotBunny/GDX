@@ -6,6 +6,7 @@ using System;
 using System.Reflection;
 using GDX.Developer;
 using UnityEditor;
+using Console = System.Console;
 
 namespace GDX.Editor.ConsoleCommands
 {
@@ -21,6 +22,8 @@ namespace GDX.Editor.ConsoleCommands
             {
                 method.Invoke(new object(), null);
             }
+
+            GDX.Developer.Console.Log.Clear();
 
             return true;
         }

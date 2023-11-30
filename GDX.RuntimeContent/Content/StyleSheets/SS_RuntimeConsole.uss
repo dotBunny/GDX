@@ -120,12 +120,13 @@
     background-color: rgb(34, 37, 41);
 }
 
-#gdx-console-item-timestamp
+#gdx-console-item-frame
 {
     padding-top: 2px;
     padding-left: 5px;
+    padding-right: 5px;
     color: rgb(57,62,69);
-    -unity-text-align: upper-left;
+    -unity-text-align: upper-right;
 }
 
 #gdx-console-item-level
