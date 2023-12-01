@@ -226,7 +226,7 @@ namespace GDX.Threading
 
             ConsoleLogEntry lastLog = m_ConsoleLog.GetLastEntry();
             Assert.IsTrue(
-                lastLog.Level == LogLevel.Warning &&
+                lastLog.Level == UnityEngine.LogType.Warning &&
                 lastLog.Message ==
                 "Unable to tick Task Director from PlayerLoop outside of PlayMode.");
         }
