@@ -42,7 +42,7 @@ namespace GDX.Threading
                 return;
             }
 #if !UNITY_EDITOR
-            Debug.Log"GDX runtime task scheduler activated.");
+            Debug.Log("GDX runtime task scheduler activated.");
 #endif // !UNITY_EDITOR
 
             PlayerLoopSystem systemRoot = PlayerLoop.GetCurrentPlayerLoop();
