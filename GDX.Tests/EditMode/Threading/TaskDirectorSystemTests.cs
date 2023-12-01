@@ -6,7 +6,7 @@ using System;
 using System.Collections;
 using System.Threading;
 using GDX.Editor;
-using GDX.Logging;
+using GDX.Developer;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -28,12 +28,14 @@ namespace GDX.Threading
         int m_Counter;
 
         Scene m_TestScene;
+        ConsoleLog m_ConsoleLog;
 
         [UnitySetUp]
         public IEnumerator Setup()
         {
             // Ensure we are not in a scene
             m_TestScene = TestFramework.ForceEmptyScene();
+            m_ConsoleLog = new ConsoleLog();
 
             // Cache previous settings we are bound to play with
             m_PreviousToggle = EditorSettings.enterPlayModeOptionsEnabled;
@@ -209,7 +211,7 @@ namespace GDX.Threading
             Config.TaskDirectorSystem = false;
             TaskDirectorSystem.SetTickRate(1);
 
-            LogEntry lastLog = ManagedLog.GetLastEntry();
+            ConsoleLogEntry lastLog = m_ConsoleLog.GetLastEntry();
             Assert.IsTrue(
                 lastLog.Level == LogLevel.Warning &&
                 lastLog.Message == "Tick rate set whilst TaskDirectorSystem has been configured off.");
@@ -222,7 +224,7 @@ namespace GDX.Threading
             Reflection.InvokeStaticMethod("GDX.Threading.TaskDirectorSystem", "PlayerLoopTick", null,
                 Reflection.PrivateStaticFlags);
 
-            LogEntry lastLog = ManagedLog.GetLastEntry();
+            ConsoleLogEntry lastLog = m_ConsoleLog.GetLastEntry();
             Assert.IsTrue(
                 lastLog.Level == LogLevel.Warning &&
                 lastLog.Message ==

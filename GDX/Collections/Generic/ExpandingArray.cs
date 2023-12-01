@@ -6,6 +6,7 @@ using System;
 
 namespace GDX.Collections.Generic
 {
+#if UNITY_2021_2_OR_NEWER
     public struct ExpandingArray<T>
     {
         T[] m_Array;
@@ -97,4 +98,5 @@ namespace GDX.Collections.Generic
             m_Head = 0;
         }
     }
+#endif // UNITY_2021_2_OR_NEWER
 }

@@ -20,9 +20,19 @@ namespace GDX.Developer
             return m_LogHistory[index];
         }
 
+        public ConsoleLogEntry GetLastEntry()
+        {
+            return m_LogHistory[Count - 1];
+        }
+
         public ConsoleLog()
         {
             Application.logMessageReceivedThreaded += OnMessageReceived;
+        }
+
+        ~ConsoleLog()
+        {
+            Application.logMessageReceivedThreaded -= OnMessageReceived;
         }
 
         void OnMessageReceived(string message, string stacktrace, LogType type)
