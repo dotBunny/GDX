@@ -21,7 +21,7 @@ namespace GDX.Developer.ConsoleCommands
 #if UNITY_EDITOR
             EditorApplication.isPlaying = false;
 #else
-            Application.Quit(errorCode);
+            Application.Quit(m_ErrorCode);
 #endif
             return true;
         }
