@@ -4,7 +4,9 @@
 
 using System;
 using GDX.Developer;
+#if UNITY_2022_2_OR_NEWER
 using GDX.Developer.ConsoleCommands;
+#endif // UNITY_2022_2_OR_NEWER
 using UnityEditor;
 using UnityEngine;
 
