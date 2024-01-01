@@ -316,7 +316,7 @@ namespace GDX.Developer
         static void Initialize()
         {
             if (!Config.EnvironmentDeveloperConsole) return;
-            
+
             Log = new ConsoleLog();
 
             // We preregister a bunch of commands to be optimal
@@ -336,6 +336,7 @@ namespace GDX.Developer
             RegisterCommand(new BuildVerificationTestConsoleCommand());
             RegisterCommand(new ConsoleVariablesConsoleCommand());
             RegisterCommand(new WatchConsoleCommand());
+            RegisterCommand(new WatchAllConsoleCommand());
             RegisterCommand(new WatchListConsoleCommand());
             RegisterCommand(new ScreenCaptureConsoleCommand());
 

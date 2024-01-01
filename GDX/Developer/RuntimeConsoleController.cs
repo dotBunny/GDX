@@ -254,7 +254,7 @@ namespace GDX.Developer
 
             Label timestampLabel = new Label { name = "gdx-console-item-frame", style = { fontSize = m_FontSize, width = m_FrameWidth }};
             Label levelLabel = new Label { name = "gdx-console-item-level" , style = { fontSize = m_FontSize, width = m_LevelWidth}};
-            Label messageLabel = new Label { name = "gdx-console-item-message", style = { fontSize = m_FontSize}};
+            Label messageLabel = new Label { name = "gdx-console-item-message", style = { fontSize = m_FontSize}, enableRichText = false};
 
             itemBaseElement.Add(timestampLabel);
             itemBaseElement.Add(levelLabel);

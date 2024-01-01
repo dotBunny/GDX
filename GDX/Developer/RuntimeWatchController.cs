@@ -61,6 +61,7 @@ namespace GDX.Developer
 
         public void UpdateShow(bool show)
         {
+            WatchProvider.SetGlobalState(show);
             if (show)
             {
                 m_RootElement.Show();

@@ -36,13 +36,13 @@ namespace GDX.Developer.ConsoleCommands
         /// <inheritdoc />
         public override string GetHelpUsage()
         {
-            return "watch [identifier] <state>";
+            return "watch <identifier> [state]";
         }
 
         /// <inheritdoc />
         public override string GetHelpMessage()
         {
-            return "Toggles the enabled/disabled state of a watch based on its unique identifier, or sets a specific state.";
+            return "Toggles the enabled/disabled state of a watch based on its unique identifier, or sets a specific state. To disable polling globally of watches see the `watches.show` cvar.";
         }
 
         /// <inheritdoc />

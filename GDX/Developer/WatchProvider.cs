@@ -11,6 +11,7 @@ namespace GDX.Developer
 #if UNITY_2022_2_OR_NEWER
     public static class WatchProvider
     {
+        static bool s_ShouldPollEnabledWatches = true;
         public static ushort Version;
         static uint s_OverrideTicket;
         static readonly object k_Lock = new object();
@@ -20,9 +21,34 @@ namespace GDX.Developer
 
         static readonly List<WatchBase> k_KnownActiveWatches = new List<WatchBase>(50);
 
+
         public static void ToggleState(WatchBase watch)
         {
             SetState(watch, !k_KnownActiveWatches.Contains(watch));
+        }
+
+        public static void SetGlobalState(bool enabled)
+        {
+            s_ShouldPollEnabledWatches = enabled;
+        }
+
+        public static void SetAllEnabled()
+        {
+            WatchList list = GetWatchList();
+            int count = list.Count;
+            for (int i = 0; i < count; i++)
+            {
+                SetState(GetWatch(list.Identfiers[i]), true);
+            }
+        }
+
+        public static void SetAllDisabled()
+        {
+            int count = k_KnownActiveWatches.Count;
+            for (int i = count - 1; i >= 0; i--)
+            {
+                SetState(k_KnownActiveWatches[i], false);
+            }
         }
 
         public static void SetState(WatchBase watch, bool enabled)
@@ -68,6 +94,7 @@ namespace GDX.Developer
 
         public static bool HasActiveWatches()
         {
+            if (!s_ShouldPollEnabledWatches) return false;
             return k_KnownActiveWatches.Count > 0;
         }
 
@@ -161,6 +188,8 @@ namespace GDX.Developer
 
         public static void Poll()
         {
+            if (!s_ShouldPollEnabledWatches) return;
+
             // TODO: We could make this part of the managed update and self ticking at a rate?
             lock (k_Lock)
             {

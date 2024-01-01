@@ -41,8 +41,7 @@ namespace GDX.Developer.ConsoleCommands
         /// <inheritdoc />
         public override string GetHelpMessage()
         {
-            return
-                "Exits the application with the provided error code, if none is present will use the currently set one OR exits playmode in the editor.";
+            return "Exits the application with the provided error code, if none is present will use the currently set one OR exits playmode in the editor.";
         }
 
         /// <inheritdoc />
