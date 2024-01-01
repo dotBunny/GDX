@@ -64,7 +64,6 @@ While the purpose of `GDX` is to provide battle-tested code to developers, this 
 Highlight | Description
 :-- | :--
 [DebugDraw](xref:GDX.Experimental.DebugDraw) | A state-based optimized line drawing solution for debugging information at authoring and runtime.
-[ManagedLog](xref:GDX.Experimental.Logging.ManagedLog)  | A managed-only categorized hierarchical logging solution.
 
 ## [GDX.IO](xref:GDX.IO)
 

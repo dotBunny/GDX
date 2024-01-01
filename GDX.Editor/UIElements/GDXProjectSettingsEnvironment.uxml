@@ -5,7 +5,6 @@
         <ui:VisualElement class="gdx-fixed-vertical-spacer-10"/>
         <ui:Toggle label="Use Developer Console" name="toggle-developer-console"
                    tooltip="Should the developer console system be ran at both author and runtime. (Unity 2021.3+)"/>
-        <ui:Toggle label="Use Managed Log" name="toggle-managed-log" tooltip="Should the managed log be used?"/>
         <ui:Toggle label="Auto Capture Unity Logs" name="toggle-auto-capture-unity-logs"
                    tooltip="Should the managed log capture the Unity log automatically at runtime?"/>
         <ui:Toggle label="Ensure GDX Symbol" name="toggle-ensure-symbol"

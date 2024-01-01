@@ -37,6 +37,14 @@ namespace GDX.Editor
             }
         }
 
+#if GDX_TOOLS
+        [MenuItem("Tools/GDX/Developer/Force Domain Reload", false, 100)]
+#endif // GDX_TOOLS
+        static void ForceDomainReload()
+        {
+            EditorUtility.RequestScriptReload();
+        }
+
 #if UNITY_2022_2_OR_NEWER && !UNITY_2023_2_OR_NEWER
 #if GDX_TOOLS
         [MenuItem("Assets/Find References In Project", false, 25)]

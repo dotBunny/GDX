@@ -5,12 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.0.1] - Unreleased
+***"Runtime Console"***
+> Testing the waters of some features we've been cooking up for other purposes.
+
+## [4.0.1] - 2024-01-01
 
 ### Added
 
 - A `CommandPalette`, (Developer)`Console` and `RuntimeConsole` requiring (_Unity 2022.2+_), example code utilizes the new InputSystem.
-- GDX primarily uses own `ManagedLog` system now allowing for heirarchial logging through the framework.
 - Numerous `Watches` which provide easily visualization of static fields.
 - A simplified `BuildConfiguration` object with inheritance.
 - Simplified ways to access identifiers for `DataTableBase` rows and columns.

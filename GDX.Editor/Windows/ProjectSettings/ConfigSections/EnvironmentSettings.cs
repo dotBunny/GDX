@@ -19,7 +19,6 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         Toggle m_ToggleDeveloperConsole;
         Toggle m_ToggleEnsureShaders;
         Toggle m_ToggleEnsureSymbol;
-        Toggle m_ToggleManagedLog;
         Toggle m_ToggleToolsMenu;
 
         public string[] GetSearchKeywords()
@@ -50,8 +49,6 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
                 {
                     m_ToggleDeveloperConsole.RemoveFromClassList(ResourcesProvider.ChangedClass);
                 }
-
-                UpdateForRequirements();
                 ProjectSettingsProvider.UpdateForChanges();
             });
 
@@ -138,7 +135,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 
         public void UpdateSectionContent()
         {
-            UpdateForRequirements();
+
 
             ProjectSettingsProvider.SetStructChangeCheck(m_ToggleEnsureSymbol,
                 Config.EnvironmentScriptingDefineSymbol,
@@ -151,23 +148,6 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
             ProjectSettingsProvider.SetStructChangeCheck(m_ToggleToolsMenu,
                 Config.EnvironmentToolsMenu,
                 ProjectSettingsProvider.WorkingConfig.EnvironmentToolsMenu);
-        }
-
-        void UpdateForRequirements()
-        {
-            // Ensure that the managed log is turned on if your using the developer console
-            if (ProjectSettingsProvider.WorkingConfig.EnvironmentDeveloperConsole &&
-                m_ToggleManagedLog.enabledSelf)
-            {
-                m_ToggleManagedLog.value = true;
-                m_ToggleManagedLog.SetEnabled(false);
-            }
-
-            if (!ProjectSettingsProvider.WorkingConfig.EnvironmentDeveloperConsole &&
-                !m_ToggleManagedLog.enabledSelf)
-            {
-                m_ToggleManagedLog.SetEnabled(true);
-            }
         }
     }
 }
