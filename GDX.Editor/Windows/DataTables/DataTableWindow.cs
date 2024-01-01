@@ -7,25 +7,45 @@ using UnityEngine.UIElements;
 namespace GDX.Editor.Windows.DataTables
 {
 #if UNITY_2022_2_OR_NEWER
-    public class DataTableWindow : EditorWindow, DataTableTracker.IStructuralChangeCallbackReceiver, DataTableTracker.ICellValueChangedCallbackReceiver, DataTableTracker.IUndoRedoEventCallbackReceiver
+    public class DataTableWindow : EditorWindow, DataTableTracker.IStructuralChangeCallbackReceiver,
+        DataTableTracker.ICellValueChangedCallbackReceiver, DataTableTracker.IUndoRedoEventCallbackReceiver
     {
-
         /// <summary>
-        ///     Cached version of the <see cref="DataTableBase"/> ticket.
+        ///     Cached version of the <see cref="DataTableBase" /> ticket.
         /// </summary>
         /// <remarks>
         ///     This is used to support the Reload function and to help survive domain reload.
         /// </remarks>
-        [SerializeField]
-        int m_DataTableTicket = -1;
+        [SerializeField] int m_DataTableTicket = -1;
+
+        bool m_Bound;
 
         DataTableWindowController m_Controller;
-        DataTableWindowOverlay m_Overlay;
 
         DataTableBase m_DataTable;
+        DataTableWindowOverlay m_Overlay;
         DataTableWindowToolbar m_Toolbar;
         DataTableWindowView m_View;
-        bool m_Bound;
+
+        void OnDestroy()
+        {
+            rootVisualElement.UnregisterCallback<KeyDownEvent>(OnKeyboardEvent);
+
+            if (m_Bound)
+            {
+                DataTableTracker.UnregisterStructuralChanged(this, m_DataTableTicket);
+                DataTableTracker.UnregisterCellValueChanged(this, m_DataTableTicket);
+                DataTableTracker.UnregisterUndoRedoEvent(this, m_DataTableTicket);
+                DataTableTracker.RemoveUsage(m_DataTableTicket);
+            }
+
+            if (m_DataTable != null)
+            {
+                Save();
+            }
+
+            DataTableWindowProvider.UnregisterTableWindow(this);
+        }
 
         void CreateGUI()
         {
@@ -50,23 +70,51 @@ namespace GDX.Editor.Windows.DataTables
             EditorApplication.delayCall += CheckForNoTable;
         }
 
-        void OnDestroy()
+        /// <inheritdoc />
+        public void OnCellValueChanged(int rowIdentifier, int columnIdentifier)
         {
-            rootVisualElement.UnregisterCallback<KeyDownEvent>(OnKeyboardEvent);
+            int orderedIndex = m_DataTable.GetRowOrder(rowIdentifier);
+            m_View.GetMultiColumnListView().RefreshItem(orderedIndex);
+        }
 
-            if (m_Bound)
-            {
-                DataTableTracker.UnregisterStructuralChanged(this, m_DataTableTicket);
-                DataTableTracker.UnregisterCellValueChanged(this, m_DataTableTicket);
-                DataTableTracker.UnregisterUndoRedoEvent(this, m_DataTableTicket);
-                DataTableTracker.RemoveUsage(m_DataTableTicket);
-            }
+        /// <inheritdoc />
+        public void OnColumnDefinitionChange(int columnIdentifier)
+        {
+            RebindTable();
+        }
 
-            if (m_DataTable != null)
-            {
-                Save();
-            }
-            DataTableWindowProvider.UnregisterTableWindow(this);
+        /// <inheritdoc />
+        public void OnRowDefinitionChange(int rowIdentifier)
+        {
+            m_View.RebuildRowData();
+        }
+
+        public void OnSettingsChange()
+        {
+            titleContent = new GUIContent(m_DataTable.GetMetaData().DisplayName, ResourcesProvider.GetDataTableIcon());
+            m_View.RefreshItems();
+            m_Toolbar.UpdateForSettings();
+        }
+
+        public void OnUndoRedoRowDefinitionChange(int rowIdentifier)
+        {
+            m_View.RebuildRowData();
+        }
+
+        public void OnUndoRedoColumnDefinitionChange(int columnIdentifier)
+        {
+            RebindTable();
+        }
+
+        public void OnUndoRedoCellValueChanged(int rowIdentifier, int columnIdentifier)
+        {
+            int orderedIndex = m_DataTable.GetRowOrder(rowIdentifier);
+            m_View.GetMultiColumnListView().RefreshItem(orderedIndex);
+        }
+
+        public void OnUndoRedoSettingsChanged()
+        {
+            titleContent = new GUIContent(m_DataTable.GetMetaData().DisplayName, ResourcesProvider.GetDataTableIcon());
         }
 
         void OnKeyboardEvent(KeyDownEvent evt)
@@ -139,6 +187,7 @@ namespace GDX.Editor.Windows.DataTables
                     BindTable(m_DataTable, true);
                     return;
                 }
+
                 Close();
             }
         }
@@ -151,7 +200,9 @@ namespace GDX.Editor.Windows.DataTables
                 return;
             }
 
-            if (skipDialog || EditorUtility.DisplayDialog($"Save {m_DataTable.GetMetaData().DisplayName}", "There are changes made to the table (in memory) which have not been saved to disk. Would you like to write those changes to disk now?", "Yes", "No"))
+            if (skipDialog || EditorUtility.DisplayDialog($"Save {m_DataTable.GetMetaData().DisplayName}",
+                    "There are changes made to the table (in memory) which have not been saved to disk. Would you like to write those changes to disk now?",
+                    "Yes", "No"))
             {
                 AssetDatabase.SaveAssetIfDirty(m_DataTable);
                 AssetDatabase.SaveAssetIfDirty(m_DataTable.GetMetaData());
@@ -162,7 +213,9 @@ namespace GDX.Editor.Windows.DataTables
         public void BindTable(DataTableBase dataTable, bool fromDomainReload = false)
         {
             m_DataTable = dataTable;
-            m_DataTableTicket = fromDomainReload ? DataTableTracker.RegisterTableAfterReload(dataTable, m_DataTableTicket) : DataTableTracker.RegisterTable(dataTable);
+            m_DataTableTicket = fromDomainReload
+                ? DataTableTracker.RegisterTableAfterReload(dataTable, m_DataTableTicket)
+                : DataTableTracker.RegisterTable(dataTable);
 
             DataTableWindowProvider.RegisterTableWindow(this, m_DataTable);
 
@@ -219,53 +272,6 @@ namespace GDX.Editor.Windows.DataTables
 
             // Update for settings
             m_Toolbar.UpdateForSettings();
-        }
-
-        /// <inheritdoc />
-        public void OnColumnDefinitionChange(int columnIdentifier)
-        {
-            RebindTable();
-        }
-
-        /// <inheritdoc />
-        public void OnCellValueChanged(int rowIdentifier, int columnIdentifier)
-        {
-            int orderedIndex = m_DataTable.GetRowOrder(rowIdentifier);
-            m_View.GetMultiColumnListView().RefreshItem(orderedIndex);
-        }
-
-        /// <inheritdoc />
-        public void OnRowDefinitionChange(int rowIdentifier)
-        {
-            m_View.RebuildRowData();
-        }
-
-        public void OnSettingsChange()
-        {
-            titleContent = new GUIContent(m_DataTable.GetMetaData().DisplayName, ResourcesProvider.GetDataTableIcon());
-            m_View.RefreshItems();
-            m_Toolbar.UpdateForSettings();
-        }
-
-        public void OnUndoRedoRowDefinitionChange(int rowIdentifier)
-        {
-            m_View.RebuildRowData();
-        }
-
-        public void OnUndoRedoColumnDefinitionChange(int columnIdentifier)
-        {
-            RebindTable();
-        }
-
-        public void OnUndoRedoCellValueChanged(int rowIdentifier, int columnIdentifier)
-        {
-            int orderedIndex = m_DataTable.GetRowOrder(rowIdentifier);
-            m_View.GetMultiColumnListView().RefreshItem(orderedIndex);
-        }
-
-        public void OnUndoRedoSettingsChanged()
-        {
-            titleContent = new GUIContent(m_DataTable.GetMetaData().DisplayName, ResourcesProvider.GetDataTableIcon());
         }
     }
 #endif // UNITY_2022_2_OR_NEWER

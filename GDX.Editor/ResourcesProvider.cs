@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2023 dotBunny Inc.
+// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -42,7 +42,7 @@ namespace GDX.Editor
         static Texture2D s_DataTableIcon;
 
         /// <summary>
-        ///     A collection of queried <see cref="StyleSheet"/> keyed by their search.
+        ///     A collection of queried <see cref="StyleSheet" /> keyed by their search.
         /// </summary>
         static StringKeyDictionary<StyleSheet> s_StyleSheets = new StringKeyDictionary<StyleSheet>(10);
 
@@ -86,11 +86,14 @@ namespace GDX.Editor
         /// <returns>An image loaded from disk, if not cached.</returns>
         public static Texture2D GetBanner()
         {
-            if (s_Banner != null) return s_Banner;
+            if (s_Banner != null)
+            {
+                return s_Banner;
+            }
 
             string imagePath = Path.Combine(
                 Path.GetDirectoryName(UpdateProvider.LocalPackage.PackageManifestPath),
-                ".docfx", "images", "home", "gdx-banner.png" );
+                ".docfx", "images", "home", "gdx-banner.png");
 
             if (File.Exists(imagePath))
             {
@@ -98,6 +101,7 @@ namespace GDX.Editor
                 s_Banner = new Texture2D(1200, 630, TextureFormat.RGBA32, true);
                 s_Banner.LoadImage(bytes);
             }
+
             return s_Banner;
         }
 
@@ -107,7 +111,10 @@ namespace GDX.Editor
         /// <returns>An image loaded from disk, if not cached.</returns>
         public static Texture2D GetDataTableIcon()
         {
-            if (s_DataTableIcon != null) return s_DataTableIcon;
+            if (s_DataTableIcon != null)
+            {
+                return s_DataTableIcon;
+            }
 
             // Different icons based on theme
             string imagePath = null;
@@ -115,13 +122,13 @@ namespace GDX.Editor
             {
                 imagePath = Path.Combine(
                     Path.GetDirectoryName(UpdateProvider.LocalPackage.PackageManifestPath),
-                    ".docfx","images", "manual", "features", "data-table", "data-table-window-icon-dark.png" );
+                    ".docfx", "images", "manual", "features", "data-table", "data-table-window-icon-dark.png");
             }
             else
             {
                 imagePath = Path.Combine(
                     Path.GetDirectoryName(UpdateProvider.LocalPackage.PackageManifestPath),
-                    ".docfx","images", "manual", "features", "data-table", "data-table-window-icon-light.png" );
+                    ".docfx", "images", "manual", "features", "data-table", "data-table-window-icon-light.png");
             }
 
             if (File.Exists(imagePath))
@@ -130,6 +137,7 @@ namespace GDX.Editor
                 s_DataTableIcon = new Texture2D(88, 128, TextureFormat.RGBA32, false);
                 s_DataTableIcon.LoadImage(bytes);
             }
+
             return s_DataTableIcon;
         }
 
@@ -139,11 +147,14 @@ namespace GDX.Editor
         /// <returns>An image loaded from disk, if not cached.</returns>
         public static Texture2D GetLogo()
         {
-            if (s_CompanyLogo != null) return s_CompanyLogo;
+            if (s_CompanyLogo != null)
+            {
+                return s_CompanyLogo;
+            }
 
             string imagePath = Path.Combine(
                 Path.GetDirectoryName(UpdateProvider.LocalPackage.PackageManifestPath),
-                ".docfx", "images", "branding", "dotBunny.png" );
+                ".docfx", "images", "branding", "dotBunny.png");
 
             if (File.Exists(imagePath))
             {
@@ -151,6 +162,7 @@ namespace GDX.Editor
                 s_CompanyLogo = new Texture2D(800, 800, TextureFormat.RGBA32, true);
                 s_CompanyLogo.LoadImage(bytes);
             }
+
             return s_CompanyLogo;
         }
 
@@ -162,6 +174,7 @@ namespace GDX.Editor
                 s_StyleSheets.AddWithExpandCheck(targetName, AssetDatabase.LoadAssetAtPath<StyleSheet>(
                     $"{UpdateProvider.LocalPackage.PackageAssetPath}/GDX.Editor/StyleSheets/{targetName}.uss"));
             }
+
             return s_StyleSheets[targetName];
         }
 
@@ -176,6 +189,7 @@ namespace GDX.Editor
             {
                 return s_SharedStyleSheet;
             }
+
             s_SharedStyleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(
                 $"{UpdateProvider.LocalPackage.PackageAssetPath}/GDX.Editor/StyleSheets/GDXShared.uss");
 
@@ -205,9 +219,9 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        /// Sets up the initial stylesheets for a <see cref="VisualElement"/>.
+        ///     Sets up the initial stylesheets for a <see cref="VisualElement" />.
         /// </summary>
-        /// <param name="rootElement">The target <see cref="VisualElement"/> to have the stylesheets applied to.</param>
+        /// <param name="rootElement">The target <see cref="VisualElement" /> to have the stylesheets applied to.</param>
         public static void SetupSharedStylesheets(VisualElement rootElement)
         {
             StyleSheet shared = GetSharedStylesheet();
@@ -215,6 +229,7 @@ namespace GDX.Editor
             {
                 rootElement.styleSheets.Add(shared);
             }
+
             // Add any overrides
             if (GetStyleSheetOverride() != null)
             {
@@ -225,7 +240,7 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        ///     Add the target stylesheet to the provided <paramref name="rootElement"/>.
+        ///     Add the target stylesheet to the provided <paramref name="rootElement" />.
         /// </summary>
         /// <param name="targetName">The name of the stylesheet found in the package.</param>
         /// <param name="rootElement">The element to apply the stylesheet to.</param>

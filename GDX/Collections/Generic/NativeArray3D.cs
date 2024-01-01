@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -26,7 +26,7 @@ namespace GDX.Collections.Generic
         public readonly int Depth;
 
         /// <summary>
-        ///     The total length of a single <see cref="Depth"/>.
+        ///     The total length of a single <see cref="Depth" />.
         /// </summary>
         public readonly int DepthLength;
 
@@ -54,7 +54,8 @@ namespace GDX.Collections.Generic
         /// <param name="depth">Z-axis length.</param>
         /// <param name="allocator">The <see cref="Unity.Collections.Allocator" /> type to use.</param>
         /// <param name="nativeArrayOptions">Should the memory be cleared on allocation?</param>
-        public NativeArray3D(int width, int height, int depth, Allocator allocator, NativeArrayOptions nativeArrayOptions)
+        public NativeArray3D(int width, int height, int depth, Allocator allocator,
+            NativeArrayOptions nativeArrayOptions)
         {
             Width = width;
             Height = height;
@@ -115,8 +116,8 @@ namespace GDX.Collections.Generic
         public int3 GetFromIndex(int index)
         {
             int x = index % Width;
-            int y =  (index - x) / Width % Height;
-            int z = index / (DepthLength);
+            int y = (index - x) / Width % Height;
+            int z = index / DepthLength;
 
             return new int3(x, y, z);
         }

@@ -1,12 +1,15 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
+using GDX.Developer;
 using GDX.Mathematics.Random;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace GDX
 {
@@ -22,10 +25,12 @@ namespace GDX
         public const string SafeCharacterPool = "abcdefghijklmnopqrstuvwxyz";
         public const int CharacterPoolLength = 25;
         public const int CharacterPoolLengthExclusive = 24;
+
         /// <summary>
         ///     A filename safe version of the timestamp format.
-        /// </summary>
+        /// </summary>s
         public const string FilenameTimestampFormat = "yyyyMMdd_HHmmss";
+        public const string TimestampFormat = "yyyy-MM-dd HH:mm:ss";
 
         static string s_OutputFolder;
 
@@ -68,6 +73,7 @@ namespace GDX
                     Directory.CreateDirectory(directoryPath);
                 }
             }
+
             if (File.Exists(filePath))
             {
                 File.SetAttributes(filePath, File.GetAttributes(filePath) & ~FileAttributes.ReadOnly);
@@ -75,7 +81,7 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Use our best attempt to remove a file at the designated <paramref name="filePath"/>.
+        ///     Use our best attempt to remove a file at the designated <paramref name="filePath" />.
         /// </summary>
         /// <param name="filePath">The file path to remove forcefully.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -127,21 +133,25 @@ namespace GDX
         ///         </item>
         ///         <item>
         ///             <term>DOTS Runtime</term>
-        ///             <description>Uses <see cref="Directory.GetCurrentDirectory()"/>.</description>
+        ///             <description>Uses <see cref="Directory.GetCurrentDirectory()" />.</description>
         ///         </item>
         ///     </list>
         ///     The path can be overridden by assigning GDX_OUTPUT_FOLDER in the launching arguments.
         /// </remarks>
         public static string GetOutputFolder(string folderName = null)
         {
-            if (s_OutputFolder != null && string.IsNullOrEmpty(folderName)) return s_OutputFolder;
+            if (s_OutputFolder != null && string.IsNullOrEmpty(folderName))
+            {
+                return s_OutputFolder;
+            }
+
             if (s_OutputFolder == null)
             {
-                if (Developer.CommandLineParser.Arguments.ContainsKey("GDX_OUTPUT_FOLDER"))
+                if (CommandLineParser.Arguments.ContainsKey("GDX_OUTPUT_FOLDER"))
                 {
                     // Assign and remove quotes
-                    s_OutputFolder = Developer.CommandLineParser.Arguments["GDX_OUTPUT_FOLDER"]
-                        .Replace("\"","");
+                    s_OutputFolder = CommandLineParser.Arguments["GDX_OUTPUT_FOLDER"]
+                        .Replace("\"", "");
                 }
                 else
                 {
@@ -177,13 +187,14 @@ namespace GDX
             return SafeCharacterPool[random.NextInteger(0, CharacterPoolLengthExclusive)];
         }
 
-        public static string GetUniqueOutputFilePath(string prefix = "GDX_", string extension = ".log", string folderName = null)
+        public static string GetUniqueOutputFilePath(string prefix = "GDX_", string extension = ".log",
+            string folderName = null)
         {
             string tempFolder = GetOutputFolder(folderName);
             StringBuilder tmpFileName = new StringBuilder(260);
             tmpFileName.Append(prefix);
             RandomWrapper random = new RandomWrapper(
-                System.DateTime.Now.Ticks.ToString().GetStableHashCode());
+                DateTime.Now.Ticks.ToString().GetStableHashCode());
 
             tmpFileName.Append(GetRandomSafeCharacter(random));
             tmpFileName.Append(GetRandomSafeCharacter(random));
@@ -238,7 +249,7 @@ namespace GDX
 #endif // !UNITY_DOTSRUNTIME
 
         /// <summary>
-        /// Is it safe to write to the indicated <paramref name="filePath"/>?
+        ///     Is it safe to write to the indicated <paramref name="filePath" />?
         /// </summary>
         /// <param name="filePath">The file path to check if it can be written.</param>
         /// <returns>true/false if the path can be written too.</returns>
@@ -253,12 +264,13 @@ namespace GDX
                     return false;
                 }
             }
+
             return true;
         }
 
 #if !UNITY_DOTSRUNTIME
         /// <summary>
-        /// Is the application running in headless mode?.
+        ///     Is the application running in headless mode?.
         /// </summary>
         /// <remarks>Useful for detecting running a server.</remarks>
         /// <returns>true/false if the application is without an initialized graphics device.</returns>
@@ -266,7 +278,7 @@ namespace GDX
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsHeadless()
         {
-            return SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null;
+            return SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null;
         }
 #endif // !UNITY_DOTSRUNTIME
     }

@@ -1,12 +1,12 @@
-// Copyright (c) 2020-2023 dotBunny Inc.
+// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 using System;
 using System.Collections;
+using GDX.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using GDX.Collections.Generic;
 using Object = UnityEngine.Object;
 
 namespace GDX.Editor.PropertyDrawers
@@ -30,7 +30,7 @@ namespace GDX.Editor.PropertyDrawers
     class SerializableDictionaryPropertyDrawer : PropertyDrawer
     {
         /// <summary>
-        ///     A reference to an <see cref="object"/> which represents the value to be added as a key.
+        ///     A reference to an <see cref="object" /> which represents the value to be added as a key.
         /// </summary>
         /// <remarks>
         ///     This can be a proper object, or a boxed value.
@@ -89,7 +89,7 @@ namespace GDX.Editor.PropertyDrawers
         float m_HeightTotal;
 
         /// <summary>
-        ///     Is the <see cref="m_AddKey"/> a valid key to add to the target <see cref="SerializableDictionary{TKey,TValue}"/>
+        ///     Is the <see cref="m_AddKey" /> a valid key to add to the target <see cref="SerializableDictionary{TKey,TValue}" />
         /// </summary>
         bool m_IsAddKeyValid;
 
@@ -101,29 +101,32 @@ namespace GDX.Editor.PropertyDrawers
         /// </remarks>
         bool m_IsKeyValueCountValid = true;
 
+        Type m_KeyType = typeof(object);
+        bool m_KeyTypeNullable;
+
         SerializedProperty m_PropertyCount;
         int m_PropertyCountCache = -1;
         SerializedProperty m_PropertyIsSerializable;
         bool m_PropertyIsSerializableCache;
         SerializedProperty m_PropertyKeys;
         SerializedProperty m_PropertyValues;
-        Type m_KeyType = typeof(object);
-        Type m_ValueType = typeof(object);
-        bool m_KeyTypeNullable;
 
         /// <summary>
         ///     The index of in the data arrays to be considered selected.
         /// </summary>
         int m_SelectedIndex = -1;
 
+        SerializedProperty m_SerializedKeysClone;
+
+        SerializedObject m_SerializedObjectClone;
+
         /// <summary>
         ///     The target object of the <see cref="PropertyDrawer" />.
         /// </summary>
         Object m_TargetObject;
 
-        SerializedObject m_SerializedObjectClone;
-        SerializedProperty m_SerializedKeysClone;
         SerializedProperty m_TargetProperty;
+        Type m_ValueType = typeof(object);
 
         /// <summary>
         ///     Clean up our allocations.
@@ -165,13 +168,13 @@ namespace GDX.Editor.PropertyDrawers
                     1, m_PropertyCountCache) - Styles.ContentAreaElementSpacing;
             m_HeightContentFooter = 4;
             m_HeightContent = m_HeightContentHeader +
-                             m_HeightContentElements +
-                             m_HeightContentFooter;
+                              m_HeightContentElements +
+                              m_HeightContentFooter;
 
             // Figure out our footer total height
             m_HeightFooter = Styles.ActionButtonVerticalPadding +
-                            EditorGUIUtility.singleLineHeight +
-                            Styles.ActionButtonVerticalPadding;
+                             EditorGUIUtility.singleLineHeight +
+                             Styles.ActionButtonVerticalPadding;
 
             // Add up our total
             m_HeightTotal = m_HeightFoldout + Styles.ContentAreaTopMargin + m_HeightContent + m_HeightFooter;
@@ -288,6 +291,7 @@ namespace GDX.Editor.PropertyDrawers
                 SerializedProperty newValueProperty = m_PropertyValues.GetArrayElementAtIndex(m_PropertyCountCache);
                 newValueProperty.SetValue(m_ValueType.GetDefault());
             }
+
             // We do this to force serialization
             m_PropertyValues.isExpanded = true;
 
@@ -455,13 +459,14 @@ namespace GDX.Editor.PropertyDrawers
                 m_SerializedObjectClone ??= new SerializedObject(m_TargetObject);
                 m_SerializedKeysClone ??=
                     m_SerializedObjectClone.FindProperty(m_TargetProperty.propertyPath)
-                    .FindPropertyRelative("m_SerializedKeys");
+                        .FindPropertyRelative("m_SerializedKeys");
 
                 // Expand our array if necessary
                 if (m_SerializedKeysClone.arraySize == 0)
                 {
                     m_SerializedKeysClone.arraySize = 1;
                 }
+
                 SerializedProperty fakeKey = m_SerializedKeysClone.GetArrayElementAtIndex(0);
                 EditorGUI.PropertyField(inputRect, fakeKey, GUIContent.none);
                 object newObject = fakeKey.GetValue();
@@ -478,6 +483,7 @@ namespace GDX.Editor.PropertyDrawers
                 {
                     m_IsAddKeyValid = false;
                 }
+
                 fakeKey.Dispose();
             }
 
@@ -510,11 +516,11 @@ namespace GDX.Editor.PropertyDrawers
             }
 
             if (GUI.Button(
-                new Rect(
-                    removeBackground.xMin + Styles.ActionButtonHorizontalPadding,
-                    removeBackground.yMin + Styles.ActionButtonVerticalPadding,
-                    Styles.ActionButtonWidth, Styles.ActionButtonHeight),
-                Content.IconMinus, Styles.FooterButton))
+                    new Rect(
+                        removeBackground.xMin + Styles.ActionButtonHorizontalPadding,
+                        removeBackground.yMin + Styles.ActionButtonVerticalPadding,
+                        Styles.ActionButtonWidth, Styles.ActionButtonHeight),
+                    Content.IconMinus, Styles.FooterButton))
             {
                 // Remove control focus
                 GUIUtility.hotControl = 0;
@@ -596,7 +602,6 @@ namespace GDX.Editor.PropertyDrawers
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <remarks>
         ///     At a certain point (we noticed in 2020.3.33f1), Unity switched to caring about the names of fields
@@ -607,15 +612,25 @@ namespace GDX.Editor.PropertyDrawers
         /// <returns></returns>
         bool IsValidKey(object targetObject)
         {
-            if (targetObject == null) return false;
+            if (targetObject == null)
+            {
+                return false;
+            }
 
             bool isFound = Reflection.TryGetFieldOrPropertyValue(m_TargetObject, m_TargetProperty.name,
                 out object instanceObject, SerializedProperties.SerializationFieldFlags,
                 SerializedProperties.SerializationPropertyFlags);
-            if (!isFound) return false;
+            if (!isFound)
+            {
+                return false;
+            }
 
             IDictionary instanceDictionary = (IDictionary)instanceObject;
-            if (instanceDictionary == null ) return false;
+            if (instanceDictionary == null)
+            {
+                return false;
+            }
+
             return !instanceDictionary.Contains(targetObject);
         }
 

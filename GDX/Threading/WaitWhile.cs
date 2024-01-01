@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -14,7 +14,7 @@ namespace GDX.Threading
     public static class WaitWhile
     {
         /// <summary>
-        ///     Wait using an <see cref="IEnumerator"/> while the <paramref name="conditional"/> is true.
+        ///     Wait using an <see cref="IEnumerator" /> while the <paramref name="conditional" /> is true.
         /// </summary>
         /// <param name="conditional">A function evaluated to determine if the wait continues.</param>
         /// <returns>Yields null values.</returns>
@@ -27,14 +27,14 @@ namespace GDX.Threading
         }
 
         /// <summary>
-        ///     Wait asynchronously while the <paramref name="conditional"/> is true.
+        ///     Wait asynchronously while the <paramref name="conditional" /> is true.
         /// </summary>
         /// <param name="conditional">A function evaluated to determine if the wait continues.</param>
         public static async Task GetTask(Func<bool> conditional)
         {
             await Task.Run(() =>
             {
-                while(conditional())
+                while (conditional())
                 {
                     Task.Delay(1).Wait();
                 }

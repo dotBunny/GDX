@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -13,36 +13,6 @@ namespace GDX.Editor.Windows.ProjectSettings
 {
     public static class ChangelogProvider
     {
-        enum ArtifactType
-        {
-            Default,
-            Header1,
-            Header2,
-            Header3,
-            Header4,
-            Bold,
-            Italic,
-            BoldItalic,
-            RightArrow,
-            Link,
-            DotAdded,
-            DotChanged,
-            DotRemoved,
-            DotFixed,
-            Item,
-            ItemText,
-            Badge,
-            Spacer
-        }
-        enum ChangelogSection
-        {
-            Default = 0,
-            Added = 1,
-            Changed = 2,
-            Fixed = 3,
-            Removed = 4
-        }
-
         static readonly int k_AddedLineHash = "### Added".GetStableHashCode();
         static readonly int k_ArrowHash = "->".GetStableHashCode();
         static readonly int k_ChangedLineHash = "### Changed".GetStableHashCode();
@@ -286,6 +256,37 @@ namespace GDX.Editor.Windows.ProjectSettings
 
             // text
             return new Artifact(text);
+        }
+
+        enum ArtifactType
+        {
+            Default,
+            Header1,
+            Header2,
+            Header3,
+            Header4,
+            Bold,
+            Italic,
+            BoldItalic,
+            RightArrow,
+            Link,
+            DotAdded,
+            DotChanged,
+            DotRemoved,
+            DotFixed,
+            Item,
+            ItemText,
+            Badge,
+            Spacer
+        }
+
+        enum ChangelogSection
+        {
+            Default = 0,
+            Added = 1,
+            Changed = 2,
+            Fixed = 3,
+            Removed = 4
         }
 
         struct Artifact

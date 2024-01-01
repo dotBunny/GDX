@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2023 dotBunny Inc.
+// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -17,13 +17,15 @@ namespace GDX.Developer.Reports
         readonly TestRun m_Results = new TestRun();
         bool m_ForceFail;
 
-        public NUnitReport(string name = null, string fullName = null, string className = null )
+        public NUnitReport(string name = null, string fullName = null, string className = null)
         {
             m_Results.TestSuite.Name = name;
             m_Results.TestSuite.FullName = fullName;
             m_Results.TestSuite.ClassName = className;
         }
-        public TestCase AddDurationResult(string name, float seconds, bool passed = true, string failMessage = null, TestSuite testSuite = null)
+
+        public TestCase AddDurationResult(string name, float seconds, bool passed = true, string failMessage = null,
+            TestSuite testSuite = null)
         {
             TestCase testCase = new TestCase
             {
@@ -40,16 +42,13 @@ namespace GDX.Developer.Reports
             {
                 m_Results.TestSuite.TestCases.Add(testCase);
             }
+
             return testCase;
         }
+
         public TestCase AddSkippedTest(string name, string skipMessage = null, TestSuite testSuite = null)
         {
-            TestCase testCase = new TestCase
-            {
-                Name = name,
-                Result = SkippedString,
-                Message = skipMessage
-            };
+            TestCase testCase = new TestCase { Name = name, Result = SkippedString, Message = skipMessage };
             if (testSuite != null)
             {
                 testSuite.TestCases.Add(testCase);
@@ -58,6 +57,7 @@ namespace GDX.Developer.Reports
             {
                 m_Results.TestSuite.TestCases.Add(testCase);
             }
+
             return testCase;
         }
 
@@ -77,6 +77,7 @@ namespace GDX.Developer.Reports
             {
                 return FailedString;
             }
+
             return m_Results.Result;
         }
 
@@ -112,6 +113,7 @@ namespace GDX.Developer.Reports
             generator.Append(" />");
             generator.NextLine();
         }
+
         static void AddToGenerator(TextGenerator generator, Properties properties)
         {
             generator.AppendLine("<properties>");
@@ -121,9 +123,11 @@ namespace GDX.Developer.Reports
             {
                 AddToGenerator(generator, properties.Property[i]);
             }
+
             generator.PopIndent();
             generator.AppendLine("</properties>");
         }
+
         static void AddToGenerator(TextGenerator generator, TestCase testCase)
         {
             generator.ApplyIndent();
@@ -180,6 +184,7 @@ namespace GDX.Developer.Reports
                 generator.NextLine();
             }
         }
+
         static void AddToGenerator(TextGenerator generator, TestSuite testSuite)
         {
             generator.ApplyIndent();
@@ -213,7 +218,6 @@ namespace GDX.Developer.Reports
             if (testSuite.Properties != null)
             {
                 AddToGenerator(generator, testSuite.Properties);
-
             }
 
             foreach (TestCase t in testSuite.TestCases)
@@ -225,9 +229,11 @@ namespace GDX.Developer.Reports
             {
                 AddToGenerator(generator, s);
             }
+
             generator.PopIndent();
             generator.AppendLine("</test-suite>");
         }
+
         static void AddToGenerator(TextGenerator generator, TestRun testRun)
         {
             generator.ApplyIndent();
@@ -258,19 +264,33 @@ namespace GDX.Developer.Reports
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static void AddToGeneratorAttribute(TextGenerator generator, string key, string value)
         {
-            if (value == default) return;
+            if (value == default)
+            {
+                return;
+            }
+
             generator.Append($" {key}=\"{value}\"");
         }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static void AddToGeneratorAttribute(TextGenerator generator, string key, int value)
         {
-            if (value == default) return;
+            if (value == default)
+            {
+                return;
+            }
+
             generator.Append($" {key}=\"{value}\"");
         }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static void AddToGeneratorAttribute(TextGenerator generator, string key, float value)
         {
-            if (value == 0f) return;
+            if (value == 0f)
+            {
+                return;
+            }
+
             generator.Append($" {key}=\"{value}\"");
         }
     }

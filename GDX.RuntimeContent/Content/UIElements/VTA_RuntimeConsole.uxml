@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" gdx="GDX.UIElements"
+         noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="../StyleSheets/SS_RuntimeConsole.uss" />
+    <ui:VisualElement name="gdx-console" style="flex-grow: 1;">
+        <ui:VisualElement name="gdx-console-container">
+            <ui:ListView name="gdx-console-list" allow-add="false" allow-remove="false" virtualization-method="DynamicHeight" selection-type="Single" show-bound-collection-size="false" show-alternating-row-backgrounds="None" focusable="false" />
+        </ui:VisualElement>
+        <ui:VisualElement name="gdx-console-bar">
+            <ui:Label text="$" name="gdx-console-caret" enable-rich-text="false" />
+            <ui:Label name="gdx-console-input" enable-rich-text="false" />
+            <ui:Label name="gdx-console-suggestion" enable-rich-text="false" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

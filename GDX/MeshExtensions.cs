@@ -1,11 +1,11 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 #if !UNITY_DOTSRUNTIME
 
-using UnityEngine;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace GDX
 {
@@ -38,6 +38,7 @@ namespace GDX
                 float3 p3 = vertices[triangles[i + 2]];
                 volume += math.dot(math.cross(p1, p2), p3);
             }
+
             return math.abs(volume / 6.0f);
         }
     }

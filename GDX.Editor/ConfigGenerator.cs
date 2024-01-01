@@ -1,19 +1,20 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 using System;
 using System.Reflection;
-using System.Text;
+using GDX.Developer;
 
 namespace GDX.Editor
 {
     public static class ConfigGenerator
     {
         const string k_CoreConfigPath = "GDX.Config";
+
         public static string Build(TransientConfig rhs)
         {
-            Developer.TextGenerator code = new Developer.TextGenerator("    ", "{", "}");
+            TextGenerator code = new TextGenerator("    ", "{", "}");
 
             // Start header
             code.AppendLine("// Generated file of difference from default config.");
@@ -38,7 +39,7 @@ namespace GDX.Editor
             // boilerplate around it that its really easy.
             AddToGenerator(code, configFields, nameof(Config.ConfigOutputPath), rhs.ConfigOutputPath);
 
-            AddToGenerator(code,configFields, nameof(Config.BuildInfo),
+            AddToGenerator(code, configFields, nameof(Config.BuildInfo),
                 rhs.BuildInfo);
             AddToGenerator(code, configFields, nameof(Config.BuildInfoAssemblyDefinition),
                 rhs.BuildInfoAssemblyDefinition);
@@ -67,8 +68,8 @@ namespace GDX.Editor
             AddToGenerator(code, configFields, nameof(Config.EditorTaskDirectorSystemTickRate),
                 rhs.EditorTaskDirectorSystemTickRate);
 
-            AddToGenerator(code, configFields, nameof(Config.EnvironmentAlwaysIncludeShaders),
-                rhs.EnvironmentAlwaysIncludeShaders);
+            AddToGenerator(code, configFields, nameof(Config.EnvironmentDeveloperConsole),
+                rhs.EnvironmentDeveloperConsole);
             AddToGenerator(code, configFields, nameof(Config.EnvironmentScriptingDefineSymbol),
                 rhs.EnvironmentScriptingDefineSymbol);
             AddToGenerator(code, configFields, nameof(Config.EnvironmentToolsMenu),
@@ -95,40 +96,61 @@ namespace GDX.Editor
             return code.ToString();
         }
 
-        static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, bool rhs)
+        static void AddToGenerator(TextGenerator code, FieldInfo[] configFields, string member, bool rhs)
         {
             bool lhs = OriginalValueAttribute.GetValue<bool>(GetFirstFieldInfoByName(configFields, member));
-            if (lhs == rhs) return;
+            if (lhs == rhs)
+            {
+                return;
+            }
+
             code.AppendLine(rhs ? $"{k_CoreConfigPath}.{member} = true;" : $"{k_CoreConfigPath}.{member} = false;");
         }
 
-        static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, double rhs)
+        static void AddToGenerator(TextGenerator code, FieldInfo[] configFields, string member, double rhs)
         {
             double lhs = OriginalValueAttribute.GetValue<double>(GetFirstFieldInfoByName(configFields, member));
-            if (Math.Abs(lhs - rhs) < Platform.DoubleTolerance) return;
+            if (Math.Abs(lhs - rhs) < Platform.DoubleTolerance)
+            {
+                return;
+            }
+
             code.AppendLine($"{k_CoreConfigPath}.{member} = {rhs}d;");
         }
 
-        static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, float rhs)
+        static void AddToGenerator(TextGenerator code, FieldInfo[] configFields, string member, float rhs)
         {
             float lhs = OriginalValueAttribute.GetValue<float>(GetFirstFieldInfoByName(configFields, member));
-            if (Math.Abs(lhs - rhs) < Platform.DoubleTolerance) return;
+            if (Math.Abs(lhs - rhs) < Platform.DoubleTolerance)
+            {
+                return;
+            }
+
             code.AppendLine($"{k_CoreConfigPath}.{member} = {rhs}f;");
         }
 
-        static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, string rhs)
+        static void AddToGenerator(TextGenerator code, FieldInfo[] configFields, string member, string rhs)
         {
             string lhs = OriginalValueAttribute.GetValue<string>(GetFirstFieldInfoByName(configFields, member));
-            if (lhs == rhs) return;
+            if (lhs == rhs)
+            {
+                return;
+            }
+
             code.AppendLine($"{k_CoreConfigPath}.{member} = \"{rhs}\";");
         }
 
-        static void AddToGenerator(Developer.TextGenerator code, FieldInfo[] configFields, string member, Localization.Language rhs)
+        static void AddToGenerator(TextGenerator code, FieldInfo[] configFields, string member,
+            Localization.Language rhs)
         {
             Localization.Language lhs = OriginalValueAttribute.GetValue<Localization.Language>(
                 GetFirstFieldInfoByName(configFields, member));
 
-            if (lhs == rhs) return;
+            if (lhs == rhs)
+            {
+                return;
+            }
+
             code.AppendLine($"{k_CoreConfigPath}.{member} = Localization.Language.{rhs.ToString()};");
         }
 
@@ -142,6 +164,7 @@ namespace GDX.Editor
                     return configFields[i];
                 }
             }
+
             return null;
         }
     }

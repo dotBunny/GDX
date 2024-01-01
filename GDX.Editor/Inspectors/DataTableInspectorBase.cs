@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -22,6 +22,12 @@ namespace GDX.Editor.Inspectors
     public abstract class DataTableInspectorBase : UnityEditor.Editor,
         DataTableTracker.IStructuralChangeCallbackReceiver, DataTableTracker.IUndoRedoEventCallbackReceiver
     {
+        Label m_BindingDescription;
+        Label m_BindingLabel;
+        Button m_BindingPullButton;
+        Button m_BindingPushButton;
+        VisualElement m_BindingRow;
+
         /// <summary>
         ///     Is the bound/subscribed to the <see cref="DataTableTracker" />.
         /// </summary>
@@ -33,14 +39,9 @@ namespace GDX.Editor.Inspectors
         Label m_DataTableTracker;
         Label m_DataTableTrackerLabel;
         Button m_DataTableTrackerRefreshButton;
-        Label m_BindingLabel;
-        Label m_BindingDescription;
-        Button m_BindingPullButton;
-        Button m_BindingPushButton;
-        VisualElement m_BindingRow;
-        Label m_InterchangeLabel;
         VisualElement m_ExportContainer;
         Button m_ImportButton;
+        Label m_InterchangeLabel;
         VisualElement m_RootElement;
         Label m_RowDescription;
         Label m_RowLabel;
@@ -111,13 +112,12 @@ namespace GDX.Editor.Inspectors
         /// <inheritdoc />
         public override VisualElement CreateInspectorGUI()
         {
-
             DataTableBase dataTable = (DataTableBase)target;
 
             // This is for when it is being created, we do not want to show anything until they have saved to disk the first time.
             if (!EditorUtility.IsPersistent(target))
             {
-                return new TextElement()
+                return new TextElement
                 {
                     text = "A DataTable must be present on disk before this inspector will populate.",
                     style = { unityFontStyleAndWeight = FontStyle.Italic }
@@ -146,7 +146,7 @@ namespace GDX.Editor.Inspectors
 
             m_InterchangeLabel = new Label("Interchange") { name = "gdx-datatable-inspector-interchange-label" };
             m_InterchangeLabel.AddToClassList("gdx-datatable-inspector-label");
-            m_ExportContainer = new VisualElement() { name = "gdx-datatable-inspector-interchange-export" };
+            m_ExportContainer = new VisualElement { name = "gdx-datatable-inspector-interchange-export" };
 
             m_ImportButton =
                 new Button(() =>
@@ -159,9 +159,10 @@ namespace GDX.Editor.Inspectors
             m_BindingDescription = new Label("") { name = "gdx-datatable-inspector-sync-description" };
             m_BindingDescription.AddToClassList("gdx-datatable-inspector-description");
 
-            m_BindingPullButton = new Button(OnPushButton) { text = "Push", name = "gdx-datatable-inspector-binding-push" };
-            m_BindingPushButton = new Button(OnPullButton) { text = "Pull", name = "gdx-datatable-inspector-binding-pull" };
-
+            m_BindingPullButton =
+                new Button(OnPushButton) { text = "Push", name = "gdx-datatable-inspector-binding-push" };
+            m_BindingPushButton =
+                new Button(OnPullButton) { text = "Pull", name = "gdx-datatable-inspector-binding-pull" };
 
 
             m_DataTableTrackerLabel = new Label("Tracker") { name = "gdx-datatable-inspector-tracker-label" };
@@ -223,12 +224,14 @@ namespace GDX.Editor.Inspectors
             {
                 if (dataTable.Migrate(currentStructureVersion))
                 {
-                    Debug.Log($"Migrated {dataTable.GetMetaData().DisplayName} from Structure version {tableStructureVersion.ToString()} to version {currentStructureVersion.ToString()}.");
+                    Debug.Log(
+                        $"Migrated {dataTable.GetMetaData().DisplayName} from Structure version {tableStructureVersion.ToString()} to version {currentStructureVersion.ToString()}.");
                     AssetDatabase.SaveAssetIfDirty(dataTable);
                 }
                 else
                 {
-                    Debug.LogWarning($"Attempted to migrate {dataTable.GetMetaData().DisplayName} from Structure version {tableStructureVersion.ToString()} to version {currentStructureVersion.ToString()}.");
+                    Debug.LogWarning(
+                        $"Attempted to migrate {dataTable.GetMetaData().DisplayName} from Structure version {tableStructureVersion.ToString()} to version {currentStructureVersion.ToString()}.");
                 }
             }
 
@@ -243,6 +246,7 @@ namespace GDX.Editor.Inspectors
         {
             BindingPush(target as DataTableBase);
         }
+
         void OnPullButton()
         {
             BindingPull(target as DataTableBase);
@@ -259,7 +263,8 @@ namespace GDX.Editor.Inspectors
             StringBuilder content = new StringBuilder(100);
 
             m_DataTableLabel.text = dataTable.GetMetaData().DisplayName;
-            m_DataTableLabel.tooltip = $"Data Version: {dataTable.GetDataVersion().ToString()}\nStructure Version: {dataTable.GetStructureVersion().ToString()}";
+            m_DataTableLabel.tooltip =
+                $"Data Version: {dataTable.GetDataVersion().ToString()}\nStructure Version: {dataTable.GetStructureVersion().ToString()}";
 
             if (dataTable.GetRowCount() == 0)
             {
@@ -281,8 +286,10 @@ namespace GDX.Editor.Inspectors
                         content.Append(", ");
                     }
                 }
+
                 m_RowDescription.text = content.ToString();
             }
+
             content.Clear();
 
             int columnCount = dataTable.GetColumnCount();
@@ -332,9 +339,10 @@ namespace GDX.Editor.Inspectors
 
         public static void ShowExportDialogForTable(DataTableBase dataTable, string friendlyName, string extension)
         {
-           string savePath =  EditorUtility.SaveFilePanel($"Export {dataTable.GetMetaData().DisplayName} to {friendlyName}",
-                     Application.dataPath,
-                     dataTable.name, extension);
+            string savePath = EditorUtility.SaveFilePanel(
+                $"Export {dataTable.GetMetaData().DisplayName} to {friendlyName}",
+                Application.dataPath,
+                dataTable.name, extension);
 
             if (!string.IsNullOrEmpty(savePath))
             {
@@ -345,7 +353,8 @@ namespace GDX.Editor.Inspectors
 
         public static void ShowImportDialogForTable(DataTableBase dataTable)
         {
-            string openPath = EditorUtility.OpenFilePanelWithFilters($"Import into {dataTable.GetMetaData().DisplayName}",
+            string openPath = EditorUtility.OpenFilePanelWithFilters(
+                $"Import into {dataTable.GetMetaData().DisplayName}",
                 Application.dataPath, DataBindingProvider.GetImportDialogExtensions());
 
             if (string.IsNullOrEmpty(openPath))
@@ -354,12 +363,13 @@ namespace GDX.Editor.Inspectors
             }
 
             if (EditorUtility.DisplayDialog($"Replace '{dataTable.GetMetaData().DisplayName}' Content",
-                    $"Are you sure you want to replace your tables content with the imported content?\n\nThe structural format of the content needs to match the column structure of the existing table; reference types will not replace the data in the existing cells at that location. Make sure the first row contains the column names, and that you have not altered columns.",
+                    "Are you sure you want to replace your tables content with the imported content?\n\nThe structural format of the content needs to match the column structure of the existing table; reference types will not replace the data in the existing cells at that location. Make sure the first row contains the column names, and that you have not altered columns.",
                     "Yes", "No"))
             {
                 if (dataTable.GetMetaData().SupportsUndo)
                 {
-                    Undo.RegisterCompleteObjectUndo(dataTable, $"DataTable {DataTableTracker.GetTicket(dataTable)} - Import");
+                    Undo.RegisterCompleteObjectUndo(dataTable,
+                        $"DataTable {DataTableTracker.GetTicket(dataTable)} - Import");
                 }
 
                 if (DataBindingProvider.Import(dataTable, openPath))
@@ -377,7 +387,10 @@ namespace GDX.Editor.Inspectors
         {
             DataTableMetaData metaData = dataTable.GetMetaData();
             FormatBase format = DataBindingProvider.GetFormatFromUri(metaData.BindingUri);
-            if (format == null) return;
+            if (format == null)
+            {
+                return;
+            }
 
             string uri = format.IsOnDiskFormat()
                 ? Path.GetFullPath(Path.Combine(Application.dataPath, metaData.BindingUri))
@@ -385,13 +398,14 @@ namespace GDX.Editor.Inspectors
 
             if (metaData.SupportsUndo)
             {
-                Undo.RegisterCompleteObjectUndo(dataTable, $"DataTable {DataTableTracker.GetTicket(dataTable).ToString()} - Binding Import");
+                Undo.RegisterCompleteObjectUndo(dataTable,
+                    $"DataTable {DataTableTracker.GetTicket(dataTable).ToString()} - Binding Import");
             }
 
             SerializableTable serializableTable =
                 format.Pull(uri, dataTable.GetDataVersion(), dataTable.GetStructureVersion());
 
-            if (serializableTable != null &&  serializableTable.Update(dataTable))
+            if (serializableTable != null && serializableTable.Update(dataTable))
             {
                 DataTableTracker.NotifyOfRowChange(DataTableTracker.GetTicket(dataTable), -1);
                 metaData.BindingTimestamp = format.GetBindingTimestamp(uri);
@@ -404,7 +418,10 @@ namespace GDX.Editor.Inspectors
         {
             DataTableMetaData metaData = dataTable.GetMetaData();
             FormatBase format = DataBindingProvider.GetFormatFromUri(metaData.BindingUri);
-            if (format == null) return;
+            if (format == null)
+            {
+                return;
+            }
 
             string uri = format.IsOnDiskFormat()
                 ? Path.GetFullPath(Path.Combine(Application.dataPath, metaData.BindingUri))
@@ -414,12 +431,13 @@ namespace GDX.Editor.Inspectors
             if (currentTimestamp > metaData.BindingTimestamp)
             {
                 if (!EditorUtility.DisplayDialog($"Overwrite '{metaData.BindingUri}'?",
-                        $"The bindings timestamp is newer then the last known sync timestamp which means the file could have newer data which you will stomp. Are you sure you want to do this?",
+                        "The bindings timestamp is newer then the last known sync timestamp which means the file could have newer data which you will stomp. Are you sure you want to do this?",
                         "Yes", "No"))
                 {
                     return;
                 }
             }
+
             if (format.Push(uri, new SerializableTable(dataTable)))
             {
                 metaData.BindingTimestamp = format.GetBindingTimestamp(uri);

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -13,11 +13,11 @@ namespace GDX.Threading
     public static class TaskExtensions
     {
         /// <summary>
-        ///     Wraps a <see cref="Task"/> for use in a coroutine.
+        ///     Wraps a <see cref="Task" /> for use in a coroutine.
         /// </summary>
         /// <remarks>Don't use coroutines.</remarks>
-        /// <param name="task">An established <see cref="Task"/>.</param>
-        /// <returns>An <see cref="IEnumerator"/> for use with coroutines.</returns>
+        /// <param name="task">An established <see cref="Task" />.</param>
+        /// <returns>An <see cref="IEnumerator" /> for use with coroutines.</returns>
         public static IEnumerator AsIEnumerator(this Task task)
         {
             while (!task.IsCompleted)

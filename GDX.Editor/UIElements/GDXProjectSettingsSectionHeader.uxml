@@ -1,11 +1,14 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <ui:VisualElement name="gdx-project-settings-section-header" class="gdx-project-settings-section-header" style="flex-direction: row;">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance"
+         engine="UnityEngine.UIElements" editor="UnityEditor.UIElements"
+         noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement name="gdx-project-settings-section-header" class="gdx-project-settings-section-header"
+                      style="flex-direction: row;">
         <ui:VisualElement class="gdx-icon-button">
-            <ui:Button display-tooltip-when-elided="true" name="button-expand" />
+            <ui:Button display-tooltip-when-elided="true" name="button-expand"/>
         </ui:VisualElement>
-        <ui:Label text="Label" display-tooltip-when-elided="true" name="label-name" />
-        <ui:Button display-tooltip-when-elided="true" name="button-help" />
-        <ui:VisualElement style="flex-grow: 1;" />
-        <ui:Toggle name="toggle-enabled" />
+        <ui:Label text="Label" display-tooltip-when-elided="true" name="label-name"/>
+        <ui:Button display-tooltip-when-elided="true" name="button-help"/>
+        <ui:VisualElement style="flex-grow: 1;"/>
+        <ui:Toggle name="toggle-enabled"/>
     </ui:VisualElement>
 </ui:UXML>

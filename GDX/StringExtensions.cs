@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2023 dotBunny Inc.
+// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -92,9 +92,9 @@ namespace GDX
         ///     Concatenate an array of strings into one unified string.
         /// </summary>
         /// <param name="pieces">An array of strings</param>
-        /// <param name="delimiter">An optional string which to use between <paramref name="pieces"/> when combining.</param>
-        /// <param name="trailingDelimiter">Should a trailing <paramref name="delimiter"/> be appended?</param>
-        /// <returns>A concatenated <see cref="string"/>.</returns>
+        /// <param name="delimiter">An optional string which to use between <paramref name="pieces" /> when combining.</param>
+        /// <param name="trailingDelimiter">Should a trailing <paramref name="delimiter" /> be appended?</param>
+        /// <returns>A concatenated <see cref="string" />.</returns>
         public static string Concatenate(this string[] pieces, string delimiter = null, bool trailingDelimiter = false)
         {
             StringBuilder builder = new StringBuilder();
@@ -125,6 +125,7 @@ namespace GDX
                     }
                 }
             }
+
             return builder.ToString();
         }
 
@@ -588,7 +589,7 @@ namespace GDX
         ///             <description>A single decimal point <c>.</c> may be present in the <paramref name="targetString" />.</description>
         ///         </item>
         ///         <item>
-        ///             <description>No alphabet characters are present in the <paramref name="targetString"/>.</description>
+        ///             <description>No alphabet characters are present in the <paramref name="targetString" />.</description>
         ///         </item>
         ///     </list>
         /// </remarks>
@@ -639,12 +640,13 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Counts the number of times the needle (<paramref name="targetCharacter"/>) appears in the haystack (<paramref name="targetString"/>).
+        ///     Counts the number of times the needle (<paramref name="targetCharacter" />) appears in the haystack (
+        ///     <paramref name="targetString" />).
         /// </summary>
         /// <remarks>Specifically created to avoid using LINQ and avoid an allocation.</remarks>
         /// <param name="targetString">The haystack.</param>
         /// <param name="targetCharacter">The needle.</param>
-        /// <returns>The number of times <paramref name="targetCharacter"/> is found in <paramref name="targetString"/>.</returns>
+        /// <returns>The number of times <paramref name="targetCharacter" /> is found in <paramref name="targetString" />.</returns>
         [SecuritySafeCritical]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
         public static unsafe int CountOccurence(this string targetString, char targetCharacter)
@@ -660,6 +662,7 @@ namespace GDX
                     {
                         counter++;
                     }
+
                     s += 1;
                 }
             }
@@ -668,15 +671,18 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Does the <paramref name="haystack"/> partially contain the <paramref name="needle"/>?
+        ///     Does the <paramref name="haystack" /> partially contain the <paramref name="needle" />?
         /// </summary>
-        /// <param name="haystack">An array of <see cref="string"/>s.</param>
-        /// <param name="needle">The <see cref="string"/> that is being looked for.</param>
+        /// <param name="haystack">An array of <see cref="string" />s.</param>
+        /// <param name="needle">The <see cref="string" /> that is being looked for.</param>
         /// <returns>true/false if found.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool PartialMatch(this string[] haystack, string needle)
         {
-            if (haystack == null) return false;
+            if (haystack == null)
+            {
+                return false;
+            }
 
             int count = haystack.Length;
             for (int i = 0; i < count; i++)
@@ -691,15 +697,18 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Does the <paramref name="haystack"/> partially contain the <paramref name="needle"/>?
+        ///     Does the <paramref name="haystack" /> partially contain the <paramref name="needle" />?
         /// </summary>
-        /// <param name="haystack">A <see cref="SimpleList{T}"/> of <see cref="string"/>s.</param>
-        /// <param name="needle">The <see cref="string"/> that is being looked for.</param>
+        /// <param name="haystack">A <see cref="SimpleList{T}" /> of <see cref="string" />s.</param>
+        /// <param name="needle">The <see cref="string" /> that is being looked for.</param>
         /// <returns>true/false if found.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool PartialMatch(this SimpleList<string> haystack, string needle)
         {
-            if (haystack.Count == 0) return false;
+            if (haystack.Count == 0)
+            {
+                return false;
+            }
 
             int count = haystack.Count;
             for (int i = 0; i < count; i++)
@@ -726,10 +735,10 @@ namespace GDX
         }
 
         /// <summary>
-        ///     Remove non ASCII characters from a <see cref="string"/>.
+        ///     Remove non ASCII characters from a <see cref="string" />.
         /// </summary>
-        /// <param name="targetString">The <see cref="string"/> to be cleaned.</param>
-        /// <returns>A <see cref="string"/> without ASCII characters.</returns>
+        /// <param name="targetString">The <see cref="string" /> to be cleaned.</param>
+        /// <returns>A <see cref="string" /> without ASCII characters.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string StripNonAscii(this string targetString)
         {

@@ -1,10 +1,10 @@
-// Copyright (c) 2020-2023 dotBunny Inc.
+// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
-using Unity.Burst;
 
 namespace GDX.Jobs.ParallelFor
 {
@@ -28,7 +28,7 @@ namespace GDX.Jobs.ParallelFor
         [ReadOnly] public NativeArray<int> Source;
 
         /// <summary>
-        /// Executable work for the provided index.
+        ///     Executable work for the provided index.
         /// </summary>
         /// <param name="index">The index of the Parallel for loop at which to perform work.</param>
         public void Execute(int index)

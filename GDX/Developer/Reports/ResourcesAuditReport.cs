@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -67,15 +67,15 @@ namespace GDX.Developer.Reports
             context ??= new ResourceReportContext();
 
             // Create header
-            builder.AppendLine(CreateHeader(context,"START: Resources Audit Report"));
+            builder.AppendLine(CreateHeader(context, "START: Resources Audit Report"));
 
             // Add standard report information
             ApplicationContext.Output(context, builder);
 
             // Custom header information
-            builder.AppendLine(CreateKeyValuePair(context,"Last Touched",
+            builder.AppendLine(CreateKeyValuePair(context, "Last Touched",
                 LastTouched.ToString(Localization.LocalTimestampFormat)));
-            builder.AppendLine(CreateKeyValuePair(context,"Total Objects", ObjectCount.ToString()));
+            builder.AppendLine(CreateKeyValuePair(context, "Total Objects", ObjectCount.ToString()));
 
             builder.AppendLine();
 
@@ -89,8 +89,8 @@ namespace GDX.Developer.Reports
                 int count = knownObject.Value.Count;
 
                 builder.AppendLine(CreateHeader(context, knownObject.Key.ToString(), '-'));
-                builder.AppendLine(CreateKeyValuePair(context,"Count", count.ToString()));
-                builder.AppendLine(CreateKeyValuePair(context,"Total Size",
+                builder.AppendLine(CreateKeyValuePair(context, "Count", count.ToString()));
+                builder.AppendLine(CreateKeyValuePair(context, "Total Size",
                     Localization.GetHumanReadableFileSize(KnownUsage[knownObject.Key])));
                 builder.AppendLine();
 
@@ -113,7 +113,7 @@ namespace GDX.Developer.Reports
             }
 
             // Footer
-            builder.AppendLine(CreateHeader(context,"END: Resources Audit Report"));
+            builder.AppendLine(CreateHeader(context, "END: Resources Audit Report"));
 
             return true;
         }
@@ -160,7 +160,7 @@ namespace GDX.Developer.Reports
             MethodInfo generic = method.MakeGenericMethod(typeActual, objectInfoActual);
 
             // Invoke the method on our container
-            generic.Invoke(this, new object[] {query.NameFilter});
+            generic.Invoke(this, new object[] { query.NameFilter });
 
             LastTouched = DateTime.Now;
         }

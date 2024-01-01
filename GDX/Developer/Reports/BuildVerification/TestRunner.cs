@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -6,8 +6,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading.Tasks;
 using GDX.Collections.Generic;
-using GDX.Experimental;
-using GDX.Experimental.Logging;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,7 +14,6 @@ namespace GDX.Developer.Reports.BuildVerification
     public static class TestRunner
     {
         /// <summary>
-        ///
         /// </summary>
         const int SafeDelayTime = 1;
 
@@ -25,7 +22,10 @@ namespace GDX.Developer.Reports.BuildVerification
 
         public static void AddTest(SimpleTestBehaviour simpleTest)
         {
-            if (simpleTest == null) return;
+            if (simpleTest == null)
+            {
+                return;
+            }
 
             lock (s_lockKnownTests)
             {
@@ -48,14 +48,14 @@ namespace GDX.Developer.Reports.BuildVerification
         {
             if (!testScene.IsValid())
             {
-                ManagedLog.Warning(LogCategory.Test, $"Invalid scene {testScene.BuildIndex.ToString()}.");
+                UnityEngine.Debug.LogWarning($"Invalid scene {testScene.BuildIndex.ToString()}.");
                 Reset();
                 return;
             }
 
             Stopwatch timeoutTimer = new Stopwatch();
 
-            ManagedLog.Info(LogCategory.Test, $"Load {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
+            UnityEngine.Debug.Log($"Load {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
             AsyncOperation loadOperation = SceneManager.LoadSceneAsync(testScene.BuildIndex, LoadSceneMode.Additive);
             timeoutTimer.Restart();
             if (loadOperation != null)
@@ -68,15 +68,23 @@ namespace GDX.Developer.Reports.BuildVerification
                     }
                     else
                     {
-                        ManagedLog.Error(LogCategory.Test, $"Failed to load {testScene.ScenePath} ({testScene.BuildIndex.ToString()}).");
+                        UnityEngine.Debug.LogError(
+                            $"Failed to load {testScene.ScenePath} ({testScene.BuildIndex.ToString()}).");
                         Reset();
                         return;
                     }
                 }
             }
 
+            // Wait for all scenes to load and activate
+            while (SceneExtensions.IsSceneManagerBusy())
+            {
+                await Task.Delay(SafeDelayTime);
+            }
+
+
             // Wait for next update - super important around integration of loaded content
-            ManagedLog.Info(LogCategory.Test, "Waiting at least frame ...");
+            UnityEngine.Debug.Log("Waiting at least frame ...");
             float loadCurrentTime = Time.time;
             while (Time.time == loadCurrentTime)
             {
@@ -89,29 +97,32 @@ namespace GDX.Developer.Reports.BuildVerification
             {
                 if (timeoutTimer.ElapsedMilliseconds < testScene.TestTimeout)
                 {
-                   await Task.Delay(SafeDelayTime);
+                    await Task.Delay(SafeDelayTime);
                 }
                 else
                 {
-                    ManagedLog.Warning(LogCategory.Test, $"Test run timed out after {(timeoutTimer.ElapsedMilliseconds/1000f).ToString(CultureInfo.CurrentCulture)} seconds.");
+                    UnityEngine.Debug.LogWarning(
+                        $"Test run timed out after {(timeoutTimer.ElapsedMilliseconds / 1000f).ToString(CultureInfo.CurrentCulture)} seconds.");
                     for (int i = 0; i < s_KnownTest.Count; i++)
                     {
                         BuildVerificationReport.Assert(s_KnownTest.Array[i].GetIdentifier(), false, "Test timed out.");
                     }
+
                     Reset();
                     break;
                 }
             }
 
-            ManagedLog.Info(LogCategory.Test, "Waiting at least frame ...");
+            UnityEngine.Debug.Log( "Waiting at least frame ...");
             float testCurrentTime = Time.time;
             while (Time.time == testCurrentTime)
             {
                 await Task.Delay(SafeDelayTime);
             }
 
-            ManagedLog.Info(LogCategory.Test, $"Unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
-            AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(testScene.BuildIndex, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
+            UnityEngine.Debug.Log($"Unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()})");
+            AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(testScene.BuildIndex,
+                UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
             timeoutTimer.Restart();
             if (unloadOperation != null)
             {
@@ -123,7 +134,7 @@ namespace GDX.Developer.Reports.BuildVerification
                     }
                     else
                     {
-                        ManagedLog.Error(LogCategory.Test, $"Failed to unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()}).");
+                        UnityEngine.Debug.LogError($"Failed to unload {testScene.ScenePath} ({testScene.BuildIndex.ToString()}).");
                         Reset();
                         return;
                     }
@@ -131,7 +142,7 @@ namespace GDX.Developer.Reports.BuildVerification
             }
 
             // Wait for next update - super important around unloading
-            ManagedLog.Info(LogCategory.Test, "Waiting at least frame ...");
+            UnityEngine.Debug.Log("Waiting at least frame ...");
             float unloadCurrentTime = Time.time;
             while (Time.time == unloadCurrentTime)
             {
@@ -141,13 +152,16 @@ namespace GDX.Developer.Reports.BuildVerification
             // Make sure we remove all registered as a safety precaution / will also stop the timer
             Reset();
 
-            ManagedLog.Info(LogCategory.Test, $"Test scene {testScene.ScenePath} ({testScene.BuildIndex.ToString()}) execution finished.");
+            UnityEngine.Debug.Log($"Test scene {testScene.ScenePath} ({testScene.BuildIndex.ToString()}) execution finished.");
         }
 
 
         public static void RemoveTest(SimpleTestBehaviour simpleTest)
         {
-            if (simpleTest == null) return;
+            if (simpleTest == null)
+            {
+                return;
+            }
 
             lock (s_lockKnownTests)
             {

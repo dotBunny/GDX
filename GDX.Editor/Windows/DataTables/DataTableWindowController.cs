@@ -1,7 +1,8 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using GDX.DataTables;
 using UnityEditor;
 using UnityEngine;
@@ -11,8 +12,8 @@ namespace GDX.Editor.Windows.DataTables
 #if UNITY_2022_2_OR_NEWER
     public class DataTableWindowController
     {
-        readonly DataTableWindowOverlay m_Overlay;
         readonly DataTableWindow m_DataTableWindow;
+        readonly DataTableWindowOverlay m_Overlay;
 
         internal DataTableWindowController(DataTableWindow window, DataTableWindowOverlay overlay)
         {
@@ -67,7 +68,8 @@ namespace GDX.Editor.Windows.DataTables
             Application.OpenURL($"{PackageProvider.GetDocumentationBaseUri()}/manual/features/data-tables.html");
         }
 
-        public bool AddColumn(string name, Serializable.SerializableTypes type, string secondary = null, int orderedIndex = -1)
+        public bool AddColumn(string name, Serializable.SerializableTypes type, string secondary = null,
+            int orderedIndex = -1)
         {
             DataTableTracker.RecordColumnDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), -1, $"Add '{name}'");
 
@@ -75,7 +77,7 @@ namespace GDX.Editor.Windows.DataTables
             int columnIdentifier = dataTable.AddColumn(type, name, orderedIndex);
             if (!string.IsNullOrEmpty(secondary))
             {
-                System.Type newType = System.Type.GetType(secondary);
+                Type newType = Type.GetType(secondary);
                 if (newType != null)
                 {
                     dataTable.SetTypeNameForColumn(columnIdentifier, secondary);
@@ -95,7 +97,7 @@ namespace GDX.Editor.Windows.DataTables
                 return false;
             }
 
-            DataTableTracker.RecordRowDefinitionUndo(m_DataTableWindow.GetDataTableTicket(),-1, $"Add '{name}'");
+            DataTableTracker.RecordRowDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), -1, $"Add '{name}'");
             int rowIdentifier = dataTable.AddRow(name, orderedIndex);
 
             DataTableTracker.NotifyOfRowChange(m_DataTableWindow.GetDataTableTicket(), rowIdentifier);
@@ -110,7 +112,7 @@ namespace GDX.Editor.Windows.DataTables
                 return;
             }
 
-            DataTableTracker.RecordRowDefinitionUndo(m_DataTableWindow.GetDataTableTicket(),-1, "Add Default");
+            DataTableTracker.RecordRowDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), -1, "Add Default");
             int rowIdentifier = dataTable.AddRow($"Row_{Core.Random.NextInteger(1, 9999).ToString()}");
 
             m_Overlay.SetOverlayStateHidden();
@@ -127,15 +129,16 @@ namespace GDX.Editor.Windows.DataTables
             }
 
             int currentOrder = dataTable.GetColumnOrder(columnIdentifier);
-            if(currentOrder < (dataTable.GetColumnCount() - 1))
+            if (currentOrder < dataTable.GetColumnCount() - 1)
             {
-                DataTableTracker.RecordColumnDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), columnIdentifier, "Move Column Right");
+                DataTableTracker.RecordColumnDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), columnIdentifier,
+                    "Move Column Right");
                 dataTable.SetColumnOrder(columnIdentifier, currentOrder + 1);
                 DataTableTracker.NotifyOfColumnChange(m_DataTableWindow.GetDataTableTicket(), columnIdentifier);
                 return true;
             }
-            return false;
 
+            return false;
         }
 
         public bool MoveColumnLeft(int columnIdentifier)
@@ -149,22 +152,28 @@ namespace GDX.Editor.Windows.DataTables
             int currentOrder = dataTable.GetColumnOrder(columnIdentifier);
             if (currentOrder > 0)
             {
-                DataTableTracker.RecordColumnDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), columnIdentifier, "Move Column Left");
+                DataTableTracker.RecordColumnDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), columnIdentifier,
+                    "Move Column Left");
                 dataTable.SetColumnOrder(columnIdentifier, currentOrder - 1);
                 DataTableTracker.NotifyOfColumnChange(m_DataTableWindow.GetDataTableTicket(), columnIdentifier);
                 return true;
             }
+
             return false;
         }
 
         public void RemoveSelectedRow()
         {
             object selectedItem = m_DataTableWindow.GetView().GetMultiColumnListView().selectedItem;
-            if (selectedItem == null) return;
+            if (selectedItem == null)
+            {
+                return;
+            }
 
             RowDescription selectedRow =
                 (RowDescription)m_DataTableWindow.GetView().GetMultiColumnListView().selectedItem;
-            DataTableTracker.RecordRowDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), selectedRow.Identifier, "Remove Selected");
+            DataTableTracker.RecordRowDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), selectedRow.Identifier,
+                "Remove Selected");
 
             m_DataTableWindow.GetDataTable().RemoveRow(selectedRow.Identifier);
 
@@ -179,7 +188,8 @@ namespace GDX.Editor.Windows.DataTables
                 return false;
             }
 
-            DataTableTracker.RecordColumnDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), columnIdentifier, "Remove");
+            DataTableTracker.RecordColumnDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), columnIdentifier,
+                "Remove");
 
             dataTable.RemoveColumn(m_DataTableWindow.GetView().GetColumnType(columnIdentifier), columnIdentifier);
 
@@ -190,7 +200,7 @@ namespace GDX.Editor.Windows.DataTables
         public bool RemoveRow(int rowIdentifier)
         {
             DataTableBase dataTable = m_DataTableWindow.GetDataTable();
-            DataTableTracker.RecordRowDefinitionUndo(m_DataTableWindow.GetDataTableTicket(),rowIdentifier, "Remove");
+            DataTableTracker.RecordRowDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), rowIdentifier, "Remove");
             dataTable.RemoveRow(rowIdentifier);
 
             DataTableTracker.NotifyOfRowChange(m_DataTableWindow.GetDataTableTicket(), rowIdentifier);
@@ -201,7 +211,7 @@ namespace GDX.Editor.Windows.DataTables
         {
             DataTableBase dataTable = m_DataTableWindow.GetDataTable();
 
-            DataTableTracker.RecordRowDefinitionUndo(m_DataTableWindow.GetDataTableTicket(),rowIdentifier);
+            DataTableTracker.RecordRowDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), rowIdentifier);
             dataTable.SetRowName(rowIdentifier, name);
             DataTableTracker.NotifyOfRowChange(m_DataTableWindow.GetDataTableTicket(), rowIdentifier);
             return true;
@@ -210,18 +220,21 @@ namespace GDX.Editor.Windows.DataTables
         public bool RenameColumn(int columnIdentifier, string name)
         {
             DataTableBase dataTable = m_DataTableWindow.GetDataTable();
-            DataTableTracker.RecordColumnDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), columnIdentifier, $"Rename '{name}'");
+            DataTableTracker.RecordColumnDefinitionUndo(m_DataTableWindow.GetDataTableTicket(), columnIdentifier,
+                $"Rename '{name}'");
 
             // Update column data in place
             m_DataTableWindow.GetView().UpdateColumnData(columnIdentifier, name);
 
             dataTable.SetColumnName(columnIdentifier, name);
 
-            DataTableTracker.NotifyOfColumnChange(m_DataTableWindow.GetDataTableTicket(), columnIdentifier,  m_DataTableWindow);
+            DataTableTracker.NotifyOfColumnChange(m_DataTableWindow.GetDataTableTicket(), columnIdentifier,
+                m_DataTableWindow);
             return true;
         }
 
-        public bool SetTableSettings(string displayName, string bindingUri, bool enableUndo, bool supportReferenceOnlyMode)
+        public bool SetTableSettings(string displayName, string bindingUri, bool enableUndo,
+            bool supportReferenceOnlyMode)
         {
             DataTableBase dataTable = m_DataTableWindow.GetDataTable();
             DataTableTracker.RecordSettingsUndo(m_DataTableWindow.GetDataTableTicket());

@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2023 dotBunny Inc.
+// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -45,6 +45,7 @@ namespace GDX.Developer.Reports
                         ? new LongDiff(kvp.Value, rhs.KnownUsage[kvp.Key])
                         : new LongDiff(kvp.Value, 0));
             }
+
             foreach (KeyValuePair<Type, long> kvp in rhs.KnownUsage)
             {
                 if (!lhs.KnownUsage.ContainsKey(kvp.Key))
@@ -61,10 +62,12 @@ namespace GDX.Developer.Reports
                 {
                     AddedObjects.Add(kvpType.Key, new Dictionary<TransientReference, ObjectInfo>());
                 }
+
                 if (!RemovedObjects.ContainsKey(kvpType.Key))
                 {
                     RemovedObjects.Add(kvpType.Key, new Dictionary<TransientReference, ObjectInfo>());
                 }
+
                 if (!CommonObjects.ContainsKey(kvpType.Key))
                 {
                     CommonObjects.Add(kvpType.Key, new Dictionary<TransientReference, ObjectInfo>());
@@ -98,7 +101,6 @@ namespace GDX.Developer.Reports
                         {
                             RemovedObjects[kvpType.Key].Add(knownObject.Key, knownObject.Value);
                         }
-
                     }
                 }
             }
@@ -125,10 +127,12 @@ namespace GDX.Developer.Reports
                     removeType.Add(kvpType.Key);
                 }
             }
+
             foreach (Type type in removeType)
             {
                 AddedObjects.Remove(type);
             }
+
             removeType.Clear();
             foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> kvpType in RemovedObjects)
             {
@@ -137,10 +141,12 @@ namespace GDX.Developer.Reports
                     removeType.Add(kvpType.Key);
                 }
             }
+
             foreach (Type type in removeType)
             {
                 RemovedObjects.Remove(type);
             }
+
             removeType.Clear();
             foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> kvpType in CommonObjects)
             {
@@ -149,6 +155,7 @@ namespace GDX.Developer.Reports
                     removeType.Add(kvpType.Key);
                 }
             }
+
             foreach (Type type in removeType)
             {
                 CommonObjects.Remove(type);
@@ -165,12 +172,14 @@ namespace GDX.Developer.Reports
             builder.AppendLine(CreateHeader(context, "START: Resources Diff Report"));
 
             // Custom header information
-            builder.AppendLine(CreateKeyValuePair(context,"Total Objects", ObjectCount.GetOutput(context)));
+            builder.AppendLine(CreateKeyValuePair(context, "Total Objects", ObjectCount.GetOutput(context)));
             builder.AppendLine();
             foreach (KeyValuePair<Type, LongDiff> usage in KnownUsage)
             {
-                builder.AppendLine(CreateKeyValuePair(context,usage.Key.ToString(), usage.Value.GetSizeOutput(context)));
+                builder.AppendLine(
+                    CreateKeyValuePair(context, usage.Key.ToString(), usage.Value.GetSizeOutput(context)));
             }
+
             builder.AppendLine();
 
             // Add memory information
@@ -180,19 +189,20 @@ namespace GDX.Developer.Reports
             builder.AppendLine(CreateHeader(context, "Added Objects"));
             OutputObjectInfos(builder, context, AddedObjects);
 
-            builder.AppendLine(CreateHeader(context,"Common Objects"));
+            builder.AppendLine(CreateHeader(context, "Common Objects"));
             OutputObjectInfos(builder, context, CommonObjects);
 
-            builder.AppendLine(CreateHeader(context,"Removed Objects"));
+            builder.AppendLine(CreateHeader(context, "Removed Objects"));
             OutputObjectInfos(builder, context, RemovedObjects);
 
             // Footer
-            builder.AppendLine(CreateHeader(context,"END: Resources Diff Report"));
+            builder.AppendLine(CreateHeader(context, "END: Resources Diff Report"));
 
             return true;
         }
 
-        static void OutputObjectInfos(StringBuilder builder, ResourceReportContext context, Dictionary<Type, Dictionary<TransientReference, ObjectInfo>> targetObjects)
+        static void OutputObjectInfos(StringBuilder builder, ResourceReportContext context,
+            Dictionary<Type, Dictionary<TransientReference, ObjectInfo>> targetObjects)
         {
             foreach (KeyValuePair<Type, Dictionary<TransientReference, ObjectInfo>> target in targetObjects)
             {

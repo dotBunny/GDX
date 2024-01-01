@@ -1,9 +1,9 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 namespace GDX.Editor.DecoratorDrawers
 {
@@ -15,7 +15,13 @@ namespace GDX.Editor.DecoratorDrawers
     public class InspectorMessageBoxAttributeDecoratorDrawer : DecoratorDrawer
     {
         /// <summary>
-        ///     Cached reference to the target <see cref="InspectorMessageBoxAttribute"/>.
+        ///     A cached reference to the "help box" style.
+        /// </summary>
+        // ReSharper disable once StringLiteralTypo
+        static readonly GUIStyle k_CachedHelpBoxStyle = new GUIStyle("helpbox");
+
+        /// <summary>
+        ///     Cached reference to the target <see cref="InspectorMessageBoxAttribute" />.
         /// </summary>
         InspectorMessageBoxAttribute m_Target;
 
@@ -23,12 +29,6 @@ namespace GDX.Editor.DecoratorDrawers
         ///     Cached GUIContent of text, strictly used by height calculations.
         /// </summary>
         GUIContent m_TargetMessage;
-
-        /// <summary>
-        ///     A cached reference to the "help box" style.
-        /// </summary>
-        // ReSharper disable once StringLiteralTypo
-        static readonly GUIStyle k_CachedHelpBoxStyle = new GUIStyle("helpbox");
 
         /// <summary>
         ///     Returns the inspector height needed for this decorator.

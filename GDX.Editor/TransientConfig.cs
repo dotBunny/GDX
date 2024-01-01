@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -9,13 +9,13 @@ namespace GDX.Editor
     /// <summary>
     ///     A configuration that is operated on when in Project Settings.
     /// </summary>
-    /// <remarks>A non-static copy of <see cref="GDX.Config"/>.</remarks>
+    /// <remarks>A non-static copy of <see cref="GDX.Config" />.</remarks>
     public class TransientConfig
     {
         /// <summary>
-        ///     The asset database relative path of the GDX config override file.
+        ///     Should the BuildInfo file be written during builds?
         /// </summary>
-        public string ConfigOutputPath;
+        public bool BuildInfo;
 
         /// <summary>
         ///     Ensure that there is an assembly definition wrapping the generated content.
@@ -48,11 +48,6 @@ namespace GDX.Editor
         public string BuildInfoBuildTaskArgument;
 
         /// <summary>
-        ///     Should the BuildInfo file be written during builds?
-        /// </summary>
-        public bool BuildInfo;
-
-        /// <summary>
         ///     The namespace where the BuildInfo should be placed.
         /// </summary>
         public string BuildInfoNamespace;
@@ -73,6 +68,11 @@ namespace GDX.Editor
         public string CommandLineParserArgumentSplit;
 
         /// <summary>
+        ///     The asset database relative path of the GDX config override file.
+        /// </summary>
+        public string ConfigOutputPath;
+
+        /// <summary>
         ///     Should the Editor Task Director tick the Task Director.
         /// </summary>
         public bool EditorTaskDirectorSystem;
@@ -83,9 +83,9 @@ namespace GDX.Editor
         public double EditorTaskDirectorSystemTickRate;
 
         /// <summary>
-        ///     Should GDX make sure that it's shaders are always included in builds.
+        ///     Should the GDX developer console be used.
         /// </summary>
-        public bool EnvironmentAlwaysIncludeShaders;
+        public bool EnvironmentDeveloperConsole;
 
         /// <summary>
         ///     Should a GDX scripting define symbol be added to all target build groups.
@@ -146,10 +146,10 @@ namespace GDX.Editor
             BuildInfoOutputPath = Config.BuildInfoOutputPath;
             CommandLineParserArgumentPrefix = Config.CommandLineParserArgumentPrefix;
             CommandLineParserArgumentSplit = Config.CommandLineParserArgumentSplit;
-            EnvironmentAlwaysIncludeShaders = Config.EnvironmentAlwaysIncludeShaders;
             EditorTaskDirectorSystem = Config.EditorTaskDirectorSystem;
             EditorTaskDirectorSystemTickRate = Config.EditorTaskDirectorSystemTickRate;
             EnvironmentScriptingDefineSymbol = Config.EnvironmentScriptingDefineSymbol;
+            EnvironmentDeveloperConsole = Config.EnvironmentDeveloperConsole;
             EnvironmentToolsMenu = Config.EnvironmentToolsMenu;
             TaskDirectorSystem = Config.TaskDirectorSystem;
             TaskDirectorSystemTickRate = Config.TaskDirectorSystemTickRate;
@@ -175,12 +175,13 @@ namespace GDX.Editor
                    BuildInfoBuildTaskArgument == Config.BuildInfoBuildTaskArgument &&
                    BuildInfoBuildStreamArgument == Config.BuildInfoBuildStreamArgument &&
                    EnvironmentScriptingDefineSymbol == Config.EnvironmentScriptingDefineSymbol &&
+                   EnvironmentDeveloperConsole == Config.EnvironmentDeveloperConsole &&
                    EnvironmentToolsMenu == Config.EnvironmentToolsMenu &&
-                   EnvironmentAlwaysIncludeShaders == Config.EnvironmentAlwaysIncludeShaders &&
                    TaskDirectorSystem == Config.TaskDirectorSystem &&
                    Math.Abs(TaskDirectorSystemTickRate - Config.TaskDirectorSystemTickRate) < Platform.FloatTolerance &&
                    EditorTaskDirectorSystem == Config.EditorTaskDirectorSystem &&
-                   Math.Abs(EditorTaskDirectorSystemTickRate - Config.EditorTaskDirectorSystemTickRate) < Platform.DoubleTolerance &&
+                   Math.Abs(EditorTaskDirectorSystemTickRate - Config.EditorTaskDirectorSystemTickRate) <
+                   Platform.DoubleTolerance &&
                    LocalizationSetDefaultCulture == Config.LocalizationSetDefaultCulture &&
                    LocalizationDefaultCulture == Config.LocalizationDefaultCulture &&
                    ConfigOutputPath == Config.ConfigOutputPath &&

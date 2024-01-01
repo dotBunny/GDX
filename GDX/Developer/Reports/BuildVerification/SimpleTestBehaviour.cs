@@ -11,20 +11,6 @@ namespace GDX.Developer.Reports.BuildVerification
         string m_StartTime;
         Stopwatch m_Timer;
 
-        public abstract TestCase Check();
-        public abstract string GetIdentifier();
-
-        /// <inheritdoc />
-        public virtual void Setup()
-        {
-
-        }
-
-        /// <inheritdoc />
-        public virtual void TearDown()
-        {
-        }
-
         void Start()
         {
             TestRunner.AddTest(this);
@@ -43,7 +29,11 @@ namespace GDX.Developer.Reports.BuildVerification
                 m_frameWait--;
                 return;
             }
-            if (m_frameWait < 0) return;
+
+            if (m_frameWait < 0)
+            {
+                return;
+            }
 
             m_frameWait--;
 
@@ -63,6 +53,19 @@ namespace GDX.Developer.Reports.BuildVerification
 
         // ReSharper restore UnusedMember.Local
 #pragma warning restore IDE0051
+
+        public abstract TestCase Check();
+        public abstract string GetIdentifier();
+
+        /// <inheritdoc />
+        public virtual void Setup()
+        {
+        }
+
+        /// <inheritdoc />
+        public virtual void TearDown()
+        {
+        }
 
         TestCase RunTest()
         {

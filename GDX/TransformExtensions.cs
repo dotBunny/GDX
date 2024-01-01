@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -6,6 +6,7 @@
 
 using System.Runtime.CompilerServices;
 using System.Text;
+using UnityEditor;
 using UnityEngine;
 
 namespace GDX
@@ -36,9 +37,15 @@ namespace GDX
             for (int i = count - 1; i >= 0; i--)
             {
                 GameObject childObject = targetTransform.GetChild(i).gameObject;
-                if (!destroyInactive && !childObject.activeInHierarchy) continue;
+                if (!destroyInactive && !childObject.activeInHierarchy)
+                {
+                    continue;
+                }
 
-                if (deactivateBeforeDestroy) childObject.SetActive(false);
+                if (deactivateBeforeDestroy)
+                {
+                    childObject.SetActive(false);
+                }
 
                 if (immediateMode)
                 {
@@ -62,8 +69,12 @@ namespace GDX
             int counter = 0;
             int childCount = targetTransform.childCount;
             for (int i = 0; i < childCount; i++)
+            {
                 if (targetTransform.GetChild(i).gameObject.activeSelf)
+                {
                     counter++;
+                }
+            }
 
             return counter;
         }
@@ -89,7 +100,10 @@ namespace GDX
             // Increase depth count
             currentDepth++;
 
-            if (maxLevelsOfRecursion >= 0 && currentDepth > maxLevelsOfRecursion) return default;
+            if (maxLevelsOfRecursion >= 0 && currentDepth > maxLevelsOfRecursion)
+            {
+                return default;
+            }
 
             int cachedChildCount = targetTransform.childCount;
             for (int i = 0; i < cachedChildCount; i++)
@@ -99,20 +113,31 @@ namespace GDX
                 // Don't include disabled transforms
                 if (!transformToCheck.gameObject.activeSelf &&
                     !includeInactive)
+                {
                     continue;
+                }
 
                 // Lets check the current transform for the component.
                 T returnComponent = transformToCheck.GetComponent<T>();
 
                 // Its important to use the Equals here, not a !=
-                if (returnComponent != null) return returnComponent;
+                if (returnComponent != null)
+                {
+                    return returnComponent;
+                }
 
                 // OK, time to deep dive.
-                if (maxLevelsOfRecursion >= 0 && currentDepth >= maxLevelsOfRecursion) continue;
+                if (maxLevelsOfRecursion >= 0 && currentDepth >= maxLevelsOfRecursion)
+                {
+                    continue;
+                }
 
                 returnComponent = GetFirstComponentInChildrenComplex<T>(transformToCheck, includeInactive, currentDepth,
                     maxLevelsOfRecursion);
-                if (returnComponent != null) return returnComponent;
+                if (returnComponent != null)
+                {
+                    return returnComponent;
+                }
             }
 
             return default;
@@ -138,8 +163,10 @@ namespace GDX
             }
 #if UNITY_EDITOR
             if (originalTransform &&
-                UnityEditor.EditorUtility.IsPersistent(originalTransform))
+                EditorUtility.IsPersistent(originalTransform))
+            {
                 stringBuilder.Append(" [P]");
+            }
 #endif // UNITY_EDITOR
             return stringBuilder.ToString();
         }

@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2023 dotBunny Inc.
+// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 {
     /// <summary>
-    ///    GDX Config Settings
+    ///     GDX Config Settings
     /// </summary>
     class PlatformSettings : IConfigSection
     {
@@ -112,7 +112,6 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 
         public void SetToggleState(VisualElement toggleElement, bool newState)
         {
-
         }
 
         /// <inheritdoc />

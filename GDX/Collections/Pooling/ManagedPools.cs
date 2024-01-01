@@ -1,11 +1,10 @@
-// Copyright (c) 2020-2023 dotBunny Inc.
+// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 using System.Collections.Generic;
 using GDX.Collections.Generic;
-using GDX.Experimental;
-using GDX.Experimental.Logging;
+using UnityEngine;
 
 namespace GDX.Collections.Pooling
 {
@@ -128,7 +127,8 @@ namespace GDX.Collections.Pooling
             }
             else
             {
-               ManagedLog.Error(LogCategory.GDX, "A managed pool attempted to register itself with the ManagedPools, but the provided key is already in use.");
+                Debug.LogError(
+                    "A managed pool attempted to register itself with the ManagedPools, but the provided key is already in use.");
             }
         }
 
@@ -169,7 +169,8 @@ namespace GDX.Collections.Pooling
                 k_Pools.Remove(removeKeyBuffer.Array[r]);
             }
 
-            ManagedLog.Info(LogCategory.GDX, $"[PoolSystem::TearDown] Removed {removeCount.ToString()}/{poolCount.ToString()}");
+            Debug.Log(
+                $"[PoolSystem::TearDown] Removed {removeCount.ToString()}/{poolCount.ToString()}");
         }
 
         /// <summary>

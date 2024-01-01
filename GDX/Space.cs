@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -8,43 +8,50 @@ namespace GDX
 {
     public static class Space
     {
-        public enum Direction
-        {
-            /// <summary>
-            /// An undetermined direction.
-            /// </summary>
-            Undefined,
-            /// <summary>
-            /// Z axis.
-            /// </summary>
-            Forward,
-            /// <summary>
-            /// -Z axis.
-            /// </summary>
-            Backward,
-            /// <summary>
-            /// -X axis.
-            /// </summary>
-            Left,
-            /// <summary>
-            /// X axis.
-            /// </summary>
-            Right,
-            /// <summary>
-            /// Y axis.
-            /// </summary>
-            Up,
-            /// <summary>
-            /// -Y axis.
-            /// </summary>
-            Down
-        }
         public enum Axis
         {
             Undefined,
             X,
             Y,
             Z
+        }
+
+        public enum Direction
+        {
+            /// <summary>
+            ///     An undetermined direction.
+            /// </summary>
+            Undefined,
+
+            /// <summary>
+            ///     Z axis.
+            /// </summary>
+            Forward,
+
+            /// <summary>
+            ///     -Z axis.
+            /// </summary>
+            Backward,
+
+            /// <summary>
+            ///     -X axis.
+            /// </summary>
+            Left,
+
+            /// <summary>
+            ///     X axis.
+            /// </summary>
+            Right,
+
+            /// <summary>
+            ///     Y axis.
+            /// </summary>
+            Up,
+
+            /// <summary>
+            ///     -Y axis.
+            /// </summary>
+            Down
         }
 
 #if !UNITY_DOTSRUNTIME
@@ -56,11 +63,11 @@ namespace GDX
         static readonly Quaternion k_RotationBackward = Quaternion.Euler(0, 0, -90);
 
         /// <summary>
-        ///     Get the corresponding <see cref="Direction"/> for a <see cref="Vector3"/> provided direction.
+        ///     Get the corresponding <see cref="Direction" /> for a <see cref="Vector3" /> provided direction.
         /// </summary>
         /// <remarks>Only works with deterministic directions builtin to Unity.</remarks>
         /// <param name="direction">The given direction.</param>
-        /// <returns>A qualified <see cref="Direction"/> equivalent to the <paramref name="direction"/>.</returns>
+        /// <returns>A qualified <see cref="Direction" /> equivalent to the <paramref name="direction" />.</returns>
         public static Direction GetDirection(Vector3 direction)
         {
             // Left/Right
@@ -70,7 +77,8 @@ namespace GDX
                 {
                     return Direction.Right;
                 }
-                if(direction.x < 0 )
+
+                if (direction.x < 0)
                 {
                     return Direction.Left;
                 }
@@ -83,6 +91,7 @@ namespace GDX
                 {
                     return Direction.Forward;
                 }
+
                 if (direction.z < 0)
                 {
                     return Direction.Backward;
@@ -96,11 +105,13 @@ namespace GDX
                 {
                     return Direction.Up;
                 }
+
                 if (direction.y < 0)
                 {
                     return Direction.Down;
                 }
             }
+
             return Direction.Undefined;
         }
 
@@ -115,6 +126,7 @@ namespace GDX
                 _ => Quaternion.identity
             };
         }
+
         public static Quaternion ToRotation(this Direction direction)
         {
             return direction switch
@@ -126,7 +138,7 @@ namespace GDX
                 Direction.Down => k_RotationDown,
                 Direction.Backward => k_RotationBackward,
                 Direction.Forward => k_RotationForward,
-                _ => Quaternion.identity,
+                _ => Quaternion.identity
             };
         }
 #endif // !UNITY_DOTSRUNTIME

@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2023 dotBunny Inc.
+// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -53,12 +53,32 @@ namespace GDX.Developer.Reports.Resource.Objects
         public Type Type;
 
         /// <summary>
-        /// Create a clone of this object.
+        ///     Evaluate if the compared <see cref="ObjectInfo" /> utilizes more memory then this one.
+        /// </summary>
+        /// <param name="obj">The <see cref="ObjectInfo" /> to compare against.</param>
+        /// <returns>1 if larger, otherwise 0.</returns>
+        public int CompareTo(object obj)
+        {
+            if (!(obj is ObjectInfo info))
+            {
+                return 0;
+            }
+
+            if (TotalMemoryUsage > info.TotalMemoryUsage)
+            {
+                return -1;
+            }
+
+            return 1;
+        }
+
+        /// <summary>
+        ///     Create a clone of this object.
         /// </summary>
         /// <returns></returns>
         public virtual ObjectInfo Clone()
         {
-            return new ObjectInfo()
+            return new ObjectInfo
             {
                 CopyCount = CopyCount,
                 MemoryUsage = MemoryUsage,
@@ -101,25 +121,6 @@ namespace GDX.Developer.Reports.Resource.Objects
             CopyCount = 1;
         }
 
-        /// <summary>
-        /// Evaluate if the compared <see cref="ObjectInfo"/> utilizes more memory then this one.
-        /// </summary>
-        /// <param name="obj">The <see cref="ObjectInfo"/> to compare against.</param>
-        /// <returns>1 if larger, otherwise 0.</returns>
-        public int CompareTo(object obj)
-        {
-            if (!(obj is ObjectInfo info))
-            {
-                return 0;
-            }
-
-            if (TotalMemoryUsage > info.TotalMemoryUsage)
-            {
-                return -1;
-            }
-            return 1;
-        }
-
 
         public void Output(ResourceReportContext context, StringBuilder builder, bool stripUnicode = true)
         {
@@ -128,6 +129,7 @@ namespace GDX.Developer.Reports.Resource.Objects
             {
                 typeName = typeName.Substring(0, context.ObjectTypeWidth);
             }
+
             if (stripUnicode)
             {
                 typeName = typeName.StripNonAscii();
@@ -138,6 +140,7 @@ namespace GDX.Developer.Reports.Resource.Objects
             {
                 objectName = objectName.Substring(0, context.ObjectNameWidth);
             }
+
             if (stripUnicode)
             {
                 objectName = objectName.StripNonAscii();
@@ -160,10 +163,6 @@ namespace GDX.Developer.Reports.Resource.Objects
                 ? $"{typeName} {objectName} {sizeInfo} {additionalInfo}"
                 : $"{typeName} {objectName} {sizeInfo}");
         }
-
-
-
-
     }
 }
 #endif // !UNITY_DOTSRUNTIME

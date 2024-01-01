@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -18,7 +18,8 @@ namespace GDX.Collections.Pooling
     public static class GameObjectPool
     {
         /// <summary>
-        ///     The <see cref="SimpleListManagedPool" /> flags index used to determine if the object which is used to create new objects
+        ///     The <see cref="SimpleListManagedPool" /> flags index used to determine if the object which is used to create new
+        ///     objects
         ///     has the <see cref="IGameObjectPoolItem" /> interface on a root component.
         /// </summary>
         const int k_HasInterfaceFlag = 5;
@@ -55,7 +56,7 @@ namespace GDX.Collections.Pooling
                 allowReuseWhenCapped,
                 allowManagedTearDown)
             {
-                Flags = {[k_HasInterfaceFlag] = gameObject.GetComponent<IGameObjectPoolItem>() != null}
+                Flags = { [k_HasInterfaceFlag] = gameObject.GetComponent<IGameObjectPoolItem>() != null }
             };
 
             ManagedPoolBuilder.AddManagedPool(newGameManagedPool);
@@ -72,11 +73,17 @@ namespace GDX.Collections.Pooling
         }
 
         /// <summary>
-        ///     Get the next available item from the <paramref name="pool"/>.
+        ///     Get the next available item from the <paramref name="pool" />.
         /// </summary>
-        /// <param name="pool">The <see cref="SimpleListManagedPool"/> created with <see cref="GameObjectPool"/> to pull an item from.</param>
-        /// <param name="triggerOnSpawnedFromPool">Should the <see cref="OnSpawnedFromPoolAction"/> be called when getting this item.</param>
-        /// <returns>A <see cref="GameObject" /> from the <see cref="SimpleListManagedPool"/>, or null if no item is available.</returns>
+        /// <param name="pool">
+        ///     The <see cref="SimpleListManagedPool" /> created with <see cref="GameObjectPool" /> to pull an item
+        ///     from.
+        /// </param>
+        /// <param name="triggerOnSpawnedFromPool">
+        ///     Should the <see cref="OnSpawnedFromPoolAction" /> be called when getting this
+        ///     item.
+        /// </param>
+        /// <returns>A <see cref="GameObject" /> from the <see cref="SimpleListManagedPool" />, or null if no item is available.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static GameObject Get(SimpleListManagedPool pool, bool triggerOnSpawnedFromPool = true)
         {
@@ -94,20 +101,35 @@ namespace GDX.Collections.Pooling
             }
 
             // Return
-            return item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
+            return item is IGameObjectPoolItem gameObjectPoolItem
+                ? gameObjectPoolItem.GetGameObject()
+                : (GameObject)item;
         }
 
         /// <summary>
-        ///     Get the next available item from the <paramref name="pool"/> and parent it to a <see cref="Transform"/>.
+        ///     Get the next available item from the <paramref name="pool" /> and parent it to a <see cref="Transform" />.
         /// </summary>
-        /// <param name="pool">The <see cref="SimpleListManagedPool"/> created with <see cref="GameObjectPool"/> to pull an item from.</param>
-        /// <param name="parent">The transform parent on the item pulled from the <see cref="SimpleListManagedPool"/>.</param>
-        /// <param name="worldPositionStays">Ensure that the world position of the item pulled from the <see cref="SimpleListManagedPool"/> remains the same through parenting.</param>
-        /// <param name="zeroLocalPosition">Set the local position of the item pulled from the <see cref="SimpleListManagedPool"/> to being <see cref="Vector3.zero"/> after parenting.</param>
-        /// <param name="triggerOnSpawnedFromPool">Should the <see cref="OnSpawnedFromPoolAction"/> be called when getting this item.</param>
-        /// <returns>A <see cref="GameObject" /> from the <see cref="SimpleListManagedPool"/>, or null if no item is available.</returns>
+        /// <param name="pool">
+        ///     The <see cref="SimpleListManagedPool" /> created with <see cref="GameObjectPool" /> to pull an item
+        ///     from.
+        /// </param>
+        /// <param name="parent">The transform parent on the item pulled from the <see cref="SimpleListManagedPool" />.</param>
+        /// <param name="worldPositionStays">
+        ///     Ensure that the world position of the item pulled from the
+        ///     <see cref="SimpleListManagedPool" /> remains the same through parenting.
+        /// </param>
+        /// <param name="zeroLocalPosition">
+        ///     Set the local position of the item pulled from the <see cref="SimpleListManagedPool" />
+        ///     to being <see cref="Vector3.zero" /> after parenting.
+        /// </param>
+        /// <param name="triggerOnSpawnedFromPool">
+        ///     Should the <see cref="OnSpawnedFromPoolAction" /> be called when getting this
+        ///     item.
+        /// </param>
+        /// <returns>A <see cref="GameObject" /> from the <see cref="SimpleListManagedPool" />, or null if no item is available.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GameObject Get(SimpleListManagedPool pool, Transform parent, bool worldPositionStays = false, bool zeroLocalPosition = true, bool triggerOnSpawnedFromPool = true)
+        public static GameObject Get(SimpleListManagedPool pool, Transform parent, bool worldPositionStays = false,
+            bool zeroLocalPosition = true, bool triggerOnSpawnedFromPool = true)
         {
             // Pull
             object item = pool.Get(false);
@@ -115,7 +137,10 @@ namespace GDX.Collections.Pooling
             {
                 return null;
             }
-            GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
+
+            GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem
+                ? gameObjectPoolItem.GetGameObject()
+                : (GameObject)item;
             if (returnObject == null)
             {
                 return null;
@@ -140,16 +165,30 @@ namespace GDX.Collections.Pooling
         }
 
         /// <summary>
-        ///     Get the next available item from the <paramref name="pool"/>, parent it to a <see cref="Transform"/>, and then set it's local position and rotation.
+        ///     Get the next available item from the <paramref name="pool" />, parent it to a <see cref="Transform" />, and then
+        ///     set it's local position and rotation.
         /// </summary>
-        /// <param name="pool">The <see cref="SimpleListManagedPool"/> created with <see cref="GameObjectPool"/> to pull an item from.</param>
-        /// <param name="parent">The transform parent on the item pulled from the <see cref="SimpleListManagedPool"/>.</param>
-        /// <param name="localPosition">The local position to set on the item pulled from the <see cref="SimpleListManagedPool"/> after parenting.</param>
-        /// <param name="localRotation">The local rotation to set on the item pulled from the <see cref="SimpleListManagedPool"/> after parenting.</param>
-        /// <param name="triggerOnSpawnedFromPool">Should the <see cref="OnSpawnedFromPoolAction"/> be called when getting this item.</param>
-        /// <returns>A <see cref="GameObject" /> from the <see cref="SimpleListManagedPool"/>, or null if no item is available.</returns>
+        /// <param name="pool">
+        ///     The <see cref="SimpleListManagedPool" /> created with <see cref="GameObjectPool" /> to pull an item
+        ///     from.
+        /// </param>
+        /// <param name="parent">The transform parent on the item pulled from the <see cref="SimpleListManagedPool" />.</param>
+        /// <param name="localPosition">
+        ///     The local position to set on the item pulled from the <see cref="SimpleListManagedPool" />
+        ///     after parenting.
+        /// </param>
+        /// <param name="localRotation">
+        ///     The local rotation to set on the item pulled from the <see cref="SimpleListManagedPool" />
+        ///     after parenting.
+        /// </param>
+        /// <param name="triggerOnSpawnedFromPool">
+        ///     Should the <see cref="OnSpawnedFromPoolAction" /> be called when getting this
+        ///     item.
+        /// </param>
+        /// <returns>A <see cref="GameObject" /> from the <see cref="SimpleListManagedPool" />, or null if no item is available.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GameObject Get(SimpleListManagedPool pool, Transform parent, Vector3 localPosition, Quaternion localRotation, bool triggerOnSpawnedFromPool = true)
+        public static GameObject Get(SimpleListManagedPool pool, Transform parent, Vector3 localPosition,
+            Quaternion localRotation, bool triggerOnSpawnedFromPool = true)
         {
             // Pull
             object item = pool.Get(false);
@@ -157,7 +196,10 @@ namespace GDX.Collections.Pooling
             {
                 return null;
             }
-            GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
+
+            GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem
+                ? gameObjectPoolItem.GetGameObject()
+                : (GameObject)item;
             if (returnObject == null)
             {
                 return null;
@@ -180,16 +222,30 @@ namespace GDX.Collections.Pooling
         }
 
         /// <summary>
-        ///     Get the next available item from the <paramref name="pool"/>, parent it to a <see cref="Transform"/>, and then setting it's local position and where it is looking.
+        ///     Get the next available item from the <paramref name="pool" />, parent it to a <see cref="Transform" />, and then
+        ///     setting it's local position and where it is looking.
         /// </summary>
-        /// <param name="pool">The <see cref="SimpleListManagedPool"/> created with <see cref="GameObjectPool"/> to pull an item from.</param>
-        /// <param name="parent">The transform parent on the item pulled from the <see cref="SimpleListManagedPool"/>.</param>
-        /// <param name="localPosition">The local position to set on the item pulled from the <see cref="SimpleListManagedPool"/> after parenting.</param>
-        /// <param name="worldLookAtPosition">The world position to have the item pulled from the <see cref="SimpleListManagedPool"/> look at</param>
-        /// <param name="triggerOnSpawnedFromPool">Should the <see cref="OnSpawnedFromPoolAction"/> be called when getting this item.</param>
-        /// <returns>A <see cref="GameObject" /> from the <see cref="SimpleListManagedPool"/>, or null if no item is available.</returns>
+        /// <param name="pool">
+        ///     The <see cref="SimpleListManagedPool" /> created with <see cref="GameObjectPool" /> to pull an item
+        ///     from.
+        /// </param>
+        /// <param name="parent">The transform parent on the item pulled from the <see cref="SimpleListManagedPool" />.</param>
+        /// <param name="localPosition">
+        ///     The local position to set on the item pulled from the <see cref="SimpleListManagedPool" />
+        ///     after parenting.
+        /// </param>
+        /// <param name="worldLookAtPosition">
+        ///     The world position to have the item pulled from the
+        ///     <see cref="SimpleListManagedPool" /> look at
+        /// </param>
+        /// <param name="triggerOnSpawnedFromPool">
+        ///     Should the <see cref="OnSpawnedFromPoolAction" /> be called when getting this
+        ///     item.
+        /// </param>
+        /// <returns>A <see cref="GameObject" /> from the <see cref="SimpleListManagedPool" />, or null if no item is available.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GameObject Get(SimpleListManagedPool pool, Transform parent, Vector3 localPosition, Vector3 worldLookAtPosition, bool triggerOnSpawnedFromPool = true)
+        public static GameObject Get(SimpleListManagedPool pool, Transform parent, Vector3 localPosition,
+            Vector3 worldLookAtPosition, bool triggerOnSpawnedFromPool = true)
         {
             // Pull
             object item = pool.Get(false);
@@ -197,7 +253,10 @@ namespace GDX.Collections.Pooling
             {
                 return null;
             }
-            GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
+
+            GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem
+                ? gameObjectPoolItem.GetGameObject()
+                : (GameObject)item;
             if (returnObject == null)
             {
                 return null;
@@ -220,15 +279,25 @@ namespace GDX.Collections.Pooling
         }
 
         /// <summary>
-        ///     Get the next available item from the <paramref name="pool"/>, and set its world position and where it is looking.
+        ///     Get the next available item from the <paramref name="pool" />, and set its world position and where it is looking.
         /// </summary>
-        /// <param name="pool">The <see cref="SimpleListManagedPool"/> created with <see cref="GameObjectPool"/> to pull an item from.</param>
-        /// <param name="worldPosition">The world position to set on the item pulled from the <see cref="SimpleListManagedPool"/>.</param>
-        /// <param name="worldLookAtPosition">The world position to have the item pulled from the <see cref="SimpleListManagedPool"/> look at</param>
-        /// <param name="triggerOnSpawnedFromPool">Should the <see cref="OnSpawnedFromPoolAction"/> be called when getting this item.</param>
-        /// <returns>A <see cref="GameObject" /> from the <see cref="SimpleListManagedPool"/>, or null if no item is available.</returns>
+        /// <param name="pool">
+        ///     The <see cref="SimpleListManagedPool" /> created with <see cref="GameObjectPool" /> to pull an item
+        ///     from.
+        /// </param>
+        /// <param name="worldPosition">The world position to set on the item pulled from the <see cref="SimpleListManagedPool" />.</param>
+        /// <param name="worldLookAtPosition">
+        ///     The world position to have the item pulled from the
+        ///     <see cref="SimpleListManagedPool" /> look at
+        /// </param>
+        /// <param name="triggerOnSpawnedFromPool">
+        ///     Should the <see cref="OnSpawnedFromPoolAction" /> be called when getting this
+        ///     item.
+        /// </param>
+        /// <returns>A <see cref="GameObject" /> from the <see cref="SimpleListManagedPool" />, or null if no item is available.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GameObject Get(SimpleListManagedPool pool, Vector3 worldPosition, Vector3 worldLookAtPosition, bool triggerOnSpawnedFromPool = true)
+        public static GameObject Get(SimpleListManagedPool pool, Vector3 worldPosition, Vector3 worldLookAtPosition,
+            bool triggerOnSpawnedFromPool = true)
         {
             // Pull
             object item = pool.Get(false);
@@ -236,7 +305,10 @@ namespace GDX.Collections.Pooling
             {
                 return null;
             }
-            GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
+
+            GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem
+                ? gameObjectPoolItem.GetGameObject()
+                : (GameObject)item;
             if (returnObject == null)
             {
                 return null;
@@ -258,15 +330,22 @@ namespace GDX.Collections.Pooling
         }
 
         /// <summary>
-        ///     Get the next available item from the <paramref name="pool"/>, and set its world position and rotation.
+        ///     Get the next available item from the <paramref name="pool" />, and set its world position and rotation.
         /// </summary>
-        /// <param name="pool">The <see cref="SimpleListManagedPool"/> created with <see cref="GameObjectPool"/> to pull an item from.</param>
-        /// <param name="worldPosition">The world position to set on the item pulled from the <see cref="SimpleListManagedPool"/>.</param>
-        /// <param name="worldRotation">The world rotation to set on the item pulled from the <see cref="SimpleListManagedPool"/>.</param>
-        /// <param name="triggerOnSpawnedFromPool">Should the <see cref="OnSpawnedFromPoolAction"/> be called when getting this item.</param>
-        /// <returns>A <see cref="GameObject" /> from the <see cref="SimpleListManagedPool"/>, or null if no item is available.</returns>
+        /// <param name="pool">
+        ///     The <see cref="SimpleListManagedPool" /> created with <see cref="GameObjectPool" /> to pull an item
+        ///     from.
+        /// </param>
+        /// <param name="worldPosition">The world position to set on the item pulled from the <see cref="SimpleListManagedPool" />.</param>
+        /// <param name="worldRotation">The world rotation to set on the item pulled from the <see cref="SimpleListManagedPool" />.</param>
+        /// <param name="triggerOnSpawnedFromPool">
+        ///     Should the <see cref="OnSpawnedFromPoolAction" /> be called when getting this
+        ///     item.
+        /// </param>
+        /// <returns>A <see cref="GameObject" /> from the <see cref="SimpleListManagedPool" />, or null if no item is available.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GameObject Get(SimpleListManagedPool pool, Vector3 worldPosition, Quaternion worldRotation, bool triggerOnSpawnedFromPool = true)
+        public static GameObject Get(SimpleListManagedPool pool, Vector3 worldPosition, Quaternion worldRotation,
+            bool triggerOnSpawnedFromPool = true)
         {
             // Pull
             object item = pool.Get(false);
@@ -274,7 +353,10 @@ namespace GDX.Collections.Pooling
             {
                 return null;
             }
-            GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
+
+            GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem
+                ? gameObjectPoolItem.GetGameObject()
+                : (GameObject)item;
             if (returnObject == null)
             {
                 return null;
@@ -295,16 +377,30 @@ namespace GDX.Collections.Pooling
         }
 
         /// <summary>
-        ///     Get the next available item from the <paramref name="pool"/>, and set its world position and rotation after parenting.
+        ///     Get the next available item from the <paramref name="pool" />, and set its world position and rotation after
+        ///     parenting.
         /// </summary>
-        /// <param name="pool">The <see cref="SimpleListManagedPool"/> created with <see cref="GameObjectPool"/> to pull an item from.</param>
-        /// <param name="worldPosition">The world position to set on the item pulled from the <see cref="SimpleListManagedPool"/> after parenting.</param>
-        /// <param name="worldRotation">The world rotation to set on the item pulled from the <see cref="SimpleListManagedPool"/> after parenting.</param>
-        /// <param name="parent">The transform parent on the item pulled from the <see cref="SimpleListManagedPool"/>.</param>
-        /// <param name="triggerOnSpawnedFromPool">Should the <see cref="OnSpawnedFromPoolAction"/> be called when getting this item.</param>
-        /// <returns>A <see cref="GameObject" /> from the <see cref="SimpleListManagedPool"/>, or null if no item is available.</returns>
+        /// <param name="pool">
+        ///     The <see cref="SimpleListManagedPool" /> created with <see cref="GameObjectPool" /> to pull an item
+        ///     from.
+        /// </param>
+        /// <param name="worldPosition">
+        ///     The world position to set on the item pulled from the <see cref="SimpleListManagedPool" />
+        ///     after parenting.
+        /// </param>
+        /// <param name="worldRotation">
+        ///     The world rotation to set on the item pulled from the <see cref="SimpleListManagedPool" />
+        ///     after parenting.
+        /// </param>
+        /// <param name="parent">The transform parent on the item pulled from the <see cref="SimpleListManagedPool" />.</param>
+        /// <param name="triggerOnSpawnedFromPool">
+        ///     Should the <see cref="OnSpawnedFromPoolAction" /> be called when getting this
+        ///     item.
+        /// </param>
+        /// <returns>A <see cref="GameObject" /> from the <see cref="SimpleListManagedPool" />, or null if no item is available.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GameObject Get(SimpleListManagedPool pool, Vector3 worldPosition, Quaternion worldRotation, Transform parent, bool triggerOnSpawnedFromPool = true)
+        public static GameObject Get(SimpleListManagedPool pool, Vector3 worldPosition, Quaternion worldRotation,
+            Transform parent, bool triggerOnSpawnedFromPool = true)
         {
             // Pull
             object item = pool.Get(false);
@@ -312,7 +408,10 @@ namespace GDX.Collections.Pooling
             {
                 return null;
             }
-            GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
+
+            GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem
+                ? gameObjectPoolItem.GetGameObject()
+                : (GameObject)item;
             if (returnObject == null)
             {
                 return null;
@@ -334,16 +433,30 @@ namespace GDX.Collections.Pooling
         }
 
         /// <summary>
-        ///     Get the next available item from the <paramref name="pool"/>, and set its world position and look at position after parenting.
+        ///     Get the next available item from the <paramref name="pool" />, and set its world position and look at position
+        ///     after parenting.
         /// </summary>
-        /// <param name="pool">The <see cref="SimpleListManagedPool"/> created with <see cref="GameObjectPool"/> to pull an item from.</param>
-        /// <param name="worldPosition">The world position to set on the item pulled from the <see cref="SimpleListManagedPool"/> after parenting.</param>
-        /// <param name="worldLookAtPosition">The world position to have the item pulled from the <see cref="SimpleListManagedPool"/> look at after parenting.</param>
-        /// <param name="parent">The transform parent on the item pulled from the <see cref="SimpleListManagedPool"/>.</param>
-        /// <param name="triggerOnSpawnedFromPool">Should the <see cref="OnSpawnedFromPoolAction"/> be called when getting this item.</param>
-        /// <returns>A <see cref="GameObject" /> from the <see cref="SimpleListManagedPool"/>, or null if no item is available.</returns>
+        /// <param name="pool">
+        ///     The <see cref="SimpleListManagedPool" /> created with <see cref="GameObjectPool" /> to pull an item
+        ///     from.
+        /// </param>
+        /// <param name="worldPosition">
+        ///     The world position to set on the item pulled from the <see cref="SimpleListManagedPool" />
+        ///     after parenting.
+        /// </param>
+        /// <param name="worldLookAtPosition">
+        ///     The world position to have the item pulled from the
+        ///     <see cref="SimpleListManagedPool" /> look at after parenting.
+        /// </param>
+        /// <param name="parent">The transform parent on the item pulled from the <see cref="SimpleListManagedPool" />.</param>
+        /// <param name="triggerOnSpawnedFromPool">
+        ///     Should the <see cref="OnSpawnedFromPoolAction" /> be called when getting this
+        ///     item.
+        /// </param>
+        /// <returns>A <see cref="GameObject" /> from the <see cref="SimpleListManagedPool" />, or null if no item is available.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static GameObject Get(SimpleListManagedPool pool, Vector3 worldPosition, Vector3 worldLookAtPosition, Transform parent, bool triggerOnSpawnedFromPool = true)
+        public static GameObject Get(SimpleListManagedPool pool, Vector3 worldPosition, Vector3 worldLookAtPosition,
+            Transform parent, bool triggerOnSpawnedFromPool = true)
         {
             // Pull
             object item = pool.Get(false);
@@ -351,7 +464,10 @@ namespace GDX.Collections.Pooling
             {
                 return null;
             }
-            GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem ? gameObjectPoolItem.GetGameObject() : (GameObject)item;
+
+            GameObject returnObject = item is IGameObjectPoolItem gameObjectPoolItem
+                ? gameObjectPoolItem.GetGameObject()
+                : (GameObject)item;
             if (returnObject == null)
             {
                 return null;
@@ -364,7 +480,7 @@ namespace GDX.Collections.Pooling
             transform.LookAt(worldLookAtPosition);
 
             // Actions
-            if(triggerOnSpawnedFromPool)
+            if (triggerOnSpawnedFromPool)
             {
                 OnSpawnedFromPoolAction(pool, item);
             }
@@ -374,7 +490,7 @@ namespace GDX.Collections.Pooling
         }
 
         /// <summary>
-        ///     Gets a pool for the <paramref name="gameObject"/>, or creates a new <see cref="SimpleListManagedPool" /> for it.
+        ///     Gets a pool for the <paramref name="gameObject" />, or creates a new <see cref="SimpleListManagedPool" /> for it.
         /// </summary>
         /// <param name="gameObject">The object which going to be cloned.</param>
         /// <param name="parent">The container object.</param>
@@ -396,14 +512,15 @@ namespace GDX.Collections.Pooling
             {
                 return checkPool;
             }
+
             return CreatePool(gameObject, parent, minimumObjects, maximumObjects, allowCreateMore, allowReuseWhenCapped,
                 allowManagedTearDown);
         }
 
         /// <summary>
-        ///     Create a new item for the <paramref name="pool"/>.
+        ///     Create a new item for the <paramref name="pool" />.
         /// </summary>
-        /// <param name="pool">The <see cref="SimpleListManagedPool"/> to create an item for, and assign too.</param>
+        /// <param name="pool">The <see cref="SimpleListManagedPool" /> to create an item for, and assign too.</param>
         /// <returns>The newly created item.</returns>
         static object CreateItem(SimpleListManagedPool pool)
         {
@@ -434,7 +551,10 @@ namespace GDX.Collections.Pooling
         /// <param name="item">The item being destroyed.</param>
         static void OnDestroyItemAction(object item)
         {
-            if (item == null) return;
+            if (item == null)
+            {
+                return;
+            }
 
             Object unityObject;
             if (item is IGameObjectPoolItem poolItem && poolItem.IsValidItem())
@@ -460,16 +580,14 @@ namespace GDX.Collections.Pooling
 #else
                 Object.Destroy(unityObject, 0f);
 #endif // UNITY_EDITOR
-
             }
-
         }
 
         /// <summary>
-        ///     The subscribed action called when an item is returned to the <paramref name="pool"/>.
+        ///     The subscribed action called when an item is returned to the <paramref name="pool" />.
         /// </summary>
-        /// <param name="pool">The <see cref="SimpleListManagedPool"/> which the <paramref name="item"/> is being returned to.</param>
-        /// <param name="item">The item being returned to the <paramref name="pool"/>.</param>
+        /// <param name="pool">The <see cref="SimpleListManagedPool" /> which the <paramref name="item" /> is being returned to.</param>
+        /// <param name="item">The item being returned to the <paramref name="pool" />.</param>
         static void OnReturnedToPoolAction(SimpleListManagedPool pool, object item)
         {
             if (!pool.Flags[k_HasInterfaceFlag])
@@ -482,9 +600,9 @@ namespace GDX.Collections.Pooling
         }
 
         /// <summary>
-        ///     The subscribed action called when an item is spawned from the <paramref name="pool"/>.
+        ///     The subscribed action called when an item is spawned from the <paramref name="pool" />.
         /// </summary>
-        /// <param name="pool">The <see cref="SimpleListManagedPool"/> which has had the <paramref name="item"/> spawned from.</param>
+        /// <param name="pool">The <see cref="SimpleListManagedPool" /> which has had the <paramref name="item" /> spawned from.</param>
         /// <param name="item">The spawned item.</param>
         static void OnSpawnedFromPoolAction(SimpleListManagedPool pool, object item)
         {
@@ -498,9 +616,10 @@ namespace GDX.Collections.Pooling
         }
 
         /// <summary>
-        ///     The subscribed action called when the <paramref name="pool"/> is asked to <see cref="IManagedPool.TearDown()"/> before items were returned to the pool.
+        ///     The subscribed action called when the <paramref name="pool" /> is asked to <see cref="IManagedPool.TearDown()" />
+        ///     before items were returned to the pool.
         /// </summary>
-        /// <param name="pool">The <see cref="SimpleListManagedPool"/> being torn down.</param>
+        /// <param name="pool">The <see cref="SimpleListManagedPool" /> being torn down.</param>
         static void OnTearDownAction(SimpleListManagedPool pool)
         {
             ManagedPoolBuilder.RemoveManagedPool(pool);

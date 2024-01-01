@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -9,9 +9,9 @@ namespace GDX.Mathematics.Random
     {
         /// <summary>
         ///     Returns a pseudorandom <see cref="System.Boolean" /> value based on chance, favoring false,
-        ///     with a default 50% <paramref name="chance"/>.
+        ///     with a default 50% <paramref name="chance" />.
         /// </summary>
-        /// <param name="chance">The 0-1 <see cref="float"/> percent chance of success.</param>
+        /// <param name="chance">The 0-1 <see cref="float" /> percent chance of success.</param>
         /// <returns>A pseudorandom <see cref="System.Boolean" />.</returns>
         bool NextBoolean(float chance = 0.5f);
 
@@ -19,7 +19,7 @@ namespace GDX.Mathematics.Random
         ///     Fills a buffer with pseudorandom <see cref="System.Byte" />.
         /// </summary>
         /// <remarks>
-        ///     The <paramref name="buffer" /> shouldn't be <see langword="null"/>.
+        ///     The <paramref name="buffer" /> shouldn't be <see langword="null" />.
         /// </remarks>
         /// <param name="buffer">The buffer to fill.</param>
         void NextBytes(byte[] buffer);

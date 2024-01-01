@@ -1,12 +1,10 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 using System;
 using System.IO;
 using GDX.Developer;
-using GDX.Experimental;
-using GDX.Experimental.Logging;
 using UnityEditor;
 using UnityEngine;
 using TextGenerator = GDX.Developer.TextGenerator;
@@ -33,7 +31,8 @@ namespace GDX.Editor.Build
             code.AppendLine($"namespace {Config.BuildInfoNamespace}");
             code.PushIndent();
             code.AppendLine("/// <summary>");
-            code.AppendLine("///     A collection of information providing further information as to the conditions present when the build was made.");
+            code.AppendLine(
+                "///     A collection of information providing further information as to the conditions present when the build was made.");
             code.AppendLine("/// </summary>");
             code.AppendLine("public static class BuildInfo");
             code.PushIndent();
@@ -139,7 +138,6 @@ namespace GDX.Editor.Build
         /// </summary>
         public static void WriteDefaultFile()
         {
-
             try
             {
                 string path = Path.Combine(Application.dataPath, Config.BuildInfoOutputPath);
@@ -150,7 +148,7 @@ namespace GDX.Editor.Build
             }
             catch (Exception e)
             {
-                ManagedLog.Exception(0, e);
+                Debug.LogException(e);
             }
         }
 

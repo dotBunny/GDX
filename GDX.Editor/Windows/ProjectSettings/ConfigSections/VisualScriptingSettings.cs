@@ -1,16 +1,15 @@
-// Copyright (c) 2020-2023 dotBunny Inc.
+// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
 using System;
 using System.Collections.Generic;
+using UnityEngine.UIElements;
 #if GDX_VISUALSCRIPTING
 using UnityEditor;
 using UnityEngine;
 using Unity.VisualScripting;
 #endif // GDX_VISUALSCRIPTING
-
-using UnityEngine.UIElements;
 
 namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 {
@@ -20,10 +19,12 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
     class VisualScriptingSettings : IConfigSection
     {
         public const int SectionIndex = 8;
+
         /// <summary>
         ///     Internal section identifier.
         /// </summary>
         public const string SectionKey = "GDX.VisualScripting";
+
         static readonly string[] k_Keywords = { "vs", "visual scripting" };
 
         Button m_ButtonRegenerateUnits;
@@ -95,7 +96,8 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
                 AssemblyProvider.VisualScriptingUtilities, false));
         }
 
-        static VisualElement CreateBindUpdateCategorySection(string sectionName, string sectionDescription, List<Type> sectionTypes, bool bottomBorder = true)
+        static VisualElement CreateBindUpdateCategorySection(string sectionName, string sectionDescription, List<Type> sectionTypes, bool bottomBorder
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     = true)
         {
             VisualTreeAsset categoryAsset =
                 ResourcesProvider.GetVisualTreeAsset("GDXProjectSettingsVisualScriptingCategory");
@@ -105,7 +107,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 
             Label labelCategory = categoryInstance.Q<Label>("label-category");
             labelCategory.text = sectionName;
-            Label labelDescription  = categoryInstance.Q<Label>("label-description");
+            Label labelDescription = categoryInstance.Q<Label>("label-description");
 
             labelDescription.text = sectionDescription;
             VisualElement elementTypeContainer = categoryInstance.Q<VisualElement>("type-container");
@@ -183,12 +185,11 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 #endif // GDX_VISUALSCRIPTING
 
 
-
         /// <summary>
         ///     Adds a provided list of types to the Visual Scripting configuration; the database still
         ///     needs to be rebuilt afterwards.
         /// </summary>
-        /// <param name="types">A collection of <see cref="Type"/>.</param>
+        /// <param name="types">A collection of <see cref="Type" />.</param>
         static void AddTypesToVisualScripting(List<Type> types)
         {
 #if GDX_VISUALSCRIPTING
@@ -221,10 +222,10 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         }
 
         /// <summary>
-        ///     Check to make sure all the provided <see cref="Type"/> are found in the Visual Scripting configuration.
+        ///     Check to make sure all the provided <see cref="Type" /> are found in the Visual Scripting configuration.
         /// </summary>
-        /// <param name="types">A collection of <see cref="Type"/>.</param>
-        /// <returns>true/false if all the provided <see cref="Type"/> are in the configuration.</returns>
+        /// <param name="types">A collection of <see cref="Type" />.</param>
+        /// <returns>true/false if all the provided <see cref="Type" /> are in the configuration.</returns>
         static bool HasAllTypesInConfiguration(List<Type> types)
         {
 #if !GDX_VISUALSCRIPTING
@@ -251,7 +252,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         ///     Removes a provided list of types from the Visual Scripting configuration; the database still
         ///     needs to be rebuilt afterwards.
         /// </summary>
-        /// <param name="types">A collection of <see cref="Type"/>.</param>
+        /// <param name="types">A collection of <see cref="Type" />.</param>
         static void RemoveTypesFromVisualScripting(List<Type> types)
         {
 #if GDX_VISUALSCRIPTING
@@ -269,6 +270,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         {
             return false;
         }
+
         public int GetPriority()
         {
             return 0;
@@ -283,6 +285,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         {
             return "Visual Scripting";
         }
+
         public int GetSectionIndex()
         {
             return SectionIndex;
@@ -292,14 +295,17 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         {
             return SectionKey;
         }
+
         public string GetSectionHelpLink()
         {
             return "manual/getting-started/visual-scripting.html";
         }
+
         public bool GetToggleSupport()
         {
             return false;
         }
+
         public bool GetToggleState()
         {
             return false;
@@ -312,12 +318,10 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 
         public void SetToggleState(VisualElement toggleElement, bool newState)
         {
-
         }
 
         public void UpdateSectionContent()
         {
-
         }
 
         public string GetTemplateName()

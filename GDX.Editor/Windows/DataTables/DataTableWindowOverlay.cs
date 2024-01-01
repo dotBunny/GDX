@@ -1,24 +1,23 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
-using System.Data;
+using System.IO;
 using GDX.DataTables;
 using GDX.DataTables.DataBinding;
 using GDX.Editor.VisualElements;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace GDX.Editor.Windows.DataTables
 {
 #if UNITY_2022_2_OR_NEWER
     class DataTableWindowOverlay
     {
-        const string k_ValidClass = "valid";
-        const string k_WarningClass = "warning";
-        const string k_ErrorClass = "error";
-
         public enum ConfirmationState
         {
             Invalid,
@@ -37,15 +36,19 @@ namespace GDX.Editor.Windows.DataTables
             Confirmation
         }
 
+        const string k_ValidClass = "valid";
+        const string k_WarningClass = "warning";
+        const string k_ErrorClass = "error";
+
         readonly Button m_AddColumnAddButton;
         readonly Button m_AddColumnCancelButton;
+        readonly TextField m_AddColumnFilter;
+        readonly TypePicker m_AddColumnFilterPicker;
+        readonly VisualElement m_AddColumnFilterStatus;
         readonly TextField m_AddColumnName;
 
         readonly VisualElement m_AddColumnOverlay;
         readonly PopupField<int> m_AddColumnType;
-        readonly TextField m_AddColumnFilter;
-        readonly VisualElement m_AddColumnFilterStatus;
-        readonly TypePicker m_AddColumnFilterPicker;
 
         readonly Button m_AddRowAddButton;
         readonly Button m_AddRowCancelButton;
@@ -59,6 +62,8 @@ namespace GDX.Editor.Windows.DataTables
         readonly VisualElement m_ConfirmationOverlay;
         readonly Label m_ConfirmationTitleLabel;
 
+        readonly DataTableWindow m_DataTableWindow;
+
         readonly Button m_RenameAcceptButton;
         readonly Button m_RenameCancelButton;
         readonly TextField m_RenameName;
@@ -66,19 +71,17 @@ namespace GDX.Editor.Windows.DataTables
         readonly Label m_RenameTitleLabel;
 
         readonly VisualElement m_RootElement;
+        readonly TextField m_SettingsBinding;
+        readonly Button m_SettingsBindingButton;
+
+        readonly VisualElement m_SettingsBindingStatus;
         readonly Button m_SettingsCancelButton;
         readonly TextField m_SettingsDisplayName;
 
         readonly VisualElement m_SettingsOverlay;
+        readonly Toggle m_SettingsReferenceOnlyModeToggle;
         readonly Button m_SettingsSaveButton;
         readonly Toggle m_SettingsSupportUndoToggle;
-        readonly Toggle m_SettingsReferenceOnlyModeToggle;
-
-        readonly VisualElement m_SettingsBindingStatus;
-        readonly TextField m_SettingsBinding;
-        readonly Button m_SettingsBindingButton;
-
-        readonly DataTableWindow m_DataTableWindow;
         int m_CachedIndex;
         ConfirmationState m_ConfirmationState;
 
@@ -100,6 +103,7 @@ namespace GDX.Editor.Windows.DataTables
             {
                 typeValues.Add(i);
             }
+
             m_AddColumnType =
                 new PopupField<int>(typeValues, 0, Serializable.GetLabelFromTypeValue,
                     Serializable.GetLabelFromTypeValue) { label = "Type", name = "gdx-table-column-type" };
@@ -115,7 +119,8 @@ namespace GDX.Editor.Windows.DataTables
             {
                 ValidateAssemblyQualifiedName(e.newValue);
             });
-            m_AddColumnFilterPicker = new TypePicker(m_AddColumnFilter, m_AddColumnOverlay, m_RootElement, ValidateAssemblyQualifiedName);
+            m_AddColumnFilterPicker = new TypePicker(m_AddColumnFilter, m_AddColumnOverlay, m_RootElement,
+                ValidateAssemblyQualifiedName);
             m_AddColumnFilterStatus = m_AddColumnOverlay.Q<VisualElement>("gdx-table-add-column-filter-status");
             m_AddColumnFilterStatus.AddToClassList(ResourcesProvider.HiddenClass);
 
@@ -176,9 +181,10 @@ namespace GDX.Editor.Windows.DataTables
 
         void OnSettingsBindingButtonClicked()
         {
-            string openPath = EditorUtility.OpenFilePanelWithFilters($"Sync {m_DataTableWindow.GetDataTable().GetMetaData().DisplayName} With …",
-                UnityEngine.Application.dataPath, DataBindingProvider.GetImportDialogExtensions());
-            if (string.IsNullOrEmpty(openPath) || !System.IO.File.Exists(openPath))
+            string openPath = EditorUtility.OpenFilePanelWithFilters(
+                $"Sync {m_DataTableWindow.GetDataTable().GetMetaData().DisplayName} With …",
+                Application.dataPath, DataBindingProvider.GetImportDialogExtensions());
+            if (string.IsNullOrEmpty(openPath) || !File.Exists(openPath))
             {
                 return;
             }
@@ -215,7 +221,7 @@ namespace GDX.Editor.Windows.DataTables
                     m_AddColumnFilter.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterPicker.RemoveFromClassList(ResourcesProvider.HiddenClass);
-                    m_AddColumnFilterPicker.SetType(typeof(System.Enum));
+                    m_AddColumnFilterPicker.SetType(typeof(Enum));
                     m_AddColumnFilterPicker.ScheduleUpdateSizeAndPosition();
                     break;
                 case Serializable.SerializableTypes.Object:
@@ -224,7 +230,7 @@ namespace GDX.Editor.Windows.DataTables
                     m_AddColumnFilter.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterStatus.RemoveFromClassList(ResourcesProvider.HiddenClass);
                     m_AddColumnFilterPicker.RemoveFromClassList(ResourcesProvider.HiddenClass);
-                    m_AddColumnFilterPicker.SetType(typeof(UnityEngine.Object));
+                    m_AddColumnFilterPicker.SetType(typeof(Object));
                     m_AddColumnFilterPicker.ScheduleUpdateSizeAndPosition();
                     break;
                 default:
@@ -255,6 +261,7 @@ namespace GDX.Editor.Windows.DataTables
         {
             ValidateAssemblyQualifiedName(m_AddColumnFilter.text);
         }
+
         void ValidateAssemblyQualifiedName(string newValue)
         {
             if (string.IsNullOrEmpty(newValue))
@@ -265,7 +272,7 @@ namespace GDX.Editor.Windows.DataTables
             }
             else
             {
-                System.Type newType = System.Type.GetType(newValue);
+                Type newType = Type.GetType(newValue);
                 if (newType != null)
                 {
                     m_AddColumnFilterStatus.AddToClassList(k_ValidClass);
@@ -373,6 +380,7 @@ namespace GDX.Editor.Windows.DataTables
                         m_SettingsBindingStatus.AddToClassList(k_ErrorClass);
                         m_SettingsBindingStatus.RemoveFromClassList(k_ValidClass);
                     }
+
                     break;
                 default:
                     m_RootElement.style.display = DisplayStyle.None;
@@ -406,7 +414,8 @@ namespace GDX.Editor.Windows.DataTables
             }
 
             if (m_DataTableWindow.GetController()
-                .AddColumn(m_AddColumnName.text, (Serializable.SerializableTypes)m_AddColumnType.value, m_AddColumnFilter.value))
+                .AddColumn(m_AddColumnName.text, (Serializable.SerializableTypes)m_AddColumnType.value,
+                    m_AddColumnFilter.value))
             {
                 SetOverlayStateHidden();
             }

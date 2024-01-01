@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2023 dotBunny Inc.
+// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -16,23 +16,23 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         public const int SectionIndex = 0;
         public const string SectionKey = "GDX.Editor.UpdateProvider";
         static readonly string[] k_Keywords = { "git", "upm", "automatic", "updates", "package", "gdx" };
+        Button m_ButtonChangeLog;
+        Button m_ButtonManualCheck;
+        Button m_ButtonManualUpgrade;
+        Button m_ButtonUpdate;
+        VisualElement m_ElementInstallationMethod;
+        VisualElement m_ElementLastChecked;
+        VisualElement m_ElementLocalVersion;
+        VisualElement m_ElementRemoteVersion;
+        VisualElement m_ElementSource;
+        Label m_LabelInstallationMethod;
+        Label m_LabelLastChecked;
+        Label m_LabelLocalVersion;
+        Label m_LabelRemoteVersion;
+        Label m_LabelSourceData;
+        Label m_LabelSourceItem;
 
         VisualElement m_RootElement;
-        VisualElement m_ElementLocalVersion;
-        Label m_LabelLocalVersion;
-        VisualElement m_ElementInstallationMethod;
-        Label m_LabelInstallationMethod;
-        VisualElement m_ElementSource;
-        Label m_LabelSourceItem;
-        Label m_LabelSourceData;
-        VisualElement m_ElementRemoteVersion;
-        Label m_LabelRemoteVersion;
-        VisualElement m_ElementLastChecked;
-        Label m_LabelLastChecked;
-        Button m_ButtonManualUpgrade;
-        Button m_ButtonChangeLog;
-        Button m_ButtonUpdate;
-        Button m_ButtonManualCheck;
         SliderInt m_SliderUpdateTime;
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         /// <summary>
         ///     Bind the Automatic Update section.
         /// </summary>
-        /// <param name="rootElement">The Automatic Update section <see cref="VisualElement"/>.</param>
+        /// <param name="rootElement">The Automatic Update section <see cref="VisualElement" />.</param>
         public void BindSectionContent(VisualElement rootElement)
         {
             m_RootElement = rootElement;
@@ -89,34 +89,34 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
 
                 switch (UpdateProvider.LocalPackage.InstallationMethod)
                 {
-                case PackageProvider.InstallationType.PackageManagerBranch:
-                case PackageProvider.InstallationType.GitHubBranch:
-                case PackageProvider.InstallationType.GitHub:
-                    m_ElementSource.RemoveFromClassList(ResourcesProvider.HiddenClass);
-                    m_LabelSourceItem.text = "Branch:";
-                    m_LabelSourceData.text = !string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
-                        ? UpdateProvider.LocalPackage.SourceTag
-                        : "N/A";
-                    break;
-                case PackageProvider.InstallationType.PackageManagerTag:
-                case PackageProvider.InstallationType.GitHubTag:
-                    m_ElementSource.RemoveFromClassList(ResourcesProvider.HiddenClass);
-                    m_LabelSourceItem.text = "Tag:";
-                    m_LabelSourceData.text = !string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
-                        ? UpdateProvider.LocalPackage.SourceTag
-                        : "N/A";
-                    break;
-                case PackageProvider.InstallationType.PackageManagerCommit:
-                case PackageProvider.InstallationType.GitHubCommit:
-                    m_ElementSource.RemoveFromClassList(ResourcesProvider.HiddenClass);
-                    m_LabelSourceItem.text = "Commit:";
-                    m_LabelSourceData.text = !string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
-                        ? UpdateProvider.LocalPackage.SourceTag
-                        : "N/A";
-                    break;
-                default:
-                    m_ElementSource.AddToClassList(ResourcesProvider.HiddenClass);
-                    break;
+                    case PackageProvider.InstallationType.PackageManagerBranch:
+                    case PackageProvider.InstallationType.GitHubBranch:
+                    case PackageProvider.InstallationType.GitHub:
+                        m_ElementSource.RemoveFromClassList(ResourcesProvider.HiddenClass);
+                        m_LabelSourceItem.text = "Branch:";
+                        m_LabelSourceData.text = !string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
+                            ? UpdateProvider.LocalPackage.SourceTag
+                            : "N/A";
+                        break;
+                    case PackageProvider.InstallationType.PackageManagerTag:
+                    case PackageProvider.InstallationType.GitHubTag:
+                        m_ElementSource.RemoveFromClassList(ResourcesProvider.HiddenClass);
+                        m_LabelSourceItem.text = "Tag:";
+                        m_LabelSourceData.text = !string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
+                            ? UpdateProvider.LocalPackage.SourceTag
+                            : "N/A";
+                        break;
+                    case PackageProvider.InstallationType.PackageManagerCommit:
+                    case PackageProvider.InstallationType.GitHubCommit:
+                        m_ElementSource.RemoveFromClassList(ResourcesProvider.HiddenClass);
+                        m_LabelSourceItem.text = "Commit:";
+                        m_LabelSourceData.text = !string.IsNullOrEmpty(UpdateProvider.LocalPackage.SourceTag)
+                            ? UpdateProvider.LocalPackage.SourceTag
+                            : "N/A";
+                        break;
+                    default:
+                        m_ElementSource.AddToClassList(ResourcesProvider.HiddenClass);
+                        break;
                 }
             }
             else
@@ -177,7 +177,6 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
         }
 
 
-
         public string GetSectionHelpLink()
         {
             return null;
@@ -204,6 +203,7 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
             {
                 toggleElement.RemoveFromClassList(ResourcesProvider.ChangedClass);
             }
+
             ProjectSettingsProvider.UpdateForChanges();
         }
 
@@ -259,7 +259,6 @@ namespace GDX.Editor.Windows.ProjectSettings.ConfigSections
                 {
                     m_ButtonManualUpgrade.AddToClassList(ResourcesProvider.HiddenClass);
                 }
-
             }
         }
     }

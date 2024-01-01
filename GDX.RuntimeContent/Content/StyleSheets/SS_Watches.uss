@@ -1,0 +1,84 @@
+@import url('project://database/Packages/com.dotbunny.gdx/GDX.RuntimeContent/Content/StyleSheets/SS_GDX.uss?fileID=7433441132597879392&guid=2192fff7b3654711a52ba4dd38c2be11&type=3#SS_GDX');
+#gdx-watches {
+    position: absolute;
+    flex-shrink: 1;
+    flex-grow: 1;
+    background-color: var(--background-75);
+    color: var(--font-color);
+    border-color: var(--border-75);
+    border-radius: 0;
+    padding: 2px 5px;
+}
+
+#gdx-watches.top-left {
+    top: 0;
+    left: 0;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+}
+
+#gdx-watches.top-right {
+    top: 0;
+    right: 0;
+    border-left-width: 1px;
+    border-bottom-width: 1px;
+}
+
+#gdx-watches.bottom-right {
+    bottom: 0;
+    right: 0;
+    border-left-width: 1px;
+    border-top-width: 1px;
+}
+
+#gdx-watches.bottom-left {
+    bottom: 0;
+    left: 0;
+    border-right-width: 1px;
+    border-top-width: 1px;
+}
+
+.gdx-watch {
+    white-space: nowrap;
+    -unity-text-align: upper-left;
+    flex-direction: row;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.gdx-watch > Label,
+.gdx-watch-right > Label
+{
+    margin: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.gdx-watch-left {
+    -unity-text-align: upper-left;
+    padding-left: 0;
+    padding-right: 5px;
+
+}
+.gdx-watch-right {
+    -unity-text-align: upper-right;
+    padding-right: 0;
+    flex-grow: 1;
+}
+
+.inner-box
+{
+    background-color: var(--background-25);
+}
+
+.good {
+    color: var(--font-color-green);
+}
+.warning {
+    color: var(--font-color-yellow);
+}
+.bad{
+    color: var(--font-color-red);
+}
+.default {
+    color: var(--font-color);
+}

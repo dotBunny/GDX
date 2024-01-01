@@ -1,8 +1,15 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance"
+         engine="UnityEngine.UIElements" editor="UnityEditor.UIElements"
+         noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <ui:VisualElement name="gdx-environment" class="gdx-project-settings-section-content">
-        <ui:VisualElement class="gdx-fixed-vertical-spacer-10" />
-        <ui:Toggle label="Ensure GDX Symbol" name="toggle-ensure-symbol" tooltip="Should GDX make sure that there is a GDX scripting define symbol across all viable build target groups." />
-        <ui:Toggle label="Always Include Shaders" name="toggle-ensure-shaders" tooltip="Should GDX make sure that it&apos;s shaders are always included in builds." />
-        <ui:Toggle label="Tools Menu" name="toggle-tools-menu" tooltip="Should the GDX tool menu be added to the editor?" />
+        <ui:VisualElement class="gdx-fixed-vertical-spacer-10"/>
+        <ui:Toggle label="Use Developer Console" name="toggle-developer-console"
+                   tooltip="Should the developer console system be ran at both author and runtime. (Unity 2021.3+)"/>
+        <ui:Toggle label="Auto Capture Unity Logs" name="toggle-auto-capture-unity-logs"
+                   tooltip="Should the managed log capture the Unity log automatically at runtime?"/>
+        <ui:Toggle label="Ensure GDX Symbol" name="toggle-ensure-symbol"
+                   tooltip="Should GDX make sure that there is a GDX scripting define symbol across all viable build target groups."/>
+        <ui:Toggle label="Tools Menu" name="toggle-tools-menu"
+                   tooltip="Should the GDX tool menu be added to the editor?"/>
     </ui:VisualElement>
 </ui:UXML>

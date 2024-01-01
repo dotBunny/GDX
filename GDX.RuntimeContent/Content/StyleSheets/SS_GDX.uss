@@ -1,0 +1,17 @@
+:root {
+    --font-awesome-mini: url('../Fonts/FONT_FontAwesome-Mini.otf');
+    --corner-radius: 8px;
+
+    --background-99: rgba(27,29,32, 0.996);
+    --background-75: rgba(27,29,32, 0.75);
+    --background-25: rgba(27,29,32, 0.25);
+
+    --border-99: rgba(51,55,65,0.996);
+    --border-75: rgba(51,55,65,0.75);
+
+    --font-color: rgb(206,209,214);
+    --font-color-red: rgb(255,0,0);
+    --font-color-green: rgb(0,255,0);
+    --font-color-yellow: rgb(255,255,0);
+    --font-color-blue: rgb(0,0,255);
+}

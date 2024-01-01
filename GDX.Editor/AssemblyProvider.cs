@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2023 dotBunny Inc.
+// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -25,22 +25,22 @@ namespace GDX.Editor
         public static Assembly RuntimeAssembly;
 
         /// <summary>
-        ///     A list of all types with the <see cref="VisualScriptingCompatibleAttribute"/> attribute.
+        ///     A list of all types with the <see cref="VisualScriptingCompatibleAttribute" /> attribute.
         /// </summary>
         public static List<Type> VisualScriptingCollections;
 
         /// <summary>
-        ///     A list of all types with the <see cref="VisualScriptingCompatibleAttribute"/> attribute.
+        ///     A list of all types with the <see cref="VisualScriptingCompatibleAttribute" /> attribute.
         /// </summary>
         public static List<Type> VisualScriptingExtensions;
 
         /// <summary>
-        ///     A list of all types with the <see cref="VisualScriptingCompatibleAttribute"/> attribute.
+        ///     A list of all types with the <see cref="VisualScriptingCompatibleAttribute" /> attribute.
         /// </summary>
         public static List<Type> VisualScriptingTypes;
 
         /// <summary>
-        ///     A list of all types with the <see cref="VisualScriptingCompatibleAttribute"/> attribute.
+        ///     A list of all types with the <see cref="VisualScriptingCompatibleAttribute" /> attribute.
         /// </summary>
         public static List<Type> VisualScriptingUtilities;
 
@@ -54,28 +54,37 @@ namespace GDX.Editor
             VisualScriptingTypes = new List<Type>();
             VisualScriptingUtilities = new List<Type>();
 
-            foreach(Type type in RuntimeAssembly.GetTypes())
+            foreach (Type type in RuntimeAssembly.GetTypes())
             {
-                VisualScriptingCompatibleAttribute targetType = (VisualScriptingCompatibleAttribute)type.GetCustomAttribute(typeof(VisualScriptingCompatibleAttribute), true);
+                VisualScriptingCompatibleAttribute targetType =
+                    (VisualScriptingCompatibleAttribute)type.GetCustomAttribute(
+                        typeof(VisualScriptingCompatibleAttribute), true);
                 if (targetType == null)
                 {
                     continue;
                 }
 
                 // A whole lot of frustrating boxing
-                if (targetType.VisualScriptingCategories.HasFlag(VisualScriptingCompatibleAttribute.VisualScriptingCategory.Collection))
+                if (targetType.VisualScriptingCategories.HasFlag(VisualScriptingCompatibleAttribute
+                        .VisualScriptingCategory.Collection))
                 {
                     VisualScriptingCollections.Add(type);
                 }
-                if (targetType.VisualScriptingCategories.HasFlag(VisualScriptingCompatibleAttribute.VisualScriptingCategory.Extension))
+
+                if (targetType.VisualScriptingCategories.HasFlag(VisualScriptingCompatibleAttribute
+                        .VisualScriptingCategory.Extension))
                 {
                     VisualScriptingExtensions.Add(type);
                 }
-                if (targetType.VisualScriptingCategories.HasFlag(VisualScriptingCompatibleAttribute.VisualScriptingCategory.Type))
+
+                if (targetType.VisualScriptingCategories.HasFlag(VisualScriptingCompatibleAttribute
+                        .VisualScriptingCategory.Type))
                 {
                     VisualScriptingTypes.Add(type);
                 }
-                if (targetType.VisualScriptingCategories.HasFlag(VisualScriptingCompatibleAttribute.VisualScriptingCategory.Utility))
+
+                if (targetType.VisualScriptingCategories.HasFlag(VisualScriptingCompatibleAttribute
+                        .VisualScriptingCategory.Utility))
                 {
                     VisualScriptingUtilities.Add(type);
                 }

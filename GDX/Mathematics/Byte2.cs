@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2023 dotBunny Inc.
+// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -755,27 +755,6 @@ namespace GDX.Mathematics
         }
 
         /// <summary>
-        ///     Debug object used by IDEs for visibility of a <see cref="Byte2" />.
-        /// </summary>
-        internal sealed class DebuggerProxy
-        {
-            public DebuggerProxy(Byte2 v)
-            {
-                X = v.X;
-                Y = v.Y;
-            }
-            /// <summary>
-            ///     X <see cref="byte" />.
-            /// </summary>
-            public byte X;
-
-            /// <summary>
-            ///     Y <see cref="byte" />.
-            /// </summary>
-            public byte Y;
-        }
-
-        /// <summary>
         ///     Explicitly converts a <see cref="Unity.Mathematics.bool2" /> to a <see cref="Byte2" /> by conversion.
         /// </summary>
         /// <param name="v">The value to transcribe.</param>
@@ -1056,6 +1035,28 @@ namespace GDX.Mathematics
         public static bool2 operator !=(byte lhs, Byte2 rhs)
         {
             return new bool2(lhs != rhs.X, lhs != rhs.Y);
+        }
+
+        /// <summary>
+        ///     Debug object used by IDEs for visibility of a <see cref="Byte2" />.
+        /// </summary>
+        internal sealed class DebuggerProxy
+        {
+            /// <summary>
+            ///     X <see cref="byte" />.
+            /// </summary>
+            public byte X;
+
+            /// <summary>
+            ///     Y <see cref="byte" />.
+            /// </summary>
+            public byte Y;
+
+            public DebuggerProxy(Byte2 v)
+            {
+                X = v.X;
+                Y = v.Y;
+            }
         }
     }
 }

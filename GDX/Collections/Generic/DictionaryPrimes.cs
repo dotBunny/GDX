@@ -9,13 +9,14 @@ namespace GDX.Collections.Generic
         ///     The cached array of prime numbers.
         /// </summary>
         static int[] s_Primes;
+
         /// <summary>
-        ///     The number of predetermined prime numbers in <see cref="s_Primes"/>.
+        ///     The number of predetermined prime numbers in <see cref="s_Primes" />.
         /// </summary>
         static int s_PrimesLength;
 
         /// <summary>
-        ///     Get the nearest prime number greater then or equal to the provided <paramref name="minimum"/>.
+        ///     Get the nearest prime number greater then or equal to the provided <paramref name="minimum" />.
         /// </summary>
         /// <param name="minimum">The lowest possible value.</param>
         /// <returns>A prime number.</returns>
@@ -29,13 +30,17 @@ namespace GDX.Collections.Generic
             for (int i = 0; i < s_PrimesLength; i++)
             {
                 int prime = s_Primes[i];
-                if (prime >= minimum) return prime;
+                if (prime >= minimum)
+                {
+                    return prime;
+                }
             }
+
             return int.MaxValue;
         }
 
         /// <summary>
-        ///     Get the prime number in <see cref="s_Primes"/> at index.
+        ///     Get the prime number in <see cref="s_Primes" /> at index.
         /// </summary>
         /// <remarks>No out of bounds detection.</remarks>
         /// <param name="index">The valid array index requested.</param>
@@ -55,7 +60,7 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        /// Returns size of hashtable to grow to.
+        ///     Returns size of hashtable to grow to.
         /// </summary>
         /// <param name="oldSize"></param>
         /// <returns></returns>
@@ -72,28 +77,33 @@ namespace GDX.Collections.Generic
             for (int i = 0; i < primesLength; i++)
             {
                 int prime = primes[i];
-                if (prime >= newSize) return prime;
+                if (prime >= newSize)
+                {
+                    return prime;
+                }
             }
 
             return k_MaxPrime;
         }
 
         /// <summary>
-        ///     Establish the default prime numbers in <see cref="s_Primes"/>.
+        ///     Establish the default prime numbers in <see cref="s_Primes" />.
         /// </summary>
         public static void SetDefaultPrimes()
         {
-            SetPrimes( new []{
-                17, 23, 29, 37, 47, 59, 71, 89, 107, 131, 163, 197, 239, 293, 353, 431, 521, 631, 761, 919,
-                1103, 1327, 1597, 1931, 2333, 2801, 3371, 4049, 4861, 5839, 7013, 8419, 10103, 12143, 14591,
-                17519, 21023, 25229, 30293, 36353, 43627, 52361, 62851, 75431, 90523, 108631, 130363, 156437,
-                187751, 225307, 270371, 324449, 389357, 467237, 560689, 672827, 807403, 968897, 1162687, 1395263,
-                1674319, 2009191, 2411033, 2893249, 3471899, 4166287, 4999559, 5999471, 7199369, 12582917, 25165843,
-                50331653, 100663319, 201326611, 402653189, 805306457, 1610612741 });
+            SetPrimes(new[]
+            {
+                17, 23, 29, 37, 47, 59, 71, 89, 107, 131, 163, 197, 239, 293, 353, 431, 521, 631, 761, 919, 1103,
+                1327, 1597, 1931, 2333, 2801, 3371, 4049, 4861, 5839, 7013, 8419, 10103, 12143, 14591, 17519, 21023,
+                25229, 30293, 36353, 43627, 52361, 62851, 75431, 90523, 108631, 130363, 156437, 187751, 225307,
+                270371, 324449, 389357, 467237, 560689, 672827, 807403, 968897, 1162687, 1395263, 1674319, 2009191,
+                2411033, 2893249, 3471899, 4166287, 4999559, 5999471, 7199369, 12582917, 25165843, 50331653,
+                100663319, 201326611, 402653189, 805306457, 1610612741
+            });
         }
 
         /// <summary>
-        ///     Set the <see cref="s_Primes"/> array with the provided <paramref name="primes"/>.
+        ///     Set the <see cref="s_Primes" /> array with the provided <paramref name="primes" />.
         /// </summary>
         /// <param name="primes">An array of prime numbers.</param>
         public static void SetPrimes(int[] primes)

@@ -1,19 +1,18 @@
 ﻿
-#gdx-cell-value-container
-{
+#gdx-cell-value-container {
     padding-right: 2px;
     max-width: 58%;
 }
-.gdx-cell-field-inspector
-{
+
+.gdx-cell-field-inspector {
     flex-grow: 1;
 }
-#gdx-cell-value-lock
-{
+
+#gdx-cell-value-lock {
     width: 12px;
     height: 12px;
     border-width: 0;
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(0, 0, 0, 0);
     -unity-slice-top: 0;
     -unity-slice-bottom: 0;
     -unity-background-scale-mode: scale-and-crop;
@@ -26,25 +25,23 @@
     border-radius: 0px;
 }
 
-#gdx-cell-value-lock:hover
-{
+#gdx-cell-value-lock:hover {
     background-color: var(--unity-colors-toolbar_button-background-hover);
 }
-#gdx-cell-value-lock.locked
-{
+
+#gdx-cell-value-lock.locked {
     background-image: resource('Icons/LockIcon-On.png');
 }
-#gdx-cell-value-lock.unlocked
-{
+
+#gdx-cell-value-lock.unlocked {
     background-image: resource('Icons/LockIcon.png');
 }
 
-#gdx-cell-value-table
-{
+#gdx-cell-value-table {
     width: 16px;
     height: 16px;
     border-width: 0;
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(0, 0, 0, 0);
     -unity-slice-top: 0;
     -unity-slice-bottom: 0;
     -unity-background-scale-mode: scale-and-crop;
@@ -60,32 +57,26 @@
     right: 0px;
 }
 
-#gdx-cell-value-table:hover
-{
+#gdx-cell-value-table:hover {
     background-color: var(--unity-colors-toolbar_button-background-hover);
 }
 
-.dark #gdx-cell-value-table.linked
-{
+.dark #gdx-cell-value-table.linked {
     background-image: resource('Icons/d_Linked.png');
 }
 
-.dark #gdx-cell-value-table.unlinked
-{
+.dark #gdx-cell-value-table.unlinked {
     background-image: resource('Icons/d_Unlinked.png');
 }
 
-.light #gdx-cell-value-table.linked
-{
+.light #gdx-cell-value-table.linked {
     background-image: resource('Icons/Linked.png');
 }
 
-.light #gdx-cell-value-table.unlinked
-{
+.light #gdx-cell-value-table.unlinked {
     background-image: resource('Icons/Unlinked.png');
 }
 
-#gdx-cell-value-table.error
-{
+#gdx-cell-value-table.error {
     background-image: resource('Icons/Error.png');
 }

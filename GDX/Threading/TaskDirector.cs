@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -11,23 +11,23 @@ using GDX.Collections;
 namespace GDX.Threading
 {
     /// <summary>
-    ///     A simple control mechanism for distributed <see cref="TaskBase"/> work across the
+    ///     A simple control mechanism for distributed <see cref="TaskBase" /> work across the
     ///     thread pool. Tasks should be short-lived and can queue up additional work.
     /// </summary>
     public static class TaskDirector
     {
         /// <summary>
-        ///     An event invoked when a <see cref="TaskBase"/> throws an exception.
+        ///     An event invoked when a <see cref="TaskBase" /> throws an exception.
         /// </summary>
         public static Action<Exception> exceptionOccured;
 
         /// <summary>
-        ///     An event invoked during <see cref="Tick"/> when user input should be blocked.
+        ///     An event invoked during <see cref="Tick" /> when user input should be blocked.
         /// </summary>
         public static Action<bool> inputBlocked;
 
         /// <summary>
-        ///     An event invoked during <see cref="Tick"/> with new log content.
+        ///     An event invoked during <see cref="Tick" /> with new log content.
         /// </summary>
         public static Action<string[]> logAdded;
 
@@ -43,8 +43,8 @@ namespace GDX.Threading
         static readonly List<string> k_BlockedNames = new List<string>();
 
         /// <summary>
-        ///     An accumulating collection of log content which will be passed to <see cref="logAdded"/>
-        ///     subscribed methods during <see cref="Tick"/>.
+        ///     An accumulating collection of log content which will be passed to <see cref="logAdded" />
+        ///     subscribed methods during <see cref="Tick" />.
         /// </summary>
         static readonly Queue<string> k_Log = new Queue<string>(10);
 
@@ -64,14 +64,14 @@ namespace GDX.Threading
         static readonly List<TaskBase> k_TasksBusy = new List<TaskBase>();
 
         /// <summary>
-        ///     A working list of tasks that recently finished, used in <see cref="Tick"/> to ensure
+        ///     A working list of tasks that recently finished, used in <see cref="Tick" /> to ensure
         ///     callbacks occur on the main thread.
         /// </summary>
         static readonly List<TaskBase> k_TasksFinished = new List<TaskBase>();
 
         /// <summary>
         ///     A list of tasks that were moved from waiting state to a working/busy state during
-        ///     <see cref="Tick"/>.
+        ///     <see cref="Tick" />.
         /// </summary>
         static readonly List<TaskBase> k_TasksProcessed = new List<TaskBase>();
 
@@ -85,7 +85,7 @@ namespace GDX.Threading
         /// </summary>
         /// <remarks>
         ///     This number can be higher then one, when tasks are forcibly started and then added to the
-        ///     <see cref="TaskDirector"/>.
+        ///     <see cref="TaskDirector" />.
         /// </remarks>
         static int s_BlockAllTasksCount;
 
@@ -100,19 +100,19 @@ namespace GDX.Threading
         static int s_BlockInputCount;
 
         /// <summary>
-        ///     A cached count of <see cref="k_TasksBusy"/>.
+        ///     A cached count of <see cref="k_TasksBusy" />.
         /// </summary>
         static int s_TasksBusyCount;
 
         /// <summary>
-        ///     A cached count of <see cref="k_TasksQueue"/>.
+        ///     A cached count of <see cref="k_TasksQueue" />.
         /// </summary>
         static int s_TasksQueueCount;
 
         /// <summary>
         ///     The number of tasks currently in process or awaiting execution by the thread pool.
         /// </summary>
-        /// <returns>The number of tasks sitting in <see cref="k_TasksBusy"/>.</returns>
+        /// <returns>The number of tasks sitting in <see cref="k_TasksBusy" />.</returns>
         public static int GetBusyCount()
         {
             return s_TasksBusyCount;
@@ -121,14 +121,14 @@ namespace GDX.Threading
         /// <summary>
         ///     The number of tasks waiting in the queue.
         /// </summary>
-        /// <returns>The number of tasks sitting in <see cref="k_TasksQueue"/>.</returns>
+        /// <returns>The number of tasks sitting in <see cref="k_TasksQueue" />.</returns>
         public static int GetQueueCount()
         {
             return s_TasksQueueCount;
         }
 
         /// <summary>
-        ///     Get the status message for the <see cref="TaskDirector"/>.
+        ///     Get the status message for the <see cref="TaskDirector" />.
         /// </summary>
         /// <returns>A pre-formatted status message.</returns>
         public static string GetStatus()
@@ -137,11 +137,12 @@ namespace GDX.Threading
             {
                 return $"{s_TasksBusyCount.ToString()} Busy / {s_TasksQueueCount.ToString()} Queued";
             }
+
             return s_TasksQueueCount > 0 ? $"{s_TasksQueueCount.ToString()} Queued" : null;
         }
 
         /// <summary>
-        ///     Does the <see cref="TaskDirector"/> have any known busy or queued tasks?
+        ///     Does the <see cref="TaskDirector" /> have any known busy or queued tasks?
         /// </summary>
         /// <remarks>
         ///     It's not performant to poll this.
@@ -153,21 +154,21 @@ namespace GDX.Threading
         }
 
         /// <summary>
-        ///     Is the <see cref="TaskDirector"/> blocking tasks with a specific bit?
+        ///     Is the <see cref="TaskDirector" /> blocking tasks with a specific bit?
         /// </summary>
         /// <remarks>
         ///     It isn't ideal to constantly poll this method, ideally this could be used to block things outside of
-        ///     the <see cref="TaskDirector"/>'s control based on tasks running.
+        ///     the <see cref="TaskDirector" />'s control based on tasks running.
         /// </remarks>
-        /// <returns>A true/false value indicating if a <see cref="BitArray16"/> index is being blocked.</returns>
+        /// <returns>A true/false value indicating if a <see cref="BitArray16" /> index is being blocked.</returns>
         public static bool IsBlockingBit(int index)
         {
             return k_BlockedBits[index] > 0;
         }
 
         /// <summary>
-        ///     Adds a thread-safe log entry to a queue which will be dispatched to <see cref="logAdded"/> on
-        ///     the <see cref="Tick"/> invoking thread.
+        ///     Adds a thread-safe log entry to a queue which will be dispatched to <see cref="logAdded" /> on
+        ///     the <see cref="Tick" /> invoking thread.
         /// </summary>
         /// <param name="message">The log content.</param>
         public static void Log(string message)
@@ -182,7 +183,7 @@ namespace GDX.Threading
         ///     Add a task to the queue, to be later started when possible.
         /// </summary>
         /// <remarks>
-        ///     If the <paramref name="task"/> is already executing it will be added to the known busy list.
+        ///     If the <paramref name="task" /> is already executing it will be added to the known busy list.
         /// </remarks>
         /// <param name="task">An established task.</param>
         public static void QueueTask(TaskBase task)
@@ -206,10 +207,10 @@ namespace GDX.Threading
         }
 
         /// <summary>
-        ///     Update the <see cref="TaskDirector"/>, evaluating known tasks for work eligibility and execution.
+        ///     Update the <see cref="TaskDirector" />, evaluating known tasks for work eligibility and execution.
         /// </summary>
         /// <remarks>
-        ///     This should occur on the main thread. If the <see cref="TaskDirector"/> is used during play mode,
+        ///     This should occur on the main thread. If the <see cref="TaskDirector" /> is used during play mode,
         ///     something needs to call this every global tick. While in edit mode the EditorTaskDirector triggers this
         ///     method.
         /// </remarks>
@@ -294,12 +295,12 @@ namespace GDX.Threading
         }
 
         /// <summary>
-        ///     Evaluate the provided task and update its state inside of the <see cref="TaskDirector"/>.
+        ///     Evaluate the provided task and update its state inside of the <see cref="TaskDirector" />.
         /// </summary>
         /// <remarks>
-        ///     This will add a task to the <see cref="TaskDirector"/> if it does not already know about it, regardless
+        ///     This will add a task to the <see cref="TaskDirector" /> if it does not already know about it, regardless
         ///     of the current blocking mode status. Do not use this method to add non executing tasks, they will not
-        ///     be added to the <see cref="TaskDirector"/> in this way.
+        ///     be added to the <see cref="TaskDirector" /> in this way.
         /// </remarks>
         /// <param name="task">An established task.</param>
         public static void UpdateTask(TaskBase task)
@@ -327,6 +328,7 @@ namespace GDX.Threading
                 Thread.Sleep(1);
                 Tick();
             }
+
             Tick();
         }
 
@@ -340,12 +342,13 @@ namespace GDX.Threading
                 await Task.Delay(1);
                 Tick();
             }
+
             Tick();
         }
 
 
         /// <summary>
-        ///     Add a <see cref="TaskBase"/> to the known list of working tasks.
+        ///     Add a <see cref="TaskBase" /> to the known list of working tasks.
         /// </summary>
         /// <remarks>
         ///     This will add the blocking mode settings to the current settings.
@@ -394,7 +397,7 @@ namespace GDX.Threading
         /// <summary>
         ///     Is the provided bit array blocked by the current blocking settings.
         /// </summary>
-        /// <param name="bits">A <see cref="TaskBase"/>'s bits.</param>
+        /// <param name="bits">A <see cref="TaskBase" />'s bits.</param>
         /// <returns>true/false if the task should be blocked from executing.</returns>
         static bool IsBlockedByBits(ref BitArray16 bits)
         {
@@ -405,11 +408,12 @@ namespace GDX.Threading
                     return true;
                 }
             }
+
             return false;
         }
 
         /// <summary>
-        ///     Remove a <see cref="TaskBase"/> from the known list of working tasks.
+        ///     Remove a <see cref="TaskBase" /> from the known list of working tasks.
         /// </summary>
         /// <remarks>
         ///     This will remove the blocking mode settings to the current settings.

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -94,7 +94,7 @@ namespace GDX.Collections.Generic
         public int3 GetFromIndex(int index)
         {
             int x = index % Stride;
-            int y =  (index - x)/Stride % Stride;
+            int y = (index - x) / Stride % Stride;
             int z = (index - x - Stride * y) / StrideSquared;
             return new int3(x, y, z);
         }
@@ -104,12 +104,12 @@ namespace GDX.Collections.Generic
         /// </summary>
         /// <param name="index">A flat array index.</param>
         /// <param name="stride">The predetermined length of an axis.</param>
-        /// <param name="strideSquared">The squared value of <paramref name="stride"/>.</param>
+        /// <param name="strideSquared">The squared value of <paramref name="stride" />.</param>
         /// <returns>A three-dimensional voxel index.</returns>
         public static int3 GetFromIndex(int index, int stride, int strideSquared)
         {
             int x = index % stride;
-            int y =  (index - x)/stride % stride;
+            int y = (index - x) / stride % stride;
             int z = (index - x - stride * y) / strideSquared;
             return new int3(x, y, z);
         }

@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2023 dotBunny Inc.
+// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -107,7 +107,8 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     Add an object reference to the <see cref="SimpleList{T}" /> with checking the internal size (expanding as necessary),
+        ///     Add an object reference to the <see cref="SimpleList{T}" /> with checking the internal size (expanding as
+        ///     necessary),
         ///     making sure that the reference is not already contained in the <see cref="SimpleList{T}" />.
         ///     Does not prevent addition of different objects for which Equals returns true.
         /// </summary>
@@ -116,7 +117,8 @@ namespace GDX.Collections.Generic
         /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
         /// <returns>true/false if the operation was able to add the reference successfully.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool AddWithExpandCheckUniqueReference<T>(ref this SimpleList<T> targetSimpleList, T targetReference)
+        public static bool AddWithExpandCheckUniqueReference<T>(ref this SimpleList<T> targetSimpleList,
+            T targetReference)
             where T : class
         {
             if (targetSimpleList.ContainsReference(targetReference))
@@ -186,7 +188,8 @@ namespace GDX.Collections.Generic
         /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
         /// <returns>true/false</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool ContainsValue<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : IEquatable<T>
+        public static bool ContainsValue<T>(ref this SimpleList<T> targetSimpleList, T targetItem)
+            where T : IEquatable<T>
         {
             int length = targetSimpleList.Count;
             T[] array = targetSimpleList.Array;
@@ -234,11 +237,14 @@ namespace GDX.Collections.Generic
         /// <summary>
         ///     Find the first index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" />.
         /// </summary>
-        /// <remarks>This will work for <see cref="string"/> comparisons.</remarks>
+        /// <remarks>This will work for <see cref="string" /> comparisons.</remarks>
         /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
         /// <param name="targetItem">The object to be found.</param>
         /// <typeparam name="T">The type of the array.</typeparam>
-        /// <returns>The index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" /> backing array, or -1 if not found.</returns>
+        /// <returns>
+        ///     The index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" /> backing array, or -1 if
+        ///     not found.
+        /// </returns>
         public static int FirstIndexOf<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : IEquatable<T>
         {
             int length = targetSimpleList.Count;
@@ -249,17 +255,21 @@ namespace GDX.Collections.Generic
                     return i;
                 }
             }
+
             return -1;
         }
 
         /// <summary>
         ///     Find the first index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" />.
         /// </summary>
-        /// <remarks>Ignores equality check and end up comparing object pointers. Do NOT use this for <see cref="string"/> types.</remarks>
+        /// <remarks>Ignores equality check and end up comparing object pointers. Do NOT use this for <see cref="string" /> types.</remarks>
         /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
         /// <param name="targetItem">The object to be found.</param>
         /// <typeparam name="T">The type of the array.</typeparam>
-        /// <returns>The index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" /> backing array, or -1 if not found.</returns>
+        /// <returns>
+        ///     The index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" /> backing array, or -1 if
+        ///     not found.
+        /// </returns>
         public static int FirstIndexOfItem<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : class
         {
             int length = targetSimpleList.Count;
@@ -270,6 +280,7 @@ namespace GDX.Collections.Generic
                     return i;
                 }
             }
+
             return -1;
         }
 
@@ -279,7 +290,10 @@ namespace GDX.Collections.Generic
         /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
         /// <param name="targetValue">The value to be found.</param>
         /// <typeparam name="T">The type of the array.</typeparam>
-        /// <returns>The index of <paramref name="targetValue" /> in <paramref name="targetSimpleList" /> backing array, or -1 if not found.</returns>
+        /// <returns>
+        ///     The index of <paramref name="targetValue" /> in <paramref name="targetSimpleList" /> backing array, or -1 if
+        ///     not found.
+        /// </returns>
         public static int FirstIndexOfValue<T>(ref this SimpleList<T> targetSimpleList, T targetValue) where T : struct
         {
             int length = targetSimpleList.Count;
@@ -298,11 +312,14 @@ namespace GDX.Collections.Generic
         /// <summary>
         ///     Find the last index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" />.
         /// </summary>
-        /// <remarks>This will work for <see cref="string"/> comparisons.</remarks>
+        /// <remarks>This will work for <see cref="string" /> comparisons.</remarks>
         /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
         /// <param name="targetItem">The object to be found.</param>
         /// <typeparam name="T">The type of the array.</typeparam>
-        /// <returns>The index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" /> backing array, or -1 if not found.</returns>
+        /// <returns>
+        ///     The index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" /> backing array, or -1 if
+        ///     not found.
+        /// </returns>
         public static int LastIndexOf<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : IEquatable<T>
         {
             int length = targetSimpleList.Count;
@@ -323,7 +340,10 @@ namespace GDX.Collections.Generic
         /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
         /// <param name="targetItem">The object to be found.</param>
         /// <typeparam name="T">The type of the array.</typeparam>
-        /// <returns>The index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" /> backing array, or -1 if not found.</returns>
+        /// <returns>
+        ///     The index of <paramref name="targetItem" /> in <paramref name="targetSimpleList" /> backing array, or -1 if
+        ///     not found.
+        /// </returns>
         public static int LastIndexOfItem<T>(ref this SimpleList<T> targetSimpleList, T targetItem) where T : class
         {
             int length = targetSimpleList.Count;
@@ -344,7 +364,10 @@ namespace GDX.Collections.Generic
         /// <param name="targetSimpleList">The <see cref="SimpleList{T}" /> to look in.</param>
         /// <param name="targetValue">The value to be found.</param>
         /// <typeparam name="T">The type of the array.</typeparam>
-        /// <returns>The index of <paramref name="targetValue" /> in <paramref name="targetSimpleList" /> backing array, or -1 if not found.</returns>
+        /// <returns>
+        ///     The index of <paramref name="targetValue" /> in <paramref name="targetSimpleList" /> backing array, or -1 if
+        ///     not found.
+        /// </returns>
         public static int LastIndexOfValue<T>(ref this SimpleList<T> targetSimpleList, T targetValue) where T : struct
         {
             int length = targetSimpleList.Count;
@@ -398,7 +421,8 @@ namespace GDX.Collections.Generic
         /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
         /// <returns>true/false if an object reference was removed.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool RemoveFirstReference<T>(ref this SimpleList<T> targetSimpleList, T targetReference) where T : class
+        public static bool RemoveFirstReference<T>(ref this SimpleList<T> targetSimpleList, T targetReference)
+            where T : class
         {
             int length = targetSimpleList.Count;
             T[] array = targetSimpleList.Array;
@@ -423,7 +447,6 @@ namespace GDX.Collections.Generic
         ///     <para>Removes all <paramref name="targetItem" /> from the provided <paramref name="targetSimpleList" />.</para>
         /// </summary>
         /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
-
         /// <param name="targetSimpleList">The target <see cref="SimpleList{T}" />.</param>
         /// <param name="targetItem">The item to remove from the <paramref name="targetSimpleList" />.</param>
         /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
@@ -450,16 +473,19 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     <para>Removes all instances of references to <paramref name="targetReference" /> from the provided <paramref name="targetSimpleList" />.</para>
+        ///     <para>
+        ///         Removes all instances of references to <paramref name="targetReference" /> from the provided
+        ///         <paramref name="targetSimpleList" />.
+        ///     </para>
         ///     Only removes direct object references, i.e. equivalent strings at different memory addresses would not be removed.
         /// </summary>
         /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
-
         /// <param name="targetSimpleList">The target <see cref="SimpleList{T}" />.</param>
         /// <param name="targetReference">The object reference to remove from the <paramref name="targetSimpleList" />.</param>
         /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
         /// <returns>true/false if any references were removed.</returns>
-        public static bool RemoveReferences<T>(ref this SimpleList<T> targetSimpleList, T targetReference) where T : class
+        public static bool RemoveReferences<T>(ref this SimpleList<T> targetSimpleList, T targetReference)
+            where T : class
         {
             int length = targetSimpleList.Count;
             T[] array = targetSimpleList.Array;
@@ -510,7 +536,10 @@ namespace GDX.Collections.Generic
         }
 
         /// <summary>
-        ///     <para>Removes the last reference to <paramref name="targetReference" /> from the provided <paramref name="targetSimpleList" />.</para>
+        ///     <para>
+        ///         Removes the last reference to <paramref name="targetReference" /> from the provided
+        ///         <paramref name="targetSimpleList" />.
+        ///     </para>
         ///     Only removes direct object references, i.e. equivalent strings at different memory addresses would not be removed.
         /// </summary>
         /// <remarks>Avoids using <see cref="System.Collections.Generic.EqualityComparer{T}" />.</remarks>
@@ -518,7 +547,8 @@ namespace GDX.Collections.Generic
         /// <param name="targetReference">The target object reference to remove from the <paramref name="targetSimpleList" />.</param>
         /// <typeparam name="T">The type of the <see cref="SimpleList{T}" />.</typeparam>
         /// <returns>true/false if an object reference was removed.</returns>
-        public static bool RemoveLastReference<T>(ref this SimpleList<T> targetSimpleList, T targetReference) where T : class
+        public static bool RemoveLastReference<T>(ref this SimpleList<T> targetSimpleList, T targetReference)
+            where T : class
         {
             int length = targetSimpleList.Count;
             T[] array = targetSimpleList.Array;

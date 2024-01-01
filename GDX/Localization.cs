@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -15,11 +15,6 @@ namespace GDX
     [VisualScriptingCompatible(8)]
     public static class Localization
     {
-        /// <summary>
-        ///     An array of strings representative for file size formats.
-        /// </summary>
-        public static readonly string[] ByteSizes = { "B", "KB", "MB", "GB", "TB" };
-
         /// <summary>
         ///     A list of supported languages.
         /// </summary>
@@ -47,6 +42,16 @@ namespace GDX
         ///     The local ISO 8601 compliant <see cref="DateTime.ToString(System.String)" />.
         /// </summary>
         public const string LocalTimestampFormat = "yyyy-MM-dd HH\\:mm\\:ss";
+
+        /// <summary>
+        ///     A filename safe <see cref="DateTime.ToString(System.String)" />.
+        /// </summary>
+        public const string FilenameTimestampFormat = "yyyyMMdd_HHmmss";
+
+        /// <summary>
+        ///     An array of strings representative for file size formats.
+        /// </summary>
+        public static readonly string[] ByteSizes = { "B", "KB", "MB", "GB", "TB" };
 
         /// <summary>
         ///     Creates a more human readable <see cref="string" /> of a byte size.
@@ -230,7 +235,8 @@ namespace GDX
         {
             if (Config.LocalizationSetDefaultCulture && GetSystemLanguage() == Language.Default)
             {
-                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(Config.LocalizationDefaultCulture.GetIETF_BCP47());
+                CultureInfo.DefaultThreadCurrentCulture =
+                    new CultureInfo(Config.LocalizationDefaultCulture.GetIETF_BCP47());
             }
         }
     }

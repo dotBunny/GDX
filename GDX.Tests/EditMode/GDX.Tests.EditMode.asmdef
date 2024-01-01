@@ -3,6 +3,7 @@
     "rootNamespace": "GDX",
     "references": [
         "GDX",
+        "GDX.RuntimeContent",
         "GDX.Editor",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",

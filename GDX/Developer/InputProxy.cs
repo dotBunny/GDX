@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -18,6 +18,12 @@ namespace GDX.Developer
     /// </remarks>
     public static class InputProxy
     {
+        public enum SynthesizeMethod
+        {
+            Native,
+            InputSystem // TODO:Add path to push the unity input system manually
+        }
+
         /// <summary>
         ///     A set of flags to describe various aspects of <see cref="KeyboardInput" />, mainly used to define
         ///     additional information related to <see cref="KeyboardInput.Key" />.
@@ -46,6 +52,7 @@ namespace GDX.Developer
         /// <seealso href="https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes" />
         public enum KeyCode : ushort
         {
+            Invalid = 0x00,
             Backspace = 0x08,
             Tab = 0x09,
             Clear = 0x0c,
@@ -143,6 +150,206 @@ namespace GDX.Developer
             RightControl = 0xa3
         }
 
+        public static KeyCode GetKeyCode(string keyCode)
+        {
+            int hash = keyCode.GetStableLowerCaseHashCode();
+            switch (hash)
+            {
+                case -68092673:
+                    return KeyCode.Backspace;
+                case 696029671:
+                    return KeyCode.Tab;
+                case 613662425:
+                    return KeyCode.Clear;
+                case -607330920:
+                    return KeyCode.Return;
+                case -387753726:
+                    return KeyCode.Shift;
+                case -1166912341:
+                    return KeyCode.Control;
+                case -63485571:
+                    return KeyCode.Alt;
+                case -1685075688:
+                    return KeyCode.Pause;
+                case -1943382536:
+                    return KeyCode.CapsLock;
+                case 1110997421:
+                    return KeyCode.Escape;
+                case 1144830560:
+                    return KeyCode.Space;
+                case 234281596:
+                    return KeyCode.PageUp;
+                case -1752670719:
+                    return KeyCode.PageDown;
+                case -1226285125:
+                    return KeyCode.End;
+                case 1414245067:
+                    return KeyCode.Home;
+                case -871206253:
+                    return KeyCode.Left;
+                case 1543969241:
+                    return KeyCode.Up;
+                case 109637592:
+                    return KeyCode.Right;
+                case 1367190538:
+                    return KeyCode.Down;
+                case -98072495:
+                    return KeyCode.PrintScreen;
+                case 695394959:
+                    return KeyCode.Insert;
+                case 1381955065:
+                    return KeyCode.Delete;
+                case -252055437:
+                    return KeyCode.Number0;
+                case -252055438:
+                    return KeyCode.Number1;
+                case -252055439:
+                    return KeyCode.Number2;
+                case -252055440:
+                    return KeyCode.Number3;
+                case -252055433:
+                    return KeyCode.Number4;
+                case -252055434:
+                    return KeyCode.Number5;
+                case -252055435:
+                    return KeyCode.Number6;
+                case -252055436:
+                    return KeyCode.Number7;
+                case -252055429:
+                    return KeyCode.Number8;
+                case -252055430:
+                    return KeyCode.Number9;
+                case 372029373:
+                    return KeyCode.A;
+                case 372029376:
+                    return KeyCode.B;
+                case 372029375:
+                    return KeyCode.C;
+                case 372029370:
+                    return KeyCode.D;
+                case 372029369:
+                    return KeyCode.E;
+                case 372029372:
+                    return KeyCode.F;
+                case 372029371:
+                    return KeyCode.G;
+                case 372029382:
+                    return KeyCode.H;
+                case 372029381:
+                    return KeyCode.I;
+                case 372029384:
+                    return KeyCode.J;
+                case 372029383:
+                    return KeyCode.K;
+                case 372029378:
+                    return KeyCode.L;
+                case 372029377:
+                    return KeyCode.M;
+                case 372029380:
+                    return KeyCode.N;
+                case 372029379:
+                    return KeyCode.O;
+                case 372029390:
+                    return KeyCode.P;
+                case 372029389:
+                    return KeyCode.Q;
+                case 372029392:
+                    return KeyCode.R;
+                case 372029391:
+                    return KeyCode.S;
+                case 372029386:
+                    return KeyCode.T;
+                case 372029385:
+                    return KeyCode.U;
+                case 372029388:
+                    return KeyCode.V;
+                case 372029387:
+                    return KeyCode.W;
+                case 372029398:
+                    return KeyCode.X;
+                case 372029397:
+                    return KeyCode.Y;
+                case 372029400:
+                    return KeyCode.Z;
+                case -1953951152:
+                    return KeyCode.LeftWindows;
+                case -1623418013:
+                    return KeyCode.RightWindows;
+                case 1523316373:
+                    return KeyCode.Applications;
+                case -1711919009:
+                    return KeyCode.Sleep;
+                case 191376843:
+                    return KeyCode.NumPad0;
+                case 191376842:
+                    return KeyCode.NumPad1;
+                case 191376841:
+                    return KeyCode.NumPad2;
+                case 191376840:
+                    return KeyCode.NumPad3;
+                case 191376839:
+                    return KeyCode.NumPad4;
+                case 191376838:
+                    return KeyCode.NumPad5;
+                case 191376837:
+                    return KeyCode.NumPad6;
+                case 191376836:
+                    return KeyCode.NumPad7;
+                case 191376851:
+                    return KeyCode.NumPad8;
+                case 191376850:
+                    return KeyCode.NumPad9;
+                case -1585322177:
+                    return KeyCode.NumPadMultiply;
+                case 1476018722:
+                    return KeyCode.NumPadAdd;
+                case 283539863:
+                    return KeyCode.NumPadSubtract;
+                case -1957785586:
+                    return KeyCode.NumPadDecimal;
+                case 1060101014:
+                    return KeyCode.NumPadDivide;
+                case -1467239129:
+                    return KeyCode.F1;
+                case -1063954602:
+                    return KeyCode.F2;
+                case 1664928753:
+                    return KeyCode.F3;
+                case -1870523656:
+                    return KeyCode.F4;
+                case 858359699:
+                    return KeyCode.F5;
+                case 1261644226:
+                    return KeyCode.F6;
+                case -304439715:
+                    return KeyCode.F7;
+                case -257385548:
+                    return KeyCode.F8;
+                case -1823469489:
+                    return KeyCode.F9;
+                case -1461555849:
+                    return KeyCode.F10;
+                case -1461555850:
+                    return KeyCode.F11;
+                case -1461555851:
+                    return KeyCode.F12;
+                case -1717124259:
+                    return KeyCode.NumLock;
+                case -1411354708:
+                    return KeyCode.ScrollLock;
+                case -1825696445:
+                    return KeyCode.LeftShift;
+                case 965494012:
+                    return KeyCode.RightShift;
+                case -595951364:
+                    return KeyCode.LeftControl;
+                case -873360029:
+                    return KeyCode.RightControl;
+            }
+
+            return KeyCode.Invalid;
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="keyCode"></param>
@@ -228,13 +435,12 @@ namespace GDX.Developer
 #endif // UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool Synthesize(KeyboardInput keyboardInput)
+        public static bool Synthesize(KeyboardInput keyboardInput, SynthesizeMethod method = SynthesizeMethod.Native)
         {
-            return Synthesize(new[] { keyboardInput }) == 1;
+            return Synthesize(new[] { keyboardInput }, method) == 1;
         }
 
-
-        public static uint Synthesize(KeyboardInput[] keyboardInputs)
+        public static uint Synthesize(KeyboardInput[] keyboardInputs, SynthesizeMethod method = SynthesizeMethod.Native)
         {
             uint count = (uint)keyboardInputs.Length;
             if (count == 0)
@@ -252,12 +458,12 @@ namespace GDX.Developer
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool Synthesize(MouseInput mouseInput)
+        public static bool Synthesize(MouseInput mouseInput, SynthesizeMethod method = SynthesizeMethod.Native)
         {
-            return Synthesize(new[] { mouseInput }) == 1;
+            return Synthesize(new[] { mouseInput }, method) == 1;
         }
 
-        public static uint Synthesize(MouseInput[] mouseInputs)
+        public static uint Synthesize(MouseInput[] mouseInputs, SynthesizeMethod method = SynthesizeMethod.Native)
         {
             uint count = (uint)mouseInputs.Length;
             if (count == 0)
@@ -275,12 +481,12 @@ namespace GDX.Developer
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool Synthesize(HardwareInput hardwareInput)
+        public static bool Synthesize(HardwareInput hardwareInput, SynthesizeMethod method = SynthesizeMethod.Native)
         {
-            return Synthesize(new[] { hardwareInput }) == 1;
+            return Synthesize(new[] { hardwareInput }, method) == 1;
         }
 
-        public static uint Synthesize(HardwareInput[] hardwareInputs)
+        public static uint Synthesize(HardwareInput[] hardwareInputs, SynthesizeMethod method = SynthesizeMethod.Native)
         {
             uint count = (uint)hardwareInputs.Length;
             if (count == 0)
@@ -297,23 +503,26 @@ namespace GDX.Developer
             return SendInput(count, items, k_InputStructureSize);
         }
 
-        public static bool KeyPress(KeyCode keyCode)
+        public static bool KeyPress(KeyCode keyCode, SynthesizeMethod method = SynthesizeMethod.Native)
         {
-            return Synthesize(new[]
-            {
-                new KeyboardInput(keyCode, KeyboardFlag.KeyDown, 0, IntPtr.Zero),
-                new KeyboardInput(keyCode, KeyboardFlag.KeyUp, 0, IntPtr.Zero)
-            }) == 2;
+            return Synthesize(
+                new[]
+                {
+                    new KeyboardInput(keyCode, KeyboardFlag.KeyDown, 0, IntPtr.Zero),
+                    new KeyboardInput(keyCode, KeyboardFlag.KeyUp, 0, IntPtr.Zero)
+                }, method) == 2;
         }
 
-        public static bool MouseClick(int x, int y, bool virtualMode = false)
+        public static bool MouseClick(int x, int y, bool virtualMode = false,
+            SynthesizeMethod method = SynthesizeMethod.Native)
         {
-            return Synthesize(new[]
-            {
-                new MouseInput(x, y, 0, MouseFlag.Move & MouseFlag.Absolute, 0, IntPtr.Zero),
-                new MouseInput(x, y, 0, MouseFlag.LeftDown, 0, IntPtr.Zero),
-                new MouseInput(x, y, 0, MouseFlag.LeftUp, 0, IntPtr.Zero)
-            }) == 3;
+            return Synthesize(
+                new[]
+                {
+                    new MouseInput(x, y, 0, MouseFlag.Move & MouseFlag.Absolute, 0, IntPtr.Zero),
+                    new MouseInput(x, y, 0, MouseFlag.LeftDown, 0, IntPtr.Zero),
+                    new MouseInput(x, y, 0, MouseFlag.LeftUp, 0, IntPtr.Zero)
+                }, method) == 3;
         }
 
         /// <summary>
@@ -348,7 +557,6 @@ namespace GDX.Developer
             public KeyboardInput(KeyCode key, KeyboardFlag flags, uint timestamp, IntPtr extraInfo)
             {
                 Key = (ushort)key;
-
 
                 // Safety check for extended key
                 if (IsExtendedKey(key) && !flags.HasFlags(KeyboardFlag.ExtendedKey))
@@ -441,13 +649,11 @@ namespace GDX.Developer
 
             public MouseInput(int x, int y, uint data, MouseFlag flags, uint timestamp, IntPtr extraInfo)
             {
-
                 Data = data;
 
                 // Absolute on main monitor?
                 if (flags.HasFlags(MouseFlag.Absolute) && !flags.HasFlags(MouseFlag.VirtualDesk))
                 {
-
                     float widthPercent = (float)x / Screen.currentResolution.width;
                     float heightPercent = (float)y / Screen.currentResolution.height;
                     X = (int)(widthPercent * 65535);
@@ -458,6 +664,7 @@ namespace GDX.Developer
                     X = x;
                     Y = y;
                 }
+
                 Flags = (uint)flags;
                 Timestamp = timestamp;
                 ExtraInfo = extraInfo;
@@ -505,6 +712,7 @@ namespace GDX.Developer
         {
             readonly InputType Type;
             readonly InputData Data;
+
             public InputItem(InputType type, InputData data)
             {
                 Type = type;

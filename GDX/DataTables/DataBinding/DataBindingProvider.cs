@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -16,6 +16,7 @@ namespace GDX.DataTables.DataBinding
     {
         static readonly List<FormatBase> k_KnownFormats = new List<FormatBase>(3);
         static readonly CommaSeperatedValueFormat k_CommaSeperatedValueFormat = new CommaSeperatedValueFormat();
+
         static readonly JavaScriptObjectNotationFormat k_JavaScriptObjectNotationFormat =
             new JavaScriptObjectNotationFormat();
 
@@ -33,6 +34,7 @@ namespace GDX.DataTables.DataBinding
             {
                 format = k_JavaScriptObjectNotationFormat;
             }
+
             format?.Push(uri, serializableTable);
         }
 
@@ -62,6 +64,7 @@ namespace GDX.DataTables.DataBinding
                     return k_KnownFormats[i];
                 }
             }
+
             return null;
         }
 
@@ -74,6 +77,7 @@ namespace GDX.DataTables.DataBinding
                     return k_KnownFormats[i];
                 }
             }
+
             return null;
         }
 
@@ -90,6 +94,7 @@ namespace GDX.DataTables.DataBinding
                     returnData.AddRange(extensions);
                 }
             }
+
             return returnData.ToArray();
         }
 
@@ -104,7 +109,10 @@ namespace GDX.DataTables.DataBinding
         /// <param name="dataTable">The target <see cref="DataTableBase" /> to apply changes to.</param>
         /// <param name="uri">The resource path to load data from, absolute if on disk.</param>
         /// <param name="removeRowIfNotFound">Should rows that are not found in the file content be removed?</param>
-        /// <param name="jsonFallback">If the importer is unable to determine the format based on the URI, fallback to assuming its JSON.</param>
+        /// <param name="jsonFallback">
+        ///     If the importer is unable to determine the format based on the URI, fallback to assuming its
+        ///     JSON.
+        /// </param>
         /// <returns>Was the import successful?</returns>
         public static bool Import(DataTableBase dataTable, string uri, bool removeRowIfNotFound = true,
             bool jsonFallback = true)
@@ -115,10 +123,12 @@ namespace GDX.DataTables.DataBinding
             {
                 format = k_JavaScriptObjectNotationFormat;
             }
+
             if (format != null)
             {
                 serializableTable = format.Pull(uri, dataTable.GetDataVersion(), dataTable.GetStructureVersion());
             }
+
             return serializableTable != null && serializableTable.Update(dataTable, removeRowIfNotFound);
         }
 

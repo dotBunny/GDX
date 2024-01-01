@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -17,7 +17,7 @@ namespace GDX.Developer.Reports.Resource
         /// <summary>
         ///     A <see cref="string" /> array used to represent the end of a line for splitting purposes.
         /// </summary>
-        static readonly string[] k_NewLineSplit = {Environment.NewLine};
+        static readonly string[] k_NewLineSplit = { Environment.NewLine };
 
         /// <summary>
         ///     Output the report format as an array of <see cref="string" />.
@@ -38,7 +38,7 @@ namespace GDX.Developer.Reports.Resource
         ///     write buffers by <paramref name="bufferSize" />.
         /// </summary>
         /// <param name="context">Contextual information regarding the generation of the report.</param>
-        /// <param name="writer">A <see cref="StreamWriter"/> instance to use for output.</param>
+        /// <param name="writer">A <see cref="StreamWriter" /> instance to use for output.</param>
         /// <param name="bufferSize">The write buffer size.</param>
         /// <returns>true/false if the report was successfully written to the provided <paramref name="writer" />.</returns>
         public bool Output(StreamWriter writer, int bufferSize = 1024, ResourceReportContext context = null)
@@ -74,9 +74,9 @@ namespace GDX.Developer.Reports.Resource
         /// <summary>
         ///     Output the report format utilizing the provided <paramref name="builder" />.
         /// </summary>
-        /// <param name="builder">A <see cref="StringBuilder"/> to use when generating the report.</param>
+        /// <param name="builder">A <see cref="StringBuilder" /> to use when generating the report.</param>
         /// <param name="context">Contextual information regarding the generation of the report.</param>
-        /// <returns>true/false if report was added to <paramref name="builder"/>.</returns>
+        /// <returns>true/false if report was added to <paramref name="builder" />.</returns>
         public abstract bool Output(StringBuilder builder, ResourceReportContext context = null);
 
 

@@ -24,7 +24,7 @@
     - name: Documentation
       href: contributing\documentation.md
     - name: Agile Board
-      href: https://dotbunny.youtrack.cloud/youtrack/agiles/99-15/current
+      href: https://github.com/dotBunny/GDX/issues
 - name: Policies
   href: policy\index.md
   items:

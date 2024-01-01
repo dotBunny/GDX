@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using GDX.Collections.Generic;
 using GDX.DataTables;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace GDX.Editor.Windows.DataTables
@@ -13,14 +14,19 @@ namespace GDX.Editor.Windows.DataTables
 #if UNITY_2022_2_OR_NEWER
     public class DataTableWindowView
     {
-        readonly List<RowDescription> m_RowDescriptions = new List<RowDescription>();
         readonly Length m_BoundsMinWidth = new Length(200, LengthUnit.Pixel);
         readonly List<ColumnDescription> m_ColumnDescriptions = new List<ColumnDescription>();
+
+        readonly StringKeyDictionary<int> m_ColumnIdentifierCache;
+        readonly StringKeyDictionary<Serializable.SerializableTypes> m_ColumnTypeCache;
+
+        readonly DataTableWindow m_DataTableWindow;
 
         readonly Length m_GenericMinWidth = new Length(75, LengthUnit.Pixel);
         readonly Length m_HashMinWidth = new Length(260, LengthUnit.Pixel);
         readonly MultiColumnListView m_MultiColumnListView;
         readonly Length m_NumericMinWidth = new Length(50, LengthUnit.Pixel);
+        readonly List<RowDescription> m_RowDescriptions = new List<RowDescription>();
 
         readonly Columns m_TableViewColumns;
         readonly VisualElement m_TableViewHeader;
@@ -29,23 +35,10 @@ namespace GDX.Editor.Windows.DataTables
         readonly Length m_Vector3MinWidth = new Length(150, LengthUnit.Pixel);
         readonly Length m_Vector4MinWidth = new Length(200, LengthUnit.Pixel);
 
-        readonly DataTableWindow m_DataTableWindow;
-
-        readonly StringKeyDictionary<int> m_ColumnIdentifierCache;
-        readonly StringKeyDictionary<Serializable.SerializableTypes> m_ColumnTypeCache;
-
         float m_DesiredRowHeight = 27f;
+        bool m_HasMadeManualRowOrderChanges;
 
-        ~DataTableWindowView()
-        {
-            Destroy();
-        }
-
-        public void Destroy()
-        {
-            m_RowDescriptions.Clear();
-            m_ColumnDescriptions.Clear();
-        }
+        int m_SortedColumnCount;
 
         public DataTableWindowView(VisualElement rootElement, DataTableWindow window)
         {
@@ -217,19 +210,22 @@ namespace GDX.Editor.Windows.DataTables
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Vector2Int:
-                        column.makeCell += () => DataTableWindowCells.MakeVector2IntCell(this, tableTicket, columnIndex);
+                        column.makeCell += () =>
+                            DataTableWindowCells.MakeVector2IntCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindVector2IntCell;
                         column.minWidth = m_Vector2MinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Vector3Int:
-                        column.makeCell += () => DataTableWindowCells.MakeVector3IntCell(this, tableTicket, columnIndex);
+                        column.makeCell += () =>
+                            DataTableWindowCells.MakeVector3IntCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindVector3IntCell;
                         column.minWidth = m_Vector3MinWidth;
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.Quaternion:
-                        column.makeCell += () => DataTableWindowCells.MakeQuaternionCell(this, tableTicket, columnIndex);
+                        column.makeCell += () =>
+                            DataTableWindowCells.MakeQuaternionCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindQuaternionCell;
                         column.minWidth = m_Vector4MinWidth;
                         column.sortable = false;
@@ -285,7 +281,8 @@ namespace GDX.Editor.Windows.DataTables
                         column.sortable = false;
                         break;
                     case Serializable.SerializableTypes.AnimationCurve:
-                        column.makeCell += () => DataTableWindowCells.MakeAnimationCurveCell(this, tableTicket, columnIndex);
+                        column.makeCell += () =>
+                            DataTableWindowCells.MakeAnimationCurveCell(this, tableTicket, columnIndex);
                         column.bindCell = DataTableWindowCells.BindAnimationCurveCell;
                         column.minWidth = m_GenericMinWidth;
                         column.sortable = false;
@@ -304,7 +301,11 @@ namespace GDX.Editor.Windows.DataTables
             // Create MultiColumnListView
             m_MultiColumnListView = new MultiColumnListView(m_TableViewColumns)
             {
+#if UNITY_2023_3_OR_NEWER
+                sortingMode = ColumnSortingMode.Custom,
+#else
                 sortingEnabled = true,
+#endif
                 name = "gdx-table-view",
                 selectionType = SelectionType.Single,
                 itemsSource = m_RowDescriptions,
@@ -312,7 +313,7 @@ namespace GDX.Editor.Windows.DataTables
                 virtualizationMethod = CollectionVirtualizationMethod.FixedHeight,
                 fixedItemHeight = m_DesiredRowHeight,
                 style = { height = new StyleLength(new Length(100f, LengthUnit.Percent)) },
-                reorderable =  true,
+                reorderable = true,
                 reorderMode = ListViewReorderMode.Simple
             };
             m_MultiColumnListView.headerContextMenuPopulateEvent += AppendColumnContextMenu;
@@ -327,11 +328,23 @@ namespace GDX.Editor.Windows.DataTables
             RebuildRowData();
         }
 
+        ~DataTableWindowView()
+        {
+            Destroy();
+        }
+
+        public void Destroy()
+        {
+            m_RowDescriptions.Clear();
+            m_ColumnDescriptions.Clear();
+        }
+
 
         public RowDescription GetRowDescriptionBySortedOrder(int row)
         {
             return m_RowDescriptions[row];
         }
+
         void UnbindCell(VisualElement cell, int row)
         {
             DataTableWindowCells.CellData data = (DataTableWindowCells.CellData)cell.userData;
@@ -376,9 +389,6 @@ namespace GDX.Editor.Windows.DataTables
             RebuildRowData();
         }
 
-        int m_SortedColumnCount;
-        bool m_HasMadeManualRowOrderChanges = false;
-
 
         public bool HasSortedColumns()
         {
@@ -389,6 +399,7 @@ namespace GDX.Editor.Windows.DataTables
         {
             return m_HasMadeManualRowOrderChanges;
         }
+
         void SortItems()
         {
             List<int> sortedColumnIdentifiers = new List<int>(m_ColumnDescriptions.Count);
@@ -419,6 +430,7 @@ namespace GDX.Editor.Windows.DataTables
 
             m_MultiColumnListView.RefreshItems();
         }
+
         void OnRowsReordered(int oldIndex, int newIndex)
         {
             m_HasMadeManualRowOrderChanges = true;
@@ -535,6 +547,7 @@ namespace GDX.Editor.Windows.DataTables
             {
                 return;
             }
+
             int indexOfSplit = column.name.IndexOf("_", StringComparison.Ordinal);
             if (indexOfSplit != -1)
             {
@@ -552,6 +565,14 @@ namespace GDX.Editor.Windows.DataTables
                 evt.menu.AppendAction("Move Right",
                     _ => m_DataTableWindow.GetController().MoveColumnRight(columnIdentifier),
                     _ => CanMoveColumnRight(columnIdentifier));
+                evt.menu.AppendSeparator();
+                evt.menu.AppendAction($"Copy Identifier ({columnIdentifier.ToString()})",
+                    _ =>
+                    {
+                        GUIUtility.systemCopyBuffer = columnIdentifier.ToString();
+                        Debug.Log(
+                            $"Copied column identifier '{columnIdentifier.ToString()}' to clipboard.");
+                    });
             }
         }
 
@@ -562,6 +583,7 @@ namespace GDX.Editor.Windows.DataTables
             {
                 return DropdownMenuAction.Status.Disabled;
             }
+
             int currentOrder = dataTable.GetColumnOrder(columnIdentifier);
             return currentOrder > 0 ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
         }
@@ -574,8 +596,11 @@ namespace GDX.Editor.Windows.DataTables
             {
                 return DropdownMenuAction.Status.Disabled;
             }
+
             int currentOrder = dataTable.GetColumnOrder(columnIdentifier);
-            return currentOrder < (columnCount - 1) ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled;
+            return currentOrder < columnCount - 1
+                ? DropdownMenuAction.Status.Normal
+                : DropdownMenuAction.Status.Disabled;
         }
 
         DropdownMenuAction.Status CanRemoveColumn(DropdownMenuAction action)

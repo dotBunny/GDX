@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2023 dotBunny Inc.
+// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -131,7 +131,8 @@ namespace GDX.Collections
         /// <param name="versionArray">The array containing the version number to check against.</param>
         /// <param name="version">Enables detection of use-after-free errors when using the sparse index as a reference.</param>
         /// <returns>True if the index pool expanded.</returns>
-        public bool AddWithExpandCheck(int expandBy, out int sparseIndex, out int denseIndex, ref ulong[] versionArray, out ulong version)
+        public bool AddWithExpandCheck(int expandBy, out int sparseIndex, out int denseIndex, ref ulong[] versionArray,
+            out ulong version)
         {
             int indexToClaim = FreeIndex;
             int currentCapacity = SparseArray.Length;
@@ -309,16 +310,21 @@ namespace GDX.Collections
 
         /// <summary>
         ///     Frees the allocated entry corresponding to the sparse index.
-        ///     WARNING: Will not protect against accidentally removing twice if the index in question was recycled between Remove calls.
-        /// <param name="sparseIndexToRemove">The sparse index corresponding to the entry to remove.</param>
-        /// <param name="dataIndexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
-        /// <param name="dataIndexToSwapFrom">
-        ///     Set the data array value at this index to default after swapping with the data array
-        ///     value at dataIndexToSwapTo.
-        /// </param>
+        ///     WARNING: Will not protect against accidentally removing twice if the index in question was recycled between Remove
+        ///     calls.
+        ///     <param name="sparseIndexToRemove">The sparse index corresponding to the entry to remove.</param>
+        ///     <param name="dataIndexToSwapTo">
+        ///         Replace the data array value at this index with the data array value at
+        ///         indexToSwapFrom.
+        ///     </param>
+        ///     <param name="dataIndexToSwapFrom">
+        ///         Set the data array value at this index to default after swapping with the data array
+        ///         value at dataIndexToSwapTo.
+        ///     </param>
         /// </summary>
         /// <returns>True if the entry was valid and thus removed.</returns>
-        public bool RemoveWithBoundsCheck(ref int sparseIndexToRemove, out int dataIndexToSwapFrom, out int dataIndexToSwapTo)
+        public bool RemoveWithBoundsCheck(ref int sparseIndexToRemove, out int dataIndexToSwapFrom,
+            out int dataIndexToSwapTo)
         {
             dataIndexToSwapFrom = -1;
             dataIndexToSwapTo = -1;
@@ -370,7 +376,10 @@ namespace GDX.Collections
         ///     indices that have been removed and reused.
         /// </param>
         /// <param name="versionArray">The array where version numbers to check against are stored.</param>
-        /// <param name="dataIndexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
+        /// <param name="dataIndexToSwapTo">
+        ///     Replace the data array value at this index with the data array value at
+        ///     indexToSwapFrom.
+        /// </param>
         /// <param name="dataIndexToSwapFrom">
         ///     Set the data array value at this index to default after swapping with the data array
         ///     value at dataIndexToSwapTo.
@@ -421,7 +430,10 @@ namespace GDX.Collections
         ///     The version number of the int used to access the sparse index. Used to guard against erroneously accessing
         ///     freed indices currently in use with an outdated reference.
         /// </param>
-        /// <param name="dataIndexToSwapTo">Replace the data array value at this index with the data array value at indexToSwapFrom.</param>
+        /// <param name="dataIndexToSwapTo">
+        ///     Replace the data array value at this index with the data array value at
+        ///     indexToSwapFrom.
+        /// </param>
         /// <param name="dataIndexToSwapFrom">
         ///     Set the data array value at this index to default after swapping with the data array
         ///     value at dataIndexToSwapTo.
@@ -544,7 +556,8 @@ namespace GDX.Collections
         ///     value at indexToSwapTo.
         /// </param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void RemoveUnchecked(int sparseIndexToRemove, ulong[] versionArray, out int indexToSwapFrom, out int indexToSwapTo)
+        public void RemoveUnchecked(int sparseIndexToRemove, ulong[] versionArray, out int indexToSwapFrom,
+            out int indexToSwapTo)
         {
             int denseIndexToRemove = SparseArray[sparseIndexToRemove];
             int newLength = Count - 1;

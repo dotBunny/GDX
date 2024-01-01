@@ -5,11 +5,12 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using GDX.Developer;
-using GDX.Experimental;
-using GDX.Experimental.Logging;
+using GDX.Editor.Windows.ProjectSettings.ConfigSections;
 using GDX.IO.Compression;
 using UnityEditor;
+using UnityEditor.PackageManager;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace GDX.Editor
 {
@@ -54,11 +55,10 @@ namespace GDX.Editor
             LocalPackage = new PackageProvider();
 
             EditorApplication.delayCall += DelayCall;
-
         }
 
         /// <summary>
-        /// Execute delayed logic that won't interfere with a current import process.
+        ///     Execute delayed logic that won't interfere with a current import process.
         /// </summary>
         static void DelayCall()
         {
@@ -68,7 +68,7 @@ namespace GDX.Editor
             }
 
             // Should we check for updates?
-            DateTime targetDate = GetLastChecked().AddDays(Windows.ProjectSettings.ConfigSections.AutomaticUpdatesSettings.UpdateDayCountSetting);
+            DateTime targetDate = GetLastChecked().AddDays(AutomaticUpdatesSettings.UpdateDayCountSetting);
             if (DateTime.Now >= targetDate)
             {
                 CheckForUpdates();
@@ -129,8 +129,8 @@ namespace GDX.Editor
                 case PackageProvider.InstallationType.PackageManagerBranch:
                 case PackageProvider.InstallationType.PackageManagerTag:
                     if (EditorUtility.DisplayDialog("GDX Update Available",
-                        $"{messageStart}Would you like to have the package attempt to upgrade itself through UPM to the newest version automatically?",
-                        "Yes", "No"))
+                            $"{messageStart}Would you like to have the package attempt to upgrade itself through UPM to the newest version automatically?",
+                            "Yes", "No"))
                     {
                         UpgradeUnityPackageManager();
                     }
@@ -145,8 +145,8 @@ namespace GDX.Editor
                 case PackageProvider.InstallationType.GitHubBranch:
                 case PackageProvider.InstallationType.GitHubTag:
                     if (EditorUtility.DisplayDialog("GDX Update Available",
-                        $"{messageStart}Would you like your cloned repository updated?\n\nIMPORTANT!\n\nThis will \"reset hard\" and \"pull\" the repository, wiping any local changes made.",
-                        "Yes", "No"))
+                            $"{messageStart}Would you like your cloned repository updated?\n\nIMPORTANT!\n\nThis will \"reset hard\" and \"pull\" the repository, wiping any local changes made.",
+                            "Yes", "No"))
                     {
                         UpgradeGitHub();
                     }
@@ -158,8 +158,8 @@ namespace GDX.Editor
                     break;
                 case PackageProvider.InstallationType.Assets:
                     if (EditorUtility.DisplayDialog("GDX Update Available",
-                        $"{messageStart}Would you like your install replaced?\n\nIMPORTANT!\n\nThis will remove any local changes to GDX.",
-                        "Yes", "No"))
+                            $"{messageStart}Would you like your install replaced?\n\nIMPORTANT!\n\nThis will remove any local changes to GDX.",
+                            "Yes", "No"))
                     {
                         UpgradeAssetDatabase();
                     }
@@ -198,7 +198,7 @@ namespace GDX.Editor
             string filePath = Path.Combine(
                 Path.GetDirectoryName(
                     LocalPackage.PackageManifestPath) ??
-                string.Empty, "CHANGELOG.md" );
+                string.Empty, "CHANGELOG.md");
 
             return File.Exists(filePath) ? filePath : null;
         }
@@ -231,10 +231,13 @@ namespace GDX.Editor
                     {
                         return returnLines.ToArray();
                     }
+
                     returnLines.Add(line);
                 }
+
                 return returnLines.ToArray();
             }
+
             return null;
         }
 
@@ -261,7 +264,7 @@ namespace GDX.Editor
             string filePath = Path.Combine(
                 Path.GetDirectoryName(
                     LocalPackage.PackageManifestPath) ??
-                string.Empty, "LICENSE" );
+                string.Empty, "LICENSE");
 
             return File.Exists(filePath) ? filePath : null;
         }
@@ -372,7 +375,7 @@ namespace GDX.Editor
             catch (Exception e)
             {
                 // We will end up here if the formulated Uri is bad.
-                ManagedLog.Exception(0, e);
+                Debug.LogException(e);
                 return;
             }
             finally
@@ -395,7 +398,6 @@ namespace GDX.Editor
 
             // Get desired target placement
             string targetPath = Path.GetDirectoryName(LocalPackage.PackageManifestPath);
-
 
 
             // Remove all existing content
@@ -518,7 +520,7 @@ namespace GDX.Editor
                 {
                     File.WriteAllLines(packageManifestLockFile, newFileContent.ToArray());
                     // Tell PackageManager to resolve our newly altered file.
-                    UnityEditor.PackageManager.Client.Resolve();
+                    Client.Resolve();
                 }
             }
         }

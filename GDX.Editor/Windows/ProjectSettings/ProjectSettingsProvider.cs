@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2023 dotBunny Inc.
+// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -6,19 +6,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using GDX.Collections.Generic;
-using GDX.Editor.Windows.ProjectSettings;
+using GDX.Developer;
 using GDX.Editor.Windows.ProjectSettings.ConfigSections;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Button = UnityEngine.UIElements.Button;
-using Label = UnityEngine.UIElements.Label;
 
 namespace GDX.Editor.Windows.ProjectSettings
 {
     /// <summary>
-    ///     A settings provider scoped to the project which is backed by the <see cref="Config"/>.
+    ///     A settings provider scoped to the project which is backed by the <see cref="Config" />.
     /// </summary>
     /// <remarks>
     ///     This operates under the assumption that there can only ever be one Project Settings window.
@@ -37,22 +35,22 @@ namespace GDX.Editor.Windows.ProjectSettings
         static string s_SearchString;
 
         /// <summary>
-        ///     The unsaved working copy of the <see cref="Config"/> which the project settings operates on.
+        ///     The unsaved working copy of the <see cref="Config" /> which the project settings operates on.
         /// </summary>
         public static TransientConfig WorkingConfig;
 
         /// <summary>
-        ///   A mapping of section's content <see cref="VisualElement"/> to <see cref="IConfigSection"/> by its index.
+        ///     A mapping of section's content <see cref="VisualElement" /> to <see cref="IConfigSection" /> by its index.
         /// </summary>
         static readonly VisualElement[] k_ConfigSectionContents = new VisualElement[k_SectionCount];
 
         /// <summary>
-        ///   A mapping of section's header <see cref="VisualElement"/> to <see cref="IConfigSection"/> by its index.
+        ///     A mapping of section's header <see cref="VisualElement" /> to <see cref="IConfigSection" /> by its index.
         /// </summary>
         static readonly VisualElement[] k_ConfigSectionHeaders = new VisualElement[k_SectionCount];
 
         /// <summary>
-        ///     A mapping of the actual <see cref="IConfigSection"/> by its index.
+        ///     A mapping of the actual <see cref="IConfigSection" /> by its index.
         /// </summary>
         static readonly IConfigSection[] k_ConfigSections = new IConfigSection[k_SectionCount];
 
@@ -60,19 +58,12 @@ namespace GDX.Editor.Windows.ProjectSettings
         ///     A list of keywords to exclude from the parsed keywords, these are just common words which are not
         ///     relevant when it comes to searching.
         /// </summary>
-        static readonly int[] k_SearchKeywordExclusions = new int[]
+        static readonly int[] k_SearchKeywordExclusions =
         {
-            "the".GetStableHashCode(),
-            "for".GetStableHashCode(),
-            "and".GetStableHashCode(),
-            "can".GetStableHashCode(),
-            "its".GetStableHashCode(),
-            "not".GetStableHashCode(),
-            "all".GetStableHashCode(),
-            "like".GetStableHashCode(),
-            "that".GetStableHashCode(),
-            "then".GetStableHashCode(),
-            "with".GetStableHashCode()
+            "the".GetStableHashCode(), "for".GetStableHashCode(), "and".GetStableHashCode(),
+            "can".GetStableHashCode(), "its".GetStableHashCode(), "not".GetStableHashCode(),
+            "all".GetStableHashCode(), "like".GetStableHashCode(), "that".GetStableHashCode(),
+            "then".GetStableHashCode(), "with".GetStableHashCode()
         };
 
         /// <summary>
@@ -83,7 +74,7 @@ namespace GDX.Editor.Windows.ProjectSettings
         static SimpleList<int> s_SearchKeywordsHashes = new SimpleList<int>(150);
 
         /// <summary>
-        ///     A map of search keywords to individual <see cref="VisualElement"/>s which should be highlighted.
+        ///     A map of search keywords to individual <see cref="VisualElement" />s which should be highlighted.
         /// </summary>
         static readonly Dictionary<int, List<VisualElement>> k_SearchKeywordMap =
             new Dictionary<int, List<VisualElement>>(150);
@@ -91,20 +82,14 @@ namespace GDX.Editor.Windows.ProjectSettings
         static SimpleList<VisualElement> s_SearchContentResults = new SimpleList<VisualElement>(10);
 
         /// <summary>
-        ///     A map of <see cref="VisualElement"/>s that have been processed for keyword search, to their
-        ///     <see cref="IConfigSection"/> by section index.
+        ///     A map of <see cref="VisualElement" />s that have been processed for keyword search, to their
+        ///     <see cref="IConfigSection" /> by section index.
         /// </summary>
-        static readonly SimpleList<VisualElement>[] k_SearchSectionElementMap = new SimpleList<VisualElement>[]
+        static readonly SimpleList<VisualElement>[] k_SearchSectionElementMap =
         {
-            new SimpleList<VisualElement>(10),
-            new SimpleList<VisualElement>(10),
-            new SimpleList<VisualElement>(10),
-            new SimpleList<VisualElement>(10),
-            new SimpleList<VisualElement>(10),
-            new SimpleList<VisualElement>(10),
-            new SimpleList<VisualElement>(10),
-            new SimpleList<VisualElement>(10),
-            new SimpleList<VisualElement>(10)
+            new SimpleList<VisualElement>(10), new SimpleList<VisualElement>(10), new SimpleList<VisualElement>(10),
+            new SimpleList<VisualElement>(10), new SimpleList<VisualElement>(10), new SimpleList<VisualElement>(10),
+            new SimpleList<VisualElement>(10), new SimpleList<VisualElement>(10), new SimpleList<VisualElement>(10)
         };
 
 
@@ -120,7 +105,6 @@ namespace GDX.Editor.Windows.ProjectSettings
         static ScrollView s_ChangelogScrollView;
 
         static EditorWindow s_ProjectSettingsWindow;
-
 
 
         static void CacheSectionContent(int sectionIndex)
@@ -143,12 +127,14 @@ namespace GDX.Editor.Windows.ProjectSettings
             // Record the whole section
             k_ConfigSectionContents[sectionIndex] = sectionInstance;
         }
+
         static void CacheSectionHeader(int sectionIndex)
         {
             if (k_ConfigSectionHeaders[sectionIndex] != null)
             {
                 return;
             }
+
             IConfigSection section = k_ConfigSections[sectionIndex];
 
             VisualTreeAsset headerAsset =
@@ -297,7 +283,7 @@ namespace GDX.Editor.Windows.ProjectSettings
                     Button buttonIssue = rootElement.Q<Button>("button-issue");
                     buttonIssue.clicked += () =>
                     {
-                        Application.OpenURL("https://dotbunny.youtrack.cloud/youtrack/issues/GDX");
+                        Application.OpenURL("https://github.com/dotBunny/GDX/issues");
                     };
                     Button buttonLicense = rootElement.Q<Button>("button-license");
                     buttonLicense.clicked += () =>
@@ -321,11 +307,11 @@ namespace GDX.Editor.Windows.ProjectSettings
                     // Badges
                     s_PackageBadgeElement = rootElement.Q<VisualElement>("gdx-packages");
                     AddPackageBadge(s_PackageBadgeElement, "Addressables",
-                        Developer.Conditionals.HasAddressablesPackage);
+                        Conditionals.HasAddressablesPackage);
                     AddPackageBadge(s_PackageBadgeElement, "Platforms",
-                        Developer.Conditionals.HasPlatformsPackage);
+                        Conditionals.HasPlatformsPackage);
                     AddPackageBadge(s_PackageBadgeElement, "Visual Scripting",
-                        Developer.Conditionals.HasVisualScriptingPackage);
+                        Conditionals.HasVisualScriptingPackage);
 
                     // Build some useful references
                     ScrollView contentScrollView = rootElement.Q<ScrollView>("gdx-project-settings-content");
@@ -337,7 +323,10 @@ namespace GDX.Editor.Windows.ProjectSettings
                     for (int i = 0; i < k_SectionCount; i++)
                     {
                         IConfigSection section = k_ConfigSections[i];
-                        if (section == null) continue;
+                        if (section == null)
+                        {
+                            continue;
+                        }
 
                         contentScrollView.contentContainer.Add(k_ConfigSectionHeaders[i]);
                         UpdateSectionHeader(i);
@@ -364,7 +353,9 @@ namespace GDX.Editor.Windows.ProjectSettings
                         out string searchContext);
 
                     if (s_SearchString == searchContext)
+                    {
                         return;
+                    }
 
                     if (string.IsNullOrEmpty(searchContext))
                     {
@@ -379,6 +370,7 @@ namespace GDX.Editor.Windows.ProjectSettings
                     {
                         s_RootElement.AddToClassList(ResourcesProvider.SearchClass);
                     }
+
                     s_SearchString = searchContext;
 
                     UpdateForSearch();
@@ -445,6 +437,7 @@ namespace GDX.Editor.Windows.ProjectSettings
                     }
                 });
             }
+
             s_PopupMenu.ShowAsContext();
         }
 
@@ -481,6 +474,7 @@ namespace GDX.Editor.Windows.ProjectSettings
                 k_ConfigSectionHeaders[i] = null;
                 k_SearchSectionElementMap[i] = new SimpleList<VisualElement>(10);
             }
+
             s_SearchKeywords.Clear();
             s_SearchKeywordsHashes.Clear();
             k_SearchKeywordMap.Clear();
@@ -510,7 +504,10 @@ namespace GDX.Editor.Windows.ProjectSettings
             for (int i = 0; i < k_SectionCount; i++)
             {
                 // Check for non built, just skip
-                if (k_ConfigSections[i] == null) continue;
+                if (k_ConfigSections[i] == null)
+                {
+                    continue;
+                }
 
                 CacheSectionHeader(i);
                 CacheSectionContent(i);
@@ -534,7 +531,10 @@ namespace GDX.Editor.Windows.ProjectSettings
         static void OnToggleSectionHeaderClicked(VisualElement toggleElement, int sectionIndex, bool newValue)
         {
             // Do not toggle during search mode
-            if (IsSearching()) return;
+            if (IsSearching())
+            {
+                return;
+            }
 
             IConfigSection section = k_ConfigSections[sectionIndex];
             section.SetToggleState(toggleElement, newValue);
@@ -565,8 +565,9 @@ namespace GDX.Editor.Windows.ProjectSettings
             }
         }
 
-         public static void RegisterElementForSearch(int sectionIndex, VisualElement element, string additionalDescription = null)
-         {
+        public static void RegisterElementForSearch(int sectionIndex, VisualElement element,
+            string additionalDescription = null)
+        {
             // Create our working list
             SimpleList<string> validWords = new SimpleList<string>(25);
 
@@ -612,6 +613,7 @@ namespace GDX.Editor.Windows.ProjectSettings
                     s_SearchKeywordsHashes.AddWithExpandCheck(hash);
                     k_SearchKeywordMap.Add(hash, new List<VisualElement>(10));
                 }
+
                 k_SearchKeywordMap[hash].Add(element);
             }
 
@@ -619,10 +621,14 @@ namespace GDX.Editor.Windows.ProjectSettings
             k_SearchSectionElementMap[sectionIndex].AddWithExpandCheckUniqueItem(element);
         }
 
-         public static void SetClassChangeCheck<T1, T2>(T1 element, T2 lhs, T2 rhs)
+        public static void SetClassChangeCheck<T1, T2>(T1 element, T2 lhs, T2 rhs)
             where T1 : BaseField<T2> where T2 : class
         {
-            if (element == null) return;
+            if (element == null)
+            {
+                return;
+            }
+
             element.SetValueWithoutNotify(rhs);
 
             if (lhs != rhs)
@@ -637,7 +643,11 @@ namespace GDX.Editor.Windows.ProjectSettings
 
         public static void SetEnumChangeCheck<T>(EnumField element, T lhs, T rhs) where T : Enum
         {
-            if (element == null) return;
+            if (element == null)
+            {
+                return;
+            }
+
             element.SetValueWithoutNotify(rhs);
             if (lhs.ToString() != rhs.ToString())
             {
@@ -651,7 +661,11 @@ namespace GDX.Editor.Windows.ProjectSettings
 
         public static void SetMaskChangeCheck(MaskField element, int lhs, int rhs)
         {
-            if (element == null) return;
+            if (element == null)
+            {
+                return;
+            }
+
             element.SetValueWithoutNotify(rhs);
             if (lhs != rhs)
             {
@@ -666,7 +680,11 @@ namespace GDX.Editor.Windows.ProjectSettings
         public static void SetStructChangeCheck<T1, T2>(T1 element, T2 lhs, T2 rhs)
             where T1 : BaseField<T2> where T2 : struct
         {
-            if (element == null) return;
+            if (element == null)
+            {
+                return;
+            }
+
             element.SetValueWithoutNotify(rhs);
 
             if (!lhs.Equals(rhs))
@@ -683,7 +701,11 @@ namespace GDX.Editor.Windows.ProjectSettings
         {
             for (int i = 0; i < k_SectionCount; i++)
             {
-                if (k_ConfigSections[i] == null) continue;
+                if (k_ConfigSections[i] == null)
+                {
+                    continue;
+                }
+
                 UpdateSectionHeader(i);
                 UpdateSectionContent(i);
             }
@@ -709,14 +731,21 @@ namespace GDX.Editor.Windows.ProjectSettings
             {
                 for (int i = 0; i < existingCount; i++)
                 {
-                    if (s_SearchContentResults.Array[i] == null) continue;
+                    if (s_SearchContentResults.Array[i] == null)
+                    {
+                        continue;
+                    }
+
                     s_SearchContentResults.Array[i].RemoveFromClassList(ResourcesProvider.SearchHighlightClass);
                 }
 
                 s_SearchContentResults.Clear();
             }
 
-            if (!IsSearching()) return;
+            if (!IsSearching())
+            {
+                return;
+            }
 
             QueryElements(s_SearchString);
             if (s_SearchContentResults.Count == 0)

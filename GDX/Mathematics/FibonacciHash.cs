@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -9,11 +9,15 @@ namespace GDX.Mathematics
     public static class FibonacciHash
     {
         /// <summary>
-        /// Takes a 32-bit length equal to a power of two,
-        /// and returns how many spaces another 32-bit int would need to shift in order to be a valid index within an array of that length.
+        ///     Takes a 32-bit length equal to a power of two,
+        ///     and returns how many spaces another 32-bit int would need to shift in order to be a valid index within an array of
+        ///     that length.
         /// </summary>
         /// <param name="pow2Length">A 32-bit int equal to a power of two.</param>
-        /// <returns>How many spaces a 32-bit int would need to shift in order to be a valid index within <paramref name="pow2Length" />.</returns>
+        /// <returns>
+        ///     How many spaces a 32-bit int would need to shift in order to be a valid index within
+        ///     <paramref name="pow2Length" />.
+        /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static byte GetRightShiftFromPow2Length(int pow2Length)
         {
@@ -27,8 +31,8 @@ namespace GDX.Mathematics
         }
 
         /// <summary>
-        /// Takes the <paramref name="hash" /> and multiplies it by 2^32 divided by the golden ratio,
-        /// then right shifts it by <paramref name="shift" /> to fit within a given power-of-two size.
+        ///     Takes the <paramref name="hash" /> and multiplies it by 2^32 divided by the golden ratio,
+        ///     then right shifts it by <paramref name="shift" /> to fit within a given power-of-two size.
         /// </summary>
         /// <param name="hash">The key to find an index for.</param>
         /// <param name="shift">How far to right shift in order to fit within a given power-of-two size.</param>
@@ -41,7 +45,8 @@ namespace GDX.Mathematics
         }
 
         /// <summary>
-        /// Takes the <paramref name="hash" /> and finds an index within the provided <paramref name="pow2Length" /> range with Fibonacci hashing.
+        ///     Takes the <paramref name="hash" /> and finds an index within the provided <paramref name="pow2Length" /> range with
+        ///     Fibonacci hashing.
         /// </summary>
         /// <param name="hash">The hash to find an index for.</param>
         /// <param name="pow2Length">The power-of-two array length to find an index within.</param>
@@ -62,4 +67,3 @@ namespace GDX.Mathematics
         }
     }
 }
-

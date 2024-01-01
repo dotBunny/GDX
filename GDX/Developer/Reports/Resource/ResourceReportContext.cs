@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -7,19 +7,19 @@
 namespace GDX.Developer.Reports.Resource
 {
     /// <summary>
-    ///     Context for generating a <see cref="ResourceReport"/> based report.
+    ///     Context for generating a <see cref="ResourceReport" /> based report.
     /// </summary>
     /// <exception cref="UnsupportedRuntimeException">Not supported on DOTS Runtime.</exception>
     public sealed class ResourceReportContext
     {
         public readonly int CharacterWidth;
-        public readonly int KeyValuePairWidth;
         public readonly int KeyValuePairInfoWidth;
-
-        public readonly int ObjectTypeWidth;
+        public readonly int KeyValuePairWidth;
+        public readonly int ObjectInfoWidth;
         public readonly int ObjectNameWidth;
         public readonly int ObjectSizeWidth;
-        public readonly int ObjectInfoWidth;
+
+        public readonly int ObjectTypeWidth;
 
         public ResourceReportContext(int characterWidth = 120)
         {

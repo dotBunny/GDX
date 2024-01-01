@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -17,7 +17,7 @@ namespace GDX.Developer.Reports.BuildVerification
         ///     Get some semblance of identifiable information for a test.
         /// </summary>
         /// <returns>
-        ///     The <see cref="string"/> identifier for the test.
+        ///     The <see cref="string" /> identifier for the test.
         /// </returns>
         string GetIdentifier();
 

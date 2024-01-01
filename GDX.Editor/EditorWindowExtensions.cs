@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020-2023 dotBunny Inc.
+﻿// Copyright (c) 2020-2024 dotBunny Inc.
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
@@ -16,7 +16,7 @@ namespace GDX.Editor
         /// <summary>
         ///     Force a window to repaint immediately.
         /// </summary>
-        /// <param name="window">The <see cref="EditorWindow"/> to target.</param>
+        /// <param name="window">The <see cref="EditorWindow" /> to target.</param>
         public static void ForceRepaint(this EditorWindow window)
         {
             // We need to force some internal repainting without having the API surface area to do so.
@@ -34,24 +34,29 @@ namespace GDX.Editor
         }
 
         /// <summary>
-        ///     Apply the settings found in a <see cref="EditorWindowSetup"/> to a given <see cref="EditorWindow"/>.
+        ///     Apply the settings found in a <see cref="EditorWindowSetup" /> to a given <see cref="EditorWindow" />.
         /// </summary>
-        /// <param name="window">The target <see cref="EditorWindow"/>.</param>
+        /// <param name="window">The target <see cref="EditorWindow" />.</param>
         /// <param name="setup">The settings data to be used.</param>
         public static void ApplySetup(this EditorWindow window, EditorWindowSetup setup)
         {
             if (window == null)
+            {
                 return;
+            }
 
             if (setup.HasFixedSize)
             {
-                if ( setup.Width < window.minSize.x || setup.Height < window.minSize.y)
+                if (setup.Width < window.minSize.x || setup.Height < window.minSize.y)
                 {
-                    Debug.LogWarning("Requested window size is too small compared to the windows existing minSize setting.");
+                    Debug.LogWarning(
+                        "Requested window size is too small compared to the windows existing minSize setting.");
                 }
+
                 if (setup.Width > window.maxSize.x || setup.Height > window.maxSize.y)
                 {
-                    Debug.LogWarning("Requested window size is too big compared to the windows existing maxSize setting.");
+                    Debug.LogWarning(
+                        "Requested window size is too big compared to the windows existing maxSize setting.");
                 }
             }
 
@@ -61,11 +66,13 @@ namespace GDX.Editor
                 newPosition.width = setup.Width;
                 newPosition.height = setup.Height;
             }
+
             if (setup.HasPosition)
             {
                 newPosition.x = setup.X;
                 newPosition.y = setup.Y;
             }
+
             if (setup.HasFixedSize || setup.HasPosition)
             {
                 // This fixes a bug with Unity when you ask for a window that is previously docked,
@@ -131,11 +138,12 @@ namespace GDX.Editor
             /// </remarks>
             public int Height;
 
-            public bool HasPosition;// Position forces undocked
+            public bool HasPosition; // Position forces undocked
             public int X;
             public int Y;
 
-            public EditorWindowSetup(bool useExisting = false, bool setFocus = true, bool maximized = false, bool setFixedSize = false,
+            public EditorWindowSetup(bool useExisting = false, bool setFocus = true, bool maximized = false,
+                bool setFixedSize = false,
                 int width = 800, int height = 600, bool setPosition = false, int x = 0, int y = 0)
             {
                 UseExisting = useExisting;

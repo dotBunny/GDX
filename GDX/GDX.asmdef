@@ -2,11 +2,13 @@
     "name": "GDX",
     "rootNamespace": "GDX",
     "references": [
+        "GDX.RuntimeContent",
         "Unity.Mathematics",
         "Unity.Burst",
         "Unity.Collections",
         "Unity.Addressables",
-        "Unity.ResourceManager"
+        "Unity.ResourceManager",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -42,6 +44,11 @@
             "name": "com.unity.collections",
             "expression": "[1.2,2.0)",
             "define": "GDX_UNSAFE_COLLECTIONS"
+        },
+        {
+            "name": "com.unity.inputsystem",
+            "expression": "1.7.0",
+            "define": "GDX_INPUT"
         }
     ],
     "noEngineReferences": false
