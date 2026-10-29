@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `Murmur3`, the 32-bit MurmurHash3 of one to four integers or of bytes, and its `Mix` finalizer: integer only, so the same on every platform.
+- `IntegerMath.FloorDivide` and `FloorModulo` for `int` and `long`, rounding toward negative infinity as grid math needs.
+- `WELL1024a.SampleUnsignedInteger` returns the generator's next 32 bits without floating point; `Sample` is built on it and returns what it did before.
+
 ### Changed
 
 - Unity 6.3+ uses `EntityId` in place of instance IDs in the `DataTable` editor tooling (`objectReferenceEntityIdValue`, `EditorUtility.EntityIdToObject`, an `EntityId` `OnOpenAsset` callback); earlier versions keep the instance ID calls.

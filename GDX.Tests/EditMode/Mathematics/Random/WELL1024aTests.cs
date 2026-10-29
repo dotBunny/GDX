@@ -15,6 +15,32 @@ namespace GDX.Mathematics.Random
     {
         [Test]
         [Category(Core.TestCategory)]
+        public void SampleUnsignedInteger_SameSeed_MatchesScaledSample()
+        {
+            WELL1024a integers = new WELL1024a(1234u);
+            WELL1024a doubles = new WELL1024a(1234u);
+
+            bool evaluate = true;
+            for (int i = 0; i < 1000; i++)
+            {
+                uint bits = integers.SampleUnsignedInteger();
+                double sample = doubles.Sample();
+                if (bits * 2.32830643653869628906e-10d != sample)
+                {
+                    evaluate = false;
+                }
+            }
+
+            evaluate &= integers.SampleCount == doubles.SampleCount && integers.Index == doubles.Index;
+
+            integers.Dispose();
+            doubles.Dispose();
+
+            Assert.IsTrue(evaluate);
+        }
+
+        [Test]
+        [Category(Core.TestCategory)]
         public void WELL1024a_FromInteger_StrippedSeed()
         {
             WELL1024a mockWell = new WELL1024a(-999);

@@ -218,6 +218,21 @@ namespace GDX.Mathematics.Random
         /// <inheritdoc cref="IRandomProvider.Sample" />
         public double Sample()
         {
+            return SampleUnsignedInteger() * 2.32830643653869628906e-10d;
+        }
+
+        /// <summary>
+        ///     Advance the generator and return its next 32 bits, the value <see cref="Sample" /> scales to
+        ///     [0, 1).
+        /// </summary>
+        /// <remarks>
+        ///     Integer only: build ranges on it with integer math (for example a 64-bit multiply and shift) where
+        ///     results must match across platforms, as a floating point scale can round differently where a
+        ///     compiler fuses a multiply and an add.
+        /// </remarks>
+        /// <returns>The next 32 bits of the sequence.</returns>
+        public uint SampleUnsignedInteger()
+        {
             SampleCount++;
 
             uint* ptr = (uint*)State.GetUnsafePtr();
@@ -232,7 +247,7 @@ namespace GDX.Mathematics.Random
             ptr[(int)((Index + 31u) & 31u)] = d ^ (d << 11) ^ z1 ^ (z1 << 7) ^ z2 ^ (z2 << 13);
             Index = (byte)((Index + 31u) & 31u);
 
-            return ptr[Index & 31u] * 2.32830643653869628906e-10d;
+            return ptr[Index & 31u];
         }
 
         /// <summary>
