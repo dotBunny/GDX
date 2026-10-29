@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - `StringExtensionsPerformance` creates a new `SampleGroup` for each measurement, as newer versions of the performance testing package require.
+- [#105](https://github.com/dotBunny/GDX/issues/105) A `DataTable` exported to CSV whose last row ends in an empty value imports again; the parser now keeps the empty value after a line's last comma.
 
 ## [4.0.1] - 2024-01-01
 

@@ -267,10 +267,9 @@ namespace GDX.DataTables.DataBinding.Formats
                 currentIndex++;
             }
 
-            if (lastIndex != line.Length - 1)
-            {
-                returnStrings.Add(line.Substring(lastIndex + 1).Trim());
-            }
+            // Whatever follows the last comma is the last value, even when it is empty. An export's last line ends
+            // in a bare comma when its last value is empty, as the generated text is trimmed.
+            returnStrings.Add(line.Substring(lastIndex + 1).Trim());
 
             return returnStrings.ToArray();
         }
