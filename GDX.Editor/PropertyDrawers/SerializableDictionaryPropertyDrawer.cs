@@ -2,6 +2,10 @@
 // dotBunny licenses this file to you under the BSL-1.0 license.
 // See the LICENSE file in the project root for more information.
 
+// Unity serializes Dictionary<TKey, TValue> itself from Unity 6.6 (DictionaryDisplayAttribute), so GDX's own
+// SerializableDictionary is only compiled for earlier versions.
+#if !UNITY_6000_6_OR_NEWER
+
 using System;
 using System.Collections;
 using GDX.Collections.Generic;
@@ -824,3 +828,4 @@ namespace GDX.Editor.PropertyDrawers
     }
 #endif // !UNITY_DOTSRUNTIME
 }
+#endif // !UNITY_6000_6_OR_NEWER

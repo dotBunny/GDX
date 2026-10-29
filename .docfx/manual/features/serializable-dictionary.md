@@ -1,5 +1,9 @@
 # Serializable Dictionary
 
+> [!NOTE]
+> From Unity 6.6, Unity serializes `Dictionary<TKey, TValue>` fields itself (see `DictionaryDisplayAttribute`), so
+> `SerializableDictionary` and its property drawer are only compiled for earlier versions of Unity.
+
 ## A New Beginning
 
 A typical piece of feedback we've heard repeatedly is that Unity needs to have a Dictionary collection capable of being serialized. With the introduction of template-based property drawers in `Unity 2020.1`, the final piece to solving that puzzle landed. While the core functionality backing the SerializableDictionary is compatible across all supported versions of Unity. The real power comes from the freshly acquired property drawer features.
