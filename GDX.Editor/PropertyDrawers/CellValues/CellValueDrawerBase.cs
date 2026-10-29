@@ -226,7 +226,11 @@ namespace GDX.Editor.PropertyDrawers.CellValues
         void ApplySettings()
         {
             m_TableProperty.objectReferenceValue = m_DataTable;
+#if UNITY_6000_3_OR_NEWER
+            m_TableProperty.objectReferenceEntityIdValue = m_DataTable.GetEntityId();
+#else
             m_TableProperty.objectReferenceInstanceIDValue = m_DataTable.GetInstanceID();
+#endif // UNITY_6000_3_OR_NEWER
             m_RowProperty.intValue = m_RowIdentifier;
             m_ColumnProperty.intValue = m_ColumnIdentifier;
 

@@ -37,9 +37,15 @@ namespace GDX.Editor.Windows.DataTables
         }
 
         [OnOpenAsset(1)]
+#if UNITY_6000_3_OR_NEWER
+        public static bool OnOpenAssetTable(EntityId entityId, int line)
+        {
+            Object unityObject = EditorUtility.EntityIdToObject(entityId);
+#else
         public static bool OnOpenAssetTable(int instanceID, int line)
         {
             Object unityObject = EditorUtility.InstanceIDToObject(instanceID);
+#endif // UNITY_6000_3_OR_NEWER
             if (unityObject is DataTableBase table)
             {
                 OpenAsset(table);
