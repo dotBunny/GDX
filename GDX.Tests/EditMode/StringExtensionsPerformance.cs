@@ -14,10 +14,27 @@ namespace GDX
         const int k_MeasurementCount = 20;
         const int k_IterationsPerMeasurement = 100;
 
-        static readonly SampleGroup k_ComplexSample = new SampleGroup("Complex");
-        static readonly SampleGroup k_SimpleSample = new SampleGroup("Simple");
-        static readonly SampleGroup k_UpperCaseSample = new SampleGroup("UpperCase");
-        static readonly SampleGroup k_LowerCaseSample = new SampleGroup("LowerCase");
+        // A new sample group for every measurement: the performance testing package sets a group's capacity before it
+        // runs, which throws once a group shared between measurements already holds more samples.
+        static SampleGroup ComplexSample
+        {
+            get { return new SampleGroup("Complex"); }
+        }
+
+        static SampleGroup SimpleSample
+        {
+            get { return new SampleGroup("Simple"); }
+        }
+
+        static SampleGroup UpperCaseSample
+        {
+            get { return new SampleGroup("UpperCase"); }
+        }
+
+        static SampleGroup LowerCaseSample
+        {
+            get { return new SampleGroup("LowerCase"); }
+        }
 
         [Test]
         [Performance]
@@ -30,7 +47,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_SimpleSample)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(SimpleSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -38,7 +55,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_LowerCaseSample)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(LowerCaseSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -46,7 +63,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_UpperCaseSample)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(UpperCaseSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -54,7 +71,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_ComplexSample)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(ComplexSample)
                 .Run();
         }
 
@@ -69,7 +86,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_SimpleSample)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(SimpleSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -77,7 +94,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_LowerCaseSample)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(LowerCaseSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -85,7 +102,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_UpperCaseSample)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(UpperCaseSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -93,7 +110,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_ComplexSample)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(ComplexSample)
                 .Run();
         }
 
@@ -108,7 +125,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_SimpleSample)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(SimpleSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -116,7 +133,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_LowerCaseSample)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(LowerCaseSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -124,7 +141,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_UpperCaseSample)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(UpperCaseSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -132,7 +149,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_ComplexSample)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(ComplexSample)
                 .Run();
         }
 
@@ -147,7 +164,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_SimpleSample)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(SimpleSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -155,7 +172,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_LowerCaseSample)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(LowerCaseSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -163,7 +180,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_UpperCaseSample)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(UpperCaseSample)
                 .Run();
             Measure.Method(() =>
                 {
@@ -171,7 +188,7 @@ namespace GDX
                 })
                 .WarmupCount(k_WarmupCount)
                 .MeasurementCount(k_MeasurementCount)
-                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(k_ComplexSample)
+                .IterationsPerMeasurement(k_IterationsPerMeasurement).SampleGroup(ComplexSample)
                 .Run();
         }
     }

@@ -8,6 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ***"Runtime Console"***
 > Testing the waters of some features we've been cooking up for other purposes.
 
+## [Unreleased]
+
+### Changed
+
+- Unity 6.3+ uses `EntityId` in place of instance IDs in the `DataTable` editor tooling (`objectReferenceEntityIdValue`, `EditorUtility.EntityIdToObject`, an `EntityId` `OnOpenAsset` callback); earlier versions keep the instance ID calls.
+
+### Removed
+
+- `SerializableDictionary` and its property drawer are not compiled on Unity 6.6+, which serializes `Dictionary<TKey, TValue>` itself.
+
+### Fixed
+
+- `StringExtensionsPerformance` creates a new `SampleGroup` for each measurement, as newer versions of the performance testing package require.
+
 ## [4.0.1] - 2024-01-01
 
 ### Added
