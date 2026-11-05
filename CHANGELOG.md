@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `TestMonitor.IsTesting` survives a domain reload in the middle of a test run (it is kept in `SessionState`): after `DomainReloadTests` reloaded the domain, a `DataTableWindow` closed by a later test asked in a modal dialog whether to save its table, and the editor stopped until someone answered (the run never finished, leaving `Assets/DomainReloadTest.cs` behind).
+- A message logged from a thread other than the main thread no longer throws in `ConsoleLogEntry`, which read `Time.frameCount` (main thread only); such an entry takes the main thread's last frame, and the developer console makes sure the main thread is known before it listens.
 - `StringExtensionsPerformance` creates a new `SampleGroup` for each measurement, as newer versions of the performance testing package require.
 - [#105](https://github.com/dotBunny/GDX/issues/105) A `DataTable` exported to CSV whose last row ends in an empty value imports again; the parser now keeps the empty value after a line's last comma.
 

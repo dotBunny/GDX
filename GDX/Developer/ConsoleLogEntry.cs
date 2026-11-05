@@ -4,12 +4,23 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 namespace GDX.Developer
 {
     public struct ConsoleLogEntry : IComparable<ConsoleLogEntry>, IComparer<ConsoleLogEntry>
     {
+        /// <summary>
+        ///     The frame of the last entry made on the main thread.
+        /// </summary>
+        /// <remarks>
+        ///     Unity's frame count can only be read on the main thread, and log messages arrive on whichever thread
+        ///     logged them (<see cref="Application.logMessageReceivedThreaded" />): an entry made on another thread
+        ///     takes this frame, so it still sorts among the main thread's.
+        /// </remarks>
+        static int s_LastFrame;
+
         public int Frame;
         public string FrameCount;
         public LogType Level;
@@ -18,7 +29,12 @@ namespace GDX.Developer
 
         public ConsoleLogEntry(LogType type, string message, string stackTrace = null)
         {
-            Frame = Time.frameCount;
+            if (Thread.CurrentThread.ManagedThreadId == Core.MainThreadID)
+            {
+                s_LastFrame = Time.frameCount;
+            }
+
+            Frame = s_LastFrame;
             FrameCount = Frame.ToString().PadLeft(10, '0');
             Level = type;
             Message = message;

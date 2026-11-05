@@ -317,6 +317,8 @@ namespace GDX.Developer
         {
             if (!Config.EnvironmentDeveloperConsole) return;
 
+            // Know the main thread before listening: an entry reads the frame count only there.
+            Core.InitializeOnMainThread();
             Log = new ConsoleLog();
 
             // We preregister a bunch of commands to be optimal

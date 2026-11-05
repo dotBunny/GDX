@@ -14,7 +14,21 @@ namespace GDX.Editor
 {
     class TestMonitor : ICallbacks
     {
-        public static bool IsTesting;
+        const string k_IsTestingKey = "GDX.TestMonitor.IsTesting";
+
+        /// <summary>
+        ///     Is a test run going on?
+        /// </summary>
+        /// <remarks>
+        ///     Kept in the editor session's state, not a static field: a test can reload the domain in the middle of a
+        ///     run (<c>DomainReloadTests</c>), which resets every static, and a window a later test closed then asked
+        ///     in a modal dialog whether to save its table, stopping the editor until someone answered.
+        /// </remarks>
+        public static bool IsTesting
+        {
+            get => SessionState.GetBool(k_IsTestingKey, false);
+            set => SessionState.SetBool(k_IsTestingKey, value);
+        }
 
         string m_CachedTempFolder;
         bool m_IsMonitoredTestRun;
